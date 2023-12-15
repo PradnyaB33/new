@@ -26,7 +26,7 @@ import SkeletonForLeaveTypes from "../LeaveComponents/components/skeleton-for-le
 import Setup from "../Setup";
 
 const SalaryInput = () => {
-  const { id } = useParams;
+  const { organisationId } = useParams;
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const queryClient = useQueryClient();
@@ -254,9 +254,13 @@ const SalaryInput = () => {
         </div>
       </Popover>
 
-      <SalaryInputFieldsModal id={id} open={open} handleClose={handleClose} />
       <SalaryInputFieldsModal
-        id={id}
+        id={organisationId}
+        open={open}
+        handleClose={handleClose}
+      />
+      <SalaryInputFieldsModal
+        id={organisationId}
         open={editModalOpen}
         handleClose={handleClose}
         salaryId={salaryInputId}

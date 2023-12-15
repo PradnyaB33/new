@@ -9,6 +9,7 @@ import TermsAndConditionsPage from "./components/termscondition/termsconditonpag
 import AddEmployee from "./pages/AddEmployee/addemployee";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import Application from "./pages/Application/Application";
+import Dashboard from "./pages/DashBoard/Dashboard";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import Designation from "./pages/Designation/Designation";
 import EmployeeList from "./pages/EmployeeList/EmployeeList";
@@ -41,14 +42,22 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/organizationList" element={<OrgList />} />
+      {/* Login Routes */}
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<Signup />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/waiting" element={<WaitMain />} />
       <Route path="/verify/:token/" element={<AnimationComponent />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
+      {/* Login Routes */}
+      {/* Dashboard Routes */}
+      <Route
+        path="/organisation/:organisationId/dashboard/main"
+        element={<Dashboard />}
+      />
+      {/* Dashboard Routes */}
       <Route path="/add-organisation" element={<AddOrganisation />} />
+      <Route path="/organizationList" element={<OrgList />} />
       <Route
         path="/organisation/:organisationId/create-department"
         element={<CreateDepartment />}
@@ -109,7 +118,7 @@ const App = () => {
         element={<OrganizationLocations />}
       />
       <Route
-        path="/organization/:organisationId/setup/set-salary-input-selection"
+        path="/organisation/:organisationId/setup/set-salary-input-selection"
         element={<SalaryInput />}
       />
       <Route path="/setup/:organisationId" element={<Setup />} />

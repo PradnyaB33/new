@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import Route from "./Route";
 import TestState from "./State/Function/Main";
 import UseEffectState from "./State/UseEffect/UseEffectContext";
@@ -8,6 +9,8 @@ import AppLoader from "./utils/AppLoader/AppLoader";
 import TopLoadingBar from "./utils/TopLoadingBar/TopLoadingBar";
 
 function App() {
+  const location = useLocation();
+
   return (
     <>
       <UseState>
@@ -16,7 +19,12 @@ function App() {
             <TopLoadingBar />
             <AppLoader />
             <AppAlert />
-            <div className={`h-full mt-[60px]`}>
+            {/* change as per requirement currently removed css : -  mt-[60px] */}
+            <div
+              className={`h-full ${
+                location.pathname !== "/sign-in" && "mt-[60px]"
+              } `}
+            >
               <SwipeableTemporaryDrawer />
               <div style={{ height: "100%", width: "100%" }}>
                 <Route />
