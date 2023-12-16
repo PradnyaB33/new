@@ -1,30 +1,29 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Button, TextField } from "@mui/material";
+import { Button, Checkbox, ListItemText, TextField } from "@mui/material";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import Tooltip from "@mui/material/Tooltip";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import dayjs from "dayjs";
-import useAddEmpForm from "../../hooks/useAddEmpForm";
 import axios from "axios";
+import dayjs from "dayjs";
+import { jwtDecode } from "jwt-decode";
+import React, { useContext, useEffect, useState } from "react";
+import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import InputLabel from "@mui/material/InputLabel";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
-import { Checkbox, ListItemText } from "@mui/material";
-import { useParams } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
-import Tooltip from "@mui/material/Tooltip";
-import { useQuery } from "react-query";
+import useAddEmpForm from "../../hooks/useAddEmpForm";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -168,7 +167,7 @@ const AddEmployee = () => {
   const fetchAvailableDesignation = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/designation/create`
+        `${process.env.REACT_APP_API}/route/designation/get/${id}`
       );
 
       setAvailableDesignation(response.data.designations);
@@ -185,7 +184,7 @@ const AddEmployee = () => {
 
   const { data: salaryInput } = useQuery(["empType"], async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/salary-template`,
+      `${process.env.REACT_APP_API}/route/salary-template-org/${id}`,
       {
         headers: {
           Authorization: authToken,
@@ -200,7 +199,7 @@ const AddEmployee = () => {
   const fetchAvailableLocation = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations`,
+        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${id}`,
         {
           headers: {
             Authorization: authToken,
@@ -395,36 +394,37 @@ const AddEmployee = () => {
     });
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const user = {
-      first_name,
-      last_name,
-      email,
-      password,
-      companyemail,
-      address,
-      phone_number,
-      deptname,
-      mgrempid,
-      citizenship,
-      employmentType,
-      date_of_birth,
-      joining_date,
-      designation,
-      worklocation,
-      gender,
-      salarystructure,
-      profile,
-      ...dynamicFields,
-      organizationId: id,
-      creatorId: userId,
-    };
-    console.log("user", user);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API}/route/employee/add-employee`,
-        user,
+      const user = {
+        first_name,
+        last_name,
+        email,
+        password,
+        companyemail,
+        address,
+        phone_number,
+        deptname,
+        mgrempid,
+        citizenship,
+        employmentType,
+        date_of_birth,
+        joining_date,
+        designation,
+        worklocation,
+        gender,
+        salarystructure,
+        profile,
+        ...dynamicFields,
+        organizationId: id,
+        creatorId: userId,
+      };
+      console.log("user", user);
+      // Check if the selected profile exists
+      const checkProfileResponse = await axios.post(
+        `${process.env.REACT_APP_API}/route/employee/check-profile-exists`,
+        { profile },
         {
           headers: {
             Authorization: authToken,
@@ -432,10 +432,52 @@ const AddEmployee = () => {
         }
       );
 
-      if (response.data.success) {
-        handleAlert(true, "error", "Invalid authorization");
+      if (
+        checkProfileResponse.status === 200 &&
+        checkProfileResponse.data.profileExist
+      ) {
+        const createProfileConfirmation = window.confirm(
+          `${profile} profile already exists. Do you want to create it again?`
+        );
+
+        if (createProfileConfirmation) {
+          // Proceed with profile creation
+          const response = await axios.post(
+            `${process.env.REACT_APP_API}/route/employee/create-profile`,
+            user,
+            {
+              headers: {
+                Authorization: authToken,
+              },
+            }
+          );
+
+          if (response.status === 201) {
+            handleAlert(true, "success", response.data.message);
+          } else {
+            handleAlert(true, "error", "Profile creation failed.");
+          }
+        } else {
+          // User declined creating the profile again
+          handleAlert(true, "info", "Profile creation canceled.");
+        }
       } else {
-        handleAlert(true, "success", response.data.message);
+        // Profile does not exist, proceed with creation
+        const response = await axios.post(
+          `${process.env.REACT_APP_API}/route/employee/add-employee`,
+          user,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+
+        if (response.data.success) {
+          handleAlert(true, "error", "Invalid authorization");
+        } else {
+          handleAlert(true, "success", response.data.message);
+        }
       }
     } catch (error) {
       handleAlert(
