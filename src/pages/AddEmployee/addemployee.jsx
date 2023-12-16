@@ -395,36 +395,37 @@ const AddEmployee = () => {
     });
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const user = {
-      first_name,
-      last_name,
-      email,
-      password,
-      companyemail,
-      address,
-      phone_number,
-      deptname,
-      mgrempid,
-      citizenship,
-      employmentType,
-      date_of_birth,
-      joining_date,
-      designation,
-      worklocation,
-      gender,
-      salarystructure,
-      profile,
-      ...dynamicFields,
-      organizationId: id,
-      creatorId: userId,
-    };
-    console.log("user", user);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API}/route/employee/add-employee`,
-        user,
+      const user = {
+        first_name,
+        last_name,
+        email,
+        password,
+        companyemail,
+        address,
+        phone_number,
+        deptname,
+        mgrempid,
+        citizenship,
+        employmentType,
+        date_of_birth,
+        joining_date,
+        designation,
+        worklocation,
+        gender,
+        salarystructure,
+        profile,
+        ...dynamicFields,
+        organizationId: id,
+        creatorId: userId,
+      };
+      console.log("user", user);
+      // Check if the selected profile exists
+      const checkProfileResponse = await axios.post(
+        `${process.env.REACT_APP_API}/route/employee/check-profile-exists`,
+        { profile },
         {
           headers: {
             Authorization: authToken,
@@ -432,10 +433,52 @@ const AddEmployee = () => {
         }
       );
 
-      if (response.data.success) {
-        handleAlert(true, "error", "Invalid authorization");
+      if (
+        checkProfileResponse.status === 200 &&
+        checkProfileResponse.data.profileExist
+      ) {
+        const createProfileConfirmation = window.confirm(
+          `${profile} profile already exists. Do you want to create it again?`
+        );
+
+        if (createProfileConfirmation) {
+          // Proceed with profile creation
+          const response = await axios.post(
+            `${process.env.REACT_APP_API}/route/employee/create-profile`,
+            user,
+            {
+              headers: {
+                Authorization: authToken,
+              },
+            }
+          );
+
+          if (response.status === 201) {
+            handleAlert(true, "success", response.data.message);
+          } else {
+            handleAlert(true, "error", "Profile creation failed.");
+          }
+        } else {
+          // User declined creating the profile again
+          handleAlert(true, "info", "Profile creation canceled.");
+        }
       } else {
-        handleAlert(true, "success", response.data.message);
+        // Profile does not exist, proceed with creation
+        const response = await axios.post(
+          `${process.env.REACT_APP_API}/route/employee/add-employee`,
+          user,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+
+        if (response.data.success) {
+          handleAlert(true, "error", "Invalid authorization");
+        } else {
+          handleAlert(true, "success", response.data.message);
+        }
       }
     } catch (error) {
       handleAlert(
