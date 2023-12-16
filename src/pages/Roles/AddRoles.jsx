@@ -34,6 +34,7 @@ const AddRoles = () => {
   };
 
   const { data, isLoading } = useQuery("profiles", fetchProfiles);
+  console.log(`🚀 ~ file: AddRoles.jsx:37 ~ data:`, data);
 
   const AddProfiles = useMutation(
     (data) =>
@@ -86,7 +87,7 @@ const AddRoles = () => {
 
   const handleSubmit = async () => {
     // You can use roleState to submit your request
-    await AddProfiles.mutateAsync(data);
+    await AddProfiles.mutateAsync(roleState);
     console.log("Submitted Roles:", roleState);
   };
 

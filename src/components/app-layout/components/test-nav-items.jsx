@@ -29,6 +29,7 @@ const TestNavItems = ({ toggleDrawer }) => {
   const token = cookies["aeigs"];
   const location = useLocation();
   const pathname = location.pathname;
+  let decodedToken;
 
   // Update organization ID when URL changes
   useEffect(() => {
@@ -155,7 +156,15 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
       Department: {
         open: false,
-        isVisible: isVisible,
+        isVisible:
+          //   decodedToken?.profile?.includes(
+          //   "Department Admin",
+          //   "Super-Admin",
+          //   "Manager"
+          // )
+          //   ?
+          isVisible,
+        // : false
         icon: <Business className="text-white" />,
         routes: [
           {
@@ -226,8 +235,12 @@ const TestNavItems = ({ toggleDrawer }) => {
 
   useEffect(() => {
     try {
-      const decodedToken = jwtDecode(token);
+      decodedToken = jwtDecode(token);
       if (decodedToken && decodedToken.user.profile) {
+        console.log(
+          `🚀 ~ file: test-nav-items.jsx:230 ~ decodedToken:`,
+          decodedToken
+        );
       }
     } catch (error) {
       console.error("Failed to decode the token:", error);
@@ -238,60 +251,6 @@ const TestNavItems = ({ toggleDrawer }) => {
     <>
       {Object.keys(navItems).map((role) => {
         const { icon, routes, isVisible } = navItems[role];
-
-        // Check if on root or organisation page
-        // const isOrganisationAndIdNotDefined =
-        //   role === "Organisation" && (!params || params.params?.id === null);
-
-        // // Check if on a specific department page
-        // const isDepartmentAndDepartmentIdNotDefined =
-        //   role === "Department" &&
-        //   (!params2 ||
-        //     params2.params?.id === null ||
-        //     params2.params?.departmentId === null);
-
-        // Show Organisation navbar when on organisation page, not on root
-        // if (role === "Organisation") {
-        //   if (params && params.params && params.params.id !== undefined) {
-        //     return (
-        //       <NavAccordian
-        //         key={role}
-        //         role={role}
-        //         icon={icon}
-        //         routes={routes}
-        //         toggleDrawer={toggleDrawer}
-        //         valueBoolean={navItems[role].open}
-        //       />
-        //     );
-        //   } else {
-        //     // If on root, do not show Organisation navbar
-        //     return null;
-        //   }
-        // }
-
-        // // Show Department navbar when on a specific department page
-        // if (role === "Department") {
-        //   if (
-        //     params2 &&
-        //     params2.params &&
-        //     params2.params.id !== undefined &&
-        //     params2.params.departmentId !== undefined
-        //   ) {
-        //     return (
-        //       <NavAccordian
-        //         key={role}
-        //         role={role}
-        //         icon={icon}
-        //         routes={routes}
-        //         toggleDrawer={toggleDrawer}
-        //         valueBoolean={navItems[role].open}
-        //       />
-        //     );
-        //   } else {
-        //     // If not on a specific department page, do not show Department navbar
-        //     return null;
-        //   }
-        // }
 
         return (
           <NavAccordian
