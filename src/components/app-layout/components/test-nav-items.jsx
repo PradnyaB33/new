@@ -18,8 +18,8 @@ import {
   TrendingUp,
 } from "@mui/icons-material";
 import { jwtDecode } from "jwt-decode";
-import React, { useContext, useEffect, useState } from "react";
-import { useLocation, useMatch } from "react-router-dom";
+import React, { useContext, useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import NavAccordian from "./accordian";
 
@@ -27,7 +27,6 @@ const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
   const token = cookies["aeigs"];
-  const params = useMatch("/organisation/:id");
   const location = useLocation();
   const pathname = location.pathname;
 
@@ -37,6 +36,7 @@ const TestNavItems = ({ toggleDrawer }) => {
     if (!hasEmployeeOnboarding) {
       getOrganizationIdFromPathname(location.pathname);
     }
+    // eslint-disable-next-line
   }, [location.pathname]);
 
   // Function to extract organization ID from pathname
@@ -50,171 +50,175 @@ const TestNavItems = ({ toggleDrawer }) => {
 
   const [isVisible, setisVisible] = useState(true);
 
-  let navItems = {
-    "Self Help": {
-      open: true,
-      icon: <Category className="text-white" />,
-      isVisible: true,
-      routes: [
-        {
-          key: "attendance",
-          link: "/leave",
-          icon: <AccessTime className="text-white" />,
-          text: "Attendance",
-        },
-        {
-          key: "accountSettings",
-          link: "/account",
-          icon: <Settings className="text-white" />,
-          text: "Account Settings",
-        },
-      ],
-    },
-    Notification: {
-      open: false,
-      isVisible: true,
-      icon: <NotificationsActive className="text-white" />,
-      routes: [
-        {
-          key: "createNotification",
-          link: "/create-notification",
-          icon: <AddAlert className="text-white" />,
-          text: "Create Notification",
-        },
-        {
-          key: "listNotification",
-          link: "/list-notification",
-          icon: <CircleNotifications className="text-white" />,
-          text: "List Notification",
-        },
-      ],
-    },
-    "Pay-roll": {
-      open: false,
-      isVisible: true,
-      icon: <Payment className="text-white" />,
-      routes: [
-        {
-          key: "allowance",
-          link: "/allowance",
-          icon: <MonetizationOn className="text-white" />,
-          text: "Allowance",
-        },
-        {
-          key: "payslip",
-          link: "/payslip",
-          icon: <ListAlt className="text-white" />,
-          text: "Pay Slip",
-        },
-        {
-          key: "icomeTax",
-          link: "/income-tax",
-          icon: <TrendingUp className="text-white" />,
-          text: "Income Tax",
-        },
-        {
-          key: "form-16",
-          link: "/form-16",
-          icon: <Description className="text-white" />,
-          text: "Form-16",
-        },
-        {
-          key: "shiftManagement",
-          link: "/shift-manage",
-          icon: <Event className="text-white" />,
-          text: "Shift Management",
-        },
-      ],
-    },
-    Employee: {
-      open: false,
-      icon: <PeopleAlt className="text-white" />,
-      isVisible: isVisible,
-      routes: [
-        {
-          key: "onboarding",
-          link: `organisation/${orgId}/employee-onboarding`,
-          icon: <PersonAdd className="text-white" />,
-          text: "Onboarding",
-        },
+  let navItems = useMemo(
+    () => ({
+      "Self Help": {
+        open: true,
+        icon: <Category className="text-white" />,
+        isVisible: true,
+        routes: [
+          {
+            key: "attendance",
+            link: "/leave",
+            icon: <AccessTime className="text-white" />,
+            text: "Attendance",
+          },
+          {
+            key: "accountSettings",
+            link: "/account",
+            icon: <Settings className="text-white" />,
+            text: "Account Settings",
+          },
+        ],
+      },
+      Notification: {
+        open: false,
+        isVisible: true,
+        icon: <NotificationsActive className="text-white" />,
+        routes: [
+          {
+            key: "createNotification",
+            link: "/create-notification",
+            icon: <AddAlert className="text-white" />,
+            text: "Create Notification",
+          },
+          {
+            key: "listNotification",
+            link: "/list-notification",
+            icon: <CircleNotifications className="text-white" />,
+            text: "List Notification",
+          },
+        ],
+      },
+      "Pay-roll": {
+        open: false,
+        isVisible: true,
+        icon: <Payment className="text-white" />,
+        routes: [
+          {
+            key: "allowance",
+            link: "/allowance",
+            icon: <MonetizationOn className="text-white" />,
+            text: "Allowance",
+          },
+          {
+            key: "payslip",
+            link: "/payslip",
+            icon: <ListAlt className="text-white" />,
+            text: "Pay Slip",
+          },
+          {
+            key: "icomeTax",
+            link: "/income-tax",
+            icon: <TrendingUp className="text-white" />,
+            text: "Income Tax",
+          },
+          {
+            key: "form-16",
+            link: "/form-16",
+            icon: <Description className="text-white" />,
+            text: "Form-16",
+          },
+          {
+            key: "shiftManagement",
+            link: "/shift-manage",
+            icon: <Event className="text-white" />,
+            text: "Shift Management",
+          },
+        ],
+      },
+      Employee: {
+        open: false,
+        icon: <PeopleAlt className="text-white" />,
+        isVisible: isVisible,
+        routes: [
+          {
+            key: "onboarding",
+            link: `organisation/${orgId}/employee-onboarding`,
+            icon: <PersonAdd className="text-white" />,
+            text: "Onboarding",
+          },
 
-        {
-          key: "offboarding",
-          link: `organisation/${orgId}/employee-offboarding`,
-          icon: <PersonRemove className="text-white" />,
-          text: "Offboarding",
-        },
-        {
-          key: "employeeList",
-          link: `organisation/${orgId}/employee-list`,
-          icon: <Groups className="text-white" />,
-          text: "Employee List",
-        },
-      ],
-    },
-    Department: {
-      open: false,
-      isVisible: isVisible,
-      icon: <Business className="text-white" />,
-      routes: [
-        {
-          key: "addDepartment",
-          link: `/organisation/${orgId}/create-department`,
-          icon: <AddAlert className="text-white" />,
-          text: "Add Department",
-        },
-        {
-          key: "updateDepartment",
-          link: "/department-update",
-          icon: <ListAlt className="text-white" />,
-          text: "Update Department",
-        },
-        {
-          key: "deleteDepartment",
-          link: "/department-delete",
-          icon: <ListAlt className="text-white" />,
-          text: "Delete Department",
-        },
-        {
-          key: "departmentList",
-          link: "/department-list",
-          icon: <ListAlt className="text-white" />,
-          text: "Department List",
-        },
-      ],
-    },
-    Organisation: {
-      open: false,
-      isVisible: isVisible,
-      icon: <MonetizationOn className="text-white" />,
-      routes: [
-        {
-          key: "addOrganisation",
-          link: "/organisation-add",
-          icon: <AddAlert className="text-white" />,
-          text: "Add Organisation",
-        },
-        {
-          key: "updateOrganisation",
-          link: "/organisation-update",
-          icon: <ListAlt className="text-white" />,
-          text: "Update Organisation",
-        },
-        {
-          key: "deleteOrganisation",
-          link: "/organisation-delete",
-          icon: <ListAlt className="text-white" />,
-          text: "Delete Organisation",
-        },
-        {
-          key: "organisationList",
-          link: "/department-list",
-          icon: <ListAlt className="text-white" />,
-          text: "Organisation List",
-        },
-      ],
-    },
-  };
+          {
+            key: "offboarding",
+            link: `organisation/${orgId}/employee-offboarding`,
+            icon: <PersonRemove className="text-white" />,
+            text: "Offboarding",
+          },
+          {
+            key: "employeeList",
+            link: `organisation/${orgId}/employee-list`,
+            icon: <Groups className="text-white" />,
+            text: "Employee List",
+          },
+        ],
+      },
+      Department: {
+        open: false,
+        isVisible: isVisible,
+        icon: <Business className="text-white" />,
+        routes: [
+          {
+            key: "addDepartment",
+            link: `/organisation/${orgId}/create-department`,
+            icon: <AddAlert className="text-white" />,
+            text: "Add Department",
+          },
+          {
+            key: "updateDepartment",
+            link: "/department-update",
+            icon: <ListAlt className="text-white" />,
+            text: "Update Department",
+          },
+          {
+            key: "deleteDepartment",
+            link: "/department-delete",
+            icon: <ListAlt className="text-white" />,
+            text: "Delete Department",
+          },
+          {
+            key: "departmentList",
+            link: "/department-list",
+            icon: <ListAlt className="text-white" />,
+            text: "Department List",
+          },
+        ],
+      },
+      Organisation: {
+        open: false,
+        isVisible: isVisible,
+        icon: <MonetizationOn className="text-white" />,
+        routes: [
+          {
+            key: "addOrganisation",
+            link: "/organisation-add",
+            icon: <AddAlert className="text-white" />,
+            text: "Add Organisation",
+          },
+          {
+            key: "updateOrganisation",
+            link: "/organisation-update",
+            icon: <ListAlt className="text-white" />,
+            text: "Update Organisation",
+          },
+          {
+            key: "deleteOrganisation",
+            link: "/organisation-delete",
+            icon: <ListAlt className="text-white" />,
+            text: "Delete Organisation",
+          },
+          {
+            key: "organisationList",
+            link: "/department-list",
+            icon: <ListAlt className="text-white" />,
+            text: "Organisation List",
+          },
+        ],
+      },
+    }),
+    // eslint-disable-next-line
+    [isVisible]
+  );
 
   useEffect(() => {
     setisVisible(location.pathname.includes("/organisation"));

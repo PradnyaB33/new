@@ -14,10 +14,10 @@ import randomColor from "randomcolor";
 import React, { useContext, useState } from "react";
 import { FaArrowCircleRight } from "react-icons/fa";
 import { useQueryClient } from "react-query";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-const Organisation = ({ item, id }) => {
+const Organisation = ({ item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const queryClient = useQueryClient();
@@ -25,12 +25,12 @@ const Organisation = ({ item, id }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
 
-  const navigate = useNavigate();
-  const handleCreateProfile = () => {
-    navigate(`/organisation/${item._id}/add-profile`, {
-      state: { orgName: item.name },
-    });
-  };
+  // const navigate = useNavigate();
+  // const handleCreateProfile = () => {
+  //   navigate(`/organisation/${item._id}/add-profile`, {
+  //     state: { orgName: item.name },
+  //   });
+  // };
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);

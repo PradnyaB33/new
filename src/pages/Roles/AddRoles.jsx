@@ -2,7 +2,7 @@ import { PersonAddOutlined } from "@mui/icons-material";
 import { Checkbox, FormControlLabel, Skeleton, Switch } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
@@ -15,77 +15,7 @@ const AddRoles = () => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aeigs"];
-
-  const initialRoles = [
-    {
-      placeholder: "Department Head",
-      label: "departmentHead",
-      isApprover: false,
-      isActive: false,
-    },
-    {
-      placeholder: "Department Head Delegate",
-      label: "delegateDepartmentHead",
-      isApprover: false,
-      isActive: false,
-    },
-    {
-      placeholder: "Department Admin",
-      label: "departmentAdmin",
-      isApprover: false,
-      isActive: false,
-    },
-
-    {
-      placeholder: "Department Delegate Admin",
-      label: "delegateDepartmentAdmin",
-      isApprover: false,
-      isActive: false,
-    },
-    {
-      placeholder: "Human Resource",
-      label: "hr",
-      isApprover: false,
-      isActive: false,
-    },
-
-    {
-      placeholder: "Manager",
-      label: "manager",
-      isApprover: false,
-      isActive: false,
-    },
-    {
-      placeholder: "Accoutant",
-      label: "accoutant",
-      isApprover: false,
-      isActive: false,
-    },
-    {
-      placeholder: "Delegate Accoutant",
-      label: "delegateAccoutant",
-      isApprover: false,
-      isActive: false,
-    },
-    {
-      placeholder: "Delegate Super Admin",
-      label: "delegateSuperAdmin",
-      isApprover: false,
-      isActive: false,
-    },
-    {
-      placeholder: "Acountant",
-      label: "accountant",
-      isApprover: false,
-      isActive: false,
-    },
-    {
-      placeholder: "Delegate Accoutant",
-      label: "delegate accountant",
-      isApprover: false,
-      isActive: false,
-    },
-  ];
+  const queryClient = useQueryClient();
 
   const fetchProfiles = async () => {
     try {
@@ -99,94 +29,65 @@ const AddRoles = () => {
       );
       return response.data;
     } catch (error) {
-      throw new Error("Error fetching single shift");
+      throw new Error("Error fetching data");
     }
   };
+
   const { data, isLoading } = useQuery("profiles", fetchProfiles);
 
-  useEffect(() => {
-    // Update the state with the transformed roles
-    if (data?.roles) {
-      const transformedRoles = data.roles.map((role) => ({
-        placeholder: role?.roleName, // Adjust this mapping based on your actual data
-        label: role?.roleName, // Assuming label is also derived from roleName
-        isApprover: role?.isApprover,
-        isActive: role?.isActive,
-      }));
-      setRoles(transformedRoles);
-    }
-  }, [data?.roles]);
-
-  const [roles, setRoles] = useState(initialRoles);
-
-  const handleRoleChange = (role) => {
-    if (data) {
-      const updatedRoles = roles.map((r) => {
-        if (r.placeholder === role.label) {
-          return { ...r, isActive: !r.isActive };
-        }
-        return r;
-      });
-
-      setRoles(updatedRoles);
-    } else {
-      const updatedRoles = roles.map((r) => {
-        if (r.placeholder === role.label) {
-          return { ...r, isSelected: !r.isSelected, isActive: !r.isSelected };
-        }
-        return r;
-      });
-      setRoles(updatedRoles);
-    }
-  };
-
-  const handleIsApproverChange = (event, role) => {
-    const updatedRoles = roles.map((r) => {
-      if (r.placeholder === role.label) {
-        return { ...r, isApprover: event.target.checked };
-      }
-      return r;
-    });
-    setRoles(updatedRoles);
-  };
-
-  const sendRequestToBackend = async () => {
-    try {
-      // Filter the roles that are selected
-
-      const newRoles = roles.map((role) => ({
-        ...role,
-        organisationId: organisationId,
-      }));
-
-      const rolesObject = newRoles.reduce((acc, role) => {
-        acc[role.label] = {
-          isApprover: role.isApprover,
-          isActive: role.isActive,
-          organisationId: organisationId,
-        };
-        return acc;
-      }, {});
-
-      const sendData = await axios.post(
-        `${process.env.REACT_APP_API}/route/profile/role/create`,
-        rolesObject,
+  const AddProfiles = useMutation(
+    (data) =>
+      axios.patch(
+        `${process.env.REACT_APP_API}/route/profile/role/${organisationId}`,
+        Object.values(data),
         {
           headers: {
             Authorization: authToken,
           },
         }
-      );
-
-      handleAlert(true, "success", sendData.data.message);
-    } catch (error) {
-      handleAlert(
-        true,
-        "success",
-        error?.response?.data?.message || "Failed to sign in. Please try again."
-      );
-      console.log(error, "error");
+      ),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["profiles"] });
+        handleAlert(true, "success", "Roles Created Successfully");
+      },
+      onError: () => {
+        handleAlert(true, "error", "Error from server");
+      },
     }
+  );
+
+  const [roleState, setRoleState] = useState({});
+
+  useEffect(() => {
+    setRoleState(data?.roles);
+    // eslint-disable-next-line
+  }, [isLoading]);
+
+  const handleRoleChange = (role) => {
+    setRoleState((prevRoles) => ({
+      ...prevRoles,
+      [role]: {
+        ...prevRoles[role],
+        isActive: !prevRoles[role].isActive,
+      },
+    }));
+  };
+
+  const handleIsApproverChange = (event, role) => {
+    setRoleState((prevRoles) => ({
+      ...prevRoles,
+      [role]: {
+        ...prevRoles[role],
+        isApprover: event.target.checked,
+      },
+    }));
+  };
+
+  const handleSubmit = async () => {
+    // You can use roleState to submit your request
+    await AddProfiles.mutateAsync(data);
+    console.log("Submitted Roles:", roleState);
   };
 
   return (
@@ -216,26 +117,26 @@ const AddRoles = () => {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col flex-wrap">
-                {roles.map((role, index) => (
+              <div>
+                {Object.entries(roleState ?? [])?.map(([role, obj], index) => (
                   <div
                     key={index}
-                    className="border-gray-200 flex justify-between py-2 px-6 "
+                    className="border-gray-200 flex justify-between py-2 px-6"
                   >
                     <FormControlLabel
                       control={
                         <Checkbox
-                          checked={role.isActive}
+                          checked={obj.isActive}
                           onChange={() => handleRoleChange(role)}
                         />
                       }
-                      label={role.placeholder}
+                      label={role}
                     />
-                    {role.isActive && (
+                    {obj.isActive && (
                       <FormControlLabel
                         control={
                           <Switch
-                            checked={role.isApprover || false}
+                            checked={obj.isApprover || false}
                             onChange={(event) =>
                               handleIsApproverChange(event, role)
                             }
@@ -246,16 +147,16 @@ const AddRoles = () => {
                     )}
                   </div>
                 ))}
+                <div className="px-6 w-full">
+                  <button
+                    onClick={handleSubmit}
+                    className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                  >
+                    Submit
+                  </button>
+                </div>
               </div>
             )}
-            <div className="w-max px-4 py-2 mt-2">
-              <button
-                onClick={sendRequestToBackend}
-                className=" flex justify-center rounded-md px-3 py-2 text-sm font-semibold text-white bg-sky-500 hover:bg-sky-600 focus-visible:outline-sky-600"
-              >
-                Apply Changes
-              </button>
-            </div>
           </div>
         </Setup>
       </section>
