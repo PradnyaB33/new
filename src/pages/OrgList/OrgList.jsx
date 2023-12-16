@@ -1,4 +1,4 @@
-import { Avatar } from "@mui/material";
+import { Avatar, Skeleton } from "@mui/material";
 import axios from "axios";
 import React, { useContext } from "react";
 import { IoBusiness } from "react-icons/io5";
@@ -22,47 +22,6 @@ const OrgList = () => {
     );
     return response.data;
   });
-
-  // const dotsresponsive = {
-  //   desktop: {
-  //     breakpoint: { max: 3000, min: 1400 },
-  //     items: 4,
-  //     slidesToSlide: 1,
-  //   },
-  //   tablet: {
-  //     breakpoint: { max: 1400, min: 1050 },
-  //     items: 3,
-  //     slidesToSlide: 1,
-  //   },
-  //   mobile: {
-  //     breakpoint: { max: 1050, min: 500 },
-  //     items: 2,
-  //     slidesToSlide: 1,
-  //   },
-  // };
-
-  // const CustomRightArrow = ({ onClick }) => {
-  //   // onMove means if dragging or swiping in progress.
-  //   return (
-  //     <button
-  //       className="p-2 rounded-full border-sky-600 font-bold bg-slate-300 text-sky-600 border absolute right-0"
-  //       onClick={() => onClick()}
-  //     >
-  //       <East />
-  //     </button>
-  //   );
-  // };
-
-  // const CustomLeftArrow = ({ onClick }) => {
-  //   return (
-  //     <button
-  //       className="p-2 rounded-full text-[2px] border-sky-600 font-bold bg-slate-300 text-sky-600 border absolute left-0"
-  //       onClick={() => onClick()}
-  //     >
-  //       <West className="h-2 w-4 text-[5px]" />
-  //     </button>
-  //   );
-  // };
 
   return (
     <div className="bg-gray-50 h-screen">
@@ -94,21 +53,36 @@ const OrgList = () => {
       </div>
 
       {!isLoading && (
-        // <Carousel
-        //   swipeable={false}
-        //   draggable={false}
-        //   customRightArrow={<CustomRightArrow />}
-        //   customLeftArrow={<CustomLeftArrow />}
-        //   responsive={dotsresponsive}
-        // >
         <div className="flex flex-wrap  gap-x-6 gap-y-2 px-10">
-          {data?.organizations?.map((item, index) => (
-            <div className="h-max py-4" key={index}>
-              <Organisation item={item} id={index} />
+          {data?.organizations.length <= 0 ? (
+            <div
+              className={`border-b-[3px]  block min-w-[21rem] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-200`}
+            >
+              <div className="border-b-2 flex items-center justify-between border-[#0000002d] px-6 py-3 text-black">
+                <Avatar variant="rounded" sx={{ height: 35, width: 35 }} />
+              </div>
+              <div className="p-6 pt-6  pb-4">
+                <Skeleton
+                  animation="wave"
+                  height={35}
+                  width="60%"
+                  style={{ marginBottom: 6 }}
+                />
+                <Skeleton animation="wave" height={30} width="80%" />
+              </div>
+              <div className="p-6 py-4 flex gap-4">
+                <Skeleton variant="rounded" height={30} width="30%" />
+                <Skeleton variant="rounded" height={30} width="50%" />
+              </div>
             </div>
-          ))}
+          ) : (
+            data?.organizations?.map((item, index) => (
+              <div className="h-max py-4" key={index}>
+                <Organisation item={item} id={index} />
+              </div>
+            ))
+          )}
         </div>
-        // </Carousel>
       )}
     </div>
   );

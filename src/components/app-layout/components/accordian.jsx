@@ -12,7 +12,14 @@ import {
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const NavAccordian = ({ icon, routes, role, toggleDrawer, valueBoolean }) => {
+const NavAccordian = ({
+  icon,
+  routes,
+  role,
+  toggleDrawer,
+  valueBoolean,
+  isVisible,
+}) => {
   const [open, setOpen] = useState(valueBoolean);
   // const params = useMatch("/organisation/:id");
   // console.log(
@@ -25,6 +32,7 @@ const NavAccordian = ({ icon, routes, role, toggleDrawer, valueBoolean }) => {
         <ListItem
           style={{ padding: "8px", borderRadius: "8px", width: "100%" }}
           components={{ Root: "div" }}
+          className={`block ${!isVisible && "hidden"}`}
           onClick={(e) => {
             e.stopPropagation();
             if (open === true) {

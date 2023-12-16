@@ -28,19 +28,16 @@ const TestNavItems = ({ toggleDrawer }) => {
   const { cookies } = useContext(UseContext);
   const token = cookies["aeigs"];
   const params = useMatch("/organisation/:id");
-  const params2 = useMatch("/organisation/:id/department/:departmentId");
-  const params3 = useLocation();
-  // console.log(params3);
-  const pathname = params3.pathname;
-  // console.log(pathname);
+  const location = useLocation();
+  const pathname = location.pathname;
+
   // Update organization ID when URL changes
   useEffect(() => {
     const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
     if (!hasEmployeeOnboarding) {
-      const id = getOrganizationIdFromPathname(pathname);
-      setOrgId(id);
+      getOrganizationIdFromPathname(location.pathname);
     }
-  }, [pathname]);
+  }, [location.pathname]);
 
   // Function to extract organization ID from pathname
   const getOrganizationIdFromPathname = (pathname) => {
@@ -51,14 +48,13 @@ const TestNavItems = ({ toggleDrawer }) => {
     }
   };
 
-  const decodedToken = token && jwtDecode(token);
-  const id = decodedToken?.user?.organizationId;
-  // console.log(id);
-  // console.log(orgId, "orgId");
-  const [navItems, setNavItems] = useState({
+  const [isVisible, setisVisible] = useState(true);
+
+  let navItems = {
     "Self Help": {
       open: true,
       icon: <Category className="text-white" />,
+      isVisible: true,
       routes: [
         {
           key: "attendance",
@@ -76,6 +72,7 @@ const TestNavItems = ({ toggleDrawer }) => {
     },
     Notification: {
       open: false,
+      isVisible: true,
       icon: <NotificationsActive className="text-white" />,
       routes: [
         {
@@ -94,6 +91,7 @@ const TestNavItems = ({ toggleDrawer }) => {
     },
     "Pay-roll": {
       open: false,
+      isVisible: true,
       icon: <Payment className="text-white" />,
       routes: [
         {
@@ -131,23 +129,24 @@ const TestNavItems = ({ toggleDrawer }) => {
     Employee: {
       open: false,
       icon: <PeopleAlt className="text-white" />,
+      isVisible: isVisible,
       routes: [
         {
           key: "onboarding",
-          link: `organisation/${id}/employee-onboarding`,
+          link: `organisation/${orgId}/employee-onboarding`,
           icon: <PersonAdd className="text-white" />,
           text: "Onboarding",
         },
 
         {
           key: "offboarding",
-          link: `organisation/${id}/employee-offboarding`,
+          link: `organisation/${orgId}/employee-offboarding`,
           icon: <PersonRemove className="text-white" />,
           text: "Offboarding",
         },
         {
           key: "employeeList",
-          link: `organisation/${id}/employee-list`,
+          link: `organisation/${orgId}/employee-list`,
           icon: <Groups className="text-white" />,
           text: "Employee List",
         },
@@ -155,11 +154,12 @@ const TestNavItems = ({ toggleDrawer }) => {
     },
     Department: {
       open: false,
+      isVisible: isVisible,
       icon: <Business className="text-white" />,
       routes: [
         {
           key: "addDepartment",
-          link: `${params}/department-add`,
+          link: `/organisation/${orgId}/create-department`,
           icon: <AddAlert className="text-white" />,
           text: "Add Department",
         },
@@ -185,6 +185,7 @@ const TestNavItems = ({ toggleDrawer }) => {
     },
     Organisation: {
       open: false,
+      isVisible: isVisible,
       icon: <MonetizationOn className="text-white" />,
       routes: [
         {
@@ -213,8 +214,11 @@ const TestNavItems = ({ toggleDrawer }) => {
         },
       ],
     },
-  });
-  // console.log(`🚀 ~ file: test-nav-items.jsx:203 ~ setNavItems:`, setNavItems);
+  };
+
+  useEffect(() => {
+    setisVisible(location.pathname.includes("/organisation"));
+  }, [location, navItems]);
 
   useEffect(() => {
     try {
@@ -229,7 +233,7 @@ const TestNavItems = ({ toggleDrawer }) => {
   return (
     <>
       {Object.keys(navItems).map((role) => {
-        const { icon, routes } = navItems[role];
+        const { icon, routes, isVisible } = navItems[role];
 
         // Check if on root or organisation page
         // const isOrganisationAndIdNotDefined =
@@ -243,47 +247,47 @@ const TestNavItems = ({ toggleDrawer }) => {
         //     params2.params?.departmentId === null);
 
         // Show Organisation navbar when on organisation page, not on root
-        if (role === "Organisation") {
-          if (params && params.params && params.params.id !== undefined) {
-            return (
-              <NavAccordian
-                key={role}
-                role={role}
-                icon={icon}
-                routes={routes}
-                toggleDrawer={toggleDrawer}
-                valueBoolean={navItems[role].open}
-              />
-            );
-          } else {
-            // If on root, do not show Organisation navbar
-            return null;
-          }
-        }
+        // if (role === "Organisation") {
+        //   if (params && params.params && params.params.id !== undefined) {
+        //     return (
+        //       <NavAccordian
+        //         key={role}
+        //         role={role}
+        //         icon={icon}
+        //         routes={routes}
+        //         toggleDrawer={toggleDrawer}
+        //         valueBoolean={navItems[role].open}
+        //       />
+        //     );
+        //   } else {
+        //     // If on root, do not show Organisation navbar
+        //     return null;
+        //   }
+        // }
 
-        // Show Department navbar when on a specific department page
-        if (role === "Department") {
-          if (
-            params2 &&
-            params2.params &&
-            params2.params.id !== undefined &&
-            params2.params.departmentId !== undefined
-          ) {
-            return (
-              <NavAccordian
-                key={role}
-                role={role}
-                icon={icon}
-                routes={routes}
-                toggleDrawer={toggleDrawer}
-                valueBoolean={navItems[role].open}
-              />
-            );
-          } else {
-            // If not on a specific department page, do not show Department navbar
-            return null;
-          }
-        }
+        // // Show Department navbar when on a specific department page
+        // if (role === "Department") {
+        //   if (
+        //     params2 &&
+        //     params2.params &&
+        //     params2.params.id !== undefined &&
+        //     params2.params.departmentId !== undefined
+        //   ) {
+        //     return (
+        //       <NavAccordian
+        //         key={role}
+        //         role={role}
+        //         icon={icon}
+        //         routes={routes}
+        //         toggleDrawer={toggleDrawer}
+        //         valueBoolean={navItems[role].open}
+        //       />
+        //     );
+        //   } else {
+        //     // If not on a specific department page, do not show Department navbar
+        //     return null;
+        //   }
+        // }
 
         return (
           <NavAccordian
@@ -292,6 +296,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon={icon}
             routes={routes}
             toggleDrawer={toggleDrawer}
+            isVisible={isVisible}
             valueBoolean={navItems[role].open}
           />
         );
