@@ -168,7 +168,7 @@ const AddEmployee = () => {
   const fetchAvailableDesignation = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/designation/create`
+        `${process.env.REACT_APP_API}/route/designation/get/${id}`
       );
 
       setAvailableDesignation(response.data.designations);
@@ -200,7 +200,7 @@ const AddEmployee = () => {
   const fetchAvailableLocation = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations`,
+        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${id}`,
         {
           headers: {
             Authorization: authToken,
