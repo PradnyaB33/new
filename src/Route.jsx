@@ -65,7 +65,7 @@ const App = () => {
       <Route path="/userprofile" element={<UserProfile />} />
       <Route path="/organisation/:id" element={<SingleOrganisation />} />
       <Route
-        path="/organisation/:id/employee-onboarding"
+        path="/organisation/:organisationId/employee-onboarding"
         element={<AddEmployee />}
       />
       <Route
@@ -78,7 +78,7 @@ const App = () => {
       />
       <Route path="/organisation/:id/add-profile" element={<AddProfile />} />
       <Route
-        path="/organisation/:id/setup/input-field"
+        path="/organisation/:organisationId/setup/input-field"
         element={<Inputfield />}
       />{" "}
       {/* set up routes*/}
