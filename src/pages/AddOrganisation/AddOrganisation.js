@@ -21,6 +21,7 @@ import React, { useContext, useState, useRef } from "react";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 const AddOrganisation = () => {
   const navigate = useNavigate();
@@ -51,7 +52,6 @@ const AddOrganisation = () => {
         console.log(resp);
       });
   };
-
   const data = {
     name: "",
     web_url: "",
@@ -72,6 +72,7 @@ const AddOrganisation = () => {
   };
 
   const [inputdata, setInputData] = useState(data);
+  console.log(inputdata.foundation_date);
 
   const handleData = (e) => {
     const { name, value } = e.target;
@@ -138,7 +139,7 @@ const AddOrganisation = () => {
       console.log(result);
 
       handleAlert(true, "success", "Organization created successfully");
-      navigate("/");
+      navigate("/organizationList");
     } catch (e) {
       console.error(e);
 
