@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 
@@ -14,7 +15,7 @@ const CreateDepartment = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
-
+  const { organisationId } = useParams();
   const [enterDepartmentId, setEnterDepartmentId] = useState(false);
   const [numCharacters, setNumCharacters] = useState(0);
   const [departmentId, setDepartmentId] = useState("");
@@ -52,7 +53,7 @@ const CreateDepartment = () => {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations`,
+        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${organisationId}`,
         {
           headers: {
             Authorization: authToken,
@@ -61,10 +62,9 @@ const CreateDepartment = () => {
       )
       .then((response) => {
         setLocations(response.data);
-        console.log("locations are: ", response.data);
       })
       .catch((error) => console.error("Error fetching locations:", error));
-  }, [authToken]);
+  }, [authToken, organisationId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -86,10 +86,11 @@ const CreateDepartment = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       console.log(formValues);
       await axios.post(
-        `${process.env.REACT_APP_API}route/department/create`,
+        `${process.env.REACT_APP_API}/route/department/create`,
         formValues,
         {
           headers: {
@@ -101,6 +102,7 @@ const CreateDepartment = () => {
       setFormValues(initialFormValues);
       // window.location.reload();
     } catch (error) {
+      console.log(`🚀 ~ file: addDepartment.jsx:105 ~ error:`, error);
       console.error(error.response.data.error);
       handleAlert(true, "error", error.response.data.error);
     }

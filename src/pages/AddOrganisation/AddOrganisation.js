@@ -12,27 +12,31 @@ import {
   Typography,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from 'dayjs';
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef } from "react";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useNavigate } from "react-router-dom";
-import dayjs from "dayjs";
 
 const AddOrganisation = () => {
+  var LOGOURL;
   const navigate = useNavigate();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const [selectedImage, setSelectedImage] = useState(null);
+  const [logoUrl, setLogoUrl] = useState("")
   const [emailLabel, setEmailLabel] = useState("Organisation Email");
   const [numberLabel, setNumberLabel] = useState("Phone Number");
   const [emailError, setEmailError] = useState(false);
   const [contactNumberError, setContactNumberError] = useState(false);
   const { handleAlert } = useContext(TestContext);
-  const today = dayjs(new Date());
+
+  const [firstEmptyField, setFirstEmptyField] = useState(null);
+  const firstEmptyFieldRef = useRef(null);
 
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
@@ -43,11 +47,21 @@ const AddOrganisation = () => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "lhyvmmdu");
-    await axios
-      .post("https://api.cloudinary.com/v1_1/dnpj0dyxu/image/upload", formData)
-      .then((resp) => {
-        console.log(resp);
-      });
+    try {
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dnpj0dyxu/image/upload",
+        formData
+      );
+  
+      // Extract the URL from the Cloudinary response
+      const imageURL = response.data.secure_url;
+      console.log("Image URL:", imageURL);
+  
+      // Set LOGOURL here after the request completes
+      setLogoUrl(imageURL);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
   };
   const data = {
     name: "",
@@ -57,7 +71,8 @@ const AddOrganisation = () => {
     location: "",
     contact_number: "",
     description: "",
-    foundation_date: today,
+    foundation_date: dayjs(),
+    // logo_url: LOGOURL
   };
 
   const isEmailValid = (email) => {
@@ -69,7 +84,6 @@ const AddOrganisation = () => {
   };
 
   const [inputdata, setInputData] = useState(data);
-  console.log(inputdata.foundation_date);
 
   const handleData = (e) => {
     const { name, value } = e.target;
@@ -77,6 +91,12 @@ const AddOrganisation = () => {
       ...inputdata,
       [name]: name === "email" ? value.toLowerCase() : value,
     });
+
+    if (!value && firstEmptyFieldRef.current === null) {
+      setFirstEmptyField(name);
+    } else if (firstEmptyField === name) {
+      setFirstEmptyField(null);
+    }
 
     if (name === "contact_number") {
       if (!isContactNumberValid(value)) {
@@ -107,10 +127,21 @@ const AddOrganisation = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const emptyField = Object.keys(inputdata).find((key) => !inputdata[key]);
+
+    if (emptyField) {
+      handleAlert(true, "error", `Please fill in the ${emptyField} field.`);
+      setFirstEmptyField(emptyField);
+      firstEmptyFieldRef.current.focus();
+      return;
+    }
+
     try {
+      setInputData({...inputdata})
       const result = await axios.post(
         `${process.env.REACT_APP_API}/route/organization/create`,
-        inputdata,
+        { ...inputdata },
         {
           headers: {
             Authorization: authToken,
@@ -126,6 +157,7 @@ const AddOrganisation = () => {
 
       handleAlert(true, "error", "Failed to create organization");
     }
+
     setInputData({
       name: "",
       web_url: "",
@@ -133,10 +165,12 @@ const AddOrganisation = () => {
       email: "",
       location: "",
       description: "",
-      foundation_date: "",
+      foundation_date: dayjs(),
       contact_number: "",
+      // logo_url:LOGOURL
     });
     setSelectedImage(null);
+    setFirstEmptyField(null);
   };
 
   return (
@@ -148,7 +182,7 @@ const AddOrganisation = () => {
           height: "80vh",
           width: "100%",
         }}
-        action=""
+        action="submit"
       >
         <Container
           style={{
@@ -187,9 +221,10 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.name}
             size="small"
-            className="w-[80%]"
+            className={`w-[80%] ${firstEmptyField === 'name' ? 'error' : ''}`}
             label="My Organisation Name"
             type="text"
+            inputRef={firstEmptyField === 'name' ? firstEmptyFieldRef : null}
           />
           <TextField
             required
@@ -198,9 +233,10 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.web_url}
             size="small"
-            className="w-[80%]"
+            className={`w-[80%] ${firstEmptyField === 'web_url' ? 'error' : ''}`}
             label="Url Of Website"
             type="text"
+            inputRef={firstEmptyField === 'web_url' ? firstEmptyFieldRef : null}
           />
           <FormControl
             required
@@ -214,6 +250,7 @@ const AddOrganisation = () => {
               name="industry_type"
               value={inputdata.industry_type}
               onChange={handleData}
+              inputRef={firstEmptyField === 'industry_type' ? firstEmptyFieldRef : null}
             >
               <MenuItem value="IT">IT</MenuItem>
               <MenuItem value="MECH">MECH</MenuItem>
@@ -227,7 +264,7 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.email}
             size="small"
-            className="w-[80%]"
+            className={`w-[80%] ${firstEmptyField === 'email' ? 'error' : ''}`}
             label={emailLabel}
             type="email"
             error={emailError}
@@ -236,6 +273,7 @@ const AddOrganisation = () => {
                 borderColor: emailError ? "red" : "blue",
               },
             }}
+            inputRef={firstEmptyField === 'email' ? firstEmptyFieldRef : null}
           />
           <TextField
             required
@@ -244,9 +282,10 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.location}
             size="small"
-            className="w-[80%]"
+            className={`w-[80%] ${firstEmptyField === 'location' ? 'error' : ''}`}
             label="Location"
             type="text"
+            inputRef={firstEmptyField === 'location' ? firstEmptyFieldRef : null}
           />
           <TextField
             required
@@ -255,7 +294,7 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.contact_number}
             size="small"
-            className="w-[80%]"
+            className={`w-[80%] ${firstEmptyField === 'contact_number' ? 'error' : ''}`}
             label={numberLabel}
             type="number"
             error={contactNumberError}
@@ -264,6 +303,7 @@ const AddOrganisation = () => {
                 borderColor: contactNumberError ? "red" : "blue",
               },
             }}
+            inputRef={firstEmptyField === 'contact_number' ? firstEmptyFieldRef : null}
           />
           <TextField
             required
@@ -272,9 +312,10 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.description}
             size="small"
-            className="w-[80%]"
+            className={`w-[80%] ${firstEmptyField === 'description' ? 'error' : ''}`}
             label="Organisation Description"
             type="text"
+            inputRef={firstEmptyField === 'description' ? firstEmptyFieldRef : null}
           />
           <div style={{ marginTop: "15px", display: "block", width: "80%" }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>

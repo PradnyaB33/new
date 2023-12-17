@@ -34,6 +34,7 @@ const AddRoles = () => {
   };
 
   const { data, isLoading } = useQuery("profiles", fetchProfiles);
+  console.log(`🚀 ~ file: AddRoles.jsx:37 ~ data:`, data);
 
   const AddProfiles = useMutation(
     (data) =>

@@ -18,6 +18,7 @@ import { Menu, MenuItem } from "@mui/material";
 import * as XLSX from "xlsx";
 import { GetApp, Publish } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
+import { useParams } from "react-router-dom";
 
 const DeleteEmployee = () => {
   const { handleAlert } = useContext(TestContext);
@@ -37,18 +38,23 @@ const DeleteEmployee = () => {
     useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [showConfirmationExcel, setShowConfirmationExcel] = useState(false);
+  const { organisationId } = useParams();
+  console.log("organization id", organisationId);
 
   const fetchAvailableEmployee = async (page) => {
     try {
+      const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
+      console.log(apiUrl);
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee?page=${page}`,
+        apiUrl,
+
         {
           headers: {
             Authorization: authToken,
           },
         }
       );
-
+      console.log(response);
       setAvailableEmployee(response.data.employees);
       setCurrentPage(page);
       setTotalPages(response.data.totalPages || 1);
@@ -329,6 +335,12 @@ const DeleteEmployee = () => {
     <>
       <section className="bg-gray-50 min-h-screen w-full">
         <article className="SetupSection bg-white w-full  h-max shadow-md rounded-sm border  items-center">
+          <h1
+            id="modal-modal-title"
+            className="text-lg pl-2 font-semibold text-center modal-title py-2"
+          >
+            Delete Employee
+          </h1>
           <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
             <div className="flex items-center  gap-3 ">
               <TextField
@@ -436,7 +448,10 @@ const DeleteEmployee = () => {
             <table className="min-w-full bg-white  text-left !text-sm font-light">
               <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                 <tr className="!font-semibold">
-                  <th scope="col" className="!text-left pl-8 py-3"></th>
+                  <th scope="col" className="!text-left pl-8 py-3">
+                    Employee Selection
+                  </th>
+
                   <th scope="col" className="!text-left pl-8 py-3">
                     SR NO
                   </th>
