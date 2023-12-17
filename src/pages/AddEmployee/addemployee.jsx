@@ -281,7 +281,7 @@ const AddEmployee = () => {
           },
         }
       );
-      console.log(response);
+
       if (response.data && Array.isArray(response.data.roles)) {
         const filteredProfiles = response.data.roles.filter(
           (role) => role && role.isActive
@@ -362,7 +362,7 @@ const AddEmployee = () => {
           },
         }
       );
-
+      console.log(response);
       setAvailableMgrId(response.data.manager);
     } catch (error) {
       console.error(error);
