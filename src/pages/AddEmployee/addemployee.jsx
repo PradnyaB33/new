@@ -286,14 +286,6 @@ const AddEmployee = () => {
           },
         }
       );
-<<<<<<< HEAD
-
-      if (response.data && Array.isArray(response.data.roles)) {
-        const filteredProfiles = response.data.roles.filter(
-          (role) => role && role.isActive
-        );
-=======
->>>>>>> eacd59325371b867dac5ad15141fab49a6146218
 
       const activeRoles = Object.entries(response.data.roles ?? [])
         .filter(([role, obj]) => obj.isActive === true)
