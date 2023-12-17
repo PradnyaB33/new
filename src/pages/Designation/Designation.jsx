@@ -26,7 +26,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 const Designation = () => {
   const [click, setClick] = useState(false);
   const {organisationId} = useParams()
-  console.log(organisationId);
+  // console.log(organisationId);
   const [designationIdRequired, setDesignationIdRequired] = useState(false);
   const { setAppAlert } = useContext(UseContext);
 
@@ -94,11 +94,14 @@ const Designation = () => {
     setEnterDesignationId(false);
     setTrackedId(id);
 
-    axios.get(`${process.env.REACT_APP_API}/route/designation/create/${id}`)
+    axios.get(`${process.env.REACT_APP_API}/route/designation/findone/${id}`)
       .then((response) => {
+        console.log(id);
+        console.log(response);
         setDesignationName(response.data.designation.designationName);
         setDesignationId(response.data.designation.designationId);
         setEnterDesignationId(true);
+        
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -262,7 +265,7 @@ const Designation = () => {
 
   useEffect(() => {
     fetchDesignations();
-  });
+  },[]);
 
   const getPrefixFromName = (name, length) => {
     return name.substring(0, length);
