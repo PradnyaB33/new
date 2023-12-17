@@ -57,7 +57,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   // Get Query
   const { data: empTypeslist } = useQuery("empTypes", async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/employment-types`,
+      `${process.env.REACT_APP_API}/route/employment-types-organisation/${id}`,
       {
         headers: {
           Authorization: authToken,
@@ -228,11 +228,15 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
 
   const AddSalaryInputs = useMutation(
     (data) =>
-      axios.post(`${process.env.REACT_APP_API}/route/salary-template`, data, {
-        headers: {
-          Authorization: authToken,
-        },
-      }),
+      axios.post(
+        `${process.env.REACT_APP_API}/route/salary-template-org/${id}`,
+        data,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      ),
 
     {
       onSuccess: () => {

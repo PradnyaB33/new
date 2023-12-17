@@ -8,8 +8,8 @@ import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
 
 const Inputfield = () => {
-  const { id } = useParams("");
-  console.log(id);
+  const { organisationId } = useParams("");
+  console.log(organisationId);
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aeigs"];
@@ -20,7 +20,7 @@ const Inputfield = () => {
     const fetchInputFieldData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API}/route/inputfield/${id}`,
+          `${process.env.REACT_APP_API}/route/inputfield/${organisationId}`,
           {
             headers: {
               Authorization: authToken,
@@ -35,7 +35,7 @@ const Inputfield = () => {
     };
 
     fetchInputFieldData();
-  }, [authToken, id]);
+  }, [authToken, organisationId]);
 
   const handleInputFieldChange = (field) => {
     const updatedInputField = inputDetail.map((inputField) => {
@@ -61,7 +61,7 @@ const Inputfield = () => {
 
       // Send a PUT request to update the input fields
       const response = await axios.put(
-        `${process.env.REACT_APP_API}/route/inputfield/update/${id}`,
+        `${process.env.REACT_APP_API}/route/inputfield/update/${organisationId}`,
         { inputDetails: updatedInputDetails },
         {
           headers: {

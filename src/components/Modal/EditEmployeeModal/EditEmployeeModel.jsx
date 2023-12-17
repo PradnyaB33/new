@@ -58,6 +58,15 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
     phone_number: "",
     deptname: "",
     location: "",
+    companyemail: "",
+    address: "",
+    citizenship: "",
+    mgrempid: "",
+    employmentType: "",
+    date_of_birth: "",
+    joining_date: "",
+    designation: "",
+    profile: "",
   });
   const [error, setError] = useState("");
 
@@ -88,6 +97,15 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
           phone_number: updatedData.data.phone_number || "",
           deptname: updatedData.data.deptname || "",
           location: updatedData.data.location || "",
+          companyemail: updatedData.data.companyemail || "",
+          address: updatedData.data.address || "",
+          citizenship: updatedData.data.citizenship || "",
+          mgrempid: updatedData.data.mgrempid || "",
+          employmentType: updatedData.data.employmentType || "",
+          date_of_birth: updatedData.data.date_of_birth || "",
+          joining_date: updatedData.data.joining_date || "",
+          designation: updatedData.data.designation || "",
+          profile: updatedData.data.profile || "",
         }));
       },
       onError: () => {
@@ -105,6 +123,15 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
         phone_number: employeeData?.empData?.phone_number || "",
         deptname: employeeData?.empData?.deptname || "",
         location: employeeData?.empData?.location || "",
+        companyemail: employeeData?.empData?.companyemail || "",
+        address: employeeData?.empData?.address || "",
+        citizenship: employeeData?.empData?.citizenship || "",
+        mgrempid: employeeData?.empData?.mgrempid || "",
+        employmentType: employeeData?.empData?.location || "",
+        date_of_birth: employeeData?.empData?.date_of_birth || "",
+        joining_date: employeeData?.empData?.joining_date || "",
+        designation: employeeData?.empData?.designation || "",
+        profile: employeeData?.empData?.profile || "",
       });
     }
   }, [employeeData]);
@@ -140,7 +167,7 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
         sx={style}
         className="border-none !z-10 !pt-0 !px-0 !w-[90%] lg:!w-[50%] md:!w-[60%] shadow-md outline-none rounded-md"
       >
-        <div className="flex justify-between py-4 items-center  px-4">
+        <div className="flex justify-between py-6 items-center  px-6">
           <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
             Edit Employee Data
           </h1>
@@ -253,13 +280,175 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
                 variant="outlined"
               >
                 <InputLabel htmlFor="outlined-adornment-password">
-                  Enter Department
+                  Enter Department Name
                 </InputLabel>
                 <OutlinedInput
                   id="outlined-adornment-password"
                   label="Add Employee Data"
-                  name="phone_number"
+                  name="deptname"
                   value={formData.deptname}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl
+                error={error}
+                size="small"
+                sx={{ width: "100%" }}
+                variant="outlined"
+              >
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Enter Comapany Email
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  label="Add Employee Data"
+                  name="companyemail"
+                  value={formData.companyemail}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl
+                error={error}
+                size="small"
+                sx={{ width: "100%" }}
+                variant="outlined"
+              >
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Enter Address
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  label="Add Employee Data"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl
+                error={error}
+                size="small"
+                sx={{ width: "100%" }}
+                variant="outlined"
+              >
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Enter Citizenship
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  label="Add Employee Data"
+                  name="citizenship"
+                  value={formData.citizenship}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl
+                error={error}
+                size="small"
+                sx={{ width: "100%" }}
+                variant="outlined"
+              >
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Enter Manager Name
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  label="Add Employee Data"
+                  name="mgrempid"
+                  value={formData.mgrempid}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl
+                error={error}
+                size="small"
+                sx={{ width: "100%" }}
+                variant="outlined"
+              >
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Enter Employement Type
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  label="Add Employee Data"
+                  name="employmentType"
+                  value={formData.employmentType}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl
+                error={error}
+                size="small"
+                sx={{ width: "100%" }}
+                variant="outlined"
+              >
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Enter Date of Birth
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  label="Add Employee Data"
+                  name="date_of_birth"
+                  value={formData.date_of_birth}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl
+                error={error}
+                size="small"
+                sx={{ width: "100%" }}
+                variant="outlined"
+              >
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Enter Joining Date
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  label="Add Employee Data"
+                  name="joining_date"
+                  value={formData.joining_date}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl
+                error={error}
+                size="small"
+                sx={{ width: "100%" }}
+                variant="outlined"
+              >
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Enter Designation
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  label="Add Employee Data"
+                  name="designation"
+                  value={formData.designation}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl
+                error={error}
+                size="small"
+                sx={{ width: "100%" }}
+                variant="outlined"
+              >
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Enter Profile
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  label="Add Employee Data"
+                  name="profile"
+                  value={formData.profile}
                   onChange={handleInputChange}
                 />
               </FormControl>

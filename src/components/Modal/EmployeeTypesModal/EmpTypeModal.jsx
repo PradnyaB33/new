@@ -52,11 +52,15 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
 
   const AddEmployeeTypes = useMutation(
     (data) =>
-      axios.post(`${process.env.REACT_APP_API}/route/employment-types`, data, {
-        headers: {
-          Authorization: authToken,
-        },
-      }),
+      axios.post(
+        `${process.env.REACT_APP_API}/route/employment-types/${id}`,
+        data,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      ),
 
     {
       onSuccess: () => {
