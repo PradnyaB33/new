@@ -40,7 +40,7 @@ const AddEmployee = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { organisationId } = useParams();
-
+  console.log("organization id", organisationId);
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
@@ -244,7 +244,7 @@ const AddEmployee = () => {
   const fetchAvailabeDepartment = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/department/get/${id}`,
+        `${process.env.REACT_APP_API}/route/department/get/${organisationId}`,
         {
           headers: {
             Authorization: authToken,
