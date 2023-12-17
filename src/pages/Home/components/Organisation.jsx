@@ -8,6 +8,10 @@ import {
   DialogTitle,
   Menu,
   MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
+  TextField,
 } from "@mui/material";
 import axios from "axios";
 import randomColor from "randomcolor";
@@ -17,14 +21,36 @@ import { useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from 'dayjs';
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+
 const Organisation = ({ item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  const [editConfirmation, setEditConfirmation] = useState(null);
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
+ 
 
+
+
+  const data = {
+    name: "",
+    web_url: "",
+    industry_type: "",
+    email: "",
+    location: "",
+    contact_number: "",
+    description: "",
+    foundation_date: dayjs(),
+  };
+
+  const [inputdata, setInputData] = useState(data);
   // const navigate = useNavigate();
   // const handleCreateProfile = () => {
   //   navigate(`/organisation/${item._id}/add-profile`, {
@@ -39,17 +65,29 @@ const Organisation = ({ item }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleData = (e) =>{
+
+    const { name, value } = e.target;
+    setInputData({
+      ...inputdata,
+      [name]: name === "email" ? value.toLowerCase() : value,
+    })
+    
+  }
   // Delete Query for deleting single Organization
   const handleDeleteConfirmation = (id) => {
-    console.log(id);
+    // console.log(id);
     setDeleteConfirmation(id);
   };
   const handleCloseConfirmation = () => {
     setDeleteConfirmation(null);
+    setEditConfirmation(null)
   };
   // delete query for deleting Single Organization
   const handleDelete = async (id) => {
     try {
+      // console.log(id);
       const response = await axios.delete(
         `${process.env.REACT_APP_API}/route/organization/delete/${id}`,
         {
@@ -58,7 +96,7 @@ const Organisation = ({ item }) => {
           },
         }
       );
-      console.log(`🚀 ~ file: Organisation.jsx:63 ~ response:`, response);
+      // console.log(`🚀 ~ file: Organisation.jsx:63 ~ response:`, response);
       handleAlert(true, "success", "Organization deleted successfully");
       queryClient.invalidateQueries(["orgData"]);
       // Reload the window to reflect the updated data
@@ -70,6 +108,55 @@ const Organisation = ({ item }) => {
       setAnchorEl(null);
     }
   };
+
+
+  const handleEdit = async (id) => {
+    setEditConfirmation(true);
+  
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/route/organization/get/${id}`
+      );
+      const organizationData = response.data.organizations;
+  
+      setInputData({
+        name: organizationData.name,
+        web_url: organizationData.web_url,
+        industry_type: organizationData.industry_type,
+        email: organizationData.email,
+        location: organizationData.location,
+        contact_number: organizationData.contact_number,
+        description: organizationData.description,
+        foundation_date: dayjs(organizationData.foundation_date),
+      });
+    } catch (error) {
+      console.log(error);
+      // Handle error appropriately
+    }
+  };
+  
+
+  const handleEditConfirmation = async (id) => {
+    try {
+      await axios.patch(
+        `${process.env.REACT_APP_API}/route/organization/edit/${id}`,
+        inputdata,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+  
+      handleAlert(true, 'success', 'Organization updated successfully');
+      queryClient.invalidateQueries(['orgData']);
+      // Close the dialog
+      handleCloseConfirmation();
+    } catch (error) {
+      handleAlert(true, 'error', 'Failed to update Organization');
+    }
+  };
+  
 
   const getRandomColor = () => {
     return randomColor();
@@ -149,9 +236,9 @@ const Organisation = ({ item }) => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem>
+              <MenuItem onClick={() => handleEdit(item._id)} >
                 <Edit style={{ color: "green", marginRight: "10px" }} />
-                <span>Update</span>
+                <span >Update</span>
               </MenuItem>
               <MenuItem onClick={() => handleDeleteConfirmation(item._id)}>
                 <Delete style={{ color: "red", marginRight: "10px" }} />
@@ -223,6 +310,150 @@ const Organisation = ({ item }) => {
           >
             Delete
           </Button>
+        </DialogActions>
+      </Dialog>
+
+
+
+
+
+
+
+
+
+      <Dialog
+        open={ editConfirmation!== null}
+        onClose={handleCloseConfirmation}
+        fullWidth
+      >
+        <DialogTitle>
+                Edit Organization
+              </DialogTitle>
+              <DialogContent>
+              <div className="flex flex-col gap-4 mt-3">
+              <TextField
+            required
+         
+            name="name"
+            onChange={handleData}
+            value={inputdata.name}
+            size="small"
+            label="My Organisation Name"
+            type="text"
+            fullWidth
+          />
+          <TextField
+            required
+            name="web_url"
+            onChange={handleData}
+            value={inputdata.web_url}
+            size="small"
+            label="Url Of Website"
+            type="text"
+            fullWidth
+          />
+          <FormControl
+            required
+            size="small"
+            fullWidth
+          >
+            <InputLabel id="industry-type-label">Industry Type</InputLabel>
+            <Select
+              labelId="industry-type-label"
+              id="industry-type"
+              name="industry_type"
+              value={inputdata.industry_type}
+              onChange={handleData}
+              fullWidth
+            >
+              <MenuItem value="IT">IT</MenuItem>
+              <MenuItem value="MECH">MECH</MenuItem>
+              <MenuItem value="ACCOUNTS">ACCOUNTS</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            required
+            label="organization email"
+            name="email"
+            onChange={handleData}
+            value={inputdata.email}
+            size="small"
+            type="email"
+            fullWidth
+         
+          />
+          <TextField
+            required
+
+            name="location"
+            onChange={handleData}
+            value={inputdata.location}
+            size="small"
+            label="Location"
+            type="text"
+            fullWidth
+          />
+          <TextField
+            required
+            name="contact_number"
+            onChange={handleData}
+            value={inputdata.contact_number}
+            size="small"
+            type="number"
+            label="contact number"
+            fullWidth
+          />
+          <TextField
+            required
+            name="description"
+            onChange={handleData}
+            value={inputdata.description}
+            size="small"
+            label="Organisation Description"
+            type="text"
+            fullWidth
+          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer
+                className="w-full"
+                components={["DatePicker"]}
+                required
+              >
+                <DatePicker
+                  label="Foundation Date"
+                  value={inputdata.foundation_date}
+                  onChange={(newDate) => {
+                    setInputData({ ...inputdata, foundation_date: newDate });
+                    console.log(newDate);
+                  }}
+                  slotProps={{ textField: { size: "small", fullWidth: true } }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+          </div>
+     
+                </DialogContent>
+  
+        
+       
+        <DialogActions>
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
+            onClick={handleCloseConfirmation}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            color="error"
+            onClick={() => handleEditConfirmation(item._id)}
+          >
+            Edit
+          </Button>
+          
         </DialogActions>
       </Dialog>
     </>

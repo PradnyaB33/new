@@ -14,11 +14,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import Setup from "../SetUpOrganization/Setup";
 import { Menu, MenuItem } from "@mui/material";
 import * as XLSX from "xlsx";
 import { GetApp, Publish } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
+import { useParams } from "react-router-dom";
 
 const DeleteEmployee = () => {
   const { handleAlert } = useContext(TestContext);
@@ -38,18 +38,23 @@ const DeleteEmployee = () => {
     useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [showConfirmationExcel, setShowConfirmationExcel] = useState(false);
+  const { organisationId } = useParams();
+  console.log("organization id", organisationId);
 
   const fetchAvailableEmployee = async (page) => {
     try {
+      const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
+      console.log(apiUrl);
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee?page=${page}`,
+        apiUrl,
+
         {
           headers: {
             Authorization: authToken,
           },
         }
       );
-
+      console.log(response);
       setAvailableEmployee(response.data.employees);
       setCurrentPage(page);
       setTotalPages(response.data.totalPages || 1);
@@ -329,301 +334,284 @@ const DeleteEmployee = () => {
   return (
     <>
       <section className="bg-gray-50 min-h-screen w-full">
-        <Setup>
-          <article className="SetupSection bg-white w-[80%]  h-max shadow-md rounded-sm border  items-center">
-            <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
-              <div className="flex items-center  gap-3 ">
-                <TextField
-                  onChange={(e) => setNameSearch(e.target.value)}
-                  placeholder="Search Employee Name...."
-                  variant="outlined"
-                  size="small"
-                  sx={{ width: 300 }}
-                />
-              </div>
-              <div className="flex items-center  gap-3 ">
-                <TextField
-                  onChange={(e) => setDeptSearch(e.target.value)}
-                  placeholder="Search Department Name...."
-                  variant="outlined"
-                  size="small"
-                  sx={{ width: 300 }}
-                />
-              </div>
-              <div className="flex items-center  gap-3 ">
-                <TextField
-                  onChange={(e) => setLocationSearch(e.target.value)}
-                  placeholder="Search Location ...."
-                  variant="outlined"
-                  size="small"
-                  sx={{ width: 300 }}
-                />
-              </div>
-              <div>
-                {/* <Button
-                  className="!font-semibold !bg-sky-500 flex items-center gap-2"
-                  variant="contained"
-                  onClick={handleMenuClick}
-                >
-                  Bulk Delete
-                </Button> */}
-                <Tooltip
-                  title={
-                    <span>
-                      To perform bulk deletion:
-                      <ol>
-                        <li>Generate an Excel file with employee data.</li>
-                        <li>
-                          Write "delete" in front of user IDs in the Excel
-                          sheet.
-                        </li>
-                        <li>Save the file and upload it.</li>
-                        <li>
-                          Click on the delete button to execute bulk deletion.
-                        </li>
-                      </ol>
-                    </span>
-                  }
-                  arrow
-                >
-                  <div>
-                    <Button
-                      className="!font-semibold !bg-sky-500 flex items-center gap-2"
-                      variant="contained"
-                      onClick={handleMenuClick}
-                    >
-                      Bulk Delete
-                    </Button>
-                  </div>
-                </Tooltip>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={generateExcel}>
-                    <GetApp style={{ color: "blue", marginRight: "20px" }} />{" "}
-                    Generate Excel
-                  </MenuItem>
-                  <MenuItem>
-                    <label
-                      htmlFor="fileInput"
-                      className="flex items-center gap-2"
-                    >
-                      <Publish
-                        style={{ color: "green", marginRight: "15px" }}
-                      />
-                      <span>Choose File</span>
-                      <input
-                        type="file"
-                        accept=".xlsx, .xls"
-                        id="fileInput"
-                        className="w-full rounded opacity-0 absolute inset-0"
-                        style={{ zIndex: -1 }}
-                      />
-                    </label>
-                  </MenuItem>
-
-                  <MenuItem onClick={() => setShowConfirmationExcel(true)}>
-                    <Delete style={{ color: "red", marginRight: "25px" }} />
-                    <span>Delete</span>
-                  </MenuItem>
-                </Menu>
-              </div>
-
-              <Tooltip title="Check at least one checkbox to delete" arrow>
+        <article className="SetupSection bg-white w-full  h-max shadow-md rounded-sm border  items-center">
+          <h1
+            id="modal-modal-title"
+            className="text-lg pl-2 font-semibold text-center modal-title py-2"
+          >
+            Delete Employee
+          </h1>
+          <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
+            <div className="flex items-center  gap-3 ">
+              <TextField
+                onChange={(e) => setNameSearch(e.target.value)}
+                placeholder="Search Employee Name...."
+                variant="outlined"
+                size="small"
+                sx={{ width: 300 }}
+              />
+            </div>
+            <div className="flex items-center  gap-3 ">
+              <TextField
+                onChange={(e) => setDeptSearch(e.target.value)}
+                placeholder="Search Department Name...."
+                variant="outlined"
+                size="small"
+                sx={{ width: 300 }}
+              />
+            </div>
+            <div className="flex items-center  gap-3 ">
+              <TextField
+                onChange={(e) => setLocationSearch(e.target.value)}
+                placeholder="Search Location ...."
+                variant="outlined"
+                size="small"
+                sx={{ width: 300 }}
+              />
+            </div>
+            <div>
+              <Tooltip
+                title={
+                  <span>
+                    To perform bulk deletion:
+                    <ol>
+                      <li>Generate an Excel file with employee data.</li>
+                      <li>
+                        Write "delete" in front of user IDs in the Excel sheet.
+                      </li>
+                      <li>Save the file and upload it.</li>
+                      <li>
+                        Click on the delete button to execute bulk deletion.
+                      </li>
+                    </ol>
+                  </span>
+                }
+                arrow
+              >
                 <div>
                   <Button
                     className="!font-semibold !bg-sky-500 flex items-center gap-2"
                     variant="contained"
-                    onClick={handleDeleteMultiple}
+                    onClick={handleMenuClick}
                   >
-                    Delete
+                    Bulk Delete
                   </Button>
                 </div>
               </Tooltip>
-
-              {/* <Button
-                className="!font-semibold !bg-sky-500 flex items-center gap-2"
-                variant="contained"
-                onClick={handleDeleteMultiple}
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
               >
-                Delete
-              </Button> */}
-            </div>
-
-            <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
-              <table className="min-w-full bg-white  text-left !text-sm font-light">
-                <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
-                  <tr className="!font-semibold">
-                    <th scope="col" className="!text-left pl-8 py-3"></th>
-                    <th scope="col" className="!text-left pl-8 py-3">
-                      SR NO
-                    </th>
-                    <th scope="col" className="!text-left pl-8 py-3">
-                      First Name
-                    </th>
-                    <th scope="col" className="!text-left pl-8 py-3">
-                      Last Name
-                    </th>
-                    <th scope="col" className="!text-left pl-8 py-3">
-                      Email
-                    </th>
-                    <th scope="col" className="!text-left pl-8 py-3">
-                      Location
-                    </th>
-                    <th scope="col" className="!text-left pl-8 py-3">
-                      Department
-                    </th>
-                    <th scope="col" className="!text-left pl-8 py-3">
-                      Phone Number
-                    </th>
-
-                    <th scope="col" className="px-6 py-3 ">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {availableEmployee
-                    .filter((item) => {
-                      return (
-                        (!nameSearch.toLowerCase() ||
-                          (item.first_name &&
-                            item.first_name
-                              .toLowerCase()
-                              .includes(nameSearch))) &&
-                        (!deptSearch.toLowerCase() ||
-                          (item.deptname &&
-                            item.deptname
-                              .toLowerCase()
-                              .includes(deptSearch))) &&
-                        (!locationSearch.toLowerCase() ||
-                          item.worklocation.some(
-                            (location) =>
-                              location.city &&
-                              location.city
-                                .toLowerCase()
-                                .includes(locationSearch)
-                          ))
-                      );
-                    })
-                    .map((item, id) => (
-                      <tr className="!font-medium border-b" key={id}>
-                        <td className="!text-left pl-8 py-3">
-                          <Checkbox
-                            checked={selectedEmployees.indexOf(item._id) !== -1}
-                            onChange={() => handleEmployeeSelection(item._id)}
-                          />
-                        </td>
-                        <td className="!text-left pl-8 py-3">{id + 1}</td>
-                        <td className="py-3">{item.first_name}</td>
-                        <td className="py-3">{item.last_name}</td>
-                        <td className="py-3">{item.email}</td>
-                        <td className="py-3">
-                          {item.worklocation.map((location, index) => (
-                            <span key={index}>{location.city}</span>
-                          ))}
-                        </td>
-                        <td className="py-3">{item.deptname}</td>
-                        <td className="py-3">{item.phone_number}</td>
-
-                        <td className="whitespace-nowrap px-6 py-2">
-                          <IconButton
-                            onClick={() => handleDeleteConfirmation(item._id)}
-                          >
-                            <Delete className="!text-xl" color="error" />
-                          </IconButton>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-              <nav
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  marginTop: "30px",
-                  marginBottom: "20px",
-                }}
-              >
-                <ul
-                  style={{ display: "inline-block", marginRight: "5px" }}
-                  className="pagination"
-                >
-                  <li
-                    style={{ display: "inline-block", marginRight: "5px" }}
-                    className="page-item"
+                <MenuItem onClick={generateExcel}>
+                  <GetApp style={{ color: "blue", marginRight: "20px" }} />{" "}
+                  Generate Excel
+                </MenuItem>
+                <MenuItem>
+                  <label
+                    htmlFor="fileInput"
+                    className="flex items-center gap-2"
                   >
-                    <button
-                      style={{
-                        color: "#007bff",
-                        padding: "8px 12px",
-                        border: "1px solid #007bff",
-                        textDecoration: "none",
-                        borderRadius: "4px",
-                        transition: "all 0.3s ease",
-                        cursor: "pointer",
-                      }}
-                      className="page-link"
-                      onClick={prePage}
-                    >
-                      Prev
-                    </button>
-                  </li>
-                  {/* Map through page numbers and generate pagination */}
-                  {numbers.map((n, i) => (
-                    <li
-                      key={i}
-                      className={`page-item ${
-                        currentPage === n ? "active" : ""
-                      }`}
-                      style={{
-                        display: "inline-block",
-                        marginRight: "5px",
-                      }}
-                    >
-                      <a
-                        href={`#${n}`}
-                        style={{
-                          color: currentPage === n ? "#fff" : "#007bff",
-                          backgroundColor:
-                            currentPage === n ? "#007bff" : "transparent",
-                          padding: "8px 12px",
-                          border: "1px solid #007bff",
-                          textDecoration: "none",
-                          borderRadius: "4px",
-                          transition: "all 0.3s ease",
-                        }}
-                        className="page-link"
-                        onClick={() => changePage(n)}
-                      >
-                        {n}
-                      </a>
-                    </li>
-                  ))}
-                  <li style={{ display: "inline-block" }} className="page-item">
-                    <button
-                      style={{
-                        color: "#007bff",
-                        padding: "8px 12px",
-                        border: "1px solid #007bff",
-                        textDecoration: "none",
-                        borderRadius: "4px",
-                        transition: "all 0.3s ease",
-                        cursor: "pointer",
-                      }}
-                      className="page-link"
-                      onClick={nextPage}
-                    >
-                      Next
-                    </button>
-                  </li>
-                </ul>
-              </nav>
+                    <Publish style={{ color: "green", marginRight: "15px" }} />
+                    <span>Choose File</span>
+                    <input
+                      type="file"
+                      accept=".xlsx, .xls"
+                      id="fileInput"
+                      className="w-full rounded opacity-0 absolute inset-0"
+                      style={{ zIndex: -1 }}
+                    />
+                  </label>
+                </MenuItem>
+
+                <MenuItem onClick={() => setShowConfirmationExcel(true)}>
+                  <Delete style={{ color: "red", marginRight: "25px" }} />
+                  <span>Delete</span>
+                </MenuItem>
+              </Menu>
             </div>
-          </article>
-        </Setup>
+
+            <Tooltip title="Check at least one checkbox to delete" arrow>
+              <div>
+                <Button
+                  className="!font-semibold !bg-sky-500 flex items-center gap-2"
+                  variant="contained"
+                  onClick={handleDeleteMultiple}
+                >
+                  Delete
+                </Button>
+              </div>
+            </Tooltip>
+          </div>
+
+          <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
+            <table className="min-w-full bg-white  text-left !text-sm font-light">
+              <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
+                <tr className="!font-semibold">
+                  <th scope="col" className="!text-left pl-8 py-3">
+                    Employee Selection
+                  </th>
+
+                  <th scope="col" className="!text-left pl-8 py-3">
+                    SR NO
+                  </th>
+                  <th scope="col" className="!text-left pl-8 py-3">
+                    First Name
+                  </th>
+                  <th scope="col" className="!text-left pl-8 py-3">
+                    Last Name
+                  </th>
+                  <th scope="col" className="!text-left pl-8 py-3">
+                    Email
+                  </th>
+                  <th scope="col" className="!text-left pl-8 py-3">
+                    Location
+                  </th>
+                  <th scope="col" className="!text-left pl-8 py-3">
+                    Department
+                  </th>
+                  <th scope="col" className="!text-left pl-8 py-3">
+                    Phone Number
+                  </th>
+
+                  <th scope="col" className="px-6 py-3 ">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {availableEmployee
+                  .filter((item) => {
+                    return (
+                      (!nameSearch.toLowerCase() ||
+                        (item.first_name &&
+                          item.first_name
+                            .toLowerCase()
+                            .includes(nameSearch))) &&
+                      (!deptSearch.toLowerCase() ||
+                        (item.deptname &&
+                          item.deptname.toLowerCase().includes(deptSearch))) &&
+                      (!locationSearch.toLowerCase() ||
+                        item.worklocation.some(
+                          (location) =>
+                            location.city &&
+                            location.city.toLowerCase().includes(locationSearch)
+                        ))
+                    );
+                  })
+                  .map((item, id) => (
+                    <tr className="!font-medium border-b" key={id}>
+                      <td className="!text-left pl-8 py-3">
+                        <Checkbox
+                          checked={selectedEmployees.indexOf(item._id) !== -1}
+                          onChange={() => handleEmployeeSelection(item._id)}
+                        />
+                      </td>
+                      <td className="!text-left pl-8 py-3">{id + 1}</td>
+                      <td className="py-3">{item.first_name}</td>
+                      <td className="py-3">{item.last_name}</td>
+                      <td className="py-3">{item.email}</td>
+                      <td className="py-3">
+                        {item.worklocation.map((location, index) => (
+                          <span key={index}>{location.city}</span>
+                        ))}
+                      </td>
+                      <td className="py-3">{item.deptname}</td>
+                      <td className="py-3">{item.phone_number}</td>
+
+                      <td className="whitespace-nowrap px-6 py-2">
+                        <IconButton
+                          onClick={() => handleDeleteConfirmation(item._id)}
+                        >
+                          <Delete className="!text-xl" color="error" />
+                        </IconButton>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+            <nav
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "30px",
+                marginBottom: "20px",
+              }}
+            >
+              <ul
+                style={{ display: "inline-block", marginRight: "5px" }}
+                className="pagination"
+              >
+                <li
+                  style={{ display: "inline-block", marginRight: "5px" }}
+                  className="page-item"
+                >
+                  <button
+                    style={{
+                      color: "#007bff",
+                      padding: "8px 12px",
+                      border: "1px solid #007bff",
+                      textDecoration: "none",
+                      borderRadius: "4px",
+                      transition: "all 0.3s ease",
+                      cursor: "pointer",
+                    }}
+                    className="page-link"
+                    onClick={prePage}
+                  >
+                    Prev
+                  </button>
+                </li>
+                {/* Map through page numbers and generate pagination */}
+                {numbers.map((n, i) => (
+                  <li
+                    key={i}
+                    className={`page-item ${currentPage === n ? "active" : ""}`}
+                    style={{
+                      display: "inline-block",
+                      marginRight: "5px",
+                    }}
+                  >
+                    <a
+                      href={`#${n}`}
+                      style={{
+                        color: currentPage === n ? "#fff" : "#007bff",
+                        backgroundColor:
+                          currentPage === n ? "#007bff" : "transparent",
+                        padding: "8px 12px",
+                        border: "1px solid #007bff",
+                        textDecoration: "none",
+                        borderRadius: "4px",
+                        transition: "all 0.3s ease",
+                      }}
+                      className="page-link"
+                      onClick={() => changePage(n)}
+                    >
+                      {n}
+                    </a>
+                  </li>
+                ))}
+                <li style={{ display: "inline-block" }} className="page-item">
+                  <button
+                    style={{
+                      color: "#007bff",
+                      padding: "8px 12px",
+                      border: "1px solid #007bff",
+                      textDecoration: "none",
+                      borderRadius: "4px",
+                      transition: "all 0.3s ease",
+                      cursor: "pointer",
+                    }}
+                    className="page-link"
+                    onClick={nextPage}
+                  >
+                    Next
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </article>
       </section>
       {/* this dialogue for deleting single employee */}
       <Dialog
@@ -631,8 +619,8 @@ const DeleteEmployee = () => {
         onClose={handleCloseConfirmation}
       >
         <DialogTitle color={"error"}>
-          <Warning color="error" /> “All information of employee will be
-          deleted. Are you sure you want to delete it?”
+          <Warning color="error" /> All information of employee will be deleted.
+          Are you sure you want to delete it?
         </DialogTitle>
         <DialogContent>
           <p>
@@ -666,8 +654,8 @@ const DeleteEmployee = () => {
         onClose={() => setDeleteMultiEmpConfirmation(false)}
       >
         <DialogTitle color={"error"}>
-          <Warning color="error" /> “All information of employees will be
-          deleted. Are you sure you want to delete it?”
+          <Warning color="error" /> All information of employees will be
+          deleted. Are you sure you want to delete it?
         </DialogTitle>
         <DialogContent>
           <p>
@@ -701,8 +689,8 @@ const DeleteEmployee = () => {
         onClose={() => setShowConfirmationExcel(false)}
       >
         <DialogTitle color={"error"}>
-          <Warning color="error" /> “All information of employees will be
-          deleted. Are you sure you want to delete it?”
+          <Warning color="error" /> All information of employees will be
+          deleted. Are you sure you want to delete it?
         </DialogTitle>
         <DialogContent>
           <p>

@@ -65,20 +65,20 @@ const App = () => {
       <Route path="/userprofile" element={<UserProfile />} />
       <Route path="/organisation/:id" element={<SingleOrganisation />} />
       <Route
-        path="/organisation/:id/employee-onboarding"
+        path="/organisation/:organisationId/employee-onboarding"
         element={<AddEmployee />}
       />
       <Route
-        path="/organisation/:id/employee-offboarding"
+        path="/organisation/:organisationId/employee-offboarding"
         element={<DeleteEmployee />}
       />
       <Route
-        path="/organisation/:id/employee-list"
+        path="/organisation/:organisationId/employee-list"
         element={<EmployeeList />}
       />
       <Route path="/organisation/:id/add-profile" element={<AddProfile />} />
       <Route
-        path="/organisation/:id/setup/input-field"
+        path="/organisation/:organisationId/setup/input-field"
         element={<Inputfield />}
       />{" "}
       {/* set up routes*/}

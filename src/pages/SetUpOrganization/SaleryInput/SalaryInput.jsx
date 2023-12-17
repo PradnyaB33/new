@@ -26,7 +26,7 @@ import SkeletonForLeaveTypes from "../LeaveComponents/components/skeleton-for-le
 import Setup from "../Setup";
 
 const SalaryInput = () => {
-  const { organisationId } = useParams;
+  const { organisationId } = useParams();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const queryClient = useQueryClient();
@@ -109,7 +109,7 @@ const SalaryInput = () => {
     "salaryTemplates",
     async () => {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/salary-template`,
+        `${process.env.REACT_APP_API}/route/salary-template-org/${organisationId}`,
         {
           headers: {
             Authorization: authToken,
