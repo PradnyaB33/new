@@ -1,12 +1,17 @@
-import { Button, Checkbox, ListItemText, TextField } from "@mui/material";
-import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Chip,
+  InputLabel,
+  ListItemText,
+  OutlinedInput,
+  TextField,
+} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Select from "@mui/material/Select";
@@ -282,23 +287,29 @@ const AddEmployee = () => {
         }
       );
 
-      if (response.data && Array.isArray(response.data.roles)) {
-        const filteredProfiles = response.data.roles.filter(
-          (role) => role && role.isActive
-        );
+      const activeRoles = Object.entries(response.data.roles ?? [])
+        .filter(([role, obj]) => obj.isActive === true)
+        .map(([role, obj]) => role);
 
-        if (filteredProfiles.length > 0) {
-          setAvailableProfiles(filteredProfiles);
-        } else {
-          handleAlert(
-            true,
-            "error",
-            "No active profiles available. Please add active profiles for your organization."
-          );
-        }
-      } else {
-        handleAlert(true, "error", "Invalid data received from the server");
-      }
+      setAvailableProfiles(activeRoles);
+
+      // if (response.data && Array.isArray(response.data.roles)) {
+      //   const filteredProfiles = response.data.roles.filter(
+      //     (role) => role && role.isActive
+      //   );
+
+      //   if (filteredProfiles.length > 0) {
+      //     setAvailableProfiles(filteredProfiles);
+      //   } else {
+      //     handleAlert(
+      //       true,
+      //       "error",
+      //       "No active profiles available. Please add active profiles for your organization."
+      //     );
+      //   }
+      // } else {
+      //   handleAlert(true, "error", "Invalid data received from the server");
+      // }
     } catch (error) {
       console.error(error);
       handleAlert(true, "error", "Failed to fetch available profiles");
@@ -849,11 +860,9 @@ const AddEmployee = () => {
                         </MenuItem>
                       ) : (
                         availableProfiles.map((name) => (
-                          <MenuItem key={name._id} value={name.roleName}>
-                            <Checkbox
-                              checked={profile.indexOf(name.roleName) > -1}
-                            />
-                            <ListItemText primary={name.roleName} />
+                          <MenuItem key={name} value={name}>
+                            <Checkbox checked={profile.indexOf(name) > -1} />
+                            <ListItemText primary={name} />
                           </MenuItem>
                         ))
                       )}

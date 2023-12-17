@@ -87,7 +87,7 @@ const AddRoles = () => {
   const handleSubmit = async () => {
     // You can use roleState to submit your request
     await AddProfiles.mutateAsync(roleState);
-    // console.log("Submitted Roles:", roleState);
+    console.log("Submitted Roles:", roleState);
   };
 
   return (
@@ -147,7 +147,7 @@ const AddRoles = () => {
                     )}
                   </div>
                 ))}
-                <div className="px-6 w-full">
+                <div className="px-6 py-2 w-full">
                   <button
                     onClick={handleSubmit}
                     className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
