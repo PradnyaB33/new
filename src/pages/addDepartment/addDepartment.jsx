@@ -9,12 +9,13 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import { useParams } from "react-router-dom";
 
 const CreateDepartment = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
-
+  const { organisationId } = useParams();
   const [enterDepartmentId, setEnterDepartmentId] = useState(false);
   const [numCharacters, setNumCharacters] = useState(0);
   const [departmentId, setDepartmentId] = useState("");
@@ -52,7 +53,7 @@ const CreateDepartment = () => {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations`,
+        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${organisationId}`,
         {
           headers: {
             Authorization: authToken,

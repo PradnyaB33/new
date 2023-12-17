@@ -40,7 +40,6 @@ const AddEmployee = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { organisationId } = useParams();
-  console.log("organization id", organisationId);
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
@@ -167,9 +166,9 @@ const AddEmployee = () => {
   const fetchAvailableDesignation = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/designation/get/${organisationId}`
+        `${process.env.REACT_APP_API}/route/designation/create/${organisationId}`
       );
-
+      console.log("availableDesignation", response);
       setAvailableDesignation(response.data.designations);
     } catch (error) {
       console.error(error);
@@ -194,7 +193,6 @@ const AddEmployee = () => {
     return response.data;
   });
 
-  console.log();
   const [availabelLocation, setAvailableLocation] = useState([]);
   const fetchAvailableLocation = async () => {
     try {
@@ -206,7 +204,7 @@ const AddEmployee = () => {
           },
         }
       );
-
+      console.log("availableLocation", response);
       setAvailableLocation(response.data);
     } catch (error) {
       console.error(error);
@@ -229,6 +227,7 @@ const AddEmployee = () => {
           },
         }
       );
+      console.log("employementType", response);
       setAvailableEmpTypes(response.data.empTypes);
     } catch (error) {
       console.error(error);
@@ -251,9 +250,10 @@ const AddEmployee = () => {
           },
         }
       );
-
+      console.log("availableDepartment", response);
       setAvailableDepartment(response.data.department);
     } catch (error) {
+      console.log(error);
       handleAlert(true, "error", "Failed to fetch Department");
     }
   };
