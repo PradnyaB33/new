@@ -92,7 +92,6 @@ const Shifts = () => {
       }),
     {
       onSuccess: () => {
-        // Invalidate and refetch the data after successful deletion
         queryClient.invalidateQueries("shifts");
         handleAlert(true, "success", "Shift deleted succesfully");
       },

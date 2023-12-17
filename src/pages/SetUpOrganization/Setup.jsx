@@ -138,7 +138,7 @@ const Setup = ({ children }) => {
 
   return (
     <>
-      <section ction className=" bg-gray-50 min-h-screen w-full">
+      <section className=" bg-gray-50 min-h-screen w-full">
         <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
           <Link to={"/organizationList"}>
             <West className="mx-4 !text-xl" />

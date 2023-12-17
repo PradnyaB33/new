@@ -69,11 +69,11 @@ const App = () => {
         element={<AddEmployee />}
       />
       <Route
-        path="/organisation/:id/employee-offboarding"
+        path="/organisation/:organisationId/employee-offboarding"
         element={<DeleteEmployee />}
       />
       <Route
-        path="/organisation/:id/employee-list"
+        path="/organisation/:organisationId/employee-list"
         element={<EmployeeList />}
       />
       <Route path="/organisation/:id/add-profile" element={<AddProfile />} />
