@@ -21,6 +21,8 @@ import { UseContext } from "../../State/UseState/UseContext";
 // import { tr } from "date-fns/locale";
 
 
+
+
 const Designation = () => {
   const [click, setClick] = useState(false);
   const {organisationId} = useParams()
@@ -45,6 +47,13 @@ const Designation = () => {
   const [showUpdateConfirmationDialog, setShowUpdateConfirmationDialog] =
     useState(false);
 
+    // useEffect(() =>{
+    //   const filteredDesignations = designation.filter(
+    //     (d) => d.organizationId === organisationId
+    //   )
+    //   console.log(filteredDesignations);
+    // },[])
+
   const handleClick = (id) => {
     // setDesignationError("");
     setClick(!click);
@@ -59,11 +68,10 @@ const Designation = () => {
 
     axios.get(`${process.env.REACT_APP_API}/route/designation/create/${id}`)
       .then((response) => {
-        const filteredDesignation = response.data.filter((designation) => {
-          return designation.organizationId === organisationId;
-        });
-        setDesignation(filteredDesignation)
-        console.log(filteredDesignation);
+        setDesignation(response.data.designation)
+        console.log(designation);
+        // console.log(response.data.designation);
+        // console.log(filteredDesignation);
         setTrackedId(id);
         setDesignationName(response.data.designation.designationName);
         setDesignationId(response.data.designation.designationId);
@@ -98,6 +106,8 @@ const Designation = () => {
   };
 
   const handleAddDesignation = () => {
+
+    
     setPrefixRequired(false);
     setClick(true);
     if (!designationName.trim()) {
@@ -241,7 +251,7 @@ const Designation = () => {
   };
 
   const fetchDesignations = () => {
-    axios.get(`${process.env.REACT_APP_API}/route/designation/create`)
+    axios.get(`${process.env.REACT_APP_API}/route/designation/create/${organisationId}`)
       .then((response) => {
         setDesignation(response.data.designations);
       })
@@ -252,7 +262,7 @@ const Designation = () => {
 
   useEffect(() => {
     fetchDesignations();
-  }, []);
+  });
 
   const getPrefixFromName = (name, length) => {
     return name.substring(0, length);

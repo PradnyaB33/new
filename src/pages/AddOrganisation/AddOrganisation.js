@@ -21,13 +21,14 @@ import React, { useContext, useState, useRef } from "react";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useNavigate } from "react-router-dom";
-import dayjs from "dayjs";
 
 const AddOrganisation = () => {
+  var LOGOURL;
   const navigate = useNavigate();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const [selectedImage, setSelectedImage] = useState(null);
+  const [logoUrl, setLogoUrl] = useState("")
   const [emailLabel, setEmailLabel] = useState("Organisation Email");
   const [numberLabel, setNumberLabel] = useState("Phone Number");
   const [emailError, setEmailError] = useState(false);
@@ -46,11 +47,21 @@ const AddOrganisation = () => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "lhyvmmdu");
-    await axios
-      .post("https://api.cloudinary.com/v1_1/dnpj0dyxu/image/upload", formData)
-      .then((resp) => {
-        console.log(resp);
-      });
+    try {
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dnpj0dyxu/image/upload",
+        formData
+      );
+  
+      // Extract the URL from the Cloudinary response
+      const imageURL = response.data.secure_url;
+      console.log("Image URL:", imageURL);
+  
+      // Set LOGOURL here after the request completes
+      setLogoUrl(imageURL);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
   };
   const data = {
     name: "",
@@ -61,6 +72,7 @@ const AddOrganisation = () => {
     contact_number: "",
     description: "",
     foundation_date: dayjs(),
+    // logo_url: LOGOURL
   };
 
   const isEmailValid = (email) => {
@@ -72,7 +84,6 @@ const AddOrganisation = () => {
   };
 
   const [inputdata, setInputData] = useState(data);
-  console.log(inputdata.foundation_date);
 
   const handleData = (e) => {
     const { name, value } = e.target;
@@ -127,9 +138,10 @@ const AddOrganisation = () => {
     }
 
     try {
+      setInputData({...inputdata})
       const result = await axios.post(
         `${process.env.REACT_APP_API}/route/organization/create`,
-        inputdata,
+        { ...inputdata },
         {
           headers: {
             Authorization: authToken,
@@ -155,6 +167,7 @@ const AddOrganisation = () => {
       description: "",
       foundation_date: dayjs(),
       contact_number: "",
+      // logo_url:LOGOURL
     });
     setSelectedImage(null);
     setFirstEmptyField(null);
