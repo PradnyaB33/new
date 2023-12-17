@@ -168,7 +168,7 @@ const AddEmployee = () => {
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/designation/create/${organisationId}`
       );
-      console.log("availableDesignation", response);
+
       setAvailableDesignation(response.data.designations);
     } catch (error) {
       console.error(error);
@@ -204,7 +204,7 @@ const AddEmployee = () => {
           },
         }
       );
-      console.log("availableLocation", response);
+
       setAvailableLocation(response.data);
     } catch (error) {
       console.error(error);
@@ -227,7 +227,7 @@ const AddEmployee = () => {
           },
         }
       );
-      console.log("employementType", response);
+
       setAvailableEmpTypes(response.data.empTypes);
     } catch (error) {
       console.error(error);
@@ -250,7 +250,7 @@ const AddEmployee = () => {
           },
         }
       );
-      console.log("availableDepartment", response);
+
       setAvailableDepartment(response.data.department);
     } catch (error) {
       console.log(error);
@@ -281,7 +281,7 @@ const AddEmployee = () => {
           },
         }
       );
-
+      console.log(response);
       if (response.data && Array.isArray(response.data.roles)) {
         const filteredProfiles = response.data.roles.filter(
           (role) => role && role.isActive
@@ -1006,7 +1006,6 @@ const AddEmployee = () => {
                     } // Update state on change
                     fullWidth
                     margin="normal"
-                    required
                     sx={{
                       flexBasis: "45%",
                       marginBottom: "16px",
