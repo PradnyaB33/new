@@ -244,7 +244,7 @@ const AddEmployee = () => {
   const fetchAvailabeDepartment = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/department/get/${id}`,
+        `${process.env.REACT_APP_API}/route/department/get/`,
         {
           headers: {
             Authorization: authToken,
