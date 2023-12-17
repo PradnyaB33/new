@@ -39,7 +39,7 @@ const AddEmployee = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-  const { id } = useParams();
+  const { organisationId } = useParams();
 
   const [userId, setUserId] = useState(null);
 
@@ -167,7 +167,7 @@ const AddEmployee = () => {
   const fetchAvailableDesignation = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/designation/get/${id}`
+        `${process.env.REACT_APP_API}/route/designation/get/${organisationId}`
       );
 
       setAvailableDesignation(response.data.designations);
@@ -184,7 +184,7 @@ const AddEmployee = () => {
 
   const { data: salaryInput } = useQuery(["empType"], async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/salary-template-org/${id}`,
+      `${process.env.REACT_APP_API}/route/salary-template-org/${organisationId}`,
       {
         headers: {
           Authorization: authToken,
@@ -199,7 +199,7 @@ const AddEmployee = () => {
   const fetchAvailableLocation = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${id}`,
+        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${organisationId}`,
         {
           headers: {
             Authorization: authToken,
@@ -222,7 +222,7 @@ const AddEmployee = () => {
   const fetchAvailabeEmpTypes = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employment-types-organisation/${id}`,
+        `${process.env.REACT_APP_API}/route/employment-types-organisation/${organisationId}`,
         {
           headers: {
             Authorization: authToken,
@@ -274,7 +274,7 @@ const AddEmployee = () => {
   const fetchAvailableProfiles = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/profile/role/${id}`,
+        `${process.env.REACT_APP_API}/route/profile/role/${organisationId}`,
         {
           headers: {
             Authorization: authToken,
@@ -308,13 +308,13 @@ const AddEmployee = () => {
   useEffect(() => {
     fetchAvailableProfiles();
     // eslint-disable-next-line
-  }, [id]);
+  }, [organisationId]);
 
   const [availableInputField, setAvailableInputField] = useState([]);
   const fetchAvailbleInputField = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/inputfield/${id}`,
+        `${process.env.REACT_APP_API}/route/inputfield/${organisationId}`,
         {
           headers: {
             Authorization: authToken,
@@ -349,7 +349,7 @@ const AddEmployee = () => {
   useEffect(() => {
     fetchAvailbleInputField();
     // eslint-disable-next-line
-  }, [id]);
+  }, [organisationId]);
 
   const [availableMgrId, setAvailableMgrId] = useState([]);
   const fetchAvailabeMgrId = async () => {
@@ -417,7 +417,7 @@ const AddEmployee = () => {
         salarystructure,
         profile,
         ...dynamicFields,
-        organizationId: id,
+        organizationId: organisationId,
         creatorId: userId,
       };
       console.log("user", user);
