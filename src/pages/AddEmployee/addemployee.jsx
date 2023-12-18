@@ -523,6 +523,7 @@ const AddEmployee = () => {
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
+                      required
                       size="small"
                       type="text"
                       label="First Name"
