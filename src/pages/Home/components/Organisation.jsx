@@ -26,6 +26,11 @@ import { useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 
 const Organisation = ({ item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -91,7 +96,7 @@ const Organisation = ({ item }) => {
           },
         }
       );
-      // console.log(`🚀 ~ file: Organisation.jsx:63 ~ response:`, response);
+      console.log(`🚀 ~ file: Organisation.jsx:63 ~ response:`, response);
       handleAlert(true, "success", "Organization deleted successfully");
       queryClient.invalidateQueries(["orgData"]);
       // Reload the window to reflect the updated data
