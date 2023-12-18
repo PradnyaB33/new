@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import dayjs from 'dayjs';
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -23,7 +24,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 import { useNavigate } from "react-router-dom";
 
 const AddOrganisation = () => {
-  var LOGOURL;
+  // var LOGOURL;
   const navigate = useNavigate();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
@@ -188,6 +189,7 @@ const AddOrganisation = () => {
 
   return (
     <>
+    
       <form
         style={{
           display: "flex",
@@ -197,6 +199,12 @@ const AddOrganisation = () => {
         }}
         action="submit"
       >
+
+<div onClick={() => navigate("/organizationList")} style={{backgroundColor:"white"}} className="cursor-pointer flex items-center justify-center z-50 absolute top-[5rem] h-[50px] w-[50px] left-[20rem]">
+     <ArrowBackIcon className=" w-full right-25 top-15 " />
+     </div>
+     
+  
         <Container
           style={{
             display: "flex",
