@@ -13,7 +13,7 @@ import LeaveDisplayList from "./Components/List/LeaveDisplayList";
 Chart.register(CategoryScale);
 
 const Dashboard = () => {
-  console.log("base commit");
+  console.log("base committed 1");
   return (
     <>
       <section className="flex bg-gray-50  min-h-screen w-full ">
