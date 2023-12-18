@@ -345,6 +345,9 @@ const OrganizationLocations = () => {
                       State
                     </th>
                     <th scope="col" className="px-3 py-3 ">
+                      City
+                    </th>
+                    <th scope="col" className="px-3 py-3 ">
                       Short Name
                     </th>
                     <th scope="col" className="px-3 py-3 ">
@@ -374,6 +377,7 @@ const OrganizationLocations = () => {
                         <td className="py-2 px-3">{location.continent}</td>
                         <td className="py-2 px-3">{location.country}</td>
                         <td className="py-2 px-3">{location.state}</td>
+                        <td className="py-2 px-3">{location.city}</td>
                         <td className="py-2 px-3">{location.shortName}</td>
                         <td className="py-2 px-3">
                           {`${location.addressLine1} ${location.addressLine2} ${location.pinCode}`}
@@ -386,39 +390,15 @@ const OrganizationLocations = () => {
                             <Edit className="!text-xl" color="success" />
                           </IconButton>
                           <IconButton
-                            onClick={() =>
-                              handleDeleteLocationConfirmation(index)
-                            }
+                            onClick={() => {
+                              handleDeleteLocationConfirmation(index);
+                              setDeleteIndex(index);
+                            }}
                             aria-label="delete"
                           >
                             <Delete className="!text-xl" color="error" />
                           </IconButton>
                         </td>
-                        <Dialog
-                          open={confirmOpen}
-                          onClose={() => setConfirmOpen(false)}
-                        >
-                          <DialogTitle>Confirm Deletion</DialogTitle>
-                          <DialogContent>
-                            <DialogContentText>
-                              Are you sure you want to delete this location?
-                            </DialogContentText>
-                          </DialogContent>
-                          <DialogActions>
-                            <Button
-                              onClick={() => setConfirmOpen(false)}
-                              color="primary"
-                            >
-                              Cancel
-                            </Button>
-                            <Button
-                              onClick={() => handleDeleteLocation(index)}
-                              color="primary"
-                            >
-                              Delete
-                            </Button>
-                          </DialogActions>
-                        </Dialog>
                       </tr>
                     ))}
                   {/* {isLoading ? (
@@ -600,6 +580,25 @@ const OrganizationLocations = () => {
                         defaultMessage="Add Location"
                       />
                     )}
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+                <DialogTitle>Confirm Deletion</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Are you sure you want to delete this location?
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => setConfirmOpen(false)} color="primary">
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => handleDeleteLocation(deleteIndex)}
+                    color="primary"
+                  >
+                    Delete
                   </Button>
                 </DialogActions>
               </Dialog>
