@@ -86,9 +86,7 @@ const AddRoles = () => {
   };
 
   const handleSubmit = async () => {
-    // You can use roleState to submit your request
     await AddProfiles.mutateAsync(roleState);
-    console.log("Submitted Roles:", roleState);
   };
 
   return (
