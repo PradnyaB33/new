@@ -54,17 +54,20 @@ const EmployementTypes = () => {
   };
 
   // Get Query
-  const { data: empList, isLoading } = useQuery("empTypes", async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/employment-types-organisation/${organisationId}`,
-      {
-        headers: {
-          Authorization: authToken,
-        },
-      }
-    );
-    return response.data;
-  });
+  const { data: empList, isLoading } = useQuery(
+    `empTypes ${organisationId}`,
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employment-types-organisation/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data;
+    }
+  );
 
   // Delete Query
   const handleDeleteConfirmation = (id) => {

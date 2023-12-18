@@ -246,6 +246,7 @@ const TestNavItems = ({ toggleDrawer }) => {
     } catch (error) {
       console.error("Failed to decode the token:", error);
     }
+    // eslint-disable-next-line
   }, [token]);
 
   return (

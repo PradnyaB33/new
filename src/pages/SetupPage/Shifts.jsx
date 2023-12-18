@@ -71,7 +71,7 @@ const Shifts = () => {
     setShiftId(shiftId); // Set the shiftId for editing
   };
 
-  const { data, isLoading } = useQuery("shifts", async () => {
+  const { data, isLoading } = useQuery(`shifts ${organisationId}`, async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/shifts/${organisationId}`,
       {
