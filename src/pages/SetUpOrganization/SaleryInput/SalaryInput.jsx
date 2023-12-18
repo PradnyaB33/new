@@ -23,8 +23,8 @@ import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import SalaryInputFieldsModal from "../../../components/Modal/SalaryInputFields/SalaryInputFieldsModal";
-import SkeletonForLeaveTypes from "../LeaveComponents/components/skeleton-for-leavetype";
 import Setup from "../Setup";
+import SkeletonSalaryInput from "./SkeletonSalaryInput";
 
 const SalaryInput = () => {
   const { organisationId } = useParams();
@@ -145,7 +145,7 @@ const SalaryInput = () => {
             </div>
 
             {isLoading ? (
-              <SkeletonForLeaveTypes />
+              <SkeletonSalaryInput />
             ) : salaryTemplate?.salaryTemplates?.length > 0 ? (
               <div className="overflow-auto   border-[.5px] border-gray-200">
                 <table className="min-w-full bg-white px-4  text-left !text-sm font-light">

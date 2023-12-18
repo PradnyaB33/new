@@ -29,7 +29,7 @@ const TestNavItems = ({ toggleDrawer }) => {
   const token = cookies["aeigs"];
   const location = useLocation();
   const pathname = location.pathname;
-  let decodedToken;
+  const [decodedToken, setDecodedToken] = useState("");
 
   // Update organization ID when URL changes
   useEffect(() => {
@@ -235,7 +235,8 @@ const TestNavItems = ({ toggleDrawer }) => {
 
   useEffect(() => {
     try {
-      decodedToken = jwtDecode(token);
+      const newToken = jwtDecode(token);
+      setDecodedToken(newToken);
       if (decodedToken && decodedToken.user.profile) {
         console.log(
           `🚀 ~ file: test-nav-items.jsx:230 ~ decodedToken:`,
