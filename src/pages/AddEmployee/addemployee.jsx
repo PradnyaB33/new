@@ -434,7 +434,7 @@ const AddEmployee = () => {
       console.log("user", user);
       // Check if the selected profile exists
       const checkProfileResponse = await axios.post(
-        `${process.env.REACT_APP_API}/route/employee/check-profile-exists`,
+        `${process.env.REACT_APP_API}/route/employee/check-profile-exists/${organisationId}`,
         { profile },
         {
           headers: {
@@ -445,7 +445,7 @@ const AddEmployee = () => {
 
       if (
         checkProfileResponse.status === 200 &&
-        checkProfileResponse.data.profileExist
+        checkProfileResponse.data.profileExists
       ) {
         const createProfileConfirmation = window.confirm(
           `${profile} profile already exists. Do you want to create it again?`
@@ -454,7 +454,7 @@ const AddEmployee = () => {
         if (createProfileConfirmation) {
           // Proceed with profile creation
           const response = await axios.post(
-            `${process.env.REACT_APP_API}/route/employee/create-profile`,
+            `${process.env.REACT_APP_API}/route/employee/add-employee`,
             user,
             {
               headers: {
@@ -462,11 +462,10 @@ const AddEmployee = () => {
               },
             }
           );
-
-          if (response.status === 201) {
-            handleAlert(true, "success", response.data.message);
+          if (response.data.success) {
+            handleAlert(true, "error", "Invalid authorization");
           } else {
-            handleAlert(true, "error", "Profile creation failed.");
+            handleAlert(true, "success", response.data.message);
           }
         } else {
           // User declined creating the profile again

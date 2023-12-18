@@ -6,14 +6,19 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Menu,
-  MenuItem,
   FormControl,
   InputLabel,
+  Menu,
+  MenuItem,
   Select,
   TextField,
 } from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
+import dayjs from "dayjs";
 import randomColor from "randomcolor";
 import React, { useContext, useState } from "react";
 import { FaArrowCircleRight } from "react-icons/fa";
@@ -21,11 +26,6 @@ import { useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 
 const Organisation = ({ item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -217,7 +217,11 @@ const Organisation = ({ item }) => {
         className={`border-b-[3px] border-${getRandomColor()} block min-w-[21rem] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-200`}
       >
         <div className="border-b-2 flex items-center justify-between border-[#0000002d] px-6 py-3 text-black">
-          <Avatar variant="rounded" sx={{ height: 35, width: 35 }} />
+          <Avatar
+            src={item?.logo_url}
+            variant="rounded"
+            sx={{ height: 35, width: 35 }}
+          />
           <div>
             <MoreVert
               onClick={(e) => handleClick(e, item)}
