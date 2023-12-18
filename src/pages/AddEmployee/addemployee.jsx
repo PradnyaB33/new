@@ -921,6 +921,7 @@ const AddEmployee = () => {
                   </Select>
                 </FormControl>
               </div>
+
               <div className="flex items-center gap-20">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
@@ -933,7 +934,7 @@ const AddEmployee = () => {
                       <MenuItem value="" disabled>
                         Select Designation
                       </MenuItem>
-                      {availabelDesignation.map((type) => (
+                      {availabelDesignation?.map((type) => (
                         <MenuItem key={type._id} value={type._id}>
                           {type.designationName}
                         </MenuItem>

@@ -180,12 +180,12 @@ const EmployementTypes = () => {
                 <article className="flex items-center mb-1 text-red-500 gap-2">
                   <Info className="!text-2xl" />
                   <h1 className="text-xl font-semibold">
-                    Employement Not found
+                    Employement Types Not found
                   </h1>
                 </article>
                 <p>
-                  No employement types for the organization. Please create a
-                  Employement types.
+                  Employment types have not been set up for your organization.
+                  Please create the 'Employment Types'
                 </p>
               </section>
             )}
