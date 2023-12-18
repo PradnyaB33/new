@@ -1,6 +1,7 @@
 import {
   BorderColor,
   Delete,
+  Info,
   MoreHoriz,
   PriceChangeOutlined,
   Warning,
@@ -22,8 +23,8 @@ import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import SalaryInputFieldsModal from "../../../components/Modal/SalaryInputFields/SalaryInputFieldsModal";
-import SkeletonForLeaveTypes from "../LeaveComponents/components/skeleton-for-leavetype";
 import Setup from "../Setup";
+import SkeletonSalaryInput from "./SkeletonSalaryInput";
 
 const SalaryInput = () => {
   const { organisationId } = useParams();
@@ -143,25 +144,25 @@ const SalaryInput = () => {
               </Button>
             </div>
 
-            <div className="overflow-auto   border-[.5px] border-gray-200">
-              <table className="min-w-full bg-white px-4  text-left !text-sm font-light">
-                <thead className="bg-gray-200  !font-medium ">
-                  <tr className="!font-semibold ">
-                    <th scope="col" className="!text-left px-6 py-3 ">
-                      SR NO
-                    </th>
-                    <th className="py-3 ">Template Name</th>
-                    <th className="px-6 py-3 ">Template Description</th>
-                    <th className="px-6 py-3 ">Employment Type</th>
-                    <th className="px-6 py-3 ">Salary Structure</th>
-                    <th className="px-6 py-3 ">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {isLoading ? (
-                    <SkeletonForLeaveTypes />
-                  ) : (
-                    salaryTemplate?.salaryTemplates?.map((item, id) => (
+            {isLoading ? (
+              <SkeletonSalaryInput />
+            ) : salaryTemplate?.salaryTemplates?.length > 0 ? (
+              <div className="overflow-auto   border-[.5px] border-gray-200">
+                <table className="min-w-full bg-white px-4  text-left !text-sm font-light">
+                  <thead className="bg-gray-200  !font-medium ">
+                    <tr className="!font-semibold ">
+                      <th scope="col" className="!text-left px-6 py-3 ">
+                        SR NO
+                      </th>
+                      <th className="py-3 ">Template Name</th>
+                      <th className="px-6 py-3 ">Template Description</th>
+                      <th className="px-6 py-3 ">Employment Type</th>
+                      <th className="px-6 py-3 ">Salary Structure</th>
+                      <th className="px-6 py-3 ">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {salaryTemplate?.salaryTemplates?.map((item, id) => (
                       <tr
                         className={`
                       ${id % 2 === 0 && "bg-[white]"} 
@@ -197,11 +198,21 @@ const SalaryInput = () => {
                           </IconButton>
                         </td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+                <article className="flex items-center mb-1 text-red-500 gap-2">
+                  <Info className="!text-2xl" />
+                  <h1 className="text-xl font-semibold">
+                    Salary template Not found
+                  </h1>
+                </article>
+                <p>for the organization. Please create a Employement types.</p>
+              </section>
+            )}
           </article>
         </Setup>
       </section>

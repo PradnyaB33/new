@@ -12,23 +12,22 @@ import {
   Typography,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from 'dayjs';
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
-import React, { useContext, useState, useRef } from "react";
+import dayjs from "dayjs";
+import React, { useContext, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import { useNavigate } from "react-router-dom";
 
 const AddOrganisation = () => {
-  var LOGOURL;
   const navigate = useNavigate();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const [selectedImage, setSelectedImage] = useState(null);
-  const [logoUrl, setLogoUrl] = useState("")
+  const [logoUrl, setLogoUrl] = useState("");
   const [emailLabel, setEmailLabel] = useState("Organisation Email");
   const [numberLabel, setNumberLabel] = useState("Phone Number");
   const [emailError, setEmailError] = useState(false);
@@ -52,11 +51,12 @@ const AddOrganisation = () => {
         "https://api.cloudinary.com/v1_1/dnpj0dyxu/image/upload",
         formData
       );
-  
+
       // Extract the URL from the Cloudinary response
       const imageURL = response.data.secure_url;
       console.log("Image URL:", imageURL);
-  
+      // setInputData({ ...inputdata, logo_url: imageURL })
+
       // Set LOGOURL here after the request completes
       setLogoUrl(imageURL);
     } catch (error) {
@@ -72,7 +72,7 @@ const AddOrganisation = () => {
     contact_number: "",
     description: "",
     foundation_date: dayjs(),
-    // logo_url: LOGOURL
+    logo_url: "",
   };
 
   const isEmailValid = (email) => {
@@ -128,7 +128,9 @@ const AddOrganisation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const emptyField = Object.keys(inputdata).find((key) => !inputdata[key]);
+    const emptyField = Object.keys(inputdata)
+      .slice(0, -1)
+      .find((key) => !inputdata[key]);
 
     if (emptyField) {
       handleAlert(true, "error", `Please fill in the ${emptyField} field.`);
@@ -138,10 +140,22 @@ const AddOrganisation = () => {
     }
 
     try {
-      setInputData({...inputdata})
+      setInputData({ ...inputdata, logo_url: logoUrl })
+
+      const payload = {
+        name: inputdata.name,
+        web_url: inputdata.web_url,
+        industry_type: inputdata.industry_type,
+        email: inputdata.email,
+        location: inputdata.location,
+        contact_number: inputdata.contact_number,
+        description: inputdata.description,
+        foundation_date: inputdata.foundation_date,
+        logo_url: logoUrl, // Include logo_url in the payload
+      };
       const result = await axios.post(
         `${process.env.REACT_APP_API}/route/organization/create`,
-        { ...inputdata },
+        payload,
         {
           headers: {
             Authorization: authToken,
@@ -167,7 +181,7 @@ const AddOrganisation = () => {
       description: "",
       foundation_date: dayjs(),
       contact_number: "",
-      // logo_url:LOGOURL
+      logo_url: "",
     });
     setSelectedImage(null);
     setFirstEmptyField(null);
@@ -221,10 +235,10 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.name}
             size="small"
-            className={`w-[80%] ${firstEmptyField === 'name' ? 'error' : ''}`}
+            className={`w-[80%] ${firstEmptyField === "name" ? "error" : ""}`}
             label="My Organisation Name"
             type="text"
-            inputRef={firstEmptyField === 'name' ? firstEmptyFieldRef : null}
+            inputRef={firstEmptyField === "name" ? firstEmptyFieldRef : null}
           />
           <TextField
             required
@@ -233,10 +247,11 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.web_url}
             size="small"
-            className={`w-[80%] ${firstEmptyField === 'web_url' ? 'error' : ''}`}
+            className={`w-[80%] ${firstEmptyField === "web_url" ? "error" : ""
+              }`}
             label="Url Of Website"
             type="text"
-            inputRef={firstEmptyField === 'web_url' ? firstEmptyFieldRef : null}
+            inputRef={firstEmptyField === "web_url" ? firstEmptyFieldRef : null}
           />
           <FormControl
             required
@@ -250,7 +265,9 @@ const AddOrganisation = () => {
               name="industry_type"
               value={inputdata.industry_type}
               onChange={handleData}
-              inputRef={firstEmptyField === 'industry_type' ? firstEmptyFieldRef : null}
+              inputRef={
+                firstEmptyField === "industry_type" ? firstEmptyFieldRef : null
+              }
             >
               <MenuItem value="IT">IT</MenuItem>
               <MenuItem value="MECH">MECH</MenuItem>
@@ -264,7 +281,7 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.email}
             size="small"
-            className={`w-[80%] ${firstEmptyField === 'email' ? 'error' : ''}`}
+            className={`w-[80%] ${firstEmptyField === "email" ? "error" : ""}`}
             label={emailLabel}
             type="email"
             error={emailError}
@@ -273,7 +290,7 @@ const AddOrganisation = () => {
                 borderColor: emailError ? "red" : "blue",
               },
             }}
-            inputRef={firstEmptyField === 'email' ? firstEmptyFieldRef : null}
+            inputRef={firstEmptyField === "email" ? firstEmptyFieldRef : null}
           />
           <TextField
             required
@@ -282,10 +299,13 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.location}
             size="small"
-            className={`w-[80%] ${firstEmptyField === 'location' ? 'error' : ''}`}
+            className={`w-[80%] ${firstEmptyField === "location" ? "error" : ""
+              }`}
             label="Location"
             type="text"
-            inputRef={firstEmptyField === 'location' ? firstEmptyFieldRef : null}
+            inputRef={
+              firstEmptyField === "location" ? firstEmptyFieldRef : null
+            }
           />
           <TextField
             required
@@ -294,7 +314,8 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.contact_number}
             size="small"
-            className={`w-[80%] ${firstEmptyField === 'contact_number' ? 'error' : ''}`}
+            className={`w-[80%] ${firstEmptyField === "contact_number" ? "error" : ""
+              }`}
             label={numberLabel}
             type="number"
             error={contactNumberError}
@@ -303,7 +324,9 @@ const AddOrganisation = () => {
                 borderColor: contactNumberError ? "red" : "blue",
               },
             }}
-            inputRef={firstEmptyField === 'contact_number' ? firstEmptyFieldRef : null}
+            inputRef={
+              firstEmptyField === "contact_number" ? firstEmptyFieldRef : null
+            }
           />
           <TextField
             required
@@ -312,10 +335,13 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.description}
             size="small"
-            className={`w-[80%] ${firstEmptyField === 'description' ? 'error' : ''}`}
+            className={`w-[80%] ${firstEmptyField === "description" ? "error" : ""
+              }`}
             label="Organisation Description"
             type="text"
-            inputRef={firstEmptyField === 'description' ? firstEmptyFieldRef : null}
+            inputRef={
+              firstEmptyField === "description" ? firstEmptyFieldRef : null
+            }
           />
           <div style={{ marginTop: "15px", display: "block", width: "80%" }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>

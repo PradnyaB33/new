@@ -1,6 +1,7 @@
 import {
   BorderColor,
   Delete,
+  Info,
   ManageAccountsOutlined,
   Warning,
 } from "@mui/icons-material";
@@ -53,17 +54,20 @@ const EmployementTypes = () => {
   };
 
   // Get Query
-  const { data: empList, isLoading } = useQuery("empTypes", async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/employment-types-organisation/${organisationId}`,
-      {
-        headers: {
-          Authorization: authToken,
-        },
-      }
-    );
-    return response.data;
-  });
+  const { data: empList, isLoading } = useQuery(
+    `empTypes ${organisationId}`,
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employment-types-organisation/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data;
+    }
+  );
 
   // Delete Query
   const handleDeleteConfirmation = (id) => {
@@ -127,49 +131,67 @@ const EmployementTypes = () => {
               </Button>
             </div>
 
-            <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
-              <table className="min-w-full bg-white  text-left !text-sm font-light">
-                <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
-                  <tr className="!font-semibold ">
-                    <th scope="col" className="!text-left pl-8 py-3 ">
-                      SR NO
-                    </th>
-                    <th scope="col" className="py-3 ">
-                      Employment Title
-                    </th>
-                    <th scope="col" className="px-6 py-3 ">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {isLoading ? (
-                    <EmployeeTypeSkeleton />
-                  ) : (
-                    empList?.empTypes?.map((emptype, id) => (
-                      <tr className="!font-medium border-b" key={id}>
-                        <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                        <td className="py-3 ">{emptype?.title}</td>
-                        <td className="whitespace-nowrap px-6 py-2">
-                          <IconButton
-                            onClick={() =>
-                              handleDeleteConfirmation(emptype._id)
-                            }
-                          >
-                            <Delete className="!text-xl" color="error" />
-                          </IconButton>
-                          <IconButton
-                            onClick={() => handleEditModalOpen(emptype._id)}
-                          >
-                            <BorderColor className="!text-xl" color="success" />
-                          </IconButton>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+            {empList?.empTypes?.length > 0 ? (
+              <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
+                <table className="min-w-full bg-white  text-left !text-sm font-light">
+                  <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
+                    <tr className="!font-semibold ">
+                      <th scope="col" className="!text-left pl-8 py-3 ">
+                        SR NO
+                      </th>
+                      <th scope="col" className="py-3 ">
+                        Employment Title
+                      </th>
+                      <th scope="col" className="px-6 py-3 ">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {isLoading ? (
+                      <EmployeeTypeSkeleton />
+                    ) : (
+                      empList?.empTypes?.map((emptype, id) => (
+                        <tr className="!font-medium border-b" key={id}>
+                          <td className="!text-left pl-8 py-3 ">{id + 1}</td>
+                          <td className="py-3 ">{emptype?.title}</td>
+                          <td className="whitespace-nowrap px-6 py-2">
+                            <IconButton
+                              onClick={() =>
+                                handleDeleteConfirmation(emptype._id)
+                              }
+                            >
+                              <Delete className="!text-xl" color="error" />
+                            </IconButton>
+                            <IconButton
+                              onClick={() => handleEditModalOpen(emptype._id)}
+                            >
+                              <BorderColor
+                                className="!text-xl"
+                                color="success"
+                              />
+                            </IconButton>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+                <article className="flex items-center mb-1 text-red-500 gap-2">
+                  <Info className="!text-2xl" />
+                  <h1 className="text-xl font-semibold">
+                    Employement Types Not found
+                  </h1>
+                </article>
+                <p>
+                  Employment types have not been set up for your organization.
+                  Please create the 'Employment Types'
+                </p>
+              </section>
+            )}
           </article>
         </Setup>
       </section>

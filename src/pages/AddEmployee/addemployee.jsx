@@ -1,12 +1,17 @@
-import { Button, Checkbox, ListItemText, TextField } from "@mui/material";
-import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Chip,
+  InputLabel,
+  ListItemText,
+  OutlinedInput,
+  TextField,
+} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Select from "@mui/material/Select";
@@ -40,9 +45,8 @@ const AddEmployee = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { organisationId } = useParams();
-  console.log("organization id", organisationId);
   const [userId, setUserId] = useState(null);
-
+  console.log(organisationId);
   useEffect(() => {
     try {
       const decodedToken = jwtDecode(authToken);
@@ -167,7 +171,7 @@ const AddEmployee = () => {
   const fetchAvailableDesignation = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/designation/get/${organisationId}`
+        `${process.env.REACT_APP_API}/route/designation/create/${organisationId}`
       );
 
       setAvailableDesignation(response.data.designations);
@@ -194,7 +198,6 @@ const AddEmployee = () => {
     return response.data;
   });
 
-  console.log();
   const [availabelLocation, setAvailableLocation] = useState([]);
   const fetchAvailableLocation = async () => {
     try {
@@ -229,6 +232,7 @@ const AddEmployee = () => {
           },
         }
       );
+
       setAvailableEmpTypes(response.data.empTypes);
     } catch (error) {
       console.error(error);
@@ -254,6 +258,7 @@ const AddEmployee = () => {
 
       setAvailableDepartment(response.data.department);
     } catch (error) {
+      console.log(error);
       handleAlert(true, "error", "Failed to fetch Department");
     }
   };
@@ -282,23 +287,29 @@ const AddEmployee = () => {
         }
       );
 
-      if (response.data && Array.isArray(response.data.roles)) {
-        const filteredProfiles = response.data.roles.filter(
-          (role) => role && role.isActive
-        );
+      const activeRoles = Object.entries(response.data.roles ?? [])
+        .filter(([role, obj]) => obj.isActive === true)
+        .map(([role, obj]) => role);
 
-        if (filteredProfiles.length > 0) {
-          setAvailableProfiles(filteredProfiles);
-        } else {
-          handleAlert(
-            true,
-            "error",
-            "No active profiles available. Please add active profiles for your organization."
-          );
-        }
-      } else {
-        handleAlert(true, "error", "Invalid data received from the server");
-      }
+      setAvailableProfiles(activeRoles);
+
+      // if (response.data && Array.isArray(response.data.roles)) {
+      //   const filteredProfiles = response.data.roles.filter(
+      //     (role) => role && role.isActive
+      //   );
+
+      //   if (filteredProfiles.length > 0) {
+      //     setAvailableProfiles(filteredProfiles);
+      //   } else {
+      //     handleAlert(
+      //       true,
+      //       "error",
+      //       "No active profiles available. Please add active profiles for your organization."
+      //     );
+      //   }
+      // } else {
+      //   handleAlert(true, "error", "Invalid data received from the server");
+      // }
     } catch (error) {
       console.error(error);
       handleAlert(true, "error", "Failed to fetch available profiles");
@@ -362,7 +373,7 @@ const AddEmployee = () => {
           },
         }
       );
-
+      console.log(response);
       setAvailableMgrId(response.data.manager);
     } catch (error) {
       console.error(error);
@@ -423,7 +434,7 @@ const AddEmployee = () => {
       console.log("user", user);
       // Check if the selected profile exists
       const checkProfileResponse = await axios.post(
-        `${process.env.REACT_APP_API}/route/employee/check-profile-exists`,
+        `${process.env.REACT_APP_API}/route/employee/check-profile-exists/${organisationId}`,
         { profile },
         {
           headers: {
@@ -434,7 +445,7 @@ const AddEmployee = () => {
 
       if (
         checkProfileResponse.status === 200 &&
-        checkProfileResponse.data.profileExist
+        checkProfileResponse.data.profileExists
       ) {
         const createProfileConfirmation = window.confirm(
           `${profile} profile already exists. Do you want to create it again?`
@@ -443,7 +454,7 @@ const AddEmployee = () => {
         if (createProfileConfirmation) {
           // Proceed with profile creation
           const response = await axios.post(
-            `${process.env.REACT_APP_API}/route/employee/create-profile`,
+            `${process.env.REACT_APP_API}/route/employee/add-employee`,
             user,
             {
               headers: {
@@ -451,11 +462,10 @@ const AddEmployee = () => {
               },
             }
           );
-
-          if (response.status === 201) {
-            handleAlert(true, "success", response.data.message);
+          if (response.data.success) {
+            handleAlert(true, "error", "Invalid authorization");
           } else {
-            handleAlert(true, "error", "Profile creation failed.");
+            handleAlert(true, "success", response.data.message);
           }
         } else {
           // User declined creating the profile again
@@ -512,6 +522,7 @@ const AddEmployee = () => {
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
+                      required
                       size="small"
                       type="text"
                       label="First Name"
@@ -771,7 +782,7 @@ const AddEmployee = () => {
                       <MenuItem value="" disabled>
                         Select Manager Id
                       </MenuItem>
-                      {availableMgrId.map((manager) => (
+                      {/* {availableMgrId.map((manager) => (
                         <MenuItem
                           key={manager._id}
                           value={manager.managerId ? manager.managerId._id : ""}
@@ -780,7 +791,18 @@ const AddEmployee = () => {
                             ? `${manager.managerId.first_name} ${manager.managerId.last_name}`
                             : "No Manager Name"}
                         </MenuItem>
-                      ))}
+                      ))} */}
+                      {availableMgrId.map(
+                        (manager) =>
+                          manager.managerId && ( // Render only if managerId exists
+                            <MenuItem
+                              key={manager._id}
+                              value={manager.managerId._id}
+                            >
+                              {`${manager.managerId.first_name} ${manager.managerId.last_name}`}
+                            </MenuItem>
+                          )
+                      )}
                     </Select>
                   </FormControl>
                 </div>
@@ -849,11 +871,9 @@ const AddEmployee = () => {
                         </MenuItem>
                       ) : (
                         availableProfiles.map((name) => (
-                          <MenuItem key={name._id} value={name.roleName}>
-                            <Checkbox
-                              checked={profile.indexOf(name.roleName) > -1}
-                            />
-                            <ListItemText primary={name.roleName} />
+                          <MenuItem key={name} value={name}>
+                            <Checkbox checked={profile.indexOf(name) > -1} />
+                            <ListItemText primary={name} />
                           </MenuItem>
                         ))
                       )}
@@ -900,6 +920,7 @@ const AddEmployee = () => {
                   </Select>
                 </FormControl>
               </div>
+
               <div className="flex items-center gap-20">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
@@ -912,7 +933,7 @@ const AddEmployee = () => {
                       <MenuItem value="" disabled>
                         Select Designation
                       </MenuItem>
-                      {availabelDesignation.map((type) => (
+                      {availabelDesignation?.map((type) => (
                         <MenuItem key={type._id} value={type._id}>
                           {type.designationName}
                         </MenuItem>
@@ -1006,7 +1027,6 @@ const AddEmployee = () => {
                     } // Update state on change
                     fullWidth
                     margin="normal"
-                    required
                     sx={{
                       flexBasis: "45%",
                       marginBottom: "16px",

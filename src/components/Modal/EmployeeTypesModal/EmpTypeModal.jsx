@@ -204,7 +204,7 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
                 {EditEmployeeType.isLoading ? (
                   <CircularProgress size={20} />
                 ) : (
-                  "Edit Employee Types"
+                  "Apply"
                 )}
               </Button>
             ) : (

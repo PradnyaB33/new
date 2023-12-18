@@ -20,13 +20,10 @@ import Setup from "../SetUpOrganization/Setup";
 import { UseContext } from "../../State/UseState/UseContext";
 // import { tr } from "date-fns/locale";
 
-
-
-
 const Designation = () => {
   const [click, setClick] = useState(false);
-  const {organisationId} = useParams()
-  console.log(organisationId);
+  const { organisationId } = useParams();
+  // console.log(organisationId);
   const [designationIdRequired, setDesignationIdRequired] = useState(false);
   const { setAppAlert } = useContext(UseContext);
 
@@ -47,12 +44,12 @@ const Designation = () => {
   const [showUpdateConfirmationDialog, setShowUpdateConfirmationDialog] =
     useState(false);
 
-    // useEffect(() =>{
-    //   const filteredDesignations = designation.filter(
-    //     (d) => d.organizationId === organisationId
-    //   )
-    //   console.log(filteredDesignations);
-    // },[])
+  // useEffect(() =>{
+  //   const filteredDesignations = designation.filter(
+  //     (d) => d.organizationId === organisationId
+  //   )
+  //   console.log(filteredDesignations);
+  // },[])
 
   const handleClick = (id) => {
     // setDesignationError("");
@@ -66,9 +63,10 @@ const Designation = () => {
     setCounter(1);
     setEnterDesignationId(false);
 
-    axios.get(`${process.env.REACT_APP_API}/route/designation/create/${id}`)
+    axios
+      .get(`${process.env.REACT_APP_API}/route/designation/create/${id}`)
       .then((response) => {
-        setDesignation(response.data.designation)
+        setDesignation(response.data.designation);
         console.log(designation);
         // console.log(response.data.designation);
         // console.log(filteredDesignation);
@@ -94,8 +92,11 @@ const Designation = () => {
     setEnterDesignationId(false);
     setTrackedId(id);
 
-    axios.get(`${process.env.REACT_APP_API}/route/designation/create/${id}`)
+    axios
+      .get(`${process.env.REACT_APP_API}/route/designation/findone/${id}`)
       .then((response) => {
+        console.log(id);
+        console.log(response);
         setDesignationName(response.data.designation.designationName);
         setDesignationId(response.data.designation.designationId);
         setEnterDesignationId(true);
@@ -106,8 +107,6 @@ const Designation = () => {
   };
 
   const handleAddDesignation = () => {
-
-    
     setPrefixRequired(false);
     setClick(true);
     if (!designationName.trim()) {
@@ -125,12 +124,13 @@ const Designation = () => {
     } else {
       generateDesignationIds();
 
-      axios.post(`${process.env.REACT_APP_API}/route/designation/create`, data)
+      axios
+        .post(`${process.env.REACT_APP_API}/route/designation/create`, data)
         .then((response) => {
           setAppAlert({
             alert: true,
-            type: 'success',
-            msg: 'Designation Added successfully!',
+            type: "success",
+            msg: "Designation Added successfully!",
           });
           console.log("Designation added successfully:", response.data);
           fetchDesignations();
@@ -139,8 +139,8 @@ const Designation = () => {
         .catch((error) => {
           setAppAlert({
             alert: true,
-            type: 'error',
-            msg: 'Error adding designation',
+            type: "error",
+            msg: "Error adding designation",
           });
           console.error("Error adding designation:", error);
         });
@@ -154,13 +154,17 @@ const Designation = () => {
       designationName,
       designationId,
     };
-    axios.patch(`${process.env.REACT_APP_API}/route/designation/create/${trackedId}`, patchData)
+    axios
+      .patch(
+        `${process.env.REACT_APP_API}/route/designation/create/${trackedId}`,
+        patchData
+      )
       .then((response) => {
         console.log("Designation updated successfully:", response.data);
         setAppAlert({
           alert: true,
-          type: 'success',
-          msg: 'Designation updated successfully!',
+          type: "success",
+          msg: "Designation updated successfully!",
         });
         fetchDesignations();
         handleClick();
@@ -170,10 +174,9 @@ const Designation = () => {
         console.error("Error updating designation:", error);
         setAppAlert({
           alert: true,
-          type: 'error',
-          msg: 'Error adding designation',
+          type: "error",
+          msg: "Error adding designation",
         });
-        
       });
   };
 
@@ -185,8 +188,8 @@ const Designation = () => {
     setNumCharacters(0);
     setDesignationName("");
     setClick(false);
-    setEditMode(false)
-    setDesignationId("")
+    setEditMode(false);
+    setDesignationId("");
   };
 
   const generateDesignationIds = () => {
@@ -220,13 +223,16 @@ const Designation = () => {
 
   const handleConfirmDelete = () => {
     if (designationToDelete) {
-      axios.delete(`${process.env.REACT_APP_API}/route/designation/create/${designationToDelete}`)
+      axios
+        .delete(
+          `${process.env.REACT_APP_API}/route/designation/create/${designationToDelete}`
+        )
         .then(() => {
           console.log("Designation deleted successfully");
           setAppAlert({
             alert: true,
-            type: 'success',
-            msg: 'designation deleted successfully',
+            type: "success",
+            msg: "designation deleted successfully",
           });
           fetchDesignations();
         })
@@ -234,8 +240,8 @@ const Designation = () => {
           console.error("Error deleting designation:", error);
           setAppAlert({
             alert: true,
-            type: 'error',
-            msg: 'Error deleting designation',
+            type: "error",
+            msg: "Error deleting designation",
           });
         })
         .finally(() => {
@@ -251,7 +257,10 @@ const Designation = () => {
   };
 
   const fetchDesignations = () => {
-    axios.get(`${process.env.REACT_APP_API}/route/designation/create/${organisationId}`)
+    axios
+      .get(
+        `${process.env.REACT_APP_API}/route/designation/create/${organisationId}`
+      )
       .then((response) => {
         setDesignation(response.data.designations);
       })
@@ -262,7 +271,8 @@ const Designation = () => {
 
   useEffect(() => {
     fetchDesignations();
-  });
+    // eslint-disable-next-line
+  }, []);
 
   const getPrefixFromName = (name, length) => {
     return name.substring(0, length);
@@ -271,7 +281,7 @@ const Designation = () => {
   const data = {
     designationName,
     designationId,
-    organizationId:organisationId
+    organizationId: organisationId,
   };
 
   return (
@@ -279,7 +289,7 @@ const Designation = () => {
       <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
         <Setup>
           <article className="SetupSection bg-white w-[80%]  h-max shadow-md rounded-sm border  items-center">
-          <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
+            <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
               <div className="flex items-center gap-3 ">
                 <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                   <BadgeOutlinedIcon className="!text-lg text-white" />
@@ -311,39 +321,38 @@ const Designation = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {
-                    designation.length === 0 ? (
-
-                      <tr className="!font-medium border-b text">No designations found</tr>
-                    )
-                    :
-                 
-                  (designation.map((data, id) => (
-                    <tr className="!font-medium border-b" key={id}>
-                      <td className="!text-left pl-9">{id + 1}</td>
-                      <td className=" py-3">{data?.designationName}</td>
-                      <td className="px-2">
-                        <IconButton
-                          color="primary"
-                          aria-label="edit"
-                          onClick={() => handleClickEdit(data._id)}
-                        >
-                          <EditOutlinedIcon />
-                        </IconButton>
-                        <IconButton
-                          color="error"
-                          aria-label="delete"
-                          onClick={() => handleDeleteDesignation(data._id)}
-                        >
-                          <DeleteOutlineIcon />
-                        </IconButton>
-                      </td>
+                  {designation.length === 0 ? (
+                    <tr className="!font-medium border-b text">
+                      No designations found
                     </tr>
-                  ))) }
+                  ) : (
+                    designation.map((data, id) => (
+                      <tr className="!font-medium border-b" key={id}>
+                        <td className="!text-left pl-9">{id + 1}</td>
+                        <td className=" py-3">{data?.designationName}</td>
+                        <td className="px-2">
+                          <IconButton
+                            color="primary"
+                            aria-label="edit"
+                            onClick={() => handleClickEdit(data._id)}
+                          >
+                            <EditOutlinedIcon />
+                          </IconButton>
+                          <IconButton
+                            color="error"
+                            aria-label="delete"
+                            onClick={() => handleDeleteDesignation(data._id)}
+                          >
+                            <DeleteOutlineIcon />
+                          </IconButton>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
-            <Dialog open={ click} onClose={handleClose} maxWidth="sm" fullWidth>
+            <Dialog open={click} onClose={handleClose} maxWidth="sm" fullWidth>
               <DialogTitle>
                 {editMode ? "Edit Designation" : "Add Designation"}
               </DialogTitle>
@@ -359,7 +368,7 @@ const Designation = () => {
                   value={designationName}
                   onChange={(e) => setDesignationName(e.target.value)}
                 />
-  
+
                 {designationIdRequired && (
                   <>
                     {prefixRequired && (
@@ -378,12 +387,14 @@ const Designation = () => {
                     )}
                   </>
                 )}
-  
+
                 <FormControlLabel
                   control={
                     <Checkbox
                       checked={enterDesignationId}
-                      onChange={() => setEnterDesignationId(!enterDesignationId)}
+                      onChange={() =>
+                        setEnterDesignationId(!enterDesignationId)
+                      }
                     />
                   }
                   label="Prefix Required"
@@ -394,37 +405,36 @@ const Designation = () => {
                       Note 1: Please provide the length of prefix characters
                       below.
                     </p>
-                  
                   </>
                 )}
                 {!enterDesignationId && (
                   <>
-                  <p className="font-extrabold">
-                    Note : you can add numbers by default
-                  </p>
+                    <p className="font-extrabold">
+                      Note : you can add numbers by default
+                    </p>
                   </>
                 )}
-  
+
                 {enterDesignationId && (
                   <>
-                  <TextField
-                    style={{ marginTop: "1rem" }}
-                    required
-                    name="numCharacters"
-                    size="small"
-                    className="w-full"
-                    label="no of Characters"
-                    type="number"
-                    value={numCharacters}
-                    onChange={(e) => setNumCharacters(e.target.value)}
-                  />
-                  <p className="font-extrabold my-2">
-                  Note 2: If the number of characters is 0, only numeric
-                  values are accepted.
-                </p>
-                </>
+                    <TextField
+                      style={{ marginTop: "1rem" }}
+                      required
+                      name="numCharacters"
+                      size="small"
+                      className="w-full"
+                      label="no of Characters"
+                      type="number"
+                      value={numCharacters}
+                      onChange={(e) => setNumCharacters(e.target.value)}
+                    />
+                    <p className="font-extrabold my-2">
+                      Note 2: If the number of characters is 0, only numeric
+                      values are accepted.
+                    </p>
+                  </>
                 )}
-  
+
                 <TextField
                   style={{ marginBottom: "1rem", marginTop: "1rem" }}
                   required
@@ -469,7 +479,7 @@ const Designation = () => {
                 </Button>
               </DialogActions>
             </Dialog>
-  
+
             <Dialog
               open={showUpdateConfirmationDialog}
               onClose={() => setShowUpdateConfirmationDialog(false)}
@@ -495,8 +505,6 @@ const Designation = () => {
               </DialogActions>
             </Dialog>
           </article>
-
-
         </Setup>
       </section>
     </>
