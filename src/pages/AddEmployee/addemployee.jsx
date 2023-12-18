@@ -46,7 +46,7 @@ const AddEmployee = () => {
   const authToken = cookies["aeigs"];
   const { organisationId } = useParams();
   const [userId, setUserId] = useState(null);
-  console.log(organisationId);
+
   useEffect(() => {
     try {
       const decodedToken = jwtDecode(authToken);
