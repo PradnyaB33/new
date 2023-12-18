@@ -12,15 +12,15 @@ import {
   Typography,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from 'dayjs';
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
-import React, { useContext, useState, useRef } from "react";
+import dayjs from 'dayjs';
+import React, { useContext, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import { useNavigate } from "react-router-dom";
 
 const AddOrganisation = () => {
   var LOGOURL;
@@ -52,12 +52,12 @@ const AddOrganisation = () => {
         "https://api.cloudinary.com/v1_1/dnpj0dyxu/image/upload",
         formData
       );
-  
+
       // Extract the URL from the Cloudinary response
       const imageURL = response.data.secure_url;
       console.log("Image URL:", imageURL);
       // setInputData({ ...inputdata, logo_url: imageURL })
-  
+
       // Set LOGOURL here after the request completes
       setLogoUrl(imageURL);
     } catch (error) {
@@ -139,7 +139,7 @@ const AddOrganisation = () => {
     }
 
     try {
-      setInputData({...inputdata, logo_url:logoUrl})
+      setInputData({ ...inputdata, logo_url: logoUrl })
 
       const payload = {
         name: inputdata.name,
@@ -154,7 +154,7 @@ const AddOrganisation = () => {
       };
       const result = await axios.post(
         `${process.env.REACT_APP_API}/route/organization/create`,
-       payload,
+        payload,
         {
           headers: {
             Authorization: authToken,
@@ -180,7 +180,7 @@ const AddOrganisation = () => {
       description: "",
       foundation_date: dayjs(),
       contact_number: "",
-      logo_url:""
+      logo_url: ""
     });
     setSelectedImage(null);
     setFirstEmptyField(null);
