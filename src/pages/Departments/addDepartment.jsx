@@ -7,18 +7,19 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import { useParams } from "react-router-dom";
 
 const CreateDepartment = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
-  const { organisationId } = useParams();
+
   const [enterDepartmentId, setEnterDepartmentId] = useState(false);
   const [numCharacters, setNumCharacters] = useState(0);
   const [departmentId, setDepartmentId] = useState("");
+  const organizationId = useParams().organisationId;
 
   const Employees = [
     { label: "Ramesh patnayak", email: "ramesh1@gmail.com" },
@@ -34,11 +35,11 @@ const CreateDepartment = () => {
 
   const handleGetLocation = (e) => {
     setLocationId(e);
-    console.log(e);
+    // console.log(e);
   };
   const initialFormValues = {
-    departmentId: "",
     departmentName: "",
+    departmentId: "",
     departmentDescription: "",
     departmentLocation: "",
     costCenterName: "",
@@ -46,6 +47,7 @@ const CreateDepartment = () => {
     departmentHeadName: "",
     departmentHeadDelegateName: "",
     organizationLocationId: locationID,
+    organizationId: organizationId,
   };
   const [formValues, setFormValues] = useState(initialFormValues);
   const [locations, setLocations] = useState([]);
@@ -53,7 +55,7 @@ const CreateDepartment = () => {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${organisationId}`,
+        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${organizationId}`,
         {
           headers: {
             Authorization: authToken,
@@ -62,17 +64,27 @@ const CreateDepartment = () => {
       )
       .then((response) => {
         setLocations(response.data);
+        // console.log("locations are: ", response.data);
       })
       .catch((error) => console.error("Error fetching locations:", error));
-  }, [authToken, organisationId]);
+  }, [authToken]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormValues({
-      ...formValues,
-      [name]: value,
-      departmentLocation: locationID,
-    });
+
+    // Handle departmentId separately
+    if (name === "departmentId") {
+      setFormValues({
+        ...formValues,
+        departmentId: value,
+      });
+    } else {
+      setFormValues({
+        ...formValues,
+        [name]: value,
+        departmentLocation: locationID,
+      });
+    }
   };
 
   const handleDepartmentIdChange = (e) => {
@@ -80,17 +92,20 @@ const CreateDepartment = () => {
     const charactersOnly = input.replace(/\d/g, "");
 
     if (charactersOnly.length <= numCharacters) {
-      setDepartmentId(input);
+      setFormValues({
+        ...formValues,
+        departmentId: input,
+      });
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
+      console.log(departmentId);
       console.log(formValues);
       await axios.post(
-        `${process.env.REACT_APP_API}/route/department/create/${organisationId}`,
+        `${process.env.REACT_APP_API}/route/department/create/${organizationId}`,
         formValues,
         {
           headers: {
@@ -102,9 +117,8 @@ const CreateDepartment = () => {
       setFormValues(initialFormValues);
       // window.location.reload();
     } catch (error) {
-      console.log(`🚀 ~ file: addDepartment.jsx:105 ~ error:`, error);
-      console.error(error.response.data.error);
-      handleAlert(true, "error", error.response.data.error);
+      console.error(error);
+      handleAlert(true, "error", error);
     }
   };
 
@@ -280,7 +294,7 @@ const CreateDepartment = () => {
               className="w-full"
               label="Department ID"
               type="text"
-              value={departmentId}
+              value={formValues.departmentId}
               onChange={handleDepartmentIdChange}
             />
             {!departmentId}
