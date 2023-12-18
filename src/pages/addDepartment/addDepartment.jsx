@@ -90,7 +90,7 @@ const CreateDepartment = () => {
     try {
       console.log(formValues);
       await axios.post(
-        `${process.env.REACT_APP_API}/route/department/create`,
+        `${process.env.REACT_APP_API}/route/department/create/${organisationId}`,
         formValues,
         {
           headers: {
