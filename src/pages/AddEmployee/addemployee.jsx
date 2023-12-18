@@ -373,7 +373,7 @@ const AddEmployee = () => {
           },
         }
       );
-
+      console.log(response);
       setAvailableMgrId(response.data.manager);
     } catch (error) {
       console.error(error);
@@ -523,6 +523,7 @@ const AddEmployee = () => {
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
+                      required
                       size="small"
                       type="text"
                       label="First Name"
@@ -782,7 +783,7 @@ const AddEmployee = () => {
                       <MenuItem value="" disabled>
                         Select Manager Id
                       </MenuItem>
-                      {availableMgrId.map((manager) => (
+                      {/* {availableMgrId.map((manager) => (
                         <MenuItem
                           key={manager._id}
                           value={manager.managerId ? manager.managerId._id : ""}
@@ -791,7 +792,18 @@ const AddEmployee = () => {
                             ? `${manager.managerId.first_name} ${manager.managerId.last_name}`
                             : "No Manager Name"}
                         </MenuItem>
-                      ))}
+                      ))} */}
+                      {availableMgrId.map(
+                        (manager) =>
+                          manager.managerId && ( // Render only if managerId exists
+                            <MenuItem
+                              key={manager._id}
+                              value={manager.managerId._id}
+                            >
+                              {`${manager.managerId.first_name} ${manager.managerId.last_name}`}
+                            </MenuItem>
+                          )
+                      )}
                     </Select>
                   </FormControl>
                 </div>

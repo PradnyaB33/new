@@ -56,6 +56,7 @@ const AddOrganisation = () => {
       // Extract the URL from the Cloudinary response
       const imageURL = response.data.secure_url;
       console.log("Image URL:", imageURL);
+      // setInputData({ ...inputdata, logo_url: imageURL })
   
       // Set LOGOURL here after the request completes
       setLogoUrl(imageURL);
@@ -72,7 +73,7 @@ const AddOrganisation = () => {
     contact_number: "",
     description: "",
     foundation_date: dayjs(),
-    // logo_url: LOGOURL
+    logo_url: ""
   };
 
   const isEmailValid = (email) => {
@@ -128,7 +129,7 @@ const AddOrganisation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const emptyField = Object.keys(inputdata).find((key) => !inputdata[key]);
+    const emptyField = Object.keys(inputdata).slice(0, -1).find((key) => !inputdata[key]);
 
     if (emptyField) {
       handleAlert(true, "error", `Please fill in the ${emptyField} field.`);
@@ -138,10 +139,22 @@ const AddOrganisation = () => {
     }
 
     try {
-      setInputData({...inputdata})
+      setInputData({...inputdata, logo_url:logoUrl})
+
+      const payload = {
+        name: inputdata.name,
+        web_url: inputdata.web_url,
+        industry_type: inputdata.industry_type,
+        email: inputdata.email,
+        location: inputdata.location,
+        contact_number: inputdata.contact_number,
+        description: inputdata.description,
+        foundation_date: inputdata.foundation_date,
+        logo_url: logoUrl, // Include logo_url in the payload
+      };
       const result = await axios.post(
         `${process.env.REACT_APP_API}/route/organization/create`,
-        { ...inputdata },
+       payload,
         {
           headers: {
             Authorization: authToken,
@@ -167,7 +180,7 @@ const AddOrganisation = () => {
       description: "",
       foundation_date: dayjs(),
       contact_number: "",
-      // logo_url:LOGOURL
+      logo_url:""
     });
     setSelectedImage(null);
     setFirstEmptyField(null);
