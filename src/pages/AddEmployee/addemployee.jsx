@@ -465,32 +465,23 @@ const AddEmployee = () => {
             },
           }
         );
-
-        if (response.data.success) {
+        if (response.status === 200) {
+          // Display a message to the user indicating that a manager ID is required
+          alert(
+            "Manager ID is required for an employee profile. Please provide a valid manager ID."
+          );
+        } else if (response.data && response.data.success) {
           handleAlert(true, "error", "Invalid authorization");
         } else {
           handleAlert(true, "success", response.data.message);
         }
       }
     } catch (error) {
-      if (error.response) {
-        if (error.response.status === 400) {
-          console.error(error.response.data.message);
-          handleAlert(
-            true,
-            "error",
-            error.response ? error.response.data.message : error.message
-          );
-        } else {
-        }
-      } else {
-        console.error(error.message);
-      }
-      // handleAlert(
-      //   true,
-      //   "error",
-      //   error.response ? error.response.data.message : error.message
-      // );
+      handleAlert(
+        true,
+        "error",
+        error.response ? error.response.data.message : error.message
+      );
     }
   };
 
