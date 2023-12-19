@@ -3,6 +3,7 @@ import Route from "./Route";
 import TestState from "./State/Function/Main";
 import UseEffectState from "./State/UseEffect/UseEffectContext";
 import UseState from "./State/UseState/UseContext";
+import BackComponent from "./components/BackComponent/BackComponent";
 import SwipeableTemporaryDrawer from "./components/app-layout/swipable-drawer";
 import AppAlert from "./utils/AppAlert/AppAlert";
 import AppLoader from "./utils/AppLoader/AppLoader";
@@ -26,6 +27,7 @@ function App() {
               } `}
             >
               <SwipeableTemporaryDrawer />
+              <BackComponent />
               <div style={{ height: "100%", width: "100%" }}>
                 <Route />
               </div>
