@@ -292,24 +292,6 @@ const AddEmployee = () => {
         .map(([role, obj]) => role);
 
       setAvailableProfiles(activeRoles);
-
-      // if (response.data && Array.isArray(response.data.roles)) {
-      //   const filteredProfiles = response.data.roles.filter(
-      //     (role) => role && role.isActive
-      //   );
-
-      //   if (filteredProfiles.length > 0) {
-      //     setAvailableProfiles(filteredProfiles);
-      //   } else {
-      //     handleAlert(
-      //       true,
-      //       "error",
-      //       "No active profiles available. Please add active profiles for your organization."
-      //     );
-      //   }
-      // } else {
-      //   handleAlert(true, "error", "Invalid data received from the server");
-      // }
     } catch (error) {
       console.error(error);
       handleAlert(true, "error", "Failed to fetch available profiles");
@@ -394,8 +376,9 @@ const AddEmployee = () => {
     education: "",
     permanant_address: "",
     relative_info: "",
-    manager_name: "",
     emer_contact: "",
+    adhar_card_number: "",
+    pan_card_number: "",
   });
 
   const handleDynamicFieldChange = (name, value) => {
@@ -780,18 +763,9 @@ const AddEmployee = () => {
                       inputProps={{ "aria-label": "Manager Id" }}
                     >
                       <MenuItem value="" disabled>
-                        Select Manager Id
+                        Select Manager Name
                       </MenuItem>
-                      {/* {availableMgrId.map((manager) => (
-                        <MenuItem
-                          key={manager._id}
-                          value={manager.managerId ? manager.managerId._id : ""}
-                        >
-                          {manager.managerId
-                            ? `${manager.managerId.first_name} ${manager.managerId.last_name}`
-                            : "No Manager Name"}
-                        </MenuItem>
-                      ))} */}
+
                       {availableMgrId.map(
                         (manager) =>
                           manager.managerId && ( // Render only if managerId exists
