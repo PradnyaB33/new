@@ -348,7 +348,7 @@ const AddEmployee = () => {
   const fetchAvailabeMgrId = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-manager`,
+        `${process.env.REACT_APP_API}/route/employee/get-manager/${organisationId}`,
         {
           headers: {
             Authorization: authToken,
@@ -473,11 +473,24 @@ const AddEmployee = () => {
         }
       }
     } catch (error) {
-      handleAlert(
-        true,
-        "error",
-        error.response ? error.response.data.message : error.message
-      );
+      if (error.response) {
+        if (error.response.status === 400) {
+          console.error(error.response.data.message);
+          handleAlert(
+            true,
+            "error",
+            error.response ? error.response.data.message : error.message
+          );
+        } else {
+        }
+      } else {
+        console.error(error.message);
+      }
+      // handleAlert(
+      //   true,
+      //   "error",
+      //   error.response ? error.response.data.message : error.message
+      // );
     }
   };
 

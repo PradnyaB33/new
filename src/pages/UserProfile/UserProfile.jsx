@@ -1,13 +1,15 @@
-import { LocationOn, Person } from "@mui/icons-material";
-import { Divider } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useState } from "react";
 import { UseContext } from "../../State/UseState/UseContext";
-
+import { Paper, Divider, FormControl, Button } from "@mui/material";
+import { TextField, InputLabel } from "@mui/material";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 const UserProfile = () => {
   const { cookies } = useContext(UseContext);
   const token = cookies["aeigs"];
   const [user, setUser] = useState();
+  console.log("user info", user);
   useEffect(() => {
     try {
       const decodedToken = jwtDecode(token);
@@ -20,75 +22,122 @@ const UserProfile = () => {
       console.error("Failed to decode the token:", error);
     }
   }, [token]);
+
   return (
-    <section className="min-h-screen bg-gray-50 px">
-      <article className="flex pt-20">
-        <div className="w-[35%] flex  justify-end">
-          <div className=" rounded-lg h-max">
-            <img
-              src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt="none"
-              className="h-[40vh]"
-            />
+    <>
+      <div
+        style={{
+          marginTop: "10%",
+          marginLeft: "20%",
+        }}
+      >
+        <Paper
+          sx={{
+            width: "100%",
+            maxWidth: "800px!important",
+            height: "100%",
+            maxHeight: "85vh!important",
+          }}
+          className="w-full"
+        >
+          <div className="w-full py-4">
+            <h1 className="text-lg pl-2 font-semibold">Account Setting</h1>
           </div>
-        </div>
 
-        <div className="w-[50%] flex flex-col pl-20 ">
-          <div className="flex gap-8 items-center">
-            <h1 className="text-2xl font-medium leading-relaxed">
-              {user?.first_name} {user?.middle_name} {user?.last_name}
-            </h1>
-            <p className="text-gray-400 !text-sm !font-medium">
-              <LocationOn className="!text-sm" /> {user?.address}
-            </p>
-          </div>
-          <p className="text-blue-500 !font-semibold">
-            {user?.profile.map((profile) => profile)}
-          </p>
-
-          <div className="pr-6 pt-4">
-            <div className="text-gray-400 flex items-center  border-b-[2px] pr-4 w-max border-blue-500 gap-2">
-              <Person />
-              <h1 className=" tracking-wider">About</h1>
+          <Paper className="border-none !pt-0 !px-0 shadow-md outline-none rounded-md">
+            <div className="w-full py-4">
+              <Divider variant="fullWidth" orientation="horizontal" />
             </div>
-            <Divider />
 
-            <div className="mt-6   p-4 rounded-md bg-white shadow-md  ">
-              <h1 className="text-gray-400 !text-xs tracking-wider">
-                CONTACT INFORMATION
-              </h1>
+            <Box sx={{ flexGrow: 1 }}>
+              <Grid container spacing={2}>
+                <Grid item xs={6} md={4}>
+                  <h1>Hello</h1>
+                </Grid>
+                <Grid item xs={6} md={8}>
+                  <div>
+                    <h1>Megha Dumbre</h1>
+                    <h1>Employee</h1>
+                    <div style={{ display: "flex", marginTop: "20px" }}>
+                      <button
+                        style={{
+                          backgroundColor: "red",
+                          color: "white",
+                          padding: "10px 20px",
+                          border: "none",
+                          borderRadius: "5px",
+                          cursor: "pointer",
+                          marginRight: "10px",
+                        }}
+                      >
+                        Delete Photo
+                      </button>
+                      <button
+                        style={{
+                          backgroundColor: "blue",
+                          color: "white",
+                          padding: "10px 20px",
+                          border: "none",
+                          borderRadius: "5px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Change Photo
+                      </button>
+                    </div>
+                  </div>
+                </Grid>
+              </Grid>
+            </Box>
 
-              <div className="flex gap-10 pt-2  items-center">
-                <div className="flex flex-col gap-4 pt-4 ">
-                  <h1 className="text-gray-800  !text-[15px]  leading-relaxed">
-                    Phone:
-                  </h1>
-                  <h1 className="text-gray-800  !text-[15px]  leading-relaxed">
-                    Phone2:
-                  </h1>
+            <div className="w-full py-6">
+              <Divider variant="fullWidth" orientation="horizontal" />
+            </div>
 
-                  <h1 className="text-gray-800  !text-[15px]  leading-relaxed">
-                    Email:
-                  </h1>
-                </div>
-
-                <div className="flex flex-col gap-4 pt-4">
-                  <h1 className=" !text-[15px]  leading-relaxed">
-                    {user?.emergency_contact}
-                  </h1>
-                  <h1 className=" !text-[15px]  leading-relaxed">
-                    {user?.phone_number}
-                  </h1>
-                  <h1 className=" !text-[15px]  leading-relaxed">
-                    {user?.email}
-                  </h1>
-                </div>
+            <div className="flex items-center gap-20">
+              <div className="w-full px-4">
+                <InputLabel>Additional Phone Number</InputLabel>
+                <FormControl sx={{ width: 300 }}>
+                  <TextField
+                    size="small"
+                    type="text"
+                    fullWidth
+                    margin="normal"
+                  />
+                </FormControl>
+              </div>
+              <div className="w-full">
+                <InputLabel>Add Chat Id</InputLabel>
+                <FormControl sx={{ width: 300 }}>
+                  <TextField
+                    size="small"
+                    type="text"
+                    fullWidth
+                    margin="normal"
+                  />
+                </FormControl>
               </div>
             </div>
-          </div>
-        </div>
-      </article>
-    </section>
+
+            <div className="w-full px-4">
+              <InputLabel>Add Status Message</InputLabel>
+              <FormControl sx={{ width: 730 }}>
+                <TextField size="small" type="text" fullWidth margin="normal" />
+              </FormControl>
+            </div>
+
+            <div className="w-full py-4 px-4 flex justify-center">
+              <Button color="error" variant="outlined">
+                Cancel
+              </Button>
+              <Button type="submit" variant="contained" color="primary">
+                Save Change
+              </Button>
+            </div>
+          </Paper>
+        </Paper>
+      </div>
+    </>
   );
 };
 
