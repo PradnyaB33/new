@@ -106,6 +106,7 @@ const AddEmployee = () => {
     companyEmailError,
     setCompanyEmailError,
   } = useAddEmpForm();
+
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
