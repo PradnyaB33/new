@@ -4,11 +4,10 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { TestContext } from "../../State/Function/Main";
-import { UseContext } from "../../State/UseState/UseContext";
-import Setup from "../SetUpOrganization/Setup";
 
-import "../../index.css";
+import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
+import Setup from "../../SetUpOrganization/Setup";
 
 const AddRoles = () => {
   const { organisationId } = useParams("");
