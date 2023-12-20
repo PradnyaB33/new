@@ -777,7 +777,8 @@ const AddEmployee = () => {
                               key={manager._id}
                               value={manager.managerId._id}
                             >
-                              {`${manager.managerId.first_name} ${manager.managerId.last_name}`}
+                              {manager.managerId}
+                              {/* {`${manager.managerId.first_name} ${manager.managerId.last_name}`} */}
                             </MenuItem>
                           )
                       )}
