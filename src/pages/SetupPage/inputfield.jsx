@@ -27,7 +27,7 @@ const Inputfield = () => {
             },
           }
         );
-
+        console.log(response.data.inputField.inputDetail);
         setinputDetail(response.data.inputField.inputDetail);
       } catch (error) {
         console.error("Error fetching input fields:", error);

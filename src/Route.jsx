@@ -34,7 +34,8 @@ import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
-import CreateDepartment from "./pages/addDepartment/addDepartment";
+import CreateDepartment from "./pages/Departments/addDepartment";
+import DepartmentList from "./pages/Departments/department-list";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 
@@ -61,6 +62,10 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/create-department"
         element={<CreateDepartment />}
+      />
+      <Route
+        path="/department/get/:organizationId"
+        element={<DepartmentList />}
       />
       <Route path="/userprofile" element={<UserProfile />} />
       <Route path="/organisation/:id" element={<SingleOrganisation />} />

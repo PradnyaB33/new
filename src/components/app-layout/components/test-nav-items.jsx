@@ -15,6 +15,7 @@ import {
   PersonAdd,
   PersonRemove,
   Settings,
+  SwipeLeftAlt,
   TrendingUp,
 } from "@mui/icons-material";
 import { jwtDecode } from "jwt-decode";
@@ -58,6 +59,12 @@ const TestNavItems = ({ toggleDrawer }) => {
         icon: <Category className="text-white" />,
         isVisible: true,
         routes: [
+          {
+            key: "orglist",
+            link: "/organizationList",
+            icon: <SwipeLeftAlt className="text-white" />,
+            text: "Go to Organisation",
+          },
           {
             key: "attendance",
             link: "/leave",
@@ -200,7 +207,7 @@ const TestNavItems = ({ toggleDrawer }) => {
         routes: [
           {
             key: "addOrganisation",
-            link: "/organisation-add",
+            link: "/add-organisation",
             icon: <AddAlert className="text-white" />,
             text: "Add Organisation",
           },
