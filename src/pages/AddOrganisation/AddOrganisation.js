@@ -16,7 +16,6 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
-import dayjs from "dayjs";
 import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
@@ -54,17 +53,15 @@ const AddOrganisation = () => {
         formData
       );
 
-      // Extract the URL from the Cloudinary response
       const imageURL = response.data.secure_url;
       console.log("Image URL:", imageURL);
-      // setInputData({ ...inputdata, logo_url: imageURL })
 
-      // Set LOGOURL here after the request completes
       setLogoUrl(imageURL);
     } catch (error) {
       console.error("Error uploading image:", error);
     }
   };
+  //TODO : this is data field
   const data = {
     name: "",
     web_url: "",
@@ -173,18 +170,6 @@ const AddOrganisation = () => {
 
       handleAlert(true, "error", "Failed to create organization");
     }
-
-    setInputData({
-      name: "",
-      web_url: "",
-      industry_type: "",
-      email: "",
-      location: "",
-      description: "",
-      foundation_date: dayjs(),
-      contact_number: "",
-      logo_url: "",
-    });
     setSelectedImage(null);
     setFirstEmptyField(null);
   };
@@ -263,10 +248,10 @@ const AddOrganisation = () => {
             style={{ marginTop: "20px", width: "80%", height: "10px" }}
             size="small"
           >
-            <InputLabel id="industry-type-label">Industry Type</InputLabel>
+            <InputLabel id="demo-simple-select-label">Industry Type</InputLabel>
             <Select
-              labelId="industry-type-label"
-              id="industry-type"
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
               name="industry_type"
               value={inputdata.industry_type}
               onChange={handleData}

@@ -18,12 +18,10 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Setup from "../SetUpOrganization/Setup";
 import { UseContext } from "../../State/UseState/UseContext";
-// import { tr } from "date-fns/locale";
 
 const Designation = () => {
   const [click, setClick] = useState(false);
   const { organisationId } = useParams();
-  // console.log(organisationId);
   const [designationIdRequired, setDesignationIdRequired] = useState(false);
   const { setAppAlert } = useContext(UseContext);
 
@@ -45,19 +43,19 @@ const Designation = () => {
     useState(false);
 
   // useEffect(() =>{
-  //   const filteredDesignations = designation.filter(
+    // !done for the day guys
+  // const filteredDesignations = designation.filter(
   //     (d) => d.organizationId === organisationId
   //   )
-  //   console.log(filteredDesignations);
+ 
   // },[])
 
   const handleClick = (id) => {
-    // setDesignationError("");
     setClick(!click);
     setDesignationId("");
     setPrefixRequired(false);
     setPrefixLength(0);
-    setNumCharacters(0);
+    setNumCharacters(1);
     setDesignationName("");
     setEditMode(false);
     setCounter(1);
@@ -68,8 +66,6 @@ const Designation = () => {
       .then((response) => {
         setDesignation(response.data.designation);
         console.log(designation);
-        // console.log(response.data.designation);
-        // console.log(filteredDesignation);
         setTrackedId(id);
         setDesignationName(response.data.designation.designationName);
         setDesignationId(response.data.designation.designationId);
@@ -85,7 +81,7 @@ const Designation = () => {
     setDesignationId("");
     setPrefixRequired(false);
     setPrefixLength(0);
-    setNumCharacters(0);
+    setNumCharacters(1);
     setDesignationName("");
     setCounter(1);
     setEditMode(true);
@@ -110,12 +106,12 @@ const Designation = () => {
     setPrefixRequired(false);
     setClick(true);
     if (!designationName.trim()) {
-      // setDesignationError("Designation Name is required.");
+      // todo setDesignationError("Designation Name is required.");
       return;
     }
 
     if (designationIdRequired && !designationId.trim()) {
-      // setDesignationError("Designation ID is required.");
+      // ! setDesignationError("Designation ID is required.");
       return;
     }
 
@@ -134,7 +130,7 @@ const Designation = () => {
           });
           console.log("Designation added successfully:", response.data);
           fetchDesignations();
-          handleClose(); // Close the dialog after adding
+          handleClose(); // ? Close the dialog after adding
         })
         .catch((error) => {
           setAppAlert({
@@ -185,7 +181,7 @@ const Designation = () => {
     setDesignationIdRequired(false);
     setPrefixRequired(false);
     setPrefixLength(0);
-    setNumCharacters(0);
+    setNumCharacters(1);
     setDesignationName("");
     setClick(false);
     setEditMode(false);
@@ -233,7 +229,7 @@ const Designation = () => {
             alert: true,
             type: "success",
             msg: "designation deleted successfully",
-          });
+          })
           fetchDesignations();
         })
         .catch((error) => {
@@ -320,10 +316,10 @@ const Designation = () => {
                     </th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody >
                   {designation.length === 0 ? (
-                    <tr className="!font-medium border-b text">
-                      No designations found
+                    <tr className="w-full !font-medium border-b text relative text-center">
+                      No designations found !
                     </tr>
                   ) : (
                     designation.map((data, id) => (
