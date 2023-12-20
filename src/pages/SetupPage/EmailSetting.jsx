@@ -194,7 +194,7 @@ const EmailSetting = () => {
                                 <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                                     <tr className="!font-semibold ">
                                         <th scope="col" className="!text-left pl-8 py-3 w-1/12">
-                                            SR NO
+                                            Sr No
                                         </th>
                                         <th scope="col" className="py-3 w-8/12">
                                             Email
@@ -204,14 +204,21 @@ const EmailSetting = () => {
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody >
-                                    {emails.map((data, idx) => (
-                                        <tr className="!font-medium" key={idx}>
-                                            <td className="!text-left pl-9 py-3 w-1/12" >{idx + 1}</td>
+                                <tbody>
+                                {emails.length === 0 ? (
+                    <tr className=" text py-3 text-center">
+
+                      No Emails found
+                    </tr>
+                  )  :
+                                    (emails.map((data, idx) => (
+                                        <tr className="!font-medium border-b" key={idx}>
+                                            <td className="!text-left pl-9 py-4 w-1/12" >{idx + 1}</td>
                                             <td>{data.email}</td>
                                             <IconButton
                                                 color="primary"
                                                 aria-label="edit"
+                                                style={{paddingTop:"0.8rem"}}
                                                 onClick={() => handleEdit(data._id)}
                                             >
                                                 <EditOutlinedIcon />
@@ -219,14 +226,15 @@ const EmailSetting = () => {
                                             <IconButton
                                                 color="error"
                                                 aria-label="delete"
+                                                style={{paddingTop:"0.8rem"}}
                                                 onClick={() => handleDelete(data._id)}
                                             >
                                                 <DeleteOutlineIcon />
                                             </IconButton>
                                         </tr>
-                                    ))}
+                                    )))}
                                 </tbody>
-                            </table>
+                            </table> 
                             <Dialog open={handleOpen} onClose={handleClose} maxWidth="sm" fullWidth>
                                 <DialogTitle>
                                     Add Email
@@ -291,8 +299,8 @@ const EmailSetting = () => {
                                             helperText={error}
                                         />
                                         <div className='flex gap-5 mt-5'>
-                                            <Button variant='contained' onClick={handleUpdate}>edit</Button>
-                                            <Button color='warning' variant='contained' onClick={handleClose}>cancel</Button>
+                                            <Button color='warning' variant='contained' onClick={handleUpdate}>edit</Button>
+                                            <Button  variant='contained' onClick={handleClose}>cancel</Button>
                                         </div>
                                     </div>
                                 </DialogContent>
