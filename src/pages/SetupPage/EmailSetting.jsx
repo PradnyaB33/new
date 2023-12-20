@@ -1,193 +1,209 @@
 // Import necessary components and icons
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from "react";
 import {
-    Button,
-    TextField,
-    IconButton,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    Typography
+  Button,
+  TextField,
+  IconButton,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Typography,
 } from "@mui/material";
-import axios from 'axios';
+import axios from "axios";
 import { useParams } from "react-router-dom";
-import { UseContext } from '../../State/UseState/UseContext'; // Adjust the path based on your project structure
+import { UseContext } from "../../State/UseState/UseContext"; // Adjust the path based on your project structure
 import Setup from "../SetUpOrganization/Setup";
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 const EmailSetting = () => {
-    const id = useParams().organisationId;
-    const { setAppAlert } = useContext(UseContext);
-    const [emails, setEmails] = useState([]);
-    const [email, setEmail] = useState('');
-    const [error, setError] = useState('');
-    const [handleOpen, setHandleOpen] = useState(false);
-    const [newHandleOpen, setNewHandleOpen] = useState(false);
-    const [handleDeleteOpen, setHandleDeleteOpen] = useState(false);
-    const [handleUpdateOpen, setHandleUpdateOpen] = useState(false);
-    const [editEmailId, setEditEmailId] = useState(""); // Add state for the email to edit
-    const [editEmail, setEditEmail] = useState(""); // Add state for the edited email
+  const id = useParams().organisationId;
+  const { setAppAlert } = useContext(UseContext);
+  const [emails, setEmails] = useState([]);
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [handleOpen, setHandleOpen] = useState(false);
+  const [newHandleOpen, setNewHandleOpen] = useState(false);
+  const [handleDeleteOpen, setHandleDeleteOpen] = useState(false);
+  const [handleUpdateOpen, setHandleUpdateOpen] = useState(false);
+  const [editEmailId, setEditEmailId] = useState(""); // Add state for the email to edit
+  const [editEmail, setEditEmail] = useState(""); // Add state for the edited email
 
-    useEffect(() => {
-        const fetchEmails = async () => {
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_API}/route/email/get/${id}`);
-                setEmails(response.data.emails);
-            } catch (error) {
-                console.error("Error fetching emails:", error);
-            }
-        };
-
-        fetchEmails();
-    }, [email]);
-
-    const handleCheck = () => {
-        email ? setNewHandleOpen(true) : setNewHandleOpen(false);
-        setError("Email is required");
+  useEffect(() => {
+    const fetchEmails = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/email/get/${id}`
+        );
+        setEmails(response.data.emails);
+      } catch (error) {
+        console.error("Error fetching emails:", error);
+      }
     };
 
-    const handleEmailChange = (event) => {
-        setEmail(event.target.value);
-        setError('');
-    };
+    fetchEmails();
+  }, [email, id]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!email.trim()) {
-            setError('Email is required');
-            return;
-        }
+  const handleCheck = () => {
+    email ? setNewHandleOpen(true) : setNewHandleOpen(false);
+    setError("Email is required");
+  };
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+    setError("");
+  };
 
-        if (!emailRegex.test(email)) {
-            setError('Invalid email address');
-            return;
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email.trim()) {
+      setError("Email is required");
+      return;
+    }
 
-        try {
-            const response = await axios.post(`${process.env.REACT_APP_API}/route/email/create`, { email, organizationId: id });
-            setAppAlert({
-                alert: true,
-                type: 'success',
-                msg: 'Email submitted successfully!',
-            });
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            setNewHandleOpen(false);
-            setHandleOpen(false);
+    if (!emailRegex.test(email)) {
+      setError("Invalid email address");
+      return;
+    }
 
-            setEmails([...emails, response.data.email]); // Add the newly created email to the emails state
-            setEmail('');
-            setError('');
-        } catch (error) {
-            console.error('Error submitting email:', error);
-            setAppAlert({
-                alert: true,
-                type: 'error',
-                msg: 'Error submitting email. Please try again.',
-            });
-            setHandleOpen(false);
-            setNewHandleOpen(false);
-            setEmail("");
-        }
-    };
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/route/email/create`,
+        { email, organizationId: id }
+      );
+      setAppAlert({
+        alert: true,
+        type: "success",
+        msg: "Email submitted successfully!",
+      });
 
-    const handleClose = () => {
-        setHandleOpen(false);
-        setNewHandleOpen(false);
-        setHandleUpdateOpen(false);
-        setHandleDeleteOpen(false);
-    };
+      setNewHandleOpen(false);
+      setHandleOpen(false);
 
-    const handleDelete = async (id) => {
-        setEditEmailId(id);
-        setHandleDeleteOpen(true);
-    };
+      setEmails([...emails, response.data.email]); // Add the newly created email to the emails state
+      setEmail("");
+      setError("");
+    } catch (error) {
+      console.error("Error submitting email:", error);
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: "Error submitting email. Please try again.",
+      });
+      setHandleOpen(false);
+      setNewHandleOpen(false);
+      setEmail("");
+    }
+  };
 
-    const handleDeleteConfirmation = async () => {
-        try {
-            await axios.delete(`${process.env.REACT_APP_API}/route/email/delete/${editEmailId}`);
-            setAppAlert({
-                alert: true,
-                type: 'success',
-                msg: 'Email Deleted Successfully.',
-            });
-            setEmails(emails.filter(data => data._id !== editEmailId));
-            setHandleDeleteOpen(false);
-        } catch (e) {
-            console.log(e);
-            setAppAlert({
-                alert: true,
-                type: 'error',
-                msg: 'Failed to delete email',
-            });
-        }
-    };
+  const handleClose = () => {
+    setHandleOpen(false);
+    setNewHandleOpen(false);
+    setHandleUpdateOpen(false);
+    setHandleDeleteOpen(false);
+  };
 
-    const handleEdit = async (id) => {
-        setEditEmailId(id);
-        setHandleUpdateOpen(true);
+  const handleDelete = async (id) => {
+    setEditEmailId(id);
+    setHandleDeleteOpen(true);
+  };
 
-        try {
-            const response = await axios.get(`${process.env.REACT_APP_API}/route/email/getone/${id}`);
-            const emailDetails = response.data.email;
+  const handleDeleteConfirmation = async () => {
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_API}/route/email/delete/${editEmailId}`
+      );
+      setAppAlert({
+        alert: true,
+        type: "success",
+        msg: "Email Deleted Successfully.",
+      });
+      setEmails(emails.filter((data) => data._id !== editEmailId));
+      setHandleDeleteOpen(false);
+    } catch (e) {
+      console.log(e);
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: "Failed to delete email",
+      });
+    }
+  };
 
-            setEditEmail(emailDetails.email);
-        } catch (error) {
-            console.log(error);
-            console.log("Error occurred while fetching email details");
-        }
-    };
+  const handleEdit = async (id) => {
+    setEditEmailId(id);
+    setHandleUpdateOpen(true);
 
-    const handleEditEmailChange = (event) => {
-        setEditEmail(event.target.value); 
-    };
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/email/getone/${id}`
+      );
+      const emailDetails = response.data.email;
 
-    const handleUpdate = async () => {
-        try {
-            await axios.patch(`${process.env.REACT_APP_API}/route/email/edit/${editEmailId}`, { email: editEmail });
-            console.log("Updated successfully");
-            setAppAlert({
-                alert: true,
-                type: 'success',
-                msg: 'Email Updated Successfully.',
-            });
-            setEmails(emails.map((data) => (data._id === editEmailId ? { ...data, email: editEmail } : data)));
+      setEditEmail(emailDetails.email);
+    } catch (error) {
+      console.log(error);
+      console.log("Error occurred while fetching email details");
+    }
+  };
 
-            setHandleUpdateOpen(false);
-        } catch (error) {
-            console.log(error);
-            console.log("Error occurred");
-            setAppAlert({
-                alert: true,
-                type: 'error',
-                msg: 'Failed to update email',
-            });
-        }
-    };
+  const handleEditEmailChange = (event) => {
+    setEditEmail(event.target.value);
+  };
 
-    return (
-        <>
-            <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
-                <Setup>
-                    <article className="SetupSection bg-white w-[80%] h-max shadow-md rounded-sm border items-center">
-                        <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
-                            <div className="flex items-center gap-3">
-                                <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
-                                    <EmailOutlinedIcon className="!text-lg text-white" />
-                                </div>
-                                <h1 className="!text-lg tracking-wide">Add Emails</h1>
-                            </div>
-                            <Button
-                                className="!font-semibold !bg-sky-500 flex items-center gap-2"
-                                variant="contained"
-                                onClick={() => setHandleOpen(true)}
-                            >
-                                Create Email
-                            </Button>
-                        </div>
+  const handleUpdate = async () => {
+    try {
+      await axios.patch(
+        `${process.env.REACT_APP_API}/route/email/edit/${editEmailId}`,
+        { email: editEmail }
+      );
+      console.log("Updated successfully");
+      setAppAlert({
+        alert: true,
+        type: "success",
+        msg: "Email Updated Successfully.",
+      });
+      setEmails(
+        emails.map((data) =>
+          data._id === editEmailId ? { ...data, email: editEmail } : data
+        )
+      );
+
+      setHandleUpdateOpen(false);
+    } catch (error) {
+      console.log(error);
+      console.log("Error occurred");
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: "Failed to update email",
+      });
+    }
+  };
+
+  return (
+    <>
+      <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
+        <Setup>
+          <article className="SetupSection bg-white w-[80%] h-max shadow-md rounded-sm border items-center">
+            <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
+              <div className="flex items-center gap-3">
+                <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+                  <EmailOutlinedIcon className="!text-lg text-white" />
+                </div>
+                <h1 className="!text-lg tracking-wide">Add Emails</h1>
+              </div>
+              <Button
+                className="!font-semibold !bg-sky-500 flex items-center gap-2"
+                variant="contained"
+                onClick={() => setHandleOpen(true)}
+              >
+                Create Email
+              </Button>
+            </div>
 
                         <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
                             <table className="min-w-full bg-white text-left !text-sm font-light">
@@ -265,20 +281,31 @@ const EmailSetting = () => {
                                 </DialogContent>
                             </Dialog>
 
-                            <Dialog open={newHandleOpen} onClose={handleClose} maxWidth="sm" fullWidth>
-                                <DialogTitle>
-                                    Confirmation
-                                </DialogTitle>
-                                <DialogContent>
-                                    <Typography>
-                                        Are you sure you want to add this Email?
-                                    </Typography>
-                                    <div className='flex gap-5 my-5'>
-                                        <Button variant='contained' onClick={handleSubmit}>add</Button>
-                                        <Button color='warning' variant='contained' onClick={handleClose}>cancel</Button>
-                                    </div>
-                                </DialogContent>
-                            </Dialog>
+              <Dialog
+                open={newHandleOpen}
+                onClose={handleClose}
+                maxWidth="sm"
+                fullWidth
+              >
+                <DialogTitle>Confirmation</DialogTitle>
+                <DialogContent>
+                  <Typography>
+                    Are you sure you want to add this Email?
+                  </Typography>
+                  <div className="flex gap-5 my-5">
+                    <Button variant="contained" onClick={handleSubmit}>
+                      add
+                    </Button>
+                    <Button
+                      color="warning"
+                      variant="contained"
+                      onClick={handleClose}
+                    >
+                      cancel
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
 
                             <Dialog open={handleUpdateOpen} onClose={handleClose} maxWidth="sm" fullWidth>
                                 <DialogTitle>
@@ -306,26 +333,37 @@ const EmailSetting = () => {
                                 </DialogContent>
                             </Dialog>
 
-                            <Dialog open={handleDeleteOpen} onClose={handleClose} maxWidth="sm" fullWidth>
-                                <DialogTitle>
-                                    Confirmation
-                                </DialogTitle>
-                                <DialogContent>
-                                    <Typography>
-                                        Are you sure you want to delete this Email?
-                                    </Typography>
-                                    <div className='flex gap-5 mt-5'>
-                                        <Button color='error' variant='contained' onClick={handleDeleteConfirmation}>delete</Button>
-                                        <Button variant='contained' onClick={handleClose}>cancel</Button>
-                                    </div>
-                                </DialogContent>
-                            </Dialog>
-                        </div>
-                    </article>
-                </Setup>
-            </section>
-        </>
-    );
+              <Dialog
+                open={handleDeleteOpen}
+                onClose={handleClose}
+                maxWidth="sm"
+                fullWidth
+              >
+                <DialogTitle>Confirmation</DialogTitle>
+                <DialogContent>
+                  <Typography>
+                    Are you sure you want to delete this Email?
+                  </Typography>
+                  <div className="flex gap-5 mt-5">
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={handleDeleteConfirmation}
+                    >
+                      delete
+                    </Button>
+                    <Button variant="contained" onClick={handleClose}>
+                      cancel
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </article>
+        </Setup>
+      </section>
+    </>
+  );
 };
 
 export default EmailSetting;

@@ -20,21 +20,15 @@ const EmployeeList = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
-  console.log("organization id", organisationId);
 
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
-      console.log(apiUrl);
-      const response = await axios.get(
-        apiUrl,
-
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
+      const response = await axios.get(apiUrl, {
+        headers: {
+          Authorization: authToken,
+        },
+      });
       console.log(response);
       setAvailableEmployee(response.data.employees);
       setCurrentPage(page);
@@ -55,6 +49,8 @@ const EmployeeList = () => {
     fetchAvailableEmployee(currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
+
+  console.log("employee", availableEmployee);
 
   const prePage = () => {
     if (currentPage !== 1) {
@@ -186,11 +182,12 @@ const EmployeeList = () => {
                       <td className="py-3">{item.first_name}</td>
                       <td className="py-3">{item.last_name}</td>
                       <td className="py-3">{item.email}</td>
-                      <td className="py-3">
+                      {/* <td className="py-3">
                         {item.worklocation.map((location, index) => (
                           <span key={index}>{location.city}</span>
                         ))}
-                      </td>
+                      </td> */}
+                      <td className="py-3">{item.worklocation}</td>
                       <td className="py-3">{item.deptname}</td>
                       <td className="py-3">{item.phone_number}</td>
                       <td className="whitespace-nowrap px-6 py-2">
