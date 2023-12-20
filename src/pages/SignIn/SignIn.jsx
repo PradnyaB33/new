@@ -25,7 +25,6 @@ const SignIn = () => {
           password,
         }
       );
-      console.log(`🚀 ~ response:`, response);
       setCookie("aeigs", response.data.token);
       handleAlert(
         true,

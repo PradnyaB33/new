@@ -50,7 +50,7 @@ const OrgList = () => {
             </button>
           </Link>
         </div>
-      </div>
+      </div>  
 
       {!isLoading && (
         <div className="flex flex-wrap  gap-x-6 gap-y-2 px-10">

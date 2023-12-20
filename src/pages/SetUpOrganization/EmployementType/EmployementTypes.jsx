@@ -55,7 +55,7 @@ const EmployementTypes = () => {
 
   // Get Query
   const { data: empList, isLoading } = useQuery(
-    `empTypes ${organisationId}`,
+    ["empTypes", organisationId],
     async () => {
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/employment-types-organisation/${organisationId}`,
@@ -131,7 +131,9 @@ const EmployementTypes = () => {
               </Button>
             </div>
 
-            {empList?.empTypes?.length > 0 ? (
+            {isLoading ? (
+              <EmployeeTypeSkeleton />
+            ) : empList?.empTypes?.length > 0 ? (
               <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
                 <table className="min-w-full bg-white  text-left !text-sm font-light">
                   <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
@@ -148,33 +150,26 @@ const EmployementTypes = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {isLoading ? (
-                      <EmployeeTypeSkeleton />
-                    ) : (
-                      empList?.empTypes?.map((emptype, id) => (
-                        <tr className="!font-medium border-b" key={id}>
-                          <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                          <td className="py-3 ">{emptype?.title}</td>
-                          <td className="whitespace-nowrap px-6 py-2">
-                            <IconButton
-                              onClick={() =>
-                                handleDeleteConfirmation(emptype._id)
-                              }
-                            >
-                              <Delete className="!text-xl" color="error" />
-                            </IconButton>
-                            <IconButton
-                              onClick={() => handleEditModalOpen(emptype._id)}
-                            >
-                              <BorderColor
-                                className="!text-xl"
-                                color="success"
-                              />
-                            </IconButton>
-                          </td>
-                        </tr>
-                      ))
-                    )}
+                    {empList?.empTypes?.map((emptype, id) => (
+                      <tr className="!font-medium border-b" key={id}>
+                        <td className="!text-left pl-8 py-3 ">{id + 1}</td>
+                        <td className="py-3 ">{emptype?.title}</td>
+                        <td className="whitespace-nowrap px-6 py-2">
+                          <IconButton
+                            onClick={() =>
+                              handleDeleteConfirmation(emptype._id)
+                            }
+                          >
+                            <Delete className="!text-xl" color="error" />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => handleEditModalOpen(emptype._id)}
+                          >
+                            <BorderColor className="!text-xl" color="success" />
+                          </IconButton>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
