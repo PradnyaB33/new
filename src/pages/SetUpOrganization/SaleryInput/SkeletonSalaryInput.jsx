@@ -21,9 +21,8 @@ const SkeletonSalaryInput = () => {
           </tr>
         </thead>
         {numberArray.map((i) => (
-          <tbody>
+          <tbody key={i}>
             <tr
-              key={i}
               className={`${
                 i % 2 === 0 ? "bg-gray-50" : "bg-white"
               } border-b dark:border-neutral-500`}

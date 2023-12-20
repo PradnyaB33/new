@@ -245,11 +245,11 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
         setEmpTypes("");
         setSalaryStructures("");
         handleClose();
-        handleAlert(true, "success", "Employee types generated succesfully");
+        handleAlert(true, "success", "Salary template generated succesfully");
       },
 
       onError: () => {
-        handleAlert(true, "error", "Somerthing went wrong");
+        handleAlert(true, "error", "Something went wrong");
       },
     }
   );

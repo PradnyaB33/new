@@ -348,7 +348,7 @@ const AddEmployee = () => {
   const fetchAvailabeMgrId = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-manager`,
+        `${process.env.REACT_APP_API}/route/employee/get-manager/${organisationId}`,
         {
           headers: {
             Authorization: authToken,
@@ -465,8 +465,12 @@ const AddEmployee = () => {
             },
           }
         );
-
-        if (response.data.success) {
+        if (response.status === 200) {
+          // Display a message to the user indicating that a manager ID is required
+          alert(
+            "Manager ID is required for an employee profile. Please provide a valid manager ID."
+          );
+        } else if (response.data && response.data.success) {
           handleAlert(true, "error", "Invalid authorization");
         } else {
           handleAlert(true, "success", response.data.message);
@@ -773,7 +777,8 @@ const AddEmployee = () => {
                               key={manager._id}
                               value={manager.managerId._id}
                             >
-                              {`${manager.managerId.first_name} ${manager.managerId.last_name}`}
+                              {manager.managerId}
+                              {/* {`${manager.managerId.first_name} ${manager.managerId.last_name}`} */}
                             </MenuItem>
                           )
                       )}
