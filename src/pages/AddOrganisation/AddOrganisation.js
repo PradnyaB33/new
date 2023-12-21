@@ -177,50 +177,53 @@ const AddOrganisation = () => {
 
   return (
     <>
+    <div className="w-full h-[92vh] bg-white">
       <BackComponent />
 
       <form
         style={{
           display: "flex",
           alignItems: "center",
-          height: "80vh",
+          height: "90vh",
+          backgroundColor:"white",
           width: "100%",
         }}
         action="submit"
       >
+        
         <Container
           style={{
             display: "flex",
-            paddingTop: "5px",
             backgroundColor: "#fefdff",
             padding: "10px",
             paddingBottom: "30px",
-            borderRadius: "5px",
+            borderRadius: "20px",
             flexDirection: "column",
             justifyContent: "space-around",
             alignItems: "center",
-            height: "90vh",
-            border: "1.5PX solid rgb(177, 177, 177)",
+            height: "85vh",
+            position:"relative",
+            border:"2px solid #dedede",
+            top:"10px",
             margin: "auto",
-            position: "relative",
-            top: "20px",
           }}
+          className="shadow-md"
           maxWidth="sm"
         >
           <Typography
             style={{
               color: "#1D6EB7",
               fontWeight: "600",
-              position: "relative",
-              top: "15px",
+              position:"relative",
+              top:"5px"
             }}
             variant="h4"
           >
-            Add Organisation
+            Add Organization
           </Typography>
           <TextField
             required
-            style={{ marginTop: "20px", height: "10px" }}
+            style={{ marginTop: "5px", height: "10px" }}
             name="name"
             onChange={handleData}
             value={inputdata.name}
@@ -399,6 +402,7 @@ const AddOrganisation = () => {
           </Button>
         </Container>
       </form>
+      </div>
     </>
   );
 };
