@@ -107,7 +107,7 @@ const SalaryInput = () => {
 
   // Get Query
   const { data: salaryTemplate, isLoading } = useQuery(
-    "salaryTemplates",
+    ["salaryTemplates", organisationId],
     async () => {
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/salary-template-org/${organisationId}`,
