@@ -24,7 +24,6 @@ import { UseContext } from "../../State/UseState/UseContext";
 import BackComponent from "../../components/BackComponent/BackComponent";
 
 const AddOrganisation = () => {
-  // var LOGOURL;
   const navigate = useNavigate();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
