@@ -1,14 +1,20 @@
-import { Button, TextField } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
-import TermsCondition from "../../components/termscondition/termsCondition";
+import { Button } from "@mui/material";
+import { Email} from "@mui/icons-material";
+import React, { useContext, useState } from "react";
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import useSignupFormStore from "../../hooks/useSignUpForm";
-
-const Signup = () => {
+import LockIcon from '@mui/icons-material/Lock';
+import NoEncryptionIcon from '@mui/icons-material/NoEncryption';
+import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
+import BadgeIcon from '@mui/icons-material/Badge';
+import TermsCondition from "../../components/termscondition/termsCondition";
+const SignIn = () => {
   const { handleAlert } = useContext(TestContext);
   const router = useNavigate();
+  const location = useLocation();
 
   const {
     firstName,
@@ -23,8 +29,6 @@ const Signup = () => {
     setLastNameError,
     emailError,
     setEmailError,
-    orgnizationName,
-    setOrganizationName,
   } = useSignupFormStore();
 
   const [middleName, setMiddleName] = useState("");
@@ -36,6 +40,7 @@ const Signup = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
   const handlePasswordChange = (enteredPassword) => {
     setPassword(enteredPassword);
     if (!enteredPassword) {
@@ -59,6 +64,7 @@ const Signup = () => {
       setConfirmPasswordError("");
     }
   };
+
   const isValidEmail = (email) => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
     const validDomain =
@@ -76,6 +82,7 @@ const Signup = () => {
       email,
       password,
     };
+
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create`,
@@ -83,8 +90,8 @@ const Signup = () => {
       );
       handleAlert(true, "success", response.data.message);
       // Redirect to a waiting page after successful signup
-      router("/waiting"); // Redirect to a waiting page
-
+      router("/waiting");
+      // Refresh the page after signup
       window.location.reload();
     } catch (error) {
       handleAlert(
@@ -96,18 +103,69 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center p-8 box-border ">
-      <div className="flex w-full h-full rounded-lg shadow-xl border bg-white">
-        <div className="w-full md:w-1/2 p-8 flex flex-col items-center gap-4 justify-center">
-          <form onSubmit={handleSignup}>
-            <h1 className="text-3xl font-semibold  text-center text-blue-500">
-              Register
-            </h1>
-            <div className=" w-[300px]">
-              <TextField
-                size="small"
+    <>
+      <section className="min-h-screen flex w-full">
+        {/* Left Section */}
+        <div className="w-[30%] lg:flex hidden text-white flex-col items-center justify-center h-screen relative">
+          <div className="bg__gradient absolute inset-0"></div>
+          <ul className="circles">
+            {[...Array(10)].map((_, index) => (
+              <li key={index}></li>
+            ))}
+          </ul>
+          <div className="space-y-2 mb-8 flex-col flex items-center justify-center">
+            <img src="login.svg" alt="none" className="absolute z-50 !h-[350px]" />
+          </div>
+        </div>
+
+        {/* Right Section */}
+        <article className="lg:w-[70%] !bg-white w-full md:block flex items-center flex-col justify-center">
+          <div className="flex w-full py-4 px-8  gap-4 items-center justify-center lg:justify-end">
+            <p>
+              {location.pathname === "/sign-up"
+                ? "Already have an account?"
+                : "Don't have an account?"}
+            </p>
+            <Link to={location.pathname === "/sign-up" ? "/sign-in" : "/sign-up"}>
+              <button className="py-[.22rem] text-sm uppercase font-semibold rounded-sm px-6 border-[.5px] border-black hover:bg-black hover:text-white transition-all">
+                {location.pathname === "/sign-up" ? "Sign In" : "Create Account"}
+              </button>
+            </Link>
+          </div>
+
+          {/* Signup Form */}
+          <form
+            onSubmit={handleSignup}
+            autoComplete="off"
+            className="flex px-20 w-max justify-center flex-col h-[80vh]"
+          >
+            {/* Logo and Title */}
+            <div className="flex flex-col space-y-1">
+              <img src="aeigs-log-final.svg" alt="none" className="text-center !h-[60px]" />
+              <div>
+                <h1 className="font-[600] text-4xl">Register for AEGIS Account</h1>
+                <p className="text-lg">Enter your credentials below</p>
+              </div>
+            </div>
+
+            {/* Form Fields */}
+            <div className="flex flex-col gap-2 mt-4 w-[30vw]">
+              {/* First Name */}
+              <div className="">
+              <label
+                htmlFor="email"
+                className="font-semibold text-gray-700 text-lg"
+
+              >
+                First Name
+              </label>
+
+              <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200  py-[6px]">
+              <PermContactCalendarIcon className="text-gray-700" />
+              <input
                 type="text"
                 label="First Name"
+                className="border-none border-[.5px] bg-neutral-200   w-full outline-none px-2 "
                 name="firstName"
                 id="firstName"
                 value={firstName}
@@ -125,7 +183,7 @@ const Signup = () => {
                       "First Name must be between 2 and 30 characters and should only contain letters."
                     );
                   } else {
-                    setFirstNameError(""); // Clear error message when criteria are met
+                    setFirstNameError("");
                   }
                 }}
                 required
@@ -134,13 +192,30 @@ const Signup = () => {
                 error={!!firstNameError}
                 helperText={firstNameError}
               />
+              </div>
+              </div>
 
-              <TextField
+              {/* Middle Name */}
+              <div className="">
+              <label
+                htmlFor="email"
+                className="font-semibold text-gray-700 text-lg"
+
+              >
+                Middle Name
+              </label>
+
+              <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200  py-[6px]">
+              <BadgeIcon className="text-gray-700" />
+              <input
                 size="small"
                 type="text"
                 label="Middle Name"
+                className="border-none border-[.5px] bg-neutral-200   w-full outline-none px-2"
+                variant="standard"
                 name="middleName"
                 id="middleName"
+                required
                 value={middleName}
                 onChange={(e) => {
                   const enteredMiddleName = e.target.value;
@@ -149,11 +224,8 @@ const Signup = () => {
                   if (enteredMiddleName.trim() === "") {
                     setMiddleNameError("");
                   } else if (/[^a-zA-Z]/.test(enteredMiddleName)) {
-                    setMiddleNameError(
-                      "Middle Name should only contain letters."
-                    );
+                    setMiddleNameError("Middle Name should only contain letters.");
                   } else {
-                    // Valid middle name with only letters
                     setMiddleNameError("");
                   }
                 }}
@@ -162,10 +234,26 @@ const Signup = () => {
                 error={!!middleNameError}
                 helperText={middleNameError}
               />
-              <TextField
+              </div>
+              </div>
+
+              {/* Last Name */}
+              <div className=" ">
+              <label
+                htmlFor="email"
+                className="font-semibold text-gray-700 text-lg"
+              >
+                Last Name
+              </label>
+
+              <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200  py-[6px]">
+              <DriveFileRenameOutlineIcon className="text-gray-700" />
+              <input
                 size="small"
                 type="text"
                 label="Last Name"
+                className="border-none border-[.5px] bg-neutral-200   w-full outline-none px-2"
+                variant="standard"
                 name="lastName"
                 id="lastName"
                 value={lastName}
@@ -183,7 +271,7 @@ const Signup = () => {
                       "Last Name must be between 2 and 30 characters and should only contain letters."
                     );
                   } else {
-                    setLastNameError(""); // Clear error message when criteria are met
+                    setLastNameError("");
                   }
                 }}
                 error={!!lastNameError}
@@ -192,11 +280,27 @@ const Signup = () => {
                 fullWidth
                 margin="normal"
               />
+              </div>
+              </div>
 
-              <TextField
+              {/* Email */}
+              <div className="">
+              <label
+                htmlFor="email"
+
+                className="font-semibold text-gray-700 text-lg"
+              >
+                Email Address
+              </label>
+
+              <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200 py-[6px] ">
+                <Email className="text-gray-700" />
+              <input
                 size="small"
                 type="email"
                 label="Email"
+                variant="standard"
+                className="border-none border-[.5px] bg-neutral-200   w-full outline-none px-2"
                 name="email"
                 id="email"
                 value={email}
@@ -208,7 +312,7 @@ const Signup = () => {
                   } else if (!isValidEmail(enteredEmail)) {
                     setEmailError("Invalid Email Format");
                   } else {
-                    setEmailError(""); // Clear error message when criteria are met
+                    setEmailError("");
                   }
                 }}
                 required
@@ -217,11 +321,26 @@ const Signup = () => {
                 error={!!emailError}
                 helperText={emailError}
               />
+</div>
+</div>
+              {/* Password */}
+              <div className="">
+              <label
+                htmlFor="email"
+                className="font-semibold text-gray-700 text-lg"
 
-              <TextField
+              >
+                Password
+              </label>
+
+              <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200  py-[6px]">
+              <LockIcon className="text-gray-700" />
+              <input
                 size="small"
                 type="password"
                 label="Password"
+                variant="standard"
+                className="border-none border-[.5px] bg-neutral-200   w-full outline-none px-2"
                 name="password"
                 id="password"
                 value={password}
@@ -237,12 +356,29 @@ const Signup = () => {
                   },
                 }}
               />
-              <TextField
+              </div>
+              </div>
+
+              {/* Confirm Password */}
+              <div className="">
+              <label
+                htmlFor="email"
+                className="font-semibold text-gray-700 text-lg"
+
+              >
+                Confirm Password
+              </label>
+
+              <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200  py-[6px]">
+              <NoEncryptionIcon className="text-gray-700" />
+              <input
                 size="small"
                 type="password"
                 label="Confirm Password"
+                className="border-none border-[.5px] bg-neutral-200   w-full outline-none px-2"
                 name="confirmPassword"
                 id="confirmPassword"
+                variant="standard"
                 value={confirmPassword}
                 onChange={(e) => handleConfirmPasswordChange(e.target.value)}
                 required
@@ -251,66 +387,28 @@ const Signup = () => {
                 error={!!confirmPasswordError}
                 helperText={confirmPasswordError}
               />
-
-              <TextField
-                size="small"
-                type="text"
-                label="Organization Name"
-                name="orgnizationName"
-                id="orgnizationName"
-                value={orgnizationName}
-                onChange={(e) => setOrganizationName(e.target.value)}
-                required
-                fullWidth
-                margin="normal"
-              />
-              <div>
+              </div>
+              </div>
+            </div>
+            <div>
                 <TermsCondition />
               </div>
 
-              <div className="text-center m-6">
-                <Button
-                  className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  fullWidth={false}
-                  margin="normal"
-                >
-                  Sign Up
-                </Button>
-              </div>
+            {/* Signup Button */}
+            <div className="flex gap-5 mt-2">
+                
+              <Button style={{borderRadius:"1rem"}} fullWidth size="medium" type="submit" variant="contained" className="rounded- bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
+                Sign Up
+              </Button>
+
+              {/* Sign In Link */}
+             
             </div>
           </form>
-        </div>
-        <div className="w-full md:w-1/2 p-8 bg-blue-500 rounded-r-lg items-center flex-col justify-center hidden md:flex ">
-          <div className="flex flex-col items-center justify-center gap-2">
-            <img
-              src="aeigs-log-final.svg"
-              alt="My Img"
-              className="w-36 before:bottom-0 h-36 object-cover  rounded-lg p-6 bg-white"
-            />
-            <h1 className="text-white text-2xl mb-6">AEGIS</h1>
-          </div>
-          <Link to="/sign-in">
-            <Button
-              variant="contained"
-              fullWidth
-              size="small"
-              className=" bg-white"
-              style={{
-                marginTop: "38px",
-                background: "white",
-                color: "#1976d2",
-              }}
-            >
-              Sign In
-            </Button>
-          </Link>
-        </div>
-      </div>
-    </div>
+        </article>
+      </section>
+    </>
   );
 };
 
-export default Signup;
+export default SignIn;
