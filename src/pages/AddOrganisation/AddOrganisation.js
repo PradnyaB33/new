@@ -22,7 +22,6 @@ import { useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import BackComponent from "../../components/BackComponent/BackComponent";
-import dayjs from "dayjs";
 
 const AddOrganisation = () => {
   // var LOGOURL;
