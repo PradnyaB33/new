@@ -11,10 +11,9 @@ const Home = () => {
   const redirect = useNavigate();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-  // const token = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
 
-  const { data, isLoading } = useQuery(["orgData"], async () => {
+  const getOrgList = async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/organization/get`,
       {
@@ -24,13 +23,14 @@ const Home = () => {
       }
     );
     return response.data;
-  });
+  };
+  const { data, isLoading } = useQuery(["orgData"], getOrgList);
 
   // const [userRole, setUserRole] = useState();
 
   // useEffect(() => {
   //   try {
-  //     if (token) {
+  //     if (authToken) {
   //       const decodedToken = jwtDecode(authToken);
   //       if (decodedToken && decodedToken.user) {
   //         setUserRole(decodedToken.user);
@@ -39,10 +39,10 @@ const Home = () => {
   //       }
   //     }
   //   } catch (error) {
-  //     console.error("Failed to decode the token:", error);
+  //     console.error("Failed to decode the authToken:", error);
   //   }
   //   // eslint-disable-next-line
-  // }, [token]);
+  // }, [authToken]);
 
   useEffect(() => {
     if (!authToken) {
@@ -50,13 +50,11 @@ const Home = () => {
       redirect("/sign-in");
       handleAlert(true, "warning", "Please login first.");
     }
+    // eslint-disable-next-line
   }, [redirect, cookies, handleAlert, authToken]);
 
   return (
     <div className="p-8 bg-white h-screen">
-      {/* <TextCycler />
-      <Divider /> */}
-      {/* <Org /> */}
       <div className="w-full  ">
         <>
           <div className="flex items-center h-[70vh] justify-center w-full">

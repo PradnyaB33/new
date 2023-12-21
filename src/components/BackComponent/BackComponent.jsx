@@ -9,9 +9,19 @@ const BackComponent = () => {
   const goBack = () => {
     navigate(-1);
   };
-  if (location.pathname.includes(["organizationList"])) {
+
+  const backFalseRoutes = [
+    "/sign-in",
+    "/sign-up",
+    "organizationList",
+    "organisation/employee-dashboard",
+    "organisation",
+  ];
+
+  if (backFalseRoutes.some((value) => location.pathname.includes(value))) {
     return <></>;
   }
+
   return (
     <div className="mb-5 fixed w-full cursor-pointer top-[72px] left-[-10px] z-50">
       <div

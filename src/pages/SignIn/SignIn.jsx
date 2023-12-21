@@ -1,11 +1,11 @@
 import { Email, Key } from "@mui/icons-material";
+import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import useSignup from "../../hooks/useLoginForm";
-import { Button } from "@mui/material";
 
 const SignIn = () => {
   const { setEmail, setPassword, email, password } = useSignup();
@@ -13,12 +13,34 @@ const SignIn = () => {
   const { setCookie } = useContext(UseContext);
   const redirect = useNavigate();
 
+  const handleSendSms = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API}/route/send-sms`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("SMS sent successfully:", data);
+      } else {
+        const error = await response.json();
+        console.error("Error sending SMS:", error);
+      }
+    } catch (error) {
+      console.error("Error sending SMS:", error);
+    }
+  };
+
   const onSubmit = async (event) => {
     event.preventDefault();
-
     try {
-      console.log(`${process.env.REACT_APP_API}/route/employee/login`);
-
+      // console.log(`${process.env.REACT_APP_API}/route/employee/login`);
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/login`,
         {
@@ -32,9 +54,12 @@ const SignIn = () => {
         "success",
         `Welcome ${response.data.user.first_name} you are logged in successfully`
       );
-      redirect("/");
-      // console.log(`🚀 ~ response:`, response);
-      // console.log("API response:", response.data);
+
+      if (response.data.user.profile.length === 1) {
+        redirect("/organisation/employee-dashboard");
+      } else {
+        redirect("/");
+      }
 
       window.location.reload();
     } catch (error) {
@@ -49,94 +74,6 @@ const SignIn = () => {
 
   return (
     <>
-      {/* Form 1 */}
-      {/* <div className="flex items-center justify-center p-8 box-border h-[500px] lg:w-[900px] m-auto">
-        <div className="flex w-full h-full rounded-lg shadow-xl border bg-white">
-          <form
-            onSubmit={onSubmit}
-            className="w-full md:w-1/2 p-8 flex flex-col items-center gap-4 justify-center"
-          >
-            <Typography
-              color={"primary"}
-              fontWeight={800}
-              fontSize={20}
-              className="text-2xl my-2"
-            >
-              Login As Admin
-            </Typography>
-            <div className="w-full sm:[250px]">
-              <TextField
-                required
-                type="email"
-                size="small"
-                label="Email"
-                name="email"
-                id="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                required
-                size="small"
-                type="password"
-                label="Password"
-                name="password"
-                id="password"
-                onChange={(event) => setPassword(event.target.value)}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
-            </div>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className="m-auto w-fit"
-            >
-              Sign In
-            </Button>
-            <div>
-              <p>
-                <Link
-                  to="/forgot-password"
-                  className="text-blue-500 hover:text-blue-700 underline"
-                >
-                  forgot password
-                </Link>
-              </p>
-            </div>
-          </form>
-          <div className="md:w-1/2 md:flex hidden p-8 bg-blue-500 rounded-r-lg items-center flex-col justify-around">
-            <div className="flex flex-col items-center justify-center gap-2">
-              <img
-                src="aeigs-log-final.svg"
-                alt="My Img"
-                className="w-36 before:bottom-0 h-36 object-cover  rounded-lg p-6 bg-white"
-              />
-              <h1 className="text-white text-2xl mb-6">AEGIS</h1>
-            </div>
-            <Link to="/sign-up">
-              <Button
-                variant="contained"
-                fullWidth
-                className=" bg-white"
-                style={{
-                  marginTop: "38px",
-                  background: "white",
-                  color: "#1976d2",
-                }}
-              >
-                Sign Up
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div> */}
-
       <section className="min-h-screen flex w-full">
         <div className="!w-[30%]  lg:flex hidden text-white flex-col items-center justify-center h-screen relative">
           <div className="bg__gradient  absolute inset-0 "></div>
@@ -239,10 +176,22 @@ const SignIn = () => {
               </div>
             </div>
 
-            <Button style={{borderRadius:"1rem"}} size="medium" type="submit" variant="contained" className="rounded- bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
+            <Button
+              style={{ borderRadius: "1rem" }}
+              size="medium"
+              type="submit"
+              variant="contained"
+              className="rounded- bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+            >
               SIGN IN
             </Button>
           </form>
+          {/* <button
+            onClick={handleSendSms}
+            className=" flex mt-2 w-max group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+          >
+            OTP
+          </button> */}
         </article>
       </section>
 

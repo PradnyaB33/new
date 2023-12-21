@@ -196,6 +196,7 @@ const AddEmployee = () => {
         },
       }
     );
+    console.log(response.data);
     return response.data;
   });
 
@@ -900,7 +901,7 @@ const AddEmployee = () => {
                       Select Salary Type
                     </MenuItem>
                     {salaryInput?.salaryTemplates?.map((item) => (
-                      <MenuItem key={item._id} value={item.name}>
+                      <MenuItem key={item._id} value={item._id}>
                         {item.name}
                       </MenuItem>
                     ))}

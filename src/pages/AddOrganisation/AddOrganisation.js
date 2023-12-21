@@ -161,7 +161,6 @@ const AddOrganisation = () => {
           },
         }
       );
-      console.log(result);
 
       handleAlert(true, "success", "Organization created successfully");
       navigate("/organizationList");
@@ -174,52 +173,57 @@ const AddOrganisation = () => {
     setFirstEmptyField(null);
   };
 
+
+
   return (
     <>
+    <div className="w-full h-[92vh] bg-white">
       <BackComponent />
 
       <form
         style={{
           display: "flex",
           alignItems: "center",
-          height: "80vh",
+          height: "90vh",
+          backgroundColor:"white",
           width: "100%",
         }}
         action="submit"
       >
+        
         <Container
           style={{
             display: "flex",
-            paddingTop: "5px",
             backgroundColor: "#fefdff",
             padding: "10px",
             paddingBottom: "30px",
-            borderRadius: "5px",
+            borderRadius: "20px",
             flexDirection: "column",
             justifyContent: "space-around",
             alignItems: "center",
-            height: "90vh",
-            border: "1.5PX solid rgb(177, 177, 177)",
+            height: "85vh",
+            position:"relative",
+            border:"2px solid #dedede",
+            top:"10px",
             margin: "auto",
-            position: "relative",
-            top: "20px",
           }}
+          className="shadow-md"
           maxWidth="sm"
         >
           <Typography
             style={{
               color: "#1D6EB7",
               fontWeight: "600",
-              position: "relative",
-              top: "15px",
+              position:"relative",
+              top:"5px"
             }}
             variant="h4"
           >
-            Add Organisation
+            Add Organization
           </Typography>
           <TextField
             required
-            style={{ marginTop: "20px", height: "10px" }}
+            style={{ marginTop: "5px", height: "10px" }}
             name="name"
             onChange={handleData}
             value={inputdata.name}
@@ -236,9 +240,8 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.web_url}
             size="small"
-            className={`w-[80%] ${
-              firstEmptyField === "web_url" ? "error" : ""
-            }`}
+            className={`w-[80%] ${firstEmptyField === "web_url" ? "error" : ""
+              }`}
             label="Url Of Website"
             type="text"
             inputRef={firstEmptyField === "web_url" ? firstEmptyFieldRef : null}
@@ -289,9 +292,8 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.location}
             size="small"
-            className={`w-[80%] ${
-              firstEmptyField === "location" ? "error" : ""
-            }`}
+            className={`w-[80%] ${firstEmptyField === "location" ? "error" : ""
+              }`}
             label="Location"
             type="text"
             inputRef={
@@ -305,9 +307,8 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.contact_number}
             size="small"
-            className={`w-[80%] ${
-              firstEmptyField === "contact_number" ? "error" : ""
-            }`}
+            className={`w-[80%] ${firstEmptyField === "contact_number" ? "error" : ""
+              }`}
             label={numberLabel}
             type="number"
             error={contactNumberError}
@@ -327,9 +328,8 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.description}
             size="small"
-            className={`w-[80%] ${
-              firstEmptyField === "description" ? "error" : ""
-            }`}
+            className={`w-[80%] ${firstEmptyField === "description" ? "error" : ""
+              }`}
             label="Organisation Description"
             type="text"
             inputRef={
@@ -398,6 +398,7 @@ const AddOrganisation = () => {
           </Button>
         </Container>
       </form>
+      </div>
     </>
   );
 };

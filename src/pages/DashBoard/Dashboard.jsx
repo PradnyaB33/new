@@ -5,6 +5,8 @@ import React from "react";
 
 import { CategoryScale } from "chart.js";
 import HRgraph from "./Components/Bar/HRgraph";
+import LeaveDisplayList from "./Components/List/LeaveDisplayList";
+import PublicHolidayDisplayList from "./Components/List/PublicHolidayDisplayList";
 import EmployeeLeavePie from "./Components/Pie/EmployeeLeavePie";
 Chart.register(CategoryScale);
 
@@ -27,9 +29,9 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="flex w-full justify-between gap-4">
-            <div className=" flex flex-col !w-[60%] pb-4">
-              <article className=" pt-6 flex gap-4 justify-between w-full items-center">
+          <div className="flex w-full justify-between gap-2">
+            <div className=" flex flex-col !w-[60%] pb-2">
+              <article className=" pt-6 flex gap-2 justify-between w-full items-center">
                 {/* <div className="hover:scale-105 w cursor-pointer transition-all w-[49%] min-h-[10rem] bg-white rounded-md shadow-md p-3">
                   <div className="space-y-2">
                     <Avatar
@@ -47,26 +49,14 @@ const Dashboard = () => {
 
                 <EmployeeLeavePie />
                 <EmployeeLeavePie />
-
-                {/* <div className="hover:scale-105 transition-all cursor-pointer w-[49%] min-h-[10rem] bg-white rounded-md shadow-md p-3">
-                  <div className="space-y-2">
-                    <Avatar
-                      className="bg-gradient-to-tl  from-green-500 to-lime-300  h-[100px] text-4xl p-1 shadow-sm"
-                      variant="rounded"
-                      sx={{ width: "46", height: "46" }}
-                    >
-                      <AttachMoneyOutlined />
-                    </Avatar>
-                    <h1 className="text-xl ">Salary Paid in last month</h1>
-                  </div>
-                  <div className="bg-gradient-to-tl  from-green-500 to-lime-300 h-[5px] my-2 rounded-md w-full"></div>
-                  <p className="text-right">₹ 22,222</p>
-                </div> */}
               </article>
               <HRgraph />
             </div>
 
-            <div className="w-[50%] ">{/* <EmployeeLeavePie /> */}</div>
+            <div className="w-[40%] pt-8 px-2 space-y-4">
+              <PublicHolidayDisplayList />
+              <LeaveDisplayList />
+            </div>
           </div>
         </div>
       </section>
