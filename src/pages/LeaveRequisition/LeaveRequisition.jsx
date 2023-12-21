@@ -64,6 +64,11 @@ const LeaveRequisition = () => {
         );
       } catch (error) {
         console.error(`🚀 ~ error:`, error);
+        handleAlert(
+          true,
+          "error",
+          error?.response?.data?.message || "Leaves not created succcesfully"
+        );
       }
     });
   };
@@ -71,7 +76,7 @@ const LeaveRequisition = () => {
     onSuccess: () => {
       console.log("success");
       // setNewAppliedLeaveEvents([]);
-      handleAlert(true, "success", "Leaves created succcesfully");
+
       // queryclient.invalidateQueries("")
       // queryclient.invalidateQueries([
       //   "employee-leave-table-without-default",
@@ -216,13 +221,6 @@ const LeaveRequisition = () => {
             ) : (
               <>
                 <div className="w-full h-max grid justify-center relative gap-4 !mt-4 space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg">
-                  <img
-                    src="leave-reaquesation.gif"
-                    alt="description of your GIF"
-                    className="mt-2"
-                    width="700"
-                    height="700"
-                  ></img>
                   <Button
                     disabled={isLoading}
                     onClick={() => setCalendarOpen(true)}

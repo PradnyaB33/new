@@ -142,6 +142,7 @@ const AddProfile = () => {
           },
         }
       );
+      console.log(`🚀 ~ file: addprofile.jsx:145 ~ response:`, response);
 
       if (response.data && Array.isArray(response.data.roles)) {
         const filteredProfiles = response.data.roles.filter(

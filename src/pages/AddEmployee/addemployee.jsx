@@ -106,6 +106,7 @@ const AddEmployee = () => {
     companyEmailError,
     setCompanyEmailError,
   } = useAddEmpForm();
+
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
@@ -195,6 +196,7 @@ const AddEmployee = () => {
         },
       }
     );
+    console.log(response.data);
     return response.data;
   });
 
@@ -245,6 +247,7 @@ const AddEmployee = () => {
   }, []);
 
   const [availableDepartment, setAvailableDepartment] = useState([]);
+
   const fetchAvailabeDepartment = async () => {
     try {
       const response = await axios.get(
@@ -258,7 +261,7 @@ const AddEmployee = () => {
 
       setAvailableDepartment(response.data.department);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       handleAlert(true, "error", "Failed to fetch Department");
     }
   };
@@ -276,6 +279,7 @@ const AddEmployee = () => {
   };
 
   const [availableProfiles, setAvailableProfiles] = useState([]);
+
   const fetchAvailableProfiles = async () => {
     try {
       const response = await axios.get(
@@ -286,12 +290,15 @@ const AddEmployee = () => {
           },
         }
       );
-
-      const activeRoles = Object.entries(response.data.roles ?? [])
+      const rolesArray = Object.entries(response.data.roles ?? {})
         .filter(([role, obj]) => obj.isActive === true)
-        .map(([role, obj]) => role);
+        .map(([role, obj]) => ({
+          roleName: role,
+          isApprover: obj.isApprover,
+          isActive: obj.isActive,
+        }));
 
-      setAvailableProfiles(activeRoles);
+      setAvailableProfiles(rolesArray);
     } catch (error) {
       console.error(error);
       handleAlert(true, "error", "Failed to fetch available profiles");
@@ -355,7 +362,6 @@ const AddEmployee = () => {
           },
         }
       );
-      console.log(response);
       setAvailableMgrId(response.data.manager);
     } catch (error) {
       console.error(error);
@@ -414,7 +420,6 @@ const AddEmployee = () => {
         organizationId: organisationId,
         creatorId: userId,
       };
-      console.log("user", user);
       // Check if the selected profile exists
       const checkProfileResponse = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/check-profile-exists/${organisationId}`,
@@ -750,7 +755,7 @@ const AddEmployee = () => {
                       <MenuItem value="" disabled>
                         Select Department Name
                       </MenuItem>
-                      {availableDepartment.map((deptname) => (
+                      {availableDepartment?.map((deptname) => (
                         <MenuItem key={deptname._id} value={deptname._id}>
                           {deptname.departmentName}
                         </MenuItem>
@@ -843,18 +848,22 @@ const AddEmployee = () => {
                       )}
                       MenuProps={MenuProps}
                     >
-                      {availableProfiles.length === 0 ? (
+                      {availableProfiles?.length === 0 ? (
                         <MenuItem disabled>
                           No roles available. Please add roles for your
                           organization.
                         </MenuItem>
                       ) : (
-                        availableProfiles.map((name) => (
-                          <MenuItem key={name} value={name}>
-                            <Checkbox checked={profile.indexOf(name) > -1} />
-                            <ListItemText primary={name} />
-                          </MenuItem>
-                        ))
+                        availableProfiles?.map((name) => {
+                          return (
+                            <MenuItem key={name.roleName} value={name.roleName}>
+                              <Checkbox
+                                checked={profile.indexOf(name.roleName) > -1}
+                              />
+                              <ListItemText primary={name.roleName} />
+                            </MenuItem>
+                          );
+                        })
                       )}
                     </Select>
                   </FormControl>

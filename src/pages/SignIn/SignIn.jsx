@@ -1,4 +1,5 @@
 import { Email, Key } from "@mui/icons-material";
+import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,12 +15,15 @@ const SignIn = () => {
 
   const handleSendSms = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API}/send-sms`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API}/route/send-sms`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -129,7 +133,7 @@ const SignIn = () => {
                 Email Address
               </label>
 
-              <div className="flex rounded-sm px-2 border-gray-200  border-[.5px] bg-neutral-200  py-2">
+              <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200  py-1">
                 <Email className="text-gray-700" />
                 <input
                   name="email"
@@ -158,7 +162,7 @@ const SignIn = () => {
                     Forgot your password?
                   </Link>
                 </div>
-                <div className="flex rounded-sm px-2 border-gray-200  border-[.5px] bg-neutral-200 py-2">
+                <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200 py-[6px]">
                   <Key className="text-gray-700" />
                   <input
                     type="password"
@@ -172,19 +176,22 @@ const SignIn = () => {
               </div>
             </div>
 
-            <button
+            <Button
+              style={{ borderRadius: "1rem" }}
+              size="medium"
               type="submit"
-              className=" flex w-max group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+              variant="contained"
+              className="rounded- bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
             >
               SIGN IN
-            </button>
+            </Button>
           </form>
-          <button
+          {/* <button
             onClick={handleSendSms}
             className=" flex mt-2 w-max group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
           >
             OTP
-          </button>
+          </button> */}
         </article>
       </section>
 

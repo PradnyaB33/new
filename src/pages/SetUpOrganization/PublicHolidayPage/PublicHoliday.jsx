@@ -20,12 +20,14 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
 import { format } from "date-fns";
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../Setup";
 
 const PublicHoliday = () => {
   const id = useParams().organisationId;
+  const { setAppAlert } = useContext(UseContext);
   const [openModal, setOpenModal] = useState(false);
   const [actionModal, setActionModal] = useState(false);
   const [holidays, setHolidays] = useState([]);
@@ -34,6 +36,9 @@ const PublicHoliday = () => {
   const [region, setRegion] = useState("");
   const [operation, setOperation] = useState("");
   const [selectedHolidayId, setSelectedHolidayId] = useState(null);
+
+  // todo - data to post
+
   const [inputdata, setInputData] = useState({
     name: "",
     year: "",
@@ -53,12 +58,17 @@ const PublicHoliday = () => {
       setHolidays(response.data.holidays);
     } catch (error) {
       console.error("Error fetching holidays:", error);
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: "An error occurred while fetching holidays",
+      });
     }
   };
 
   useEffect(() => {
     fetchHolidays();
-  }, [id]);
+  }, []);
 
   const handleData = (e) => {
     const { name, value } = e.target;
@@ -104,14 +114,25 @@ const PublicHoliday = () => {
         organizationId: id,
       });
       setOpenModal(false);
-      fetchHolidays(); // Refresh holidays after create
+      setAppAlert({
+        alert: true,
+        type: "success",
+        msg: "Holiday created successfully!",
+      });
+      fetchHolidays();
     } catch (error) {
       console.error("Error:", error);
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: "An error occurred while creating holiday",
+      });
     }
   };
 
   const handleOperateEdit = async (id) => {
     setActionModal(true);
+    setOpenModal(false);
     setOperation("edit");
     setSelectedHolidayId(id);
 
@@ -154,6 +175,11 @@ const PublicHoliday = () => {
         .then((response) => {
           console.log("Successfully updated");
           setOpenModal(false);
+          setAppAlert({
+            alert: true,
+            type: "success",
+            msg: "updated successfully!",
+          });
           fetchHolidays();
         })
         .catch((error) => {
@@ -166,12 +192,27 @@ const PublicHoliday = () => {
         );
         console.log("Successfully deleted");
         setOpenModal(false);
+        setAppAlert({
+          alert: true,
+          type: "success",
+          msg: "deleted successfully!",
+        });
         fetchHolidays(); // Refresh holidays after delete
       } catch (error) {
         console.error("Error deleting holiday:", error);
+        setAppAlert({
+          alert: true,
+          type: "error",
+          msg: "Error deleting holiday!",
+        });
       }
     } else {
       console.log("Nothing changed");
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: "error occured!",
+      });
     }
 
     handleClose();
@@ -273,18 +314,24 @@ const PublicHoliday = () => {
                     onChange={handleData}
                   />
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={["DatePicker"]} required>
+                    <DemoContainer
+                      className="w-full"
+                      components={["DatePicker"]}
+                      required
+                    >
                       <DatePicker
-                        label="Holiday date"
-                        slotProps={{
-                          textField: {
-                            size: "small",
-                            fullWidth: true,
-                            style: { marginBottom: "8px" },
-                          },
+                        label="Foundation Date"
+                        value={inputdata.foundation_date}
+                        onChange={(newDate) => {
+                          setInputData({
+                            ...inputdata,
+                            foundation_date: newDate,
+                          });
+                          console.log(newDate);
                         }}
-                        value={dayjs(inputdata.date)}
-                        onChange={handleDateChange}
+                        slotProps={{
+                          textField: { size: "small", fullWidth: true },
+                        }}
                       />
                     </DemoContainer>
                   </LocalizationProvider>
@@ -420,9 +467,21 @@ const PublicHoliday = () => {
                   </>
                 ) : (
                   <>
-                    <div>
-                      <Button onClick={doTheOperation}>{operation}</Button>
-                      <Button>cancel</Button>
+                    <div className="flex gap-5 py-5">
+                      <Button
+                        onClick={doTheOperation}
+                        variant="contained"
+                        color="secondary"
+                      >
+                        {operation}
+                      </Button>
+                      <Button
+                        onClick={handleClose}
+                        color="error"
+                        variant="contained"
+                      >
+                        Cancel
+                      </Button>
                     </div>
                   </>
                 )}
