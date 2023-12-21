@@ -1,11 +1,11 @@
 import { Email, Key } from "@mui/icons-material";
+import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import useSignup from "../../hooks/useLoginForm";
-import { Button } from "@mui/material";
 
 const SignIn = () => {
   const { setEmail, setPassword, email, password } = useSignup();
@@ -15,12 +15,15 @@ const SignIn = () => {
 
   const handleSendSms = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API}/send-sms`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API}/route/send-sms`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -173,16 +176,22 @@ const SignIn = () => {
               </div>
             </div>
 
-            <Button style={{borderRadius:"1rem"}} size="medium" type="submit" variant="contained" className="rounded- bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
+            <Button
+              style={{ borderRadius: "1rem" }}
+              size="medium"
+              type="submit"
+              variant="contained"
+              className="rounded- bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+            >
               SIGN IN
             </Button>
           </form>
-          <button
+          {/* <button
             onClick={handleSendSms}
             className=" flex mt-2 w-max group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
           >
             OTP
-          </button>
+          </button> */}
         </article>
       </section>
 

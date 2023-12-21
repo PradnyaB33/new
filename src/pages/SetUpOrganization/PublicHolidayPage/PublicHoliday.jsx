@@ -20,8 +20,9 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
 import { format } from "date-fns";
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../Setup";
 
 const PublicHoliday = () => {
@@ -67,7 +68,7 @@ const PublicHoliday = () => {
 
   useEffect(() => {
     fetchHolidays();
-  },[]);
+  }, []);
 
   const handleData = (e) => {
     const { name, value } = e.target;
@@ -131,7 +132,7 @@ const PublicHoliday = () => {
 
   const handleOperateEdit = async (id) => {
     setActionModal(true);
-    setOpenModal(false)
+    setOpenModal(false);
     setOperation("edit");
     setSelectedHolidayId(id);
 
@@ -140,7 +141,6 @@ const PublicHoliday = () => {
         `${process.env.REACT_APP_API}/route/holiday/getone/${id}`
       );
       const holidayData = response.data.holidays;
-
 
       console.log(holidayData);
 
@@ -163,23 +163,28 @@ const PublicHoliday = () => {
 
     if (operation === "edit") {
       const patchData = {
-        name, type, region
-      }
-      await axios.patch(`${process.env.REACT_APP_API}/route/holiday/update/${id}`, patchData).then((response) => {
-        console.log("Successfully updated");
-        setOpenModal(false);
-        setAppAlert({
-          alert: true,
-          type: "success",
-          msg: "updated successfully!",
+        name,
+        type,
+        region,
+      };
+      await axios
+        .patch(
+          `${process.env.REACT_APP_API}/route/holiday/update/${id}`,
+          patchData
+        )
+        .then((response) => {
+          console.log("Successfully updated");
+          setOpenModal(false);
+          setAppAlert({
+            alert: true,
+            type: "success",
+            msg: "updated successfully!",
+          });
+          fetchHolidays();
+        })
+        .catch((error) => {
+          console.error("Error updating holiday:", error);
         });
-        fetchHolidays();
-
-      }).catch((error) => {
-        console.error("Error updating holiday:", error);
-      })
-
-
     } else if (operation === "delete") {
       try {
         await axios.delete(
@@ -308,19 +313,25 @@ const PublicHoliday = () => {
                     value={inputdata.name}
                     onChange={handleData}
                   />
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DemoContainer components={["DatePicker"]} required>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer
+                      className="w-full"
+                      components={["DatePicker"]}
+                      required
+                    >
                       <DatePicker
-                        label="Holiday date"
-                        slotProps={{
-                          textField: {
-                            size: "small",
-                            fullWidth: true,
-                            style: { marginBottom: "8px" },
-                          },
+                        label="Foundation Date"
+                        value={inputdata.foundation_date}
+                        onChange={(newDate) => {
+                          setInputData({
+                            ...inputdata,
+                            foundation_date: newDate,
+                          });
+                          console.log(newDate);
                         }}
-                        value={inputdata.date}
-                        onChange={handleDateChange}
+                        slotProps={{
+                          textField: { size: "small", fullWidth: true },
+                        }}
                       />
                     </DemoContainer>
                   </LocalizationProvider>
@@ -371,7 +382,6 @@ const PublicHoliday = () => {
                   >
                     Cancel
                   </Button>
-
                 </div>
               </DialogContent>
             </Dialog>
@@ -455,19 +465,26 @@ const PublicHoliday = () => {
                       </Button>
                     </div>
                   </>
-                )
-
-                  : (
-                    <>
-                      <div className="flex gap-5 py-5">
-                        <Button onClick={doTheOperation} variant="contained" color="secondary">{operation}</Button>
-                        <Button onClick={handleClose} color="error" variant="contained">
-                          Cancel
-                        </Button>
-                      </div>
-                    </>
-                  )}
-
+                ) : (
+                  <>
+                    <div className="flex gap-5 py-5">
+                      <Button
+                        onClick={doTheOperation}
+                        variant="contained"
+                        color="secondary"
+                      >
+                        {operation}
+                      </Button>
+                      <Button
+                        onClick={handleClose}
+                        color="error"
+                        variant="contained"
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </>
+                )}
               </DialogContent>
             </Dialog>
           </div>
