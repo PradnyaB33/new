@@ -6,32 +6,19 @@ import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { jwtDecode } from "jwt-decode";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
+import UserProfile from "../../hooks/UserData/useUser";
 
 export default function ProfileIcon() {
   const navigate = useNavigate();
-  const { cookies, removeCookie } = useContext(UseContext);
-  const token = cookies["aeigs"];
+  const { removeCookie } = useContext(UseContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  const [user, setUser] = useState();
-
-  useEffect(() => {
-    try {
-      const decodedToken = jwtDecode(token);
-      if (decodedToken && decodedToken.user) {
-        setUser(decodedToken.user);
-      } else {
-        setUser();
-      }
-    } catch (error) {
-      console.error("Failed to decode the token:", error);
-    }
-  }, [token]);
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -47,11 +34,6 @@ export default function ProfileIcon() {
     navigate("/sign-in");
     window.location.reload();
   };
-
-  // const handleNotificationClick = () => {
-  //   navigate("/notification");
-  //   setAnchorEl(null);
-  // };
 
   const handleNavigate = (link) => {
     navigate(link);
@@ -82,11 +64,11 @@ export default function ProfileIcon() {
           "aria-labelledby": "basic-button",
         }}
       >
-        {token ? (
+        {user?._id ? (
           <div>
             <h1 className="!px-4 pt-4 pb-2 text-xl">Account</h1>
             {/* <Divider variant="fullWidth" orientation="horizontal" /> */}
-            <div className="flex !w-[230px] flex-col !z-10 !px-0 mx-4 !py-0 bg-white   !items-start !justify-start">
+            <div className="flex !pl-0 !pr-2 !w-[230px] flex-col !z-10  mx-4 !py-0 bg-white   !items-start !justify-start">
               <div className="w-max flex gap-3 pt-4 pb-6  items-center  h-max rounded-full ">
                 <Avatar
                   variant="circular"

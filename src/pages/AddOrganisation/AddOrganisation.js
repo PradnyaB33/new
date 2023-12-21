@@ -16,6 +16,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
+import dayjs from "dayjs";
 import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
@@ -161,7 +162,6 @@ const AddOrganisation = () => {
           },
         }
       );
-      console.log(result);
 
       handleAlert(true, "success", "Organization created successfully");
       navigate("/organizationList");
@@ -173,6 +173,8 @@ const AddOrganisation = () => {
     setSelectedImage(null);
     setFirstEmptyField(null);
   };
+
+
 
   return (
     <>
@@ -236,9 +238,8 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.web_url}
             size="small"
-            className={`w-[80%] ${
-              firstEmptyField === "web_url" ? "error" : ""
-            }`}
+            className={`w-[80%] ${firstEmptyField === "web_url" ? "error" : ""
+              }`}
             label="Url Of Website"
             type="text"
             inputRef={firstEmptyField === "web_url" ? firstEmptyFieldRef : null}
@@ -289,9 +290,8 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.location}
             size="small"
-            className={`w-[80%] ${
-              firstEmptyField === "location" ? "error" : ""
-            }`}
+            className={`w-[80%] ${firstEmptyField === "location" ? "error" : ""
+              }`}
             label="Location"
             type="text"
             inputRef={
@@ -305,9 +305,8 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.contact_number}
             size="small"
-            className={`w-[80%] ${
-              firstEmptyField === "contact_number" ? "error" : ""
-            }`}
+            className={`w-[80%] ${firstEmptyField === "contact_number" ? "error" : ""
+              }`}
             label={numberLabel}
             type="number"
             error={contactNumberError}
@@ -327,9 +326,8 @@ const AddOrganisation = () => {
             onChange={handleData}
             value={inputdata.description}
             size="small"
-            className={`w-[80%] ${
-              firstEmptyField === "description" ? "error" : ""
-            }`}
+            className={`w-[80%] ${firstEmptyField === "description" ? "error" : ""
+              }`}
             label="Organisation Description"
             type="text"
             inputRef={

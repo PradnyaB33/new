@@ -11,6 +11,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 const LeaveTable = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
+
   const authToken = cookies["aeigs"];
   const { data, isLoading, isError, error } = useQuery(
     "employee-leave-table",

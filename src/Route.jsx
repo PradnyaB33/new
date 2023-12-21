@@ -11,6 +11,8 @@ import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import Application from "./pages/Application/Application";
 import Dashboard from "./pages/DashBoard/Dashboard";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
+import CreateDepartment from "./pages/Departments/addDepartment";
+import DepartmentList from "./pages/Departments/department-list";
 import Designation from "./pages/Designation/Designation";
 import EmployeeList from "./pages/EmployeeList/EmployeeList";
 import Home from "./pages/Home/Home";
@@ -34,8 +36,6 @@ import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
-import CreateDepartment from "./pages/Departments/addDepartment";
-import DepartmentList from "./pages/Departments/department-list";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 
@@ -52,8 +52,9 @@ const App = () => {
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       {/* Login Routes */}
       {/* Dashboard Routes */}
+      <Route path="/organisation/employee-dashboard" element={<Dashboard />} />
       <Route
-        path="/organisation/:organisationId/dashboard/main"
+        path="/organisation/:organisationId/super-admin"
         element={<Dashboard />}
       />
       {/* Dashboard Routes */}
