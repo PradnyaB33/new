@@ -1,19 +1,20 @@
 import { jwtDecode } from "jwt-decode";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { UseContext } from "../../State/UseState/UseContext";
 import { Paper, Divider, FormControl, Button } from "@mui/material";
 import { TextField, InputLabel } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { TestContext } from "../../State/Function/Main";
+import axios from "axios";
+import Tooltip from "@mui/material/Tooltip";
+
 const UserProfile = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-
   const token = cookies["aeigs"];
   const decodedToken = jwtDecode(token);
   const user = decodedToken.user;
-  console.log(user);
 
   const [selectedImage, setSelectedImage] = useState(null);
   const handleImageChange = async (event) => {
@@ -24,29 +25,20 @@ const UserProfile = () => {
     }
   };
 
-  const handleDeletePhoto = () => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this photo?"
-    );
-    if (confirmDelete) {
-      setSelectedImage(null);
-    }
-  };
   const userId = user._id;
 
   // State to hold changes in additional details
   const [additionalPhoneNumber, setAdditionalPhoneNumber] = useState("");
   const [chatId, setChatId] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
-  console.log("info", { additionalPhoneNumber, chatId, statusMessage });
 
-  // Function to handle updating additional details
-  const handleUpdateAdditionalDetails = async () => {
+  // Function to handle addd additional details
+  const handleAddAdditionalDetails = async () => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API}/route/employee/update/profile/${userId}`,
+        `${process.env.REACT_APP_API}/route/employee/profile/add/${userId}`,
         {
-          method: "PATCH",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: token,
@@ -61,12 +53,9 @@ const UserProfile = () => {
       );
 
       if (response.status === 200) {
-        handleAlert(
-          true,
-          "success",
-          "Additional details updated successfully!"
-        );
+        handleAlert(true, "success", "Additional details Added successfully!");
         console.log("Additional details updated successfully!");
+        window.location.reload(); // Reload the page on success
       } else {
         console.error("Failed to update additional details");
       }
@@ -79,46 +68,31 @@ const UserProfile = () => {
       );
     }
   };
-  // Function to handle updating additional details
-  const handleDeleteAdditionalDetails = async () => {
+
+  // function to handle get additional detail of employee
+  const [availableUserProfileData, setAvailableProfileData] = useState([]);
+  const fetchAvailableUserProfileData = async () => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API}/route/employee/delete/profile/${userId}`,
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/get/profile/${userId}`,
         {
-          method: "DELETE",
           headers: {
-            "Content-Type": "application/json",
             Authorization: token,
           },
-          body: JSON.stringify({
-            additional_phone_number: true,
-            status_message: true,
-            chat_id: true,
-            profile_photo: true,
-          }),
         }
       );
 
-      if (response.status === 200) {
-        handleAlert(
-          true,
-          "success",
-          "Additional details deleted successfully!"
-        );
-        console.log("Additional details deleted successfully!");
-        // Handle any necessary UI updates or state changes after deletion
-      } else {
-        console.error("Failed to delete additional details");
-      }
+      setAvailableProfileData(response.data.employee);
     } catch (error) {
-      console.error("Error deleting additional details:", error);
-      handleAlert(
-        true,
-        "error",
-        error.response ? error.response.data.message : error.message
-      );
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch User Profile Data");
     }
   };
+
+  useEffect(() => {
+    fetchAvailableUserProfileData();
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>
@@ -137,9 +111,11 @@ const UserProfile = () => {
           }}
           className="w-full"
         >
-          <div className="w-full py-4">
-            <h1 className="text-lg pl-2 font-semibold">Account Setting</h1>
-            <h1 className="text-lg pl-2 ">Here You Can Manage Your Account</h1>
+          <div style={{ display: "flex", marginTop: "20px" }}>
+            <div style={{ marginRight: "30%" }}>
+              <h1 className="text-lg pl-2 font-semibold">Account Setting</h1>
+              <h1 className="text-lg pl-2">Here You Can Manage Your Account</h1>
+            </div>
           </div>
 
           <Paper className="border-none !pt-0 !px-0 shadow-md outline-none rounded-md">
@@ -163,8 +139,8 @@ const UserProfile = () => {
                         alt="User"
                         style={{
                           borderRadius: "50%",
-                          width: "100px",
-                          height: "100px",
+                          width: "180px",
+                          height: "180px",
                           display: "block",
                           margin: "auto",
                         }}
@@ -183,13 +159,19 @@ const UserProfile = () => {
                     >
                       {`${user?.first_name} ${user?.last_name}`}
                     </h1>
+                    <h1 className="text-lg font-semibold">
+                      {user?.profile.join(" ,")}
+                    </h1>
+                    <h1 className="text-lg">{user?.email}</h1>
+                    <div className="w-full">
+                      <h1 className="text-lg">
+                        Status: {availableUserProfileData.status_message}
+                      </h1>
+                      <h1>Chat Id: {availableUserProfileData.chat_id}</h1>
+                    </div>
 
-                    <h1>{user?.profile.join(" ,")}</h1>
-                    <h1>{user?.phone_number}</h1>
-                    <h1>{user?.email}</h1>
                     <div style={{ display: "flex", marginTop: "20px" }}>
                       <button
-                        onClick={handleDeletePhoto}
                         style={{
                           backgroundColor: "red",
                           color: "white",
@@ -284,37 +266,27 @@ const UserProfile = () => {
                 justifyContent: "center",
               }}
             >
-              <Button
-                onClick={handleDeleteAdditionalDetails}
-                variant="outlined"
-                style={{
-                  backgroundColor: "blue",
-                  color: "white",
-                  padding: "5px 20px",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                  marginRight: "10px",
-                }}
+              <Tooltip
+                title="You can add or update the data here"
+                placement="top"
               >
-                Delete
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                onClick={handleUpdateAdditionalDetails}
-                style={{
-                  backgroundColor: "green",
-                  color: "white",
-                  padding: "5px 20px",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                Update
-              </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAddAdditionalDetails}
+                  style={{
+                    backgroundColor: "blue",
+                    color: "white",
+                    padding: "5px 20px",
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Add or Update
+                </Button>
+              </Tooltip>
             </div>
           </Paper>
         </Paper>
