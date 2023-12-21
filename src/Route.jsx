@@ -33,7 +33,7 @@ import AddRoles from "./pages/SetupPage/Roles/AddRoles";
 import Shifts from "./pages/SetupPage/Shifts";
 import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
-import Signup from "./pages/SignUp/Signup";
+import Signup from "./pages/SignUp/NewSignUp";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";

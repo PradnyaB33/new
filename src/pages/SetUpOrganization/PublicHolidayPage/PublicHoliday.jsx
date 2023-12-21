@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Setup from "../Setup";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
-import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import axios from 'axios';
 import { useParams } from "react-router-dom";
+import { UseContext } from "../../../State/UseState/UseContext";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
@@ -16,6 +16,7 @@ import {
 
 const PublicHoliday = () => {
   const id = useParams().organisationId;
+  const { setAppAlert } = useContext(UseContext);
   const [openModal, setOpenModal] = useState(false);
   const [actionModal, setActionModal] = useState(false);
   const [holidays, setHolidays] = useState([]);
@@ -24,12 +25,13 @@ const PublicHoliday = () => {
   const [region, setRegion] = useState("")
   const [operation, setOperation] = useState("");
   const [selectedHolidayId, setSelectedHolidayId] = useState(null);
+
+  // todo - data to post
+
   const [inputdata, setInputData] = useState({
     name: "",
     year: "",
-    date: dayjs(),
-    day: "",
-    month: "",
+    date: new Date(), 
     type: "",
     region: "",
     organizationId: "",
@@ -41,12 +43,17 @@ const PublicHoliday = () => {
       setHolidays(response.data.holidays);
     } catch (error) {
       console.error("Error fetching holidays:", error);
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: "An error occurred while fetching holidays",
+      });
     }
   };
 
   useEffect(() => {
     fetchHolidays();
-  }, [id]);
+  },[]);
 
   const handleData = (e) => {
     const { name, value } = e.target;
@@ -65,9 +72,7 @@ const PublicHoliday = () => {
     setInputData({
       name: "",
       year: "",
-      date: dayjs(),
-      day: "",
-      month: "",
+      date: new Date(),
       type: "",
       region: "",
       organizationId: "",
@@ -77,10 +82,8 @@ const PublicHoliday = () => {
   const handleDateChange = (newDate) => {
     setInputData({
       ...inputdata,
-      year: newDate.format("YYYY"),
-      date: newDate.format("DD-MM-YYYY"),
-      day: newDate.format("ddd"),
-      month: newDate.format("MM"),
+      year: newDate.getFullYear(),
+      date: newDate, 
     });
   };
 
@@ -89,32 +92,41 @@ const PublicHoliday = () => {
       const sanitizedData = JSON.parse(JSON.stringify(inputdata));
       await axios.post(`${process.env.REACT_APP_API}/route/holiday/create`, { ...sanitizedData, organizationId: id });
       setOpenModal(false);
-      fetchHolidays(); // Refresh holidays after create
+      setAppAlert({
+        alert: true,
+        type: "success",
+        msg: "Holiday created successfully!",
+      });
+      fetchHolidays();
     } catch (error) {
       console.error("Error:", error);
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: "An error occurred while creating holiday",
+      });
     }
   };
 
   const handleOperateEdit = async (id) => {
     setActionModal(true);
+    setOpenModal(false)
     setOperation("edit");
     setSelectedHolidayId(id);
-  
+
     try {
       const response = await axios.get(`${process.env.REACT_APP_API}/route/holiday/getone/${id}`);
       const holidayData = response.data.holidays;
-  
+
       console.log(holidayData);
-  
-     setName(holidayData.name)
-     setType(holidayData.type)
-     setRegion(holidayData.region)
+
+      setName(holidayData.name)
+      setType(holidayData.type)
+      setRegion(holidayData.region)
     } catch (error) {
       console.error("Error fetching holiday data for edit:", error);
     }
   };
-  
-  
 
   const handleOperateDelete = (id) => {
     setActionModal(true);
@@ -124,17 +136,22 @@ const PublicHoliday = () => {
 
   const doTheOperation = async () => {
     const id = selectedHolidayId;
-  
+
     if (operation === "edit") {
       const patchData = {
         name, type, region
       }
-        await axios.patch(`${process.env.REACT_APP_API}/route/holiday/update/${id}`, patchData).then((response) =>{
-          console.log("Successfully updated");
-          setOpenModal(false);
-          fetchHolidays(); 
+      await axios.patch(`${process.env.REACT_APP_API}/route/holiday/update/${id}`, patchData).then((response) => {
+        console.log("Successfully updated");
+        setOpenModal(false);
+        setAppAlert({
+          alert: true,
+          type: "success",
+          msg: "updated successfully!",
+        });
+        fetchHolidays();
 
-        }).catch((error) => {
+      }).catch((error) => {
         console.error("Error updating holiday:", error);
       })
 
@@ -144,17 +161,31 @@ const PublicHoliday = () => {
         await axios.delete(`${process.env.REACT_APP_API}/route/holiday/delete/${id}`);
         console.log("Successfully deleted");
         setOpenModal(false);
+        setAppAlert({
+          alert: true,
+          type: "success",
+          msg: "deleted successfully!",
+        });
         fetchHolidays(); // Refresh holidays after delete
       } catch (error) {
         console.error("Error deleting holiday:", error);
+        setAppAlert({
+          alert: true,
+          type: "error",
+          msg: "Error deleting holiday!",
+        });
       }
     } else {
       console.log("Nothing changed");
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: "error occured!",
+      });
     }
-  
-    handleClose(); 
+
+    handleClose();
   };
-  
 
   return (
     <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
@@ -207,8 +238,8 @@ const PublicHoliday = () => {
                     <tr className="!font-medium border-b" key={id}>
                       <td className="!text-left pl-9">{id + 1}</td>
                       <td className=" py-3">{data.name}</td>
-                      <td className="py-3">{data.date}</td>
-                      <td className="py-3">{data.type}</td>
+                      <td className="py-3 pl-2">{new Date(data.date).toLocaleDateString()}</td>
+                      <td className="py-3 pl-3">{data.type}</td>
                       <td className="px-2">
                         <IconButton
                           color="primary"
@@ -246,7 +277,7 @@ const PublicHoliday = () => {
                     value={inputdata.name}
                     onChange={handleData}
                   />
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DemoContainer components={["DatePicker"]} required>
                       <DatePicker
                         label="Holiday date"
@@ -257,7 +288,7 @@ const PublicHoliday = () => {
                             style: { marginBottom: "8px" },
                           },
                         }}
-                        value={dayjs(inputdata.date)}
+                        value={inputdata.date}
                         onChange={handleDateChange}
                       />
                     </DemoContainer>
@@ -299,10 +330,10 @@ const PublicHoliday = () => {
                   <Button onClick={handleClose} color="error" variant="contained">
                     Cancel
                   </Button>
+
                 </div>
               </DialogContent>
             </Dialog>
-
 
             <Dialog fullWidth open={actionModal} onClose={handleClose}>
               <DialogTitle>
@@ -311,77 +342,82 @@ const PublicHoliday = () => {
               <DialogContent>
                 {operation === "edit" ? (
                   <>
-                 <div className="flex gap-3 flex-col mt-3">
-                  <TextField
-                    required
-                    size="small"
-                    className="w-full"
-                    label="Holiday name"
-                    type="text"
-                    name="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={["DatePicker"]} required>
-                      <DatePicker
-                        label="Holiday date"
-                        slotProps={{
-                          textField: {
-                            size: "small",
-                            fullWidth: true,
-                            style: { marginBottom: "8px" },
-                          },
-                        }}
-                        value={dayjs(inputdata.date)}
-                        onChange={handleDateChange}
+                    <div className="flex gap-3 flex-col mt-3">
+                      <TextField
+                        required
+                        size="small"
+                        className="w-full"
+                        label="Holiday name"
+                        type="text"
+                        name="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                       />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                  <FormControl size="small" fullWidth>
-                    <InputLabel id="holiday-type-label">Holiday type</InputLabel>
-                    <Select
-                      labelId="holiday-type-label"
-                      id="demo-simple-select"
-                      label="holiday type"
-                      className="mb-[8px]"
-                      value={type}
-                      name="type"
-                      onChange={(e) => setType(e.target.value) }
-                    >
-                      <MenuItem value="Optional">Optional</MenuItem>
-                      <MenuItem value="Mandatory">Mandatory</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <FormControl size="small" fullWidth>
-                    <InputLabel id="region-label">Region</InputLabel>
-                    <Select
-                      labelId="region-label"
-                      id="demo-simple-select"
-                      label="Region"
-                      className="mb-[8px]"
-                      onChange={(e) => setRegion(e.target.value)}
-                      value={region}
-                      name="region"
-                    >
-                      <MenuItem value="India">India</MenuItem>
-                      <MenuItem value="USA">USA</MenuItem>
-                    </Select>
-                  </FormControl>
-                </div>
-
-                  <div className="mt-5 flex gap-5">
-                    <Button onClick={doTheOperation} color="warning" variant="contained">{operation}</Button>
-                    <Button variant="contained" color= "primary">cancel</Button>
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DemoContainer components={["DatePicker"]} required>
+                          <DatePicker
+                            label="Holiday date"
+                            slotProps={{
+                              textField: {
+                                size: "small",
+                                fullWidth: true,
+                                style: { marginBottom: "8px" },
+                              },
+                            }}
+                            value={inputdata.date}
+                            onChange={handleDateChange}
+                          />
+                        </DemoContainer>
+                      </LocalizationProvider>
+                      <FormControl size="small" fullWidth>
+                        <InputLabel id="holiday-type-label">Holiday type</InputLabel>
+                        <Select
+                          labelId="holiday-type-label"
+                          id="demo-simple-select"
+                          label="holiday type"
+                          className="mb-[8px]"
+                          value={type}
+                          name="type"
+                          onChange={(e) => setType(e.target.value)}
+                        >
+                          <MenuItem value="Optional">Optional</MenuItem>
+                          <MenuItem value="Mandatory">Mandatory</MenuItem>
+                        </Select>
+                      </FormControl>
+                      <FormControl size="small" fullWidth>
+                        <InputLabel id="region-label">Region</InputLabel>
+                        <Select
+                          labelId="region-label"
+                          id="demo-simple-select"
+                          label="Region"
+                          className="mb-[8px]"
+                          onChange={(e) => setRegion(e.target.value)}
+                          value={region}
+                          name="region"
+                        >
+                          <MenuItem value="India">India</MenuItem>
+                          <MenuItem value="USA">USA</MenuItem>
+                        </Select>
+                      </FormControl>
                     </div>
-                    </>
+
+                    <div className="mt-5 flex gap-5">
+                      <Button onClick={doTheOperation} variant="contained" color="success" >{operation}</Button>
+                      <Button onClick={handleClose} color="error" variant="contained">
+                        Cancel
+                      </Button>
+
+                    </div>
+                  </>
                 )
 
                   : (
                     <>
-                      <div>
-                      <Button onClick={doTheOperation}>{operation}</Button>
-                    <Button>cancel</Button>
+                      <div className="flex gap-5 py-5">
+                        <Button onClick={doTheOperation} variant="contained" color="secondary">{operation}</Button>
+                        <Button onClick={handleClose} color="error" variant="contained">
+                          Cancel
+                        </Button>
                       </div>
                     </>
                   )}
