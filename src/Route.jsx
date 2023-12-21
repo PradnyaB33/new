@@ -38,7 +38,7 @@ import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
-
+import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 const App = () => {
   return (
     <Routes>
@@ -153,6 +153,10 @@ const App = () => {
       <Route
         path="/del-department-by-location"
         element={<DeleteDepartment />}
+      />
+      <Route
+        path="/organisation/:organisationId/salary-management"
+        element={<SalaryManagement />}
       />
     </Routes>
   );
