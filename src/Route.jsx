@@ -20,6 +20,7 @@ import AddProfile from "./pages/Home/components/addprofile";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
+import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
 import EmployementTypes from "./pages/SetUpOrganization/EmployementType/EmployementTypes";
 import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
@@ -38,7 +39,6 @@ import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
-import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 const App = () => {
   return (
     <Routes>
@@ -65,7 +65,7 @@ const App = () => {
         element={<CreateDepartment />}
       />
       <Route
-        path="/department/get/:organizationId"
+        path="/department/get/:organisationId"
         element={<DepartmentList />}
       />
       <Route path="/userprofile" element={<UserProfile />} />

@@ -26,6 +26,7 @@ import NavAccordian from "./accordian";
 
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
+  console.log(`🚀 ~ file: test-nav-items.jsx:29 ~ orgId:`, orgId);
   const { cookies } = useContext(UseContext);
   const token = cookies["aeigs"];
   const location = useLocation();
@@ -233,7 +234,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
     }),
     // eslint-disable-next-line
-    [isVisible]
+    [isVisible, orgId]
   );
 
   useEffect(() => {
@@ -245,10 +246,6 @@ const TestNavItems = ({ toggleDrawer }) => {
       const newToken = jwtDecode(token);
       setDecodedToken(newToken);
       if (decodedToken && decodedToken.user.profile) {
-        console.log(
-          `🚀 ~ file: test-nav-items.jsx:230 ~ decodedToken:`,
-          decodedToken
-        );
       }
     } catch (error) {
       console.error("Failed to decode the token:", error);
