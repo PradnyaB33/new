@@ -45,11 +45,9 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
 
   const { handleSubmit, control, formState } = form;
   const { errors } = formState;
-  console.log(`🚀 ~ errors:`, errors);
   const isFormClean = Object.keys(formState.dirtyFields).length === 0;
 
   const onSubmit = async (data) => {
-    console.log(`🚀 ~ data:`, data);
 
     try {
       // Make the PATCH request using axios

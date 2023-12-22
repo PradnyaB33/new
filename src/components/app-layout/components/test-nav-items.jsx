@@ -26,6 +26,7 @@ import NavAccordian from "./accordian";
 
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
+  console.log(`🚀 ~ file: test-nav-items.jsx:29 ~ orgId:`, orgId);
   const { cookies } = useContext(UseContext);
   const token = cookies["aeigs"];
   const location = useLocation();
@@ -35,9 +36,7 @@ const TestNavItems = ({ toggleDrawer }) => {
   // Update organization ID when URL changes
   useEffect(() => {
     const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
-    // if (!hasEmployeeOnboarding) {
     getOrganizationIdFromPathname(location.pathname);
-    // }
     // eslint-disable-next-line
   }, [location.pathname, orgId]);
 
@@ -233,7 +232,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
     }),
     // eslint-disable-next-line
-    [isVisible]
+    [isVisible, orgId]
   );
 
   useEffect(() => {
