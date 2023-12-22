@@ -154,10 +154,10 @@ const App = () => {
         path="/del-department-by-location"
         element={<DeleteDepartment />}
       />
-      <Route
+      {/* <Route
         path="/organisation/:organisationId/salary-management"
         element={<SalaryManagement />}
-      />
+      /> */}
     </Routes>
   );
 };
