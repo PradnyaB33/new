@@ -352,6 +352,7 @@ const AddEmployee = () => {
   }, [organisationId]);
 
   const [availableMgrId, setAvailableMgrId] = useState([]);
+
   const fetchAvailabeMgrId = async () => {
     try {
       const response = await axios.get(
@@ -782,8 +783,8 @@ const AddEmployee = () => {
                               key={manager._id}
                               value={manager.managerId._id}
                             >
-                              {manager.managerId}
-                              {/* {`${manager.managerId.first_name} ${manager.managerId.last_name}`} */}
+                              {/* {manager.managerId} */}
+                              {`${manager.managerId.first_name} ${manager.managerId.last_name}`}
                             </MenuItem>
                           )
                       )}
