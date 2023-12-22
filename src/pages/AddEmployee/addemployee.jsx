@@ -44,6 +44,7 @@ const AddEmployee = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
+  console.log(`🚀 ~ file: addemployee.jsx:47 ~ authToken:`, authToken);
   const { organisationId } = useParams();
   const [userId, setUserId] = useState(null);
 
