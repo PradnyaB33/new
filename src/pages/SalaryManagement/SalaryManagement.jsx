@@ -1,17 +1,15 @@
-import { IconButton, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import axios from "axios";
-import { BorderColor } from "@mui/icons-material";
 import React, { useContext, useEffect, useState } from "react";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import { useQueryClient } from "react-query";
-import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
 import { useParams } from "react-router-dom";
+import { Button } from "@mui/material";
+
 const SalaryManagement = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-  const queryClient = useQueryClient();
   const [nameSearch, setNameSearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const [deptSearch, setDeptSearch] = useState("");
@@ -66,22 +64,6 @@ const SalaryManagement = () => {
 
   const changePage = (id) => {
     fetchAvailableEmployee(id);
-  };
-  // Modal states and function
-  const [open, setOpen] = React.useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [employeeId, setemployeeId] = useState(null);
-
-  const handleEditModalOpen = (empId) => {
-    setEditModalOpen(true);
-    queryClient.invalidateQueries(["employee", empId]);
-    setemployeeId(empId);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setemployeeId(null);
-    setEditModalOpen(false);
   };
 
   return (
@@ -165,9 +147,13 @@ const SalaryManagement = () => {
                           item.first_name
                             .toLowerCase()
                             .includes(nameSearch))) &&
-                      (!deptSearch.toLowerCase() ||
+                      (!deptSearch ||
                         (item.deptname &&
-                          item.deptname.toLowerCase().includes(deptSearch))) &&
+                          item.deptname.some((dept) =>
+                            dept.departmentName
+                              .toLowerCase()
+                              .includes(deptSearch.toLowerCase())
+                          ))) &&
                       (!locationSearch.toLowerCase() ||
                         item.worklocation.some(
                           (location) =>
@@ -176,26 +162,36 @@ const SalaryManagement = () => {
                         ))
                     );
                   })
-                  .map((item, id) => (
+                  ?.map((item, id) => (
                     <tr className="!font-medium border-b" key={id}>
                       <td className="!text-left pl-8 py-3">{id + 1}</td>
                       <td className="py-3">{item.first_name}</td>
                       <td className="py-3">{item.last_name}</td>
                       <td className="py-3">{item.email}</td>
-                      {/* <td className="py-3">
-                        {item.worklocation.map((location, index) => (
+                      <td className="py-3">
+                        {item?.worklocation?.map((location, index) => (
                           <span key={index}>{location.city}</span>
                         ))}
-                      </td> */}
-                      <td className="py-3">{item.worklocation}</td>
-                      <td className="py-3">{item.deptname}</td>
-                      <td className="py-3">{item.phone_number}</td>
-                      <td className="whitespace-nowrap px-6 py-2">
-                        <IconButton
-                          onClick={() => handleEditModalOpen(item._id)}
+                      </td>
+                      <td className="py-3">
+                        {item?.deptname?.map((dept, index) => {
+                          return (
+                            <span key={index}>{dept?.departmentName}</span>
+                          );
+                        })}
+                      </td>
+                      <td className="py-3">{item?.salarystructure?.name}</td>
+                      <td className="whitespace-nowrap ">
+                        <Button
+                          className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"
+                          type="submit"
+                          variant="contained"
+                          color="primary"
+                          fullWidth={false}
+                          margin="normal"
                         >
-                          <BorderColor className="!text-xl" color="success" />
-                        </IconButton>
+                          Create Salary
+                        </Button>
                       </td>
                     </tr>
                   ))}
@@ -286,12 +282,6 @@ const SalaryManagement = () => {
       </section>
 
       {/* edit model */}
-      <EditModelOpen open={open} handleClose={handleClose} />
-      <EditModelOpen
-        handleClose={handleClose}
-        open={editModalOpen}
-        employeeId={employeeId}
-      />
     </>
   );
 };

@@ -132,6 +132,12 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <Event className="text-white" />,
             text: "Shift Management",
           },
+          {
+            key: "createsalary",
+            link: `/organisation/${orgId}/salary-management`,
+            icon: <Event className="text-white" />,
+            text: "Create Salary",
+          },
         ],
       },
       Employee: {
