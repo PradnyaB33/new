@@ -36,11 +36,9 @@ const TestNavItems = ({ toggleDrawer }) => {
   // Update organization ID when URL changes
   useEffect(() => {
     const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
-    if (!hasEmployeeOnboarding) {
-      getOrganizationIdFromPathname(location.pathname);
-    }
+    getOrganizationIdFromPathname(location.pathname);
     // eslint-disable-next-line
-  }, [location.pathname]);
+  }, [location.pathname, orgId]);
 
   // Function to extract organization ID from pathname
   const getOrganizationIdFromPathname = (pathname) => {
