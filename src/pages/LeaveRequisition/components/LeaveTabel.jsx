@@ -1,16 +1,18 @@
-import { Help } from "@mui/icons-material";
+import { Help, MoreHoriz, MoreVert } from "@mui/icons-material";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import { Skeleton } from "@mui/material";
+import { IconButton, Popover, Skeleton, Tooltip } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import SummaryTable from "./summaryTable";
 
 const LeaveTable = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const authToken = cookies["aeigs"];
   const { data, isLoading, isError, error } = useQuery(
@@ -67,6 +69,14 @@ const LeaveTable = () => {
       <article className="w-[350px] h-max py-6 bg-white shadow-xl rounded-lg ">
         <h1 className="text-xl px-8 font-semibold flex items-center gap-3 ">
           <AccountBalanceIcon className="text-gray-400" /> Balance for Leaves
+          <Tooltip title="Click to get Summary for current month">
+            <IconButton
+            // aria-describedby={Popid}
+            // onClick={(event) => handlePopClick(event, item)}
+            >
+              <MoreHoriz className="!text-[19px] text-black" />
+            </IconButton>
+          </Tooltip>
         </h1>
         <Divider
           className="pt-6"
@@ -92,11 +102,22 @@ const LeaveTable = () => {
   if (isError) {
     return <p>Error loading data</p>;
   }
-
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <article className="w-[350px] h-max bg-white shadow-lg rounded-lg ">
-      <h1 className="text-xl py-6 px-6 font-semibold flex items-center gap-3 ">
-        <AccountBalanceIcon className="text-gray-400" /> Balance for Leaves
+      <h1 className="text-xl py-6 px-6 font-semibold flex items-center gap-3 justify-between">
+        <AccountBalanceIcon className="text-gray-400" />
+        <div>Balance for Leaves</div>
+        <Tooltip title="Click to get Summary for current month">
+          <IconButton onClick={handlePopoverOpen}>
+            <MoreVert className="!text-[19px] text-black" />
+          </IconButton>
+        </Tooltip>
       </h1>
       <div className="w-full">
         {data?.leaveTypes?.map((item, index) => {
@@ -122,6 +143,18 @@ const LeaveTable = () => {
           </h1>
         </div>
       </div>
+
+      <Popover
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        onClose={handlePopoverClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+      >
+        <SummaryTable />
+      </Popover>
     </article>
   );
 };

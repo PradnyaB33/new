@@ -12,7 +12,6 @@ import { UseContext } from "../../State/UseState/UseContext";
 import AppDatePicker from "../../components/date-picker/date-picker";
 import LeaveTable from "./components/LeaveTabel";
 import Mapped from "./components/mapped-form";
-import SummaryTable from "./components/summaryTable";
 
 // Set up the localizer for moment.js
 
@@ -123,7 +122,6 @@ const LeaveRequisition = () => {
         <div className="flex flex-col-reverse md:flex-row w-full justify-start p-6 gap-4">
           <div className="flex flex-col gap-4">
             <LeaveTable />
-            <SummaryTable />
           </div>
 
           <article className="md:w-[100%] space-y-2">
