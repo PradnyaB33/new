@@ -41,10 +41,7 @@ const PublicHoliday = () => {
 
   const [inputdata, setInputData] = useState({
     name: "",
-    year: "",
-    date: new Date(),
-    day: "",
-    month: "",
+    date: dayjs(new Date()),
     type: "",
     region: "",
     organizationId: "",
@@ -68,6 +65,7 @@ const PublicHoliday = () => {
 
   useEffect(() => {
     fetchHolidays();
+    // eslint-disable-next-line
   }, []);
 
   const handleData = (e) => {
@@ -95,22 +93,16 @@ const PublicHoliday = () => {
       organizationId: "",
     });
   };
-
   const handleDateChange = (newDate) => {
-    setInputData({
-      ...inputdata,
-      year: newDate.format("YYYY"),
-      date: newDate,
-      day: newDate.format("ddd"),
-      month: newDate.format("MM"),
-    });
+    setInputData((prev) => ({
+      ...prev,
+      date: newDate.toISOString(),
+    }));
   };
-
   const handleSubmit = async () => {
     try {
-      const sanitizedData = JSON.parse(JSON.stringify(inputdata));
       await axios.post(`${process.env.REACT_APP_API}/route/holiday/create`, {
-        ...sanitizedData,
+        ...inputdata,
         organizationId: id,
       });
       setOpenModal(false);
@@ -141,8 +133,6 @@ const PublicHoliday = () => {
         `${process.env.REACT_APP_API}/route/holiday/getone/${id}`
       );
       const holidayData = response.data.holidays;
-
-      console.log(holidayData);
 
       setName(holidayData.name);
       setType(holidayData.type);
@@ -320,12 +310,12 @@ const PublicHoliday = () => {
                       required
                     >
                       <DatePicker
-                        label="Foundation Date"
-                        value={inputdata.foundation_date}
+                        label="Date"
+                        value={inputdata.date}
                         onChange={(newDate) => {
                           setInputData({
                             ...inputdata,
-                            foundation_date: newDate,
+                            date: newDate,
                           });
                           console.log(newDate);
                         }}
@@ -413,8 +403,8 @@ const PublicHoliday = () => {
                                 style: { marginBottom: "8px" },
                               },
                             }}
-                            value={dayjs(inputdata.date)}
-                            onChange={handleDateChange}
+                            value={inputdata.date}
+                            onChange={(newDate) => handleDateChange(newDate)}
                           />
                         </DemoContainer>
                       </LocalizationProvider>

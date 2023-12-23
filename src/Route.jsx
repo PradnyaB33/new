@@ -20,7 +20,6 @@ import AddProfile from "./pages/Home/components/addprofile";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
-import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
 import EmployementTypes from "./pages/SetUpOrganization/EmployementType/EmployementTypes";
 import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
@@ -155,10 +154,10 @@ const App = () => {
         path="/del-department-by-location"
         element={<DeleteDepartment />}
       />
-      <Route
+      {/* <Route
         path="/organisation/:organisationId/salary-management"
         element={<SalaryManagement />}
-      />
+      /> */}
     </Routes>
   );
 };
