@@ -165,9 +165,13 @@ const EmployeeList = () => {
                           item.first_name
                             .toLowerCase()
                             .includes(nameSearch))) &&
-                      (!deptSearch.toLowerCase() ||
+                      (!deptSearch ||
                         (item.deptname &&
-                          item.deptname.toLowerCase().includes(deptSearch))) &&
+                          item.deptname.some((dept) =>
+                            dept.departmentName
+                              .toLowerCase()
+                              .includes(deptSearch.toLowerCase())
+                          ))) &&
                       (!locationSearch.toLowerCase() ||
                         item.worklocation.some(
                           (location) =>
@@ -182,13 +186,18 @@ const EmployeeList = () => {
                       <td className="py-3">{item.first_name}</td>
                       <td className="py-3">{item.last_name}</td>
                       <td className="py-3">{item.email}</td>
-                      {/* <td className="py-3">
-                        {item.worklocation.map((location, index) => (
+                      <td className="py-3">
+                        {item?.worklocation?.map((location, index) => (
                           <span key={index}>{location.city}</span>
                         ))}
-                      </td> */}
-                      <td className="py-3">{item.worklocation}</td>
-                      <td className="py-3">{item.deptname}</td>
+                      </td>
+                      <td className="py-3">
+                        {item?.deptname?.map((dept, index) => {
+                          return (
+                            <span key={index}>{dept?.departmentName}</span>
+                          );
+                        })}
+                      </td>
                       <td className="py-3">{item.phone_number}</td>
                       <td className="whitespace-nowrap px-6 py-2">
                         <IconButton
