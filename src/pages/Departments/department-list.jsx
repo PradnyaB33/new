@@ -1,15 +1,16 @@
-import { Add, AddLocationAltOutlined, Delete, Edit } from "@mui/icons-material";
-import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
-import { UseContext } from "../../State/UseState/UseContext";
-import { useParams } from "react-router-dom";
 import { Typography } from "@mui/material";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { UseContext } from "../../State/UseState/UseContext";
 
 const DepartmentList = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { organizationId } = useParams();
   const [departmentList, setDepartmentList] = useState([]);
+
+  console.log(departmentList);
 
   useEffect(() => {
     const fetchDepartmentList = async () => {
@@ -24,6 +25,7 @@ const DepartmentList = () => {
       }
     };
     fetchDepartmentList();
+    // eslint-disable-next-line
   }, [authToken]);
 
   return (

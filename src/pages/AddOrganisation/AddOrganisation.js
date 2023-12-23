@@ -152,7 +152,7 @@ const AddOrganisation = () => {
         foundation_date: inputdata.foundation_date,
         logo_url: logoUrl, // Include logo_url in the payload
       };
-      const result = await axios.post(
+      await axios.post(
         `${process.env.REACT_APP_API}/route/organization/create`,
         payload,
         {
@@ -237,9 +237,8 @@ const AddOrganisation = () => {
               onChange={handleData}
               value={inputdata.web_url}
               size="small"
-              className={`w-[80%] ${
-                firstEmptyField === "web_url" ? "error" : ""
-              }`}
+              className={`w-[80%] ${firstEmptyField === "web_url" ? "error" : ""
+                }`}
               label="Url Of Website"
               type="text"
               inputRef={
@@ -278,9 +277,8 @@ const AddOrganisation = () => {
               onChange={handleData}
               value={inputdata.email}
               size="small"
-              className={`w-[80%] ${
-                firstEmptyField === "email" ? "error" : ""
-              }`}
+              className={`w-[80%] ${firstEmptyField === "email" ? "error" : ""
+                }`}
               label={emailLabel}
               type="email"
               error={emailError}
@@ -298,9 +296,8 @@ const AddOrganisation = () => {
               onChange={handleData}
               value={inputdata.location}
               size="small"
-              className={`w-[80%] ${
-                firstEmptyField === "location" ? "error" : ""
-              }`}
+              className={`w-[80%] ${firstEmptyField === "location" ? "error" : ""
+                }`}
               label="Location"
               type="text"
               inputRef={
@@ -314,9 +311,8 @@ const AddOrganisation = () => {
               onChange={handleData}
               value={inputdata.contact_number}
               size="small"
-              className={`w-[80%] ${
-                firstEmptyField === "contact_number" ? "error" : ""
-              }`}
+              className={`w-[80%] ${firstEmptyField === "contact_number" ? "error" : ""
+                }`}
               label={numberLabel}
               type="number"
               error={contactNumberError}
@@ -336,9 +332,8 @@ const AddOrganisation = () => {
               onChange={handleData}
               value={inputdata.description}
               size="small"
-              className={`w-[80%] ${
-                firstEmptyField === "description" ? "error" : ""
-              }`}
+              className={`w-[80%] ${firstEmptyField === "description" ? "error" : ""
+                }`}
               label="Organisation Description"
               type="text"
               inputRef={

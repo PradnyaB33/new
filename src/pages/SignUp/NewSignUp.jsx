@@ -7,13 +7,12 @@ import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import TermsCondition from "../../components/termscondition/termsCondition";
 import useSignupFormStore from "../../hooks/useSignUpForm";
 const SignIn = () => {
   const { handleAlert } = useContext(TestContext);
-  const router = useNavigate();
   const location = useLocation();
 
   const {

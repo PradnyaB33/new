@@ -30,12 +30,11 @@ const TestNavItems = ({ toggleDrawer }) => {
   const { cookies } = useContext(UseContext);
   const token = cookies["aeigs"];
   const location = useLocation();
-  const pathname = location.pathname;
   const [decodedToken, setDecodedToken] = useState("");
 
   // Update organization ID when URL changes
   useEffect(() => {
-    const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
+    // const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
     getOrganizationIdFromPathname(location.pathname);
     // eslint-disable-next-line
   }, [location.pathname, orgId]);

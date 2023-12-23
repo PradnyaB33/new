@@ -96,6 +96,7 @@ const OrganizationLocations = () => {
       setContinent(continents[0]);
       setStateData("");
     }
+    // eslint-disable-next-line
   }, [open, country]);
 
   const handleOpen = () => {

@@ -13,29 +13,29 @@ const SignIn = () => {
   const { setCookie } = useContext(UseContext);
   const redirect = useNavigate();
 
-  const handleSendSms = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API}/route/send-sms`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+  // const handleSendSms = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.REACT_APP_API}/route/send-sms`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("SMS sent successfully:", data);
-      } else {
-        const error = await response.json();
-        console.error("Error sending SMS:", error);
-      }
-    } catch (error) {
-      console.error("Error sending SMS:", error);
-    }
-  };
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       console.log("SMS sent successfully:", data);
+  //     } else {
+  //       const error = await response.json();
+  //       console.error("Error sending SMS:", error);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error sending SMS:", error);
+  //   }
+  // };
 
   const onSubmit = async (event) => {
     event.preventDefault();

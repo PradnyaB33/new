@@ -7,9 +7,9 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import { useParams } from "react-router-dom";
 
 const CreateDepartment = () => {
   const { cookies } = useContext(UseContext);
@@ -35,6 +35,7 @@ const CreateDepartment = () => {
 
   const handleGetLocation = (e) => {
     setLocationId(e);
+    setDepartmentId();
     // console.log(e);
   };
   const initialFormValues = {
@@ -52,22 +53,26 @@ const CreateDepartment = () => {
   const [formValues, setFormValues] = useState(initialFormValues);
   const [locations, setLocations] = useState([]);
 
-  useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${organizationId}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      )
-      .then((response) => {
-        setLocations(response.data);
-        // console.log("locations are: ", response.data);
-      })
-      .catch((error) => console.error("Error fetching locations:", error));
-  }, [authToken]);
+  useEffect(
+    () => {
+      axios
+        .get(
+          `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${organizationId}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        )
+        .then((response) => {
+          setLocations(response.data);
+          // console.log("locations are: ", response.data);
+        })
+        .catch((error) => console.error("Error fetching locations:", error));
+    },
+    // eslint-disable-next-line
+    [authToken]
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
