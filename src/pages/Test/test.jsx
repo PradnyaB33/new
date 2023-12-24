@@ -44,10 +44,10 @@ export default function Test() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     return () => {
       stopWatching();
     };
+    // eslint-disable-next-line
   }, []); // Cleanup on component unmount
 
   return (
