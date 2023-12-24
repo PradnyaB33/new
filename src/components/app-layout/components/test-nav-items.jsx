@@ -26,7 +26,6 @@ import NavAccordian from "./accordian";
 
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
-  console.log(`🚀 ~ file: test-nav-items.jsx:29 ~ orgId:`, orgId);
   const { cookies } = useContext(UseContext);
   const token = cookies["aeigs"];
   const location = useLocation();
