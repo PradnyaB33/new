@@ -1,4 +1,3 @@
-import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 export default function Test() {
@@ -45,10 +44,10 @@ export default function Test() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     return () => {
       stopWatching();
     };
-    // eslint-disable-next-line
   }, []); // Cleanup on component unmount
 
   return (
@@ -65,8 +64,8 @@ export default function Test() {
       <div>
         <strong>Accuracy:</strong> {locationData.accuracy}
       </div>
-      <Button onClick={startWatching}>Start Watching</Button>
-      <Button onClick={stopWatching}>Stop Watching</Button>
+      <button onClick={startWatching}>Start Watching</button>
+      <button onClick={stopWatching}>Stop Watching</button>
     </div>
   );
 }
