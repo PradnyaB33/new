@@ -43,6 +43,7 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/test" element={<Test />} />
       {/* Login Routes */}
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<Signup />} />
@@ -155,7 +156,6 @@ const App = () => {
         path="/del-department-by-location"
         element={<DeleteDepartment />}
       />
-      <Route path="/test" element={<Test />} />
     </Routes>
   );
 };
