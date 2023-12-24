@@ -44,6 +44,8 @@ export default function Test() {
   };
 
   useEffect(() => {
+    console.log("hello i am wori");
+
     return () => {
       stopWatching();
     };
