@@ -48,6 +48,7 @@ export default function Test() {
     return () => {
       stopWatching();
     };
+    // eslint-disable-next-line
   }, []); // Cleanup on component unmount
 
   return (
