@@ -79,7 +79,7 @@ const Setup = ({ children }) => {
     {
       label: "Add Location",
       icon: AddLocationAltOutlined,
-      href: `/organization/${organisationId}/setup/add-organization-locations`,
+      href: `/organisation/${organisationId}/setup/add-organization-locations`,
       active:
         location.pathname ===
         `/organization/${organisationId}/setup/add-organization-locations`,
