@@ -121,7 +121,7 @@ const App = () => {
         element={<EmployementTypes />}
       />
       <Route
-        path="/organization/:organisationId/setup/add-organization-locations"
+        path="/organisation/:organisationId/setup/add-organization-locations"
         element={<OrganizationLocations />}
       />
       <Route
