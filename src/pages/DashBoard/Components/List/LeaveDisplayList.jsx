@@ -1,9 +1,33 @@
 import { BeachAccessOutlined } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 import Divider from "@mui/material/Divider";
-import React from "react";
+import axios from "axios";
+import { format } from "date-fns";
+import React, { useContext } from "react";
+import { useQuery } from "react-query";
+import { UseContext } from "../../../../State/UseState/UseContext";
 
 const LeaveDisplayList = () => {
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
+
+  const GetLastLeaves = async () => {
+    const { data } = await axios.get(
+      `${process.env.REACT_APP_API}/route/leave/get-3-leaves-employee`,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+    return data.leaves;
+  };
+
+  const { data: previousLeaves } = useQuery(
+    ["upcomingLeaves", authToken],
+    GetLastLeaves
+  );
+
   return (
     <article>
       <div className="bg-white rounded-md  w-full shadow-md">
@@ -23,11 +47,14 @@ const LeaveDisplayList = () => {
         </div>
         <Divider variant="fullWidth" orientation="horizontal" />
 
-        {Array.from({ length: 3 }).map((i, id) => (
+        {previousLeaves?.map((item, id) => (
           <>
             <div key={id} className="p-4">
-              <h1 className="text-md font-semibold">Diwali</h1>
-              <p className="text-lg">25 sept 2023</p>
+              <h1 className="text-md font-semibold">{item.title}</h1>
+              <p className="text-lg">
+                {format(new Date(item.start), "PP")} -{" "}
+                {format(new Date(item.end), "PP")}{" "}
+              </p>
             </div>
             <Divider variant="fullWidth" orientation="horizontal" />
           </>

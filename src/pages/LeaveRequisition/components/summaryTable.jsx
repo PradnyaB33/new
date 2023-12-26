@@ -1,5 +1,6 @@
+import { MoreHoriz } from "@mui/icons-material";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import { Skeleton } from "@mui/material";
+import { IconButton, Skeleton, Tooltip } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import axios from "axios";
 import React, { useContext } from "react";
@@ -24,9 +25,17 @@ const SummaryTable = () => {
 
   if (isLoading) {
     return (
-      <article className="w-[350px] h-max py-6 bg-white shadow-xl rounded-lg ">
+      <article className="w-[300px] h-max py-4 bg-white shadow-xl rounded-lg ">
         <h1 className="text-xl px-8 font-semibold flex items-center gap-3 ">
           <AccountBalanceIcon className="text-gray-400" /> Balance for Leaves
+          <Tooltip title="Click to get Salary structure">
+            <IconButton
+            // aria-describedby={Popid}
+            // onClick={(event) => handlePopClick(event, item)}
+            >
+              <MoreHoriz className="!text-[19px] text-black" />
+            </IconButton>
+          </Tooltip>
         </h1>
         <Divider
           className="pt-6"
@@ -55,7 +64,7 @@ const SummaryTable = () => {
 
   return (
     <article className="w-[350px] h-max bg-white shadow-lg rounded-lg ">
-      <h1 className="text-xl py-6 px-6 font-semibold flex items-center gap-3 text-gray-400">
+      <h1 className="text-xl py-4 px-6 font-semibold flex items-center gap-3 text-gray-400">
         <AccountBalanceIcon className="text-gray-400" /> Summary for current
         month
       </h1>
@@ -63,7 +72,7 @@ const SummaryTable = () => {
         {data?.leaveTypeDetailsArray?.map((item, index) => {
           return (
             <div key={index} className="border-b border">
-              <div className="flex justify-between items-center py-6 px-6">
+              <div className="flex justify-between items-center py-4 px-6">
                 <h1 className="text-md text-gray-400 font-bold tracking-wide">
                   {item.leaveName}
                 </h1>
@@ -74,7 +83,7 @@ const SummaryTable = () => {
             </div>
           );
         })}
-        <div className="flex justify-between items-center py-6 px-6">
+        <div className="flex justify-between items-center py-4 px-6">
           <h1 className="text-md text-gray-400 font-bold tracking-wide">
             Total Leave Balance
           </h1>

@@ -6,7 +6,7 @@ import useLeaveTable from "../../../../hooks/Leave/useLeaveTable";
 const EmployeeLeavePie = () => {
   const RemainingLeaves = useLeaveTable();
 
-  const { data: remainingLeaves, isLoading, isError, error } = RemainingLeaves;
+  const { data: remainingLeaves, isLoading } = RemainingLeaves;
 
   const data = {
     labels: remainingLeaves?.leaveTypes?.map((item) => item.leaveName) ?? [],
