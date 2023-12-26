@@ -44,9 +44,10 @@ const AddEmployee = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
+  console.log(`🚀 ~ file: addemployee.jsx:47 ~ authToken:`, authToken);
   const { organisationId } = useParams();
   const [userId, setUserId] = useState(null);
-  console.log(organisationId);
+
   useEffect(() => {
     try {
       const decodedToken = jwtDecode(authToken);
@@ -106,6 +107,7 @@ const AddEmployee = () => {
     companyEmailError,
     setCompanyEmailError,
   } = useAddEmpForm();
+
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
@@ -195,6 +197,7 @@ const AddEmployee = () => {
         },
       }
     );
+    console.log(response.data);
     return response.data;
   });
 
@@ -245,6 +248,7 @@ const AddEmployee = () => {
   }, []);
 
   const [availableDepartment, setAvailableDepartment] = useState([]);
+
   const fetchAvailabeDepartment = async () => {
     try {
       const response = await axios.get(
@@ -258,7 +262,7 @@ const AddEmployee = () => {
 
       setAvailableDepartment(response.data.department);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       handleAlert(true, "error", "Failed to fetch Department");
     }
   };
@@ -276,6 +280,7 @@ const AddEmployee = () => {
   };
 
   const [availableProfiles, setAvailableProfiles] = useState([]);
+
   const fetchAvailableProfiles = async () => {
     try {
       const response = await axios.get(
@@ -286,30 +291,15 @@ const AddEmployee = () => {
           },
         }
       );
-
-      const activeRoles = Object.entries(response.data.roles ?? [])
+      const rolesArray = Object.entries(response.data.roles ?? {})
         .filter(([role, obj]) => obj.isActive === true)
-        .map(([role, obj]) => role);
+        .map(([role, obj]) => ({
+          roleName: role,
+          isApprover: obj.isApprover,
+          isActive: obj.isActive,
+        }));
 
-      setAvailableProfiles(activeRoles);
-
-      // if (response.data && Array.isArray(response.data.roles)) {
-      //   const filteredProfiles = response.data.roles.filter(
-      //     (role) => role && role.isActive
-      //   );
-
-      //   if (filteredProfiles.length > 0) {
-      //     setAvailableProfiles(filteredProfiles);
-      //   } else {
-      //     handleAlert(
-      //       true,
-      //       "error",
-      //       "No active profiles available. Please add active profiles for your organization."
-      //     );
-      //   }
-      // } else {
-      //   handleAlert(true, "error", "Invalid data received from the server");
-      // }
+      setAvailableProfiles(rolesArray);
     } catch (error) {
       console.error(error);
       handleAlert(true, "error", "Failed to fetch available profiles");
@@ -363,17 +353,17 @@ const AddEmployee = () => {
   }, [organisationId]);
 
   const [availableMgrId, setAvailableMgrId] = useState([]);
+
   const fetchAvailabeMgrId = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-manager`,
+        `${process.env.REACT_APP_API}/route/employee/get-manager/${organisationId}`,
         {
           headers: {
             Authorization: authToken,
           },
         }
       );
-      console.log(response);
       setAvailableMgrId(response.data.manager);
     } catch (error) {
       console.error(error);
@@ -394,8 +384,9 @@ const AddEmployee = () => {
     education: "",
     permanant_address: "",
     relative_info: "",
-    manager_name: "",
     emer_contact: "",
+    adhar_card_number: "",
+    pan_card_number: "",
   });
 
   const handleDynamicFieldChange = (name, value) => {
@@ -431,7 +422,6 @@ const AddEmployee = () => {
         organizationId: organisationId,
         creatorId: userId,
       };
-      console.log("user", user);
       // Check if the selected profile exists
       const checkProfileResponse = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/check-profile-exists/${organisationId}`,
@@ -482,8 +472,12 @@ const AddEmployee = () => {
             },
           }
         );
-
-        if (response.data.success) {
+        if (response.status === 200) {
+          // Display a message to the user indicating that a manager ID is required
+          alert(
+            "Manager ID is required for an employee profile. Please provide a valid manager ID."
+          );
+        } else if (response.data && response.data.success) {
           handleAlert(true, "error", "Invalid authorization");
         } else {
           handleAlert(true, "success", response.data.message);
@@ -763,7 +757,7 @@ const AddEmployee = () => {
                       <MenuItem value="" disabled>
                         Select Department Name
                       </MenuItem>
-                      {availableDepartment.map((deptname) => (
+                      {availableDepartment?.map((deptname) => (
                         <MenuItem key={deptname._id} value={deptname._id}>
                           {deptname.departmentName}
                         </MenuItem>
@@ -780,18 +774,9 @@ const AddEmployee = () => {
                       inputProps={{ "aria-label": "Manager Id" }}
                     >
                       <MenuItem value="" disabled>
-                        Select Manager Id
+                        Select Manager Name
                       </MenuItem>
-                      {/* {availableMgrId.map((manager) => (
-                        <MenuItem
-                          key={manager._id}
-                          value={manager.managerId ? manager.managerId._id : ""}
-                        >
-                          {manager.managerId
-                            ? `${manager.managerId.first_name} ${manager.managerId.last_name}`
-                            : "No Manager Name"}
-                        </MenuItem>
-                      ))} */}
+
                       {availableMgrId.map(
                         (manager) =>
                           manager.managerId && ( // Render only if managerId exists
@@ -799,6 +784,7 @@ const AddEmployee = () => {
                               key={manager._id}
                               value={manager.managerId._id}
                             >
+                              {/* {manager.managerId} */}
                               {`${manager.managerId.first_name} ${manager.managerId.last_name}`}
                             </MenuItem>
                           )
@@ -864,18 +850,22 @@ const AddEmployee = () => {
                       )}
                       MenuProps={MenuProps}
                     >
-                      {availableProfiles.length === 0 ? (
+                      {availableProfiles?.length === 0 ? (
                         <MenuItem disabled>
                           No roles available. Please add roles for your
                           organization.
                         </MenuItem>
                       ) : (
-                        availableProfiles.map((name) => (
-                          <MenuItem key={name} value={name}>
-                            <Checkbox checked={profile.indexOf(name) > -1} />
-                            <ListItemText primary={name} />
-                          </MenuItem>
-                        ))
+                        availableProfiles?.map((name) => {
+                          return (
+                            <MenuItem key={name.roleName} value={name.roleName}>
+                              <Checkbox
+                                checked={profile.indexOf(name.roleName) > -1}
+                              />
+                              <ListItemText primary={name.roleName} />
+                            </MenuItem>
+                          );
+                        })
                       )}
                     </Select>
                   </FormControl>

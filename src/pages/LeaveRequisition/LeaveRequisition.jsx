@@ -12,7 +12,6 @@ import { UseContext } from "../../State/UseState/UseContext";
 import AppDatePicker from "../../components/date-picker/date-picker";
 import LeaveTable from "./components/LeaveTabel";
 import Mapped from "./components/mapped-form";
-import SummaryTable from "./components/summaryTable";
 
 // Set up the localizer for moment.js
 
@@ -64,6 +63,11 @@ const LeaveRequisition = () => {
         );
       } catch (error) {
         console.error(`🚀 ~ error:`, error);
+        handleAlert(
+          true,
+          "error",
+          error?.response?.data?.message || "Leaves not created succcesfully"
+        );
       }
     });
   };
@@ -71,7 +75,7 @@ const LeaveRequisition = () => {
     onSuccess: () => {
       console.log("success");
       // setNewAppliedLeaveEvents([]);
-      handleAlert(true, "success", "Leaves created succcesfully");
+
       // queryclient.invalidateQueries("")
       // queryclient.invalidateQueries([
       //   "employee-leave-table-without-default",
@@ -118,7 +122,6 @@ const LeaveRequisition = () => {
         <div className="flex flex-col-reverse md:flex-row w-full justify-start p-6 gap-4">
           <div className="flex flex-col gap-4">
             <LeaveTable />
-            <SummaryTable />
           </div>
 
           <article className="md:w-[100%] space-y-2">
@@ -216,13 +219,6 @@ const LeaveRequisition = () => {
             ) : (
               <>
                 <div className="w-full h-max grid justify-center relative gap-4 !mt-4 space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg">
-                  <img
-                    src="leave-reaquesation.gif"
-                    alt="description of your GIF"
-                    className="mt-2"
-                    width="700"
-                    height="700"
-                  ></img>
                   <Button
                     disabled={isLoading}
                     onClick={() => setCalendarOpen(true)}

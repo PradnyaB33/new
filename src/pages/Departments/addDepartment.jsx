@@ -7,9 +7,9 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import { useParams } from "react-router-dom";
 
 const CreateDepartment = () => {
   const { cookies } = useContext(UseContext);
@@ -35,6 +35,7 @@ const CreateDepartment = () => {
 
   const handleGetLocation = (e) => {
     setLocationId(e);
+    setDepartmentId();
     // console.log(e);
   };
   const initialFormValues = {

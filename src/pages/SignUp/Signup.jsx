@@ -147,10 +147,8 @@ const Signup = () => {
                   setMiddleName(enteredMiddleName);
 
                   if (enteredMiddleName.trim() === "") {
-                    // Middle name is empty, no validation required
                     setMiddleNameError("");
                   } else if (/[^a-zA-Z]/.test(enteredMiddleName)) {
-                    // Middle name contains characters other than letters
                     setMiddleNameError(
                       "Middle Name should only contain letters."
                     );

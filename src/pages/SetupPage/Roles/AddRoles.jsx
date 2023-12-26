@@ -4,11 +4,10 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { TestContext } from "../../State/Function/Main";
-import { UseContext } from "../../State/UseState/UseContext";
-import Setup from "../SetUpOrganization/Setup";
 
-import "../../index.css";
+import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
+import Setup from "../../SetUpOrganization/Setup";
 
 const AddRoles = () => {
   const { organisationId } = useParams("");
@@ -86,9 +85,7 @@ const AddRoles = () => {
   };
 
   const handleSubmit = async () => {
-    // You can use roleState to submit your request
     await AddProfiles.mutateAsync(roleState);
-    console.log("Submitted Roles:", roleState);
   };
 
   return (

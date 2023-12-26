@@ -176,6 +176,7 @@ const OrganizationLocations = () => {
     setEditing(true);
     setEditIndex(index);
     const selectedLocation = locationList[index];
+    console.log(selectedLocation);
     setAddressLine1(selectedLocation.addressLine1);
     setAddressLine2(selectedLocation.addressLine2);
     setCity(selectedLocation.city);

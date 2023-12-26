@@ -1,4 +1,5 @@
-import { Add, AddLocationAltOutlined, Delete, Edit } from "@mui/icons-material";
+import { Typography } from "@mui/material";
+import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { TestContext } from "../../State/Function/Main";
 import axios from "axios";
@@ -110,6 +111,7 @@ const DepartmentList = () => {
       }
     };
     fetchDepartmentList();
+    // eslint-disable-next-line
   }, [authToken]);
 
   const handleChange = (e) => {

@@ -47,10 +47,6 @@ const LeaveTypes = ({ open, handleClose, id }) => {
     setConfirmOpen(true);
   };
 
-  console.log(
-    `🚀 ~ file: LeaveTypes.jsx:113 ~ data?.length > 0:`,
-    data?.length === 0
-  );
   return (
     <section className="bg-gray-50 min-h-screen w-full">
       <Setup>

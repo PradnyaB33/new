@@ -139,15 +139,15 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
         isValid = false;
       }
 
-      if (!structure.manuallyInput.trim()) {
-        error.manuallyInput = "Manually Input is required";
-        isValid = false;
-      }
+      // if (!structure.manuallyInput.trim()) {
+      //   error.manuallyInput = "Manually Input is required";
+      //   isValid = false;
+      // }
 
-      if (!structure.calculation.trim()) {
-        error.calculation = "Calculation is required";
-        isValid = false;
-      }
+      // if (!structure.calculation.trim()) {
+      //   error.calculation = "Calculation is required";
+      //   isValid = false;
+      // }
 
       structuresError[index] = error;
     });
@@ -245,11 +245,11 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
         setEmpTypes("");
         setSalaryStructures("");
         handleClose();
-        handleAlert(true, "success", "Employee types generated succesfully");
+        handleAlert(true, "success", "Salary template generated succesfully");
       },
 
       onError: () => {
-        handleAlert(true, "error", "Somerthing went wrong");
+        handleAlert(true, "error", "Something went wrong");
       },
     }
   );
@@ -272,7 +272,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
         handleAlert(true, "success", "Salary template updated succesfully");
       },
       onError: () => {
-        handleAlert(true, "error", "Somerthing went wrong");
+        handleAlert(true, "error", "Something went wrong");
       },
     }
   );
@@ -439,12 +439,12 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
                     <th scope="col" className="!text-left pl-8 py-3 ">
                       Salary Component
                     </th>
-                    <th scope="col" className="py-3 ">
+                    {/* <th scope="col" className="py-3 ">
                       Manual Input
                     </th>
                     <th scope="col" className="px-6 py-3 ">
                       Calculation
-                    </th>
+                    </th> */}
                     <th scope="col" className="px-6 py-3 ">
                       Actions
                     </th>
@@ -524,7 +524,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
                         </p>
                       </td>
 
-                      <td className="w-[35%] !mx-4">
+                      {/* <td className="w-[35%] !mx-4">
                         <FormControl size="small" className="w-[90%]">
                           <InputLabel id="demo-simple-select-label">
                             manually
@@ -553,9 +553,9 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
                           {errors.salaryStructures[index]?.manuallyInput &&
                             ` *${errors.salaryStructures[index].manuallyInput}`}
                         </p>
-                      </td>
+                      </td> */}
 
-                      <td className="w-[35%]">
+                      {/* <td className="w-[35%]">
                         <FormControl
                           size="small"
                           className="w-full"
@@ -581,7 +581,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
                           {errors.salaryStructures[index]?.calculation &&
                             `*${errors.salaryStructures[index].calculation}`}
                         </p>
-                      </td>
+                      </td> */}
 
                       <td className="w-[10%]">
                         <Tooltip title="Remove this row">

@@ -48,12 +48,6 @@ const Organisation = ({ item }) => {
   };
 
   const [inputdata, setInputData] = useState(data);
-  // const navigate = useNavigate();
-  // const handleCreateProfile = () => {
-  //   navigate(`/organisation/${item._id}/add-profile`, {
-  //     state: { orgName: item.name },
-  //   });
-  // };
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -155,64 +149,6 @@ const Organisation = ({ item }) => {
   };
   return (
     <>
-      {/* <Card
-        className="hover:shadow-lg transition-all h-max w-[320px]"
-        sx={{ overflow: "visible" }}
-      >
-        <div className="cursor-pointer scroll-smooth transition-all">
-          <CardContent className="flex justify-between items-center">
-            <div className="cursor-pointer">
-              <Typography
-                color="#1D6EB7"
-                gutterBottom
-                variant="h6"
-                component="div"
-              >
-                {item.name}
-              </Typography>
-            </div>
-            <div>
-              <MoreVertIcon
-                onClick={(e) => handleClick(e, item)}
-                className="cursor-pointer"
-              />
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem>
-                  <EditIcon style={{ color: "green", marginRight: "10px" }} />
-                  <span>Update</span>
-                </MenuItem>
-                <MenuItem onClick={() => handleDeleteConfirmation(item._id)}>
-                  <Delete style={{ color: "red", marginRight: "10px" }} />
-                  <span>Delete</span>
-                </MenuItem>
-              </Menu>
-            </div>
-          </CardContent>
-        </div>
-        <Typography variant="body2" color="text.secondary">
-          Description : {item.description}
-        </Typography>
-        <div className="space-x-4 p-2 pb-6">
-          <Link to={`/organisation/${item._id}/setup/add-roles`}>
-            <Button size="small" className="cursor-pointer" variant="contained">
-              Go to setuppage
-            </Button>
-          </Link>
-          <Button
-            size="small"
-            className="cursor-pointer"
-            variant="contained"
-            onClick={handleCreateProfile}
-          >
-            Create Profile
-          </Button>
-        </div>
-      </Card> */}
-
       <div
         className={`border-b-[3px] border-${getRandomColor()} block min-w-[21rem] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-200`}
       >
@@ -257,22 +193,13 @@ const Organisation = ({ item }) => {
             </button>
           </Link>
 
-          <Link to={`/organisation/${item._id}/dashboard/main`}>
+          <Link to={`/organisation/${item._id}/super-admin`}>
             <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
               Go to Dashboard
               <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
             </button>
           </Link>
         </div>
-        {/* <div className="p-6 py-2">
-          <Button
-            onClick={handleCreateProfile}
-            variant="contained"
-            color="primary"
-          >
-            profile
-          </Button>
-        </div> */}
       </div>
 
       <Dialog
@@ -280,8 +207,8 @@ const Organisation = ({ item }) => {
         onClose={handleCloseConfirmation}
       >
         <DialogTitle color={"error"}>
-          <Warning color="error" /> “ All information in this orgnisation will
-          be deleted. Are you sure you want to delete it?”
+          <Warning color="error" /> All information in this orgnisation will be
+          deleted. Are you sure you want to delete it?
         </DialogTitle>
         <DialogContent>
           <p>

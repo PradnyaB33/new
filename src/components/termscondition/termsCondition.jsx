@@ -16,8 +16,13 @@ const TermsCondition = () => {
 
   return (
     <>
-      <div>
+      <div   style={{
+          paddingLeft:"0px",
+          marginLeft:"0px",
+          marginTop:'2px'
+        }}>
         <Checkbox
+      
           required
           checked={isTermsAccepted}
           onChange={(e) => handleTermsAcceptance(e.target.checked)}

@@ -21,6 +21,7 @@ import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import BackComponent from "../../components/BackComponent/BackComponent";
 
 const AddOrganisation = () => {
   const navigate = useNavigate();
@@ -52,17 +53,15 @@ const AddOrganisation = () => {
         formData
       );
 
-      // Extract the URL from the Cloudinary response
       const imageURL = response.data.secure_url;
       console.log("Image URL:", imageURL);
-      // setInputData({ ...inputdata, logo_url: imageURL })
 
-      // Set LOGOURL here after the request completes
       setLogoUrl(imageURL);
     } catch (error) {
       console.error("Error uploading image:", error);
     }
   };
+  //TODO : this is data field
   const data = {
     name: "",
     web_url: "",
@@ -140,7 +139,7 @@ const AddOrganisation = () => {
     }
 
     try {
-      setInputData({ ...inputdata, logo_url: logoUrl })
+      setInputData({ ...inputdata, logo_url: logoUrl });
 
       const payload = {
         name: inputdata.name,
@@ -153,7 +152,7 @@ const AddOrganisation = () => {
         foundation_date: inputdata.foundation_date,
         logo_url: logoUrl, // Include logo_url in the payload
       };
-      const result = await axios.post(
+      await axios.post(
         `${process.env.REACT_APP_API}/route/organization/create`,
         payload,
         {
@@ -162,7 +161,6 @@ const AddOrganisation = () => {
           },
         }
       );
-      console.log(result);
 
       handleAlert(true, "success", "Organization created successfully");
       navigate("/organizationList");
@@ -171,240 +169,245 @@ const AddOrganisation = () => {
 
       handleAlert(true, "error", "Failed to create organization");
     }
-
-    setInputData({
-      name: "",
-      web_url: "",
-      industry_type: "",
-      email: "",
-      location: "",
-      description: "",
-      foundation_date: dayjs(),
-      contact_number: "",
-      logo_url: "",
-    });
     setSelectedImage(null);
     setFirstEmptyField(null);
   };
 
   return (
     <>
-      <form
-        style={{
-          display: "flex",
-          alignItems: "center",
-          height: "80vh",
-          width: "100%",
-        }}
-        action="submit"
-      >
-        <Container
+      <div className="w-full h-[92vh] bg-white">
+        <BackComponent />
+
+        <form
           style={{
             display: "flex",
-            paddingTop: "5px",
-            backgroundColor: "#fefdff",
-            padding: "10px",
-            paddingBottom: "30px",
-            borderRadius: "5px",
-            flexDirection: "column",
-            justifyContent: "space-around",
             alignItems: "center",
             height: "90vh",
-            border: "1.5PX solid rgb(177, 177, 177)",
-            margin: "auto",
-            position: "relative",
-            top: "20px",
+            backgroundColor: "white",
+            width: "100%",
           }}
-          maxWidth="sm"
+          action="submit"
         >
-          <Typography
+          <Container
             style={{
-              color: "#1D6EB7",
-              fontWeight: "600",
+              display: "flex",
+              backgroundColor: "#fefdff",
+              padding: "10px",
+              paddingBottom: "30px",
+              borderRadius: "20px",
+              flexDirection: "column",
+              justifyContent: "space-around",
+              alignItems: "center",
+              height: "85vh",
               position: "relative",
-              top: "15px",
+              border: "2px solid #dedede",
+              top: "10px",
+              margin: "auto",
             }}
-            variant="h4"
+            className="shadow-md"
+            maxWidth="sm"
           >
-            Add Organisation
-          </Typography>
-          <TextField
-            required
-            style={{ marginTop: "20px", height: "10px" }}
-            name="name"
-            onChange={handleData}
-            value={inputdata.name}
-            size="small"
-            className={`w-[80%] ${firstEmptyField === "name" ? "error" : ""}`}
-            label="My Organisation Name"
-            type="text"
-            inputRef={firstEmptyField === "name" ? firstEmptyFieldRef : null}
-          />
-          <TextField
-            required
-            style={{ marginTop: "20px", height: "10px" }}
-            name="web_url"
-            onChange={handleData}
-            value={inputdata.web_url}
-            size="small"
-            className={`w-[80%] ${firstEmptyField === "web_url" ? "error" : ""
-              }`}
-            label="Url Of Website"
-            type="text"
-            inputRef={firstEmptyField === "web_url" ? firstEmptyFieldRef : null}
-          />
-          <FormControl
-            required
-            style={{ marginTop: "20px", width: "80%", height: "10px" }}
-            size="small"
-          >
-            <InputLabel id="industry-type-label">Industry Type</InputLabel>
-            <Select
-              labelId="industry-type-label"
-              id="industry-type"
-              name="industry_type"
-              value={inputdata.industry_type}
-              onChange={handleData}
-              inputRef={
-                firstEmptyField === "industry_type" ? firstEmptyFieldRef : null
-              }
+            <Typography
+              style={{
+                color: "#1D6EB7",
+                fontWeight: "600",
+                position: "relative",
+                top: "5px",
+              }}
+              variant="h4"
             >
-              <MenuItem value="IT">IT</MenuItem>
-              <MenuItem value="MECH">MECH</MenuItem>
-              <MenuItem value="ACCOUNTS">ACCOUNTS</MenuItem>
-            </Select>
-          </FormControl>
-          <TextField
-            required
-            style={{ marginTop: "20px", height: "10px" }}
-            name="email"
-            onChange={handleData}
-            value={inputdata.email}
-            size="small"
-            className={`w-[80%] ${firstEmptyField === "email" ? "error" : ""}`}
-            label={emailLabel}
-            type="email"
-            error={emailError}
-            InputProps={{
-              style: {
-                borderColor: emailError ? "red" : "blue",
-              },
-            }}
-            inputRef={firstEmptyField === "email" ? firstEmptyFieldRef : null}
-          />
-          <TextField
-            required
-            style={{ marginTop: "20px", height: "10px" }}
-            name="location"
-            onChange={handleData}
-            value={inputdata.location}
-            size="small"
-            className={`w-[80%] ${firstEmptyField === "location" ? "error" : ""
-              }`}
-            label="Location"
-            type="text"
-            inputRef={
-              firstEmptyField === "location" ? firstEmptyFieldRef : null
-            }
-          />
-          <TextField
-            required
-            style={{ marginTop: "20px", height: "10px" }}
-            name="contact_number"
-            onChange={handleData}
-            value={inputdata.contact_number}
-            size="small"
-            className={`w-[80%] ${firstEmptyField === "contact_number" ? "error" : ""
-              }`}
-            label={numberLabel}
-            type="number"
-            error={contactNumberError}
-            InputProps={{
-              style: {
-                borderColor: contactNumberError ? "red" : "blue",
-              },
-            }}
-            inputRef={
-              firstEmptyField === "contact_number" ? firstEmptyFieldRef : null
-            }
-          />
-          <TextField
-            required
-            style={{ marginTop: "20px", height: "10px" }}
-            name="description"
-            onChange={handleData}
-            value={inputdata.description}
-            size="small"
-            className={`w-[80%] ${firstEmptyField === "description" ? "error" : ""
-              }`}
-            label="Organisation Description"
-            type="text"
-            inputRef={
-              firstEmptyField === "description" ? firstEmptyFieldRef : null
-            }
-          />
-          <div style={{ marginTop: "15px", display: "block", width: "80%" }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer
-                className="w-full"
-                components={["DatePicker"]}
-                required
+              Add Organization
+            </Typography>
+            <TextField
+              required
+              style={{ marginTop: "5px", height: "10px" }}
+              name="name"
+              onChange={handleData}
+              value={inputdata.name}
+              size="small"
+              className={`w-[80%] ${firstEmptyField === "name" ? "error" : ""}`}
+              label="My Organisation Name"
+              type="text"
+              inputRef={firstEmptyField === "name" ? firstEmptyFieldRef : null}
+            />
+            <TextField
+              required
+              style={{ marginTop: "20px", height: "10px" }}
+              name="web_url"
+              onChange={handleData}
+              value={inputdata.web_url}
+              size="small"
+              className={`w-[80%] ${firstEmptyField === "web_url" ? "error" : ""
+                }`}
+              label="Url Of Website"
+              type="text"
+              inputRef={
+                firstEmptyField === "web_url" ? firstEmptyFieldRef : null
+              }
+            />
+            <FormControl
+              required
+              style={{ marginTop: "20px", width: "80%", height: "10px" }}
+              size="small"
+            >
+              <InputLabel id="demo-simple-select-label">
+                Industry Type
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                name="industry_type"
+                value={inputdata.industry_type}
+                onChange={handleData}
+                inputRef={
+                  firstEmptyField === "industry_type"
+                    ? firstEmptyFieldRef
+                    : null
+                }
               >
-                <DatePicker
-                  label="Foundation Date"
-                  value={inputdata.foundation_date}
-                  onChange={(newDate) => {
-                    setInputData({ ...inputdata, foundation_date: newDate });
-                    console.log(newDate);
-                  }}
-                  slotProps={{ textField: { size: "small", fullWidth: true } }}
-                />
-              </DemoContainer>
-            </LocalizationProvider>
-            <div className="flex" style={{ position: "relative", top: "20px" }}>
-              <Input
-                type="file"
-                id="imageInput"
-                accept="image/*"
-                style={{ display: "none" }}
-                onChange={handleImageChange}
-                required
-              />
-              <label htmlFor="imageInput">
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  component="span"
-                  startIcon={<PhotoCamera />}
+                <MenuItem value="IT">IT</MenuItem>
+                <MenuItem value="MECH">MECH</MenuItem>
+                <MenuItem value="ACCOUNTS">ACCOUNTS</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              required
+              style={{ marginTop: "20px", height: "10px" }}
+              name="email"
+              onChange={handleData}
+              value={inputdata.email}
+              size="small"
+              className={`w-[80%] ${firstEmptyField === "email" ? "error" : ""
+                }`}
+              label={emailLabel}
+              type="email"
+              error={emailError}
+              InputProps={{
+                style: {
+                  borderColor: emailError ? "red" : "blue",
+                },
+              }}
+              inputRef={firstEmptyField === "email" ? firstEmptyFieldRef : null}
+            />
+            <TextField
+              required
+              style={{ marginTop: "20px", height: "10px" }}
+              name="location"
+              onChange={handleData}
+              value={inputdata.location}
+              size="small"
+              className={`w-[80%] ${firstEmptyField === "location" ? "error" : ""
+                }`}
+              label="Location"
+              type="text"
+              inputRef={
+                firstEmptyField === "location" ? firstEmptyFieldRef : null
+              }
+            />
+            <TextField
+              required
+              style={{ marginTop: "20px", height: "10px" }}
+              name="contact_number"
+              onChange={handleData}
+              value={inputdata.contact_number}
+              size="small"
+              className={`w-[80%] ${firstEmptyField === "contact_number" ? "error" : ""
+                }`}
+              label={numberLabel}
+              type="number"
+              error={contactNumberError}
+              InputProps={{
+                style: {
+                  borderColor: contactNumberError ? "red" : "blue",
+                },
+              }}
+              inputRef={
+                firstEmptyField === "contact_number" ? firstEmptyFieldRef : null
+              }
+            />
+            <TextField
+              required
+              style={{ marginTop: "20px", height: "10px" }}
+              name="description"
+              onChange={handleData}
+              value={inputdata.description}
+              size="small"
+              className={`w-[80%] ${firstEmptyField === "description" ? "error" : ""
+                }`}
+              label="Organisation Description"
+              type="text"
+              inputRef={
+                firstEmptyField === "description" ? firstEmptyFieldRef : null
+              }
+            />
+            <div style={{ marginTop: "15px", display: "block", width: "80%" }}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer
+                  className="w-full"
+                  components={["DatePicker"]}
+                  required
                 >
-                  Choose logo
-                </Button>
-              </label>
-              {selectedImage && (
-                <Avatar
-                  src={selectedImage}
-                  alt="Selected Image"
-                  sx={{ width: 40, height: 40 }}
-                  style={{ marginLeft: "3rem" }}
+                  <DatePicker
+                    label="Foundation Date"
+                    value={inputdata.foundation_date}
+                    onChange={(newDate) => {
+                      setInputData({ ...inputdata, foundation_date: newDate });
+                      console.log(newDate);
+                    }}
+                    slotProps={{
+                      textField: { size: "small", fullWidth: true },
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+              <div
+                className="flex"
+                style={{ position: "relative", top: "20px" }}
+              >
+                <Input
+                  type="file"
+                  id="imageInput"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={handleImageChange}
                   required
                 />
-              )}
+                <label htmlFor="imageInput">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    component="span"
+                    startIcon={<PhotoCamera />}
+                  >
+                    Choose logo
+                  </Button>
+                </label>
+                {selectedImage && (
+                  <Avatar
+                    src={selectedImage}
+                    alt="Selected Image"
+                    sx={{ width: 40, height: 40 }}
+                    style={{ marginLeft: "3rem" }}
+                    required
+                  />
+                )}
+              </div>
             </div>
-          </div>
-          <Button
-            onClick={handleSubmit}
-            variant="contained"
-            style={{
-              background: "#1D6EB7",
-              color: "white",
-              position: "relative",
-              bottom: "-15px",
-            }}
-          >
-            Submit
-          </Button>
-        </Container>
-      </form>
+            <Button
+              onClick={handleSubmit}
+              variant="contained"
+              style={{
+                background: "#1D6EB7",
+                color: "white",
+                position: "relative",
+                bottom: "-15px",
+              }}
+            >
+              Submit
+            </Button>
+          </Container>
+        </form>
+      </div>
     </>
   );
 };

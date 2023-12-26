@@ -27,8 +27,7 @@ const HRgraph = () => {
         data: [1, 2, 3, 4, 5, 6, 7, 9, 0, 3, 6, 4].map((ele) => {
           return ele;
         }),
-        backgroundColor: "#90caf9",
-        borderColor: "#2196f3",
+        backgroundColor: "#00b0ff",
         borderWidth: 1,
       },
       {
@@ -36,7 +35,7 @@ const HRgraph = () => {
         data: [5, 7, 6, 7, 2, 4, 3, 1, 10, 0, 4, 6].map((ele) => {
           return ele;
         }),
-        backgroundColor: "#ef5350",
+        backgroundColor: "#f50057",
 
         borderWidth: 1,
       },
@@ -44,10 +43,11 @@ const HRgraph = () => {
   };
   return (
     <>
-      <article className="my-4 bg-white rounded-md shadow-md">
-        <div className="p-4 pt-2">
+      <article className="my-4 bg-white rounded-md shadow-xl">
+        <div className="p-4 py-4 flex justify-between items-center">
           <h1 className="text-xl">Overall Attendence</h1>
         </div>
+
         <Bar
           data={data}
           style={{

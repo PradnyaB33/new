@@ -1,37 +1,24 @@
 import { NotificationsOutlined, PersonOutline } from "@mui/icons-material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import { Tooltip } from "@mui/material";
+import { Divider } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { jwtDecode } from "jwt-decode";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
+import UserProfile from "../../hooks/UserData/useUser";
 
 export default function ProfileIcon() {
   const navigate = useNavigate();
-  const { cookies, removeCookie } = useContext(UseContext);
-  const token = cookies["aeigs"];
+  const { removeCookie } = useContext(UseContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  const [user, setUser] = useState();
-
-  useEffect(() => {
-    try {
-      const decodedToken = jwtDecode(token);
-      if (decodedToken && decodedToken.user) {
-        setUser(decodedToken.user);
-      } else {
-        setUser();
-      }
-    } catch (error) {
-      console.error("Failed to decode the token:", error);
-    }
-  }, [token]);
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -47,11 +34,6 @@ export default function ProfileIcon() {
     navigate("/sign-in");
     window.location.reload();
   };
-
-  // const handleNotificationClick = () => {
-  //   navigate("/notification");
-  //   setAnchorEl(null);
-  // };
 
   const handleNavigate = (link) => {
     navigate(link);
@@ -82,58 +64,57 @@ export default function ProfileIcon() {
           "aria-labelledby": "basic-button",
         }}
       >
-        {token ? (
+        {user?._id ? (
           <div>
-            <MenuItem
-              key="info"
-              className="flex !w-[230px] flex-col !z-10 !px-0 mx-4 !py-0   !items-start !justify-start"
-            >
-              <div className="h-[80px] flex items-center  border-b-[.5px] border-gray-300 justify-center w-full relative bg-blue-500">
-                <div className="absolute w-max h-max rounded-full top-[50%]">
-                  <Avatar
-                    variant="circular"
-                    src=""
-                    alt="none"
-                    sx={{ width: 56, height: 56 }}
-                    className="!rounded-[50%]
-                     
+            <h1 className="!px-4 pt-4 pb-2 text-xl">Account</h1>
+            {/* <Divider variant="fullWidth" orientation="horizontal" /> */}
+            <div className="flex !pl-0 !pr-2 !w-[230px] flex-col !z-10  mx-4 !py-0 bg-white   !items-start !justify-start">
+              <div className="w-max flex gap-3 pt-4 pb-6  items-center  h-max rounded-full ">
+                <Avatar
+                  variant="circular"
+                  src=""
+                  alt="none"
+                  sx={{ width: 35, height: 35 }}
+                  className="!rounded-[50%]
                      !shadow-lg  !object-cover"
-                  />
-
-                  {/* ring-[3px] ring-white  */}
+                />
+                <div>
+                  <h1 className="italic !font-semibold  text-gray-600  !text-md ">
+                    {user?.first_name} {user?.last_name}
+                  </h1>
+                  <p className="text-sm text-gray-600  ">{user?.email}</p>
+                  {/* <p className="text-sm italic">
+                    Working as{" "}
+                    <Tooltip title={user?.profile.join(",")}>
+                      <span className="text-blue-500 cursor-pointer hover:underline ">
+                        @job
+                      </span>
+                    </Tooltip>
+                  </p> */}
                 </div>
               </div>
-            </MenuItem>
-            <MenuItem className="h-max !border !border-gray-700 !w-[230px] !pt-8 !pb-2 flex-col flex items-center justify-center !p-0  !bg-gray-100 !z-0">
-              <h1 className=" italic tracking-wider  !font-semibold  text-gray-600  !text-sm !text-center">
-                {user?.first_name} {user?.last_name}
-              </h1>
-              <p className="text-sm text-gray-600 pb-2 ">{user?.email}</p>
+            </div>
 
-              <p className="text-sm italic">
-                Working as{" "}
-                <Tooltip title={user?.profile.join(",")}>
-                  <span className="text-blue-500 hover:underline ">@job</span>
-                </Tooltip>
-              </p>
-            </MenuItem>
+            <Divider variant="fullWidth" orientation="horizontal" />
 
             <MenuItem
               key="profile"
               onClick={() => handleNavigate("/userprofile")}
-              className="flex items-center justify-center !border-[.5px]  !py-2 !border-gray-500 hover:!bg-blue-500 !w-[230px] hover:text-white transition-all gap-4 "
+              className="flex gap-4 items-center justify-center !py-3 hover:!bg-gray-100  "
             >
               <PersonOutline className="!text-[19px]" /> Profile
             </MenuItem>
+
             <MenuItem
               key="notification"
-              className="flex gap-4  items-center justify-center !py-2 hover:!bg-blue-500 hover:text-white "
+              className="flex gap-4  items-center justify-center !py-3 hover:!bg-gray-100  "
               onClick={() => handleNavigate("/notification")}
             >
               <NotificationsOutlined className="!text-[19px]" /> Notification
             </MenuItem>
+
             <MenuItem key="sign-out" className="!p-0" onClick={handleSignOut}>
-              <div className="flex !border-gray-300 w-full h-full items-center  hover:!bg-red-500 !text-red-500 !py-2 hover:!text-white transition-all gap-4 border-t-[.5px] px-4">
+              <div className="flex  w-full h-full items-center  hover:!bg-red-500 !text-red-500 !py-3 hover:!text-white transition-all gap-4  px-4">
                 <ExitToAppIcon className="!text-[19px]" /> Log out
               </div>
             </MenuItem>
