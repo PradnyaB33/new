@@ -1,8 +1,6 @@
-import { Typography } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { TestContext } from "../../State/Function/Main";
-import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useParams } from "react-router-dom";
 import {
@@ -20,6 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import { FormattedMessage, IntlProvider } from "react-intl";
+import { Delete, Edit } from "@mui/icons-material";
 
 const DepartmentList = () => {
   const { cookies } = useContext(UseContext);
