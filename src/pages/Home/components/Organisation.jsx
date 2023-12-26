@@ -264,15 +264,23 @@ const Organisation = ({ item }) => {
               type="text"
               fullWidth
             />
-            <FormControl required size="small" fullWidth>
-              <InputLabel id="industry-type-label">Industry Type</InputLabel>
+            <FormControl
+              required
+              size="small"
+            >
+              <InputLabel
+                id="demo-simple-select-label"
+                style={{ background: "white", zIndex: 1 }}
+              >
+                Industry Type
+              </InputLabel>
               <Select
-                labelId="industry-type-label"
-                id="industry-type"
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
                 name="industry_type"
                 value={inputdata.industry_type}
                 onChange={handleData}
-                fullWidth
+                style={{ zIndex: 0 }}
               >
                 <MenuItem value="IT">IT</MenuItem>
                 <MenuItem value="MECH">MECH</MenuItem>
@@ -341,20 +349,20 @@ const Organisation = ({ item }) => {
 
         <DialogActions>
           <Button
-            variant="outlined"
-            color="primary"
+            variant="contained"
+            size="small"
+            color="success"
+            onClick={() => handleEditConfirmation(item._id)}
+          >
+            Edit
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
             size="small"
             onClick={handleCloseConfirmation}
           >
             Cancel
-          </Button>
-          <Button
-            variant="contained"
-            size="small"
-            color="error"
-            onClick={() => handleEditConfirmation(item._id)}
-          >
-            Edit
           </Button>
         </DialogActions>
       </Dialog>

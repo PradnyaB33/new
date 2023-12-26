@@ -31,7 +31,7 @@ const PublicHoliday = () => {
   const [inputdata, setInputData] = useState({
     name: "",
     year: "",
-    date: new Date(), 
+    date: new Date(),
     type: "",
     region: "",
     organizationId: "",
@@ -53,7 +53,7 @@ const PublicHoliday = () => {
 
   useEffect(() => {
     fetchHolidays();
-  },[]);
+  }, []);
 
   const handleData = (e) => {
     const { name, value } = e.target;
@@ -83,7 +83,7 @@ const PublicHoliday = () => {
     setInputData({
       ...inputdata,
       year: newDate.getFullYear(),
-      date: newDate, 
+      date: newDate,
     });
   };
 
@@ -432,3 +432,26 @@ const PublicHoliday = () => {
 };
 
 export default PublicHoliday;
+
+//todo this is select field of organization
+//  <FormControl
+//               required
+//               style={{ marginTop: "20px", width: "80%", height: "10px" }}
+//               size="small"
+//             >
+//               <InputLabel id="demo-simple-select-label">Industry Type</InputLabel>
+//               <Select
+//                 labelId="demo-simple-select-label"
+//                 id="demo-simple-select"
+//                 name="industry_type"
+//                 value={inputdata.industry_type}
+//                 onChange={handleData}
+//                 inputRef={
+//                   firstEmptyField === "industry_type" ? firstEmptyFieldRef : null
+//                 }
+//               >
+//                 <MenuItem value="IT">IT</MenuItem>
+//                 <MenuItem value="MECH">MECH</MenuItem>
+//                 <MenuItem value="ACCOUNTS">ACCOUNTS</MenuItem>
+//               </Select>
+//             </FormControl>

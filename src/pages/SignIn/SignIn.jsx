@@ -188,7 +188,7 @@ const SignIn = () => {
               </div>
             </div>
 
-            <div className="my-6 space-y-2">
+            <div className="my-6 space-y-2 ">
               <label
                 htmlFor="email"
                 className="font-semibold text-gray-700 text-lg"
@@ -196,7 +196,7 @@ const SignIn = () => {
                 Email Address
               </label>
 
-              <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200  py-1">
+              <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200  py-[6px]">
                 <Email className="text-gray-700" />
                 <input
                   name="email"
@@ -209,7 +209,7 @@ const SignIn = () => {
                 />
               </div>
 
-              <div className="mt-2 space-y-2">
+              <div className="mt-2 space-y-2 ">
                 <div className="flex items-center justify-between">
                   <label
                     htmlFor="email"
