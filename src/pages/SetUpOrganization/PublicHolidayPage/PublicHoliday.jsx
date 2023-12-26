@@ -41,8 +41,7 @@ const PublicHoliday = () => {
 
   const [inputdata, setInputData] = useState({
     name: "",
-    year: "",
-    date: new Date(),
+    date: dayjs(new Date()),
     type: "",
     region: "",
     organizationId: "",
@@ -85,7 +84,7 @@ const PublicHoliday = () => {
     setInputData({
       name: "",
       year: "",
-      date: new Date(),
+      date: dayjs(),
       day: "",
       month: "",
       type: "",
@@ -94,11 +93,10 @@ const PublicHoliday = () => {
     });
   };
   const handleDateChange = (newDate) => {
-    setInputData({
-      ...inputdata,
-      year: newDate.getFullYear(),
-      date: newDate,
-    });
+    setInputData((prev) => ({
+      ...prev,
+      date: newDate.toISOString(),
+    }));
   };
   const handleSubmit = async () => {
     try {

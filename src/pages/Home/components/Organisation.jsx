@@ -180,7 +180,7 @@ const Organisation = ({ item }) => {
           </div>
         </div>
 
-        <div className="p-6 pt-6 pb-4">
+        <div className="p-6 pt-6 pb-4"> 
           <h5 className="mb-2 text-xl font-semibold leading-tight text-black">
             {item.name}
           </h5>

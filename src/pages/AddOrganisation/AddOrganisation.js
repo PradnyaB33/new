@@ -175,9 +175,12 @@ const AddOrganisation = () => {
 
   return (
     <>
-   
       <div className="w-full h-[92vh] bg-white">
-        <BackComponent />
+        <div>
+
+        <BackComponent style={{ zIndex: 1000 }} />
+
+        </div>
 
         <form
           style={{
