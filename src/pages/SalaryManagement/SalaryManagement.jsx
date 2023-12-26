@@ -1,17 +1,16 @@
-import { IconButton, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import axios from "axios";
-import { BorderColor } from "@mui/icons-material";
 import React, { useContext, useEffect, useState } from "react";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import { useQueryClient } from "react-query";
-import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
 import { useParams } from "react-router-dom";
-const EmployeeList = () => {
+import { Button } from "@mui/material";
+import { useQueryClient } from "react-query";
+import CreateSalaryModel from "../../components/Modal/CreateSalaryModel/CreateSalaryModel";
+const SalaryManagement = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-  const queryClient = useQueryClient();
   const [nameSearch, setNameSearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const [deptSearch, setDeptSearch] = useState("");
@@ -20,6 +19,7 @@ const EmployeeList = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
+  const queryClient = useQueryClient();
 
   const fetchAvailableEmployee = async (page) => {
     try {
@@ -50,8 +50,6 @@ const EmployeeList = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
-  console.log("employee", availableEmployee);
-
   const prePage = () => {
     if (currentPage !== 1) {
       fetchAvailableEmployee(currentPage - 1);
@@ -67,21 +65,22 @@ const EmployeeList = () => {
   const changePage = (id) => {
     fetchAvailableEmployee(id);
   };
-  // Modal states and function
-  const [open, setOpen] = React.useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [employeeId, setemployeeId] = useState(null);
 
-  const handleEditModalOpen = (empId) => {
-    setEditModalOpen(true);
-    queryClient.invalidateQueries(["employee", empId]);
-    setemployeeId(empId);
+  // modal for create salary
+  const [open, setOpen] = React.useState(false);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [employeeId, setEmployeeId] = useState(null);
+
+  const handleCreateModalOpen = (empId) => {
+    setCreateModalOpen(true);
+    queryClient.invalidateQueries(["salary", empId]);
+    setEmployeeId(empId);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setemployeeId(null);
-    setEditModalOpen(false);
+    setEmployeeId(null);
+    setCreateModalOpen(false);
   };
 
   return (
@@ -92,7 +91,7 @@ const EmployeeList = () => {
             id="modal-modal-title"
             className="text-lg pl-2 font-semibold text-center modal-title py-2"
           >
-            Employee List
+            Employee List for Salary Management
           </h1>
 
           <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
@@ -148,7 +147,7 @@ const EmployeeList = () => {
                     Department
                   </th>
                   <th scope="col" className="!text-left pl-8 py-3">
-                    Phone Number
+                    Salary Template
                   </th>
 
                   <th scope="col" className="px-6 py-3 ">
@@ -180,7 +179,7 @@ const EmployeeList = () => {
                         ))
                     );
                   })
-                  .map((item, id) => (
+                  ?.map((item, id) => (
                     <tr className="!font-medium border-b" key={id}>
                       <td className="!text-left pl-8 py-3">{id + 1}</td>
                       <td className="py-3">{item.first_name}</td>
@@ -198,13 +197,19 @@ const EmployeeList = () => {
                           );
                         })}
                       </td>
-                      <td className="py-3">{item.phone_number}</td>
-                      <td className="whitespace-nowrap px-6 py-2">
-                        <IconButton
-                          onClick={() => handleEditModalOpen(item._id)}
+                      <td className="py-3">{item?.salarystructure?.name}</td>
+                      <td className="whitespace-nowrap ">
+                        <Button
+                          onClick={() => handleCreateModalOpen(item._id)}
+                          className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"
+                          type="submit"
+                          variant="contained"
+                          color="primary"
+                          fullWidth={false}
+                          margin="normal"
                         >
-                          <BorderColor className="!text-xl" color="success" />
-                        </IconButton>
+                          Create Salary
+                        </Button>
                       </td>
                     </tr>
                   ))}
@@ -294,15 +299,20 @@ const EmployeeList = () => {
         </article>
       </section>
 
-      {/* edit model */}
-      <EditModelOpen open={open} handleClose={handleClose} />
-      <EditModelOpen
+      {/* Create model */}
+      <CreateSalaryModel
+        id={organisationId}
+        open={open}
         handleClose={handleClose}
-        open={editModalOpen}
-        employeeId={employeeId}
+      />
+      <CreateSalaryModel
+        id={organisationId}
+        open={createModalOpen}
+        handleClose={handleClose}
+        empId={employeeId}
       />
     </>
   );
 };
 
-export default EmployeeList;
+export default SalaryManagement;

@@ -34,15 +34,16 @@ import Shifts from "./pages/SetupPage/Shifts";
 import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
+import Test from "./pages/Test/test";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
-
 const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/test" element={<Test />} />
       {/* Login Routes */}
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<Signup />} />
@@ -52,8 +53,9 @@ const App = () => {
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       {/* Login Routes */}
       {/* Dashboard Routes */}
+      <Route path="/organisation/employee-dashboard" element={<Dashboard />} />
       <Route
-        path="/organisation/:organisationId/dashboard/main"
+        path="/organisation/:organisationId/super-admin"
         element={<Dashboard />}
       />
       {/* Dashboard Routes */}
@@ -64,7 +66,7 @@ const App = () => {
         element={<CreateDepartment />}
       />
       <Route
-        path="/department/get/:organizationId"
+        path="/department/get/:organisationId"
         element={<DepartmentList />}
       />
       <Route path="/userprofile" element={<UserProfile />} />

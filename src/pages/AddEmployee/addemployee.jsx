@@ -196,6 +196,7 @@ const AddEmployee = () => {
         },
       }
     );
+    console.log(response.data);
     return response.data;
   });
 
@@ -351,6 +352,7 @@ const AddEmployee = () => {
   }, [organisationId]);
 
   const [availableMgrId, setAvailableMgrId] = useState([]);
+
   const fetchAvailabeMgrId = async () => {
     try {
       const response = await axios.get(
@@ -781,8 +783,8 @@ const AddEmployee = () => {
                               key={manager._id}
                               value={manager.managerId._id}
                             >
-                              {manager.managerId}
-                              {/* {`${manager.managerId.first_name} ${manager.managerId.last_name}`} */}
+                              {/* {manager.managerId} */}
+                              {`${manager.managerId.first_name} ${manager.managerId.last_name}`}
                             </MenuItem>
                           )
                       )}
@@ -900,7 +902,7 @@ const AddEmployee = () => {
                       Select Salary Type
                     </MenuItem>
                     {salaryInput?.salaryTemplates?.map((item) => (
-                      <MenuItem key={item._id} value={item.name}>
+                      <MenuItem key={item._id} value={item._id}>
                         {item.name}
                       </MenuItem>
                     ))}

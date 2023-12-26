@@ -29,17 +29,14 @@ const TestNavItems = ({ toggleDrawer }) => {
   const { cookies } = useContext(UseContext);
   const token = cookies["aeigs"];
   const location = useLocation();
-  const pathname = location.pathname;
   const [decodedToken, setDecodedToken] = useState("");
 
   // Update organization ID when URL changes
   useEffect(() => {
-    const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
-    if (!hasEmployeeOnboarding) {
-      getOrganizationIdFromPathname(location.pathname);
-    }
+    // const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
+    getOrganizationIdFromPathname(location.pathname);
     // eslint-disable-next-line
-  }, [location.pathname]);
+  }, [location.pathname, orgId]);
 
   // Function to extract organization ID from pathname
   const getOrganizationIdFromPathname = (pathname) => {
@@ -132,6 +129,12 @@ const TestNavItems = ({ toggleDrawer }) => {
             link: "/shift-manage",
             icon: <Event className="text-white" />,
             text: "Shift Management",
+          },
+          {
+            key: "createsalary",
+            link: `/organisation/${orgId}/salary-management`,
+            icon: <Event className="text-white" />,
+            text: "Create Salary",
           },
         ],
       },
@@ -233,7 +236,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
     }),
     // eslint-disable-next-line
-    [isVisible]
+    [isVisible, orgId]
   );
 
   useEffect(() => {
@@ -241,14 +244,18 @@ const TestNavItems = ({ toggleDrawer }) => {
   }, [location, navItems]);
 
   useEffect(() => {
+    console.log(token);
     try {
-      const newToken = jwtDecode(token);
-      setDecodedToken(newToken);
-      if (decodedToken && decodedToken.user.profile) {
-        console.log(
-          `🚀 ~ file: test-nav-items.jsx:230 ~ decodedToken:`,
-          decodedToken
-        );
+      if (token) {
+        const newToken = jwtDecode(token);
+
+        setDecodedToken(newToken);
+        if (decodedToken && decodedToken.user.profile) {
+          console.log(
+            `🚀 ~ file: test-nav-items.jsx:230 ~ decodedToken:`,
+            decodedToken
+          );
+        }
       }
     } catch (error) {
       console.error("Failed to decode the token:", error);

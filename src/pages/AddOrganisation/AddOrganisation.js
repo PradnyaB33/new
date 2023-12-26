@@ -24,7 +24,6 @@ import { UseContext } from "../../State/UseState/UseContext";
 import BackComponent from "../../components/BackComponent/BackComponent";
 
 const AddOrganisation = () => {
-  // var LOGOURL;
   const navigate = useNavigate();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
@@ -153,7 +152,7 @@ const AddOrganisation = () => {
         foundation_date: inputdata.foundation_date,
         logo_url: logoUrl, // Include logo_url in the payload
       };
-      const result = await axios.post(
+      await axios.post(
         `${process.env.REACT_APP_API}/route/organization/create`,
         payload,
         {
@@ -162,7 +161,6 @@ const AddOrganisation = () => {
           },
         }
       );
-      console.log(result);
 
       handleAlert(true, "success", "Organization created successfully");
       navigate("/organizationList");
@@ -177,6 +175,7 @@ const AddOrganisation = () => {
 
   return (
     <>
+   
       <div className="w-full h-[92vh] bg-white">
         <BackComponent />
 

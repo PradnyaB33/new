@@ -193,7 +193,7 @@ const Organisation = ({ item }) => {
             </button>
           </Link>
 
-          <Link to={`/organisation/${item._id}/dashboard/main`}>
+          <Link to={`/organisation/${item._id}/super-admin`}>
             <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
               Go to Dashboard
               <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
