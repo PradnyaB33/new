@@ -94,7 +94,10 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   });
   const [empTypes, setEmpTypes] = useState("");
   const [salaryStructures, setSalaryStructures] = useState([
-    { salaryComponent: "", manuallyInput: "", calculation: "" },
+    {
+      salaryComponent: "",
+      // manuallyInput: "", calculation: ""
+    },
   ]);
   const [errors, setErrors] = useState({
     name: "",
