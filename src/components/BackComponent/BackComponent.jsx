@@ -10,13 +10,7 @@ const BackComponent = () => {
     navigate(-1);
   };
 
-  const backFalseRoutes = [
-    "/sign-in",
-    "/sign-up",
-    "organizationList",
-    "organisation/employee-dashboard",
-    "organisation",
-  ];
+  const backFalseRoutes = ["/sign-in", "/sign-up", "organizationList"];
 
   if (backFalseRoutes.some((value) => location.pathname.includes(value))) {
     return <></>;

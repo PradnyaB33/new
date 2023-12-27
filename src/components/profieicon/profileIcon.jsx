@@ -66,7 +66,7 @@ export default function ProfileIcon() {
       >
         {user?._id ? (
           <div>
-            <h1 className="!px-4 pt-4 pb-2 text-xl">Account</h1>
+            <h1 className="!px-4 pt-4  text-lg">Account</h1>
             {/* <Divider variant="fullWidth" orientation="horizontal" /> */}
             <div className="flex !pl-0 !pr-2 !w-[230px] flex-col !z-10  mx-4 !py-0 bg-white   !items-start !justify-start">
               <div className="w-max flex gap-3 pt-4 pb-6  items-center  h-max rounded-full ">
@@ -79,7 +79,7 @@ export default function ProfileIcon() {
                      !shadow-lg  !object-cover"
                 />
                 <div>
-                  <h1 className="italic !font-semibold  text-gray-600  !text-md ">
+                  <h1 className="italic !font-semibold  text-gray-600  !text-sm ">
                     {user?.first_name} {user?.last_name}
                   </h1>
                   <p className="text-sm text-gray-600  ">{user?.email}</p>
@@ -100,21 +100,21 @@ export default function ProfileIcon() {
             <MenuItem
               key="profile"
               onClick={() => handleNavigate("/userprofile")}
-              className="flex gap-4 items-center justify-center !py-3 hover:!bg-gray-100  "
+              className="flex gap-4  !text-sm items-center justify-center !py-3 hover:!bg-gray-100  "
             >
               <PersonOutline className="!text-[19px]" /> Profile
             </MenuItem>
 
             <MenuItem
               key="notification"
-              className="flex gap-4  items-center justify-center !py-3 hover:!bg-gray-100  "
+              className="flex gap-4  items-center justify-center !text-sm !py-3 hover:!bg-gray-100  "
               onClick={() => handleNavigate("/notification")}
             >
               <NotificationsOutlined className="!text-[19px]" /> Notification
             </MenuItem>
 
             <MenuItem key="sign-out" className="!p-0" onClick={handleSignOut}>
-              <div className="flex  w-full h-full items-center  hover:!bg-red-500 !text-red-500 !py-3 hover:!text-white transition-all gap-4  px-4">
+              <div className="flex  w-full h-full items-center !text-sm  hover:!bg-red-500 !text-red-500 !py-3 hover:!text-white transition-all gap-4  px-4">
                 <ExitToAppIcon className="!text-[19px]" /> Log out
               </div>
             </MenuItem>

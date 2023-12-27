@@ -1,12 +1,12 @@
+import { BorderColor } from "@mui/icons-material";
 import { IconButton, TextField } from "@mui/material";
 import axios from "axios";
-import { BorderColor } from "@mui/icons-material";
 import React, { useContext, useEffect, useState } from "react";
+import { useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import { useQueryClient } from "react-query";
 import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
-import { useParams } from "react-router-dom";
 const EmployeeList = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);

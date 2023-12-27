@@ -27,7 +27,7 @@ const OrgList = () => {
     <div className="bg-gray-50 h-screen">
       <div className="p-10  !pb-6">
         <div className="flex justify-between items-center">
-          <div>
+          {/* <div>
             <div className="flex items-center justify-center gap-2 ">
               <Avatar
                 className="!bg-blue-500  h-[100px] text-4xl p-1 shadow-sm"
@@ -36,12 +36,23 @@ const OrgList = () => {
               >
                 <IoBusiness />
               </Avatar>
-              {/* <SvgIcon className="text-blue-500 bg-white h-[100px] text-4xl p-1 shadow-sm"></SvgIcon> */}
-              <h1 className="!text-[1.7rem] font-semibold text-black">
-                List of Organizations
-              </h1>
+              <h1 className="!text-[1.7rem] font-semibold text-black"></h1>
             </div>
-            <p className="text-gray-600">Select and manage your oragnization</p>
+            <p className="text-gray-600"></p>
+          </div> */}
+
+          <div className="flex items-center gap-3">
+            <Avatar
+              className="!bg-blue-500  h-[100px] text-4xl p-1 shadow-sm"
+              variant="rounded"
+              sx={{ width: "46", height: "46" }}
+            >
+              <IoBusiness />
+            </Avatar>
+            <div>
+              <h1 className="text-2xl font-semibold">Organisations</h1>
+              <p>Select and manage your oragnization</p>
+            </div>
           </div>
 
           <Link to={"/add-organisation"}>
