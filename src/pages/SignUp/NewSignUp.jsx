@@ -9,7 +9,7 @@ import {
   Phone,
 } from "@mui/icons-material";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation } from "react-router-dom";
 import { z } from "zod";
@@ -20,6 +20,8 @@ import TermsCondition from "../../components/termscondition/termsCondition";
 const SignIn = () => {
   const { handleAlert } = useContext(TestContext);
   const location = useLocation();
+  const [display, setDisplay] = useState(false);
+
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -61,10 +63,14 @@ const SignIn = () => {
     handleSubmit,
     control,
     getValues,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(SignUpSchema),
   });
+
+  const number = watch("phone");
+  console.log("number", number?.length);
 
   const onSubmit = async (data) => {
     console.log("Form Data:", data);
@@ -190,6 +196,7 @@ const SignIn = () => {
 
               <button
                 type="button"
+                disabled={number?.length === 10 ? false : true}
                 onClick={sendOtp}
                 className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
               >
