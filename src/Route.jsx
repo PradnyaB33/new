@@ -66,7 +66,7 @@ const App = () => {
         element={<CreateDepartment />}
       />
       <Route
-        path="/department/get/:organisationId"
+        path="organisation/:organisationId/department-list"
         element={<DepartmentList />}
       />
       <Route path="/userprofile" element={<UserProfile />} />
