@@ -38,8 +38,7 @@ const SignIn = () => {
         .regex(/^[a-zA-Z]+$/),
       phone: z
         .string()
-        .min(10)
-        .max(15)
+        .min(10, { message: "Phone Number must be 10 digit" })
         .regex(/^[0-9]+$/),
       email: z.string().email(),
       password: z
@@ -61,6 +60,7 @@ const SignIn = () => {
   const {
     handleSubmit,
     control,
+    getValues,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(SignUpSchema),
@@ -83,6 +83,11 @@ const SignIn = () => {
         error.response.data.message || "Failed to sign up. Please try again."
       );
     }
+  };
+
+  const sendOtp = () => {
+    const phone = getValues("phone");
+    console.log(phone);
   };
 
   return (
@@ -172,21 +177,20 @@ const SignIn = () => {
             {/* Phone Number */}
 
             <div className="flex items-center gap-2">
-              <div className="w-[70%]">
-                <AuthInputFiled
-                  name="phone"
-                  icon={Phone}
-                  control={control}
-                  label={"Phone Number *"}
-                  type={"number"}
-                  errors={errors}
-                  error={errors.phone}
-                  placeholder={"123456789"}
-                />
-              </div>
+              <AuthInputFiled
+                name="phone"
+                icon={Phone}
+                control={control}
+                label={"Phone Number *"}
+                type={"number"}
+                errors={errors}
+                error={errors.phone}
+                placeholder={"123456789"}
+              />
 
               <button
                 type="button"
+                onClick={sendOtp}
                 className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
               >
                 Get Otp
