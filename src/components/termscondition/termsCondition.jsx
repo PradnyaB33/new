@@ -16,9 +16,8 @@ const TermsCondition = () => {
 
   return (
     <>
-      <div>
+      <div className="mb-1">
         <Checkbox
-          required
           className="!pr-2 !p-0"
           checked={isTermsAccepted}
           onChange={(e) => handleTermsAcceptance(e.target.checked)}
