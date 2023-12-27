@@ -24,7 +24,8 @@ const DepartmentList = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
-  const { organizationId } = useParams();
+  const { organisationId } = useParams();
+  let organizationId = organisationId;
   const [departmentList, setDepartmentList] = useState([]);
   const [departmentName, setDepartmentName] = useState("");
   const [departmentHeadName, setDepartmentHeadName] = useState("");
