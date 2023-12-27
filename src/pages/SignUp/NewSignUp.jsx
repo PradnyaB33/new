@@ -1,98 +1,80 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Badge,
+  DriveFileRenameOutlineOutlined,
   Email,
-  LocalPhone,
+  Lock,
+  NoEncryption,
   PermContactCalendar,
+  Phone,
 } from "@mui/icons-material";
-import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
-import LockIcon from "@mui/icons-material/Lock";
-import NoEncryptionIcon from "@mui/icons-material/NoEncryption";
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
+import { useForm } from "react-hook-form";
 import { Link, useLocation } from "react-router-dom";
+import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
+import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import TermsCondition from "../../components/termscondition/termsCondition";
-import useSignupFormStore from "../../hooks/useSignUpForm";
+
 const SignIn = () => {
   const { handleAlert } = useContext(TestContext);
   const location = useLocation();
-
-  const {
-    firstName,
-    setFirstName,
-    lastName,
-    setLastName,
-    email,
-    setEmail,
-    firstNameError,
-    setFirstNameError,
-    lastNameError,
-    setLastNameError,
-    emailError,
-    setEmailError,
-  } = useSignupFormStore();
-
-  const [middleName, setMiddleName] = useState("");
-  const [middleNameError, setMiddleNameError] = useState("");
-
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-  const handlePasswordChange = (enteredPassword) => {
-    setPassword(enteredPassword);
-    if (!enteredPassword) {
-      setPasswordError("Password is required");
-    } else if (!enteredPassword.match(passwordRegex)) {
-      setPasswordError(
-        "Password must contain at least one number, one special character, and be at least 8 characters long"
-      );
-    } else {
-      setPasswordError("");
-    }
-  };
+  const SignUpSchema = z
+    .object({
+      first_name: z
+        .string()
+        .min(2)
+        .max(30)
+        .regex(/^[a-zA-Z]+$/),
 
-  const handleConfirmPasswordChange = (enteredConfirmPassword) => {
-    setConfirmPassword(enteredConfirmPassword);
-    if (!enteredConfirmPassword) {
-      setConfirmPasswordError("Confirm Password is required");
-    } else if (enteredConfirmPassword !== password) {
-      setConfirmPasswordError("Passwords do not match");
-    } else {
-      setConfirmPasswordError("");
-    }
-  };
+      last_name: z
+        .string()
+        .min(2)
+        .max(30)
+        .regex(/^[a-zA-Z]+$/),
+      phone: z
+        .string()
+        .min(10)
+        .max(15)
+        .regex(/^[0-9]+$/),
+      email: z.string().email(),
+      password: z
+        .string()
+        .min(8)
+        .refine((value) => passwordRegex.test(value), {
+          message:
+            "Password must contain at least one number, one special character, and be at least 8 characters long",
+        }),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Password don't match",
+      path: ["confirmPassword"],
+    });
 
-  const isValidEmail = (email) => {
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-    const validDomain =
-      email.endsWith(".com") || email.endsWith(".net") || email.endsWith(".in");
-    return emailRegex.test(email) && validDomain && email.includes("@");
-  };
+  // Create a type for validation
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(SignUpSchema),
+  });
 
-    const user = {
-      first_name: firstName,
-      middle_name: middleName,
-      last_name: lastName,
-      email,
-      password,
-    };
+  const onSubmit = async (data) => {
+    console.log("Form Data:", data);
 
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create`,
-        user
+        data
       );
       handleAlert(true, "success", response.data.message);
-      // Redirect to a waiting page after successful signup
-      // router("/waiting");
-      // Refresh the page after signup
       window.location.reload();
     } catch (error) {
       handleAlert(
@@ -115,11 +97,7 @@ const SignIn = () => {
             ))}
           </ul>
           <div className="space-y-2 mb-8 flex-col flex items-center justify-center">
-            <img
-              src="aeigs-log-final.svg"
-              alt="none"
-              className="z-50 !h-[90px]"
-            />
+            {/* image here */}
           </div>
         </div>
 
@@ -143,7 +121,7 @@ const SignIn = () => {
           </div>
 
           <form
-            onSubmit={handleSignup}
+            onSubmit={handleSubmit(onSubmit)}
             autoComplete="off"
             className="flex px-20 w-max justify-center flex-col h-[80vh]"
           >
@@ -158,289 +136,100 @@ const SignIn = () => {
 
             <div className="flex gap-2">
               {/* First Name */}
-              <div className="space-y-1">
-                <label
-                  htmlFor="email"
-                  className="font-semibold text-gray-500  text-md"
-                >
-                  First Name *
-                </label>
-
-                <div className="flex rounded-md px-2 border-gray-200  border-[.5px] bg-white  py-[6px]">
-                  <PermContactCalendar className="text-gray-700" />
-                  <input
-                    type="text"
-                    label="First Name"
-                    className="border-none bg-white  w-full outline-none px-2"
-                    name="firstName"
-                    id="firstName"
-                    placeholder="jhon"
-                    value={firstName}
-                    onChange={(e) => {
-                      const enteredFirstName = e.target.value;
-                      setFirstName(enteredFirstName);
-                      if (!enteredFirstName.trim()) {
-                        setFirstNameError("First Name is required");
-                      } else if (
-                        enteredFirstName.length < 2 ||
-                        enteredFirstName.length > 30 ||
-                        /[^a-zA-Z]/.test(enteredFirstName)
-                      ) {
-                        setFirstNameError(
-                          "First Name must be between 2 and 30 characters and should only contain letters."
-                        );
-                      } else {
-                        setFirstNameError("");
-                      }
-                    }}
-                    required
-                    fullWidth
-                    margin="normal"
-                    error={!!firstNameError}
-                    helperText={firstNameError}
-                  />
-                </div>
-              </div>
-
-              {/* Middle Name */}
-              <div className="space-y-1">
-                <label
-                  htmlFor="email"
-                  className="font-semibold text-gray-500  text-md"
-                >
-                  Middle Name
-                </label>
-
-                <div className="flex rounded-md px-2 border-gray-200  border-[.5px] bg-white  py-[6px]">
-                  <Badge className="text-gray-700" />
-                  <input
-                    size="small"
-                    type="text"
-                    placeholder="xyz"
-                    label="Middle Name"
-                    className="border-none bg-white  w-full outline-none px-2"
-                    variant="standard"
-                    name="middleName"
-                    id="middleName"
-                    required
-                    value={middleName}
-                    onChange={(e) => {
-                      const enteredMiddleName = e.target.value;
-                      setMiddleName(enteredMiddleName);
-
-                      if (enteredMiddleName.trim() === "") {
-                        setMiddleNameError("");
-                      } else if (/[^a-zA-Z]/.test(enteredMiddleName)) {
-                        setMiddleNameError(
-                          "Middle Name should only contain letters."
-                        );
-                      } else {
-                        setMiddleNameError("");
-                      }
-                    }}
-                    fullWidth
-                    margin="normal"
-                    error={!!middleNameError}
-                    helperText={middleNameError}
-                  />
-                </div>
-              </div>
+              <AuthInputFiled
+                name="first_name"
+                icon={PermContactCalendar}
+                control={control}
+                type="text"
+                placeholder="jhon"
+                label="First Name *"
+                errors={errors}
+                error={errors.first_name}
+              />
+              <AuthInputFiled
+                name="middle_name"
+                icon={Badge}
+                control={control}
+                type="text"
+                placeholder="xyz"
+                label="Middle Name"
+                errors={errors}
+                error={errors.middle_name}
+              />
             </div>
 
-            {/* Form Fields */}
-            <div className="flex flex-col gap-2 mt-4 w-[30vw]">
-              {/* Last Name */}
-              <div className=" ">
-                <label
-                  htmlFor="email"
-                  className="font-semibold text-gray-500  text-md"
-                >
-                  Last Name *
-                </label>
+            {/* Last Name */}
+            <AuthInputFiled
+              name="last_name"
+              icon={DriveFileRenameOutlineOutlined}
+              control={control}
+              type="text"
+              label="Last Name *"
+              placeholder="Doe"
+              errors={errors}
+              error={errors.last_name}
+            />
+            {/* Phone Number */}
 
-                <div className="flex rounded-md px-2 border-gray-200  border-[.5px] bg-white  py-[6px]">
-                  <DriveFileRenameOutlineIcon className="text-gray-700" />
-                  <input
-                    size="small"
-                    type="text"
-                    label="Last Name"
-                    placeholder="Doe"
-                    className="border-none bg-white  w-full outline-none px-2"
-                    variant="standard"
-                    name="lastName"
-                    id="lastName"
-                    value={lastName}
-                    onChange={(e) => {
-                      const enteredLastName = e.target.value;
-                      setLastName(enteredLastName);
-                      if (!enteredLastName.trim()) {
-                        setLastNameError("Last Name is required");
-                      } else if (
-                        enteredLastName.length < 2 ||
-                        enteredLastName.length > 30 ||
-                        /[^a-zA-Z]/.test(enteredLastName)
-                      ) {
-                        setLastNameError(
-                          "Last Name must be between 2 and 30 characters and should only contain letters."
-                        );
-                      } else {
-                        setLastNameError("");
-                      }
-                    }}
-                    error={!!lastNameError}
-                    helperText={lastNameError}
-                    required
-                    fullWidth
-                    margin="normal"
-                  />
-                </div>
+            <div className="flex items-center gap-2">
+              <div className="w-[70%]">
+                <AuthInputFiled
+                  name="phone"
+                  icon={Phone}
+                  control={control}
+                  label={"Phone Number *"}
+                  type={"number"}
+                  errors={errors}
+                  error={errors.phone}
+                  placeholder={"123456789"}
+                />
               </div>
 
-              <div className="space-y-1">
-                <label
-                  htmlFor="email"
-                  className="font-semibold text-gray-500  text-md"
-                >
-                  Phone Number *
-                </label>
+              <button
+                type="button"
+                className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+              >
+                Get Otp
+              </button>
+            </div>
+            {/* Email */}
+            <AuthInputFiled
+              name="email"
+              icon={Email}
+              control={control}
+              type="email"
+              placeholder="test@gmai..."
+              label="Email Address *"
+              errors={errors}
+              error={errors.email}
+            />
 
-                <div className="flex  rounded-md px-2 border-gray-200  border-[.5px] bg-white  py-[6px]">
-                  <LocalPhone className="text-gray-700" />
-                  <input
-                    size="small"
-                    type="number"
-                    placeholder="12344567890"
-                    label="Phone number"
-                    className="border-none bg-white  w-full outline-none px-2"
-                    name="phone"
-                    id="phone"
-                    variant="standard"
-                    // value={phone}
-                    // onChange={(e) =>
-                    //   handleConfirmPasswordChange(e.target.value)
-                    // }
-                    required
-                    fullWidth
-                    margin="normal"
-                    error={!!confirmPasswordError}
-                    helperText={confirmPasswordError}
-                  />
-                </div>
-              </div>
+            {/* Password */}
+            <div className="flex items-center gap-2">
+              <AuthInputFiled
+                name="password"
+                icon={Lock}
+                control={control}
+                type="password"
+                placeholder="****"
+                label="Password *"
+                errors={errors}
+                error={errors.password}
+              />
 
-              {/* Email */}
-              <div className="space-y-1">
-                <label
-                  htmlFor="email"
-                  className="font-semibold text-gray-500  text-md"
-                >
-                  Email Address *
-                </label>
-
-                <div className="flex rounded-md px-2 border-gray-200  border-[.5px] bg-white  py-[6px]">
-                  <Email className="text-gray-700" />
-                  <input
-                    size="small"
-                    type="email"
-                    placeholder="test@gmai..."
-                    label="Email"
-                    variant="standard"
-                    className="border-none bg-white  w-full outline-none px-2"
-                    name="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => {
-                      const enteredEmail = e.target.value;
-                      setEmail(enteredEmail);
-                      if (!enteredEmail.trim()) {
-                        setEmailError("Email is required");
-                      } else if (!isValidEmail(enteredEmail)) {
-                        setEmailError("Invalid Email Format");
-                      } else {
-                        setEmailError("");
-                      }
-                    }}
-                    required
-                    fullWidth
-                    margin="normal"
-                    error={!!emailError}
-                    helperText={emailError}
-                  />
-                </div>
-              </div>
-              {/* Password */}
-              <div className="flex items-center gap-2">
-                <div className="space-y-1">
-                  <label
-                    htmlFor="email"
-                    className="font-semibold text-gray-500  text-md"
-                  >
-                    Password *
-                  </label>
-
-                  <div className="flex rounded-md px-2 border-gray-200  border-[.5px] bg-white  py-[6px]">
-                    <LockIcon className="text-gray-700" />
-                    <input
-                      size="small"
-                      type="password"
-                      label="Password"
-                      variant="standard"
-                      placeholder="******"
-                      className="border-none bg-white  w-full outline-none px-2"
-                      name="password"
-                      id="password"
-                      value={password}
-                      onChange={(e) => handlePasswordChange(e.target.value)}
-                      required
-                      fullWidth
-                      margin="normal"
-                      error={!!passwordError}
-                      helperText={passwordError}
-                      InputProps={{
-                        inputProps: {
-                          pattern: passwordRegex.source,
-                        },
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Confirm Password */}
-                <div className="space-y-1">
-                  <label
-                    htmlFor="email"
-                    className="font-semibold text-gray-500  text-md"
-                  >
-                    Confirm Password *
-                  </label>
-
-                  <div className="flex  rounded-md px-2 border-gray-200  border-[.5px] bg-white  py-[6px]">
-                    <NoEncryptionIcon className="text-gray-700" />
-                    <input
-                      size="small"
-                      type="password"
-                      placeholder="******"
-                      label="Confirm Password"
-                      className="border-none bg-white  w-full outline-none px-2"
-                      name="confirmPassword"
-                      id="confirmPassword"
-                      variant="standard"
-                      value={confirmPassword}
-                      onChange={(e) =>
-                        handleConfirmPasswordChange(e.target.value)
-                      }
-                      required
-                      fullWidth
-                      margin="normal"
-                      error={!!confirmPasswordError}
-                      helperText={confirmPasswordError}
-                    />
-                  </div>
-                </div>
-              </div>
+              <AuthInputFiled
+                name="confirmPassword"
+                icon={NoEncryption}
+                control={control}
+                type="password"
+                placeholder="****"
+                label="Confirm Password *"
+                errors={errors}
+                error={errors.confirmPassword}
+              />
             </div>
 
-            <div className="!mt-4 mb-1">
+            <div className=" mb-1">
               <TermsCondition />
             </div>
 
