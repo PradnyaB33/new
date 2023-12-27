@@ -1,10 +1,12 @@
-import { Email } from "@mui/icons-material";
-import BadgeIcon from "@mui/icons-material/Badge";
+import {
+  Badge,
+  Email,
+  LocalPhone,
+  PermContactCalendar,
+} from "@mui/icons-material";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import LockIcon from "@mui/icons-material/Lock";
 import NoEncryptionIcon from "@mui/icons-material/NoEncryption";
-import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
-import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -114,9 +116,9 @@ const SignIn = () => {
           </ul>
           <div className="space-y-2 mb-8 flex-col flex items-center justify-center">
             <img
-              src="login.svg"
+              src="aeigs-log-final.svg"
               alt="none"
-              className="absolute z-50 !h-[350px]"
+              className="z-50 !h-[90px]"
             />
           </div>
         </div>
@@ -140,46 +142,39 @@ const SignIn = () => {
             </Link>
           </div>
 
-          {/* Signup Form */}
           <form
             onSubmit={handleSignup}
             autoComplete="off"
             className="flex px-20 w-max justify-center flex-col h-[80vh]"
           >
-            {/* Logo and Title */}
             <div className="flex flex-col space-y-1">
-              <img
-                src="aeigs-log-final.svg"
-                alt="none"
-                className="text-center !h-[60px]"
-              />
-              <div>
-                <h1 className="font-[600] text-4xl">
+              <div className="mb-4">
+                <h1 className="font-[600] text-3xl">
                   Register for AEGIS Account
                 </h1>
                 <p className="text-lg">Enter your credentials below</p>
               </div>
             </div>
 
-            {/* Form Fields */}
-            <div className="flex flex-col gap-2 mt-4 w-[30vw]">
+            <div className="flex gap-2">
               {/* First Name */}
-              <div className="">
+              <div className="space-y-1">
                 <label
                   htmlFor="email"
-                  className="font-semibold text-gray-700 text-lg"
+                  className="font-semibold text-gray-500  text-md"
                 >
-                  First Name
+                  First Name *
                 </label>
 
-                <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200  py-[6px]">
-                  <PermContactCalendarIcon className="text-gray-700" />
+                <div className="flex rounded-md px-2 border-gray-200  border-[.5px] bg-white  py-[6px]">
+                  <PermContactCalendar className="text-gray-700" />
                   <input
                     type="text"
                     label="First Name"
-                    className="border-none border-[.5px] bg-neutral-200   w-full outline-none px-2 "
+                    className="border-none bg-white  w-full outline-none px-2"
                     name="firstName"
                     id="firstName"
+                    placeholder="jhon"
                     value={firstName}
                     onChange={(e) => {
                       const enteredFirstName = e.target.value;
@@ -208,21 +203,22 @@ const SignIn = () => {
               </div>
 
               {/* Middle Name */}
-              <div className="">
+              <div className="space-y-1">
                 <label
                   htmlFor="email"
-                  className="font-semibold text-gray-700 text-lg"
+                  className="font-semibold text-gray-500  text-md"
                 >
                   Middle Name
                 </label>
 
-                <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200  py-[6px]">
-                  <BadgeIcon className="text-gray-700" />
+                <div className="flex rounded-md px-2 border-gray-200  border-[.5px] bg-white  py-[6px]">
+                  <Badge className="text-gray-700" />
                   <input
                     size="small"
                     type="text"
+                    placeholder="xyz"
                     label="Middle Name"
-                    className="border-none border-[.5px] bg-neutral-200   w-full outline-none px-2"
+                    className="border-none bg-white  w-full outline-none px-2"
                     variant="standard"
                     name="middleName"
                     id="middleName"
@@ -249,23 +245,27 @@ const SignIn = () => {
                   />
                 </div>
               </div>
+            </div>
 
+            {/* Form Fields */}
+            <div className="flex flex-col gap-2 mt-4 w-[30vw]">
               {/* Last Name */}
               <div className=" ">
                 <label
                   htmlFor="email"
-                  className="font-semibold text-gray-700 text-lg"
+                  className="font-semibold text-gray-500  text-md"
                 >
-                  Last Name
+                  Last Name *
                 </label>
 
-                <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200  py-[6px]">
+                <div className="flex rounded-md px-2 border-gray-200  border-[.5px] bg-white  py-[6px]">
                   <DriveFileRenameOutlineIcon className="text-gray-700" />
                   <input
                     size="small"
                     type="text"
                     label="Last Name"
-                    className="border-none border-[.5px] bg-neutral-200   w-full outline-none px-2"
+                    placeholder="Doe"
+                    className="border-none bg-white  w-full outline-none px-2"
                     variant="standard"
                     name="lastName"
                     id="lastName"
@@ -296,23 +296,56 @@ const SignIn = () => {
                 </div>
               </div>
 
-              {/* Email */}
-              <div className="">
+              <div className="space-y-1">
                 <label
                   htmlFor="email"
-                  className="font-semibold text-gray-700 text-lg"
+                  className="font-semibold text-gray-500  text-md"
                 >
-                  Email Address
+                  Phone Number *
                 </label>
 
-                <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200 py-[6px] ">
+                <div className="flex  rounded-md px-2 border-gray-200  border-[.5px] bg-white  py-[6px]">
+                  <LocalPhone className="text-gray-700" />
+                  <input
+                    size="small"
+                    type="number"
+                    placeholder="12344567890"
+                    label="Phone number"
+                    className="border-none bg-white  w-full outline-none px-2"
+                    name="phone"
+                    id="phone"
+                    variant="standard"
+                    // value={phone}
+                    // onChange={(e) =>
+                    //   handleConfirmPasswordChange(e.target.value)
+                    // }
+                    required
+                    fullWidth
+                    margin="normal"
+                    error={!!confirmPasswordError}
+                    helperText={confirmPasswordError}
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="space-y-1">
+                <label
+                  htmlFor="email"
+                  className="font-semibold text-gray-500  text-md"
+                >
+                  Email Address *
+                </label>
+
+                <div className="flex rounded-md px-2 border-gray-200  border-[.5px] bg-white  py-[6px]">
                   <Email className="text-gray-700" />
                   <input
                     size="small"
                     type="email"
+                    placeholder="test@gmai..."
                     label="Email"
                     variant="standard"
-                    className="border-none border-[.5px] bg-neutral-200   w-full outline-none px-2"
+                    className="border-none bg-white  w-full outline-none px-2"
                     name="email"
                     id="email"
                     value={email}
@@ -336,90 +369,89 @@ const SignIn = () => {
                 </div>
               </div>
               {/* Password */}
-              <div className="">
-                <label
-                  htmlFor="email"
-                  className="font-semibold text-gray-700 text-lg"
-                >
-                  Password
-                </label>
+              <div className="flex items-center gap-2">
+                <div className="space-y-1">
+                  <label
+                    htmlFor="email"
+                    className="font-semibold text-gray-500  text-md"
+                  >
+                    Password *
+                  </label>
 
-                <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200  py-[6px]">
-                  <LockIcon className="text-gray-700" />
-                  <input
-                    size="small"
-                    type="password"
-                    label="Password"
-                    variant="standard"
-                    className="border-none border-[.5px] bg-neutral-200   w-full outline-none px-2"
-                    name="password"
-                    id="password"
-                    value={password}
-                    onChange={(e) => handlePasswordChange(e.target.value)}
-                    required
-                    fullWidth
-                    margin="normal"
-                    error={!!passwordError}
-                    helperText={passwordError}
-                    InputProps={{
-                      inputProps: {
-                        pattern: passwordRegex.source,
-                      },
-                    }}
-                  />
+                  <div className="flex rounded-md px-2 border-gray-200  border-[.5px] bg-white  py-[6px]">
+                    <LockIcon className="text-gray-700" />
+                    <input
+                      size="small"
+                      type="password"
+                      label="Password"
+                      variant="standard"
+                      placeholder="******"
+                      className="border-none bg-white  w-full outline-none px-2"
+                      name="password"
+                      id="password"
+                      value={password}
+                      onChange={(e) => handlePasswordChange(e.target.value)}
+                      required
+                      fullWidth
+                      margin="normal"
+                      error={!!passwordError}
+                      helperText={passwordError}
+                      InputProps={{
+                        inputProps: {
+                          pattern: passwordRegex.source,
+                        },
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {/* Confirm Password */}
-              <div className="">
-                <label
-                  htmlFor="email"
-                  className="font-semibold text-gray-700 text-lg"
-                >
-                  Confirm Password
-                </label>
+                {/* Confirm Password */}
+                <div className="space-y-1">
+                  <label
+                    htmlFor="email"
+                    className="font-semibold text-gray-500  text-md"
+                  >
+                    Confirm Password *
+                  </label>
 
-                <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200  py-[6px]">
-                  <NoEncryptionIcon className="text-gray-700" />
-                  <input
-                    size="small"
-                    type="password"
-                    label="Confirm Password"
-                    className="border-none border-[.5px] bg-neutral-200   w-full outline-none px-2"
-                    name="confirmPassword"
-                    id="confirmPassword"
-                    variant="standard"
-                    value={confirmPassword}
-                    onChange={(e) =>
-                      handleConfirmPasswordChange(e.target.value)
-                    }
-                    required
-                    fullWidth
-                    margin="normal"
-                    error={!!confirmPasswordError}
-                    helperText={confirmPasswordError}
-                  />
+                  <div className="flex  rounded-md px-2 border-gray-200  border-[.5px] bg-white  py-[6px]">
+                    <NoEncryptionIcon className="text-gray-700" />
+                    <input
+                      size="small"
+                      type="password"
+                      placeholder="******"
+                      label="Confirm Password"
+                      className="border-none bg-white  w-full outline-none px-2"
+                      name="confirmPassword"
+                      id="confirmPassword"
+                      variant="standard"
+                      value={confirmPassword}
+                      onChange={(e) =>
+                        handleConfirmPasswordChange(e.target.value)
+                      }
+                      required
+                      fullWidth
+                      margin="normal"
+                      error={!!confirmPasswordError}
+                      helperText={confirmPasswordError}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-            <div>
+
+            <div className="!mt-4 mb-1">
               <TermsCondition />
             </div>
 
             {/* Signup Button */}
             <div className="flex gap-5 mt-2">
-              <Button
-                style={{ borderRadius: "1rem" }}
-                fullWidth
-                size="medium"
+              <button
                 type="submit"
-                variant="contained"
-                className="rounded- bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                className=" flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
               >
-                Sign Up
-              </Button>
-
-              {/* Sign In Link */}
+                Register Account
+              </button>
             </div>
           </form>
         </article>

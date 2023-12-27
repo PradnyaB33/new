@@ -509,7 +509,7 @@ const NavItems = ({ toggleDrawer }) => {
                       </ListItemButton>
                     </Link>
                   </ListItem>
-                  <ListItem disablePadding>
+                  {/* <ListItem disablePadding>
                     <Link
                       onClick={() => toggleDrawer()}
                       to="#"
@@ -550,11 +550,11 @@ const NavItems = ({ toggleDrawer }) => {
                         />
                       </ListItemButton>
                     </Link>
-                  </ListItem>
+                  </ListItem> */}
                   <ListItem disablePadding>
                     <Link
                       onClick={() => toggleDrawer()}
-                      to="#"
+                      to="/department-list"
                       className="w-full"
                     >
                       <ListItemButton className="!p-2 !rounded-lg w-full">

@@ -239,12 +239,12 @@ const SalaryInput = () => {
                 <th scope="col" className="!text-left px-3 py-3 ">
                   Salary Component
                 </th>
-                <th scope="col" className="p-3 ">
+                {/* <th scope="col" className="p-3 ">
                   Manually input
                 </th>
                 <th scope="col" className="px-3 ">
                   Calculation
-                </th>
+                </th> */}
               </tr>
             </thead>
             <tbody>
@@ -254,10 +254,10 @@ const SalaryInput = () => {
                   className="px-2 !border border-gray-300 !py-4 !space-x-4 gap-4 w-full"
                 >
                   <td className="w-[40%] py-4 pl-2">{row.salaryComponent}</td>
-                  <td className="w-[40%] !mx-4">
+                  {/* <td className="w-[40%] !mx-4">
                     {row.manuallyInput ? "yes" : "no"}
                   </td>
-                  <td className="w-[40%] px-3">{row.calculation}</td>
+                  <td className="w-[40%] px-3">{row.calculation}</td> */}
                 </tr>
               ))}
             </tbody>
