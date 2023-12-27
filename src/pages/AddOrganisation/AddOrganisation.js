@@ -176,7 +176,11 @@ const AddOrganisation = () => {
   return (
     <>
       <div className="w-full h-[92vh] bg-white">
-        <BackComponent />
+        <div>
+
+        <BackComponent style={{ zIndex: 1000 }} />
+
+        </div>
 
         <form
           style={{
@@ -188,6 +192,7 @@ const AddOrganisation = () => {
           }}
           action="submit"
         >
+
           <Container
             style={{
               display: "flex",
@@ -212,7 +217,7 @@ const AddOrganisation = () => {
                 color: "#1D6EB7",
                 fontWeight: "600",
                 position: "relative",
-                top: "5px",
+                top: "5px"
               }}
               variant="h4"
             >
@@ -241,16 +246,17 @@ const AddOrganisation = () => {
                 }`}
               label="Url Of Website"
               type="text"
-              inputRef={
-                firstEmptyField === "web_url" ? firstEmptyFieldRef : null
-              }
+              inputRef={firstEmptyField === "web_url" ? firstEmptyFieldRef : null}
             />
             <FormControl
               required
               style={{ marginTop: "20px", width: "80%", height: "10px" }}
               size="small"
             >
-              <InputLabel id="demo-simple-select-label">
+              <InputLabel
+                id="demo-simple-select-label"
+                style={{ background: "white", zIndex: 1 }}
+              >
                 Industry Type
               </InputLabel>
               <Select
@@ -260,16 +266,16 @@ const AddOrganisation = () => {
                 value={inputdata.industry_type}
                 onChange={handleData}
                 inputRef={
-                  firstEmptyField === "industry_type"
-                    ? firstEmptyFieldRef
-                    : null
+                  firstEmptyField === "industry_type" ? firstEmptyFieldRef : null
                 }
+                style={{ zIndex: 0 }}
               >
                 <MenuItem value="IT">IT</MenuItem>
                 <MenuItem value="MECH">MECH</MenuItem>
                 <MenuItem value="ACCOUNTS">ACCOUNTS</MenuItem>
               </Select>
             </FormControl>
+
             <TextField
               required
               style={{ marginTop: "20px", height: "10px" }}
@@ -277,8 +283,7 @@ const AddOrganisation = () => {
               onChange={handleData}
               value={inputdata.email}
               size="small"
-              className={`w-[80%] ${firstEmptyField === "email" ? "error" : ""
-                }`}
+              className={`w-[80%] ${firstEmptyField === "email" ? "error" : ""}`}
               label={emailLabel}
               type="email"
               error={emailError}
@@ -354,16 +359,11 @@ const AddOrganisation = () => {
                       setInputData({ ...inputdata, foundation_date: newDate });
                       console.log(newDate);
                     }}
-                    slotProps={{
-                      textField: { size: "small", fullWidth: true },
-                    }}
+                    slotProps={{ textField: { size: "small", fullWidth: true } }}
                   />
                 </DemoContainer>
               </LocalizationProvider>
-              <div
-                className="flex"
-                style={{ position: "relative", top: "20px" }}
-              >
+              <div className="flex" style={{ position: "relative", top: "20px" }}>
                 <Input
                   type="file"
                   id="imageInput"
@@ -407,7 +407,7 @@ const AddOrganisation = () => {
             </Button>
           </Container>
         </form>
-      </div>
+      </div >
     </>
   );
 };

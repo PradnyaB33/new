@@ -53,26 +53,22 @@ const CreateDepartment = () => {
   const [formValues, setFormValues] = useState(initialFormValues);
   const [locations, setLocations] = useState([]);
 
-  useEffect(
-    () => {
-      axios
-        .get(
-          `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${organizationId}`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        )
-        .then((response) => {
-          setLocations(response.data);
-          // console.log("locations are: ", response.data);
-        })
-        .catch((error) => console.error("Error fetching locations:", error));
-    },
-    // eslint-disable-next-line
-    [authToken]
-  );
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${organizationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      )
+      .then((response) => {
+        setLocations(response.data);
+        console.log("locations are: ", response.data);
+      })
+      .catch((error) => console.error("Error fetching locations:", error));
+  }, [authToken]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

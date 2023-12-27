@@ -65,7 +65,6 @@ const PublicHoliday = () => {
 
   useEffect(() => {
     fetchHolidays();
-    // eslint-disable-next-line
   }, []);
 
   const handleData = (e) => {
@@ -85,7 +84,7 @@ const PublicHoliday = () => {
     setInputData({
       name: "",
       year: "",
-      date: new Date(),
+      date: dayjs(),
       day: "",
       month: "",
       type: "",
@@ -485,3 +484,26 @@ const PublicHoliday = () => {
 };
 
 export default PublicHoliday;
+
+//todo this is select field of organization
+//  <FormControl
+//               required
+//               style={{ marginTop: "20px", width: "80%", height: "10px" }}
+//               size="small"
+//             >
+//               <InputLabel id="demo-simple-select-label">Industry Type</InputLabel>
+//               <Select
+//                 labelId="demo-simple-select-label"
+//                 id="demo-simple-select"
+//                 name="industry_type"
+//                 value={inputdata.industry_type}
+//                 onChange={handleData}
+//                 inputRef={
+//                   firstEmptyField === "industry_type" ? firstEmptyFieldRef : null
+//                 }
+//               >
+//                 <MenuItem value="IT">IT</MenuItem>
+//                 <MenuItem value="MECH">MECH</MenuItem>
+//                 <MenuItem value="ACCOUNTS">ACCOUNTS</MenuItem>
+//               </Select>
+//             </FormControl>

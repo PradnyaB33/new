@@ -43,11 +43,11 @@ const Designation = () => {
     useState(false);
 
   // useEffect(() =>{
-    // !done for the day guys
+  // !done for the day guys
   // const filteredDesignations = designation.filter(
   //     (d) => d.organizationId === organisationId
   //   )
- 
+
   // },[])
 
   const handleClick = (id) => {
@@ -432,7 +432,7 @@ const Designation = () => {
                 )}
 
                 <TextField
-                  style={{ marginBottom: "1rem", marginTop: "1rem" }}
+                  style={{ marginTop: "1rem" }}
                   required
                   name="designationId"
                   size="small"
@@ -445,12 +445,14 @@ const Designation = () => {
                 {!designationId}
               </DialogContent>
               <DialogActions>
-                <Button color="primary" onClick={handleClose}>
-                  Cancel
-                </Button>
-                <Button color="error" onClick={handleAddDesignation}>
-                  {editMode ? "Update" : "Add"}
-                </Button>
+                <div className="flex flex-col w-[95%] m-auto gap-3 mb-2">
+                  <Button variant="contained" color="primary" onClick={handleAddDesignation}>
+                    {editMode ? "Update" : "Add"}
+                  </Button>
+                  <Button variant="contained" fullWidth color="error" onClick={handleClose}>
+                    Cancel
+                  </Button>
+                </div>
               </DialogActions>
             </Dialog>
 
@@ -467,12 +469,14 @@ const Designation = () => {
                 </Typography>
               </DialogContent>
               <DialogActions>
-                <Button color="primary" onClick={handleCloseConfirmationDialog}>
-                  Cancel
-                </Button>
-                <Button color="error" onClick={handleConfirmDelete}>
-                  Delete
-                </Button>
+                <div className="flex w-[95%] flex-col gap-3 m-auto mb-2">
+                  <Button variant="contained" fullWidth color="error" onClick={handleConfirmDelete}>
+                    Delete
+                  </Button>
+                  <Button variant="contained" fullWidth color="primary" onClick={handleCloseConfirmationDialog}>
+                    Cancel
+                  </Button>
+                </div>
               </DialogActions>
             </Dialog>
 

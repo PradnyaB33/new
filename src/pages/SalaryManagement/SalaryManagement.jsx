@@ -5,7 +5,8 @@ import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useParams } from "react-router-dom";
 import { Button } from "@mui/material";
-
+import { useQueryClient } from "react-query";
+import CreateSalaryModel from "../../components/Modal/CreateSalaryModel/CreateSalaryModel";
 const SalaryManagement = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -18,6 +19,7 @@ const SalaryManagement = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
+  const queryClient = useQueryClient();
 
   const fetchAvailableEmployee = async (page) => {
     try {
@@ -48,8 +50,6 @@ const SalaryManagement = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
-  console.log("employee", availableEmployee);
-
   const prePage = () => {
     if (currentPage !== 1) {
       fetchAvailableEmployee(currentPage - 1);
@@ -64,6 +64,23 @@ const SalaryManagement = () => {
 
   const changePage = (id) => {
     fetchAvailableEmployee(id);
+  };
+
+  // modal for create salary
+  const [open, setOpen] = React.useState(false);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [employeeId, setEmployeeId] = useState(null);
+
+  const handleCreateModalOpen = (empId) => {
+    setCreateModalOpen(true);
+    queryClient.invalidateQueries(["salary", empId]);
+    setEmployeeId(empId);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setEmployeeId(null);
+    setCreateModalOpen(false);
   };
 
   return (
@@ -183,6 +200,7 @@ const SalaryManagement = () => {
                       <td className="py-3">{item?.salarystructure?.name}</td>
                       <td className="whitespace-nowrap ">
                         <Button
+                          onClick={() => handleCreateModalOpen(item._id)}
                           className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"
                           type="submit"
                           variant="contained"
@@ -281,7 +299,18 @@ const SalaryManagement = () => {
         </article>
       </section>
 
-      {/* edit model */}
+      {/* Create model */}
+      <CreateSalaryModel
+        id={organisationId}
+        open={open}
+        handleClose={handleClose}
+      />
+      <CreateSalaryModel
+        id={organisationId}
+        open={createModalOpen}
+        handleClose={handleClose}
+        empId={employeeId}
+      />
     </>
   );
 };

@@ -34,6 +34,7 @@ import Shifts from "./pages/SetupPage/Shifts";
 import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
+import Test from "./pages/Test/test";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
@@ -42,6 +43,7 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/test" element={<Test />} />
       {/* Login Routes */}
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<Signup />} />
@@ -119,7 +121,7 @@ const App = () => {
         element={<EmployementTypes />}
       />
       <Route
-        path="/organization/:organisationId/setup/add-organization-locations"
+        path="/organisation/:organisationId/setup/add-organization-locations"
         element={<OrganizationLocations />}
       />
       <Route
@@ -154,10 +156,6 @@ const App = () => {
         path="/del-department-by-location"
         element={<DeleteDepartment />}
       />
-      {/* <Route
-        path="/organisation/:organisationId/salary-management"
-        element={<SalaryManagement />}
-      /> */}
     </Routes>
   );
 };

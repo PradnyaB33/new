@@ -14,6 +14,7 @@ import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
+import BackComponent from "../../components/BackComponent/BackComponent";
 const Setup = ({ children }) => {
   const location = useLocation();
   const { organisationId } = useParams("");
@@ -78,7 +79,7 @@ const Setup = ({ children }) => {
     {
       label: "Add Location",
       icon: AddLocationAltOutlined,
-      href: `/organization/${organisationId}/setup/add-organization-locations`,
+      href: `/organisation/${organisationId}/setup/add-organization-locations`,
       active:
         location.pathname ===
         `/organization/${organisationId}/setup/add-organization-locations`,
@@ -140,9 +141,11 @@ const Setup = ({ children }) => {
     <>
       <section className=" bg-gray-50 min-h-screen w-full">
         <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
+        <BackComponent />
           <Link to={"/organizationList"}>
             <West className="mx-4 !text-xl" />
           </Link>
+          {/* <BackComponent /> */}
           Organization Setup page
         </header>
         <article className="p-4 w-full h-full flex gap-4">
