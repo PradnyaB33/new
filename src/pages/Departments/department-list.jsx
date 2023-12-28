@@ -19,7 +19,6 @@ import { FormattedMessage, IntlProvider } from "react-intl";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import { Delete, Edit, Warning } from "@mui/icons-material";
 
 const DepartmentList = () => {
   const { cookies } = useContext(UseContext);
