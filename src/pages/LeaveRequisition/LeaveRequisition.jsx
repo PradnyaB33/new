@@ -66,15 +66,7 @@ const LeaveRequisition = () => {
   const leaveMutation = useMutation(createLeaves, {
     onSuccess: () => {
       console.log("success");
-      // setNewAppliedLeaveEvents([]);
 
-      // queryclient.invalidateQueries("")
-      // queryclient.invalidateQueries([
-      //   "employee-leave-table-without-default",
-      //   "employee-leave-table",
-      //   "employee-summary-table",
-      //   "employee-leave-table-without-default",
-      // ]);
       queryclient.invalidateQueries("employee-leave-table");
       queryclient.invalidateQueries("employee-leave-table");
       queryclient.invalidateQueries("employee-summary-table");

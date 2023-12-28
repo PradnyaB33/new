@@ -1,6 +1,7 @@
 import { Close } from "@mui/icons-material";
 import { Button, MenuItem, Popover, Select } from "@mui/material";
 import moment from "moment";
+import { extendMoment } from "moment-range";
 import { momentLocalizer } from "react-big-calendar";
 
 import React, { useContext, useEffect, useState } from "react";
@@ -18,6 +19,7 @@ const AppDatePicker = ({
   setAppliedLeaveEvents,
   setNewAppliedLeaveEvents,
 }) => {
+  const momentWithRange = extendMoment(moment);
   const localizer = momentLocalizer(moment);
   const [selectEvent, setselectEvent] = useState(false);
   const [Delete, setDelete] = useState(false);
@@ -35,11 +37,38 @@ const AppDatePicker = ({
     }
   };
 
+  const dayPropGetter = (date) => {
+    if (date.getDay() === 0) {
+      return {
+        style: {
+          pointerEvents: "none",
+          backgroundColor: "#ff7a7a",
+        },
+      };
+    }
+    return {};
+  };
+
   const handleSelectSlot = ({ start, end }) => {
     setDelete(false);
     setUpdate(false);
-    const selectedStartDate = moment(start);
-    const selectedEndDate = moment(end);
+
+    const selectedStartDate = momentWithRange(start);
+    const selectedEndDate = momentWithRange(end);
+
+    const dateRange = momentWithRange.range(selectedStartDate, selectedEndDate);
+
+    // Check if any date in the range is a Sunday (day() === 0)
+    const includesSunday = Array.from(dateRange.by("days")).some(
+      (day) => day.day() === 6
+    );
+
+    console.log(`includesSunday:`, includesSunday);
+
+    if (includesSunday) {
+      handleAlert(true, "warning", "You cannot select Sundays for leave");
+      return;
+    }
 
     const isOverlap = [...appliedLeaveEvents, ...newAppliedLeaveEvents].some(
       (event) =>
@@ -79,6 +108,7 @@ const AppDatePicker = ({
       }
     }
   };
+
   const handleUpdateFunction = (e) => {
     setselectEvent(true);
     // newAppliedLeaveEvents
@@ -133,6 +163,7 @@ const AppDatePicker = ({
             </MenuItem>
           ))}
         </Select>
+
         <div className="fled w-full flex-row-reverse px-3 text-blue-500 italic font-extrabold">
           {" "}
           {selectEvent ? "Please select dates for you leaves" : ""}
@@ -218,6 +249,7 @@ const AppDatePicker = ({
                 backgroundColor: event.color,
               },
             })}
+            dayPropGetter={dayPropGetter}
           />
         </div>
       </div>
