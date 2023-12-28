@@ -26,7 +26,7 @@ const LeaveRequisition = () => {
   const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([]);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
   const queryclient = useQueryClient();
-  const { data, isLoading } = useQuery(
+  const { isLoading } = useQuery(
     "employee-leave-table-without-default",
     async () => {
       const response = await axios.get(
