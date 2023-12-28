@@ -92,6 +92,7 @@ const SignIn = () => {
   };
 
   const sendOtp = () => {
+    setDisplay(true);
     const phone = getValues("phone");
     console.log(phone);
   };
@@ -201,6 +202,27 @@ const SignIn = () => {
                 className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
               >
                 Get Otp
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <AuthInputFiled
+                name="OTP"
+                icon={Phone}
+                control={control}
+                label={"OTP"}
+                type={"number"}
+                errors={errors}
+                error={errors.phone}
+                placeholder={"0000"}
+              />
+
+              <button
+                type="button"
+                onClick={sendOtp}
+                className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+              >
+                Verify Otp
               </button>
             </div>
             {/* Email */}
