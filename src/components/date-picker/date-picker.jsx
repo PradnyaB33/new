@@ -55,17 +55,30 @@ const AppDatePicker = ({
 
     const selectedStartDate = momentWithRange(start);
     const selectedEndDate = momentWithRange(end);
+    const startDate = moment(start).startOf("day"); // Extract date, start at midnight
+    const endDate = moment(end).startOf("day").add(1, "day"); // Add 1 day to make sure it's after 12 am
 
-    const dateRange = momentWithRange.range(selectedStartDate, selectedEndDate);
+    // Check if the day is Sunday and it's before 12 am
 
-    // Check if any date in the range is a Sunday (day() === 0)
-    const includesSunday = Array.from(dateRange.by("days")).some(
-      (day) => day.day() === 6
+    console.log(
+      `selectedStartDate:`,
+      selectedStartDate.format("MMM DD YYYY hh:mm A")
     );
+    console.log(
+      `selectedEndDate:`,
+      selectedEndDate.format("MMM DD YYYY hh:mm A")
+    );
+    console.log(`startDate:`, startDate.format("MMM DD YYYY hh:mm A"));
+    console.log(`endDate:`, endDate.format("MMM DD YYYY hh:mm A"));
+    const isSunday = endDate.day() === 0;
 
-    console.log(`includesSunday:`, includesSunday);
+    // Check if it's before 12 AM
+    const isBefore12AM = endDate.hours() < 12;
 
-    if (includesSunday) {
+    // Check if it's Sunday and before 12 AM
+    const isSundayBefore12AM = isSunday && isBefore12AM;
+
+    if (isSundayBefore12AM) {
       handleAlert(true, "warning", "You cannot select Sundays for leave");
       return;
     }
