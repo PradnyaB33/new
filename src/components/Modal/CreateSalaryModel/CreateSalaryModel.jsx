@@ -11,13 +11,16 @@ import {
 import React, { useContext, useState } from "react";
 import { UseContext } from "../../../State/UseState/UseContext";
 import axios from "axios";
-import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useQuery } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 const CreateSalaryModel = ({ handleClose, open, empId }) => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aeigs"];
+  const [errorMessage, setErrorMessage] = useState("");
   const [deduction, setDeduction] = useState("");
+  const [employee_pf, setEmployeePf] = useState("");
+  const [esic, setEsic] = useState("");
   const [inputValue, setInputValue] = useState({
     Basic: "",
     HRA: "",
@@ -53,8 +56,24 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
     }
   );
 
+  // const handleInputChange = (name, value) => {
+  //   console.log("name, value", name, value);
+  //   setInputValue({
+  //     ...inputValue,
+  //     [name]: value,
+  //   });
+  // };
   const handleInputChange = (name, value) => {
-    console.log("name, value", name, value);
+    const enteredValue = parseFloat(value);
+
+    if (!isNaN(enteredValue) && enteredValue > 10000000) {
+      // Set an error message when the entered value exceeds a crore
+      setErrorMessage("Please enter a number less than 1 crore");
+      return;
+    }
+
+    // Clear the error message if the entered value is valid
+    setErrorMessage("");
     setInputValue({
       ...inputValue,
       [name]: value,
@@ -77,12 +96,14 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
     const basicValue = parseFloat(Basic) || 0;
     const hraValue = parseFloat(HRA) || 0;
     const daValue = parseFloat(DA) || 0;
-    const deductionValue = parseFloat(deduction) || 0;
     const foodAllowanceValue = parseFloat(foodAllowance) || 0;
     const variableAllowanceValue = parseFloat(variableAllowance) || 0;
     const specialAllowanceValue = parseFloat(specialAllowance) || 0;
     const travelAllowanceValue = parseFloat(travelAllowance) || 0;
     const salesAllowanceValue = parseFloat(salesAllowance) || 0;
+    const deductionValue = parseFloat(deduction) || 0;
+    const employeePfValue = parseFloat(employee_pf) || 0;
+    const esicValue = parseFloat(esic) || 0;
 
     const total =
       basicValue +
@@ -93,18 +114,26 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
       specialAllowanceValue +
       travelAllowanceValue +
       salesAllowanceValue -
-      deductionValue;
+      deductionValue -
+      employeePfValue -
+      esicValue;
 
     return total.toFixed(2);
   };
-  const totalSalary = calculateTotalSalary();
+  let totalSalary = calculateTotalSalary();
 
-  // add salary data
-  const queryClient = useQueryClient();
-  const AddSalaryData = useMutation(
-    async (data) => {
+  const handleApply = async () => {
+    try {
+      const data = {
+        inputValue,
+        deduction,
+        employee_pf,
+        esic,
+        totalSalary,
+      };
+
       const response = await axios.post(
-        `${process.env.REACT_APP_API}/route/employee/salary/add`,
+        `${process.env.REACT_APP_API}/route/employee/salary/add/${empId}`,
         data,
         {
           headers: {
@@ -112,12 +141,12 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
           },
         }
       );
-      return response.data; // Return the response data from the API
-    },
-
-    {
-      onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: ["salaryTemplates"] });
+      console.log("response ", response);
+      if (response.data.success) {
+        handleAlert(true, "error", "Invalid authorization");
+      } else {
+        handleAlert(true, "success", "Salary Detail added Successfully");
+        // Clear input values and deduction after successful submission
         setInputValue({
           Basic: "",
           HRA: "",
@@ -127,28 +156,16 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
           "Special allowance": "",
           "Travel allowance": "",
           "Sales allowance": "",
-        }); // Clear input values
-        setDeduction(""); // Clear deduction value
+        });
+        setDeduction("");
+        setEmployeePf("");
+        setEsic("");
+        totalSalary = ""; //  totalSalary is a variable
         handleClose();
-        handleAlert(true, "success", "Salary Created successfully");
-      },
-
-      onError: () => {
-        handleAlert(true, "error", "Something went wrong");
-      },
-    }
-  );
-
-  const handleApply = async () => {
-    try {
-      const data = {
-        inputValue,
-        deduction,
-        totalSalary,
-      };
-      await AddSalaryData.mutateAsync(data);
+      }
     } catch (error) {
       console.error("Error adding salary data:", error);
+      handleAlert(true, "error", "Something went wrong");
     }
   };
 
@@ -158,7 +175,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
         sx: {
           width: "100%",
           maxWidth: "900px!important",
-          height: "50%",
+          height: "70%",
           maxHeight: "85vh!important",
         },
       }}
@@ -201,22 +218,6 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="!text-left pl-8 pr-8 py-3">Deduction</td>
-                  <td className="py-3 ">
-                    <input
-                      type="number"
-                      placeholder="Enter the input"
-                      style={{
-                        padding: "10px",
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                      }}
-                      value={deduction}
-                      onChange={(e) => setDeduction(e.target.value)}
-                    />
-                  </td>
-                </tr>
                 {isLoading ? (
                   <tr>
                     <td colSpan={2}>
@@ -255,7 +256,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                                   item.salaryComponent,
                                   e.target.value
                                 );
-                              }} // Update state on change
+                              }}
                             />
                           </td>
                         </tr>
@@ -263,11 +264,64 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                     )}
                   </tr>
                 )}
+                <tr>
+                  <td className="!text-left pl-8 pr-8 py-3">
+                    Professinal Tax (Deduction)
+                  </td>
+                  <td className="py-3 ">
+                    <input
+                      type="number"
+                      placeholder="Enter the input"
+                      style={{
+                        padding: "10px",
+                        border: "1px solid #ccc",
+                        borderRadius: "4px",
+                      }}
+                      value={deduction}
+                      onChange={(e) => setDeduction(e.target.value)}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="!text-left pl-8 pr-8 py-3">Employee PF</td>
+                  <td className="py-3 ">
+                    <input
+                      type="number"
+                      placeholder="Enter the input"
+                      style={{
+                        padding: "10px",
+                        border: "1px solid #ccc",
+                        borderRadius: "4px",
+                      }}
+                      value={employee_pf}
+                      onChange={(e) => setEmployeePf(e.target.value)}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="!text-left pl-8 pr-8 py-3">ESIC</td>
+                  <td className="py-3 ">
+                    <input
+                      type="number"
+                      placeholder="Enter the input"
+                      style={{
+                        padding: "10px",
+                        border: "1px solid #ccc",
+                        borderRadius: "4px",
+                      }}
+                      value={esic}
+                      onChange={(e) => setEsic(e.target.value)}
+                    />
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
           <div className="w-full">
             <Divider variant="fullWidth" orientation="horizontal" />
+          </div>
+          <div style={{ height: "5px", width: "280px" }}>
+            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
           </div>
 
           <div>
@@ -287,28 +341,13 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                 readOnly // This prevents the input from being edited directly
               />
             </div>
-            <div className="flex items-center justify-between py-3 px-4">
-              <span className="font-semibold">Per Day Salary</span>
-              <input
-                type="number"
-                placeholder="Per Day Salary"
-                style={{
-                  padding: "10px",
-                  border: "1px solid #ccc",
-                  borderRadius: "4px",
-                  backgroundColor: "#f9f9f9",
-                  fontWeight: "bold",
-                }}
-                readOnly
-              />
-            </div>
           </div>
 
           <DialogActions>
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>
-            <Button variant="contained" color="primary">
+            <Button onClick={handleApply} variant="contained" color="primary">
               Apply
             </Button>
           </DialogActions>
