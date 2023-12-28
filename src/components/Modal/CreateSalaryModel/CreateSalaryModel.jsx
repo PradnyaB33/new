@@ -11,12 +11,24 @@ import {
 import React, { useContext, useState } from "react";
 import { UseContext } from "../../../State/UseState/UseContext";
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient, useMutation } from "react-query";
+import { TestContext } from "../../../State/Function/Main";
 const CreateSalaryModel = ({ handleClose, open, empId }) => {
   const { cookies } = useContext(UseContext);
+  const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aeigs"];
-  const [basic, setBasic] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [deduction, setDeduction] = useState("");
+  const [inputValue, setInputValue] = useState({
+    Basic: "",
+    HRA: "",
+    DA: "",
+    "Food allowance": "",
+    "Varialble allowance": "",
+    "Special allowance": "",
+    "Travel allowance": "",
+    "Sales allowance": "",
+  });
+
   const {
     data: salaryInput,
     isLoading,
@@ -41,14 +53,103 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
     }
   );
 
-  const handleInputChange = (e) => {
-    const enteredValue = e.target.value;
-    if (enteredValue && parseInt(enteredValue) > 10000000) {
-      setErrorMessage("Maximum Number limit is 7");
-      return;
+  const handleInputChange = (name, value) => {
+    console.log("name, value", name, value);
+    setInputValue({
+      ...inputValue,
+      [name]: value,
+    });
+  };
+
+  // Function to calculate total salary
+  const calculateTotalSalary = () => {
+    const {
+      Basic,
+      HRA,
+      DA,
+      "Food allowance": foodAllowance,
+      "Varialble allowance": variableAllowance,
+      "Special allowance": specialAllowance,
+      "Travel allowance": travelAllowance,
+      "Sales allowance": salesAllowance,
+    } = inputValue;
+
+    const basicValue = parseFloat(Basic) || 0;
+    const hraValue = parseFloat(HRA) || 0;
+    const daValue = parseFloat(DA) || 0;
+    const deductionValue = parseFloat(deduction) || 0;
+    const foodAllowanceValue = parseFloat(foodAllowance) || 0;
+    const variableAllowanceValue = parseFloat(variableAllowance) || 0;
+    const specialAllowanceValue = parseFloat(specialAllowance) || 0;
+    const travelAllowanceValue = parseFloat(travelAllowance) || 0;
+    const salesAllowanceValue = parseFloat(salesAllowance) || 0;
+
+    const total =
+      basicValue +
+      hraValue +
+      daValue +
+      foodAllowanceValue +
+      variableAllowanceValue +
+      specialAllowanceValue +
+      travelAllowanceValue +
+      salesAllowanceValue -
+      deductionValue;
+
+    return total.toFixed(2);
+  };
+  const totalSalary = calculateTotalSalary();
+
+  // add salary data
+  const queryClient = useQueryClient();
+  const AddSalaryData = useMutation(
+    async (data) => {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/route/employee/salary/add`,
+        data,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data; // Return the response data from the API
+    },
+
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({ queryKey: ["salaryTemplates"] });
+        setInputValue({
+          Basic: "",
+          HRA: "",
+          DA: "",
+          "Food allowance": "",
+          "Varialble allowance": "",
+          "Special allowance": "",
+          "Travel allowance": "",
+          "Sales allowance": "",
+        }); // Clear input values
+        setDeduction(""); // Clear deduction value
+        handleClose();
+        handleAlert(true, "success", "Salary Created successfully");
+      },
+
+      onError: () => {
+        handleAlert(true, "error", "Something went wrong");
+      },
     }
-    setErrorMessage("");
-    setBasic(enteredValue);
+  );
+
+  const handleApply = async () => {
+    try {
+      const data = {
+        inputValue,
+        deduction,
+        totalSalary,
+      };
+      await AddSalaryData.mutateAsync(data);
+    } catch (error) {
+      console.error("Error adding salary data:", error);
+    }
   };
 
   return (
@@ -56,7 +157,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
       PaperProps={{
         sx: {
           width: "100%",
-          maxWidth: "800px!important",
+          maxWidth: "900px!important",
           height: "50%",
           maxHeight: "85vh!important",
         },
@@ -100,6 +201,22 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                 </tr>
               </thead>
               <tbody>
+                <tr>
+                  <td className="!text-left pl-8 pr-8 py-3">Deduction</td>
+                  <td className="py-3 ">
+                    <input
+                      type="number"
+                      placeholder="Enter the input"
+                      style={{
+                        padding: "10px",
+                        border: "1px solid #ccc",
+                        borderRadius: "4px",
+                      }}
+                      value={deduction}
+                      onChange={(e) => setDeduction(e.target.value)}
+                    />
+                  </td>
+                </tr>
                 {isLoading ? (
                   <tr>
                     <td colSpan={2}>
@@ -132,8 +249,13 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                                 borderRadius: "4px",
                                 marginLeft: "200%",
                               }}
-                              value={basic}
-                              onChange={handleInputChange}
+                              value={inputValue[item.salaryComponent] || ""} // Set value from state
+                              onChange={(e) => {
+                                handleInputChange(
+                                  item.salaryComponent,
+                                  e.target.value
+                                );
+                              }} // Update state on change
                             />
                           </td>
                         </tr>
@@ -144,7 +266,44 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
               </tbody>
             </table>
           </div>
-          {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+          <div className="w-full">
+            <Divider variant="fullWidth" orientation="horizontal" />
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between py-3 px-4">
+              <span className="font-semibold">Total Salary</span>
+              <input
+                type="number"
+                placeholder="Total Salary"
+                style={{
+                  padding: "10px",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  backgroundColor: "#f9f9f9",
+                  fontWeight: "bold",
+                }}
+                value={totalSalary}
+                readOnly // This prevents the input from being edited directly
+              />
+            </div>
+            <div className="flex items-center justify-between py-3 px-4">
+              <span className="font-semibold">Per Day Salary</span>
+              <input
+                type="number"
+                placeholder="Per Day Salary"
+                style={{
+                  padding: "10px",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  backgroundColor: "#f9f9f9",
+                  fontWeight: "bold",
+                }}
+                readOnly
+              />
+            </div>
+          </div>
+
           <DialogActions>
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
