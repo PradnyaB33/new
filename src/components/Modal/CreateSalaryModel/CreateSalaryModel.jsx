@@ -104,7 +104,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
   const AddSalaryData = useMutation(
     async (data) => {
       const response = await axios.post(
-        `${process.env.REACT_APP_API}/route/employee/salary/add`,
+        `${process.env.REACT_APP_API}/route/employee/salary/add/${empId}`,
         data,
         {
           headers: {
