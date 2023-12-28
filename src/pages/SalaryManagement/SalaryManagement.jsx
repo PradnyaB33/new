@@ -29,7 +29,6 @@ const SalaryManagement = () => {
           Authorization: authToken,
         },
       });
-      console.log(response);
       setAvailableEmployee(response.data.employees);
       setCurrentPage(page);
       setTotalPages(response.data.totalPages || 1);
