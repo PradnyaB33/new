@@ -37,16 +37,8 @@ const LeaveRequisition = () => {
       );
       setAppliedLeaveEvents([...response.data.currentYearLeaves]);
       setSubtractedLeaves(response.data.LeaveTypedEdited);
-      handleAlert(
-        true,
-        "success",
-        data.data.message || "Leave generated successfully."
-      );
+
       return response.data;
-    },
-    {
-      cacheTime: 0, // Disable caching for this query
-      staleTime: 0,
     }
   );
   const createLeaves = async () => {

@@ -183,23 +183,23 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <AddAlert className="text-white" />,
             text: "Add Department",
           },
-          {
-            key: "updateDepartment",
-            link: "/department-update",
-            icon: <ListAlt className="text-white" />,
-            text: "Update Department",
-          },
-          {
-            key: "deleteDepartment",
-            link: "/department-delete",
-            icon: <ListAlt className="text-white" />,
-            text: "Delete Department",
-          },
+          // {
+          //   key: "updateDepartment",
+          //   link: "/department-update",
+          //   icon: <ListAlt className="text-white" />,
+          //   text: "Update Department",
+          // },
+          // {
+          //   key: "deleteDepartment",
+          //   link: "/department-delete",
+          //   icon: <ListAlt className="text-white" />,
+          //   text: "Delete Department",
+          // },
           {
             key: "departmentList",
-            link: "/department-list",
+            link: `/organisation/${orgId}/department-list`,
             icon: <ListAlt className="text-white" />,
-            text: "Department List",
+            text: "Manage Departments",
           },
         ],
       },
@@ -244,17 +244,12 @@ const TestNavItems = ({ toggleDrawer }) => {
   }, [location, navItems]);
 
   useEffect(() => {
-    console.log(token);
     try {
       if (token) {
         const newToken = jwtDecode(token);
 
         setDecodedToken(newToken);
         if (decodedToken && decodedToken.user.profile) {
-          console.log(
-            `🚀 ~ file: test-nav-items.jsx:230 ~ decodedToken:`,
-            decodedToken
-          );
         }
       }
     } catch (error) {
