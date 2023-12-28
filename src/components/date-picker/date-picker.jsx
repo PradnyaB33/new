@@ -1,6 +1,7 @@
 import { Close } from "@mui/icons-material";
 import { Button, MenuItem, Popover, Select } from "@mui/material";
 import moment from "moment";
+import { extendMoment } from "moment-range";
 import { momentLocalizer } from "react-big-calendar";
 
 import React, { useContext, useEffect, useState } from "react";
@@ -18,6 +19,7 @@ const AppDatePicker = ({
   setAppliedLeaveEvents,
   setNewAppliedLeaveEvents,
 }) => {
+  const momentWithRange = extendMoment(moment);
   const localizer = momentLocalizer(moment);
   const [selectEvent, setselectEvent] = useState(false);
   const [Delete, setDelete] = useState(false);
@@ -35,11 +37,51 @@ const AppDatePicker = ({
     }
   };
 
+  const dayPropGetter = (date) => {
+    if (date.getDay() === 0) {
+      return {
+        style: {
+          pointerEvents: "none",
+          backgroundColor: "#ff7a7a",
+        },
+      };
+    }
+    return {};
+  };
+
   const handleSelectSlot = ({ start, end }) => {
     setDelete(false);
     setUpdate(false);
-    const selectedStartDate = moment(start);
-    const selectedEndDate = moment(end);
+
+    const selectedStartDate = momentWithRange(start);
+    const selectedEndDate = momentWithRange(end);
+    const startDate = moment(start).startOf("day"); // Extract date, start at midnight
+    const endDate = moment(end).startOf("day").add(1, "day"); // Add 1 day to make sure it's after 12 am
+
+    // Check if the day is Sunday and it's before 12 am
+
+    console.log(
+      `selectedStartDate:`,
+      selectedStartDate.format("MMM DD YYYY hh:mm A")
+    );
+    console.log(
+      `selectedEndDate:`,
+      selectedEndDate.format("MMM DD YYYY hh:mm A")
+    );
+    console.log(`startDate:`, startDate.format("MMM DD YYYY hh:mm A"));
+    console.log(`endDate:`, endDate.format("MMM DD YYYY hh:mm A"));
+    const isSunday = endDate.day() === 0;
+
+    // Check if it's before 12 AM
+    const isBefore12AM = endDate.hours() < 12;
+
+    // Check if it's Sunday and before 12 AM
+    const isSundayBefore12AM = isSunday && isBefore12AM;
+
+    if (isSundayBefore12AM) {
+      handleAlert(true, "warning", "You cannot select Sundays for leave");
+      return;
+    }
 
     const isOverlap = [...appliedLeaveEvents, ...newAppliedLeaveEvents].some(
       (event) =>
@@ -79,6 +121,7 @@ const AppDatePicker = ({
       }
     }
   };
+
   const handleUpdateFunction = (e) => {
     setselectEvent(true);
     // newAppliedLeaveEvents
@@ -133,6 +176,7 @@ const AppDatePicker = ({
             </MenuItem>
           ))}
         </Select>
+
         <div className="fled w-full flex-row-reverse px-3 text-blue-500 italic font-extrabold">
           {" "}
           {selectEvent ? "Please select dates for you leaves" : ""}
@@ -218,6 +262,7 @@ const AppDatePicker = ({
                 backgroundColor: event.color,
               },
             })}
+            dayPropGetter={dayPropGetter}
           />
         </div>
       </div>

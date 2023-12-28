@@ -20,7 +20,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
 import { format } from "date-fns";
 import dayjs from "dayjs";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../Setup";
@@ -47,7 +47,7 @@ const PublicHoliday = () => {
     organizationId: "",
   });
 
-  const fetchHolidays = async () => {
+  const fetchHolidays = useCallback(async () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/holiday/get/${id}`
@@ -61,11 +61,15 @@ const PublicHoliday = () => {
         msg: "An error occurred while fetching holidays",
       });
     }
-  };
+  }, [id, setHolidays, setAppAlert]);
 
   useEffect(() => {
-    fetchHolidays();
-  }, []);
+    const fetchData = async () => {
+      await fetchHolidays();
+    };
+
+    fetchData();
+  }, [fetchHolidays]);
 
   const handleData = (e) => {
     const { name, value } = e.target;

@@ -26,7 +26,7 @@ const LeaveRequisition = () => {
   const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([]);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
   const queryclient = useQueryClient();
-  const { data, isLoading } = useQuery(
+  const { isLoading } = useQuery(
     "employee-leave-table-without-default",
     async () => {
       const response = await axios.get(
@@ -37,16 +37,8 @@ const LeaveRequisition = () => {
       );
       setAppliedLeaveEvents([...response.data.currentYearLeaves]);
       setSubtractedLeaves(response.data.LeaveTypedEdited);
-      handleAlert(
-        true,
-        "success",
-        data.data.message || "Leave generated successfully."
-      );
+
       return response.data;
-    },
-    {
-      cacheTime: 0, // Disable caching for this query
-      staleTime: 0,
     }
   );
   const createLeaves = async () => {
@@ -74,15 +66,7 @@ const LeaveRequisition = () => {
   const leaveMutation = useMutation(createLeaves, {
     onSuccess: () => {
       console.log("success");
-      // setNewAppliedLeaveEvents([]);
 
-      // queryclient.invalidateQueries("")
-      // queryclient.invalidateQueries([
-      //   "employee-leave-table-without-default",
-      //   "employee-leave-table",
-      //   "employee-summary-table",
-      //   "employee-leave-table-without-default",
-      // ]);
       queryclient.invalidateQueries("employee-leave-table");
       queryclient.invalidateQueries("employee-leave-table");
       queryclient.invalidateQueries("employee-summary-table");
