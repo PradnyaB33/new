@@ -35,6 +35,7 @@ const TrackingMap = () => {
         window.google.maps.event.clearInstanceListeners(map);
       }
     };
+    // eslint-disable-next-line
   }, [map]);
 
   const initMap = () => {
