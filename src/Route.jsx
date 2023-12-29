@@ -34,16 +34,18 @@ import Shifts from "./pages/SetupPage/Shifts";
 import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
-import Test from "./pages/Test/test";
+import EditablePolyline from "./pages/Test/test2";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
+import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
+import WeekendHoliday from "./pages/SetupPage/WeekendHoliday";
 const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/test" element={<Test />} />
+      <Route path="/test" element={<EditablePolyline />} />
       {/* Login Routes */}
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<Signup />} />
@@ -88,7 +90,10 @@ const App = () => {
         path="/organisation/:organisationId/setup/input-field"
         element={<Inputfield />}
       />{" "}
-      {/* set up routes*/}
+      <Route
+        path="/organisation/:organisationId/salary-management"
+        element={<SalaryManagement />}
+      />
       <Route
         path="/organisation/:organisationId/setup/set-shifts"
         element={<Shifts />}
@@ -100,6 +105,10 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/set-designation"
         element={<Designation />}
+      />
+      <Route
+        path="/organisation/:organisationId/setup/set-weekend-holiday"
+        element={<WeekendHoliday />}
       />
       <Route path="/set-shifts/:id" element={<Shifts />} />
       <Route path="/add-inputfield/:id" element={<Inputfield />} />
@@ -148,12 +157,12 @@ const App = () => {
         element={<TermsAndConditionsPage />}
       />
       <Route
-        path="/organisation/:id/department/:departmentId"
+        path="/organisation/:organisationId/department/:departmentId"
         element={<SingleDepartment />}
       />
       {/* Removable component */}
       <Route
-        path="/del-department-by-location"
+        path="/organisation/:id/dept-deletion"
         element={<DeleteDepartment />}
       />
     </Routes>

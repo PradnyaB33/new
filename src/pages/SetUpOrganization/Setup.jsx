@@ -10,6 +10,7 @@ import {
 } from "@mui/icons-material";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import WeekendOutlinedIcon from '@mui/icons-material/WeekendOutlined';
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
@@ -131,6 +132,16 @@ const Setup = ({ children }) => {
       href: `/organisation/${organisationId}/setup/set-email`,
       active:
         location.pathname === `/organisation/${organisationId}/setup/set-email`,
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "HR"].includes(role)
+      ),
+    },
+    {
+      label: "Weekend Holidays",
+      icon: WeekendOutlinedIcon,
+      href: `/organisation/${organisationId}/setup/set-weekend-holiday`,
+      active:
+        location.pathname === `/organisation/${organisationId}/setup/set-weekend-holiday`,
       isVisible: user?.profile?.some((role) =>
         ["Super-Admin", "HR"].includes(role)
       ),

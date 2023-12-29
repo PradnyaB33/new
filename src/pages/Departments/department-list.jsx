@@ -1,8 +1,4 @@
-import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
-import { TestContext } from "../../State/Function/Main";
-import { UseContext } from "../../State/UseState/UseContext";
-import { useParams } from "react-router-dom";
+import { Delete, Edit, Warning } from "@mui/icons-material";
 import {
   Autocomplete,
   Button,
@@ -17,8 +13,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import { FormattedMessage, IntlProvider } from "react-intl";
-import { Delete, Edit } from "@mui/icons-material";
+import { useParams } from "react-router-dom";
+import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
 
 const DepartmentList = () => {
   const { cookies } = useContext(UseContext);
@@ -91,7 +91,7 @@ const DepartmentList = () => {
         console.log("locations are: ", response.data);
       })
       .catch((error) => console.error("Error fetching locations:", error));
-  }, [authToken]);
+  }, [authToken, organizationId]);
 
   useEffect(() => {
     const fetchDepartmentList = async () => {
@@ -114,10 +114,6 @@ const DepartmentList = () => {
     // eslint-disable-next-line
   }, [authToken]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-  };
-
   const handleDepartmentIdChange = (e) => {
     const input = e.target.value;
     const charactersOnly = input.replace(/\d/g, "");
@@ -127,9 +123,9 @@ const DepartmentList = () => {
     }
   };
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  // const handleOpen = () => {
+  //   setOpen(true);
+  // };
 
   const handleDeleteDepartmentConfirmation = (index) => {
     setConfirmOpen(true);
@@ -164,7 +160,6 @@ const DepartmentList = () => {
     }
     setConfirmOpen(false);
   };
-  console.log(departmentList);
 
   const handleClose = () => {
     setOpen(false);
@@ -191,7 +186,7 @@ const DepartmentList = () => {
       costCenterDescription,
       departmentHeadName,
       departmentHeadDelegateName,
-      setOrganizationLocationId: locationID,
+      organizationLocationId,
       organizationId: organizationId,
     };
     try {
@@ -215,6 +210,10 @@ const DepartmentList = () => {
         }
       );
 
+      // const handleChange = (e) => {
+      //   const { name, value } = e.target;
+      // };
+
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/department/get/${organizationId}`,
         {
@@ -232,104 +231,113 @@ const DepartmentList = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const newDepartment = {
-        departmentName,
-        departmentId,
-        departmentDescription,
-        departmentLocation,
-        costCenterName,
-        costCenterDescription,
-        departmentHeadName,
-        departmentHeadDelegateName,
-        organizationLocationId: locationID,
-        organizationId: organizationId,
-      };
-      console.log(departmentId);
-      await axios.post(
-        `${process.env.REACT_APP_API}/route/department/create/${organizationId}`,
-        newDepartment,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      handleAlert(true, "success", `Department created successfully`);
-    } catch (error) {
-      console.error(error);
-      handleAlert(true, "error", error);
-    }
-  };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const newDepartment = {
+  //       departmentName,
+  //       departmentId,
+  //       departmentDescription,
+  //       departmentLocation,
+  //       costCenterName,
+  //       costCenterDescription,
+  //       departmentHeadName,
+  //       departmentHeadDelegateName,
+  //       organizationLocationId: locationID,
+  //       organizationId: organizationId,
+  //     };
+  //     console.log(departmentId);
+  //     await axios.post(
+  //       `${process.env.REACT_APP_API}/route/department/create/${organizationId}`,
+  //       newDepartment,
+  //       {
+  //         headers: {
+  //           Authorization: authToken,
+  //         },
+  //       }
+  //     );
+  //     handleAlert(true, "success", `Department created successfully`);
+  //   } catch (error) {
+  //     console.error(error);
+  //     handleAlert(true, "error", error);
+  //   }
+  // };
 
   return (
     <div>
-      {departmentList.length === 0 ? (
-        <Typography>No departments, please add department.</Typography>
+      {departmentList.department?.length === 0 ? (
+        // <div className="flex items-center justify-center h-screen">
+        <Typography variant="h5" className="w-50 text-center mb-2 text-red-600">
+          <Warning /> No departments added, please add department first.
+        </Typography>
       ) : (
-        <table className="min-w-full bg-white text-left text-sm font-light">
-          <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-            <tr className="!font-medium">
-              <th scope="col" className="px-3 py-3 whitespace-nowrap">
-                Sr. No
-              </th>
-              <th scope="col" className="px-3 py-3 ">
-                Department Name
-              </th>
-              <th scope="col" className="px-3 py-3 ">
-                Department Head
-              </th>
-              <th scope="col" className="px-3 py-3 ">
-                Department Head Delegate
-              </th>
-              <th scope="col" className="px-3 py-3 ">
-                Department Location
-              </th>
-              <th scope="col" className="px-3 py-3 ">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {departmentList?.department?.map((department, index) => (
-              <tr
-                key={index}
-                className={`${
-                  index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                } border-b dark:border-neutral-500 !font-medium`}
-              >
-                <td className="py-2 px-3">{index + 1}</td>
-                <td className="py-2 px-3">{department.departmentName}</td>
-                <td className="py-2 px-3">{department.departmentHeadName}</td>
-                <td className="py-2 px-3">
-                  {department.departmentHeadDelegateName}
-                </td>
-                <td className="py-2 px-3">
-                  {department.departmentLocation.shortName}
-                </td>
-                <td className="whitespace-nowrap px-3 py-2">
-                  <IconButton
-                    onClick={() => handleEditDepartment(index)}
-                    aria-label="edit"
-                  >
-                    <Edit className="!text-xl" color="success" />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      handleDeleteDepartmentConfirmation(index);
-                      setDeleteIndex(index);
-                    }}
-                    aria-label="delete"
-                  >
-                    <Delete className="!text-xl" color="error" />
-                  </IconButton>
-                </td>
+        // </div>
+        <div style={{ padding: "1.5rem" }}>
+          <Typography variant="h4" className="w-50 text-center mb-2">
+            Department List
+          </Typography>
+          <table className="min-w-full bg-white text-left text-sm font-light">
+            <thead className="border-b bg-gray-300 font-medium dark:border-neutral-500">
+              <tr className="!font-medium">
+                <th scope="col" className="px-3 py-3 whitespace-nowrap">
+                  Sr. No
+                </th>
+                <th scope="col" className="px-3 py-3 ">
+                  Department Name
+                </th>
+                <th scope="col" className="px-3 py-3 ">
+                  Department Head
+                </th>
+                <th scope="col" className="px-3 py-3 ">
+                  Department Head Delegate
+                </th>
+                <th scope="col" className="px-3 py-3 ">
+                  Department Location
+                </th>
+                <th scope="col" className="px-3 py-3 ">
+                  Actions
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {departmentList?.department?.map((department, index) => (
+                <tr
+                  key={index}
+                  className={`${
+                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                  } border-b dark:border-neutral-500 !font-medium`}
+                >
+                  <td className="py-2 px-3">{index + 1}</td>
+                  <td className="py-2 px-3">{department.departmentName}</td>
+                  <td className="py-2 px-3">{department.departmentHeadName}</td>
+                  <td className="py-2 px-3">
+                    {department.departmentHeadDelegateName}
+                  </td>
+                  <td className="py-2 px-3">
+                    {department.departmentLocation.shortName}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-2">
+                    <IconButton
+                      onClick={() => handleEditDepartment(index)}
+                      aria-label="edit"
+                    >
+                      <Edit className="!text-xl" color="success" />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => {
+                        handleDeleteDepartmentConfirmation(index);
+                        setDeleteIndex(index);
+                      }}
+                      aria-label="delete"
+                    >
+                      <Delete className="!text-xl" color="error" />
+                    </IconButton>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
       <IntlProvider>
         <form>
@@ -392,9 +400,9 @@ const DepartmentList = () => {
                 onChange={(e, value) => {
                   setLocationId(value._id);
 
-                  handleChange({
-                    target: { name: "departmentLocation", value: locationID },
-                  });
+                  // handleChange({
+                  //   target: { name: "departmentLocation", value: locationID },
+                  // });
                 }}
                 isOptionEqualToValue={(option, value) =>
                   option.shortName === value.shortName
@@ -514,10 +522,10 @@ const DepartmentList = () => {
                 id="departmentHeadName"
                 options={Employees}
                 onChange={(e, value) => {
-                  const headName = value ? value.label : "";
-                  handleChange({
-                    target: { name: "departmentHeadName", value: headName },
-                  });
+                  // const headName = value ? value.label : "";
+                  // handleChange({
+                  //   target: { name: "departmentHeadName", value: headName },
+                  // });
                 }}
                 isOptionEqualToValue={(option, value) =>
                   option.label === value.label
@@ -538,13 +546,13 @@ const DepartmentList = () => {
                 id="departmentHeadDelegateName"
                 options={Employees}
                 onChange={(e, value) => {
-                  const delegateName = value ? value.label : "";
-                  handleChange({
-                    target: {
-                      name: "departmentHeadDelegateName",
-                      value: delegateName,
-                    },
-                  });
+                  // const delegateName = value ? value.label : "";
+                  // handleChange({
+                  //   target: {
+                  //     name: "departmentHeadDelegateName",
+                  //     value: delegateName,
+                  //   },
+                  // });
                 }}
                 isOptionEqualToValue={(option, value) =>
                   option.label === value.label

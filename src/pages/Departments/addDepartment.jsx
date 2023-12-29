@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 
@@ -52,6 +52,7 @@ const CreateDepartment = () => {
   };
   const [formValues, setFormValues] = useState(initialFormValues);
   const [locations, setLocations] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -68,7 +69,7 @@ const CreateDepartment = () => {
         console.log("locations are: ", response.data);
       })
       .catch((error) => console.error("Error fetching locations:", error));
-  }, [authToken]);
+  }, [authToken, organizationId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -115,8 +116,8 @@ const CreateDepartment = () => {
         }
       );
       handleAlert(true, "success", `Department created successfully`);
-      setFormValues(initialFormValues);
-      // window.location.reload();
+      // setFormValues(initialFormValues);
+      navigate(`/organisation/${organizationId}/department-list`);
     } catch (error) {
       console.error(error);
       handleAlert(true, "error", error);

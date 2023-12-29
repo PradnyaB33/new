@@ -196,6 +196,12 @@ const TestNavItems = ({ toggleDrawer }) => {
           //   text: "Delete Department",
           // },
           {
+            key: "deptDeletion",
+            link: `/organisation/${orgId}/dept-deletion`,
+            icon: <ListAlt className="text-white" />,
+            text: "Bulk Deletion",
+          },
+          {
             key: "departmentList",
             link: `/organisation/${orgId}/department-list`,
             icon: <ListAlt className="text-white" />,
@@ -244,17 +250,13 @@ const TestNavItems = ({ toggleDrawer }) => {
   }, [location, navItems]);
 
   useEffect(() => {
-    console.log(token);
+    // console.log(token);
     try {
       if (token) {
         const newToken = jwtDecode(token);
 
         setDecodedToken(newToken);
         if (decodedToken && decodedToken.user.profile) {
-          console.log(
-            `🚀 ~ file: test-nav-items.jsx:230 ~ decodedToken:`,
-            decodedToken
-          );
         }
       }
     } catch (error) {
