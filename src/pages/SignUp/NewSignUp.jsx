@@ -34,7 +34,6 @@ const SignIn = () => {
   const [isTimeVisible, setIsTimeVisible] = useState(false);
 
   const { cookies } = useContext(UseContext);
-  const otps = cookies["otp"];
 
   useEffect(() => {
     let interval;
@@ -49,7 +48,7 @@ const SignIn = () => {
 
     // Clean up the interval when the component unmounts
     return () => clearInterval(interval);
-  }, [isTimeVisible]);
+  }, [time, isTimeVisible]);
 
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;

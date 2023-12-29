@@ -27,11 +27,10 @@ const EmployeeLeavePie = () => {
         display: true,
         position: "right",
       },
-      maintainAspectRatio: false,
     },
   };
   return (
-    <article className="mb-2 w-full bg-white rounded-md shadow-md">
+    <article className="mb-2 w-full h-max bg-white rounded-md shadow-md">
       {isLoading ? (
         <div className="p-4 !pb-2 space-y-2">
           <h1 className="text-xl">Total Leave's Left</h1>

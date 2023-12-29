@@ -106,11 +106,10 @@ const HRgraph = () => {
 
   return (
     <>
-      <article className="my-4 bg-white rounded-md shadow-xl">
+      <article className=" bg-white rounded-md shadow-xl">
         <div className="p-4 py-4 flex justify-between items-center">
           <h1 className="text-xl">Overall Attendence</h1>
         </div>
-
         <Bar
           data={data}
           style={{

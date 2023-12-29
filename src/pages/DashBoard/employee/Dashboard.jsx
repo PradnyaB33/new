@@ -4,10 +4,11 @@ import Chart from "chart.js/auto";
 import React from "react";
 
 import { CategoryScale } from "chart.js";
-import HRgraph from "./Components/Bar/HRgraph";
-import LeaveDisplayList from "./Components/List/LeaveDisplayList";
-import PublicHolidayDisplayList from "./Components/List/PublicHolidayDisplayList";
-import EmployeeLeavePie from "./Components/Pie/EmployeeLeavePie";
+import HRgraph from "../Components/Bar/HRgraph";
+import SinglePayGraph from "../Components/Bar/employee/SinglePayGraph";
+import LeaveDisplayList from "../Components/List/LeaveDisplayList";
+import PublicHolidayDisplayList from "../Components/List/PublicHolidayDisplayList";
+import EmployeeLeavePie from "../Components/Pie/EmployeeLeavePie";
 Chart.register(CategoryScale);
 
 const Dashboard = () => {
@@ -29,17 +30,16 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="flex w-full justify-between gap-2">
-            <div className=" flex flex-col !w-[60%] pb-2">
+          <div className="flex  w-full justify-between gap-2">
+            <div className="my-2 flex gap-2 flex-col !w-[50%] pb-2">
               <HRgraph />
-              <HRgraph />
+              <SinglePayGraph />
             </div>
 
-            <div className="w-[40%] my-4 px-2 space-y-4">
+            <div className="w-[50%] my-4 px-2 space-y-4">
               <EmployeeLeavePie />
               <PublicHolidayDisplayList />
               <LeaveDisplayList />
-              {/* <SinglePayGraph /> */}
             </div>
           </div>
         </div>
