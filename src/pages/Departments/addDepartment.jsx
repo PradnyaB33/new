@@ -68,7 +68,7 @@ const CreateDepartment = () => {
         console.log("locations are: ", response.data);
       })
       .catch((error) => console.error("Error fetching locations:", error));
-  }, [authToken]);
+  }, [authToken, organizationId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
