@@ -3,10 +3,13 @@ import { Button, MenuItem, Popover, Select } from "@mui/material";
 import moment from "moment";
 import { extendMoment } from "moment-range";
 import { momentLocalizer } from "react-big-calendar";
+import { useQuery } from "react-query";
 
+import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { Calendar } from "react-big-calendar";
 import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
 
 const AppDatePicker = ({
   isCalendarOpen,
@@ -25,6 +28,22 @@ const AppDatePicker = ({
   const [Delete, setDelete] = useState(false);
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
+  const { data, isLoading } = useQuery(
+    "employee-disable-weekends",
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/weekend/get`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+
+      return response.data;
+    }
+  );
+  console.log(`🚀 ~ file: date-picker.jsx:34 ~ data:`, data);
   const handleSelectEvent = (event) => {
     setSelectedLeave(event);
     setCalendarOpen(true);
@@ -38,7 +57,12 @@ const AppDatePicker = ({
   };
 
   const dayPropGetter = (date) => {
-    if (date.getDay() === 0) {
+    const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "short" });
+
+    // Check if the current day is in the data? array
+    const isDisabled = data?.days?.some((day) => day.day === dayOfWeek);
+
+    if (isDisabled) {
       return {
         style: {
           pointerEvents: "none",
@@ -46,40 +70,54 @@ const AppDatePicker = ({
         },
       };
     }
+
     return {};
   };
 
   const handleSelectSlot = ({ start, end }) => {
-    setDelete(false);
-    setUpdate(false);
-
+    console.log(`🚀 ~ file: date-picker.jsx:78 ~ { start, end }:`, {
+      start,
+      end,
+    });
     const selectedStartDate = momentWithRange(start);
     const selectedEndDate = momentWithRange(end);
     const startDate = moment(start).startOf("day"); // Extract date, start at midnight
     const endDate = moment(end).startOf("day").add(1, "day"); // Add 1 day to make sure it's after 12 am
 
-    // Check if the day is Sunday and it's before 12 am
+    // Check if the selected date range includes any disabled days
+    const includesDisabledDay = data?.days?.some((day) => {
+      console.log(`🚀 ~ file: date-picker.jsx:89 ~ day:`, day);
+      const disabledDate = moment(startDate).day(day.index);
+      console.log(
+        `🚀 ~ file: date-picker.jsx:91 ~ moment(startDate).day(day.index):`,
+        moment(endDate).day()
+      );
 
+      // Check if the entire day is disabled
+      const isDisabledDay = moment(disabledDate).isSame(startDate, "day");
+      console.log(
+        `🚀 ~ file: date-picker.jsx:93 ~ isDisabledDay:`,
+        isDisabledDay
+      );
+
+      // Check if the selected date range overlaps with the disabled day
+      const isOverlap =
+        selectedStartDate.isBefore(moment(disabledDate)) &&
+        selectedEndDate.isAfter(moment(disabledDate));
+      console.log(`🚀 ~ file: date-picker.jsx:100 ~ isOverlap:`, isOverlap);
+      console.log(
+        `🚀 ~ file: date-picker.jsx:101 ~ isDisabledDay && isOverlap:`,
+        isDisabledDay && isOverlap
+      );
+      return isDisabledDay && isOverlap;
+    });
     console.log(
-      `selectedStartDate:`,
-      selectedStartDate.format("MMM DD YYYY hh:mm A")
+      `🚀 ~ file: date-picker.jsx:101 ~ includesDisabledDay:`,
+      includesDisabledDay
     );
-    console.log(
-      `selectedEndDate:`,
-      selectedEndDate.format("MMM DD YYYY hh:mm A")
-    );
-    console.log(`startDate:`, startDate.format("MMM DD YYYY hh:mm A"));
-    console.log(`endDate:`, endDate.format("MMM DD YYYY hh:mm A"));
-    const isSunday = endDate.day() === 0;
 
-    // Check if it's before 12 AM
-    const isBefore12AM = endDate.hours() < 12;
-
-    // Check if it's Sunday and before 12 AM
-    const isSundayBefore12AM = isSunday && isBefore12AM;
-
-    if (isSundayBefore12AM) {
-      handleAlert(true, "warning", "You cannot select Sundays for leave");
+    if (includesDisabledDay) {
+      handleAlert(true, "warning", "You cannot select disabled days for leave");
       return;
     }
 
