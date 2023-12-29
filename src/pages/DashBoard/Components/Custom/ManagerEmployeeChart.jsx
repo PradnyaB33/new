@@ -1,20 +1,23 @@
-import React, { useContext } from "react";
-import { Bar, Pie } from "react-chartjs-2";
+import React, { useContext, useState } from "react";
 
 import { Info, WorkHistory } from "@mui/icons-material";
 import { Autocomplete, Avatar, Card, TextField } from "@mui/material";
 import axios from "axios";
 import { CategoryScale, Chart } from "chart.js";
+import { Bar, Pie } from "react-chartjs-2";
 import { useQuery } from "react-query";
 import { UseContext } from "../../../../State/UseState/UseContext";
 import useLeaveTable from "../../../../hooks/Leave/useLeaveTable";
+import UserProfile from "../../../../hooks/UserData/useUser";
 Chart.register(CategoryScale);
 
-const ManagerEmployeeChart = () => {
+const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
   const RemainingLeaves = useLeaveTable();
+  const [userId, setuserId] = useState(user._id);
 
   const { data: remainingLeaves, isLoading } = RemainingLeaves;
 
@@ -42,19 +45,7 @@ const ManagerEmployeeChart = () => {
 
   const getYearLeaves = async () => {
     const { data } = await axios.get(
-      `${process.env.REACT_APP_API}/route/leave/getYearLeaves`,
-      {
-        headers: {
-          Authorization: authToken,
-        },
-      }
-    );
-
-    return data.data[0].reporteeIds;
-  };
-  const getAllEmployeeForManger = async () => {
-    const { data } = await axios.get(
-      `${process.env.REACT_APP_API}/route/employee/countofEmployees`,
+      `${process.env.REACT_APP_API}/route/leave/getYearLeaves/${userId}`,
       {
         headers: {
           Authorization: authToken,
@@ -64,16 +55,9 @@ const ManagerEmployeeChart = () => {
     return data;
   };
 
-  const { data: LeaveYearData } = useQuery("leaveData", getYearLeaves);
-  const { data: EmployeeDataOfManager } = useQuery(
-    "employeeData",
-    getAllEmployeeForManger
-  );
-
-  console.log(EmployeeDataOfManager?.data[0]?.reporteeIds);
-
-  const renderOptions = EmployeeDataOfManager?.data[0]?.reporteeIds?.map(
-    (item, id) => <div>{item.name}</div>
+  const { data: LeaveYearData } = useQuery(
+    ["leaveData", userId],
+    getYearLeaves
   );
 
   const monthNames = [
@@ -155,6 +139,14 @@ const ManagerEmployeeChart = () => {
     ],
   };
 
+  const handleSelect = (event, newValue) => {
+    if (newValue) {
+      setuserId(newValue?._id);
+    } else {
+      setuserId(user._id);
+    }
+  };
+
   return (
     <>
       <Card elevation={3}>
@@ -175,6 +167,7 @@ const ManagerEmployeeChart = () => {
             id="combo-box-demo"
             sx={{ width: 300 }}
             size="small"
+            onChange={handleSelect}
             options={EmployeeDataOfManager?.data[0]?.reporteeIds}
             getOptionLabel={(option) => option.first_name}
             renderOption={(props, option) => (
@@ -196,7 +189,7 @@ const ManagerEmployeeChart = () => {
               <h1 className="text-xl">Overall Attendence</h1>
             </div> */}
 
-            {reversedMonthsArray?.length > 0 ? (
+            {reversedMonthsArray?.length <= 0 ? (
               <Card
                 elevation={1}
                 className="!bg-gray-50  mx-4 py-6 px-8 rounded-md"
@@ -209,21 +202,26 @@ const ManagerEmployeeChart = () => {
                 </article>
               </Card>
             ) : (
-              <Bar
-                data={data}
-                style={{
-                  padding: "15px",
-                }}
-              />
+              <div className="flex items-center gap-2">
+                <div className="w-[70%]">
+                  <Bar
+                    data={data}
+                    style={{
+                      padding: "15px",
+                    }}
+                  />
+                </div>
+
+                <Card className="w-[30%]" elevation={0}>
+                  <div className="px-4 pt-4">
+                    <h1 className="text-xl">Total Leave's Left</h1>
+                  </div>
+                  <div className="p-2 flex items-center  w-full">
+                    <Pie data={dataPie} options={optionsPie} />
+                  </div>
+                </Card>
+              </div>
             )}
-          </Card>
-          <Card elevation={0}>
-            <div className="px-4 pt-4">
-              <h1 className="text-xl">Total Leave's Left</h1>
-            </div>
-            <div className="p-2 flex items-center  w-full">
-              <Pie data={dataPie} options={optionsPie} />
-            </div>
           </Card>
         </div>
       </Card>

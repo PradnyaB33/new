@@ -5,15 +5,18 @@ import axios from "axios";
 import { CategoryScale, Chart } from "chart.js";
 import { useQuery } from "react-query";
 import { UseContext } from "../../../../State/UseState/UseContext";
+import UserProfile from "../../../../hooks/UserData/useUser";
 Chart.register(CategoryScale);
 
 const HRgraph = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
 
   const getYearLeaves = async () => {
     const { data } = await axios.get(
-      `${process.env.REACT_APP_API}/route/leave/getYearLeaves`,
+      `${process.env.REACT_APP_API}/route/leave/getYearLeaves/${user?._id}`,
       {
         headers: {
           Authorization: authToken,
