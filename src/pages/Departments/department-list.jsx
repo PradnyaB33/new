@@ -160,7 +160,6 @@ const DepartmentList = () => {
     }
     setConfirmOpen(false);
   };
-  console.log(departmentList);
 
   const handleClose = () => {
     setOpen(false);
