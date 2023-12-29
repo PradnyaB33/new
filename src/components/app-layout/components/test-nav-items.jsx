@@ -250,7 +250,6 @@ const TestNavItems = ({ toggleDrawer }) => {
   }, [location, navItems]);
 
   useEffect(() => {
-    // console.log(token);
     try {
       if (token) {
         const newToken = jwtDecode(token);

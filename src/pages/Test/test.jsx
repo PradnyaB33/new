@@ -9,6 +9,7 @@ export default function Test() {
   });
   const [watchId, setWatchId] = useState(null);
   let map, polyline, mappls; // Reference to the Google Map
+  let map, polyline, mappls; // Reference to the Google Map
 
   const startWatching = () => {
     if ("geolocation" in navigator) {
@@ -57,7 +58,6 @@ export default function Test() {
     // Load Google Maps API script
     const script = document.createElement("script");
     script.src = `https://apis.mappls.com/advancedmaps/api/dfb06668ce660987cc7008f8175a6720/map_sdk?layer=vector&v=3.0&callback=initMap1`;
-    console.log(src);
     script.async = true;
     script.onload = () => {
       console.log(`🚀 ~ file: test.jsx:67 ~ window:`, window);
