@@ -10,6 +10,7 @@ const AuthInputFiled = ({
   errors,
   error,
   control,
+  readOnly = false,
   placeholder,
 }) => {
   return (
@@ -28,12 +29,19 @@ const AuthInputFiled = ({
         id={name}
         render={({ field }) => (
           <>
-            <div className="flex rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px]">
+            <div
+              className={`${
+                readOnly && "bg-[ghostwhite]"
+              } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px]`}
+            >
               <Icon className="text-gray-700" />
               <input
                 type={type}
+                readOnly={readOnly}
                 placeholder={placeholder}
-                className="border-none bg-white w-full outline-none px-2"
+                className={`${
+                  readOnly && "bg-[ghostwhite]"
+                } border-none bg-white w-full outline-none px-2`}
                 {...field}
               />
             </div>

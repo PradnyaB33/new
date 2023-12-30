@@ -19,7 +19,6 @@ import { Link, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
-import { UseContext } from "../../State/UseState/UseContext";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import TermsCondition from "../../components/termscondition/termsCondition";
 
@@ -32,8 +31,9 @@ const SignIn = () => {
   const [otp, setOTP] = useState("");
   const [time, setTime] = useState(300);
   const [isTimeVisible, setIsTimeVisible] = useState(false);
+  const [readOnly, setReadOnly] = useState(false);
 
-  const { cookies } = useContext(UseContext);
+  // const { cookies } = useContext(UseContext);
 
   useEffect(() => {
     let interval;
@@ -48,7 +48,9 @@ const SignIn = () => {
 
     // Clean up the interval when the component unmounts
     return () => clearInterval(interval);
-  }, [time, isTimeVisible]);
+
+    // eslint-disable-next-line
+  }, [isTimeVisible]);
 
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -100,8 +102,6 @@ const SignIn = () => {
   const number = watch("phone");
 
   const onSubmit = async (data) => {
-    console.log("Form Data:", data);
-
     if (!isVerified) {
       handleAlert(true, "error", "Please verify mobile no first");
       return false;
@@ -166,6 +166,7 @@ const SignIn = () => {
           setdisplay(false);
           setIsVerified(true);
           setIsTimeVisible(false);
+          setReadOnly(true);
         }
       },
     }
@@ -272,6 +273,7 @@ const SignIn = () => {
               <AuthInputFiled
                 name="phone"
                 icon={Phone}
+                readOnly={readOnly}
                 control={control}
                 label={"Phone Number *"}
                 type={"number"}

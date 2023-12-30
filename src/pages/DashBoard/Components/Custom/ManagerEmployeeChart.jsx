@@ -19,7 +19,7 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
   const RemainingLeaves = useLeaveTable();
   const [userId, setuserId] = useState(user._id);
 
-  const { data: remainingLeaves, isLoading } = RemainingLeaves;
+  const { data: remainingLeaves } = RemainingLeaves;
 
   const dataPie = {
     labels: remainingLeaves?.leaveTypes?.map((item) => item.leaveName) ?? [],

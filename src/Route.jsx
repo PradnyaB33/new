@@ -9,8 +9,9 @@ import TermsAndConditionsPage from "./components/termscondition/termsconditonpag
 import AddEmployee from "./pages/AddEmployee/addemployee";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import Application from "./pages/Application/Application";
-import DashBoard_HR from "./pages/DashBoard/HR/DashBoard_HR";
-import Dashboard_Manger from "./pages/DashBoard/Manager/Dashboard_Manger";
+
+import DashBoardHR from "./pages/DashBoard/HR/DashBoardHR";
+import DashboardManger from "./pages/DashBoard/Manager/DashboardManger";
 import Dashboard from "./pages/DashBoard/employee/Dashboard";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import CreateDepartment from "./pages/Departments/addDepartment";
@@ -57,10 +58,10 @@ const App = () => {
       {/* Login Routes */}
       {/* Dashboard Routes */}
       <Route path="/organisation/employee-dashboard" element={<Dashboard />} />
-      <Route path="/organisation/dashboard/hr" element={<DashBoard_HR />} />
+      <Route path="/organisation/dashboard/hr" element={<DashBoardHR />} />
       <Route
         path="/organisation/dashboard/manager"
-        element={<Dashboard_Manger />}
+        element={<DashboardManger />}
       />
       <Route
         path="/organisation/:organisationId/super-admin"

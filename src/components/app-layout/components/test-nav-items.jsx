@@ -89,7 +89,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "listNotification",
-            link: "/list-notification",
+            link: "/notification",
             icon: <CircleNotifications className="text-white" />,
             text: "List Notification",
           },
