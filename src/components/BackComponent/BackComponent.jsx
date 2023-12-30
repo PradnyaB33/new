@@ -1,26 +1,27 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const BackComponent = () => {
   const navigate = useNavigate();
-  // const location = useLocation();
+  const location = useLocation();
 
   const goBack = () => {
     navigate(-1);
   };
 
-  // const backFalseRoutes = [
-  //   "/sign-in",
-  //   "/sign-up",
-  //   "/organizationList",
-  //   "/organisation/employee-dashboard",
-  //   "/organisation",
-  // ];
+  const backFalseRoutes = [
+    "/sign-in",
+    "/sign-up",
+    "setup",
+    // "/organizationList",
+    // "/organisation/employee-dashboard",
+    // "/organisation",
+  ];
 
-  // if (backFalseRoutes.some((value) => location.pathname.includes(value))) {
-  //   return <></>;
-  // }
+  if (backFalseRoutes.some((value) => location.pathname.includes(value))) {
+    return <></>;
+  }
 
   return (
     <div className=" mb-5 fixed w-full cursor-pointer top-[72px] left-[-10px] z-[1000]">
