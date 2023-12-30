@@ -100,7 +100,6 @@ const SignIn = () => {
   return (
     <>
       <section className="min-h-screen flex w-full">
-        {/* Left Section */}
         <div className="w-[30%] lg:flex hidden text-white flex-col items-center justify-center h-screen relative">
           <div className="bg__gradient absolute inset-0"></div>
           <ul className="circles">
@@ -108,12 +107,9 @@ const SignIn = () => {
               <li key={index}></li>
             ))}
           </ul>
-          <div className="space-y-2 mb-8 flex-col flex items-center justify-center">
-            {/* image here */}
-          </div>
+          <div className="space-y-2 mb-8 flex-col flex items-center justify-center"></div>
         </div>
 
-        {/* Right Section */}
         <article className="lg:w-[70%] !bg-white w-full md:block flex items-center flex-col justify-center">
           <div className="flex w-full py-4 px-8  gap-4 items-center justify-center lg:justify-end">
             <p>
@@ -145,9 +141,7 @@ const SignIn = () => {
                 <p className="text-lg">Enter your credentials below</p>
               </div>
             </div>
-
             <div className="flex gap-2">
-              {/* First Name */}
               <AuthInputFiled
                 name="first_name"
                 icon={PermContactCalendar}
@@ -170,7 +164,6 @@ const SignIn = () => {
               />
             </div>
 
-            {/* Last Name */}
             <AuthInputFiled
               name="last_name"
               icon={DriveFileRenameOutlineOutlined}
@@ -181,7 +174,6 @@ const SignIn = () => {
               errors={errors}
               error={errors.last_name}
             />
-            {/* Phone Number */}
 
             <div className="flex items-center gap-2">
               <AuthInputFiled
@@ -225,7 +217,6 @@ const SignIn = () => {
                 Verify Otp
               </button>
             </div>
-            {/* Email */}
             <AuthInputFiled
               name="email"
               icon={Email}
@@ -237,7 +228,6 @@ const SignIn = () => {
               error={errors.email}
             />
 
-            {/* Password */}
             <div className="flex items-center gap-2">
               <AuthInputFiled
                 name="password"
@@ -266,7 +256,6 @@ const SignIn = () => {
               <TermsCondition />
             </div>
 
-            {/* Signup Button */}
             <div className="flex gap-5 mt-2">
               <button
                 type="submit"
