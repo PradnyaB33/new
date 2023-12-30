@@ -1,54 +1,26 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Badge,
-  CheckCircle,
   DriveFileRenameOutlineOutlined,
   Email,
-  Fingerprint,
   Lock,
   NoEncryption,
   PermContactCalendar,
   Phone,
 } from "@mui/icons-material";
-import { SvgIcon } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
 import { Link, useLocation } from "react-router-dom";
-import Swal from "sweetalert2";
 import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
-import { UseContext } from "../../State/UseState/UseContext";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import TermsCondition from "../../components/termscondition/termsCondition";
 
 const SignIn = () => {
   const { handleAlert } = useContext(TestContext);
   const location = useLocation();
-
-  const [display, setdisplay] = useState(false);
-  const [isVerified, setIsVerified] = useState(false);
-  const [otp, setOTP] = useState("");
-  const [time, setTime] = useState(300);
-  const [isTimeVisible, setIsTimeVisible] = useState(false);
-
-  const { cookies } = useContext(UseContext);
-
-  useEffect(() => {
-    let interval;
-
-    if (time > 0) {
-      interval = setInterval(() => {
-        setTime((prevTimer) => prevTimer - 1);
-      }, 1000);
-    } else {
-      setIsTimeVisible(false);
-    }
-
-    // Clean up the interval when the component unmounts
-    return () => clearInterval(interval);
-  }, [time, isTimeVisible]);
+  const [display, setDisplay] = useState(false);
 
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -98,14 +70,11 @@ const SignIn = () => {
   });
 
   const number = watch("phone");
+  console.log("number", number?.length);
 
   const onSubmit = async (data) => {
     console.log("Form Data:", data);
 
-    if (!isVerified) {
-      handleAlert(true, "error", "Please verify mobile no first");
-      return false;
-    }
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create`,
@@ -122,68 +91,16 @@ const SignIn = () => {
     }
   };
 
-  const OtpRequest = useMutation(
-    (data) =>
-      axios.post(`${process.env.REACT_APP_API}/route/employee/sendOtp`, {
-        number: data,
-      }),
-    {
-      onSuccess: (data) => {
-        handleAlert(
-          true,
-          "success",
-          "otp has been send successfully on your device"
-        );
-        setdisplay(true);
-        setTime(300);
-        setIsTimeVisible(true);
-      },
-
-      onError: (data) => {
-        if (data?.response?.data?.success === false)
-          handleAlert(true, "error", data?.response?.data?.message);
-      },
-    }
-  );
-
-  const VerifyOtpRequest = useMutation(
-    (data) =>
-      axios.post(`${process.env.REACT_APP_API}/route/employee/verifyOtp`, data),
-    {
-      onSuccess: (data) => {
-        console.log(data);
-        if (data?.data?.success === false) {
-          handleAlert(true, "error", data?.data?.message);
-        }
-
-        if (data?.data?.success === true) {
-          Swal.fire({
-            title: "Congratulation",
-            text: "OTP verifed successfully",
-            icon: "success",
-            confirmButtonText: "ok",
-          });
-          setdisplay(false);
-          setIsVerified(true);
-          setIsTimeVisible(false);
-        }
-      },
-    }
-  );
-
-  const phone = getValues("phone");
-  const SendOtp = () => {
-    OtpRequest.mutateAsync(phone);
-  };
-
-  const VerifyOtp = () => {
-    const data = { number: phone, otp };
-    VerifyOtpRequest.mutateAsync(data);
+  const sendOtp = () => {
+    setDisplay(true);
+    const phone = getValues("phone");
+    console.log(phone);
   };
 
   return (
     <>
       <section className="min-h-screen flex w-full">
+        {/* Left Section */}
         <div className="w-[30%] lg:flex hidden text-white flex-col items-center justify-center h-screen relative">
           <div className="bg__gradient absolute inset-0"></div>
           <ul className="circles">
@@ -191,9 +108,12 @@ const SignIn = () => {
               <li key={index}></li>
             ))}
           </ul>
-          <div className="space-y-2 mb-8 flex-col flex items-center justify-center"></div>
+          <div className="space-y-2 mb-8 flex-col flex items-center justify-center">
+            {/* image here */}
+          </div>
         </div>
 
+        {/* Right Section */}
         <article className="lg:w-[70%] !bg-white w-full md:block flex items-center flex-col justify-center">
           <div className="flex w-full py-4 px-8  gap-4 items-center justify-center lg:justify-end">
             <p>
@@ -225,7 +145,9 @@ const SignIn = () => {
                 <p className="text-lg">Enter your credentials below</p>
               </div>
             </div>
+
             <div className="flex gap-2">
+              {/* First Name */}
               <AuthInputFiled
                 name="first_name"
                 icon={PermContactCalendar}
@@ -248,6 +170,7 @@ const SignIn = () => {
               />
             </div>
 
+            {/* Last Name */}
             <AuthInputFiled
               name="last_name"
               icon={DriveFileRenameOutlineOutlined}
@@ -258,6 +181,7 @@ const SignIn = () => {
               errors={errors}
               error={errors.last_name}
             />
+            {/* Phone Number */}
 
             <div className="flex items-center gap-2">
               <AuthInputFiled
@@ -271,55 +195,27 @@ const SignIn = () => {
                 placeholder={"123456789"}
               />
 
-              {isVerified ? (
-                <>
-                  <SvgIcon color="success">
-                    <CheckCircle />
-                  </SvgIcon>
-                  Verified
-                </>
-              ) : (
-                <div>
-                  <button
-                    type="button"
-                    disabled={
-                      number?.length !== 10 || isTimeVisible ? true : false
-                    }
-                    onClick={SendOtp}
-                    className={`w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500  ${
-                      (number?.length !== 10 || isTimeVisible) &&
-                      "bg-gray-400 text-gray-900"
-                    }`}
-                  >
-                    Get Otp
-                  </button>
-                </div>
-              )}
-              {isTimeVisible && (
-                <p>
-                  Resend otp {Math.floor(time / 60)}:
-                  {(time % 60).toString().padStart(2, "0")}
-                </p>
-              )}
+              <button
+                type="button"
+                disabled={number?.length === 10 ? false : true}
+                onClick={sendOtp}
+                className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+              >
+                Get Otp
+              </button>
             </div>
-            {display && (
-              <div className="flex items-center gap-2">
-                <div className="space-y-1">
-                  <label className={`font-semibold text-gray-500 text-md`}>
-                    Verify OTP
-                  </label>
-                  <div className="flex  rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px]">
-                    <Fingerprint className="text-gray-700" />
-                    <input
-                      type={"number"}
-                      onChange={(e) => setOTP(e.target.value)}
-                      placeholder={"1235"}
-                      className="border-none bg-white w-full outline-none px-2"
-                    />
-                  </div>
 
-                  <div className="h-4  !mb-1"></div>
-                </div>
+            <div className="flex items-center gap-2">
+              <AuthInputFiled
+                name="OTP"
+                icon={Phone}
+                control={control}
+                label={"OTP"}
+                type={"number"}
+                errors={errors}
+                error={errors.phone}
+                placeholder={"0000"}
+              />
 
               <button
                 type="button"
@@ -329,6 +225,7 @@ const SignIn = () => {
                 Verify Otp
               </button>
             </div>
+            {/* Email */}
             <AuthInputFiled
               name="email"
               icon={Email}
@@ -340,6 +237,7 @@ const SignIn = () => {
               error={errors.email}
             />
 
+            {/* Password */}
             <div className="flex items-center gap-2">
               <AuthInputFiled
                 name="password"
@@ -368,6 +266,7 @@ const SignIn = () => {
               <TermsCondition />
             </div>
 
+            {/* Signup Button */}
             <div className="flex gap-5 mt-2">
               <button
                 type="submit"
