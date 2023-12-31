@@ -9,7 +9,9 @@ import TermsAndConditionsPage from "./components/termscondition/termsconditonpag
 import AddEmployee from "./pages/AddEmployee/addemployee";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import Application from "./pages/Application/Application";
-import Dashboard from "./pages/DashBoard/Dashboard";
+import DashBoard_HR from "./pages/DashBoard/HR/DashBoard_HR";
+import Dashboard_Manger from "./pages/DashBoard/Manager/Dashboard_Manger";
+import Dashboard from "./pages/DashBoard/employee/Dashboard";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import CreateDepartment from "./pages/Departments/addDepartment";
 import DepartmentList from "./pages/Departments/department-list";
@@ -20,6 +22,7 @@ import AddProfile from "./pages/Home/components/addprofile";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
+import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
 import EmployementTypes from "./pages/SetUpOrganization/EmployementType/EmployementTypes";
 import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
@@ -39,7 +42,6 @@ import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
-import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import WeekendHoliday from "./pages/SetupPage/WeekendHoliday";
 const App = () => {
   return (
@@ -56,6 +58,11 @@ const App = () => {
       {/* Login Routes */}
       {/* Dashboard Routes */}
       <Route path="/organisation/employee-dashboard" element={<Dashboard />} />
+      <Route path="/organisation/dashboard/hr" element={<DashBoard_HR />} />
+      <Route
+        path="/organisation/dashboard/manager"
+        element={<Dashboard_Manger />}
+      />
       <Route
         path="/organisation/:organisationId/super-admin"
         element={<Dashboard />}
