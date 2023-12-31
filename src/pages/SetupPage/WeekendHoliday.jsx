@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import Setup from "../SetUpOrganization/Setup";
 import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
 import {
@@ -7,8 +7,7 @@ import {
   DialogActions,
   DialogContent,
   IconButton,
-  Skeleton,
-} from "@mui/material"; // Import Skeleton
+} from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
 import { useParams } from "react-router";
@@ -17,8 +16,6 @@ import { useQuery, useQueryClient } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import Info from "@mui/icons-material/Info";
-import { tr } from "date-fns/locale";
 
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -32,11 +29,7 @@ const WeekdaySelector = ({ selectedDays, handleDayToggle, getColor }) => {
             onClick={() => handleDayToggle({ day, index })}
             className="!font-bold text-2xl"
             style={{
-              backgroundColor: selectedDays.find(
-                (selected) => selected.index === index
-              )
-                ? getColor(day)
-                : "white",
+              backgroundColor:{},
               borderRadius: "50%",
               width: "55px",
               height: "55px",
@@ -175,26 +168,25 @@ const WeekendHoliday = () => {
     setDeleteModel(false);
   };
 
-//   useEffect(() =>{
-//     (async() =>{
+  //   useEffect(() =>{
+  //     (async() =>{
 
-//         await axios.get(`${process.env.REACT_APP_API}/route/weekend/get/${organizationId}`).then((e)=>{
-//             console.log(e.data.days.days);
-//         }).catch(e => console.log(e))
+  //         await axios.get(`${process.env.REACT_APP_API}/route/weekend/get/${organizationId}`).then((e)=>{
+  //             console.log(e.data.days.days);
+  //         }).catch(e => console.log(e))
 
-//     })()
-//   })
-//   const data = []
+  //     })()
+  //   })
+  //   const data = []
 
   const fetchDays = async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/weekend/get/${organizationId}`
     );
-    return response.data.days.days
+    return response.data.days.days;
   };
 
-  const {data } = useQuery("days", fetchDays);
-
+  const { data } = useQuery("days", fetchDays);
 
   return (
     <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
@@ -202,11 +194,10 @@ const WeekendHoliday = () => {
         <article className="SetupSection bg-white w-[80%] h-max shadow-md rounded-sm border items-center">
           <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center gap-3 ">
-                <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
-                  <WeekendOutlinedIcon className="!text-lg text-white" />
-                </div>
+              <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+                <WeekendOutlinedIcon className="!text-lg text-white" />
+              </div>
 
-           
               <h1 className="!text-lg tracking-wide">Weekend Holidays</h1>
             </div>
             <Button
@@ -234,7 +225,7 @@ const WeekendHoliday = () => {
                 </tr>
               </thead>
               <tbody>
-{/* 
+                {/* 
                 {
                     data?.map((item, idx) =>{
                         return(
@@ -251,24 +242,24 @@ const WeekendHoliday = () => {
                     <td className="!text-left pl-8 w-1/12">{idx + 1}</td>
                     <td className="w-2/12 ">
                       <div className="flex">
-                          <Chip
-                            key={idx}
-                            label={item.day}
-                            className="!font-bold text-sm" // Adjust the font size
-                            style={{
-                            //   backgroundColor: getColor(day.day),
-                              borderRadius: "50%",
-                              width: "50px",
-                              height: "50px",
-                              margin: "10px",
-                              cursor: "pointer",
-                              border: "1px solid gray",
-                              color: "black",
-                              fontSize: "11px", // Adjust the font size
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          />
+                        <Chip
+                          key={idx}
+                          label={item.day}
+                          className="!font-bold text-sm" // Adjust the font size
+                          style={{
+                            backgroundColor: getColor(item.day), // Use item.day here
+                            borderRadius: "50%",
+                            width: "50px",
+                            height: "50px",
+                            margin: "10px",
+                            cursor: "pointer",
+                            border: "1px solid gray",
+                            color: "black",
+                            fontSize: "11px", // Adjust the font size
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        />
                       </div>
                     </td>
                     <td className="px-6  w-2/12">
@@ -287,6 +278,7 @@ const WeekendHoliday = () => {
                         onClick={() => {
                           setID(item._id);
                           setDeleteModel(true);
+                          console.log(ID);
                         }}
                       >
                         <DeleteOutlineIcon />
