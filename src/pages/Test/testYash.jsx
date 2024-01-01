@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef, useContext } from "react";
-import axios from "axios";
 import { Button } from "@mui/material";
-import { UseContext } from "../../State/UseState/UseContext";
 
+import axios from "axios";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { UseContext } from "../../State/UseState/UseContext";
 
 // Custom hook to manage intervals
 function useInterval(callback, delay) {
@@ -28,7 +28,7 @@ export default function TestYash() {
   const authToken = cookies["aeigs"];
   const [watchId, setWatchId] = useState(null);
   const [isWatching, setIsWatching] = useState(false);
-  let map ;
+  let map, polyline, mappls;
 
   const latestLocationData = useRef({
     latitude: null,
@@ -101,24 +101,19 @@ export default function TestYash() {
       start: new Date().toISOString(),
       locations: [
         {
-          latitude: latitude.toString(),
-          longitude: longitude.toString(),
+          lat: latitude.toString(),
+          lng: longitude.toString(),
           time: new Date().toISOString(),
         },
       ],
-      employeeId: "658cfa086ef8e46be2e41fb2", // Replace with the actual employee ID
     };
 
     try {
       // Make a POST request to the backend API using Axios
       const response = await axios.post(
-        "http://localhost:4000/route/punch/create",
+        `${process.env.REACT_APP_API}/route/punch/create`,
         payload,
-        {
-          headers:{
-            Authorization:authToken,
-          }
-        }
+        { headers: { Authorization: authToken } }
       );
 
       if (response.status === 200) {
@@ -177,22 +172,18 @@ export default function TestYash() {
 
   return (
     <>
-
-    <div className="w-full h-full bg-slate-200">
-<div className="flex  items-center justify-center h-[92vh]">
-    <div className=" shadow-md rounded-xl bg-[white] gap-4 p-10 flex flex-col w-[200px] h-[200px] items-center justify-center" >
-
-        <Button color="success" onClick={startWatching} variant="contained">Punch IN</Button>
-        <Button color="error" onClick={stopWatching} variant="contained">Punch OUT</Button>
-    </div>
-    </div>
-
-    </div>
-    
+      <div className="w-full h-full bg-slate-200">
+        <div className="flex  items-center justify-center h-[92vh]">
+          <div className=" shadow-md rounded-xl bg-[white] gap-4 p-10 flex flex-col w-[200px] h-[200px] items-center justify-center">
+            <Button color="success" onClick={startWatching} variant="contained">
+              Punch IN
+            </Button>
+            <Button color="error" onClick={stopWatching} variant="contained">
+              Punch OUT
+            </Button>
+          </div>
+        </div>
+      </div>
     </>
-   
-     
-
-   
   );
 }
