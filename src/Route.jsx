@@ -37,7 +37,7 @@ import Shifts from "./pages/SetupPage/Shifts";
 import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
-import EditablePolyline from "./pages/Test/test2";
+import TrackingMap from "./pages/Test/test3";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
@@ -47,7 +47,8 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/test" element={<EditablePolyline />} />
+      {/* <Route path="/test" element={<EditablePolyline />} /> */}
+      <Route path="/test" element={<TrackingMap />} />
       {/* Login Routes */}
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<Signup />} />
