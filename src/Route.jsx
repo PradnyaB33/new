@@ -39,6 +39,7 @@ import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 
+import SuperAdmin from "./pages/DashBoard/superAdmin/SuperAdmin";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
@@ -49,7 +50,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Home />} />
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
-      <Route path="/test" element={<TrackingMap />} />
+      {/* <Route path="/test" element={<TrackingMap />} /> */}
       {/* Login Routes */}
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<Signup />} />
@@ -170,7 +171,6 @@ const App = () => {
         path="/del-department-by-location"
         element={<DeleteDepartment />}
       />
-      <Route path="/resendTimer" element={<ResendTimer />} />
     </Routes>
   );
 };

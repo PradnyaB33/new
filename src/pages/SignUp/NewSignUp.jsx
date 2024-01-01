@@ -9,8 +9,9 @@ import {
   Phone,
 } from "@mui/icons-material";
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 import { Link, useLocation } from "react-router-dom";
 import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
@@ -26,8 +27,6 @@ const SignIn = () => {
   const [time, setTime] = useState(30);
   const [isTimeVisible, setIsTimeVisible] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
-
-  const { cookies } = useContext(UseContext);
 
   useEffect(() => {
     let interval;
@@ -336,15 +335,15 @@ const SignIn = () => {
                   <div className="h-4  !mb-1"></div>
                 </div>
 
-              <button
-                type="button"
-                onClick={sendOtp}
-                className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-              >
-                Verify Otp
-              </button>
-            </div>
-            {/* Email */}
+                <button
+                  type="button"
+                  onClick={sendOtp}
+                  className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                >
+                  Verify Otp
+                </button>
+              </div>
+            )}
             <AuthInputFiled
               name="email"
               icon={Email}
@@ -356,7 +355,6 @@ const SignIn = () => {
               error={errors.email}
             />
 
-            {/* Password */}
             <div className="flex items-center gap-2">
               <AuthInputFiled
                 name="password"

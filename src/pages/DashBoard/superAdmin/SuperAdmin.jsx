@@ -1,4 +1,4 @@
-import { Business, Group } from "@mui/icons-material";
+import { Business, Group, SupervisorAccount } from "@mui/icons-material";
 import React from "react";
 import SuperAdminCard from "../Components/Card/superadmin/SuperAdminCard";
 
@@ -37,15 +37,15 @@ const SuperAdmin = () => {
           />
           <SuperAdminCard
             color={"!bg-blue-500"}
-            icon={Business}
+            icon={SupervisorAccount}
             data={10}
-            title={"Test"}
+            title={"People's Manager"}
           />
           <SuperAdminCard
             color={"!bg-orange-500"}
             icon={Business}
             data={5}
-            title={"Test"}
+            title={"Peoples Manager"}
           />
           {/* <DataCard
             icon={AssignmentTurnedIn}
