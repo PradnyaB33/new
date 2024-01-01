@@ -28,7 +28,7 @@ export default function TestYash() {
   const authToken = cookies["aeigs"];
   const [watchId, setWatchId] = useState(null);
   const [isWatching, setIsWatching] = useState(false);
-  let map, polyline, mappls;
+  let map;
 
   const latestLocationData = useRef({
     latitude: null,
