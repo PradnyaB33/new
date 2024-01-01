@@ -1,3 +1,5 @@
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import React, { useEffect, useState } from "react";
 
 const TrackingMap = () => {
@@ -21,66 +23,49 @@ const TrackingMap = () => {
   ]);
 
   useEffect(() => {
-    // Load Google Maps API script
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=geometry`;
-    script.async = true;
-    script.defer = true;
-    script.onload = initMap;
-    document.head.appendChild(script);
+    const mapInstance = L.map("map").setView(path[0], 14);
 
-    // Cleanup on component unmount
-    return () => {
-      if (map) {
-        window.google.maps.event.clearInstanceListeners(map);
-      }
-    };
-    // eslint-disable-next-line
-  }, [map]);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(mapInstance);
 
-  const initMap = () => {
-    const mapInstance = new window.google.maps.Map(
-      document.getElementById("map"),
-      {
-        center: path[0],
-        zoom: 14,
-      }
-    );
-
-    const polylineInstance = new window.google.maps.Polyline({
-      path: path,
-      geodesic: true,
-      strokeColor: "#FF0000",
-      strokeOpacity: 1.0,
-      strokeWeight: 2,
-      map: mapInstance,
-    });
+    const polylineInstance = L.polyline(path, {
+      color: "#FF0000",
+      weight: 2,
+    }).addTo(mapInstance);
 
     setMap(mapInstance);
     setPolyline(polylineInstance);
-  };
+
+    // Cleanup on component unmount
+    return () => {
+      if (mapInstance) {
+        mapInstance.remove();
+      }
+    };
+    // eslint-disable-next-line
+  }, [path]);
 
   // Simulate tracking by updating the path
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setPath((prevPath) => [
-        ...prevPath,
-        {
-          lat: prevPath[prevPath.length - 1].lat + 0.0001,
-          lng: prevPath[prevPath.length - 1].lng + 0.0001,
-        },
-      ]);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     setPath((prevPath) => [
+  //       ...prevPath,
+  //       {
+  //         lat: prevPath[prevPath.length - 1].lat + 0.0001,
+  //         lng: prevPath[prevPath.length - 1].lng + 0.0001,
+  //       },
+  //     ]);
 
-      if (polyline) {
-        const bounds = new window.google.maps.LatLngBounds();
-        path.forEach((point) => bounds.extend(point));
-        map.fitBounds(bounds);
-        polyline.setPath(path);
-      }
-    }, 1000);
+  //     if (polyline) {
+  //       const bounds = L.latLngBounds(path);
+  //       map.fitBounds(bounds);
+  //       polyline.setLatLngs(path);
+  //     }
+  //   }, 5000);
 
-    return () => clearInterval(intervalId);
-  }, [path, polyline, map]);
+  //   return () => clearInterval(intervalId);
+  // }, [path, polyline, map]);
 
   return <div id="map" style={{ height: "400px", width: "100%" }}></div>;
 };

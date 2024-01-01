@@ -25,6 +25,7 @@ const AuthInputFiled = ({
       <Controller
         control={control}
         name={name}
+        id={name}
         render={({ field }) => (
           <>
             <div className="flex rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px]">

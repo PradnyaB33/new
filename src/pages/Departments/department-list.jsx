@@ -91,7 +91,7 @@ const DepartmentList = () => {
         console.log("locations are: ", response.data);
       })
       .catch((error) => console.error("Error fetching locations:", error));
-  }, [authToken]);
+  }, [authToken, organizationId]);
 
   useEffect(() => {
     const fetchDepartmentList = async () => {
@@ -114,10 +114,6 @@ const DepartmentList = () => {
     // eslint-disable-next-line
   }, [authToken]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-  };
-
   const handleDepartmentIdChange = (e) => {
     const input = e.target.value;
     const charactersOnly = input.replace(/\d/g, "");
@@ -127,9 +123,9 @@ const DepartmentList = () => {
     }
   };
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  // const handleOpen = () => {
+  //   setOpen(true);
+  // };
 
   const handleDeleteDepartmentConfirmation = (index) => {
     setConfirmOpen(true);
@@ -164,7 +160,6 @@ const DepartmentList = () => {
     }
     setConfirmOpen(false);
   };
-  console.log(departmentList);
 
   const handleClose = () => {
     setOpen(false);
@@ -191,7 +186,7 @@ const DepartmentList = () => {
       costCenterDescription,
       departmentHeadName,
       departmentHeadDelegateName,
-      organizationLocationId: locationID,
+      organizationLocationId,
       organizationId: organizationId,
     };
     try {
@@ -215,6 +210,10 @@ const DepartmentList = () => {
         }
       );
 
+      // const handleChange = (e) => {
+      //   const { name, value } = e.target;
+      // };
+
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/department/get/${organizationId}`,
         {
@@ -232,37 +231,37 @@ const DepartmentList = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const newDepartment = {
-        departmentName,
-        departmentId,
-        departmentDescription,
-        departmentLocation,
-        costCenterName,
-        costCenterDescription,
-        departmentHeadName,
-        departmentHeadDelegateName,
-        organizationLocationId: locationID,
-        organizationId: organizationId,
-      };
-      console.log(departmentId);
-      await axios.post(
-        `${process.env.REACT_APP_API}/route/department/create/${organizationId}`,
-        newDepartment,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      handleAlert(true, "success", `Department created successfully`);
-    } catch (error) {
-      console.error(error);
-      handleAlert(true, "error", error);
-    }
-  };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const newDepartment = {
+  //       departmentName,
+  //       departmentId,
+  //       departmentDescription,
+  //       departmentLocation,
+  //       costCenterName,
+  //       costCenterDescription,
+  //       departmentHeadName,
+  //       departmentHeadDelegateName,
+  //       organizationLocationId: locationID,
+  //       organizationId: organizationId,
+  //     };
+  //     console.log(departmentId);
+  //     await axios.post(
+  //       `${process.env.REACT_APP_API}/route/department/create/${organizationId}`,
+  //       newDepartment,
+  //       {
+  //         headers: {
+  //           Authorization: authToken,
+  //         },
+  //       }
+  //     );
+  //     handleAlert(true, "success", `Department created successfully`);
+  //   } catch (error) {
+  //     console.error(error);
+  //     handleAlert(true, "error", error);
+  //   }
+  // };
 
   return (
     <div>
@@ -401,9 +400,9 @@ const DepartmentList = () => {
                 onChange={(e, value) => {
                   setLocationId(value._id);
 
-                  handleChange({
-                    target: { name: "departmentLocation", value: locationID },
-                  });
+                  // handleChange({
+                  //   target: { name: "departmentLocation", value: locationID },
+                  // });
                 }}
                 isOptionEqualToValue={(option, value) =>
                   option.shortName === value.shortName
@@ -523,10 +522,10 @@ const DepartmentList = () => {
                 id="departmentHeadName"
                 options={Employees}
                 onChange={(e, value) => {
-                  const headName = value ? value.label : "";
-                  handleChange({
-                    target: { name: "departmentHeadName", value: headName },
-                  });
+                  // const headName = value ? value.label : "";
+                  // handleChange({
+                  //   target: { name: "departmentHeadName", value: headName },
+                  // });
                 }}
                 isOptionEqualToValue={(option, value) =>
                   option.label === value.label
@@ -547,13 +546,13 @@ const DepartmentList = () => {
                 id="departmentHeadDelegateName"
                 options={Employees}
                 onChange={(e, value) => {
-                  const delegateName = value ? value.label : "";
-                  handleChange({
-                    target: {
-                      name: "departmentHeadDelegateName",
-                      value: delegateName,
-                    },
-                  });
+                  // const delegateName = value ? value.label : "";
+                  // handleChange({
+                  //   target: {
+                  //     name: "departmentHeadDelegateName",
+                  //     value: delegateName,
+                  //   },
+                  // });
                 }}
                 isOptionEqualToValue={(option, value) =>
                   option.label === value.label
