@@ -110,7 +110,7 @@ export default function TestYash() {
 
     try {
       // Make a POST request to the backend API using Axios
-      const response = await axios.get(
+      const response = await axios.post(
         `${process.env.REACT_APP_API}/route/punch/create`,
         payload,
         { headers: { Authorization: authToken } }
