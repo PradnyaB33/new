@@ -11,7 +11,8 @@ import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-
+import PDFDocument from "./SalaryPdfDocument";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 const SalaryCalculate = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -120,6 +121,11 @@ const SalaryCalculate = () => {
   console.log(totalNetSalary);
 
   const formattedDate = dayjs(selectedDate).format("MMM-YY");
+
+  const [employeeData, setEmployeeData] = useState(null); // Employee data state
+  const handleGeneratePDF = () => {
+    setEmployeeData(availableEmployee);
+  };
 
   return (
     <>
@@ -675,16 +681,34 @@ const SalaryCalculate = () => {
                 margin: "40px",
               }}
             >
+              {/* Generate PDF button with PDFDownloadLink */}
+              {employeeData && (
+                <PDFDownloadLink
+                  document={
+                    <PDFDocument
+                      employeeData={employeeData}
+                      formattedDate={formattedDate}
+                    />
+                  }
+                  fileName="SalarySlip.pdf"
+                >
+                  {({ blob, url, loading, error }) =>
+                    loading ? "Generating PDF..." : "Download PDF"
+                  }
+                </PDFDownloadLink>
+              )}
               <button
+                onClick={handleGeneratePDF}
                 style={{
                   padding: "8px 15px",
                   borderRadius: "5px",
                   backgroundColor: "green",
                   color: "#fff",
                   cursor: "pointer",
+                  marginLeft: "10px",
                 }}
               >
-                Calculate Salary
+                Generate PDF
               </button>
             </div>
           </Paper>
