@@ -136,6 +136,12 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <Event className="text-white" />,
             text: "Create Salary",
           },
+          {
+            key: "salarycalculate",
+            link: `/organisation/${orgId}/salary-calculate`,
+            icon: <MonetizationOn className="text-white" />,
+            text: "Salary Calculate",
+          },
         ],
       },
       Employee: {
