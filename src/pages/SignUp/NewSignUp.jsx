@@ -1,18 +1,22 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Badge,
+  CheckCircle,
   DriveFileRenameOutlineOutlined,
   Email,
+  Fingerprint,
   Lock,
   NoEncryption,
   PermContactCalendar,
   Phone,
 } from "@mui/icons-material";
+import { SvgIcon } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { Link, useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
 import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
@@ -337,7 +341,7 @@ const SignIn = () => {
 
                 <button
                   type="button"
-                  onClick={sendOtp}
+                  onClick={VerifyOtp}
                   className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
                 >
                   Verify Otp
