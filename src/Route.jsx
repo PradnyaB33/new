@@ -50,7 +50,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Home />} />
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
-      <Route path="/test" element={<EditablePolyline />} />
+      <Route path="/test" element={<TrackingMap />} />
       {/* Login Routes */}
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<Signup />} />

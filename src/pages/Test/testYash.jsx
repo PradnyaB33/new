@@ -1,6 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import axios from "axios";
 import { Button } from "@mui/material";
+import { UseContext } from "../../State/UseState/UseContext";
+
 
 // Custom hook to manage intervals
 function useInterval(callback, delay) {
@@ -22,9 +24,11 @@ function useInterval(callback, delay) {
 }
 
 export default function TestYash() {
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
   const [watchId, setWatchId] = useState(null);
   const [isWatching, setIsWatching] = useState(false);
-  let map, polyline, mappls;
+  let map ;
 
   const latestLocationData = useRef({
     latitude: null,
@@ -90,7 +94,7 @@ export default function TestYash() {
   };
 
   const postDataToBackend = async () => {
-    const { latitude, longitude, speed, accuracy } = latestLocationData.current;
+    const { latitude, longitude } = latestLocationData.current;
 
     // Create the payload in the required format
     const payload = {
@@ -102,14 +106,19 @@ export default function TestYash() {
           time: new Date().toISOString(),
         },
       ],
-      employeeId: "658bafedd4e82a4558961fa9", // Replace with the actual employee ID
+      employeeId: "658cfa086ef8e46be2e41fb2", // Replace with the actual employee ID
     };
 
     try {
       // Make a POST request to the backend API using Axios
       const response = await axios.post(
         "http://localhost:4000/route/punch/create",
-        payload
+        payload,
+        {
+          headers:{
+            Authorization:authToken,
+          }
+        }
       );
 
       if (response.status === 200) {
@@ -139,32 +148,32 @@ export default function TestYash() {
     // eslint-disable-next-line
   }, []);
 
-  function initMap1() {
-    // Your map initialization logic
-    map = new mappls.Map("map", {
-      center: [28.544, 77.5454],
-      zoomControl: true,
-      location: true,
-    });
-    map.addListener("load", function () {
-      var pts = [
-        {
-          lat: 28.55108,
-          lng: 77.26913,
-        },
-        // ... (rest of your polyline points)
-      ];
-      polyline = new mappls.Polyline({
-        map: map,
-        paths: pts,
-        strokeColor: "#333",
-        strokeOpacity: 1.0,
-        strokeWeight: 5,
-        fitbounds: true,
-        dasharray: [2, 2],
-      });
-    });
-  }
+  // function initMap1() {
+  //   // Your map initialization logic
+  //   map = new mappls.Map("map", {
+  //     center: [28.544, 77.5454],
+  //     zoomControl: true,
+  //     location: true,
+  //   });
+  //   map.addListener("load", function () {
+  //     var pts = [
+  //       {
+  //         lat: 28.55108,
+  //         lng: 77.26913,
+  //       },
+  //       // ... (rest of your polyline points)
+  //     ];
+  //     polyline = new mappls.Polyline({
+  //       map: map,
+  //       paths: pts,
+  //       strokeColor: "#333",
+  //       strokeOpacity: 1.0,
+  //       strokeWeight: 5,
+  //       fitbounds: true,
+  //       dasharray: [2, 2],
+  //     });
+  //   });
+  // }
 
   return (
     <>
