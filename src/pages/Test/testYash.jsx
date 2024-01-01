@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import { Button } from "@mui/material";
 
 // Custom hook to manage intervals
 function useInterval(callback, delay) {
@@ -20,11 +21,11 @@ function useInterval(callback, delay) {
   }, [delay]);
 }
 
-export default function Test() {
+export default function TestYash() {
   const [watchId, setWatchId] = useState(null);
-  let map, polyline, mappls; // Reference to the Google Map
+  const [isWatching, setIsWatching] = useState(false);
+  let map, polyline, mappls;
 
-  // Use useRef to store the latest location data without causing re-renders
   const latestLocationData = useRef({
     latitude: null,
     longitude: null,
@@ -32,13 +33,22 @@ export default function Test() {
     accuracy: null,
   });
 
+  // Custom interval hook to handle posting data every 10 seconds
+  useInterval(() => {
+    if (isWatching && watchId) {
+      console.log("Posting data to the backend after 10 seconds");
+      postDataToBackend();
+    }
+  }, 10000);
+
   const startWatching = () => {
+    stopWatching();
+
     if ("geolocation" in navigator) {
       const id = navigator.geolocation.watchPosition(
         (position) => {
           const { latitude, longitude, speed, accuracy } = position.coords;
 
-          // Update Google Map marker position
           if (map) {
             const currentPosition = new window.google.maps.LatLng(
               latitude,
@@ -47,7 +57,6 @@ export default function Test() {
             map.panTo(currentPosition);
           }
 
-          // Update the latest location data
           latestLocationData.current = {
             latitude,
             longitude,
@@ -64,7 +73,9 @@ export default function Test() {
           maximumAge: 0,
         }
       );
+
       setWatchId(id);
+      setIsWatching(true);
     } else {
       console.error("Geolocation is not supported in this browser.");
     }
@@ -74,6 +85,7 @@ export default function Test() {
     if (watchId !== null) {
       navigator.geolocation.clearWatch(watchId);
       setWatchId(null);
+      setIsWatching(false);
     }
   };
 
@@ -110,24 +122,16 @@ export default function Test() {
     }
   };
 
-  // Use the custom interval hook
-  useInterval(() => {
-    console.log("Posting data to the backend after 10 seconds");
-    postDataToBackend();
-  }, watchId ? 10000 : null);
-
   useEffect(() => {
     // Load Google Maps API script
-    const script = document.createElement("script");
-    script.src = `https://apis.mappls.com/advancedmaps/api/dfb06668ce660987cc7008f8175a6720/map_sdk?layer=vector&v=3.0&callback=initMap1`;
-    script.async = true;
-    script.onload = () => {
-      mappls = window.mappls;
-      initMap1();
-    };
-    document.head.appendChild(script);
-
-    startWatching();
+    // const script = document.createElement("script");
+    // script.src = `https://apis.mappls.com/advancedmaps/api/dfb06668ce660987cc7008f8175a6720/map_sdk?layer=vector&v=3.0&callback=initMap1`;
+    // script.async = true;
+    // script.onload = () => {
+    //   mappls = window.mappls;
+    //   initMap1();
+    // };
+    // document.head.appendChild(script);
 
     return () => {
       stopWatching();
@@ -163,23 +167,23 @@ export default function Test() {
   }
 
   return (
-    <div className="pt-32">
-      <div>
-        <strong>Latitude:</strong> {latestLocationData.current.latitude}
-      </div>
-      <div>
-        <strong>Longitude:</strong> {latestLocationData.current.longitude}
-      </div>
-      <div>
-        <strong>Speed:</strong> {latestLocationData.current.speed}
-      </div>
-      <div>
-        <strong>Accuracy:</strong> {latestLocationData.current.accuracy}
-      </div>
-      <button onClick={startWatching}>Start Watching</button>
-      <button onClick={stopWatching}>Stop Watching</button>
+    <>
 
-      <div id="map" style={{ height: "400px", width: "100%" }}></div>
+    <div className="w-full h-full bg-slate-200">
+<div className="flex  items-center justify-center h-[92vh]">
+    <div className=" shadow-md rounded-xl bg-[white] gap-4 p-10 flex flex-col w-[200px] h-[200px] items-center justify-center" >
+
+        <Button color="success" onClick={startWatching} variant="contained">Punch IN</Button>
+        <Button color="error" onClick={stopWatching} variant="contained">Punch OUT</Button>
     </div>
+    </div>
+
+    </div>
+    
+    </>
+   
+     
+
+   
   );
 }

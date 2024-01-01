@@ -202,6 +202,12 @@ const TestNavItems = ({ toggleDrawer }) => {
           //   text: "Delete Department",
           // },
           {
+            key: "deptDeletion",
+            link: `/organisation/${orgId}/dept-deletion`,
+            icon: <ListAlt className="text-white" />,
+            text: "Bulk Deletion",
+          },
+          {
             key: "departmentList",
             link: `/organisation/${orgId}/department-list`,
             icon: <ListAlt className="text-white" />,
