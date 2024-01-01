@@ -40,6 +40,7 @@ import WeekendHoliday from "./pages/SetupPage/WeekendHoliday";
 import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
+import TrackingMap from "./pages/Test/test3";
 import EditablePolyline from "./pages/Test/testYash";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
@@ -51,6 +52,7 @@ const App = () => {
       <Route path="/" element={<Home />} />
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
       <Route path="/test" element={<EditablePolyline />} />
+      <Route path="/test2" element={<TrackingMap />} />
       {/* Login Routes */}
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<Signup />} />
