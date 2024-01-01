@@ -1,6 +1,7 @@
+import axios from "axios";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   MapContainer,
   Marker,
@@ -9,8 +10,11 @@ import {
   Tooltip,
   useMapEvents,
 } from "react-leaflet";
+import { useQuery } from "react-query";
+import { TestContext } from "../../State/Function/Main";
 
 const TrackingMap = () => {
+  const { handleAlert } = useContext(TestContext);
   function LocationMarker() {
     const [position, setPosition] = useState(null);
     console.log(`🚀 ~ file: test3.jsx:14 ~ position:`, position);
@@ -36,6 +40,16 @@ const TrackingMap = () => {
       </Marker>
     );
   }
+  const fetchPts = async () => {
+    const response = await axios.get("https://example.com/api/pts"); // Replace with your API endpoint
+
+    return response.data;
+  };
+  const { data: pts2, error } = useQuery("pts", fetchPts);
+  if (error) {
+    handleAlert(true, "error", "error in getting the you location track");
+  }
+
   const pts = [
     {
       lat: 28.55108,
@@ -109,7 +123,7 @@ const TrackingMap = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Polyline positions={pts} color="blue" />
+        <Polyline positions={pts2 ? pts2 : pts} color="blue" />
         <LocationMarker />
       </MapContainer>
       ,
