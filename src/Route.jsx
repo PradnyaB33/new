@@ -40,6 +40,7 @@ import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
+import SalaryCalculate from "./pages/SalaryCalculate/SalaryCalculate";
 const App = () => {
   return (
     <Routes>
@@ -88,10 +89,14 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/input-field"
         element={<Inputfield />}
-      />{" "}
+      />
       <Route
         path="/organisation/:organisationId/salary-management"
         element={<SalaryManagement />}
+      />
+      <Route
+        path="/organisation/:organisationId/salary-calculate"
+        element={<SalaryCalculate />}
       />
       <Route
         path="/organisation/:organisationId/setup/set-shifts"
