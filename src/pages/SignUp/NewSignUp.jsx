@@ -19,25 +19,24 @@ import { Link, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import TermsCondition from "../../components/termscondition/termsCondition";
 
 const SignIn = () => {
   const { handleAlert } = useContext(TestContext);
   const location = useLocation();
-
   const [display, setdisplay] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [otp, setOTP] = useState("");
-  const [time, setTime] = useState(300);
+  const [time, setTime] = useState(30);
   const [isTimeVisible, setIsTimeVisible] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
 
-  // const { cookies } = useContext(UseContext);
+  const { cookies } = useContext(UseContext);
 
   useEffect(() => {
     let interval;
-
     if (time > 0) {
       interval = setInterval(() => {
         setTime((prevTimer) => prevTimer - 1);
@@ -50,7 +49,7 @@ const SignIn = () => {
     return () => clearInterval(interval);
 
     // eslint-disable-next-line
-  }, [isTimeVisible]);
+  }, [time, isTimeVisible]);
 
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -135,11 +134,19 @@ const SignIn = () => {
           "otp has been send successfully on your device"
         );
         setdisplay(true);
-        setTime(300);
+        setTime(30);
         setIsTimeVisible(true);
       },
 
       onError: (data) => {
+        if (data?.response?.status === 500) {
+          Swal.fire({
+            title: "Warning",
+            text: `${data?.response?.data?.message}`,
+            icon: "warning",
+            confirmButtonText: "ok",
+          });
+        }
         if (data?.response?.data?.success === false)
           handleAlert(true, "error", data?.response?.data?.message);
       },
@@ -151,7 +158,6 @@ const SignIn = () => {
       axios.post(`${process.env.REACT_APP_API}/route/employee/verifyOtp`, data),
     {
       onSuccess: (data) => {
-        console.log(data);
         if (data?.data?.success === false) {
           handleAlert(true, "error", data?.data?.message);
         }
@@ -179,15 +185,19 @@ const SignIn = () => {
 
   const VerifyOtp = () => {
     const data = { number: phone, otp };
+
+    if (!otp || !number) {
+      handleAlert(true, "warning", "Otp and number are required fields");
+      return false;
+    }
     VerifyOtpRequest.mutateAsync(data);
   };
 
   return (
     <>
-      <section className=" flex h-max w-full">
+      <section className="flex    w-full">
         {/* Left Section */}
-
-        <div className="w-[30%] lg:flex hidden text-white flex-col items-center justify-center h-screen relative">
+        <div className="w-[30%]  h-screen lg:flex hidden text-white flex-col items-center justify-center  relative">
           <div className="bg__gradient absolute inset-0"></div>
           <ul className="circles">
             {[...Array(10)].map((_, index) => (
@@ -198,9 +208,8 @@ const SignIn = () => {
             {/* image here */}
           </div>
         </div>
-
         {/* Right Section */}
-        <article className="lg:w-[70%]  !bg-white w-full md:block flex items-center flex-col justify-center">
+        <article className="lg:w-[70%]  py-4  h-max min-h-screen  bg-white  w-full md:block flex items-center flex-col justify-center">
           <div className="flex w-full py-4 px-8  gap-4 items-center justify-center lg:justify-end">
             <p>
               {location.pathname === "/sign-up"
@@ -221,7 +230,7 @@ const SignIn = () => {
           <form
             onSubmit={handleSubmit(onSubmit)}
             autoComplete="off"
-            className="flex px-20 w-max justify-center flex-col h-[80vh]"
+            className="flex md:px-20 px-8 lg:w-max justify-center flex-col h-[80vh]"
           >
             <div className="flex flex-col space-y-1">
               <div className="mb-4">
@@ -297,7 +306,7 @@ const SignIn = () => {
                       number?.length !== 10 || isTimeVisible ? true : false
                     }
                     onClick={SendOtp}
-                    className={`w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500  ${
+                    className={`w-max flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500  ${
                       (number?.length !== 10 || isTimeVisible) &&
                       "bg-gray-400 text-gray-900"
                     }`}

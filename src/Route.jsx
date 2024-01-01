@@ -38,6 +38,9 @@ import Shifts from "./pages/SetupPage/Shifts";
 import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
+// import Signup from "./pages/SignUp/SignUp";
+import SuperAdmin from "./pages/DashBoard/superAdmin/SuperAdmin";
+import ResendTimer from "./pages/Test/ResendTimer";
 import EditablePolyline from "./pages/Test/test2";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
@@ -65,7 +68,7 @@ const App = () => {
       />
       <Route
         path="/organisation/:organisationId/super-admin"
-        element={<Dashboard />}
+        element={<SuperAdmin />}
       />
       {/* Dashboard Routes */}
       <Route path="/add-organisation" element={<AddOrganisation />} />
@@ -168,6 +171,7 @@ const App = () => {
         path="/del-department-by-location"
         element={<DeleteDepartment />}
       />
+      <Route path="/resendTimer" element={<ResendTimer />} />
     </Routes>
   );
 };

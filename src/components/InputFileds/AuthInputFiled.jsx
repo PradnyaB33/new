@@ -14,7 +14,7 @@ const AuthInputFiled = ({
   placeholder,
 }) => {
   return (
-    <div className="space-y-1">
+    <div className="space-y-1 w-full ">
       <label
         htmlFor={name}
         className={`${

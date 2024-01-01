@@ -1,4 +1,4 @@
-import { BeachAccessOutlined } from "@mui/icons-material";
+import { BeachAccessOutlined, Info } from "@mui/icons-material";
 import { Avatar, Card } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import axios from "axios";
@@ -65,8 +65,7 @@ const EmployeeLeaveRequest = () => {
           </button> */}
         </div>
         <Divider variant="fullWidth" orientation="horizontal" />
-
-        {EmployeeLeavesRequest &&
+        {EmployeeLeavesRequest?.length > 0 ? (
           EmployeeLeavesRequest?.slice(0, 3)?.map((item, id) => (
             <div className="p-4 " key={id}>
               <div key={id} className="gap-3   flex">
@@ -100,7 +99,16 @@ const EmployeeLeaveRequest = () => {
                 </div>
               </div>
             </div>
-          ))}
+          ))
+        ) : (
+          <div className="p-4">
+            <article className="flex  items-center mb-1 text-red-500 gap-2">
+              <Info className="!text-2xl" />
+              <h1 className="text-xl font-semibold">No record found</h1>
+            </article>
+            <p>Currenlty no leave request is in pending</p>
+          </div>
+        )}
       </div>
     </Card>
   );
