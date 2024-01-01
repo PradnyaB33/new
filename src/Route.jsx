@@ -13,6 +13,7 @@ import Application from "./pages/Application/Application";
 import DashBoardHR from "./pages/DashBoard/HR/DashBoardHR";
 import DashboardManger from "./pages/DashBoard/Manager/DashboardManger";
 import Dashboard from "./pages/DashBoard/employee/Dashboard";
+import SuperAdmin from "./pages/DashBoard/superAdmin/SuperAdmin";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import CreateDepartment from "./pages/Departments/addDepartment";
 import DepartmentList from "./pages/Departments/department-list";
