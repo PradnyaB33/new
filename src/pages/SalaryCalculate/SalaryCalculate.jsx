@@ -1,9 +1,80 @@
-import React from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Paper } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { Divider } from "@mui/material";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
+import dayjs from "dayjs";
+import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+
 const SalaryCalculate = () => {
+  const { handleAlert } = useContext(TestContext);
+  const { cookies } = useContext(UseContext);
+  const token = cookies["aeigs"];
+  const { userId } = useParams();
+
+  // function to handle get detail of employee
+  const [availableEmployee, setAvailableEmployee] = useState();
+  const fetchAvailableEmployee = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/get/profile/${userId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setAvailableEmployee(response.data.employee);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch User Profile Data");
+    }
+  };
+
+  useEffect(() => {
+    fetchAvailableEmployee();
+    // eslint-disable-next-line
+  }, []);
+
+  const [selectedDate, setSelectedDate] = useState(dayjs("2022-04-17"));
+  const [numDaysInMonth, setNumDaysInMonth] = useState(0);
+  const getWeekendCount = (year, month) => {
+    const daysInMonth = new Date(year, month, 0).getDate();
+    let weekendCount = 0;
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const currentDate = new Date(year, month - 1, day);
+      const dayOfWeek = currentDate.getDay(); // 0 for Sunday, 6 for Saturday
+
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        weekendCount++;
+      }
+    }
+
+    return weekendCount;
+  };
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+
+    // Calculate the number of days in the selected month and year
+    const daysInMonth = dayjs(date).daysInMonth();
+    setNumDaysInMonth(daysInMonth);
+
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // Month in JavaScript starts from 0 (January)
+
+    const weekends = getWeekendCount(year, month);
+    console.log("Number of weekends:", weekends);
+  };
+  console.log(numDaysInMonth);
+
   return (
     <>
       <div
@@ -22,7 +93,28 @@ const SalaryCalculate = () => {
           className="w-full"
         >
           <Paper className="border-none !pt-0 !px-0 shadow-md outline-none rounded-md">
-            <Box sx={{ flexGrow: 1 }}>
+            <Box>
+              <h3
+                style={{
+                  fontSize: "1em", // Adjust font size
+                  color: "#333", // Change text color
+                  fontWeight: "bold", // Make text bold
+                  marginLeft: "40%",
+                }}
+              >
+                Select Month and Year
+              </h3>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateCalendar
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  views={["month", "year"]}
+                  openTo="month"
+                />
+              </LocalizationProvider>
+            </Box>
+
+            <Box sx={{ flexGrow: 1, marginBottom: "30px" }}>
               <Grid container spacing={4}>
                 <Grid item xs={6} md={4}>
                   <h1
@@ -33,12 +125,12 @@ const SalaryCalculate = () => {
                     }}
                   >
                     <img
-                      src=""
+                      src={availableEmployee?.organizationId?.logo_url || ""}
                       alt="Organziation"
                       style={{
                         borderRadius: "50%",
-                        width: "180px",
-                        height: "180px",
+                        width: "120px",
+                        height: "120px",
                         display: "block",
                         margin: "auto",
                       }}
@@ -47,36 +139,25 @@ const SalaryCalculate = () => {
                 </Grid>
                 <Grid item xs={6} md={8}>
                   <h1 style={{ color: "red", fontSize: "1.2em" }}>
-                    ARGAN TECHNOLOGY PVT LID
+                    {availableEmployee?.organizationId?.name || ""}
                   </h1>
                   <p style={{ fontSize: "1em", color: "#333" }}>
                     Address :
                     <span style={{ fontSize: "0.9em", color: "#666" }}>
-                      Office No. 603 , Haware Grand Heritage Opposite to
-                      Ambience hotel , Kaspate Wasti , Wakad , Pune,
-                      Maharshtra-411057
+                      {availableEmployee?.organizationId?.location || ""}
                     </span>
                   </p>
                   <p style={{ fontSize: "1em", color: "#333" }}>
                     Phone no :
                     <span style={{ fontSize: "0.9em", color: "#666" }}>
-                      +911234567890
+                      {availableEmployee?.organizationId?.contact_number || ""}
                     </span>
                   </p>
                   <p style={{ fontSize: "1em", color: "#333" }}>
                     Email :
                     <span style={{ fontSize: "0.9em", color: "#666" }}>
-                      hr_argan@argantechnology.com
+                      {availableEmployee?.organizationId?.email || ""}
                     </span>
-                  </p>
-                  <p style={{ fontSize: "1em", color: "#333" }}>
-                    GSTIN :
-                    <span style={{ fontSize: "0.9em", color: "#666" }}>
-                      27AAVCA3805825
-                    </span>
-                  </p>
-                  <p style={{ fontSize: "1em", color: "#333" }}>
-                    ISO9001 -2015 & ISO27001-2013 certified company
                   </p>
                 </Grid>
               </Grid>
@@ -132,7 +213,9 @@ const SalaryCalculate = () => {
                           >
                             Employee Name :
                           </td>
-                          <td>Megha Dumbre</td>
+                          <td>
+                            {`${availableEmployee?.first_name} ${availableEmployee?.last_name}`}
+                          </td>
                         </tr>
                         <tr>
                           <td
@@ -143,7 +226,10 @@ const SalaryCalculate = () => {
                           >
                             Designation :
                           </td>
-                          <td>Software Developer</td>
+                          <td>
+                            {availableEmployee?.designation[0]
+                              ?.designationName || ""}
+                          </td>
                         </tr>
                         <tr>
                           <td
@@ -154,30 +240,13 @@ const SalaryCalculate = () => {
                           >
                             PAN No :
                           </td>
-                          <td>FWASDF0345</td>
-                        </tr>
-                        <tr>
-                          <td
-                            style={{
-                              fontWeight: "bold",
-                              paddingRight: "8px",
-                            }}
-                          >
-                            Personal Leaves :
+                          <td>
+                            {availableEmployee?.additionalInfo?.[
+                              "Pan Card Number"
+                            ] || ""}
                           </td>
-                          <td>5</td>
                         </tr>
-                        <tr>
-                          <td
-                            style={{
-                              fontWeight: "bold",
-                              paddingRight: "8px",
-                            }}
-                          >
-                            Available Personal Leaves PA:
-                          </td>
-                          <td>3</td>
-                        </tr>
+
                         <tr>
                           <td
                             style={{
@@ -187,7 +256,7 @@ const SalaryCalculate = () => {
                           >
                             Bank Account Number :
                           </td>
-                          <td>12345678901234</td>
+                          <td>{}</td>
                         </tr>
                         <tr>
                           <td
@@ -198,7 +267,18 @@ const SalaryCalculate = () => {
                           >
                             Weekend :
                           </td>
-                          <td>1</td>
+                          <td>{}</td>
+                        </tr>
+                        <tr>
+                          <td
+                            style={{
+                              fontWeight: "bold",
+                              paddingRight: "8px",
+                            }}
+                          >
+                            No of Days in Month :
+                          </td>
+                          <td>{numDaysInMonth}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -210,7 +290,7 @@ const SalaryCalculate = () => {
               <div>
                 <Paper className="w-full">
                   <Box sx={{ flexGrow: 1 }}>
-                    <table style={{ width: "420px" }}>
+                    <table style={{ width: "420px", height: "20vh" }}>
                       <tbody>
                         <tr>
                           <td
@@ -221,29 +301,13 @@ const SalaryCalculate = () => {
                           >
                             Date of Joining :
                           </td>
-                          <td>25/08/2023</td>
-                        </tr>
-                        <tr>
-                          <td
-                            style={{
-                              fontWeight: "bold",
-                              paddingRight: "8px",
-                            }}
-                          >
-                            Total Payable Days :
+                          <td>
+                            {availableEmployee?.joining_date
+                              ? new Date(
+                                  availableEmployee.joining_date
+                                ).toLocaleDateString("en-GB")
+                              : ""}
                           </td>
-                          <td>31</td>
-                        </tr>
-                        <tr>
-                          <td
-                            style={{
-                              fontWeight: "bold",
-                              paddingRight: "8px",
-                            }}
-                          >
-                            No of Working Days Attened :
-                          </td>
-                          <td>27</td>
                         </tr>
                         <tr>
                           <td
@@ -254,7 +318,7 @@ const SalaryCalculate = () => {
                           >
                             Unpaid Leaves :
                           </td>
-                          <td>5</td>
+                          <td>{}</td>
                         </tr>
                         <tr>
                           <td
@@ -263,9 +327,9 @@ const SalaryCalculate = () => {
                               paddingRight: "8px",
                             }}
                           >
-                            Sick Leave:
+                            No of Working Days Attened :
                           </td>
-                          <td>3</td>
+                          <td>{}</td>
                         </tr>
                         <tr>
                           <td
@@ -274,10 +338,11 @@ const SalaryCalculate = () => {
                               paddingRight: "8px",
                             }}
                           >
-                            Available Sick Leaves PA :
+                            Paid Leaves :
                           </td>
-                          <td>1</td>
+                          <td>{}</td>
                         </tr>
+
                         <tr>
                           <td
                             style={{
@@ -287,7 +352,7 @@ const SalaryCalculate = () => {
                           >
                             Public Holidays :
                           </td>
-                          <td>1</td>
+                          <td>{}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -514,6 +579,26 @@ const SalaryCalculate = () => {
 
             <div className="w-full">
               <Divider variant="fullWidth" orientation="horizontal" />
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                margin: "40px",
+              }}
+            >
+              <button
+                style={{
+                  padding: "8px 15px",
+                  borderRadius: "5px",
+                  backgroundColor: "green",
+                  color: "#fff",
+                  cursor: "pointer",
+                }}
+              >
+                Calculate Salary
+              </button>
             </div>
           </Paper>
         </Paper>

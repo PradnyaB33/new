@@ -4,9 +4,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useParams } from "react-router-dom";
-import { Button } from "@mui/material";
 import { useQueryClient } from "react-query";
 import CreateSalaryModel from "../../components/Modal/CreateSalaryModel/CreateSalaryModel";
+import { Button, Menu, MenuItem } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
 const SalaryManagement = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -20,6 +22,17 @@ const SalaryManagement = () => {
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
   const queryClient = useQueryClient();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const navigate = useNavigate();
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   const fetchAvailableEmployee = async (page) => {
     try {
@@ -198,17 +211,39 @@ const SalaryManagement = () => {
                       </td>
                       <td className="py-3">{item?.salarystructure?.name}</td>
                       <td className="whitespace-nowrap ">
-                        <Button
-                          onClick={() => handleCreateModalOpen(item._id)}
-                          className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"
-                          type="submit"
-                          variant="contained"
-                          color="primary"
-                          fullWidth={false}
-                          margin="normal"
-                        >
-                          Create Salary
-                        </Button>
+                        <div>
+                          <Button
+                            onClick={handleMenuOpen}
+                            className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            fullWidth={false}
+                            margin="normal"
+                          >
+                            Actions
+                          </Button>
+                          <Menu
+                            anchorEl={anchorEl}
+                            open={Boolean(anchorEl)}
+                            onClose={handleMenuClose}
+                          >
+                            <MenuItem
+                              onClick={() => handleCreateModalOpen(item._id)}
+                            >
+                              Create Salary
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() =>
+                                navigate(
+                                  `/organisation/${organisationId}/salary-calculate/${item._id}`
+                                )
+                              }
+                            >
+                              Calculate Salary
+                            </MenuItem>
+                          </Menu>
+                        </div>
                       </td>
                     </tr>
                   ))}
