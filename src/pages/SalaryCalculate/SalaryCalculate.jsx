@@ -17,6 +17,8 @@ const SalaryCalculate = () => {
   const { cookies } = useContext(UseContext);
   const token = cookies["aeigs"];
   const { userId } = useParams();
+  const [selectedDate, setSelectedDate] = useState(dayjs("2022-04-17"));
+  const [numDaysInMonth, setNumDaysInMonth] = useState(0);
 
   // function to handle get detail of employee
   const [availableEmployee, setAvailableEmployee] = useState();
@@ -41,38 +43,83 @@ const SalaryCalculate = () => {
     fetchAvailableEmployee();
     // eslint-disable-next-line
   }, []);
+  console.log(availableEmployee);
 
-  const [selectedDate, setSelectedDate] = useState(dayjs("2022-04-17"));
-  const [numDaysInMonth, setNumDaysInMonth] = useState(0);
-  const getWeekendCount = (year, month) => {
-    const daysInMonth = new Date(year, month, 0).getDate();
-    let weekendCount = 0;
-
-    for (let day = 1; day <= daysInMonth; day++) {
-      const currentDate = new Date(year, month - 1, day);
-      const dayOfWeek = currentDate.getDay(); // 0 for Sunday, 6 for Saturday
-
-      if (dayOfWeek === 0 || dayOfWeek === 6) {
-        weekendCount++;
-      }
-    }
-
-    return weekendCount;
-  };
   const handleDateChange = (date) => {
     setSelectedDate(date);
-
-    // Calculate the number of days in the selected month and year
-    const daysInMonth = dayjs(date).daysInMonth();
+    const daysInMonth = date.daysInMonth();
     setNumDaysInMonth(daysInMonth);
-
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1; // Month in JavaScript starts from 0 (January)
-
-    const weekends = getWeekendCount(year, month);
-    console.log("Number of weekends:", weekends);
   };
-  console.log(numDaysInMonth);
+
+  console.log(selectedDate);
+
+  // calculate the basic , hra , da monthly
+  const calculateSalaryComponent = (componentValue) => {
+    const daysInMonth = numDaysInMonth;
+    const numberOfAvailableDays = 25;
+    if (!isNaN(parseFloat(componentValue)) && daysInMonth > 0) {
+      return (
+        (parseFloat(componentValue) / daysInMonth) *
+        numberOfAvailableDays
+      ).toFixed(2);
+    } else {
+      return 0;
+    }
+  };
+
+  let basicSalary = calculateSalaryComponent(
+    availableEmployee?.salaryComponent?.Basic || ""
+  );
+  let hraSalary = calculateSalaryComponent(
+    availableEmployee?.salaryComponent?.HRA || ""
+  );
+  let daSalary = calculateSalaryComponent(
+    availableEmployee?.salaryComponent?.DA || ""
+  );
+  let foodAllowance = calculateSalaryComponent(
+    availableEmployee?.salaryComponent?.["Food allowance"] || ""
+  );
+  let salesAllowance = calculateSalaryComponent(
+    availableEmployee?.salaryComponent?.["Sales allowance"] || ""
+  );
+  let specialAllowance = calculateSalaryComponent(
+    availableEmployee?.salaryComponent?.["Special allowance"] || ""
+  );
+  let travelAllowance = calculateSalaryComponent(
+    availableEmployee?.salaryComponent?.["Travel allowance"] || ""
+  );
+  let variableAllowance = calculateSalaryComponent(
+    availableEmployee?.salaryComponent?.["Varialble allowance"] || ""
+  );
+
+  // calculate the total gross salary
+  let totalSalary =
+    parseFloat(basicSalary) +
+    parseFloat(hraSalary) +
+    parseFloat(daSalary) +
+    parseFloat(foodAllowance) +
+    parseFloat(salesAllowance) +
+    parseFloat(specialAllowance) +
+    parseFloat(travelAllowance) +
+    parseFloat(variableAllowance);
+
+  let totalGrossSalary = totalSalary.toFixed(2);
+
+  // calculate the total deduction
+  let deduction = availableEmployee?.deduction || "";
+  let employee_pf = availableEmployee?.employee_pf || "";
+  let esic = availableEmployee?.esic || "";
+
+  // Calculate total deduction by adding all deductions
+  let totalDeductions =
+    parseFloat(deduction) + parseFloat(employee_pf) + parseFloat(esic);
+  let totalDeduction = totalDeductions.toFixed(2);
+
+  // calculate the totalNetSalary
+  let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
+  console.log(totalNetSalary);
+
+  const formattedDate = dayjs(selectedDate).format("MMM-YY");
 
   return (
     <>
@@ -180,7 +227,7 @@ const SalaryCalculate = () => {
                 </Grid>
                 <Grid item xs={6} md={8}>
                   <h1 style={{ fontSize: "1.1em", fontWeight: "bold" }}>
-                    Month <span>Dec-23</span>
+                    Month <span>{formattedDate}</span>
                   </h1>
                 </Grid>
               </Grid>
@@ -404,7 +451,7 @@ const SalaryCalculate = () => {
                             >
                               Basic :
                             </td>
-                            <td>9000</td>
+                            <td>{basicSalary}</td>
                           </tr>
                           <tr>
                             <td
@@ -414,7 +461,7 @@ const SalaryCalculate = () => {
                             >
                               DA :
                             </td>
-                            <td>335</td>
+                            <td>{daSalary}</td>
                           </tr>
                           <tr>
                             <td
@@ -424,7 +471,48 @@ const SalaryCalculate = () => {
                             >
                               HRA :
                             </td>
-                            <td>760</td>
+                            <td>{hraSalary}</td>
+                          </tr>
+
+                          <tr>
+                            <td
+                              style={{
+                                paddingRight: "8px",
+                              }}
+                            >
+                              Food allowance :
+                            </td>
+                            <td>{foodAllowance}</td>
+                          </tr>
+                          <tr>
+                            <td
+                              style={{
+                                paddingRight: "8px",
+                              }}
+                            >
+                              Sales allowance :
+                            </td>
+                            <td>{salesAllowance}</td>
+                          </tr>
+                          <tr>
+                            <td
+                              style={{
+                                paddingRight: "8px",
+                              }}
+                            >
+                              Special allowance :
+                            </td>
+                            <td>{specialAllowance}</td>
+                          </tr>
+                          <tr>
+                            <td
+                              style={{
+                                paddingRight: "8px",
+                              }}
+                            >
+                              Travel allowance :
+                            </td>
+                            <td>{travelAllowance}</td>
                           </tr>
                           <tr>
                             <td
@@ -434,7 +522,7 @@ const SalaryCalculate = () => {
                             >
                               Variable Pay allowance :
                             </td>
-                            <td>379</td>
+                            <td>{variableAllowance}</td>
                           </tr>
                           <div>
                             <Divider
@@ -456,7 +544,7 @@ const SalaryCalculate = () => {
                                 fontWeight: "bold",
                               }}
                             >
-                              10472
+                              {totalGrossSalary}
                             </td>
                           </tr>
                         </tbody>
@@ -471,7 +559,7 @@ const SalaryCalculate = () => {
                 <Paper className="w-full">
                   <Paper className="border-none !pt-0 !px-0 shadow-md outline-none rounded-md">
                     <Box sx={{ flexGrow: 1 }}>
-                      <table style={{ width: "420px", height: "20vh" }}>
+                      <table style={{ width: "420px", height: "33vh" }}>
                         <tbody>
                           <tr>
                             <td
@@ -499,7 +587,7 @@ const SalaryCalculate = () => {
                             >
                               Professional Tax :
                             </td>
-                            <td>200</td>
+                            <td>{availableEmployee?.deduction || ""}</td>
                           </tr>
                           <tr>
                             <td
@@ -509,7 +597,7 @@ const SalaryCalculate = () => {
                             >
                               Employee PF :
                             </td>
-                            <td>1800</td>
+                            <td>{availableEmployee?.employee_pf || ""}</td>
                           </tr>
                           <tr>
                             <td
@@ -519,7 +607,7 @@ const SalaryCalculate = () => {
                             >
                               ESIC :
                             </td>
-                            <td>123</td>
+                            <td>{availableEmployee?.esic || ""}</td>
                           </tr>
                           <div>
                             <Divider
@@ -541,7 +629,7 @@ const SalaryCalculate = () => {
                                 fontWeight: "bold",
                               }}
                             >
-                              2123
+                              {totalDeduction}
                             </td>
                           </tr>
                         </tbody>
@@ -570,7 +658,7 @@ const SalaryCalculate = () => {
                 </Grid>
                 <Grid item xs={6} md={8}>
                   <h1 style={{ fontSize: "1.2em", fontWeight: "bold" }}>
-                    8349
+                    {totalNetSalary}
                   </h1>
                 </Grid>
               </Grid>
