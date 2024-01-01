@@ -9,9 +9,11 @@ import TermsAndConditionsPage from "./components/termscondition/termsconditonpag
 import AddEmployee from "./pages/AddEmployee/addemployee";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import Application from "./pages/Application/Application";
-import DashBoard_HR from "./pages/DashBoard/HR/DashBoard_HR";
-import Dashboard_Manger from "./pages/DashBoard/Manager/Dashboard_Manger";
+
+import DashBoardHR from "./pages/DashBoard/HR/DashBoardHR";
+import DashboardManger from "./pages/DashBoard/Manager/DashboardManger";
 import Dashboard from "./pages/DashBoard/employee/Dashboard";
+import SuperAdmin from "./pages/DashBoard/superAdmin/SuperAdmin";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import CreateDepartment from "./pages/Departments/addDepartment";
 import DepartmentList from "./pages/Departments/department-list";
@@ -34,21 +36,23 @@ import DeleteDepartment from "./pages/SetupPage/DepartmentDeletion";
 import EmailSetting from "./pages/SetupPage/EmailSetting";
 import AddRoles from "./pages/SetupPage/Roles/AddRoles";
 import Shifts from "./pages/SetupPage/Shifts";
+import WeekendHoliday from "./pages/SetupPage/WeekendHoliday";
 import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 import TrackingMap from "./pages/Test/test3";
+import EditablePolyline from "./pages/Test/testYash";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
-import SalaryCalculate from "./pages/SalaryCalculate/SalaryCalculate";
 const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
-      <Route path="/test" element={<TrackingMap />} />
+      <Route path="/test" element={<EditablePolyline />} />
+      <Route path="/test2" element={<TrackingMap />} />
       {/* Login Routes */}
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<Signup />} />
@@ -59,14 +63,14 @@ const App = () => {
       {/* Login Routes */}
       {/* Dashboard Routes */}
       <Route path="/organisation/employee-dashboard" element={<Dashboard />} />
-      <Route path="/organisation/dashboard/hr" element={<DashBoard_HR />} />
+      <Route path="/organisation/dashboard/hr" element={<DashBoardHR />} />
       <Route
         path="/organisation/dashboard/manager"
-        element={<Dashboard_Manger />}
+        element={<DashboardManger />}
       />
       <Route
         path="/organisation/:organisationId/super-admin"
-        element={<Dashboard />}
+        element={<SuperAdmin />}
       />
       {/* Dashboard Routes */}
       <Route path="/add-organisation" element={<AddOrganisation />} />
@@ -97,14 +101,10 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/input-field"
         element={<Inputfield />}
-      />
+      />{" "}
       <Route
         path="/organisation/:organisationId/salary-management"
         element={<SalaryManagement />}
-      />
-      <Route
-        path="/organisation/:organisationId/salary-calculate/:userId"
-        element={<SalaryCalculate />}
       />
       <Route
         path="/organisation/:organisationId/setup/set-shifts"
@@ -117,6 +117,10 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/set-designation"
         element={<Designation />}
+      />
+      <Route
+        path="/organisation/:organisationId/setup/set-weekend-holiday"
+        element={<WeekendHoliday />}
       />
       <Route path="/set-shifts/:id" element={<Shifts />} />
       <Route path="/add-inputfield/:id" element={<Inputfield />} />
@@ -165,12 +169,12 @@ const App = () => {
         element={<TermsAndConditionsPage />}
       />
       <Route
-        path="/organisation/:id/department/:departmentId"
+        path="/organisation/:organisationId/department/:departmentId"
         element={<SingleDepartment />}
       />
       {/* Removable component */}
       <Route
-        path="/del-department-by-location"
+        path="/organisation/:id/dept-deletion"
         element={<DeleteDepartment />}
       />
     </Routes>

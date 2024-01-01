@@ -52,7 +52,7 @@ const Dashboard_Manger = () => {
 
         <div className="flex mt-8">
           <div className="w-full flex gap-5">
-            <div className="flex flex-col h-max w-[60%] 2xl:w-[70%] gap-3">
+            <div className="flex flex-col h-max w-[70%] 2xl:w-[70%] gap-3">
               <div className="flex h-max w-full justify-between gap-3">
                 <DataCard
                   icon={Groups}
@@ -79,9 +79,9 @@ const Dashboard_Manger = () => {
                 />
               </div>
             </div>
-            <div className="w-[40%] 2xl:w-[30%]  space-y-3">
+            <div className="w-[30%] 2xl:w-[30%]  space-y-3">
               <EmployeeLeaveRequest />
-              <EmployeeLeaveRequest />
+              {/* <EmployeeLeaveRequest /> */}
             </div>
           </div>
         </div>

@@ -1,5 +1,4 @@
 import { Email, Key } from "@mui/icons-material";
-import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -70,11 +69,11 @@ const SignIn = () => {
             <li></li>
           </ul>
           <div className="space-y-2 mb-8 flex-col flex items-center justify-center">
-            <img
+            {/* <img
               src="login.svg"
               alt="none"
               className="absolute z-50 !h-[350px]"
-            />
+            /> */}
           </div>
         </div>
 
@@ -93,7 +92,7 @@ const SignIn = () => {
             autoComplete="off"
             className="flex px-20 w-max justify-center flex-col  h-[80vh]"
           >
-            <div className="flex items-center flex-col space-y-2">
+            {/* <div className="flex items-center flex-col space-y-2">
               <img
                 src="aeigs-log-final.svg"
                 alt="none"
@@ -103,34 +102,45 @@ const SignIn = () => {
                 <h1 className=" font-[600] text-4xl">Log into AEGIS Account</h1>
                 <p className="text-lg">Enter your login credentials below</p>
               </div>
+            </div> */}
+
+            <div className="flex flex-col space-y-1">
+              <div className="mb-4">
+                <h1 className="font-[600] text-3xl">Log into AEGIS Account</h1>
+                <p className="text-lg">Enter your login credentials below</p>
+              </div>
             </div>
 
             <div className="my-6 space-y-2 ">
               <label
-                htmlFor="email"
-                className="font-semibold text-gray-700 text-lg"
+                htmlFor={email}
+                className={" font-semibold text-gray-500 text-md"}
               >
                 Email Address
               </label>
-
-              <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200  py-[6px]">
+              <div
+                className={
+                  "  flex  rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px]"
+                }
+              >
                 <Email className="text-gray-700" />
                 <input
                   name="email"
                   autoComplete="off"
                   id="email"
+                  placeholder="abc@gmail.com"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   type="email"
-                  className="border-none border-[.5px] bg-neutral-200   w-full outline-none px-2"
+                  className={" border-none  bg-white w-full outline-none px-2"}
                 />
               </div>
 
-              <div className="mt-2 space-y-2 ">
+              <div className="space-y-1 !mt-5 w-full ">
                 <div className="flex items-center justify-between">
                   <label
-                    htmlFor="email"
-                    className="font-semibold  text-gray-700 text-lg"
+                    htmlFor={password}
+                    className={" font-semibold text-gray-500 text-md"}
                   >
                     Password
                   </label>
@@ -141,6 +151,54 @@ const SignIn = () => {
                   >
                     Forgot your password?
                   </Link>
+                </div>
+
+                <div
+                  className={
+                    "  flex rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px]"
+                  }
+                >
+                  <Key className="text-gray-700" />
+                  <input
+                    name="password"
+                    autoComplete="off"
+                    id="password"
+                    type="password"
+                    placeholder="*****"
+                    label="Password"
+                    onChange={(event) => setPassword(event.target.value)}
+                    className={" border-none bg-white w-full outline-none px-2"}
+                  />
+                </div>
+              </div>
+
+              {/* <label
+                htmlFor="email"
+                className="font-semibold text-gray-700 text-lg"
+              >
+                Email Address
+              </label> */}
+              {/* <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200  py-[6px]">
+                <Email className="text-gray-700" />
+                <input
+                  name="email"
+                  autoComplete="off"
+                  id="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  type="email"
+                  className="border-none border-[.5px] bg-neutral-200   w-full outline-none px-2"
+                />
+              </div> */}
+
+              {/* <div className="mt-2 space-y-2 ">
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="email"
+                    className="font-semibold  text-gray-700 text-lg"
+                  >
+                    Password
+                  </label>
                 </div>
                 <div className="flex rounded-2xl px-2 border-gray-200  border-[.5px] bg-neutral-200 py-[6px]">
                   <Key className="text-gray-700" />
@@ -153,29 +211,20 @@ const SignIn = () => {
                     className="border-none bg-neutral-200  outline-none px-2 w-full"
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
 
-            <Button
-              style={{ borderRadius: "1rem" }}
-              size="medium"
-              type="submit"
-              variant="contained"
-              className="rounded- bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-            >
-              SIGN IN
-            </Button>
+            <div className="flex gap-5 mt-2">
+              <button
+                type="submit"
+                className=" flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+              >
+                Log in
+              </button>
+            </div>
           </form>
-          {/* <button
-            onClick={handleSendSms}
-            className=" flex mt-2 w-max group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-          >
-            OTP
-          </button> */}
         </article>
       </section>
-
-      {/* Form2  */}
     </>
   );
 };

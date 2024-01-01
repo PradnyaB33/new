@@ -3,7 +3,7 @@ import React from "react";
 
 const DataCard = ({ icon: Icon, title, desc, svg, color }) => {
   return (
-    <Card className="min-w-[32%]" elevation={3}>
+    <Card className="w-[25%]" elevation={3}>
       <CardContent>
         <div className="flex gap-4 mb-3 items-center ">
           <Avatar

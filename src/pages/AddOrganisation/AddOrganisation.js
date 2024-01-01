@@ -363,7 +363,7 @@ const AddOrganisation = () => {
                   />
                 </DemoContainer>
               </LocalizationProvider>
-              <div className="flex" style={{ position: "relative", top: "20px" }}>
+              <div className="flex h-[50px] pt-3 " >
                 <Input
                   type="file"
                   id="imageInput"
@@ -386,8 +386,8 @@ const AddOrganisation = () => {
                   <Avatar
                     src={selectedImage}
                     alt="Selected Image"
-                    sx={{ width: 40, height: 40 }}
-                    style={{ marginLeft: "3rem" }}
+                    sx={{ width: 35, height: 35 }}
+                    style={{ marginLeft: "4.2rem" }}
                     required
                   />
                 )}
@@ -399,8 +399,6 @@ const AddOrganisation = () => {
               style={{
                 background: "#1D6EB7",
                 color: "white",
-                position: "relative",
-                bottom: "-15px",
               }}
             >
               Submit
