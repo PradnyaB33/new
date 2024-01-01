@@ -17,9 +17,9 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const RemainingLeaves = useLeaveTable();
-  const [userId, setuserId] = useState(user._id);
+  const [userId, setuserId] = useState(user?._id);
 
-  const { data: remainingLeaves, isLoading } = RemainingLeaves;
+  const { data: remainingLeaves } = RemainingLeaves;
 
   const dataPie = {
     labels: remainingLeaves?.leaveTypes?.map((item) => item.leaveName) ?? [],
@@ -75,23 +75,20 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
     "December",
   ];
 
-  function getFilteredAndReversedMonths(data) {
-    const filteredMonths = data
-      ?.filter((element) => monthNames[element.month - 1])
-      ?.map((element) => monthNames[element.month - 1]);
-    const reversedMonths = filteredMonths?.reverse();
-    return reversedMonths;
+  function getMonthArray(data) {
+    const filteredMonths = data?.map(
+      (element) => monthNames[element.month - 1]
+    );
+    return filteredMonths;
   }
-
-  const reversedMonthsArray = getFilteredAndReversedMonths(LeaveYearData);
+  const MonthArray = getMonthArray(LeaveYearData);
 
   const organizeDataByMonth = (data) => {
     const organizedData = [];
 
     for (let i = 0; i < data?.length; i++) {
       const monthData = data[i];
-      const monthIndex = monthData.month - 1; // Month numbers are 1-based
-
+      const monthIndex = monthData.month - 1;
       if (!organizedData[monthIndex]) {
         organizedData[monthIndex] = {
           month: monthData.month,
@@ -106,33 +103,31 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
       organizedData[monthIndex].paidleaveDays += monthData.paidleaveDays;
     }
 
-    // Filter out undefined elements and reverse the array
-    const reversedData = organizedData.filter((monthData) => monthData);
-    return reversedData;
+    // Filter out undefined elements =
+    const MonthData = organizedData.filter((monthData) => monthData);
+    return MonthData;
   };
 
-  const reversedOrganizedData = organizeDataByMonth(LeaveYearData);
+  const EmployeeleaveData = organizeDataByMonth(LeaveYearData);
 
   const data = {
-    labels: reversedMonthsArray,
+    labels: MonthArray,
     datasets: [
       {
         label: "Available Days",
-        data: reversedOrganizedData.map((monthData) => monthData.availableDays),
+        data: EmployeeleaveData.map((monthData) => monthData.availableDays),
         backgroundColor: "#00b0ff",
         borderWidth: 1,
       },
       {
         label: "Unpaid Leave Days",
-        data: reversedOrganizedData.map(
-          (monthData) => monthData.unpaidleaveDays
-        ),
+        data: EmployeeleaveData.map((monthData) => monthData.unpaidleaveDays),
         backgroundColor: "#f50057",
         borderWidth: 1,
       },
       {
         label: "Paid Leave Days",
-        data: reversedOrganizedData.map((monthData) => monthData.paidleaveDays),
+        data: EmployeeleaveData.map((monthData) => monthData.paidleaveDays),
         backgroundColor: "#4caf50",
         borderWidth: 1,
       },
@@ -185,11 +180,7 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
 
         <div className="flex flex-col gap-2">
           <Card elevation={0} className="w-full ">
-            {/* <div className="p-4 py-4 flex justify-between items-center">
-              <h1 className="text-xl">Overall Attendence</h1>
-            </div> */}
-
-            {reversedMonthsArray?.length <= 0 ? (
+            {MonthArray?.length <= 0 ? (
               <Card
                 elevation={1}
                 className="!bg-gray-50  mx-4 py-6 px-8 rounded-md"
