@@ -1,25 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Badge,
-  CheckCircle,
   DriveFileRenameOutlineOutlined,
   Email,
-  Fingerprint,
   Lock,
   NoEncryption,
   PermContactCalendar,
   Phone,
 } from "@mui/icons-material";
-import { SvgIcon } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
 import { Link, useLocation } from "react-router-dom";
-import Swal from "sweetalert2";
 import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
-import { UseContext } from "../../State/UseState/UseContext";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import TermsCondition from "../../components/termscondition/termsCondition";
 
@@ -99,6 +93,7 @@ const SignIn = () => {
   });
 
   const number = watch("phone");
+  console.log("number", number?.length);
 
   const onSubmit = async (data) => {
     if (!isVerified) {
@@ -341,18 +336,14 @@ const SignIn = () => {
                   <div className="h-4  !mb-1"></div>
                 </div>
 
-                <button
-                  type="button"
-                  disabled={number?.length === 10 ? false : true}
-                  onClick={VerifyOtp}
-                  className={`w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500 ${
-                    number?.length !== 10 && "bg-gray-400 text-gray-900"
-                  }`}
-                >
-                  Verify
-                </button>
-              </div>
-            )}
+              <button
+                type="button"
+                onClick={sendOtp}
+                className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+              >
+                Verify Otp
+              </button>
+            </div>
             {/* Email */}
             <AuthInputFiled
               name="email"
