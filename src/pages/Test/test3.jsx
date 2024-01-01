@@ -12,12 +12,14 @@ import {
 } from "react-leaflet";
 import { useQuery } from "react-query";
 import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
 
 const TrackingMap = () => {
   const { handleAlert } = useContext(TestContext);
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
   function LocationMarker() {
     const [position, setPosition] = useState(null);
-    console.log(`🚀 ~ file: test3.jsx:14 ~ position:`, position);
     const markerIcon = new L.Icon({
       iconUrl: "marker-icon-2x.png",
       iconSize: [35, 45],
@@ -41,12 +43,19 @@ const TrackingMap = () => {
     );
   }
   const fetchPts = async () => {
-    const response = await axios.get("https://example.com/api/pts"); // Replace with your API endpoint
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/punch/getone`,
+      {
+        headers: { Authorization: authToken },
+      }
+    );
 
     return response.data;
   };
-  const { data: pts2, error } = useQuery("pts", fetchPts);
-  if (error) {
+  const { data, isError } = useQuery("pts", fetchPts);
+  console.log(`🚀 ~ file: test3.jsx:57 ~ data:`, data);
+  if (isError) {
+    console.log(`🚀 ~ file: test3.jsx:50 ~ error:`, isError);
     handleAlert(true, "error", "error in getting the you location track");
   }
 
@@ -123,7 +132,13 @@ const TrackingMap = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Polyline positions={pts2 ? pts2 : pts} color="blue" />
+        {data && (
+          <Polyline
+            positions={data.punch}
+            // positions={pts}
+            color="blue"
+          />
+        )}
         <LocationMarker />
       </MapContainer>
       ,
