@@ -1,66 +1,11 @@
 import { Button } from "@mui/material";
 
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { TestContext } from "../../State/Function/Main";
+import React from "react";
 import useLocationStore from "../../hooks/Location/useLocation";
 
-// Custom hook to manage intervals
-function useInterval(callback, delay) {
-  const savedCallback = useRef();
-
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  useEffect(() => {
-    function tick() {
-      savedCallback.current();
-    }
-    if (delay !== null) {
-      const id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
-}
-
 export default function TestNaresh() {
-  //   const { cookies } = useContext(UseContext);
-  const { handleAlert } = useContext(TestContext);
-  //   const authToken = cookies["aeigs"];
-  const [watchId, setWatchId] = useState(null);
   const { startLocationTracking, stopLocationTracking, locationData, count } =
     useLocationStore();
-  console.log(`🚀 ~ file: testNaresh.jsx:34 ~ count:`, count);
-  console.log(`🚀 ~ file: testNaresh.jsx:34 ~ locationData:`, locationData);
-
-  const postDataToBackend = async () => {
-    // const { latitude, longitude } = latestLocationData.current;
-    // Create the payload in the required format
-    // const payload = {
-    //   start: new Date().toISOString(),
-    //   locations: [
-    //     {
-    //       lat: latitude.toString(),
-    //       lng: longitude.toString(),
-    //       time: new Date().toISOString(),
-    //     },
-    //   ],
-    // };
-    // try {
-    //   const response = await axios.post(
-    //     `${process.env.REACT_APP_API}/route/punch/create`,
-    //     payload,
-    //     { headers: { Authorization: authToken } }
-    //   );
-    //   if (response.status === 200) {
-    //     console.log("Data posted successfully");
-    //   } else {
-    //     console.error("Failed to post data to the backend");
-    //   }
-    // } catch (error) {
-    //   console.error("Error posting data to the backend", error);
-    // }
-  };
 
   return (
     <>
