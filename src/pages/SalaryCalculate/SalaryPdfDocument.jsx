@@ -284,33 +284,33 @@ const styles = StyleSheet.create({
   },
   tablesContainer: {
     flexDirection: "row",
-    justifyContent: "space-between", // Distribute space between tables
+    justifyContent: "space-between",
     marginBottom: 20,
   },
   table: {
     display: "table",
-    width: "calc(50% - 5px)", // Adjusted width to accommodate margin
+    width: "calc(50% - 5px)",
     borderWidth: 1,
-    borderColor: "#999", // Adjusted color to be fainter
+    borderColor: "#999",
     borderStyle: "solid",
-    borderCollapse: "collapse", // Improved border rendering
-    marginRight: 10, // Added margin to create space between tables
+    borderCollapse: "collapse",
+    marginRight: 10,
   },
   tableRow: {
     flexDirection: "row",
     display: "table-row",
-    borderBottomWidth: 0.5, // Adjusted bottom border width
+    borderBottomWidth: 0.5,
     borderStyle: "solid",
-    borderColor: "#999", // Adjusted color to be fainter
+    borderColor: "#999",
   },
 
   cell: {
     flex: 0.5,
     padding: 4,
-    fontSize: 9, // Adjusted font size for the cells
+    fontSize: 9,
   },
   highlightedCell: {
-    backgroundColor: "#FFFF00", // Standard yellow color
+    backgroundColor: "#FFFF00",
   },
   secondTableCell: {
     flex: 0.5,
@@ -322,41 +322,41 @@ const styles = StyleSheet.create({
     display: "table",
     width: "100%",
     borderWidth: 1,
-    borderColor: "#999", // Adjusted color to be fainter
+    borderColor: "#999",
     borderStyle: "solid",
-    borderCollapse: "collapse", // Improved border rendering
-    marginRight: 10, // Added margin to create space between tables
+    borderCollapse: "collapse",
+    marginRight: 10,
     marginBottom: 15,
   },
   netTableRow: {
     flexDirection: "row",
     display: "table-row",
-    borderBottomWidth: 0.5, // Adjusted bottom border width
+    borderBottomWidth: 0.5,
     borderStyle: "solid",
-    borderColor: "#999", // Adjusted color to be fainter
+    borderColor: "#999",
   },
 
   netcell: {
     flex: 0.5,
     padding: 4,
-    fontSize: 9, // Adjusted font size for the cells
+    fontSize: 9,
     textAlign: "center",
   },
 
   header: {
     flexDirection: "row",
-    justifyContent: "space-between", // Align items horizontally
+    justifyContent: "space-between",
     marginBottom: 20,
   },
   logo: {
-    width: 100, // Set the width of the logo
-    height: 70, // Set the height of the logo
+    width: 100,
+    height: 70,
   },
   roundedImage: {
     width: "100%",
     height: "100%",
-    borderRadius: "200%", // Set the border radius for the image
-    overflow: "hidden", // Ensure the image stays within the container
+    borderRadius: "200%",
+    overflow: "hidden",
   },
   organizationDetails: {
     flex: 1,
@@ -364,13 +364,13 @@ const styles = StyleSheet.create({
   },
   detailRow: {
     flexDirection: "row",
-    marginBottom: 5, // Add spacing between each detail row
-    alignItems: "center", // Align items vertically in the row
+    marginBottom: 5,
+    alignItems: "center",
   },
   detailLabel: {
     fontWeight: "bold",
     fontSize: 11,
-    marginRight: 5, // Add spacing between label and value
+    marginRight: 5,
   },
   textLabel: {
     fontSize: 9,
@@ -382,7 +382,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     textAlign: "right",
     fontStyle: "italic",
-    color: "#555", // Adjust the color as needed
+    color: "#555",
   },
   footerDetails: {
     flex: 1,
@@ -392,7 +392,7 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 11,
     fontWeight: "bold",
-    backgroundColor: "#f0f0f0", // Adjust background color as desired
+    backgroundColor: "#f0f0f0",
   },
 });
 
