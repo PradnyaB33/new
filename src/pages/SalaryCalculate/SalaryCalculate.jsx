@@ -118,7 +118,6 @@ const SalaryCalculate = () => {
 
   // calculate the totalNetSalary
   let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
-  console.log(totalNetSalary);
 
   const formattedDate = dayjs(selectedDate).format("MMM-YY");
 
@@ -254,7 +253,7 @@ const SalaryCalculate = () => {
               <div style={{ marginRight: "40px" }}>
                 <Paper className="w-full">
                   <Box sx={{ flexGrow: 1 }}>
-                    <table style={{ width: "500px" }}>
+                    <table style={{ width: "500px", height: "25vh" }}>
                       <tbody>
                         <tr>
                           <td
@@ -310,17 +309,7 @@ const SalaryCalculate = () => {
                           </td>
                           <td>{}</td>
                         </tr>
-                        <tr>
-                          <td
-                            style={{
-                              fontWeight: "bold",
-                              paddingRight: "8px",
-                            }}
-                          >
-                            Weekend :
-                          </td>
-                          <td>{}</td>
-                        </tr>
+
                         <tr>
                           <td
                             style={{
@@ -342,7 +331,7 @@ const SalaryCalculate = () => {
               <div>
                 <Paper className="w-full">
                   <Box sx={{ flexGrow: 1 }}>
-                    <table style={{ width: "420px", height: "20vh" }}>
+                    <table style={{ width: "420px", height: "25vh" }}>
                       <tbody>
                         <tr>
                           <td
@@ -688,6 +677,18 @@ const SalaryCalculate = () => {
                     <PDFDocument
                       employeeData={employeeData}
                       formattedDate={formattedDate}
+                      noOfDaysInMonth={numDaysInMonth}
+                      totalDeduction={totalDeduction}
+                      totalGrossSalary={totalGrossSalary}
+                      totalNetSalary={totalNetSalary}
+                      basicSalary={basicSalary}
+                      hraSalary={hraSalary}
+                      daSalary={daSalary}
+                      foodAllowance={foodAllowance}
+                      salesAllowance={salesAllowance}
+                      specialAllowance={specialAllowance}
+                      travelAllowance={travelAllowance}
+                      variableAllowance={variableAllowance}
                     />
                   }
                   fileName="SalarySlip.pdf"
