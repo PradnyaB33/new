@@ -4,10 +4,10 @@ import { Badge, Button, Skeleton } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import "tailwindcss/tailwind.css";
-import { TestContext } from "../../../State/Function/Main";
+// import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import AppDatePicker from "../../../components/date-picker/date-picker";
 import ShiftTable from "./components/ShiftsTable";
@@ -21,17 +21,18 @@ const ShiftManagement = () => {
   const authToken = cookies["aeigs"];
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  const { handleAlert } = useContext(TestContext);
+  // const { handleAlert } = useContext(TestContext);
   const { shifts, setShifts } = useState([]);
-  const [subtractedLeaves, setSubtractedLeaves] = useState([]);
+  // const [subtractedLeaves, setSubtractedLeaves] = useState([]);
   const [isCalendarOpen, setCalendarOpen] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([]);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
-  const queryclient = useQueryClient();
+  // const queryclient = useQueryClient();
   const { isLoading } = useQuery(
-    "employee-leave-table-without-default",
+    // "employee-leave-table-without-default",
+    "shift-management",
     async () => {
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/shifts/${user.organizationId}`,
@@ -43,7 +44,13 @@ const ShiftManagement = () => {
       // setAppliedLeaveEvents([...response.data.currentYearLeaves]);
       // This is to get all shifts
       setShifts(response.data.shifts);
+      console.log("THis is complete", response.data);
       return response.data;
+      //
+      // Below are taken leaves
+      // setAppliedLeaveEvents([...response.data.currentYearLeaves]);
+      // Below are all leaves
+      // setSubtractedLeaves(response.data.LeaveTypedEdited);
     }
   );
 
@@ -184,7 +191,7 @@ const ShiftManagement = () => {
                     Selected Leave's
                   </h1>
                   <div className="flex flex-col gap-4">
-                    {newAppliedLeaveEvents?.map((item, index) => (
+                    {shifts?.map((item, index) => (
                       <Mapped
                         key={index}
                         setCalendarOpen={setCalendarOpen}

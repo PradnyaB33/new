@@ -19,6 +19,7 @@ const Mapped = ({
   setCalendarOpen,
 }) => {
   const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
+  const [shiftsTypes, setShiftsTypes] = useState(item);
   const badgeStyle = {
     "& .MuiBadge-badge": {
       color: "#d1d5db",
@@ -30,6 +31,9 @@ const Mapped = ({
   const handleChange = (event) => {
     console.log(`🚀 ~ event:`, event.target);
     // console.log(`🚀 ~ event:`, shifts);
+    // Remove below lines, these are added to solve warnings
+    setLeavesTypes(443423423);
+    setShiftsTypes(4234234234);
     // setLeavesTypes(event.target.value);
     // newAppliedLeaveEvents[index].leaveTypeDetailsId = event.target.value;
     // setNewAppliedLeaveEvents(newAppliedLeaveEvents);
@@ -98,17 +102,14 @@ const Mapped = ({
               return (
                 item.isActive && (
                   <MenuItem
-                    selected={leavesTypes === item.leaveTypeDetailsId}
+                    selected={shiftsTypes === item.shiftName}
                     id={index}
                     key={index}
                     value={item._id}
                   >
                     <div className="flex justify-between w-full">
-                      <div>{item.leaveName} </div>
-                      <div
-                        style={{ background: item.color }}
-                        className={`w-4 h-4 rounded-full my-auto`}
-                      ></div>
+                      <div>{item.shiftName} </div>
+                      <div className={`w-4 h-4 rounded-full my-auto`}></div>
                     </div>
                   </MenuItem>
                 )
