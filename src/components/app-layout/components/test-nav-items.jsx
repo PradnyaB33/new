@@ -126,7 +126,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "shiftManagement",
-            link: "/shift-manage",
+            link: "/shift-management",
             icon: <Event className="text-white" />,
             text: "Shift Management",
           },

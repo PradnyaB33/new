@@ -18,6 +18,7 @@ import EmployeeList from "./pages/EmployeeList/EmployeeList";
 import Home from "./pages/Home/Home";
 import AddProfile from "./pages/Home/components/addprofile";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
+import ShiftManagement from "./pages/SetupPage/ShiftManagement/shiftAllowance";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
@@ -147,6 +148,7 @@ const App = () => {
       <Route path="/notification" element={<Notification />} />
       <Route path="/application" element={<Application />} />
       <Route path="/leave" element={<LeaveRequisition />} />
+      <Route path="/shift-management" element={<ShiftManagement />} />
       <Route
         path="/terms-and-conditions"
         element={<TermsAndConditionsPage />}
