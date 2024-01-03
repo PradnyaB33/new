@@ -9,7 +9,7 @@ import TermsAndConditionsPage from "./components/termscondition/termsconditonpag
 import AddEmployee from "./pages/AddEmployee/addemployee";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import Application from "./pages/Application/Application";
-import Dashboard from "./pages/DashBoard/Dashboard";
+import Dashboard from "./pages/DashBoard/employee/Dashboard";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import CreateDepartment from "./pages/Departments/addDepartment";
 import DepartmentList from "./pages/Departments/department-list";
@@ -21,6 +21,8 @@ import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import ShiftManagement from "./pages/SetupPage/ShiftManagement/shiftAllowance";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
+import SalaryCalculate from "./pages/SalaryCalculate/SalaryCalculate";
+import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
 import EmployementTypes from "./pages/SetUpOrganization/EmployementType/EmployementTypes";
 import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
@@ -36,16 +38,20 @@ import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 import EditablePolyline from "./pages/Test/test2";
+import TrackingMap from "./pages/Test/test3";
+import TestNaresh from "./pages/Test/testNaresh";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
-import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/test" element={<EditablePolyline />} />
+      {/* <Route path="/test" element={<EditablePolyline />} /> */}
+      <Route path="/test3" element={<TestNaresh />} />
+      <Route path="/test2" element={<TrackingMap />} />
       {/* Login Routes */}
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<Signup />} />
@@ -56,6 +62,7 @@ const App = () => {
       {/* Login Routes */}
       {/* Dashboard Routes */}
       <Route path="/organisation/employee-dashboard" element={<Dashboard />} />
+
       <Route
         path="/organisation/:organisationId/super-admin"
         element={<Dashboard />}
@@ -89,10 +96,14 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/input-field"
         element={<Inputfield />}
-      />{" "}
+      />
       <Route
         path="/organisation/:organisationId/salary-management"
         element={<SalaryManagement />}
+      />
+      <Route
+        path="/organisation/:organisationId/salary-calculate/:userId"
+        element={<SalaryCalculate />}
       />
       <Route
         path="/organisation/:organisationId/setup/set-shifts"

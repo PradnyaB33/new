@@ -30,7 +30,6 @@ const AppDatePicker = ({
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-  //Removed isLoading from below line as was giving not used error
   const { data } = useQuery("employee-disable-weekends", async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/weekend/get`,
@@ -41,7 +40,6 @@ const AppDatePicker = ({
 
     return response.data;
   });
-  console.log(`🚀 ~ file: date-picker.jsx:34 ~ data:`, data);
   const handleSelectEvent = (event) => {
     setSelectedLeave(event);
     setCalendarOpen(true);

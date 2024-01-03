@@ -1,50 +1,49 @@
-import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 const TrackingMap = () => {
-  const [map, setMap] = useState(null);
-  const [polyline, setPolyline] = useState(null);
-  const [path, setPath] = useState([
-    { lat: 28.55108, lng: 77.26913 },
-    { lat: 28.55106, lng: 77.26906 },
-    { lat: 28.55105, lng: 77.26897 },
-    { lat: 28.55101, lng: 77.26872 },
-    { lat: 28.55099, lng: 77.26849 },
-    { lat: 28.55097, lng: 77.26831 },
-    { lat: 28.55093, lng: 77.26794 },
-    { lat: 28.55089, lng: 77.2676 },
-    { lat: 28.55123, lng: 77.26756 },
-    { lat: 28.55145, lng: 77.26758 },
-    { lat: 28.55168, lng: 77.26758 },
-    { lat: 28.55175, lng: 77.26759 },
-    { lat: 28.55177, lng: 77.26755 },
-    { lat: 28.55179, lng: 77.26753 },
-  ]);
+  // const [map, setMap] = useState(null);
+  // const [polyline, setPolyline] = useState(null);
+  // const [path, setPath] = useState([
+  //   { lat: 28.55108, lng: 77.26913 },
+  //   { lat: 28.55106, lng: 77.26906 },
+  //   { lat: 28.55105, lng: 77.26897 },
+  //   { lat: 28.55101, lng: 77.26872 },
+  //   { lat: 28.55099, lng: 77.26849 },
+  //   { lat: 28.55097, lng: 77.26831 },
+  //   { lat: 28.55093, lng: 77.26794 },
+  //   { lat: 28.55089, lng: 77.2676 },
+  //   { lat: 28.55123, lng: 77.26756 },
+  //   { lat: 28.55145, lng: 77.26758 },
+  //   { lat: 28.55168, lng: 77.26758 },
+  //   { lat: 28.55175, lng: 77.26759 },
+  //   { lat: 28.55177, lng: 77.26755 },
+  //   { lat: 28.55179, lng: 77.26753 },
+  // ]);
 
-  useEffect(() => {
-    const mapInstance = L.map("map").setView(path[0], 14);
+  // useEffect(() => {
+  //   const mapInstance = L.map("map").setView(path[0], 14);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "&copy; OpenStreetMap contributors",
-    }).addTo(mapInstance);
+  //   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  //     attribution: "&copy; OpenStreetMap contributors",
+  //   }).addTo(mapInstance);
 
-    const polylineInstance = L.polyline(path, {
-      color: "#FF0000",
-      weight: 2,
-    }).addTo(mapInstance);
+  //   const polylineInstance = L.polyline(path, {
+  //     color: "#FF0000",
+  //     weight: 2,
+  //   }).addTo(mapInstance);
 
-    setMap(mapInstance);
-    setPolyline(polylineInstance);
+  //   setMap(mapInstance);
+  //   setPolyline(polylineInstance);
 
-    // Cleanup on component unmount
-    return () => {
-      if (mapInstance) {
-        mapInstance.remove();
-      }
-    };
-    // eslint-disable-next-line
-  }, [path]);
+  //   // Cleanup on component unmount
+  //   return () => {
+  //     if (mapInstance) {
+  //       mapInstance.remove();
+  //     }
+  //   };
+  //   // eslint-disable-next-line
+  // }, [path]);
 
   // Simulate tracking by updating the path
   // useEffect(() => {

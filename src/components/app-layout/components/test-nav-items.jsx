@@ -89,7 +89,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "listNotification",
-            link: "/list-notification",
+            link: "/notification",
             icon: <CircleNotifications className="text-white" />,
             text: "List Notification",
           },
@@ -195,6 +195,12 @@ const TestNavItems = ({ toggleDrawer }) => {
           //   icon: <ListAlt className="text-white" />,
           //   text: "Delete Department",
           // },
+          {
+            key: "deptDeletion",
+            link: `/organisation/${orgId}/dept-deletion`,
+            icon: <ListAlt className="text-white" />,
+            text: "Bulk Deletion",
+          },
           {
             key: "departmentList",
             link: `/organisation/${orgId}/department-list`,

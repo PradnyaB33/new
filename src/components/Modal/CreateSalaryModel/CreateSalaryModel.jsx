@@ -56,13 +56,6 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
     }
   );
 
-  // const handleInputChange = (name, value) => {
-  //   console.log("name, value", name, value);
-  //   setInputValue({
-  //     ...inputValue,
-  //     [name]: value,
-  //   });
-  // };
   const handleInputChange = (name, value) => {
     const enteredValue = parseFloat(value);
 

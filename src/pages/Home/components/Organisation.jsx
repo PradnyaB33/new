@@ -11,8 +11,10 @@ import {
   Menu,
   MenuItem,
   Select,
+  Input,
   TextField,
 } from "@mui/material";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -31,6 +33,8 @@ const Organisation = ({ item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [editConfirmation, setEditConfirmation] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [logoUrl, setLogoUrl] = useState("");
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -45,12 +49,37 @@ const Organisation = ({ item }) => {
     contact_number: "",
     description: "",
     foundation_date: dayjs(),
+    logo_url:logoUrl
   };
 
   const [inputdata, setInputData] = useState(data);
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
+  };
+
+  const handleImageChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl);
+    }
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "lhyvmmdu");
+    try {
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dnpj0dyxu/image/upload",
+        formData
+      );
+
+      const imageURL = response.data.secure_url;
+      console.log("Image URL:", imageURL);
+
+      setLogoUrl(imageURL);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
   };
 
   const handleClose = () => {
@@ -116,6 +145,7 @@ const Organisation = ({ item }) => {
         contact_number: organizationData.contact_number,
         description: organizationData.description,
         foundation_date: dayjs(organizationData.foundation_date),
+        logo_url:organizationData.logo_url
       });
     } catch (error) {
       console.log(error);
@@ -125,16 +155,21 @@ const Organisation = ({ item }) => {
 
   const handleEditConfirmation = async (id) => {
     try {
+      const editedData = {
+        ...inputdata,
+        logo_url: logoUrl, // Include the logo_url in the payload
+      };
+  
       await axios.patch(
         `${process.env.REACT_APP_API}/route/organization/edit/${id}`,
-        inputdata,
+        editedData,
         {
           headers: {
             Authorization: authToken,
           },
         }
       );
-
+  
       handleAlert(true, "success", "Organization updated successfully");
       queryClient.invalidateQueries(["orgData"]);
       // Close the dialog
@@ -241,7 +276,7 @@ const Organisation = ({ item }) => {
         onClose={handleCloseConfirmation}
         fullWidth
       >
-        <DialogTitle>Edit Organization</DialogTitle>
+        <DialogTitle className="!font-semibold !text-2xl" >Edit Organization</DialogTitle>
         <DialogContent>
           <div className="flex flex-col gap-4 mt-3">
             <TextField
@@ -329,12 +364,13 @@ const Organisation = ({ item }) => {
             />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer
-                className="w-full"
+                className="w-full !pt-0 !mt-0"
                 components={["DatePicker"]}
                 required
               >
                 <DatePicker
                   label="Foundation Date"
+                  className="!mt-0 !pt-0"
                   value={inputdata.foundation_date}
                   onChange={(newDate) => {
                     setInputData({ ...inputdata, foundation_date: newDate });
@@ -344,6 +380,35 @@ const Organisation = ({ item }) => {
                 />
               </DemoContainer>
             </LocalizationProvider>
+            <div className="flex h-[50px]" >
+                <Input
+                  type="file"
+                  id="imageInput"
+                  accept="image/*"
+                  style={{ display: "none",  }}
+                  onChange={handleImageChange}
+                  required
+                />
+                <label htmlFor="imageInput">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    component="span"
+                    startIcon={<PhotoCamera />}
+                  > 
+                    Choose logo
+                  </Button>
+                </label>
+                {selectedImage && (
+                  <Avatar
+                    src={selectedImage}
+                    alt="Selected Image"
+                    sx={{ width: 35, height: 35 }}
+                    className="!ml-4"
+                    required
+                  />
+                )}
+              </div>
           </div>
         </DialogContent>
 

@@ -1,21 +1,21 @@
-import React, { useContext, useEffect, useState } from "react";
-import { TestContext } from "../../../State/Function/Main";
-import { UseContext } from "../../../State/UseState/UseContext";
-import axios from "axios";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Button,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
   Divider,
   FormControl,
   IconButton,
   InputLabel,
   OutlinedInput,
-  Dialog,
-  DialogActions,
-  DialogContent,
 } from "@mui/material";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
 
 const EditModelOpen = ({ handleClose, open, employeeId }) => {
   const { handleAlert } = useContext(TestContext);

@@ -16,61 +16,55 @@ import {
 import axios from "axios";
 import * as XLSX from "xlsx";
 import { UseContext } from "../../State/UseState/UseContext";
+import { useParams } from "react-router-dom";
 
 const DepartmentDeletion = () => {
   const { setAppAlert, cookies } = useContext(UseContext);
   const [departments, setDepartments] = useState([]);
-  const [deptLocationId, setDeptLocationId] = useState("");
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState("");
-  const [filteredDepartments, setFilteredDepartments] = useState([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showConfirmationExcel, setShowConfirmationExcel] = useState(false);
+  const organizationId = useParams().id;
   const authToken = cookies["aeigs"];
-
-  useEffect(() => {
-    const fetchDepartments = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API}/route/department/get`);
-        setDepartments(response.data.department);
-      } catch (error) {
-        console.error("Error fetching department data:", error);
-      }
-    };
-    fetchDepartments();
-  }, [authToken]);
+  var deptLocationId;
 
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API}/route/location/getOrganizationLocations`, {
-          headers: { Authorization: authToken },
-        });
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${organizationId}`,
+          {
+            headers: { Authorization: authToken },
+          }
+        );
         setLocations(response.data);
       } catch (error) {
         console.error("Error fetching location data:", error);
       }
     };
+
     fetchLocations();
-  }, [authToken]);
+  }, [authToken, organizationId]);
 
   const handleLocationChange = async (event) => {
-    setSelectedLocation(event.target.value);
+    const selectedShortName = event.target.value;
+    setSelectedLocation(selectedShortName);
+    const selectedLocation = locations.find(
+      (obj) => obj.shortName === selectedShortName
+    );
+    deptLocationId = selectedLocation._id;
 
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API}/route/location/getOrganizationLocations`, {
-        headers: { Authorization: authToken },
-      });
-
-      const location = response.data.find(
-        (obj) => obj.shortName === event.target.value
+      let departments = await axios.get(
+        `${process.env.REACT_APP_API}/route/department/getbylocation/${deptLocationId}`,
+        {
+          headers: { Authorization: authToken },
+        }
       );
-      const singleDept = departments.filter(
-        (dept) => dept.departmentLocation === location._id
-      );
-      setFilteredDepartments(singleDept);
-    } catch (error) {
-      console.error("Error fetching location data:", error);
+      setDepartments(departments.data.message)
+    } catch (e) {
+      console.log(e.message);
     }
   };
 
@@ -80,37 +74,40 @@ const DepartmentDeletion = () => {
         console.error("Please select a department to delete.");
         return;
       }
-      await axios.delete(`${process.env.REACT_APP_API}/route/department/delete/${deptLocationId}`, {
-        headers: { Authorization: authToken },
-      }).then((response) => {
-        setAppAlert({
-          alert: true,
-          type: 'success',
-          msg: 'Department deleted successfully!',
+      await axios
+        .delete(
+          `${process.env.REACT_APP_API}/route/department/delete/${deptLocationId}`,
+          {
+            headers: { Authorization: authToken },
+          }
+        )
+        .then((response) => {
+          setAppAlert({
+            alert: true,
+            type: "success",
+            msg: "Department deleted successfully!",
+          });
+          setShowConfirmation(false);
+        })
+        .catch((error) => {
+          console.error("Error deleting department:", error);
+          setAppAlert({
+            alert: true,
+            type: "error",
+            msg: "Error deleting department. Please try again.",
+          });
+          setShowConfirmation(false);
         });
-        setShowConfirmation(false);
-      }).catch((error) => {
-        console.error("Error deleting department:", error);
-        setAppAlert({
-          alert: true,
-          type: 'error',
-          msg: 'Error deleting department. Please try again.',
-        });
-        setShowConfirmation(false);
-      });
 
-      const response = await axios.get(`${process.env.REACT_APP_API}/route/department/get`);
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/department/get`
+      );
       setDepartments(response.data.department);
       setSelectedLocation("");
-      setFilteredDepartments([]);
     } catch (error) {
       console.error("Error deleting department:", error);
     }
     setShowConfirmation(false);
-  };
-
-  const getDepartmentId = (e) => {
-    setDeptLocationId(e.target.value);
   };
 
   const generateExcel = () => {
@@ -118,7 +115,7 @@ const DepartmentDeletion = () => {
       const wb = XLSX.utils.book_new();
       const wsData = [["Department Name", "Department ID"]];
 
-      filteredDepartments.forEach((department) => {
+      departments.forEach((department) => {
         wsData.push([department.departmentName, department._id]);
       });
 
@@ -158,7 +155,9 @@ const DepartmentDeletion = () => {
           const deleteColumnIndex = XLSX.utils.decode_range(ws["!ref"]).e.c;
 
           if (deleteColumnIndex === undefined) {
-            console.error("Delete column not found in the Excel sheet.");
+            console.error(
+              "Delete column not found in the Excel sheet."
+            );
             setAppAlert({
               alert: true,
               type: "error",
@@ -197,7 +196,8 @@ const DepartmentDeletion = () => {
             setAppAlert({
               alert: true,
               type: "error",
-              msg: "Failed to delete department from Excel. Please try again.",
+              msg:
+                "Failed to delete department from Excel. Please try again.",
             });
             setShowConfirmationExcel(false);
             setSelectedLocation("");
@@ -206,28 +206,36 @@ const DepartmentDeletion = () => {
 
           for (const department of departmentsToDelete) {
             try {
-              await axios.delete(`${process.env.REACT_APP_API}/route/department/delete/${department._id}`, {
-                headers: { Authorization: authToken },
-              }).then((resp) => {
-                console.log("deleted successfully");
-                setDepartments((prevDepartments) =>
-                  prevDepartments.filter((dept) => dept._id !== department._id)
-                );
-                setAppAlert({
-                  alert: true,
-                  type: "success",
-                  msg: "Departments deleted from the Excel sheet!",
+              await axios
+                .delete(
+                  `${process.env.REACT_APP_API}/route/department/delete/${department._id}`,
+                  {
+                    headers: { Authorization: authToken },
+                  }
+                )
+                .then((resp) => {
+                  console.log("deleted successfully");
+                  setDepartments((prevDepartments) =>
+                    prevDepartments.filter(
+                      (dept) => dept._id !== department._id
+                    )
+                  );
+                  setAppAlert({
+                    alert: true,
+                    type: "success",
+                    msg: "Departments deleted from the Excel sheet!",
+                  });
+                  setSelectedLocation("");
+                })
+                .catch((error) => {
+                  console.log(error);
+                  setAppAlert({
+                    alert: true,
+                    type: "error",
+                    msg:
+                      "Failed to delete department from Excel. Please try again.",
+                  });
                 });
-                setSelectedLocation("")
-              }).catch((error) => {
-                console.log(error);
-                setAppAlert({
-                  alert: true,
-                  type: "error",
-                  msg: "Failed to delete department from Excel. Please try again.",
-                });
-              });
-
             } catch (error) {
               console.log(error);
               return;
@@ -265,14 +273,18 @@ const DepartmentDeletion = () => {
 
     if (confirmed) {
       try {
-        await axios.delete(`${process.env.REACT_APP_API}/route/department/delete/${deptLocationId}`, {
-          headers: { Authorization: authToken },
-        });
+        await axios.delete(
+          `${process.env.REACT_APP_API}/route/department/delete/${deptLocationId}`,
+          {
+            headers: { Authorization: authToken },
+          }
+        );
 
-        const response = await axios.get(`${process.env.REACT_APP_API}/route/department/get`);
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/department/get`
+        );
         setDepartments(response.data.department);
         setSelectedLocation("");
-        setFilteredDepartments([]);
         setAppAlert({
           alert: true,
           type: "success",
@@ -338,20 +350,21 @@ const DepartmentDeletion = () => {
         size="small"
       >
         <InputLabel id="department-label">Select Department</InputLabel>
-        <Select
-          labelId="department-label"
-          id="department"
-          name="department"
-          onChange={getDepartmentId}
-        >
-          {filteredDepartments.length === 0 && (
-            <h1 className="p-2">dept's not found!!</h1>
-          )}
-          {filteredDepartments.map((data, index) => (
-            <MenuItem key={index} value={data._id}>
-              {data.departmentName}
-            </MenuItem>
-          ))}
+        <Select labelId="department-label" id="department" name="department">
+
+          {
+
+            (departments.length === 0) ?
+
+              (<MenuItem>
+                No department found !!
+              </MenuItem>)
+              :
+              departments.map((data, index) => (
+                <MenuItem key={index} value={data._id}>
+                  {data.departmentName}
+                </MenuItem>
+              ))}
         </Select>
       </FormControl>
       <TextField
@@ -361,14 +374,14 @@ const DepartmentDeletion = () => {
         onChange={() => setShowConfirmationExcel(true)}
       />
       <div className="flex gap-5 w-full my-5">
-        <Button
+        {/* <Button
           color="error"
           variant="contained"
           style={{ marginBottom: "2rem" }}
           onClick={() => setShowConfirmation(true)}
         >
           Delete
-        </Button>
+        </Button> */}
 
         <Button
           variant="contained"
