@@ -1,23 +1,9 @@
-import {
-  BorderColor,
-  Delete,
-  Info,
-  ManageAccountsOutlined,
-  Warning,
-} from "@mui/icons-material";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-} from "@mui/material";
+import { BorderColor } from "@mui/icons-material";
+import { Button, IconButton } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../Setup";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
@@ -26,16 +12,48 @@ const EmployeeSalaryCalculateDay = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { organisationId } = useParams();
-
+  const queryClient = useQueryClient();
   // Modal states and function
   const [open, setOpen] = React.useState(false);
-
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [empSalCalId, setEmpSalCalId] = useState(null);
   const handleOpen = (scrollType) => {
     setOpen(true);
+    setEmpSalCalId(null);
   };
 
   const handleClose = () => {
     setOpen(false);
+    setEmpSalCalId(null);
+    setEditModalOpen(false);
+  };
+
+  const { data: empSalCalData } = useQuery(
+    ["empSalaryCalData", organisationId],
+    async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/employee-salary-cal-day/get/${organisationId}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        return response.data;
+      } catch (error) {
+        throw new Error(
+          error.response.data.message ||
+            "Failed to fetch Employee Salary Calculation Data"
+        );
+      }
+    }
+  );
+
+  const handleEditModalOpen = (empSalCalId) => {
+    setEditModalOpen(true);
+    queryClient.invalidateQueries(["empsal", empSalCalId]);
+    setEmpSalCalId(empSalCalId);
   };
 
   return (
@@ -76,7 +94,21 @@ const EmployeeSalaryCalculateDay = () => {
                     </th>
                   </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                  {empSalCalData?.empSalaryCalDayData?.map((empSalCal, id) => (
+                    <tr className="!font-medium border-b" key={id}>
+                      <td className="!text-left pl-8 py-3 ">{id + 1}</td>
+                      <td className="py-3 ">{empSalCal.selectedDay}</td>
+                      <td className="whitespace-nowrap px-6 py-2">
+                        <IconButton
+                          onClick={() => handleEditModalOpen(empSalCal._id)}
+                        >
+                          <BorderColor className="!text-xl" color="success" />
+                        </IconButton>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
               </table>
             </div>
           </article>
@@ -88,6 +120,12 @@ const EmployeeSalaryCalculateDay = () => {
         id={organisationId}
         open={open}
         handleClose={handleClose}
+      />
+      <EmpSalaryDayModal
+        handleClose={handleClose}
+        id={organisationId}
+        open={editModalOpen}
+        empSalCalId={empSalCalId}
       />
     </>
   );

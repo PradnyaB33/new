@@ -6,20 +6,21 @@ import {
   CircularProgress,
   Divider,
   FormControl,
-  FormLabel,
   IconButton,
-  InputLabel,
   Modal,
-  OutlinedInput,
 } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 
-const EmpSalaryDayModal = ({ handleClose, open, id }) => {
+const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
+  const { handleAlert } = useContext(TestContext);
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
+  const queryClient = useQueryClient();
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -51,12 +52,103 @@ const EmpSalaryDayModal = ({ handleClose, open, id }) => {
     setSelectedDay(event.target.value);
   };
 
-  const handleSubmitData = (event) => {
-    event.preventDefault();
-    const data = {
-      selectedDay,
-    };
-    console.log(data);
+  const EditEmployeeSalaryData = useMutation(
+    async (data) => {
+      try {
+        const response = await axios.put(
+          `${process.env.REACT_APP_API}/route/employee-salary-cal-day/update/${id}/${empSalCalId}`,
+          data,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        return response.data;
+      } catch (error) {
+        throw new Error(
+          error.response.data.message ||
+            "Failed to update Employee Salary Calculation Day"
+        );
+      }
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["empSalary"] });
+        handleClose();
+        handleAlert(
+          true,
+          "success",
+          "Employee Salary Calculation Day Updated Successfully.."
+        );
+        window.location.reload();
+      },
+      onError: (error) => {
+        console.error("Error:", error.message);
+      },
+    }
+  );
+
+  const AddEmployeeSalaryData = useMutation(
+    async (data) => {
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_API}/route/employee-salary-cal-day/${id}`,
+          data,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        return response.data;
+      } catch (error) {
+        throw new Error(
+          error.response.data.message ||
+            "Failed to create Employee Salary Calculation Day"
+        );
+      }
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["empSalary"] });
+        handleClose();
+        setSelectedDay("");
+        handleAlert(
+          true,
+          "success",
+          "Employee Salary Calculation Day Created Successfully.."
+        );
+        window.location.reload();
+      },
+      onError: (error) => {
+        console.error("Error:", error.message);
+      },
+    }
+  );
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const data = {
+        selectedDay,
+      };
+      if (empSalCalId) {
+        // Use EditEmployeeSalaryData function from React Query
+        await EditEmployeeSalaryData.mutateAsync(data);
+      } else {
+        // Use the AddEmployeeTypes function from React Query
+        await AddEmployeeSalaryData.mutateAsync(data);
+      }
+      // Reset form state
+    } catch (error) {
+      console.error(error);
+      handleAlert(
+        true,
+        "error",
+        "An error occurred while creating a Employee Salary Calculation Day"
+      );
+    }
   };
 
   return (
@@ -72,7 +164,9 @@ const EmpSalaryDayModal = ({ handleClose, open, id }) => {
       >
         <div className="flex justify-between py-4 items-center  px-4">
           <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
-            Create Employee Salary Calculation Day
+            {empSalCalId
+              ? "Edit Employee Salary Calculation Day"
+              : "Create Employee Salary Calculation Day"}
           </h1>
           <IconButton onClick={handleClose}>
             <CloseIcon className="!text-[16px]" />
@@ -108,9 +202,33 @@ const EmpSalaryDayModal = ({ handleClose, open, id }) => {
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>
-            <Button onClick={handleSubmitData} color="error" variant="outlined">
-              Submit
-            </Button>
+            {empSalCalId ? (
+              <Button
+                onClick={handleSubmit}
+                variant="contained"
+                color="primary"
+                disabled={EditEmployeeSalaryData.isLoading}
+              >
+                {EditEmployeeSalaryData.isLoading ? (
+                  <CircularProgress size={20} />
+                ) : (
+                  "Apply"
+                )}
+              </Button>
+            ) : (
+              <Button
+                onClick={handleSubmit}
+                variant="contained"
+                color="primary"
+                disabled={AddEmployeeSalaryData.isLoading}
+              >
+                {AddEmployeeSalaryData.isLoading ? (
+                  <CircularProgress size={20} />
+                ) : (
+                  "Submit"
+                )}
+              </Button>
+            )}
           </div>
         </div>
       </Box>
