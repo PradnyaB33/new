@@ -15,10 +15,52 @@ const useLocationStore = () => {
 
   const startLocationTracking = () => {
     if ("geolocation" in navigator) {
-      const id = navigator.geolocation.watchPosition(
+      navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude, speed, accuracy } = position.coords;
-          try {
+
+          // Initial request to backend
+          const initialPayload = {
+            start: new Date(),
+            locations: [
+              {
+                lat: latitude,
+                lng: longitude,
+                time: new Date(),
+              },
+            ],
+          };
+          if (locationData.latitude === null) {
+            try {
+              const initialResponse = await axios.post(
+                `${process.env.REACT_APP_API}/route/punch/create`,
+                initialPayload,
+                { headers: { Authorization: authToken } }
+              );
+              if (initialResponse.status === 200) {
+                console.log("Initial data posted successfully");
+                setCount((prev) => prev + 1);
+              } else {
+                console.error("Failed to post initial data to the backend");
+              }
+            } catch (initialError) {
+              console.error(
+                "Error posting initial data to the backend",
+                initialError
+              );
+            }
+          }
+
+          // Update locationData state with the initial values
+          setLocationData({
+            latitude,
+            longitude,
+            speed,
+            accuracy,
+          });
+
+          // Set up the interval for subsequent requests every 20 seconds
+          const id = setInterval(async () => {
             const payload = {
               start: new Date(),
               locations: [
@@ -29,28 +71,25 @@ const useLocationStore = () => {
                 },
               ],
             };
-            const response = await axios.post(
-              `${process.env.REACT_APP_API}/route/punch/create`,
-              payload,
-              { headers: { Authorization: authToken } }
-            );
-            console.log(`🚀 ~ file: useLocation.jsx:32 ~ response:`, response);
-            if (response.status === 200) {
-              console.log("Data posted successfully");
-            } else {
-              console.error("Failed to post data to the backend");
+            try {
+              const response = await axios.post(
+                `${process.env.REACT_APP_API}/route/punch/create`,
+                payload,
+                { headers: { Authorization: authToken } }
+              );
+              if (response.status === 200) {
+                console.log("Data posted successfully");
+                setCount((prevCount) => prevCount + 1);
+              } else {
+                console.error("Failed to post data to the backend");
+              }
+            } catch (error) {
+              console.error("Error posting data to the backend", error);
             }
-          } catch (error) {
-            console.error("Error posting data to the backend", error);
-          }
-          setLocationData((prevLocationData) => ({
-            ...prevLocationData,
-            latitude,
-            longitude,
-            speed,
-            accuracy,
-          }));
-          setCount((prevCount) => prevCount + 1);
+          }, 20000); // 20 seconds in milliseconds
+
+          // Save the interval ID for cleanup
+          setLocationWatcherId(id);
         },
         (error) => {
           console.error(error.message);
@@ -61,7 +100,6 @@ const useLocationStore = () => {
           maximumAge: 0,
         }
       );
-      setLocationWatcherId(id);
     } else {
       console.error("Geolocation is not supported in this browser.");
     }
@@ -77,6 +115,7 @@ const useLocationStore = () => {
         speed: null,
         accuracy: null,
       });
+      setCount(0);
     }
   };
 
