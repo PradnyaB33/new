@@ -79,7 +79,7 @@ const TrackingMap = () => {
           <Polyline
             positions={data?.punch}
             // positions={pts}
-            color="blue"
+            color="red"
           />
         )}
         <LocationMarker />

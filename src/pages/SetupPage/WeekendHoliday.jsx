@@ -15,7 +15,7 @@ import axios from "axios";
 import { useQuery, useQueryClient } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+// import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -26,10 +26,10 @@ const WeekdaySelector = ({ selectedDays, handleDayToggle, getColor }) => {
         <Grid item key={day} xs={6} sm={4} md={3} lg={2}>
           <Chip
             label={day}
-            onClick={() => handleDayToggle({ day, index })}
+            onClick={() => handleDayToggle(day, index)} // Pass index to handleDayToggle
             className="!font-bold text-2xl"
             style={{
-              backgroundColor:{},
+              backgroundColor: selectedDays.includes(day) ? getColor(day) : '',
               borderRadius: "50%",
               width: "55px",
               height: "55px",
@@ -50,31 +50,27 @@ const WeekendHoliday = () => {
   const [openModel, setOpenModel] = useState(false);
   const { setAppAlert } = useContext(UseContext);
   const [editItem, setEditItem] = useState(null);
+  // const { cookies } = useContext(UseContext);
+  // const authToken = cookies["aeigs"];
+  console.log(organizationId);
 
   //! this is the dialog box of delete model
   const [deleteModel, setDeleteModel] = useState(false);
   const [ID, setID] = useState("");
   const queryClient = useQueryClient();
 
-  const handleEdit = (item) => {
-    setEditItem(item);
-    setSelectedDays(item.days);
-    setOpenModel(true);
-  };
-
-  const handleDayToggle = ({ day, index }) => {
-    const updatedDays = [...selectedDays];
-    const existingDay = updatedDays.find(
-      (selected) => selected.index === index
-    );
-
-    if (existingDay) {
-      updatedDays.splice(updatedDays.indexOf(existingDay), 1);
-    } else {
-      updatedDays.push({ day, index });
-    }
+  // const handleEdit = (item) => {
+  //   setEditItem(item);
+  //   setSelectedDays(item.days);
+  //   setOpenModel(true);
+  // };
+  const handleDayToggle = (day, index) => {
+    const updatedDays = selectedDays.includes(day)
+      ? selectedDays.filter((selected) => selected !== day)
+      : [...selectedDays, day];
 
     setSelectedDays(updatedDays);
+    console.log(`Toggled day: ${day} at index: ${index}`);
   };
 
   const getColor = (day) => {
@@ -82,18 +78,17 @@ const WeekendHoliday = () => {
     const hue = (index * 50) % 360;
     return `hsl(${hue}, 100%, 60%)`;
   };
-
   const handleSubmit = async () => {
     try {
+      const daysArray = selectedDays.map(day => ({ day }));
+
       if (editItem) {
         await axios.patch(
-          `${process.env.REACT_APP_API}/route/weekend/edit/${editItem._id}`,
-          {
-            days: selectedDays,
-          }
+          `${process.env.REACT_APP_API}/route/weekend/update/${editItem._id}`,
+          { days: daysArray }
         );
 
-        console.log("successfully updated");
+        console.log("Successfully updated");
         setAppAlert({
           alert: true,
           type: "success",
@@ -108,12 +103,14 @@ const WeekendHoliday = () => {
           handleOpenClose();
           throw new Error("Weekend already exists for this organization.");
         }
-        await axios.post(`${process.env.REACT_APP_API}/route/weekend/create`, {
-          days: selectedDays,
-          organizationId,
-        });
 
-        console.log("successfully created");
+        console.log(daysArray);
+
+        await axios.post(
+          `${process.env.REACT_APP_API}/route/weekend/create`,
+          { days: daysArray, organizationId }
+        );
+        console.log("Successfully created");
         setAppAlert({
           alert: true,
           type: "success",
@@ -127,7 +124,7 @@ const WeekendHoliday = () => {
 
       queryClient.invalidateQueries("days");
     } catch (error) {
-      console.error(error.message);
+      console.error(error);
       setAppAlert({
         alert: true,
         type: "error",
@@ -135,22 +132,22 @@ const WeekendHoliday = () => {
       });
     }
   };
-
   const handleDelete = async () => {
     try {
+      console.log(ID);
       await axios.delete(
         `${process.env.REACT_APP_API}/route/weekend/delete/${ID}`
       );
-      console.log("successfully deleted");
+      console.log("Successfully deleted");
       setAppAlert({
         alert: true,
         type: "success",
-        msg: "Weekend Deleted Successfully !",
+        msg: "Weekend Deleted Successfully!",
       });
       handleOpenClose();
       queryClient.invalidateQueries("days");
     } catch (error) {
-      console.error(error.message);
+      console.error(error);
       setAppAlert({
         alert: true,
         type: "error",
@@ -162,31 +159,43 @@ const WeekendHoliday = () => {
     }
   };
 
+
   const handleOpenClose = () => {
     setOpenModel((prevstate) => !prevstate);
     setSelectedDays([]);
     setDeleteModel(false);
+    setEditItem()
   };
 
-  //   useEffect(() =>{
-  //     (async() =>{
+  // useEffect(() =>{
+  //   (async() =>{
 
-  //         await axios.get(`${process.env.REACT_APP_API}/route/weekend/get/${organizationId}`).then((e)=>{
-  //             console.log(e.data.days.days);
-  //         }).catch(e => console.log(e))
+  //       await axios.get(`${process.env.REACT_APP_API}/route/weekend/get/${organizationId}`).then((e)=>{
+  //         console.log(e.data.days);
+  //       }).catch(e => console.log(e))
 
-  //     })()
-  //   })
-  //   const data = []
+  //   })()
+  // })
+
 
   const fetchDays = async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/weekend/get/${organizationId}`
-    );
-    return response.data.days.days;
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/weekend/get/${organizationId}`
+      );
+      return response.data.days || [];
+
+    } catch (error) {
+      console.error("Error fetching days:", error);
+      throw error;
+    }
   };
 
-  const { data } = useQuery("days", fetchDays);
+  const { data, isLoading } = useQuery("days", fetchDays);
+  console.log(data);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
@@ -216,7 +225,7 @@ const WeekendHoliday = () => {
                   <th scope="col" className="!text-left pl-8 py-3 w-1/12">
                     SR NO
                   </th>
-                  <th scope="col" className="py-3 w-2/12">
+                  <th scope="col" className="py-3 w-2/12 !mr-6">
                     Days
                   </th>
                   <th scope="col" className="px-6 py-3 w-2/12">
@@ -225,52 +234,49 @@ const WeekendHoliday = () => {
                 </tr>
               </thead>
               <tbody>
-                {/* 
-                {
-                    data?.map((item, idx) =>{
-                        return(
-                            <tr>
-                                <td>
-                                    {item.day}
-                                </td>
-                            </tr>
-                        )
-                    })
-                } */}
-                {data?.map((item, idx) => (
+                
+             {
+
+              data.length <= 0 ? (<tr className="w-full !font-medium border-b text relative">No data to display</tr>)
+             
+             :
+             (data && data?.map((item, idx) => (
+                  
                   <tr className="!font-medium border-b !space-y-3" key={idx}>
-                    <td className="!text-left pl-8 w-1/12">{idx + 1}</td>
-                    <td className="w-2/12 ">
+                    <td className="!text-left !pl-9 w-1/12 ">{idx + 1}</td>
+                    <td className="w-2/12">
                       <div className="flex">
-                        <Chip
-                          key={idx}
-                          label={item.day}
-                          className="!font-bold text-sm" // Adjust the font size
-                          style={{
-                            backgroundColor: getColor(item.day), // Use item.day here
-                            borderRadius: "50%",
-                            width: "50px",
-                            height: "50px",
-                            margin: "10px",
-                            cursor: "pointer",
-                            border: "1px solid gray",
-                            color: "black",
-                            fontSize: "11px", // Adjust the font size
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                        />
+                        {item.days.map((day, dayIdx) => (
+                          <Chip
+                            key={dayIdx}
+                            label={day.day}
+                            className="!font-bold text-sm"
+                            style={{
+                              backgroundColor: getColor(day.day),
+                              borderRadius: "50%",
+                              width: "50px",
+                              height: "50px",
+                              margin: "10px",
+                              cursor: "pointer",
+                              border: "1px solid gray",
+                              color: "black",
+                              fontSize: "11px",
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          />
+                        ))}
                       </div>
                     </td>
-                    <td className="px-6  w-2/12">
-                      <IconButton
+                    <td className="px-6 w-2/12">
+                      {/* <IconButton
                         color="primary"
                         aria-label="edit"
                         style={{ paddingTop: "0.8rem" }}
                         onClick={() => handleEdit(item)}
                       >
                         <EditOutlinedIcon />
-                      </IconButton>
+                      </IconButton> */}
                       <IconButton
                         color="error"
                         aria-label="delete"
@@ -285,7 +291,8 @@ const WeekendHoliday = () => {
                       </IconButton>
                     </td>
                   </tr>
-                ))}
+                )))}
+
               </tbody>
             </table>
 
@@ -329,6 +336,8 @@ const WeekendHoliday = () => {
                       getColor={getColor}
                     />
                   </div>
+                  <div className="flex gap-5 !pt-5">
+
                   <Button
                     onClick={handleSubmit}
                     variant="contained"
@@ -343,6 +352,7 @@ const WeekendHoliday = () => {
                   >
                     Cancel
                   </Button>
+                  </div>
                 </DialogContent>
               </DialogActions>
             </Dialog>
