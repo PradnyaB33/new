@@ -4,15 +4,8 @@ import { useQuery } from "react-query";
 import useAuthToken from "../Token/useAuth";
 
 const useLocationStore = () => {
-  const [locationData, setLocationData] = useState({
-    latitude: null,
-    longitude: null,
-    speed: null,
-    accuracy: null,
-  });
   const [start, setStart] = useState(false);
   const [count, setCount] = useState(0);
-  const [locationWatcherId, setLocationWatcherId] = useState(null);
   const authToken = useAuthToken();
 
   const fetchLocationData = async () => {
@@ -75,18 +68,8 @@ const useLocationStore = () => {
   };
 
   const stopLocationTracking = () => {
-    if (locationWatcherId !== null) {
-      navigator.geolocation.clearWatch(locationWatcherId);
-      setLocationWatcherId(null);
-    }
     setCount(0);
-    setLocationWatcherId(null);
-    setLocationData({
-      latitude: null,
-      longitude: null,
-      speed: null,
-      accuracy: null,
-    });
+
     setStart(false);
   };
 
