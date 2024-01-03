@@ -109,7 +109,7 @@ const AddEmployee = () => {
 
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
-
+  const [bank_account_no, setBankAccountNo] = useState("");
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -417,10 +417,12 @@ const AddEmployee = () => {
         gender,
         salarystructure,
         profile,
+        bank_account_no,
         ...dynamicFields,
         organizationId: organisationId,
         creatorId: userId,
       };
+      console.log(user);
       // Check if the selected profile exists
       const checkProfileResponse = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/check-profile-exists/${organisationId}`,
@@ -890,24 +892,43 @@ const AddEmployee = () => {
                   </FormControl>
                 </div>
               </div>
-              <div className="w-full">
-                <FormControl sx={{ width: 640 }}>
-                  <Select
-                    value={salarystructure}
-                    onChange={handleSalaryStructure}
-                    displayEmpty
-                    inputProps={{ "aria-label": "Employment Type" }}
-                  >
-                    <MenuItem value="" disabled>
-                      Select Salary Type
-                    </MenuItem>
-                    {salaryInput?.salaryTemplates?.map((item) => (
-                      <MenuItem key={item._id} value={item._id}>
-                        {item.name}
+
+              <div className="flex items-center gap-20">
+                <div className="w-full">
+                  <FormControl sx={{ width: 280 }}>
+                    <Select
+                      value={salarystructure}
+                      onChange={handleSalaryStructure}
+                      displayEmpty
+                      inputProps={{ "aria-label": "Employment Type" }}
+                    >
+                      <MenuItem value="" disabled>
+                        Select Salary Type
                       </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                      {salaryInput?.salaryTemplates?.map((item) => (
+                        <MenuItem key={item._id} value={item._id}>
+                          {item.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+                <div className="w-full">
+                  <FormControl sx={{ width: 280 }}>
+                    <TextField
+                      size="small"
+                      type="text"
+                      label="Bank Account Number"
+                      name="bank_account_no"
+                      id="bank_account_no"
+                      value={bank_account_no}
+                      onChange={(e) => setBankAccountNo(e.target.value)}
+                      fullWidth
+                      margin="normal"
+                      required
+                    />
+                  </FormControl>
+                </div>
               </div>
 
               <div className="flex items-center gap-20">

@@ -18,12 +18,14 @@ import EmployeeList from "./pages/EmployeeList/EmployeeList";
 import Home from "./pages/Home/Home";
 import AddProfile from "./pages/Home/components/addprofile";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
+import ShiftManagement from "./pages/SetupPage/ShiftManagement/shiftAllowance";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
 import SalaryCalculate from "./pages/SalaryCalculate/SalaryCalculate";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
 import EmployementTypes from "./pages/SetUpOrganization/EmployementType/EmployementTypes";
+import EmployeeSalaryCalculateDay from "./pages/SetUpOrganization/EmoloyeeSalaryCalculate/EmployeeSalaryCalculate";
 import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
 import OrganizationLocations from "./pages/SetUpOrganization/OrganizationLocations/OrganizationLocations";
 import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHoliday";
@@ -136,6 +138,10 @@ const App = () => {
         element={<EmployementTypes />}
       />
       <Route
+        path="/organisation/:organisationId/setup/set-employee-salary-calculate-day"
+        element={<EmployeeSalaryCalculateDay />}
+      />
+      <Route
         path="/organisation/:organisationId/setup/add-organization-locations"
         element={<OrganizationLocations />}
       />
@@ -158,6 +164,7 @@ const App = () => {
       <Route path="/notification" element={<Notification />} />
       <Route path="/application" element={<Application />} />
       <Route path="/leave" element={<LeaveRequisition />} />
+      <Route path="/shift-management" element={<ShiftManagement />} />
       <Route
         path="/terms-and-conditions"
         element={<TermsAndConditionsPage />}

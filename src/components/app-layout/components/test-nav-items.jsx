@@ -126,7 +126,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "shiftManagement",
-            link: "/shift-manage",
+            link: "/shift-management",
             icon: <Event className="text-white" />,
             text: "Shift Management",
           },
@@ -135,12 +135,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             link: `/organisation/${orgId}/salary-management`,
             icon: <Event className="text-white" />,
             text: "Create Salary",
-          },
-          {
-            key: "salarycalculate",
-            link: `/organisation/${orgId}/salary-calculate`,
-            icon: <MonetizationOn className="text-white" />,
-            text: "Salary Calculate",
           },
         ],
       },

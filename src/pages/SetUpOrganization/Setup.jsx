@@ -10,7 +10,8 @@ import {
 } from "@mui/icons-material";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import WeekendOutlinedIcon from '@mui/icons-material/WeekendOutlined';
+import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
+import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
@@ -141,10 +142,20 @@ const Setup = ({ children }) => {
       icon: WeekendOutlinedIcon,
       href: `/organisation/${organisationId}/setup/set-weekend-holiday`,
       active:
-        location.pathname === `/organisation/${organisationId}/setup/set-weekend-holiday`,
+        location.pathname ===
+        `/organisation/${organisationId}/setup/set-weekend-holiday`,
       isVisible: user?.profile?.some((role) =>
         ["Super-Admin", "HR"].includes(role)
       ),
+    },
+    {
+      label: "Employee Salary Calculate Day",
+      icon: EventNoteOutlinedIcon,
+      href: `/organisation/${organisationId}/setup/set-employee-salary-calculate-day`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/set-employee-salary-calculate-day`,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
   ];
 
@@ -152,7 +163,7 @@ const Setup = ({ children }) => {
     <>
       <section className=" bg-gray-50 min-h-screen w-full">
         <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
-        <BackComponent />
+          <BackComponent />
           <Link to={"/organizationList"}>
             <West className="mx-4 !text-xl" />
           </Link>
