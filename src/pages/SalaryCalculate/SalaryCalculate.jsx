@@ -136,7 +136,7 @@ const SalaryCalculate = () => {
         totalNetSalary,
         month: selectedDate.format("M"), // Extract month from selectedDate
         year: selectedDate.format("YYYY"), // Extract year from selectedDate
-        organisationId,
+        organizationId: organisationId,
       };
       console.log(data);
 
@@ -331,6 +331,20 @@ const SalaryCalculate = () => {
                               paddingRight: "8px",
                             }}
                           >
+                            Department Name :
+                          </td>
+                          <td>
+                            {availableEmployee?.deptname[0]?.departmentName ||
+                              ""}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style={{
+                              fontWeight: "bold",
+                              paddingRight: "8px",
+                            }}
+                          >
                             PAN No :
                           </td>
                           <td>
@@ -349,7 +363,7 @@ const SalaryCalculate = () => {
                           >
                             Bank Account Number :
                           </td>
-                          <td>{}</td>
+                          <td>{availableEmployee?.bank_account_no || ""}</td>
                         </tr>
 
                         <tr>

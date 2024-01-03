@@ -92,6 +92,13 @@ const PDFDocument = ({
               </View>
 
               <View style={styles.tableRow}>
+                <Text style={styles.cell}>Department Name:</Text>
+                <Text style={styles.cell}>
+                  {employeeData?.deptname[0]?.departmentName || ""}
+                </Text>
+              </View>
+
+              <View style={styles.tableRow}>
                 <Text style={styles.cell}>Pan No:</Text>
                 <Text style={styles.cell}>
                   {employeeData?.additionalInfo?.["Pan Card Number"] || ""}
@@ -100,7 +107,9 @@ const PDFDocument = ({
 
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Bank Account No :</Text>
-                <Text style={styles.cell}>{}</Text>
+                <Text style={styles.cell}>
+                  {employeeData?.bank_account_no || ""}
+                </Text>
               </View>
 
               <View style={styles.tableRow}>
