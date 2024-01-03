@@ -24,6 +24,7 @@ import SalaryCalculate from "./pages/SalaryCalculate/SalaryCalculate";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
 import EmployementTypes from "./pages/SetUpOrganization/EmployementType/EmployementTypes";
+import EmployeeSalaryCalculate from "./pages/SetUpOrganization/EmoloyeeSalaryCalculate/EmployeeSalaryCalculate";
 import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
 import OrganizationLocations from "./pages/SetUpOrganization/OrganizationLocations/OrganizationLocations";
 import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHoliday";
@@ -134,6 +135,10 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/set-employement-types"
         element={<EmployementTypes />}
+      />
+      <Route
+        path="/organisation/:organisationId/setup/set-employee-salary-calculate"
+        element={<EmployeeSalaryCalculate />}
       />
       <Route
         path="/organisation/:organisationId/setup/add-organization-locations"
