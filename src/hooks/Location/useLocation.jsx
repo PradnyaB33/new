@@ -9,7 +9,7 @@ const useLocationStore = () => {
   const authToken = useAuthToken();
 
   const fetchLocationData = async () => {
-    console.log("i am working");
+    console.log("i am from hook");
 
     const position = await new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, reject, {
