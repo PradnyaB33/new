@@ -57,7 +57,7 @@ const useLocationStore = () => {
   };
 
   const { data, refetch } = useQuery("locationData", fetchLocationData, {
-    refetchInterval: 2000, // Cache is considered stale after 20 seconds
+    refetchInterval: 10000, // Cache is considered stale after 20 seconds
     refetchOnMount: true, // Disable automatic refetching on mount
     enabled: start,
   });
