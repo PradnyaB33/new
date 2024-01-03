@@ -127,7 +127,7 @@ const Mapped = ({
         <Button
           type="button"
           className="!border-gray-300 group-hover:!border-gray-400"
-          onClick={() => removeItem(index)}
+          // onClick={() => removeItem(index)}
           variant="outlined"
         >
           <Delete className="text-gray-300 group-hover:text-red-500" />
