@@ -77,18 +77,19 @@ const SalaryManagement = () => {
   const changePage = (id) => {
     fetchAvailableEmployee(id);
   };
-
+  console.log(availableEmployee);
   // modal for create salary
   const [open, setOpen] = React.useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [employeeId, setEmployeeId] = useState(null);
 
   const handleCreateModalOpen = (empId) => {
+    console.log(empId);
     setCreateModalOpen(true);
     queryClient.invalidateQueries(["salary", empId]);
     setEmployeeId(empId);
   };
-
+  console.log(employeeId);
   const handleClose = () => {
     setOpen(false);
     setEmployeeId(null);
