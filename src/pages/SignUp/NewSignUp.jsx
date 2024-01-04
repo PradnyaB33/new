@@ -28,7 +28,7 @@ const SignIn = () => {
   const [display, setdisplay] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [otp, setOTP] = useState("");
-  const [time, setTime] = useState(30);
+  const [time, setTime] = useState(1);
   const [isTimeVisible, setIsTimeVisible] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
 
@@ -132,7 +132,7 @@ const SignIn = () => {
           "otp has been send successfully on your device"
         );
         setdisplay(true);
-        setTime(30);
+        setTime(1);
         setIsTimeVisible(true);
       },
 
