@@ -37,15 +37,20 @@ import AddRoles from "./pages/SetupPage/Roles/AddRoles";
 import Shifts from "./pages/SetupPage/Shifts";
 import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
+import WeekendHoliday from "./pages/SetupPage/WeekendHoliday";
 import Signup from "./pages/SignUp/NewSignUp";
 import EditablePolyline from "./pages/Test/test2";
 import TrackingMap from "./pages/Test/test3";
+import TrackingMap3 from "./pages/Test/testYash";
+import TrackingMap2 from "./pages/Test/testMap";
 import TestNaresh from "./pages/Test/testNaresh";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
+import DepartmentDeletion from "./pages/SetupPage/DepartmentDeletion";
+
 const App = () => {
   return (
     <Routes>
@@ -54,6 +59,8 @@ const App = () => {
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
       <Route path="/test3" element={<TestNaresh />} />
       <Route path="/test2" element={<TrackingMap />} />
+      <Route path="/test5" element={<TrackingMap2 />} />
+      <Route path="/test6" element={<TrackingMap3 />} />
       {/* Login Routes */}
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<Signup />} />
@@ -121,6 +128,10 @@ const App = () => {
         element={<Shifts />}
       />
       <Route
+        path="/organisation/:organisationId/setup/set-weekend-holiday"
+        element={<WeekendHoliday />}
+      />
+      <Route
         path="/organisation/:organisationId/setup/add-roles"
         element={<AddRoles />}
       />
@@ -169,6 +180,10 @@ const App = () => {
         element={<EmailSetting />}
       />
       <Route path="/notification" element={<Notification />} />
+      <Route
+        path="/organisation/:organisationId/dept-deletion"
+        element={<DepartmentDeletion />}
+      />
       <Route path="/application" element={<Application />} />
       <Route path="/leave" element={<LeaveRequisition />} />
       <Route path="/shift-management" element={<ShiftManagement />} />

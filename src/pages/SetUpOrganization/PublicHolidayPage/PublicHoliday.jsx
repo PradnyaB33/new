@@ -265,7 +265,7 @@ const PublicHoliday = () => {
                       <td className="py-3">
                         {data && format(new Date(data?.date), "PP")}
                       </td>
-                      <td className="py-3">{data.type}</td>
+                      <td className="py-3 px-4">{data.type}</td>
                       <td className="px-2">
                         <IconButton
                           color="primary"
