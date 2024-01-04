@@ -313,7 +313,7 @@ const DepartmentDeletion = () => {
     >
       <Typography style={{ fontSize: "1.5rem" }}>Delete Department</Typography>
 
-      <FormControl
+      {/* <FormControl
         required
         style={{
           width: "100%",
@@ -337,9 +337,49 @@ const DepartmentDeletion = () => {
             </MenuItem>
           ))}
         </Select>
-      </FormControl>
+      </FormControl> */}
 
       <FormControl
+        required
+        style={{
+          width: "100%",
+          marginBottom: 30,
+          marginTop: 20,
+        }}
+        size="small"
+        variant="outlined" // Add variant outlined for better visual separation
+        
+      >
+        <InputLabel
+          id="holiday-type-label"
+          
+          // Ensure the label doesn't cut into the border
+          style={{
+            backgroundColor: "white", // Set the background color to match the container
+            paddingLeft: 8, // Adjust left padding for better alignment
+          }}
+        >
+          Select Location
+        </InputLabel>
+        <Select
+          labelId="holiday-type-label"
+          id="demo-simple-select"
+          name="location"
+          value={selectedLocation}
+          onChange={handleLocationChange}
+          label="Select Location"
+           // Add label prop for better alignment
+        >
+          {locations.map((data, index) => (
+            <MenuItem key={index} value={data.shortName}>
+              {data.shortName}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+
+      {/* <FormControl
         required
         style={{
           width: "100%",
@@ -366,7 +406,7 @@ const DepartmentDeletion = () => {
                 </MenuItem>
               ))}
         </Select>
-      </FormControl>
+      </FormControl> */}
       <TextField
         type="file"
         id="fileInput"

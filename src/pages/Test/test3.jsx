@@ -1,6 +1,7 @@
+import axios from "axios";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   MapContainer,
   Marker,
@@ -9,11 +10,16 @@ import {
   Tooltip,
   useMapEvents,
 } from "react-leaflet";
+import { useQuery } from "react-query";
+import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
 
 const TrackingMap = () => {
+  const { handleAlert } = useContext(TestContext);
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
   function LocationMarker() {
     const [position, setPosition] = useState(null);
-    console.log(`🚀 ~ file: test3.jsx:14 ~ position:`, position);
     const markerIcon = new L.Icon({
       iconUrl: "marker-icon-2x.png",
       iconSize: [35, 45],
@@ -36,64 +42,22 @@ const TrackingMap = () => {
       </Marker>
     );
   }
-  const pts = [
-    {
-      lat: 28.55108,
-      lng: 77.26913,
-    },
-    {
-      lat: 28.55106,
-      lng: 77.26906,
-    },
-    {
-      lat: 28.55105,
-      lng: 77.26897,
-    },
-    {
-      lat: 28.55101,
-      lng: 77.26872,
-    },
-    {
-      lat: 28.55099,
-      lng: 77.26849,
-    },
-    {
-      lat: 28.55097,
-      lng: 77.26831,
-    },
-    {
-      lat: 28.55093,
-      lng: 77.26794,
-    },
-    {
-      lat: 28.55089,
-      lng: 77.2676,
-    },
-    {
-      lat: 28.55123,
-      lng: 77.26756,
-    },
-    {
-      lat: 28.55145,
-      lng: 77.26758,
-    },
-    {
-      lat: 28.55168,
-      lng: 77.26758,
-    },
-    {
-      lat: 28.55175,
-      lng: 77.26759,
-    },
-    {
-      lat: 28.55177,
-      lng: 77.26755,
-    },
-    {
-      lat: 28.55179,
-      lng: 77.26753,
-    },
-  ];
+  const fetchPts = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/punch/getone`,
+      {
+        headers: { Authorization: authToken },
+      }
+    );
+
+    return response.data;
+  };
+  const { data, isError } = useQuery("pts", fetchPts);
+  console.log(`🚀 ~ file: test3.jsx:57 ~ data:`, data);
+  if (isError) {
+    console.log(`🚀 ~ file: test3.jsx:50 ~ error:`, isError);
+    handleAlert(true, "error", "error in getting the you location track");
+  }
 
   return (
     <div>
@@ -109,10 +73,9 @@ const TrackingMap = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Polyline positions={pts} color="blue" />
+        {data?.punch && <Polyline positions={data?.punch} color="blue" />}
         <LocationMarker />
       </MapContainer>
-      ,
     </div>
   );
 };
