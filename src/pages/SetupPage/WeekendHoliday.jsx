@@ -29,11 +29,12 @@ const WeekdaySelector = ({ selectedDays, handleDayToggle, getColor }) => {
             onClick={() => handleDayToggle(day, index)} // Pass index to handleDayToggle
             className="!font-bold text-2xl"
             style={{
-              backgroundColor: selectedDays.includes(day) ? getColor(day) : '',
+              backgroundColor: selectedDays.includes(day) ? getColor(day) : 'gray',
               borderRadius: "50%",
               width: "55px",
               height: "55px",
               cursor: "pointer",
+              color:"white",
               border: "1px solid gray",
             }}
           />
@@ -75,8 +76,8 @@ const WeekendHoliday = () => {
 
   const getColor = (day) => {
     const index = daysOfWeek.indexOf(day);
-    const hue = (index * 50) % 360;
-    return `hsl(${hue}, 100%, 60%)`;
+    const hue = (index * 40) % 360;
+    return `hsl(${hue}, 80%, 40%)`; // Adjust the saturation and lightness values
   };
   const handleSubmit = async () => {
     try {
@@ -243,9 +244,9 @@ const WeekendHoliday = () => {
              (data && data?.map((item, idx) => (
                   
                   <tr className="!font-medium border-b !space-y-3" key={idx}>
-                    <td className="!text-left !pl-9 w-1/12 ">{idx + 1}</td>
-                    <td className="w-2/12">
-                      <div className="flex">
+                    <td className="!text-left !pl-9 !mr-5 w-1/12 ">{idx + 1}</td>
+                    <td style={{marginRight:"1rem"}} className="w-2/12 pt-2 pb-2">
+                      <div className="flex gap-1">
                         {item.days.map((day, dayIdx) => (
                           <Chip
                             key={dayIdx}
@@ -256,11 +257,10 @@ const WeekendHoliday = () => {
                               borderRadius: "50%",
                               width: "50px",
                               height: "50px",
-                              margin: "10px",
                               cursor: "pointer",
                               border: "1px solid gray",
-                              color: "black",
-                              fontSize: "11px",
+                              color: "white",
+                              fontSize: "12.5px",
                               display: "flex",
                               alignItems: "center",
                             }}
