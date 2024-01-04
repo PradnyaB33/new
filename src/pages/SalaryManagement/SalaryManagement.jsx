@@ -6,8 +6,9 @@ import { UseContext } from "../../State/UseState/UseContext";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "react-query";
 import CreateSalaryModel from "../../components/Modal/CreateSalaryModel/CreateSalaryModel";
-import { Button, Menu, MenuItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Event } from "@mui/icons-material";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 
 const SalaryManagement = () => {
   const { handleAlert } = useContext(TestContext);
@@ -22,17 +23,8 @@ const SalaryManagement = () => {
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
   const queryClient = useQueryClient();
-  const [anchorEl, setAnchorEl] = React.useState(null);
 
   const navigate = useNavigate();
-
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
 
   const fetchAvailableEmployee = async (page) => {
     try {
@@ -77,21 +69,18 @@ const SalaryManagement = () => {
   const changePage = (id) => {
     fetchAvailableEmployee(id);
   };
-  console.log(availableEmployee);
+
   // modal for create salary
-  const [open, setOpen] = React.useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [employeeId, setEmployeeId] = useState(null);
 
   const handleCreateModalOpen = (empId) => {
-    console.log(empId);
     setCreateModalOpen(true);
-    queryClient.invalidateQueries(["salary", empId]);
     setEmployeeId(empId);
+    queryClient.invalidateQueries(["salary", empId]);
   };
-  console.log(employeeId);
+
   const handleClose = () => {
-    setOpen(false);
     setEmployeeId(null);
     setCreateModalOpen(false);
   };
@@ -162,9 +151,11 @@ const SalaryManagement = () => {
                   <th scope="col" className="!text-left pl-8 py-3">
                     Salary Template
                   </th>
-
                   <th scope="col" className="px-6 py-3 ">
-                    Actions
+                    Create Salary
+                  </th>
+                  <th scope="col" className="px-6 py-3 ">
+                    Calculate Salary
                   </th>
                 </tr>
               </thead>
@@ -211,40 +202,23 @@ const SalaryManagement = () => {
                         })}
                       </td>
                       <td className="py-3">{item?.salarystructure?.name}</td>
-                      <td className="whitespace-nowrap ">
-                        <div>
-                          <Button
-                            onClick={handleMenuOpen}
-                            className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            fullWidth={false}
-                            margin="normal"
-                          >
-                            Actions
-                          </Button>
-                          <Menu
-                            anchorEl={anchorEl}
-                            open={Boolean(anchorEl)}
-                            onClose={handleMenuClose}
-                          >
-                            <MenuItem
-                              onClick={() => handleCreateModalOpen(item._id)}
-                            >
-                              Create Salary
-                            </MenuItem>
-                            <MenuItem
-                              onClick={() =>
-                                navigate(
-                                  `/organisation/${organisationId}/salary-calculate/${item._id}`
-                                )
-                              }
-                            >
-                              Calculate Salary
-                            </MenuItem>
-                          </Menu>
-                        </div>
+                      <td>
+                        <Event
+                          onClick={() => handleCreateModalOpen(item._id)}
+                          className="cursor-pointer"
+                          style={{ color: "blue", fontSize: 24 }}
+                        />
+                      </td>
+                      <td>
+                        <AttachMoneyIcon
+                          onClick={() =>
+                            navigate(
+                              `/organisation/${organisationId}/salary-calculate/${item._id}`
+                            )
+                          }
+                          className="cursor-pointer"
+                          style={{ color: "green", fontSize: 24 }}
+                        />
                       </td>
                     </tr>
                   ))}
@@ -335,11 +309,11 @@ const SalaryManagement = () => {
       </section>
 
       {/* Create model */}
-      <CreateSalaryModel
+      {/* <CreateSalaryModel
         id={organisationId}
         open={open}
         handleClose={handleClose}
-      />
+      /> */}
       <CreateSalaryModel
         id={organisationId}
         open={createModalOpen}

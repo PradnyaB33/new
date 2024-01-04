@@ -20,7 +20,10 @@ const SalaryCalculate = () => {
   const { userId, organisationId } = useParams();
   const [selectedDate, setSelectedDate] = useState(dayjs("2022-04-17"));
   const [numDaysInMonth, setNumDaysInMonth] = useState(0);
-
+  const [availableDays, setAvailableDays] = useState(0);
+  const [paidleaveDays, setPaidLeaveDays] = useState(0);
+  const [unpaidleaveDays, setUnPaidLeaveDays] = useState(0);
+  const [publicDays, setPublicHoliDays] = useState(0);
   // function to handle get detail of employee
   const [availableEmployee, setAvailableEmployee] = useState();
   const fetchAvailableEmployee = async () => {
@@ -137,6 +140,11 @@ const SalaryCalculate = () => {
         month: selectedDate.format("M"), // Extract month from selectedDate
         year: selectedDate.format("YYYY"), // Extract year from selectedDate
         organizationId: organisationId,
+        numDaysInMonth,
+        availableDays,
+        paidleaveDays,
+        unpaidleaveDays,
+        publicDays,
       };
       console.log(data);
 
