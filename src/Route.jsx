@@ -107,10 +107,7 @@ const App = () => {
         path="/organisation/:organisationId/salary-calculate/:userId"
         element={<SalaryCalculate />}
       />
-      <Route
-        path="/organisation/:organisationId/view-payslip"
-        element={<ViewPayslip />}
-      />
+      <Route path="/organisation/view-payslip" element={<ViewPayslip />} />
       <Route
         path="/terms-and-conditions"
         element={<TermsAndConditionsPage />}
