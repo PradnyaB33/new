@@ -45,6 +45,7 @@ import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
+import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 const App = () => {
   return (
     <Routes>
@@ -79,8 +80,8 @@ const App = () => {
         path="organisation/:organisationId/department-list"
         element={<DepartmentList />}
       />
-      <Route path="/userprofile" element={<UserProfile />} />
       <Route path="/organisation/:id" element={<SingleOrganisation />} />
+      <Route path="/userprofile" element={<UserProfile />} />
       <Route
         path="/organisation/:organisationId/employee-onboarding"
         element={<AddEmployee />}
@@ -105,6 +106,18 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/salary-calculate/:userId"
         element={<SalaryCalculate />}
+      />
+      <Route
+        path="/organisation/:organisationId/view-payslip"
+        element={<ViewPayslip />}
+      />
+      <Route
+        path="/terms-and-conditions"
+        element={<TermsAndConditionsPage />}
+      />
+      <Route
+        path="/organisation/:organisationId/setup/set-employee-salary-calculate-day"
+        element={<EmployeeSalaryCalculateDay />}
       />
       <Route
         path="/organisation/:organisationId/setup/set-shifts"
@@ -137,10 +150,7 @@ const App = () => {
         path="/organisation/:organisationId/setup/set-employement-types"
         element={<EmployementTypes />}
       />
-      <Route
-        path="/organisation/:organisationId/setup/set-employee-salary-calculate-day"
-        element={<EmployeeSalaryCalculateDay />}
-      />
+
       <Route
         path="/organisation/:organisationId/setup/add-organization-locations"
         element={<OrganizationLocations />}
@@ -165,10 +175,7 @@ const App = () => {
       <Route path="/application" element={<Application />} />
       <Route path="/leave" element={<LeaveRequisition />} />
       <Route path="/shift-management" element={<ShiftManagement />} />
-      <Route
-        path="/terms-and-conditions"
-        element={<TermsAndConditionsPage />}
-      />
+
       <Route
         path="/organisation/:id/department/:departmentId"
         element={<SingleDepartment />}
