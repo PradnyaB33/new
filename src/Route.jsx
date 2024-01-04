@@ -48,6 +48,7 @@ import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
+import DepartmentDeletion from "./pages/SetupPage/DepartmentDeletion";
 
 
 const App = () => {
@@ -117,10 +118,10 @@ const App = () => {
         path="/organisation/:organisationId/setup/set-shifts"
         element={<Shifts />}
       />
-      {/* <Route
+      <Route
         path="/organisation/:organisationId/setup/set-weekend-holiday"
         element={<WeekendHoliday />}
-      /> */}
+      />
       <Route
         path="/organisation/:organisationId/setup/add-roles"
         element={<AddRoles />}
@@ -173,6 +174,7 @@ const App = () => {
         element={<EmailSetting />}
       />
       <Route path="/notification" element={<Notification />} />
+      <Route path="/organisation/:organisationId/dept-deletion" element={<DepartmentDeletion />} />
       <Route path="/application" element={<Application />} />
       <Route path="/leave" element={<LeaveRequisition />} />
       <Route path="/shift-management" element={<ShiftManagement />} />
