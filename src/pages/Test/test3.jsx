@@ -59,8 +59,6 @@ const TrackingMap = () => {
     handleAlert(true, "error", "error in getting the you location track");
   }
 
-
-
   return (
     <div>
       <MapContainer
@@ -75,13 +73,7 @@ const TrackingMap = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {data?.punch && (
-          <Polyline
-            positions={data?.punch}
-            // positions={pts}
-            color="red"
-          />
-        )}
+        {data?.punch && <Polyline positions={data?.punch} color="blue" />}
         <LocationMarker />
       </MapContainer>
     </div>

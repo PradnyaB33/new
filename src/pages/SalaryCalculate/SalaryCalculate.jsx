@@ -11,12 +11,13 @@ import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-
+import PDFDocument from "./SalaryPdfDocument";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 const SalaryCalculate = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const token = cookies["aeigs"];
-  const { userId } = useParams();
+  const { userId, organisationId } = useParams();
   const [selectedDate, setSelectedDate] = useState(dayjs("2022-04-17"));
   const [numDaysInMonth, setNumDaysInMonth] = useState(0);
 
@@ -50,8 +51,6 @@ const SalaryCalculate = () => {
     const daysInMonth = date.daysInMonth();
     setNumDaysInMonth(daysInMonth);
   };
-
-  console.log(selectedDate);
 
   // calculate the basic , hra , da monthly
   const calculateSalaryComponent = (componentValue) => {
@@ -117,9 +116,57 @@ const SalaryCalculate = () => {
 
   // calculate the totalNetSalary
   let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
-  console.log(totalNetSalary);
 
   const formattedDate = dayjs(selectedDate).format("MMM-YY");
+
+  const saveSallaryDetail = async () => {
+    try {
+      const data = {
+        employeeId: userId,
+        basicSalary,
+        hraSalary,
+        daSalary,
+        foodAllowance,
+        salesAllowance,
+        specialAllowance,
+        travelAllowance,
+        variableAllowance,
+        totalGrossSalary,
+        totalDeduction,
+        totalNetSalary,
+        month: selectedDate.format("M"), // Extract month from selectedDate
+        year: selectedDate.format("YYYY"), // Extract year from selectedDate
+        organizationId: organisationId,
+      };
+      console.log(data);
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/route/employeeSalary/add-salary/${userId}/${organisationId}`,
+        data,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      console.log("response ", response);
+      if (response.data.success) {
+        handleAlert(
+          true,
+          "success",
+          " Monthly Salary Detail added Successfully"
+        );
+      }
+    } catch (error) {
+      console.error("Error adding Monthly salary data:", error);
+      handleAlert(true, "error", "Something went wrong");
+    }
+  };
+
+  const [employeeData, setEmployeeData] = useState(null); // Employee data state
+  const handleGeneratePDF = () => {
+    setEmployeeData(availableEmployee);
+  };
 
   return (
     <>
@@ -248,7 +295,7 @@ const SalaryCalculate = () => {
               <div style={{ marginRight: "40px" }}>
                 <Paper className="w-full">
                   <Box sx={{ flexGrow: 1 }}>
-                    <table style={{ width: "500px" }}>
+                    <table style={{ width: "500px", height: "25vh" }}>
                       <tbody>
                         <tr>
                           <td
@@ -284,6 +331,20 @@ const SalaryCalculate = () => {
                               paddingRight: "8px",
                             }}
                           >
+                            Department Name :
+                          </td>
+                          <td>
+                            {availableEmployee?.deptname[0]?.departmentName ||
+                              ""}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style={{
+                              fontWeight: "bold",
+                              paddingRight: "8px",
+                            }}
+                          >
                             PAN No :
                           </td>
                           <td>
@@ -302,19 +363,9 @@ const SalaryCalculate = () => {
                           >
                             Bank Account Number :
                           </td>
-                          <td>{}</td>
+                          <td>{availableEmployee?.bank_account_no || ""}</td>
                         </tr>
-                        <tr>
-                          <td
-                            style={{
-                              fontWeight: "bold",
-                              paddingRight: "8px",
-                            }}
-                          >
-                            Weekend :
-                          </td>
-                          <td>{}</td>
-                        </tr>
+
                         <tr>
                           <td
                             style={{
@@ -336,7 +387,7 @@ const SalaryCalculate = () => {
               <div>
                 <Paper className="w-full">
                   <Box sx={{ flexGrow: 1 }}>
-                    <table style={{ width: "420px", height: "20vh" }}>
+                    <table style={{ width: "420px", height: "25vh" }}>
                       <tbody>
                         <tr>
                           <td
@@ -671,21 +722,76 @@ const SalaryCalculate = () => {
             <div
               style={{
                 display: "flex",
-                justifyContent: "center",
-                margin: "40px",
+                flexDirection: "column",
+                alignItems: "center",
               }}
             >
-              <button
+              <div
                 style={{
-                  padding: "8px 15px",
-                  borderRadius: "5px",
-                  backgroundColor: "green",
-                  color: "#fff",
-                  cursor: "pointer",
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: "20px",
                 }}
               >
-                Calculate Salary
-              </button>
+                <button
+                  onClick={handleGeneratePDF}
+                  style={{
+                    padding: "8px 38px",
+                    borderRadius: "5px",
+                    backgroundColor: "green",
+                    color: "#fff",
+                    cursor: "pointer",
+                    marginRight: "10px", // Add margin-right for spacing
+                  }}
+                >
+                  Generate PDF
+                </button>
+
+                <button
+                  onClick={saveSallaryDetail}
+                  style={{
+                    padding: "10px 20px",
+                    borderRadius: "5px",
+                    backgroundColor: "#008CBA",
+                    color: "#fff",
+                    border: "none",
+                    fontSize: "1em",
+                    cursor: "pointer",
+                  }}
+                >
+                  Submit Salary Details
+                </button>
+              </div>
+
+              <div style={{ margin: "20px" }}>
+                {employeeData && (
+                  <PDFDownloadLink
+                    document={
+                      <PDFDocument
+                        employeeData={employeeData}
+                        formattedDate={formattedDate}
+                        noOfDaysInMonth={numDaysInMonth}
+                        totalDeduction={totalDeduction}
+                        totalGrossSalary={totalGrossSalary}
+                        totalNetSalary={totalNetSalary}
+                        basicSalary={basicSalary}
+                        hraSalary={hraSalary}
+                        daSalary={daSalary}
+                        foodAllowance={foodAllowance}
+                        salesAllowance={salesAllowance}
+                        specialAllowance={specialAllowance}
+                        travelAllowance={travelAllowance}
+                        variableAllowance={variableAllowance}
+                      />
+                    }
+                    fileName="SalarySlip.pdf"
+                  >
+                    {({ blob, url, loading, error }) =>
+                      loading ? "Generating PDF..." : "Download PDF"
+                    }
+                  </PDFDownloadLink>
+                )}
+              </div>
             </div>
           </Paper>
         </Paper>
