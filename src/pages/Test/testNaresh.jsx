@@ -4,7 +4,7 @@ import React from "react";
 import useLocationStore from "../../hooks/Location/useLocation";
 
 export default function TestNaresh() {
-  const { startLocationTracking, stopLocationTracking, locationData, count } =
+  const { startLocationTracking, stopLocationTracking, data, count, start } =
     useLocationStore();
 
 
@@ -19,7 +19,7 @@ export default function TestNaresh() {
               onClick={startLocationTracking}
               variant="contained"
               size="small"
-              disabled={locationData?.latitude}
+              disabled={start}
             >
               Punch IN
             </Button>
@@ -28,13 +28,13 @@ export default function TestNaresh() {
               color="error"
               onClick={stopLocationTracking}
               variant="contained"
-              disabled={!locationData?.latitude}
+              disabled={!start}
             >
               Punch OUT
             </Button>
             <div>{count}</div>
-            <div>lattitude is {locationData?.latitude}</div>
-            <div>longiture is{locationData?.longitude}</div>
+            <div>lattitude is {data?.latitude}</div>
+            <div>longiture is{data?.longitude}</div>
           </div>
         </div>
       </div>

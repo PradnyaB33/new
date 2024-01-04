@@ -1,93 +1,81 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "react-query";
 import useAuthToken from "../Token/useAuth";
 
 const useLocationStore = () => {
-  const [locationData, setLocationData] = useState({
-    latitude: null,
-    longitude: null,
-    speed: null,
-    accuracy: null,
-  });
+  const [start, setStart] = useState(false);
   const [count, setCount] = useState(0);
-  const [locationWatcherId, setLocationWatcherId] = useState(null);
   const authToken = useAuthToken();
 
-  const startLocationTracking = () => {
-    if ("geolocation" in navigator) {
-      const id = navigator.geolocation.watchPosition(
-        async (position) => {
-          const { latitude, longitude, speed, accuracy } = position.coords;
-          try {
-            const payload = {
-              start: new Date(),
-              locations: [
-                {
-                  lat: latitude,
-                  lng: longitude,
-                  time: new Date(),
-                },
-              ],
-            };
-            const response = await axios.post(
-              `${process.env.REACT_APP_API}/route/punch/create`,
-              payload,
-              { headers: { Authorization: authToken } }
-            );
-            console.log(`🚀 ~ file: useLocation.jsx:32 ~ response:`, response);
-            if (response.status === 200) {
-              console.log("Data posted successfully");
-            } else {
-              console.error("Failed to post data to the backend");
-            }
-          } catch (error) {
-            console.error("Error posting data to the backend", error);
-          }
-          setLocationData((prevLocationData) => ({
-            ...prevLocationData,
-            latitude,
-            longitude,
-            speed,
-            accuracy,
-          }));
-          setCount((prevCount) => prevCount + 1);
-        },
-        (error) => {
-          console.error(error.message);
-        },
+  const fetchLocationData = async () => {
+    console.log("i am from hook");
+
+    const position = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      });
+    });
+
+    const { latitude, longitude, speed, accuracy } = position.coords;
+    const payload = {
+      start: new Date(),
+      locations: [
         {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0,
+          lat: latitude,
+          lng: longitude,
+          time: new Date(),
+        },
+      ],
+    };
+
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/route/punch/create`,
+        payload,
+        {
+          headers: { Authorization: authToken },
         }
       );
-      setLocationWatcherId(id);
-    } else {
-      console.error("Geolocation is not supported in this browser.");
+      if (response.status === 200) {
+        setCount((prevCount) => prevCount + 1);
+      } else {
+        console.error("Failed to post data to the backend");
+      }
+    } catch (error) {
+      console.error("Error posting data to the backend", error);
     }
+
+    return {
+      latitude,
+      longitude,
+      speed,
+      accuracy,
+    };
+  };
+
+  const { data, refetch } = useQuery("locationData", fetchLocationData, {
+    refetchInterval: 10000, // Cache is considered stale after 20 seconds
+    refetchOnMount: true, // Disable automatic refetching on mount
+    enabled: start,
+  });
+
+  const startLocationTracking = () => {
+    refetch();
+    setStart(true);
   };
 
   const stopLocationTracking = () => {
-    if (locationWatcherId !== null) {
-      navigator.geolocation.clearWatch(locationWatcherId);
-      setLocationWatcherId(null);
-      setLocationData({
-        latitude: null,
-        longitude: null,
-        speed: null,
-        accuracy: null,
-      });
-    }
+    setCount(0);
+
+    setStart(false);
   };
 
-  useEffect(() => {
-    return () => {
-      stopLocationTracking();
-    };
-  }, []);
-
   return {
-    locationData,
+    start,
+    data,
     count,
     startLocationTracking,
     stopLocationTracking,
