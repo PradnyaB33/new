@@ -23,9 +23,8 @@ const SalaryCalculate = () => {
   // const [availableDays, setAvailableDays] = useState(0);
   // const [paidleaveDays, setPaidLeaveDays] = useState(0);
   // const [unpaidleaveDays, setUnPaidLeaveDays] = useState(0);
-  // const [publicDays, setPublicHoliDays] = useState(0);
+  const [publicHolidays, setPublicHoliDays] = useState(0);
   const [weekend, setWeekend] = useState([]);
-  // function to handle get detail of employee
   const [availableEmployee, setAvailableEmployee] = useState();
 
   // pull employee data based on emp id
@@ -74,7 +73,7 @@ const SalaryCalculate = () => {
     fetchWeekend();
     // eslint-disable-next-line
   }, []);
-  console.log(weekend);
+
   const getWeekendbyOeganization = weekend
     .map((item) => item.days.map((dayItem) => dayItem.day))
     .flat();
@@ -101,6 +100,53 @@ const SalaryCalculate = () => {
   // Call the function to count weekend days in the selected month
   const weekendCountInSelectedMonth = countWeekendDaysInMonth();
   console.log(weekendCountInSelectedMonth);
+
+  // pull holidays based on organization id
+  const fetchHoliday = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/holiday/get/${organisationId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      setPublicHoliDays(response.data.holidays);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch Holiday");
+    }
+  };
+
+  useEffect(() => {
+    fetchHoliday();
+    // eslint-disable-next-line
+  }, []);
+
+  //  count the how many public holiday in selected month
+  const countPublicHolidaysInSelectedMonth = (publicHolidays) => {
+    // Get the current date
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1; // Adding 1 to get 1-based index
+    const currentYear = currentDate.getFullYear();
+
+    const holidaysInSelectedMonth = publicHolidays.filter((holiday) => {
+      const holidayDate = new Date(holiday.date);
+      return (
+        holidayDate.getMonth() === currentMonth - 1 &&
+        holidayDate.getFullYear() === currentYear
+      );
+    });
+
+    return holidaysInSelectedMonth.length;
+  };
+
+  const publicHolidaysCount =
+    countPublicHolidaysInSelectedMonth(publicHolidays);
+
+  console.log("Public holidays count in selected month:", publicHolidaysCount);
 
   // get month and year from user selected date and also pull the data paidleavedays , unpaidleavedays, public holiday and all
   const monthYear = dayjs(selectedDate).format("MMM YYYY");
@@ -217,10 +263,10 @@ const SalaryCalculate = () => {
         organizationId: organisationId,
         numDaysInMonth,
         formattedDate,
+        publicHolidaysCount,
         // availableDays,
         // paidleaveDays,
         // unpaidleaveDays,
-        // publicDays,
       };
       console.log(data);
 

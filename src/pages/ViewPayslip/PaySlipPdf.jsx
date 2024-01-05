@@ -139,7 +139,9 @@ const PaySlipPdf = ({ employeeInfo, organisationInfo, salaryInfo }) => {
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Public Holidays:</Text>
-                <Text style={styles.cell}>{salaryInfo?.publicDays || ""}</Text>
+                <Text style={styles.cell}>
+                  {salaryInfo?.publicHolidaysCount || ""}
+                </Text>
               </View>
             </View>
           </View>
