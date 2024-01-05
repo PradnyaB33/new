@@ -47,7 +47,29 @@ const SalaryCalculate = () => {
     fetchAvailableEmployee();
     // eslint-disable-next-line
   }, []);
-  console.log(availableEmployee);
+
+  // get month and year from user selected date and also pull the data paidleavedays , unpaidleavedays, public holiday and all
+
+  const monthYear = dayjs(selectedDate).format("MMM YYYY");
+  console.log(monthYear);
+  // const fetchEmployeeLeaveSummary = async () => {
+  //   try {
+  //     const response = await axios.get(`${process.env.REACT_APP_API}/route`, {
+  //       headers: {
+  //         Authorization: token,
+  //       },
+  //     });
+  //     console.log(response);
+  //   } catch (error) {
+  //     console.error(error);
+  //     handleAlert(true, "error", "Failed to fetch Employee Leave Summary");
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchEmployeeLeaveSummary();
+  //   // eslint-disable-next-line
+  // }, []);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -141,6 +163,7 @@ const SalaryCalculate = () => {
         year: selectedDate.format("YYYY"), // Extract year from selectedDate
         organizationId: organisationId,
         numDaysInMonth,
+        formattedDate,
         // availableDays,
         // paidleaveDays,
         // unpaidleaveDays,

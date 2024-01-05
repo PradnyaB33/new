@@ -54,7 +54,9 @@ const PaySlipPdf = ({ employeeInfo, organisationInfo, salaryInfo }) => {
           <View style={styles.netSalarytable}>
             <View style={styles.netTableRow}>
               <Text style={styles.netcell}>Salary Slip</Text>
-              <Text style={styles.netcell}>{}</Text>
+              <Text style={styles.netcell}>
+                {salaryInfo?.formattedDate || ""}
+              </Text>
             </View>
           </View>
 
@@ -99,7 +101,9 @@ const PaySlipPdf = ({ employeeInfo, organisationInfo, salaryInfo }) => {
 
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>No of Days in Month:</Text>
-                <Text style={styles.cell}>{}</Text>
+                <Text style={styles.cell}>
+                  {salaryInfo?.numDaysInMonth || ""}
+                </Text>
               </View>
             </View>
 
@@ -117,19 +121,25 @@ const PaySlipPdf = ({ employeeInfo, organisationInfo, salaryInfo }) => {
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Unpaid Leaves:</Text>
-                <Text style={styles.cell}>{salaryInfo?.unpaidleaveDays}</Text>
+                <Text style={styles.cell}>
+                  {salaryInfo?.unpaidleaveDays || ""}
+                </Text>
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Paid Leaves:</Text>
-                <Text style={styles.cell}>{salaryInfo?.paidleaveDays}</Text>
+                <Text style={styles.cell}>
+                  {salaryInfo?.paidleaveDays || ""}
+                </Text>
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.cell}> Working Days Attended:</Text>
-                <Text style={styles.cell}>{salaryInfo?.availableDays}</Text>
+                <Text style={styles.cell}>
+                  {salaryInfo?.availableDays || ""}
+                </Text>
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Public Holidays:</Text>
-                <Text style={styles.cell}>{salaryInfo?.publicDays}</Text>
+                <Text style={styles.cell}>{salaryInfo?.publicDays || ""}</Text>
               </View>
             </View>
           </View>
@@ -149,46 +159,56 @@ const PaySlipPdf = ({ employeeInfo, organisationInfo, salaryInfo }) => {
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Basic:</Text>
-                <Text style={styles.cell}>{salaryInfo?.basicSalary}</Text>
+                <Text style={styles.cell}>{salaryInfo?.basicSalary || ""}</Text>
               </View>
 
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>DA:</Text>
-                <Text style={styles.cell}>{salaryInfo?.daSalary}</Text>
+                <Text style={styles.cell}>{salaryInfo?.daSalary || ""}</Text>
               </View>
 
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>HRA:</Text>
-                <Text style={styles.cell}>{salaryInfo?.hraSalary}</Text>
+                <Text style={styles.cell}>{salaryInfo?.hraSalary || ""}</Text>
               </View>
 
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Food Allowance :</Text>
-                <Text style={styles.cell}>{salaryInfo?.foodAllowance}</Text>
+                <Text style={styles.cell}>
+                  {salaryInfo?.foodAllowance || ""}
+                </Text>
               </View>
 
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Sales Allowance:</Text>
-                <Text style={styles.cell}>{salaryInfo?.salesAllowance}</Text>
+                <Text style={styles.cell}>
+                  {salaryInfo?.salesAllowance || ""}
+                </Text>
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Special Allowance:</Text>
-                <Text style={styles.cell}>{salaryInfo?.specialAllowance}</Text>
+                <Text style={styles.cell}>
+                  {salaryInfo?.specialAllowance || ""}
+                </Text>
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Travel Allowance:</Text>
-                <Text style={styles.cell}>{salaryInfo?.travelAllowance}</Text>
+                <Text style={styles.cell}>
+                  {salaryInfo?.travelAllowance || ""}
+                </Text>
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Variable Pay Allowance:</Text>
-                <Text style={styles.cell}>{salaryInfo?.variableAllowance}</Text>
+                <Text style={styles.cell}>
+                  {salaryInfo?.variableAllowance || ""}
+                </Text>
               </View>
               <View style={styles.tableRow}>
                 <Text style={[styles.cell, styles.highlightedCell]}>
                   Total Gross Salary:
                 </Text>
                 <Text style={[styles.cell, styles.highlightedCell]}>
-                  {salaryInfo?.totalGrossSalary}
+                  {salaryInfo?.totalGrossSalary || ""}
                 </Text>
               </View>
             </View>
@@ -227,7 +247,7 @@ const PaySlipPdf = ({ employeeInfo, organisationInfo, salaryInfo }) => {
                   Total Deduction:
                 </Text>
                 <Text style={[styles.cell, styles.highlightedCell]}>
-                  {salaryInfo?.totalDeduction}
+                  {salaryInfo?.totalDeduction || ""}
                 </Text>
               </View>
             </View>
@@ -239,7 +259,7 @@ const PaySlipPdf = ({ employeeInfo, organisationInfo, salaryInfo }) => {
                 Total Net Salary :
               </Text>
               <Text style={[styles.netcell, styles.highlightedCell]}>
-                {salaryInfo?.totalNetSalary}
+                {salaryInfo?.totalNetSalary || ""}
               </Text>
             </View>
           </View>
