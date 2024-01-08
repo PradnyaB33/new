@@ -34,6 +34,7 @@ const TestMap = () => {
       }
     })();
   }, [authToken]);
+  
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371;
@@ -55,22 +56,22 @@ const TestMap = () => {
     }
     return total;
   }, 0);
-  
 
-const smoothWaypoints = (waypoints, windowSize) => {
-  return waypoints?.map((waypoint, index, array) => {
-    const start = Math.max(0, index - windowSize + 1);
-    const end = index + 1;
-    const subset = array.slice(start, end);
-    const smoothedLat = subset.reduce((sum, point) => sum + point.lat, 0) / subset.length;
-    const smoothedLng = subset.reduce((sum, point) => sum + point.lng, 0) / subset.length;
 
-    return {
-      lat: smoothedLat,
-      lng: smoothedLng,
-    };
-  });
-};
+  const smoothWaypoints = (waypoints, windowSize) => {
+    return waypoints?.map((waypoint, index, array) => {
+      const start = Math.max(0, index - windowSize + 1);
+      const end = index + 1;
+      const subset = array.slice(start, end);
+      const smoothedLat = subset.reduce((sum, point) => sum + point.lat, 0) / subset.length;
+      const smoothedLng = subset.reduce((sum, point) => sum + point.lng, 0) / subset.length;
+
+      return {
+        lat: smoothedLat,
+        lng: smoothedLng,
+      };
+    });
+  };
 
   const center = {
     lat: parseFloat(waypoints[0]?.lat),
@@ -88,7 +89,7 @@ const smoothWaypoints = (waypoints, windowSize) => {
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={center}
-          zoom={20}
+          zoom={15}
           options={{ zoomControl: false, streetViewControl: false, mapTypeControl: false, fullscreenControl: false }}
         >
           {waypoints?.length > 0 && <Marker position={center} icon={{ url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' }} />}
@@ -100,6 +101,7 @@ const smoothWaypoints = (waypoints, windowSize) => {
       {waypoints?.length > 0 && <p className='absolute top-24 z-[99999999] bg-black text-gray-50'>Total Distance Traveled: {totalDistance.toFixed(2)} kilometers</p>}
     </div>
   );
+
 };
 
 

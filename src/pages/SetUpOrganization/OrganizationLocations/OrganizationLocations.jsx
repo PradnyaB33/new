@@ -72,8 +72,7 @@ const OrganizationLocations = () => {
             },
           }
         );
-        setLocationList(response.data);
-        console.log(response.data);
+        setLocationList(response.data.locationsData);
       } catch (error) {
         console.error(error.response.data.message);
       }
@@ -81,7 +80,7 @@ const OrganizationLocations = () => {
 
     fetchLocationList();
     // eslint-disable-next-line
-  }, [authToken]);
+  }, []);
 
   useEffect(() => {
     if (open) {
@@ -161,7 +160,7 @@ const OrganizationLocations = () => {
           },
         }
       );
-      setLocationList(response.data);
+      setLocationList(response.data.locationsData);
 
       handleAlert(true, "success", "Location added successfully");
       handleClose();
@@ -251,7 +250,8 @@ const OrganizationLocations = () => {
           },
         }
       );
-      setLocationList(response.data);
+      setLocationList(response.data.locationsData);
+      console.log(locationList);
       handleAlert(true, "success", "Location updated successfully");
       handleClose();
     } catch (error) {
@@ -260,7 +260,7 @@ const OrganizationLocations = () => {
     }
   };
 
-  const handleDeleteLocation = async () => {
+  const handleDeleteLocation = async (deleteIndex) => {
     try {
       await axios.delete(
         `${process.env.REACT_APP_API}/route/location/deleteOrganizationLocations/${locationList[deleteIndex]._id}`,
@@ -279,7 +279,8 @@ const OrganizationLocations = () => {
           },
         }
       );
-      setLocationList(response.data);
+
+      setLocationList(response.data.locationsData);
 
       handleAlert(true, "success", "Location deleted successfully");
     } catch (error) {
@@ -360,47 +361,43 @@ const OrganizationLocations = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {locationList
-                    .sort((a, b) => {
-                      if (a.continent !== b.continent) {
-                        return a.continent.localeCompare(b.continent);
-                      }
-                      return a.country.localeCompare(b.country);
-                    })
-                    .map((location, index) => (
-                      <tr
-                        key={index}
-                        className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                          } border-b dark:border-neutral-500 !font-medium`}
-                      >
-                        <td className="py-2 px-3">{index + 1}</td>
-                        <td className="py-2 px-3">{location.continent}</td>
-                        <td className="py-2 px-3">{location.country}</td>
-                        <td className="py-2 px-3">{location.state}</td>
-                        <td className="py-2 px-3">{location.city}</td>
-                        <td className="py-2 px-3">{location.shortName}</td>
-                        <td className="py-2 px-3">
-                          {`${location.addressLine1} ${location.addressLine2} ${location.pinCode}`}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-2">
-                          <IconButton
-                            onClick={() => handleEditLocation(index)}
-                            aria-label="edit"
-                          >
-                            <Edit className="!text-xl" color="success" />
-                          </IconButton>
-                          <IconButton
-                            onClick={() => {
-                              handleDeleteLocationConfirmation(index);
-                              setDeleteIndex(index);
-                            }}
-                            aria-label="delete"
-                          >
-                            <Delete className="!text-xl" color="error" />
-                          </IconButton>
-                        </td>
-                      </tr>
-                    ))}
+                  {locationList?.map((location, index) =>
+                  
+                      (
+                        <tr
+                          key={index}
+                          className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                            } border-b dark:border-neutral-500 !font-medium`}
+                        >
+                          <td className="py-2 px-3">{index + 1}</td>
+                          <td className="py-2 px-3">{location.continent}</td>
+                          <td className="py-2 px-3">{location.country}</td>
+                          <td className="py-2 px-3">{location.state}</td>
+                          <td className="py-2 px-3">{location.city}</td>
+                          <td className="py-2 px-3">{location.shortName}</td>
+                          <td className="py-2 px-3">
+                            {`${location.addressLine1} ${location.addressLine2} ${location.pinCode}`}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-2">
+                            <IconButton
+                              onClick={() => handleEditLocation(index)}
+                              aria-label="edit"
+                            >
+                              <Edit className="!text-xl" color="success" />
+                            </IconButton>
+                            <IconButton
+                              onClick={() => {
+                                handleDeleteLocationConfirmation(index);
+                                setDeleteIndex(index);
+                              }}
+                              aria-label="delete"
+                            >
+                              <Delete className="!text-xl" color="error" />
+                            </IconButton>
+                          </td>
+                        </tr>
+                      )
+                    )}
                   {/* {isLoading ? (
                     <SkeletonForLeaveTypes />
                   ) : (
