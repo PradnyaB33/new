@@ -1,18 +1,17 @@
-import React, { useContext, useState, useEffect } from "react";
-import { Paper } from "@mui/material";
+import { Divider, Paper } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { Divider } from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import axios from "axios";
+import dayjs from "dayjs";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import dayjs from "dayjs";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import PDFDocument from "./SalaryPdfDocument";
-import { PDFDownloadLink } from "@react-pdf/renderer";
 const SalaryCalculate = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -25,6 +24,10 @@ const SalaryCalculate = () => {
   const [weekend, setWeekend] = useState([]);
   const [employeeSummary, setEmployeeSummary] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  console.log(
+    `🚀 ~ file: SalaryCalculate.jsx:27 ~ filteredData:`,
+    filteredData
+  );
   const [availableDays, setAvailableDays] = useState(0);
   const [paidLeaveDays, setPaidLeaveDays] = useState(0);
   const [unPaidLeaveDays, setUnPaidLeaveDays] = useState(0);
@@ -139,7 +142,7 @@ const SalaryCalculate = () => {
   // pull the data such as paidLeaveDays , unpaidLeave days , available Days
   const filterDataByMonthYear = (data, selectedMonth, selectedYear) => {
     return data.filter((item) => {
-      return item.month == selectedMonth && item.year == selectedYear;
+      return item.month === selectedMonth && item.year === selectedYear;
     });
   };
 
