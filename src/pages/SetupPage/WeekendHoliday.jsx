@@ -27,7 +27,7 @@ const WeekdaySelector = ({ selectedDays, handleDayToggle, getColor }) => {
           <Chip
             label={day}
             onClick={() => handleDayToggle(day, index)} // Pass index to handleDayToggle
-            className="!font-bold text-2xl"
+            className=" text-2xl"
             style={{
               backgroundColor: selectedDays.includes(day) ? getColor(day) : 'gray',
               borderRadius: "50%",
@@ -251,7 +251,7 @@ const WeekendHoliday = () => {
                           <Chip
                             key={dayIdx}
                             label={day.day}
-                            className="!font-bold text-sm"
+                            className="text-sm"
                             style={{
                               backgroundColor: getColor(day.day),
                               borderRadius: "50%",
