@@ -70,7 +70,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "accountSettings",
-            link: "/account",
+            link: `/userprofile`,
             icon: <Settings className="text-white" />,
             text: "Account Settings",
           },

@@ -196,7 +196,7 @@ const AddEmployee = () => {
         },
       }
     );
-    console.log(response.data);
+
     return response.data;
   });
 
@@ -211,8 +211,7 @@ const AddEmployee = () => {
           },
         }
       );
-
-      setAvailableLocation(response.data);
+      setAvailableLocation(response.data.locationsData);
     } catch (error) {
       console.error(error);
       handleAlert(true, "error", "Failed to fetch Available Work Location");
@@ -778,7 +777,7 @@ const AddEmployee = () => {
                         Select Manager Name
                       </MenuItem>
 
-                      {availableMgrId.map(
+                      {availableMgrId?.map(
                         (manager) =>
                           manager.managerId && ( // Render only if managerId exists
                             <MenuItem
@@ -883,7 +882,7 @@ const AddEmployee = () => {
                       <MenuItem value="" disabled>
                         Select Employment Type
                       </MenuItem>
-                      {availabelEmpTypes.map((type) => (
+                      {availabelEmpTypes?.map((type) => (
                         <MenuItem key={type._id} value={type._id}>
                           {type.title}
                         </MenuItem>
@@ -1023,7 +1022,7 @@ const AddEmployee = () => {
                 </div>
               </div>
               <div className="flex flex-wrap gap-8">
-                {availableInputField.map((item) => (
+                {availableInputField?.map((item) => (
                   <TextField
                     key={item._id}
                     size="small"
