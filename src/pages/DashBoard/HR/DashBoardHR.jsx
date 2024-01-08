@@ -3,7 +3,7 @@ import { Avatar } from "@mui/material";
 import React from "react";
 import SinglePayGraph from "../Components/Bar/employee/SinglePayGraph";
 
-const DashBoard_HR = () => {
+const DashBoardHR = () => {
   return (
     <section className="flex bg-gray-50  min-h-screen w-full ">
       <div className="py-10 px-8 w-full">
@@ -34,4 +34,4 @@ const DashBoard_HR = () => {
   );
 };
 
-export default DashBoard_HR;
+export default DashBoardHR;

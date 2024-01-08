@@ -8,7 +8,7 @@ import SuperAdminCard from "../Components/Card/superadmin/SuperAdminCard";
 import ManagerEmployeeChart from "../Components/Custom/ManagerEmployeeChart";
 import EmployeeLeaveRequest from "../Components/List/EmployeLeaveReqest";
 
-const Dashboard_Manger = () => {
+const DashboardManger = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { getCurrentUser } = UserProfile();
@@ -114,4 +114,4 @@ const Dashboard_Manger = () => {
   );
 };
 
-export default Dashboard_Manger;
+export default DashboardManger;
