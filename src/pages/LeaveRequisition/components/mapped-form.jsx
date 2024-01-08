@@ -34,6 +34,7 @@ const Mapped = ({
 
   // Adjust for the case when the difference is exactly 1 day
   const pluralSuffix = daysDifference === 1 ? "" : "s";
+  console.log(`🚀 ~ file: mapped-form.jsx:37 ~ pluralSuffix:`, pluralSuffix);
 
   console.log("Days Difference:", daysDifference);
   const handleChange = (event) => {
