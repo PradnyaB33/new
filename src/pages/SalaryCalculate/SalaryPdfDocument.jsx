@@ -6,6 +6,7 @@ const PDFDocument = ({
   employeeData,
   formattedDate,
   noOfDaysInMonth,
+  publicHolidaysCount,
   totalDeduction,
   totalGrossSalary,
   totalNetSalary,
@@ -144,7 +145,7 @@ const PDFDocument = ({
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Public Holidays:</Text>
-                <Text style={styles.cell}>{}</Text>
+                <Text style={styles.cell}>{publicHolidaysCount}</Text>
               </View>
             </View>
           </View>
