@@ -10,21 +10,23 @@ import React, { useContext, useEffect, useState } from "react";
 import { Calendar } from "react-big-calendar";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import useLeaveData from "../../hooks/Leave/useLeaveData";
 
-const AppDatePicker = () => {
-  const {
-    data,
-    handleUpdateFunction,
-    selectEvent,
-    setselectEvent,
-    setCalendarOpen,
-    setNewAppliedLeaveEvents,
-    selectedLeave,
-    setSelectedLeave,
-    newAppliedLeaveEvents,
-    isCalendarOpen,
-  } = useLeaveData();
+const AppDatePicker = ({
+  data,
+  handleUpdateFunction,
+  selectEvent,
+  setselectEvent,
+  setCalendarOpen,
+  setNewAppliedLeaveEvents,
+  selectedLeave,
+  setSelectedLeave,
+  newAppliedLeaveEvents,
+  isCalendarOpen,
+}) => {
+  console.log(
+    `🚀 ~ file: date-picker.jsx:28 ~ isCalendarOpen:`,
+    isCalendarOpen
+  );
   const momentWithRange = extendMoment(moment);
   const localizer = momentLocalizer(moment);
   const [Delete, setDelete] = useState(false);

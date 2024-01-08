@@ -43,14 +43,11 @@ const Notification = () => {
         throw err;
       }
     }
-    // {
-    //   throwOnError: false, // Do not throw an error, let isError handle it
-    // }
   );
   const queryClient = useQueryClient();
-  console.log(`🚀 ~ file: notification.jsx:24 ~ isError:`, isError);
+  console.log(`🚀 ~ file: notification.jsx:26 ~ isLoading:`, isLoading);
 
-  const { mutate: acceptLeaveMutation } = useMutation(
+  const { mutate: acceptLeaveMutation, isLoading: mutateLoading } = useMutation(
     ({ id }) =>
       axios.post(
         `${process.env.REACT_APP_API}/route/leave/accept/${id}`,
@@ -85,10 +82,11 @@ const Notification = () => {
   };
 
   if (isLoading) {
-    console.log(`🚀 ~ file: notification.jsx:78 ~ isLoading:`, isLoading);
     return <Loader />;
   }
-  console.log(`🚀 ~ file: notification.jsx:81 ~ error:`, error);
+  if (mutateLoading) {
+    return <Loader />;
+  }
   if (isError) {
     return <Error error={error} />;
   }

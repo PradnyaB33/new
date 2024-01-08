@@ -9,8 +9,6 @@ import useLeaveData from "../../hooks/Leave/useLeaveData";
 import LeaveTable from "./components/LeaveTabel";
 import Mapped from "./components/mapped-form";
 
-// Set up the localizer for moment.js
-
 const LeaveRequisition = () => {
   const {
     data,
@@ -20,7 +18,14 @@ const LeaveRequisition = () => {
     handleInputChange,
     newAppliedLeaveEvents,
     setNewAppliedLeaveEvents,
+    isCalendarOpen,
+    handleUpdateFunction,
+    selectEvent,
+    setSelectedLeave,
+    selectedLeave,
+    setselectEvent,
   } = useLeaveData();
+
   // const { isLoading } = useQuery(
   //   "employee-leave-table-without-default",
   //   async () => {
@@ -150,8 +155,16 @@ const LeaveRequisition = () => {
             )}
 
             <AppDatePicker
+              data={data}
+              handleUpdateFunction={handleUpdateFunction}
+              selectEvent={selectEvent}
+              setselectEvent={setselectEvent}
+              setCalendarOpen={setCalendarOpen}
               setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
+              selectedLeave={selectedLeave}
+              setSelectedLeave={setSelectedLeave}
               newAppliedLeaveEvents={newAppliedLeaveEvents}
+              isCalendarOpen={isCalendarOpen}
             />
 
             {newAppliedLeaveEvents.length > 0 &&

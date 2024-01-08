@@ -8,6 +8,7 @@ const useLeaveData = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const [isCalendarOpen, setCalendarOpen] = useState(false);
+
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
   const queryclient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
@@ -68,8 +69,6 @@ const useLeaveData = () => {
 
     setCalendarOpen(false);
 
-    setCalendarOpen(false);
-
     leaveMutation.mutate();
   };
   const handleInputChange = () => {
@@ -91,12 +90,20 @@ const useLeaveData = () => {
     let array = data?.currentYearLeaves.filter((item) => {
       return item._id !== selectedLeave?._id;
     });
+    console.log(
+      `🚀 ~ file: useLeaveData.jsx:93 ~ data?.currentYearLeaves:`,
+      data?.currentYearLeaves
+    );
     console.log(`🚀 ~ file: useLeaveData.jsx:84 ~ array:`, array);
     // setAppliedLeaveEvents(array);
-    queryclient.setQueryData("mployee-leave-table-without-default", (old) => [
-      ...old,
-      array,
-    ]);
+    queryclient.setQueryData("employee-leave-table-without-default", (old) => {
+      console.log(`🚀 ~ file: useLeaveData.jsx:100 ~ old:`, old);
+      old.currentYearLeaves = old?.currentYearLeaves.filter((item) => {
+        return item._id !== selectedLeave?._id;
+      });
+      console.log(`🚀 ~ file: useLeaveData.jsx:104 ~ old:`, old);
+      return { ...old };
+    });
   };
   return {
     data,
