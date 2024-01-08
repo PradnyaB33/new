@@ -962,7 +962,7 @@ const AddEmployee = () => {
                       <MenuItem value="" disabled>
                         Select Work Location
                       </MenuItem>
-                      {availabelLocation.map((type) => (
+                      {availabelLocation?.map((type) => (
                         <MenuItem key={type._id} value={type._id}>
                           {type.city}
                         </MenuItem>

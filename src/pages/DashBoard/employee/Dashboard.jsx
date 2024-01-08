@@ -31,7 +31,7 @@ const Dashboard = () => {
           </div>
 
           <div className="flex  w-full justify-between gap-2">
-            <div className="my-2 flex gap-2 flex-col !w-[50%] pb-2">
+            <div className="my-2 flex gap-2 flex-col !w-[60%] pb-2">
               <HRgraph />
               <SinglePayGraph />
             </div>

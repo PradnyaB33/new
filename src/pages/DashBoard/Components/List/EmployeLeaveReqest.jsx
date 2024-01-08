@@ -5,6 +5,7 @@ import axios from "axios";
 import { format } from "date-fns";
 import React, { useContext } from "react";
 import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
 import { UseContext } from "../../../../State/UseState/UseContext";
 
 const EmployeeLeaveRequest = () => {
@@ -51,18 +52,21 @@ const EmployeeLeaveRequest = () => {
         <div className="flex w-full px-4 items-center justify-between">
           <div className="flex items-center gap-2 py-2  ">
             <Avatar
-              variant="rounded"
-              className="!bg-sky-400 p-1 h-[30px] rounded-full"
+              variant="circle"
+              className="!bg-sky-400 p-1 !h-[32px] !w-[32px] rounded-full"
             >
-              <BeachAccessOutlined />
+              <BeachAccessOutlined className="!text-xl" />
             </Avatar>
-            <h1 className="text-xl font-semibold py-3">
+            <h1 className="text-lg text-[#152745] font-semibold">
               Employee Leave Request
             </h1>
           </div>
-          {/* <button className=" flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
+          <Link
+            to={"/notification"}
+            className=" flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-sm font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+          >
             View All
-          </button> */}
+          </Link>
         </div>
         <Divider variant="fullWidth" orientation="horizontal" />
         {EmployeeLeavesRequest?.length > 0 ? (

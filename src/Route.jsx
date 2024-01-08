@@ -10,6 +10,7 @@ import AddEmployee from "./pages/AddEmployee/addemployee";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import Application from "./pages/Application/Application";
 import Dashboard from "./pages/DashBoard/employee/Dashboard";
+import SuperAdmin from "./pages/DashBoard/superAdmin/SuperAdmin";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import CreateDepartment from "./pages/Departments/addDepartment";
 import DepartmentList from "./pages/Departments/department-list";
@@ -18,38 +19,40 @@ import EmployeeList from "./pages/EmployeeList/EmployeeList";
 import Home from "./pages/Home/Home";
 import AddProfile from "./pages/Home/components/addprofile";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
-import ShiftManagement from "./pages/SetupPage/ShiftManagement/shiftAllowance";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
 import SalaryCalculate from "./pages/SalaryCalculate/SalaryCalculate";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
+import EmployeeSalaryCalculateDay from "./pages/SetUpOrganization/EmoloyeeSalaryCalculate/EmployeeSalaryCalculate";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
 import EmployementTypes from "./pages/SetUpOrganization/EmployementType/EmployementTypes";
-import EmployeeSalaryCalculateDay from "./pages/SetUpOrganization/EmoloyeeSalaryCalculate/EmployeeSalaryCalculate";
 import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
 import OrganizationLocations from "./pages/SetUpOrganization/OrganizationLocations/OrganizationLocations";
 import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHoliday";
 import SalaryInput from "./pages/SetUpOrganization/SaleryInput/SalaryInput";
 import Setup from "./pages/SetUpOrganization/Setup";
-import DeleteDepartment from "./pages/SetupPage/DepartmentDeletion";
+import {
+  default as DeleteDepartment,
+  default as DepartmentDeletion,
+} from "./pages/SetupPage/DepartmentDeletion";
 import EmailSetting from "./pages/SetupPage/EmailSetting";
 import AddRoles from "./pages/SetupPage/Roles/AddRoles";
+import ShiftManagement from "./pages/SetupPage/ShiftManagement/shiftAllowance";
 import Shifts from "./pages/SetupPage/Shifts";
+import WeekendHoliday from "./pages/SetupPage/WeekendHoliday";
 import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
-import WeekendHoliday from "./pages/SetupPage/WeekendHoliday";
 import Signup from "./pages/SignUp/NewSignUp";
 import EditablePolyline from "./pages/Test/test2";
 import TrackingMap from "./pages/Test/test3";
-import TrackingMap3 from "./pages/Test/testYash";
 import TrackingMap2 from "./pages/Test/testMap";
 import TestNaresh from "./pages/Test/testNaresh";
+import TrackingMap3 from "./pages/Test/testYash";
 import UserProfile from "./pages/UserProfile/UserProfile";
+import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
-import DepartmentDeletion from "./pages/SetupPage/DepartmentDeletion";
-
 
 const App = () => {
   return (
@@ -74,7 +77,7 @@ const App = () => {
 
       <Route
         path="/organisation/:organisationId/super-admin"
-        element={<Dashboard />}
+        element={<SuperAdmin />}
       />
       {/* Dashboard Routes */}
       <Route path="/add-organisation" element={<AddOrganisation />} />
@@ -87,8 +90,8 @@ const App = () => {
         path="organisation/:organisationId/department-list"
         element={<DepartmentList />}
       />
-      <Route path="/userprofile" element={<UserProfile />} />
       <Route path="/organisation/:id" element={<SingleOrganisation />} />
+      <Route path="/userprofile" element={<UserProfile />} />
       <Route
         path="/organisation/:organisationId/employee-onboarding"
         element={<AddEmployee />}
@@ -113,6 +116,15 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/salary-calculate/:userId"
         element={<SalaryCalculate />}
+      />
+      <Route path="/organisation/view-payslip" element={<ViewPayslip />} />
+      <Route
+        path="/terms-and-conditions"
+        element={<TermsAndConditionsPage />}
+      />
+      <Route
+        path="/organisation/:organisationId/setup/set-employee-salary-calculate-day"
+        element={<EmployeeSalaryCalculateDay />}
       />
       <Route
         path="/organisation/:organisationId/setup/set-shifts"
@@ -149,10 +161,7 @@ const App = () => {
         path="/organisation/:organisationId/setup/set-employement-types"
         element={<EmployementTypes />}
       />
-      <Route
-        path="/organisation/:organisationId/setup/set-employee-salary-calculate-day"
-        element={<EmployeeSalaryCalculateDay />}
-      />
+
       <Route
         path="/organisation/:organisationId/setup/add-organization-locations"
         element={<OrganizationLocations />}
@@ -174,14 +183,14 @@ const App = () => {
         element={<EmailSetting />}
       />
       <Route path="/notification" element={<Notification />} />
-      <Route path="/organisation/:organisationId/dept-deletion" element={<DepartmentDeletion />} />
+      <Route
+        path="/organisation/:organisationId/dept-deletion"
+        element={<DepartmentDeletion />}
+      />
       <Route path="/application" element={<Application />} />
       <Route path="/leave" element={<LeaveRequisition />} />
       <Route path="/shift-management" element={<ShiftManagement />} />
-      <Route
-        path="/terms-and-conditions"
-        element={<TermsAndConditionsPage />}
-      />
+
       <Route
         path="/organisation/:id/department/:departmentId"
         element={<SingleDepartment />}
