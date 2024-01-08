@@ -67,7 +67,7 @@ const SummaryTable = () => {
       </h1>
       <div className="w-full">
         {data?.leaveTypeDetailsArray?.map((item, index) => {
-          if (item.count == 0) {
+          if (item.count === 0) {
             return null;
           } else {
             return (
