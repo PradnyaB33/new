@@ -70,10 +70,7 @@ const LeaveTable = () => {
         <h1 className="text-xl px-8 font-semibold flex items-center gap-3 ">
           <AccountBalanceIcon className="text-gray-400" /> Balance for Leaves
           <Tooltip title="Click to get Summary for current month">
-            <IconButton
-            // aria-describedby={Popid}
-            // onClick={(event) => handlePopClick(event, item)}
-            >
+            <IconButton>
               <MoreHoriz className="!text-[19px] text-black" />
             </IconButton>
           </Tooltip>

@@ -33,9 +33,9 @@ const SignIn = () => {
       if (response.data.user.profile.length === 1) {
         redirect("/organisation/employee-dashboard");
       } else if (response.data.user.profile.includes("Hr")) {
-        redirect("/organisation/dashboard/hr");
+        redirect("/organisation/HR-dashboard");
       } else if (response.data.user.profile.includes("Manager")) {
-        redirect("/organisation/dashboard/manager");
+        redirect("/organisation/manager-dashboard");
       } else {
         redirect("/");
       }

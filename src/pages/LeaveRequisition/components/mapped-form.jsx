@@ -28,8 +28,6 @@ const Mapped = ({
     },
   };
   const handleChange = (event) => {
-    console.log(`🚀 ~ event:`, event.target);
-    console.log(`🚀 ~ event:`, subtractedLeaves);
     setLeavesTypes(event.target.value);
     newAppliedLeaveEvents[index].leaveTypeDetailsId = event.target.value;
     setNewAppliedLeaveEvents(newAppliedLeaveEvents);

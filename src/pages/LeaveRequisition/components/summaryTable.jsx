@@ -29,10 +29,7 @@ const SummaryTable = () => {
         <h1 className="text-xl px-8 font-semibold flex items-center gap-3 ">
           <AccountBalanceIcon className="text-gray-400" /> Balance for Leaves
           <Tooltip title="Click to get Salary structure">
-            <IconButton
-            // aria-describedby={Popid}
-            // onClick={(event) => handlePopClick(event, item)}
-            >
+            <IconButton>
               <MoreHoriz className="!text-[19px] text-black" />
             </IconButton>
           </Tooltip>
@@ -70,18 +67,22 @@ const SummaryTable = () => {
       </h1>
       <div className="w-full">
         {data?.leaveTypeDetailsArray?.map((item, index) => {
-          return (
-            <div key={index} className="border-b border">
-              <div className="flex justify-between items-center py-4 px-6">
-                <h1 className="text-md text-gray-400 font-bold tracking-wide">
-                  {item.leaveName}
-                </h1>
-                <h1 className="text-lg tracking-wide font-bold text-gray-400">
-                  {item.count}
-                </h1>
+          if (item.count === 0) {
+            return null;
+          } else {
+            return (
+              <div key={index} className="border-b border">
+                <div className="flex justify-between items-center py-4 px-6">
+                  <h1 className="text-md text-gray-400 font-bold tracking-wide">
+                    {item.leaveName}
+                  </h1>
+                  <h1 className="text-lg tracking-wide font-bold text-gray-400">
+                    {item.count}
+                  </h1>
+                </div>
               </div>
-            </div>
-          );
+            );
+          }
         })}
         <div className="flex justify-between items-center py-4 px-6">
           <h1 className="text-md text-gray-400 font-bold tracking-wide">

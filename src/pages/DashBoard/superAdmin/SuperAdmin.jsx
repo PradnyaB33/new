@@ -5,11 +5,12 @@ import {
   FilterAltOff,
   Group,
   LocationOn,
+  West,
 } from "@mui/icons-material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Select from "react-select";
 import { UseContext } from "../../../State/UseState/UseContext";
 import LineGraph from "../Components/Bar/LineGraph";
@@ -222,12 +223,29 @@ const SuperAdmin = () => {
   );
 
   return (
-    <section className="flex bg-gray-50  min-h-screen w-full ">
-      <div className="py-10 px-8 w-full">
-        <h1 className="text-xl text-[#152745] font-semibold">
-          Organization Overview
-        </h1>
+    <section className=" bg-gray-50  min-h-screen w-full ">
+      {/* <BackComponent /> */}
+      {/* <header className="px-8 !text-[#152745] text-xl w-full flex items-center gap-2 pt-6 bg-white shadow-md   p-4">
+        <Dashboard />
+        <h1 className="text-2xl  font-semibold">Organization Overview</h1>
+      </header> */}
 
+      <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
+        {/* <BackComponent /> */}
+        <Link to={"/organizationList"}>
+          <West className="mx-4 !text-xl" />
+        </Link>
+        Organization Overview
+      </header>
+      {/* <Link to={"/organizationList"} className="my-4 px-8 flex gap-1">
+        <KeyboardBackspace />
+        <h1>Go back</h1>
+      </Link> */}
+      {/* <div className="bg-white pt-10 pb-4 border-b-[.5px] border-gray-300">
+        <div className="flex  px-8    items-center !text-[#152745] gap-1"></div>
+      </div> */}
+
+      <div className=" px-8 w-full">
         <div className="flex mt-6 w-full justify-between gap-5">
           <SuperAdminCard
             icon={Business}
@@ -348,7 +366,7 @@ const SuperAdmin = () => {
           </div>
         )}
 
-        <div className="w-full gap-4 mt-1 flex items-center">
+        <div className="w-full gap-4 mt-4 flex items-center">
           <LineGraph />
           <AttendenceBar
             isLoading={oraganizationLoading}
