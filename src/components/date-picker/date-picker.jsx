@@ -23,10 +23,6 @@ const AppDatePicker = ({
   newAppliedLeaveEvents,
   isCalendarOpen,
 }) => {
-  console.log(
-    `🚀 ~ file: date-picker.jsx:28 ~ isCalendarOpen:`,
-    isCalendarOpen
-  );
   const momentWithRange = extendMoment(moment);
   const localizer = momentLocalizer(moment);
   const [Delete, setDelete] = useState(false);
@@ -41,11 +37,12 @@ const AppDatePicker = ({
         headers: { Authorization: authToken },
       }
     );
+    console.log(`🚀 ~ file: date-picker.jsx:40 ~ response:`, response);
 
     return response.data;
   });
+  console.log(`🚀 ~ file: date-picker.jsx:43 ~ data2:`, data2);
   const handleSelectEvent = (event) => {
-    console.log(`🚀 ~ file: date-picker.jsx:45 ~ event:`, event);
     setSelectedLeave(event);
     setCalendarOpen(true);
     if (event.title === "Selected Leave") {
@@ -78,10 +75,17 @@ const AppDatePicker = ({
   };
 
   const handleSelectSlot = ({ start, end }) => {
+    // Convert start time to JavaScript Date object
+    const startDat2e = new Date(start);
+
+    // Add one minute to the start time
+    startDat2e.setMinutes(startDat2e.getMinutes() + 1);
+    console.log(`🚀 ~ file: date-picker.jsx:85 ~ startDat2e:`, startDat2e);
+    start = startDat2e;
+
     const selectedStartDate = momentWithRange(start);
     const selectedEndDate = momentWithRange(end);
     const startDate = moment(start).startOf("day"); // Extract date, start at midnight
-    const endDate = moment(end).startOf("day").add(1, "day"); // Add 1 day to make sure it's after 12 am
 
     // Check if the selected date range includes any disabled days
     const includesDisabledDay = data2?.days?.some((day) => {
@@ -261,7 +265,7 @@ const AppDatePicker = ({
             }}
             events={
               data
-                ? [...data?.currentYearLeaves, newAppliedLeaveEvents]
+                ? [...data?.currentYearLeaves, ...newAppliedLeaveEvents]
                 : [...newAppliedLeaveEvents]
             }
             startAccessor="start"

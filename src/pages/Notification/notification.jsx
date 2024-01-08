@@ -22,7 +22,7 @@ const Notification = () => {
   const [id, setid] = useState("");
   const { handleAlert } = useContext(TestContext);
 
-  const { data, isLoading, isError, error } = useQuery(
+  const { data, isLoading, isError, error, isFetching } = useQuery(
     "employee-leave",
     async () => {
       try {
@@ -84,7 +84,7 @@ const Notification = () => {
   if (isLoading) {
     return <Loader />;
   }
-  if (mutateLoading) {
+  if (mutateLoading || isFetching) {
     return <Loader />;
   }
   if (isError) {
