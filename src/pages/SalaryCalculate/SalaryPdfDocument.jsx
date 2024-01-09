@@ -7,6 +7,9 @@ const PDFDocument = ({
   formattedDate,
   noOfDaysInMonth,
   publicHolidaysCount,
+  paidLeaveDays,
+  unPaidLeaveDays,
+  noOfDaysEmployeePresent,
   totalDeduction,
   totalGrossSalary,
   totalNetSalary,
@@ -133,15 +136,15 @@ const PDFDocument = ({
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Unpaid Leaves:</Text>
-                <Text style={styles.cell}>{}</Text>
+                <Text style={styles.cell}>{unPaidLeaveDays}</Text>
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Paid Leaves:</Text>
-                <Text style={styles.cell}>{}</Text>
+                <Text style={styles.cell}>{paidLeaveDays}</Text>
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.cell}> Working Days Attended:</Text>
-                <Text style={styles.cell}>{}</Text>
+                <Text style={styles.cell}>{noOfDaysEmployeePresent}</Text>
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Public Holidays:</Text>

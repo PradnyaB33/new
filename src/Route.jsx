@@ -55,7 +55,7 @@ import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
-
+import EmployeeProfile from "./pages/UserProfile/UserProfile";
 const App = () => {
   return (
     <Routes>
@@ -111,7 +111,7 @@ const App = () => {
         element={<DepartmentList />}
       />
       <Route path="/organisation/:id" element={<SingleOrganisation />} />
-      <Route path="/userprofile" element={<UserProfile />} />
+      <Route path="/employee-profile" element={<EmployeeProfile />} />
       <Route
         path="/organisation/:organisationId/employee-onboarding"
         element={<AddEmployee />}
