@@ -129,7 +129,6 @@ const ViewPayslip = () => {
 
   // Example usage:
   let emp_sal_cal_date = getActualDate(empSalCalDay);
-  console.log(emp_sal_cal_date);
 
   // Get the current system date
   const currentDate = new Date();
@@ -154,8 +153,6 @@ const ViewPayslip = () => {
           salary.year === previousMonth.getFullYear()
       )
     : null;
-
-  console.log(previousMonthSalary);
 
   //   function to generate the pdf
   const handleGeneratePDF = () => {

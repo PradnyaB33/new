@@ -121,20 +121,16 @@ const PaySlipPdf = ({ employeeInfo, organisationInfo, salaryInfo }) => {
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Unpaid Leaves:</Text>
-                <Text style={styles.cell}>
-                  {salaryInfo?.unpaidleaveDays || ""}
-                </Text>
+                <Text style={styles.cell}>{salaryInfo?.unPaidLeaveDays}</Text>
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Paid Leaves:</Text>
-                <Text style={styles.cell}>
-                  {salaryInfo?.paidleaveDays || ""}
-                </Text>
+                <Text style={styles.cell}>{salaryInfo?.paidLeaveDays}</Text>
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.cell}> Working Days Attended:</Text>
                 <Text style={styles.cell}>
-                  {salaryInfo?.availableDays || ""}
+                  {salaryInfo?.noOfDaysEmployeePresent || ""}
                 </Text>
               </View>
               <View style={styles.tableRow}>
