@@ -99,7 +99,7 @@ export default function ProfileIcon() {
 
             <MenuItem
               key="profile"
-              onClick={() => handleNavigate("/userprofile")}
+              onClick={() => handleNavigate("/employee-profile")}
               className="flex gap-4  !text-sm items-center justify-center !py-3 hover:!bg-gray-100  "
             >
               <PersonOutline className="!text-[19px]" /> Profile

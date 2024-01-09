@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 
@@ -22,27 +22,36 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const queryClient = useQueryClient();
+  const [employeeData, setEmployeeData] = useState(null);
+  const [error, setError] = useState("");
 
-  const { data: employeeData } = useQuery(
-    ["empData", employeeId],
-    async () => {
-      if (open && employeeId !== null) {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API}/route/employee/get-employee-data/${employeeId}`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        );
-        return response.data;
+  // pull the employee data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (open && employeeId !== null && employeeId !== undefined) {
+          const response = await axios.get(
+            `${process.env.REACT_APP_API}/route/employee/get/profile/${employeeId}`,
+            {
+              headers: {
+                Authorization: authToken,
+              },
+            }
+          );
+          setEmployeeData(response.data.employee);
+        }
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
       }
-    },
-    {
-      enabled: open && employeeId !== null && employeeId !== undefined,
-    }
-  );
+    };
 
+    fetchData();
+    return () => {};
+  }, [open, employeeId, authToken]);
+
+  console.log(employeeData);
+
+  // define the state for storing the employee data
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -60,7 +69,6 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
     designation: "",
     profile: "",
   });
-  const [error, setError] = useState("");
 
   const EditEmployeeData = useMutation(
     (data) =>
@@ -107,23 +115,25 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
   );
 
   useEffect(() => {
-    if (employeeData?.empData) {
+    if (employeeData) {
+      const formattedDateOfBirth = employeeData.date_of_birth
+        ? new Date(employeeData.date_of_birth).toLocaleDateString("en-US")
+        : "";
+      const formattedJoiningDate = employeeData.joining_date
+        ? new Date(employeeData.joining_date).toLocaleDateString("en-US")
+        : "";
       setFormData({
-        first_name: employeeData?.empData?.first_name || "",
-        last_name: employeeData?.empData?.last_name || "",
-        email: employeeData?.empData?.email || "",
-        phone_number: employeeData?.empData?.phone_number || "",
-        deptname: employeeData?.empData?.deptname || "",
-        location: employeeData?.empData?.location || "",
-        companyemail: employeeData?.empData?.companyemail || "",
-        address: employeeData?.empData?.address || "",
-        citizenship: employeeData?.empData?.citizenship || "",
-        mgrempid: employeeData?.empData?.mgrempid || "",
-        employmentType: employeeData?.empData?.location || "",
-        date_of_birth: employeeData?.empData?.date_of_birth || "",
-        joining_date: employeeData?.empData?.joining_date || "",
-        designation: employeeData?.empData?.designation || "",
-        profile: employeeData?.empData?.profile || "",
+        first_name: employeeData?.first_name || "",
+        last_name: employeeData?.last_name || "",
+        email: employeeData?.email || "",
+        phone_number: employeeData?.phone_number || "",
+        companyemail: employeeData?.companyemail || "",
+        address: employeeData?.address || "",
+        citizenship: employeeData?.citizenship || "",
+        date_of_birth: formattedDateOfBirth,
+        joining_date: formattedJoiningDate,
+        deptname: employeeData?.deptname[0]?.departmentName || "",
+        profile: employeeData?.profile || "",
       });
     }
   }, [employeeData]);
