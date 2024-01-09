@@ -96,7 +96,7 @@ const LineGraph = ({ isLoading }) => {
         </div>
       ) : (
         <div
-          className="w-[50%] 
+          className="w-full 
       px-4 pb-4 flex flex-col shadow-md rounded-md bg-white  justify-center"
         >
           <h1 className="text-lg my-4 font-bold text-[#67748E]">

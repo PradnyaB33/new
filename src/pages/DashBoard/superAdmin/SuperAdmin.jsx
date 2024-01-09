@@ -167,7 +167,10 @@ const SuperAdmin = () => {
           Authorization: authToken,
         },
       });
-      return data;
+      const currentYear = new Date().getFullYear();
+      const filterData = data.filter((item) => item.year === currentYear);
+
+      return filterData;
     } catch (error) {
       console.log(error);
     }
@@ -198,6 +201,7 @@ const SuperAdmin = () => {
       enabled: !!department,
     }
   );
+
   useQuery(
     ["manager-attenedence", manager],
     () =>
@@ -367,11 +371,15 @@ const SuperAdmin = () => {
         )}
 
         <div className="w-full gap-4 mt-4 flex items-center">
-          <LineGraph />
-          <AttendenceBar
-            isLoading={oraganizationLoading}
-            attendenceData={data}
-          />
+          <div className="w-[50%]">
+            <LineGraph />
+          </div>
+          <div className="w-[50%]">
+            <AttendenceBar
+              isLoading={oraganizationLoading}
+              attendenceData={data}
+            />
+          </div>
         </div>
       </div>
     </section>

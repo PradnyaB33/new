@@ -31,11 +31,11 @@ const SignIn = () => {
       );
 
       if (response.data.user.profile.length === 1) {
-        redirect("/organisation/employee-dashboard");
+        redirect("/organisation/dashboard/employee-dashboard");
       } else if (response.data.user.profile.includes("Hr")) {
-        redirect("/organisation/HR-dashboard");
+        redirect("/organisation/dashboard/HR-dashboard");
       } else if (response.data.user.profile.includes("Manager")) {
-        redirect("/organisation/manager-dashboard");
+        redirect("/organisation/dashboard/manager-dashboard");
       } else {
         redirect("/");
       }

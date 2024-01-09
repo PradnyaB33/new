@@ -27,7 +27,6 @@ const HRgraph = () => {
   };
 
   const { data: LeaveYearData } = useQuery("leaveData", getYearLeaves);
-
   const monthNames = [
     "January",
     "February",
@@ -43,64 +42,54 @@ const HRgraph = () => {
     "December",
   ];
 
-  function getFilteredAndReversedMonths(data) {
-    const filteredMonths = data
-      ?.filter((element) => monthNames[element.month - 1])
-      ?.map((element) => monthNames[element.month - 1]);
-    const reversedMonths = filteredMonths?.reverse();
-    return reversedMonths;
-  }
-
-  const reversedMonthsArray = getFilteredAndReversedMonths(LeaveYearData);
+  const allMonths = monthNames;
 
   const organizeDataByMonth = (data) => {
-    const organizedData = [];
+    const organizedData = Array.from({ length: 12 }, (_, index) => {
+      const month = index + 1;
+      return {
+        month,
+        year: null,
+        PresentPercent: 0,
+        absentPercent: 0,
+      };
+    });
 
-    for (let i = 0; i < data?.length; i++) {
-      const monthData = data[i];
-      const monthIndex = monthData.month - 1; // Month numbers are 1-based
+    data?.forEach((monthData) => {
+      const monthIndex = monthData.month - 1;
+      organizedData[monthIndex] = {
+        month: monthData.month,
+        year: monthData.year,
+        availableDays: monthData.availableDays,
+        unpaidleaveDays: monthData.unpaidleaveDays,
+        paidleaveDays: monthData.paidleaveDays,
+      };
+    });
 
-      if (!organizedData[monthIndex]) {
-        organizedData[monthIndex] = {
-          month: monthData.month,
-          year: monthData.year,
-          availableDays: 0,
-          unpaidleaveDays: 0,
-          paidleaveDays: 0,
-        };
-      }
-      organizedData[monthIndex].availableDays += monthData.availableDays;
-      organizedData[monthIndex].unpaidleaveDays += monthData.unpaidleaveDays;
-      organizedData[monthIndex].paidleaveDays += monthData.paidleaveDays;
-    }
-
-    // Filter out undefined elements and reverse the array
-    const reversedData = organizedData.filter((monthData) => monthData);
-    return reversedData;
+    return organizedData;
   };
 
-  const reversedOrganizedData = organizeDataByMonth(LeaveYearData);
+  const EmployeeleaveData = organizeDataByMonth(LeaveYearData);
+  const MonthArray = allMonths.map((month) => month);
 
   const data = {
-    labels: reversedMonthsArray,
+    labels: MonthArray,
     datasets: [
       {
         label: "Available Days",
-        data: reversedOrganizedData.map((monthData) => monthData.availableDays),
+        data: EmployeeleaveData.map((monthData) => monthData.availableDays),
         backgroundColor: "#00b0ff",
         borderWidth: 1,
       },
       {
         label: "Unpaid Leave Days",
-        data: reversedOrganizedData.map(
-          (monthData) => monthData.unpaidleaveDays
-        ),
+        data: EmployeeleaveData.map((monthData) => monthData.unpaidleaveDays),
         backgroundColor: "#f50057",
         borderWidth: 1,
       },
       {
         label: "Paid Leave Days",
-        data: reversedOrganizedData.map((monthData) => monthData.paidleaveDays),
+        data: EmployeeleaveData.map((monthData) => monthData.paidleaveDays),
         backgroundColor: "#4caf50",
         borderWidth: 1,
       },
@@ -111,7 +100,9 @@ const HRgraph = () => {
     <>
       <article className=" bg-white rounded-md shadow-xl">
         <div className="p-4 py-4 flex justify-between items-center">
-          <h1 className="text-xl">Overall Attendence</h1>
+          <h1 className="text-lg  mt-4 font-bold text-[#67748E]">
+            Employee Dashboard
+          </h1>
         </div>
         <Bar
           data={data}

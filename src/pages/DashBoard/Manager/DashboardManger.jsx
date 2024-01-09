@@ -53,8 +53,15 @@ const DashboardManger = () => {
   );
 
   return (
-    <section className="flex bg-gray-50  min-h-screen w-full ">
-      <div className="py-10 px-8 w-full">
+    <section className=" bg-gray-50  min-h-screen w-full ">
+      <header className="text-xl w-full px-8 pt-6 bg-white shadow-md   p-4">
+        Manager Dashboard
+      </header>
+      {/* <BackComponent /> */}
+      {/* <Link to={"/organizationList"}>
+          <West className="mx-4 !text-xl" />
+        </Link> */}
+      <div className=" px-8 w-full">
         {/* <div className="flex items-center gap-3">
           <Avatar
             className="!bg-blue-500  h-[100px] text-4xl p-1 shadow-sm"
@@ -69,9 +76,9 @@ const DashboardManger = () => {
           </div>
         </div> */}
 
-        <h1 className="text-xl text-[#152745] font-semibold">
+        {/* <h1 className="text-xl text-[#152745] font-semibold">
           Manager Dashboard
-        </h1>
+        </h1> */}
 
         <div className="flex mt-6">
           <div className="w-full flex gap-5">

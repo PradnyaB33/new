@@ -75,15 +75,21 @@ const App = () => {
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       {/* Login Routes */}
       {/* Dashboard Routes */}
-      <Route path="/organisation/employee-dashboard" element={<Dashboard />} />
-      <Route path="/organisation/HR-dashboard" element={<DashBoardHR />} />
       <Route
-        path="/organisation/manager-dashboard"
+        path="/organisation/dashboard/employee-dashboard"
+        element={<Dashboard />}
+      />
+      <Route
+        path="/organisation/dashboard/HR-dashboard"
+        element={<DashBoardHR />}
+      />
+      <Route
+        path="/organisation/dashboard/manager-dashboard"
         element={<DashboardManger />}
       />
 
       <Route
-        path="/organisation/:organisationId/super-admin"
+        path="/organisation/:organisationId/dashboard/super-admin"
         element={<SuperAdmin />}
       />
       {/* Dashboard Routes */}
