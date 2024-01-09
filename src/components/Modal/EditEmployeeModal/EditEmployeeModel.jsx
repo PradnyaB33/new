@@ -62,14 +62,85 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
     companyemail: "",
     address: "",
     citizenship: "",
-    mgrempid: "",
-    employmentType: "",
     date_of_birth: "",
     joining_date: "",
-    designation: "",
+    bank_account_no: "",
     profile: "",
   });
 
+  // define the state for store additional info data of employee
+  const [additionalInfo, setAdditionalInfo] = useState({
+    Adhar_Card_Number: "",
+    Department_Cost_Center_No: "",
+    Education: "",
+    Emergency_Contact: "",
+    Martial_Status: "",
+    Middle_Name: "",
+    Pan_Card_Number: "",
+    Permanent_Address: "",
+    Primary_Nationality: "",
+    Relative_Information: "",
+    Shifts_Allocation: "",
+  });
+
+  // fetch the data in input field
+  useEffect(() => {
+    if (employeeData) {
+      const formattedDateOfBirth = employeeData.date_of_birth
+        ? new Date(employeeData.date_of_birth).toLocaleDateString("en-US")
+        : "";
+      const formattedJoiningDate = employeeData.joining_date
+        ? new Date(employeeData.joining_date).toLocaleDateString("en-US")
+        : "";
+      setFormData({
+        first_name: employeeData?.first_name || "",
+        last_name: employeeData?.last_name || "",
+        email: employeeData?.email || "",
+        phone_number: employeeData?.phone_number || "",
+        companyemail: employeeData?.companyemail || "",
+        address: employeeData?.address || "",
+        citizenship: employeeData?.citizenship || "",
+        date_of_birth: formattedDateOfBirth,
+        joining_date: formattedJoiningDate,
+        deptname: employeeData?.deptname[0]?.departmentName || "",
+        location: employeeData?.worklocation[0]?.city || "",
+        bank_account_no: employeeData?.bank_account_no || "",
+        profile: employeeData?.profile || "",
+      });
+      setAdditionalInfo({
+        Adhar_Card_Number:
+          employeeData?.additionalInfo?.["Adhar Card Number"] || "",
+        Department_Cost_Center_No:
+          employeeData?.additionalInfo?.["Department cost center no"] || "",
+        Education: employeeData?.additionalInfo?.Education || "",
+        Emergency_Contact:
+          employeeData?.additionalInfo?.["Emergency contact"] || "",
+        Martial_Status: employeeData?.additionalInfo?.["Martial status"] || "",
+        Middle_Name: employeeData?.additionalInfo?.["Middle Name"] || "",
+        Pan_Card_Number:
+          employeeData?.additionalInfo?.["Pan Card Number"] || "",
+        Permanent_Address:
+          employeeData?.additionalInfo?.["Permanent Address"] || "",
+        Primary_Nationality:
+          employeeData?.additionalInfo?.["Primary nationality"] || "",
+        Relative_Information:
+          employeeData?.additionalInfo?.["Relative Information"] || "",
+        Shifts_Allocation:
+          employeeData?.additionalInfo?.["Shifts allocation"] || "",
+      });
+    }
+  }, [employeeData]);
+
+  // function for changing the data by user
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // update the data of employee
   const EditEmployeeData = useMutation(
     (data) =>
       axios.put(
@@ -100,12 +171,36 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
           companyemail: updatedData.data.companyemail || "",
           address: updatedData.data.address || "",
           citizenship: updatedData.data.citizenship || "",
-          mgrempid: updatedData.data.mgrempid || "",
-          employmentType: updatedData.data.employmentType || "",
           date_of_birth: updatedData.data.date_of_birth || "",
           joining_date: updatedData.data.joining_date || "",
-          designation: updatedData.data.designation || "",
           profile: updatedData.data.profile || "",
+          bank_account_no: updatedData.data.bank_account_no || "",
+        }));
+
+        // Update additionalInfo in local state
+        setAdditionalInfo((prevData) => ({
+          ...prevData,
+          Adhar_Card_Number:
+            updatedData.data.additionalInfo?.["Adhar Card Number"] || "",
+          Department_Cost_Center_No:
+            updatedData.data.additionalInfo?.["Department cost center no"] ||
+            "",
+          Education: updatedData.data.additionalInfo?.Education || "",
+          Emergency_Contact:
+            updatedData.data.additionalInfo?.["Emergency contact"] || "",
+          Martial_Status:
+            updatedData.data.additionalInfo?.["Martial status"] || "",
+          Middle_Name: updatedData.data.additionalInfo?.["Middle Name"] || "",
+          Pan_Card_Number:
+            updatedData.data.additionalInfo?.["Pan Card Number"] || "",
+          Permanent_Address:
+            updatedData.data.additionalInfo?.["Permanent Address"] || "",
+          Primary_Nationality:
+            updatedData.data.additionalInfo?.["Primary nationality"] || "",
+          Relative_Information:
+            updatedData.data.additionalInfo?.["Relative Information"] || "",
+          Shifts_Allocation:
+            updatedData.data.additionalInfo?.["Shifts allocation"] || "",
         }));
       },
       onError: () => {
@@ -114,43 +209,16 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
     }
   );
 
-  useEffect(() => {
-    if (employeeData) {
-      const formattedDateOfBirth = employeeData.date_of_birth
-        ? new Date(employeeData.date_of_birth).toLocaleDateString("en-US")
-        : "";
-      const formattedJoiningDate = employeeData.joining_date
-        ? new Date(employeeData.joining_date).toLocaleDateString("en-US")
-        : "";
-      setFormData({
-        first_name: employeeData?.first_name || "",
-        last_name: employeeData?.last_name || "",
-        email: employeeData?.email || "",
-        phone_number: employeeData?.phone_number || "",
-        companyemail: employeeData?.companyemail || "",
-        address: employeeData?.address || "",
-        citizenship: employeeData?.citizenship || "",
-        date_of_birth: formattedDateOfBirth,
-        joining_date: formattedJoiningDate,
-        deptname: employeeData?.deptname[0]?.departmentName || "",
-        profile: employeeData?.profile || "",
-      });
-    }
-  }, [employeeData]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
+  // when user click on edit employee data button that time invoke this function
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (employeeId) {
-        await EditEmployeeData.mutateAsync(formData);
+        const updatedData = {
+          ...formData,
+          additionalInfo: additionalInfo,
+        };
+        await EditEmployeeData.mutateAsync(updatedData);
       }
     } catch (error) {
       console.error(error);
@@ -275,6 +343,25 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
               variant="outlined"
             >
               <InputLabel htmlFor="outlined-adornment-password">
+                Enter Bank Account Number
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                label="Add Employee Data"
+                name="bank_account_no"
+                value={formData.bank_account_no}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+          </div>
+          <div className="space-y-2 ">
+            <FormControl
+              error={error}
+              size="small"
+              sx={{ width: "100%" }}
+              variant="outlined"
+            >
+              <InputLabel htmlFor="outlined-adornment-password">
                 Enter Location
               </InputLabel>
               <OutlinedInput
@@ -371,45 +458,7 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
               variant="outlined"
             >
               <InputLabel htmlFor="outlined-adornment-password">
-                Enter Manager Name
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                label="Add Employee Data"
-                name="mgrempid"
-                value={formData.mgrempid}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-          </div>
-          <div className="space-y-2 ">
-            <FormControl
-              error={error}
-              size="small"
-              sx={{ width: "100%" }}
-              variant="outlined"
-            >
-              <InputLabel htmlFor="outlined-adornment-password">
-                Enter Employement Type
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                label="Add Employee Data"
-                name="employmentType"
-                value={formData.employmentType}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-          </div>
-          <div className="space-y-2 ">
-            <FormControl
-              error={error}
-              size="small"
-              sx={{ width: "100%" }}
-              variant="outlined"
-            >
-              <InputLabel htmlFor="outlined-adornment-password">
-                Enter Date of Birth
+                Enter Date Of Birth
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
@@ -420,6 +469,7 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
               />
             </FormControl>
           </div>
+
           <div className="space-y-2 ">
             <FormControl
               error={error}
@@ -439,6 +489,7 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
               />
             </FormControl>
           </div>
+
           <div className="space-y-2 ">
             <FormControl
               error={error}
@@ -447,18 +498,20 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
               variant="outlined"
             >
               <InputLabel htmlFor="outlined-adornment-password">
-                Enter Designation
+                Profile
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
-                name="designation"
-                value={formData.designation}
+                label="Profile"
+                name="profile"
+                value={formData.profile}
                 onChange={handleInputChange}
               />
             </FormControl>
           </div>
-          <div className="space-y-2 ">
+
+          {/* AdditionalInfo fields */}
+          <div className="space-y-2">
             <FormControl
               error={error}
               size="small"
@@ -466,14 +519,259 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
               variant="outlined"
             >
               <InputLabel htmlFor="outlined-adornment-password">
-                Enter Profile
+                Adhar Card Number
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
-                name="profile"
-                value={formData.profile}
-                onChange={handleInputChange}
+                label="Adhar Card Number"
+                name="adharCardNumber"
+                value={additionalInfo.Adhar_Card_Number}
+                onChange={(e) =>
+                  setAdditionalInfo((prevData) => ({
+                    ...prevData,
+                    Adhar_Card_Number: e.target.value,
+                  }))
+                }
+              />
+            </FormControl>
+          </div>
+          <div className="space-y-2">
+            <FormControl
+              error={error}
+              size="small"
+              sx={{ width: "100%" }}
+              variant="outlined"
+            >
+              <InputLabel htmlFor="outlined-adornment-password">
+                Department cost center no
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                label="Department cost center no"
+                name="Department_Cost_Center_No"
+                value={additionalInfo.Department_Cost_Center_No}
+                onChange={(e) =>
+                  setAdditionalInfo((prevData) => ({
+                    ...prevData,
+                    Department_Cost_Center_No: e.target.value,
+                  }))
+                }
+              />
+            </FormControl>
+          </div>
+          <div className="space-y-2">
+            <FormControl
+              error={error}
+              size="small"
+              sx={{ width: "100%" }}
+              variant="outlined"
+            >
+              <InputLabel htmlFor="outlined-adornment-password">
+                Education
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                label="Education"
+                name="Education"
+                value={additionalInfo.Education}
+                onChange={(e) =>
+                  setAdditionalInfo((prevData) => ({
+                    ...prevData,
+                    Education: e.target.value,
+                  }))
+                }
+              />
+            </FormControl>
+          </div>
+          <div className="space-y-2">
+            <FormControl
+              error={error}
+              size="small"
+              sx={{ width: "100%" }}
+              variant="outlined"
+            >
+              <InputLabel htmlFor="outlined-adornment-password">
+                Emergency contact
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                label="Emergency contact"
+                name="Emergency_Contact"
+                value={additionalInfo.Emergency_Contact}
+                onChange={(e) =>
+                  setAdditionalInfo((prevData) => ({
+                    ...prevData,
+                    Emergency_Contact: e.target.value,
+                  }))
+                }
+              />
+            </FormControl>
+          </div>
+          <div className="space-y-2">
+            <FormControl
+              error={error}
+              size="small"
+              sx={{ width: "100%" }}
+              variant="outlined"
+            >
+              <InputLabel htmlFor="outlined-adornment-password">
+                Martial Status
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                label="Martial status"
+                name="Martial_Status"
+                value={additionalInfo.Martial_Status}
+                onChange={(e) =>
+                  setAdditionalInfo((prevData) => ({
+                    ...prevData,
+                    Martial_Status: e.target.value,
+                  }))
+                }
+              />
+            </FormControl>
+          </div>
+          <div className="space-y-2">
+            <FormControl
+              error={error}
+              size="small"
+              sx={{ width: "100%" }}
+              variant="outlined"
+            >
+              <InputLabel htmlFor="outlined-adornment-password">
+                Middle Name
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                label="Middle Name"
+                name="Middle_Name"
+                value={additionalInfo.Middle_Name}
+                onChange={(e) =>
+                  setAdditionalInfo((prevData) => ({
+                    ...prevData,
+                    Middle_Name: e.target.value,
+                  }))
+                }
+              />
+            </FormControl>
+          </div>
+          <div className="space-y-2">
+            <FormControl
+              error={error}
+              size="small"
+              sx={{ width: "100%" }}
+              variant="outlined"
+            >
+              <InputLabel htmlFor="outlined-adornment-password">
+                Pan Card Number
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                label="Pan Card Number"
+                name="Pan_Card_Number"
+                value={additionalInfo.Pan_Card_Number}
+                onChange={(e) =>
+                  setAdditionalInfo((prevData) => ({
+                    ...prevData,
+                    Pan_Card_Number: e.target.value,
+                  }))
+                }
+              />
+            </FormControl>
+          </div>
+          <div className="space-y-2">
+            <FormControl
+              error={error}
+              size="small"
+              sx={{ width: "100%" }}
+              variant="outlined"
+            >
+              <InputLabel htmlFor="outlined-adornment-password">
+                Permanent Address
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                label="Permanent Address"
+                name="Permanent_Address"
+                value={additionalInfo.Permanent_Address}
+                onChange={(e) =>
+                  setAdditionalInfo((prevData) => ({
+                    ...prevData,
+                    Permanent_Address: e.target.value,
+                  }))
+                }
+              />
+            </FormControl>
+          </div>
+          <div className="space-y-2">
+            <FormControl
+              error={error}
+              size="small"
+              sx={{ width: "100%" }}
+              variant="outlined"
+            >
+              <InputLabel htmlFor="outlined-adornment-password">
+                Primary nationality
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                label="Primary Nationality"
+                name="Primary_Nationality"
+                value={additionalInfo.Primary_Nationality}
+                onChange={(e) =>
+                  setAdditionalInfo((prevData) => ({
+                    ...prevData,
+                    Primary_Nationality: e.target.value,
+                  }))
+                }
+              />
+            </FormControl>
+          </div>
+          <div className="space-y-2">
+            <FormControl
+              error={error}
+              size="small"
+              sx={{ width: "100%" }}
+              variant="outlined"
+            >
+              <InputLabel htmlFor="outlined-adornment-password">
+                Relative Information
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                label="Relative Information"
+                name="Relative_Information"
+                value={additionalInfo.Relative_Information}
+                onChange={(e) =>
+                  setAdditionalInfo((prevData) => ({
+                    ...prevData,
+                    Relative_Information: e.target.value,
+                  }))
+                }
+              />
+            </FormControl>
+          </div>
+          <div className="space-y-2">
+            <FormControl
+              error={error}
+              size="small"
+              sx={{ width: "100%" }}
+              variant="outlined"
+            >
+              <InputLabel htmlFor="outlined-adornment-password">
+                Shifts allocation
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                label="Shifts Allocation"
+                name="Shifts_Allocation"
+                value={additionalInfo.Shifts_Allocation}
+                onChange={(e) =>
+                  setAdditionalInfo((prevData) => ({
+                    ...prevData,
+                    Shifts_Allocation: e.target.value,
+                  }))
+                }
               />
             </FormControl>
           </div>
