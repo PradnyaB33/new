@@ -39,22 +39,16 @@ const DeleteEmployee = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [showConfirmationExcel, setShowConfirmationExcel] = useState(false);
   const { organisationId } = useParams();
-  console.log("organization id", organisationId);
 
+  // pull the employee data
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
-      console.log(apiUrl);
-      const response = await axios.get(
-        apiUrl,
-
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      console.log(response);
+      const response = await axios.get(apiUrl, {
+        headers: {
+          Authorization: authToken,
+        },
+      });
       setAvailableEmployee(response.data.employees);
       setCurrentPage(page);
       setTotalPages(response.data.totalPages || 1);
@@ -75,6 +69,9 @@ const DeleteEmployee = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
+  console.log(availableEmployee);
+
+  // function for previous button , next button and current button
   const prePage = () => {
     if (currentPage !== 1) {
       fetchAvailableEmployee(currentPage - 1);
@@ -451,7 +448,6 @@ const DeleteEmployee = () => {
                   <th scope="col" className="!text-left pl-8 py-3">
                     Employee Selection
                   </th>
-
                   <th scope="col" className="!text-left pl-8 py-3">
                     SR NO
                   </th>
@@ -488,9 +484,13 @@ const DeleteEmployee = () => {
                           item.first_name
                             .toLowerCase()
                             .includes(nameSearch))) &&
-                      (!deptSearch.toLowerCase() ||
+                      (!deptSearch ||
                         (item.deptname &&
-                          item.deptname.toLowerCase().includes(deptSearch))) &&
+                          item.deptname.some((dept) =>
+                            dept.departmentName
+                              .toLowerCase()
+                              .includes(deptSearch.toLowerCase())
+                          ))) &&
                       (!locationSearch.toLowerCase() ||
                         item.worklocation.some(
                           (location) =>
@@ -512,13 +512,18 @@ const DeleteEmployee = () => {
                       <td className="py-3">{item.last_name}</td>
                       <td className="py-3">{item.email}</td>
                       <td className="py-3">
-                        {item.worklocation.map((location, index) => (
+                        {item?.worklocation?.map((location, index) => (
                           <span key={index}>{location.city}</span>
                         ))}
                       </td>
-                      <td className="py-3">{item.deptname}</td>
+                      <td className="py-3">
+                        {item?.deptname?.map((dept, index) => {
+                          return (
+                            <span key={index}>{dept?.departmentName}</span>
+                          );
+                        })}
+                      </td>
                       <td className="py-3">{item.phone_number}</td>
-
                       <td className="whitespace-nowrap px-6 py-2">
                         <IconButton
                           onClick={() => handleDeleteConfirmation(item._id)}
@@ -613,6 +618,7 @@ const DeleteEmployee = () => {
           </div>
         </article>
       </section>
+
       {/* this dialogue for deleting single employee */}
       <Dialog
         open={deleteConfirmation !== null}
