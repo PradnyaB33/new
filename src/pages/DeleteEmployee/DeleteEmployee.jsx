@@ -312,8 +312,8 @@ const DeleteEmployee = () => {
               });
             }
           }
-          setShowConfirmationExcel(false);
           handleClose();
+          setShowConfirmationExcel(false);
         } catch (error) {
           console.error("Error processing Excel data:", error);
           setAppAlert({
