@@ -69,8 +69,6 @@ const DeleteEmployee = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
-  console.log(availableEmployee);
-
   // function for previous button , next button and current button
   const prePage = () => {
     if (currentPage !== 1) {
@@ -137,7 +135,6 @@ const DeleteEmployee = () => {
       handleAlert(true, "error", "Please select employees to delete");
       return;
     }
-
     // Display confirmation dialog for deleting multiple employees
     setDeleteMultiEmpConfirmation(true);
   };
@@ -157,14 +154,12 @@ const DeleteEmployee = () => {
       console.log(response);
       queryClient.invalidateQueries("employee");
       handleAlert(true, "success", "Employees deleted successfully");
-
       // Filter the available employees, removing the deleted ones
       setAvailableEmployee((prevEmployees) =>
         prevEmployees.filter(
           (employee) => !selectedEmployees.includes(employee._id)
         )
       );
-
       // Reset selectedEmployees after successful deletion
       setSelectedEmployees([]);
     } catch (error) {
@@ -180,6 +175,7 @@ const DeleteEmployee = () => {
     setAnchorEl(event.currentTarget);
   };
 
+  // deleting the employee from excel sheet
   // generate excel sheet
   const generateExcel = () => {
     try {
@@ -316,8 +312,8 @@ const DeleteEmployee = () => {
               });
             }
           }
-
           setShowConfirmationExcel(false);
+          handleClose();
         } catch (error) {
           console.error("Error processing Excel data:", error);
           setAppAlert({
@@ -328,7 +324,6 @@ const DeleteEmployee = () => {
           setShowConfirmationExcel(false);
         }
       };
-
       reader.readAsArrayBuffer(file);
     } catch (error) {
       console.error("Error handling Excel delete:", error);
