@@ -16,8 +16,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+// import MenuItem from "@mui/material/MenuItem";
+// import Select from "@mui/material/Select";
 
-const EditModelOpen = ({ handleClose, open, employeeId }) => {
+const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
@@ -48,7 +50,29 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
     return () => {};
   }, [open, employeeId, authToken]);
 
-  console.log(employeeData);
+  // pull the worklocation of organization
+  // const [worklocation, setWorkLocation] = useState([]);
+  // const [availabelLocation, setAvailableLocation] = useState([]);
+  // const fetchAvailableLocation = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${organisationId}`,
+  //       {
+  //         headers: {
+  //           Authorization: authToken,
+  //         },
+  //       }
+  //     );
+  //     setAvailableLocation(response.data.locationsData);
+  //   } catch (error) {
+  //     console.error(error);
+  //     handleAlert(true, "error", "Failed to fetch Available Work Location");
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchAvailableLocation();
+  //   // eslint-disable-next-line
+  // }, []);
 
   // define the state for storing the employee data
   const [formData, setFormData] = useState({
@@ -135,9 +159,16 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
         "Shifts allocation":
           employeeData?.additionalInfo?.["Shifts allocation"] || "",
       });
+      // const employeeWorkLocations = employeeData.worklocation;
+      // if (employeeWorkLocations && employeeWorkLocations.length > 0) {
+      //   setWorkLocation(employeeWorkLocations[0]?.city || "");
+      // }
     }
   }, [employeeData]);
 
+  // const handleLocationChange = (event) => {
+  //   setWorkLocation(event.target.value);
+  // };
   // update the data of employee
   const EditEmployeeData = useMutation(
     (data) =>
@@ -198,6 +229,9 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
           "Shifts allocation":
             updatedData.data.additionalInfo?.["Shifts allocation"] || "",
         }));
+        // setWorkLocation({
+        //   worklocation: updatedData.data.worklocation[0]?.city || "",
+        // });
       },
       onError: () => {
         handleAlert("Failed to update employee. Please try again.");
@@ -624,6 +658,30 @@ const EditModelOpen = ({ handleClose, open, employeeId }) => {
               />
             </FormControl>
           </div>
+          {/* <div className="space-y-2">
+            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
+              <InputLabel htmlFor="work-location-select">
+                Work Location
+              </InputLabel>
+              <Select
+                id="work-location-select"
+                value={worklocation}
+                onChange={handleLocationChange}
+                displayEmpty
+                inputProps={{ "aria-label": "Work Location" }}
+                label="Work Location"
+              >
+                <MenuItem value="" disabled>
+                  Select Work Location
+                </MenuItem>
+                {availabelLocation?.map((location) => (
+                  <MenuItem key={location._id} value={location._id}>
+                    {location.city}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div> */}
 
           <DialogActions>
             <Button onClick={handleClose} color="error" variant="outlined">

@@ -293,6 +293,7 @@ const EmployeeList = () => {
         handleClose={handleClose}
         open={editModalOpen}
         employeeId={employeeId}
+        organisationId={organisationId}
       />
     </>
   );
