@@ -99,6 +99,9 @@ const DeleteEmployee = () => {
   const handleDelete = (id) => {
     deleteMutation.mutate(id);
     handleCloseConfirmation();
+    setAvailableEmployee((prevEmployees) =>
+      prevEmployees.filter((employee) => employee._id !== id)
+    );
   };
   const deleteMutation = useMutation(
     (id) =>
@@ -154,6 +157,16 @@ const DeleteEmployee = () => {
       console.log(response);
       queryClient.invalidateQueries("employee");
       handleAlert(true, "success", "Employees deleted successfully");
+
+      // Filter the available employees, removing the deleted ones
+      setAvailableEmployee((prevEmployees) =>
+        prevEmployees.filter(
+          (employee) => !selectedEmployees.includes(employee._id)
+        )
+      );
+
+      // Reset selectedEmployees after successful deletion
+      setSelectedEmployees([]);
     } catch (error) {
       handleAlert(true, "error", "Failed to delete employees");
     } finally {
