@@ -226,6 +226,34 @@ const SuperAdmin = () => {
     }
   );
 
+  //TODO Attendence Fillter and data
+
+  //? Salary Graph Data
+
+  const OrganizationSalaryOverview = async () => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/route/employeeSalary/organizationSalaryOverview/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      return data;
+    } catch (error) {
+      console.log("errr", error);
+    }
+  };
+
+  const { data: OrganizationSalaryAttendence } = useQuery(
+    "Org-Salary-overview",
+    OrganizationSalaryOverview
+  );
+
+  //? Salary Graph Data
+
   return (
     <section className=" bg-gray-50  min-h-screen w-full ">
       {/* <BackComponent /> */}
@@ -372,7 +400,7 @@ const SuperAdmin = () => {
 
         <div className="w-full gap-4 mt-4 flex items-center">
           <div className="w-[50%]">
-            <LineGraph />
+            <LineGraph salarydata={OrganizationSalaryAttendence} />
           </div>
           <div className="w-[50%]">
             <AttendenceBar

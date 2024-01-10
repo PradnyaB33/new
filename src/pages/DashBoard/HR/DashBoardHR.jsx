@@ -1,14 +1,45 @@
 import {
+  AccessTimeSharp,
   Dashboard,
+  ErrorOutline,
   FilterAltOff,
-  Group,
+  Groups,
   LocationOn,
 } from "@mui/icons-material";
+import axios from "axios";
 import React from "react";
+import { useQuery } from "react-query";
+import useAuthToken from "../../../hooks/Token/useAuth";
+import UserProfile from "../../../hooks/UserData/useUser";
 import LineGraph from "../Components/Bar/LineGraph";
 import SuperAdminCard from "../Components/Card/superadmin/SuperAdminCard";
 
 const DashBoardHR = () => {
+  const authToken = useAuthToken();
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
+  const OrganizationSalaryOverview = async () => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/route/employeeSalary/organizationSalaryOverview/${user.organizationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      return data;
+    } catch (error) {
+      console.log("errr", error);
+    }
+  };
+
+  const { data: OrganizationSalaryAttendence } = useQuery(
+    "Org-Salary-overview",
+    OrganizationSalaryOverview
+  );
+
   return (
     <section className=" bg-gray-50  min-h-screen w-full ">
       <header className="text-xl w-full px-8 pt-6 bg-white shadow-md   p-4">
@@ -17,32 +48,32 @@ const DashBoardHR = () => {
       <div className=" px-8 w-full">
         <div className="flex mt-6 w-full justify-between gap-5">
           <SuperAdminCard
-            icon={Group}
-            color={"!bg-red-500"}
+            icon={Groups}
+            color={"!bg-blue-500"}
             data={20}
             isLoading={false}
             title={"Overall Employees"}
           />
           <SuperAdminCard
-            color={"!bg-blue-500"}
-            icon={LocationOn}
+            color={"!bg-green-500"}
+            icon={AccessTimeSharp}
             data={13}
             isLoading={false}
             title={"People's Manager"}
           />
           <SuperAdminCard
-            icon={LocationOn}
+            title={"Employees on leave"}
+            icon={ErrorOutline}
+            color={"!bg-red-500"}
             data={15}
-            color={"!bg-green-500"}
             isLoading={false}
-            title={"Employees"}
           />
           <SuperAdminCard
             color={"!bg-orange-500"}
             isLoading={false}
             icon={LocationOn}
             data={14}
-            title={"Locations"}
+            title={"Special Shift"}
           />
         </div>
 
@@ -63,7 +94,7 @@ const DashBoardHR = () => {
 
         <div className="w-full gap-4 mt-4 flex items-center">
           <div className="w-[50%]">
-            <LineGraph />
+            <LineGraph salarydata={OrganizationSalaryAttendence} />
           </div>
         </div>
       </div>
