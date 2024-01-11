@@ -39,7 +39,7 @@ const DeleteEmployee = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [showConfirmationExcel, setShowConfirmationExcel] = useState(false);
   const { organisationId } = useParams();
-
+  const [selectedFile, setSelectedFile] = useState(null);
   // pull the employee data
   const fetchAvailableEmployee = async (page) => {
     try {
@@ -96,10 +96,10 @@ const DeleteEmployee = () => {
   };
   const handleDelete = (id) => {
     deleteMutation.mutate(id);
-    handleCloseConfirmation();
     setAvailableEmployee((prevEmployees) =>
       prevEmployees.filter((employee) => employee._id !== id)
     );
+    setDeleteConfirmation(null);
   };
   const deleteMutation = useMutation(
     (id) =>
@@ -220,6 +220,12 @@ const DeleteEmployee = () => {
       console.error("Error generating Excel:", error);
     }
   };
+
+  const handleFileInputChange = (e) => {
+    // Update the state with the selected file
+    setSelectedFile(e.target.files[0]);
+  };
+
   // delete query for deleting multiple employee from excel
   const handleDeleteFromExcel = async () => {
     try {
@@ -418,13 +424,16 @@ const DeleteEmployee = () => {
                     className="flex items-center gap-2"
                   >
                     <Publish style={{ color: "green", marginRight: "15px" }} />
-                    <span>Choose File</span>
+                    <span>
+                      {selectedFile ? selectedFile.name : "Choose File"}
+                    </span>
                     <input
                       type="file"
                       accept=".xlsx, .xls"
                       id="fileInput"
                       className="w-full rounded opacity-0 absolute inset-0"
                       style={{ zIndex: -1 }}
+                      onChange={handleFileInputChange}
                     />
                   </label>
                 </MenuItem>
