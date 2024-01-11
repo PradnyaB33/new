@@ -51,11 +51,11 @@ import TrackingMap from "./pages/Test/test3";
 import TrackingMap2 from "./pages/Test/testMap";
 import TestNaresh from "./pages/Test/testNaresh";
 import TrackingMap3 from "./pages/Test/testYash";
+import EmployeeProfile from "./pages/UserProfile/UserProfile";
 import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
-import EmployeeProfile from "./pages/UserProfile/UserProfile";
 const App = () => {
   return (
     <Routes>
@@ -77,20 +77,36 @@ const App = () => {
       {/* Dashboard Routes */}
       <Route
         path="/organisation/dashboard/employee-dashboard"
-        element={<Dashboard />}
+        element={
+          <RequireAuth permission={"Employee"}>
+            <Dashboard />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/dashboard/HR-dashboard"
-        element={<DashBoardHR />}
+        element={
+          <RequireAuth permission={"Hr"}>
+            <DashBoardHR />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/dashboard/manager-dashboard"
-        element={<DashboardManger />}
+        element={
+          <RequireAuth permission={"Manager"}>
+            <DashboardManger />
+          </RequireAuth>
+        }
       />
 
       <Route
         path="/organisation/:organisationId/dashboard/super-admin"
-        element={<SuperAdmin />}
+        element={
+          <RequireAuth permission={"Super-Admin"}>
+            <SuperAdmin />
+          </RequireAuth>
+        }
       />
       {/* Dashboard Routes */}
       <Route path="/add-organisation" element={<AddOrganisation />} />
@@ -236,7 +252,7 @@ function RequireAuth({ children, permission }) {
     <Navigate to={"/sign-in"} />;
     if (!permission) return children;
   }
-  return user && isPermission ? children : navigate(-1);
+  return user && isPermission ? children : navigate("/");
 
   //   : user?.profile?.length < 2 ? (
   //   <Navigate to={"/organisation/employee-dashboard"} />

@@ -2,21 +2,7 @@ import { Skeleton } from "@mui/material";
 import React from "react";
 import { Line } from "react-chartjs-2";
 
-const LineGraph = ({ isLoading }) => {
-  const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "Septmber",
-    "Octomber",
-    "November",
-    "December",
-  ];
-
+const LineGraph = ({ salarydata, isLoading = false }) => {
   const option = {
     elements: {
       line: {
@@ -26,15 +12,10 @@ const LineGraph = ({ isLoading }) => {
     scales: {
       yAxes: [
         {
-          gridLines: {
-            color: "red",
-          },
-        },
-      ],
-      xAxes: [
-        {
-          gridLines: {
-            color: "blue",
+          display: true,
+          ticks: {
+            suggestedMin: 0,
+            beginAtZero: true,
           },
         },
       ],
@@ -51,17 +32,56 @@ const LineGraph = ({ isLoading }) => {
     return gradientColor;
   };
 
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const allMonths = monthNames;
+
+  const organizeDataByMonth = (data) => {
+    const organizedData = Array.from({ length: 12 }, (_, index) => {
+      const month = index + 1;
+      return {
+        month,
+        year: null,
+        totalNetSalary: 0,
+      };
+    });
+
+    data?.forEach((monthData) => {
+      const monthIndex = monthData.month - 1;
+      organizedData[monthIndex] = {
+        month: monthData.month,
+        year: monthData.year,
+        totalNetSalary: parseInt(monthData.totalNetSalary),
+      };
+    });
+
+    return organizedData;
+  };
+
+  const EmployeeleaveData = organizeDataByMonth(salarydata);
+  const MonthArray = allMonths.map((month) => month);
+
   const data = {
-    labels: labels,
+    labels: MonthArray,
     datasets: [
       {
         // fill: true,
         label: "Salary Overview",
-        data: [
-          15000, 14500, 15000, 12000, 11111, 10000, 10000, 7500, 6000, 4000,
-          13000, 10000,
-        ].map((ele) => {
-          return ele;
+        data: EmployeeleaveData.map((item) => {
+          return item.totalNetSalary;
         }),
         fill: true,
         backgroundColor: createGradient(), // Fading background color

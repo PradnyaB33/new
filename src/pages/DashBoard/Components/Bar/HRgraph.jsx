@@ -23,7 +23,10 @@ const HRgraph = () => {
         },
       }
     );
-    return data;
+
+    const currentYear = new Date().getFullYear();
+    const filterData = data.filter((item) => item.year === currentYear);
+    return filterData;
   };
 
   const { data: LeaveYearData } = useQuery("leaveData", getYearLeaves);
@@ -98,18 +101,20 @@ const HRgraph = () => {
 
   return (
     <>
-      <article className=" bg-white rounded-md shadow-xl">
-        <div className="p-4 py-4 flex justify-between items-center">
+      <article className=" bg-white  rounded-md shadow-xl">
+        <div className="px-4 pb-2  flex justify-between items-center">
           <h1 className="text-lg  mt-4 font-bold text-[#67748E]">
             Employee Dashboard
           </h1>
         </div>
-        <Bar
-          data={data}
-          style={{
-            padding: "15px",
-          }}
-        />
+        <div className="w-[90%] px-4 flex items-center">
+          <Bar
+            data={data}
+            style={{
+              padding: "15px",
+            }}
+          />
+        </div>
       </article>
     </>
   );

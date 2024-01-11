@@ -39,7 +39,7 @@ const DeleteEmployee = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [showConfirmationExcel, setShowConfirmationExcel] = useState(false);
   const { organisationId } = useParams();
-
+  const [selectedFile, setSelectedFile] = useState(null);
   // pull the employee data
   const fetchAvailableEmployee = async (page) => {
     try {
@@ -69,8 +69,6 @@ const DeleteEmployee = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
-  console.log(availableEmployee);
-
   // function for previous button , next button and current button
   const prePage = () => {
     if (currentPage !== 1) {
@@ -98,10 +96,10 @@ const DeleteEmployee = () => {
   };
   const handleDelete = (id) => {
     deleteMutation.mutate(id);
-    handleCloseConfirmation();
     setAvailableEmployee((prevEmployees) =>
       prevEmployees.filter((employee) => employee._id !== id)
     );
+    setDeleteConfirmation(null);
   };
   const deleteMutation = useMutation(
     (id) =>
@@ -137,7 +135,6 @@ const DeleteEmployee = () => {
       handleAlert(true, "error", "Please select employees to delete");
       return;
     }
-
     // Display confirmation dialog for deleting multiple employees
     setDeleteMultiEmpConfirmation(true);
   };
@@ -157,14 +154,12 @@ const DeleteEmployee = () => {
       console.log(response);
       queryClient.invalidateQueries("employee");
       handleAlert(true, "success", "Employees deleted successfully");
-
       // Filter the available employees, removing the deleted ones
       setAvailableEmployee((prevEmployees) =>
         prevEmployees.filter(
           (employee) => !selectedEmployees.includes(employee._id)
         )
       );
-
       // Reset selectedEmployees after successful deletion
       setSelectedEmployees([]);
     } catch (error) {
@@ -180,6 +175,7 @@ const DeleteEmployee = () => {
     setAnchorEl(event.currentTarget);
   };
 
+  // deleting the employee from excel sheet
   // generate excel sheet
   const generateExcel = () => {
     try {
@@ -224,6 +220,12 @@ const DeleteEmployee = () => {
       console.error("Error generating Excel:", error);
     }
   };
+
+  const handleFileInputChange = (e) => {
+    // Update the state with the selected file
+    setSelectedFile(e.target.files[0]);
+  };
+
   // delete query for deleting multiple employee from excel
   const handleDeleteFromExcel = async () => {
     try {
@@ -316,7 +318,7 @@ const DeleteEmployee = () => {
               });
             }
           }
-
+          handleClose();
           setShowConfirmationExcel(false);
         } catch (error) {
           console.error("Error processing Excel data:", error);
@@ -328,7 +330,6 @@ const DeleteEmployee = () => {
           setShowConfirmationExcel(false);
         }
       };
-
       reader.readAsArrayBuffer(file);
     } catch (error) {
       console.error("Error handling Excel delete:", error);
@@ -423,13 +424,16 @@ const DeleteEmployee = () => {
                     className="flex items-center gap-2"
                   >
                     <Publish style={{ color: "green", marginRight: "15px" }} />
-                    <span>Choose File</span>
+                    <span>
+                      {selectedFile ? selectedFile.name : "Choose File"}
+                    </span>
                     <input
                       type="file"
                       accept=".xlsx, .xls"
                       id="fileInput"
                       className="w-full rounded opacity-0 absolute inset-0"
                       style={{ zIndex: -1 }}
+                      onChange={handleFileInputChange}
                     />
                   </label>
                 </MenuItem>
