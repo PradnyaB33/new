@@ -25,20 +25,23 @@ const DepartmentDeletion = () => {
   const [selectedLocation, setSelectedLocation] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showConfirmationExcel, setShowConfirmationExcel] = useState(false);
-  const organizationId = useParams().id;
+  const organizationId = useParams().organisationId;
   const authToken = cookies["aeigs"];
   var deptLocationId;
 
   useEffect(() => {
     const fetchLocations = async () => {
       try {
+        console.log(organizationId);
         const response = await axios.get(
+         
           `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${organizationId}`,
           {
             headers: { Authorization: authToken },
           }
         );
-        setLocations(response.data);
+        setLocations(response.data.locationsData);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching location data:", error);
       }
