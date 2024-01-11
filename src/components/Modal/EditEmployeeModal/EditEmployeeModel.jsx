@@ -16,17 +16,52 @@ import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-// import MenuItem from "@mui/material/MenuItem";
-// import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 
 const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const queryClient = useQueryClient();
-  const [employeeData, setEmployeeData] = useState(null);
+  // define the state for storing the employee data
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone_number: "",
+    companyemail: "",
+    address: "",
+    citizenship: "",
+    date_of_birth: "",
+    joining_date: "",
+    bank_account_no: "",
+    profile: "",
+  });
+  // define the state for store additional info data of employee
+  const [additionalInfo, setAdditionalInfo] = useState({
+    "Adhar Card Number": "",
+    "Department cost center no": "",
+    "Emergency contact": "",
+    "Middle Name": "",
+    "Pan Card Number": "",
+    "Permanent Address": "",
+    "Primary nationality": "",
+    "Relative Information": "",
+    "Shifts allocation": "",
+    "Martial status": "",
+    Education: "",
+  });
+  // define the state for stored worklocation
+  const [selectedWorkLocation, setSelectedWorkLocation] = useState("");
+  // define the state for stored deptname
+  const [deptname, setDepartment] = useState([]);
+  // define the state for stored designation
+  const [designation, setDesignation] = useState([]);
+  const [employmentType, setEmployementType] = useState("");
 
   // pull the employee data
+  const [employeeData, setEmployeeData] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -51,58 +86,95 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   }, [open, employeeId, authToken]);
 
   // pull the worklocation of organization
-  // const [worklocation, setWorkLocation] = useState([]);
-  // const [availabelLocation, setAvailableLocation] = useState([]);
-  // const fetchAvailableLocation = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${organisationId}`,
-  //       {
-  //         headers: {
-  //           Authorization: authToken,
-  //         },
-  //       }
-  //     );
-  //     setAvailableLocation(response.data.locationsData);
-  //   } catch (error) {
-  //     console.error(error);
-  //     handleAlert(true, "error", "Failed to fetch Available Work Location");
-  //   }
-  // };
-  // useEffect(() => {
-  //   fetchAvailableLocation();
-  //   // eslint-disable-next-line
-  // }, []);
+  const [availabelLocation, setAvailableLocation] = useState([]);
+  const fetchAvailableLocation = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setAvailableLocation(response.data.locationsData);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch Available Work Location");
+    }
+  };
+  useEffect(() => {
+    fetchAvailableLocation();
+    // eslint-disable-next-line
+  }, []);
+  console.log(availabelLocation);
 
-  // define the state for storing the employee data
-  const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone_number: "",
-    companyemail: "",
-    address: "",
-    citizenship: "",
-    date_of_birth: "",
-    joining_date: "",
-    bank_account_no: "",
-    profile: "",
-  });
+  // pull the department data
+  const [availabelDepartment, setAvailableDepartment] = useState([]);
+  const fetchAvailableDepartment = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/department/get/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setAvailableDepartment(response.data.department);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch Available Work Location");
+    }
+  };
+  useEffect(() => {
+    fetchAvailableDepartment();
+    // eslint-disable-next-line
+  }, []);
 
-  // define the state for store additional info data of employee
-  const [additionalInfo, setAdditionalInfo] = useState({
-    "Adhar Card Number": "",
-    "Department cost center no": "",
-    "Emergency contact": "",
-    "Middle Name": "",
-    "Pan Card Number": "",
-    "Permanent Address": "",
-    "Primary nationality": "",
-    "Relative Information": "",
-    "Shifts allocation": "",
-    "Martial status": "",
-    Education: "",
-  });
+  // pull the data of designation
+  const [availabelDesignation, setAvailableDesignation] = useState([]);
+  const fetchAvailableDesignation = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/designation/create/${organisationId}`
+      );
+
+      setAvailableDesignation(response.data.designations);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch Available Designation");
+    }
+  };
+
+  useEffect(() => {
+    fetchAvailableDesignation();
+    // eslint-disable-next-line
+  }, []);
+
+  // pull the data of employement type
+  const [availabelEmpTypes, setAvailableEmpTypes] = useState([]);
+  const fetchAvailabeEmpTypes = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employment-types-organisation/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      setAvailableEmpTypes(response.data.empTypes);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch Available Employement Type");
+    }
+  };
+  useEffect(() => {
+    fetchAvailabeEmpTypes();
+    // eslint-disable-next-line
+  }, []);
 
   // function for changing the data by user
   const handleInputChange = (e) => {
@@ -112,7 +184,38 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
       [name]: value,
     }));
   };
+  const handleLocationChange = (event) => {
+    const selectedLocation = availabelLocation.find(
+      (location) => location.city === event.target.value
+    );
 
+    if (selectedLocation) {
+      setSelectedWorkLocation(selectedLocation._id);
+      console.log(selectedLocation._id);
+    }
+  };
+
+  // const handleLocationChange = (event) => {
+  //   setSelectedWorkLocation(event.target.value);
+  //   console.log(event.target.value);
+  // };
+
+  // function for change department
+  const handleDepartmnetChange = (event) => {
+    setDepartment(event.target.value);
+    console.log(event.target.value);
+  };
+  // function for chnage designation
+  const handleDesignationChange = (event) => {
+    setDesignation(event.target.value);
+    console.log(event.target.value);
+  };
+  // function for chnage employement type
+  const handleEmployeMentType = (event) => {
+    setEmployementType(event.target.value);
+    console.log(event.target.value);
+  };
+  console.log(employeeData);
   // fetch the data in input field which is already stored
   useEffect(() => {
     if (employeeData) {
@@ -159,16 +262,13 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
         "Shifts allocation":
           employeeData?.additionalInfo?.["Shifts allocation"] || "",
       });
-      // const employeeWorkLocations = employeeData.worklocation;
-      // if (employeeWorkLocations && employeeWorkLocations.length > 0) {
-      //   setWorkLocation(employeeWorkLocations[0]?.city || "");
-      // }
+      const employeeWorkLocations = employeeData.worklocation;
+      if (employeeWorkLocations && employeeWorkLocations.length > 0) {
+        setSelectedWorkLocation(employeeWorkLocations[0]?.city || "");
+      }
     }
   }, [employeeData]);
 
-  // const handleLocationChange = (event) => {
-  //   setWorkLocation(event.target.value);
-  // };
   // update the data of employee
   const EditEmployeeData = useMutation(
     (data) =>
@@ -189,50 +289,86 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
         // Reload the window to reflect the updated data
         window.location.reload();
         // Update the local state with the updated data
+        //console.log(updatedData);
+        // console.log(updatedData.data.updatedEmployee.first_name);
         setFormData((prevData) => ({
           ...prevData,
-          first_name: updatedData.data.first_name || "",
-          last_name: updatedData.data.last_name || "",
-          email: updatedData.data.email || "",
-          phone_number: updatedData.data.phone_number || "",
-          companyemail: updatedData.data.companyemail || "",
-          address: updatedData.data.address || "",
-          citizenship: updatedData.data.citizenship || "",
-          date_of_birth: updatedData.data.date_of_birth || "",
-          joining_date: updatedData.data.joining_date || "",
-          profile: updatedData.data.profile || "",
-          bank_account_no: updatedData.data.bank_account_no || "",
+          first_name: updatedData.data.updatedEmployee.first_name || "",
+          last_name: updatedData.data.updatedEmployee.last_name || "",
+          email: updatedData.data.updatedEmployee.email || "",
+          phone_number: updatedData.data.updatedEmployee.phone_number || "",
+          companyemail: updatedData.data.updatedEmployee.companyemail || "",
+          address: updatedData.data.updatedEmployee.address || "",
+          citizenship: updatedData.data.updatedEmployee.citizenship || "",
+          date_of_birth: updatedData.data.updatedEmployee.date_of_birth || "",
+          joining_date: updatedData.data.updatedEmployee.joining_date || "",
+          profile: updatedData.data.updatedEmployee.profile || "",
+          bank_account_no:
+            updatedData.data.updatedEmployee.bank_account_no || "",
         }));
+        // console.log(formData);
 
         // Update additionalInfo in local state
         setAdditionalInfo((prevData) => ({
           ...prevData,
           "Adhar Card Number":
-            updatedData.data.additionalInfo?.["Adhar Card Number"] || "",
+            updatedData.data.updatedEmployee.additionalInfo?.[
+              "Adhar Card Number"
+            ] || "",
           "Department cost center no":
-            updatedData.data.additionalInfo?.["Department cost center no"] ||
-            "",
-          Education: updatedData.data.additionalInfo?.Education || "",
+            updatedData.data.updatedEmployee.additionalInfo?.[
+              "Department cost center no"
+            ] || "",
+          Education:
+            updatedData.data.updatedEmployee.additionalInfo?.Education || "",
           "Emergency contact":
-            updatedData.data.additionalInfo?.["Emergency contact"] || "",
+            updatedData.data.updatedEmployee.additionalInfo?.[
+              "Emergency contact"
+            ] || "",
           "Martial status":
-            updatedData.data.additionalInfo?.["Martial status"] || "",
-          "Middle Name": updatedData.data.additionalInfo?.["Middle Name"] || "",
+            updatedData.data.updatedEmployee.additionalInfo?.[
+              "Martial status"
+            ] || "",
+          "Middle Name":
+            updatedData.data.updatedEmployee.additionalInfo?.["Middle Name"] ||
+            "",
           "Pan Card Number":
-            updatedData.data.additionalInfo?.["Pan Card Number"] || "",
+            updatedData.data.updatedEmployee.additionalInfo?.[
+              "Pan Card Number"
+            ] || "",
           "Permanent Address":
-            updatedData.data.additionalInfo?.["Permanent Address"] || "",
+            updatedData.data.updatedEmployee.additionalInfo?.[
+              "Permanent Address"
+            ] || "",
           "Primary nationality":
-            updatedData.data.additionalInfo?.["Primary nationality"] || "",
+            updatedData.data.updatedEmployee.additionalInfo?.[
+              "Primary nationality"
+            ] || "",
           "Relative Information":
-            updatedData.data.additionalInfo?.["Relative Information"] || "",
+            updatedData.data.updatedEmployee.additionalInfo?.[
+              "Relative Information"
+            ] || "",
           "Shifts allocation":
-            updatedData.data.additionalInfo?.["Shifts allocation"] || "",
+            updatedData.data.updatedEmployee.additionalInfo?.[
+              "Shifts allocation"
+            ] || "",
         }));
-        // setWorkLocation({
-        //   worklocation: updatedData.data.worklocation[0]?.city || "",
-        // });
+        setSelectedWorkLocation({
+          selectedWorkLocation:
+            updatedData.data.updatedEmployee.worklocation || "",
+        });
+        setDepartment({
+          deptname: updatedData.data.updatedEmployee.deptname || "",
+        });
+        setDesignation({
+          designation: updatedData.data.updatedEmployee.designation || "",
+        });
+        setEmployementType({
+          employmentType: updatedData.data.updatedEmployee.employmentType || "",
+        });
+        // console.log(worklocation);
       },
+
       onError: () => {
         handleAlert("Failed to update employee. Please try again.");
       },
@@ -246,7 +382,11 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
       if (employeeId) {
         const updatedData = {
           ...formData,
-          additionalInfo: additionalInfo,
+          additionalInfo,
+          worklocation: selectedWorkLocation,
+          deptname,
+          designation,
+          employmentType,
         };
         await EditEmployeeData.mutateAsync(updatedData);
       }
@@ -658,10 +798,21 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               />
             </FormControl>
           </div>
-          {/* <div className="space-y-2">
-            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
+          <div className="space-y-2">
+            <select
+              value={selectedWorkLocation}
+              onChange={handleLocationChange}
+            >
+              {availabelLocation.map((location) => (
+                <option key={location._id} value={location.city}>
+                  {location.city}
+                </option>
+              ))}
+            </select>
+
+            {/* <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="work-location-select">
-                Work Location
+                Select Work Location
               </InputLabel>
               <Select
                 id="work-location-select"
@@ -680,8 +831,80 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                   </MenuItem>
                 ))}
               </Select>
+            </FormControl> */}
+          </div>
+          <div className="space-y-2">
+            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
+              <InputLabel htmlFor="work-location-select">
+                Select Department
+              </InputLabel>
+              <Select
+                id="work-location-select"
+                value={deptname}
+                onChange={handleDepartmnetChange}
+                displayEmpty
+                inputProps={{ "aria-label": "Work Location" }}
+                label="Work Location"
+              >
+                <MenuItem value="" disabled>
+                  Select Department
+                </MenuItem>
+                {availabelDepartment?.map((department) => (
+                  <MenuItem key={department._id} value={department._id}>
+                    {department.departmentName}
+                  </MenuItem>
+                ))}
+              </Select>
             </FormControl>
-          </div> */}
+          </div>
+          <div className="space-y-2">
+            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
+              <InputLabel htmlFor="work-location-select">
+                Select Designation
+              </InputLabel>
+              <Select
+                id="work-location-select"
+                value={designation}
+                onChange={handleDesignationChange}
+                displayEmpty
+                inputProps={{ "aria-label": "Work Location" }}
+                label="Work Location"
+              >
+                <MenuItem value="" disabled>
+                  Select Designation
+                </MenuItem>
+                {availabelDesignation?.map((designation) => (
+                  <MenuItem key={designation._id} value={designation._id}>
+                    {designation.designationName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+          <div className="space-y-2">
+            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
+              <InputLabel htmlFor="work-location-select">
+                Select Employement Type
+              </InputLabel>
+              <Select
+                id="work-location-select"
+                value={employmentType}
+                onChange={handleEmployeMentType}
+                displayEmpty
+                inputProps={{ "aria-label": "Work Location" }}
+                label="Work Location"
+              >
+                <MenuItem value="" disabled>
+                  Select Employement Type
+                </MenuItem>
+                {availabelEmpTypes?.map((emptypes) => (
+                  <MenuItem key={emptypes._id} value={emptypes._id}>
+                    {emptypes.title}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
 
           <DialogActions>
             <Button onClick={handleClose} color="error" variant="outlined">
