@@ -102,7 +102,7 @@ const LineGraph = ({ isLoading }) => {
           <h1 className="text-lg my-4 font-bold text-[#67748E]">
             Salary Overview
           </h1>
-          <div className="h-[370px] 2xl:h-[400px] w-full ">
+          <div className=" 2xl:h-[400px] w-full ">
             <Line data={data} options={option} />
           </div>
         </div>
