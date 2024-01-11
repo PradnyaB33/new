@@ -1,9 +1,9 @@
-name: 🚀 Build and Deploy
+name: 🚀 qa-runner-main
 
 on:
   push:
     branches:
-      - main
+      - qa-branch
 
 jobs:
   build:
@@ -28,26 +28,26 @@ jobs:
           cat .env
           npm run build
 
-      # - name: 🚀 Upload build
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: static-site
-      #     path: build/
+      - name: 🚀 Upload build
+        uses: actions/upload-artifact@v2
+        with:
+          name: static-site
+          path: build/
 
-  # release-project:
-  #   name: 🚀 Release project
-  #   runs-on: self-hosted
-  #   needs: build
-  #   steps:
-  #     - name: 📥 Download artifact
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: static-site
+  release-project:
+    name: 🚀 Release project
+    runs-on: [qa-frontend-main]
+    needs: build
+    steps:
+      - name: 📥 Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: static-site
   
-  #     - name: 🧪 Test artifact download
-  #       run: |
-  #         ls -R
-  #         cat .env
+      - name: 🧪 Test artifact download
+        run: |
+          ls -R
+    
           
 
 # Advantages:

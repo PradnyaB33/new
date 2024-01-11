@@ -69,7 +69,7 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
   return (
     <>
       {isLoading ? (
-        <div className="w-[50%] px-4 pb-4 flex flex-col shadow-md rounded-md bg-white  justify-center">
+        <div className=" px-4 pb-4 flex flex-col shadow-md rounded-md bg-white  justify-center">
           <h1 className="text-lg my-4 font-bold text-[#67748E]">
             <Skeleton variant="text" width={150} height={20} />
           </h1>
@@ -78,7 +78,7 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
           </div>
         </div>
       ) : (
-        <div className="w-[50%] px-4 pb-4 bg-white shadow-md rounded-md flex flex-col justify-center">
+        <div className="px-4 pb-4 bg-white shadow-md rounded-md flex flex-col justify-center">
           <h1 className="text-lg my-4 font-bold text-[#67748E]">Attendance</h1>
           <div className="h-[370px] 2xl:h-[400px] w-full">
             <Bar data={data} />

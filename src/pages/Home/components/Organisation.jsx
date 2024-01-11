@@ -1,4 +1,5 @@
 import { Delete, Edit, MoreVert, Warning } from "@mui/icons-material";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import {
   Avatar,
   Button,
@@ -7,14 +8,13 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  Input,
   InputLabel,
   Menu,
   MenuItem,
   Select,
-  Input,
   TextField,
 } from "@mui/material";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -49,7 +49,7 @@ const Organisation = ({ item }) => {
     contact_number: "",
     description: "",
     foundation_date: dayjs(),
-    logo_url:logoUrl
+    logo_url: logoUrl,
   };
 
   const [inputdata, setInputData] = useState(data);
@@ -145,7 +145,7 @@ const Organisation = ({ item }) => {
         contact_number: organizationData.contact_number,
         description: organizationData.description,
         foundation_date: dayjs(organizationData.foundation_date),
-        logo_url:organizationData.logo_url
+        logo_url: organizationData.logo_url,
       });
     } catch (error) {
       console.log(error);
@@ -159,7 +159,7 @@ const Organisation = ({ item }) => {
         ...inputdata,
         logo_url: logoUrl, // Include the logo_url in the payload
       };
-  
+
       await axios.patch(
         `${process.env.REACT_APP_API}/route/organization/edit/${id}`,
         editedData,
@@ -169,7 +169,7 @@ const Organisation = ({ item }) => {
           },
         }
       );
-  
+
       handleAlert(true, "success", "Organization updated successfully");
       queryClient.invalidateQueries(["orgData"]);
       // Close the dialog
@@ -215,7 +215,7 @@ const Organisation = ({ item }) => {
           </div>
         </div>
 
-        <div className="p-6 pt-6 pb-4"> 
+        <div className="p-6 pt-6 pb-4">
           <h5 className="mb-2 text-xl font-semibold leading-tight text-black">
             {item.name}
           </h5>
@@ -228,7 +228,7 @@ const Organisation = ({ item }) => {
             </button>
           </Link>
 
-          <Link to={`/organisation/${item._id}/super-admin`}>
+          <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
             <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
               Go to Dashboard
               <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
@@ -276,7 +276,9 @@ const Organisation = ({ item }) => {
         onClose={handleCloseConfirmation}
         fullWidth
       >
-        <DialogTitle className="!font-semibold !text-2xl" >Edit Organization</DialogTitle>
+        <DialogTitle className="!font-semibold !text-2xl">
+          Edit Organization
+        </DialogTitle>
         <DialogContent>
           <div className="flex flex-col gap-4 mt-3">
             <TextField
@@ -299,10 +301,7 @@ const Organisation = ({ item }) => {
               type="text"
               fullWidth
             />
-            <FormControl
-              required
-              size="small"
-            >
+            <FormControl required size="small">
               <InputLabel
                 id="demo-simple-select-label"
                 style={{ background: "white", zIndex: 1 }}
@@ -380,35 +379,35 @@ const Organisation = ({ item }) => {
                 />
               </DemoContainer>
             </LocalizationProvider>
-            <div className="flex h-[50px]" >
-                <Input
-                  type="file"
-                  id="imageInput"
-                  accept="image/*"
-                  style={{ display: "none",  }}
-                  onChange={handleImageChange}
+            <div className="flex h-[50px]">
+              <Input
+                type="file"
+                id="imageInput"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handleImageChange}
+                required
+              />
+              <label htmlFor="imageInput">
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  component="span"
+                  startIcon={<PhotoCamera />}
+                >
+                  Choose logo
+                </Button>
+              </label>
+              {selectedImage && (
+                <Avatar
+                  src={selectedImage}
+                  alt="Selected Image"
+                  sx={{ width: 35, height: 35 }}
+                  className="!ml-4"
                   required
                 />
-                <label htmlFor="imageInput">
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    component="span"
-                    startIcon={<PhotoCamera />}
-                  > 
-                    Choose logo
-                  </Button>
-                </label>
-                {selectedImage && (
-                  <Avatar
-                    src={selectedImage}
-                    alt="Selected Image"
-                    sx={{ width: 35, height: 35 }}
-                    className="!ml-4"
-                    required
-                  />
-                )}
-              </div>
+              )}
+            </div>
           </div>
         </DialogContent>
 

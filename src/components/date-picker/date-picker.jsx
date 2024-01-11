@@ -12,34 +12,36 @@ import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 
 const AppDatePicker = ({
-  isCalendarOpen,
+  data,
+  handleUpdateFunction,
+  selectEvent,
+  setselectEvent,
   setCalendarOpen,
-  anchorEl,
-  appliedLeaveEvents,
-  newAppliedLeaveEvents,
+  setNewAppliedLeaveEvents,
   selectedLeave,
   setSelectedLeave,
-  setAppliedLeaveEvents,
-  setNewAppliedLeaveEvents,
+  newAppliedLeaveEvents,
+  isCalendarOpen,
 }) => {
   const momentWithRange = extendMoment(moment);
   const localizer = momentLocalizer(moment);
-  const [selectEvent, setselectEvent] = useState(false);
   const [Delete, setDelete] = useState(false);
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-  const { data } = useQuery("employee-disable-weekends", async () => {
+  const { data2 } = useQuery("employee-disable-weekends", async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/weekend/get`,
       {
         headers: { Authorization: authToken },
       }
     );
+    console.log(`🚀 ~ file: date-picker.jsx:40 ~ response:`, response);
 
     return response.data;
   });
+  console.log(`🚀 ~ file: date-picker.jsx:43 ~ data2:`, data2);
   const handleSelectEvent = (event) => {
     setSelectedLeave(event);
     setCalendarOpen(true);
@@ -56,13 +58,15 @@ const AppDatePicker = ({
     const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "short" });
 
     // Check if the current day is in the data? array
-    const isDisabled = data?.days?.some((day) => day.day === dayOfWeek);
+    const isDisabled = data2?.days?.some((day) => {
+      return day.days.some((day) => day.day === dayOfWeek);
+    });
 
     if (isDisabled) {
       return {
         style: {
           pointerEvents: "none",
-          backgroundColor: "#ff7a7a",
+          backgroundColor: "#ffb4b4",
         },
       };
     }
@@ -71,53 +75,42 @@ const AppDatePicker = ({
   };
 
   const handleSelectSlot = ({ start, end }) => {
-    console.log(`🚀 ~ file: date-picker.jsx:78 ~ { start, end }:`, {
-      start,
-      end,
-    });
+    // Convert start time to JavaScript Date object
+    const startDat2e = new Date(start);
+
+    // Add one minute to the start time
+    startDat2e.setMinutes(startDat2e.getMinutes() + 1);
+    console.log(`🚀 ~ file: date-picker.jsx:85 ~ startDat2e:`, startDat2e);
+    start = startDat2e;
+
     const selectedStartDate = momentWithRange(start);
     const selectedEndDate = momentWithRange(end);
     const startDate = moment(start).startOf("day"); // Extract date, start at midnight
-    const endDate = moment(end).startOf("day").add(1, "day"); // Add 1 day to make sure it's after 12 am
 
     // Check if the selected date range includes any disabled days
-    const includesDisabledDay = data?.days?.some((day) => {
-      console.log(`🚀 ~ file: date-picker.jsx:89 ~ day:`, day);
+    const includesDisabledDay = data2?.days?.some((day) => {
       const disabledDate = moment(startDate).day(day.index);
-      console.log(
-        `🚀 ~ file: date-picker.jsx:91 ~ moment(startDate).day(day.index):`,
-        moment(endDate).day()
-      );
 
       // Check if the entire day is disabled
       const isDisabledDay = moment(disabledDate).isSame(startDate, "day");
-      console.log(
-        `🚀 ~ file: date-picker.jsx:93 ~ isDisabledDay:`,
-        isDisabledDay
-      );
 
       // Check if the selected date range overlaps with the disabled day
       const isOverlap =
         selectedStartDate.isBefore(moment(disabledDate)) &&
         selectedEndDate.isAfter(moment(disabledDate));
-      console.log(`🚀 ~ file: date-picker.jsx:100 ~ isOverlap:`, isOverlap);
-      console.log(
-        `🚀 ~ file: date-picker.jsx:101 ~ isDisabledDay && isOverlap:`,
-        isDisabledDay && isOverlap
-      );
+
       return isDisabledDay && isOverlap;
     });
-    console.log(
-      `🚀 ~ file: date-picker.jsx:101 ~ includesDisabledDay:`,
-      includesDisabledDay
-    );
 
     if (includesDisabledDay) {
       handleAlert(true, "warning", "You cannot select disabled days for leave");
       return;
     }
 
-    const isOverlap = [...appliedLeaveEvents, ...newAppliedLeaveEvents].some(
+    const isOverlap = [
+      ...data?.currentYearLeaves,
+      ...newAppliedLeaveEvents,
+    ].some(
       (event) =>
         (selectedStartDate.isSameOrAfter(moment(event.start)) &&
           selectedStartDate.isBefore(moment(event.end))) ||
@@ -156,14 +149,6 @@ const AppDatePicker = ({
     }
   };
 
-  const handleUpdateFunction = (e) => {
-    setselectEvent(true);
-    // newAppliedLeaveEvents
-    let array = appliedLeaveEvents.filter(
-      (item) => item._id !== selectedLeave._id
-    );
-    setAppliedLeaveEvents(array);
-  };
   const CustomToolbar = (toolbar) => {
     const handleMonthChange = (event) => {
       const newDate = moment(toolbar.date).month(event.target.value).toDate();
@@ -257,7 +242,6 @@ const AppDatePicker = ({
     <Popover
       PaperProps={{ className: "w-full md:w-[70vw] xl:w-[60vw]" }}
       open={isCalendarOpen}
-      anchorEl={anchorEl}
       onClose={() => setCalendarOpen(false)}
       components={{
         toolbar: CustomToolbar,
@@ -279,7 +263,11 @@ const AppDatePicker = ({
             components={{
               toolbar: CustomToolbar,
             }}
-            events={[...appliedLeaveEvents, ...newAppliedLeaveEvents]}
+            events={
+              data
+                ? [...data?.currentYearLeaves, ...newAppliedLeaveEvents]
+                : [...newAppliedLeaveEvents]
+            }
             startAccessor="start"
             endAccessor="end"
             style={{

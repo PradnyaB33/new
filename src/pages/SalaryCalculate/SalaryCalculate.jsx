@@ -1,18 +1,17 @@
-import React, { useContext, useState, useEffect } from "react";
-import { Paper } from "@mui/material";
+import { Divider, Paper } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { Divider } from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import axios from "axios";
+import dayjs from "dayjs";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import dayjs from "dayjs";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import PDFDocument from "./SalaryPdfDocument";
-import { PDFDownloadLink } from "@react-pdf/renderer";
 const SalaryCalculate = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -20,12 +19,22 @@ const SalaryCalculate = () => {
   const { userId, organisationId } = useParams();
   const [selectedDate, setSelectedDate] = useState(dayjs("2022-04-17"));
   const [numDaysInMonth, setNumDaysInMonth] = useState(0);
-  // const [availableDays, setAvailableDays] = useState(0);
-  // const [paidleaveDays, setPaidLeaveDays] = useState(0);
-  // const [unpaidleaveDays, setUnPaidLeaveDays] = useState(0);
-  const [publicHolidays, setPublicHoliDays] = useState(0);
-  const [weekend, setWeekend] = useState([]);
   const [availableEmployee, setAvailableEmployee] = useState();
+  const [publicHolidays, setPublicHoliDays] = useState([]);
+  const [weekend, setWeekend] = useState([]);
+  const [employeeSummary, setEmployeeSummary] = useState([]);
+  const [paidLeaveDays, setPaidLeaveDays] = useState(0);
+  const [unPaidLeaveDays, setUnPaidLeaveDays] = useState(0);
+
+  // get the data which is use selected by calender
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    const daysInMonth = date.daysInMonth();
+    setNumDaysInMonth(daysInMonth);
+  };
+
+  // formate the data in this format eg(Dec-23)
+  const formattedDate = dayjs(selectedDate).format("MMM-YY");
 
   // pull employee data based on emp id
   const fetchAvailableEmployee = async () => {
@@ -50,58 +59,7 @@ const SalaryCalculate = () => {
     // eslint-disable-next-line
   }, []);
 
-  // pull weekend based on organization id
-  const fetchWeekend = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/weekend/get/${organisationId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-
-      setWeekend(response.data.days);
-    } catch (error) {
-      console.error(error);
-      handleAlert(true, "error", "Failed to fetch Weekend");
-    }
-  };
-
-  useEffect(() => {
-    fetchWeekend();
-    // eslint-disable-next-line
-  }, []);
-
-  const getWeekendbyOeganization = weekend
-    .map((item) => item.days.map((dayItem) => dayItem.day))
-    .flat();
-
-  // get the weekend count in that organization
-  const countWeekendDaysInMonth = () => {
-    const selectedMonth = dayjs(selectedDate); // selectedDate is the chosen date
-    const daysInMonth = selectedMonth.daysInMonth();
-    let weekendCount = 0;
-
-    for (let i = 1; i <= daysInMonth; i++) {
-      const currentDate = selectedMonth.date(i);
-      const dayOfWeek = currentDate.format("ddd"); // Get day of the week (e.g., "Sat", "Sun")
-
-      if (getWeekendbyOeganization.includes(dayOfWeek)) {
-        // If the day falls on a weekend day defined by the organization
-        weekendCount++;
-      }
-    }
-
-    return weekendCount;
-  };
-
-  // Call the function to count weekend days in the selected month
-  const weekendCountInSelectedMonth = countWeekendDaysInMonth();
-  console.log(weekendCountInSelectedMonth);
-
-  // pull holidays based on organization id
+  // pull holiday's count based on organization id
   const fetchHoliday = async () => {
     try {
       const response = await axios.get(
@@ -112,7 +70,6 @@ const SalaryCalculate = () => {
           },
         }
       );
-
       setPublicHoliDays(response.data.holidays);
     } catch (error) {
       console.error(error);
@@ -125,65 +82,141 @@ const SalaryCalculate = () => {
     // eslint-disable-next-line
   }, []);
 
-  //  count the how many public holiday in selected month
-  const countPublicHolidaysInSelectedMonth = (publicHolidays) => {
-    // Get the current date
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth() + 1; // Adding 1 to get 1-based index
-    const currentYear = currentDate.getFullYear();
-
-    const holidaysInSelectedMonth = publicHolidays.filter((holiday) => {
-      const holidayDate = new Date(holiday.date);
+  const countPublicHolidaysInCurrentMonth = () => {
+    const currentDate = dayjs(); // Get current date using dayjs
+    const currentMonth = currentDate.month() + 1; // Adding 1 to get 1-based index
+    const currentYear = currentDate.year();
+    const holidaysInCurrentMonth = publicHolidays.filter((holiday) => {
+      const holidayDate = dayjs(holiday.date);
       return (
-        holidayDate.getMonth() === currentMonth - 1 &&
-        holidayDate.getFullYear() === currentYear
+        holidayDate.month() + 1 === currentMonth &&
+        holidayDate.year() === currentYear
       );
     });
 
-    return holidaysInSelectedMonth.length;
+    return holidaysInCurrentMonth.length;
+  };
+  let publicHolidaysCount = countPublicHolidaysInCurrentMonth();
+
+  // pull weekend based on organization id
+  const fetchWeekend = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/weekend/get/${organisationId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setWeekend(response.data.days);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch Weekend");
+    }
   };
 
-  const publicHolidaysCount =
-    countPublicHolidaysInSelectedMonth(publicHolidays);
+  useEffect(() => {
+    fetchWeekend();
+    // eslint-disable-next-line
+  }, []);
 
-  console.log("Public holidays count in selected month:", publicHolidaysCount);
+  const getWeekendbyOrganization = weekend
+    .map((item) => item.days.map((dayItem) => dayItem.day))
+    .flat();
 
-  // get month and year from user selected date and also pull the data paidleavedays , unpaidleavedays, public holiday and all
-  const monthYear = dayjs(selectedDate).format("MMM YYYY");
-  console.log(monthYear);
-  // const fetchEmployeeLeaveSummary = async () => {
-  //   try {
-  //     const response = await axios.get(`${process.env.REACT_APP_API}/route`, {
-  //       headers: {
-  //         Authorization: token,
-  //       },
-  //     });
-  //     console.log(response);
-  //   } catch (error) {
-  //     console.error(error);
-  //     handleAlert(true, "error", "Failed to fetch Employee Leave Summary");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchEmployeeLeaveSummary();
-  //   // eslint-disable-next-line
-  // }, []);
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-    const daysInMonth = date.daysInMonth();
-    setNumDaysInMonth(daysInMonth);
+  // // get the weekend count in that organization
+  const countWeekendDaysInMonth = () => {
+    const selectedMonth = dayjs(selectedDate); // selectedDate is the chosen date
+    const daysInMonth = selectedMonth.daysInMonth();
+    let weekendCount = 0;
+    for (let i = 1; i <= daysInMonth; i++) {
+      const currentDate = selectedMonth.date(i);
+      const dayOfWeek = currentDate.format("ddd"); // Get day of the week (e.g., "Sat", "Sun")
+      if (getWeekendbyOrganization.includes(dayOfWeek)) {
+        // If the day falls on a weekend day defined by the organization
+        weekendCount++;
+      }
+    }
+    return weekendCount;
   };
+
+  // // Call the function to count weekend days in the selected month
+  const weekendCount = countWeekendDaysInMonth();
+
+  // pull the data such as paidLeaveDays , unpaidLeave days , available Days
+  const fetchDataAndFilter = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/leave/getYearLeaves/${userId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setEmployeeSummary(response.data);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch Employee Leave Summary");
+    }
+  };
+
+  useEffect(() => {
+    fetchDataAndFilter();
+    // eslint-disable-next-line
+  }, []);
+
+  // Extract month and year from selectedDate
+  const selectedMonth = selectedDate.format("M");
+  const selectedYear = selectedDate.format("YYYY");
+
+  const filterDataByMonthYear = (data, selectedMonth, selectedYear) => {
+    const numericMonth = parseInt(selectedMonth, 10); // Convert selectedMonth to a number
+    const numericYear = parseInt(selectedYear, 10); // Convert selectedYear to a number
+
+    return data.filter((item) => {
+      // Convert item.month to a number if it's a string in your data
+      const itemMonth = parseInt(item.month, 10);
+
+      // Check equality after converting types
+      return (
+        itemMonth === numericMonth && parseInt(item.year, 10) === numericYear
+      );
+    });
+  };
+
+  useEffect(() => {
+    const filteredData = filterDataByMonthYear(
+      employeeSummary,
+      selectedMonth,
+      selectedYear
+    );
+    if (filteredData.length > 0) {
+      const { paidleaveDays, unpaidleaveDays } = filteredData[0];
+      setPaidLeaveDays(paidleaveDays);
+      setUnPaidLeaveDays(unpaidleaveDays);
+    }
+  }, [employeeSummary, selectedMonth, selectedYear]);
+
+  // calculate the no of days employee present in selected Month
+  const calculateDaysEmployeePresent = () => {
+    const daysPresent =
+      numDaysInMonth -
+      (paidLeaveDays + unPaidLeaveDays + weekendCount + publicHolidaysCount);
+
+    return daysPresent;
+  };
+
+  let noOfDaysEmployeePresent = calculateDaysEmployeePresent();
 
   // calculate the basic , hra , da monthly
   const calculateSalaryComponent = (componentValue) => {
     const daysInMonth = numDaysInMonth;
-    const numberOfAvailableDays = 25;
     if (!isNaN(parseFloat(componentValue)) && daysInMonth > 0) {
       return (
         (parseFloat(componentValue) / daysInMonth) *
-        numberOfAvailableDays
+        noOfDaysEmployeePresent
       ).toFixed(2);
     } else {
       return 0;
@@ -241,8 +274,6 @@ const SalaryCalculate = () => {
   // calculate the totalNetSalary
   let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
 
-  const formattedDate = dayjs(selectedDate).format("MMM-YY");
-
   const saveSallaryDetail = async () => {
     try {
       const data = {
@@ -258,15 +289,15 @@ const SalaryCalculate = () => {
         totalGrossSalary,
         totalDeduction,
         totalNetSalary,
-        month: selectedDate.format("M"), // Extract month from selectedDate
-        year: selectedDate.format("YYYY"), // Extract year from selectedDate
-        organizationId: organisationId,
         numDaysInMonth,
         formattedDate,
         publicHolidaysCount,
-        // availableDays,
-        // paidleaveDays,
-        // unpaidleaveDays,
+        paidLeaveDays,
+        unPaidLeaveDays,
+        noOfDaysEmployeePresent,
+        month: selectedDate.format("M"),
+        year: selectedDate.format("YYYY"),
+        organizationId: organisationId,
       };
       console.log(data);
 
@@ -279,13 +310,34 @@ const SalaryCalculate = () => {
           },
         }
       );
-      console.log("response ", response);
+
       if (response.data.success) {
         handleAlert(
           true,
           "success",
           " Monthly Salary Detail added Successfully"
         );
+        basicSalary = 0;
+        hraSalary = 0;
+        daSalary = 0;
+        foodAllowance = 0;
+        salesAllowance = 0;
+        specialAllowance = 0;
+        travelAllowance = 0;
+        variableAllowance = 0;
+        totalGrossSalary = 0;
+        totalDeduction = 0;
+        totalNetSalary = 0;
+        noOfDaysEmployeePresent = 0;
+        publicHolidaysCount = 0;
+        setNumDaysInMonth(0);
+        setUnPaidLeaveDays(0);
+        setPaidLeaveDays(0);
+
+        // Resetting alerts after a certain time
+        setTimeout(() => {
+          handleAlert(false, "", "");
+        }, 5000);
       }
     } catch (error) {
       console.error("Error adding Monthly salary data:", error);
@@ -294,6 +346,7 @@ const SalaryCalculate = () => {
   };
 
   const [employeeData, setEmployeeData] = useState(null); // Employee data state
+
   const handleGeneratePDF = () => {
     setEmployeeData(availableEmployee);
   };
@@ -319,9 +372,9 @@ const SalaryCalculate = () => {
             <Box>
               <h3
                 style={{
-                  fontSize: "1em", // Adjust font size
-                  color: "#333", // Change text color
-                  fontWeight: "bold", // Make text bold
+                  fontSize: "1em",
+                  color: "#333",
+                  fontWeight: "bold",
                   marginLeft: "40%",
                 }}
               >
@@ -545,7 +598,7 @@ const SalaryCalculate = () => {
                           >
                             Unpaid Leaves :
                           </td>
-                          <td>{}</td>
+                          <td>{unPaidLeaveDays}</td>
                         </tr>
                         <tr>
                           <td
@@ -556,7 +609,7 @@ const SalaryCalculate = () => {
                           >
                             No of Working Days Attened :
                           </td>
-                          <td>{}</td>
+                          <td>{noOfDaysEmployeePresent}</td>
                         </tr>
                         <tr>
                           <td
@@ -567,7 +620,7 @@ const SalaryCalculate = () => {
                           >
                             Paid Leaves :
                           </td>
-                          <td>{}</td>
+                          <td>{paidLeaveDays}</td>
                         </tr>
 
                         <tr>
@@ -579,7 +632,7 @@ const SalaryCalculate = () => {
                           >
                             Public Holidays :
                           </td>
-                          <td>{}</td>
+                          <td>{publicHolidaysCount}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -899,8 +952,6 @@ const SalaryCalculate = () => {
                     document={
                       <PDFDocument
                         employeeData={employeeData}
-                        formattedDate={formattedDate}
-                        noOfDaysInMonth={numDaysInMonth}
                         totalDeduction={totalDeduction}
                         totalGrossSalary={totalGrossSalary}
                         totalNetSalary={totalNetSalary}
@@ -912,6 +963,12 @@ const SalaryCalculate = () => {
                         specialAllowance={specialAllowance}
                         travelAllowance={travelAllowance}
                         variableAllowance={variableAllowance}
+                        publicHolidaysCount={publicHolidaysCount}
+                        formattedDate={formattedDate}
+                        noOfDaysInMonth={numDaysInMonth}
+                        paidLeaveDays={paidLeaveDays}
+                        unPaidLeaveDays={unPaidLeaveDays}
+                        noOfDaysEmployeePresent={noOfDaysEmployeePresent}
                       />
                     }
                     fileName="SalarySlip.pdf"

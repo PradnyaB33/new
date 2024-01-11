@@ -28,11 +28,16 @@ const NavAccordian = ({
   // );
   return (
     <>
-      <List>
+      <List className="my-4">
         <ListItem
-          style={{ padding: "8px", borderRadius: "8px", width: "100%" }}
+          style={{
+            padding: "2px",
+
+            borderRadius: "8px",
+            width: "100%",
+          }}
           components={{ Root: "div" }}
-          className={`block ${!isVisible && "hidden"}`}
+          className={`block ${!isVisible && "hidden"} `}
           onClick={(e) => {
             e.stopPropagation();
             if (open === true) {
@@ -44,17 +49,19 @@ const NavAccordian = ({
         >
           <Accordion
             expanded={open}
-            className="w-full !shadow-none border-[#0093d6] border-none !m-0"
+            className="w-full !bg-white !shadow-none  border-none !m-0"
             style={{ background: "rgb(14, 165, 233)" }}
           >
             <AccordionSummary
-              expandIcon={<ExpandMore className="text-white" />}
+              expandIcon={<ExpandMore className="text-black" />}
               aria-controls="panel1a-content"
               id="panel1a-header"
-              className="flex !m-0"
+              className="flex items-center justify-center !m-0"
             >
-              <ListItemIcon className="p-4 !min-w-[25px]">{icon}</ListItemIcon>
-              <Typography className="text-white flex items-center">
+              <ListItemIcon className="px-4 !text-black  py-2 !min-w-[25px]">
+                {icon}
+              </ListItemIcon>
+              <Typography className="text-black flex items-center">
                 {role}
               </Typography>
             </AccordionSummary>
@@ -64,7 +71,6 @@ const NavAccordian = ({
                   padding: "8px",
                   borderRadius: "8px",
                   width: "100%",
-                  paddingLeft: "24px",
                 }}
                 components={{ Root: "div" }}
                 key={route.key}
@@ -76,12 +82,11 @@ const NavAccordian = ({
                 >
                   <ListItemButton
                     style={{
-                      padding: "8px",
                       borderRadius: "8px",
                       width: "100%",
                     }}
                   >
-                    <ListItemIcon className="p-2 !min-w-[25px]">
+                    <ListItemIcon className="px-3 py-1 !text-black !min-w-[25px]">
                       {route.icon}
                     </ListItemIcon>
                     <ListItemText
@@ -89,7 +94,7 @@ const NavAccordian = ({
                         style: { fontSize: 13 },
                       }}
                       style={{ fontSize: "10px" }}
-                      className="text-white text-sm"
+                      className="text-black text-sm"
                       primary={route.text}
                     />
                   </ListItemButton>

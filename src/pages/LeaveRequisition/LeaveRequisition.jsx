@@ -1,104 +1,104 @@
-import { CalendarMonth } from "@mui/icons-material";
-import WestIcon from "@mui/icons-material/West";
+import { CalendarMonth, West } from "@mui/icons-material";
 import { Badge, Button, Skeleton } from "@mui/material";
-import axios from "axios";
-import React, { useContext, useState } from "react";
+import React from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import "tailwindcss/tailwind.css";
-import { TestContext } from "../../State/Function/Main";
-import { UseContext } from "../../State/UseState/UseContext";
 import AppDatePicker from "../../components/date-picker/date-picker";
+import useLeaveData from "../../hooks/Leave/useLeaveData";
 import LeaveTable from "./components/LeaveTabel";
 import Mapped from "./components/mapped-form";
 
-// Set up the localizer for moment.js
-
 const LeaveRequisition = () => {
-  const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
-  const { handleAlert } = useContext(TestContext);
-  const [subtractedLeaves, setSubtractedLeaves] = useState([]);
-  const [isCalendarOpen, setCalendarOpen] = useState(false);
-  const [selectedLeave, setSelectedLeave] = useState(null);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([]);
-  const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
-  const queryclient = useQueryClient();
-  const { isLoading } = useQuery(
-    "employee-leave-table-without-default",
-    async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/leave/getEmployeeCurrentYearLeave`,
-        {
-          headers: { Authorization: authToken },
-        }
-      );
-      setAppliedLeaveEvents([...response.data.currentYearLeaves]);
-      setSubtractedLeaves(response.data.LeaveTypedEdited);
-      console.log("THis is complete", response.data);
-      return response.data;
-    }
-  );
-  const createLeaves = async () => {
-    newAppliedLeaveEvents.forEach(async (value) => {
-      try {
-        await axios.post(
-          `${process.env.REACT_APP_API}/route/leave/create`,
-          value,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        );
-      } catch (error) {
-        console.error(`🚀 ~ error:`, error);
-        handleAlert(
-          true,
-          "error",
-          error?.response?.data?.message || "Leaves not created succcesfully"
-        );
-      }
-    });
-  };
-  const leaveMutation = useMutation(createLeaves, {
-    onSuccess: () => {
-      console.log("success");
+  const {
+    data,
+    setCalendarOpen,
+    isLoading,
+    handleSubmit,
+    handleInputChange,
+    newAppliedLeaveEvents,
+    setNewAppliedLeaveEvents,
+    isCalendarOpen,
+    handleUpdateFunction,
+    selectEvent,
+    setSelectedLeave,
+    selectedLeave,
+    setselectEvent,
+  } = useLeaveData();
 
-      queryclient.invalidateQueries("employee-leave-table");
-      queryclient.invalidateQueries("employee-leave-table");
-      queryclient.invalidateQueries("employee-summary-table");
-      queryclient.invalidateQueries("employee-leave-table-without-default");
-      setNewAppliedLeaveEvents([]);
-    },
-    onError: (error) => {
-      console.error(error);
-    },
-  });
-  const handleInputChange = () => {
-    setCalendarOpen(true);
-    setSelectedLeave(null);
-  };
+  // const { isLoading } = useQuery(
+  //   "employee-leave-table-without-default",
+  //   async () => {
+  //     const response = await axios.get(
+  //       `${process.env.REACT_APP_API}/route/leave/getEmployeeCurrentYearLeave`,
+  //       {
+  //         headers: { Authorization: authToken },
+  //       }
+  //     );
+  //     setAppliedLeaveEvents([...response.data.currentYearLeaves]);
+  //     setSubtractedLeaves(response.data.LeaveTypedEdited);
+  //     console.log("THis is complete", response.data);
+  //     return response.data;
+  //   }
+  // );
+  // const createLeaves = async () => {
+  //   newAppliedLeaveEvents.forEach(async (value) => {
+  //     try {
+  //       await axios.post(
+  //         `${process.env.REACT_APP_API}/route/leave/create`,
+  //         value,
+  //         {
+  //           headers: {
+  //             Authorization: authToken,
+  //           },
+  //         }
+  //       );
+  //     } catch (error) {
+  //       console.error(`🚀 ~ error:`, error);
+  //       handleAlert(
+  //         true,
+  //         "error",
+  //         error?.response?.data?.message || "Leaves not created succcesfully"
+  //       );
+  //     }
+  //   });
+  // };
+  // const leaveMutation = useMutation(createLeaves, {
+  //   onSuccess: () => {
+  //     console.log("success");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  //     queryclient.invalidateQueries("employee-leave-table");
+  //     queryclient.invalidateQueries("employee-leave-table");
+  //     queryclient.invalidateQueries("employee-summary-table");
+  //     queryclient.invalidateQueries("employee-leave-table-without-default");
+  //     setNewAppliedLeaveEvents([]);
+  //   },
+  //   onError: (error) => {
+  //     console.error(error);
+  //   },
+  // });
+  // const handleInputChange = () => {
+  //   setCalendarOpen(true);
+  //   setSelectedLeave(null);
+  // };
 
-    setCalendarOpen(false);
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
 
-    setCalendarOpen(false);
-    setAnchorEl("");
+  //   setCalendarOpen(false);
 
-    leaveMutation.mutate();
-  };
+  //   setCalendarOpen(false);
+  //   setAnchorEl("");
+
+  //   leaveMutation.mutate();
+  // };
 
   return (
     <>
       <section className="">
         <header className="text-xl pt-6 bg-gray-50 shadow-md font-semibold p-4">
           <Link to={"/"}>
-            <WestIcon className="mx-4 !text-xl" />
+            <West className="mx-4 !text-xl" />
           </Link>
           Leave Request section
         </header>
@@ -155,15 +155,16 @@ const LeaveRequisition = () => {
             )}
 
             <AppDatePicker
-              isCalendarOpen={isCalendarOpen}
+              data={data}
+              handleUpdateFunction={handleUpdateFunction}
+              selectEvent={selectEvent}
+              setselectEvent={setselectEvent}
               setCalendarOpen={setCalendarOpen}
-              anchorEl={anchorEl}
-              appliedLeaveEvents={appliedLeaveEvents}
-              setAppliedLeaveEvents={setAppliedLeaveEvents}
               setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
-              newAppliedLeaveEvents={newAppliedLeaveEvents}
               selectedLeave={selectedLeave}
               setSelectedLeave={setSelectedLeave}
+              newAppliedLeaveEvents={newAppliedLeaveEvents}
+              isCalendarOpen={isCalendarOpen}
             />
 
             {newAppliedLeaveEvents.length > 0 &&
@@ -181,7 +182,7 @@ const LeaveRequisition = () => {
                       <Mapped
                         key={index}
                         setCalendarOpen={setCalendarOpen}
-                        subtractedLeaves={subtractedLeaves}
+                        subtractedLeaves={data?.LeaveTypedEdited}
                         item={item}
                         index={index}
                         newAppliedLeaveEvents={newAppliedLeaveEvents}

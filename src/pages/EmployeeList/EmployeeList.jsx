@@ -2,7 +2,6 @@ import { BorderColor } from "@mui/icons-material";
 import { IconButton, TextField } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
@@ -11,7 +10,6 @@ const EmployeeList = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-  const queryClient = useQueryClient();
   const [nameSearch, setNameSearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const [deptSearch, setDeptSearch] = useState("");
@@ -29,7 +27,6 @@ const EmployeeList = () => {
           Authorization: authToken,
         },
       });
-      console.log(response);
       setAvailableEmployee(response.data.employees);
       setCurrentPage(page);
       setTotalPages(response.data.totalPages || 1);
@@ -50,8 +47,6 @@ const EmployeeList = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
-  console.log("employee", availableEmployee);
-
   const prePage = () => {
     if (currentPage !== 1) {
       fetchAvailableEmployee(currentPage - 1);
@@ -68,18 +63,16 @@ const EmployeeList = () => {
     fetchAvailableEmployee(id);
   };
   // Modal states and function
-  const [open, setOpen] = React.useState(false);
+
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [employeeId, setemployeeId] = useState(null);
 
-  const handleEditModalOpen = (empId) => {
+  const handleEditModalOpen = (employeeId) => {
     setEditModalOpen(true);
-    queryClient.invalidateQueries(["employee", empId]);
-    setemployeeId(empId);
+    setemployeeId(employeeId);
   };
 
   const handleClose = () => {
-    setOpen(false);
     setemployeeId(null);
     setEditModalOpen(false);
   };
@@ -295,11 +288,12 @@ const EmployeeList = () => {
       </section>
 
       {/* edit model */}
-      <EditModelOpen open={open} handleClose={handleClose} />
+
       <EditModelOpen
         handleClose={handleClose}
         open={editModalOpen}
         employeeId={employeeId}
+        organisationId={organisationId}
       />
     </>
   );

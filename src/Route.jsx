@@ -1,14 +1,17 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 
 // Components
 import AnimationComponent from "./components/emailverify/verification-animation";
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
+import UserProfile from "./hooks/UserData/useUser";
 import AddEmployee from "./pages/AddEmployee/addemployee";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import Application from "./pages/Application/Application";
+import DashBoardHR from "./pages/DashBoard/HR/DashBoardHR";
+import DashboardManger from "./pages/DashBoard/Manager/DashboardManger";
 import Dashboard from "./pages/DashBoard/employee/Dashboard";
 import SuperAdmin from "./pages/DashBoard/superAdmin/SuperAdmin";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
@@ -48,12 +51,11 @@ import TrackingMap from "./pages/Test/test3";
 import TrackingMap2 from "./pages/Test/testMap";
 import TestNaresh from "./pages/Test/testNaresh";
 import TrackingMap3 from "./pages/Test/testYash";
-import UserProfile from "./pages/UserProfile/UserProfile";
+import EmployeeProfile from "./pages/UserProfile/UserProfile";
 import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
-
 const App = () => {
   return (
     <Routes>
@@ -73,15 +75,49 @@ const App = () => {
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       {/* Login Routes */}
       {/* Dashboard Routes */}
-      <Route path="/organisation/employee-dashboard" element={<Dashboard />} />
+      <Route
+        path="/organisation/dashboard/employee-dashboard"
+        element={
+          <RequireAuth permission={"Employee"}>
+            <Dashboard />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/organisation/dashboard/HR-dashboard"
+        element={
+          <RequireAuth permission={"Hr"}>
+            <DashBoardHR />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/organisation/dashboard/manager-dashboard"
+        element={
+          <RequireAuth permission={"Manager"}>
+            <DashboardManger />
+          </RequireAuth>
+        }
+      />
 
       <Route
-        path="/organisation/:organisationId/super-admin"
-        element={<SuperAdmin />}
+        path="/organisation/:organisationId/dashboard/super-admin"
+        element={
+          <RequireAuth permission={"Super-Admin"}>
+            <SuperAdmin />
+          </RequireAuth>
+        }
       />
       {/* Dashboard Routes */}
       <Route path="/add-organisation" element={<AddOrganisation />} />
-      <Route path="/organizationList" element={<OrgList />} />
+      <Route
+        path="/organizationList"
+        element={
+          <RequireAuth permission={"Super-Admin"}>
+            <OrgList />
+          </RequireAuth>
+        }
+      />
       <Route
         path="/organisation/:organisationId/create-department"
         element={<CreateDepartment />}
@@ -91,7 +127,7 @@ const App = () => {
         element={<DepartmentList />}
       />
       <Route path="/organisation/:id" element={<SingleOrganisation />} />
-      <Route path="/userprofile" element={<UserProfile />} />
+      <Route path="/employee-profile" element={<EmployeeProfile />} />
       <Route
         path="/organisation/:organisationId/employee-onboarding"
         element={<AddEmployee />}
@@ -205,3 +241,24 @@ const App = () => {
 };
 
 export default App;
+
+function RequireAuth({ children, permission }) {
+  const { getCurrentUser } = UserProfile();
+  const navigate = useNavigate("");
+  const user = getCurrentUser();
+  const isPermission = user?.profile?.includes(permission);
+
+  if (!user || !window.location.pathname.includes("sign-in", "sign-up")) {
+    <Navigate to={"/sign-in"} />;
+    if (!permission) return children;
+  }
+  return user && isPermission ? children : navigate("/");
+
+  //   : user?.profile?.length < 2 ? (
+  //   <Navigate to={"/organisation/employee-dashboard"} />
+  // ) : user?.profile?.includes("Hr") ? (
+  //   <Navigate to={"/organisation/HR-dashboard"} />
+  // ) : (
+  //   <Navigate to={"/organisation/employee-dashboard"} />
+  // );
+}

@@ -75,40 +75,35 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
     "December",
   ];
 
-  function getMonthArray(data) {
-    const filteredMonths = data?.map(
-      (element) => monthNames[element.month - 1]
-    );
-    return filteredMonths;
-  }
-  const MonthArray = getMonthArray(LeaveYearData);
+  const allMonths = monthNames;
 
   const organizeDataByMonth = (data) => {
-    const organizedData = [];
+    const organizedData = Array.from({ length: 12 }, (_, index) => {
+      const month = index + 1;
+      return {
+        month,
+        year: null,
+        PresentPercent: 0,
+        absentPercent: 0,
+      };
+    });
 
-    for (let i = 0; i < data?.length; i++) {
-      const monthData = data[i];
+    data?.forEach((monthData) => {
       const monthIndex = monthData.month - 1;
-      if (!organizedData[monthIndex]) {
-        organizedData[monthIndex] = {
-          month: monthData.month,
-          year: monthData.year,
-          availableDays: 0,
-          unpaidleaveDays: 0,
-          paidleaveDays: 0,
-        };
-      }
-      organizedData[monthIndex].availableDays += monthData.availableDays;
-      organizedData[monthIndex].unpaidleaveDays += monthData.unpaidleaveDays;
-      organizedData[monthIndex].paidleaveDays += monthData.paidleaveDays;
-    }
+      organizedData[monthIndex] = {
+        month: monthData.month,
+        year: monthData.year,
+        availableDays: monthData.availableDays,
+        unpaidleaveDays: monthData.unpaidleaveDays,
+        paidleaveDays: monthData.paidleaveDays,
+      };
+    });
 
-    // Filter out undefined elements =
-    const MonthData = organizedData.filter((monthData) => monthData);
-    return MonthData;
+    return organizedData;
   };
 
   const EmployeeleaveData = organizeDataByMonth(LeaveYearData);
+  const MonthArray = allMonths.map((month) => month);
 
   const data = {
     labels: MonthArray,

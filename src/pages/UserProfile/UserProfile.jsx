@@ -9,7 +9,7 @@ import { TestContext } from "../../State/Function/Main";
 import axios from "axios";
 import Tooltip from "@mui/material/Tooltip";
 
-const UserProfile = () => {
+const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const token = cookies["aeigs"];
@@ -295,4 +295,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default EmployeeProfile;
