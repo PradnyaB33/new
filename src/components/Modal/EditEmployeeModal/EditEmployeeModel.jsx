@@ -195,11 +195,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     }
   };
 
-  // const handleLocationChange = (event) => {
-  //   setSelectedWorkLocation(event.target.value);
-  //   console.log(event.target.value);
-  // };
-
   // function for change department
   const handleDepartmnetChange = (event) => {
     setDepartment(event.target.value);
@@ -215,7 +210,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     setEmployementType(event.target.value);
     console.log(event.target.value);
   };
-  console.log(employeeData);
+
   // fetch the data in input field which is already stored
   useEffect(() => {
     if (employeeData) {
@@ -263,8 +258,10 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           employeeData?.additionalInfo?.["Shifts allocation"] || "",
       });
       const employeeWorkLocations = employeeData.worklocation;
+
       if (employeeWorkLocations && employeeWorkLocations.length > 0) {
-        setSelectedWorkLocation(employeeWorkLocations[0]?.city || "");
+        const workLocation = employeeWorkLocations[0]?.city || "";
+        setSelectedWorkLocation(workLocation);
       }
     }
   }, [employeeData]);
@@ -383,7 +380,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
         const updatedData = {
           ...formData,
           additionalInfo,
-          worklocation: selectedWorkLocation,
+          worklocation: [selectedWorkLocation],
           deptname,
           designation,
           employmentType,
@@ -809,29 +806,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 </option>
               ))}
             </select>
-
-            {/* <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-              <InputLabel htmlFor="work-location-select">
-                Select Work Location
-              </InputLabel>
-              <Select
-                id="work-location-select"
-                value={worklocation}
-                onChange={handleLocationChange}
-                displayEmpty
-                inputProps={{ "aria-label": "Work Location" }}
-                label="Work Location"
-              >
-                <MenuItem value="" disabled>
-                  Select Work Location
-                </MenuItem>
-                {availabelLocation?.map((location) => (
-                  <MenuItem key={location._id} value={location._id}>
-                    {location.city}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl> */}
           </div>
           <div className="space-y-2">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
