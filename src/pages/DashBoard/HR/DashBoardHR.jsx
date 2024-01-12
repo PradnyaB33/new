@@ -9,6 +9,8 @@ import {
 import axios from "axios";
 import React from "react";
 import { useQuery } from "react-query";
+import useDashboardFilter from "../../../hooks/Dashboard/useDashboardFilter";
+import useEmployee from "../../../hooks/Dashboard/useEmployee";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 import LineGraph from "../Components/Bar/LineGraph";
@@ -18,6 +20,9 @@ const DashBoardHR = () => {
   const authToken = useAuthToken();
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
+  const { employee, employeeLoading } = useEmployee(user.organizationId);
+  const { Managers, managerLoading } = useDashboardFilter(user.organizationId);
+
   const OrganizationSalaryOverview = async () => {
     try {
       const { data } = await axios.get(
@@ -50,15 +55,15 @@ const DashBoardHR = () => {
           <SuperAdminCard
             icon={Groups}
             color={"!bg-blue-500"}
-            data={20}
-            isLoading={false}
+            data={employee?.totalEmployees}
+            isLoading={employeeLoading}
             title={"Overall Employees"}
           />
           <SuperAdminCard
             color={"!bg-green-500"}
             icon={AccessTimeSharp}
-            data={13}
-            isLoading={false}
+            data={Managers?.length}
+            isLoading={managerLoading}
             title={"People's Manager"}
           />
           <SuperAdminCard

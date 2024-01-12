@@ -80,7 +80,7 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
       ) : (
         <div className="px-4 pb-4 bg-white shadow-md rounded-md flex flex-col justify-center">
           <h1 className="text-lg my-4 font-bold text-[#67748E]">Attendance</h1>
-          <div className="h-[370px] 2xl:h-[400px] w-full">
+          <div className=" 2xl:h-[400px] w-full">
             <Bar data={data} />
           </div>
         </div>
