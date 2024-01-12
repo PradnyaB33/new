@@ -258,7 +258,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           employeeData?.additionalInfo?.["Shifts allocation"] || "",
       });
       const employeeWorkLocations = employeeData.worklocation;
-
       if (employeeWorkLocations && employeeWorkLocations.length > 0) {
         const workLocation = employeeWorkLocations[0]?.city || "";
         setSelectedWorkLocation(workLocation);
