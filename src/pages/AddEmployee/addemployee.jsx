@@ -278,7 +278,6 @@ const AddEmployee = () => {
   };
 
   const [availableProfiles, setAvailableProfiles] = useState([]);
-
   const fetchAvailableProfiles = async () => {
     try {
       const response = await axios.get(
@@ -351,7 +350,6 @@ const AddEmployee = () => {
   }, [organisationId]);
 
   const [availableMgrId, setAvailableMgrId] = useState([]);
-
   const fetchAvailabeMgrId = async () => {
     try {
       const response = await axios.get(
