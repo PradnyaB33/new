@@ -269,6 +269,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                         padding: "10px",
                         border: "1px solid #ccc",
                         borderRadius: "4px",
+                        marginRight: "50px",
                       }}
                       value={deduction}
                       onChange={(e) => setDeduction(e.target.value)}

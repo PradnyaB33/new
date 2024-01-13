@@ -22,6 +22,7 @@ const EmployeeProfile = () => {
   const user = getCurrentUser();
   const userId = user._id;
   const organisationId = user.organizationId;
+  console.log(organisationId);
 
   const handleEditModalOpen = () => {
     setEditModalOpen(true);

@@ -34,7 +34,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     date_of_birth: "",
     joining_date: "",
     bank_account_no: "",
-    profile: "",
   });
   // define the state for store additional info data of employee
   const [additionalInfo, setAdditionalInfo] = useState({
@@ -50,6 +49,8 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     "Martial status": "",
     Education: "",
   });
+  // define the state for stored salary tempalte of employee
+  const [profile, setProfile] = useState([]);
   // define the state for stored worklocation
   const [selectedWorkLocation, setSelectedWorkLocation] = useState(null);
   // define the state for stored deptname
@@ -199,6 +200,37 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     // eslint-disable-next-line
   }, []);
 
+  const [availableProfiles, setAvailableProfiles] = useState([]);
+  const fetchAvailableProfiles = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/profile/role/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      const rolesArray = Object.entries(response.data.roles ?? {})
+        .filter(([role, obj]) => obj.isActive === true)
+        .map(([role, obj]) => ({
+          roleName: role,
+          isApprover: obj.isApprover,
+          isActive: obj.isActive,
+        }));
+
+      setAvailableProfiles(rolesArray);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch available profiles");
+    }
+  };
+
+  useEffect(() => {
+    fetchAvailableProfiles();
+    // eslint-disable-next-line
+  }, [organisationId]);
+
   // function for changing the data by user
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -228,6 +260,19 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   const handleEmployementChange = (event) => {
     setEmployementType(event.target.value);
   };
+  // function for change department
+  const handleProfileChange = (event) => {
+    const selectedProfile = event.target.value;
+    setProfile((prevProfiles) => {
+      if (prevProfiles.includes(selectedProfile)) {
+        // If already selected, remove it
+        return prevProfiles.filter((profile) => profile !== selectedProfile);
+      } else {
+        // If not selected, add it
+        return [...prevProfiles, selectedProfile];
+      }
+    });
+  };
 
   // fetch the data in input field which is already stored
   useEffect(() => {
@@ -250,7 +295,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
         date_of_birth: formattedDateOfBirth,
         joining_date: formattedJoiningDate,
         bank_account_no: employeeData?.bank_account_no || "",
-        profile: employeeData?.profile || "",
       });
 
       setAdditionalInfo({
@@ -326,6 +370,8 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
       } else {
         setEmployementType(null);
       }
+      const employeeProfileData = employeeData?.profile || [];
+      setProfile(employeeProfileData);
     }
   }, [
     employeeData,
@@ -372,6 +418,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           designation,
           salarystructure: salaryTemplate,
           employmentType: employementType,
+          profile,
         };
         await EditEmployeeData.mutateAsync(updatedData);
       }
@@ -551,21 +598,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 label="Add Employee Data"
                 name="joining_date"
                 value={formData.joining_date}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-          </div>
-
-          <div className="space-y-2 ">
-            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">
-                Profile
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                label="Profile"
-                name="profile"
-                value={formData.profile}
                 onChange={handleInputChange}
               />
             </FormControl>
@@ -787,7 +819,41 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
             className="space-y-2"
             style={{ borderColor: "rgba(0, 0, 0, 0.3)" }}
           >
+            <label
+              htmlFor="workLocation"
+              style={{ display: "block", color: "#000000" }}
+            >
+              Profile:
+            </label>
             <select
+              multiple // Enable multiple selections
+              value={profile}
+              onChange={handleProfileChange}
+              style={{
+                width: "750px",
+                padding: "8px",
+                borderColor: "rgba(0, 0, 0, 0.3)",
+              }}
+            >
+              {availableProfiles.map((empProfile) => (
+                <option key={empProfile.roleName} value={empProfile.roleName}>
+                  {empProfile.roleName}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div
+            className="space-y-2"
+            style={{ borderColor: "rgba(0, 0, 0, 0.3)" }}
+          >
+            <label
+              htmlFor="workLocation"
+              style={{ display: "block", color: "#000000" }}
+            >
+              Work Location:
+            </label>
+            <select
+              id="workLocation"
               value={selectedWorkLocation || ""}
               onChange={handleLocationChange}
               style={{
@@ -803,7 +869,14 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               ))}
             </select>
           </div>
+
           <div className="space-y-2">
+            <label
+              htmlFor="workLocation"
+              style={{ display: "block", color: "#000000" }}
+            >
+              Department:
+            </label>
             <select
               value={deptname || ""}
               onChange={handleDepartmnetChange}
@@ -821,6 +894,12 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
             </select>
           </div>
           <div className="space-y-2">
+            <label
+              htmlFor="workLocation"
+              style={{ display: "block", color: "#000000" }}
+            >
+              Designation:
+            </label>
             <select
               value={designation || ""}
               onChange={handleDesignationChange}
@@ -838,6 +917,12 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
             </select>
           </div>
           <div className="space-y-2">
+            <label
+              htmlFor="workLocation"
+              style={{ display: "block", color: "#000000" }}
+            >
+              Salary Template:
+            </label>
             <select
               value={salaryTemplate || ""}
               onChange={handleSalaryTemplateChange}
@@ -855,6 +940,12 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
             </select>
           </div>
           <div className="space-y-2">
+            <label
+              htmlFor="workLocation"
+              style={{ display: "block", color: "#000000" }}
+            >
+              Employement Type:
+            </label>
             <select
               value={employementType || ""}
               onChange={handleEmployementChange}
@@ -886,7 +977,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               {EditEmployeeData.isLoading ? (
                 <CircularProgress size={20} />
               ) : (
-                "Edit Employee Data"
+                "Apply"
               )}
             </Button>
           </DialogActions>
