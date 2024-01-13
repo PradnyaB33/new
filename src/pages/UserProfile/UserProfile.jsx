@@ -1,4 +1,3 @@
-import { jwtDecode } from "jwt-decode";
 import React, { useContext, useState, useEffect } from "react";
 import { UseContext } from "../../State/UseState/UseContext";
 import { Paper, Divider, FormControl, Button } from "@mui/material";
@@ -7,16 +6,32 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { TestContext } from "../../State/Function/Main";
 import axios from "axios";
-import Tooltip from "@mui/material/Tooltip";
-
+import EditEmpProfileModal from "../../components/Modal/EditEmpProfileModal/EditEmpProfileModal";
+import UserProfile from "../../hooks/UserData/useUser";
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const token = cookies["aeigs"];
-  const decodedToken = jwtDecode(token);
-  const user = decodedToken.user;
-
   const [selectedImage, setSelectedImage] = useState(null);
+  const [additionalPhoneNumber, setAdditionalPhoneNumber] = useState("");
+  const [chatId, setChatId] = useState("");
+  const [statusMessage, setStatusMessage] = useState("");
+  const [editingUserId, setEditingUserId] = useState(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
+  const userId = user._id;
+  const organisationId = user.organizationId;
+
+  const handleEditModalOpen = () => {
+    setEditModalOpen(true);
+    setEditingUserId(userId);
+  };
+  const handleClose = () => {
+    setEditModalOpen(false);
+    setEditingUserId(null);
+  };
+
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -24,13 +39,6 @@ const EmployeeProfile = () => {
       setSelectedImage(imageUrl);
     }
   };
-
-  const userId = user._id;
-
-  // State to hold changes in additional details
-  const [additionalPhoneNumber, setAdditionalPhoneNumber] = useState("");
-  const [chatId, setChatId] = useState("");
-  const [statusMessage, setStatusMessage] = useState("");
 
   // Function to handle addd additional details
   const handleAddAdditionalDetails = async () => {
@@ -55,7 +63,7 @@ const EmployeeProfile = () => {
       if (response.status === 200) {
         handleAlert(true, "success", "Additional details Added successfully!");
         console.log("Additional details updated successfully!");
-        window.location.reload(); // Reload the page on success
+        window.location.reload();
       } else {
         console.error("Failed to update additional details");
       }
@@ -81,7 +89,6 @@ const EmployeeProfile = () => {
           },
         }
       );
-
       setAvailableProfileData(response.data.employee);
     } catch (error) {
       console.error(error);
@@ -108,6 +115,7 @@ const EmployeeProfile = () => {
             maxWidth: "800px!important",
             height: "100%",
             maxHeight: "85vh!important",
+            paddingBottom: "10%",
           }}
           className="w-full"
         >
@@ -164,17 +172,19 @@ const EmployeeProfile = () => {
                     </h1>
                     <h1 className="text-lg">{user?.email}</h1>
                     <div className="w-full">
-                      <h1 className="text-lg">
+                      <h1 className="text-lg" style={{ color: "#000" }}>
                         Status: {availableUserProfileData.status_message}
                       </h1>
-                      <h1>Chat Id: {availableUserProfileData.chat_id}</h1>
+                      <h1 className="text-lg" style={{ color: "#000" }}>
+                        Chat Id: {availableUserProfileData.chat_id}
+                      </h1>
                     </div>
 
                     <div style={{ display: "flex", marginTop: "20px" }}>
                       <button
                         style={{
-                          backgroundColor: "red",
-                          color: "white",
+                          backgroundColor: "#dc3545",
+                          color: "#fff",
                           padding: "5px 20px",
                           border: "none",
                           borderRadius: "5px",
@@ -194,8 +204,8 @@ const EmployeeProfile = () => {
                       <label htmlFor="imageInput">
                         <Button
                           style={{
-                            backgroundColor: "blue",
-                            color: "white",
+                            backgroundColor: "#1976D2",
+                            color: "#fff",
                             padding: "5px 20px",
                             border: "none",
                             borderRadius: "5px",
@@ -266,31 +276,49 @@ const EmployeeProfile = () => {
                 justifyContent: "center",
               }}
             >
-              <Tooltip
-                title="You can add or update the data here"
-                placement="top"
+              <Button
+                onClick={handleEditModalOpen}
+                type="submit"
+                variant="contained"
+                color="primary"
+                style={{
+                  backgroundColor: "#1976D2",
+                  color: "#fff",
+                  padding: "5px 20px",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  marginRight: "10px",
+                }}
               >
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  onClick={handleAddAdditionalDetails}
-                  style={{
-                    backgroundColor: "blue",
-                    color: "white",
-                    padding: "5px 20px",
-                    border: "none",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Add or Update
-                </Button>
-              </Tooltip>
+                Update
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                onClick={handleAddAdditionalDetails}
+                style={{
+                  backgroundColor: "#1976D2",
+                  color: "#fff",
+                  padding: "5px 20px",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Submit
+              </Button>
             </div>
           </Paper>
         </Paper>
       </div>
+
+      <EditEmpProfileModal
+        handleClose={handleClose}
+        open={editModalOpen}
+        userId={editingUserId}
+      />
     </>
   );
 };

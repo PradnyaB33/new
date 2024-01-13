@@ -83,14 +83,6 @@ export default function ProfileIcon() {
                     {user?.first_name} {user?.last_name}
                   </h1>
                   <p className="text-sm text-gray-600  ">{user?.email}</p>
-                  {/* <p className="text-sm italic">
-                    Working as{" "}
-                    <Tooltip title={user?.profile.join(",")}>
-                      <span className="text-blue-500 cursor-pointer hover:underline ">
-                        @job
-                      </span>
-                    </Tooltip>
-                  </p> */}
                 </div>
               </div>
             </div>
