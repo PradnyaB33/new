@@ -56,7 +56,6 @@ const EmployeeProfile = () => {
             additional_phone_number: additionalPhoneNumber,
             chat_id: chatId,
             status_message: statusMessage,
-            profile_photo: selectedImage,
           }),
         }
       );

@@ -14,6 +14,7 @@ const ViewPayslip = () => {
   const user = getCurrentUser();
   const employeeId = user._id;
   const organisationId = user.organizationId;
+  console.log({ employeeId, organisationId });
   const [employeeInfo, setEmployeeInfo] = useState("");
   const [organisationInfo, setOrganisationInfo] = useState("");
   const [salaryInfo, setSalaryInfo] = useState([]);
