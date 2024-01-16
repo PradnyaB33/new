@@ -60,7 +60,6 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
         }
       );
       // Handle success
-      console.log(`🚀 ~ response:`, response);
       handleAlert(true, "success", response.data.message);
       // Invalidate the query to refetch the data
       queryClient.invalidateQueries("leaveTypes");
