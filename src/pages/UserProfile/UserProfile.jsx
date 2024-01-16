@@ -21,8 +21,6 @@ const EmployeeProfile = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const userId = user._id;
-  const organisationId = user.organizationId;
-  console.log(organisationId);
 
   const handleEditModalOpen = () => {
     setEditModalOpen(true);
@@ -232,11 +230,17 @@ const EmployeeProfile = () => {
                 <FormControl sx={{ width: 300 }}>
                   <TextField
                     size="small"
-                    type="text"
+                    type="Number"
                     fullWidth
                     margin="normal"
                     value={additionalPhoneNumber}
-                    onChange={(e) => setAdditionalPhoneNumber(e.target.value)}
+                    onChange={(e) => {
+                      const enteredNumber = e.target.value;
+                      // Check if enteredNumber is a valid 10-digit number
+                      if (/^\d{0,10}$/.test(enteredNumber)) {
+                        setAdditionalPhoneNumber(enteredNumber);
+                      }
+                    }}
                   />
                 </FormControl>
               </div>
