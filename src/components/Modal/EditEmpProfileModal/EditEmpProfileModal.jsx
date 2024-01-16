@@ -1,9 +1,8 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Button, Divider, IconButton, Modal } from "@mui/material";
-import React, { useContext } from "react";
-import { useQueryClient } from "react-query";
-import { TestContext } from "../../../State/Function/Main";
-import { UseContext } from "../../../State/UseState/UseContext";
+
+import React from "react";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -14,10 +13,6 @@ const style = {
 };
 
 const EditEmpProfileModal = () => {
-  const { handleAlert } = useContext(TestContext);
-  const { cookies } = useContext(UseContext);
-  const queryClient = useQueryClient();
-
   return (
     <Modal
       aria-labelledby="modal-modal-title"
@@ -28,10 +23,9 @@ const EditEmpProfileModal = () => {
         className="border-none !z-10 !pt-0 !px-0 !w-[90%] lg:!w-[50%] md:!w-[60%] shadow-md outline-none rounded-md"
       >
         <div className="flex justify-between py-4 items-center  px-4">
-          <h1
-            id="modal-modal-title"
-            className="text-lg pl-2 font-semibold"
-          ></h1>
+          <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
+            Update Data
+          </h1>
           <IconButton>
             <CloseIcon className="!text-[16px]" />
           </IconButton>
