@@ -179,7 +179,7 @@ const TestNavItems = ({ toggleDrawer }) => {
         routes: [
           {
             key: "addDepartment",
-            link: `/organisation/${orgId}/create-department`,
+            link: `/organisation/${orgId}/add-department`,
             icon: <AddAlert className="text-black" />,
             text: "Add Department",
           },
