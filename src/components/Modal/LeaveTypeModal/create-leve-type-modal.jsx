@@ -67,7 +67,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
       // Close the modal
 
       handleClose();
-      form.resetField();
+      form.reset();
     } catch (error) {
       // Handle error
       console.error(error);
