@@ -1,18 +1,9 @@
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Divider,
-  IconButton,
-  Modal,
-} from "@mui/material";
-import axios from "axios";
-import React, { useContext, useState, useEffect } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { Box, Button, Divider, IconButton, Modal } from "@mui/material";
+import React, { useContext } from "react";
+import { useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import { useParams } from "react-router-dom";
 const style = {
   position: "absolute",
   top: "50%",

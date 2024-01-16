@@ -48,7 +48,6 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
   const isFormClean = Object.keys(formState.dirtyFields).length === 0;
 
   const onSubmit = async (data) => {
-
     try {
       // Make the PATCH request using axios
       const response = await axios.post(
@@ -66,7 +65,9 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
       // Invalidate the query to refetch the data
       queryClient.invalidateQueries("leaveTypes");
       // Close the modal
+
       handleClose();
+      form.resetField();
     } catch (error) {
       // Handle error
       console.error(error);
