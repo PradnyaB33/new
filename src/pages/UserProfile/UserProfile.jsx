@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { TestContext } from "../../State/Function/Main";
 import axios from "axios";
-import EditEmpProfileModal from "../../components/Modal/EditEmpProfileModal/EditEmpProfileModal";
+//import EditEmpProfileModal from "../../components/Modal/EditEmpProfileModal/EditEmpProfileModal";
 import UserProfile from "../../hooks/UserData/useUser";
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
@@ -16,20 +16,23 @@ const EmployeeProfile = () => {
   const [additionalPhoneNumber, setAdditionalPhoneNumber] = useState("");
   const [chatId, setChatId] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
-  const [editingUserId, setEditingUserId] = useState(null);
-  const [editModalOpen, setEditModalOpen] = useState(false);
+  // const [editingUserId, setEditingUserId] = useState(null);
+  // const [editModalOpen, setEditModalOpen] = useState(false);
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const userId = user._id;
+  console.log(userId);
+  // const handleEditModalOpen = () => {
+  //   setEditModalOpen(true);
+  //   console.log(userId);
+  //   setEditingUserId(userId);
+  // };
 
-  const handleEditModalOpen = () => {
-    setEditModalOpen(true);
-    setEditingUserId(userId);
-  };
-  const handleClose = () => {
-    setEditModalOpen(false);
-    setEditingUserId(null);
-  };
+  // const handleClose = () => {
+  //   setEditModalOpen(false);
+  //   setEditingUserId(null);
+  // };
+  // console.log(editingUserId);
 
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
@@ -280,7 +283,7 @@ const EmployeeProfile = () => {
                 justifyContent: "center",
               }}
             >
-              <Button
+              {/* <Button
                 onClick={handleEditModalOpen}
                 type="submit"
                 variant="contained"
@@ -296,7 +299,7 @@ const EmployeeProfile = () => {
                 }}
               >
                 Update
-              </Button>
+              </Button> */}
               <Button
                 type="submit"
                 variant="contained"
@@ -318,11 +321,11 @@ const EmployeeProfile = () => {
         </Paper>
       </div>
 
-      <EditEmpProfileModal
+      {/* <EditEmpProfileModal
         handleClose={handleClose}
         open={editModalOpen}
         userId={editingUserId}
-      />
+      /> */}
     </>
   );
 };

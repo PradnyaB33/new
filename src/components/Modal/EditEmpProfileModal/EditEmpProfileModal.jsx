@@ -1,8 +1,11 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Button, Divider, IconButton, Modal } from "@mui/material";
-
-import React from "react";
-
+import { TextField, InputLabel } from "@mui/material";
+import React, { useState, useEffect, useContext } from "react";
+import { FormControl } from "@mui/material";
+import axios from "axios";
+import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
 const style = {
   position: "absolute",
   top: "50%",
@@ -12,11 +15,54 @@ const style = {
   p: 4,
 };
 
-const EditEmpProfileModal = () => {
+const EditEmpProfileModal = ({ handleClose, open, userId }) => {
+  const { handleAlert } = useContext(TestContext);
+  const { cookies } = useContext(UseContext);
+  const token = cookies["aeigs"];
+
+  console.log(userId);
+  // function to handle get additional detail of employee
+  const [userData, setUserData] = useState("");
+  const fetchAvailableUserProfileData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/get/profile/${userId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch User Profile Data");
+    }
+  };
+
+  useEffect(() => {
+    fetchAvailableUserProfileData();
+    // eslint-disable-next-line
+  }, []);
+  console.log(userData);
+
+  // fetch the data of emp sal cal day of employee which is already stored in database
+  // useEffect(() => {
+  //   if (userData) {
+  //     setAdditionalPhoneNumber(userData?.additional_phone_number || "");
+  //     setStatusMessage(userData?.status_message || "");
+  //     setChatId(userData?.chat_id || "");
+  //   }
+  // }, [userData]);
+  // console.log(additionalPhoneNumber);
+  // console.log(chatId);
+  // console.log(statusMessage);
   return (
     <Modal
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
+      open={open}
+      onClose={handleClose}
     >
       <Box
         sx={style}
@@ -27,7 +73,7 @@ const EditEmpProfileModal = () => {
             Update Data
           </h1>
           <IconButton>
-            <CloseIcon className="!text-[16px]" />
+            <CloseIcon className="!text-[16px]" onClick={handleClose} />
           </IconButton>
         </div>
 
@@ -36,10 +82,27 @@ const EditEmpProfileModal = () => {
         </div>
 
         <div className="px-5 space-y-4 mt-4">
-          <div className="space-y-2 "></div>
+          <div className="space-y-2 ">
+            <InputLabel> Phone Number</InputLabel>
+            <FormControl sx={{ width: 300 }}>
+              <TextField size="small" type="Number" fullWidth margin="normal" />
+            </FormControl>
+          </div>
+          <div className="space-y-2 ">
+            <InputLabel> Chat Id</InputLabel>
+            <FormControl sx={{ width: 300 }}>
+              <TextField size="small" type="text" fullWidth margin="normal" />
+            </FormControl>
+          </div>
+          <div className="space-y-2 ">
+            <InputLabel> Status Message</InputLabel>
+            <FormControl sx={{ width: 300 }}>
+              <TextField size="small" type="text" fullWidth margin="normal" />
+            </FormControl>
+          </div>
 
           <div className="flex gap-4  mt-4 justify-end">
-            <Button color="error" variant="outlined">
+            <Button color="error" variant="outlined" onClick={handleClose}>
               Cancel
             </Button>
 
