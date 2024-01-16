@@ -1,34 +1,34 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { Select, MenuItem } from "@mui/material";
 import {
   Box,
   Button,
   CircularProgress,
   Divider,
-  FormControl,
   IconButton,
   Modal,
 } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import { useParams } from "react-router-dom";
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "background.paper",
+  p: 4,
+};
 
 const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const queryClient = useQueryClient();
-
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    bgcolor: "background.paper",
-    p: 4,
-  };
+  const { organisationId } = useParams();
+  const [selectedDay, setSelectedDay] = useState("");
 
   // Generate an array of options for salary calculation days
   const salaryCalculationDays = [
@@ -45,8 +45,39 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
     { value: "last_day_of_current_month", label: "Last day of current month" },
   ];
 
-  //    create the state for selected day
-  const [selectedDay, setSelectedDay] = useState("");
+  // pull the employee salary calculation day of employee in organization
+  const [availableEmpSalCalDay, setEmpSalCalDay] = useState([]);
+  const fetchAvailabeEmpSalCalDay = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee-salary-cal-day/get/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setEmpSalCalDay(response.data.empSalaryCalDayData);
+    } catch (error) {
+      console.error(error);
+      handleAlert(
+        true,
+        "error",
+        "Failed to fetch Available Employee Salary Calculation Day"
+      );
+    }
+  };
+  useEffect(() => {
+    fetchAvailabeEmpSalCalDay();
+    // eslint-disable-next-line
+  }, []);
+
+  // fetch the data of emp sal cal day of employee which is already stored in database
+  useEffect(() => {
+    if (availableEmpSalCalDay) {
+      setSelectedDay(availableEmpSalCalDay[0]?.selectedDay || "");
+    }
+  }, [availableEmpSalCalDay]);
 
   const handleSelectedDay = (event) => {
     setSelectedDay(event.target.value);
@@ -179,23 +210,21 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
 
         <div className="px-5 space-y-4 mt-4">
           <div className="space-y-2 ">
-            <FormControl fullWidth>
-              <Select
-                value={selectedDay}
-                onChange={handleSelectedDay}
-                displayEmpty
-                inputProps={{ "aria-label": "Salary Day" }}
-              >
-                <MenuItem value="" disabled>
-                  Select Employee Salary Calculation Day
-                </MenuItem>
-                {salaryCalculationDays?.map((day) => (
-                  <MenuItem key={day.value} value={day.value}>
-                    {day.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <select
+              value={selectedDay}
+              onChange={handleSelectedDay}
+              style={{
+                width: "750px",
+                padding: "8px",
+                borderColor: "rgba(0, 0, 0, 0.3)",
+              }}
+            >
+              {salaryCalculationDays?.map((day) => (
+                <option key={day.value} value={day.value}>
+                  {day.label}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="flex gap-4  mt-4 justify-end">

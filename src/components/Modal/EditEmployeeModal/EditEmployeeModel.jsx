@@ -16,8 +16,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 
 const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   const { handleAlert } = useContext(TestContext);
@@ -36,7 +34,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     date_of_birth: "",
     joining_date: "",
     bank_account_no: "",
-    profile: "",
   });
   // define the state for store additional info data of employee
   const [additionalInfo, setAdditionalInfo] = useState({
@@ -52,16 +49,21 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     "Martial status": "",
     Education: "",
   });
+  // define the state for stored salary tempalte of employee
+  const [profile, setProfile] = useState([]);
   // define the state for stored worklocation
-  const [selectedWorkLocation, setSelectedWorkLocation] = useState("");
+  const [selectedWorkLocation, setSelectedWorkLocation] = useState(null);
   // define the state for stored deptname
-  const [deptname, setDepartment] = useState([]);
+  const [deptname, setDepartment] = useState(null);
   // define the state for stored designation
-  const [designation, setDesignation] = useState([]);
-  const [employmentType, setEmployementType] = useState("");
-
+  const [designation, setDesignation] = useState(null);
+  // define the state for stored salary tempalte of employee
+  const [salaryTemplate, setSalaryTemplate] = useState(null);
+  // define the state for stored employement type of employee
+  const [employementType, setEmployementType] = useState(null);
   // pull the employee data
   const [employeeData, setEmployeeData] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -84,7 +86,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     fetchData();
     return () => {};
   }, [open, employeeId, authToken]);
-
+  console.log(employeeData);
   // pull the worklocation of organization
   const [availabelLocation, setAvailableLocation] = useState([]);
   const fetchAvailableLocation = async () => {
@@ -107,7 +109,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     fetchAvailableLocation();
     // eslint-disable-next-line
   }, []);
-  console.log(availabelLocation);
 
   // pull the department data
   const [availabelDepartment, setAvailableDepartment] = useState([]);
@@ -152,7 +153,30 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     // eslint-disable-next-line
   }, []);
 
-  // pull the data of employement type
+  // pull the salary template data
+  const [availabelSalaryTemplate, setAvailabaleSalaryTemplate] = useState([]);
+  const fetchAvailableSalaryTemplate = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/salary-template-org/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setAvailabaleSalaryTemplate(response.data.salaryTemplates);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch Available Salary Template");
+    }
+  };
+  useEffect(() => {
+    fetchAvailableSalaryTemplate();
+    // eslint-disable-next-line
+  }, []);
+
+  // pull the employement type of employee
   const [availabelEmpTypes, setAvailableEmpTypes] = useState([]);
   const fetchAvailabeEmpTypes = async () => {
     try {
@@ -176,6 +200,37 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     // eslint-disable-next-line
   }, []);
 
+  const [availableProfiles, setAvailableProfiles] = useState([]);
+  const fetchAvailableProfiles = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/profile/role/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      const rolesArray = Object.entries(response.data.roles ?? {})
+        .filter(([role, obj]) => obj.isActive === true)
+        .map(([role, obj]) => ({
+          roleName: role,
+          isApprover: obj.isApprover,
+          isActive: obj.isActive,
+        }));
+
+      setAvailableProfiles(rolesArray);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch available profiles");
+    }
+  };
+
+  useEffect(() => {
+    fetchAvailableProfiles();
+    // eslint-disable-next-line
+  }, [organisationId]);
+
   // function for changing the data by user
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -185,30 +240,38 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     }));
   };
   const handleLocationChange = (event) => {
-    const selectedLocation = availabelLocation.find(
-      (location) => location.city === event.target.value
-    );
-
-    if (selectedLocation) {
-      setSelectedWorkLocation(selectedLocation._id);
-      console.log(selectedLocation._id);
-    }
+    setSelectedWorkLocation(event.target.value);
   };
 
   // function for change department
   const handleDepartmnetChange = (event) => {
     setDepartment(event.target.value);
-    console.log(event.target.value);
   };
   // function for chnage designation
   const handleDesignationChange = (event) => {
     setDesignation(event.target.value);
-    console.log(event.target.value);
   };
-  // function for chnage employement type
-  const handleEmployeMentType = (event) => {
+
+  // function for change salary template
+  const handleSalaryTemplateChange = (event) => {
+    setSalaryTemplate(event.target.value);
+  };
+  // function for change employement type of employee
+  const handleEmployementChange = (event) => {
     setEmployementType(event.target.value);
-    console.log(event.target.value);
+  };
+  // function for change department
+  const handleProfileChange = (event) => {
+    const selectedProfile = event.target.value;
+    setProfile((prevProfiles) => {
+      if (prevProfiles.includes(selectedProfile)) {
+        // If already selected, remove it
+        return prevProfiles.filter((profile) => profile !== selectedProfile);
+      } else {
+        // If not selected, add it
+        return [...prevProfiles, selectedProfile];
+      }
+    });
   };
 
   // fetch the data in input field which is already stored
@@ -232,7 +295,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
         date_of_birth: formattedDateOfBirth,
         joining_date: formattedJoiningDate,
         bank_account_no: employeeData?.bank_account_no || "",
-        profile: employeeData?.profile || "",
       });
 
       setAdditionalInfo({
@@ -257,14 +319,66 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
         "Shifts allocation":
           employeeData?.additionalInfo?.["Shifts allocation"] || "",
       });
-      const employeeWorkLocations = employeeData.worklocation;
-
-      if (employeeWorkLocations && employeeWorkLocations.length > 0) {
-        const workLocation = employeeWorkLocations[0]?.city || "";
-        setSelectedWorkLocation(workLocation);
+      // pull work location of employee which is already stored in database
+      const employeeWorkLocations = employeeData?.worklocation || "";
+      const workLocationName = employeeWorkLocations[0]?.city || "";
+      const selectedWorkLocationObject = availabelLocation.find(
+        (location) => location.city === workLocationName
+      );
+      if (selectedWorkLocationObject) {
+        setSelectedWorkLocation(selectedWorkLocationObject._id);
+      } else {
+        setSelectedWorkLocation(null);
       }
+      // pull the  department of employee which is already stored in database
+      const employeeDepartment = employeeData?.deptname || "";
+      const employeeDepartmentName =
+        employeeDepartment[0]?.departmentName || "";
+
+      const empDeptObject = availabelDepartment.find(
+        (department) => department.departmentName === employeeDepartmentName
+      );
+
+      if (empDeptObject) {
+        setDepartment(empDeptObject._id);
+      } else {
+        setDepartment(null);
+      }
+      // pull the designation of employee which is already stored in database
+      const employeeDesignation = employeeData?.designation || "";
+      const employeeDesignationName =
+        employeeDesignation[0]?.designationName || "";
+      const empDesignationObject = availabelDesignation.find(
+        (designation) => designation.designationName === employeeDesignationName
+      );
+      if (empDesignationObject) {
+        setDesignation(empDesignationObject._id);
+      } else {
+        setDesignation(null);
+      }
+      // pull the salary template data of employee which is already stored in database
+      const empSalaryTemplate = employeeData?.salarystructure || "";
+      if (empSalaryTemplate) {
+        setSalaryTemplate(empSalaryTemplate._id);
+      } else {
+        setSalaryTemplate(null);
+      }
+      // pull the employement type of employee which is already stored in the database
+      const employementType = employeeData?.employmentType || "";
+      if (employementType) {
+        setEmployementType(employementType._id);
+      } else {
+        setEmployementType(null);
+      }
+      const employeeProfileData = employeeData?.profile || [];
+      setProfile(employeeProfileData);
     }
-  }, [employeeData]);
+  }, [
+    employeeData,
+    availabelLocation,
+    availabelDepartment,
+    availabelDesignation,
+  ]);
 
   // update the data of employee
   const EditEmployeeData = useMutation(
@@ -279,93 +393,12 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
         }
       ),
     {
-      onSuccess: (updatedData) => {
-        queryClient.invalidateQueries(["empData", employeeId]);
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["employeeId"] });
         handleClose();
         handleAlert(true, "success", "Employee updated successfully");
-        // Reload the window to reflect the updated data
         window.location.reload();
-        // Update the local state with the updated data
-        //console.log(updatedData);
-        // console.log(updatedData.data.updatedEmployee.first_name);
-        setFormData((prevData) => ({
-          ...prevData,
-          first_name: updatedData.data.updatedEmployee.first_name || "",
-          last_name: updatedData.data.updatedEmployee.last_name || "",
-          email: updatedData.data.updatedEmployee.email || "",
-          phone_number: updatedData.data.updatedEmployee.phone_number || "",
-          companyemail: updatedData.data.updatedEmployee.companyemail || "",
-          address: updatedData.data.updatedEmployee.address || "",
-          citizenship: updatedData.data.updatedEmployee.citizenship || "",
-          date_of_birth: updatedData.data.updatedEmployee.date_of_birth || "",
-          joining_date: updatedData.data.updatedEmployee.joining_date || "",
-          profile: updatedData.data.updatedEmployee.profile || "",
-          bank_account_no:
-            updatedData.data.updatedEmployee.bank_account_no || "",
-        }));
-        // console.log(formData);
-
-        // Update additionalInfo in local state
-        setAdditionalInfo((prevData) => ({
-          ...prevData,
-          "Adhar Card Number":
-            updatedData.data.updatedEmployee.additionalInfo?.[
-              "Adhar Card Number"
-            ] || "",
-          "Department cost center no":
-            updatedData.data.updatedEmployee.additionalInfo?.[
-              "Department cost center no"
-            ] || "",
-          Education:
-            updatedData.data.updatedEmployee.additionalInfo?.Education || "",
-          "Emergency contact":
-            updatedData.data.updatedEmployee.additionalInfo?.[
-              "Emergency contact"
-            ] || "",
-          "Martial status":
-            updatedData.data.updatedEmployee.additionalInfo?.[
-              "Martial status"
-            ] || "",
-          "Middle Name":
-            updatedData.data.updatedEmployee.additionalInfo?.["Middle Name"] ||
-            "",
-          "Pan Card Number":
-            updatedData.data.updatedEmployee.additionalInfo?.[
-              "Pan Card Number"
-            ] || "",
-          "Permanent Address":
-            updatedData.data.updatedEmployee.additionalInfo?.[
-              "Permanent Address"
-            ] || "",
-          "Primary nationality":
-            updatedData.data.updatedEmployee.additionalInfo?.[
-              "Primary nationality"
-            ] || "",
-          "Relative Information":
-            updatedData.data.updatedEmployee.additionalInfo?.[
-              "Relative Information"
-            ] || "",
-          "Shifts allocation":
-            updatedData.data.updatedEmployee.additionalInfo?.[
-              "Shifts allocation"
-            ] || "",
-        }));
-        setSelectedWorkLocation({
-          selectedWorkLocation:
-            updatedData.data.updatedEmployee.worklocation || "",
-        });
-        setDepartment({
-          deptname: updatedData.data.updatedEmployee.deptname || "",
-        });
-        setDesignation({
-          designation: updatedData.data.updatedEmployee.designation || "",
-        });
-        setEmployementType({
-          employmentType: updatedData.data.updatedEmployee.employmentType || "",
-        });
-        // console.log(worklocation);
       },
-
       onError: () => {
         handleAlert("Failed to update employee. Please try again.");
       },
@@ -383,7 +416,9 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           worklocation: [selectedWorkLocation],
           deptname,
           designation,
-          employmentType,
+          salarystructure: salaryTemplate,
+          employmentType: employementType,
+          profile,
         };
         await EditEmployeeData.mutateAsync(updatedData);
       }
@@ -563,21 +598,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 label="Add Employee Data"
                 name="joining_date"
                 value={formData.joining_date}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-          </div>
-
-          <div className="space-y-2 ">
-            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">
-                Profile
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                label="Profile"
-                name="profile"
-                value={formData.profile}
                 onChange={handleInputChange}
               />
             </FormControl>
@@ -795,89 +815,152 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               />
             </FormControl>
           </div>
-          <div className="space-y-2">
+          <div
+            className="space-y-2"
+            style={{ borderColor: "rgba(0, 0, 0, 0.3)" }}
+          >
+            <label
+              htmlFor="workLocation"
+              style={{ display: "block", color: "#000000" }}
+            >
+              Profile:
+            </label>
             <select
-              value={selectedWorkLocation}
+              multiple // Enable multiple selections
+              value={profile}
+              onChange={handleProfileChange}
+              style={{
+                width: "750px",
+                padding: "8px",
+                borderColor: "rgba(0, 0, 0, 0.3)",
+              }}
+            >
+              {availableProfiles.map((empProfile) => (
+                <option key={empProfile.roleName} value={empProfile.roleName}>
+                  {empProfile.roleName}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div
+            className="space-y-2"
+            style={{ borderColor: "rgba(0, 0, 0, 0.3)" }}
+          >
+            <label
+              htmlFor="workLocation"
+              style={{ display: "block", color: "#000000" }}
+            >
+              Work Location:
+            </label>
+            <select
+              id="workLocation"
+              value={selectedWorkLocation || ""}
               onChange={handleLocationChange}
+              style={{
+                width: "750px",
+                padding: "8px",
+                borderColor: "rgba(0, 0, 0, 0.3)",
+              }}
             >
               {availabelLocation.map((location) => (
-                <option key={location._id} value={location.city}>
+                <option key={location._id} value={location._id}>
                   {location.city}
                 </option>
               ))}
             </select>
           </div>
+
           <div className="space-y-2">
-            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-              <InputLabel htmlFor="work-location-select">
-                Select Department
-              </InputLabel>
-              <Select
-                id="work-location-select"
-                value={deptname}
-                onChange={handleDepartmnetChange}
-                displayEmpty
-                inputProps={{ "aria-label": "Work Location" }}
-                label="Work Location"
-              >
-                <MenuItem value="" disabled>
-                  Select Department
-                </MenuItem>
-                {availabelDepartment?.map((department) => (
-                  <MenuItem key={department._id} value={department._id}>
-                    {department.departmentName}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <label
+              htmlFor="workLocation"
+              style={{ display: "block", color: "#000000" }}
+            >
+              Department:
+            </label>
+            <select
+              value={deptname || ""}
+              onChange={handleDepartmnetChange}
+              style={{
+                width: "750px",
+                padding: "8px",
+                borderColor: "rgba(0, 0, 0, 0.3)",
+              }}
+            >
+              {availabelDepartment.map((department) => (
+                <option key={department._id} value={department._id}>
+                  {department.departmentName}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="space-y-2">
-            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-              <InputLabel htmlFor="work-location-select">
-                Select Designation
-              </InputLabel>
-              <Select
-                id="work-location-select"
-                value={designation}
-                onChange={handleDesignationChange}
-                displayEmpty
-                inputProps={{ "aria-label": "Work Location" }}
-                label="Work Location"
-              >
-                <MenuItem value="" disabled>
-                  Select Designation
-                </MenuItem>
-                {availabelDesignation?.map((designation) => (
-                  <MenuItem key={designation._id} value={designation._id}>
-                    {designation.designationName}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <label
+              htmlFor="workLocation"
+              style={{ display: "block", color: "#000000" }}
+            >
+              Designation:
+            </label>
+            <select
+              value={designation || ""}
+              onChange={handleDesignationChange}
+              style={{
+                width: "750px",
+                padding: "8px",
+                borderColor: "rgba(0, 0, 0, 0.3)",
+              }}
+            >
+              {availabelDesignation.map((designation) => (
+                <option key={designation._id} value={designation._id}>
+                  {designation.designationName}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="space-y-2">
-            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-              <InputLabel htmlFor="work-location-select">
-                Select Employement Type
-              </InputLabel>
-              <Select
-                id="work-location-select"
-                value={employmentType}
-                onChange={handleEmployeMentType}
-                displayEmpty
-                inputProps={{ "aria-label": "Work Location" }}
-                label="Work Location"
-              >
-                <MenuItem value="" disabled>
-                  Select Employement Type
-                </MenuItem>
-                {availabelEmpTypes?.map((emptypes) => (
-                  <MenuItem key={emptypes._id} value={emptypes._id}>
-                    {emptypes.title}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <label
+              htmlFor="workLocation"
+              style={{ display: "block", color: "#000000" }}
+            >
+              Salary Template:
+            </label>
+            <select
+              value={salaryTemplate || ""}
+              onChange={handleSalaryTemplateChange}
+              style={{
+                width: "750px",
+                padding: "8px",
+                borderColor: "rgba(0, 0, 0, 0.3)",
+              }}
+            >
+              {availabelSalaryTemplate.map((salarytemplate) => (
+                <option key={salarytemplate._id} value={salarytemplate._id}>
+                  {salarytemplate.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label
+              htmlFor="workLocation"
+              style={{ display: "block", color: "#000000" }}
+            >
+              Employement Type:
+            </label>
+            <select
+              value={employementType || ""}
+              onChange={handleEmployementChange}
+              style={{
+                width: "750px",
+                padding: "8px",
+                borderColor: "rgba(0, 0, 0, 0.3)",
+              }}
+            >
+              {availabelEmpTypes.map((empType) => (
+                <option key={empType._id} value={empType._id}>
+                  {empType.title}
+                </option>
+              ))}
+            </select>
           </div>
 
           <DialogActions>
@@ -894,7 +977,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               {EditEmployeeData.isLoading ? (
                 <CircularProgress size={20} />
               ) : (
-                "Edit Employee Data"
+                "Apply"
               )}
             </Button>
           </DialogActions>
