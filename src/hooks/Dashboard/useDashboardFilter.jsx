@@ -10,6 +10,25 @@ export default function useDashboardFilter(organisationId) {
   const [manager, setManager] = useState("");
   const [locations, setLocations] = useState("");
   const [data, setData] = useState([]);
+  const [salaryData, setSalaryData] = useState([]);
+
+  // Card Data
+  const { data: absentEmployee } = useQuery(
+    ["absents", organisationId],
+    async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/leave/getAbsent/${organisationId}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        return response.data;
+      } catch (error) {}
+    }
+  );
 
   // Department data
   const getAPIData = async (url) => {
@@ -111,7 +130,7 @@ export default function useDashboardFilter(organisationId) {
     },
   };
 
-  // Dashboard Filterd data
+  // Dashboard attendence Filterd data
   async function getAttendenceData(endPoint) {
     try {
       const { data } = await axios.get(`${endPoint}`, {
@@ -135,10 +154,11 @@ export default function useDashboardFilter(organisationId) {
         `${process.env.REACT_APP_API}/route/leave/getOrganizationAttendece/${organisationId}`
       ),
     {
-      onSuccess: (organizationAttendenceData) =>
-        setData(organizationAttendenceData),
+      onSuccess: (organizationAttendenceData) => {
+        setData(organizationAttendenceData);
+      },
       enabled: !department && !locations,
-      staleTime: Infinity,
+      staleTime: 0,
     }
   );
 
@@ -178,6 +198,81 @@ export default function useDashboardFilter(organisationId) {
     }
   );
 
+  //! Salary Area Graph Data For filter data
+  // Dashboard Filterd data
+  async function getSalaryData(endPoint) {
+    try {
+      const { data } = await axios.get(`${endPoint}`, {
+        headers: {
+          Authorization: authToken,
+        },
+      });
+      // const currentYear = new Date().getFullYear();
+      // const filterData = data.filter((item) => item.year === currentYear);
+
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useQuery(
+    ["Org-Salary-overview", organisationId],
+    () =>
+      getSalaryData(
+        `${process.env.REACT_APP_API}/route/employeeSalary/organizationSalaryOverview/${organisationId}`
+      ),
+    {
+      onSuccess: (organizationAttendenceData) => {
+        setSalaryData(organizationAttendenceData);
+      },
+      enabled: !department && !locations,
+      staleTime: 0,
+    }
+  );
+
+  useQuery(
+    ["department-salary", department],
+    () =>
+      getSalaryData(
+        `${process.env.REACT_APP_API}/route/employeeSalary/departmentSalaryOverview/${department}`
+      ),
+    {
+      onSuccess: (organizationAttendenceData) => {
+        setSalaryData(organizationAttendenceData);
+      },
+      enabled: !!department,
+    }
+  );
+
+  useQuery(
+    ["manager-salary", manager],
+    () =>
+      getSalaryData(
+        `${process.env.REACT_APP_API}/route/employeeSalary/managerSalaryOverview/${manager}`
+      ),
+    {
+      onSuccess: (organizationAttendenceData) => {
+        setSalaryData(organizationAttendenceData);
+      },
+      enabled: !!manager,
+    }
+  );
+
+  useQuery(
+    ["location-salary", locations],
+    () =>
+      getSalaryData(
+        `${process.env.REACT_APP_API}/route/employeeSalary/locationSalaryOverview/${locations}`
+      ),
+    {
+      onSuccess: (organizationAttendenceData) => {
+        setSalaryData(organizationAttendenceData);
+      },
+      enabled: !!locations,
+    }
+  );
+
   return {
     // data for select fileds and super admin cards
     Department,
@@ -207,5 +302,11 @@ export default function useDashboardFilter(organisationId) {
     setManager,
     department,
     setDepartment,
+
+    // TODO
+    salaryData,
+
+    // CardsData
+    absentEmployee,
   };
 }

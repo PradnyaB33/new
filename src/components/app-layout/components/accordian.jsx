@@ -72,6 +72,7 @@ const NavAccordian = ({
                   borderRadius: "8px",
                   width: "100%",
                 }}
+                className={`${route.isVisible ? "block" : "hidden"}`}
                 components={{ Root: "div" }}
                 key={route.key}
               >

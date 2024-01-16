@@ -7,14 +7,12 @@ import {
   LocationOn,
   West,
 } from "@mui/icons-material";
-import axios from "axios";
 import React from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import Select from "react-select";
 import useDashboardFilter from "../../../hooks/Dashboard/useDashboardFilter";
 import useEmployee from "../../../hooks/Dashboard/useEmployee";
-import useAuthToken from "../../../hooks/Token/useAuth";
 import LineGraph from "../Components/Bar/LineGraph";
 import AttendenceBar from "../Components/Bar/SuperAdmin/AttendenceBar";
 import SuperAdminCard from "../Components/Card/superadmin/SuperAdminCard";
@@ -22,7 +20,6 @@ import SkeletonFilterSection from "../Components/Skeletons/SkeletonFilterSection
 
 const SuperAdmin = () => {
   const { organisationId } = useParams();
-  const authToken = useAuthToken();
   const queryClient = useQueryClient();
   // custom hooks
   const { employee, employeeLoading } = useEmployee(organisationId);
@@ -45,30 +42,31 @@ const SuperAdmin = () => {
     setManager,
     department,
     setDepartment,
+    salaryData,
   } = useDashboardFilter(organisationId);
 
   // Salary Graph Data
-  const OrganizationSalaryOverview = async () => {
-    try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/employeeSalary/organizationSalaryOverview/${organisationId}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
+  // const OrganizationSalaryOverview = async () => {
+  //   try {
+  //     const { data } = await axios.get(
+  //       `${process.env.REACT_APP_API}/route/employeeSalary/organizationSalaryOverview/${organisationId}`,
+  //       {
+  //         headers: {
+  //           Authorization: authToken,
+  //         },
+  //       }
+  //     );
 
-      return data;
-    } catch (error) {
-      console.log("errr", error);
-    }
-  };
+  //     return data;
+  //   } catch (error) {
+  //     console.log("errr", error);
+  //   }
+  // };
 
-  const { data: OrganizationSalaryAttendence } = useQuery(
-    "Org-Salary-overview",
-    OrganizationSalaryOverview
-  );
+  // const { data: OrganizationSalaryAttendence } = useQuery(
+  //   "Org-Salary-overview",
+  //   OrganizationSalaryOverview
+  // );
 
   //? Salary Graph Data
 
@@ -217,7 +215,7 @@ const SuperAdmin = () => {
 
         <div className="w-full gap-4 mt-4 flex items-center">
           <div className="w-[50%]">
-            <LineGraph salarydata={OrganizationSalaryAttendence} />
+            <LineGraph salarydata={salaryData} />
           </div>
           <div className="w-[50%]">
             <AttendenceBar
