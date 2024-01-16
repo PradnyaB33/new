@@ -48,6 +48,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
   const isFormClean = Object.keys(formState.dirtyFields).length === 0;
 
   const onSubmit = async (data) => {
+    console.log(data);
     try {
       // Make the PATCH request using axios
       const response = await axios.post(
@@ -64,9 +65,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
       // Invalidate the query to refetch the data
       queryClient.invalidateQueries("leaveTypes");
       // Close the modal
-
       handleClose();
-      form.reset();
     } catch (error) {
       // Handle error
       console.error(error);
@@ -90,6 +89,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
 
   return (
     <Modal
+      keepMounted={false}
       open={open}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
@@ -129,7 +129,6 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
                       }}
                       size="small"
                       type="number"
-                      // {...field}
                     />
                   );
                 }}
@@ -140,30 +139,32 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
               <Controller
                 name="color"
                 control={control}
-                render={({ field }) => (
-                  <div
-                    className="rounded-full overflow-hidden relative"
-                    style={{
-                      height: "40px",
-                      width: "40px",
-                    }}
-                  >
-                    <input
-                      value={field.value}
-                      required
-                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                render={({ field }) => {
+                  return (
+                    <div
+                      className="rounded-full overflow-hidden relative"
                       style={{
-                        height: "60px",
-                        width: "60px",
-                        padding: "0",
-                        border: "none",
+                        height: "40px",
+                        width: "40px",
                       }}
-                      type="color"
-                      id="favcolor"
-                      onChange={(e) => field.onChange(e.target.value)}
-                    />
-                  </div>
-                )}
+                    >
+                      <input
+                        value={field.value}
+                        required
+                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                        style={{
+                          height: "60px",
+                          width: "60px",
+                          padding: "0",
+                          border: "none",
+                        }}
+                        type="color"
+                        id="favcolor"
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
+                    </div>
+                  );
+                }}
               />
             </FormControl>
             <FormControl component="fieldset">
