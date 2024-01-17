@@ -1,4 +1,4 @@
-// Import necessary components and icons
+//todo 
 import React, { useState, useContext, useEffect } from "react";
 import {
   Button,
@@ -82,6 +82,8 @@ const EmailSetting = () => {
 
       setNewHandleOpen(false);
       setHandleOpen(false);
+
+      //! adding the newly created email to the emails state
 
       setEmails([...emails, response.data.email]); // Add the newly created email to the emails state
       setEmail("");

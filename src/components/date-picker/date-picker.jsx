@@ -30,18 +30,16 @@ const AppDatePicker = ({
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-  const { data2 } = useQuery("employee-disable-weekends", async () => {
+  const { data: data2 } = useQuery("employee-disable-weekends", async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/weekend/get`,
       {
         headers: { Authorization: authToken },
       }
     );
-    console.log(`🚀 ~ file: date-picker.jsx:40 ~ response:`, response);
 
     return response.data;
   });
-  console.log(`🚀 ~ file: date-picker.jsx:43 ~ data2:`, data2);
   const handleSelectEvent = (event) => {
     setSelectedLeave(event);
     setCalendarOpen(true);
@@ -57,16 +55,19 @@ const AppDatePicker = ({
   const dayPropGetter = (date) => {
     const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "short" });
 
+
+
     // Check if the current day is in the data? array
     const isDisabled = data2?.days?.some((day) => {
-      return day.days.some((day) => day.day === dayOfWeek);
+      return day.days.some((day) => {
+        return (day.day === dayOfWeek)
+      });
     });
-
     if (isDisabled) {
       return {
         style: {
           pointerEvents: "none",
-          backgroundColor: "#ffb4b4",
+          backgroundColor: "#cd1111",
         },
       };
     }
@@ -75,32 +76,32 @@ const AppDatePicker = ({
   };
 
   const handleSelectSlot = ({ start, end }) => {
-    // Convert start time to JavaScript Date object
-    const startDat2e = new Date(start);
+    const selectedStartDate = moment(start).startOf("day");
+    const selectedEndDate = moment(end).startOf("day");
 
-    // Add one minute to the start time
-    startDat2e.setMinutes(startDat2e.getMinutes() + 1);
-    console.log(`🚀 ~ file: date-picker.jsx:85 ~ startDat2e:`, startDat2e);
-    start = startDat2e;
-
-    const selectedStartDate = momentWithRange(start);
-    const selectedEndDate = momentWithRange(end);
-    const startDate = moment(start).startOf("day"); // Extract date, start at midnight
-
-    // Check if the selected date range includes any disabled days
+    // Check if any disabled days are part of the selected range
     const includesDisabledDay = data2?.days?.some((day) => {
-      const disabledDate = moment(startDate).day(day.index);
-
-      // Check if the entire day is disabled
-      const isDisabledDay = moment(disabledDate).isSame(startDate, "day");
-
-      // Check if the selected date range overlaps with the disabled day
-      const isOverlap =
-        selectedStartDate.isBefore(moment(disabledDate)) &&
-        selectedEndDate.isAfter(moment(disabledDate));
-
-      return isDisabledDay && isOverlap;
+      const disabledDate = moment(selectedStartDate).day(day.index);
+      return selectedStartDate.isSame(disabledDate, "day");
     });
+
+    // Check if the selected date range includes any days with the specified style
+    const isDisabledStyle = data2?.days?.some((day) => {
+      // Check if the selected day is in the array of disabled days
+      return day.days.some((disabledDay) => {
+        return disabledDay.day === selectedStartDate.format("ddd");
+      });
+    });
+
+    if (isDisabledStyle) {
+      handleAlert(true, "warning", "You cannot select these days for leave");
+      return;
+    }
+
+    if (isDisabledStyle) {
+      handleAlert(true, "warning", "You cannot select these days for leave");
+      return;
+    }
 
     if (includesDisabledDay) {
       handleAlert(true, "warning", "You cannot select disabled days for leave");
@@ -112,12 +113,12 @@ const AppDatePicker = ({
       ...newAppliedLeaveEvents,
     ].some(
       (event) =>
-        (selectedStartDate.isSameOrAfter(moment(event.start)) &&
-          selectedStartDate.isBefore(moment(event.end))) ||
-        (selectedEndDate.isAfter(moment(event.start)) &&
-          selectedEndDate.isSameOrBefore(moment(event.end))) ||
-        (selectedStartDate.isBefore(moment(event.start)) &&
-          selectedEndDate.isAfter(moment(event.end)))
+        (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
+          selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
+        (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
+          selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
+        (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
+          selectedEndDate.isAfter(moment(event.end).startOf("day")))
     );
 
     if (isOverlap) {
@@ -147,6 +148,7 @@ const AppDatePicker = ({
         setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
       }
     }
+    
   };
 
   const CustomToolbar = (toolbar) => {
@@ -258,6 +260,7 @@ const AppDatePicker = ({
       <div className=" bg-white shadow-lg z-10">
         <div className="w-full">
           <Calendar
+
             localizer={localizer}
             views={["month"]}
             components={{

@@ -15,9 +15,36 @@ import axios from "axios";
 import { useQuery, useQueryClient } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-// import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import Skeleton from "@mui/material/Skeleton";
 
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+const SkeletonRow = () => (
+  <tr className="!font-medium border-b !space-y-3">
+    <td className="!text-left !pl-9 !mr-5 w-1/12">
+      <Skeleton variant="text" width={30} height={20} />
+    </td>
+    <td className="w-2/12 pt-2 pb-2">
+      <div className="flex gap-1">
+        <Skeleton
+          variant="circle"
+          width={50}
+          height={50}
+          style={{borderRadius:"50%"}}
+        />
+        <Skeleton
+          variant="circle"
+          width={50}
+          height={50}
+          style={{borderRadius:"50%"}}
+        />
+      </div>
+    </td>
+    <td className="px-6 w-2/12">
+      <Skeleton variant="circle" width={30} height={30} />
+    </td>
+  </tr>
+);
 
 const WeekdaySelector = ({ selectedDays, handleDayToggle, getColor }) => {
   return (
@@ -26,15 +53,15 @@ const WeekdaySelector = ({ selectedDays, handleDayToggle, getColor }) => {
         <Grid item key={day} xs={6} sm={4} md={3} lg={2}>
           <Chip
             label={day}
-            onClick={() => handleDayToggle(day, index)} // Pass index to handleDayToggle
-            className=" text-2xl"
+            onClick={() => handleDayToggle(day, index)}
+            className="text-2xl"
             style={{
               backgroundColor: selectedDays.includes(day) ? getColor(day) : 'gray',
               borderRadius: "50%",
               width: "55px",
               height: "55px",
               cursor: "pointer",
-              color:"white",
+              color: "white",
               border: "1px solid gray",
             }}
           />
@@ -47,24 +74,13 @@ const WeekdaySelector = ({ selectedDays, handleDayToggle, getColor }) => {
 const WeekendHoliday = () => {
   const organizationId = useParams().organisationId;
   const [selectedDays, setSelectedDays] = useState([]);
-  //todo this is the dialog box of edit model
   const [openModel, setOpenModel] = useState(false);
   const { setAppAlert } = useContext(UseContext);
   const [editItem, setEditItem] = useState(null);
-  // const { cookies } = useContext(UseContext);
-  // const authToken = cookies["aeigs"];
-  console.log(organizationId);
-
-  //! this is the dialog box of delete model
   const [deleteModel, setDeleteModel] = useState(false);
   const [ID, setID] = useState("");
   const queryClient = useQueryClient();
 
-  // const handleEdit = (item) => {
-  //   setEditItem(item);
-  //   setSelectedDays(item.days);
-  //   setOpenModel(true);
-  // };
   const handleDayToggle = (day, index) => {
     const updatedDays = selectedDays.includes(day)
       ? selectedDays.filter((selected) => selected !== day)
@@ -77,8 +93,9 @@ const WeekendHoliday = () => {
   const getColor = (day) => {
     const index = daysOfWeek.indexOf(day);
     const hue = (index * 40) % 360;
-    return `hsl(${hue}, 80%, 40%)`; // Adjust the saturation and lightness values
+    return `hsl(${hue}, 80%, 40%)`;
   };
+
   const handleSubmit = async () => {
     try {
       const daysArray = selectedDays.map(day => ({ day }));
@@ -133,6 +150,7 @@ const WeekendHoliday = () => {
       });
     }
   };
+
   const handleDelete = async () => {
     try {
       console.log(ID);
@@ -160,24 +178,12 @@ const WeekendHoliday = () => {
     }
   };
 
-
   const handleOpenClose = () => {
     setOpenModel((prevstate) => !prevstate);
     setSelectedDays([]);
     setDeleteModel(false);
-    setEditItem()
+    setEditItem(null);
   };
-
-  // useEffect(() =>{
-  //   (async() =>{
-
-  //       await axios.get(`${process.env.REACT_APP_API}/route/weekend/get/${organizationId}`).then((e)=>{
-  //         console.log(e.data.days);
-  //       }).catch(e => console.log(e))
-
-  //   })()
-  // })
-
 
   const fetchDays = async () => {
     try {
@@ -185,7 +191,6 @@ const WeekendHoliday = () => {
         `${process.env.REACT_APP_API}/route/weekend/get/${organizationId}`
       );
       return response.data.days || [];
-
     } catch (error) {
       console.error("Error fetching days:", error);
       throw error;
@@ -193,10 +198,6 @@ const WeekendHoliday = () => {
   };
 
   const { data, isLoading } = useQuery("days", fetchDays);
-  console.log(data);
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
@@ -207,7 +208,6 @@ const WeekendHoliday = () => {
               <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                 <WeekendOutlinedIcon className="!text-lg text-white" />
               </div>
-
               <h1 className="!text-lg tracking-wide">Weekend Holidays</h1>
             </div>
             <Button
@@ -235,64 +235,56 @@ const WeekendHoliday = () => {
                 </tr>
               </thead>
               <tbody>
-                
-             {
-
-              data.length <= 0 ? (<tr className="w-full !font-medium border-b text relative">No data to display</tr>)
-             
-             :
-             (data && data?.map((item, idx) => (
-                  
-                  <tr className="!font-medium border-b !space-y-3" key={idx}>
-                    <td className="!text-left !pl-9 !mr-5 w-1/12 ">{idx + 1}</td>
-                    <td style={{marginRight:"1rem"}} className="w-2/12 pt-2 pb-2">
-                      <div className="flex gap-1">
-                        {item.days.map((day, dayIdx) => (
-                          <Chip
-                            key={dayIdx}
-                            label={day.day}
-                            className="text-sm"
-                            style={{
-                              backgroundColor: getColor(day.day),
-                              borderRadius: "50%",
-                              width: "50px",
-                              height: "50px",
-                              cursor: "pointer",
-                              border: "1px solid gray",
-                              color: "white",
-                              fontSize: "12.5px",
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          />
-                        ))}
-                      </div>
-                    </td>
-                    <td className="px-6 w-2/12">
-                      {/* <IconButton
-                        color="primary"
-                        aria-label="edit"
-                        style={{ paddingTop: "0.8rem" }}
-                        onClick={() => handleEdit(item)}
-                      >
-                        <EditOutlinedIcon />
-                      </IconButton> */}
-                      <IconButton
-                        color="error"
-                        aria-label="delete"
-                        style={{ paddingTop: "0.8rem" }}
-                        onClick={() => {
-                          setID(item._id);
-                          setDeleteModel(true);
-                          console.log(ID);
-                        }}
-                      >
-                        <DeleteOutlineIcon />
-                      </IconButton>
-                    </td>
-                  </tr>
-                )))}
-
+                {isLoading ? (
+                  <>
+                    <SkeletonRow />
+                    <SkeletonRow />
+                    <SkeletonRow />
+                  </>
+                ) : (
+                  data && data?.map((item, idx) => (
+                    <tr className="!font-medium border-b !space-y-3" key={idx}>
+                      <td className="!text-left !pl-9 !mr-5 w-1/12 ">{idx + 1}</td>
+                      <td style={{ marginRight: "1rem" }} className="w-2/12 pt-2 pb-2">
+                        <div className="flex gap-1">
+                          {item.days.map((day, dayIdx) => (
+                            <Chip
+                              key={dayIdx}
+                              label={day.day}
+                              className="text-sm"
+                              style={{
+                                backgroundColor: getColor(day.day),
+                                borderRadius: "50%",
+                                width: "50px",
+                                height: "50px",
+                                cursor: "pointer",
+                                border: "1px solid gray",
+                                color: "white",
+                                fontSize: "12.5px",
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </td>
+                      <td className="px-6 w-2/12">
+                        <IconButton
+                          color="error"
+                          aria-label="delete"
+                          style={{ paddingTop: "0.8rem" }}
+                          onClick={() => {
+                            setID(item._id);
+                            setDeleteModel(true);
+                            console.log(ID);
+                          }}
+                        >
+                          <DeleteOutlineIcon />
+                        </IconButton>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
 
@@ -337,21 +329,20 @@ const WeekendHoliday = () => {
                     />
                   </div>
                   <div className="flex gap-5 !pt-5">
-
-                  <Button
-                    onClick={handleSubmit}
-                    variant="contained"
-                    color="secondary"
-                  >
-                    {editItem ? "Update" : "Set"}
-                  </Button>
-                  <Button
-                    onClick={handleOpenClose}
-                    variant="contained"
-                    color="error"
-                  >
-                    Cancel
-                  </Button>
+                    <Button
+                      onClick={handleSubmit}
+                      variant="contained"
+                      color="secondary"
+                    >
+                      {editItem ? "Update" : "Set"}
+                    </Button>
+                    <Button
+                      onClick={handleOpenClose}
+                      variant="contained"
+                      color="error"
+                    >
+                      Cancel
+                    </Button>
                   </div>
                 </DialogContent>
               </DialogActions>

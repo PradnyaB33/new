@@ -13,7 +13,6 @@ const useLeaveData = () => {
   const queryclient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
   const [selectedLeave, setSelectedLeave] = useState(null);
-  console.log(`🚀 ~ file: useLeaveData.jsx:15 ~ selectedLeave:`, selectedLeave);
   const [selectEvent, setselectEvent] = useState(false);
 
   const { data, isLoading, isError, error } = useQuery(
@@ -52,7 +51,6 @@ const useLeaveData = () => {
   };
   const leaveMutation = useMutation(createLeaves, {
     onSuccess: () => {
-      console.log("success");
 
       queryclient.invalidateQueries("employee-leave-table");
       queryclient.invalidateQueries("employee-leave-table");
