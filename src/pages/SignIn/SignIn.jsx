@@ -30,12 +30,14 @@ const SignIn = () => {
         `Welcome ${response.data.user.first_name} you are logged in successfully`
       );
 
-      if (response.data.user.profile.length === 1) {
-        redirect("/organisation/dashboard/employee-dashboard");
+      if (response.data.user.profile.includes("Super-Admin")) {
+        redirect("/");
       } else if (response.data.user.profile.includes("Hr")) {
         redirect("/organisation/dashboard/HR-dashboard");
       } else if (response.data.user.profile.includes("Manager")) {
         redirect("/organisation/dashboard/manager-dashboard");
+      } else if (response.data.user.profile.length === 1) {
+        redirect("/organisation/dashboard/employee-dashboard");
       } else {
         redirect("/");
       }
@@ -104,10 +106,13 @@ const SignIn = () => {
               </div>
             </div> */}
 
-            <div className="flex flex-col space-y-1">
-              <div className="mb-4">
+            <div className="flex space-x-4 items-center">
+              <img src="/logo.svg" className="h-[45px]" alt="logo" />
+              <div className="flex flex-col space-y-1">
+                {/* <div className="mb-4"> */}
                 <h1 className="font-[600] text-3xl">Log into AEGIS Account</h1>
                 <p className="text-lg">Enter your login credentials below</p>
+                {/* </div> */}
               </div>
             </div>
 
