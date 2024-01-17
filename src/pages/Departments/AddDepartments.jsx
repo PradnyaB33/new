@@ -30,7 +30,7 @@ const AddDepartments = () => {
   const [numCharacters, setNumCharacters] = useState(1);
   const [departmentNameError, setDepartmentNameError] = useState("");
 
-  //   fetch the location
+  // fetch the location
   const [locationsData, setLocationsData] = useState([]);
   useEffect(() => {
     axios
@@ -48,6 +48,44 @@ const AddDepartments = () => {
       .catch((error) => console.error("Error fetching locations:", error));
   }, [authToken, organisationId]);
 
+  //fetch the department head
+  const [departmentHeadData, setDepartmentHeadData] = useState([]);
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_API}/route/employee/get-department-head/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      )
+      .then((response) => {
+        setDepartmentHeadData(response.data.employees);
+      })
+      .catch((error) => console.error("Error fetching Data:", error));
+  }, [authToken, organisationId]);
+  console.log(departmentHeadData);
+
+  //fetch the department delegate head
+  const [deptDelegateHeadData, setDeptDelegateHeadData] = useState([]);
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_API}/route/employee/get-department-delegate-head/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      )
+      .then((response) => {
+        setDeptDelegateHeadData(response.data.employees);
+      })
+      .catch((error) => console.error("Error fetching Data:", error));
+  }, [authToken, organisationId]);
+  console.log(deptDelegateHeadData);
+
   //  store department id
   const handleDepartmentIdChange = (e) => {
     const input = e.target.value;
@@ -56,7 +94,7 @@ const AddDepartments = () => {
       setDepartmentId(input);
     }
   };
-
+  // add validaion while enter the departname name
   const handleDepartmentNameChange = (e) => {
     const enteredValue = e.target.value;
     // Validation logic
