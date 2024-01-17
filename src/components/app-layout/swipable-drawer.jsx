@@ -64,12 +64,11 @@ export default function SwipeableTemporaryDrawer() {
         color="white"
         anchor="left"
         open={open}
-        // open={true}
         onClose={toggleDrawer} // Removed unnecessary function call here
         onOpen={toggleDrawer} // Removed unnecessary function call here
       >
         <div className="py-4 px-10 border-b-[.5px] flex  items-center gap-4 border-gray-300 ">
-          <img src="logo.svg" className="h-[30px]" alt="logo" />
+          <img src="/logo.svg" className="h-[30px]" alt="logo" />
           <div>
             <h1 className="text-2xl">Aegis</h1>
           </div>

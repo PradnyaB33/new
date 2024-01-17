@@ -6,7 +6,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   FormControlLabel,
   IconButton,
@@ -37,15 +36,13 @@ const DepartmentList = () => {
   const [costCenterDescription, setCostCenterDescription] = useState("");
   const [organizationLocationId, setOrganizationLocationId] = useState("");
   const [departmentDescription, setDepartmentDescription] = useState("");
-  const [confirmOpen, setConfirmOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-  const [deleteIndex, setDeleteIndex] = useState(null);
   const [open, setOpen] = useState(false);
   const [locations, setLocations] = useState([]);
   const [locationID, setLocationId] = useState('');
   const [enterDepartmentId, setEnterDepartmentId] = useState(false);
   const [numCharacters, setNumCharacters] = useState(0);
-  console.log(departmentList);
+
   const Employees = [
     { label: "Ramesh patnayak", email: "ramesh1@gmail.com" },
     { label: "Raj Sathe", email: "rsathe@gmail.com" },
@@ -94,7 +91,6 @@ const DepartmentList = () => {
       )
       .then((response) => {
         setLocations(response.data.locationsData);
-        console.log("locations are: ", response.data);
       })
       .catch((error) => console.error("Error fetching locations:", error));
   }, [authToken, organizationId]);
@@ -110,7 +106,7 @@ const DepartmentList = () => {
             },
           }
         );
-        console.log(response);
+
         setDepartmentList(response.data.department);
       } catch (error) {
         console.error(error.response.data.message);
@@ -127,40 +123,6 @@ const DepartmentList = () => {
     if (charactersOnly.length <= numCharacters) {
       setDepartmentId(input);
     }
-  };
-
-  const handleDeleteDepartmentConfirmation = (index) => {
-    setConfirmOpen(true);
-    setDeleteIndex(index);
-  };
-
-  const handleDeleteDepartment = async () => {
-    try {
-      await axios.delete(
-        `${process.env.REACT_APP_API}/route/department/delete/${departmentList.department[deleteIndex]._id}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/department/get/${organizationId}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      setDepartmentList(response.data.department);
-
-      handleAlert(true, "success", "Department deleted successfully");
-    } catch (error) {
-      console.error(error.response);
-      handleAlert(true, "error", error.response);
-    }
-    setConfirmOpen(false);
   };
 
   const handleClose = () => {
@@ -230,6 +192,12 @@ const DepartmentList = () => {
       handleAlert(true, "error", error.response);
     }
   };
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  // Delete Query for deleting single Employee
+  const handleDeleteConfirmation = (id) => {
+    setDeleteConfirmation(id);
+  };
+  console.log(deleteConfirmation);
 
   return (
     <div>
@@ -290,14 +258,12 @@ const DepartmentList = () => {
                     >
                       <Edit className="!text-xl" color="success" />
                     </IconButton>
-                    <IconButton
-                      onClick={() => {
-                        handleDeleteDepartmentConfirmation(index);
-                        setDeleteIndex(index);
-                      }}
-                      aria-label="delete"
-                    >
-                      <Delete className="!text-xl" color="error" />
+                    <IconButton aria-label="delete">
+                      <Delete
+                        className="!text-xl"
+                        color="error"
+                        onClick={() => handleDeleteConfirmation(index)}
+                      />
                     </IconButton>
                   </td>
                 </tr>
@@ -480,12 +446,7 @@ const DepartmentList = () => {
                 id="departmentHeadName"
                 value={departmentHeadName}
                 options={Employees}
-                onChange={(e, value) => {
-                  // const headName = value ? value.label : "";
-                  // handleChange({
-                  //   target: { name: "departmentHeadName", value: headName },
-                  // });
-                }}
+                onChange={(e, value) => {}}
                 isOptionEqualToValue={(option, value) =>
                   option.label === value.label
                 }
@@ -505,15 +466,7 @@ const DepartmentList = () => {
                 id="departmentHeadDelegateName"
                 value={departmentHeadDelegateName}
                 options={Employees}
-                onChange={(e, value) => {
-                  // const delegateName = value ? value.label : "";
-                  // handleChange({
-                  //   target: {
-                  //     name: "departmentHeadDelegateName",
-                  //     value: delegateName,
-                  //   },
-                  // });
-                }}
+                onChange={(e, value) => {}}
                 isOptionEqualToValue={(option, value) =>
                   option.label === value.label
                 }
@@ -555,25 +508,6 @@ const DepartmentList = () => {
                     defaultMessage="Add Location"
                   />
                 )}
-              </Button>
-            </DialogActions>
-          </Dialog>
-          <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
-            <DialogTitle>Confirm Deletion</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Are you sure you want to delete this department?
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setConfirmOpen(false)} color="primary">
-                Cancel
-              </Button>
-              <Button
-                onClick={() => handleDeleteDepartment(deleteIndex)}
-                color="primary"
-              >
-                Delete
               </Button>
             </DialogActions>
           </Dialog>
