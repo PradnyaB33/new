@@ -18,7 +18,6 @@ import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import Designation from "./pages/Designation/Designation";
 import EmployeeList from "./pages/EmployeeList/EmployeeList";
 import Home from "./pages/Home/Home";
-import AddProfile from "./pages/Home/components/addprofile";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
@@ -140,7 +139,7 @@ const App = () => {
         path="/organisation/:organisationId/employee-list"
         element={<EmployeeList />}
       />
-      <Route path="/organisation/:id/add-profile" element={<AddProfile />} />
+
       <Route
         path="/organisation/:organisationId/setup/input-field"
         element={<Inputfield />}
