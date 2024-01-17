@@ -33,7 +33,8 @@ export default function SwipeableTemporaryDrawer() {
     <div
       className={`${
         location.pathname.includes("/sign-in") ||
-        location.pathname.includes("/sign-up")
+        location.pathname.includes("/sign-up") ||
+        location.pathname.includes("/terms-and-conditions")
           ? "hidden"
           : "block"
       }`}

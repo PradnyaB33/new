@@ -60,11 +60,8 @@ const DepartmentList = () => {
   const handleEditDepartment = async (index) => {
     setEditIndex(index);
     setOpen(true);
-
     console.log(departmentList);
     const selectedDepartment = departmentList[index]
-
-
     console.log(selectedDepartment);
     setDepartmentId(selectedDepartment.departmentId);
     setDepartmentName(selectedDepartment.departmentName);
@@ -358,12 +355,12 @@ const DepartmentList = () => {
                 style={{ marginBottom: "10px" }}
                 disablePortal
                 id="departmentLocation"
-                value={locations.find((loc) => loc._id === locationID) || null}
+                value={departmentLocation}
                 options={locations}
                 onChange={(e, value) => {
                   setLocationId(value ? value._id : null);
                 }}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
+                isOptionEqualToValue={(option, value) => option.shortName === value.shortName}
                 getOptionLabel={(option) => option.shortName}
                 renderInput={(params) => (
                   <TextField
@@ -373,6 +370,7 @@ const DepartmentList = () => {
                   />
                 )}
               />
+
               <TextField
                 required
                 size="small"

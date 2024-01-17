@@ -18,7 +18,6 @@ import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import Designation from "./pages/Designation/Designation";
 import EmployeeList from "./pages/EmployeeList/EmployeeList";
 import Home from "./pages/Home/Home";
-import AddProfile from "./pages/Home/components/addprofile";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
@@ -56,6 +55,7 @@ import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import AddDepartments from "./pages/Departments/AddDepartments";
 import DepartmentList from "./pages/Departments/DepartmentList";
+import DepartmentList2 from "./pages/Departments/department-list";
 const App = () => {
   return (
     <Routes>
@@ -124,7 +124,7 @@ const App = () => {
       />
       <Route
         path="organisation/:organisationId/department-list"
-        element={<DepartmentList />}
+        element={<DepartmentList2 />}
       />
       <Route path="/organisation/:id" element={<SingleOrganisation />} />
       <Route path="/employee-profile" element={<EmployeeProfile />} />
@@ -140,7 +140,7 @@ const App = () => {
         path="/organisation/:organisationId/employee-list"
         element={<EmployeeList />}
       />
-      <Route path="/organisation/:id/add-profile" element={<AddProfile />} />
+
       <Route
         path="/organisation/:organisationId/setup/input-field"
         element={<Inputfield />}
