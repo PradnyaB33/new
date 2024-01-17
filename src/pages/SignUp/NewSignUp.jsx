@@ -230,14 +230,27 @@ const SignIn = () => {
             autoComplete="off"
             className="flex md:px-20 px-8 lg:w-max justify-center flex-col h-[80vh]"
           >
-            <div className="flex flex-col space-y-1">
-              <div className="mb-4">
+            <div className="flex space-x-4 mb-4 items-center">
+              <img src="/logo.svg" className="h-[45px]" alt="logo" />
+              <div className="flex flex-col space-y-1">
+                {/* <div className="mb-4"> */}
+                <h1 className="font-[600] text-3xl">
+                  Register for AEGIS Account
+                </h1>
+                <p className="text-lg">Enter your credentials below</p>
+                {/* </div> */}
+              </div>
+            </div>
+
+            {/* <div className="flex space-x-4 items-center">
+              <img src="/logo.svg" className="h-[45px]" alt="logo" />
+              <div className="flex flex-col space-y-1">
                 <h1 className="font-[600] text-3xl">
                   Register for AEGIS Account
                 </h1>
                 <p className="text-lg">Enter your credentials below</p>
               </div>
-            </div>
+            </div> */}
 
             <div className="flex gap-2">
               {/* First Name */}
