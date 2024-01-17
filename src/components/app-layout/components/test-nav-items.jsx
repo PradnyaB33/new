@@ -206,11 +206,16 @@ const TestNavItems = ({ toggleDrawer }) => {
         routes: [
           {
             key: "addDepartment",
+<<<<<<< HEAD
+            link: `/organisation/${orgId}/add-department`,
+            icon: <AddAlert className="text-black" />,
+=======
             isVisible: ["Super-Admin", "Hr"].some((item) => {
               return user?.profile?.includes(item);
             }),
             link: `/organisation/${orgId}/create-department`,
             icon: <AddAlert className=" !text-[1.2em] text-[#67748E]" />,
+>>>>>>> 8197958fe9fc4f7b116a5d65c34eb399b0ad0bd9
             text: "Add Department",
           },
           // {
