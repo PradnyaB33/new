@@ -163,7 +163,7 @@ const TestNavItems = ({ toggleDrawer }) => {
         isVisible:
           window.location.pathname?.includes("organisation") &&
           ["Super-Admin", "Hr", "Manager"]?.some((item) => {
-            return user.profile.includes(item);
+            return user?.profile?.includes(item);
           }),
         routes: [
           {
