@@ -42,7 +42,7 @@ const DepartmentList = () => {
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [open, setOpen] = useState(false);
   const [locations, setLocations] = useState([]);
-  const [locationID, setLocationId] = useState([]);
+  const [locationID, setLocationId] = useState('');
   const [enterDepartmentId, setEnterDepartmentId] = useState(false);
   const [numCharacters, setNumCharacters] = useState(0);
   console.log(departmentList);
@@ -59,11 +59,18 @@ const DepartmentList = () => {
 
   const handleEditDepartment = async (index) => {
     setEditIndex(index);
-    const selectedDepartment = departmentList.department[index];
+    setOpen(true);
+
+    console.log(departmentList);
+    const selectedDepartment = departmentList[index]
+
+
+    console.log(selectedDepartment);
     setDepartmentId(selectedDepartment.departmentId);
     setDepartmentName(selectedDepartment.departmentName);
     setCostCenterName(selectedDepartment.costCenterName);
-    setDepartmentLocation(selectedDepartment.departmentLocation);
+    setDepartmentLocation(selectedDepartment.departmentLocation.shortName);
+    setLocationId(selectedDepartment.departmentLocation._id)
     setDepartmentHeadName(selectedDepartment.departmentHeadName);
     setDepartmentDescription(selectedDepartment.departmentDescription);
     setCostCenterDescription(selectedDepartment.costCenterDescription);
@@ -72,8 +79,7 @@ const DepartmentList = () => {
     );
     setOrganizationLocationId(locationID);
 
-    setOpen(true);
-    console.log("id is;", departmentId);
+    console.log("id is;", locationID);
   };
 
   useEffect(() => {
@@ -170,6 +176,8 @@ const DepartmentList = () => {
     setOrganizationLocationId(locationID);
   };
 
+
+
   const handleUpdateDepartment = async (index) => {
     setEditIndex(index);
 
@@ -197,7 +205,7 @@ const DepartmentList = () => {
         return false;
       }
       await axios.put(
-        `${process.env.REACT_APP_API}/route/department/update/${departmentList.department[index]._id}`,
+        `${process.env.REACT_APP_API}/route/department/update`,
         newDepartment,
         {
           headers: {
@@ -218,8 +226,8 @@ const DepartmentList = () => {
       handleAlert(true, "success", "Location updated successfully");
       handleClose();
     } catch (error) {
-      console.error("error is: ", error.response.data.error);
-      handleAlert(true, "error", error.response.data.error);
+      console.error("error is: ", error);
+      handleAlert(true, "error", error.response);
     }
   };
 
@@ -263,9 +271,8 @@ const DepartmentList = () => {
               {departmentList?.map((department, index) => (
                 <tr
                   key={index}
-                  className={`${
-                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                  } border-b dark:border-neutral-500 !font-medium`}
+                  className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                    } border-b dark:border-neutral-500 !font-medium`}
                 >
                   <td className="py-2 px-3">{index + 1}</td>
                   <td className="py-2 px-3">{department.departmentName}</td>
@@ -351,22 +358,13 @@ const DepartmentList = () => {
                 fullWidth
                 style={{ marginBottom: "10px" }}
                 disablePortal
-                value={locations.map(
-                  (thisLocation) => thisLocation === departmentLocation
-                )}
                 id="departmentLocation"
-                name="departmentLocation"
+                value={locations.find((loc) => loc._id === locationID) || null}
                 options={locations}
                 onChange={(e, value) => {
-                  setLocationId(value._id);
-
-                  // handleChange({
-                  //   target: { name: "departmentLocation", value: locationID },
-                  // });
+                  setLocationId(value ? value._id : null);
                 }}
-                isOptionEqualToValue={(option, value) =>
-                  option.shortName === value.shortName
-                }
+                isOptionEqualToValue={(option, value) => option._id === value._id}
                 getOptionLabel={(option) => option.shortName}
                 renderInput={(params) => (
                   <TextField
@@ -480,6 +478,7 @@ const DepartmentList = () => {
                 style={{ marginBottom: "10px" }}
                 disablePortal
                 id="departmentHeadName"
+                value={departmentHeadName}
                 options={Employees}
                 onChange={(e, value) => {
                   // const headName = value ? value.label : "";
@@ -504,6 +503,7 @@ const DepartmentList = () => {
                 style={{ marginBottom: "10px" }}
                 disablePortal
                 id="departmentHeadDelegateName"
+                value={departmentHeadDelegateName}
                 options={Employees}
                 onChange={(e, value) => {
                   // const delegateName = value ? value.label : "";
