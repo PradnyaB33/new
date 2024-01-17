@@ -33,7 +33,8 @@ export default function SwipeableTemporaryDrawer() {
     <div
       className={`${
         location.pathname.includes("/sign-in") ||
-        location.pathname.includes("/sign-up")
+        location.pathname.includes("/sign-up") ||
+        location.pathname.includes("/terms-and-conditions")
           ? "hidden"
           : "block"
       }`}
@@ -64,7 +65,6 @@ export default function SwipeableTemporaryDrawer() {
         color="white"
         anchor="left"
         open={open}
-        // open={true}
         onClose={toggleDrawer} // Removed unnecessary function call here
         onOpen={toggleDrawer} // Removed unnecessary function call here
       >

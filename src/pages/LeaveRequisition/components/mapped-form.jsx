@@ -27,16 +27,7 @@ const Mapped = ({
       transition: "color 0.3s, background-color 0.3s, border-color 0.3s",
     },
   };
-  const startDate = parseISO(item.start);
-  const endDate = parseISO(item.end);
 
-  const daysDifference = differenceInDays(endDate, startDate);
-
-  // Adjust for the case when the difference is exactly 1 day
-  const pluralSuffix = daysDifference === 1 ? "" : "s";
-  console.log(`🚀 ~ file: amapped-form.jsx:37 ~ pluralSuffix:`, pluralSuffix);
-
-  console.log("Days Difference:", daysDifference);
   const handleChange = (event) => {
     setLeavesTypes(event.target.value);
     newAppliedLeaveEvents[index].leaveTypeDetailsId = event.target.value;
@@ -63,8 +54,7 @@ const Mapped = ({
           }}
           badgeContent={
             <span>
-              {differenceInDays(parseISO(item.end), parseISO(item.start)) + 1}{" "}
-              day
+              {differenceInDays(parseISO(item.end), parseISO(item.start))} day
             </span>
           }
           sx={badgeStyle}

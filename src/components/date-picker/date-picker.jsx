@@ -1,7 +1,6 @@
 import { Close } from "@mui/icons-material";
 import { Button, MenuItem, Popover, Select } from "@mui/material";
 import moment from "moment";
-import { extendMoment } from "moment-range";
 import { momentLocalizer } from "react-big-calendar";
 import { useQuery } from "react-query";
 
@@ -23,7 +22,6 @@ const AppDatePicker = ({
   newAppliedLeaveEvents,
   isCalendarOpen,
 }) => {
-  const momentWithRange = extendMoment(moment);
   const localizer = momentLocalizer(moment);
   const [Delete, setDelete] = useState(false);
   const [update, setUpdate] = useState(false);
@@ -44,10 +42,10 @@ const AppDatePicker = ({
     setSelectedLeave(event);
     setCalendarOpen(true);
     if (event.title === "Selected Leave") {
-      setDelete(true);
+      setDelete(false);
       setUpdate(false);
     } else {
-      setDelete(false);
+      setDelete(true);
       setUpdate(true);
     }
   };
@@ -55,13 +53,9 @@ const AppDatePicker = ({
   const dayPropGetter = (date) => {
     const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "short" });
 
-
-
     // Check if the current day is in the data? array
-    const isDisabled = data2?.days?.some((day) => {
-      return day.days.some((day) => {
-        return (day.day === dayOfWeek)
-      });
+    const isDisabled = data2?.days?.days?.some((day) => {
+      return day.day === dayOfWeek;
     });
     if (isDisabled) {
       return {
@@ -77,35 +71,22 @@ const AppDatePicker = ({
 
   const handleSelectSlot = ({ start, end }) => {
     const selectedStartDate = moment(start).startOf("day");
-    const selectedEndDate = moment(end).startOf("day");
+    const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
+    const currentDate = moment(selectedStartDate);
 
-    // Check if any disabled days are part of the selected range
-    const includesDisabledDay = data2?.days?.some((day) => {
-      const disabledDate = moment(selectedStartDate).day(day.index);
-      return selectedStartDate.isSame(disabledDate, "day");
-    });
+    const includedDays = data2.days?.days?.map((day) => day.day);
 
-    // Check if the selected date range includes any days with the specified style
-    const isDisabledStyle = data2?.days?.some((day) => {
-      // Check if the selected day is in the array of disabled days
-      return day.days.some((disabledDay) => {
-        return disabledDay.day === selectedStartDate.format("ddd");
-      });
-    });
+    while (currentDate.isSameOrBefore(selectedEndDate)) {
+      const currentDay = currentDate.format("ddd");
+      if (includedDays.includes(currentDay)) {
+        return handleAlert(
+          true,
+          "warning",
+          `You cannot select ${currentDay} for leave`
+        );
+      }
 
-    if (isDisabledStyle) {
-      handleAlert(true, "warning", "You cannot select these days for leave");
-      return;
-    }
-
-    if (isDisabledStyle) {
-      handleAlert(true, "warning", "You cannot select these days for leave");
-      return;
-    }
-
-    if (includesDisabledDay) {
-      handleAlert(true, "warning", "You cannot select disabled days for leave");
-      return;
+      currentDate.add(1, "day");
     }
 
     const isOverlap = [
@@ -122,33 +103,24 @@ const AppDatePicker = ({
     );
 
     if (isOverlap) {
-      handleAlert(true, "warning", "You have already selected this leave");
+      return handleAlert(
+        true,
+        "warning",
+        "You have already selected this leave"
+      );
     } else {
-      if (selectEvent) {
-        const newLeave = {
-          ...selectedLeave,
-          title: "Updated Leave",
-          start: new Date(start).toISOString(),
-          end: new Date(end).toISOString(),
-          color: "black",
-        };
+      const newLeave = {
+        title: selectEvent ? "Updated Leave" : "Selected Leave",
+        start: new Date(start).toISOString(),
+        end: new Date(end).toISOString(),
+        color: selectEvent ? "black" : "blue",
+        leaveTypeDetailsId: "",
+      };
 
-        setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
-        setSelectedLeave(null);
-
-        setselectEvent(false);
-      } else {
-        const newLeave = {
-          title: "Selected Leave",
-          start: new Date(start).toISOString(),
-          end: new Date(end).toISOString(),
-          color: "blue",
-          leaveTypeDetailsId: "",
-        };
-        setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
-      }
+      setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
+      setSelectedLeave(selectEvent ? null : newLeave);
+      setselectEvent(false);
     }
-    
   };
 
   const CustomToolbar = (toolbar) => {
@@ -260,7 +232,6 @@ const AppDatePicker = ({
       <div className=" bg-white shadow-lg z-10">
         <div className="w-full">
           <Calendar
-
             localizer={localizer}
             views={["month"]}
             components={{
@@ -300,7 +271,7 @@ const AppDatePicker = ({
           variant="contained"
           onClick={handleDelete}
           className="rbc-event-content"
-          disabled={!Delete}
+          disabled={Delete}
         >
           Delete
         </Button>

@@ -15,13 +15,11 @@ import DashboardManger from "./pages/DashBoard/Manager/DashboardManger";
 import Dashboard from "./pages/DashBoard/employee/Dashboard";
 import SuperAdmin from "./pages/DashBoard/superAdmin/SuperAdmin";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
-//import CreateDepartment from "./pages/Departments/addDepartment";
 import AddDepartments from "./pages/Departments/AddDepartments";
-import DepartmentList from "./pages/Departments/department-list";
+import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
 import EmployeeList from "./pages/EmployeeList/EmployeeList";
 import Home from "./pages/Home/Home";
-import AddProfile from "./pages/Home/components/addprofile";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
@@ -141,7 +139,7 @@ const App = () => {
         path="/organisation/:organisationId/employee-list"
         element={<EmployeeList />}
       />
-      <Route path="/organisation/:id/add-profile" element={<AddProfile />} />
+
       <Route
         path="/organisation/:organisationId/setup/input-field"
         element={<Inputfield />}
