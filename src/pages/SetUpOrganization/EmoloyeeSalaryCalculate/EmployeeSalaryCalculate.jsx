@@ -8,24 +8,33 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../Setup";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import EmpSalaryDayModal from "../../../components/Modal/EmployeeSalaryDayModal/EmpSalaryDayModal";
+import CreateEmpSalCalDayModel from "../../../components/Modal/EmployeeSalaryDayModal/CreateEmpSalCalDay";
 const EmployeeSalaryCalculateDay = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { organisationId } = useParams();
   const queryClient = useQueryClient();
-  // Modal states and function
-  const [open, setOpen] = React.useState(false);
+  // Modal states and function for edit
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [empSalCalId, setEmpSalCalId] = useState(null);
+  // Modal states and function for create
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+
   const handleOpen = (scrollType) => {
-    setOpen(true);
+    setEditModalOpen(true);
     setEmpSalCalId(null);
   };
 
   const handleClose = () => {
-    setOpen(false);
     setEmpSalCalId(null);
     setEditModalOpen(false);
+  };
+
+  const handleCreateModalOpen = () => {
+    setCreateModalOpen(true);
+  };
+  const handleCreateModalClose = () => {
+    setCreateModalOpen(false);
   };
 
   const { data: empSalCalData } = useQuery(
@@ -73,7 +82,7 @@ const EmployeeSalaryCalculateDay = () => {
               <Button
                 className="!font-semibold !bg-sky-500 flex items-center gap-2"
                 variant="contained"
-                onClick={() => handleOpen("paper")}
+                onClick={handleCreateModalOpen}
               >
                 Create Employee Salary Calculate Day
               </Button>
@@ -116,11 +125,13 @@ const EmployeeSalaryCalculateDay = () => {
       </section>
 
       {/* for create */}
-      <EmpSalaryDayModal
+      <CreateEmpSalCalDayModel
+        handleClose={handleCreateModalClose}
+        open={createModalOpen}
         id={organisationId}
-        open={open}
-        handleClose={handleClose}
       />
+
+      {/* for update */}
       <EmpSalaryDayModal
         handleClose={handleClose}
         id={organisationId}
