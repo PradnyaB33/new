@@ -209,7 +209,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible: ["Super-Admin", "Hr"].some((item) => {
               return user?.profile?.includes(item);
             }),
-            link: `/organisation/${orgId}/create-department`,
+            link: `/organisation/${orgId}/add-department`,
             icon: <AddAlert className=" !text-[1.2em] text-[#67748E]" />,
             text: "Add Department",
           },

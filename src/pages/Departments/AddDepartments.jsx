@@ -65,7 +65,6 @@ const AddDepartments = () => {
       })
       .catch((error) => console.error("Error fetching Data:", error));
   }, [authToken, organisationId]);
-  console.log(departmentHeadData);
 
   //fetch the department delegate head
   const [deptDelegateHeadData, setDeptDelegateHeadData] = useState([]);
@@ -84,7 +83,6 @@ const AddDepartments = () => {
       })
       .catch((error) => console.error("Error fetching Data:", error));
   }, [authToken, organisationId]);
-  console.log(deptDelegateHeadData);
 
   //  store department id
   const handleDepartmentIdChange = (e) => {
@@ -109,7 +107,7 @@ const AddDepartments = () => {
       setDepartmentNameError(""); // Clear error message when criteria are met
     } else {
       setDepartmentNameError(
-        "Department Name cannot repeat. No special characters, Max 5 words."
+        "Department Name must be unique. No special characters, Max 5 words."
       );
     }
   };
@@ -131,8 +129,6 @@ const AddDepartments = () => {
         organizationId: organisationId,
       };
 
-      console.log(departmentData);
-
       await axios.post(
         `${process.env.REACT_APP_API}/route/department/create/${organisationId}`,
         departmentData,
@@ -142,7 +138,16 @@ const AddDepartments = () => {
           },
         }
       );
-
+      setDepartmentName("");
+      setDepartmentDescription("");
+      setDepartmentLocation("");
+      setDepartmentCostCenterName("");
+      setDepartmentCostCenterDescription("");
+      setDepartmentId("");
+      setDepartmentHeadName("");
+      setDepartmenDelegateHeadName("");
+      setNumCharacters("");
+      setEnterDepartmentId("");
       handleAlert(true, "success", "Department created successfully");
     } catch (error) {
       console.error("Error creating department:", error);
@@ -329,11 +334,14 @@ const AddDepartments = () => {
                   <MenuItem value="" disabled>
                     Select Departmnet Head Name
                   </MenuItem>
-                  {/* {availabelLocation?.map((type) => (
-                        <MenuItem key={type._id} value={type._id}>
-                          {type.city}
-                        </MenuItem>
-                      ))} */}
+                  {departmentHeadData?.map((deptHead) => (
+                    <MenuItem
+                      key={deptHead._id}
+                      value={`${deptHead.first_name} ${deptHead.last_name}`}
+                    >
+                      {`${deptHead?.first_name} ${deptHead?.last_name}`}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </div>
@@ -349,11 +357,14 @@ const AddDepartments = () => {
                   <MenuItem value="" disabled>
                     Select Department Delegate head name
                   </MenuItem>
-                  {/* {availabelLocation?.map((type) => (
-                        <MenuItem key={type._id} value={type._id}>
-                          {type.city}
-                        </MenuItem>
-                      ))} */}
+                  {deptDelegateHeadData?.map((deptDelegateHead) => (
+                    <MenuItem
+                      key={deptDelegateHead._id}
+                      value={`${deptDelegateHead?.first_name} ${deptDelegateHead?.last_name}`}
+                    >
+                      {`${deptDelegateHead?.first_name} ${deptDelegateHead?.last_name}`}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </div>
