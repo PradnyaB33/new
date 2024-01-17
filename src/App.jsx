@@ -12,7 +12,6 @@ import TopLoadingBar from "./utils/TopLoadingBar/TopLoadingBar";
 function App() {
   const location = useLocation();
   const isNavEnabled = ["/sign-in", "/sign-up", "/terms-and-conditions"];
-  console.log(window.location.href);
 
   return (
     <>
