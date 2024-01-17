@@ -50,8 +50,8 @@ const DashBoardHR = () => {
       <header className="text-xl w-full px-8 pt-6 bg-white shadow-md   p-4">
         HR Dashboard
       </header>
-      <div className=" px-8 w-full">
-        <div className="flex mt-6 w-full justify-between gap-5">
+      <div className="px-8 w-full">
+        <div className="flex flex-1 mt-6 flex-wrap w-full justify-between gap-5 md:gap-2">
           <SuperAdminCard
             icon={Groups}
             color={"!bg-blue-500"}

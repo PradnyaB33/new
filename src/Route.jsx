@@ -15,6 +15,8 @@ import DashboardManger from "./pages/DashBoard/Manager/DashboardManger";
 import Dashboard from "./pages/DashBoard/employee/Dashboard";
 import SuperAdmin from "./pages/DashBoard/superAdmin/SuperAdmin";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
+import AddDepartments from "./pages/Departments/AddDepartments";
+import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
 import EmployeeList from "./pages/EmployeeList/EmployeeList";
 import Home from "./pages/Home/Home";
@@ -53,8 +55,6 @@ import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
-import AddDepartments from "./pages/Departments/AddDepartments";
-import DepartmentList from "./pages/Departments/DepartmentList";
 const App = () => {
   return (
     <Routes>
@@ -77,9 +77,9 @@ const App = () => {
       <Route
         path="/organisation/dashboard/employee-dashboard"
         element={
-          <RequireAuth permission={"Employee"}>
-            <Dashboard />
-          </RequireAuth>
+          // <RequireAuth permission={"Employee"}>
+          <Dashboard />
+          // </RequireAuth>
         }
       />
       <Route
@@ -251,6 +251,7 @@ function RequireAuth({ children, permission }) {
     <Navigate to={"/sign-in"} />;
     if (!permission) return children;
   }
+
   return user && isPermission ? children : navigate("/");
 
   //   : user?.profile?.length < 2 ? (
