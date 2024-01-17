@@ -64,7 +64,6 @@ export default function SwipeableTemporaryDrawer() {
         color="white"
         anchor="left"
         open={open}
-        // open={true}
         onClose={toggleDrawer} // Removed unnecessary function call here
         onOpen={toggleDrawer} // Removed unnecessary function call here
       >
