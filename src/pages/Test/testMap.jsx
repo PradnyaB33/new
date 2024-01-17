@@ -85,7 +85,7 @@ const TestMap = () => {
 
   return (
     <div>
-      <LoadScript googleMapsApiKey="AIzaSyCBuMhbAtoJI32mTmcVytH_4x-R9VUZn4k">
+      <LoadScript googleMapsApiKey="AIzaSyCF6yoqO4xCnsA02uAYEU1-O5e_cooFQrI">
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={center}
