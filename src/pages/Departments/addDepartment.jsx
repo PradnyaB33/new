@@ -15,7 +15,6 @@ const CreateDepartment = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
-
   const [enterDepartmentId, setEnterDepartmentId] = useState(false);
   const [numCharacters, setNumCharacters] = useState(0);
   const [departmentId, setDepartmentId] = useState("");
@@ -36,7 +35,6 @@ const CreateDepartment = () => {
   const handleGetLocation = (e) => {
     setLocationId(e);
     setDepartmentId();
-    // console.log(e);
   };
   const initialFormValues = {
     departmentName: "",

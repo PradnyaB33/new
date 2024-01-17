@@ -3,260 +3,75 @@ import {
   Business,
   Dashboard,
   FilterAltOff,
-  Group,
+  Groups,
   LocationOn,
   West,
 } from "@mui/icons-material";
-import axios from "axios";
-import React, { useContext, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import React from "react";
+import { useQueryClient } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import Select from "react-select";
-import { UseContext } from "../../../State/UseState/UseContext";
+import useDashboardFilter from "../../../hooks/Dashboard/useDashboardFilter";
+import useEmployee from "../../../hooks/Dashboard/useEmployee";
 import LineGraph from "../Components/Bar/LineGraph";
 import AttendenceBar from "../Components/Bar/SuperAdmin/AttendenceBar";
 import SuperAdminCard from "../Components/Card/superadmin/SuperAdminCard";
 import SkeletonFilterSection from "../Components/Skeletons/SkeletonFilterSection";
 
 const SuperAdmin = () => {
-  const { organisationId } = useParams("");
-  const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
-  const [department, setDepartment] = useState("");
-  const [manager, setManager] = useState("");
-  const [locations, setLocations] = useState("");
+  const { organisationId } = useParams();
   const queryClient = useQueryClient();
-  const [data, setData] = useState([]);
+  // custom hooks
+  const { employee, employeeLoading } = useEmployee(organisationId);
+  const {
+    Department,
+    departmentLoading,
+    Managers,
+    managerLoading,
+    location,
+    oraganizationLoading,
+    locationLoading,
+    locationOptions,
+    managerOptions,
+    Departmentoptions,
+    customStyles,
+    data,
+    locations,
+    setLocations,
+    manager,
+    setManager,
+    department,
+    setDepartment,
+    salaryData,
+  } = useDashboardFilter(organisationId);
 
-  const getDepartment = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/department/get/${organisationId}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // Salary Graph Data
+  // const OrganizationSalaryOverview = async () => {
+  //   try {
+  //     const { data } = await axios.get(
+  //       `${process.env.REACT_APP_API}/route/employeeSalary/organizationSalaryOverview/${organisationId}`,
+  //       {
+  //         headers: {
+  //           Authorization: authToken,
+  //         },
+  //       }
+  //     );
 
-  const { data: Department, isLoading: departmentLoading } = useQuery(
-    ["departments-data", organisationId],
-    getDepartment
-  );
+  //     return data;
+  //   } catch (error) {
+  //     console.log("errr", error);
+  //   }
+  // };
 
-  const getEmployees = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const { data: employee, isLoading: employeeLoading } = useQuery(
-    ["employee-data", organisationId],
-    getEmployees
-  );
-
-  const getLocationData = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${organisationId}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const { data: location, isLoading: locationLoading } = useQuery(
-    ["organization-locations", organisationId],
-    getLocationData
-  );
-
-  const customStyles = {
-    control: (base) => ({
-      ...base,
-      border: 0,
-      background: "#f9fafb",
-      boxShadow: "none",
-      hover: {
-        cursor: "pointer !important",
-      },
-    }),
-    menu: (base) => ({
-      ...base,
-      width: "max-content",
-      minWidth: "100%",
-      right: 0,
-    }),
-    placeholder: (defaultStyles) => {
-      return {
-        ...defaultStyles,
-        color: "#000",
-      };
-    },
-  };
-
-  const getManagerData = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-manager/${organisationId}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-
-      return response?.data?.manager;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const { data: Managers, isLoading: managerLoading } = useQuery(
-    ["all-manager", organisationId],
-    getManagerData
-  );
-
-  const Departmentoptions = Department?.department?.map((item) => {
-    return {
-      value: item?._id,
-      label: item?.departmentName,
-    };
-  });
-
-  const managerOptions = Managers?.map((item) => {
-    return {
-      value: item?.managerId?._id,
-      label: `${item?.managerId?.first_name} ${item?.managerId?.last_name}`,
-    };
-  });
-
-  const locationOptions = location?.locationsData?.map((item, id) => {
-    return {
-      value: item._id,
-      label: item.shortName,
-    };
-  });
-
-  //TODO Attendence Fillter and data
-  async function getAttendenceData(endPoint) {
-    try {
-      const { data } = await axios.get(`${endPoint}`, {
-        headers: {
-          Authorization: authToken,
-        },
-      });
-      const currentYear = new Date().getFullYear();
-      const filterData = data.filter((item) => item.year === currentYear);
-
-      return filterData;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  const { isLoading: oraganizationLoading } = useQuery(
-    ["organization-attenedence", organisationId],
-    () =>
-      getAttendenceData(
-        `${process.env.REACT_APP_API}/route/leave/getOrganizationAttendece/${organisationId}`
-      ),
-    {
-      onSuccess: (organizationAttendenceData) =>
-        setData(organizationAttendenceData),
-      enabled: !department && !locations,
-      staleTime: Infinity,
-    }
-  );
-
-  useQuery(
-    ["department-attenedence", department],
-    () =>
-      getAttendenceData(
-        `${process.env.REACT_APP_API}/route/leave/getDepartmentAttendece/${department}`
-      ),
-    {
-      onSuccess: (attendenceData) => setData(attendenceData),
-      enabled: !!department,
-    }
-  );
-
-  useQuery(
-    ["manager-attenedence", manager],
-    () =>
-      getAttendenceData(
-        `${process.env.REACT_APP_API}/route/leave/getManagerEmployeeAttendence/${manager}`
-      ),
-    {
-      onSuccess: (attendenceData) => setData(attendenceData),
-      enabled: !!manager,
-    }
-  );
-
-  useQuery(
-    ["location-attenedence", locations],
-    () =>
-      getAttendenceData(
-        `${process.env.REACT_APP_API}/route/leave/getLocationAttendece/${locations}`
-      ),
-    {
-      onSuccess: (attendenceData) => setData(attendenceData),
-      enabled: !!locations,
-    }
-  );
-
-  //TODO Attendence Fillter and data
-
-  //? Salary Graph Data
-
-  const OrganizationSalaryOverview = async () => {
-    try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/employeeSalary/organizationSalaryOverview/${organisationId}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-
-      return data;
-    } catch (error) {
-      console.log("errr", error);
-    }
-  };
-
-  const { data: OrganizationSalaryAttendence } = useQuery(
-    "Org-Salary-overview",
-    OrganizationSalaryOverview
-  );
+  // const { data: OrganizationSalaryAttendence } = useQuery(
+  //   "Org-Salary-overview",
+  //   OrganizationSalaryOverview
+  // );
 
   //? Salary Graph Data
 
   return (
     <section className=" bg-gray-50  min-h-screen w-full ">
-      {/* <BackComponent /> */}
       {/* <header className="px-8 !text-[#152745] text-xl w-full flex items-center gap-2 pt-6 bg-white shadow-md   p-4">
         <Dashboard />
         <h1 className="text-2xl  font-semibold">Organization Overview</h1>
@@ -287,14 +102,14 @@ const SuperAdmin = () => {
             title={"Departments"}
           />
           <SuperAdminCard
-            icon={Group}
-            color={"!bg-green-500"}
+            icon={Groups}
             data={employee?.totalEmployees}
+            color={"!bg-blue-500"}
             isLoading={employeeLoading}
             title={"Overall Employees"}
           />
           <SuperAdminCard
-            color={"!bg-blue-500"}
+            color={"!bg-green-500"}
             icon={AccessTimeSharp}
             data={Managers?.length}
             isLoading={managerLoading}
@@ -400,7 +215,7 @@ const SuperAdmin = () => {
 
         <div className="w-full gap-4 mt-4 flex items-center">
           <div className="w-[50%]">
-            <LineGraph salarydata={OrganizationSalaryAttendence} />
+            <LineGraph salarydata={salaryData} />
           </div>
           <div className="w-[50%]">
             <AttendenceBar

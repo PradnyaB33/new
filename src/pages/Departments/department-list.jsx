@@ -45,7 +45,7 @@ const DepartmentList = () => {
   const [locationID, setLocationId] = useState([]);
   const [enterDepartmentId, setEnterDepartmentId] = useState(false);
   const [numCharacters, setNumCharacters] = useState(0);
-
+  console.log(departmentList);
   const Employees = [
     { label: "Ramesh patnayak", email: "ramesh1@gmail.com" },
     { label: "Raj Sathe", email: "rsathe@gmail.com" },
@@ -105,7 +105,7 @@ const DepartmentList = () => {
           }
         );
         console.log(response);
-        setDepartmentList(response.data);
+        setDepartmentList(response.data.department);
       } catch (error) {
         console.error(error.response.data.message);
       }
@@ -122,10 +122,6 @@ const DepartmentList = () => {
       setDepartmentId(input);
     }
   };
-
-  // const handleOpen = () => {
-  //   setOpen(true);
-  // };
 
   const handleDeleteDepartmentConfirmation = (index) => {
     setConfirmOpen(true);
@@ -210,10 +206,6 @@ const DepartmentList = () => {
         }
       );
 
-      // const handleChange = (e) => {
-      //   const { name, value } = e.target;
-      // };
-
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/department/get/${organizationId}`,
         {
@@ -231,41 +223,9 @@ const DepartmentList = () => {
     }
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const newDepartment = {
-  //       departmentName,
-  //       departmentId,
-  //       departmentDescription,
-  //       departmentLocation,
-  //       costCenterName,
-  //       costCenterDescription,
-  //       departmentHeadName,
-  //       departmentHeadDelegateName,
-  //       organizationLocationId: locationID,
-  //       organizationId: organizationId,
-  //     };
-  //     console.log(departmentId);
-  //     await axios.post(
-  //       `${process.env.REACT_APP_API}/route/department/create/${organizationId}`,
-  //       newDepartment,
-  //       {
-  //         headers: {
-  //           Authorization: authToken,
-  //         },
-  //       }
-  //     );
-  //     handleAlert(true, "success", `Department created successfully`);
-  //   } catch (error) {
-  //     console.error(error);
-  //     handleAlert(true, "error", error);
-  //   }
-  // };
-
   return (
     <div>
-      {departmentList.department?.length === 0 ? (
+      {departmentList?.length === 0 ? (
         // <div className="flex items-center justify-center h-screen">
         <Typography variant="h5" className="w-50 text-center mb-2 text-red-600">
           <Warning /> No departments added, please add department first.
@@ -300,7 +260,7 @@ const DepartmentList = () => {
               </tr>
             </thead>
             <tbody>
-              {departmentList?.department?.map((department, index) => (
+              {departmentList?.map((department, index) => (
                 <tr
                   key={index}
                   className={`${

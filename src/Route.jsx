@@ -15,7 +15,7 @@ import DashboardManger from "./pages/DashBoard/Manager/DashboardManger";
 import Dashboard from "./pages/DashBoard/employee/Dashboard";
 import SuperAdmin from "./pages/DashBoard/superAdmin/SuperAdmin";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
-import CreateDepartment from "./pages/Departments/addDepartment";
+//import CreateDepartment from "./pages/Departments/addDepartment";
 import DepartmentList from "./pages/Departments/department-list";
 import Designation from "./pages/Designation/Designation";
 import EmployeeList from "./pages/EmployeeList/EmployeeList";
@@ -56,6 +56,7 @@ import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
+import AddDepartments from "./pages/Departments/AddDepartments";
 const App = () => {
   return (
     <Routes>
@@ -119,8 +120,8 @@ const App = () => {
         }
       />
       <Route
-        path="/organisation/:organisationId/create-department"
-        element={<CreateDepartment />}
+        path="/organisation/:organisationId/add-department"
+        element={<AddDepartments />}
       />
       <Route
         path="organisation/:organisationId/department-list"
