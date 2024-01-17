@@ -13,10 +13,10 @@ function App() {
   const location = useLocation();
   const isNavEnabled = ["/sign-in", "/sign-up", "/terms-and-conditions"];
   console.log(window.location.href);
-  const avoid = [
-    "http://localhost:3000/terms-and-conditions",
-    "http://localhost:3000/",
-  ];
+  // const avoid = [
+  //   "http://localhost:3000/terms-and-conditions",
+  //   "http://localhost:3000/",
+  // ];
   return (
     <>
       <UseState>
