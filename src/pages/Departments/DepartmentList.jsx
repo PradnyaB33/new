@@ -55,6 +55,7 @@ const DepartmentList = () => {
   const handleCloseConfirmation = () => {
     setDeleteConfirmation(null);
   };
+
   const handleDelete = (id) => {
     deleteMutation.mutate(id);
     setDepartmentList((department) =>
@@ -81,6 +82,7 @@ const DepartmentList = () => {
       },
     }
   );
+
   return (
     <>
       {departmentList?.length === 0 ? (
