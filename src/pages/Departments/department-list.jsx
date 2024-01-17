@@ -88,6 +88,7 @@ const DepartmentList = () => {
       )
       .then((response) => {
         setLocations(response.data.locationsData);
+        console.log("locations are: ", response.data);
       })
       .catch((error) => console.error("Error fetching locations:", error));
   }, [authToken, organizationId]);

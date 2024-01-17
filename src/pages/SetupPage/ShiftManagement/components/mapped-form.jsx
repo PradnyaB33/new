@@ -29,7 +29,6 @@ const Mapped = ({
     },
   };
   const handleChange = (event) => {
-    console.log(`🚀 ~ event:`, event.target);
     // console.log(`🚀 ~ event:`, shifts);
     // Remove below lines, these are added to solve warnings
     setLeavesTypes(443423423);

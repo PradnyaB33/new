@@ -163,7 +163,7 @@ const TestNavItems = ({ toggleDrawer }) => {
         isVisible:
           window.location.pathname?.includes("organisation") &&
           ["Super-Admin", "Hr", "Manager"]?.some((item) => {
-            return user.profile.includes(item);
+            return user?.profile?.includes(item);
           }),
         routes: [
           {
@@ -206,8 +206,11 @@ const TestNavItems = ({ toggleDrawer }) => {
         routes: [
           {
             key: "addDepartment",
-            link: `/organisation/${orgId}/add-department`,
-            icon: <AddAlert className="text-black" />,
+            isVisible: ["Super-Admin", "Hr"].some((item) => {
+              return user?.profile?.includes(item);
+            }),
+            link: `/organisation/${orgId}/create-department`,
+            icon: <AddAlert className=" !text-[1.2em] text-[#67748E]" />,
             text: "Add Department",
           },
           // {

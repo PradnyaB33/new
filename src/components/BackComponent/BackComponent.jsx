@@ -30,9 +30,9 @@ const BackComponent = () => {
   return (
     <div className=" mb-5 fixed w-full cursor-pointer top-[72px] left-[-10px] z-[1000]">
       <div
-        style={{ border: "1px solid black", borderRadius: "50%" }}
+        style={{ border: "2px solid gray", borderRadius: "20%" }}
         onClick={goBack}
-        className="mx-5 w-[50px] h-[50px] flex items-center justify-center bg-white"
+        className="mx-5 w-[37px] h-[37px] flex items-center justify-center bg-white"
       >
         <ArrowBackIcon />
       </div>
