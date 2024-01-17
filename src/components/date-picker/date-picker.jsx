@@ -1,7 +1,6 @@
 import { Close } from "@mui/icons-material";
 import { Button, MenuItem, Popover, Select } from "@mui/material";
 import moment from "moment";
-import { extendMoment } from "moment-range";
 import { momentLocalizer } from "react-big-calendar";
 import { useQuery } from "react-query";
 
@@ -23,7 +22,6 @@ const AppDatePicker = ({
   newAppliedLeaveEvents,
   isCalendarOpen,
 }) => {
-  const momentWithRange = extendMoment(moment);
   const localizer = momentLocalizer(moment);
   const [Delete, setDelete] = useState(false);
   const [update, setUpdate] = useState(false);
