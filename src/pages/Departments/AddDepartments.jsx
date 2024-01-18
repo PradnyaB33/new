@@ -168,17 +168,9 @@ const AddDepartments = () => {
   }, [handleAlert]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        padding: "50px 0 0",
-        boxSizing: "border-box",
-      }}
-      className="min-h-screen"
-    >
+    <div className="min-h-screen">
       <div className="content-center flex justify-center my-0 p-0 bg-[#F8F8F8]">
-        <div className="w-[700px] shadow-lg rounded-lg border py-3 px-8">
+        <div className="w-full md:w-[700px] shadow-lg rounded-lg border py-3 px-8">
           <div className="flex items-center justify-center gap-4 mb-4">
             <Tooltip title={staticTitle}>
               <Button>Add Department</Button>

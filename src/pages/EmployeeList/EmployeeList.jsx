@@ -1,5 +1,5 @@
 import { BorderColor } from "@mui/icons-material";
-import { IconButton, TextField } from "@mui/material";
+import { IconButton, TextField, Container } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -76,20 +76,18 @@ const EmployeeList = () => {
     setemployeeId(null);
     setEditModalOpen(false);
   };
+  console.log(availableEmployee);
 
   return (
     <>
-      <section className="bg-gray-50 min-h-screen w-full">
-        <article className="SetupSection bg-white w-full  h-max shadow-md rounded-sm border  items-center">
-          <h1
-            id="modal-modal-title"
-            className="text-lg pl-2 font-semibold text-center modal-title py-2"
-          >
+      <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
+        <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
+          <h1 className="text-lg pl-2 font-semibold text-center modal-title py-2">
             Employee List
           </h1>
 
-          <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
-            <div className="flex items-center  gap-3 ">
+          <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
+            <div className="flex items-center gap-3 mb-3 md:mb-0">
               <TextField
                 onChange={(e) => setNameSearch(e.target.value)}
                 placeholder="Search Employee Name...."
@@ -98,7 +96,7 @@ const EmployeeList = () => {
                 sx={{ width: 300 }}
               />
             </div>
-            <div className="flex items-center  gap-3 ">
+            <div className="flex items-center gap-3 mb-3 md:mb-0">
               <TextField
                 onChange={(e) => setDeptSearch(e.target.value)}
                 placeholder="Search Department Name...."
@@ -107,7 +105,7 @@ const EmployeeList = () => {
                 sx={{ width: 300 }}
               />
             </div>
-            <div className="flex items-center  gap-3 ">
+            <div className="flex items-center gap-3">
               <TextField
                 onChange={(e) => setLocationSearch(e.target.value)}
                 placeholder="Search Location ...."
@@ -118,7 +116,7 @@ const EmployeeList = () => {
             </div>
           </div>
 
-          <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
+          <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
             <table className="min-w-full bg-white  text-left !text-sm font-light">
               <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                 <tr className="!font-semibold">
@@ -143,8 +141,7 @@ const EmployeeList = () => {
                   <th scope="col" className="!text-left pl-8 py-3">
                     Phone Number
                   </th>
-
-                  <th scope="col" className="px-6 py-3 ">
+                  <th scope="col" className="px-6 py-3">
                     Actions
                   </th>
                 </tr>
@@ -181,7 +178,7 @@ const EmployeeList = () => {
                       <td className="py-3">{item.email}</td>
                       <td className="py-3">
                         {item?.worklocation?.map((location, index) => (
-                          <span key={index}>{location.city}</span>
+                          <span key={index}>{location.city || "N/A"}</span>
                         ))}
                       </td>
                       <td className="py-3">
@@ -235,7 +232,6 @@ const EmployeeList = () => {
                     Prev
                   </button>
                 </li>
-                {/* Map through page numbers and generate pagination */}
                 {numbers.map((n, i) => (
                   <li
                     key={i}
@@ -285,10 +281,9 @@ const EmployeeList = () => {
             </nav>
           </div>
         </article>
-      </section>
+      </Container>
 
       {/* edit model */}
-
       <EditModelOpen
         handleClose={handleClose}
         open={editModalOpen}
