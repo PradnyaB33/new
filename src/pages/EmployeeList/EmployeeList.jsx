@@ -14,6 +14,7 @@ const EmployeeList = () => {
   const [locationSearch, setLocationSearch] = useState("");
   const [deptSearch, setDeptSearch] = useState("");
   const [availableEmployee, setAvailableEmployee] = useState([]);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
@@ -151,7 +152,7 @@ const EmployeeList = () => {
               </thead>
               <tbody>
                 {availableEmployee
-                  .filter((item) => {
+                  ?.filter((item) => {
                     return (
                       (!nameSearch.toLowerCase() ||
                         (item.first_name &&
@@ -166,14 +167,21 @@ const EmployeeList = () => {
                               .includes(deptSearch.toLowerCase())
                           ))) &&
                       (!locationSearch.toLowerCase() ||
-                        item.worklocation.some(
-                          (location) =>
-                            location.city &&
-                            location.city.toLowerCase().includes(locationSearch)
-                        ))
+                        item?.worklocation?.some((location) => {
+                          console.log(
+                            `🚀 ~ file: EmployeeList.jsx:174 ~ location:`,
+                            location
+                          );
+                          return (
+                            location !== null &&
+                            location?.city
+                              .toLowerCase()
+                              .includes(locationSearch)
+                          );
+                        }))
                     );
                   })
-                  .map((item, id) => (
+                  ?.map((item, id) => (
                     <tr className="!font-medium border-b" key={id}>
                       <td className="!text-left pl-8 py-3">{id + 1}</td>
                       <td className="py-3">{item.first_name}</td>
@@ -181,7 +189,7 @@ const EmployeeList = () => {
                       <td className="py-3">{item.email}</td>
                       <td className="py-3">
                         {item?.worklocation?.map((location, index) => (
-                          <span key={index}>{location.city}</span>
+                          <span key={index}>{location?.city}</span>
                         ))}
                       </td>
                       <td className="py-3">

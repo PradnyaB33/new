@@ -86,7 +86,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     fetchData();
     return () => {};
   }, [open, employeeId, authToken]);
-  console.log(employeeData);
   // pull the worklocation of organization
   const [availabelLocation, setAvailableLocation] = useState([]);
   const fetchAvailableLocation = async () => {
