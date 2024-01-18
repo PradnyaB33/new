@@ -1,12 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Divider,
-  IconButton,
-  Modal,
-} from "@mui/material";
+import { Box, Button, Divider, IconButton, Modal } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "react-query";
@@ -95,6 +88,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
             },
           }
         );
+
         return response.data;
       } catch (error) {
         throw new Error(
@@ -126,10 +120,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
       const data = {
         selectedDay,
       };
-
-      if (empSalCalId) {
-        await EditEmployeeSalaryData.mutateAsync(data);
-      }
+      await EditEmployeeSalaryData.mutateAsync(data);
     } catch (error) {
       console.error(error);
       handleAlert(
@@ -153,9 +144,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
       >
         <div className="flex justify-between py-4 items-center  px-4">
           <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
-            {empSalCalId
-              ? "Edit Employee Salary Calculation Day"
-              : "Create Employee Salary Calculation Day"}
+            Edit Employee Salary Calculation Day
           </h1>
           <IconButton onClick={handleClose}>
             <CloseIcon className="!text-[16px]" />
@@ -172,7 +161,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
               value={selectedDay}
               onChange={handleSelectedDay}
               style={{
-                width: "750px",
+                width: "700px",
                 padding: "8px",
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
@@ -189,17 +178,8 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>
-            <Button
-              onClick={handleSubmit}
-              variant="contained"
-              color="primary"
-              disabled={EditEmployeeSalaryData.isLoading}
-            >
-              {EditEmployeeSalaryData.isLoading ? (
-                <CircularProgress size={20} />
-              ) : (
-                "Apply"
-              )}
+            <Button onClick={handleSubmit} variant="contained" color="primary">
+              Apply
             </Button>
           </div>
         </div>

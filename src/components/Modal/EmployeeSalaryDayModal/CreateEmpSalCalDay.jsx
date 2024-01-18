@@ -1,17 +1,12 @@
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Divider,
-  IconButton,
-  Modal,
-} from "@mui/material";
+import { Box, Button, Divider, IconButton, Modal } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
 
 const style = {
   position: "absolute",
@@ -43,10 +38,6 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
     { value: "tenth_day_of_next_month", label: "Tenth day of next month" },
     { value: "last_day_of_current_month", label: "Last day of current month" },
   ];
-
-  const handleSelectedDay = (event) => {
-    setSelectedDay(event.target.value);
-  };
 
   const AddEmployeeSalaryData = useMutation(
     async (data) => {
@@ -98,7 +89,7 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
       handleAlert(
         true,
         "error",
-        "An error occurred while  updating Employee Salary Calculation Day"
+        "An error occurred while Creating Employee Salary Calculation Day"
       );
     }
   };
@@ -129,21 +120,24 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
 
         <div className="px-5 space-y-4 mt-4">
           <div className="space-y-2 ">
-            <select
-              value={selectedDay}
-              onChange={handleSelectedDay}
-              style={{
-                width: "750px",
-                padding: "8px",
-                borderColor: "rgba(0, 0, 0, 0.3)",
-              }}
-            >
-              {salaryCalculationDays?.map((day) => (
-                <option key={day.value} value={day.value}>
-                  {day.label}
-                </option>
-              ))}
-            </select>
+            <Autocomplete
+              options={salaryCalculationDays}
+              getOptionLabel={(option) => option.label}
+              value={
+                salaryCalculationDays.find(
+                  (day) => day.value === selectedDay
+                ) || null
+              }
+              onChange={(e, value) => setSelectedDay(value?.value || "")}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Select Salary Calculation Day"
+                  variant="outlined"
+                  fullWidth
+                />
+              )}
+            />
           </div>
 
           <div className="flex gap-4  mt-4 justify-end">
@@ -151,11 +145,7 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
               Cancel
             </Button>
             <Button onClick={handleSubmit} variant="contained" color="primary">
-              {AddEmployeeSalaryData.isLoading ? (
-                <CircularProgress size={20} />
-              ) : (
-                "Apply"
-              )}
+              Apply
             </Button>
           </div>
         </div>
