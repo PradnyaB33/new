@@ -477,6 +477,40 @@ const AddEmployee = () => {
         } else if (response.data && response.data.success) {
           handleAlert(true, "error", "Invalid authorization");
         } else {
+          // Reset dynamicFields and profile state
+          setDynamicFields({
+            shifts_allocation: "",
+            dept_cost_no: "",
+            middalName: "",
+            martial_state: "",
+            primary_nationality: "",
+            education: "",
+            permanant_address: "",
+            relative_info: "",
+            emer_contact: "",
+            adhar_card_number: "",
+            pan_card_number: "",
+          });
+          setProfile([]);
+          // Reset other state variables as needed
+          setFirstName("");
+          setLastName("");
+          setEmail("");
+          setCompanyEmail("");
+          setPassword("");
+          setConfirmPassword("");
+          setCitizenShip("");
+          setPhoneNumber("");
+          setDeptName("");
+          setMgrEmpId("");
+          setAddress("");
+          setBankAccountNo("");
+          setSalaryStructure("");
+          setDesignation("");
+          setWorkLocation("");
+          setDateOfBirth("");
+          setJoiningDate("");
+
           handleAlert(true, "success", response.data.message);
         }
       }
@@ -744,7 +778,7 @@ const AddEmployee = () => {
 
               <div className="flex items-center gap-20">
                 <div className="w-full">
-                  <FormControl sx={{ width: 280 }} required>
+                  <FormControl sx={{ width: 280 }}>
                     <Select
                       value={deptname}
                       onChange={handleDeptName}
@@ -929,7 +963,7 @@ const AddEmployee = () => {
 
               <div className="flex items-center gap-20">
                 <div className="w-full">
-                  <FormControl sx={{ width: 280 }} required>
+                  <FormControl sx={{ width: 280 }}>
                     <Select
                       value={designation}
                       onChange={handleDesignationChange}

@@ -20,9 +20,11 @@ const EmployeeSalaryCalculateDay = () => {
   // Modal states and function for create
   const [createModalOpen, setCreateModalOpen] = useState(false);
 
-  const handleOpen = (scrollType) => {
+  // for update the emp sal cal day
+  const handleEditModalOpen = (empSalCalId) => {
     setEditModalOpen(true);
-    setEmpSalCalId(null);
+    queryClient.invalidateQueries(["empsal", empSalCalId]);
+    setEmpSalCalId(empSalCalId);
   };
 
   const handleClose = () => {
@@ -30,6 +32,7 @@ const EmployeeSalaryCalculateDay = () => {
     setEditModalOpen(false);
   };
 
+  // for create the emp sal cal day
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
   };
@@ -37,6 +40,7 @@ const EmployeeSalaryCalculateDay = () => {
     setCreateModalOpen(false);
   };
 
+  // pull the emp salary cal day
   const { data: empSalCalData } = useQuery(
     ["empSalaryCalData", organisationId],
     async () => {
@@ -58,12 +62,6 @@ const EmployeeSalaryCalculateDay = () => {
       }
     }
   );
-
-  const handleEditModalOpen = (empSalCalId) => {
-    setEditModalOpen(true);
-    queryClient.invalidateQueries(["empsal", empSalCalId]);
-    setEmpSalCalId(empSalCalId);
-  };
 
   return (
     <>
