@@ -25,38 +25,27 @@ const OrgList = () => {
 
   return (
     <div className="bg-gray-50 h-screen">
-      <div className="p-10  !pb-6">
+      <div className="md:p-10 p-4  !pb-6">
         <div className="flex justify-between items-center">
-          {/* <div>
-            <div className="flex items-center justify-center gap-2 ">
-              <Avatar
-                className="!bg-blue-500  h-[100px] text-4xl p-1 shadow-sm"
-                variant="rounded"
-                sx={{ width: "46", height: "46" }}
-              >
-                <IoBusiness />
-              </Avatar>
-              <h1 className="!text-[1.7rem] font-semibold text-black"></h1>
-            </div>
-            <p className="text-gray-600"></p>
-          </div> */}
-
           <div className="flex items-center gap-3">
             <Avatar
-              className="!bg-blue-500  h-[100px] text-4xl p-1 shadow-sm"
+              className="!bg-blue-500 !h-[40px] md:h-[100] text-xl md:text-4xl p-1 shadow-sm"
               variant="rounded"
-              sx={{ width: "46", height: "46" }}
             >
               <IoBusiness />
             </Avatar>
             <div>
-              <h1 className="text-2xl font-semibold">Organisations</h1>
-              <p>Select and manage your oragnization</p>
+              <h1 className="md:text-2xl text-xl font-semibold">
+                Organisations
+              </h1>
+              <p className="md:text-lg text-sm ">
+                Select and manage your oragnization
+              </p>
             </div>
           </div>
 
           <Link to={"/add-organisation"}>
-            <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-[.3rem] text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
+            <button className=" flex  group justify-center gap-2 items-center rounded-md md:px-6 md:py-[.3rem] text-xs p-2  md:text-sm text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
               Add Organization
             </button>
           </Link>

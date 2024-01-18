@@ -55,6 +55,8 @@ import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
+import NotFound from "./utils/Forbidden/NotFound";
+import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 const App = () => {
   return (
     <Routes>
@@ -77,32 +79,32 @@ const App = () => {
       <Route
         path="/organisation/dashboard/employee-dashboard"
         element={
-          // <RequireAuth permission={"Employee"}>
-          <Dashboard />
-          // </RequireAuth>
+          <RequireAuth permission={["Employee"]}>
+            <Dashboard />
+          </RequireAuth>
         }
       />
       <Route
         path="/organisation/dashboard/HR-dashboard"
         element={
-          <RequireAuth permission={"Hr"}>
+          <RequireAuth permission={["Hr"]}>
             <DashBoardHR />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/organisation/dashboard/manager-dashboard"
-        element={
-          <RequireAuth permission={"Manager"}>
-            <DashboardManger />
           </RequireAuth>
         }
       />
 
       <Route
+        path="/organisation/dashboard/manager-dashboard"
+        element={
+          <RequireAuth permission={["Manager"]}>
+            <DashboardManger />
+          </RequireAuth>
+        }
+      />
+      <Route
         path="/organisation/:organisationId/dashboard/super-admin"
         element={
-          <RequireAuth permission={"Super-Admin"}>
+          <RequireAuth permission={["Super-Admin"]}>
             <SuperAdmin />
           </RequireAuth>
         }
@@ -112,7 +114,7 @@ const App = () => {
       <Route
         path="/organizationList"
         element={
-          <RequireAuth permission={"Super-Admin"}>
+          <RequireAuth permission={["Super-Admin"]}>
             <OrgList />
           </RequireAuth>
         }
@@ -139,7 +141,6 @@ const App = () => {
         path="/organisation/:organisationId/employee-list"
         element={<EmployeeList />}
       />
-
       <Route
         path="/organisation/:organisationId/setup/input-field"
         element={<Inputfield />}
@@ -196,7 +197,6 @@ const App = () => {
         path="/organisation/:organisationId/setup/set-employement-types"
         element={<EmployementTypes />}
       />
-
       <Route
         path="/organisation/:organisationId/setup/add-organization-locations"
         element={<OrganizationLocations />}
@@ -225,7 +225,6 @@ const App = () => {
       <Route path="/application" element={<Application />} />
       <Route path="/leave" element={<LeaveRequisition />} />
       <Route path="/shift-management" element={<ShiftManagement />} />
-
       <Route
         path="/organisation/:id/department/:departmentId"
         element={<SingleDepartment />}
@@ -235,6 +234,7 @@ const App = () => {
         path="/del-department-by-location"
         element={<DeleteDepartment />}
       />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
@@ -245,20 +245,21 @@ function RequireAuth({ children, permission }) {
   const { getCurrentUser } = UserProfile();
   const navigate = useNavigate("");
   const user = getCurrentUser();
-  const isPermission = user?.profile?.includes(permission);
+  const isPermission = permission.some((per) => user?.profile?.includes(per));
 
-  if (!user || !window.location.pathname.includes("sign-in", "sign-up")) {
-    <Navigate to={"/sign-in"} />;
-    if (!permission) return children;
+  if (!window.location.pathname.includes("sign-in", "sign-up")) {
+    if (!user?.profile) return <Navigate to={"/sign-in"} />;
+    if (isPermission) return children;
+    return <UnAuthorized />;
   }
 
   return user && isPermission ? children : navigate("/");
-
-  //   : user?.profile?.length < 2 ? (
-  //   <Navigate to={"/organisation/employee-dashboard"} />
-  // ) : user?.profile?.includes("Hr") ? (
-  //   <Navigate to={"/organisation/HR-dashboard"} />
-  // ) : (
-  //   <Navigate to={"/organisation/employee-dashboard"} />
-  // );
 }
+
+//   : user?.profile?.length < 2 ? (
+//   <Navigate to={"/organisation/employee-dashboard"} />
+// ) : user?.profile?.includes("Hr") ? (
+//   <Navigate to={"/organisation/HR-dashboard"} />
+// ) : (
+//   <Navigate to={"/organisation/employee-dashboard"} />
+// );

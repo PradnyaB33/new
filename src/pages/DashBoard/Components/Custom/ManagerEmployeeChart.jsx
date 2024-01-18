@@ -4,10 +4,9 @@ import { Info, WorkHistory } from "@mui/icons-material";
 import { Autocomplete, Avatar, Card, TextField } from "@mui/material";
 import axios from "axios";
 import { CategoryScale, Chart } from "chart.js";
-import { Bar, Pie } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import { useQuery } from "react-query";
 import { UseContext } from "../../../../State/UseState/UseContext";
-import useLeaveTable from "../../../../hooks/Leave/useLeaveTable";
 import UserProfile from "../../../../hooks/UserData/useUser";
 Chart.register(CategoryScale);
 
@@ -16,32 +15,32 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
   const authToken = cookies["aeigs"];
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  const RemainingLeaves = useLeaveTable();
+  // const RemainingLeaves = useLeaveTable();
   const [userId, setuserId] = useState(user?._id);
 
-  const { data: remainingLeaves } = RemainingLeaves;
+  // const { data: remainingLeaves } = RemainingLeaves;
 
-  const dataPie = {
-    labels: remainingLeaves?.leaveTypes?.map((item) => item.leaveName) ?? [],
-    datasets: [
-      {
-        label: "Total Leaves",
-        data: remainingLeaves?.leaveTypes?.map((item) => item.count) ?? [],
-        backgroundColor:
-          remainingLeaves?.leaveTypes?.map((item) => item.color) ?? [],
-      },
-    ],
-  };
+  // const dataPie = {
+  //   labels: remainingLeaves?.leaveTypes?.map((item) => item.leaveName) ?? [],
+  //   datasets: [
+  //     {
+  //       label: "Total Leaves",
+  //       data: remainingLeaves?.leaveTypes?.map((item) => item.count) ?? [],
+  //       backgroundColor:
+  //         remainingLeaves?.leaveTypes?.map((item) => item.color) ?? [],
+  //     },
+  //   ],
+  // };
 
-  const optionsPie = {
-    responsive: false,
-    plugins: {
-      legend: {
-        display: true,
-        position: "right",
-      },
-    },
-  };
+  // const optionsPie = {
+  //   responsive: false,
+  //   plugins: {
+  //     legend: {
+  //       display: true,
+  //       position: "right",
+  //     },
+  //   },
+  // };
 
   const getYearLeaves = async () => {
     const { data } = await axios.get(
@@ -188,7 +187,7 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
                 </article>
               </Card>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col gap-2">
                 <div className="w-[70%]">
                   <Bar
                     data={data}
@@ -198,14 +197,14 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
                   />
                 </div>
 
-                <Card className="w-[30%]" elevation={0}>
+                {/* <Card className="w-[45%]" elevation={0}>
                   <div className="px-4 pt-4">
                     <h1 className="text-xl">Total Leave's Left</h1>
                   </div>
-                  <div className="p-2 flex items-center  w-full">
+                  <div className="p-2  flex items-center  ">
                     <Pie data={dataPie} options={optionsPie} />
                   </div>
-                </Card>
+                </Card> */}
               </div>
             )}
           </Card>

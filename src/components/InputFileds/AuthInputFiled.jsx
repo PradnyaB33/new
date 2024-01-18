@@ -19,7 +19,7 @@ const AuthInputFiled = ({
         htmlFor={name}
         className={`${
           error && "text-red-500"
-        } font-semibold text-gray-500 text-md`}
+        } font-semibold text-gray-500 text-sm md:text-md`}
       >
         {label}
       </label>
@@ -32,9 +32,9 @@ const AuthInputFiled = ({
             <div
               className={`${
                 readOnly && "bg-[ghostwhite]"
-              } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px]`}
+              } flex rounded-md items-center px-2 border-gray-200 border-[.5px] bg-white py-1 md:py-[6px]`}
             >
-              <Icon className="text-gray-700" />
+              <Icon className="text-gray-700 md:text-lg !text-[1em]" />
               <input
                 type={type}
                 readOnly={readOnly}

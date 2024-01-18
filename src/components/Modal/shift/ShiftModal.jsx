@@ -298,12 +298,12 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
               Enter shift name
             </label>
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">
-                Add leave type
+              <InputLabel htmlFor="outlined-adornment-name">
+                Shift name
               </InputLabel>
               <OutlinedInput
-                id="outlined-adornment-password"
-                label="Add leave type"
+                id="outlined-adornment-name"
+                label="Shift type"
                 value={shiftName}
                 onChange={(e) => setShiftName(e.target.value)}
               />

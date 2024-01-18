@@ -6,14 +6,14 @@ import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import React, { useContext, useState } from "react";
+import Cookies from "js-cookie";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
 
 export default function ProfileIcon() {
   const navigate = useNavigate();
-  const { removeCookie } = useContext(UseContext);
+  // const { removeCookie, cookies } = useContext(UseContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -29,10 +29,11 @@ export default function ProfileIcon() {
   };
 
   const handleSignOut = () => {
-    removeCookie("aeigs");
-    setAnchorEl(null);
-    navigate("/sign-in");
+    // setAnchorEl(null);
+    // console.log(cookies.aeigs);
     window.location.reload();
+    Cookies.remove("aeigs");
+    // navigate("/sign-in");
   };
 
   const handleNavigate = (link) => {
