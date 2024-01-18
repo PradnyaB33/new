@@ -744,7 +744,7 @@ const AddEmployee = () => {
 
               <div className="flex items-center gap-20">
                 <div className="w-full">
-                  <FormControl sx={{ width: 280 }}>
+                  <FormControl sx={{ width: 280 }} required>
                     <Select
                       value={deptname}
                       onChange={handleDeptName}
@@ -869,7 +869,7 @@ const AddEmployee = () => {
                 </div>
 
                 <div className="w-full">
-                  <FormControl sx={{ width: 280 }}>
+                  <FormControl sx={{ width: 280 }} required>
                     <Select
                       value={employmentType}
                       onChange={handleEmploymentTypeChange}
@@ -891,7 +891,7 @@ const AddEmployee = () => {
 
               <div className="flex items-center gap-20">
                 <div className="w-full">
-                  <FormControl sx={{ width: 280 }}>
+                  <FormControl sx={{ width: 280 }} required>
                     <Select
                       value={salarystructure}
                       onChange={handleSalaryStructure}
@@ -929,7 +929,7 @@ const AddEmployee = () => {
 
               <div className="flex items-center gap-20">
                 <div className="w-full">
-                  <FormControl sx={{ width: 280 }}>
+                  <FormControl sx={{ width: 280 }} required>
                     <Select
                       value={designation}
                       onChange={handleDesignationChange}
@@ -948,7 +948,7 @@ const AddEmployee = () => {
                   </FormControl>
                 </div>
                 <div className="w-full">
-                  <FormControl sx={{ width: 280 }}>
+                  <FormControl sx={{ width: 280 }} required>
                     <Select
                       value={worklocation}
                       onChange={handleLocationChange}

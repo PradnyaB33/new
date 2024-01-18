@@ -8,11 +8,11 @@ import {
   Modal,
 } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import { useParams } from "react-router-dom";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -22,12 +22,11 @@ const style = {
   p: 4,
 };
 
-const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
+const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const queryClient = useQueryClient();
-  const { organisationId } = useParams();
   const [selectedDay, setSelectedDay] = useState("");
 
   // Generate an array of options for salary calculation days
@@ -45,49 +44,15 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
     { value: "last_day_of_current_month", label: "Last day of current month" },
   ];
 
-  // pull the employee salary calculation day of employee in organization
-  const [availableEmpSalCalDay, setEmpSalCalDay] = useState([]);
-  const fetchAvailabeEmpSalCalDay = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee-salary-cal-day/get/${organisationId}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      setEmpSalCalDay(response.data.empSalaryCalDayData);
-    } catch (error) {
-      console.error(error);
-      handleAlert(
-        true,
-        "error",
-        "Failed to fetch Available Employee Salary Calculation Day"
-      );
-    }
-  };
-  useEffect(() => {
-    fetchAvailabeEmpSalCalDay();
-    // eslint-disable-next-line
-  }, []);
-
-  // fetch the data of emp sal cal day of employee which is already stored in database
-  useEffect(() => {
-    if (availableEmpSalCalDay) {
-      setSelectedDay(availableEmpSalCalDay[0]?.selectedDay || "");
-    }
-  }, [availableEmpSalCalDay]);
-
   const handleSelectedDay = (event) => {
     setSelectedDay(event.target.value);
   };
 
-  const EditEmployeeSalaryData = useMutation(
+  const AddEmployeeSalaryData = useMutation(
     async (data) => {
       try {
-        const response = await axios.put(
-          `${process.env.REACT_APP_API}/route/employee-salary-cal-day/update/${id}/${empSalCalId}`,
+        const response = await axios.post(
+          `${process.env.REACT_APP_API}/route/employee-salary-cal-day/${id}`,
           data,
           {
             headers: {
@@ -99,7 +64,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
       } catch (error) {
         throw new Error(
           error.response.data.message ||
-            "Failed to update Employee Salary Calculation Day"
+            "Failed to create Employee Salary Calculation Day"
         );
       }
     },
@@ -107,10 +72,11 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["empSalary"] });
         handleClose();
+        setSelectedDay("");
         handleAlert(
           true,
           "success",
-          "Employee Salary Calculation Day Updated Successfully.."
+          "Employee Salary Calculation Day Created Successfully.."
         );
         window.location.reload();
       },
@@ -126,10 +92,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
       const data = {
         selectedDay,
       };
-
-      if (empSalCalId) {
-        await EditEmployeeSalaryData.mutateAsync(data);
-      }
+      await AddEmployeeSalaryData.mutateAsync(data);
     } catch (error) {
       console.error(error);
       handleAlert(
@@ -153,9 +116,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
       >
         <div className="flex justify-between py-4 items-center  px-4">
           <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
-            {empSalCalId
-              ? "Edit Employee Salary Calculation Day"
-              : "Create Employee Salary Calculation Day"}
+            Create Employee Salary Calculation Day
           </h1>
           <IconButton onClick={handleClose}>
             <CloseIcon className="!text-[16px]" />
@@ -189,13 +150,8 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>
-            <Button
-              onClick={handleSubmit}
-              variant="contained"
-              color="primary"
-              disabled={EditEmployeeSalaryData.isLoading}
-            >
-              {EditEmployeeSalaryData.isLoading ? (
+            <Button onClick={handleSubmit} variant="contained" color="primary">
+              {AddEmployeeSalaryData.isLoading ? (
                 <CircularProgress size={20} />
               ) : (
                 "Apply"
@@ -208,4 +164,4 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
   );
 };
 
-export default EmpSalaryDayModal;
+export default CreateEmpSalCalDayModel;

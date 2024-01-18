@@ -191,7 +191,7 @@ const Organisation = ({ item }) => {
           <Avatar
             src={item?.logo_url}
             variant="rounded"
-            sx={{ height: 35, width: 35 }}
+            className=" md:h-[35px] md:w-[35px] h-[10px] w-[10px]"
           />
           <div>
             <MoreVert
@@ -221,7 +221,7 @@ const Organisation = ({ item }) => {
           </h5>
           <p className="text-md ">{item.description}</p>
         </div>
-        <div className="p-6 py-4 flex gap-4">
+        <div className="p-6 py-4  flex gap-4">
           <Link to={`/organisation/${item._id}/setup/add-roles`}>
             <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
               Setup

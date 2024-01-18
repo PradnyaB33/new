@@ -61,10 +61,12 @@ const AddDepartments = () => {
         }
       )
       .then((response) => {
+        console.log(response);
         setDepartmentHeadData(response.data.employees);
       })
       .catch((error) => console.error("Error fetching Data:", error));
   }, [authToken, organisationId]);
+  console.log(departmentHeadData);
 
   //fetch the department delegate head
   const [deptDelegateHeadData, setDeptDelegateHeadData] = useState([]);
