@@ -165,7 +165,7 @@ const EmployeeList = () => {
                       (!locationSearch.toLowerCase() ||
                         item.worklocation.some(
                           (location) =>
-                            location.city &&
+                            location.city !== null &&
                             location.city.toLowerCase().includes(locationSearch)
                         ))
                     );
@@ -173,12 +173,12 @@ const EmployeeList = () => {
                   .map((item, id) => (
                     <tr className="!font-medium border-b" key={id}>
                       <td className="!text-left pl-8 py-3">{id + 1}</td>
-                      <td className="py-3">{item.first_name}</td>
-                      <td className="py-3">{item.last_name}</td>
-                      <td className="py-3">{item.email}</td>
+                      <td className="py-3">{item?.first_name}</td>
+                      <td className="py-3">{item?.last_name}</td>
+                      <td className="py-3">{item?.email}</td>
                       <td className="py-3">
                         {item?.worklocation?.map((location, index) => (
-                          <span key={index}>{location.city || "N/A"}</span>
+                          <span key={index}>{location?.city}</span>
                         ))}
                       </td>
                       <td className="py-3">
@@ -188,7 +188,7 @@ const EmployeeList = () => {
                           );
                         })}
                       </td>
-                      <td className="py-3">{item.phone_number}</td>
+                      <td className="py-3">{item?.phone_number}</td>
                       <td className="whitespace-nowrap px-6 py-2">
                         <IconButton
                           onClick={() => handleEditModalOpen(item._id)}
