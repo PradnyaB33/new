@@ -156,7 +156,7 @@ const EmployeeList = () => {
                             .toLowerCase()
                             .includes(nameSearch))) &&
                       (!deptSearch ||
-                        (item.deptname &&
+                        (item.deptname !== null &&
                           item.deptname.some((dept) =>
                             dept.departmentName
                               .toLowerCase()
