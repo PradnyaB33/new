@@ -10,7 +10,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 import axios from "axios";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { TestContext } from "../../State/Function/Main";
-
+import Autocomplete from "@mui/material/Autocomplete";
 const AddDepartments = () => {
   const staticTitle = "This form is used to add information of department";
   const { cookies } = useContext(UseContext);
@@ -61,12 +61,10 @@ const AddDepartments = () => {
         }
       )
       .then((response) => {
-        console.log(response);
         setDepartmentHeadData(response.data.employees);
       })
       .catch((error) => console.error("Error fetching Data:", error));
   }, [authToken, organisationId]);
-  console.log(departmentHeadData);
 
   //fetch the department delegate head
   const [deptDelegateHeadData, setDeptDelegateHeadData] = useState([]);
@@ -126,8 +124,8 @@ const AddDepartments = () => {
         costCenterName: dept_cost_center_name,
         costCenterDescription: dept_cost_center_description,
         departmentId: dept_id,
-        departmentHeadName: dept_head_name,
-        departmentHeadDelegateName: dept_delegate_head_name,
+        departmentHeadName: `${dept_head_name.first_name} ${dept_head_name.last_name}`,
+        departmentHeadDelegateName: `${dept_delegate_head_name.first_name} ${dept_delegate_head_name.last_name}`,
         organizationId: organisationId,
       };
 
@@ -161,6 +159,13 @@ const AddDepartments = () => {
       handleAlert(true, "error", errorMessage);
     }
   };
+  useEffect(() => {
+    const clearAlertTimeout = setTimeout(() => {
+      handleAlert(false, "", "");
+    }, 5000);
+
+    return () => clearTimeout(clearAlertTimeout);
+  }, [handleAlert]);
 
   return (
     <div
@@ -326,49 +331,57 @@ const AddDepartments = () => {
               </FormControl>
             </div>
             <div className="w-full">
-              <FormControl sx={{ width: 580 }}>
-                <Select
-                  value={dept_head_name}
-                  onChange={(e) => setDepartmentHeadName(e.target.value)}
-                  displayEmpty
-                  inputProps={{ "aria-label": "Employment Type" }}
-                >
-                  <MenuItem value="" disabled>
-                    Select Departmnet Head Name
-                  </MenuItem>
-                  {departmentHeadData?.map((deptHead) => (
-                    <MenuItem
-                      key={deptHead._id}
-                      value={`${deptHead.first_name} ${deptHead.last_name}`}
-                    >
-                      {`${deptHead?.first_name} ${deptHead?.last_name}`}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Autocomplete
+                sx={{ width: 580 }}
+                value={dept_head_name || null}
+                onChange={(e, value) => setDepartmentHeadName(value)}
+                options={departmentHeadData}
+                getOptionLabel={(deptHead) =>
+                  `${deptHead.first_name} ${deptHead.last_name} - ${deptHead.email}`
+                }
+                isOptionEqualToValue={(option, value) =>
+                  option._id === value?._id ||
+                  option.first_name === value?.first_name ||
+                  option.last_name === value?.last_name ||
+                  option.email === value?.email
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Select Department Head Name"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                )}
+              />
             </div>
 
             <div className="w-full">
-              <FormControl sx={{ width: 580 }}>
-                <Select
-                  value={dept_delegate_head_name}
-                  onChange={(e) => setDepartmenDelegateHeadName(e.target.value)}
-                  displayEmpty
-                  inputProps={{ "aria-label": "Department Head Name" }}
-                >
-                  <MenuItem value="" disabled>
-                    Select Department Delegate head name
-                  </MenuItem>
-                  {deptDelegateHeadData?.map((deptDelegateHead) => (
-                    <MenuItem
-                      key={deptDelegateHead._id}
-                      value={`${deptDelegateHead?.first_name} ${deptDelegateHead?.last_name}`}
-                    >
-                      {`${deptDelegateHead?.first_name} ${deptDelegateHead?.last_name}`}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Autocomplete
+                sx={{ width: 580 }}
+                value={dept_delegate_head_name || null}
+                onChange={(e, value) => setDepartmenDelegateHeadName(value)}
+                options={deptDelegateHeadData}
+                getOptionLabel={(deptDelegateHead) =>
+                  `${deptDelegateHead.first_name} ${deptDelegateHead.last_name}- ${deptDelegateHead.email}`
+                }
+                isOptionEqualToValue={(option, value) =>
+                  option._id === value?._id ||
+                  option.first_name === value?.first_name ||
+                  option.last_name === value?.last_name ||
+                  option.email === value?.email
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Select Department Delegate Head Name"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                )}
+              />
             </div>
 
             <div className="flex justify-center">
