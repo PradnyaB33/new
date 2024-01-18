@@ -9,8 +9,8 @@ const UserProfile = () => {
   const getCurrentUser = () => {
     if (token) {
       const decodedToken = jwtDecode(token);
-      if (decodedToken && decodedToken.user) {
-        return decodedToken.user;
+      if (decodedToken && decodedToken?.user) {
+        return decodedToken?.user;
       } else {
         return "guest";
       }

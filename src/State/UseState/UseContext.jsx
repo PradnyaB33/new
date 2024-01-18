@@ -5,9 +5,8 @@ import { useLocation } from "react-router-dom";
 const UseContext = createContext();
 
 export const UseState = (props) => {
-  const [cookies, setCookie, removeCookie] = useCookies(["cookie-name"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["aegis"]);
   const location = useLocation();
-
   const [appAlert, setAppAlert] = useState({
     alert: false,
     type: "success",
