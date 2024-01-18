@@ -60,9 +60,8 @@ const DepartmentList = () => {
   const handleEditDepartment = async (index) => {
     setEditIndex(index);
     setOpen(true);
-    console.log(departmentList);
-    const selectedDepartment = departmentList[index]
-    console.log(selectedDepartment);
+  
+    const selectedDepartment = departmentList[index];
     setDepartmentId(selectedDepartment.departmentId);
     setDepartmentName(selectedDepartment.departmentName);
     setCostCenterName(selectedDepartment.costCenterName);
@@ -70,12 +69,11 @@ const DepartmentList = () => {
     setDepartmentHeadName(selectedDepartment.departmentHeadName);
     setDepartmentDescription(selectedDepartment.departmentDescription);
     setCostCenterDescription(selectedDepartment.costCenterDescription);
-    setDepartmentHeadDelegateName(
-      selectedDepartment.departmentHeadDelegateName
-    );
-    setOrganizationLocationId(locationID);
+    setDepartmentHeadDelegateName(selectedDepartment.departmentHeadDelegateName);
+    setOrganizationLocationId(selectedDepartment.departmentLocation._id);
 
-    console.log("id is;", departmentId);
+  
+    console.log("id is:", departmentId);
   };
 
   useEffect(() => {
@@ -360,8 +358,8 @@ const DepartmentList = () => {
                 onChange={(e, value) => {
                   setLocationId(value ? value._id : null);
                 }}
-                isOptionEqualToValue={(option, value) => option.shortName === value.shortName}
-                getOptionLabel={(option) => option.shortName}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
+                getOptionLabel={(option) => option.shortName || ''}
                 renderInput={(params) => (
                   <TextField
                     {...params}
