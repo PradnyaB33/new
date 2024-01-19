@@ -32,6 +32,7 @@ const ViewPayslip = () => {
           },
         }
       );
+
       setEmployeeInfo(response.data.employeeInfo);
       setOrganisationInfo(response.data.organizationInfo);
       setSalaryInfo(response.data.salaryDetails);
