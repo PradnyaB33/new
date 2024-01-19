@@ -144,6 +144,12 @@ const AddEmployee = () => {
     }
   };
 
+  const handlePhoneNumberChange = (e) => {
+    const inputValue = e.target.value;
+    const sanitizedInput = inputValue.replace(/\D/g, "").slice(0, 10);
+    setPhoneNumber(sanitizedInput);
+  };
+
   const staticTitle =
     "This form is used to add relavant information of employee ";
 
@@ -753,7 +759,7 @@ const AddEmployee = () => {
                       name="phone_number"
                       id="phone_number"
                       value={phone_number}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      onChange={handlePhoneNumberChange}
                       fullWidth
                       margin="normal"
                       required
