@@ -59,6 +59,8 @@ const SalaryCalculate = () => {
     // eslint-disable-next-line
   }, []);
 
+  console.log(availableEmployee);
+
   // pull holiday's count based on organization id
   const fetchHoliday = async () => {
     try {
@@ -517,7 +519,9 @@ const SalaryCalculate = () => {
                             Department Name :
                           </td>
                           <td>
-                            {availableEmployee?.deptname[0]?.departmentName ||
+                            {(availableEmployee?.deptname &&
+                              availableEmployee.deptname.length > 0 &&
+                              availableEmployee.deptname[0]?.departmentName) ||
                               ""}
                           </td>
                         </tr>
