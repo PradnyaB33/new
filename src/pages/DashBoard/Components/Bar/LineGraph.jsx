@@ -10,16 +10,18 @@ const LineGraph = ({ salarydata, isLoading = false }) => {
       },
     },
     scales: {
-      yAxes: [
-        {
-          display: true,
-          ticks: {
-            suggestedMin: 0,
-            beginAtZero: true,
-          },
+      x: {
+        grid: {
+          display: false,
         },
-      ],
+      },
+      y: {
+        grid: {
+          display: true,
+        },
+      },
     },
+    maintainAspectRatio: false,
   };
 
   // Function to create a gradient background
@@ -117,12 +119,12 @@ const LineGraph = ({ salarydata, isLoading = false }) => {
       ) : (
         <div
           className="w-full 
-      px-4 pb-4 flex flex-col shadow-md rounded-md bg-white  justify-center"
+      px-4 pb-4  flex flex-col shadow-md rounded-md bg-white  justify-center"
         >
           <h1 className="text-lg my-4 font-bold text-[#67748E]">
             Salary Overview
           </h1>
-          <div className=" 2xl:h-[400px] w-full ">
+          <div className="h-[250px] md:h-[300px] w-full ">
             <Line data={data} options={option} />
           </div>
         </div>

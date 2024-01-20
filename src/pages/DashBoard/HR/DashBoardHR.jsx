@@ -51,7 +51,7 @@ const DashBoardHR = () => {
         HR Dashboard
       </header>
       <div className="px-8 w-full">
-        <div className="flex flex-1 mt-6 flex-wrap w-full justify-between gap-5 md:gap-2">
+        <div className="flex flex-1 mt-6 flex-wrap w-full justify-between gap-2 md:gap-5 ">
           <SuperAdminCard
             icon={Groups}
             color={"!bg-blue-500"}
@@ -67,7 +67,7 @@ const DashBoardHR = () => {
             title={"People's Manager"}
           />
           <SuperAdminCard
-            title={"Employees on leave"}
+            title={"Today's leave"}
             icon={ErrorOutline}
             color={"!bg-red-500"}
             data={absentEmployee}
@@ -170,11 +170,11 @@ const DashBoardHR = () => {
           </div>
         )}
 
-        <div className="w-full gap-4 mt-4 flex items-center">
-          <div className="w-[50%]">
+        <div className="w-full md:gap-4 mt-4 flex md:flex-row flex-col items-center">
+          <div className="w-[100%] md:w-[50%]">
             <LineGraph salarydata={salaryData} />
           </div>
-          <div className="w-[50%]">
+          <div className="w-[100%] md:w-[50%]">
             <AttendenceBar
               isLoading={oraganizationLoading}
               attendenceData={data}
