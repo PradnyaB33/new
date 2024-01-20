@@ -2,6 +2,7 @@ import React from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 
 // Components
+import SetupSideNav from "./components/SideNav/SetupSideNav";
 import AnimationComponent from "./components/emailverify/verification-animation";
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
@@ -75,28 +76,40 @@ const App = () => {
       <Route path="/verify/:token/" element={<AnimationComponent />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       {/* Login Routes */}
+
+      {/* //TODO Setup Sidebar */}
+      <Route
+        path="/organisation/:organisationId/setup"
+        element={
+          <RequireAuth permission={"Super-Admin"}>
+            <SetupSideNav />
+          </RequireAuth>
+        }
+      />
+      {/* //TODO Setup Sidenar */}
+
       {/* Dashboard Routes */}
       <Route
         path="/organisation/dashboard/employee-dashboard"
         element={
-          <RequireAuth permission={["Employee"]}>
+          <RequireAuth permission={"Employee"}>
             <Dashboard />
           </RequireAuth>
         }
       />
       <Route
-        path="/organisation/dashboard/HR-dashboard"
+        path="/organisation/:organisationId/dashboard/HR-dashboard"
         element={
-          <RequireAuth permission={["Hr"]}>
+          <RequireAuth permission={"Hr"}>
             <DashBoardHR />
           </RequireAuth>
         }
       />
 
       <Route
-        path="/organisation/dashboard/manager-dashboard"
+        path="/organisation/:organisationId/dashboard/manager-dashboard"
         element={
-          <RequireAuth permission={["Manager"]}>
+          <RequireAuth permission={"Manager"}>
             <DashboardManger />
           </RequireAuth>
         }
@@ -104,7 +117,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/dashboard/super-admin"
         element={
-          <RequireAuth permission={["Super-Admin"]}>
+          <RequireAuth permission={"Super-Admin"}>
             <SuperAdmin />
           </RequireAuth>
         }
@@ -114,7 +127,7 @@ const App = () => {
       <Route
         path="/organizationList"
         element={
-          <RequireAuth permission={["Super-Admin"]}>
+          <RequireAuth permission={"Super-Admin"}>
             <OrgList />
           </RequireAuth>
         }
@@ -242,18 +255,18 @@ const App = () => {
 export default App;
 
 function RequireAuth({ children, permission }) {
-  const { getCurrentUser } = UserProfile();
+  const { getCurrentUser, getCurrentRole } = UserProfile();
   const navigate = useNavigate("");
   const user = getCurrentUser();
-  const isPermission = permission.some((per) => user?.profile?.includes(per));
-
-  if (!window.location.pathname.includes("sign-in", "sign-up")) {
-    if (!user?.profile) return <Navigate to={"/sign-in"} />;
-    if (isPermission) return children;
+  const role = getCurrentRole();
+  const isPermission = role === permission;
+  if (role || !window.location.pathname.includes("sign-in", "sign-up")) {
+    if (!role) return <Navigate to={"/sign-in"} />;
+    if (user && isPermission) return children;
     return <UnAuthorized />;
   }
 
-  return user && isPermission ? children : navigate("/");
+  // return user && isPermission ? children : navigate("/");
 }
 
 //   : user?.profile?.length < 2 ? (

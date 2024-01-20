@@ -1,58 +1,67 @@
 import { Email, Key } from "@mui/icons-material";
 import axios from "axios";
 import Cookies from "js-cookie";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Select from "react-select";
 import { TestContext } from "../../State/Function/Main";
 import UserProfile from "../../hooks/UserData/useUser";
 import useSignup from "../../hooks/useLoginForm";
-
 const SignIn = () => {
   const { setEmail, setPassword, email, password } = useSignup();
+  const [selectRole, setSelectRole] = useState("");
   const { handleAlert } = useContext(TestContext);
   // const { setCookie } = useContext(UseContext);
   const redirect = useNavigate();
 
-  const { getCurrentUser } = UserProfile();
+  const { getCurrentUser, getCurrentRole } = UserProfile();
   const user = getCurrentUser();
-  const navigate = useNavigate("");
-
+  const role = getCurrentRole();
   useEffect(() => {
     if (user?._id) {
-      navigate(-1);
+      redirect(-1);
     }
     // eslint-disable-next-line
   }, []);
 
   const onSubmit = async (event) => {
     event.preventDefault();
+
+    if (!email || !password || !selectRole) {
+      handleAlert(true, "warning", "All fields are manadatory");
+      return false;
+    }
+
     try {
-      // console.log(`${process.env.REACT_APP_API}/route/employee/login`);
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/login`,
         {
           email,
           password,
+          role: selectRole,
         }
       );
       // Changing Cookie
       Cookies.set("aeigs", response.data.token);
+
       handleAlert(
         true,
         "success",
         `Welcome ${response.data.user.first_name} you are logged in successfully`
       );
 
-      if (response.data.user.profile.includes("Super-Admin")) {
+      if (response?.data?.role === "Super-Admin") {
         redirect("/");
-      } else if (response.data.user.profile.includes("Hr")) {
-        redirect("/organisation/dashboard/HR-dashboard");
-      } else if (response.data.user.profile.includes("Manager")) {
-        redirect("/organisation/dashboard/manager-dashboard");
-      } else if (response.data.user.profile.length === 1) {
+      } else if (response?.data?.role === "Hr") {
+        redirect(
+          `/organisation/${response.data.user.organizationId}/dashboard/HR-dashboard`
+        );
+      } else if (response?.data?.role === "Manager") {
+        redirect(
+          `/organisation/${response.data.user.organizationId}/dashboard/manager-dashboard`
+        );
+      } else if (response?.data?.role === "Employee") {
         redirect("/organisation/dashboard/employee-dashboard");
-      } else {
-        redirect("/");
       }
 
       window.location.reload();
@@ -65,6 +74,25 @@ const SignIn = () => {
       );
     }
   };
+
+  const options = [
+    {
+      value: "Super-Admin",
+      label: "Super-Admin",
+    },
+    {
+      value: "Hr",
+      label: "Hr",
+    },
+    {
+      value: "Manager",
+      label: "Manager",
+    },
+    {
+      value: "Employee",
+      label: "Employee",
+    },
+  ];
 
   return (
     <>
@@ -83,16 +111,10 @@ const SignIn = () => {
             <li></li>
             <li></li>
           </ul>
-          <div className="space-y-2 mb-8 flex-col flex items-center justify-center">
-            {/* <img
-              src="login.svg"
-              alt="none"
-              className="absolute z-50 !h-[350px]"
-            /> */}
-          </div>
+          <div className="space-y-2 mb-8 flex-col flex items-center justify-center"></div>
         </div>
 
-        <article className="md:w-[70%]  !bg-white w-full flex   items-center md:items-start flex-col justify-center">
+        <article className="md:w-[70%] h-screen  !bg-white w-full flex   items-center md:items-start flex-col justify-center">
           <div className="md:flex hidden w-full md:py-2 md:px-8 my-2 gap-4 items-center justify-center lg:justify-end">
             <p>Don't have an account ?</p>
             <Link to="/sign-up">
@@ -107,18 +129,6 @@ const SignIn = () => {
             autoComplete="off"
             className="flex  md:px-20   w-max  justify-center flex-col  md:h-[80vh]"
           >
-            {/* <div className="flex items-center flex-col space-y-2">
-              <img
-                src="aeigs-log-final.svg"
-                alt="none"
-                className="text-center !h-[60px]"
-              />
-              <div>
-                <h1 className=" font-[600] text-4xl">Log into AEGIS Account</h1>
-                <p className="text-lg">Enter your login credentials below</p>
-              </div>
-            </div> */}
-
             <div className="flex space-x-4 md:items-start items-center">
               <img src="/logo.svg" className="h-[45px]" alt="logo" />
               <div className="flex flex-col space-y-1">
@@ -129,7 +139,22 @@ const SignIn = () => {
               </div>
             </div>
 
-            <div className="my-6 space-y-2 ">
+            <div className="my-4 space-y-2 ">
+              <label
+                htmlFor={role}
+                className={" font-semibold text-gray-500 text-md"}
+              >
+                Choose Role
+              </label>
+              <Select
+                onChange={(role) => setSelectRole(role.value)}
+                options={options}
+                id="role"
+                placeholder={"Role"}
+              />
+            </div>
+
+            <div className="mb-6 space-y-2 ">
               <label
                 htmlFor={email}
                 className={" font-semibold text-gray-500 text-md"}
