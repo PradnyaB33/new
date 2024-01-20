@@ -98,7 +98,10 @@ const PDFDocument = ({
               <View style={styles.tableRow}>
                 <Text style={styles.cell}>Department Name:</Text>
                 <Text style={styles.cell}>
-                  {employeeData?.deptname[0]?.departmentName || ""}
+                  {(employeeData?.deptname &&
+                    employeeData.deptname.length > 0 &&
+                    employeeData.deptname[0]?.departmentName) ||
+                    ""}
                 </Text>
               </View>
 
@@ -287,7 +290,7 @@ const PDFDocument = ({
 const styles = StyleSheet.create({
   page: {
     flexDirection: "row",
-    backgroundColor: "#E4E4E4",
+    backgroundColor: "#FFFFFF",
     padding: "40px",
   },
   section: {
@@ -296,10 +299,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   tablesContainer: {
+    display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
     marginBottom: 20,
   },
+
   table: {
     display: "table",
     width: "calc(50% - 5px)",
@@ -307,7 +311,6 @@ const styles = StyleSheet.create({
     borderColor: "#999",
     borderStyle: "solid",
     borderCollapse: "collapse",
-    marginRight: 10,
   },
   tableRow: {
     flexDirection: "row",
@@ -405,7 +408,7 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 11,
     fontWeight: "bold",
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#0D47A1",
   },
 });
 

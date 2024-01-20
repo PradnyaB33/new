@@ -80,10 +80,10 @@ const EmployeeLeaveRequest = () => {
                       {item?.employeeId?.first_name}{" "}
                       {item?.employeeId?.last_name}
                     </h1>
-                    <div className="text-sm flex items-center gap-2 border-[.5px] text-[red] border-[red] rounded-full px-4">
+                    {/* <div className="text-sm flex items-center gap-2 border-[.5px] text-[red] border-[red] rounded-full px-4">
                       <div className="bg-[red]  h-0 p-1 rounded-full"></div>
                       <p>{item.status}</p>
-                    </div>
+                    </div> */}
                   </div>
                   <span className={`text-sm  text-[${item.color}]`}>
                     {item.title}
@@ -92,14 +92,6 @@ const EmployeeLeaveRequest = () => {
                     {format(new Date(item?.start), "PP")} -{" "}
                     {format(new Date(item?.end), "PP")}{" "}
                   </p>
-                  {/* <div className="flex gap-2 mt-2 ">
-                  <button className=" flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-sm font-semibold text-white bg-red-500 hover:bg-red-500 focus-visible:outline-red-500">
-                    Reject
-                  </button>
-                  <button className=" flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-sm font-semibold text-white bg-green-500 hover:bg-green-500 focus-visible:outline-green-500">
-                    Accept
-                  </button> */}
-                  {/* </div> */}
                 </div>
               </div>
             </div>

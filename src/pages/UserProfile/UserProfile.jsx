@@ -1,11 +1,17 @@
-import React, { useContext, useState, useEffect } from "react";
-import { UseContext } from "../../State/UseState/UseContext";
-import { Paper, Divider, FormControl, Button } from "@mui/material";
-import { TextField, InputLabel } from "@mui/material";
+import {
+  Button,
+  Divider,
+  FormControl,
+  InputLabel,
+  Paper,
+  TextField,
+} from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { TestContext } from "../../State/Function/Main";
 import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
 //import EditEmpProfileModal from "../../components/Modal/EditEmpProfileModal/EditEmpProfileModal";
 import UserProfile from "../../hooks/UserData/useUser";
 const EmployeeProfile = () => {

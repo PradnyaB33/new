@@ -34,7 +34,6 @@ const DepartmentDeletion = () => {
       try {
         console.log(organizationId);
         const response = await axios.get(
-         
           `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${organizationId}`,
           {
             headers: { Authorization: authToken },
@@ -65,7 +64,7 @@ const DepartmentDeletion = () => {
           headers: { Authorization: authToken },
         }
       );
-      setDepartments(departments.data.message)
+      setDepartments(departments.data.message);
     } catch (e) {
       console.log(e.message);
     }
@@ -158,9 +157,7 @@ const DepartmentDeletion = () => {
           const deleteColumnIndex = XLSX.utils.decode_range(ws["!ref"]).e.c;
 
           if (deleteColumnIndex === undefined) {
-            console.error(
-              "Delete column not found in the Excel sheet."
-            );
+            console.error("Delete column not found in the Excel sheet.");
             setAppAlert({
               alert: true,
               type: "error",
@@ -199,8 +196,7 @@ const DepartmentDeletion = () => {
             setAppAlert({
               alert: true,
               type: "error",
-              msg:
-                "Failed to delete department from Excel. Please try again.",
+              msg: "Failed to delete department from Excel. Please try again.",
             });
             setShowConfirmationExcel(false);
             setSelectedLocation("");
@@ -235,8 +231,7 @@ const DepartmentDeletion = () => {
                   setAppAlert({
                     alert: true,
                     type: "error",
-                    msg:
-                      "Failed to delete department from Excel. Please try again.",
+                    msg: "Failed to delete department from Excel. Please try again.",
                   });
                 });
             } catch (error) {
@@ -305,9 +300,111 @@ const DepartmentDeletion = () => {
   };
 
   return (
+    // <Container
+    //   style={{
+    //     width: "500px",
+    //     position: "relative",
+    //     top: "5rem",
+    //     boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+    //     paddingTop: "1rem",
+    //   }}
+    // >
+    //   <Typography style={{ fontSize: "1.5rem" }}>Delete Department</Typography>
+    //   <FormControl
+    //     required
+    //     style={{
+    //       width: "100%",
+    //       marginBottom: 30,
+    //       marginTop: 20,
+    //     }}
+    //     size="small"
+    //     variant="outlined"
+    //   >
+    //     <InputLabel
+    //       id="holiday-type-label"
+    //       style={{
+    //         backgroundColor: "white",
+    //         paddingLeft: 8,
+    //       }}
+    //     >
+    //       Select Location
+    //     </InputLabel>
+    //     <Select
+    //       labelId="holiday-type-label"
+    //       id="demo-simple-select"
+    //       name="location"
+    //       value={selectedLocation}
+    //       onChange={handleLocationChange}
+    //       label="Select Location"
+    //     >
+    //       {locations.map((data, index) => (
+    //         <MenuItem key={index} value={data.shortName}>
+    //           {data.shortName}
+    //         </MenuItem>
+    //       ))}
+    //     </Select>
+    //   </FormControl>
+
+    //   <TextField
+    //     type="file"
+    //     id="fileInput"
+    //     className="w-full rounded"
+    //     onChange={() => setShowConfirmationExcel(true)}
+    //   />
+    //   <div className="flex gap-5 w-full my-5">
+    //     <Button
+    //       variant="contained"
+    //       color="warning"
+    //       style={{ marginBottom: "2rem" }}
+    //       onClick={generateExcel}
+    //     >
+    //       Generate Excel
+    //     </Button>
+    //   </div>
+
+    //   {/* Confirmation Dialog */}
+    //   <Dialog open={showConfirmation} onClose={() => handleConfirmation(false)}>
+    //     <DialogTitle>Confirmation</DialogTitle>
+    //     <DialogContent>
+    //       <Typography>
+    //         Are you sure you want to delete this department?
+    //       </Typography>
+    //     </DialogContent>
+    //     <DialogActions>
+    //       <Button onClick={() => handleConfirmation(false)} color="primary">
+    //         Cancel
+    //       </Button>
+    //       <Button onClick={handleDelete} color="primary">
+    //         Delete
+    //       </Button>
+    //     </DialogActions>
+    //   </Dialog>
+    //   <Dialog
+    //     open={showConfirmationExcel}
+    //     onClose={() => handleConfirmation(false)}
+    //   >
+    //     <DialogTitle>Confirmation</DialogTitle>
+    //     <DialogContent>
+    //       <Typography>
+    //         Are you sure you want to delete these departments?
+    //       </Typography>
+    //     </DialogContent>
+    //     <DialogActions>
+    //       <Button
+    //         onClick={() => setShowConfirmationExcel(false)}
+    //         color="primary"
+    //       >
+    //         Cancel
+    //       </Button>
+    //       <Button onClick={handleDeleteFromExcel} color="primary">
+    //         Delete
+    //       </Button>
+    //     </DialogActions>
+    //   </Dialog>
+    // </Container>
     <Container
       style={{
-        width: "500px",
+        width: "100%",
         position: "relative",
         top: "5rem",
         boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
@@ -315,33 +412,6 @@ const DepartmentDeletion = () => {
       }}
     >
       <Typography style={{ fontSize: "1.5rem" }}>Delete Department</Typography>
-
-      {/* <FormControl
-        required
-        style={{
-          width: "100%",
-          height: "10px",
-          marginBottom: 30,
-          marginTop: 20,
-        }}
-        size="small"
-      >
-        <InputLabel id="location-label">Select Location</InputLabel>
-        <Select
-          labelId="location-label"
-          id="location"
-          name="location"
-          value={selectedLocation}
-          onChange={handleLocationChange}
-        >
-          {locations.map((data, index) => (
-            <MenuItem key={index} value={data.shortName}>
-              {data.shortName}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl> */}
-
       <FormControl
         required
         style={{
@@ -350,16 +420,13 @@ const DepartmentDeletion = () => {
           marginTop: 20,
         }}
         size="small"
-        variant="outlined" // Add variant outlined for better visual separation
-        
+        variant="outlined"
       >
         <InputLabel
           id="holiday-type-label"
-          
-          // Ensure the label doesn't cut into the border
           style={{
-            backgroundColor: "white", // Set the background color to match the container
-            paddingLeft: 8, // Adjust left padding for better alignment
+            backgroundColor: "white",
+            paddingLeft: 8,
           }}
         >
           Select Location
@@ -371,7 +438,6 @@ const DepartmentDeletion = () => {
           value={selectedLocation}
           onChange={handleLocationChange}
           label="Select Location"
-           // Add label prop for better alignment
         >
           {locations.map((data, index) => (
             <MenuItem key={index} value={data.shortName}>
@@ -381,35 +447,6 @@ const DepartmentDeletion = () => {
         </Select>
       </FormControl>
 
-
-      {/* <FormControl
-        required
-        style={{
-          width: "100%",
-          height: "10px",
-          marginBottom: 50,
-          marginTop: 20,
-        }}
-        size="small"
-      >
-        <InputLabel id="department-label">Select Department</InputLabel>
-        <Select labelId="department-label" id="department" name="department">
-
-          {
-
-            (departments.length === 0) ?
-
-              (<MenuItem>
-                No department found !!
-              </MenuItem>)
-              :
-              departments.map((data, index) => (
-                <MenuItem key={index} value={data._id}>
-                  {data.departmentName}
-                </MenuItem>
-              ))}
-        </Select>
-      </FormControl> */}
       <TextField
         type="file"
         id="fileInput"
@@ -417,15 +454,6 @@ const DepartmentDeletion = () => {
         onChange={() => setShowConfirmationExcel(true)}
       />
       <div className="flex gap-5 w-full my-5">
-        {/* <Button
-          color="error"
-          variant="contained"
-          style={{ marginBottom: "2rem" }}
-          onClick={() => setShowConfirmation(true)}
-        >
-          Delete
-        </Button> */}
-
         <Button
           variant="contained"
           color="warning"

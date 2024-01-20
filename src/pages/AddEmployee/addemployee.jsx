@@ -46,6 +46,7 @@ const AddEmployee = () => {
   const authToken = cookies["aeigs"];
   const { organisationId } = useParams();
   const [userId, setUserId] = useState(null);
+  const [empId, setEmpId] = useState(null);
 
   useEffect(() => {
     try {
@@ -141,6 +142,12 @@ const AddEmployee = () => {
     } else {
       setConfirmPasswordError("");
     }
+  };
+
+  const handlePhoneNumberChange = (e) => {
+    const inputValue = e.target.value;
+    const sanitizedInput = inputValue.replace(/\D/g, "").slice(0, 10);
+    setPhoneNumber(sanitizedInput);
   };
 
   const staticTitle =
@@ -413,6 +420,7 @@ const AddEmployee = () => {
         gender,
         salarystructure,
         profile,
+        empId,
         bank_account_no,
         ...dynamicFields,
         organizationId: organisationId,
@@ -477,6 +485,40 @@ const AddEmployee = () => {
         } else if (response.data && response.data.success) {
           handleAlert(true, "error", "Invalid authorization");
         } else {
+          // Reset dynamicFields and profile state
+          setDynamicFields({
+            shifts_allocation: "",
+            dept_cost_no: "",
+            middalName: "",
+            martial_state: "",
+            primary_nationality: "",
+            education: "",
+            permanant_address: "",
+            relative_info: "",
+            emer_contact: "",
+            adhar_card_number: "",
+            pan_card_number: "",
+          });
+          setProfile([]);
+          // Reset other state variables as needed
+          setFirstName("");
+          setLastName("");
+          setEmail("");
+          setCompanyEmail("");
+          setPassword("");
+          setConfirmPassword("");
+          setCitizenShip("");
+          setPhoneNumber("");
+          setDeptName("");
+          setMgrEmpId("");
+          setAddress("");
+          setBankAccountNo("");
+          setSalaryStructure("");
+          setDesignation("");
+          setWorkLocation("");
+          setDateOfBirth("");
+          setJoiningDate("");
+
           handleAlert(true, "success", response.data.message);
         }
       }
@@ -712,28 +754,29 @@ const AddEmployee = () => {
                   <FormControl sx={{ width: 280 }}>
                     <TextField
                       size="small"
-                      type="text"
-                      label="Citizenship status"
-                      name="citizenship"
-                      id="citizenship"
-                      value={citizenship}
-                      onChange={(e) => setCitizenShip(e.target.value)}
+                      type="number"
+                      label="Phone Number"
+                      name="phone_number"
+                      id="phone_number"
+                      value={phone_number}
+                      onChange={handlePhoneNumberChange}
                       fullWidth
                       margin="normal"
                       required
                     />
                   </FormControl>
                 </div>
+
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
                       size="small"
                       type="text"
-                      label="Phone Number"
-                      name="phone_number"
-                      id="phone_number"
-                      value={phone_number}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      label="Emp Id"
+                      name="Emp Id"
+                      id="empId"
+                      value={empId}
+                      onChange={(e) => setEmpId(e.target.value)}
                       fullWidth
                       margin="normal"
                       required
@@ -742,9 +785,26 @@ const AddEmployee = () => {
                 </div>
               </div>
 
+              <div className="w-full">
+                <FormControl sx={{ width: 640 }}>
+                  <TextField
+                    size="small"
+                    type="text"
+                    label="Citizenship status"
+                    name="citizenship"
+                    id="citizenship"
+                    value={citizenship}
+                    onChange={(e) => setCitizenShip(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                    required
+                  />
+                </FormControl>
+              </div>
+
               <div className="flex items-center gap-20">
                 <div className="w-full">
-                  <FormControl sx={{ width: 280 }} required>
+                  <FormControl sx={{ width: 280 }}>
                     <Select
                       value={deptname}
                       onChange={handleDeptName}
@@ -929,7 +989,7 @@ const AddEmployee = () => {
 
               <div className="flex items-center gap-20">
                 <div className="w-full">
-                  <FormControl sx={{ width: 280 }} required>
+                  <FormControl sx={{ width: 280 }}>
                     <Select
                       value={designation}
                       onChange={handleDesignationChange}

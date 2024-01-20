@@ -92,7 +92,7 @@ const AddRoles = () => {
     <>
       <section className="bg-gray-50 min-h-screen w-full">
         <Setup>
-          <div className="SetupSection bg-white lg:!w-[80%] md:!w-[70%]   shadow-md rounded-sm border  items-center">
+          <div className="SetupSection bg-white w-[100%] lg:!w-[80%] md:!w-[70%]   shadow-md rounded-sm border  items-center">
             <div className="p-4  border-b-[.5px] flex items-center  gap-3 w-full border-gray-300">
               <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                 <PersonAddOutlined className="!text-lg text-white" />

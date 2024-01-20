@@ -1,14 +1,14 @@
 import { BorderColor } from "@mui/icons-material";
+import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import { Button, IconButton } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
-import Setup from "../Setup";
-import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
-import EmpSalaryDayModal from "../../../components/Modal/EmployeeSalaryDayModal/EmpSalaryDayModal";
 import CreateEmpSalCalDayModel from "../../../components/Modal/EmployeeSalaryDayModal/CreateEmpSalCalDay";
+import EmpSalaryDayModal from "../../../components/Modal/EmployeeSalaryDayModal/EmpSalaryDayModal";
+import Setup from "../Setup";
 const EmployeeSalaryCalculateDay = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
@@ -20,9 +20,11 @@ const EmployeeSalaryCalculateDay = () => {
   // Modal states and function for create
   const [createModalOpen, setCreateModalOpen] = useState(false);
 
-  const handleOpen = (scrollType) => {
+  // for update the emp sal cal day
+  const handleEditModalOpen = (empSalCalId) => {
     setEditModalOpen(true);
-    setEmpSalCalId(null);
+    queryClient.invalidateQueries(["empsal", empSalCalId]);
+    setEmpSalCalId(empSalCalId);
   };
 
   const handleClose = () => {
@@ -30,6 +32,7 @@ const EmployeeSalaryCalculateDay = () => {
     setEditModalOpen(false);
   };
 
+  // for create the emp sal cal day
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
   };
@@ -37,6 +40,7 @@ const EmployeeSalaryCalculateDay = () => {
     setCreateModalOpen(false);
   };
 
+  // pull the emp salary cal day
   const { data: empSalCalData } = useQuery(
     ["empSalaryCalData", organisationId],
     async () => {
@@ -59,17 +63,11 @@ const EmployeeSalaryCalculateDay = () => {
     }
   );
 
-  const handleEditModalOpen = (empSalCalId) => {
-    setEditModalOpen(true);
-    queryClient.invalidateQueries(["empsal", empSalCalId]);
-    setEmpSalCalId(empSalCalId);
-  };
-
   return (
     <>
       <section className="bg-gray-50 min-h-screen w-full">
         <Setup>
-          <article className="SetupSection bg-white w-[80%]  h-max shadow-md rounded-sm border  items-center">
+          <article className="SetupSection bg-white w-[100%] md:w-[80%]  h-max shadow-md rounded-sm border  items-center">
             <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
               <div className="flex items-center  gap-3 ">
                 <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">

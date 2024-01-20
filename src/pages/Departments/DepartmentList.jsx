@@ -226,16 +226,12 @@ useEffect(() =>{
   return (
     <>
       {departmentList?.length === 0 ? (
-        <Typography variant="h5" className="w-50 text-center mb-2 text-red-600">
+        <Typography variant="h5" className="text-center mb-2 text-red-600">
           <Warning /> No departments added, please add department first.
         </Typography>
       ) : (
-        <div style={{ padding: "1.5rem" }}>
-          <Typography
-            variant="h4"
-            className="w-50 text-center mb-6"
-            style={{ marginBottom: "20px" }}
-          >
+        <div className="p-4">
+          <Typography variant="h4" className="text-center mb-6">
             Department List
           </Typography>
           <table className="min-w-full bg-white text-left text-sm font-light">

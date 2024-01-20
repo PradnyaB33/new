@@ -1,10 +1,9 @@
-import React, { useContext } from "react";
-import UserProfile from "../../hooks/UserData/useUser";
-import { useState, useEffect } from "react";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import axios from "axios";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import UserProfile from "../../hooks/UserData/useUser";
 import PaySlipPdf from "./PaySlipPdf";
 const ViewPayslip = () => {
   const { handleAlert } = useContext(TestContext);
@@ -32,6 +31,7 @@ const ViewPayslip = () => {
           },
         }
       );
+
       setEmployeeInfo(response.data.employeeInfo);
       setOrganisationInfo(response.data.organizationInfo);
       setSalaryInfo(response.data.salaryDetails);

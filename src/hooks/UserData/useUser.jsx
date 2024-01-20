@@ -9,14 +9,27 @@ const UserProfile = () => {
   const getCurrentUser = () => {
     if (token) {
       const decodedToken = jwtDecode(token);
-      if (decodedToken && decodedToken.user) {
-        return decodedToken.user;
+      if (decodedToken && decodedToken?.user) {
+        return decodedToken?.user;
       } else {
         return "guest";
       }
     }
   };
-  return { getCurrentUser };
+
+  const getCurrentRole = () => {
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      console.log(decodedToken?.role);
+      if (decodedToken) {
+        return decodedToken?.role;
+      } else {
+        return "guest";
+      }
+    }
+  };
+
+  return { getCurrentUser, getCurrentRole };
 };
 
 export default UserProfile;

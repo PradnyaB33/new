@@ -59,14 +59,14 @@ const Dashboard = () => {
             </div>
           </div> */}
 
-          <div className="flex   w-full justify-between gap-2">
-            <div className="my-4 flex gap-2 flex-col !w-[60%] pb-2">
+          <div className="flex md:flex-row flex-col w-full justify-between gap-2">
+            <div className="my-4 flex gap-2 flex-col md:!w-[60%] pb-2">
               <HRgraph />
               <LineGraph salarydata={EmployeSalaryData} />
               {/* <SinglePayGraph /> */}
             </div>
 
-            <div className="w-[40%] my-4 px-2 space-y-4">
+            <div className="md:w-[40%] my-4 px-2 space-y-4">
               <EmployeeLeavePie />
               <PublicHolidayDisplayList />
               <LeaveDisplayList />
