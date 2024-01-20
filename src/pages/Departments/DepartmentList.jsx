@@ -25,6 +25,8 @@ import {
 const DepartmentList = () => {
   const { handleAlert } = useContext(TestContext);
   const [departmentName, setDepartmentName] = useState("")
+  const [headList, setHeadList] = useState([])
+  const [delegateHeadList, setDelegateHeadList] = useState([])
   const [numCharacters, setNumCharacters] = useState(0);
   const [enterDepartmentId, setEnterDepartmentId] = useState(false);
   const [departmentDescription, setDepartmentDescription] = useState("")
@@ -36,13 +38,40 @@ const DepartmentList = () => {
   const [departmentHeadDelegateName, setDepartmentHeadDelegateName] = useState("")
   const [locations, setLocations] = useState([])
   const { cookies } = useContext(UseContext);
+  const [locationID, setLocationID] = useState('')
+  const [deptID, setDeptID] = useState('')
   const authToken = cookies["aeigs"];
   const { organisationId } = useParams();
   const queryClient = useQueryClient();
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  const [open, setOpen] = useState(false)
 
   //pull the department list
   const [departmentList, setDepartmentList] = useState([]);
+
+
+useEffect(() =>{
+  (async() =>{
+    const resp = await axios.get(`${process.env.REACT_APP_API}/route/employee/get-department-head/${organisationId}`,{
+
+      headers:{Authorization:authToken}
+    })
+    setHeadList(resp.data.employees);
+    console.log(resp.data.employees);
+  })()
+},[])
+useEffect(() =>{
+  (async() =>{
+    const resp = await axios.get(`${process.env.REACT_APP_API}/route/employee/get-department-delegate-head/${organisationId}`,{
+
+      headers:{Authorization:authToken}
+    })
+    setDelegateHeadList(resp.data.employees);
+    console.log(resp.data.employees);
+  })()
+},[])
+
+
   const fetchDepartmentList = async () => {
     try {
       const response = await axios.get(
@@ -63,12 +92,17 @@ const DepartmentList = () => {
   useEffect(() => {
     fetchDepartmentList();
     // eslint-disable-next-line
-  }, []);
+  }, [deptID, locationID]);
 
   // Delete Query for deleting Single Department
   const handleDeleteConfirmation = (id) => {
     setDeleteConfirmation(id);
   };
+
+  const handleClose = () => {
+    setOpen(false)
+  }
+
 
   const handleDepartmentIdChange = (e) => {
     const input = e.target.value;
@@ -125,6 +159,70 @@ const DepartmentList = () => {
       },
     }
   );
+
+
+  //! update functionality 
+
+  const handleUpdate = async(idx) => {
+    setOpen(true)
+    const selectedDept = departmentList[idx]
+    console.log(selectedDept);
+    setDepartmentName(selectedDept.departmentName)
+    setLocationID(selectedDept.departmentLocation._id)
+    setDepartmentDescription(selectedDept.departmentDescription)
+    setDepartmentLocation(selectedDept.departmentLocation.shortName)
+    console.log(selectedDept.departmentLocation.shortName)
+    setCostCenterName(selectedDept.costCenterName)
+    setCostCenterDescription(selectedDept.costCenterDescription)
+    setDepartmentId(selectedDept.departmentId)
+    setDeptID(selectedDept._id)
+    setDepartmentHeadName(selectedDept.departmentHeadName)
+    setDepartmentHeadDelegateName(selectedDept.departmentHeadDelegateName)
+    console.log(deptID);
+    console.log(locationID);
+  }
+
+  const handleUpdateRequest = async () => {
+    try {
+      const resp = await axios.put(
+        `${process.env.REACT_APP_API}/route/department/update`,
+        {
+          departmentHeadName,
+          departmentDescription,
+          departmentLocation : locationID,
+          costCenterName,
+          costCenterDescription,
+          departmentId,
+          departmentHeadName,
+          departmentHeadDelegateName,
+          deptID,
+        },
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+  
+      handleAlert(true, "success", "Department updated successfully");
+      console.log(resp);
+      setOpen(false);
+      fetchDepartmentList()
+    } catch (error) {
+      handleAlert(true, "error", "Failed to update department");
+    }
+  };
+
+  const handleDataChange = (e, fieldName) => {
+    const value = e.target.value;
+  
+    if (fieldName === 'head') {
+      setDepartmentHeadName(value);
+    } else if (fieldName === 'delegate') {
+      setDepartmentHeadDelegateName(value);
+    }
+  };
+  
+
+
   return (
     <>
       {departmentList?.length === 0 ? (
@@ -182,7 +280,9 @@ const DepartmentList = () => {
                     {department?.departmentLocation.city}
                   </td>
                   <td className="whitespace-nowrap px-3 py-2">
-                    <IconButton aria-label="edit">
+                    <IconButton
+                      onClick={() => handleUpdate(id)}
+                      aria-label="edit">
                       <Edit className="!text-xl" color="success" />
                     </IconButton>
                     <IconButton
@@ -234,11 +334,11 @@ const DepartmentList = () => {
         </DialogActions>
       </Dialog>
 
-      <Dialog fullWidth>
+      <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogActions>
 
           <DialogContent>
-            Edit Department
+           <h1 className="text-2xl">Edit Department</h1>
             <TextField
               required
               inputProps={{
@@ -280,7 +380,7 @@ const DepartmentList = () => {
               required
               style={{
                 width: "100%",
-                marginBottom:"10px"
+                marginBottom: "10px"
               }}
               size="small"
               variant="outlined" // Add variant outlined for better visual separation
@@ -382,40 +482,6 @@ const DepartmentList = () => {
                   onChange={(e) => setNumCharacters(e.target.value)}
                 />
               )}
-              <FormControl
-                required
-                style={{
-                  width: "100%",
-                }}
-                size="small"
-                variant="outlined" // Add variant outlined for better visual separation
-
-              >
-                <InputLabel
-                  id="holiday-type-label"
-
-                  // Ensure the label doesn't cut into the border
-                  style={{
-                    backgroundColor: "white", // Set the background color to match the container
-                    paddingLeft: 8, // Adjust left padding for better alignment
-                  }}
-                >
-                  Select Location
-                </InputLabel>
-                <Select
-                  labelId="holiday-type-label"
-                  id="demo-simple-select"
-                  value={departmentLocation}
-                  label="Select Location"
-                // Add label prop for better alignment
-                >
-                  {locations.map((data, index) => (
-                    <MenuItem key={index} value={data.shortName}>
-                      {data.shortName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
             </div>
             {enterDepartmentId && (
               <p
@@ -449,7 +515,7 @@ const DepartmentList = () => {
               required
               style={{
                 width: "100%",
-                marginBottom:"10px"
+                marginBottom: "10px"
               }}
               size="small"
               variant="outlined" // Add variant outlined for better visual separation
@@ -464,18 +530,19 @@ const DepartmentList = () => {
                   paddingLeft: 8, // Adjust left padding for better alignment
                 }}
               >
-                Select Location
+                Add Department Head Name
               </InputLabel>
               <Select
                 labelId="holiday-type-label"
                 id="demo-simple-select"
-                value={departmentLocation}
-                label="Select Location"
+                value={departmentHeadName}
+                label="Add department Head Name"
+                onChange={(e) =>handleDataChange(e, 'head')}
               // Add label prop for better alignment
               >
-                {locations.map((data, index) => (
-                  <MenuItem key={index} value={data.shortName}>
-                    {data.shortName}
+                {headList.map((data, index) => (
+                  <MenuItem key={index} value={data.first_name+" " +data.last_name}>
+                    {data.first_name+" "+data.last_name}
                   </MenuItem>
                 ))}
               </Select>
@@ -498,22 +565,27 @@ const DepartmentList = () => {
                   paddingLeft: 8, // Adjust left padding for better alignment
                 }}
               >
-                Select Location
+                Add Department Head Delegate Name
               </InputLabel>
               <Select
                 labelId="holiday-type-label"
                 id="demo-simple-select"
-                value={departmentLocation}
-                label="Select Location"
+                value={departmentHeadDelegateName}
+                label="Add Department head delegate name"
+                onChange={(e) =>handleDataChange(e, 'delegate')}
               // Add label prop for better alignment
               >
-                {locations.map((data, index) => (
-                  <MenuItem key={index} value={data.shortName}>
-                    {data.shortName}
+                {delegateHeadList.map((data, index) => (
+                  <MenuItem key={index} value={data.first_name + " " + data.last_name}>
+                    {data?.first_name +" "+ data?.last_name}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
+            <div className="flex gap-3 mt-4 ">
+              <Button color="success" size="small" onClick={handleUpdateRequest} variant="contained">Confirm</Button>
+              <Button size="small" onClick={handleClose} color="error" variant="contained">Cancel</Button>
+            </div>
 
 
 

@@ -8,7 +8,7 @@ import ResetPassword from "./components/resetpassword/resetpassword";
 import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
 import UserProfile from "./hooks/UserData/useUser";
 import AddEmployee from "./pages/AddEmployee/addemployee";
-import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
+import AddOrganisation from "./pages/AddOrganisation/ADDORGANIZATION";
 import Application from "./pages/Application/Application";
 import DashBoardHR from "./pages/DashBoard/HR/DashBoardHR";
 import DashboardManger from "./pages/DashBoard/Manager/DashboardManger";
