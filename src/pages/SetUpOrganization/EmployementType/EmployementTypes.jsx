@@ -112,7 +112,7 @@ const EmployementTypes = () => {
     <>
       <section className="bg-gray-50 min-h-screen w-full">
         <Setup>
-          <article className="SetupSection bg-white w-[80%]  h-max shadow-md rounded-sm border  items-center">
+          <article className="SetupSection bg-white w-full md:w-[80%]  h-max shadow-md rounded-sm border  items-center">
             <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
               <div className="flex items-center  gap-3 ">
                 <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">

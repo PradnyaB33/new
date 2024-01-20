@@ -1,75 +1,152 @@
 import { Email, Key } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
+import Select from "react-select";
 import { TestContext } from "../../State/Function/Main";
 import UserProfile from "../../hooks/UserData/useUser";
 import useSignup from "../../hooks/useLoginForm";
-
 const SignIn = () => {
   const { setEmail, setPassword, email, password } = useSignup();
+  const [selectRole, setSelectRole] = useState("");
   const { handleAlert } = useContext(TestContext);
   // const { setCookie } = useContext(UseContext);
   const redirect = useNavigate();
 
-  const { getCurrentUser } = UserProfile();
+  const { getCurrentUser, getCurrentRole } = UserProfile();
   const user = getCurrentUser();
-  const navigate = useNavigate("");
-
+  const role = getCurrentRole();
   useEffect(() => {
     if (user?._id) {
-      navigate(-1);
+      redirect(-1);
     }
     // eslint-disable-next-line
   }, []);
 
+  const handleLogin = useMutation(
+    (data) => {
+      const res = axios.post(
+        `${process.env.REACT_APP_API}/route/employee/login`,
+        data
+      );
+      return res;
+    },
+
+    {
+      onSuccess: (response) => {
+        Cookies.set("aeigs", response.data.token);
+
+        handleAlert(
+          true,
+          "success",
+          `Welcome ${response.data.user.first_name} you are logged in successfully`
+        );
+
+        if (response?.data?.role === "Super-Admin") {
+          redirect("/");
+        } else if (response?.data?.role === "Hr") {
+          redirect(
+            `/organisation/${response.data.user.organizationId}/dashboard/HR-dashboard`
+          );
+        } else if (response?.data?.role === "Manager") {
+          redirect(
+            `/organisation/${response.data.user.organizationId}/dashboard/manager-dashboard`
+          );
+        } else if (response?.data?.role === "Employee") {
+          redirect("/organisation/dashboard/employee-dashboard");
+        }
+
+        window.location.reload();
+      },
+
+      onError: (error) => {
+        handleAlert(
+          true,
+          "error",
+          error?.response?.data?.message ||
+            "Failed to sign in. Please try again."
+        );
+      },
+    }
+  );
+
   const onSubmit = async (event) => {
     event.preventDefault();
-    try {
-      // console.log(`${process.env.REACT_APP_API}/route/employee/login`);
-      const response = await axios.post(
-        `${process.env.REACT_APP_API}/route/employee/login`,
-        {
-          email,
-          password,
-        }
-      );
-      // Changing Cookie
-      Cookies.set("aeigs", response.data.token);
-      handleAlert(
-        true,
-        "success",
-        `Welcome ${response.data.user.first_name} you are logged in successfully`
-      );
-
-      if (response.data.user.profile.includes("Super-Admin")) {
-        redirect("/");
-      } else if (response.data.user.profile.includes("Hr")) {
-        redirect("/organisation/dashboard/HR-dashboard");
-      } else if (response.data.user.profile.includes("Manager")) {
-        redirect("/organisation/dashboard/manager-dashboard");
-      } else if (response.data.user.profile.length === 1) {
-        redirect("/organisation/dashboard/employee-dashboard");
-      } else {
-        redirect("/");
-      }
-
-      window.location.reload();
-    } catch (error) {
-      console.error("API error:", error.response);
-      handleAlert(
-        true,
-        "error",
-        error?.response?.data?.message || "Failed to sign in. Please try again."
-      );
+    if (!email || !password || !selectRole) {
+      handleAlert(true, "warning", "All fields are manadatory");
+      return false;
     }
+
+    const data = { email, password, role: selectRole };
+
+    await handleLogin.mutateAsync(data);
+
+    // if (!email || !password || !selectRole) {
+    //   handleAlert(true, "warning", "All fields are manadatory");
+    //   return false;
+    // }
+
+    // try {
+
+    //   // Changing Cookie
+    //   Cookies.set("aeigs", response.data.token);
+
+    //   handleAlert(
+    //     true,
+    //     "success",
+    //     `Welcome ${response.data.user.first_name} you are logged in successfully`
+    //   );
+
+    //   if (response?.data?.role === "Super-Admin") {
+    //     redirect("/");
+    //   } else if (response?.data?.role === "Hr") {
+    //     redirect(
+    //       `/organisation/${response.data.user.organizationId}/dashboard/HR-dashboard`
+    //     );
+    //   } else if (response?.data?.role === "Manager") {
+    //     redirect(
+    //       `/organisation/${response.data.user.organizationId}/dashboard/manager-dashboard`
+    //     );
+    //   } else if (response?.data?.role === "Employee") {
+    //     redirect("/organisation/dashboard/employee-dashboard");
+    //   }
+
+    //   window.location.reload();
+    // } catch (error) {
+    //   console.error("API error:", error.response);
+    //   handleAlert(
+    //     true,
+    //     "error",
+    //     error?.response?.data?.message || "Failed to sign in. Please try again."
+    //   );
+    // }
   };
+  const options = [
+    {
+      value: "Super-Admin",
+      label: "Super-Admin",
+    },
+    {
+      value: "Hr",
+      label: "Hr",
+    },
+    {
+      value: "Manager",
+      label: "Manager",
+    },
+    {
+      value: "Employee",
+      label: "Employee",
+    },
+  ];
 
   return (
     <>
-      <section className="md:min-h-screen  flex w-full">
-        <div className="!w-[30%]  lg:flex hidden text-white flex-col items-center justify-center md:h-screen relative">
+      <section className="lg:min-h-screen  flex w-full">
+        <div className="!w-[30%]  lg:flex hidden text-white flex-col items-center justify-center lg:h-screen relative">
           <div className="bg__gradient  absolute inset-0 "></div>
           <ul class="circles">
             <li></li>
@@ -83,17 +160,11 @@ const SignIn = () => {
             <li></li>
             <li></li>
           </ul>
-          <div className="space-y-2 mb-8 flex-col flex items-center justify-center">
-            {/* <img
-              src="login.svg"
-              alt="none"
-              className="absolute z-50 !h-[350px]"
-            /> */}
-          </div>
+          <div className="space-y-2 mb-8 flex-col flex items-center justify-center"></div>
         </div>
 
-        <article className="md:w-[70%]  !bg-white w-full flex   items-center md:items-start flex-col justify-center">
-          <div className="md:flex hidden w-full md:py-2 md:px-8 my-2 gap-4 items-center justify-center lg:justify-end">
+        <article className="lg:w-[70%] h-screen  !bg-white w-full flex   items-center lg:items-start flex-col justify-center">
+          <div className="lg:flex hidden w-full  lg:py-2 lg:px-8 my-2 gap-4 items-center justify-center lg:justify-end">
             <p>Don't have an account ?</p>
             <Link to="/sign-up">
               <button className="py-[.22rem] text-sm uppercase  font-semibold rounded-sm px-6 border-[.5px] border-black hover:bg-black hover:text-white transition-all">
@@ -105,21 +176,9 @@ const SignIn = () => {
           <form
             onSubmit={onSubmit}
             autoComplete="off"
-            className="flex  md:px-20   w-max  justify-center flex-col  md:h-[80vh]"
+            className="flex  lg:px-20   w-max  justify-center flex-col  lg:h-[80vh]"
           >
-            {/* <div className="flex items-center flex-col space-y-2">
-              <img
-                src="aeigs-log-final.svg"
-                alt="none"
-                className="text-center !h-[60px]"
-              />
-              <div>
-                <h1 className=" font-[600] text-4xl">Log into AEGIS Account</h1>
-                <p className="text-lg">Enter your login credentials below</p>
-              </div>
-            </div> */}
-
-            <div className="flex space-x-4 md:items-start items-center">
+            <div className="flex space-x-4 lg:items-start items-center">
               <img src="/logo.svg" className="h-[45px]" alt="logo" />
               <div className="flex flex-col space-y-1">
                 {/* <div className="mb-4"> */}
@@ -129,7 +188,22 @@ const SignIn = () => {
               </div>
             </div>
 
-            <div className="my-6 space-y-2 ">
+            <div className="my-4 space-y-2 ">
+              <label
+                htmlFor={role}
+                className={" font-semibold text-gray-500 text-md"}
+              >
+                Choose Role
+              </label>
+              <Select
+                onChange={(role) => setSelectRole(role.value)}
+                options={options}
+                id="role"
+                placeholder={`Role`}
+              />
+            </div>
+
+            <div className="mb-6 space-y-2 ">
               <label
                 htmlFor={email}
                 className={" font-semibold text-gray-500 text-md"}
@@ -194,14 +268,21 @@ const SignIn = () => {
             <div className="flex gap-5 mt-2">
               <button
                 type="submit"
-                className=" flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                disabled={handleLogin.isLoading}
+                className={`${
+                  handleLogin.isLoading && "!bg-gray-200 shadow-lg"
+                } flex group justify-center  gap-2 items-center rounded-md h-[30px] px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500`}
               >
-                Log in
+                {handleLogin.isLoading ? (
+                  <CircularProgress CircularProgress size={20} />
+                ) : (
+                  "Log in"
+                )}
               </button>
             </div>
 
-            <p className="flex md:hidden gap-2 my-2">
-              Aleady have an account?
+            <p className="flex lg:hidden gap-2 my-2">
+              Don't have an account?
               <Link
                 to={
                   window.location.pathname === "/sign-up"
@@ -210,7 +291,7 @@ const SignIn = () => {
                 }
                 className="hover:underline"
               >
-                sign in
+                sign up
               </Link>
             </p>
           </form>
