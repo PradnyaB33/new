@@ -46,6 +46,7 @@ const AddEmployee = () => {
   const authToken = cookies["aeigs"];
   const { organisationId } = useParams();
   const [userId, setUserId] = useState(null);
+  const [empId, setEmpId] = useState(null);
 
   useEffect(() => {
     try {
@@ -141,6 +142,12 @@ const AddEmployee = () => {
     } else {
       setConfirmPasswordError("");
     }
+  };
+
+  const handlePhoneNumberChange = (e) => {
+    const inputValue = e.target.value;
+    const sanitizedInput = inputValue.replace(/\D/g, "").slice(0, 10);
+    setPhoneNumber(sanitizedInput);
   };
 
   const staticTitle =
@@ -413,6 +420,7 @@ const AddEmployee = () => {
         gender,
         salarystructure,
         profile,
+        empId,
         bank_account_no,
         ...dynamicFields,
         organizationId: organisationId,
@@ -746,34 +754,52 @@ const AddEmployee = () => {
                   <FormControl sx={{ width: 280 }}>
                     <TextField
                       size="small"
-                      type="text"
-                      label="Citizenship status"
-                      name="citizenship"
-                      id="citizenship"
-                      value={citizenship}
-                      onChange={(e) => setCitizenShip(e.target.value)}
+                      type="number"
+                      label="Phone Number"
+                      name="phone_number"
+                      id="phone_number"
+                      value={phone_number}
+                      onChange={handlePhoneNumberChange}
                       fullWidth
                       margin="normal"
                       required
                     />
                   </FormControl>
                 </div>
+
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
                       size="small"
                       type="text"
-                      label="Phone Number"
-                      name="phone_number"
-                      id="phone_number"
-                      value={phone_number}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      label="Emp Id"
+                      name="Emp Id"
+                      id="empId"
+                      value={empId}
+                      onChange={(e) => setEmpId(e.target.value)}
                       fullWidth
                       margin="normal"
                       required
                     />
                   </FormControl>
                 </div>
+              </div>
+
+              <div className="w-full">
+                <FormControl sx={{ width: 640 }}>
+                  <TextField
+                    size="small"
+                    type="text"
+                    label="Citizenship status"
+                    name="citizenship"
+                    id="citizenship"
+                    value={citizenship}
+                    onChange={(e) => setCitizenShip(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                    required
+                  />
+                </FormControl>
               </div>
 
               <div className="flex items-center gap-20">
