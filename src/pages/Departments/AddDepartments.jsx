@@ -130,7 +130,7 @@ const AddDepartments = () => {
       };
 
       await axios.post(
-        `${process.env.REACT_APP_API}/route/department/send-approval-request-to-superadmin/${organisationId}`,
+        `${process.env.REACT_APP_API}/route/department/create/${organisationId}`,
         departmentData,
         {
           headers: {
