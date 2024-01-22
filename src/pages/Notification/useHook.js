@@ -6,7 +6,7 @@ const useHook = () => {
   const authToken = useAuthToken();
   const queryClient = useQueryClient();
 
-  //  fetch notification
+  // get notification
   const getNotification = async () => {
     const config = {
       headers: {
@@ -26,7 +26,7 @@ const useHook = () => {
     queryFn: getNotification,
   });
 
-  // when super admin click on approved buttton for approved the request
+  // accept request
   const AcceptRequest = async (doc) => {
     console.log(doc);
 
@@ -47,7 +47,6 @@ const useHook = () => {
     console.log("response", response);
     return doc;
   };
-
   const { mutate } = useMutation({
     mutationFn: AcceptRequest,
     onSuccess: async (data) => {
@@ -59,7 +58,36 @@ const useHook = () => {
     },
   });
 
-  return { data, mutate };
+  // login
+  const LoginUser = async (doc) => {
+    console.log(doc);
+
+    let config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    let response = await axios.post(
+      `${process.env.REACT_APP_API}/route/employee/login`,
+      doc,
+      config
+    );
+    console.log("response", response);
+    return doc;
+  };
+
+  const { mutate: loginMutate } = useMutation({
+    mutationFn: LoginUser,
+    onSuccess: async (data) => {
+      console.log("mutation", data);
+    },
+    onError: async (data) => {
+      console.log("error", data);
+    },
+  });
+
+  return { data, mutate, loginMutate };
 };
 
 export default useHook;

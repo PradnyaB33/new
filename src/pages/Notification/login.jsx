@@ -26,6 +26,7 @@ const MyLogin = () => {
       role: undefined,
     },
   });
+
   console.log(formState.errors);
   return (
     <div className="pt-16">
