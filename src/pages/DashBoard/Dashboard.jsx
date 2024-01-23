@@ -4,13 +4,13 @@ import React from "react";
 import axios from "axios";
 import { CategoryScale } from "chart.js";
 import { useQuery } from "react-query";
-import useAuthToken from "../../../hooks/Token/useAuth";
-import UserProfile from "../../../hooks/UserData/useUser";
-import HRgraph from "../Components/Bar/HRgraph";
-import LineGraph from "../Components/Bar/LineGraph";
-import LeaveDisplayList from "../Components/List/LeaveDisplayList";
-import PublicHolidayDisplayList from "../Components/List/PublicHolidayDisplayList";
-import EmployeeLeavePie from "../Components/Pie/EmployeeLeavePie";
+import useAuthToken from "../../hooks/Token/useAuth";
+import UserProfile from "../../hooks/UserData/useUser";
+import HRgraph from "./Components/Bar/HRgraph";
+import LineGraph from "./Components/Bar/LineGraph";
+import LeaveDisplayList from "./Components/List/LeaveDisplayList";
+import PublicHolidayDisplayList from "./Components/List/PublicHolidayDisplayList";
+import EmployeeLeavePie from "./Components/Pie/EmployeeLeavePie";
 Chart.register(CategoryScale);
 
 const Dashboard = () => {

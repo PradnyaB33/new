@@ -2,11 +2,11 @@ import { AssignmentTurnedIn, ErrorOutline, Groups } from "@mui/icons-material";
 import axios from "axios";
 import React, { useContext } from "react";
 import { useQuery } from "react-query";
-import { UseContext } from "../../../State/UseState/UseContext";
-import UserProfile from "../../../hooks/UserData/useUser";
-import SuperAdminCard from "../Components/Card/superadmin/SuperAdminCard";
-import ManagerEmployeeChart from "../Components/Custom/ManagerEmployeeChart";
-import EmployeeLeaveRequest from "../Components/List/EmployeLeaveReqest";
+import { UseContext } from "../../State/UseState/UseContext";
+import UserProfile from "../../hooks/UserData/useUser";
+import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
+import ManagerEmployeeChart from "./Components/Custom/ManagerEmployeeChart";
+import EmployeeLeaveRequest from "./Components/List/EmployeLeaveReqest";
 
 const DashboardManger = () => {
   const { cookies } = useContext(UseContext);
