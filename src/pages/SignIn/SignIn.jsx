@@ -2,16 +2,15 @@ import { Email, Key } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
-import Select from "react-select";
 import { TestContext } from "../../State/Function/Main";
 import UserProfile from "../../hooks/UserData/useUser";
 import useSignup from "../../hooks/useLoginForm";
 const SignIn = () => {
   const { setEmail, setPassword, email, password } = useSignup();
-  const [selectRole, setSelectRole] = useState("");
+  // const [selectRole, setSelectRole] = useState("");
   const { handleAlert } = useContext(TestContext);
   // const { setCookie } = useContext(UseContext);
   const redirect = useNavigate();
@@ -20,8 +19,21 @@ const SignIn = () => {
   const user = getCurrentUser();
   const role = getCurrentRole();
   useEffect(() => {
-    if (user?._id) {
-      redirect(-1);
+    if (user && !role) {
+      redirect("/choose-role");
+    }
+    if (user?._id && role) {
+      if (role === "Super-Admin") return redirect("/");
+      else if (role === "Hr")
+        return redirect(
+          `/organisation/${user?.organisationId}/dashboard/HR-dashboard`
+        );
+      else if (role === "Manager")
+        return redirect(
+          `/organisation/${user?._id}/dashboard/manager-dashboard`
+        );
+      else if (role === "Employee")
+        return redirect(`/organisation/dashboard/employee-dashboard`);
     }
     // eslint-disable-next-line
   }, []);
@@ -45,19 +57,20 @@ const SignIn = () => {
           `Welcome ${response.data.user.first_name} you are logged in successfully`
         );
 
-        if (response?.data?.role === "Super-Admin") {
-          redirect("/");
-        } else if (response?.data?.role === "Hr") {
-          redirect(
-            `/organisation/${response.data.user.organizationId}/dashboard/HR-dashboard`
-          );
-        } else if (response?.data?.role === "Manager") {
-          redirect(
-            `/organisation/${response.data.user.organizationId}/dashboard/manager-dashboard`
-          );
-        } else if (response?.data?.role === "Employee") {
-          redirect("/organisation/dashboard/employee-dashboard");
-        }
+        redirect("/choose-role");
+
+        // if (response?.data?.role === "Super-Admin") {
+        // } else if (response?.data?.role === "Hr") {
+        //   redirect(
+        //     `/organisation/${response.data.user.organizationId}/dashboard/HR-dashboard`
+        //   );
+        // } else if (response?.data?.role === "Manager") {
+        //   redirect(
+        //     `/organisation/${response.data.user.organizationId}/dashboard/manager-dashboard`
+        //   );
+        // } else if (response?.data?.role === "Employee") {
+        //   redirect("/organisation/dashboard/employee-dashboard");
+        // }
 
         window.location.reload();
       },
@@ -75,80 +88,20 @@ const SignIn = () => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    if (!email || !password || !selectRole) {
+    if (!email || !password) {
       handleAlert(true, "warning", "All fields are manadatory");
       return false;
     }
-
-    const data = { email, password, role: selectRole };
-
+    const data = { email, password };
     await handleLogin.mutateAsync(data);
-
-    // if (!email || !password || !selectRole) {
-    //   handleAlert(true, "warning", "All fields are manadatory");
-    //   return false;
-    // }
-
-    // try {
-
-    //   // Changing Cookie
-    //   Cookies.set("aeigs", response.data.token);
-
-    //   handleAlert(
-    //     true,
-    //     "success",
-    //     `Welcome ${response.data.user.first_name} you are logged in successfully`
-    //   );
-
-    //   if (response?.data?.role === "Super-Admin") {
-    //     redirect("/");
-    //   } else if (response?.data?.role === "Hr") {
-    //     redirect(
-    //       `/organisation/${response.data.user.organizationId}/dashboard/HR-dashboard`
-    //     );
-    //   } else if (response?.data?.role === "Manager") {
-    //     redirect(
-    //       `/organisation/${response.data.user.organizationId}/dashboard/manager-dashboard`
-    //     );
-    //   } else if (response?.data?.role === "Employee") {
-    //     redirect("/organisation/dashboard/employee-dashboard");
-    //   }
-
-    //   window.location.reload();
-    // } catch (error) {
-    //   console.error("API error:", error.response);
-    //   handleAlert(
-    //     true,
-    //     "error",
-    //     error?.response?.data?.message || "Failed to sign in. Please try again."
-    //   );
-    // }
   };
-  const options = [
-    {
-      value: "Super-Admin",
-      label: "Super-Admin",
-    },
-    {
-      value: "Hr",
-      label: "Hr",
-    },
-    {
-      value: "Manager",
-      label: "Manager",
-    },
-    {
-      value: "Employee",
-      label: "Employee",
-    },
-  ];
 
   return (
     <>
       <section className="lg:min-h-screen  flex w-full">
-        <div className="!w-[30%]  lg:flex hidden text-white flex-col items-center justify-center lg:h-screen relative">
+        <div className="!w-[30%]  md:justify-start lg:flex hidden text-white flex-col items-center justify-center lg:h-screen relative">
           <div className="bg__gradient  absolute inset-0 "></div>
-          <ul class="circles">
+          <ul className="circles">
             <li></li>
             <li></li>
             <li></li>
@@ -163,7 +116,7 @@ const SignIn = () => {
           <div className="space-y-2 mb-8 flex-col flex items-center justify-center"></div>
         </div>
 
-        <article className="lg:w-[70%] h-screen  !bg-white w-full flex   items-center lg:items-start flex-col justify-center">
+        <article className="lg:w-[70%] h-screen  !bg-white w-full flex lg:justify-start justify-center  items-center lg:items-start flex-col ">
           <div className="lg:flex hidden w-full  lg:py-2 lg:px-8 my-2 gap-4 items-center justify-center lg:justify-end">
             <p>Don't have an account ?</p>
             <Link to="/sign-up">
@@ -188,7 +141,7 @@ const SignIn = () => {
               </div>
             </div>
 
-            <div className="my-4 space-y-2 ">
+            {/* <div className="my-4 space-y-2 ">
               <label
                 htmlFor={role}
                 className={" font-semibold text-gray-500 text-md"}
@@ -201,9 +154,9 @@ const SignIn = () => {
                 id="role"
                 placeholder={`Role`}
               />
-            </div>
+            </div> */}
 
-            <div className="mb-6 space-y-2 ">
+            <div className="mt-6 space-y-2 ">
               <label
                 htmlFor={email}
                 className={" font-semibold text-gray-500 text-md"}

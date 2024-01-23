@@ -24,7 +24,7 @@ const Home = () => {
     );
     return response.data;
   };
-  const { data, isLoading } = useQuery(["orgData"], getOrgList);
+  const { data, isLoading } = useQuery("orgDatas", getOrgList);
 
   // const [userRole, setUserRole] = useState();
 
@@ -54,10 +54,10 @@ const Home = () => {
   }, [redirect, cookies, handleAlert, authToken]);
 
   return (
-    <div className="p-8 bg-white h-screen">
+    <div className="md:p-8 py-4 px-0 bg-white h-screen">
       <div className="flex items-center h-[70vh] justify-center w-full">
-        <div className="!w-max md:px-8  xs:px-2 flex justify-end items-end  flex-col">
-          <div className="w-max">
+        <div className="md:!w-max w-full md:px-8 px-0 flex justify-end items-end  flex-col">
+          <div className="w-full md:w-max md:px-0 px-2">
             <h1 className="md:text-[2.30rem] w-max xs:text-[1.5rem] font-thin">
               Welcome to{" "}
               <span className="md:text-[2.30rem] w-max xs:text-[1.5rem]  gradinet font-semibold text-blue-500 ">
@@ -94,7 +94,7 @@ const Home = () => {
               </Link>
             ) : (
               <Link to={"/organizationList"} className="!w-max !block">
-                <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-3 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
+                <button className=" flex  group justify-center gap-2 items-center rounded-md p-2 !text-xs md:px-6 md:py-3 md:!text-[1em] font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
                   Go to Organization{" "}
                   <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
                 </button>

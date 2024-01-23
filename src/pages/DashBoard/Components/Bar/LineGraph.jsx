@@ -112,7 +112,7 @@ const LineGraph = ({ salarydata, isLoading = false }) => {
           <h1 className="text-lg my-4 font-bold text-[#67748E]">
             <Skeleton variant="text" width={150} height={20} />
           </h1>
-          <div className="h-[370px] 2xl:h-[400px] w-full ">
+          <div className="h-[250px] md:h-[340px] w-full ">
             <Skeleton variant="rect" width="100%" height="100%" />
           </div>
         </div>
@@ -124,7 +124,7 @@ const LineGraph = ({ salarydata, isLoading = false }) => {
           <h1 className="text-lg my-4 font-bold text-[#67748E]">
             Salary Overview
           </h1>
-          <div className="h-[250px] md:h-[300px] w-full ">
+          <div className="h-[250px] md:h-[340px] w-full ">
             <Line data={data} options={option} />
           </div>
         </div>
