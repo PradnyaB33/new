@@ -1,8 +1,11 @@
 import axios from "axios";
 import useAuthToken from "../../../hooks/Token/useAuth";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
+import { useContext } from "react";
+import { TestContext } from "../../../State/Function/Main";
 
 const useHook = () => {
+  const { handleAlert } = useContext(TestContext);
   const authToken = useAuthToken();
   const organisationId = "65a7b30a2dde15339e25db3e";
 
@@ -151,6 +154,106 @@ const useHook = () => {
     queryKey: ["inputfield"],
     queryFn: getInputField,
   });
+  //get manager detail
+  const getManagerDetail = async () => {
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: authToken,
+      },
+    };
+    let data = await axios.get(
+      `${process.env.REACT_APP_API}/route/employee/get-manager/${organisationId}`,
+      config
+    );
+    return data.data.manager;
+  };
+  const { data: getManagerData } = useQuery({
+    queryKey: ["manager"],
+    queryFn: getManagerDetail,
+  });
+
+  // add employee data
+  const addEmployee = async (user) => {
+    try {
+      console.log(user);
+
+      const config = {
+        headers: {
+          "Content-type": "Application/json",
+          Authorization: authToken,
+        },
+      };
+
+      // Check if the selected profile exists
+      const checkProfileResponse = await axios.post(
+        `${process.env.REACT_APP_API}/route/employee/check-profile-exists/${organisationId}`,
+        { profile: user.profile },
+        config
+      );
+
+      if (
+        checkProfileResponse.status === 200 &&
+        checkProfileResponse.data.profileExists
+      ) {
+        const createProfileConfirmation = window.confirm(
+          `${user.profile} profile already exists. Do you want to create it again?`
+        );
+
+        if (createProfileConfirmation) {
+          // Proceed with profile creation
+          const response = await axios.post(
+            `${process.env.REACT_APP_API}/route/employee/add-employee`,
+            user,
+            config
+          );
+
+          if (response.data.success) {
+            handleAlert(true, "error", "Invalid authorization");
+          } else {
+            handleAlert(true, "success", response.data.message);
+          }
+        } else {
+          // User declined creating the profile again
+          handleAlert(true, "info", "Profile creation canceled.");
+        }
+      } else {
+        // Profile does not exist, proceed with creation
+        const response = await axios.post(
+          `${process.env.REACT_APP_API}/route/employee/add-employee`,
+          user,
+          config
+        );
+
+        if (response.status === 200) {
+          // Display a message to the user indicating that a manager ID is required
+          alert(
+            "Manager ID is required for an employee profile. Please provide a valid manager ID."
+          );
+        } else if (response.data && response.data.success) {
+          handleAlert(true, "error", "Invalid authorization");
+        } else {
+          handleAlert(true, "success", response.data.message);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      // Handle errors as needed
+      handleAlert(
+        true,
+        "error",
+        error.response ? error.response.data.message : error.message
+      );
+    }
+  };
+  const { mutate: addEmployeeMutate } = useMutation({
+    mutationFn: addEmployee,
+    onSuccess: async () => {},
+    onError: async (data) => {
+      console.log("error", data);
+    },
+  });
+
   return {
     getDesignationData,
     getLocationData,
@@ -159,6 +262,8 @@ const useHook = () => {
     getDepartmentData,
     getProfileData,
     getInputFieldData,
+    getManagerData,
+    addEmployeeMutate,
   };
 };
 

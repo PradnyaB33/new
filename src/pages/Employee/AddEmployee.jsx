@@ -1,6 +1,6 @@
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Tooltip, FormControl, FormLabel } from "@mui/material";
+import { Tooltip, FormControl, InputLabel, TextField } from "@mui/material";
 import {
   Lock,
   NoEncryption,
@@ -11,13 +11,18 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import { z } from "zod";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import useHook from "./Component/useHook";
-
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Radio from "@mui/material/Radio";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormLabel from "@mui/material/FormLabel";
 const AddEmployee = () => {
+  const staticTitle =
+    "This form is used to add relavant information of employee ";
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   const {
     getDesignationData,
     getLocationData,
@@ -26,12 +31,9 @@ const AddEmployee = () => {
     getDepartmentData,
     getInputFieldData,
     getProfileData,
+    getManagerData,
+    addEmployeeMutate,
   } = useHook();
-
-  const staticTitle =
-    "This form is used to add relavant information of employee ";
-  const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   const AddEmployeeSchema = z
     .object({
@@ -51,7 +53,7 @@ const AddEmployee = () => {
         .min(10, { message: "Phone Number must be 10 digit" })
         .regex(/^[0-9]+$/),
       email: z.string().email(),
-      companyemail: z.string().email(),
+
       password: z
         .string()
         .min(8)
@@ -60,11 +62,32 @@ const AddEmployee = () => {
             "Password must contain at least one number, one special character, and be at least 8 characters long",
         }),
       confirmPassword: z.string(),
-      bank_account_no: z.number(),
+      bank_account_no: z.string(),
       empId: z.string(),
-      date_of_birth: z.date(),
-      joining_date: z.date(),
+      companyemail: z.string().email(),
+      citizenship: z.string(),
+      date_of_birth: z.string(),
+      joining_date: z.string(),
       address: z.string(),
+      designation: z.string(),
+      deptname: z.string(),
+      salarystructure: z.string(),
+      worklocation: z.string(),
+      employmentType: z.string(),
+      mgrempid: z.string(),
+      profile: z.string(),
+      gender: z.string(),
+      "Shifts allocation": z.string(),
+      "Department cost center no": z.string(),
+      "Middle Name": z.string(),
+      "Martial status": z.string(),
+      "Primary nationality": z.string(),
+      Education: z.string(),
+      "Permanent Address": z.string(),
+      "Adhar Card Number": z.number(),
+      "Pan Card Number": z.number(),
+      "Relative Information": z.string(),
+      "Emergency contact": z.number(),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Password don't match",
@@ -75,6 +98,7 @@ const AddEmployee = () => {
     handleSubmit,
     control,
     formState: { errors },
+    getValues,
   } = useForm({
     resolver: zodResolver(AddEmployeeSchema),
     defaultValues: {
@@ -90,10 +114,22 @@ const AddEmployee = () => {
       address: undefined,
       date_of_birth: undefined,
       joining_date: undefined,
+      designation: "",
+      deptname: "",
+      worklocation: "",
+      salarystructure: "",
+      employmentType: "",
+      mgrempid: "",
+      profile: "",
+      gender: "male",
     },
   });
   const onSubmit = (e) => {
     e.preventDefault();
+    console.log("Form submitted"); // Add this line
+    const formData = getValues();
+    console.log(formData);
+    addEmployeeMutate(formData);
   };
 
   return (
@@ -228,64 +264,290 @@ const AddEmployee = () => {
               errors={errors}
               error={errors.address}
             />
-            <div className="flex items-center gap-20">
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Date of Birth</FormLabel>
-                <div className="w-100">
-                  <Controller
-                    name="date_of_birth"
-                    control={control}
-                    render={({ field }) => {
-                      return (
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DemoContainer
-                            className="w-full"
-                            components={["DatePicker"]}
-                            required
-                          >
-                            <DatePicker
-                              label="Date of Birth"
-                              {...field}
-                              slotProps={{
-                                textField: { size: "small", fullWidth: true },
-                              }}
-                            />
-                          </DemoContainer>
-                        </LocalizationProvider>
-                      );
-                    }}
-                  />
-                </div>
+            <div className="flex items-center gap-2">
+              <AuthInputFiled
+                name="date_of_birth"
+                icon={Email}
+                control={control}
+                type="date"
+                placeholder="01/01/00..."
+                label="Date of Birth *"
+                errors={errors}
+                error={errors.date_of_birth}
+              />
+              <AuthInputFiled
+                name="joining_date"
+                icon={Email}
+                control={control}
+                type="date"
+                placeholder="01/01/00..."
+                label="Joining Date *"
+                errors={errors}
+                error={errors.joining_date}
+              />
+            </div>
+
+            <div className="flex items-center gap-2 mb-6">
+              <FormControl className="w-80">
+                <InputLabel id="demo-simple-select-label">
+                  Select Department
+                </InputLabel>
+                <Controller
+                  control={control}
+                  name={"deptname"}
+                  render={({ field }) => (
+                    <Select {...field}>
+                      {getDepartmentData && getDepartmentData?.department ? (
+                        getDepartmentData?.department?.map((department) => (
+                          <MenuItem key={department._id} value={department._id}>
+                            {department?.departmentName}
+                          </MenuItem>
+                        ))
+                      ) : (
+                        <MenuItem value="" disable>
+                          No departments available
+                        </MenuItem>
+                      )}
+                    </Select>
+                  )}
+                />
               </FormControl>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Joining Date</FormLabel>
-                <div className="w-100">
-                  <Controller
-                    name="joining_date"
-                    control={control}
-                    render={({ field }) => {
-                      return (
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DemoContainer
-                            className="w-full"
-                            components={["DatePicker"]}
-                            required
+              <FormControl className="w-80">
+                <InputLabel id="demo-simple-select-label">
+                  Select Designation
+                </InputLabel>
+                <Controller
+                  control={control}
+                  name={"designation"}
+                  render={({ field }) => (
+                    <Select {...field}>
+                      {getDesignationData &&
+                      getDesignationData?.designations ? (
+                        getDesignationData?.designations?.map((designation) => (
+                          <MenuItem
+                            key={designation._id}
+                            value={designation._id}
                           >
-                            <DatePicker
-                              label="Joining Date"
-                              {...field}
-                              slotProps={{
-                                textField: { size: "small", fullWidth: true },
-                              }}
-                            />
-                          </DemoContainer>
-                        </LocalizationProvider>
-                      );
-                    }}
-                  />
-                </div>
+                            {designation?.designationName}
+                          </MenuItem>
+                        ))
+                      ) : (
+                        <MenuItem value="">No Designation available</MenuItem>
+                      )}
+                    </Select>
+                  )}
+                />
               </FormControl>
             </div>
+            <div className="flex items-center gap-2 mb-6">
+              <FormControl className="w-80">
+                <InputLabel id="demo-simple-select-label">
+                  Select WorK Location
+                </InputLabel>
+                <Controller
+                  control={control}
+                  name={"worklocation"}
+                  render={({ field }) => (
+                    <Select {...field}>
+                      {getLocationData && getLocationData?.locationsData ? (
+                        getLocationData?.locationsData?.map((location) => (
+                          <MenuItem key={location._id} value={location._id}>
+                            {location?.city}
+                          </MenuItem>
+                        ))
+                      ) : (
+                        <MenuItem value="">No location available</MenuItem>
+                      )}
+                    </Select>
+                  )}
+                />
+              </FormControl>
+              <FormControl className="w-80">
+                <InputLabel id="demo-simple-select-label">
+                  Select Employement Type
+                </InputLabel>
+                <Controller
+                  control={control}
+                  name={"employmentType"}
+                  render={({ field }) => (
+                    <Select {...field}>
+                      {getEmployementTypeData &&
+                      getEmployementTypeData?.empTypes ? (
+                        getEmployementTypeData?.empTypes?.map((empType) => (
+                          <MenuItem key={empType._id} value={empType._id}>
+                            {empType?.title}
+                          </MenuItem>
+                        ))
+                      ) : (
+                        <MenuItem>No employement type available</MenuItem>
+                      )}
+                    </Select>
+                  )}
+                />
+              </FormControl>
+            </div>
+
+            <div className="flex items-center gap-2 mb-6">
+              <FormControl className="w-80">
+                <InputLabel id="demo-simple-select-label">
+                  Select Salary Template
+                </InputLabel>
+                <Controller
+                  control={control}
+                  name={"salarystructure"}
+                  render={({ field }) => (
+                    <Select {...field}>
+                      {getSalaryInputData &&
+                      getSalaryInputData?.salaryTemplates ? (
+                        getSalaryInputData?.salaryTemplates.map(
+                          (salaryTemplate) => (
+                            <MenuItem
+                              key={salaryTemplate._id}
+                              value={salaryTemplate._id}
+                            >
+                              {salaryTemplate?.name}
+                            </MenuItem>
+                          )
+                        )
+                      ) : (
+                        <MenuItem value="">
+                          No salary template available
+                        </MenuItem>
+                      )}
+                    </Select>
+                  )}
+                />
+              </FormControl>
+              <FormControl className="w-80">
+                <InputLabel id="demo-simple-select-label">
+                  Select Profile
+                </InputLabel>
+                <Controller
+                  control={control}
+                  name={"profile"}
+                  render={({ field }) => (
+                    <Select {...field}>
+                      {getProfileData && getProfileData?.length > 0 ? (
+                        getProfileData?.map((profile) => (
+                          <MenuItem
+                            key={profile.roleName}
+                            value={profile.roleName}
+                          >
+                            {profile?.roleName}
+                          </MenuItem>
+                        ))
+                      ) : (
+                        <MenuItem value="">
+                          No salary template available
+                        </MenuItem>
+                      )}
+                    </Select>
+                  )}
+                />
+              </FormControl>
+            </div>
+            <FormControl className="!w-full mb-6">
+              <InputLabel id="demo-simple-select-label">
+                Select Manager Name
+              </InputLabel>
+              <Controller
+                control={control}
+                name={"mgrempid"}
+                render={({ field }) => (
+                  <Select {...field}>
+                    {getManagerData && getManagerData.length > 0 ? (
+                      getManagerData.map((manager) =>
+                        manager.managerId ? (
+                          <MenuItem
+                            key={manager._id}
+                            value={manager.managerId._id}
+                          >
+                            {`${manager.managerId.first_name} ${manager.managerId.last_name}`}
+                          </MenuItem>
+                        ) : null
+                      )
+                    ) : (
+                      <MenuItem value="" disabled>
+                        No managers available
+                      </MenuItem>
+                    )}
+                  </Select>
+                )}
+              />
+            </FormControl>
+            <div className="mb-6">
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Gender </FormLabel>
+                <Controller
+                  control={control}
+                  name="gender"
+                  render={({ field }) => (
+                    <RadioGroup {...field} row>
+                      <label className="inline-flex items-center">
+                        <FormControlLabel
+                          value="male"
+                          control={<Radio className="text-blue-500" />}
+                          label={<span className="ml-2 text-black">Male</span>}
+                        />
+                      </label>
+
+                      <label className="inline-flex items-center">
+                        <FormControlLabel
+                          value="female"
+                          control={<Radio className="text-blue-500" />}
+                          label={
+                            <span className="ml-2 text-black">Female</span>
+                          }
+                        />
+                      </label>
+
+                      <label className="inline-flex items-center">
+                        <FormControlLabel
+                          value="transgender"
+                          control={<Radio className="text-blue-500" />}
+                          label={
+                            <span className="ml-2 text-black">Transgender</span>
+                          }
+                        />
+                      </label>
+                    </RadioGroup>
+                  )}
+                />
+              </FormControl>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {getInputFieldData &&
+                getInputFieldData?.length > 0 &&
+                getInputFieldData?.map((item) => (
+                  <Controller
+                    key={item?._id}
+                    control={control}
+                    name={item?.label}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        key={item?._id}
+                        size="small"
+                        type={item?.inputType}
+                        label={item?.label}
+                        fullWidth
+                        margin="normal"
+                        sx={{
+                          flexBasis: "45%",
+                          marginBottom: "16px",
+                          marginRight: "15px",
+                        }}
+                      />
+                    )}
+                  />
+                ))}
+            </div>
+            <button
+              type="submit"
+              className=" flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+            >
+              Submit
+            </button>
           </form>
         </div>
       </div>
