@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 // Components
 import SetupSideNav from "./components/SideNav/SetupSideNav";
@@ -8,7 +8,6 @@ import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
 import UserProfile from "./hooks/UserData/useUser";
-import AddEmployee from "./pages/AddEmployee/addemployee";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import Application from "./pages/Application/Application";
 import DashBoardHR from "./pages/DashBoard/DashBoardHR";
@@ -19,7 +18,8 @@ import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import AddDepartments from "./pages/Departments/AddDepartments";
 import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
-import EmployeeList from "./pages/EmployeeList/EmployeeList";
+import AddEmployee from "./pages/Employee/AddEmployee";
+import EmployeeList from "./pages/Employee/EmployeeList";
 import Home from "./pages/Home/Home";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
@@ -258,7 +258,7 @@ export default App;
 
 function RequireAuth({ children, permission }) {
   const { getCurrentUser, getCurrentRole } = UserProfile();
-  const navigate = useNavigate("");
+
   const user = getCurrentUser();
   const role = getCurrentRole();
   const isPermission = role === permission;

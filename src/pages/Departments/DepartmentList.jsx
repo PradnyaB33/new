@@ -47,6 +47,8 @@ const DepartmentList = () => {
     // eslint-disable-next-line
   }, []);
 
+  console.log(departmentList);
+
   // Delete Query for deleting Single Department
   const handleDeleteConfirmation = (id) => {
     setDeleteConfirmation(id);
@@ -135,8 +137,9 @@ const DepartmentList = () => {
                       {department?.departmentHeadDelegateName}
                     </td>
                     <td className="py-2 px-3">
-                      {department?.departmentLocation.city}
+                      {department?.departmentLocation?.city || ""}
                     </td>
+
                     <td className="whitespace-nowrap px-3 py-2">
                       <IconButton aria-label="edit">
                         <Edit className="!text-xl" color="success" />
