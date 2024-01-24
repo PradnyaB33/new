@@ -9,6 +9,7 @@ import TermsAndConditionsPage from "./components/termscondition/termsconditonpag
 import UserProfile from "./hooks/UserData/useUser";
 import AddEmployee from "./pages/AddEmployee/addemployee";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
+import NewOranisationForm from "./pages/AddOrganisation/NewOrgForm";
 import Application from "./pages/Application/Application";
 import DashBoardHR from "./pages/DashBoard/HR/DashBoardHR";
 import DashboardManger from "./pages/DashBoard/Manager/DashboardManger";
@@ -60,6 +61,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/test" element={<EditablePolyline />} />
+      <Route path="/testOrg" element={<NewOranisationForm />} />
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
       <Route path="/test3" element={<TestNaresh />} />
       <Route path="/test2" element={<TrackingMap />} />

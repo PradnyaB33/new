@@ -177,9 +177,7 @@ const AddOrganisation = () => {
     <>
       <div className="w-full h-[92vh] bg-white">
         <div>
-
-        <BackComponent style={{ zIndex: 1000 }} />
-
+          <BackComponent style={{ zIndex: 1000 }} />
         </div>
 
         <form
@@ -192,7 +190,6 @@ const AddOrganisation = () => {
           }}
           action="submit"
         >
-
           <Container
             style={{
               display: "flex",
@@ -217,7 +214,7 @@ const AddOrganisation = () => {
                 color: "#1D6EB7",
                 fontWeight: "600",
                 position: "relative",
-                top: "5px"
+                top: "5px",
               }}
               variant="h4"
             >
@@ -242,11 +239,14 @@ const AddOrganisation = () => {
               onChange={handleData}
               value={inputdata.web_url}
               size="small"
-              className={`w-[80%] ${firstEmptyField === "web_url" ? "error" : ""
-                }`}
+              className={`w-[80%] ${
+                firstEmptyField === "web_url" ? "error" : ""
+              }`}
               label="Url Of Website"
               type="text"
-              inputRef={firstEmptyField === "web_url" ? firstEmptyFieldRef : null}
+              inputRef={
+                firstEmptyField === "web_url" ? firstEmptyFieldRef : null
+              }
             />
             <FormControl
               required
@@ -266,7 +266,9 @@ const AddOrganisation = () => {
                 value={inputdata.industry_type}
                 onChange={handleData}
                 inputRef={
-                  firstEmptyField === "industry_type" ? firstEmptyFieldRef : null
+                  firstEmptyField === "industry_type"
+                    ? firstEmptyFieldRef
+                    : null
                 }
                 style={{ zIndex: 0 }}
               >
@@ -283,7 +285,9 @@ const AddOrganisation = () => {
               onChange={handleData}
               value={inputdata.email}
               size="small"
-              className={`w-[80%] ${firstEmptyField === "email" ? "error" : ""}`}
+              className={`w-[80%] ${
+                firstEmptyField === "email" ? "error" : ""
+              }`}
               label={emailLabel}
               type="email"
               error={emailError}
@@ -301,8 +305,9 @@ const AddOrganisation = () => {
               onChange={handleData}
               value={inputdata.location}
               size="small"
-              className={`w-[80%] ${firstEmptyField === "location" ? "error" : ""
-                }`}
+              className={`w-[80%] ${
+                firstEmptyField === "location" ? "error" : ""
+              }`}
               label="Location"
               type="text"
               inputRef={
@@ -316,8 +321,9 @@ const AddOrganisation = () => {
               onChange={handleData}
               value={inputdata.contact_number}
               size="small"
-              className={`w-[80%] ${firstEmptyField === "contact_number" ? "error" : ""
-                }`}
+              className={`w-[80%] ${
+                firstEmptyField === "contact_number" ? "error" : ""
+              }`}
               label={numberLabel}
               type="number"
               error={contactNumberError}
@@ -337,8 +343,9 @@ const AddOrganisation = () => {
               onChange={handleData}
               value={inputdata.description}
               size="small"
-              className={`w-[80%] ${firstEmptyField === "description" ? "error" : ""
-                }`}
+              className={`w-[80%] ${
+                firstEmptyField === "description" ? "error" : ""
+              }`}
               label="Organisation Description"
               type="text"
               inputRef={
@@ -359,11 +366,13 @@ const AddOrganisation = () => {
                       setInputData({ ...inputdata, foundation_date: newDate });
                       console.log(newDate);
                     }}
-                    slotProps={{ textField: { size: "small", fullWidth: true } }}
+                    slotProps={{
+                      textField: { size: "small", fullWidth: true },
+                    }}
                   />
                 </DemoContainer>
               </LocalizationProvider>
-              <div className="flex h-[50px] pt-3 " >
+              <div className="flex h-[50px] pt-3 ">
                 <Input
                   type="file"
                   id="imageInput"
@@ -405,7 +414,7 @@ const AddOrganisation = () => {
             </Button>
           </Container>
         </form>
-      </div >
+      </div>
     </>
   );
 };

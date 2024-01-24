@@ -9,6 +9,7 @@ import {
   West,
 } from "@mui/icons-material";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
@@ -155,6 +156,15 @@ const Setup = ({ children }) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/set-employee-salary-calculate-day`,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+    },
+    {
+      label: "Organization Employee Limit",
+      icon: CreditCardIcon,
+      href: `/organisation/${organisationId}/setup/employee-count`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/employee-count`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
   ];
