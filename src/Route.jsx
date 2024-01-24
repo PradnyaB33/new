@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, } from "react-router-dom";
 
 // Components
 import SetupSideNav from "./components/SideNav/SetupSideNav";
@@ -8,7 +8,8 @@ import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
 import UserProfile from "./hooks/UserData/useUser";
-import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
+import AddEmployee from "./pages/Employee/AddEmployee";
+import AddOrganisation from "./pages/AddOrganisation/ADDORGANIZATION";
 import Application from "./pages/Application/Application";
 import DashBoardHR from "./pages/DashBoard/DashBoardHR";
 import Dashboard from "./pages/DashBoard/Dashboard";
@@ -18,7 +19,10 @@ import DeleteEmployee from "./pages/Employee/DeleteEmployee";
 import AddDepartments from "./pages/Departments/AddDepartments";
 import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
+<<<<<<< HEAD
 import EmployeeAdd from "./pages/Employee/addemploye";
+=======
+>>>>>>> 24094c128985b13d8489984e066862cfae0962c2
 import EmployeeList from "./pages/Employee/EmployeeList";
 import Home from "./pages/Home/Home";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
@@ -57,8 +61,10 @@ import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
+import DepartmentList2 from "./pages/Departments/department-list";
 import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
+
 const App = () => {
   return (
     <Routes>
