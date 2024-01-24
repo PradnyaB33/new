@@ -31,7 +31,6 @@ const AddOrganisation = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [url, setUrl] = useState('')
   const [uploadedFile, setUploadedFile] = useState()
-  const [logoUrl, setLogoUrl] = useState("");
   const [emailLabel, setEmailLabel] = useState("Organisation Email");
   const [numberLabel, setNumberLabel] = useState("Phone Number");
   const [emailError, setEmailError] = useState(false);
@@ -44,20 +43,20 @@ const AddOrganisation = () => {
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
     setUploadedFile(file);
-  
+
     if (file) {
       if (!file.type.startsWith('image/')) {
         handleAlert(true, 'error', 'Please upload only image files.');
         return;
       }
-  
+
       const imageUrl = URL.createObjectURL(file);
       setSelectedImage(imageUrl);
-  
+
       const formData = new FormData();
       formData.append('file', file);
       formData.append('upload_preset', 'lhyvmmdu');
-  
+
       try {
         console.log('uploaded');
       } catch (error) {
@@ -132,21 +131,25 @@ const AddOrganisation = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const emptyField = Object.keys(inputdata)
       .slice(0, -1)
       .find((key) => !inputdata[key]);
-
+  
     if (emptyField) {
       handleAlert(true, "error", `Please fill in the ${emptyField} field.`);
       setFirstEmptyField(emptyField);
       firstEmptyFieldRef.current.focus();
       return;
     }
-
+  
     try {
-      setInputData({ ...inputdata, logo_url: logoUrl });
-
+      let logoUrl = inputdata.logo_url;
+      if (uploadedFile) {
+        const response = await uploadFile(url, uploadedFile);
+        logoUrl = response.Location;
+      }
+  
       const payload = {
         name: inputdata.name,
         web_url: inputdata.web_url,
@@ -156,8 +159,9 @@ const AddOrganisation = () => {
         contact_number: inputdata.contact_number,
         description: inputdata.description,
         foundation_date: inputdata.foundation_date,
-        logo_url: logoUrl, // Include logo_url in the payload
+        logo_url: logoUrl,
       };
+  
       await axios.post(
         `${process.env.REACT_APP_API}/route/organization/create`,
         payload,
@@ -167,46 +171,47 @@ const AddOrganisation = () => {
           },
         }
       );
-
+  
       handleAlert(true, "success", "Organization created successfully");
       navigate("/organizationList");
     } catch (e) {
       console.error(e);
-
       handleAlert(true, "error", "Failed to create organization");
     }
+  
     setSelectedImage(null);
     setFirstEmptyField(null);
   };
-
-  useEffect(() =>{
-    (async() =>{
-        const response = await getSignedUrl()
-        console.log(response.url.split('?')[0]);
-        setUrl(response.url.split('?')[0])
-
-    })()
-  },[uploadFile])
+  
 
   useEffect(() => {
-    uploadedFile &&
-      (async () => {
-        try {
-          const response = await uploadFile(url, uploadedFile);
-          setLogoUrl(response.Location);
-        } catch (error) {
-          console.error("Error uploading image:", error);
-        }
-      })();
-  }, [uploadedFile, url]);
-  
+    (async () => {
+      const response = await getSignedUrl()
+      console.log(response.url.split('?')[0]);
+      setUrl(response.url.split('?')[0])
+
+    })()
+  }, [uploadFile])
+
+  // useEffect(() => {
+  //   uploadedFile &&
+  //     (async () => {
+  //       try {
+  //         const response = await uploadFile(url, uploadedFile);
+  //         setLogoUrl(response.Location);
+  //       } catch (error) {
+  //         console.error("Error uploading image:", error);
+  //       }
+  //     })();
+  // }, [uploadedFile, url]);
+
 
   return (
     <>
-      <div className="w-full h-[92vh] bg-white">
+      <div className="w-full h-[auto] bg-white">
         <div>
 
-        <BackComponent style={{ zIndex: 1000 }} />
+          <BackComponent style={{ zIndex: 1000 }} />
 
         </div>
 
@@ -214,7 +219,7 @@ const AddOrganisation = () => {
           style={{
             display: "flex",
             alignItems: "center",
-            height: "90vh",
+            height: "91vh",
             backgroundColor: "white",
             width: "100%",
           }}
@@ -237,7 +242,7 @@ const AddOrganisation = () => {
               top: "10px",
               margin: "auto",
             }}
-            className="shadow-md"
+            className="shadow-md gap-5"
             maxWidth="sm"
           >
             <Typography
@@ -245,7 +250,7 @@ const AddOrganisation = () => {
                 color: "#1D6EB7",
                 fontWeight: "600",
                 position: "relative",
-                top: "5px"
+                top: "1rem"
               }}
               variant="h4"
             >
@@ -427,6 +432,8 @@ const AddOrganisation = () => {
               style={{
                 background: "#1D6EB7",
                 color: "white",
+                position: "relative",
+                bottom: "1rem"
               }}
             >
               Submit

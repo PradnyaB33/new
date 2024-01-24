@@ -57,6 +57,9 @@ import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import DepartmentList2 from "./pages/Departments/department-list";
+import NotFound from "./utils/Forbidden/NotFound";
+import UnAuthorized from "./utils/Forbidden/UnAuthorized";
+
 const App = () => {
   return (
     <Routes>
