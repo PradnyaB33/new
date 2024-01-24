@@ -19,7 +19,6 @@ import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import AddDepartments from "./pages/Departments/AddDepartments";
 import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
-import AddEmployee from "./pages/Employee/AddEmployee";
 import EmployeeList from "./pages/Employee/EmployeeList";
 import Home from "./pages/Home/Home";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
