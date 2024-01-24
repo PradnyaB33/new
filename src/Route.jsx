@@ -275,7 +275,7 @@ function RequireAuth({ children, permission }) {
     return <UnAuthorized />;
   }
 
-  return user && isPermission ? children : navigate("/");
+  return user && isPermission ? children : <Navigate to={"/"} />;
 }
 
 //   : user?.profile?.length < 2 ? (

@@ -30,7 +30,7 @@ const OrgList = () => {
 
   return (
     <div className="bg-gray-50 h-screen">
-      <div className="md:p-10 p-4  !pb-6">
+      <div className="md:p-10  sm:p-4 p-1 py-4  !pb-6">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Avatar
@@ -58,7 +58,7 @@ const OrgList = () => {
       </div>
 
       {!isLoading && (
-        <div className="flex flex-wrap  gap-x-6 gap-y-2 px-10">
+        <div className="flex flex-wrap sm:justify-start justify-center  gap-x-6 gap-y-2 sm:px-10">
           {data?.organizations?.length <= 0 ? (
             <div
               className={`border-b-[3px]  block min-w-[21rem] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-200`}
