@@ -1,13 +1,6 @@
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Tooltip, FormControl, InputLabel, TextField } from "@mui/material";
-import {
-  Lock,
-  NoEncryption,
-  PermContactCalendar,
-  Phone,
-  Email,
-} from "@mui/icons-material";
+import { FormControl, InputLabel, TextField } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import { z } from "zod";
@@ -18,9 +11,8 @@ import Radio from "@mui/material/Radio";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormLabel from "@mui/material/FormLabel";
+
 const AddEmployee = () => {
-  const staticTitle =
-    "This form is used to add relavant information of employee ";
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   const {
@@ -84,10 +76,10 @@ const AddEmployee = () => {
       "Primary nationality": z.string(),
       Education: z.string(),
       "Permanent Address": z.string(),
-      "Adhar Card Number": z.number(),
-      "Pan Card Number": z.number(),
+      "Adhar Card Number": z.string(),
+      "Pan Card Number": z.string(),
       "Relative Information": z.string(),
-      "Emergency contact": z.number(),
+      "Emergency contact": z.string(),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Password don't match",
@@ -102,30 +94,30 @@ const AddEmployee = () => {
   } = useForm({
     resolver: zodResolver(AddEmployeeSchema),
     defaultValues: {
-      first_name: undefined,
-      last_name: undefined,
-      phone_number: undefined,
-      email: undefined,
-      password: undefined,
-      bank_account_no: undefined,
-      empId: undefined,
-      companyemail: undefined,
-      citizenship: undefined,
-      address: undefined,
-      date_of_birth: undefined,
-      joining_date: undefined,
+      first_name: "",
+      last_name: "",
+      phone_number: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      bank_account_no: "",
+      empId: "",
+      companyemail: "",
+      citizenship: "",
+      address: "",
+      date_of_birth: "",
+      joining_date: "",
       designation: "",
       deptname: "",
       worklocation: "",
       salarystructure: "",
       employmentType: "",
       mgrempid: "",
-      profile: "",
+      profile: "Employee",
       gender: "male",
     },
   });
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = async () => {
     console.log("Form submitted"); // Add this line
     const formData = getValues();
     console.log(formData);
@@ -136,14 +128,11 @@ const AddEmployee = () => {
     <>
       <div className="content-center  flex justify-center my-0 p-0">
         <div className="w-[700px] shadow-lg rounded-lg border py-3 px-8">
-          <div className="flex items-center justify-center ">
-            <Tooltip title={`${staticTitle}`}>Add Employee</Tooltip>
-          </div>
-          <form className=" w-full  flex-1" onSubmit={handleSubmit(onSubmit)}>
+          <div className="flex items-center justify-center ">Add Employee</div>
+          <form className="w-full  flex-1" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex items-center gap-2">
               <AuthInputFiled
                 name="first_name"
-                icon={PermContactCalendar}
                 control={control}
                 type="text"
                 placeholder="jhon"
@@ -154,10 +143,9 @@ const AddEmployee = () => {
 
               <AuthInputFiled
                 name="last_name"
-                icon={PermContactCalendar}
                 control={control}
                 type="text"
-                placeholder="jhon"
+                placeholder="smith"
                 label="Last Name *"
                 errors={errors}
                 error={errors.last_name}
@@ -166,7 +154,6 @@ const AddEmployee = () => {
             <div className="flex items-center gap-2">
               <AuthInputFiled
                 name="phone_number"
-                icon={Phone}
                 control={control}
                 label={"Phone Number *"}
                 type={"number"}
@@ -176,7 +163,6 @@ const AddEmployee = () => {
               />
               <AuthInputFiled
                 name="email"
-                icon={Email}
                 control={control}
                 type="email"
                 placeholder="test@gmai..."
@@ -188,7 +174,6 @@ const AddEmployee = () => {
             <div className="flex items-center gap-2">
               <AuthInputFiled
                 name="password"
-                icon={Lock}
                 control={control}
                 type="password"
                 placeholder="****"
@@ -199,7 +184,6 @@ const AddEmployee = () => {
 
               <AuthInputFiled
                 name="confirmPassword"
-                icon={NoEncryption}
                 control={control}
                 type="password"
                 placeholder="****"
@@ -211,10 +195,9 @@ const AddEmployee = () => {
             <div className="flex items-center gap-2">
               <AuthInputFiled
                 name="bank_account_no"
-                icon={PermContactCalendar}
                 control={control}
                 type="number"
-                placeholder="jhon"
+                placeholder="1234"
                 label="Bank Account No *"
                 errors={errors}
                 error={errors.bank_account_no}
@@ -222,10 +205,9 @@ const AddEmployee = () => {
 
               <AuthInputFiled
                 name="empId"
-                icon={PermContactCalendar}
                 control={control}
-                type="number"
-                placeholder="jhon"
+                type="text"
+                placeholder="E1"
                 label="Emp Id *"
                 errors={errors}
                 error={errors.empId}
@@ -234,7 +216,6 @@ const AddEmployee = () => {
             <div className="flex items-center gap-2">
               <AuthInputFiled
                 name="companyemail"
-                icon={Email}
                 control={control}
                 type="email"
                 placeholder="test@gmai..."
@@ -245,7 +226,6 @@ const AddEmployee = () => {
 
               <AuthInputFiled
                 name="citizenship"
-                icon={NoEncryption}
                 control={control}
                 type="text"
                 placeholder="indian"
@@ -256,7 +236,6 @@ const AddEmployee = () => {
             </div>
             <AuthInputFiled
               name="address"
-              icon={PermContactCalendar}
               control={control}
               type="text"
               placeholder="Pune"
@@ -267,7 +246,6 @@ const AddEmployee = () => {
             <div className="flex items-center gap-2">
               <AuthInputFiled
                 name="date_of_birth"
-                icon={Email}
                 control={control}
                 type="date"
                 placeholder="01/01/00..."
@@ -277,7 +255,6 @@ const AddEmployee = () => {
               />
               <AuthInputFiled
                 name="joining_date"
-                icon={Email}
                 control={control}
                 type="date"
                 placeholder="01/01/00..."

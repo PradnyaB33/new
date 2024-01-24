@@ -40,7 +40,7 @@ const MenuProps = {
     },
   },
 };
-const Emp = () => {
+const EmployeeAdd = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
@@ -1153,4 +1153,4 @@ const Emp = () => {
   );
 };
 
-export default Emp;
+export default EmployeeAdd;

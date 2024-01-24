@@ -14,11 +14,11 @@ import DashBoardHR from "./pages/DashBoard/DashBoardHR";
 import Dashboard from "./pages/DashBoard/Dashboard";
 import DashboardManger from "./pages/DashBoard/DashboardManger";
 import SuperAdmin from "./pages/DashBoard/SuperAdmin";
-import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
+import DeleteEmployee from "./pages/Employee/DeleteEmployee";
 import AddDepartments from "./pages/Departments/AddDepartments";
 import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
-import AddEmployee from "./pages/Employee/AddEmployee";
+import EmployeeAdd from "./pages/Employee/addemploye";
 import EmployeeList from "./pages/Employee/EmployeeList";
 import Home from "./pages/Home/Home";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
@@ -146,7 +146,7 @@ const App = () => {
       <Route path="/employee-profile" element={<EmployeeProfile />} />
       <Route
         path="/organisation/:organisationId/employee-onboarding"
-        element={<AddEmployee />}
+        element={<EmployeeAdd />}
       />
       <Route
         path="/organisation/:organisationId/employee-offboarding"
@@ -273,7 +273,7 @@ function RequireAuth({ children, permission }) {
     return <UnAuthorized />;
   }
 
-  return user && isPermission ? children : navigate("/");
+  return user && isPermission ? children : <Navigate to={"/"} />;
 }
 
 //   : user?.profile?.length < 2 ? (
