@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 // Components
 import SetupSideNav from "./components/SideNav/SetupSideNav";
@@ -11,15 +11,16 @@ import UserProfile from "./hooks/UserData/useUser";
 import AddEmployee from "./pages/AddEmployee/addemployee";
 import AddOrganisation from "./pages/AddOrganisation/ADDORGANIZATION";
 import Application from "./pages/Application/Application";
-import DashBoardHR from "./pages/DashBoard/HR/DashBoardHR";
-import DashboardManger from "./pages/DashBoard/Manager/DashboardManger";
-import Dashboard from "./pages/DashBoard/employee/Dashboard";
-import SuperAdmin from "./pages/DashBoard/superAdmin/SuperAdmin";
+import DashBoardHR from "./pages/DashBoard/DashBoardHR";
+import Dashboard from "./pages/DashBoard/Dashboard";
+import DashboardManger from "./pages/DashBoard/DashboardManger";
+import SuperAdmin from "./pages/DashBoard/SuperAdmin";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import AddDepartments from "./pages/Departments/AddDepartments";
 import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
-import EmployeeList from "./pages/EmployeeList/EmployeeList";
+import AddEmployee from "./pages/Employee/AddEmployee";
+import EmployeeList from "./pages/Employee/EmployeeList";
 import Home from "./pages/Home/Home";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
@@ -44,6 +45,7 @@ import ShiftManagement from "./pages/SetupPage/ShiftManagement/shiftAllowance";
 import Shifts from "./pages/SetupPage/Shifts";
 import WeekendHoliday from "./pages/SetupPage/WeekendHoliday";
 import Inputfield from "./pages/SetupPage/inputfield";
+import RolePage from "./pages/SignIn/RolePage";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 import EditablePolyline from "./pages/Test/test2";
@@ -72,6 +74,7 @@ const App = () => {
       <Route path="/test6" element={<TrackingMap3 />} />
       {/* Login Routes */}
       <Route path="/sign-in" element={<SignIn />} />
+      <Route path="/choose-role" element={<RolePage />} />
       <Route path="/sign-up" element={<Signup />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/waiting" element={<WaitMain />} />
@@ -258,17 +261,22 @@ export default App;
 
 function RequireAuth({ children, permission }) {
   const { getCurrentUser, getCurrentRole } = UserProfile();
-  const navigate = useNavigate("");
+
   const user = getCurrentUser();
   const role = getCurrentRole();
   const isPermission = role === permission;
+
+  if (user && !role) {
+    return <Navigate to={"/choose-role"} />;
+  }
+
   if (role || !window.location.pathname.includes("sign-in", "sign-up")) {
     if (!role) return <Navigate to={"/sign-in"} />;
     if (user && isPermission) return children;
     return <UnAuthorized />;
   }
 
-  // return user && isPermission ? children : navigate("/");
+  return user && isPermission ? children : navigate("/");
 }
 
 //   : user?.profile?.length < 2 ? (

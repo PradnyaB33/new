@@ -239,7 +239,7 @@ const SignIn = () => {
           <form
             onSubmit={handleSubmit(onSubmit)}
             autoComplete="off"
-            className="flex md:px-20 px-8 lg:w-max justify-center flex-col h-max my-4"
+            className="flex md:px-20 px-8 lg:w-max justify-center flex-col h-[80vh]"
           >
             <div className="flex md:space-x-4 space-x-2 mb-4 items-center">
               <img
@@ -267,7 +267,6 @@ const SignIn = () => {
                 <p className="text-lg">Enter your credentials below</p>
               </div>
             </div> */}
-
             <div className="flex gap-2">
               {/* First Name */}
               <AuthInputFiled
@@ -331,7 +330,7 @@ const SignIn = () => {
                       number?.length !== 10 || isTimeVisible ? true : false
                     }
                     onClick={SendOtp}
-                    className={`w-max flex group justify-center gap-2 items-center rounded-md h-max px-4 py-2 md:py-1 md:text-md text-sm  font-semibold text-white bg-blue-500  ${
+                    className={`w-max flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500  ${
                       (number?.length !== 10 || isTimeVisible) &&
                       "bg-gray-400 text-gray-900"
                     }`}
@@ -369,7 +368,7 @@ const SignIn = () => {
                 <button
                   type="button"
                   onClick={VerifyOtp}
-                  className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1  text-sm md:text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                  className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
                 >
                   Verify Otp
                 </button>

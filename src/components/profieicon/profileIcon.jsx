@@ -33,6 +33,7 @@ export default function ProfileIcon() {
     // console.log(cookies.aeigs);
     window.location.reload();
     Cookies.remove("aeigs");
+    Cookies.remove("role");
     // navigate("/sign-in");
   };
 

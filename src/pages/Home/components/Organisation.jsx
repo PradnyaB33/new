@@ -116,7 +116,7 @@ const Organisation = ({ item }) => {
       );
       console.log(`🚀 ~ file: Organisation.jsx:63 ~ response:`, response);
       handleAlert(true, "success", "Organization deleted successfully");
-      queryClient.invalidateQueries(["orgData"]);
+      queryClient.invalidateQueries("orgData");
       // Reload the window to reflect the updated data
       window.location.reload();
     } catch (error) {
@@ -171,7 +171,7 @@ const Organisation = ({ item }) => {
       );
 
       handleAlert(true, "success", "Organization updated successfully");
-      queryClient.invalidateQueries(["orgData"]);
+      queryClient.invalidateQueries("orgData");
       // Close the dialog
       handleCloseConfirmation();
     } catch (error) {

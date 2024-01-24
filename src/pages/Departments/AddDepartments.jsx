@@ -148,13 +148,17 @@ const AddDepartments = () => {
       setDepartmenDelegateHeadName("");
       setNumCharacters("");
       setEnterDepartmentId("");
-      handleAlert(true, "success", "Department created successfully");
+      handleAlert(
+        true,
+        "success",
+        "Message sent successfully to super admin, awaiting approval"
+      );
     } catch (error) {
       console.error("Error creating department:", error);
       const errorMessage =
         error.response && error.response.data && error.response.data.message
           ? error.response.data.message
-          : "An error occurred while creating the department.";
+          : "An error occurred while send message to super admin.";
 
       handleAlert(true, "error", errorMessage);
     }

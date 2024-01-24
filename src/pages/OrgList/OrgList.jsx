@@ -11,16 +11,21 @@ const OrgList = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
 
-  const { data, isLoading } = useQuery(["orgData"], async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/organization/get`,
-      {
-        headers: {
-          Authorization: authToken,
-        },
-      }
-    );
-    return response.data;
+  const { data, isLoading } = useQuery("orglist", async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/get`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error; // Rethrow the error to be caught by React Query
+    }
   });
 
   return (
