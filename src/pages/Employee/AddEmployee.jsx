@@ -26,7 +26,7 @@ const AddEmployee = () => {
     getManagerData,
     addEmployeeMutate,
   } = useHook();
-
+  console.log(getProfileData);
   const AddEmployeeSchema = z
     .object({
       first_name: z
@@ -113,7 +113,7 @@ const AddEmployee = () => {
       salarystructure: "",
       employmentType: "",
       mgrempid: "",
-      profile: "Employee",
+      profile: "",
       gender: "male",
     },
   });
@@ -123,7 +123,7 @@ const AddEmployee = () => {
     console.log(formData);
     addEmployeeMutate(formData);
   };
-
+  console.log(errors);
   return (
     <>
       <div className="content-center  flex justify-center my-0 p-0">
@@ -404,19 +404,17 @@ const AddEmployee = () => {
                   name={"profile"}
                   render={({ field }) => (
                     <Select {...field}>
-                      {getProfileData && getProfileData?.length > 0 ? (
-                        getProfileData?.map((profile) => (
+                      {getProfileData && getProfileData ? (
+                        getProfileData.map((profile) => (
                           <MenuItem
                             key={profile.roleName}
                             value={profile.roleName}
                           >
-                            {profile?.roleName}
+                            {profile.roleName}
                           </MenuItem>
                         ))
                       ) : (
-                        <MenuItem value="">
-                          No salary template available
-                        </MenuItem>
+                        <MenuItem value="">No Profile available</MenuItem>
                       )}
                     </Select>
                   )}
