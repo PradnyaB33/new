@@ -4,7 +4,6 @@ import {
   CorporateFare,
   Description,
   FactoryOutlined,
-  Favorite,
   LocalPostOffice,
   TodayOutlined,
 } from "@mui/icons-material";
@@ -12,8 +11,10 @@ import { Button } from "@mui/material";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import useOrg from "../../../State/Org/Org";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useGetUser from "../../../hooks/Token/useUser";
+import ImageInput from "./image-input";
 
 const organizationSchema = z.object({
   name: z.string(),
@@ -22,77 +23,65 @@ const organizationSchema = z.object({
   industry_type: z.enum(["Technology", "Finance", "Healthcare", "Education"]),
   email: z.string().email(),
   organization_linkedin_url: z.string(),
-  organization_tagline: z.string(),
   location: z.string(),
   contact_number: z.string(),
   description: z.string(),
   creator: z.string(),
-  logo_url: z
-    .object({
-      name: z.string(),
-      size: z.number(),
-      type: z.string(),
-    })
-    .refine((file) => file.type.startsWith("image/"), {
-      message: "Please upload a valid image file.",
-    }),
+  logo_url: z.any(),
 });
-const Step1 = () => {
-  const { authToken, decodedToken } = useGetUser();
-  const { control, formState, handleSubmit, getValues } = useForm({
+const Step1 = ({ nextStep }) => {
+  const { decodedToken } = useGetUser();
+  const {
+    name,
+    foundation_date,
+    web_url,
+    industry_type,
+    email,
+    organization_linkedin_url,
+    location,
+    contact_number,
+    description,
+    logo_url,
+    creator,
+    setStep1Data,
+    setCreator,
+  } = useOrg();
+
+  const { control, formState, handleSubmit, setValue } = useForm({
     defaultValues: {
-      name: undefined,
-      foundation_date: undefined,
-      web_url: undefined,
-      industry_type: "",
-      email: undefined,
-      organization_linkedin_url: undefined,
-      organization_tagline: undefined,
-      location: undefined,
-      contact_number: undefined,
-      description: undefined,
-      creator: decodedToken?.user?._id,
-      logo_url: undefined,
+      name: name,
+      foundation_date: foundation_date,
+      web_url: web_url,
+      industry_type: industry_type,
+      email: email,
+      organization_linkedin_url: organization_linkedin_url,
+      location: location,
+      contact_number: contact_number,
+      description: description,
+      creator: creator === undefined ? setCreator(decodedToken) : creator,
+      logo_url: logo_url,
     },
     resolver: zodResolver(organizationSchema),
   });
   const { errors } = formState;
   const onSubmit = (data) => {
-    console.log(`🚀 ~ file: step-1.jsx:59 ~ data:`, data);
+    setStep1Data(data);
+    nextStep();
   };
-  console.log(`🚀 ~ file: step-1.jsx:62 ~ getValues:`, getValues());
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <div className="space-y-1 w-full">
-          <label
-            htmlFor={"logo_url"}
-            className={`${
-              errors.logo_url || errors["logo_url"] ? "text-red-500" : ""
-            } font-semibold text-gray-500 text-md`}
-          >
-            "sdflkas;f"
-          </label>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="item-center flex flex-col"
+        noValidate
+      >
+        <div className="space-y-1 w-full items-center flex flex-col ">
           <Controller
             control={control}
             name={"logo_url"}
-            render={({ field }) => (
-              <>
-                <div
-                  className={` flex rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px] items-center`}
-                >
-                  <Favorite className="text-gray-700" />
-                  <input
-                    type={"file"}
-                    placeholder={"placeholder"}
-                    className={`
-                      border-none bg-white w-full outline-none px-2`}
-                    {...field}
-                    formNoValidate
-                  />
-                </div>
-              </>
-            )}
+            render={({ field }) => {
+              return <ImageInput setValue={setValue} field={field} />;
+            }}
           />
           <div className="h-4 !mb-1">
             <ErrorMessage
@@ -136,6 +125,16 @@ const Step1 = () => {
             error={errors.web_url}
           />
           <AuthInputFiled
+            name="organization_linkedin_url"
+            icon={CorporateFare}
+            control={control}
+            type="text"
+            placeholder="Linkding url "
+            label="Linkding url  *"
+            errors={errors}
+            error={errors.organization_linkedin_url}
+          />
+          <AuthInputFiled
             name="industry_type"
             icon={FactoryOutlined}
             control={control}
@@ -172,16 +171,6 @@ const Step1 = () => {
             error={errors.contact_number}
           />
           <AuthInputFiled
-            name="location"
-            icon={FactoryOutlined}
-            control={control}
-            type="not-select"
-            placeholder="Location Addresss "
-            label="Location Addresss  *"
-            errors={errors}
-            error={errors.location}
-          />
-          <AuthInputFiled
             name="description"
             icon={Description}
             control={control}
@@ -191,8 +180,20 @@ const Step1 = () => {
             errors={errors}
             error={errors.description}
           />
+          <AuthInputFiled
+            name="location"
+            icon={FactoryOutlined}
+            control={control}
+            type="not-select"
+            placeholder="Location Addresss "
+            label="Location Addresss  *"
+            errors={errors}
+            error={errors.location}
+          />
         </div>
-        <Button type="submit">Submit</Button>
+        <Button type="submit" variant="contained" className="!w-max !mx-auto">
+          Submit
+        </Button>
       </form>
     </div>
   );

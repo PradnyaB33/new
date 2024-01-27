@@ -17,6 +17,7 @@ const AuthInputFiled = ({
   readOnly = false,
   placeholder,
   options,
+  disabled,
 }) => {
   if (type === "select") {
     return (
@@ -43,7 +44,6 @@ const AuthInputFiled = ({
                 >
                   <Icon className="text-gray-700" />
                   <Select
-                    value={field.value}
                     aria-errormessage=""
                     placeholder={placeholder}
                     styles={{
@@ -189,7 +189,56 @@ const AuthInputFiled = ({
       </div>
     );
   }
-
+  if (type === "checkbox") {
+    return (
+      <div className="space-y-1 w-full ">
+        <Controller
+          control={control}
+          name={name}
+          id={name}
+          render={({ field }) => (
+            <div
+              className={`${
+                readOnly && "bg-[ghostwhite]"
+              } flex rounded-md px-2 bg-white py-[6px] gap-2`}
+            >
+              <Icon className="text-gray-700" />
+              <input
+                checked={field.value}
+                type={type}
+                readOnly={readOnly}
+                id={name}
+                placeholder={placeholder}
+                className={`${
+                  readOnly && "bg-[ghostwhite]"
+                } border-none bg-white outline-none px-2`}
+                {...field}
+                disabled={disabled}
+                formNoValidate
+              />
+              <label
+                htmlFor={name}
+                className={`${
+                  error && "text-red-500"
+                } font-semibold text-gray-500 text-md`}
+              >
+                {label}
+              </label>
+            </div>
+          )}
+        />
+        <div className="h-4 !mb-1">
+          <ErrorMessage
+            errors={errors}
+            name={name}
+            render={({ message }) => (
+              <p className="text-sm text-red-500">{message}</p>
+            )}
+          />
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="space-y-1 w-full ">
       <label
