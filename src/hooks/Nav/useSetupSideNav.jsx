@@ -135,6 +135,15 @@ const useSetupSideNav = (organisationId) => {
         `/organisation/${organisationId}/setup/set-employee-salary-calculate-day`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
+    {
+      label: "Employee Code Generator",
+      icon: EventNoteOutlinedIcon,
+      href: `/organisation/${organisationId}/setup/set-employee-code-generator`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/set-employee-code-generator`,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+    },
   ];
 
   return { linkData };

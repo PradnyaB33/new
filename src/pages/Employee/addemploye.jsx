@@ -274,6 +274,7 @@ const EmployeeAdd = () => {
     fetchAvailabeDepartment();
     // eslint-disable-next-line
   }, []);
+  console.log(availableDepartment);
 
   const [profile, setProfile] = React.useState([]);
   const handleChange = (event) => {

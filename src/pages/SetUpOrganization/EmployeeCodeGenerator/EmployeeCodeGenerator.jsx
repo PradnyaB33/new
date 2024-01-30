@@ -12,6 +12,9 @@ import {
 import { useState } from "react";
 
 const EmployeeCodeGenerator = () => {
+  const [numChracterInPrefix, setNumCharacterInPrefix] = useState(0);
+  const [totalCharacter, setTotalCharacter] = useState(0);
+  const [startWith, setStartWith] = useState("");
   const [inputFields, setinputFields] = useState({
     isPrefix: false,
   });
@@ -22,6 +25,11 @@ const EmployeeCodeGenerator = () => {
       ...prevInput,
       [name]: value,
     }));
+  };
+  console.log({ numChracterInPrefix, startWith, totalCharacter });
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log("Form submitted:");
   };
   return (
     <section className="bg-gray-50 min-h-screen w-full">
@@ -70,16 +78,18 @@ const EmployeeCodeGenerator = () => {
                     variant="outlined"
                   >
                     <InputLabel htmlFor="outlined-adornment-password">
-                      Add Employment type
+                      Add Charater Employee Id
                     </InputLabel>
                     <OutlinedInput
-                      type="number"
+                      type="text"
                       id="outlined-adornment-password"
                       inputProps={{
                         min: 0, // Set the minimum value
                         max: 100, // Set the maximum value
                       }}
                       label="Add Employment types"
+                      value={numChracterInPrefix}
+                      onChange={(e) => setNumCharacterInPrefix(e.target.value)}
                     />
                   </FormControl>
                 </div>
@@ -103,6 +113,8 @@ const EmployeeCodeGenerator = () => {
                       max: 100, // Set the maximum value
                     }}
                     label="total character"
+                    value={totalCharacter}
+                    onChange={(e) => setTotalCharacter(e.target.value)}
                   />
                 </FormControl>
               </div>
@@ -116,25 +128,24 @@ const EmployeeCodeGenerator = () => {
                     start with
                   </InputLabel>
                   <OutlinedInput
-                    type="number"
+                    type="text"
                     id="outlined-adornment-password"
-                    inputProps={{
-                      min: 0, // Set the minimum value
-                      max: 100, // Set the maximum value
-                    }}
                     label="start with"
+                    value={startWith}
+                    onChange={(e) => setStartWith(e.target.value)}
                   />
                 </FormControl>
               </div>
             </div>
 
             <Button
+              onClick={handleSubmit}
               variant="contained"
               size="small"
               className="!text-semibold"
               color="primary"
             >
-              Generate Employee ID
+              Submit
             </Button>
           </div>
         </article>
