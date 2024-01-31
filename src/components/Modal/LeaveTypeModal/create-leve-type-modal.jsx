@@ -105,7 +105,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Stack spacing={2} width={400}>
             <FormControl component="fieldset">
-              <FormLabel component="legend">Leave Type Name</FormLabel>
+              <FormLabel component="legend">Type Name</FormLabel>
               <Controller
                 name="leaveName"
                 control={control}
