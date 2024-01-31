@@ -202,10 +202,8 @@ const PaySlipPdf = ({ employeeInfo, organisationInfo, salaryInfo }) => {
                 </Text>
               </View>
               <View style={styles.tableRow}>
-                <Text style={[styles.cell, styles.highlightedCell]}>
-                  Total Gross Salary:
-                </Text>
-                <Text style={[styles.cell, styles.highlightedCell]}>
+                <Text style={styles.netcell}>Total Gross Salary:</Text>
+                <Text style={styles.netcell}>
                   {salaryInfo?.totalGrossSalary || ""}
                 </Text>
               </View>
@@ -241,10 +239,8 @@ const PaySlipPdf = ({ employeeInfo, organisationInfo, salaryInfo }) => {
                 </Text>
               </View>
               <View style={styles.tableRow}>
-                <Text style={[styles.cell, styles.highlightedCell]}>
-                  Total Deduction:
-                </Text>
-                <Text style={[styles.cell, styles.highlightedCell]}>
+                <Text style={styles.netcell}>Total Deduction:</Text>
+                <Text style={styles.netcell}>
                   {salaryInfo?.totalDeduction || ""}
                 </Text>
               </View>
@@ -253,10 +249,8 @@ const PaySlipPdf = ({ employeeInfo, organisationInfo, salaryInfo }) => {
 
           <View style={styles.netSalarytable}>
             <View style={styles.netTableRow}>
-              <Text style={[styles.netcell, styles.highlightedCell]}>
-                Total Net Salary :
-              </Text>
-              <Text style={[styles.netcell, styles.highlightedCell]}>
+              <Text style={styles.netcell}>Total Net Salary :</Text>
+              <Text style={styles.netcell}>
                 {salaryInfo?.totalNetSalary || ""}
               </Text>
             </View>
@@ -321,9 +315,7 @@ const styles = StyleSheet.create({
     padding: 4,
     fontSize: 9,
   },
-  highlightedCell: {
-    backgroundColor: "#FFFF00",
-  },
+
   secondTableCell: {
     flex: 0.5,
     padding: 11,
@@ -367,7 +359,7 @@ const styles = StyleSheet.create({
   roundedImage: {
     width: "100%",
     height: "100%",
-    borderRadius: "200%",
+    // borderRadius: "200%",
     overflow: "hidden",
   },
   organizationDetails: {

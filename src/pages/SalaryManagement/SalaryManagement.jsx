@@ -170,10 +170,12 @@ const SalaryManagement = () => {
                       (!deptSearch ||
                         (item.deptname !== null &&
                           item.deptname !== undefined &&
-                          item.deptname.some((dept) =>
-                            dept.departmentName
-                              .toLowerCase()
-                              .includes(deptSearch.toLowerCase())
+                          item.deptname.some(
+                            (dept) =>
+                              dept.departmentName !== null &&
+                              dept.departmentName
+                                .toLowerCase()
+                                .includes(deptSearch.toLowerCase())
                           ))) &&
                       (!locationSearch.toLowerCase() ||
                         item.worklocation.some(
