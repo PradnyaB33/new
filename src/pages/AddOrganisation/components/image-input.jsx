@@ -1,7 +1,7 @@
 import { CameraAltOutlined } from "@mui/icons-material";
 import React, { useRef, useState } from "react";
 
-const ImageInput = ({ field, setValue }) => {
+const ImageInput = ({ field }) => {
   const [selectedImage, setSelectedImage] = useState("");
   const hiddenInputRef = useRef(null);
   const handleFileChange = (e) => {
@@ -9,8 +9,7 @@ const ImageInput = ({ field, setValue }) => {
     const file = e.target.files[0];
     console.log(`🚀 ~ file: image-input.jsx:9 ~ file:`, file);
 
-    // setValue("logo_url", file);
-    displayImage(file);
+    // displayImage(file);
   };
   const displayImage = (file) => {
     const reader = new FileReader();
@@ -23,6 +22,9 @@ const ImageInput = ({ field, setValue }) => {
       reader.readAsDataURL(file);
     }
   };
+  if (field.value) {
+    displayImage(field.value);
+  }
   return (
     <div
       className={`flex px-2 border-gray-200 border-[.5px] bg-[#f8f8ff59] py-[6px] items-center h-48 w-48 rounded-full justify-center hover:bg-[ghostwhite] cursor-pointer transition-all !bg-cover`}

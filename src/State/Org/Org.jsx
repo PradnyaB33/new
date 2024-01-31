@@ -5,7 +5,7 @@ const useOrg = create((set) => {
 
   return {
     // Organization details
-    name: undefined,
+    orgName: undefined,
     foundation_date: undefined,
     web_url: undefined,
     industry_type: undefined,
@@ -16,6 +16,7 @@ const useOrg = create((set) => {
     description: undefined,
     creator: undefined, // Using the obtained decoded token
     logo_url: undefined,
+    isTrial: false,
     remotePunching: false,
     performanceManagement: false,
     analyticsAndReporting: false,
@@ -24,35 +25,12 @@ const useOrg = create((set) => {
 
     // Setter function for updating multiple properties at once
     setStep2Data: (remotePunching) => {
-      console.log(
-        `🚀 ~ file: Org.jsx:30 ~ remotePunching,
-      performanceManagement,
-      analyticsAndReporting:`,
-        remotePunching
-      );
       set({ ...remotePunching });
     },
-    setStep1Data: (
-      name,
-      foundation_date,
-      web_url,
-      industry_type,
-      email,
-      organization_linkedin_url,
-      location,
-      contact_number,
-      description
-    ) => {
+    setStep1Data: (orgName) => {
+      console.log(`🚀 ~ file: Org.jsx:31 ~ orgName:`, orgName);
       set({
-        name,
-        foundation_date,
-        web_url,
-        industry_type,
-        email,
-        organization_linkedin_url,
-        location,
-        contact_number,
-        description,
+        ...orgName,
       });
     },
     setStep3Data: (data) => {

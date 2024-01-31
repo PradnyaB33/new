@@ -54,7 +54,7 @@ export default function SwipeableTemporaryDrawer() {
           </IconButton>
           <Badge>
             <Typography variant="h6" noWrap component="div">
-              Aegis
+              AEGIS
             </Typography>
           </Badge>
           <ProfileIcon />

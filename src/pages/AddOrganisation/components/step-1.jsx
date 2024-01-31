@@ -1,6 +1,7 @@
 import { ErrorMessage } from "@hookform/error-message/dist";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  CalendarMonthOutlined,
   CorporateFare,
   Description,
   FactoryOutlined,
@@ -17,7 +18,7 @@ import useGetUser from "../../../hooks/Token/useUser";
 import ImageInput from "./image-input";
 
 const organizationSchema = z.object({
-  name: z.string(),
+  orgName: z.string(),
   foundation_date: z.string(),
   web_url: z.string(),
   industry_type: z.enum(["Technology", "Finance", "Healthcare", "Education"]),
@@ -28,11 +29,21 @@ const organizationSchema = z.object({
   description: z.string(),
   creator: z.string(),
   logo_url: z.any(),
+  // logo_url: z.object({
+  //   name: z.string({
+  //     required_error:
+  //       "Please upload a valid file type. (MP3/MP4, JPG, JPEG, PNG)",
+  //   }),
+  //   lastModified: z.number(),
+  //   size: z.number(),
+  //   type: z.string(),
+  // }),
+  isTrial: z.boolean(),
 });
 const Step1 = ({ nextStep }) => {
   const { decodedToken } = useGetUser();
   const {
-    name,
+    orgName,
     foundation_date,
     web_url,
     industry_type,
@@ -45,11 +56,12 @@ const Step1 = ({ nextStep }) => {
     creator,
     setStep1Data,
     setCreator,
+    isTrial,
   } = useOrg();
 
-  const { control, formState, handleSubmit, setValue } = useForm({
+  const { control, formState, handleSubmit, getValues } = useForm({
     defaultValues: {
-      name: name,
+      orgName: orgName,
       foundation_date: foundation_date,
       web_url: web_url,
       industry_type: industry_type,
@@ -60,14 +72,19 @@ const Step1 = ({ nextStep }) => {
       description: description,
       creator: creator === undefined ? setCreator(decodedToken) : creator,
       logo_url: logo_url,
+      isTrial: isTrial,
     },
     resolver: zodResolver(organizationSchema),
   });
   const { errors } = formState;
+  console.log(`🚀 ~ file: step-1.jsx:79 ~ errors:`, errors);
   const onSubmit = (data) => {
+    console.log(`🚀 ~ file: step-1.jsx:68 ~ data:`, data);
     setStep1Data(data);
     nextStep();
   };
+  console.log(`🚀 ~ file: step-1.jsx:71 ~ errors:`, errors);
+  console.log("getValues", getValues());
   return (
     <div>
       <form
@@ -80,13 +97,13 @@ const Step1 = ({ nextStep }) => {
             control={control}
             name={"logo_url"}
             render={({ field }) => {
-              return <ImageInput setValue={setValue} field={field} />;
+              return <ImageInput field={field} />;
             }}
           />
           <div className="h-4 !mb-1">
             <ErrorMessage
               errors={errors}
-              name={"name"}
+              name={"logo_url"}
               render={({ message }) => (
                 <p className="text-sm text-red-500">{message}</p>
               )}
@@ -95,7 +112,7 @@ const Step1 = ({ nextStep }) => {
         </div>
         <div className="grid grid-cols-2 gap-4 px-4">
           <AuthInputFiled
-            name="name"
+            name="orgName"
             icon={CorporateFare}
             control={control}
             type="text"
@@ -190,6 +207,17 @@ const Step1 = ({ nextStep }) => {
             errors={errors}
             error={errors.location}
           />
+          <div className=" mt-7">
+            <AuthInputFiled
+              name="isTrial"
+              icon={CalendarMonthOutlined}
+              control={control}
+              type="checkbox"
+              label="Do you want 7 day Trial  *"
+              errors={errors}
+              error={errors.location}
+            />
+          </div>
         </div>
         <Button type="submit" variant="contained" className="!w-max !mx-auto">
           Submit
