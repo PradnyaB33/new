@@ -239,7 +239,7 @@ const SignIn = () => {
           <form
             onSubmit={handleSubmit(onSubmit)}
             autoComplete="off"
-            className="flex md:px-20 px-8 lg:w-max justify-center flex-col h-[80vh]"
+            className="flex md:px-20 px-8 lg:w-max justify-center flex-col h-[80vh] gap-4"
           >
             <div className="flex md:space-x-4 space-x-2 mb-4 items-center">
               <img
@@ -362,7 +362,7 @@ const SignIn = () => {
                     />
                   </div>
 
-                  <div className="h-4  !mb-1"></div>
+                  <div className="h-4  !mb-1 "></div>
                 </div>
 
                 <button

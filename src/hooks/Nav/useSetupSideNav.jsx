@@ -127,7 +127,7 @@ const useSetupSideNav = (organisationId) => {
       ),
     },
     {
-      label: "Employee Salary Calculate Day",
+      label: "Salary Computation Day",
       icon: EventNoteOutlinedIcon,
       href: `/organisation/${organisationId}/setup/set-employee-salary-calculate-day`,
       active:

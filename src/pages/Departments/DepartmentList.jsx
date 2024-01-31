@@ -1,26 +1,26 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { TestContext } from "../../State/Function/Main";
-import { UseContext } from "../../State/UseState/UseContext";
-import axios from "axios";
 import { Delete, Edit, Warning } from "@mui/icons-material";
-import { useMutation, useQueryClient } from "react-query";
 import {
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  FormControlLabel,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
   Typography,
-  FormControl,
-  Select,
-  InputLabel,
-  FormControlLabel,
-  Checkbox,
-  MenuItem,
 } from "@mui/material";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
+import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
 
 const DepartmentList = () => {
   const { handleAlert } = useContext(TestContext);
@@ -61,7 +61,7 @@ const DepartmentList = () => {
       setHeadList(resp.data.employees);
       console.log(resp.data.employees);
     })();
-  }, []);
+  }, [authToken, organisationId]);
   useEffect(() => {
     (async () => {
       const resp = await axios.get(
@@ -73,6 +73,7 @@ const DepartmentList = () => {
       setDelegateHeadList(resp.data.employees);
       console.log(resp.data.employees);
     })();
+    // eslint-disable-next-line
   }, []);
 
   const fetchDepartmentList = async () => {
@@ -194,7 +195,6 @@ const DepartmentList = () => {
           costCenterName,
           costCenterDescription,
           departmentId,
-          departmentHeadName,
           departmentHeadDelegateName,
           deptID,
         },
