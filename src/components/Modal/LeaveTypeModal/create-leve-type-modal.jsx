@@ -187,7 +187,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
               />
             </FormControl>
             <Button disabled={isFormClean} type="submit" variant="contained">
-              Apply for changes
+              Create leave types
             </Button>
           </Stack>
         </form>
