@@ -2,9 +2,16 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Box, Button, Divider, IconButton, Modal } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState, useEffect } from "react";
-import { useQuery } from "react-query";
-
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { UseContext } from "../../../State/UseState/UseContext";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  OutlinedInput,
+} from "@mui/material";
+import { TestContext } from "../../../State/Function/Main";
 
 const style = {
   position: "absolute",
@@ -16,9 +23,23 @@ const style = {
 };
 
 const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
+  const queryClient = useQueryClient();
   const { cookies } = useContext(UseContext);
+  const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aeigs"];
-
+  const [startWith, setStartWith] = useState("");
+  const [numChracterInPrefix, setNumCharacterInPrefix] = useState(1);
+  const [inputFields, setinputFields] = useState({
+    isPrefix: true,
+  });
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setinputFields((prevInput) => ({
+      ...prevInput,
+      [name]: value,
+    }));
+  };
+  // fetch the data of employee code
   const getEmployeeCodeData = async () => {
     const config = {
       headers: {
@@ -33,7 +54,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
         config
       );
 
-      return response.data.getEmployeeCode; // Return employeeCodes directly
+      return response.data.getEmployeeCode;
     } catch (error) {
       // Handle errors if necessary
       console.error("Error fetching employee codes:", error);
@@ -45,10 +66,66 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
     queryKey: ["employee-code"],
     queryFn: getEmployeeCodeData,
   });
+
+  useEffect(() => {
+    if (employeeCodes) {
+      setStartWith(employeeCodes[0]?.code || "");
+      setNumCharacterInPrefix(employeeCodes[0]?.numChracterInPrefix);
+    }
+  }, [employeeCodes]);
+
   console.log(employeeCodes);
 
-  const handleSubmit = (e) => {
+  const EditEmployeeCode = useMutation(
+    async (data) => {
+      try {
+        const response = await axios.put(
+          `${process.env.REACT_APP_API}/route/update/employee-code/${organisationId}/${empCodeId}`,
+          data,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        console.log(response);
+        return response;
+      } catch (error) {
+        throw new Error(
+          error.response.data.message || "Failed to Update Employee Code"
+        );
+      }
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["empCode"] });
+        handleClose();
+        handleAlert(true, "success", "Employee Code Updated Successfully..");
+        window.location.reload();
+      },
+      onError: (error) => {
+        console.error("Error:", error.message);
+      },
+    }
+  );
+
+  // edit the data
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const data = {
+        startWith,
+        numChracterInPrefix,
+      };
+      await EditEmployeeCode.mutateAsync(data);
+    } catch (error) {
+      console.error(error);
+      handleAlert(
+        true,
+        "error",
+        "An error occurred while  updating Employee Code"
+      );
+    }
   };
 
   return (
@@ -70,12 +147,71 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
             <CloseIcon className="!text-[16px]" />
           </IconButton>
         </div>
+        <div className="overflow-auto !p-4 flex flex-col items-start gap-4 border-[.5px] border-gray-200">
+          <div className="flex gap-4 items-center">
+            <div className="space-y-2">
+              <label className="text-md" htmlFor="demo-simple-select-label">
+                Employee id prefix (yes or no)
+              </label>
+              <FormControl size="small" className="w-full">
+                <InputLabel id="demo-simple-select-label">
+                  prefix character
+                </InputLabel>
+                <Select
+                  id={"isPrefix"}
+                  name="isPrefix"
+                  onChange={handleInputChange}
+                  label=" prefix character"
+                >
+                  <MenuItem value={true}>yes</MenuItem>
+                  <MenuItem value={false}>No</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+
+            {inputFields.isPrefix && (
+              <div className="space-y-2">
+                <label className="text-md" htmlFor="demo-simple-select-label">
+                  Number of charater in prefix
+                </label>
+                <FormControl size="small" className="w-full" variant="outlined">
+                  <InputLabel htmlFor="outlined-adornment-password">
+                    Add Charater Employee Id
+                  </InputLabel>
+                  <OutlinedInput
+                    type="number"
+                    label="Add Character Employee id"
+                    value={numChracterInPrefix}
+                    onChange={(e) => setNumCharacterInPrefix(e.target.value)}
+                  />
+                </FormControl>
+              </div>
+            )}
+          </div>
+
+          <label className="text-md" htmlFor="demo-simple-select-label">
+            Employee id starts with
+          </label>
+          <FormControl size="small" className="w-full" variant="outlined">
+            <InputLabel htmlFor="outlined-adornment-password">
+              start with
+            </InputLabel>
+            <OutlinedInput
+              type="text"
+              label="start with"
+              value={startWith}
+              onChange={(e) => setStartWith(e.target.value)}
+              inputProps={{
+                maxLength: numChracterInPrefix,
+              }}
+            />
+          </FormControl>
+        </div>
 
         <div className="w-full">
           <Divider variant="fullWidth" orientation="horizontal" />
         </div>
-
-        <div className="flex gap-4  mt-4 justify-end">
+        <div className="flex gap-4 mt-4 justify-end mr-4">
           <Button onClick={handleClose} color="error" variant="outlined">
             Cancel
           </Button>

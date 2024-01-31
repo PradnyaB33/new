@@ -25,7 +25,7 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-  const [numChracterInPrefix, setNumCharacterInPrefix] = useState(0);
+  const [numChracterInPrefix, setNumCharacterInPrefix] = useState(1);
   const [startWith, setStartWith] = useState("");
   const [inputFields, setinputFields] = useState({
     isPrefix: false,
@@ -43,11 +43,13 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log("Form submitted:");
+
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/create/employee-code-generator/${organisationId}`,
         {
           startWith,
+          numChracterInPrefix,
         },
         {
           headers: {

@@ -7,14 +7,25 @@ import { useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import CreateEmpCodeModel from "../../../components/Modal/EmpCodeModel/CreateEmpCodeModel";
 import EditEmpCodeModel from "../../../components/Modal/EmpCodeModel/EditEmpCodeModel";
+import { Delete, Warning } from "@mui/icons-material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
+import { TestContext } from "../../../State/Function/Main";
 const EmployeeCodeGenerator = () => {
   const { cookies } = useContext(UseContext);
+  const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aeigs"];
+  const queryClient = useQueryClient();
   const { organisationId } = useParams();
-
+  // state for delete the employee code
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   // Modal states and function for edit
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [empCodeId, setEmpCodeId] = useState(null);
@@ -69,6 +80,48 @@ const EmployeeCodeGenerator = () => {
     queryFn: getEmployeeCodeData,
   });
 
+  // Delete Query for deleting the employee code
+  const handleDeleteConfirmation = (id) => {
+    setDeleteConfirmation(id);
+  };
+
+  const handleCloseConfirmation = () => {
+    setDeleteConfirmation(null);
+  };
+
+  const handleDelete = (id) => {
+    deleteMutation.mutate(id);
+    // Manually update the query data to reflect the deletion
+    queryClient.setQueryData(["employee-code"], (prevData) => {
+      // Filter out the deleted employee code
+      const updatedData = prevData.filter((empCode) => empCode._id !== id);
+      return updatedData;
+    });
+    setDeleteConfirmation(null);
+    // Clear the alert message after 3000 milliseconds (3 seconds)
+    setTimeout(() => {
+      handleAlert(false, "success", "");
+    }, 3000);
+  };
+  const deleteMutation = useMutation(
+    (id) =>
+      axios.delete(
+        `${process.env.REACT_APP_API}/route/delete/employee-code/${organisationId}/${id}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      ),
+    {
+      onSuccess: () => {
+        // Invalidate and refetch the data after successful deletion
+        queryClient.invalidateQueries("employeecode");
+        handleAlert(true, "success", "Employee Code deleted succesfully");
+      },
+    }
+  );
+
   return (
     <section className="bg-gray-50 min-h-screen w-full">
       <Setup>
@@ -117,6 +170,11 @@ const EmployeeCodeGenerator = () => {
                       >
                         <BorderColor className="!text-xl" color="success" />
                       </IconButton>
+                      <IconButton
+                        onClick={() => handleDeleteConfirmation(empCode._id)}
+                      >
+                        <Delete className="!text-xl" color="error" />
+                      </IconButton>
                     </td>
                   </tr>
                 ))}
@@ -125,6 +183,41 @@ const EmployeeCodeGenerator = () => {
           </div>
         </article>
       </Setup>
+
+      {/* this dialogue for delete the employee code */}
+      <Dialog
+        open={deleteConfirmation !== null}
+        onClose={handleCloseConfirmation}
+      >
+        <DialogTitle color={"error"}>
+          <Warning color="error" /> All information of employee code will be
+          deleted. Are you sure you want to delete it?
+        </DialogTitle>
+        <DialogContent>
+          <p>
+            Please confirm your decision to delete this employee code, as this
+            action cannot be retrived
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleCloseConfirmation}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => handleDelete(deleteConfirmation)}
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* for create */}
       <CreateEmpCodeModel
