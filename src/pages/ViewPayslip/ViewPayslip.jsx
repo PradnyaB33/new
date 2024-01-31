@@ -3,6 +3,7 @@ import { TestContext } from "../../State/Function/Main";
 import UserProfile from "../../hooks/UserData/useUser";
 const ViewPayslip = () => {
   const { handleAlert } = useContext(TestContext);
+  console.log(`🚀 ~ file: ViewPayslip.jsx:6 ~ handleAlert:`, handleAlert);
   // const { cookies } = useContext(UseContext);
   // const authToken = cookies["aeigs"];
   const { getCurrentUser } = UserProfile();
