@@ -68,13 +68,13 @@ const SignIn = () => {
       first_name: z
         .string()
         .min(2)
-        .max(30)
+        .max(15)
         .regex(/^[a-zA-Z]+$/),
 
       last_name: z
         .string()
         .min(2)
-        .max(30)
+        .max(15)
         .regex(/^[a-zA-Z]+$/),
       phone: z
         .string()
