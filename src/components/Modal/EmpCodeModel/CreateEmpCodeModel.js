@@ -11,6 +11,7 @@ import {
   MenuItem,
   OutlinedInput,
 } from "@mui/material";
+import { useQueryClient } from "react-query";
 
 const style = {
   position: "absolute",
@@ -30,6 +31,7 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
   const [inputFields, setinputFields] = useState({
     isPrefix: false,
   });
+  const queryClient = useQueryClient();
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -39,11 +41,8 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
     }));
   };
 
-  //  handleSubmit
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Form submitted:");
-
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/create/employee-code-generator/${organisationId}`,
@@ -57,10 +56,16 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
           },
         }
       );
-      console.log(response);
       handleAlert(true, "success", response.data.message);
+      setTimeout(() => {
+        handleAlert(false, "success", "");
+      }, 2000);
       setStartWith("");
       setinputFields({ isPrefix: false });
+      handleClose();
+
+      // Invalidate and refetch the data after successful submission
+      queryClient.invalidateQueries(["employee-code"]);
     } catch (error) {
       handleAlert(
         true,
@@ -69,7 +74,6 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
       );
     }
   };
-
   return (
     <Modal
       open={open}

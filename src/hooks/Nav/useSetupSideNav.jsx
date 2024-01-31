@@ -8,10 +8,12 @@ import {
 } from "@mui/icons-material";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
 import { useLocation } from "react-router-dom";
 import UserProfile from "../UserData/useUser";
+import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
+import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
+import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
 
 const useSetupSideNav = (organisationId) => {
   const location = useLocation();
@@ -66,8 +68,8 @@ const useSetupSideNav = (organisationId) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
-      label: "Add Input Field For Form",
-      icon: AddLocationAltOutlined,
+      label: "Additional Employee Data",
+      icon: PersonAddAlt1OutlinedIcon,
       href: `/organisation/${organisationId}/setup/input-field`,
       active:
         location.pathname ===
@@ -128,7 +130,7 @@ const useSetupSideNav = (organisationId) => {
     },
     {
       label: "Salary Computation Day",
-      icon: EventNoteOutlinedIcon,
+      icon: DateRangeOutlinedIcon,
       href: `/organisation/${organisationId}/setup/set-employee-salary-calculate-day`,
       active:
         location.pathname ===
@@ -137,7 +139,7 @@ const useSetupSideNav = (organisationId) => {
     },
     {
       label: "Employee Code Generator",
-      icon: EventNoteOutlinedIcon,
+      icon: AssignmentIndOutlinedIcon,
       href: `/organisation/${organisationId}/setup/set-employee-code-generator`,
       active:
         location.pathname ===

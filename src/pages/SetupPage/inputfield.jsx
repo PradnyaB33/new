@@ -86,7 +86,7 @@ const Inputfield = () => {
               <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                 <InputIcon className="!text-lg text-white" />
               </div>
-              <h1 className="!text-lg">Add Input Field for organization</h1>
+              <h1 className="!text-lg">Add Additional Employee Data</h1>
             </div>
             {
               <div className="flex flex-col flex-wrap">

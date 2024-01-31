@@ -68,13 +68,12 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
   });
 
   useEffect(() => {
-    if (employeeCodes) {
+    console.log("Employee Codes Updated:", employeeCodes);
+    if (employeeCodes && employeeCodes.length > 0) {
       setStartWith(employeeCodes[0]?.code || "");
-      setNumCharacterInPrefix(employeeCodes[0]?.numChracterInPrefix);
+      setNumCharacterInPrefix(employeeCodes[0]?.numChracterInPrefix || "");
     }
   }, [employeeCodes]);
-
-  console.log(employeeCodes);
 
   const EditEmployeeCode = useMutation(
     async (data) => {
@@ -88,8 +87,8 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
             },
           }
         );
-        console.log(response);
-        return response;
+
+        return response.data;
       } catch (error) {
         throw new Error(
           error.response.data.message || "Failed to Update Employee Code"
@@ -97,14 +96,19 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
       }
     },
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["empCode"] });
+      onSuccess: (data) => {
+        // Invalidate and refetch the data after successful submission
+        queryClient.invalidateQueries(["employee-code"]);
         handleClose();
-        handleAlert(true, "success", "Employee Code Updated Successfully..");
-        window.location.reload();
+        handleAlert(true, "success", "Employee Code Updated Successfully");
+        setTimeout(() => {
+          handleAlert(false, "success", "");
+        }, 2000);
       },
+
       onError: (error) => {
         console.error("Error:", error.message);
+        handleAlert(true, "error", error.message);
       },
     }
   );

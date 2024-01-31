@@ -112,16 +112,16 @@ const EmployeeProfile = () => {
     <>
       <div
         style={{
-          marginTop: "10%",
-          marginLeft: "20%",
+          margin: "10% auto", // Center the content
+          padding: "10px",
+          maxWidth: "800px",
+          width: "90%",
         }}
       >
         <Paper
           sx={{
             width: "100%",
-            maxWidth: "800px!important",
             height: "100%",
-            maxHeight: "85vh!important",
             paddingBottom: "10%",
           }}
           className="w-full"
@@ -129,209 +129,185 @@ const EmployeeProfile = () => {
           <div style={{ display: "flex", marginTop: "20px" }}>
             <div style={{ marginRight: "30%" }}>
               <h1 className="text-lg pl-2 font-semibold">Account Setting</h1>
-              <h1 className="text-lg pl-2">Here You Can Manage Your Account</h1>
             </div>
           </div>
 
-          <Paper className="border-none !pt-0 !px-0 shadow-md outline-none rounded-md">
-            <div className="w-full py-4">
-              <Divider variant="fullWidth" orientation="horizontal" />
-            </div>
+          {/* <Paper className="border-none !pt-0 !px-0 shadow-md outline-none rounded-md"> */}
+          <div className="w-full py-4">
+            <Divider variant="fullWidth" orientation="horizontal" />
+          </div>
 
-            <Box sx={{ flexGrow: 1 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={6} md={4}>
+          <Box sx={{ flexGrow: 1 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={6} md={4}>
+                <h1
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {selectedImage && (
+                    <img
+                      src={selectedImage}
+                      alt="User"
+                      style={{
+                        borderRadius: "50%",
+                        width: "180px",
+                        height: "180px",
+                        display: "block",
+                        margin: "auto",
+                      }}
+                    />
+                  )}
+                </h1>
+              </Grid>
+              <Grid item xs={6} md={8}>
+                <div>
                   <h1
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
+                      fontSize: "24px",
+                      fontWeight: "bold",
+                      color: "#333",
                     }}
                   >
-                    {selectedImage && (
-                      <img
-                        src={selectedImage}
-                        alt="User"
-                        style={{
-                          borderRadius: "50%",
-                          width: "180px",
-                          height: "180px",
-                          display: "block",
-                          margin: "auto",
-                        }}
-                      />
-                    )}
+                    {`${user?.first_name} ${user?.last_name}`}
                   </h1>
-                </Grid>
-                <Grid item xs={6} md={8}>
-                  <div>
-                    <h1
+                  <h1 className="text-lg font-semibold">
+                    {user?.profile.join(" ,")}
+                  </h1>
+                  <h1 className="text-lg">{user?.email}</h1>
+                  <div className="w-full">
+                    <h1 className="text-lg" style={{ color: "#000" }}>
+                      Status: {availableUserProfileData.status_message}
+                    </h1>
+                    <h1 className="text-lg" style={{ color: "#000" }}>
+                      Chat Id: {availableUserProfileData.chat_id}
+                    </h1>
+                  </div>
+
+                  <div style={{ display: "flex", marginTop: "20px" }}>
+                    <button
                       style={{
-                        fontSize: "24px",
-                        fontWeight: "bold",
-                        color: "#333",
+                        backgroundColor: "#dc3545",
+                        color: "#fff",
+                        padding: "5px 20px",
+                        border: "none",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                        marginRight: "10px",
                       }}
                     >
-                      {`${user?.first_name} ${user?.last_name}`}
-                    </h1>
-                    <h1 className="text-lg font-semibold">
-                      {user?.profile.join(" ,")}
-                    </h1>
-                    <h1 className="text-lg">{user?.email}</h1>
-                    <div className="w-full">
-                      <h1 className="text-lg" style={{ color: "#000" }}>
-                        Status: {availableUserProfileData.status_message}
-                      </h1>
-                      <h1 className="text-lg" style={{ color: "#000" }}>
-                        Chat Id: {availableUserProfileData.chat_id}
-                      </h1>
-                    </div>
-
-                    <div style={{ display: "flex", marginTop: "20px" }}>
-                      <button
+                      Delete Photo
+                    </button>
+                    <input
+                      type="file"
+                      id="imageInput"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      onChange={handleImageChange}
+                    />
+                    <label htmlFor="imageInput">
+                      <Button
                         style={{
-                          backgroundColor: "#dc3545",
+                          backgroundColor: "#1976D2",
                           color: "#fff",
                           padding: "5px 20px",
                           border: "none",
                           borderRadius: "5px",
                           cursor: "pointer",
-                          marginRight: "10px",
                         }}
+                        component="span"
                       >
-                        Delete Photo
-                      </button>
-                      <input
-                        type="file"
-                        id="imageInput"
-                        accept="image/*"
-                        style={{ display: "none" }}
-                        onChange={handleImageChange}
-                      />
-                      <label htmlFor="imageInput">
-                        <Button
-                          style={{
-                            backgroundColor: "#1976D2",
-                            color: "#fff",
-                            padding: "5px 20px",
-                            border: "none",
-                            borderRadius: "5px",
-                            cursor: "pointer",
-                          }}
-                          component="span"
-                        >
-                          Change Photo
-                        </Button>
-                      </label>
-                    </div>
+                        Change Photo
+                      </Button>
+                    </label>
                   </div>
-                </Grid>
+                </div>
               </Grid>
-            </Box>
+            </Grid>
+          </Box>
 
-            <div className="w-full py-6">
-              <Divider variant="fullWidth" orientation="horizontal" />
+          <div className="w-full py-6">
+            <Divider variant="fullWidth" orientation="horizontal" />
+          </div>
+
+          <div className="flex items-center gap-20 flex-col md:flex-row">
+            <div className="w-full px-4 mb-4 md:mb-0">
+              <InputLabel>Additional Phone Number</InputLabel>
+              <FormControl sx={{ width: "100%" }}>
+                <TextField
+                  size="small"
+                  type="number"
+                  fullWidth
+                  margin="normal"
+                  value={additionalPhoneNumber}
+                  onChange={(e) => {
+                    const enteredNumber = e.target.value;
+                    // Check if enteredNumber is a valid 10-digit number
+                    if (/^\d{0,10}$/.test(enteredNumber)) {
+                      setAdditionalPhoneNumber(enteredNumber);
+                    }
+                  }}
+                />
+              </FormControl>
             </div>
-
-            <div className="flex items-center gap-20">
-              <div className="w-full px-4">
-                <InputLabel>Additional Phone Number</InputLabel>
-                <FormControl sx={{ width: 300 }}>
-                  <TextField
-                    size="small"
-                    type="Number"
-                    fullWidth
-                    margin="normal"
-                    value={additionalPhoneNumber}
-                    onChange={(e) => {
-                      const enteredNumber = e.target.value;
-                      // Check if enteredNumber is a valid 10-digit number
-                      if (/^\d{0,10}$/.test(enteredNumber)) {
-                        setAdditionalPhoneNumber(enteredNumber);
-                      }
-                    }}
-                  />
-                </FormControl>
-              </div>
-              <div className="w-full">
-                <InputLabel>Add Chat Id</InputLabel>
-                <FormControl sx={{ width: 300 }}>
-                  <TextField
-                    size="small"
-                    type="text"
-                    fullWidth
-                    margin="normal"
-                    value={chatId}
-                    onChange={(e) => setChatId(e.target.value)}
-                  />
-                </FormControl>
-              </div>
-            </div>
-
             <div className="w-full px-4">
-              <InputLabel>Add Status Message</InputLabel>
-              <FormControl sx={{ width: 730 }}>
+              <InputLabel>Add Chat Id</InputLabel>
+              <FormControl sx={{ width: "100%" }}>
                 <TextField
                   size="small"
                   type="text"
                   fullWidth
                   margin="normal"
-                  value={statusMessage}
-                  onChange={(e) => setStatusMessage(e.target.value)}
+                  value={chatId}
+                  onChange={(e) => setChatId(e.target.value)}
                 />
               </FormControl>
             </div>
+          </div>
 
-            <div
+          <div className="w-full px-4">
+            <InputLabel>Add Status Message</InputLabel>
+            <FormControl sx={{ width: 730 }}>
+              <TextField
+                size="small"
+                type="text"
+                fullWidth
+                margin="normal"
+                value={statusMessage}
+                onChange={(e) => setStatusMessage(e.target.value)}
+              />
+            </FormControl>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              marginTop: "20px",
+              justifyContent: "center",
+            }}
+          >
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              onClick={handleAddAdditionalDetails}
               style={{
-                display: "flex",
-                marginTop: "20px",
-                justifyContent: "center",
+                backgroundColor: "#1976D2",
+                color: "#fff",
+                padding: "5px 20px",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
               }}
             >
-              {/* <Button
-                onClick={handleEditModalOpen}
-                type="submit"
-                variant="contained"
-                color="primary"
-                style={{
-                  backgroundColor: "#1976D2",
-                  color: "#fff",
-                  padding: "5px 20px",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                  marginRight: "10px",
-                }}
-              >
-                Update
-              </Button> */}
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                onClick={handleAddAdditionalDetails}
-                style={{
-                  backgroundColor: "#1976D2",
-                  color: "#fff",
-                  padding: "5px 20px",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                Submit
-              </Button>
-            </div>
-          </Paper>
+              Submit
+            </Button>
+          </div>
+          {/* </Paper> */}
         </Paper>
       </div>
-
-      {/* <EditEmpProfileModal
-        handleClose={handleClose}
-        open={editModalOpen}
-        userId={editingUserId}
-      /> */}
     </>
   );
 };

@@ -132,7 +132,7 @@ const EmployeeCodeGenerator = () => {
                 <EventNoteOutlinedIcon className="!text-lg text-white" />
               </div>
               <h1 className="!text-lg tracking-wide">
-                Employee Code Generate for Organization
+                Employee Code Generation
               </h1>
             </div>
             <Button
@@ -163,15 +163,15 @@ const EmployeeCodeGenerator = () => {
                 {employeeCodes?.map((empCode, id) => (
                   <tr className="!font-medium border-b" key={id}>
                     <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                    <td className="py-3 ">{empCode.code}</td>
+                    <td className="py-3 ">{empCode?.code}</td>
                     <td className="whitespace-nowrap px-6 py-2">
                       <IconButton
-                        onClick={() => handleEditModalOpen(empCode._id)}
+                        onClick={() => handleEditModalOpen(empCode?._id)}
                       >
                         <BorderColor className="!text-xl" color="success" />
                       </IconButton>
                       <IconButton
-                        onClick={() => handleDeleteConfirmation(empCode._id)}
+                        onClick={() => handleDeleteConfirmation(empCode?._id)}
                       >
                         <Delete className="!text-xl" color="error" />
                       </IconButton>
@@ -183,7 +183,6 @@ const EmployeeCodeGenerator = () => {
           </div>
         </article>
       </Setup>
-
       {/* this dialogue for delete the employee code */}
       <Dialog
         open={deleteConfirmation !== null}
@@ -218,14 +217,13 @@ const EmployeeCodeGenerator = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
       {/* for create */}
       <CreateEmpCodeModel
         handleClose={handleCreateModalClose}
         open={createModalOpen}
         organisationId={organisationId}
       />
-      {/* for update */}
+      s{/* for update */}
       <EditEmpCodeModel
         handleClose={handleEditModelClose}
         organisationId={organisationId}
