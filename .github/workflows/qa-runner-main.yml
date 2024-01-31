@@ -39,14 +39,22 @@ jobs:
     runs-on: [qa-frontend-main]
     needs: build
     steps:
+      - name: Cleanup build folder
+        run: |
+          ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./
+
       - name: 📥 Download artifact
         uses: actions/download-artifact@v2
         with:
           name: static-site
-  
+
       - name: 🧪 Test artifact download
         run: |
           ls -R
+
     
           
 
