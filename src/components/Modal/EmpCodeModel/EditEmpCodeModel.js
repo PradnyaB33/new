@@ -1,7 +1,7 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Button, Divider, IconButton, Modal } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { UseContext } from "../../../State/UseState/UseContext";
 import {
