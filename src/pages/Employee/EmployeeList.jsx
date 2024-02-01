@@ -3,12 +3,10 @@ import { IconButton, TextField, Container } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
 
 const EmployeeList = () => {
-  const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const [nameSearch, setNameSearch] = useState("");
@@ -39,7 +37,6 @@ const EmployeeList = () => {
       setNumbers(numbersArray);
     } catch (error) {
       console.log(error);
-      handleAlert(true, "error", "Failed to Fetch Employee");
     }
   };
 
@@ -77,7 +74,6 @@ const EmployeeList = () => {
     setemployeeId(null);
     setEditModalOpen(false);
   };
-  console.log(availableEmployee);
 
   return (
     <>
@@ -152,16 +148,20 @@ const EmployeeList = () => {
                   .filter((item) => {
                     return (
                       (!nameSearch.toLowerCase() ||
-                        (item.first_name &&
+                        (item.first_name !== null &&
+                          item.first_name !== undefined &&
                           item.first_name
                             .toLowerCase()
                             .includes(nameSearch))) &&
                       (!deptSearch ||
                         (item.deptname !== null &&
-                          item.deptname.some((dept) =>
-                            dept.departmentName
-                              .toLowerCase()
-                              .includes(deptSearch.toLowerCase())
+                          item.deptname !== undefined &&
+                          item.deptname.some(
+                            (dept) =>
+                              dept.departmentName !== null &&
+                              dept.departmentName
+                                .toLowerCase()
+                                .includes(deptSearch.toLowerCase())
                           ))) &&
                       (!locationSearch.toLowerCase() ||
                         item.worklocation.some(

@@ -61,7 +61,6 @@ const DeleteEmployee = () => {
       setNumbers(numbersArray);
     } catch (error) {
       console.log(error);
-      handleAlert(true, "error", "Failed to Fetch Employee");
     }
   };
 
