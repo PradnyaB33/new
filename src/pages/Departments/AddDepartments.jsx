@@ -23,11 +23,14 @@ const AddDepartments = () => {
   const [dept_cost_center_description, setDepartmentCostCenterDescription] =
     useState("");
   const [dept_id, setDepartmentId] = useState("");
+  const [dept_cost_center_id, setDepartmentCostCenterId] = useState("");
   const [dept_head_name, setDepartmentHeadName] = useState("");
   const [dept_delegate_head_name, setDepartmenDelegateHeadName] = useState("");
   const { organisationId } = useParams();
   const [enterDepartmentId, setEnterDepartmentId] = useState(false);
+  const [enterDeptCostCenterId, setDeptCostCenterId] = useState(false);
   const [numCharacters, setNumCharacters] = useState(1);
+  const [numberCharacters, setNumberCharacters] = useState(1);
   const [departmentNameError, setDepartmentNameError] = useState("");
 
   // fetch the location
@@ -92,6 +95,14 @@ const AddDepartments = () => {
       setDepartmentId(input);
     }
   };
+  //  store department cost center id
+  const handleDeptCostCenterIdChange = (e) => {
+    const input = e.target.value;
+    const charactersOnly = input.replace(/\d/g, "");
+    if (charactersOnly.length <= numberCharacters) {
+      setDepartmentCostCenterId(input);
+    }
+  };
   // add validaion while enter the departname name
   const handleDepartmentNameChange = (e) => {
     const enteredValue = e.target.value;
@@ -115,7 +126,7 @@ const AddDepartments = () => {
   //   add the department data
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log(dept_cost_center_id);
     try {
       const departmentData = {
         departmentName: dept_name,
@@ -124,13 +135,14 @@ const AddDepartments = () => {
         costCenterName: dept_cost_center_name,
         costCenterDescription: dept_cost_center_description,
         departmentId: dept_id,
+        dept_cost_center_id,
         departmentHeadName: `${dept_head_name.first_name} ${dept_head_name.last_name}`,
         departmentHeadDelegateName: `${dept_delegate_head_name.first_name} ${dept_delegate_head_name.last_name}`,
         organizationId: organisationId,
       };
 
       await axios.post(
-        `${process.env.REACT_APP_API}/route/department/send-approval-request-to-superadmin/${organisationId}`,
+        `${process.env.REACT_APP_API}/route/department/create/${organisationId}`,
         departmentData,
         {
           headers: {
@@ -312,6 +324,7 @@ const AddDepartments = () => {
                 Note : No prefix added to Department ID.
               </p>
             )}
+
             <div className="w-full">
               <FormControl sx={{ width: 580 }}>
                 <TextField
@@ -326,6 +339,73 @@ const AddDepartments = () => {
                 />
               </FormControl>
             </div>
+
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                marginTop: "8px",
+                marginRight: "50px",
+              }}
+            >
+              <FormControlLabel
+                style={{
+                  width: "200px",
+                  alignItems: "center",
+                }}
+                control={
+                  <Checkbox
+                    checked={enterDeptCostCenterId}
+                    onChange={() => setDeptCostCenterId(!enterDeptCostCenterId)}
+                  />
+                }
+                label="Use prefix in ID"
+              />
+
+              {/* Make departmentIdRequired And prefixRequired variable and not string. */}
+
+              {enterDeptCostCenterId && (
+                <TextField
+                  inputProps={{
+                    min: 1,
+                  }}
+                  required
+                  name="numCharacters"
+                  size="small"
+                  className="w-full"
+                  label="no of Characters"
+                  type="number"
+                  value={numberCharacters}
+                  onChange={(e) => setNumberCharacters(e.target.value)}
+                />
+              )}
+            </div>
+            {enterDeptCostCenterId && (
+              <p style={{ alignSelf: "start" }} className="font-extralight">
+                Note: Please adjust the character length of prefix in ID.
+              </p>
+            )}
+            {!enterDeptCostCenterId && (
+              <p className="font-extralight" style={{ alignSelf: "start" }}>
+                Note : No prefix added to Department ID.
+              </p>
+            )}
+
+            <div className="w-full">
+              <FormControl sx={{ width: 580 }}>
+                <TextField
+                  required
+                  name="dept_cost_center_id"
+                  size="small"
+                  className="w-full"
+                  label="Department Cost Center Id"
+                  id="dept_cost_center_id"
+                  value={dept_cost_center_id}
+                  onChange={handleDeptCostCenterIdChange}
+                />
+              </FormControl>
+            </div>
+
             <div className="w-full">
               <Autocomplete
                 sx={{ width: 580 }}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 // Components
 import SetupSideNav from "./components/SideNav/SetupSideNav";
@@ -8,18 +8,18 @@ import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
 import UserProfile from "./hooks/UserData/useUser";
-import AddEmployee from "./pages/AddEmployee/addemployee";
-import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
+import AddOrganisation from "./pages/AddOrganisation/ADDORGANIZATION";
 import Application from "./pages/Application/Application";
-import DashBoardHR from "./pages/DashBoard/HR/DashBoardHR";
-import DashboardManger from "./pages/DashBoard/Manager/DashboardManger";
-import Dashboard from "./pages/DashBoard/employee/Dashboard";
-import SuperAdmin from "./pages/DashBoard/superAdmin/SuperAdmin";
-import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
+import DashBoardHR from "./pages/DashBoard/DashBoardHR";
+import Dashboard from "./pages/DashBoard/Dashboard";
+import DashboardManger from "./pages/DashBoard/DashboardManger";
+import SuperAdmin from "./pages/DashBoard/SuperAdmin";
 import AddDepartments from "./pages/Departments/AddDepartments";
 import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
-import EmployeeList from "./pages/EmployeeList/EmployeeList";
+import DeleteEmployee from "./pages/Employee/DeleteEmployee";
+import EmployeeList from "./pages/Employee/EmployeeList";
+import EmployeeAdd from "./pages/Employee/addemploye";
 import Home from "./pages/Home/Home";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
@@ -44,6 +44,7 @@ import ShiftManagement from "./pages/SetupPage/ShiftManagement/shiftAllowance";
 import Shifts from "./pages/SetupPage/Shifts";
 import WeekendHoliday from "./pages/SetupPage/WeekendHoliday";
 import Inputfield from "./pages/SetupPage/inputfield";
+import RolePage from "./pages/SignIn/RolePage";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 import EditablePolyline from "./pages/Test/test2";
@@ -58,6 +59,7 @@ import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
+
 const App = () => {
   return (
     <Routes>
@@ -70,6 +72,7 @@ const App = () => {
       <Route path="/test6" element={<TrackingMap3 />} />
       {/* Login Routes */}
       <Route path="/sign-in" element={<SignIn />} />
+      <Route path="/choose-role" element={<RolePage />} />
       <Route path="/sign-up" element={<Signup />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/waiting" element={<WaitMain />} />
@@ -144,7 +147,7 @@ const App = () => {
       <Route path="/employee-profile" element={<EmployeeProfile />} />
       <Route
         path="/organisation/:organisationId/employee-onboarding"
-        element={<AddEmployee />}
+        element={<EmployeeAdd />}
       />
       <Route
         path="/organisation/:organisationId/employee-offboarding"
@@ -211,6 +214,10 @@ const App = () => {
         element={<EmployementTypes />}
       />
       <Route
+        path="/organisation/:organisationId/setup/set-employee-code-generator"
+        element={<EmployeeCodeGenerator />}
+      />
+      <Route
         path="/organisation/:organisationId/setup/add-organization-locations"
         element={<OrganizationLocations />}
       />
@@ -221,10 +228,7 @@ const App = () => {
       <Route path="/setup/:organisationId" element={<Setup />} />
       <Route path="/set-designation" element={<Designation />} />
       <Route path="/add-inputfield/:id" element={<Inputfield />} />
-      <Route
-        path="/setup/employee-code-genreation/:id"
-        element={<EmployeeCodeGenerator />}
-      />
+
       <Route path="/setup/:id/public-holidays" element={<PublicHoliday />} />
       <Route
         path="/organisation/:organisationId/setup/set-email"
@@ -256,17 +260,22 @@ export default App;
 
 function RequireAuth({ children, permission }) {
   const { getCurrentUser, getCurrentRole } = UserProfile();
-  const navigate = useNavigate("");
+
   const user = getCurrentUser();
   const role = getCurrentRole();
   const isPermission = role === permission;
+
+  if (user && !role) {
+    return <Navigate to={"/choose-role"} />;
+  }
+
   if (role || !window.location.pathname.includes("sign-in", "sign-up")) {
     if (!role) return <Navigate to={"/sign-in"} />;
     if (user && isPermission) return children;
     return <UnAuthorized />;
   }
 
-  // return user && isPermission ? children : navigate("/");
+  return user && isPermission ? children : <Navigate to={"/"} />;
 }
 
 //   : user?.profile?.length < 2 ? (

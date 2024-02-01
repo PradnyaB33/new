@@ -206,12 +206,8 @@ const PDFDocument = ({
                 <Text style={styles.cell}>{variableAllowance}</Text>
               </View>
               <View style={styles.tableRow}>
-                <Text style={[styles.cell, styles.highlightedCell]}>
-                  Total Gross Salary:
-                </Text>
-                <Text style={[styles.cell, styles.highlightedCell]}>
-                  {totalGrossSalary}
-                </Text>
+                <Text style={styles.netcell}>Total Gross Salary:</Text>
+                <Text style={styles.netcell}>{totalGrossSalary}</Text>
               </View>
             </View>
 
@@ -245,24 +241,16 @@ const PDFDocument = ({
                 </Text>
               </View>
               <View style={styles.tableRow}>
-                <Text style={[styles.cell, styles.highlightedCell]}>
-                  Total Deduction:
-                </Text>
-                <Text style={[styles.cell, styles.highlightedCell]}>
-                  {totalDeduction}
-                </Text>
+                <Text style={styles.netcell}>Total Deduction:</Text>
+                <Text style={styles.netcell}>{totalDeduction}</Text>
               </View>
             </View>
           </View>
 
           <View style={styles.netSalarytable}>
             <View style={styles.netTableRow}>
-              <Text style={[styles.netcell, styles.highlightedCell]}>
-                Total Net Salary :
-              </Text>
-              <Text style={[styles.netcell, styles.highlightedCell]}>
-                {totalNetSalary}
-              </Text>
+              <Text style={styles.netcell}>Total Net Salary :</Text>
+              <Text style={styles.netcell}>{totalNetSalary}</Text>
             </View>
           </View>
 
@@ -311,6 +299,7 @@ const styles = StyleSheet.create({
     borderColor: "#999",
     borderStyle: "solid",
     borderCollapse: "collapse",
+    marginTop: -1,
   },
   tableRow: {
     flexDirection: "row",
@@ -325,12 +314,10 @@ const styles = StyleSheet.create({
     padding: 4,
     fontSize: 9,
   },
-  highlightedCell: {
-    backgroundColor: "#FFFF00",
-  },
+
   secondTableCell: {
     flex: 0.5,
-    padding: 11,
+    padding: 15.5,
     fontSize: 9,
   },
 
@@ -371,7 +358,6 @@ const styles = StyleSheet.create({
   roundedImage: {
     width: "100%",
     height: "100%",
-    borderRadius: "200%",
     overflow: "hidden",
   },
   organizationDetails: {

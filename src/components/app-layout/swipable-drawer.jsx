@@ -34,7 +34,8 @@ export default function SwipeableTemporaryDrawer() {
       className={`${
         location.pathname.includes("/sign-in") ||
         location.pathname.includes("/sign-up") ||
-        location.pathname.includes("/terms-and-conditions")
+        location.pathname.includes("/terms-and-conditions") ||
+        location.pathname.includes("/choose-role")
           ? "hidden"
           : "block"
       }`}
@@ -54,7 +55,7 @@ export default function SwipeableTemporaryDrawer() {
           </IconButton>
           <Badge>
             <Typography variant="h6" noWrap component="div">
-              Aegis
+              AEGIS
             </Typography>
           </Badge>
           <ProfileIcon />
@@ -71,9 +72,22 @@ export default function SwipeableTemporaryDrawer() {
         <div className="py-4 px-10 border-b-[.5px] flex  items-center gap-4 border-gray-300 ">
           <img src="/logo.svg" className="h-[30px]" alt="logo" />
           <div>
-            <h1 className="text-2xl">Aegis</h1>
+            <h1 className="text-2xl">AEGIS</h1>
           </div>
         </div>
+
+        {/* <div className="mt-4 flex gap-3 px-4 w-full text-sm items-center">
+          <Select
+            options={user?.profile?.map((item) => {
+              return {
+                value: item,
+                label: item,
+              };
+            })}
+            placeholder={"Choose your role"}
+            className="w-full"
+          />
+        </div> */}
         {list}
       </SwipeableDrawer>
     </div>

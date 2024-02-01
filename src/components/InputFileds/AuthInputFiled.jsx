@@ -34,7 +34,9 @@ const AuthInputFiled = ({
                 readOnly && "bg-[ghostwhite]"
               } flex rounded-md items-center px-2 border-gray-200 border-[.5px] bg-white py-1 md:py-[6px]`}
             >
-              <Icon className="text-gray-700 md:text-lg !text-[1em]" />
+              {Icon && (
+                <Icon className="text-gray-700 md:text-lg !text-[1em]" />
+              )}
               <input
                 type={type}
                 readOnly={readOnly}

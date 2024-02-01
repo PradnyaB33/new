@@ -9,6 +9,7 @@ import CreateSalaryModel from "../../components/Modal/CreateSalaryModel/CreateSa
 import { useNavigate } from "react-router-dom";
 import { Event } from "@mui/icons-material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import { Container } from "@mui/material";
 
 const SalaryManagement = () => {
   const { handleAlert } = useContext(TestContext);
@@ -87,17 +88,14 @@ const SalaryManagement = () => {
 
   return (
     <>
-      <section className="bg-gray-50 min-h-screen w-full">
-        <article className="SetupSection bg-white w-full  h-max shadow-md rounded-sm border  items-center">
-          <h1
-            id="modal-modal-title"
-            className="text-lg pl-2 font-semibold text-center modal-title py-2"
-          >
+      <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
+        <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
+          <h1 className="text-lg pl-2 font-semibold text-center modal-title py-2">
             Employee List for Salary Management
           </h1>
 
-          <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
-            <div className="flex items-center  gap-3 ">
+          <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
+            <div className="flex items-center gap-3 mb-3 md:mb-0">
               <TextField
                 onChange={(e) => setNameSearch(e.target.value)}
                 placeholder="Search Employee Name...."
@@ -106,7 +104,7 @@ const SalaryManagement = () => {
                 sx={{ width: 300 }}
               />
             </div>
-            <div className="flex items-center  gap-3 ">
+            <div className="flex items-center gap-3 mb-3 md:mb-0">
               <TextField
                 onChange={(e) => setDeptSearch(e.target.value)}
                 placeholder="Search Department Name...."
@@ -115,7 +113,7 @@ const SalaryManagement = () => {
                 sx={{ width: 300 }}
               />
             </div>
-            <div className="flex items-center  gap-3 ">
+            <div className="flex items-center gap-3">
               <TextField
                 onChange={(e) => setLocationSearch(e.target.value)}
                 placeholder="Search Location ...."
@@ -164,21 +162,25 @@ const SalaryManagement = () => {
                   .filter((item) => {
                     return (
                       (!nameSearch.toLowerCase() ||
-                        (item.first_name &&
+                        (item.first_name !== null &&
+                          item.first_name !== undefined &&
                           item.first_name
                             .toLowerCase()
                             .includes(nameSearch))) &&
                       (!deptSearch ||
-                        (item.deptname &&
-                          item.deptname.some((dept) =>
-                            dept.departmentName
-                              .toLowerCase()
-                              .includes(deptSearch.toLowerCase())
+                        (item.deptname !== null &&
+                          item.deptname !== undefined &&
+                          item.deptname.some(
+                            (dept) =>
+                              dept.departmentName !== null &&
+                              dept.departmentName
+                                .toLowerCase()
+                                .includes(deptSearch.toLowerCase())
                           ))) &&
                       (!locationSearch.toLowerCase() ||
                         item.worklocation.some(
                           (location) =>
-                            location.city &&
+                            location.city !== null &&
                             location.city.toLowerCase().includes(locationSearch)
                         ))
                     );
@@ -186,12 +188,12 @@ const SalaryManagement = () => {
                   ?.map((item, id) => (
                     <tr className="!font-medium border-b" key={id}>
                       <td className="!text-left pl-8 py-3">{id + 1}</td>
-                      <td className="py-3">{item.first_name}</td>
-                      <td className="py-3">{item.last_name}</td>
-                      <td className="py-3">{item.email}</td>
+                      <td className="py-3">{item?.first_name}</td>
+                      <td className="py-3">{item?.last_name}</td>
+                      <td className="py-3">{item?.email}</td>
                       <td className="py-3">
                         {item?.worklocation?.map((location, index) => (
-                          <span key={index}>{location.city}</span>
+                          <span key={index}>{location?.city}</span>
                         ))}
                       </td>
                       <td className="py-3">
@@ -306,14 +308,8 @@ const SalaryManagement = () => {
             </nav>
           </div>
         </article>
-      </section>
+      </Container>
 
-      {/* Create model */}
-      {/* <CreateSalaryModel
-        id={organisationId}
-        open={open}
-        handleClose={handleClose}
-      /> */}
       <CreateSalaryModel
         id={organisationId}
         open={createModalOpen}

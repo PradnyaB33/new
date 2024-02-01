@@ -40,7 +40,7 @@ const MenuProps = {
     },
   },
 };
-const AddEmployee = () => {
+const EmployeeAdd = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
@@ -274,6 +274,7 @@ const AddEmployee = () => {
     fetchAvailabeDepartment();
     // eslint-disable-next-line
   }, []);
+  console.log(availableDepartment);
 
   const [profile, setProfile] = React.useState([]);
   const handleChange = (event) => {
@@ -1153,4 +1154,4 @@ const AddEmployee = () => {
   );
 };
 
-export default AddEmployee;
+export default EmployeeAdd;
