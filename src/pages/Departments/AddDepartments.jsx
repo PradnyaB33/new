@@ -126,7 +126,7 @@ const AddDepartments = () => {
   //   add the department data
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(dept_cost_center_id);
+
     try {
       const departmentData = {
         departmentName: dept_name,

@@ -75,7 +75,7 @@ const DepartmentList = () => {
     })();
     // eslint-disable-next-line
   }, []);
-
+  console.log(departmentList);
   const fetchDepartmentList = async () => {
     try {
       const response = await axios.get(
@@ -265,15 +265,20 @@ const DepartmentList = () => {
                   } border-b dark:border-neutral-500 !font-medium`}
                 >
                   <td className="py-2 px-3">{id + 1}</td>
-                  <td className="py-2 px-3">{department?.departmentName}</td>
                   <td className="py-2 px-3">
-                    {department?.departmentHeadName}
+                    {department?.departmentName || ""}
                   </td>
                   <td className="py-2 px-3">
-                    {department?.departmentHeadDelegateName}
+                    {department?.departmentHeadName || ""}
                   </td>
                   <td className="py-2 px-3">
-                    {department?.departmentLocation.city}
+                    {department?.departmentHeadDelegateName || ""}
+                  </td>
+
+                  <td className="py-2 px-3">
+                    {department?.departmentLocation
+                      ? department.departmentLocation.city
+                      : ""}
                   </td>
                   <td className="whitespace-nowrap px-3 py-2">
                     <IconButton
@@ -283,7 +288,7 @@ const DepartmentList = () => {
                       <Edit className="!text-xl" color="success" />
                     </IconButton>
                     <IconButton
-                      onClick={() => handleDeleteConfirmation(department._id)}
+                      onClick={() => handleDeleteConfirmation(department?._id)}
                       aria-label="delete"
                     >
                       <Delete className="!text-xl" color="error" />
@@ -330,7 +335,6 @@ const DepartmentList = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
       <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogActions>
           <DialogContent>
@@ -400,7 +404,7 @@ const DepartmentList = () => {
               >
                 {locations.map((data, index) => (
                   <MenuItem key={index} value={data.shortName}>
-                    {data.shortName}
+                    {data?.shortName}
                   </MenuItem>
                 ))}
               </Select>
