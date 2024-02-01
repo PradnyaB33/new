@@ -188,22 +188,7 @@ const SignIn = () => {
               </div>
             </div>
 
-            <div className="my-4 space-y-2 ">
-              <label
-                htmlFor={role}
-                className={" font-semibold text-gray-500 text-md"}
-              >
-                Choose Role
-              </label>
-              <Select
-                onChange={(role) => setSelectRole(role.value)}
-                options={options}
-                id="role"
-                placeholder={`Role`}
-              />
-            </div>
-
-            <div className="mb-6 space-y-2 ">
+            <div className="mt-6 space-y-2 ">
               <label
                 htmlFor={email}
                 className={" font-semibold text-gray-500 text-md"}
@@ -262,6 +247,21 @@ const SignIn = () => {
                     className={" border-none bg-white w-full outline-none px-2"}
                   />
                 </div>
+              </div>
+
+              <div className="my-4 space-y-2 ">
+                <label
+                  htmlFor={role}
+                  className={" font-semibold text-gray-500 text-md"}
+                >
+                  Choose Role
+                </label>
+                <Select
+                  onChange={(role) => setSelectRole(role.value)}
+                  options={options}
+                  id="role"
+                  placeholder={`Role`}
+                />
               </div>
             </div>
 
