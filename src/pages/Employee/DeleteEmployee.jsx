@@ -502,7 +502,7 @@ const DeleteEmployee = () => {
                             .toLowerCase()
                             .includes(nameSearch))) &&
                       (!deptSearch ||
-                        (item.deptname &&
+                        (item.deptname !== null &&
                           item.deptname.some((dept) =>
                             dept.departmentName
                               .toLowerCase()
@@ -511,7 +511,7 @@ const DeleteEmployee = () => {
                       (!locationSearch.toLowerCase() ||
                         item.worklocation.some(
                           (location) =>
-                            location.city &&
+                            location.city !== null &&
                             location.city.toLowerCase().includes(locationSearch)
                         ))
                     );
@@ -520,17 +520,17 @@ const DeleteEmployee = () => {
                     <tr className="!font-medium border-b" key={id}>
                       <td className="!text-left pl-8 py-3">
                         <Checkbox
-                          checked={selectedEmployees.indexOf(item._id) !== -1}
-                          onChange={() => handleEmployeeSelection(item._id)}
+                          checked={selectedEmployees.indexOf(item?._id) !== -1}
+                          onChange={() => handleEmployeeSelection(item?._id)}
                         />
                       </td>
                       <td className="!text-left pl-8 py-3">{id + 1}</td>
-                      <td className="py-3">{item.first_name}</td>
-                      <td className="py-3">{item.last_name}</td>
-                      <td className="py-3">{item.email}</td>
+                      <td className="py-3">{item?.first_name}</td>
+                      <td className="py-3">{item?.last_name}</td>
+                      <td className="py-3">{item?.email}</td>
                       <td className="py-3">
                         {item?.worklocation?.map((location, index) => (
-                          <span key={index}>{location.city}</span>
+                          <span key={index}>{location?.city}</span>
                         ))}
                       </td>
                       <td className="py-3">
@@ -540,10 +540,10 @@ const DeleteEmployee = () => {
                           );
                         })}
                       </td>
-                      <td className="py-3">{item.phone_number}</td>
+                      <td className="py-3">{item?.phone_number}</td>
                       <td className="whitespace-nowrap px-6 py-2">
                         <IconButton
-                          onClick={() => handleDeleteConfirmation(item._id)}
+                          onClick={() => handleDeleteConfirmation(item?._id)}
                         >
                           <Delete className="!text-xl" color="error" />
                         </IconButton>
