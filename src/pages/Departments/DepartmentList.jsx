@@ -46,8 +46,6 @@ const DepartmentList = () => {
   const queryClient = useQueryClient();
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [open, setOpen] = useState(false);
-
-  //pull the department list
   const [departmentList, setDepartmentList] = useState([]);
 
   useEffect(() => {
@@ -90,7 +88,6 @@ const DepartmentList = () => {
       setDepartmentList(response.data.department);
     } catch (error) {
       console.error(error);
-      handleAlert(true, "error", "Failed to fetch Department");
     }
   };
   useEffect(() => {
@@ -197,6 +194,7 @@ const DepartmentList = () => {
           departmentId,
           departmentHeadDelegateName,
           deptID,
+          departmentName,
         },
         {
           headers: { Authorization: authToken },
@@ -589,7 +587,7 @@ const DepartmentList = () => {
                 onClick={handleUpdateRequest}
                 variant="contained"
               >
-                Confirm
+                Apply
               </Button>
               <Button
                 size="small"
