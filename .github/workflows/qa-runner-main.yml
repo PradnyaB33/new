@@ -39,9 +39,9 @@ jobs:
     runs-on: [qa-frontend-main]
     needs: build
     steps:
-      - name: Cleanup Workspace
-        uses: asilbek99/action-cleanup@v1.0
-            
+      # - name: Cleanup Workspace
+      #   uses: asilbek99/action-cleanup@v1.0
+
       - name: Cleanup build folder
         run: |
           ls -la ./
@@ -57,9 +57,6 @@ jobs:
       - name: 🧪 Test artifact download
         run: |
           ls -R
-
-    
-          
 
 # Advantages:
 # - ⚙️ Automation: Automates the build and deployment process whenever changes are pushed to the main branch.
