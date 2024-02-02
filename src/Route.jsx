@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, Route, Routes, } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 // Components
 import SetupSideNav from "./components/SideNav/SetupSideNav";
@@ -8,7 +8,7 @@ import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
 import UserProfile from "./hooks/UserData/useUser";
-import AddEmployee from "./pages/Employee/AddEmployee";
+import EmployeeAdd from "./pages/Employee/addemploye";
 import AddOrganisation from "./pages/AddOrganisation/ADDORGANIZATION";
 import Application from "./pages/Application/Application";
 import DashBoardHR from "./pages/DashBoard/DashBoardHR";
@@ -147,7 +147,7 @@ const App = () => {
       <Route path="/employee-profile" element={<EmployeeProfile />} />
       <Route
         path="/organisation/:organisationId/employee-onboarding"
-        element={<AddEmployee />}
+        element={<EmployeeAdd />}
       />
       <Route
         path="/organisation/:organisationId/employee-offboarding"

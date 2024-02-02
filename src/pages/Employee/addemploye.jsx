@@ -564,11 +564,19 @@ const EmployeeAdd = () => {
         }}
         className="!min-h-screen"
       >
-        <div className="content-center flex justify-center my-0 p-0 bg-[#F8F8F8]">
+        <div className="content-center flex justify-center my-0 p-0">
           <div className="w-full md:w-[700px] shadow-lg rounded-lg border py-3 px-8">
-            <div className="flex items-center justify-center gap-4">
-              <Button>Add Employee</Button>
-            </div>
+            <Typography
+              sx={{
+                color: "#1D6EB7",
+                fontWeight: "600",
+                marginTop: "1rem",
+                textAlign: "center",
+              }}
+              variant="h4"
+            >
+              Add Employee
+            </Typography>
 
             <form onSubmit={handleSubmit} className="gap-6">
               <div className="flex items-center gap-14">
@@ -1148,7 +1156,11 @@ const EmployeeAdd = () => {
                   </div>
                 )}
 
-                <Button onClick={toggleFields} variant="outlined">
+                <Button
+                  onClick={toggleFields}
+                  variant="outlined"
+                  sx={{ marginTop: "20px" }}
+                >
                   {showFields ? "Read Less" : "Read More"}
                 </Button>
               </div>
