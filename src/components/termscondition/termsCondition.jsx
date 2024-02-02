@@ -1,4 +1,3 @@
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import React, { useState } from "react";
 const TermsCondition = () => {
@@ -16,10 +15,10 @@ const TermsCondition = () => {
 
   return (
     <>
-      <div className="mb-1">
-        <Checkbox
-          className="!pr-2 !p-0"
-          checked={isTermsAccepted}
+      <div className="mb-1 flex items-center gap-2 ">
+        <input
+          type="checkbox"
+          className="form-checkbox rounded-sm h-4 w-4 text-indigo-600"
           onChange={(e) => handleTermsAcceptance(e.target.checked)}
         />
         I accept the

@@ -141,21 +141,6 @@ const SignIn = () => {
               </div>
             </div>
 
-            {/* <div className="my-4 space-y-2 ">
-              <label
-                htmlFor={role}
-                className={" font-semibold text-gray-500 text-md"}
-              >
-                Choose Role
-              </label>
-              <Select
-                onChange={(role) => setSelectRole(role.value)}
-                options={options}
-                id="role"
-                placeholder={`Role`}
-              />
-            </div> */}
-
             <div className="mt-6 space-y-2 ">
               <label
                 htmlFor={email}
@@ -227,7 +212,9 @@ const SignIn = () => {
                 } flex group justify-center  gap-2 items-center rounded-md h-[30px] px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500`}
               >
                 {handleLogin.isLoading ? (
-                  <CircularProgress CircularProgress size={20} />
+                  <>
+                    <CircularProgress CircularProgress size={20} /> Log in
+                  </>
                 ) : (
                   "Log in"
                 )}
