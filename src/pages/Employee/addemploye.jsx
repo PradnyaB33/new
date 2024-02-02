@@ -298,6 +298,27 @@ const EmployeeAdd = () => {
     fetchAvailabeDepartment();
     // eslint-disable-next-line
   }, []);
+  const [availaleCostCenterId, setAvailableCostCenter] = useState([]);
+  const fetchAvailableCostCenter = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/department/get/cost-center-id/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setAvailableCostCenter(response.data.data.departments);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchAvailableCostCenter();
+    // eslint-disable-next-line
+  }, []);
+  console.log(availaleCostCenterId);
 
   const [profile, setProfile] = React.useState([]);
   const handleChange = (event) => {
@@ -422,11 +443,6 @@ const EmployeeAdd = () => {
     { shiftId: 1, shiftName: "Morning Shift" },
     { shiftId: 2, shiftName: "Afternoon Shift" },
     { shiftId: 3, shiftName: "Night Shift" },
-  ];
-  const departmentCostCenters = [
-    { departmentId: 101, costCenter: "CC001" },
-    { departmentId: 102, costCenter: "CC002" },
-    { departmentId: 103, costCenter: "CC003" },
   ];
 
   const toggleFields = () => {
@@ -1131,14 +1147,15 @@ const EmployeeAdd = () => {
                       <MenuItem value="" disabled>
                         Department Cost Center No
                       </MenuItem>
-                      {departmentCostCenters?.map((costno) => (
-                        <MenuItem
-                          key={costno.departmentId}
-                          value={costno.costCenter}
-                        >
-                          {costno.costCenter}
-                        </MenuItem>
-                      ))}
+                      {Array.isArray(availaleCostCenterId) &&
+                        availaleCostCenterId.map((costno) => (
+                          <MenuItem
+                            key={costno?._id}
+                            value={costno?.dept_cost_center_id}
+                          >
+                            {costno?.dept_cost_center_id}
+                          </MenuItem>
+                        ))}
                     </Select>
                   </FormControl>
                 </div>
