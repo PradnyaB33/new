@@ -15,6 +15,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Select from "@mui/material/Select";
+import { Typography } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -47,6 +48,26 @@ const EmployeeAdd = () => {
   const [userId, setUserId] = useState(null);
   const [empId, setEmpId] = useState(null);
   const [showFields, setShowFields] = useState(false);
+  const [ageError, setAgeError] = useState(false);
+  const handleDatePickerChange = (newDate) => {
+    const formattedDate = dayjs(newDate).format("YYYY-MM-DD");
+    setDateOfBirth(formattedDate);
+
+    // Check age
+    const age = calculateAge(newDate);
+    if (age < 18) {
+      setAgeError(true);
+    } else {
+      setAgeError(false);
+    }
+  };
+
+  const calculateAge = (birthdate) => {
+    const today = dayjs();
+    const birthDate = dayjs(birthdate);
+    return today.diff(birthDate, "year");
+  };
+
   useEffect(() => {
     try {
       const decodedToken = jwtDecode(authToken);
@@ -536,20 +557,21 @@ const EmployeeAdd = () => {
       <div
         style={{
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
+          alignItems: "center",
           padding: "50px 0 0",
           boxSizing: "border-box",
         }}
         className="!min-h-screen"
       >
-        <div className="content-center  flex justify-center my-0 p-0 bg-[#F8F8F8]">
-          <div className="w-[700px] shadow-lg rounded-lg border py-3 px-8">
+        <div className="content-center flex justify-center my-0 p-0 bg-[#F8F8F8]">
+          <div className="w-full md:w-[700px] shadow-lg rounded-lg border py-3 px-8">
             <div className="flex items-center justify-center gap-4">
               <Button>Add Employee</Button>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex flex-wrap gap-6">
-              <div className="flex items-center gap-20">
+            <form onSubmit={handleSubmit} className="gap-6">
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
@@ -626,7 +648,7 @@ const EmployeeAdd = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-20">
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
@@ -693,7 +715,7 @@ const EmployeeAdd = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-20">
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
@@ -753,7 +775,7 @@ const EmployeeAdd = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-20">
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
@@ -790,7 +812,7 @@ const EmployeeAdd = () => {
               </div>
 
               <div className="w-full">
-                <FormControl sx={{ width: 640 }}>
+                <FormControl sx={{ width: 625 }}>
                   <TextField
                     size="small"
                     type="text"
@@ -806,7 +828,7 @@ const EmployeeAdd = () => {
                 </FormControl>
               </div>
 
-              <div className="flex items-center gap-20">
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <Select
@@ -866,9 +888,10 @@ const EmployeeAdd = () => {
                 required
                 fullWidth
                 margin="normal"
+                sx={{ width: 625 }}
               />
 
-              <div className="flex items-center gap-20">
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <InputLabel id="demo-multiple-checkbox-label">
@@ -953,7 +976,7 @@ const EmployeeAdd = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-20">
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }} required>
                     <Select
@@ -991,7 +1014,7 @@ const EmployeeAdd = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-20">
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <Select
@@ -1032,7 +1055,7 @@ const EmployeeAdd = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-20">
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -1044,10 +1067,15 @@ const EmployeeAdd = () => {
                         <DatePicker
                           label="Date of Birth"
                           value={date_of_birth}
-                          onChange={(newDate) => {
-                            const formattedDate =
-                              dayjs(newDate).format("YYYY-MM-DD");
-                            setDateOfBirth(formattedDate);
+                          onChange={handleDatePickerChange}
+                          onAccept={() => {
+                            // Check age again when the user accepts the date
+                            const age = calculateAge(date_of_birth);
+                            if (age < 18) {
+                              setAgeError(true);
+                            } else {
+                              setAgeError(false);
+                            }
                           }}
                           slotProps={{
                             textField: { size: "small", fullWidth: true },
@@ -1055,6 +1083,16 @@ const EmployeeAdd = () => {
                         />
                       </DemoContainer>
                     </LocalizationProvider>
+
+                    {ageError && (
+                      <Typography
+                        variant="caption"
+                        color="error"
+                        style={{ height: "5px", width: "280px" }}
+                      >
+                        Age must be 18 or above.
+                      </Typography>
+                    )}
                   </FormControl>
                 </div>
 
