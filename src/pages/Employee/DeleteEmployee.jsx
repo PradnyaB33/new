@@ -496,21 +496,27 @@ const DeleteEmployee = () => {
                   .filter((item) => {
                     return (
                       (!nameSearch.toLowerCase() ||
-                        (item.first_name &&
+                        (item.first_name !== null &&
+                          item.first_name !== undefined &&
                           item.first_name
                             .toLowerCase()
                             .includes(nameSearch))) &&
                       (!deptSearch ||
                         (item.deptname !== null &&
-                          item.deptname.some((dept) =>
-                            dept.departmentName
-                              .toLowerCase()
-                              .includes(deptSearch.toLowerCase())
+                          item.deptname !== undefined &&
+                          item.deptname.some(
+                            (dept) =>
+                              dept.departmentName !== null &&
+                              dept.departmentName
+                                .toLowerCase()
+                                .includes(deptSearch.toLowerCase())
                           ))) &&
                       (!locationSearch.toLowerCase() ||
                         item.worklocation.some(
                           (location) =>
+                            location &&
                             location.city !== null &&
+                            location.city !== undefined &&
                             location.city.toLowerCase().includes(locationSearch)
                         ))
                     );

@@ -180,7 +180,9 @@ const SalaryManagement = () => {
                       (!locationSearch.toLowerCase() ||
                         item.worklocation.some(
                           (location) =>
+                            location &&
                             location.city !== null &&
+                            location.city !== undefined &&
                             location.city.toLowerCase().includes(locationSearch)
                         ))
                     );

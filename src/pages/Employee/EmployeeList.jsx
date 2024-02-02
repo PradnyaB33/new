@@ -44,6 +44,7 @@ const EmployeeList = () => {
     fetchAvailableEmployee(currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
+  console.log(availableEmployee);
 
   const prePage = () => {
     if (currentPage !== 1) {
@@ -166,7 +167,9 @@ const EmployeeList = () => {
                       (!locationSearch.toLowerCase() ||
                         item.worklocation.some(
                           (location) =>
+                            location &&
                             location.city !== null &&
+                            location.city !== undefined &&
                             location.city.toLowerCase().includes(locationSearch)
                         ))
                     );
@@ -183,11 +186,9 @@ const EmployeeList = () => {
                         ))}
                       </td>
                       <td className="py-3">
-                        {item?.deptname?.map((dept, index) => {
-                          return (
-                            <span key={index}>{dept?.departmentName}</span>
-                          );
-                        })}
+                        {item?.deptname?.map((dept, index) => (
+                          <span key={index}>{dept?.departmentName}</span>
+                        ))}
                       </td>
                       <td className="py-3">{item?.phone_number}</td>
                       <td className="whitespace-nowrap px-6 py-2">

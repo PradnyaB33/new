@@ -1031,6 +1031,7 @@ const EmployeeAdd = () => {
                   </FormControl>
                 </div>
               </div>
+
               <div className="flex items-center gap-20">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
@@ -1082,7 +1083,6 @@ const EmployeeAdd = () => {
                   </FormControl>
                 </div>
               </div>
-
               <div>
                 {showFields && (
                   <div className="flex flex-wrap gap-8">
@@ -1101,7 +1101,7 @@ const EmployeeAdd = () => {
                         fullWidth
                         margin="normal"
                         sx={{
-                          flexBasis: "45%",
+                          flexBasis: "45%", // Commenting out or reducing flexBasis
                           marginBottom: "16px",
                           marginRight: "15px",
                         }}
@@ -1114,6 +1114,7 @@ const EmployeeAdd = () => {
                   {showFields ? "Read Less" : "Read More"}
                 </Button>
               </div>
+
               <div className="w-full">
                 <FormControl>
                   <FormLabel id="demo-row-radio-buttons-group-label">
