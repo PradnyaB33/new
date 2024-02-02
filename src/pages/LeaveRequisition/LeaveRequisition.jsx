@@ -100,7 +100,7 @@ const LeaveRequisition = () => {
           <Link to={"/"}>
             <West className="mx-4 !text-xl" />
           </Link>
-          Leave Request section
+          Leave Request
         </header>
 
         <div className="flex flex-col-reverse md:flex-row w-full justify-start p-6 gap-4">
@@ -148,7 +148,7 @@ const LeaveRequisition = () => {
                     </Button>
                   </Badge>
                   <p className="!text-gray-400 font-semibold mb-2 text-xl">
-                    Select Leaves Dates
+                    Select Leave Date
                   </p>
                 </div>
               </div>
