@@ -49,6 +49,7 @@ const EmployeeAdd = () => {
   const [empId, setEmpId] = useState(null);
   const [showFields, setShowFields] = useState(false);
   const [ageError, setAgeError] = useState(false);
+  const [shift_allocation, setShiftAllocation] = useState("");
   const handleDatePickerChange = (newDate) => {
     const formattedDate = dayjs(newDate).format("YYYY-MM-DD");
     setDateOfBirth(formattedDate);
@@ -126,6 +127,12 @@ const EmployeeAdd = () => {
     setPasswordError,
     companyEmailError,
     setCompanyEmailError,
+    adhar_card_number,
+    setAdharCardNumber,
+    pan_card_number,
+    setPanCardNumber,
+    dept_cost_center_no,
+    setDeptCostCenterNo,
   } = useAddEmpForm();
 
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -291,7 +298,6 @@ const EmployeeAdd = () => {
     fetchAvailabeDepartment();
     // eslint-disable-next-line
   }, []);
-  console.log(availableDepartment);
 
   const [profile, setProfile] = React.useState([]);
   const handleChange = (event) => {
@@ -396,8 +402,6 @@ const EmployeeAdd = () => {
   }, []);
 
   const [dynamicFields, setDynamicFields] = useState({
-    shifts_allocation: "",
-    dept_cost_no: "",
     middalName: "",
     martial_state: "",
     primary_nationality: "",
@@ -405,8 +409,6 @@ const EmployeeAdd = () => {
     permanant_address: "",
     relative_info: "",
     emer_contact: "",
-    adhar_card_number: "",
-    pan_card_number: "",
   });
 
   const handleDynamicFieldChange = (name, value) => {
@@ -415,6 +417,18 @@ const EmployeeAdd = () => {
       [name]: value,
     });
   };
+
+  const shiftAllocation = [
+    { shiftId: 1, shiftName: "Morning Shift" },
+    { shiftId: 2, shiftName: "Afternoon Shift" },
+    { shiftId: 3, shiftName: "Night Shift" },
+  ];
+  const departmentCostCenters = [
+    { departmentId: 101, costCenter: "CC001" },
+    { departmentId: 102, costCenter: "CC002" },
+    { departmentId: 103, costCenter: "CC003" },
+  ];
+
   const toggleFields = () => {
     setShowFields((prev) => !prev);
   };
@@ -443,6 +457,10 @@ const EmployeeAdd = () => {
         profile,
         empId,
         bank_account_no,
+        adhar_card_number,
+        pan_card_number,
+        dept_cost_center_no,
+        shift_allocation,
         ...dynamicFields,
         organizationId: organisationId,
         creatorId: userId,
@@ -818,6 +836,41 @@ const EmployeeAdd = () => {
                   </FormControl>
                 </div>
               </div>
+              <div className="flex items-center gap-14">
+                <div className="w-full">
+                  <FormControl sx={{ width: 280 }}>
+                    <TextField
+                      size="small"
+                      type="number"
+                      label="Adhar Card Number"
+                      name="adhar_card_number"
+                      id="adhar_card_number"
+                      value={adhar_card_number}
+                      onChange={(e) => setAdharCardNumber(e.target.value)}
+                      fullWidth
+                      margin="normal"
+                      required
+                    />
+                  </FormControl>
+                </div>
+
+                <div className="w-full">
+                  <FormControl sx={{ width: 280 }}>
+                    <TextField
+                      size="small"
+                      type="text"
+                      label="Pan Card Number"
+                      name="pan_card_number"
+                      id="pan_card_number"
+                      value={pan_card_number}
+                      onChange={(e) => setPanCardNumber(e.target.value)}
+                      fullWidth
+                      margin="normal"
+                      required
+                    />
+                  </FormControl>
+                </div>
+              </div>
 
               <div className="w-full">
                 <FormControl sx={{ width: 625 }}>
@@ -899,7 +952,7 @@ const EmployeeAdd = () => {
                 sx={{ width: 625 }}
               />
 
-              <div className="flex items-center gap-14">
+              <div className="flex items-center gap-14 mb-4">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <InputLabel id="demo-multiple-checkbox-label">
@@ -984,7 +1037,7 @@ const EmployeeAdd = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-14">
+              <div className="flex items-center gap-14 mb-4">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }} required>
                     <Select
@@ -1022,7 +1075,7 @@ const EmployeeAdd = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-14">
+              <div className="flex items-center gap-14 mb-4">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <Select
@@ -1056,6 +1109,50 @@ const EmployeeAdd = () => {
                       {availabelLocation?.map((type) => (
                         <MenuItem key={type._id} value={type._id}>
                           {type.city}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-14 mb-4">
+                <div className="w-full">
+                  <FormControl sx={{ width: 280 }}>
+                    <Select
+                      value={dept_cost_center_no}
+                      onChange={(e) => setDeptCostCenterNo(e.target.value)}
+                      displayEmpty
+                      inputProps={{ "aria-label": "Department Cost Center No" }}
+                    >
+                      <MenuItem value="" disabled>
+                        Department Cost Center No
+                      </MenuItem>
+                      {departmentCostCenters?.map((costno) => (
+                        <MenuItem
+                          key={costno.departmentId}
+                          value={costno.costCenter}
+                        >
+                          {costno.costCenter}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+                <div className="w-full">
+                  <FormControl sx={{ width: 280 }} required>
+                    <Select
+                      value={shift_allocation}
+                      onChange={(e) => setShiftAllocation(e.target.value)}
+                      displayEmpty
+                      inputProps={{ "aria-label": "Shift Allocation" }}
+                    >
+                      <MenuItem value="" disabled>
+                        Shift Allocation
+                      </MenuItem>
+                      {shiftAllocation?.map((shift) => (
+                        <MenuItem key={shift.shiftId} value={shift.shiftName}>
+                          {shift.shiftName}
                         </MenuItem>
                       ))}
                     </Select>
