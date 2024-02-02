@@ -103,7 +103,7 @@ const EmployementTypes = () => {
       onSuccess: () => {
         // Invalidate and refetch the data after successful deletion
         queryClient.invalidateQueries("empTypes");
-        handleAlert(true, "success", "Employment Types deleted succesfully");
+        handleAlert(true, "success", "Employeement types deleted succesfully");
       },
     }
   );
@@ -119,7 +119,7 @@ const EmployementTypes = () => {
                   <ManageAccountsOutlined className="!text-lg text-white" />
                 </div>
                 <h1 className="!text-lg tracking-wide">
-                  Create Employment types for organization
+                  Create Employeement types for organization
                 </h1>
               </div>
               <Button
@@ -127,7 +127,7 @@ const EmployementTypes = () => {
                 onClick={() => handleOpen("paper")}
                 variant="contained"
               >
-                Create Employment Types
+                Create Employeement types
               </Button>
             </div>
 
@@ -182,8 +182,8 @@ const EmployementTypes = () => {
                   </h1>
                 </article>
                 <p>
-                  Employment types have not been set up for your organization.
-                  Please create the 'Employment Types'
+                  Employeement types have not been set up for your organization.
+                  Please create the 'Employeement types'
                 </p>
               </section>
             )}
@@ -206,7 +206,8 @@ const EmployementTypes = () => {
         onClose={handleCloseConfirmation}
       >
         <DialogTitle color={"error"}>
-          <Warning color="error" /> Are you sure to delete the Employment Types?
+          <Warning color="error" /> Are you sure to delete the Employeement
+          types?
         </DialogTitle>
         <DialogContent>
           <p>

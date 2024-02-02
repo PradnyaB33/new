@@ -6,14 +6,14 @@ import {
   PersonAddAlt1Outlined,
   PriceChangeOutlined,
 } from "@mui/icons-material";
+import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
+import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
 import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
 import { useLocation } from "react-router-dom";
 import UserProfile from "../UserData/useUser";
-import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
-import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
-import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
 
 const useSetupSideNav = (organisationId) => {
   const location = useLocation();

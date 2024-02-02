@@ -63,7 +63,14 @@ import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route
+        path="/"
+        element={
+          <RequireAuth permission={"Super-Admin"}>
+            <Home />
+          </RequireAuth>
+        }
+      />
       <Route path="/test" element={<EditablePolyline />} />
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
       <Route path="/test3" element={<TestNaresh />} />

@@ -67,9 +67,9 @@ const SignIn = () => {
     .object({
       first_name: z
         .string()
-        .min(2)
+        .min(2, { message: "Minimum 2 character " })
         .max(15)
-        .regex(/^[a-zA-Z]+$/),
+        .regex(/^[a-zA-Z]+$/, { message: "only character allow" }),
 
       last_name: z
         .string()
@@ -204,11 +204,11 @@ const SignIn = () => {
 
   return (
     <>
-      <section className="flex w-full">
+      <section className="flex  w-full">
         {/* Left Section */}
-        <div className="w-[30%]  h-screen lg:flex hidden text-white flex-col items-center justify-center  relative">
-          <div className="bg__gradient absolute inset-0"></div>
-          <ul className="circles">
+        <div className="w-[30%] h-auto lg:flex hidden text-white flex-col items-center justify-center relative ">
+          <div className="bg__gradient  h-screen inset-0  "></div>
+          <ul className="circles h-screen inset-0  ">
             {[...Array(10)].map((_, index) => (
               <li key={index}></li>
             ))}
@@ -218,7 +218,7 @@ const SignIn = () => {
           </div>
         </div>
         {/* Right Section */}
-        <article className="lg:w-[70%]   h-max min-h-screen  bg-white  w-full md:block flex items-center flex-col justify-center">
+        <article className="lg:w-[70%]   h-max min-h-screen bg-white  w-full md:block flex items-center flex-col justify-center">
           <div className="md:flex hidden  w-full py-4 px-8  gap-4 items-center justify-center lg:justify-end">
             <p>
               {location.pathname === "/sign-up"
@@ -239,7 +239,7 @@ const SignIn = () => {
           <form
             onSubmit={handleSubmit(onSubmit)}
             autoComplete="off"
-            className="flex md:px-20 px-8 lg:w-max justify-center flex-col h-[80vh] gap-4"
+            className="flex md:px-20 my-10 !px-8 w-full md:w-max bg-white flex-col h-fit gap-1"
           >
             <div className="flex md:space-x-4 space-x-2 mb-4 items-center">
               <img
@@ -267,7 +267,7 @@ const SignIn = () => {
                 <p className="text-lg">Enter your credentials below</p>
               </div>
             </div> */}
-            <div className="flex gap-2">
+            <div className="flex md:flex-row flex-col gap-2">
               {/* First Name */}
               <AuthInputFiled
                 name="first_name"
@@ -276,6 +276,7 @@ const SignIn = () => {
                 type="text"
                 placeholder="jhon"
                 label="First Name *"
+                maxLimit={10}
                 errors={errors}
                 error={errors.first_name}
               />
@@ -287,6 +288,7 @@ const SignIn = () => {
                 placeholder="xyz"
                 label="Middle Name"
                 errors={errors}
+                maxLimit={10}
                 error={errors.middle_name}
               />
             </div>
@@ -299,10 +301,11 @@ const SignIn = () => {
               label="Last Name *"
               placeholder="Doe"
               errors={errors}
+              maxLimit={10}
               error={errors.last_name}
             />
             {/* Phone Number */}
-            <div className="flex items-center gap-2">
+            <div className="flex  items-center gap-2">
               <AuthInputFiled
                 name="phone"
                 icon={Phone}
@@ -385,7 +388,7 @@ const SignIn = () => {
               error={errors.email}
             />
 
-            <div className="flex items-center gap-2">
+            <div className="flex md:flex-row flex-col gap-2">
               <AuthInputFiled
                 name="password"
                 icon={Lock}
@@ -409,9 +412,7 @@ const SignIn = () => {
               />
             </div>
 
-            <div className=" mb-1">
-              <TermsCondition />
-            </div>
+            <TermsCondition />
             {/* Signup Button */}
             <div className="flex gap-5 mt-2">
               <button
