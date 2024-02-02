@@ -201,21 +201,6 @@ const SignIn = () => {
                   />
                 </div>
               </div>
-
-              <div className="my-4 space-y-2 ">
-                <label
-                  htmlFor={role}
-                  className={" font-semibold text-gray-500 text-md"}
-                >
-                  Choose Role
-                </label>
-                <Select
-                  onChange={(role) => setSelectRole(role.value)}
-                  options={options}
-                  id="role"
-                  placeholder={`Role`}
-                />
-              </div>
             </div>
 
             <div className="flex gap-5 mt-2">
