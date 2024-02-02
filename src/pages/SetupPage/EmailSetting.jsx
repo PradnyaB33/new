@@ -46,13 +46,24 @@ const EmailSetting = () => {
   }, [email, id]);
 
   const handleCheck = () => {
-    email ? setNewHandleOpen(true) : setNewHandleOpen(false);
+    email && !error ? setNewHandleOpen(true) : setNewHandleOpen(false);
     setError("Email is required");
   };
 
   const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-    setError("");
+    const lowerCaseEmail = event.target.value.toLowerCase();
+    setEmail(lowerCaseEmail);
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    console.log(lowerCaseEmail.trim());
+
+    if (!lowerCaseEmail.trim()) {
+      setError("Email is required");
+    } else if (!emailRegex.test(lowerCaseEmail)) {
+      setError("Invalid email address");
+    } else {
+      setError("");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -77,7 +88,7 @@ const EmailSetting = () => {
       setAppAlert({
         alert: true,
         type: "success",
-        msg: "Email submitted successfully!",
+        msg: "Email created successfully!",
       });
 
       setNewHandleOpen(false);
@@ -85,15 +96,15 @@ const EmailSetting = () => {
 
       //! adding the newly created email to the emails state
 
-      setEmails([...emails, response.data.email]); // Add the newly created email to the emails state
+      setEmails([...emails, response.data.email]); 
       setEmail("");
       setError("");
     } catch (error) {
-      console.error("Error submitting email:", error);
+      console.error("Error creating email:", error);
       setAppAlert({
         alert: true,
         type: "error",
-        msg: "Error submitting email. Please try again.",
+        msg: "Error creating email. Please try again.",
       });
       setHandleOpen(false);
       setNewHandleOpen(false);
@@ -137,6 +148,7 @@ const EmailSetting = () => {
 
   const handleEdit = async (id) => {
     setEditEmailId(id);
+
     setHandleUpdateOpen(true);
 
     try {
@@ -152,10 +164,21 @@ const EmailSetting = () => {
     }
   };
 
+ 
+  
   const handleEditEmailChange = (event) => {
-    setEditEmail(event.target.value);
-  };
+    const lowerCaseEditEmail = event.target.value.toLowerCase();      
+     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    if (!lowerCaseEditEmail.trim()) {
+      setError("Email is required");
+    } else if (!emailRegex.test(lowerCaseEditEmail)) {
+      setError("Invalid email address");
+    } else {
+      setError("");
+    }
+    setEditEmail(lowerCaseEditEmail);
+  };
   const handleUpdate = async () => {
     try {
       await axios.patch(
@@ -203,85 +226,85 @@ const EmailSetting = () => {
                 variant="contained"
                 onClick={() => setHandleOpen(true)}
               >
-                Create Email
+                Add Email
               </Button>
             </div>
 
-                        <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-                            <table className="min-w-full bg-white text-left !text-sm font-light">
-                                <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-                                    <tr className="!font-semibold ">
-                                        <th scope="col" className="!text-left pl-8 py-3 w-1/12">
-                                            Sr No
-                                        </th>
-                                        <th scope="col" className="py-3 w-8/12">
-                                            Email
-                                        </th>
-                                        <th colSpan="2" scope="col" className="px-6 py-3 w-2/12">
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {emails.length === 0 ? (
+            <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
+              <table className="min-w-full bg-white text-left !text-sm font-light">
+                <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+                  <tr className="!font-semibold ">
+                    <th scope="col" className="!text-left pl-8 py-3 w-1/12">
+                      Sr No
+                    </th>
+                    <th scope="col" className="py-3 w-8/12">
+                      Email
+                    </th>
+                    <th colSpan="2" scope="col" className="px-6 py-3 w-2/12">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {emails.length === 0 ? (
                     <tr className=" text py-3 text-center">
 
                       No Emails found
                     </tr>
-                  )  :
-                                    (emails.map((data, idx) => (
-                                        <tr className="!font-medium border-b" key={idx}>
-                                            <td className="!text-left pl-9 py-4 w-1/12" >{idx + 1}</td>
-                                            <td>{data.email}</td>
-                                            <IconButton
-                                                color="primary"
-                                                aria-label="edit"
-                                                style={{paddingTop:"0.8rem"}}
-                                                onClick={() => handleEdit(data._id)}
-                                            >
-                                                <EditOutlinedIcon />
-                                            </IconButton>
-                                            <IconButton
-                                                color="error"
-                                                aria-label="delete"
-                                                style={{paddingTop:"0.8rem"}}
-                                                onClick={() => handleDelete(data._id)}
-                                            >
-                                                <DeleteOutlineIcon />
-                                            </IconButton>
-                                        </tr>
-                                    )))}
-                                </tbody>
-                            </table> 
-                            <Dialog open={handleOpen} onClose={handleClose} maxWidth="sm" fullWidth>
-                                <DialogTitle>
-                                    Add Email
-                                </DialogTitle>
-                                <DialogContent>
-                                    <div className='flex items-center justify-center gap-5'>
-                                        <TextField
-                                            style={{ marginBottom: "1rem", marginTop: "1rem" }}
-                                            required
-                                            name="emailId"
-                                            size="small"
-                                            className="pl-5 w-[30vw]"
-                                            label="Email ID"
-                                            type="text"
-                                            value={email}
-                                            onChange={handleEmailChange}
-                                            error={Boolean(error)}
-                                            helperText={error}
-                                        />
-                                        <Button
-                                            color='warning'
-                                            variant='contained'
-                                            onClick={handleCheck}
-                                        >
-                                            Submit
-                                        </Button>
-                                    </div>
-                                </DialogContent>
-                            </Dialog>
+                  ) :
+                    (emails.map((data, idx) => (
+                      <tr className="!font-medium border-b" key={idx}>
+                        <td className="!text-left pl-9 py-4 w-1/12" >{idx + 1}</td>
+                        <td>{data.email}</td>
+                        <IconButton
+                          color="primary"
+                          aria-label="edit"
+                          style={{ paddingTop: "0.8rem" }}
+                          onClick={() => handleEdit(data._id)}
+                        >
+                          <EditOutlinedIcon />
+                        </IconButton>
+                        <IconButton
+                          color="error"
+                          aria-label="delete"
+                          style={{ paddingTop: "0.8rem" }}
+                          onClick={() => handleDelete(data._id)}
+                        >
+                          <DeleteOutlineIcon />
+                        </IconButton>
+                      </tr>
+                    )))}
+                </tbody>
+              </table>
+              <Dialog open={handleOpen} onClose={handleClose} maxWidth="sm" fullWidth>
+                <DialogTitle>
+                  Add Email
+                </DialogTitle>
+                <DialogContent>
+                  <div className='flex items-center justify-center gap-5'>
+                    <TextField
+                      style={{ marginBottom: "1rem", marginTop: "1rem" }}
+                      required
+                      name="emailId"
+                      size="small"
+                      className="pl-5 w-[30vw]"
+                      label="Email ID"
+                      type="email"
+                      value={email}
+                      onChange={handleEmailChange}
+                      error={Boolean(error)}
+                      helperText={error}
+                    />
+                    <Button
+                      color='warning'
+                      variant='contained'
+                      onClick={handleCheck}
+                    >
+                      Submit
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
 
               <Dialog
                 open={newHandleOpen}
@@ -309,31 +332,31 @@ const EmailSetting = () => {
                 </DialogContent>
               </Dialog>
 
-                            <Dialog open={handleUpdateOpen} onClose={handleClose} maxWidth="sm" fullWidth>
-                                <DialogTitle>
-                                    Edit Email
-                                </DialogTitle>
-                                <DialogContent>
-                                    <div className='flex flex-col gap-5 my-5'>
-                                        <TextField
-                                            required
-                                            name="emailId"
-                                            size="small"
-                                            className="pl-5 w-[30vw]"
-                                            label="Email ID"
-                                            type="text"
-                                            value={editEmail}
-                                            onChange={handleEditEmailChange}
-                                            error={Boolean(error)}
-                                            helperText={error}
-                                        />
-                                        <div className='flex gap-5 mt-5'>
-                                            <Button color='warning' variant='contained' onClick={handleUpdate}>edit</Button>
-                                            <Button  variant='contained' onClick={handleClose}>cancel</Button>
-                                        </div>
-                                    </div>
-                                </DialogContent>
-                            </Dialog>
+              <Dialog open={handleUpdateOpen} onClose={handleClose} maxWidth="sm" fullWidth>
+                <DialogTitle>
+                  Edit Email
+                </DialogTitle>
+                <DialogContent>
+                  <div className='flex flex-col gap-5 my-5'>
+                    <TextField
+                      required
+                      name="emailId"
+                      size="small"
+                      className="pl-5 w-[30vw]"
+                      label="Email ID"
+                      type="email"
+                      value={editEmail}
+                      onChange={handleEditEmailChange}
+                      error={Boolean(error)}
+                      helperText={error}
+                    />
+                    <div className='flex gap-5 mt-5'>
+                      <Button color='warning' variant='contained' onClick={handleUpdate}>edit</Button>
+                      <Button variant='contained' onClick={handleClose}>cancel</Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
 
               <Dialog
                 open={handleDeleteOpen}

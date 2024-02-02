@@ -6,6 +6,7 @@ import * as React from "react";
 import { useCallback } from "react"; // Import useCallback
 import { useLocation } from "react-router-dom";
 import ProfileIcon from "../profieicon/profileIcon";
+import NotificationIcon from "./components/NotificationIcon";
 import TestNavItems from "./components/test-nav-items";
 
 export default function SwipeableTemporaryDrawer() {
@@ -58,7 +59,10 @@ export default function SwipeableTemporaryDrawer() {
               AEGIS
             </Typography>
           </Badge>
-          <ProfileIcon />
+          <div className="flex gap-2 items-center">
+            <NotificationIcon />
+            <ProfileIcon />
+          </div>
         </Toolbar>
       </AppBar>
       <SwipeableDrawer

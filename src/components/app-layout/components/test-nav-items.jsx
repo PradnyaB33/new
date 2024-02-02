@@ -100,7 +100,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: (
               <CircleNotifications className=" !text-[1.2em] text-[#67748E]" />
             ),
-            text: "List Notification",
+            text: "Notifications",
           },
         ],
       },
@@ -153,7 +153,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             }),
             link: `/organisation/${orgId}/salary-management`,
             icon: <Event className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Create Salary",
+            text: "Salary Management",
           },
         ],
       },

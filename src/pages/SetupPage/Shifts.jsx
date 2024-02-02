@@ -121,7 +121,7 @@ const Shifts = () => {
                   <EventAvailableOutlined className="!text-lg text-white" />
                 </div>
                 <h1 className="!text-lg tracking-wide">
-                  Create shifts for organization
+                  Create shifts 
                 </h1>
               </div>
               <Button

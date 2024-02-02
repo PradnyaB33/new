@@ -10,11 +10,12 @@ const AuthInputFiled = ({
   errors,
   error,
   control,
+  maxLimit,
   readOnly = false,
   placeholder,
 }) => {
   return (
-    <div className="space-y-1 w-full ">
+    <div className="space-y-1 ">
       <label
         htmlFor={name}
         className={`${
@@ -39,6 +40,7 @@ const AuthInputFiled = ({
               )}
               <input
                 type={type}
+                maxLength={maxLimit && maxLimit}
                 readOnly={readOnly}
                 placeholder={placeholder}
                 className={`${
@@ -50,12 +52,14 @@ const AuthInputFiled = ({
           </>
         )}
       />
-      <div className="h-4 !mb-1">
+      <div className="h-4 w-[200px]  !z-50   !mb-1">
         <ErrorMessage
           errors={errors}
           name={name}
           render={({ message }) => (
-            <p className="text-sm text-red-500">{message}</p>
+            <p className="text-sm mb-4 relative !bg-white  text-red-500">
+              {message}
+            </p>
           )}
         />
       </div>

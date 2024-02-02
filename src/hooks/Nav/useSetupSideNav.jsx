@@ -118,7 +118,7 @@ const useSetupSideNav = (organisationId) => {
       ),
     },
     {
-      label: "Weekend Holidays",
+      label: "Weekly off",
       icon: WeekendOutlinedIcon,
       href: `/organisation/${organisationId}/setup/set-weekend-holiday`,
       active:
