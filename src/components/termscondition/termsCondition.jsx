@@ -5,7 +5,6 @@ const TermsCondition = () => {
   const [termsError, setTermsError] = useState("");
 
   console.log(isTermsAccepted);
-  // console.log(isTermsAccepted);
 
   const handleTermsAcceptance = (checked) => {
     setIsTermsAccepted(checked);
