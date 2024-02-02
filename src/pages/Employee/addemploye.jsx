@@ -15,7 +15,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Select from "@mui/material/Select";
-import Tooltip from "@mui/material/Tooltip";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -47,7 +46,7 @@ const EmployeeAdd = () => {
   const { organisationId } = useParams();
   const [userId, setUserId] = useState(null);
   const [empId, setEmpId] = useState(null);
-
+  const [showFields, setShowFields] = useState(false);
   useEffect(() => {
     try {
       const decodedToken = jwtDecode(authToken);
@@ -149,9 +148,6 @@ const EmployeeAdd = () => {
     const sanitizedInput = inputValue.replace(/\D/g, "").slice(0, 10);
     setPhoneNumber(sanitizedInput);
   };
-
-  const staticTitle =
-    "This form is used to add relavant information of employee ";
 
   const handleEmploymentTypeChange = (event) => {
     setEmploymentType(event.target.value);
@@ -274,6 +270,7 @@ const EmployeeAdd = () => {
     fetchAvailabeDepartment();
     // eslint-disable-next-line
   }, []);
+  console.log(availableDepartment);
 
   const [profile, setProfile] = React.useState([]);
   const handleChange = (event) => {
@@ -396,6 +393,9 @@ const EmployeeAdd = () => {
       ...dynamicFields,
       [name]: value,
     });
+  };
+  const toggleFields = () => {
+    setShowFields((prev) => !prev);
   };
 
   const handleSubmit = async (e) => {
@@ -545,9 +545,7 @@ const EmployeeAdd = () => {
         <div className="content-center  flex justify-center my-0 p-0 bg-[#F8F8F8]">
           <div className="w-[700px] shadow-lg rounded-lg border py-3 px-8">
             <div className="flex items-center justify-center gap-4">
-              <Tooltip title={`${staticTitle}`}>
-                <Button>Add Employee</Button>
-              </Tooltip>
+              <Button>Add Employee</Button>
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-wrap gap-6">
@@ -719,6 +717,8 @@ const EmployeeAdd = () => {
                         inputProps: {
                           pattern: passwordRegex.source,
                         },
+                        onPaste: (e) => e.preventDefault(),
+                        onCopy: (e) => e.preventDefault(),
                       }}
                     />
                   </FormControl>
@@ -744,6 +744,10 @@ const EmployeeAdd = () => {
                           {confirmPasswordError}
                         </div>
                       }
+                      InputProps={{
+                        onPaste: (e) => e.preventDefault(),
+                        onCopy: (e) => e.preventDefault(),
+                      }}
                     />
                   </FormControl>
                 </div>
@@ -1027,6 +1031,7 @@ const EmployeeAdd = () => {
                   </FormControl>
                 </div>
               </div>
+
               <div className="flex items-center gap-20">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
@@ -1078,28 +1083,36 @@ const EmployeeAdd = () => {
                   </FormControl>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-8">
-                {availableInputField?.map((item) => (
-                  <TextField
-                    key={item._id}
-                    size="small"
-                    type={item.inputType}
-                    label={item.label}
-                    name={item.label}
-                    id={item.label}
-                    value={dynamicFields[item.label] || ""} // Set value from state
-                    onChange={(e) =>
-                      handleDynamicFieldChange(item.label, e.target.value)
-                    } // Update state on change
-                    fullWidth
-                    margin="normal"
-                    sx={{
-                      flexBasis: "45%",
-                      marginBottom: "16px",
-                      marginRight: "15px",
-                    }}
-                  />
-                ))}
+              <div>
+                {showFields && (
+                  <div className="flex flex-wrap gap-8">
+                    {availableInputField?.map((item) => (
+                      <TextField
+                        key={item._id}
+                        size="small"
+                        type={item.inputType}
+                        label={item.label}
+                        name={item.label}
+                        id={item.label}
+                        value={dynamicFields[item.label] || ""}
+                        onChange={(e) =>
+                          handleDynamicFieldChange(item.label, e.target.value)
+                        }
+                        fullWidth
+                        margin="normal"
+                        sx={{
+                          flexBasis: "45%", // Commenting out or reducing flexBasis
+                          marginBottom: "16px",
+                          marginRight: "15px",
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                <Button onClick={toggleFields} variant="outlined">
+                  {showFields ? "Read Less" : "Read More"}
+                </Button>
               </div>
 
               <div className="w-full">

@@ -45,8 +45,8 @@ const AddOrganisation = () => {
     setUploadedFile(file);
 
     if (file) {
-      if (!file.type.startsWith('image/')) {
-        handleAlert(true, 'error', 'Please upload only image files.');
+      if (!file.type.startsWith("image/")) {
+        handleAlert(true, "error", "Please upload only image files.");
         return;
       }
 
@@ -54,17 +54,16 @@ const AddOrganisation = () => {
       setSelectedImage(imageUrl);
 
       const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', 'lhyvmmdu');
+      formData.append("file", file);
+      formData.append("upload_preset", "lhyvmmdu");
 
       try {
-        console.log('uploaded');
+        console.log("uploaded");
       } catch (error) {
-        console.error('Error uploading image:', error);
+        console.error("Error uploading image:", error);
       }
     }
   };
-
 
   //TODO : this is data field
   const data = {
@@ -131,25 +130,25 @@ const AddOrganisation = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const emptyField = Object.keys(inputdata)
       .slice(0, -1)
       .find((key) => !inputdata[key]);
-  
+
     if (emptyField) {
       handleAlert(true, "error", `Please fill in the ${emptyField} field.`);
       setFirstEmptyField(emptyField);
       firstEmptyFieldRef.current.focus();
       return;
     }
-  
+
     try {
       let logoUrl = inputdata.logo_url;
       if (uploadedFile) {
         const response = await uploadFile(url, uploadedFile);
         logoUrl = response.Location;
       }
-  
+
       const payload = {
         name: inputdata.name,
         web_url: inputdata.web_url,
@@ -161,7 +160,7 @@ const AddOrganisation = () => {
         foundation_date: inputdata.foundation_date,
         logo_url: logoUrl,
       };
-  
+
       await axios.post(
         `${process.env.REACT_APP_API}/route/organization/create`,
         payload,
@@ -171,27 +170,26 @@ const AddOrganisation = () => {
           },
         }
       );
-  
+
       handleAlert(true, "success", "Organization created successfully");
       navigate("/organizationList");
     } catch (e) {
       console.error(e);
       handleAlert(true, "error", "Failed to create organization");
     }
-  
+
     setSelectedImage(null);
     setFirstEmptyField(null);
   };
-  
 
   useEffect(() => {
     (async () => {
-      const response = await getSignedUrl()
-      console.log(response.url.split('?')[0]);
-      setUrl(response.url.split('?')[0])
-
-    })()
-  }, [uploadFile])
+      const response = await getSignedUrl();
+      console.log(response.url.split("?")[0]);
+      setUrl(response.url.split("?")[0]);
+    })();
+    // eslint-disable-next-line
+  }, [uploadFile]);
 
   // useEffect(() => {
   //   uploadedFile &&
@@ -205,14 +203,11 @@ const AddOrganisation = () => {
   //     })();
   // }, [uploadedFile, url]);
 
-
   return (
     <>
       <div className="w-full h-[auto] bg-white">
         <div>
-
           <BackComponent style={{ zIndex: 1000 }} />
-
         </div>
 
         <form
@@ -225,7 +220,6 @@ const AddOrganisation = () => {
           }}
           action="submit"
         >
-
           <Container
             style={{
               display: "flex",
@@ -250,7 +244,7 @@ const AddOrganisation = () => {
                 color: "#1D6EB7",
                 fontWeight: "600",
                 position: "relative",
-                top: "1rem"
+                top: "1rem",
               }}
               variant="h4"
             >
@@ -275,11 +269,14 @@ const AddOrganisation = () => {
               onChange={handleData}
               value={inputdata.web_url}
               size="small"
-              className={`w-[80%] ${firstEmptyField === "web_url" ? "error" : ""
-                }`}
+              className={`w-[80%] ${
+                firstEmptyField === "web_url" ? "error" : ""
+              }`}
               label="Url Of Website"
               type="text"
-              inputRef={firstEmptyField === "web_url" ? firstEmptyFieldRef : null}
+              inputRef={
+                firstEmptyField === "web_url" ? firstEmptyFieldRef : null
+              }
             />
             <FormControl
               required
@@ -299,7 +296,9 @@ const AddOrganisation = () => {
                 value={inputdata.industry_type}
                 onChange={handleData}
                 inputRef={
-                  firstEmptyField === "industry_type" ? firstEmptyFieldRef : null
+                  firstEmptyField === "industry_type"
+                    ? firstEmptyFieldRef
+                    : null
                 }
                 style={{ zIndex: 0 }}
               >
@@ -316,7 +315,9 @@ const AddOrganisation = () => {
               onChange={handleData}
               value={inputdata.email}
               size="small"
-              className={`w-[80%] ${firstEmptyField === "email" ? "error" : ""}`}
+              className={`w-[80%] ${
+                firstEmptyField === "email" ? "error" : ""
+              }`}
               label={emailLabel}
               type="email"
               error={emailError}
@@ -334,8 +335,9 @@ const AddOrganisation = () => {
               onChange={handleData}
               value={inputdata.location}
               size="small"
-              className={`w-[80%] ${firstEmptyField === "location" ? "error" : ""
-                }`}
+              className={`w-[80%] ${
+                firstEmptyField === "location" ? "error" : ""
+              }`}
               label="Location"
               type="text"
               inputRef={
@@ -349,8 +351,9 @@ const AddOrganisation = () => {
               onChange={handleData}
               value={inputdata.contact_number}
               size="small"
-              className={`w-[80%] ${firstEmptyField === "contact_number" ? "error" : ""
-                }`}
+              className={`w-[80%] ${
+                firstEmptyField === "contact_number" ? "error" : ""
+              }`}
               label={numberLabel}
               type="number"
               error={contactNumberError}
@@ -392,11 +395,13 @@ const AddOrganisation = () => {
                       setInputData({ ...inputdata, foundation_date: newDate });
                       console.log(newDate);
                     }}
-                    slotProps={{ textField: { size: "small", fullWidth: true } }}
+                    slotProps={{
+                      textField: { size: "small", fullWidth: true },
+                    }}
                   />
                 </DemoContainer>
               </LocalizationProvider>
-              <div className="flex h-[50px] pt-3 " >
+              <div className="flex h-[50px] pt-3 ">
                 <Input
                   type="file"
                   id="imageInput"
@@ -433,14 +438,14 @@ const AddOrganisation = () => {
                 background: "#1D6EB7",
                 color: "white",
                 position: "relative",
-                bottom: "1rem"
+                bottom: "1rem",
               }}
             >
               Submit
             </Button>
           </Container>
         </form>
-      </div >
+      </div>
     </>
   );
 };

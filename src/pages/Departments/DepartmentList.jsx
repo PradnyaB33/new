@@ -1,77 +1,79 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { TestContext } from "../../State/Function/Main";
-import { UseContext } from "../../State/UseState/UseContext";
-import axios from "axios";
 import { Delete, Edit, Warning } from "@mui/icons-material";
-import { useMutation, useQueryClient } from "react-query";
 import {
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  FormControlLabel,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
   Typography,
-  FormControl,
-  Select,
-  InputLabel,
-  FormControlLabel,
-  Checkbox,
-  MenuItem
 } from "@mui/material";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
+import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
 
 const DepartmentList = () => {
   const { handleAlert } = useContext(TestContext);
-  const [departmentName, setDepartmentName] = useState("")
-  const [headList, setHeadList] = useState([])
-  const [delegateHeadList, setDelegateHeadList] = useState([])
+  const [departmentName, setDepartmentName] = useState("");
+  const [headList, setHeadList] = useState([]);
+  const [delegateHeadList, setDelegateHeadList] = useState([]);
   const [numCharacters, setNumCharacters] = useState(0);
   const [enterDepartmentId, setEnterDepartmentId] = useState(false);
-  const [departmentDescription, setDepartmentDescription] = useState("")
-  const [departmentLocation, setDepartmentLocation] = useState("")
-  const [costCenterName, setCostCenterName] = useState("")
-  const [costCenterDescription, setCostCenterDescription] = useState("")
-  const [departmentId, setDepartmentId] = useState("")
-  const [departmentHeadName, setDepartmentHeadName] = useState("")
-  const [departmentHeadDelegateName, setDepartmentHeadDelegateName] = useState("")
-  const [locations, setLocations] = useState([])
+  const [departmentDescription, setDepartmentDescription] = useState("");
+  const [departmentLocation, setDepartmentLocation] = useState("");
+  const [costCenterName, setCostCenterName] = useState("");
+  const [costCenterDescription, setCostCenterDescription] = useState("");
+  const [departmentId, setDepartmentId] = useState("");
+  const [departmentHeadName, setDepartmentHeadName] = useState("");
+  const [departmentHeadDelegateName, setDepartmentHeadDelegateName] =
+    useState("");
+  const [locations, setLocations] = useState([]);
   const { cookies } = useContext(UseContext);
-  const [locationID, setLocationID] = useState('')
-  const [deptID, setDeptID] = useState('')
+  const [locationID, setLocationID] = useState("");
+  const [deptID, setDeptID] = useState("");
   const authToken = cookies["aeigs"];
   const { organisationId } = useParams();
   const queryClient = useQueryClient();
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
-  const [open, setOpen] = useState(false)
-
-  //pull the department list
+  const [open, setOpen] = useState(false);
   const [departmentList, setDepartmentList] = useState([]);
 
-
-useEffect(() =>{
-  (async() =>{
-    const resp = await axios.get(`${process.env.REACT_APP_API}/route/employee/get-department-head/${organisationId}`,{
-
-      headers:{Authorization:authToken}
-    })
-    setHeadList(resp.data.employees);
-    console.log(resp.data.employees);
-  })()
-},[])
-useEffect(() =>{
-  (async() =>{
-    const resp = await axios.get(`${process.env.REACT_APP_API}/route/employee/get-department-delegate-head/${organisationId}`,{
-
-      headers:{Authorization:authToken}
-    })
-    setDelegateHeadList(resp.data.employees);
-    console.log(resp.data.employees);
-  })()
-},[])
-
-
+  useEffect(() => {
+    (async () => {
+      const resp = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/get-department-head/${organisationId}`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+      setHeadList(resp.data.employees);
+      console.log(resp.data.employees);
+    })();
+  }, [authToken, organisationId]);
+  useEffect(() => {
+    (async () => {
+      const resp = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/get-department-delegate-head/${organisationId}`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+      setDelegateHeadList(resp.data.employees);
+      console.log(resp.data.employees);
+    })();
+    // eslint-disable-next-line
+  }, []);
+  console.log(departmentList);
   const fetchDepartmentList = async () => {
     try {
       const response = await axios.get(
@@ -86,7 +88,6 @@ useEffect(() =>{
       setDepartmentList(response.data.department);
     } catch (error) {
       console.error(error);
-      handleAlert(true, "error", "Failed to fetch Department");
     }
   };
   useEffect(() => {
@@ -100,9 +101,8 @@ useEffect(() =>{
   };
 
   const handleClose = () => {
-    setOpen(false)
-  }
-
+    setOpen(false);
+  };
 
   const handleDepartmentIdChange = (e) => {
     const input = e.target.value;
@@ -160,27 +160,26 @@ useEffect(() =>{
     }
   );
 
+  //! update functionality
 
-  //! update functionality 
-
-  const handleUpdate = async(idx) => {
-    setOpen(true)
-    const selectedDept = departmentList[idx]
+  const handleUpdate = async (idx) => {
+    setOpen(true);
+    const selectedDept = departmentList[idx];
     console.log(selectedDept);
-    setDepartmentName(selectedDept.departmentName)
-    setLocationID(selectedDept.departmentLocation._id)
-    setDepartmentDescription(selectedDept.departmentDescription)
-    setDepartmentLocation(selectedDept.departmentLocation.shortName)
-    console.log(selectedDept.departmentLocation.shortName)
-    setCostCenterName(selectedDept.costCenterName)
-    setCostCenterDescription(selectedDept.costCenterDescription)
-    setDepartmentId(selectedDept.departmentId)
-    setDeptID(selectedDept._id)
-    setDepartmentHeadName(selectedDept.departmentHeadName)
-    setDepartmentHeadDelegateName(selectedDept.departmentHeadDelegateName)
+    setDepartmentName(selectedDept.departmentName);
+    setLocationID(selectedDept.departmentLocation._id);
+    setDepartmentDescription(selectedDept.departmentDescription);
+    setDepartmentLocation(selectedDept.departmentLocation.shortName);
+    console.log(selectedDept.departmentLocation.shortName);
+    setCostCenterName(selectedDept.costCenterName);
+    setCostCenterDescription(selectedDept.costCenterDescription);
+    setDepartmentId(selectedDept.departmentId);
+    setDeptID(selectedDept._id);
+    setDepartmentHeadName(selectedDept.departmentHeadName);
+    setDepartmentHeadDelegateName(selectedDept.departmentHeadDelegateName);
     console.log(deptID);
     console.log(locationID);
-  }
+  };
 
   const handleUpdateRequest = async () => {
     try {
@@ -189,23 +188,23 @@ useEffect(() =>{
         {
           departmentHeadName,
           departmentDescription,
-          departmentLocation : locationID,
+          departmentLocation: locationID,
           costCenterName,
           costCenterDescription,
           departmentId,
-          departmentHeadName,
           departmentHeadDelegateName,
           deptID,
+          departmentName,
         },
         {
           headers: { Authorization: authToken },
         }
       );
-  
+
       handleAlert(true, "success", "Department updated successfully");
       console.log(resp);
       setOpen(false);
-      fetchDepartmentList()
+      fetchDepartmentList();
     } catch (error) {
       handleAlert(true, "error", "Failed to update department");
     }
@@ -213,15 +212,13 @@ useEffect(() =>{
 
   const handleDataChange = (e, fieldName) => {
     const value = e.target.value;
-  
-    if (fieldName === 'head') {
+
+    if (fieldName === "head") {
       setDepartmentHeadName(value);
-    } else if (fieldName === 'delegate') {
+    } else if (fieldName === "delegate") {
       setDepartmentHeadDelegateName(value);
     }
   };
-  
-
 
   return (
     <>
@@ -261,28 +258,35 @@ useEffect(() =>{
               {departmentList?.map((department, id) => (
                 <tr
                   key={id}
-                  className={`${id % 2 === 0 ? "bg-gray-50" : "bg-white"
-                    } border-b dark:border-neutral-500 !font-medium`}
+                  className={`${
+                    id % 2 === 0 ? "bg-gray-50" : "bg-white"
+                  } border-b dark:border-neutral-500 !font-medium`}
                 >
                   <td className="py-2 px-3">{id + 1}</td>
-                  <td className="py-2 px-3">{department?.departmentName}</td>
                   <td className="py-2 px-3">
-                    {department?.departmentHeadName}
+                    {department?.departmentName || ""}
                   </td>
                   <td className="py-2 px-3">
-                    {department?.departmentHeadDelegateName}
+                    {department?.departmentHeadName || ""}
                   </td>
                   <td className="py-2 px-3">
-                    {department?.departmentLocation.city}
+                    {department?.departmentHeadDelegateName || ""}
+                  </td>
+
+                  <td className="py-2 px-3">
+                    {department?.departmentLocation
+                      ? department.departmentLocation.city
+                      : ""}
                   </td>
                   <td className="whitespace-nowrap px-3 py-2">
                     <IconButton
                       onClick={() => handleUpdate(id)}
-                      aria-label="edit">
+                      aria-label="edit"
+                    >
                       <Edit className="!text-xl" color="success" />
                     </IconButton>
                     <IconButton
-                      onClick={() => handleDeleteConfirmation(department._id)}
+                      onClick={() => handleDeleteConfirmation(department?._id)}
                       aria-label="delete"
                     >
                       <Delete className="!text-xl" color="error" />
@@ -329,12 +333,10 @@ useEffect(() =>{
           </Button>
         </DialogActions>
       </Dialog>
-
       <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogActions>
-
           <DialogContent>
-           <h1 className="text-2xl">Edit Department</h1>
+            <h1 className="text-2xl">Edit Department</h1>
             <TextField
               required
               inputProps={{
@@ -376,15 +378,13 @@ useEffect(() =>{
               required
               style={{
                 width: "100%",
-                marginBottom: "10px"
+                marginBottom: "10px",
               }}
               size="small"
               variant="outlined" // Add variant outlined for better visual separation
-
             >
               <InputLabel
                 id="holiday-type-label"
-
                 // Ensure the label doesn't cut into the border
                 style={{
                   backgroundColor: "white", // Set the background color to match the container
@@ -398,11 +398,11 @@ useEffect(() =>{
                 id="demo-simple-select"
                 value={departmentLocation}
                 label="Select Location"
-              // Add label prop for better alignment
+                // Add label prop for better alignment
               >
                 {locations.map((data, index) => (
                   <MenuItem key={index} value={data.shortName}>
-                    {data.shortName}
+                    {data?.shortName}
                   </MenuItem>
                 ))}
               </Select>
@@ -511,15 +511,13 @@ useEffect(() =>{
               required
               style={{
                 width: "100%",
-                marginBottom: "10px"
+                marginBottom: "10px",
               }}
               size="small"
               variant="outlined" // Add variant outlined for better visual separation
-
             >
               <InputLabel
                 id="holiday-type-label"
-
                 // Ensure the label doesn't cut into the border
                 style={{
                   backgroundColor: "white", // Set the background color to match the container
@@ -533,12 +531,15 @@ useEffect(() =>{
                 id="demo-simple-select"
                 value={departmentHeadName}
                 label="Add department Head Name"
-                onChange={(e) =>handleDataChange(e, 'head')}
-              // Add label prop for better alignment
+                onChange={(e) => handleDataChange(e, "head")}
+                // Add label prop for better alignment
               >
                 {headList.map((data, index) => (
-                  <MenuItem key={index} value={data.first_name+" " +data.last_name}>
-                    {data.first_name+" "+data.last_name}
+                  <MenuItem
+                    key={index}
+                    value={data.first_name + " " + data.last_name}
+                  >
+                    {data.first_name + " " + data.last_name}
                   </MenuItem>
                 ))}
               </Select>
@@ -550,11 +551,9 @@ useEffect(() =>{
               }}
               size="small"
               variant="outlined" // Add variant outlined for better visual separation
-
             >
               <InputLabel
                 id="holiday-type-label"
-
                 // Ensure the label doesn't cut into the border
                 style={{
                   backgroundColor: "white", // Set the background color to match the container
@@ -568,27 +567,39 @@ useEffect(() =>{
                 id="demo-simple-select"
                 value={departmentHeadDelegateName}
                 label="Add Department head delegate name"
-                onChange={(e) =>handleDataChange(e, 'delegate')}
-              // Add label prop for better alignment
+                onChange={(e) => handleDataChange(e, "delegate")}
+                // Add label prop for better alignment
               >
                 {delegateHeadList.map((data, index) => (
-                  <MenuItem key={index} value={data.first_name + " " + data.last_name}>
-                    {data?.first_name +" "+ data?.last_name}
+                  <MenuItem
+                    key={index}
+                    value={data.first_name + " " + data.last_name}
+                  >
+                    {data?.first_name + " " + data?.last_name}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
             <div className="flex gap-3 mt-4 ">
-              <Button color="success" size="small" onClick={handleUpdateRequest} variant="contained">Confirm</Button>
-              <Button size="small" onClick={handleClose} color="error" variant="contained">Cancel</Button>
+              <Button
+                color="success"
+                size="small"
+                onClick={handleUpdateRequest}
+                variant="contained"
+              >
+                Apply
+              </Button>
+              <Button
+                size="small"
+                onClick={handleClose}
+                color="error"
+                variant="contained"
+              >
+                Cancel
+              </Button>
             </div>
-
-
-
-
           </DialogContent>
         </DialogActions>
-
       </Dialog>
     </>
   );

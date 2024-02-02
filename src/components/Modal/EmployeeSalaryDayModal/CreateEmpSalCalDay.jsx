@@ -39,6 +39,23 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
     { value: "last_day_of_current_month", label: "Last day of current month" },
   ];
 
+  // add the data
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const data = {
+        selectedDay,
+      };
+      await AddEmployeeSalaryData.mutateAsync(data);
+    } catch (error) {
+      console.error(error);
+      handleAlert(
+        true,
+        "error",
+        "An error occurred while Creating  Salary Computation Day"
+      );
+    }
+  };
   const AddEmployeeSalaryData = useMutation(
     async (data) => {
       try {
@@ -55,7 +72,7 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
       } catch (error) {
         throw new Error(
           error.response.data.message ||
-            "Failed to create Employee Salary Calculation Day"
+            "Failed to create Salary Computation Day"
         );
       }
     },
@@ -67,7 +84,7 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
         handleAlert(
           true,
           "success",
-          "Employee Salary Calculation Day Created Successfully.."
+          " Salary Computation Day Created Successfully.."
         );
         window.location.reload();
       },
@@ -76,23 +93,6 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
       },
     }
   );
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const data = {
-        selectedDay,
-      };
-      await AddEmployeeSalaryData.mutateAsync(data);
-    } catch (error) {
-      console.error(error);
-      handleAlert(
-        true,
-        "error",
-        "An error occurred while Creating Employee Salary Calculation Day"
-      );
-    }
-  };
 
   return (
     <Modal
@@ -107,7 +107,7 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
       >
         <div className="flex justify-between py-4 items-center  px-4">
           <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
-            Create Employee Salary Calculation Day
+            Salary Computation Day
           </h1>
           <IconButton onClick={handleClose}>
             <CloseIcon className="!text-[16px]" />
@@ -132,7 +132,7 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Select Salary Calculation Day"
+                  label="Select Salary Computation Day"
                   variant="outlined"
                   fullWidth
                 />

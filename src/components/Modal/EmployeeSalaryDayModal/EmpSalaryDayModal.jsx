@@ -6,6 +6,8 @@ import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import { useParams } from "react-router-dom";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
 const style = {
   position: "absolute",
   top: "50%",
@@ -53,11 +55,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
       setEmpSalCalDay(response.data.empSalaryCalDayData);
     } catch (error) {
       console.error(error);
-      handleAlert(
-        true,
-        "error",
-        "Failed to fetch Available Employee Salary Calculation Day"
-      );
+      handleAlert(true, "error", "Failed to fetch  Salary Computation Day");
     }
   };
   useEffect(() => {
@@ -71,10 +69,6 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
       setSelectedDay(availableEmpSalCalDay[0]?.selectedDay || "");
     }
   }, [availableEmpSalCalDay]);
-
-  const handleSelectedDay = (event) => {
-    setSelectedDay(event.target.value);
-  };
 
   const EditEmployeeSalaryData = useMutation(
     async (data) => {
@@ -93,7 +87,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
       } catch (error) {
         throw new Error(
           error.response.data.message ||
-            "Failed to update Employee Salary Calculation Day"
+            "Failed to updated Salary Computation Day"
         );
       }
     },
@@ -104,7 +98,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
         handleAlert(
           true,
           "success",
-          "Employee Salary Calculation Day Updated Successfully.."
+          "Salary Computation Day Updated Successfully.."
         );
         window.location.reload();
       },
@@ -126,7 +120,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
       handleAlert(
         true,
         "error",
-        "An error occurred while  updating Employee Salary Calculation Day"
+        "An error occurred while  updating  Salary Computation Day"
       );
     }
   };
@@ -144,7 +138,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
       >
         <div className="flex justify-between py-4 items-center  px-4">
           <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
-            Edit Employee Salary Calculation Day
+            Update Salary Computation Day
           </h1>
           <IconButton onClick={handleClose}>
             <CloseIcon className="!text-[16px]" />
@@ -157,21 +151,24 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
 
         <div className="px-5 space-y-4 mt-4">
           <div className="space-y-2 ">
-            <select
-              value={selectedDay}
-              onChange={handleSelectedDay}
-              style={{
-                width: "700px",
-                padding: "8px",
-                borderColor: "rgba(0, 0, 0, 0.3)",
-              }}
-            >
-              {salaryCalculationDays?.map((day) => (
-                <option key={day.value} value={day.value}>
-                  {day.label}
-                </option>
-              ))}
-            </select>
+            <Autocomplete
+              options={salaryCalculationDays}
+              getOptionLabel={(option) => option.label}
+              value={
+                salaryCalculationDays.find(
+                  (day) => day.value === selectedDay
+                ) || null
+              }
+              onChange={(e, value) => setSelectedDay(value?.value || "")}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Select Salary Computation Day"
+                  variant="outlined"
+                  fullWidth
+                />
+              )}
+            />
           </div>
 
           <div className="flex gap-4  mt-4 justify-end">

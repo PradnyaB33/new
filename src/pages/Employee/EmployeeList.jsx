@@ -3,12 +3,10 @@ import { IconButton, TextField, Container } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
 
 const EmployeeList = () => {
-  const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const [nameSearch, setNameSearch] = useState("");
@@ -39,7 +37,6 @@ const EmployeeList = () => {
       setNumbers(numbersArray);
     } catch (error) {
       console.log(error);
-      handleAlert(true, "error", "Failed to Fetch Employee");
     }
   };
 
@@ -47,6 +44,7 @@ const EmployeeList = () => {
     fetchAvailableEmployee(currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
+  console.log(availableEmployee);
 
   const prePage = () => {
     if (currentPage !== 1) {
@@ -77,7 +75,6 @@ const EmployeeList = () => {
     setemployeeId(null);
     setEditModalOpen(false);
   };
-  console.log(availableEmployee);
 
   return (
     <>
@@ -152,21 +149,27 @@ const EmployeeList = () => {
                   .filter((item) => {
                     return (
                       (!nameSearch.toLowerCase() ||
-                        (item.first_name &&
+                        (item.first_name !== null &&
+                          item.first_name !== undefined &&
                           item.first_name
                             .toLowerCase()
                             .includes(nameSearch))) &&
                       (!deptSearch ||
                         (item.deptname !== null &&
-                          item.deptname.some((dept) =>
-                            dept.departmentName
-                              .toLowerCase()
-                              .includes(deptSearch.toLowerCase())
+                          item.deptname !== undefined &&
+                          item.deptname.some(
+                            (dept) =>
+                              dept.departmentName !== null &&
+                              dept.departmentName
+                                .toLowerCase()
+                                .includes(deptSearch.toLowerCase())
                           ))) &&
                       (!locationSearch.toLowerCase() ||
                         item.worklocation.some(
                           (location) =>
+                            location &&
                             location.city !== null &&
+                            location.city !== undefined &&
                             location.city.toLowerCase().includes(locationSearch)
                         ))
                     );
@@ -183,11 +186,9 @@ const EmployeeList = () => {
                         ))}
                       </td>
                       <td className="py-3">
-                        {item?.deptname?.map((dept, index) => {
-                          return (
-                            <span key={index}>{dept?.departmentName}</span>
-                          );
-                        })}
+                        {item?.deptname?.map((dept, index) => (
+                          <span key={index}>{dept?.departmentName}</span>
+                        ))}
                       </td>
                       <td className="py-3">{item?.phone_number}</td>
                       <td className="whitespace-nowrap px-6 py-2">

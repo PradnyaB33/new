@@ -5,15 +5,12 @@ import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import * as React from "react";
 import { useCallback } from "react"; // Import useCallback
 import { useLocation } from "react-router-dom";
-import UserProfile from "../../hooks/UserData/useUser";
 import ProfileIcon from "../profieicon/profileIcon";
 import TestNavItems from "./components/test-nav-items";
 
 export default function SwipeableTemporaryDrawer() {
   const [open, setOpen] = React.useState(false);
   const location = useLocation();
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
 
   // Use useCallback to memoize the toggleDrawer function
   const toggleDrawer = useCallback(() => {
@@ -58,7 +55,7 @@ export default function SwipeableTemporaryDrawer() {
           </IconButton>
           <Badge>
             <Typography variant="h6" noWrap component="div">
-              Aegis
+              AEGIS
             </Typography>
           </Badge>
           <ProfileIcon />
@@ -75,7 +72,7 @@ export default function SwipeableTemporaryDrawer() {
         <div className="py-4 px-10 border-b-[.5px] flex  items-center gap-4 border-gray-300 ">
           <img src="/logo.svg" className="h-[30px]" alt="logo" />
           <div>
-            <h1 className="text-2xl">Aegis</h1>
+            <h1 className="text-2xl">AEGIS</h1>
           </div>
         </div>
 

@@ -215,6 +215,10 @@ const App = () => {
         element={<EmployementTypes />}
       />
       <Route
+        path="/organisation/:organisationId/setup/set-employee-code-generator"
+        element={<EmployeeCodeGenerator />}
+      />
+      <Route
         path="/organisation/:organisationId/setup/add-organization-locations"
         element={<OrganizationLocations />}
       />
@@ -225,10 +229,7 @@ const App = () => {
       <Route path="/setup/:organisationId" element={<Setup />} />
       <Route path="/set-designation" element={<Designation />} />
       <Route path="/add-inputfield/:id" element={<Inputfield />} />
-      <Route
-        path="/setup/employee-code-genreation/:id"
-        element={<EmployeeCodeGenerator />}
-      />
+
       <Route path="/setup/:id/public-holidays" element={<PublicHoliday />} />
       <Route
         path="/organisation/:organisationId/setup/set-email"

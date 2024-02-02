@@ -36,7 +36,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
     { title: "Basic" },
     { title: "HRA" },
     { title: "DA" },
-    { title: "Varialble allowance" },
+    { title: "Variable allowance" },
     { title: "Special allowance" },
     { title: "Travel allowance" },
     { title: "Food allowance" },
