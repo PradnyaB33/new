@@ -31,7 +31,7 @@ const AddOrganisation = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [url, setUrl] = useState('')
   const [uploadedFile, setUploadedFile] = useState()
-  const [emailLabel, setEmailLabel] = useState("Organisation Email");
+  const [emailLabel, setEmailLabel] = useState("Organization Email");
   const [numberLabel, setNumberLabel] = useState("Phone Number");
   const [emailError, setEmailError] = useState(false);
   const [contactNumberError, setContactNumberError] = useState(false);
@@ -264,7 +264,7 @@ const AddOrganisation = () => {
               value={inputdata.name}
               size="small"
               className={`w-[80%] ${firstEmptyField === "name" ? "error" : ""}`}
-              label="My Organisation Name"
+              label="My Organization Name"
               type="text"
               inputRef={firstEmptyField === "name" ? firstEmptyFieldRef : null}
             />
@@ -372,7 +372,7 @@ const AddOrganisation = () => {
               size="small"
               className={`w-[80%] ${firstEmptyField === "description" ? "error" : ""
                 }`}
-              label="Organisation Description"
+              label="Organization Description"
               type="text"
               inputRef={
                 firstEmptyField === "description" ? firstEmptyFieldRef : null
