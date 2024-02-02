@@ -68,7 +68,7 @@ const LeaveTable = () => {
     return (
       <article className="w-[350px] h-max py-6 bg-white shadow-xl rounded-lg ">
         <h1 className="text-xl px-8 font-semibold flex items-center gap-3 ">
-          <AccountBalanceIcon className="text-gray-400" /> Balance for Leaves
+          <AccountBalanceIcon className="text-gray-400" /> Balance Leaves
           <Tooltip title="Click to get Summary for current month">
             <IconButton>
               <MoreHoriz className="!text-[19px] text-black" />
@@ -109,7 +109,7 @@ const LeaveTable = () => {
     <article className="w-[350px] h-max bg-white shadow-lg rounded-lg ">
       <h1 className="text-xl py-6 px-6 font-semibold flex items-center gap-3 justify-between">
         <AccountBalanceIcon className="text-gray-400" />
-        <div>Balance for Leaves</div>
+        <div>Balance Leaves</div>
         <Tooltip title="Click to get Summary for current month">
           <IconButton onClick={handlePopoverOpen}>
             <MoreVert className="!text-[19px] text-black" />
