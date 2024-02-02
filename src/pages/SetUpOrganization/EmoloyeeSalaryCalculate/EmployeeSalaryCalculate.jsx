@@ -3,17 +3,28 @@ import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import { Button, IconButton } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import CreateEmpSalCalDayModel from "../../../components/Modal/EmployeeSalaryDayModal/CreateEmpSalCalDay";
 import EmpSalaryDayModal from "../../../components/Modal/EmployeeSalaryDayModal/EmpSalaryDayModal";
 import Setup from "../Setup";
+import { Delete, Warning } from "@mui/icons-material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
+import { TestContext } from "../../../State/Function/Main";
 const EmployeeSalaryCalculateDay = () => {
   const { cookies } = useContext(UseContext);
+  const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aeigs"];
   const { organisationId } = useParams();
   const queryClient = useQueryClient();
+  // state for delete the employee salary calculate day
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   // Modal states and function for edit
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [empSalCalId, setEmpSalCalId] = useState(null);
@@ -63,6 +74,57 @@ const EmployeeSalaryCalculateDay = () => {
     }
   );
 
+  // Delete Query for deleting the employee code
+  const handleDeleteConfirmation = (id) => {
+    setDeleteConfirmation(id);
+  };
+
+  const handleCloseConfirmation = () => {
+    setDeleteConfirmation(null);
+  };
+
+  // Delete Query for deleting the employee code
+  const handleDelete = (id) => {
+    deleteMutation.mutate(id);
+    setDeleteConfirmation(null);
+    // Manually update the query data to reflect the deletion
+    queryClient.setQueryData(
+      ["empSalaryCalData", organisationId],
+      (prevData) => {
+        // Filter out the deleted employee salary calculation day
+        const updatedData = prevData.empSalaryCalDayData.filter(
+          (empSalCal) => empSalCal._id !== id
+        );
+        return { ...prevData, empSalaryCalDayData: updatedData };
+      }
+    );
+    // Clear the alert message after 3000 milliseconds (3 seconds)
+    setTimeout(() => {
+      handleAlert(false, "success", "");
+    }, 3000);
+  };
+
+  const deleteMutation = useMutation(
+    (id) =>
+      axios.delete(
+        `${process.env.REACT_APP_API}/route/delete/employee-computation-day/${organisationId}/${id}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      ),
+    {
+      onSuccess: () => {
+        handleAlert(
+          true,
+          "success",
+          " Salary Computation Day deleted succesfully"
+        );
+      },
+    }
+  );
+
   return (
     <>
       <section className="bg-gray-50 min-h-screen w-full">
@@ -74,7 +136,7 @@ const EmployeeSalaryCalculateDay = () => {
                   <EventNoteOutlinedIcon className="!text-lg text-white" />
                 </div>
                 <h1 className="!text-lg tracking-wide">
-                  Create Employee Salary Calculation Day For Organization
+                  Salary Computation Day
                 </h1>
               </div>
               <Button
@@ -82,7 +144,7 @@ const EmployeeSalaryCalculateDay = () => {
                 variant="contained"
                 onClick={handleCreateModalOpen}
               >
-                Create Employee Salary Calculate Day
+                Create Salary Computation Day
               </Button>
             </div>
 
@@ -94,7 +156,7 @@ const EmployeeSalaryCalculateDay = () => {
                       SR NO
                     </th>
                     <th scope="col" className="py-3 ">
-                      Salary Calculation Day
+                      Salary Computation Day
                     </th>
                     <th scope="col" className="px-6 py-3 ">
                       Actions
@@ -112,6 +174,13 @@ const EmployeeSalaryCalculateDay = () => {
                         >
                           <BorderColor className="!text-xl" color="success" />
                         </IconButton>
+                        <IconButton
+                          onClick={() =>
+                            handleDeleteConfirmation(empSalCal._id)
+                          }
+                        >
+                          <Delete className="!text-xl" color="error" />
+                        </IconButton>
                       </td>
                     </tr>
                   ))}
@@ -121,6 +190,41 @@ const EmployeeSalaryCalculateDay = () => {
           </article>
         </Setup>
       </section>
+
+      {/* this dialogue for delete the employee code */}
+      <Dialog
+        open={deleteConfirmation !== null}
+        onClose={handleCloseConfirmation}
+      >
+        <DialogTitle color={"error"}>
+          <Warning color="error" /> All information of salary computation day
+          will be deleted. Are you sure you want to delete it?
+        </DialogTitle>
+        <DialogContent>
+          <p>
+            Please confirm your decision to delete this salary computation day,
+            as this action cannot be retrived
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleCloseConfirmation}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => handleDelete(deleteConfirmation)}
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* for create */}
       <CreateEmpSalCalDayModel

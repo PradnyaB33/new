@@ -31,10 +31,10 @@ export default function ProfileIcon() {
   const handleSignOut = () => {
     // setAnchorEl(null);
     // console.log(cookies.aeigs);
+    navigate("/sign-in");
     window.location.reload();
     Cookies.remove("aeigs");
     Cookies.remove("role");
-    // navigate("/sign-in");
   };
 
   const handleNavigate = (link) => {

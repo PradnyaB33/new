@@ -91,7 +91,7 @@ const SalaryManagement = () => {
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <h1 className="text-lg pl-2 font-semibold text-center modal-title py-2">
-            Employee List for Salary Management
+            Salary Management
           </h1>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
@@ -180,7 +180,9 @@ const SalaryManagement = () => {
                       (!locationSearch.toLowerCase() ||
                         item.worklocation.some(
                           (location) =>
+                            location &&
                             location.city !== null &&
+                            location.city !== undefined &&
                             location.city.toLowerCase().includes(locationSearch)
                         ))
                     );
