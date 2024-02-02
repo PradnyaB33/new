@@ -902,8 +902,8 @@ const EmployeeAdd = () => {
                         Select Department Name
                       </MenuItem>
                       {availableDepartment?.map((deptname) => (
-                        <MenuItem key={deptname._id} value={deptname._id}>
-                          {deptname.departmentName}
+                        <MenuItem key={deptname?._id} value={deptname?._id}>
+                          {deptname?.departmentName}
                         </MenuItem>
                       ))}
                     </Select>
@@ -929,7 +929,7 @@ const EmployeeAdd = () => {
                               value={manager.managerId._id}
                             >
                               {/* {manager.managerId} */}
-                              {`${manager.managerId.first_name} ${manager.managerId.last_name}`}
+                              {`${manager?.managerId?.first_name} ${manager?.managerId?.last_name}`}
                             </MenuItem>
                           )
                       )}
@@ -1003,11 +1003,14 @@ const EmployeeAdd = () => {
                       ) : (
                         availableProfiles?.map((name) => {
                           return (
-                            <MenuItem key={name.roleName} value={name.roleName}>
+                            <MenuItem
+                              key={name?.roleName}
+                              value={name?.roleName}
+                            >
                               <Checkbox
-                                checked={profile.indexOf(name.roleName) > -1}
+                                checked={profile.indexOf(name?.roleName) > -1}
                               />
-                              <ListItemText primary={name.roleName} />
+                              <ListItemText primary={name?.roleName} />
                             </MenuItem>
                           );
                         })
@@ -1028,8 +1031,8 @@ const EmployeeAdd = () => {
                         Select Employment Type
                       </MenuItem>
                       {availabelEmpTypes?.map((type) => (
-                        <MenuItem key={type._id} value={type._id}>
-                          {type.title}
+                        <MenuItem key={type?._id} value={type?._id}>
+                          {type?.title}
                         </MenuItem>
                       ))}
                     </Select>
@@ -1050,8 +1053,8 @@ const EmployeeAdd = () => {
                         Select Salary Type
                       </MenuItem>
                       {salaryInput?.salaryTemplates?.map((item) => (
-                        <MenuItem key={item._id} value={item._id}>
-                          {item.name}
+                        <MenuItem key={item?._id} value={item?._id}>
+                          {item?.name}
                         </MenuItem>
                       ))}
                     </Select>
@@ -1088,8 +1091,8 @@ const EmployeeAdd = () => {
                         Select Designation
                       </MenuItem>
                       {availabelDesignation?.map((type) => (
-                        <MenuItem key={type._id} value={type._id}>
-                          {type.designationName}
+                        <MenuItem key={type?._id} value={type?._id}>
+                          {type?.designationName}
                         </MenuItem>
                       ))}
                     </Select>
@@ -1107,8 +1110,8 @@ const EmployeeAdd = () => {
                         Select Work Location
                       </MenuItem>
                       {availabelLocation?.map((type) => (
-                        <MenuItem key={type._id} value={type._id}>
-                          {type.city}
+                        <MenuItem key={type?._id} value={type?._id}>
+                          {type?.city}
                         </MenuItem>
                       ))}
                     </Select>
@@ -1140,7 +1143,7 @@ const EmployeeAdd = () => {
                   </FormControl>
                 </div>
                 <div className="w-full">
-                  <FormControl sx={{ width: 280 }} required>
+                  <FormControl sx={{ width: 280 }}>
                     <Select
                       value={shift_allocation}
                       onChange={(e) => setShiftAllocation(e.target.value)}
@@ -1231,15 +1234,15 @@ const EmployeeAdd = () => {
                   <div className="flex flex-wrap gap-8">
                     {availableInputField?.map((item) => (
                       <TextField
-                        key={item._id}
+                        key={item?._id}
                         size="small"
-                        type={item.inputType}
-                        label={item.label}
-                        name={item.label}
-                        id={item.label}
-                        value={dynamicFields[item.label] || ""}
+                        type={item?.inputType}
+                        label={item?.label}
+                        name={item?.label}
+                        id={item?.label}
+                        value={dynamicFields?.[item?.label] || ""}
                         onChange={(e) =>
-                          handleDynamicFieldChange(item.label, e.target.value)
+                          handleDynamicFieldChange(item?.label, e.target.value)
                         }
                         fullWidth
                         margin="normal"
