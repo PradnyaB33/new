@@ -23,8 +23,13 @@ const RolePage = () => {
       redirect("/sign-in");
     }
     if (user?._id && roles) {
-      if (roles === "Super-Admin") return redirect("/");
-      else if (roles === "Hr")
+      if (roles === "Super-Admin" || roles === "Delegate-Super Admin")
+        return redirect("/");
+      else if (
+        roles === "Hr" ||
+        roles === "Accountant" ||
+        roles === "Delegate-Accountant"
+      )
         return redirect(
           `/organisation/${user?.organisationId}/dashboard/HR-dashboard`
         );
@@ -32,7 +37,11 @@ const RolePage = () => {
         return redirect(
           `/organisation/${user?._id}/dashboard/manager-dashboard`
         );
-      else if (roles === "Employee")
+      else if (
+        roles === "Employee" ||
+        roles === "Department-Admin" ||
+        roles === "Department-Head"
+      )
         return redirect(`/organisation/dashboard/employee-dashboard`);
     }
     // eslint-disable-next-line
