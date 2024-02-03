@@ -49,6 +49,7 @@ const EmployeeAdd = () => {
   const [empId, setEmpId] = useState(null);
   const [showFields, setShowFields] = useState(false);
   const [ageError, setAgeError] = useState(false);
+  const [shift_allocation, setShiftAllocation] = useState("");
   const handleDatePickerChange = (newDate) => {
     const formattedDate = dayjs(newDate).format("YYYY-MM-DD");
     setDateOfBirth(formattedDate);
@@ -126,6 +127,12 @@ const EmployeeAdd = () => {
     setPasswordError,
     companyEmailError,
     setCompanyEmailError,
+    adhar_card_number,
+    setAdharCardNumber,
+    pan_card_number,
+    setPanCardNumber,
+    dept_cost_center_no,
+    setDeptCostCenterNo,
   } = useAddEmpForm();
 
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -291,7 +298,27 @@ const EmployeeAdd = () => {
     fetchAvailabeDepartment();
     // eslint-disable-next-line
   }, []);
-  console.log(availableDepartment);
+  const [availaleCostCenterId, setAvailableCostCenter] = useState([]);
+  const fetchAvailableCostCenter = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/department/get/cost-center-id/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setAvailableCostCenter(response.data.data.departments);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchAvailableCostCenter();
+    // eslint-disable-next-line
+  }, []);
+  console.log(availaleCostCenterId);
 
   const [profile, setProfile] = React.useState([]);
   const handleChange = (event) => {
@@ -396,8 +423,6 @@ const EmployeeAdd = () => {
   }, []);
 
   const [dynamicFields, setDynamicFields] = useState({
-    shifts_allocation: "",
-    dept_cost_no: "",
     middalName: "",
     martial_state: "",
     primary_nationality: "",
@@ -405,8 +430,6 @@ const EmployeeAdd = () => {
     permanant_address: "",
     relative_info: "",
     emer_contact: "",
-    adhar_card_number: "",
-    pan_card_number: "",
   });
 
   const handleDynamicFieldChange = (name, value) => {
@@ -415,6 +438,13 @@ const EmployeeAdd = () => {
       [name]: value,
     });
   };
+
+  const shiftAllocation = [
+    { shiftId: 1, shiftName: "Morning Shift" },
+    { shiftId: 2, shiftName: "Afternoon Shift" },
+    { shiftId: 3, shiftName: "Night Shift" },
+  ];
+
   const toggleFields = () => {
     setShowFields((prev) => !prev);
   };
@@ -443,6 +473,10 @@ const EmployeeAdd = () => {
         profile,
         empId,
         bank_account_no,
+        adhar_card_number,
+        pan_card_number,
+        dept_cost_center_no,
+        shift_allocation,
         ...dynamicFields,
         organizationId: organisationId,
         creatorId: userId,
@@ -818,6 +852,41 @@ const EmployeeAdd = () => {
                   </FormControl>
                 </div>
               </div>
+              <div className="flex items-center gap-14">
+                <div className="w-full">
+                  <FormControl sx={{ width: 280 }}>
+                    <TextField
+                      size="small"
+                      type="number"
+                      label="Adhar Card Number"
+                      name="adhar_card_number"
+                      id="adhar_card_number"
+                      value={adhar_card_number}
+                      onChange={(e) => setAdharCardNumber(e.target.value)}
+                      fullWidth
+                      margin="normal"
+                      required
+                    />
+                  </FormControl>
+                </div>
+
+                <div className="w-full">
+                  <FormControl sx={{ width: 280 }}>
+                    <TextField
+                      size="small"
+                      type="text"
+                      label="Pan Card Number"
+                      name="pan_card_number"
+                      id="pan_card_number"
+                      value={pan_card_number}
+                      onChange={(e) => setPanCardNumber(e.target.value)}
+                      fullWidth
+                      margin="normal"
+                      required
+                    />
+                  </FormControl>
+                </div>
+              </div>
 
               <div className="w-full">
                 <FormControl sx={{ width: 625 }}>
@@ -849,8 +918,8 @@ const EmployeeAdd = () => {
                         Select Department Name
                       </MenuItem>
                       {availableDepartment?.map((deptname) => (
-                        <MenuItem key={deptname._id} value={deptname._id}>
-                          {deptname.departmentName}
+                        <MenuItem key={deptname?._id} value={deptname?._id}>
+                          {deptname?.departmentName}
                         </MenuItem>
                       ))}
                     </Select>
@@ -876,7 +945,7 @@ const EmployeeAdd = () => {
                               value={manager.managerId._id}
                             >
                               {/* {manager.managerId} */}
-                              {`${manager.managerId.first_name} ${manager.managerId.last_name}`}
+                              {`${manager?.managerId?.first_name} ${manager?.managerId?.last_name}`}
                             </MenuItem>
                           )
                       )}
@@ -899,7 +968,7 @@ const EmployeeAdd = () => {
                 sx={{ width: 625 }}
               />
 
-              <div className="flex items-center gap-14">
+              <div className="flex items-center gap-14 mb-4">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <InputLabel id="demo-multiple-checkbox-label">
@@ -950,11 +1019,14 @@ const EmployeeAdd = () => {
                       ) : (
                         availableProfiles?.map((name) => {
                           return (
-                            <MenuItem key={name.roleName} value={name.roleName}>
+                            <MenuItem
+                              key={name?.roleName}
+                              value={name?.roleName}
+                            >
                               <Checkbox
-                                checked={profile.indexOf(name.roleName) > -1}
+                                checked={profile.indexOf(name?.roleName) > -1}
                               />
-                              <ListItemText primary={name.roleName} />
+                              <ListItemText primary={name?.roleName} />
                             </MenuItem>
                           );
                         })
@@ -975,8 +1047,8 @@ const EmployeeAdd = () => {
                         Select Employment Type
                       </MenuItem>
                       {availabelEmpTypes?.map((type) => (
-                        <MenuItem key={type._id} value={type._id}>
-                          {type.title}
+                        <MenuItem key={type?._id} value={type?._id}>
+                          {type?.title}
                         </MenuItem>
                       ))}
                     </Select>
@@ -984,7 +1056,7 @@ const EmployeeAdd = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-14">
+              <div className="flex items-center gap-14 mb-4">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }} required>
                     <Select
@@ -997,8 +1069,8 @@ const EmployeeAdd = () => {
                         Select Salary Type
                       </MenuItem>
                       {salaryInput?.salaryTemplates?.map((item) => (
-                        <MenuItem key={item._id} value={item._id}>
-                          {item.name}
+                        <MenuItem key={item?._id} value={item?._id}>
+                          {item?.name}
                         </MenuItem>
                       ))}
                     </Select>
@@ -1022,7 +1094,7 @@ const EmployeeAdd = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-14">
+              <div className="flex items-center gap-14 mb-4">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <Select
@@ -1035,8 +1107,8 @@ const EmployeeAdd = () => {
                         Select Designation
                       </MenuItem>
                       {availabelDesignation?.map((type) => (
-                        <MenuItem key={type._id} value={type._id}>
-                          {type.designationName}
+                        <MenuItem key={type?._id} value={type?._id}>
+                          {type?.designationName}
                         </MenuItem>
                       ))}
                     </Select>
@@ -1054,8 +1126,53 @@ const EmployeeAdd = () => {
                         Select Work Location
                       </MenuItem>
                       {availabelLocation?.map((type) => (
-                        <MenuItem key={type._id} value={type._id}>
-                          {type.city}
+                        <MenuItem key={type?._id} value={type?._id}>
+                          {type?.city}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-14 mb-4">
+                <div className="w-full">
+                  <FormControl sx={{ width: 280 }}>
+                    <Select
+                      value={dept_cost_center_no}
+                      onChange={(e) => setDeptCostCenterNo(e.target.value)}
+                      displayEmpty
+                      inputProps={{ "aria-label": "Department Cost Center No" }}
+                    >
+                      <MenuItem value="" disabled>
+                        Department Cost Center No
+                      </MenuItem>
+                      {Array.isArray(availaleCostCenterId) &&
+                        availaleCostCenterId.map((costno) => (
+                          <MenuItem
+                            key={costno?._id}
+                            value={costno?.dept_cost_center_id}
+                          >
+                            {costno?.dept_cost_center_id}
+                          </MenuItem>
+                        ))}
+                    </Select>
+                  </FormControl>
+                </div>
+                <div className="w-full">
+                  <FormControl sx={{ width: 280 }}>
+                    <Select
+                      value={shift_allocation}
+                      onChange={(e) => setShiftAllocation(e.target.value)}
+                      displayEmpty
+                      inputProps={{ "aria-label": "Shift Allocation" }}
+                    >
+                      <MenuItem value="" disabled>
+                        Shift Allocation
+                      </MenuItem>
+                      {shiftAllocation?.map((shift) => (
+                        <MenuItem key={shift.shiftId} value={shift.shiftName}>
+                          {shift.shiftName}
                         </MenuItem>
                       ))}
                     </Select>
@@ -1134,15 +1251,15 @@ const EmployeeAdd = () => {
                   <div className="flex flex-wrap gap-8">
                     {availableInputField?.map((item) => (
                       <TextField
-                        key={item._id}
+                        key={item?._id}
                         size="small"
-                        type={item.inputType}
-                        label={item.label}
-                        name={item.label}
-                        id={item.label}
-                        value={dynamicFields[item.label] || ""}
+                        type={item?.inputType}
+                        label={item?.label}
+                        name={item?.label}
+                        id={item?.label}
+                        value={dynamicFields?.[item?.label] || ""}
                         onChange={(e) =>
-                          handleDynamicFieldChange(item.label, e.target.value)
+                          handleDynamicFieldChange(item?.label, e.target.value)
                         }
                         fullWidth
                         margin="normal"

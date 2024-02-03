@@ -174,7 +174,11 @@ const AddDepartments = () => {
       setNumCharacters("");
       setEnterDepartmentId("");
       setDepartmentCostCenterId("");
-      handleAlert(true, "success", "Department Added Successfully...");
+      handleAlert(
+        true,
+        "success",
+        `${dept_name} Department Added Successfully..`
+      );
     } catch (error) {
       console.error("Error creating department:", error);
       const errorMessage =
