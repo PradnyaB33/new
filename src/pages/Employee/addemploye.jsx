@@ -810,7 +810,7 @@ const EmployeeAdd = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-14">
+              <div className="flex items-center gap-14 mb-4">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
