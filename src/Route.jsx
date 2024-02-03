@@ -8,7 +8,6 @@ import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
 import UserProfile from "./hooks/UserData/useUser";
-import AddOrganisation from "./pages/AddOrganisation/ADDORGANIZATION";
 import NewOranisationForm from "./pages/AddOrganisation/NewOrgForm";
 import Application from "./pages/Application/Application";
 import DashBoardHR from "./pages/DashBoard/DashBoardHR";
@@ -138,7 +137,7 @@ const App = () => {
         }
       />
       {/* Dashboard Routes */}
-      <Route path="/add-organisation" element={<AddOrganisation />} />
+      <Route path="/add-organisation" element={<NewOranisationForm />} />
       <Route
         path="/organizationList"
         element={
