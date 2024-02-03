@@ -41,12 +41,12 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   });
   // define the state for store additional info data of employee
   const [additionalInfo, setAdditionalInfo] = useState({
-    "Emergency contact": "",
+    "Emergency Contact": "",
     "Middle Name": "",
     "Permanent Address": "",
-    "Primary nationality": "",
+    "Primary Nationality": "",
     "Relative Information": "",
-    "Martial status": "",
+    "Martial Status": "",
     Education: "",
   });
   // define the state for stored salary tempalte of employee
@@ -349,15 +349,15 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
 
       setAdditionalInfo({
         Education: employeeData?.additionalInfo?.Education || "",
-        "Emergency contact":
-          employeeData?.additionalInfo?.["Emergency contact"] || "",
-        "Martial status":
-          employeeData?.additionalInfo?.["Martial status"] || "",
+        "Emergency Contact":
+          employeeData?.additionalInfo?.["Emergency Contact"] || "",
+        "Martial Status":
+          employeeData?.additionalInfo?.["Martial Status"] || "",
         "Middle Name": employeeData?.additionalInfo?.["Middle Name"] || "",
         "Permanent Address":
           employeeData?.additionalInfo?.["Permanent Address"] || "",
-        "Primary nationality":
-          employeeData?.additionalInfo?.["Primary nationality"] || "",
+        "Primary Nationality":
+          employeeData?.additionalInfo?.["Primary Nationality"] || "",
         "Relative Information":
           employeeData?.additionalInfo?.["Relative Information"] || "",
       });
@@ -858,11 +858,12 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
-              {availabelLocation.map((location) => (
-                <option key={location._id} value={location._id}>
-                  {location.city}
-                </option>
-              ))}
+              {Array.isArray(availabelLocation) &&
+                availabelLocation?.map((location) => (
+                  <option key={location._id} value={location._id}>
+                    {location?.city || ""}
+                  </option>
+                ))}
             </select>
           </div>
 
@@ -882,11 +883,12 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
-              {availabelDepartment.map((department) => (
-                <option key={department._id} value={department._id}>
-                  {department.departmentName}
-                </option>
-              ))}
+              {Array.isArray(availabelDepartment) &&
+                availabelDepartment?.map((department) => (
+                  <option key={department._id} value={department._id}>
+                    {department?.departmentName || ""}
+                  </option>
+                ))}
             </select>
           </div>
           <div className="space-y-2">
@@ -905,11 +907,12 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
-              {availabelDesignation.map((designation) => (
-                <option key={designation._id} value={designation._id}>
-                  {designation.designationName}
-                </option>
-              ))}
+              {Array.isArray(availabelDesignation) &&
+                availabelDesignation?.map((designation) => (
+                  <option key={designation._id} value={designation._id}>
+                    {designation?.designationName || ""}
+                  </option>
+                ))}
             </select>
           </div>
           <div className="space-y-2">
@@ -928,11 +931,12 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
-              {availabelSalaryTemplate.map((salarytemplate) => (
-                <option key={salarytemplate._id} value={salarytemplate._id}>
-                  {salarytemplate.name}
-                </option>
-              ))}
+              {Array.isArray(availabelSalaryTemplate) &&
+                availabelSalaryTemplate?.map((salarytemplate) => (
+                  <option key={salarytemplate._id} value={salarytemplate._id}>
+                    {salarytemplate?.name || ""}
+                  </option>
+                ))}
             </select>
           </div>
           <div className="space-y-2">
@@ -951,11 +955,12 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
-              {availabelEmpTypes.map((empType) => (
-                <option key={empType._id} value={empType._id}>
-                  {empType.title}
-                </option>
-              ))}
+              {Array.isArray(availabelEmpTypes) &&
+                availabelEmpTypes?.map((empType) => (
+                  <option key={empType?._id} value={empType?._id}>
+                    {empType?.title}
+                  </option>
+                ))}
             </select>
           </div>
           <div className="space-y-2">
@@ -975,7 +980,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               }}
             >
               {Array.isArray(availaleCostCenterId) &&
-                availaleCostCenterId.map((costno) => (
+                availaleCostCenterId?.map((costno) => (
                   <option key={costno?._id} value={costno?.dept_cost_center_id}>
                     {costno?.dept_cost_center_id}
                   </option>
@@ -999,7 +1004,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               }}
             >
               {Array.isArray(availaleShiftAllocation) &&
-                availaleShiftAllocation.map((shift) => (
+                availaleShiftAllocation?.map((shift) => (
                   <option key={shift?._id} value={shift?.shiftName}>
                     {shift?.shiftName}
                   </option>

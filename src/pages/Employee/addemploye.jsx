@@ -596,8 +596,6 @@ const EmployeeAdd = () => {
         } else {
           // Reset dynamicFields and profile state
           setDynamicFields({
-            shifts_allocation: "",
-            dept_cost_no: "",
             middalName: "",
             martial_state: "",
             primary_nationality: "",
@@ -605,8 +603,6 @@ const EmployeeAdd = () => {
             permanant_address: "",
             relative_info: "",
             emer_contact: "",
-            adhar_card_number: "",
-            pan_card_number: "",
           });
           setProfile([]);
           // Reset other state variables as needed
@@ -627,7 +623,10 @@ const EmployeeAdd = () => {
           setWorkLocation("");
           setDateOfBirth("");
           setJoiningDate("");
-
+          setDeptCostCenterNo("");
+          setShiftAllocation("");
+          setAdharCardNumber("");
+          setPanCardNumber("");
           handleAlert(true, "success", response.data.message);
         }
       }
