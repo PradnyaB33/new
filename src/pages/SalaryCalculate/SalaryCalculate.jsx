@@ -58,8 +58,6 @@ const SalaryCalculate = () => {
     // eslint-disable-next-line
   }, []);
 
-  console.log(availableEmployee);
-
   // pull holiday's count based on organization id
   const fetchHoliday = async () => {
     try {
@@ -84,19 +82,20 @@ const SalaryCalculate = () => {
   }, []);
 
   const countPublicHolidaysInCurrentMonth = () => {
-    const currentDate = dayjs(); // Get current date using dayjs
-    const currentMonth = currentDate.month() + 1; // Adding 1 to get 1-based index
-    const currentYear = currentDate.year();
+    const selectedMonth = selectedDate.format("M");
+    const selectedYear = selectedDate.format("YYYY");
+
     const holidaysInCurrentMonth = publicHolidays.filter((holiday) => {
       const holidayDate = dayjs(holiday.date);
       return (
-        holidayDate.month() + 1 === currentMonth &&
-        holidayDate.year() === currentYear
+        holidayDate.month() + 1 === parseInt(selectedMonth) && // Month is zero-based in dayjs
+        holidayDate.year() === parseInt(selectedYear)
       );
     });
 
     return holidaysInCurrentMonth.length;
   };
+
   let publicHolidaysCount = countPublicHolidaysInCurrentMonth();
 
   // pull weekend based on organization id
@@ -126,7 +125,7 @@ const SalaryCalculate = () => {
     .map((item) => item.days.map((dayItem) => dayItem.day))
     .flat();
 
-  // // get the weekend count in that organization
+  // get the weekend count in that organization
   const countWeekendDaysInMonth = () => {
     const selectedMonth = dayjs(selectedDate); // selectedDate is the chosen date
     const daysInMonth = selectedMonth.daysInMonth();
@@ -145,7 +144,7 @@ const SalaryCalculate = () => {
   // // Call the function to count weekend days in the selected month
   const weekendCount = countWeekendDaysInMonth();
 
-  // pull the data such as paidLeaveDays , unpaidLeave days , available Days
+  // pull the data such as paidLeaveDays , unpaidLeave days
   const fetchDataAndFilter = async () => {
     try {
       const response = await axios.get(
@@ -519,8 +518,8 @@ const SalaryCalculate = () => {
                           </td>
                           <td>
                             {(availableEmployee?.deptname &&
-                              availableEmployee.deptname.length > 0 &&
-                              availableEmployee.deptname[0]?.departmentName) ||
+                              availableEmployee?.deptname.length > 0 &&
+                              availableEmployee?.deptname[0]?.departmentName) ||
                               ""}
                           </td>
                         </tr>
@@ -533,11 +532,7 @@ const SalaryCalculate = () => {
                           >
                             PAN No :
                           </td>
-                          <td>
-                            {availableEmployee?.additionalInfo?.[
-                              "Pan Card Number"
-                            ] || ""}
-                          </td>
+                          <td>{availableEmployee?.pan_card_number}</td>
                         </tr>
 
                         <tr>
