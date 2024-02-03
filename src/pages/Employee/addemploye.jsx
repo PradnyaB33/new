@@ -46,7 +46,6 @@ const EmployeeAdd = () => {
   const authToken = cookies["aeigs"];
   const { organisationId } = useParams();
   const [userId, setUserId] = useState(null);
-  const [empId, setEmpId] = useState(null);
   const [showFields, setShowFields] = useState(false);
   const [ageError, setAgeError] = useState(false);
   const [shift_allocation, setShiftAllocation] = useState("");
@@ -318,7 +317,68 @@ const EmployeeAdd = () => {
     fetchAvailableCostCenter();
     // eslint-disable-next-line
   }, []);
-  console.log(availaleCostCenterId);
+  const [availaleShiftAllocation, setAvailableShiftAllocation] = useState([]);
+  const fetchAvailableShiftAllocation = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/shifts/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setAvailableShiftAllocation(response.data.shifts);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchAvailableShiftAllocation();
+    // eslint-disable-next-line
+  }, []);
+
+  //  generate employee id
+  const [employeeId, setEmployeeId] = useState([]);
+  const [empId, setEmpId] = useState("");
+  const [counter, setCounter] = useState(1);
+
+  const fetchEmployeeId = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/get/employee-code/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setEmployeeId(response.data.getEmployeeCode);
+      // Assuming there's only one prefix in the response
+      const fetchedPrefix = response.data.getEmployeeCode[0]?.code || "";
+      setEmpId(generateEmployeeId(fetchedPrefix, counter));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const generateEmployeeId = (prefix, count) => {
+    return `${prefix}${count}`;
+  };
+
+  const handleEmpIdChange = (e) => {
+    setEmpId(e.target.value);
+  };
+
+  const incrementCounter = () => {
+    setCounter((prevCounter) => prevCounter + 1);
+    setEmpId(generateEmployeeId(employeeId[0]?.code || "", counter + 1));
+  };
+
+  useEffect(() => {
+    fetchEmployeeId();
+    // eslint-disable-next-line
+  }, []);
 
   const [profile, setProfile] = React.useState([]);
   const handleChange = (event) => {
@@ -438,12 +498,6 @@ const EmployeeAdd = () => {
       [name]: value,
     });
   };
-
-  const shiftAllocation = [
-    { shiftId: 1, shiftName: "Morning Shift" },
-    { shiftId: 2, shiftName: "Afternoon Shift" },
-    { shiftId: 3, shiftName: "Night Shift" },
-  ];
 
   const toggleFields = () => {
     setShowFields((prev) => !prev);
@@ -816,25 +870,24 @@ const EmployeeAdd = () => {
                   </FormControl>
                 </div>
               </div>
+              <div className="w-full">
+                <FormControl sx={{ width: 625 }}>
+                  <TextField
+                    size="small"
+                    type="number"
+                    label="Phone Number"
+                    name="phone_number"
+                    id="phone_number"
+                    value={phone_number}
+                    onChange={handlePhoneNumberChange}
+                    fullWidth
+                    margin="normal"
+                    required
+                  />
+                </FormControl>
+              </div>
 
               <div className="flex items-center gap-14">
-                <div className="w-full">
-                  <FormControl sx={{ width: 280 }}>
-                    <TextField
-                      size="small"
-                      type="number"
-                      label="Phone Number"
-                      name="phone_number"
-                      id="phone_number"
-                      value={phone_number}
-                      onChange={handlePhoneNumberChange}
-                      fullWidth
-                      margin="normal"
-                      required
-                    />
-                  </FormControl>
-                </div>
-
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
@@ -844,12 +897,29 @@ const EmployeeAdd = () => {
                       name="Emp Id"
                       id="empId"
                       value={empId}
-                      onChange={(e) => setEmpId(e.target.value)}
+                      onChange={handleEmpIdChange}
                       fullWidth
                       margin="normal"
                       required
                     />
                   </FormControl>
+                </div>
+                <div sx={{ width: 280 }}>
+                  <button
+                    onClick={incrementCounter}
+                    style={{
+                      width: 200,
+                      marginRight: "100px",
+                      padding: "5px",
+                      backgroundColor: "#4CAF50", // Green color
+                      color: "white",
+                      border: "none",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Generate Next Employee ID
+                  </button>
                 </div>
               </div>
               <div className="flex items-center gap-14">
@@ -1170,11 +1240,12 @@ const EmployeeAdd = () => {
                       <MenuItem value="" disabled>
                         Shift Allocation
                       </MenuItem>
-                      {shiftAllocation?.map((shift) => (
-                        <MenuItem key={shift.shiftId} value={shift.shiftName}>
-                          {shift.shiftName}
-                        </MenuItem>
-                      ))}
+                      {Array.isArray(availaleShiftAllocation) &&
+                        availaleShiftAllocation?.map((shift) => (
+                          <MenuItem key={shift?._id} value={shift?.shiftName}>
+                            {shift?.shiftName}
+                          </MenuItem>
+                        ))}
                     </Select>
                   </FormControl>
                 </div>
