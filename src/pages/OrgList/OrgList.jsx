@@ -11,52 +11,46 @@ const OrgList = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
 
-  const { data, isLoading } = useQuery(["orgData"], async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/organization/get`,
-      {
-        headers: {
-          Authorization: authToken,
-        },
-      }
-    );
-    return response.data;
+  const { data, isLoading } = useQuery("orglist", async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/get`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error; // Rethrow the error to be caught by React Query
+    }
   });
 
   return (
     <div className="bg-gray-50 h-screen">
-      <div className="p-10  !pb-6">
+      <div className="md:p-10  sm:p-4 p-1 py-4  !pb-6">
         <div className="flex justify-between items-center">
-          {/* <div>
-            <div className="flex items-center justify-center gap-2 ">
-              <Avatar
-                className="!bg-blue-500  h-[100px] text-4xl p-1 shadow-sm"
-                variant="rounded"
-                sx={{ width: "46", height: "46" }}
-              >
-                <IoBusiness />
-              </Avatar>
-              <h1 className="!text-[1.7rem] font-semibold text-black"></h1>
-            </div>
-            <p className="text-gray-600"></p>
-          </div> */}
-
           <div className="flex items-center gap-3">
             <Avatar
-              className="!bg-blue-500  h-[100px] text-4xl p-1 shadow-sm"
+              className="!bg-blue-500 !h-[40px] md:h-[100] text-xl md:text-4xl p-1 shadow-sm"
               variant="rounded"
-              sx={{ width: "46", height: "46" }}
             >
               <IoBusiness />
             </Avatar>
             <div>
-              <h1 className="text-2xl font-semibold">Organisations</h1>
-              <p>Select and manage your oragnization</p>
+              <h1 className="md:text-2xl text-xl font-semibold">
+                Organisations
+              </h1>
+              <p className="md:text-lg text-sm ">
+                Select and manage your oragnization
+              </p>
             </div>
           </div>
 
           <Link to={"/add-organisation"}>
-            <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-[.3rem] text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
+            <button className=" flex  group justify-center gap-2 items-center rounded-md md:px-6 md:py-[.3rem] text-xs p-2  md:text-sm text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
               Add Organization
             </button>
           </Link>
@@ -64,7 +58,7 @@ const OrgList = () => {
       </div>
 
       {!isLoading && (
-        <div className="flex flex-wrap  gap-x-6 gap-y-2 px-10">
+        <div className="flex flex-wrap sm:justify-start justify-center  gap-x-6 gap-y-2 sm:px-10">
           {data?.organizations?.length <= 0 ? (
             <div
               className={`border-b-[3px]  block min-w-[21rem] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-200`}

@@ -100,7 +100,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: (
               <CircleNotifications className=" !text-[1.2em] text-[#67748E]" />
             ),
-            text: "List Notification",
+            text: "Notifications",
           },
         ],
       },
@@ -153,7 +153,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             }),
             link: `/organisation/${orgId}/salary-management`,
             icon: <Event className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Create Salary",
+            text: "Salary Management",
           },
         ],
       },
@@ -200,7 +200,7 @@ const TestNavItems = ({ toggleDrawer }) => {
         open: false,
         isVisible:
           window.location.pathname.includes("organisation") &&
-          user.profile.includes("Super-Admin", "Hr", "Manager"),
+          user?.profile?.includes("Super-Admin", "Hr", "Manager"),
         // : false
         icon: <Business className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
@@ -247,51 +247,49 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
-      // Organisation: {
-      //   open: false,
-      //   isVisible:
-      //     window.location.pathname.includes("organisation") &&
-      //     user.profile.includes("Super-Admin", "Hr"),
-      //   icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
-      //   routes: [
-      //     {
-      //       key: "addOrganisation",
-      //       isVisible: ["Super-Admin"].some((item) => {
-      //         return user?.profile?.includes(item);
-      //       }),
-      //       link: "/add-organisation",
-      //       icon: <AddAlert className=" !text-[1.2em] text-[#67748E]" />,
-      //       text: "Add Organisation",
-      //     },
-      //     {
-      //       key: "updateOrganisation",
-      //       isVisible: ["Super-Admin"].some((item) => {
-      //         return user?.profile?.includes(item);
-      //       }),
-      //       link: "/organisation-update",
-      //       icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
-      //       text: "Update Organisation",
-      //     },
-      //     {
-      //       key: "deleteOrganisation",
-      //       isVisible: ["Super-Admin"].some((item) => {
-      //         return user?.profile?.includes(item);
-      //       }),
-      //       link: "/organisation-delete",
-      //       icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
-      //       text: "Delete Organisation",
-      //     },
-      //     {
-      //       key: "organisationList",
-      //       isVisible: ["Super-Admin"].some((item) => {
-      //         return user?.profile?.includes(item);
-      //       }),
-      //       link: "/department-list",
-      //       icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
-      //       text: "Organisation List",
-      //     },
-      //   ],
-      // },
+      Organisation: {
+        open: false,
+        isVisible: user?.profile?.includes("Super-Admin", "Hr"),
+        icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
+        routes: [
+          {
+            key: "addOrganisation",
+            isVisible: ["Super-Admin"].some((item) => {
+              return user?.profile?.includes(item);
+            }),
+            link: "/add-organisation",
+            icon: <AddAlert className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Add Organisation",
+          },
+          // {
+          //   key: "updateOrganisation",
+          //   isVisible: ["Super-Admin"].some((item) => {
+          //     return user?.profile?.includes(item);
+          //   }),
+          //   link: "/organisation-update",
+          //   icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
+          //   text: "Update Organisation",
+          // },
+          // {
+          //   key: "deleteOrganisation",
+          //   isVisible: ["Super-Admin"].some((item) => {
+          //     return user?.profile?.includes(item);
+          //   }),
+          //   link: "/organisation-delete",
+          //   icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
+          //   text: "Delete Organisation",
+          // },
+          {
+            key: "organisationList",
+            isVisible: ["Super-Admin"].some((item) => {
+              return user?.profile?.includes(item);
+            }),
+            link: "/organizationList",
+            icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Organisation List",
+          },
+        ],
+      },
     }),
     // eslint-disable-next-line
     [isVisible, orgId]
@@ -307,7 +305,7 @@ const TestNavItems = ({ toggleDrawer }) => {
         const newToken = jwtDecode(token);
 
         setDecodedToken(newToken);
-        if (decodedToken && decodedToken.user.profile) {
+        if (decodedToken && decodedToken?.user?.profile) {
         }
       }
     } catch (error) {

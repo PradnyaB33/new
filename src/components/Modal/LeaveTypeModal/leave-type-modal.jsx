@@ -159,7 +159,7 @@ const LeaveTypeModal = ({ handleClose, open, id, leaveType }) => {
               />
             </FormControl>
             <Button disabled={isFormClean} type="submit" variant="contained">
-              Apply for changes
+              Apply changes
             </Button>
           </Stack>
         </form>

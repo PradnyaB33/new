@@ -8,6 +8,7 @@ import {
   DialogTitle,
   IconButton,
   TextField,
+  Container,
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -60,7 +61,6 @@ const DeleteEmployee = () => {
       setNumbers(numbersArray);
     } catch (error) {
       console.log(error);
-      handleAlert(true, "error", "Failed to Fetch Employee");
     }
   };
 
@@ -344,15 +344,13 @@ const DeleteEmployee = () => {
 
   return (
     <>
-      <section className="bg-gray-50 min-h-screen w-full">
-        <article className="SetupSection bg-white w-full  h-max shadow-md rounded-sm border  items-center">
-          <h1
-            id="modal-modal-title"
-            className="text-lg pl-2 font-semibold text-center modal-title py-2"
-          >
+      <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
+        <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
+          <h1 className="text-lg pl-2 font-semibold text-center modal-title py-2">
             Delete Employee
           </h1>
-          <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
+
+          <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center  gap-3 ">
               <TextField
                 onChange={(e) => setNameSearch(e.target.value)}
@@ -380,7 +378,7 @@ const DeleteEmployee = () => {
                 sx={{ width: 300 }}
               />
             </div>
-            <div>
+            <div className="flex items-center gap-3 mb-3 md:mb-0">
               <Tooltip
                 title={
                   <span>
@@ -445,22 +443,24 @@ const DeleteEmployee = () => {
               </Menu>
             </div>
 
-            <Tooltip title="Check at least one checkbox to delete" arrow>
-              <div>
-                <Button
-                  className="!font-semibold !bg-sky-500 flex items-center gap-2"
-                  variant="contained"
-                  onClick={handleDeleteMultiple}
-                >
-                  Delete
-                </Button>
-              </div>
-            </Tooltip>
+            <div className="flex items-center gap-3">
+              <Tooltip title="Check at least one checkbox to delete" arrow>
+                <div>
+                  <Button
+                    className="!font-semibold !bg-sky-500 flex items-center gap-2"
+                    variant="contained"
+                    onClick={handleDeleteMultiple}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </Tooltip>
+            </div>
           </div>
 
-          <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
-            <table className="min-w-full bg-white  text-left !text-sm font-light">
-              <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
+          <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
+            <table className="min-w-full bg-white text-left !text-sm font-light">
+              <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                 <tr className="!font-semibold">
                   <th scope="col" className="!text-left pl-8 py-3">
                     Employee Selection
@@ -486,8 +486,7 @@ const DeleteEmployee = () => {
                   <th scope="col" className="!text-left pl-8 py-3">
                     Phone Number
                   </th>
-
-                  <th scope="col" className="px-6 py-3 ">
+                  <th scope="col" className="px-6 py-3">
                     Actions
                   </th>
                 </tr>
@@ -497,21 +496,27 @@ const DeleteEmployee = () => {
                   .filter((item) => {
                     return (
                       (!nameSearch.toLowerCase() ||
-                        (item.first_name &&
+                        (item.first_name !== null &&
+                          item.first_name !== undefined &&
                           item.first_name
                             .toLowerCase()
                             .includes(nameSearch))) &&
                       (!deptSearch ||
-                        (item.deptname &&
-                          item.deptname.some((dept) =>
-                            dept.departmentName
-                              .toLowerCase()
-                              .includes(deptSearch.toLowerCase())
+                        (item.deptname !== null &&
+                          item.deptname !== undefined &&
+                          item.deptname.some(
+                            (dept) =>
+                              dept.departmentName !== null &&
+                              dept.departmentName
+                                .toLowerCase()
+                                .includes(deptSearch.toLowerCase())
                           ))) &&
                       (!locationSearch.toLowerCase() ||
                         item.worklocation.some(
                           (location) =>
-                            location.city &&
+                            location &&
+                            location.city !== null &&
+                            location.city !== undefined &&
                             location.city.toLowerCase().includes(locationSearch)
                         ))
                     );
@@ -520,17 +525,17 @@ const DeleteEmployee = () => {
                     <tr className="!font-medium border-b" key={id}>
                       <td className="!text-left pl-8 py-3">
                         <Checkbox
-                          checked={selectedEmployees.indexOf(item._id) !== -1}
-                          onChange={() => handleEmployeeSelection(item._id)}
+                          checked={selectedEmployees.indexOf(item?._id) !== -1}
+                          onChange={() => handleEmployeeSelection(item?._id)}
                         />
                       </td>
                       <td className="!text-left pl-8 py-3">{id + 1}</td>
-                      <td className="py-3">{item.first_name}</td>
-                      <td className="py-3">{item.last_name}</td>
-                      <td className="py-3">{item.email}</td>
+                      <td className="py-3">{item?.first_name}</td>
+                      <td className="py-3">{item?.last_name}</td>
+                      <td className="py-3">{item?.email}</td>
                       <td className="py-3">
                         {item?.worklocation?.map((location, index) => (
-                          <span key={index}>{location.city}</span>
+                          <span key={index}>{location?.city}</span>
                         ))}
                       </td>
                       <td className="py-3">
@@ -540,10 +545,10 @@ const DeleteEmployee = () => {
                           );
                         })}
                       </td>
-                      <td className="py-3">{item.phone_number}</td>
+                      <td className="py-3">{item?.phone_number}</td>
                       <td className="whitespace-nowrap px-6 py-2">
                         <IconButton
-                          onClick={() => handleDeleteConfirmation(item._id)}
+                          onClick={() => handleDeleteConfirmation(item?._id)}
                         >
                           <Delete className="!text-xl" color="error" />
                         </IconButton>
@@ -634,7 +639,7 @@ const DeleteEmployee = () => {
             </nav>
           </div>
         </article>
-      </section>
+      </Container>
 
       {/* this dialogue for deleting single employee */}
       <Dialog

@@ -1,25 +1,26 @@
 import React from "react";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 // Components
+import SetupSideNav from "./components/SideNav/SetupSideNav";
 import AnimationComponent from "./components/emailverify/verification-animation";
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
 import UserProfile from "./hooks/UserData/useUser";
-import AddEmployee from "./pages/AddEmployee/addemployee";
-import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
+import AddOrganisation from "./pages/AddOrganisation/ADDORGANIZATION";
 import NewOranisationForm from "./pages/AddOrganisation/NewOrgForm";
 import Application from "./pages/Application/Application";
-import DashBoardHR from "./pages/DashBoard/HR/DashBoardHR";
-import DashboardManger from "./pages/DashBoard/Manager/DashboardManger";
-import Dashboard from "./pages/DashBoard/employee/Dashboard";
-import SuperAdmin from "./pages/DashBoard/superAdmin/SuperAdmin";
-import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
+import DashBoardHR from "./pages/DashBoard/DashBoardHR";
+import Dashboard from "./pages/DashBoard/Dashboard";
+import DashboardManger from "./pages/DashBoard/DashboardManger";
+import SuperAdmin from "./pages/DashBoard/SuperAdmin";
 import AddDepartments from "./pages/Departments/AddDepartments";
 import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
-import EmployeeList from "./pages/EmployeeList/EmployeeList";
+import DeleteEmployee from "./pages/Employee/DeleteEmployee";
+import EmployeeList from "./pages/Employee/EmployeeList";
+import EmployeeAdd from "./pages/Employee/addemploye";
 import Home from "./pages/Home/Home";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
@@ -44,6 +45,7 @@ import ShiftManagement from "./pages/SetupPage/ShiftManagement/shiftAllowance";
 import Shifts from "./pages/SetupPage/Shifts";
 import WeekendHoliday from "./pages/SetupPage/WeekendHoliday";
 import Inputfield from "./pages/SetupPage/inputfield";
+import RolePage from "./pages/SignIn/RolePage";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 import EditablePolyline from "./pages/Test/test2";
@@ -56,10 +58,20 @@ import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
+import NotFound from "./utils/Forbidden/NotFound";
+import UnAuthorized from "./utils/Forbidden/UnAuthorized";
+
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route
+        path="/"
+        element={
+          <RequireAuth permission={"Super-Admin"}>
+            <Home />
+          </RequireAuth>
+        }
+      />
       <Route path="/test" element={<EditablePolyline />} />
       <Route path="/testOrg" element={<NewOranisationForm />} />
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
@@ -69,38 +81,51 @@ const App = () => {
       <Route path="/test6" element={<TrackingMap3 />} />
       {/* Login Routes */}
       <Route path="/sign-in" element={<SignIn />} />
+      <Route path="/choose-role" element={<RolePage />} />
       <Route path="/sign-up" element={<Signup />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/waiting" element={<WaitMain />} />
       <Route path="/verify/:token/" element={<AnimationComponent />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       {/* Login Routes */}
+
+      {/* //TODO Setup Sidebar */}
+      <Route
+        path="/organisation/:organisationId/setup"
+        element={
+          <RequireAuth permission={"Super-Admin"}>
+            <SetupSideNav />
+          </RequireAuth>
+        }
+      />
+      {/* //TODO Setup Sidenar */}
+
       {/* Dashboard Routes */}
       <Route
         path="/organisation/dashboard/employee-dashboard"
         element={
-          // <RequireAuth permission={"Employee"}>
-          <Dashboard />
-          // </RequireAuth>
+          <RequireAuth permission={"Employee"}>
+            <Dashboard />
+          </RequireAuth>
         }
       />
       <Route
-        path="/organisation/dashboard/HR-dashboard"
+        path="/organisation/:organisationId/dashboard/HR-dashboard"
         element={
           <RequireAuth permission={"Hr"}>
             <DashBoardHR />
           </RequireAuth>
         }
       />
+
       <Route
-        path="/organisation/dashboard/manager-dashboard"
+        path="/organisation/:organisationId/dashboard/manager-dashboard"
         element={
           <RequireAuth permission={"Manager"}>
             <DashboardManger />
           </RequireAuth>
         }
       />
-
       <Route
         path="/organisation/:organisationId/dashboard/super-admin"
         element={
@@ -131,7 +156,7 @@ const App = () => {
       <Route path="/employee-profile" element={<EmployeeProfile />} />
       <Route
         path="/organisation/:organisationId/employee-onboarding"
-        element={<AddEmployee />}
+        element={<EmployeeAdd />}
       />
       <Route
         path="/organisation/:organisationId/employee-offboarding"
@@ -141,7 +166,6 @@ const App = () => {
         path="/organisation/:organisationId/employee-list"
         element={<EmployeeList />}
       />
-
       <Route
         path="/organisation/:organisationId/setup/input-field"
         element={<Inputfield />}
@@ -198,7 +222,10 @@ const App = () => {
         path="/organisation/:organisationId/setup/set-employement-types"
         element={<EmployementTypes />}
       />
-
+      <Route
+        path="/organisation/:organisationId/setup/set-employee-code-generator"
+        element={<EmployeeCodeGenerator />}
+      />
       <Route
         path="/organisation/:organisationId/setup/add-organization-locations"
         element={<OrganizationLocations />}
@@ -210,10 +237,7 @@ const App = () => {
       <Route path="/setup/:organisationId" element={<Setup />} />
       <Route path="/set-designation" element={<Designation />} />
       <Route path="/add-inputfield/:id" element={<Inputfield />} />
-      <Route
-        path="/setup/employee-code-genreation/:id"
-        element={<EmployeeCodeGenerator />}
-      />
+
       <Route path="/setup/:id/public-holidays" element={<PublicHoliday />} />
       <Route
         path="/organisation/:organisationId/setup/set-email"
@@ -227,7 +251,6 @@ const App = () => {
       <Route path="/application" element={<Application />} />
       <Route path="/leave" element={<LeaveRequisition />} />
       <Route path="/shift-management" element={<ShiftManagement />} />
-
       <Route
         path="/organisation/:id/department/:departmentId"
         element={<SingleDepartment />}
@@ -237,6 +260,7 @@ const App = () => {
         path="/del-department-by-location"
         element={<DeleteDepartment />}
       />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
@@ -244,23 +268,29 @@ const App = () => {
 export default App;
 
 function RequireAuth({ children, permission }) {
-  const { getCurrentUser } = UserProfile();
-  const navigate = useNavigate("");
-  const user = getCurrentUser();
-  const isPermission = user?.profile?.includes(permission);
+  const { getCurrentUser, getCurrentRole } = UserProfile();
 
-  if (!user || !window.location.pathname.includes("sign-in", "sign-up")) {
-    <Navigate to={"/sign-in"} />;
-    if (!permission) return children;
+  const user = getCurrentUser();
+  const role = getCurrentRole();
+  const isPermission = role === permission;
+
+  if (user && !role) {
+    return <Navigate to={"/choose-role"} />;
   }
 
-  return user && isPermission ? children : navigate("/");
+  if (role || !window.location.pathname.includes("sign-in", "sign-up")) {
+    if (!role) return <Navigate to={"/sign-in"} />;
+    if (user && isPermission) return children;
+    return <UnAuthorized />;
+  }
 
-  //   : user?.profile?.length < 2 ? (
-  //   <Navigate to={"/organisation/employee-dashboard"} />
-  // ) : user?.profile?.includes("Hr") ? (
-  //   <Navigate to={"/organisation/HR-dashboard"} />
-  // ) : (
-  //   <Navigate to={"/organisation/employee-dashboard"} />
-  // );
+  return user && isPermission ? children : <Navigate to={"/"} />;
 }
+
+//   : user?.profile?.length < 2 ? (
+//   <Navigate to={"/organisation/employee-dashboard"} />
+// ) : user?.profile?.includes("Hr") ? (
+//   <Navigate to={"/organisation/HR-dashboard"} />
+// ) : (
+//   <Navigate to={"/organisation/employee-dashboard"} />
+// );

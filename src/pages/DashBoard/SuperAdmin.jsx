@@ -1,35 +1,36 @@
 import {
   AccessTimeSharp,
+  Business,
   Dashboard,
-  ErrorOutline,
   FilterAltOff,
   Groups,
   LocationOn,
+  West,
 } from "@mui/icons-material";
-import { default as React } from "react";
+import React from "react";
 import { useQueryClient } from "react-query";
+import { Link, useParams } from "react-router-dom";
 import Select from "react-select";
-import useDashboardFilter from "../../../hooks/Dashboard/useDashboardFilter";
-import useEmployee from "../../../hooks/Dashboard/useEmployee";
-import UserProfile from "../../../hooks/UserData/useUser";
-import LineGraph from "../Components/Bar/LineGraph";
-import AttendenceBar from "../Components/Bar/SuperAdmin/AttendenceBar";
-import SuperAdminCard from "../Components/Card/superadmin/SuperAdminCard";
-import SkeletonFilterSection from "../Components/Skeletons/SkeletonFilterSection";
+import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
+import useEmployee from "../../hooks/Dashboard/useEmployee";
+import LineGraph from "./Components/Bar/LineGraph";
+import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
+import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
+import SkeletonFilterSection from "./Components/Skeletons/SkeletonFilterSection";
 
-const DashBoardHR = () => {
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
-  const { employee, employeeLoading } = useEmployee(user.organizationId);
-
+const SuperAdmin = () => {
+  const { organisationId } = useParams();
   const queryClient = useQueryClient();
-
   // custom hooks
-
+  const { employee, employeeLoading } = useEmployee(organisationId);
   const {
+    Department,
+    departmentLoading,
     Managers,
     managerLoading,
+    location,
     oraganizationLoading,
+    locationLoading,
     locationOptions,
     managerOptions,
     Departmentoptions,
@@ -42,20 +43,40 @@ const DashBoardHR = () => {
     department,
     setDepartment,
     salaryData,
-    absentEmployee,
-  } = useDashboardFilter(user.organizationId);
+  } = useDashboardFilter(organisationId);
+
+  //? Salary Graph Data
 
   return (
     <section className=" bg-gray-50  min-h-screen w-full ">
-      <header className="text-xl w-full px-8 pt-6 bg-white shadow-md   p-4">
-        HR Dashboard
+      <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
+        {/* <BackComponent /> */}
+        <Link to={"/organizationList"}>
+          <West className="mx-4 !text-xl" />
+        </Link>
+        Organization Overview
       </header>
-      <div className="px-8 w-full">
-        <div className="flex flex-1 mt-6 flex-wrap w-full justify-between gap-5 md:gap-2">
+      {/* <Link to={"/organizationList"} className="my-4 px-8 flex gap-1">
+        <KeyboardBackspace />
+        <h1>Go back</h1>
+      </Link> */}
+      {/* <div className="bg-white pt-10 pb-4 border-b-[.5px] border-gray-300">
+        <div className="flex  px-8    items-center !text-[#152745] gap-1"></div>
+      </div> */}
+
+      <div className=" px-8 w-full">
+        <div className="flex mt-6 w-full justify-between gap-5">
+          <SuperAdminCard
+            icon={Business}
+            color={"!bg-red-500"}
+            data={Department?.departmentCount}
+            isLoading={departmentLoading}
+            title={"Departments"}
+          />
           <SuperAdminCard
             icon={Groups}
-            color={"!bg-blue-500"}
             data={employee?.totalEmployees}
+            color={"!bg-blue-500"}
             isLoading={employeeLoading}
             title={"Overall Employees"}
           />
@@ -67,20 +88,14 @@ const DashBoardHR = () => {
             title={"People's Manager"}
           />
           <SuperAdminCard
-            title={"Employees on leave"}
-            icon={ErrorOutline}
-            color={"!bg-red-500"}
-            data={absentEmployee}
-            isLoading={false}
-          />
-          <SuperAdminCard
             color={"!bg-orange-500"}
-            isLoading={false}
+            isLoading={locationLoading}
             icon={LocationOn}
-            data={14}
-            title={"Special Shift"}
+            data={location?.locationCount}
+            title={"Locations"}
           />
         </div>
+
         {oraganizationLoading ? (
           <SkeletonFilterSection />
         ) : (
@@ -186,4 +201,4 @@ const DashBoardHR = () => {
   );
 };
 
-export default DashBoardHR;
+export default SuperAdmin;

@@ -116,7 +116,7 @@ const Organisation = ({ item }) => {
       );
       console.log(`🚀 ~ file: Organisation.jsx:63 ~ response:`, response);
       handleAlert(true, "success", "Organization deleted successfully");
-      queryClient.invalidateQueries(["orgData"]);
+      queryClient.invalidateQueries("orgData");
       // Reload the window to reflect the updated data
       window.location.reload();
     } catch (error) {
@@ -171,7 +171,7 @@ const Organisation = ({ item }) => {
       );
 
       handleAlert(true, "success", "Organization updated successfully");
-      queryClient.invalidateQueries(["orgData"]);
+      queryClient.invalidateQueries("orgData");
       // Close the dialog
       handleCloseConfirmation();
     } catch (error) {
@@ -225,7 +225,13 @@ const Organisation = ({ item }) => {
           <p className="text-md ">{item.description}</p>
         </div>
         <div className="p-6 py-4  flex gap-4">
-          <Link to={`/organisation/${item._id}/setup/add-roles`}>
+          <Link
+            to={
+              window.innerWidth <= 768
+                ? `/organisation/${item._id}/setup`
+                : `/organisation/${item._id}/setup/add-roles`
+            }
+          >
             <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
               Setup
             </button>

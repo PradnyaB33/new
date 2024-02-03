@@ -14,6 +14,7 @@ const AuthInputFiled = ({
   errors,
   error,
   control,
+  maxLimit,
   readOnly = false,
   placeholder,
   options,
@@ -240,12 +241,12 @@ const AuthInputFiled = ({
     );
   }
   return (
-    <div className="space-y-1 w-full ">
+    <div className="space-y-1 ">
       <label
         htmlFor={name}
         className={`${
           error && "text-red-500"
-        } font-semibold text-gray-500 text-md`}
+        } font-semibold text-gray-500 text-sm md:text-md`}
       >
         {label}
       </label>
@@ -258,11 +259,14 @@ const AuthInputFiled = ({
             <div
               className={`${
                 readOnly && "bg-[ghostwhite]"
-              } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px]`}
+              } flex rounded-md items-center px-2 border-gray-200 border-[.5px] bg-white py-1 md:py-[6px]`}
             >
-              <Icon className="text-gray-700" />
+              {Icon && (
+                <Icon className="text-gray-700 md:text-lg !text-[1em]" />
+              )}
               <input
                 type={type}
+                maxLength={maxLimit && maxLimit}
                 readOnly={readOnly}
                 placeholder={placeholder}
                 className={`${
@@ -275,12 +279,14 @@ const AuthInputFiled = ({
           </>
         )}
       />
-      <div className="h-4 !mb-1">
+      <div className="h-4 w-[200px]  !z-50   !mb-1">
         <ErrorMessage
           errors={errors}
           name={name}
           render={({ message }) => (
-            <p className="text-sm text-red-500">{message}</p>
+            <p className="text-sm mb-4 relative !bg-white  text-red-500">
+              {message}
+            </p>
           )}
         />
       </div>

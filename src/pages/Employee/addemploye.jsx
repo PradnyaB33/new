@@ -15,7 +15,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Select from "@mui/material/Select";
-import Tooltip from "@mui/material/Tooltip";
+import { Typography } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -40,12 +40,33 @@ const MenuProps = {
     },
   },
 };
-const AddEmployee = () => {
+const EmployeeAdd = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { organisationId } = useParams();
   const [userId, setUserId] = useState(null);
+  const [empId, setEmpId] = useState(null);
+  const [showFields, setShowFields] = useState(false);
+  const [ageError, setAgeError] = useState(false);
+  const handleDatePickerChange = (newDate) => {
+    const formattedDate = dayjs(newDate).format("YYYY-MM-DD");
+    setDateOfBirth(formattedDate);
+
+    // Check age
+    const age = calculateAge(newDate);
+    if (age < 18) {
+      setAgeError(true);
+    } else {
+      setAgeError(false);
+    }
+  };
+
+  const calculateAge = (birthdate) => {
+    const today = dayjs();
+    const birthDate = dayjs(birthdate);
+    return today.diff(birthDate, "year");
+  };
 
   useEffect(() => {
     try {
@@ -143,8 +164,11 @@ const AddEmployee = () => {
     }
   };
 
-  const staticTitle =
-    "This form is used to add relavant information of employee ";
+  const handlePhoneNumberChange = (e) => {
+    const inputValue = e.target.value;
+    const sanitizedInput = inputValue.replace(/\D/g, "").slice(0, 10);
+    setPhoneNumber(sanitizedInput);
+  };
 
   const handleEmploymentTypeChange = (event) => {
     setEmploymentType(event.target.value);
@@ -267,6 +291,7 @@ const AddEmployee = () => {
     fetchAvailabeDepartment();
     // eslint-disable-next-line
   }, []);
+  console.log(availableDepartment);
 
   const [profile, setProfile] = React.useState([]);
   const handleChange = (event) => {
@@ -390,6 +415,9 @@ const AddEmployee = () => {
       [name]: value,
     });
   };
+  const toggleFields = () => {
+    setShowFields((prev) => !prev);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -413,6 +441,7 @@ const AddEmployee = () => {
         gender,
         salarystructure,
         profile,
+        empId,
         bank_account_no,
         ...dynamicFields,
         organizationId: organisationId,
@@ -528,22 +557,29 @@ const AddEmployee = () => {
       <div
         style={{
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
+          alignItems: "center",
           padding: "50px 0 0",
           boxSizing: "border-box",
         }}
         className="!min-h-screen"
       >
-        <div className="content-center  flex justify-center my-0 p-0 bg-[#F8F8F8]">
-          <div className="w-[700px] shadow-lg rounded-lg border py-3 px-8">
-            <div className="flex items-center justify-center gap-4">
-              <Tooltip title={`${staticTitle}`}>
-                <Button>Add Employee</Button>
-              </Tooltip>
-            </div>
+        <div className="content-center flex justify-center my-0 p-0">
+          <div className="w-full md:w-[700px] shadow-lg rounded-lg border py-3 px-8">
+            <Typography
+              sx={{
+                color: "#1D6EB7",
+                fontWeight: "600",
+                marginTop: "1rem",
+                textAlign: "center",
+              }}
+              variant="h4"
+            >
+              Add Employee
+            </Typography>
 
-            <form onSubmit={handleSubmit} className="flex flex-wrap gap-6">
-              <div className="flex items-center gap-20">
+            <form onSubmit={handleSubmit} className="gap-6">
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
@@ -620,7 +656,7 @@ const AddEmployee = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-20">
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
@@ -687,7 +723,7 @@ const AddEmployee = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-20">
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
@@ -711,6 +747,8 @@ const AddEmployee = () => {
                         inputProps: {
                           pattern: passwordRegex.source,
                         },
+                        onPaste: (e) => e.preventDefault(),
+                        onCopy: (e) => e.preventDefault(),
                       }}
                     />
                   </FormControl>
@@ -736,38 +774,43 @@ const AddEmployee = () => {
                           {confirmPasswordError}
                         </div>
                       }
+                      InputProps={{
+                        onPaste: (e) => e.preventDefault(),
+                        onCopy: (e) => e.preventDefault(),
+                      }}
                     />
                   </FormControl>
                 </div>
               </div>
 
-              <div className="flex items-center gap-20">
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
                       size="small"
-                      type="text"
-                      label="Citizenship status"
-                      name="citizenship"
-                      id="citizenship"
-                      value={citizenship}
-                      onChange={(e) => setCitizenShip(e.target.value)}
-                      fullWidth
-                      margin="normal"
-                      required
-                    />
-                  </FormControl>
-                </div>
-                <div className="w-full">
-                  <FormControl sx={{ width: 280 }}>
-                    <TextField
-                      size="small"
-                      type="text"
+                      type="number"
                       label="Phone Number"
                       name="phone_number"
                       id="phone_number"
                       value={phone_number}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      onChange={handlePhoneNumberChange}
+                      fullWidth
+                      margin="normal"
+                      required
+                    />
+                  </FormControl>
+                </div>
+
+                <div className="w-full">
+                  <FormControl sx={{ width: 280 }}>
+                    <TextField
+                      size="small"
+                      type="text"
+                      label="Emp Id"
+                      name="Emp Id"
+                      id="empId"
+                      value={empId}
+                      onChange={(e) => setEmpId(e.target.value)}
                       fullWidth
                       margin="normal"
                       required
@@ -776,7 +819,24 @@ const AddEmployee = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-20">
+              <div className="w-full">
+                <FormControl sx={{ width: 625 }}>
+                  <TextField
+                    size="small"
+                    type="text"
+                    label="Citizenship status"
+                    name="citizenship"
+                    id="citizenship"
+                    value={citizenship}
+                    onChange={(e) => setCitizenShip(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                    required
+                  />
+                </FormControl>
+              </div>
+
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <Select
@@ -836,9 +896,10 @@ const AddEmployee = () => {
                 required
                 fullWidth
                 margin="normal"
+                sx={{ width: 625 }}
               />
 
-              <div className="flex items-center gap-20">
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <InputLabel id="demo-multiple-checkbox-label">
@@ -923,7 +984,7 @@ const AddEmployee = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-20">
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }} required>
                     <Select
@@ -961,7 +1022,7 @@ const AddEmployee = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-20">
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <Select
@@ -1001,7 +1062,8 @@ const AddEmployee = () => {
                   </FormControl>
                 </div>
               </div>
-              <div className="flex items-center gap-20">
+
+              <div className="flex items-center gap-14">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -1013,10 +1075,15 @@ const AddEmployee = () => {
                         <DatePicker
                           label="Date of Birth"
                           value={date_of_birth}
-                          onChange={(newDate) => {
-                            const formattedDate =
-                              dayjs(newDate).format("YYYY-MM-DD");
-                            setDateOfBirth(formattedDate);
+                          onChange={handleDatePickerChange}
+                          onAccept={() => {
+                            // Check age again when the user accepts the date
+                            const age = calculateAge(date_of_birth);
+                            if (age < 18) {
+                              setAgeError(true);
+                            } else {
+                              setAgeError(false);
+                            }
                           }}
                           slotProps={{
                             textField: { size: "small", fullWidth: true },
@@ -1024,6 +1091,16 @@ const AddEmployee = () => {
                         />
                       </DemoContainer>
                     </LocalizationProvider>
+
+                    {ageError && (
+                      <Typography
+                        variant="caption"
+                        color="error"
+                        style={{ height: "5px", width: "280px" }}
+                      >
+                        Age must be 18 or above.
+                      </Typography>
+                    )}
                   </FormControl>
                 </div>
 
@@ -1052,28 +1129,40 @@ const AddEmployee = () => {
                   </FormControl>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-8">
-                {availableInputField?.map((item) => (
-                  <TextField
-                    key={item._id}
-                    size="small"
-                    type={item.inputType}
-                    label={item.label}
-                    name={item.label}
-                    id={item.label}
-                    value={dynamicFields[item.label] || ""} // Set value from state
-                    onChange={(e) =>
-                      handleDynamicFieldChange(item.label, e.target.value)
-                    } // Update state on change
-                    fullWidth
-                    margin="normal"
-                    sx={{
-                      flexBasis: "45%",
-                      marginBottom: "16px",
-                      marginRight: "15px",
-                    }}
-                  />
-                ))}
+              <div>
+                {showFields && (
+                  <div className="flex flex-wrap gap-8">
+                    {availableInputField?.map((item) => (
+                      <TextField
+                        key={item._id}
+                        size="small"
+                        type={item.inputType}
+                        label={item.label}
+                        name={item.label}
+                        id={item.label}
+                        value={dynamicFields[item.label] || ""}
+                        onChange={(e) =>
+                          handleDynamicFieldChange(item.label, e.target.value)
+                        }
+                        fullWidth
+                        margin="normal"
+                        sx={{
+                          flexBasis: "45%", // Commenting out or reducing flexBasis
+                          marginBottom: "16px",
+                          marginRight: "15px",
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                <Button
+                  onClick={toggleFields}
+                  variant="outlined"
+                  sx={{ marginTop: "20px" }}
+                >
+                  {showFields ? "Read Less" : "Read More"}
+                </Button>
               </div>
 
               <div className="w-full">
@@ -1127,4 +1216,4 @@ const AddEmployee = () => {
   );
 };
 
-export default AddEmployee;
+export default EmployeeAdd;

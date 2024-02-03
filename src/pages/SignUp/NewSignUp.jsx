@@ -15,12 +15,13 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import TermsCondition from "../../components/termscondition/termsCondition";
+import UserProfile from "../../hooks/UserData/useUser";
 
 const SignIn = () => {
   const { handleAlert } = useContext(TestContext);
@@ -31,6 +32,17 @@ const SignIn = () => {
   const [time, setTime] = useState(1);
   const [isTimeVisible, setIsTimeVisible] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
+
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
+  const navigate = useNavigate("");
+
+  useEffect(() => {
+    if (user?._id) {
+      navigate(-1);
+    }
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     let interval;
@@ -55,14 +67,14 @@ const SignIn = () => {
     .object({
       first_name: z
         .string()
-        .min(2)
-        .max(30)
-        .regex(/^[a-zA-Z]+$/),
+        .min(2, { message: "Minimum 2 character " })
+        .max(15)
+        .regex(/^[a-zA-Z]+$/, { message: "only character allow" }),
 
       last_name: z
         .string()
         .min(2)
-        .max(30)
+        .max(15)
         .regex(/^[a-zA-Z]+$/),
       phone: z
         .string()
@@ -96,7 +108,6 @@ const SignIn = () => {
   });
 
   const number = watch("phone");
-  console.log("number", number?.length);
 
   const onSubmit = async (data) => {
     if (!isVerified) {
@@ -193,11 +204,11 @@ const SignIn = () => {
 
   return (
     <>
-      <section className="flex    w-full">
+      <section className="flex  w-full">
         {/* Left Section */}
-        <div className="w-[30%]  h-screen lg:flex hidden text-white flex-col items-center justify-center  relative">
-          <div className="bg__gradient absolute inset-0"></div>
-          <ul className="circles">
+        <div className="w-[30%] h-auto lg:flex hidden text-white flex-col items-center justify-center relative ">
+          <div className="bg__gradient  h-screen inset-0  "></div>
+          <ul className="circles h-screen inset-0  ">
             {[...Array(10)].map((_, index) => (
               <li key={index}></li>
             ))}
@@ -207,8 +218,8 @@ const SignIn = () => {
           </div>
         </div>
         {/* Right Section */}
-        <article className="lg:w-[70%]  py-4  h-max min-h-screen  bg-white  w-full md:block flex items-center flex-col justify-center">
-          <div className="flex w-full py-4 px-8  gap-4 items-center justify-center lg:justify-end">
+        <article className="lg:w-[70%]   h-max min-h-screen bg-white  w-full md:block flex items-center flex-col justify-center">
+          <div className="md:flex hidden  w-full py-4 px-8  gap-4 items-center justify-center lg:justify-end">
             <p>
               {location.pathname === "/sign-up"
                 ? "Already have an account?"
@@ -228,20 +239,25 @@ const SignIn = () => {
           <form
             onSubmit={handleSubmit(onSubmit)}
             autoComplete="off"
-            className="flex md:px-20 px-8 lg:w-max justify-center flex-col h-[80vh]"
+            className="flex md:px-20 my-10 !px-8 w-full md:w-max bg-white flex-col h-fit gap-1"
           >
-            <div className="flex space-x-4 mb-4 items-center">
-              <img src="/logo.svg" className="h-[45px]" alt="logo" />
+            <div className="flex md:space-x-4 space-x-2 mb-4 items-center">
+              <img
+                src="/logo.svg"
+                className="md:h-[45px] !h-[35px]"
+                alt="logo"
+              />
               <div className="flex flex-col space-y-1">
                 {/* <div className="mb-4"> */}
-                <h1 className="font-[600] text-3xl">
+                <h1 className="font-[600] text-2xl md:text-3xl">
                   Register for AEGIS Account
                 </h1>
-                <p className="text-lg">Enter your credentials below</p>
+                <p className="md:text-lg text-sm">
+                  Enter your credentials below
+                </p>
                 {/* </div> */}
               </div>
             </div>
-
             {/* <div className="flex space-x-4 items-center">
               <img src="/logo.svg" className="h-[45px]" alt="logo" />
               <div className="flex flex-col space-y-1">
@@ -251,8 +267,7 @@ const SignIn = () => {
                 <p className="text-lg">Enter your credentials below</p>
               </div>
             </div> */}
-
-            <div className="flex gap-2">
+            <div className="flex md:flex-row flex-col gap-2">
               {/* First Name */}
               <AuthInputFiled
                 name="first_name"
@@ -261,6 +276,7 @@ const SignIn = () => {
                 type="text"
                 placeholder="jhon"
                 label="First Name *"
+                maxLimit={10}
                 errors={errors}
                 error={errors.first_name}
               />
@@ -272,10 +288,10 @@ const SignIn = () => {
                 placeholder="xyz"
                 label="Middle Name"
                 errors={errors}
+                maxLimit={10}
                 error={errors.middle_name}
               />
             </div>
-
             {/* Last Name */}
             <AuthInputFiled
               name="last_name"
@@ -285,11 +301,11 @@ const SignIn = () => {
               label="Last Name *"
               placeholder="Doe"
               errors={errors}
+              maxLimit={10}
               error={errors.last_name}
             />
             {/* Phone Number */}
-
-            <div className="flex items-center gap-2">
+            <div className="flex  items-center gap-2">
               <AuthInputFiled
                 name="phone"
                 icon={Phone}
@@ -349,7 +365,7 @@ const SignIn = () => {
                     />
                   </div>
 
-                  <div className="h-4  !mb-1"></div>
+                  <div className="h-4  !mb-1 "></div>
                 </div>
 
                 <button
@@ -372,7 +388,7 @@ const SignIn = () => {
               error={errors.email}
             />
 
-            <div className="flex items-center gap-2">
+            <div className="flex md:flex-row flex-col gap-2">
               <AuthInputFiled
                 name="password"
                 icon={Lock}
@@ -396,10 +412,7 @@ const SignIn = () => {
               />
             </div>
 
-            <div className=" mb-1">
-              <TermsCondition />
-            </div>
-
+            <TermsCondition />
             {/* Signup Button */}
             <div className="flex gap-5 mt-2">
               <button
@@ -409,6 +422,16 @@ const SignIn = () => {
                 Register Account
               </button>
             </div>
+
+            <p className="flex md:hidden gap-2 my-2">
+              Aleady have an account?
+              <Link
+                to={location.pathname === "/sign-up" ? "/sign-in" : "/sign-up"}
+                className="hover:underline"
+              >
+                sign in
+              </Link>
+            </p>
           </form>
         </article>
       </section>

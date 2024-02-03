@@ -4,14 +4,13 @@ import Grid from "@mui/material/Grid";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+// import { PDFDownloadLink } from "@react-pdf/renderer";
 import axios from "axios";
 import dayjs from "dayjs";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import PDFDocument from "./SalaryPdfDocument";
 const SalaryCalculate = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -58,6 +57,8 @@ const SalaryCalculate = () => {
     fetchAvailableEmployee();
     // eslint-disable-next-line
   }, []);
+
+  console.log(availableEmployee);
 
   // pull holiday's count based on organization id
   const fetchHoliday = async () => {
@@ -345,11 +346,11 @@ const SalaryCalculate = () => {
     }
   };
 
-  const [employeeData, setEmployeeData] = useState(null); // Employee data state
+  // const [employeeData, setEmployeeData] = useState(null); // Employee data state
 
-  const handleGeneratePDF = () => {
-    setEmployeeData(availableEmployee);
-  };
+  // const handleGeneratePDF = () => {
+  //   setEmployeeData(availableEmployee);
+  // };
 
   return (
     <>
@@ -517,7 +518,9 @@ const SalaryCalculate = () => {
                             Department Name :
                           </td>
                           <td>
-                            {availableEmployee?.deptname[0]?.departmentName ||
+                            {(availableEmployee?.deptname &&
+                              availableEmployee.deptname.length > 0 &&
+                              availableEmployee.deptname[0]?.departmentName) ||
                               ""}
                           </td>
                         </tr>
@@ -916,7 +919,7 @@ const SalaryCalculate = () => {
                   margin: "20px",
                 }}
               >
-                <button
+                {/* <button
                   onClick={handleGeneratePDF}
                   style={{
                     padding: "8px 38px",
@@ -928,7 +931,7 @@ const SalaryCalculate = () => {
                   }}
                 >
                   Generate PDF
-                </button>
+                </button> */}
 
                 <button
                   onClick={saveSallaryDetail}
@@ -947,7 +950,7 @@ const SalaryCalculate = () => {
               </div>
 
               <div style={{ margin: "20px" }}>
-                {employeeData && (
+                {/* {employeeData && (
                   <PDFDownloadLink
                     document={
                       <PDFDocument
@@ -977,7 +980,7 @@ const SalaryCalculate = () => {
                       loading ? "Generating PDF..." : "Download PDF"
                     }
                   </PDFDownloadLink>
-                )}
+                )} */}
               </div>
             </div>
           </Paper>

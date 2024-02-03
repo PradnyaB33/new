@@ -23,11 +23,10 @@ function App() {
             <AppAlert />
             {/* change as per requirement currently removed css : -  mt-[60px] */}
             <div
-              className={`h-full ${
-                !isNavEnabled.some((value) => {
-                  return location.pathname.includes(value);
-                }) && "mt-[60px]"
-              } `}
+              className={`h-full ${!isNavEnabled.some((value) => {
+                return location.pathname.includes(value);
+              }) && "mt-[60px]"
+                } `}
             >
               <SwipeableTemporaryDrawer />
               <BackComponent />
