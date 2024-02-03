@@ -962,7 +962,7 @@ const EmployeeAdd = () => {
                   <TextField
                     size="small"
                     type="text"
-                    label="Citizenship status"
+                    label="Citizenship Status"
                     name="citizenship"
                     id="citizenship"
                     value={citizenship}
