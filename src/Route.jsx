@@ -25,6 +25,7 @@ import Home from "./pages/Home/Home";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
+import PaymentFailed from "./pages/Payment/page";
 import SalaryCalculate from "./pages/SalaryCalculate/SalaryCalculate";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeSalaryCalculateDay from "./pages/SetUpOrganization/EmoloyeeSalaryCalculate/EmployeeSalaryCalculate";
@@ -72,6 +73,8 @@ const App = () => {
           </RequireAuth>
         }
       />
+      <Route path="/paymentfailed" element={<PaymentFailed />} />
+
       <Route path="/test" element={<EditablePolyline />} />
       <Route path="/testOrg" element={<NewOranisationForm />} />
       {/* <Route path="/test" element={<EditablePolyline />} /> */}

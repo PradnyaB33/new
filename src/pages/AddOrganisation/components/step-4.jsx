@@ -84,7 +84,7 @@ const Step4 = () => {
         description: "Get Access to all premium keys",
         image: response.data.organisation.image,
         subscription_id: response.data.subscription_id, //This
-        callback_url: `${process.env.REACT_APP_API}/verification`,
+        callback_url: `${process.env.REACT_APP_API}/route/organization/verify/${response.data.organisation._id}`,
         prefill: {
           name: `${decodedToken.user.first_name} ${decodedToken.user.last_name}`, //your customer's name
           email: decodedToken.user.email,
