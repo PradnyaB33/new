@@ -29,15 +29,6 @@ const organizationSchema = z.object({
   description: z.string(),
   creator: z.string(),
   logo_url: z.any(),
-  // logo_url: z.object({
-  //   name: z.string({
-  //     required_error:
-  //       "Please upload a valid file type. (MP3/MP4, JPG, JPEG, PNG)",
-  //   }),
-  //   lastModified: z.number(),
-  //   size: z.number(),
-  //   type: z.string(),
-  // }),
   isTrial: z.boolean(),
 });
 const Step1 = ({ nextStep }) => {
