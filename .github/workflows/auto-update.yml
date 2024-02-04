@@ -17,7 +17,7 @@ jobs:
 
       - name: Switch to QA branch, pull changes from main
         run: |
-          git checkout qa-branch
+          git branch -M qa-branch
           git pull origin main
           git push origin qa-branch
   
