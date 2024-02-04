@@ -48,6 +48,7 @@ import Inputfield from "./pages/SetupPage/inputfield";
 import RolePage from "./pages/SignIn/RolePage";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
+import EmployeeTest from "./pages/Test/EmployeeTest";
 import EditablePolyline from "./pages/Test/test2";
 import TrackingMap from "./pages/Test/test3";
 import TrackingMap2 from "./pages/Test/testMap";
@@ -72,6 +73,7 @@ const App = () => {
           </RequireAuth>
         }
       />
+      <Route path="/organisation/employeeTest" element={<EmployeeTest />} />
       <Route path="/paymentfailed" element={<PaymentFailed />} />
 
       <Route path="/test" element={<EditablePolyline />} />

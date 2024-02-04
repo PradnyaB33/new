@@ -1,32 +1,86 @@
 // Header.tsx
-import { Button } from "@mui/material";
 import React from "react";
 
-const Header = ({ totalSteps, step, goToStep }) => {
+const Header = ({ totalSteps, step, goToStep, setper }) => {
   const stepLabels = Array.from({ length: totalSteps }, (_, index) =>
     (index + 1).toString()
   );
 
   return (
-    <div className="!w-full !flex !gap-[1px]">
-      {stepLabels.map((label, index) => (
-        <React.Fragment key={index}>
-          <Button
-            onClick={() => goToStep(index + 1)}
-            variant={step < index + 1 ? "outlined" : "contained"}
-            className="!rounded-full !flex-shrink-0 !w-16 !h-16"
-          >
-            {label}
-          </Button>
-          {index < totalSteps - 1 && (
-            <div
-              className={`!w-full !h-4 ${
-                step - 1 < index + 1 ? "!bg-[#91E0FA]" : "!bg-primary"
-              } !flex !m-auto !rounded-md`}
-            ></div>
-          )}
-        </React.Fragment>
-      ))}
+    <div className="!w-full !flex gap-1">
+      {setper?.length > 0 ? (
+        setper?.map((data, index) => (
+          <React.Fragment key={index}>
+            <div className="flex flex-col items-center">
+              <div
+                onClick={() => goToStep(index + 1)}
+                className={`cursor-pointer  flex items-center   gap-2 flex-col  border-gray-200 !text-xs rounded-full p-2 border-[.5px] first-letter:
+             ${step < index + 1 ? "!bg-white" : "!bg-primary"}
+            
+            `}
+              >
+                {data?.icon ? (
+                  <data.icon
+                    className={`  ${
+                      step < index + 1 ? "!text-black" : "!text-white"
+                    } !text-md  !font-thin `}
+                  />
+                ) : (
+                  <h1
+                    className={`  ${
+                      step < index + 1 ? "!text-black" : "!text-white"
+                    } !text-lg text-center !font-thin w-[24px]`}
+                  >
+                    {index + 1}
+                  </h1>
+                )}
+              </div>
+              <h1
+                className={`w-max  ${
+                  step < index + 1 ? "!text-black" : "!text-primary"
+                }`}
+              >
+                {data?.label}
+              </h1>
+            </div>
+
+            {index < totalSteps - 1 && (
+              <div
+                className={`!w-full !h-2 ${
+                  step - 1 < index + 1 ? "!bg-gray-200" : "!bg-primary"
+                } !flex m-auto  !rounded-md`}
+              ></div>
+            )}
+          </React.Fragment>
+        ))
+      ) : (
+        <>
+          {stepLabels.map((label, index) => (
+            <>
+              <div
+                onClick={() => goToStep(index + 1)}
+                className={`cursor-pointer justify-center  flex items-center p-6 text-lg !h-0 !w-0 gap-2 flex-col  border-gray-200 rounded-full  border-[.5px] first-letter:
+             ${
+               step < index + 1
+                 ? "!bg-white text-black"
+                 : "!bg-primary text-white"
+             }
+            
+            `}
+              >
+                {label}
+              </div>
+              {index < totalSteps - 1 && (
+                <div
+                  className={`!w-full !h-2 ${
+                    step - 1 < index + 1 ? "!bg-gray-200" : "!bg-primary"
+                  } !flex m-auto  !rounded-md`}
+                ></div>
+              )}
+            </>
+          ))}
+        </>
+      )}
     </div>
   );
 };
