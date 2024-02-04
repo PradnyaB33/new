@@ -34,28 +34,25 @@ jobs:
   #   name: 🚀 Release project
   #   runs-on: [qa-frontend-main]
   #   needs: build
-    # steps:
-    #   - name: Cleanup Workspace
-    #     uses: asilbek99/action-cleanup@v1.0
-            
-      # - name: Cleanup build folder
-      #   run: |
-      #     ls -la ./
-      #     rm -rf ./* || true
-      #     rm -rf ./.??* || true
-      #     ls -la ./
+  # steps:
+  #   - name: Cleanup Workspace
+  #     uses: asilbek99/action-cleanup@v1.0
 
-      # - name: 📥 Download artifact
-      #   uses: actions/download-artifact@v2
-      #   with:
-      #     name: static-site
+  # - name: Cleanup build folder
+  #   run: |
+  #     ls -la ./
+  #     rm -rf ./* || true
+  #     rm -rf ./.??* || true
+  #     ls -la ./
 
-      # - name: 🧪 Test artifact download
-      #   run: |
-      #     ls -R
+  # - name: 📥 Download artifact
+  #   uses: actions/download-artifact@v2
+  #   with:
+  #     name: static-site
 
-    
-          
+  # - name: 🧪 Test artifact download
+  #   run: |
+  #     ls -R
 
 # Advantages:
 # - ⚙️ Automation: Automates the build and deployment process whenever changes are pushed to the main branch.
