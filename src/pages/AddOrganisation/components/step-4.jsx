@@ -7,6 +7,8 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React from "react";
+import toast from "react-hot-toast";
+import { useMutation } from "react-query";
 import useOrg from "../../../State/Org/Org";
 import useGetUser from "../../../hooks/Token/useUser";
 import { convertCamelToTitle } from "./step-3";
@@ -14,24 +16,7 @@ import { convertCamelToTitle } from "./step-3";
 const Step4 = () => {
   const data = useOrg();
   const { authToken, decodedToken } = useGetUser();
-  console.log(`🚀 ~ file: step-4.jsx:17 ~ decodedToken:`, decodedToken.user);
-  console.log(
-    `🚀 ~ file: step-4.jsx:60 ~ handleFom.data.logo_url:`,
-    data.logo_url
-  );
-  console.log(`🚀 ~ file: step-4.jsx:14 ~ data:`, data);
-  const valueObject = {
-    memberCount: 40,
-    remotePunchingCount: 1000,
-    performanceManagementCount: 40,
-    analyticsAndReportingCount: 40,
-    skillMatricesCount: 40,
-  };
-  if (data.data === undefined) {
-    return "Please Select Plan And Package";
-  }
-
-  const handleFom = async () => {
+  const handleForm = async () => {
     const config = {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -41,6 +26,23 @@ const Step4 = () => {
 
     if (data.data === undefined) {
       return "Please Select Plan And Package";
+    }
+    if (
+      !data.logo_url ||
+      !data.orgName ||
+      !data.foundation_date ||
+      !data.web_url ||
+      !data.industry_type ||
+      !data.email ||
+      !data.isTrial ||
+      !data.location ||
+      !data.contact_number ||
+      !data.description ||
+      !data.creator
+    ) {
+      console.log("Please fill all mandatory field");
+      toast.error("please fill all mandatory  field");
+      throw new Error();
     }
 
     console.log(`🚀 ~ file: step-4.jsx:106 ~ data.logo_url:`, data.logo_url);
@@ -69,22 +71,27 @@ const Step4 = () => {
     formData.append("skillMatrices", data.skillMatrices);
     formData.append("data", JSON.stringify(data.data));
 
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API}/route/organization`,
-        formData,
-        config
-      );
-      console.log(`🚀 ~ file: step-4.jsx:77 ~ response:`, response.data);
+    const response = await axios.post(
+      `${process.env.REACT_APP_API}/route/organization`,
+      formData,
+      config
+    );
+    console.log(`🚀 ~ file: step-4.jsx:77 ~ response:`, response);
+    return response.data;
+  };
+
+  const { mutate, isLoading } = useMutation({
+    mutationFn: handleForm,
+    onSuccess: async (data) => {
       const options = {
-        key: response?.data?.key,
+        key: data?.key,
         amount: "50000",
         currency: "INR",
         name: "Aegis Plan for software", //your business name
         description: "Get Access to all premium keys",
-        image: response.data.organisation.image,
-        subscription_id: response.data.subscription_id, //This
-        callback_url: `${process.env.REACT_APP_API}/route/organization/verify/${response.data.organisation._id}`,
+        image: data.organisation.image,
+        subscription_id: data.subscription_id, //This
+        callback_url: `${process.env.REACT_APP_API}/route/organization/verify/${data.organisation._id}`,
         prefill: {
           name: `${decodedToken.user.first_name} ${decodedToken.user.last_name}`, //your customer's name
           email: decodedToken.user.email,
@@ -100,13 +107,29 @@ const Step4 = () => {
       };
       const razor = new window.Razorpay(options);
       razor.open();
-      console.log(`🚀 ~ file: step-4.jsx:31 ~ response:`, response);
-    } catch (error) {
-      console.error(`Error during POST request:`, error);
-      // Handle error as needed
-    }
+    },
+    onError: async (data) => {
+      console.error(`🚀 ~ file: mini-form.jsx:48 ~ data:`, data);
+      toast.error(
+        data?.response?.data?.message || "Please fill all madatory field"
+      );
+    },
+  });
+  const valueObject = {
+    memberCount: 40,
+    remotePunchingCount: 1000,
+    performanceManagementCount: 40,
+    analyticsAndReportingCount: 40,
+    skillMatricesCount: 40,
   };
+  if (data.data === undefined) {
+    return "Please Select Plan And Package";
+  }
 
+  // if (isLoading) {
+  //   return<Loader/
+  // }
+  console.log(`🚀 ~ file: step-4.jsx:125 ~ isLoading:`, isLoading);
   return (
     <div className="px-4 grid grid-cols-6 bg-[#f8fafb] p-4 rounded-md">
       <div className="grid col-span-2">
@@ -150,7 +173,7 @@ const Step4 = () => {
             })}
         </div>
         <div className="row-span-1 items-center justify-center flex">
-          <Button onClick={handleFom} variant="contained">
+          <Button onClick={mutate} variant="contained">
             Confirm And Pay
           </Button>
         </div>
