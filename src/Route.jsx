@@ -8,18 +8,18 @@ import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
 import UserProfile from "./hooks/UserData/useUser";
-import EmployeeAdd from "./pages/Employee/addemploye";
 import AddOrganisation from "./pages/AddOrganisation/ADDORGANIZATION";
 import Application from "./pages/Application/Application";
 import DashBoardHR from "./pages/DashBoard/DashBoardHR";
 import Dashboard from "./pages/DashBoard/Dashboard";
 import DashboardManger from "./pages/DashBoard/DashboardManger";
 import SuperAdmin from "./pages/DashBoard/SuperAdmin";
-import DeleteEmployee from "./pages/Employee/DeleteEmployee";
 import AddDepartments from "./pages/Departments/AddDepartments";
 import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
+import DeleteEmployee from "./pages/Employee/DeleteEmployee";
 import EmployeeList from "./pages/Employee/EmployeeList";
+import EmployeeAdd from "./pages/Employee/addemploye";
 import Home from "./pages/Home/Home";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
@@ -47,6 +47,7 @@ import Inputfield from "./pages/SetupPage/inputfield";
 import RolePage from "./pages/SignIn/RolePage";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
+import EmployeeTest from "./pages/Test/EmployeeTest";
 import EditablePolyline from "./pages/Test/test2";
 import TrackingMap from "./pages/Test/test3";
 import TrackingMap2 from "./pages/Test/testMap";
@@ -71,6 +72,7 @@ const App = () => {
           </RequireAuth>
         }
       />
+      <Route path="/organisation/employeeTest" element={<EmployeeTest />} />
       <Route path="/test" element={<EditablePolyline />} />
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
       <Route path="/test3" element={<TestNaresh />} />
