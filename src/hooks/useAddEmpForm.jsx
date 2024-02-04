@@ -23,6 +23,9 @@ const useAddEmpForm = create((set) => ({
   designation: "",
   worklocation: "",
   salarystructure: "",
+  adhar_card_number: "",
+  pan_card_number: "",
+  dept_cost_center_no: "",
 
   setFirstName: (first_name) => set({ first_name }),
   setLastName: (last_name) => set({ last_name }),
@@ -35,6 +38,8 @@ const useAddEmpForm = create((set) => ({
   setCitizenShip: (citizenship) => set({ citizenship }),
   setJoiningDate: (joining_date) => set({ joining_date }),
   setDateOfBirth: (date_of_birth) => set({ date_of_birth }),
+  setAdharCardNumber: (adhar_card_number) => set({ adhar_card_number }),
+  setPanCardNumber: (pan_card_number) => set({ pan_card_number }),
   setFirstNameError: (error) => set({ firstNameError: error }),
   setLastNameError: (error) => set({ lastNameError: error }),
   setEmailError: (error) => set({ emailError: error }),
@@ -46,6 +51,7 @@ const useAddEmpForm = create((set) => ({
   setSalaryStructure: (salarystructure) => set({ salarystructure }),
   setWorkLocation: (worklocation) => set({ worklocation }),
   setDesignation: (designation) => set({ designation }),
+  setDeptCostCenterNo: (dept_cost_center_no) => set({ dept_cost_center_no }),
 }));
 
 export default useAddEmpForm;

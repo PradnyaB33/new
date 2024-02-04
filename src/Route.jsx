@@ -8,7 +8,7 @@ import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
 import UserProfile from "./hooks/UserData/useUser";
-import AddOrganisation from "./pages/AddOrganisation/ADDORGANIZATION";
+import NewOranisationForm from "./pages/AddOrganisation/NewOrgForm";
 import Application from "./pages/Application/Application";
 import DashBoardHR from "./pages/DashBoard/DashBoardHR";
 import Dashboard from "./pages/DashBoard/Dashboard";
@@ -24,6 +24,7 @@ import Home from "./pages/Home/Home";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
+import PaymentFailed from "./pages/Payment/page";
 import SalaryCalculate from "./pages/SalaryCalculate/SalaryCalculate";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeSalaryCalculateDay from "./pages/SetUpOrganization/EmoloyeeSalaryCalculate/EmployeeSalaryCalculate";
@@ -47,7 +48,6 @@ import Inputfield from "./pages/SetupPage/inputfield";
 import RolePage from "./pages/SignIn/RolePage";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
-import EmployeeTest from "./pages/Test/EmployeeTest";
 import EditablePolyline from "./pages/Test/test2";
 import TrackingMap from "./pages/Test/test3";
 import TrackingMap2 from "./pages/Test/testMap";
@@ -72,8 +72,10 @@ const App = () => {
           </RequireAuth>
         }
       />
-      <Route path="/organisation/employeeTest" element={<EmployeeTest />} />
+      <Route path="/paymentfailed" element={<PaymentFailed />} />
+
       <Route path="/test" element={<EditablePolyline />} />
+      <Route path="/testOrg" element={<NewOranisationForm />} />
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
       <Route path="/test3" element={<TestNaresh />} />
       <Route path="/test2" element={<TrackingMap />} />
@@ -135,7 +137,7 @@ const App = () => {
         }
       />
       {/* Dashboard Routes */}
-      <Route path="/add-organisation" element={<AddOrganisation />} />
+      <Route path="/add-organisation" element={<NewOranisationForm />} />
       <Route
         path="/organizationList"
         element={

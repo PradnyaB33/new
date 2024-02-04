@@ -7,8 +7,6 @@ import { useParams } from "react-router-dom";
 import { useQueryClient } from "react-query";
 import CreateSalaryModel from "../../components/Modal/CreateSalaryModel/CreateSalaryModel";
 import { useNavigate } from "react-router-dom";
-import { Event } from "@mui/icons-material";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { Container } from "@mui/material";
 
 const SalaryManagement = () => {
@@ -207,14 +205,21 @@ const SalaryManagement = () => {
                       </td>
                       <td className="py-3">{item?.salarystructure?.name}</td>
                       <td>
-                        <Event
+                        {/* <Event
                           onClick={() => handleCreateModalOpen(item._id)}
                           className="cursor-pointer"
                           style={{ color: "blue", fontSize: 24 }}
-                        />
+                        /> */}
+                        <button
+                          type="submit"
+                          onClick={() => handleCreateModalOpen(item._id)}
+                          className="flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                        >
+                          Create Salary
+                        </button>
                       </td>
                       <td>
-                        <AttachMoneyIcon
+                        {/* <AttachMoneyIcon
                           onClick={() =>
                             navigate(
                               `/organisation/${organisationId}/salary-calculate/${item._id}`
@@ -222,7 +227,18 @@ const SalaryManagement = () => {
                           }
                           className="cursor-pointer"
                           style={{ color: "green", fontSize: 24 }}
-                        />
+                        /> */}
+                        <button
+                          type="submit"
+                          onClick={() =>
+                            navigate(
+                              `/organisation/${organisationId}/salary-calculate/${item._id}`
+                            )
+                          }
+                          className="flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                        >
+                          Calculate Salary
+                        </button>
                       </td>
                     </tr>
                   ))}
