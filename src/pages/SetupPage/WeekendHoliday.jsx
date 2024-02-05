@@ -30,13 +30,13 @@ const SkeletonRow = () => (
           variant="circle"
           width={50}
           height={50}
-          style={{borderRadius:"50%"}}
+          style={{ borderRadius: "50%" }}
         />
         <Skeleton
           variant="circle"
           width={50}
           height={50}
-          style={{borderRadius:"50%"}}
+          style={{ borderRadius: "50%" }}
         />
       </div>
     </td>
@@ -56,12 +56,13 @@ const WeekdaySelector = ({ selectedDays, handleDayToggle, getColor }) => {
             onClick={() => handleDayToggle(day, index)}
             className="text-2xl"
             style={{
-              backgroundColor: selectedDays.includes(day) ? getColor(day) : 'gray',
+              backgroundColor: selectedDays.includes(day) ? getColor(day) : '#dbdbdb',
               borderRadius: "50%",
               width: "55px",
               height: "55px",
               cursor: "pointer",
-              color: "white",
+              color: "black",
+              fontWeight: "bold",
               border: "1px solid gray",
             }}
           />
@@ -92,8 +93,8 @@ const WeekendHoliday = () => {
 
   const getColor = (day) => {
     const index = daysOfWeek.indexOf(day);
-    const hue = (index * 40) % 360;
-    return `hsl(${hue}, 80%, 40%)`;
+    const hue = (index * 50) % 360;
+    return `hsl(${hue}, 80%, 60%)`;
   };
 
   const handleSubmit = async () => {
@@ -215,7 +216,7 @@ const WeekendHoliday = () => {
               variant="contained"
               onClick={handleOpenClose}
             >
-              Add Weekly off
+              Add Days
             </Button>
           </div>
 
@@ -259,7 +260,8 @@ const WeekendHoliday = () => {
                                 height: "50px",
                                 cursor: "pointer",
                                 border: "1px solid gray",
-                                color: "white",
+                                color: "black",
+                                fontWeight: "bolder",
                                 fontSize: "12.5px",
                                 display: "flex",
                                 alignItems: "center",
