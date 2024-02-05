@@ -61,7 +61,7 @@ const EmployeeTest = () => {
   };
 
   return (
-    <div className="bg-gray-50 h-auto">
+    <div className="bg-gray-50 min-h-screen h-auto">
       <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
         <Link to={"/organizationList"}>
           <West className="mx-4 !text-xl" />
@@ -70,8 +70,12 @@ const EmployeeTest = () => {
       </header>
 
       <section className="px-8 flex space-x-2 py-6">
-        <article className="w-max h-full bg-white shadow-xl  ">
-          <div class=" h-[225px] w-[225px] rounded-lg overflow-hidden">
+        {/* <article
+          className=" bg-gradient-to-r
+           from-sky-600
+           to-blue-300 h-auto w-max flex-col bg-white flex px-6 py-20  items-center "
+        > */}
+        {/* <div class=" h-[225px] w-[225px] rounded-lg overflow-hidden">
             <img
               class="w-full h-full object-cover"
               src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -87,8 +91,10 @@ const EmployeeTest = () => {
                 Employee
               </div>
             </div>
-          </div>
-        </article>
+          </div> */}
+        {/* 
+          <img className="h-[400px]" src="/Employee.svg" alt="none" />
+        </article> */}
 
         <article className="w-full rounded-lg bg-white ">
           <div className=" w-full px-5 ">
