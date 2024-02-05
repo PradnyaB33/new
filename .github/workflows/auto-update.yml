@@ -18,7 +18,7 @@ jobs:
       run: |
         # Add your build commands here
         # For example, if it's a Node.js project:
-        npm install
+        npm install --force
         npm run build
       continue-on-error: true  # Continue to the next step even if the build fails
     - name: Push changes
