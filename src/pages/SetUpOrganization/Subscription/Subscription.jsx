@@ -53,15 +53,6 @@ const Subscription = () => {
     }
   );
 
-  // Delete Query
-  const handleDeleteConfirmation = (id) => {
-    setDeleteConfirmation(id);
-  };
-
-  const handleCloseConfirmation = () => {
-    setDeleteConfirmation(null);
-  };
-
   const deleteMutation = useMutation(
     (id) =>
       axios.delete(
