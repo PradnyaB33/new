@@ -7,8 +7,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    # runs-on: [qa-frontend-main]
+    # runs-on: ubuntu-latest
+    runs-on: [qa-frontend-main]
 
     steps:
       - name: 🔄 Checkout code
@@ -24,21 +24,21 @@ jobs:
           cat .env
           npm run build
 
-      - name: 🚀 Upload build
-        uses: actions/upload-artifact@v2
-        with:
-          name: static-site
-          path: build/
+      # - name: 🚀 Upload build
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: static-site
+      #     path: build/
 
-  release-project:
-    name: 🚀 Release project
-    runs-on: [qa-frontend-main]
-    needs: build
-    steps:
-      - name: 📥 Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: static-site
+  # release-project:
+  #   name: 🚀 Release project
+  #   runs-on: [qa-frontend-main]
+  #   needs: build
+  #   steps:
+  #     - name: 📥 Download artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: static-site
     
       - name: 🧪 Test artifact download
         run: |
