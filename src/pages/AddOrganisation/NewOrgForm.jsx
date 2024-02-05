@@ -33,19 +33,21 @@ const NewOranisationForm = () => {
 
   return (
     <div className="pt-10">
-      <StepFormWrapper
-        {...{
-          goToStep,
-          totalSteps,
-          step,
-          isFirstStep,
-          isLastStep,
-          nextStep,
-          prevStep,
-        }}
-      >
-        {useSwitch(step)}
-      </StepFormWrapper>
+      <div className="m-4 ">
+        <StepFormWrapper
+          {...{
+            goToStep,
+            totalSteps,
+            step,
+            isFirstStep,
+            isLastStep,
+            nextStep,
+            prevStep,
+          }}
+        >
+          {useSwitch(step)}
+        </StepFormWrapper>
+      </div>
     </div>
   );
 };
