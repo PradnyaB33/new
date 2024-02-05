@@ -57,6 +57,7 @@ const SalaryCalculate = () => {
     fetchAvailableEmployee();
     // eslint-disable-next-line
   }, []);
+  console.log(availableEmployee);
 
   // pull holiday's count based on organization id
   const fetchHoliday = async () => {
@@ -245,7 +246,7 @@ const SalaryCalculate = () => {
     availableEmployee?.salaryComponent?.["Travel allowance"] || ""
   );
   let variableAllowance = calculateSalaryComponent(
-    availableEmployee?.salaryComponent?.["Varialble allowance"] || ""
+    availableEmployee?.salaryComponent?.["Variable allowance"] || ""
   );
 
   // calculate the total gross salary
