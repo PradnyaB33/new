@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, Route, Routes, } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 // Components
 import SetupSideNav from "./components/SideNav/SetupSideNav";
@@ -8,22 +8,23 @@ import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
 import UserProfile from "./hooks/UserData/useUser";
-import AddEmployee from "./pages/Employee/AddEmployee";
-import AddOrganisation from "./pages/AddOrganisation/ADDORGANIZATION";
+import NewOranisationForm from "./pages/AddOrganisation/NewOrgForm";
 import Application from "./pages/Application/Application";
 import DashBoardHR from "./pages/DashBoard/DashBoardHR";
 import Dashboard from "./pages/DashBoard/Dashboard";
 import DashboardManger from "./pages/DashBoard/DashboardManger";
 import SuperAdmin from "./pages/DashBoard/SuperAdmin";
-import DeleteEmployee from "./pages/Employee/DeleteEmployee";
 import AddDepartments from "./pages/Departments/AddDepartments";
 import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
+import DeleteEmployee from "./pages/Employee/DeleteEmployee";
 import EmployeeList from "./pages/Employee/EmployeeList";
+import EmployeeAdd from "./pages/Employee/addemploye";
 import Home from "./pages/Home/Home";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
+import PaymentFailed from "./pages/Payment/page";
 import SalaryCalculate from "./pages/SalaryCalculate/SalaryCalculate";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeSalaryCalculateDay from "./pages/SetUpOrganization/EmoloyeeSalaryCalculate/EmployeeSalaryCalculate";
@@ -34,6 +35,7 @@ import OrganizationLocations from "./pages/SetUpOrganization/OrganizationLocatio
 import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHoliday";
 import SalaryInput from "./pages/SetUpOrganization/SaleryInput/SalaryInput";
 import Setup from "./pages/SetUpOrganization/Setup";
+import Subscription from "./pages/SetUpOrganization/Subscription/Subscription";
 import {
   default as DeleteDepartment,
   default as DepartmentDeletion,
@@ -47,6 +49,7 @@ import Inputfield from "./pages/SetupPage/inputfield";
 import RolePage from "./pages/SignIn/RolePage";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
+import EmployeeTest from "./pages/Test/EmployeeTest";
 import EditablePolyline from "./pages/Test/test2";
 import TrackingMap from "./pages/Test/test3";
 import TrackingMap2 from "./pages/Test/testMap";
@@ -63,8 +66,19 @@ import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route
+        path="/"
+        element={
+          <RequireAuth permission={"Super-Admin"}>
+            <Home />
+          </RequireAuth>
+        }
+      />
+      <Route path="/organisation/employeeTest" element={<EmployeeTest />} />
+      <Route path="/paymentfailed" element={<PaymentFailed />} />
+
       <Route path="/test" element={<EditablePolyline />} />
+      <Route path="/testOrg" element={<NewOranisationForm />} />
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
       <Route path="/test3" element={<TestNaresh />} />
       <Route path="/test2" element={<TrackingMap />} />
@@ -126,7 +140,7 @@ const App = () => {
         }
       />
       {/* Dashboard Routes */}
-      <Route path="/add-organisation" element={<AddOrganisation />} />
+      <Route path="/add-organisation" element={<NewOranisationForm />} />
       <Route
         path="/organizationList"
         element={
@@ -147,7 +161,7 @@ const App = () => {
       <Route path="/employee-profile" element={<EmployeeProfile />} />
       <Route
         path="/organisation/:organisationId/employee-onboarding"
-        element={<AddEmployee />}
+        element={<EmployeeAdd />}
       />
       <Route
         path="/organisation/:organisationId/employee-offboarding"
@@ -212,6 +226,10 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/set-employement-types"
         element={<EmployementTypes />}
+      />
+      <Route
+        path="/organisation/:organisationId/setup/subscription"
+        element={<Subscription />}
       />
       <Route
         path="/organisation/:organisationId/setup/set-employee-code-generator"

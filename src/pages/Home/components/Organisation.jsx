@@ -30,6 +30,7 @@ import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 
 const Organisation = ({ item }) => {
+  console.log(`🚀 ~ file: Organisation.jsx:33 ~ item:`, item);
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [editConfirmation, setEditConfirmation] = useState(null);
@@ -185,8 +186,22 @@ const Organisation = ({ item }) => {
   return (
     <>
       <div
-        className={`border-b-[3px] border-${getRandomColor()} block min-w-[21rem] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-200`}
+        className={`border-b-[3px] border-${getRandomColor()} block min-w-[21rem] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-200 relative`}
       >
+        {Math.ceil(
+          (new Date(item.subscriptionStartDate) - new Date()) /
+            (1000 * 60 * 60 * 24)
+        ) > 0 && (
+          <div class="wrap">
+            <span class="ribbon6 text-white">
+              {Math.ceil(
+                (new Date(item.subscriptionStartDate) - new Date()) /
+                  (1000 * 60 * 60 * 24)
+              )}{" "}
+              Day Trial{" "}
+            </span>
+          </div>
+        )}
         <div className="border-b-2 flex items-center justify-between border-[#0000002d] px-6 py-3 text-black">
           <Avatar
             src={item?.logo_url}
@@ -217,7 +232,7 @@ const Organisation = ({ item }) => {
 
         <div className="p-6 pt-6 pb-4">
           <h5 className="mb-2 text-xl font-semibold leading-tight text-black">
-            {item.name}
+            {item.orgName}
           </h5>
           <p className="text-md ">{item.description}</p>
         </div>

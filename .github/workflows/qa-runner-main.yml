@@ -8,18 +8,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # runs-on: [qa-frontend-main]
 
     steps:
       - name: 🔄 Checkout code
         uses: actions/checkout@v2
 
-      - name: ⚙️ Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 14
-
       - name: 📦 Install dependencies
-        run: npm install
+        run: npm install --force
 
       - name: 🏗️ Build
         run: |
@@ -39,27 +35,14 @@ jobs:
     runs-on: [qa-frontend-main]
     needs: build
     steps:
-      - name: Cleanup Workspace
-        uses: asilbek99/action-cleanup@v1.0
-            
-      - name: Cleanup build folder
-        run: |
-          ls -la ./
-          rm -rf ./* || true
-          rm -rf ./.??* || true
-          ls -la ./
-
       - name: 📥 Download artifact
         uses: actions/download-artifact@v2
         with:
           name: static-site
-
+    
       - name: 🧪 Test artifact download
         run: |
           ls -R
-
-    
-          
 
 # Advantages:
 # - ⚙️ Automation: Automates the build and deployment process whenever changes are pushed to the main branch.

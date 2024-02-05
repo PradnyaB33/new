@@ -7,8 +7,6 @@ import { useParams } from "react-router-dom";
 import { useQueryClient } from "react-query";
 import CreateSalaryModel from "../../components/Modal/CreateSalaryModel/CreateSalaryModel";
 import { useNavigate } from "react-router-dom";
-import { Event } from "@mui/icons-material";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { Container } from "@mui/material";
 
 const SalaryManagement = () => {
@@ -91,7 +89,7 @@ const SalaryManagement = () => {
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <h1 className="text-lg pl-2 font-semibold text-center modal-title py-2">
-            Employee List for Salary Management
+            Salary Management
           </h1>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
@@ -207,14 +205,21 @@ const SalaryManagement = () => {
                       </td>
                       <td className="py-3">{item?.salarystructure?.name}</td>
                       <td>
-                        <Event
+                        {/* <Event
                           onClick={() => handleCreateModalOpen(item._id)}
                           className="cursor-pointer"
                           style={{ color: "blue", fontSize: 24 }}
-                        />
+                        /> */}
+                        <button
+                          type="submit"
+                          onClick={() => handleCreateModalOpen(item._id)}
+                          className="flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                        >
+                          Create Salary
+                        </button>
                       </td>
                       <td>
-                        <AttachMoneyIcon
+                        {/* <AttachMoneyIcon
                           onClick={() =>
                             navigate(
                               `/organisation/${organisationId}/salary-calculate/${item._id}`
@@ -222,7 +227,18 @@ const SalaryManagement = () => {
                           }
                           className="cursor-pointer"
                           style={{ color: "green", fontSize: 24 }}
-                        />
+                        /> */}
+                        <button
+                          type="submit"
+                          onClick={() =>
+                            navigate(
+                              `/organisation/${organisationId}/salary-calculate/${item._id}`
+                            )
+                          }
+                          className="flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                        >
+                          Calculate Salary
+                        </button>
                       </td>
                     </tr>
                   ))}

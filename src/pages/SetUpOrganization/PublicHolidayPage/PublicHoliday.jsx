@@ -35,7 +35,7 @@ const PublicHoliday = () => {
   const [type, setType] = useState("");
   const [region, setRegion] = useState("");
   const [operation, setOperation] = useState("");
-  const [locations, setLocations] = useState([])
+  const [locations, setLocations] = useState([]);
   const [selectedHolidayId, setSelectedHolidayId] = useState(null);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
@@ -52,15 +52,19 @@ const PublicHoliday = () => {
 
   useEffect(() => {
     (async () => {
-      await axios.get(`${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${id}`, {
-        headers: {
-          Authorization: authToken
-        }
-      }).then((resp) => setLocations(resp.data.locationsData)).catch((e) => console.log(e))
-    })
-
-      ()
-  }, [])
+      await axios
+        .get(
+          `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${id}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        )
+        .then((resp) => setLocations(resp.data.locationsData))
+        .catch((e) => console.log(e));
+    })();
+  }, [authToken, id]);
 
   const fetchHolidays = useCallback(async () => {
     try {
@@ -371,12 +375,11 @@ const PublicHoliday = () => {
                       value={inputdata.region}
                       name="region"
                     >
-                      {
-                        locations.map((location, idx) => (
-                          <MenuItem key={idx} value={location.shortName} >{location.shortName}</MenuItem>
-
-                        ))
-                      }
+                      {locations.map((location, idx) => (
+                        <MenuItem key={idx} value={location.shortName}>
+                          {location.shortName}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
 
@@ -458,12 +461,11 @@ const PublicHoliday = () => {
                           value={region}
                           name="region"
                         >
-                          {
-                            locations.map((location, idx) => (
-                              <MenuItem key={idx} value={location.shortName} >{location.shortName}</MenuItem>
-
-                            ))
-                          }
+                          {locations.map((location, idx) => (
+                            <MenuItem key={idx} value={location.shortName}>
+                              {location.shortName}
+                            </MenuItem>
+                          ))}
                         </Select>
                       </FormControl>
                     </div>

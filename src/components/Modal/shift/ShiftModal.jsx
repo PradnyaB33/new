@@ -312,7 +312,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
           <div className="flex justify-between">
             <div className="space-y-2 w-[45%] ">
               <label className="text-md" htmlFor="demo-simple-select-label">
-                Enter shift start time
+                Start time
               </label>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={["TimePicker"]}>
@@ -333,7 +333,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
 
             <div className="space-y-2 w-[45%]">
               <label className="text-md" htmlFor="demo-simple-select-label">
-                Enter shift end time
+                End time
               </label>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={["TimePicker"]}>
@@ -368,7 +368,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
               value={selectedDays}
               onChange={handleDaySelection}
               aria-label="selectedDays"
-              className="mt-2 w-max space-x-5 gap-4"
+              className="mt-2 w-max !space-x-5 "
               style={{
                 display: "flex",
                 justifyContent: "center",

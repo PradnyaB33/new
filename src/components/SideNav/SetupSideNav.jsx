@@ -2,7 +2,7 @@ import { SettingsOutlined } from "@mui/icons-material";
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import useSetupSideNav from "../../hooks/Nav/useSetupSideNav";
-import NotFound from "../../utils/Forbidden/NotFound";
+import Setup from "../../pages/SetUpOrganization/Setup";
 
 const SetupSideNav = () => {
   const { organisationId } = useParams();
@@ -32,7 +32,13 @@ const SetupSideNav = () => {
         ))}
       </aside>
       <div className="hidden md:block">
-        <NotFound />
+        <Setup>
+          <article className="SetupSection bg-white w-[80%]  shadow-md rounded-sm border flex items-center h-[80vh] justify-center">
+            <div className="p-4 flex items-center gap-3 w-full border-gray-300 justify-center">
+              <img className="h-[300px]" src="/setup.svg" alt="setup svg" />
+            </div>
+          </article>
+        </Setup>
       </div>
     </>
   );

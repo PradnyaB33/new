@@ -54,7 +54,7 @@ function PhoneAuth() {
       {!codeSent && (
         <TextField
           size="small"
-          type="tel"
+          type="number"
           label="Enter your Phone Number"
           name="phone_number"
           id="phone_number"
