@@ -35,6 +35,7 @@ import OrganizationLocations from "./pages/SetUpOrganization/OrganizationLocatio
 import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHoliday";
 import SalaryInput from "./pages/SetUpOrganization/SaleryInput/SalaryInput";
 import Setup from "./pages/SetUpOrganization/Setup";
+import Subscription from "./pages/SetUpOrganization/Subscription/Subscription";
 import {
   default as DeleteDepartment,
   default as DepartmentDeletion,
@@ -223,6 +224,10 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/set-employement-types"
         element={<EmployementTypes />}
+      />
+      <Route
+        path="/organisation/:organisationId/setup/subscription"
+        element={<Subscription />}
       />
       <Route
         path="/organisation/:organisationId/setup/set-employee-code-generator"

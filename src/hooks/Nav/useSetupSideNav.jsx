@@ -5,6 +5,7 @@ import {
   ManageAccountsOutlined,
   PersonAddAlt1Outlined,
   PriceChangeOutlined,
+  SellOutlined,
 } from "@mui/icons-material";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
@@ -144,6 +145,15 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/set-employee-code-generator`,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+    },
+    {
+      label: "Subscription",
+      icon: SellOutlined,
+      href: `/organisation/${organisationId}/setup/subscription`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/subscription`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
   ];
