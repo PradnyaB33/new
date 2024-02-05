@@ -62,12 +62,6 @@ const Subscription = () => {
     setDeleteConfirmation(null);
   };
 
-  const handleEditModalOpen = (empTypeId) => {
-    setEditModalOpen(true);
-    queryClient.invalidateQueries(["shift", empTypeId]);
-    setempTypeId(empTypeId);
-  };
-
   const deleteMutation = useMutation(
     (id) =>
       axios.delete(
