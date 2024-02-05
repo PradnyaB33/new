@@ -9,7 +9,7 @@ const Test1 = () => {
     name: z.string(),
   });
 
-  const { control, formState, handleSubmit, getValues } = useForm({
+  const { control, formState } = useForm({
     defaultValues: {},
     resolver: zodResolver(EmployeeSchema),
   });
