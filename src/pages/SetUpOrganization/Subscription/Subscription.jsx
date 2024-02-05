@@ -68,11 +68,6 @@ const Subscription = () => {
     setempTypeId(empTypeId);
   };
 
-  const handleDelete = (id) => {
-    deleteMutation.mutate(id);
-    handleCloseConfirmation();
-  };
-
   const deleteMutation = useMutation(
     (id) =>
       axios.delete(
