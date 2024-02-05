@@ -3,12 +3,10 @@ frontend:
   phases:
     preBuild:
       commands:
-        - npm ci
+        - npm install
     build:
       commands:
-         - | touch .env
-            echo "${{secrets.PROD_ENV_FILE}}" > .env
-            npm run build
+         - npm run build
   artifacts:
     baseDirectory: build
     files:
