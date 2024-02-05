@@ -172,8 +172,10 @@ const AddDepartments = () => {
       setDepartmentHeadName("");
       setDepartmenDelegateHeadName("");
       setNumCharacters("");
+      setNumberCharacters("");
       setEnterDepartmentId("");
       setDepartmentCostCenterId("");
+      setDeptCostCenterId("");
       handleAlert(
         true,
         "success",

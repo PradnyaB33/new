@@ -627,6 +627,7 @@ const EmployeeAdd = () => {
           setShiftAllocation("");
           setAdharCardNumber("");
           setPanCardNumber("");
+          setGender("");
           handleAlert(true, "success", response.data.message);
         }
       }
