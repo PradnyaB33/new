@@ -16,6 +16,7 @@ const containerStyle = {
 const TestMap = () => {
   const [waypoints, setWaypoints] = useState([]);
   const { cookies } = useContext(UseContext);
+  const [polyLine, setPolyLine] = useState(false);
   const authToken = cookies["aeigs"];
 
   useEffect(() => {
@@ -143,6 +144,8 @@ const TestMap = () => {
           Total Distance Traveled: {totalDistance.toFixed(2)} kilometers
         </p>
       )}
+
+
     </div>
   );
 };
