@@ -1,4 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 import UserProfile from "../../hooks/UserData/useUser";
 import { UseContext } from "../../State/UseState/UseContext";
 import { Divider, Paper } from "@mui/material";
@@ -6,6 +8,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import axios from "axios";
 const ViewPayslip1 = () => {
+  const pdfRef = useRef();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { getCurrentUser } = UserProfile();
@@ -152,10 +155,34 @@ const ViewPayslip1 = () => {
   const paidLeave = previousMonthSalary?.paidLeaveDays;
   const publicHoliday = previousMonthSalary?.publicHolidaysCount;
   console.log(paidLeave);
+
+  const downloadPDF = () => {
+    const input = pdfRef.current;
+    html2canvas(input, { scale: 2 }).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4", true);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = 30;
+      pdf.addImage(
+        imgData,
+        "PNG",
+        imgX,
+        imgY,
+        imgWidth * ratio,
+        imgHeight * ratio
+      );
+      pdf.save("salaryslip.pdf");
+    });
+  };
   return (
     <div
       style={{
-        marginTop: "10%",
+        marginTop: "5%",
         marginLeft: "20%",
       }}
     >
@@ -168,7 +195,10 @@ const ViewPayslip1 = () => {
         }}
         className="w-full"
       >
-        <Paper className="border-none !pt-0 !px-0 shadow-md outline-none rounded-md">
+        <Paper
+          className="border-none !pt-0 !px-0 shadow-md outline-none rounded-md"
+          ref={pdfRef}
+        >
           <Box sx={{ flexGrow: 1, marginBottom: "30px" }}>
             <Grid container spacing={4}>
               <Grid item xs={6} md={4}>
@@ -217,41 +247,13 @@ const ViewPayslip1 = () => {
               </Grid>
             </Grid>
           </Box>
-
-          <div className="w-full">
-            <Divider variant="fullWidth" orientation="horizontal" />
-          </div>
-
-          <Box sx={{ flexGrow: 1, marginLeft: "30%" }}>
-            <Grid container spacing={8}>
-              <Grid item xs={6} md={4}>
-                <h1
-                  style={{
-                    fontSize: "1.1em",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Salary Slip
-                </h1>
-              </Grid>
-              <Grid item xs={6} md={8}>
-                <h1
-                  style={{
-                    fontSize: "1.1em",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Month -
-                  <span style={{ marginLeft: "10px" }}>
-                    {previousMonthSalary?.formattedDate || ""}
-                  </span>
-                </h1>
-              </Grid>
-            </Grid>
-          </Box>
-
-          <div className="w-full">
-            <Divider variant="fullWidth" orientation="horizontal" />
+          <div class="flex justify-between  bg-blue-500">
+            <div class="ml-60 text-lg p-1 font-semibold">
+              <h1>Month</h1>
+            </div>
+            <div class="mr-60 text-lg p-1 font-semibold">
+              <h1>{previousMonthSalary?.formattedDate || ""}</h1>
+            </div>
           </div>
 
           <div
@@ -259,6 +261,7 @@ const ViewPayslip1 = () => {
               marginTop: "2%",
               marginLeft: "2%",
               display: "flex",
+              marginBottom: "2%",
             }}
           >
             {/* First Table */}
@@ -434,41 +437,13 @@ const ViewPayslip1 = () => {
             </div>
           </div>
 
-          <div className="w-full">
-            <Divider
-              variant="fullWidth"
-              orientation="horizontal"
-              style={{ marginTop: "20px" }}
-            />
-          </div>
-
-          <Box sx={{ flexGrow: 1, marginLeft: "30%" }}>
-            <Grid container spacing={8}>
-              <Grid item xs={6} md={4}>
-                <h1
-                  style={{
-                    fontSize: "1.1em",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Income
-                </h1>
-              </Grid>
-              <Grid item xs={6} md={8}>
-                <h1
-                  style={{
-                    fontSize: "1.1em",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Deductions
-                </h1>
-              </Grid>
-            </Grid>
-          </Box>
-
-          <div className="w-full">
-            <Divider variant="fullWidth" orientation="horizontal" />
+          <div class="flex justify-between  bg-blue-500">
+            <div class="ml-60 text-lg p-1 font-semibold">
+              <h1>Income</h1>
+            </div>
+            <div class="mr-60 text-lg p-1 font-semibold">
+              <h1>Deductions</h1>
+            </div>
           </div>
 
           <div
@@ -476,6 +451,7 @@ const ViewPayslip1 = () => {
               marginTop: "2%",
               marginLeft: "2%",
               display: "flex",
+              marginBottom: "2%",
             }}
           >
             {/* First Table */}
@@ -695,34 +671,23 @@ const ViewPayslip1 = () => {
             </div>
           </div>
 
-          <div className="w-full" style={{ marginTop: "2%" }}>
-            <Divider variant="fullWidth" orientation="horizontal" />
-          </div>
-
-          <Box sx={{ flexGrow: 1, marginLeft: "30%" }}>
-            <Grid container spacing={8}>
-              <Grid item xs={6} md={4}>
-                <h1
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "1.2em",
-                  }}
-                >
-                  Net Salary
-                </h1>
-              </Grid>
-              <Grid item xs={6} md={8}>
-                <h1 style={{ fontSize: "1.2em", fontWeight: "bold" }}>
-                  {previousMonthSalary?.totalNetSalary || ""}
-                </h1>
-              </Grid>
-            </Grid>
-          </Box>
-
-          <div className="w-full">
-            <Divider variant="fullWidth" orientation="horizontal" />
+          <div class="flex justify-between  bg-blue-500">
+            <div class="ml-60 text-lg p-1 font-semibold">
+              <h1>Net Salary</h1>
+            </div>
+            <div class="mr-60 text-lg p-1 font-semibold">
+              <h1>{previousMonthSalary?.totalNetSalary || ""}</h1>
+            </div>
           </div>
         </Paper>
+        <div className="mt-10 ml-96 mb-6">
+          <button
+            onClick={downloadPDF}
+            className=" flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+          >
+            Download PDF
+          </button>
+        </div>
       </Paper>
     </div>
   );
