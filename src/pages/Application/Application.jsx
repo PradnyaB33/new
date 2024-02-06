@@ -18,7 +18,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 
 const Application = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
 
   const [employeeLeaveList, setEmployeeLeaveList] = useState([]);
   console.log(`🚀 ~ employeeLeaveList:`, employeeLeaveList);

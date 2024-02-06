@@ -1,13 +1,13 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Button, Divider, IconButton, Modal } from "@mui/material";
-import axios from "axios";
-import React, { useContext, useState, useEffect } from "react";
-import { useMutation, useQueryClient } from "react-query";
-import { TestContext } from "../../../State/Function/Main";
-import { UseContext } from "../../../State/UseState/UseContext";
-import { useParams } from "react-router-dom";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
+import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
 const style = {
   position: "absolute",
   top: "50%",
@@ -20,7 +20,7 @@ const style = {
 const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
   const { organisationId } = useParams();
   const [selectedDay, setSelectedDay] = useState("");

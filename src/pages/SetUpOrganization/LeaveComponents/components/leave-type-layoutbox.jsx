@@ -19,7 +19,7 @@ import LeaveTypeModal from "../../../../components/Modal/LeaveTypeModal/leave-ty
 const LeaveTypeEditBox = ({ leaveType, index }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);

@@ -1,9 +1,16 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, Button, Divider, IconButton, Modal } from "@mui/material";
-import { TextField, InputLabel } from "@mui/material";
-import React, { useState, useEffect, useContext } from "react";
-import { FormControl } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  FormControl,
+  IconButton,
+  InputLabel,
+  Modal,
+  TextField,
+} from "@mui/material";
 import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 const style = {
@@ -18,7 +25,7 @@ const style = {
 const EditEmpProfileModal = ({ handleClose, open, userId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const token = cookies["aeigs"];
+  const token = cookies["aegis"];
 
   console.log(userId);
   // function to handle get additional detail of employee

@@ -1,18 +1,16 @@
-import { TextField } from "@mui/material";
+import { Container, TextField } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
+import { useQueryClient } from "react-query";
+import { useNavigate, useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import { useParams } from "react-router-dom";
-import { useQueryClient } from "react-query";
 import CreateSalaryModel from "../../components/Modal/CreateSalaryModel/CreateSalaryModel";
-import { useNavigate } from "react-router-dom";
-import { Container } from "@mui/material";
 
 const SalaryManagement = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const [nameSearch, setNameSearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const [deptSearch, setDeptSearch] = useState("");

@@ -27,7 +27,7 @@ const AppDatePicker = ({
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const { data: data2 } = useQuery("employee-disable-weekends", async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/weekend/get`,

@@ -10,7 +10,7 @@ import PublicSkeletonComponent from "../SkeletonComponents/PublicSkeletonCompone
 
 const PublicHolidayDisplayList = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
 
   const GetUpcomingHoliday = async () => {
     const data = await axios.get(

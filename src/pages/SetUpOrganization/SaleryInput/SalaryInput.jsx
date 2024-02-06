@@ -29,7 +29,7 @@ import SkeletonSalaryInput from "./SkeletonSalaryInput";
 const SalaryInput = () => {
   const { organisationId } = useParams();
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
 

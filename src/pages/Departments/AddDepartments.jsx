@@ -1,24 +1,24 @@
-import React, { useContext, useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
+import React, { useContext, useEffect, useState } from "react";
 
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import { useParams } from "react-router-dom";
-import { UseContext } from "../../State/UseState/UseContext";
-import axios from "axios";
 import {
   Checkbox,
-  FormControlLabel,
   Container,
+  FormControlLabel,
   Typography,
 } from "@mui/material";
-import { TestContext } from "../../State/Function/Main";
 import Autocomplete from "@mui/material/Autocomplete";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
 const AddDepartments = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const { handleAlert } = useContext(TestContext);
   const [dept_name, setDepartmentName] = useState("");
   const [dept_description, setDepartmentDescription] = useState("");

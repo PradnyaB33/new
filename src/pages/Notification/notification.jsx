@@ -17,7 +17,7 @@ import Loader from "./Loader";
 
 const Notification = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const [open, setOpen] = useState(false);
   const [id, setid] = useState("");
   const { handleAlert } = useContext(TestContext);

@@ -6,7 +6,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 
 const useLeaveData = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const [isCalendarOpen, setCalendarOpen] = useState(false);
 
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
@@ -51,7 +51,6 @@ const useLeaveData = () => {
   };
   const leaveMutation = useMutation(createLeaves, {
     onSuccess: () => {
-
       queryclient.invalidateQueries("employee-leave-table");
       queryclient.invalidateQueries("employee-leave-table");
       queryclient.invalidateQueries("employee-summary-table");

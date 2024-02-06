@@ -4,7 +4,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 
 const UserProfile = () => {
   const { cookies } = useContext(UseContext);
-  const token = cookies["aeigs"];
+  const token = cookies["aegis"];
   const roletoken = cookies["role"];
 
   const getCurrentUser = () => {
