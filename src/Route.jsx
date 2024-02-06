@@ -8,7 +8,7 @@ import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
 import UserProfile from "./hooks/UserData/useUser";
-import NewOranisationForm from "./pages/AddOrganisation/NewOrgForm";
+import NewOranisationForm from "./pages/AddOrganisation/OrgFrom";
 import Application from "./pages/Application/Application";
 import DashBoardHR from "./pages/DashBoard/DashBoardHR";
 import Dashboard from "./pages/DashBoard/Dashboard";
@@ -57,12 +57,13 @@ import TestNaresh from "./pages/Test/testNaresh";
 import TrackingMap3 from "./pages/Test/testYash";
 import EmployeeProfile from "./pages/UserProfile/UserProfile";
 //import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
+import Loader from "./components/app-loader/page";
+import ViewPayslip1 from "./pages/ViewPayslip/ViewPayslip1";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
-import ViewPayslip1 from "./pages/ViewPayslip/ViewPayslip1";
 const App = () => {
   return (
     <Routes>
@@ -78,6 +79,7 @@ const App = () => {
       <Route path="/paymentfailed" element={<PaymentFailed />} />
 
       <Route path="/test" element={<EditablePolyline />} />
+      <Route path="/loading" element={<Loader />} />
       <Route path="/testOrg" element={<NewOranisationForm />} />
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
       <Route path="/test3" element={<TestNaresh />} />

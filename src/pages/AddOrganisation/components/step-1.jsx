@@ -77,8 +77,6 @@ const Step1 = ({ nextStep }) => {
     await setStep1Data(data);
     nextStep();
   };
-  if (creator === undefined) {
-  }
 
   return (
     <div>
@@ -105,7 +103,7 @@ const Step1 = ({ nextStep }) => {
             />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4 px-4">
+        <div className="grid md:grid-cols-2 md:gap-4 gap-0 px-4 grid-cols-1">
           <AuthInputFiled
             name="orgName"
             icon={CorporateFare}
