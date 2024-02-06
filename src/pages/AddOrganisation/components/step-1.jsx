@@ -25,7 +25,10 @@ const organizationSchema = z.object({
   email: z.string().email(),
   organization_linkedin_url: z.string(),
   location: z.string(),
-  contact_number: z.string(),
+  contact_number: z
+    .string()
+    .max(10, { message: "contact number must be 10 digits" })
+    .min(10, { message: "contact number must be 10 digits" }),
   description: z.string(),
   creator: z.string(),
   logo_url: z.any(),
@@ -137,8 +140,8 @@ const Step1 = ({ nextStep }) => {
             icon={CorporateFare}
             control={control}
             type="text"
-            placeholder="Linkding url "
-            label="Linkding url  *"
+            placeholder="LinkedIn url "
+            label="LinkedIn url  *"
             errors={errors}
             error={errors.organization_linkedin_url}
           />
