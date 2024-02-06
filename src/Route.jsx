@@ -134,7 +134,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/dashboard/super-admin"
         element={
-          <RequireAuth permission={"Super-Admin"}>
+          <RequireAuth permission={["Super-Admin"]}>
             <SuperAdmin />
           </RequireAuth>
         }
@@ -282,7 +282,7 @@ function RequireAuth({ children, permission }) {
 
   const user = getCurrentUser();
   const role = getCurrentRole();
-  const isPermission = role === permission;
+  const isPermission = permission.includes("role");
 
   if (user && !role) {
     return <Navigate to={"/choose-role"} />;
