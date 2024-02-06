@@ -7,7 +7,7 @@ import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import UserProfile from "../../hooks/UserData/useUser";
-
+import UserSelf from "../UserSelfLearning/UserSelf";
 const RolePage = () => {
   const [selected, setSelected] = useState(null);
   const { handleAlert } = useContext(TestContext);
@@ -105,61 +105,64 @@ const RolePage = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col items-center">
-      {!user ? (
-        <>
-          <div className="w-[50%]">
-            <Skeleton variant="text" width="40%" height={50} />
-            <Skeleton variant="text" width="60%" height={30} />
+    <>
+      <UserSelf message="Please Choose The Profile." />
+      <div className="h-screen flex flex-col items-center">
+        {!user ? (
+          <>
+            <div className="w-[50%]">
+              <Skeleton variant="text" width="40%" height={50} />
+              <Skeleton variant="text" width="60%" height={30} />
 
-            <div className="mt-4">
-              <Skeleton variant="text" width="100%" height={70} />
-              <Skeleton variant="text" width="100%" height={70} />
-              <Skeleton variant="text" width="100%" height={70} />
+              <div className="mt-4">
+                <Skeleton variant="text" width="100%" height={70} />
+                <Skeleton variant="text" width="100%" height={70} />
+                <Skeleton variant="text" width="100%" height={70} />
+              </div>
             </div>
-          </div>
-        </>
-      ) : (
-        <div className="w-[80%] md:w-[50%]">
-          <h1 className="text-3xl font-bold mb-1">Choose your Profile</h1>
-          <p className="text-sm text-gray-700">
-            By choosing a profile, you'll be able to access different profiles
-          </p>
+          </>
+        ) : (
+          <div className="w-[80%] md:w-[50%]">
+            <h1 className="text-3xl font-bold mb-1">Choose your Profile</h1>
+            <p className="text-sm text-gray-700">
+              By choosing a profile, you'll be able to access different profiles
+            </p>
 
-          <form className="flex-col gap-4 mt-6 flex items-center">
-            {user?.profile?.map((item, index) => (
-              <label
-                key={index}
-                className={`inline-flex items-center space-x-2 cursor-pointer w-full border-[.5px] border-gray-300 p-4 py-3  rounded-lg ${
-                  selected === index && "bg-blue-400 "
-                }`}
-              >
-                <input
-                  type="radio"
-                  className="hidden"
-                  checked={selected === index}
-                  onChange={() => handleRadioChange(index, item)}
-                />
-                <span
-                  className={`text-gray-700 space-x-2 ${
-                    selected === index && "text-white"
+            <form className="flex-col gap-4 mt-6 flex items-center">
+              {user?.profile?.map((item, index) => (
+                <label
+                  key={index}
+                  className={`inline-flex items-center space-x-2 cursor-pointer w-full border-[.5px] border-gray-300 p-4 py-3  rounded-lg ${
+                    selected === index && "bg-blue-400 "
                   }`}
                 >
-                  {selected === index ? <CheckCircle /> : <Person />} {item}
-                </span>
-              </label>
-            ))}
-          </form>
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className="bg-blue-500 my-4 text-white p-2 rounded-md"
-          >
-            Submit
-          </button>
-        </div>
-      )}
-    </div>
+                  <input
+                    type="radio"
+                    className="hidden"
+                    checked={selected === index}
+                    onChange={() => handleRadioChange(index, item)}
+                  />
+                  <span
+                    className={`text-gray-700 space-x-2 ${
+                      selected === index && "text-white"
+                    }`}
+                  >
+                    {selected === index ? <CheckCircle /> : <Person />} {item}
+                  </span>
+                </label>
+              ))}
+            </form>
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="bg-blue-500 my-4 text-white p-2 rounded-md"
+            >
+              Submit
+            </button>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

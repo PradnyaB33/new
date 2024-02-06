@@ -1,26 +1,26 @@
-import { BorderColor } from "@mui/icons-material";
+import { BorderColor, Delete, Warning } from "@mui/icons-material";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
-import { Button, IconButton } from "@mui/material";
-import axios from "axios";
-import React, { useContext, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
-import { UseContext } from "../../../State/UseState/UseContext";
-import CreateEmpSalCalDayModel from "../../../components/Modal/EmployeeSalaryDayModal/CreateEmpSalCalDay";
-import EmpSalaryDayModal from "../../../components/Modal/EmployeeSalaryDayModal/EmpSalaryDayModal";
-import Setup from "../Setup";
-import { Delete, Warning } from "@mui/icons-material";
 import {
+  Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
 } from "@mui/material";
+import axios from "axios";
+import React, { useContext, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
+import CreateEmpSalCalDayModel from "../../../components/Modal/EmployeeSalaryDayModal/CreateEmpSalCalDay";
+import EmpSalaryDayModal from "../../../components/Modal/EmployeeSalaryDayModal/EmpSalaryDayModal";
+import Setup from "../Setup";
 const EmployeeSalaryCalculateDay = () => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const { organisationId } = useParams();
   const queryClient = useQueryClient();
   // state for delete the employee salary calculate day

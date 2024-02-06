@@ -34,7 +34,7 @@ import Setup from "../SetUpOrganization/Setup";
 const Shifts = () => {
   const { organisationId } = useParams("");
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
 
@@ -120,9 +120,7 @@ const Shifts = () => {
                 <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                   <EventAvailableOutlined className="!text-lg text-white" />
                 </div>
-                <h1 className="!text-lg tracking-wide">
-                  Create shifts 
-                </h1>
+                <h1 className="!text-lg tracking-wide">Create shifts</h1>
               </div>
               <Button
                 className="!font-semibold !bg-sky-500 flex items-center gap-2"

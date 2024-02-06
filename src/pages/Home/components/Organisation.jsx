@@ -39,7 +39,7 @@ const Organisation = ({ item }) => {
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
 
   const data = {
     name: "",

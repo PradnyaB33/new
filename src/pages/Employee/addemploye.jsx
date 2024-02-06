@@ -29,7 +29,7 @@ import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import useAddEmpForm from "../../hooks/useAddEmpForm";
-
+import UserSelf from "../UserSelfLearning/UserSelf";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -43,7 +43,7 @@ const MenuProps = {
 const EmployeeAdd = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const { organisationId } = useParams();
   const [userId, setUserId] = useState(null);
   const [showFields, setShowFields] = useState(false);
@@ -627,6 +627,7 @@ const EmployeeAdd = () => {
           setShiftAllocation("");
           setAdharCardNumber("");
           setPanCardNumber("");
+          setGender("");
           handleAlert(true, "success", response.data.message);
         }
       }
@@ -641,6 +642,7 @@ const EmployeeAdd = () => {
 
   return (
     <>
+      <UserSelf message="Please Add the Employee and Assign the Role to Employee" />
       <div
         style={{
           display: "flex",

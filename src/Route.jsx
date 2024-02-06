@@ -8,7 +8,7 @@ import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
 import UserProfile from "./hooks/UserData/useUser";
-import NewOranisationForm from "./pages/AddOrganisation/NewOrgForm";
+import NewOranisationForm from "./pages/AddOrganisation/OrgFrom";
 import Application from "./pages/Application/Application";
 import DashBoardHR from "./pages/DashBoard/DashBoardHR";
 import Dashboard from "./pages/DashBoard/Dashboard";
@@ -35,6 +35,7 @@ import OrganizationLocations from "./pages/SetUpOrganization/OrganizationLocatio
 import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHoliday";
 import SalaryInput from "./pages/SetUpOrganization/SaleryInput/SalaryInput";
 import Setup from "./pages/SetUpOrganization/Setup";
+import Subscription from "./pages/SetUpOrganization/Subscription/Subscription";
 import {
   default as DeleteDepartment,
   default as DepartmentDeletion,
@@ -55,7 +56,9 @@ import TrackingMap2 from "./pages/Test/testMap";
 import TestNaresh from "./pages/Test/testNaresh";
 import TrackingMap3 from "./pages/Test/testYash";
 import EmployeeProfile from "./pages/UserProfile/UserProfile";
-import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
+//import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
+import Loader from "./components/app-loader/page";
+import ViewPayslip1 from "./pages/ViewPayslip/ViewPayslip1";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
@@ -80,6 +83,7 @@ const App = () => {
       <Route path="/paymentfailed" element={<PaymentFailed />} />
 
       <Route path="/test" element={<EditablePolyline />} />
+      <Route path="/loading" element={<Loader />} />
       <Route path="/testOrg" element={<NewOranisationForm />} />
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
       <Route path="/test3" element={<TestNaresh />} />
@@ -136,7 +140,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/dashboard/super-admin"
         element={
-          <RequireAuth permission={"Super-Admin"}>
+          <RequireAuth permission={["Super-Admin"]}>
             <SuperAdmin />
           </RequireAuth>
         }
@@ -185,11 +189,12 @@ const App = () => {
         path="/organisation/:organisationId/salary-calculate/:userId"
         element={<SalaryCalculate />}
       />
-      <Route path="/organisation/view-payslip" element={<ViewPayslip />} />
+      <Route path="/organisation/view-payslip" element={<ViewPayslip1 />} />
       <Route
         path="/terms-and-conditions"
         element={<TermsAndConditionsPage />}
       />
+
       <Route
         path="/organisation/:organisationId/setup/set-employee-salary-calculate-day"
         element={<EmployeeSalaryCalculateDay />}
@@ -228,6 +233,10 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/set-employement-types"
         element={<EmployementTypes />}
+      />
+      <Route
+        path="/organisation/:organisationId/setup/subscription"
+        element={<Subscription />}
       />
       <Route
         path="/organisation/:organisationId/setup/set-employee-code-generator"

@@ -10,11 +10,13 @@ import React from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import useOrg from "../../../State/Org/Org";
+import Loader from "../../../components/app-loader/page";
 import useGetUser from "../../../hooks/Token/useUser";
 import { convertCamelToTitle } from "./step-3";
 
 const Step4 = () => {
   const data = useOrg();
+  console.log(`🚀 ~ file: step-4.jsx:18 ~ data:`, data);
   const { authToken, decodedToken } = useGetUser();
   const handleForm = async () => {
     const config = {
@@ -27,6 +29,7 @@ const Step4 = () => {
     if (data.data === undefined) {
       return "Please Select Plan And Package";
     }
+
     if (
       !data.logo_url ||
       !data.orgName ||
@@ -45,7 +48,6 @@ const Step4 = () => {
       throw new Error();
     }
 
-    console.log(`🚀 ~ file: step-4.jsx:106 ~ data.logo_url:`, data.logo_url);
     const formData = new FormData();
 
     // Append file to FormData
@@ -122,29 +124,28 @@ const Step4 = () => {
     analyticsAndReportingCount: 40,
     skillMatricesCount: 40,
   };
-  if (data.data === undefined) {
+  console.log(`🚀 ~ file: step-4.jsx:126 ~ data?.data:`, data?.data);
+  if (data?.data === undefined) {
     return "Please Select Plan And Package";
   }
 
-  // if (isLoading) {
-  //   return<Loader/
-  // }
-  console.log(`🚀 ~ file: step-4.jsx:125 ~ isLoading:`, isLoading);
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
-    <div className="px-4 grid grid-cols-6 bg-[#f8fafb] p-4 rounded-md">
-      <div className="grid col-span-2">
-        <img src="/payment.svg" alt="" />
+    <div className="px-4 grid md:grid-cols-6 grid-cols-1 bg-[#f8fafb] p-4 rounded-md">
+      <div className="grid md:col-span-2 col-span-1 items-center">
+        <img src="/payment.svg" className="h-[100px]" alt="" />
       </div>
-      <div className=" grid col-span-4 p-8 gap-2 grid-rows-4">
+      <div className=" grid col-span-4 p-8 gap-2 grid-rows-3 md:grid-rows-4">
         <div className=" !row-span-1">
           <h2 className="text-2xl font-bold ">Your Package Pricing</h2>
-          <p className=" text-gray-500">Organisation Package </p>
+          <p className=" text-gray-500">Organization Package </p>
         </div>
         <div className="flex flex-col gap-2 !row-span-4">
           {Object.entries(data.data)
             .reverse()
             .map((doc) => {
-              console.log(`🚀 ~ file: step-4.jsx:17 ~ doc:`, doc);
               return (
                 <Accordion className="">
                   <AccordionSummary

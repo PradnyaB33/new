@@ -13,7 +13,7 @@ const AddRoles = () => {
   const { organisationId } = useParams("");
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
 
   const fetchProfiles = async () => {

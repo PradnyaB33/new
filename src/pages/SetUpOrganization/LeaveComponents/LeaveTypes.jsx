@@ -12,7 +12,7 @@ import SkeletonForLeaveTypes from "./components/skeleton-for-leavetype";
 
 const LeaveTypes = ({ open, handleClose, id }) => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const [confirmOpen, setConfirmOpen] = useState(false);
   const queryClient = useQueryClient();
   const params = useParams();

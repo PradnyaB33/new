@@ -25,7 +25,7 @@ const EmployeeTest = () => {
     goToStep,
   } = useMultiStepForm(4);
 
-  const setper = [
+  const stepper = [
     {
       label: "Personal details",
       icon: Person,
@@ -81,7 +81,7 @@ const EmployeeTest = () => {
                 isLastStep,
                 nextStep,
                 prevStep,
-                setper,
+                stepper,
               }}
             >
               {useSwitch(step)}

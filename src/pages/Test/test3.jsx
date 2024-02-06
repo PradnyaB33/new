@@ -17,7 +17,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 const TrackingMap = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   function LocationMarker() {
     const [position, setPosition] = useState(null);
     const markerIcon = new L.Icon({

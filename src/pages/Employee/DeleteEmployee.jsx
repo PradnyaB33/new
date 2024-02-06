@@ -1,30 +1,30 @@
-import { Delete, Warning } from "@mui/icons-material";
+import { Delete, GetApp, Publish, Warning } from "@mui/icons-material";
 import {
   Button,
   Checkbox,
+  Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
+  Menu,
+  MenuItem,
   TextField,
-  Container,
+  Tooltip,
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
+import * as XLSX from "xlsx";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import { Menu, MenuItem } from "@mui/material";
-import * as XLSX from "xlsx";
-import { GetApp, Publish } from "@mui/icons-material";
-import { Tooltip } from "@mui/material";
-import { useParams } from "react-router-dom";
 
 const DeleteEmployee = () => {
   const { handleAlert } = useContext(TestContext);
   const { setAppAlert, cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
   const [nameSearch, setNameSearch] = useState("");
   const [deptSearch, setDeptSearch] = useState("");
@@ -530,22 +530,22 @@ const DeleteEmployee = () => {
                         />
                       </td>
                       <td className="!text-left pl-8 py-3">{id + 1}</td>
-                      <td className="py-3">{item?.first_name}</td>
-                      <td className="py-3">{item?.last_name}</td>
-                      <td className="py-3">{item?.email}</td>
-                      <td className="py-3">
+                      <td className="py-3 pl-8">{item?.first_name}</td>
+                      <td className="py-3 pl-8">{item?.last_name}</td>
+                      <td className="py-3 pl-8">{item?.email}</td>
+                      <td className="py-3 pl-8">
                         {item?.worklocation?.map((location, index) => (
                           <span key={index}>{location?.city}</span>
                         ))}
                       </td>
-                      <td className="py-3">
+                      <td className="py-3 pl-8">
                         {item?.deptname?.map((dept, index) => {
                           return (
                             <span key={index}>{dept?.departmentName}</span>
                           );
                         })}
                       </td>
-                      <td className="py-3">{item?.phone_number}</td>
+                      <td className="py-3 pl-8">{item?.phone_number}</td>
                       <td className="whitespace-nowrap px-6 py-2">
                         <IconButton
                           onClick={() => handleDeleteConfirmation(item?._id)}

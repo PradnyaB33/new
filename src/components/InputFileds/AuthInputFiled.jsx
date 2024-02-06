@@ -55,6 +55,7 @@ const AuthInputFiled = ({
                         boxShadow: "none",
                       }),
                     }}
+                    defaultInputValue={field.value}
                     className={`${
                       readOnly && "bg-[ghostwhite]"
                     } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
