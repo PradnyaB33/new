@@ -104,7 +104,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
-      "Pay-roll": {
+      Payroll: {
         open: false,
         isVisible: true,
         icon: <Payment className=" !text-[1.2em] text-[#67748E]" />,
