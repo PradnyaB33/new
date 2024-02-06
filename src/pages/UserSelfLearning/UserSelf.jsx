@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Alert from "@mui/material/Alert";
 
-const UserSelf = () => {
+const UserSelf = ({ message }) => {
   const [showAlert, setShowAlert] = useState(true);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setShowAlert(false);
-    }, 5000); // Hide the alert after 3 seconds
+    }, 3000);
 
     return () => clearTimeout(timeout);
   }, []);
@@ -41,7 +41,7 @@ const UserSelf = () => {
             severity="success"
             sx={{ backgroundColor: "#50C878" }}
           >
-            This is a filled success Alert.
+            {message}
           </Alert>
         </div>
       </div>

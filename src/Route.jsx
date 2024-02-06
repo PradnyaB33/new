@@ -62,7 +62,7 @@ import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 import ViewPayslip1 from "./pages/ViewPayslip/ViewPayslip1";
-import UserSelf from "./pages/UserSelf/UserSelf";
+
 const App = () => {
   return (
     <Routes>
@@ -188,7 +188,7 @@ const App = () => {
         path="/terms-and-conditions"
         element={<TermsAndConditionsPage />}
       />
-      <Route path="/user-self" element={<UserSelf />} />
+
       <Route
         path="/organisation/:organisationId/setup/set-employee-salary-calculate-day"
         element={<EmployeeSalaryCalculateDay />}
