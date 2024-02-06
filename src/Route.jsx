@@ -64,6 +64,7 @@ import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
+
 const App = () => {
   return (
     <Routes>
@@ -136,7 +137,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/dashboard/super-admin"
         element={
-          <RequireAuth permission={"Super-Admin"}>
+          <RequireAuth permission={["Super-Admin"]}>
             <SuperAdmin />
           </RequireAuth>
         }
@@ -190,6 +191,7 @@ const App = () => {
         path="/terms-and-conditions"
         element={<TermsAndConditionsPage />}
       />
+
       <Route
         path="/organisation/:organisationId/setup/set-employee-salary-calculate-day"
         element={<EmployeeSalaryCalculateDay />}
@@ -283,7 +285,7 @@ function RequireAuth({ children, permission }) {
 
   const user = getCurrentUser();
   const role = getCurrentRole();
-  const isPermission = role === permission;
+  const isPermission = permission.includes("role");
 
   if (user && !role) {
     return <Navigate to={"/choose-role"} />;

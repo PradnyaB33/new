@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import UserProfile from "../../hooks/UserData/useUser";
 import useSignup from "../../hooks/useLoginForm";
+import UserSelf from "../UserSelfLearning/UserSelf";
 const SignIn = () => {
   const { setEmail, setPassword, email, password } = useSignup();
   // const [selectRole, setSelectRole] = useState("");
@@ -98,6 +99,7 @@ const SignIn = () => {
 
   return (
     <>
+      <UserSelf message="Please Login First." />
       <section className="lg:min-h-screen  flex w-full">
         <div className="!w-[30%]  md:justify-start lg:flex hidden text-white flex-col items-center justify-center lg:h-screen relative">
           <div className="bg__gradient  absolute inset-0 "></div>
