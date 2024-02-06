@@ -56,13 +56,13 @@ import TrackingMap2 from "./pages/Test/testMap";
 import TestNaresh from "./pages/Test/testNaresh";
 import TrackingMap3 from "./pages/Test/testYash";
 import EmployeeProfile from "./pages/UserProfile/UserProfile";
-//import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 import ViewPayslip1 from "./pages/ViewPayslip/ViewPayslip1";
+import UserSelf from "./pages/UserSelf/UserSelf";
 const App = () => {
   return (
     <Routes>
@@ -188,6 +188,7 @@ const App = () => {
         path="/terms-and-conditions"
         element={<TermsAndConditionsPage />}
       />
+      <Route path="/user-self" element={<UserSelf />} />
       <Route
         path="/organisation/:organisationId/setup/set-employee-salary-calculate-day"
         element={<EmployeeSalaryCalculateDay />}
