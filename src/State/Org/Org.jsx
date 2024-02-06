@@ -27,9 +27,9 @@ const useOrg = create((set) => {
     setStep2Data: (remotePunching) => {
       set({ ...remotePunching });
     },
-    setStep1Data: (orgName) => {
+    setStep1Data: async (orgName) => {
       console.log(`🚀 ~ file: Org.jsx:31 ~ orgName:`, orgName);
-      set({
+      await set({
         ...orgName,
       });
     },

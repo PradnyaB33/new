@@ -15,6 +15,7 @@ import { convertCamelToTitle } from "./step-3";
 
 const Step4 = () => {
   const data = useOrg();
+  console.log(`🚀 ~ file: step-4.jsx:18 ~ data:`, data);
   const { authToken, decodedToken } = useGetUser();
   const handleForm = async () => {
     const config = {
@@ -27,6 +28,7 @@ const Step4 = () => {
     if (data.data === undefined) {
       return "Please Select Plan And Package";
     }
+
     if (
       !data.logo_url ||
       !data.orgName ||
@@ -45,7 +47,6 @@ const Step4 = () => {
       throw new Error();
     }
 
-    console.log(`🚀 ~ file: step-4.jsx:106 ~ data.logo_url:`, data.logo_url);
     const formData = new FormData();
 
     // Append file to FormData
@@ -122,7 +123,8 @@ const Step4 = () => {
     analyticsAndReportingCount: 40,
     skillMatricesCount: 40,
   };
-  if (data.data === undefined) {
+  console.log(`🚀 ~ file: step-4.jsx:126 ~ data?.data:`, data?.data);
+  if (data?.data === undefined) {
     return "Please Select Plan And Package";
   }
 
@@ -144,7 +146,6 @@ const Step4 = () => {
           {Object.entries(data.data)
             .reverse()
             .map((doc) => {
-              console.log(`🚀 ~ file: step-4.jsx:17 ~ doc:`, doc);
               return (
                 <Accordion className="">
                   <AccordionSummary

@@ -69,9 +69,9 @@ const Step1 = ({ nextStep }) => {
   });
   const { errors } = formState;
   console.log(`🚀 ~ file: step-1.jsx:79 ~ errors:`, errors);
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(`🚀 ~ file: step-1.jsx:68 ~ data:`, data);
-    setStep1Data(data);
+    await setStep1Data(data);
     nextStep();
   };
   console.log(`🚀 ~ file: step-1.jsx:71 ~ errors:`, errors);
