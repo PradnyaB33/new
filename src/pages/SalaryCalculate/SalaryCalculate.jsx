@@ -4,7 +4,6 @@ import Grid from "@mui/material/Grid";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-// import { PDFDownloadLink } from "@react-pdf/renderer";
 import axios from "axios";
 import dayjs from "dayjs";
 import React, { useContext, useEffect, useState } from "react";
@@ -915,20 +914,6 @@ const SalaryCalculate = () => {
                   margin: "20px",
                 }}
               >
-                {/* <button
-                  onClick={handleGeneratePDF}
-                  style={{
-                    padding: "8px 38px",
-                    borderRadius: "5px",
-                    backgroundColor: "green",
-                    color: "#fff",
-                    cursor: "pointer",
-                    marginRight: "10px", // Add margin-right for spacing
-                  }}
-                >
-                  Generate PDF
-                </button> */}
-
                 <button
                   onClick={saveSallaryDetail}
                   style={{
@@ -943,40 +928,6 @@ const SalaryCalculate = () => {
                 >
                   Submit Salary Details
                 </button>
-              </div>
-
-              <div style={{ margin: "20px" }}>
-                {/* {employeeData && (
-                  <PDFDownloadLink
-                    document={
-                      <PDFDocument
-                        employeeData={employeeData}
-                        totalDeduction={totalDeduction}
-                        totalGrossSalary={totalGrossSalary}
-                        totalNetSalary={totalNetSalary}
-                        basicSalary={basicSalary}
-                        hraSalary={hraSalary}
-                        daSalary={daSalary}
-                        foodAllowance={foodAllowance}
-                        salesAllowance={salesAllowance}
-                        specialAllowance={specialAllowance}
-                        travelAllowance={travelAllowance}
-                        variableAllowance={variableAllowance}
-                        publicHolidaysCount={publicHolidaysCount}
-                        formattedDate={formattedDate}
-                        noOfDaysInMonth={numDaysInMonth}
-                        paidLeaveDays={paidLeaveDays}
-                        unPaidLeaveDays={unPaidLeaveDays}
-                        noOfDaysEmployeePresent={noOfDaysEmployeePresent}
-                      />
-                    }
-                    fileName="SalarySlip.pdf"
-                  >
-                    {({ blob, url, loading, error }) =>
-                      loading ? "Generating PDF..." : "Download PDF"
-                    }
-                  </PDFDownloadLink>
-                )} */}
               </div>
             </div>
           </Paper>

@@ -50,6 +50,15 @@ const useSetupSideNav = (organisationId) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
+      label: "Add Location",
+      icon: AddLocationAltOutlined,
+      href: `/organisation/${organisationId}/setup/add-organization-locations`,
+      active:
+        location.pathname ===
+        `/organization/${organisationId}/setup/add-organization-locations`,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+    },
+    {
       label: "Public Holidays",
       icon: BeachAccessOutlined,
       href: `/organisation/${organisationId}/setup/set-public-holiday`,
@@ -59,15 +68,6 @@ const useSetupSideNav = (organisationId) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
 
-    {
-      label: "Add Location",
-      icon: AddLocationAltOutlined,
-      href: `/organisation/${organisationId}/setup/add-organization-locations`,
-      active:
-        location.pathname ===
-        `/organization/${organisationId}/setup/add-organization-locations`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
-    },
     {
       label: "Additional Employee Data",
       icon: PersonAddAlt1OutlinedIcon,

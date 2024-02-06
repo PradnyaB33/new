@@ -416,7 +416,7 @@ const AddDepartments = () => {
 
           {enterDepartmentId && (
             <p style={{ alignSelf: "start" }} className="font-extralight">
-              Note: Please adjust the character length of prefix in ID.
+              Note: Please adjust the character length to prefix .
             </p>
           )}
           {!enterDepartmentId && (
@@ -482,7 +482,7 @@ const AddDepartments = () => {
           </div>
           {enterDeptCostCenterId && (
             <p style={{ alignSelf: "start" }} className="font-extralight">
-              Note: Please adjust the character length of prefix in ID.
+              Note: Please adjust the character length to prefix .
             </p>
           )}
           {!enterDeptCostCenterId && (
