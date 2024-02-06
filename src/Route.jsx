@@ -68,12 +68,15 @@ const App = () => {
       <Route
         path="/"
         element={
-          <RequireAuth permission={"Super-Admin"}>
+          <RequireAuth permission={["Super-Admin", "Hr"]}>
             <Home />
           </RequireAuth>
         }
       />
-      <Route path="/organisation/employeeTest" element={<EmployeeTest />} />
+      <Route
+        path="/organisation/:organisationId/employeeTest"
+        element={<EmployeeTest />}
+      />
       <Route path="/paymentfailed" element={<PaymentFailed />} />
 
       <Route path="/test" element={<EditablePolyline />} />
@@ -276,7 +279,7 @@ function RequireAuth({ children, permission }) {
 
   const user = getCurrentUser();
   const role = getCurrentRole();
-  const isPermission = role === permission;
+  const isPermission = permission.includes(role);
 
   if (user && !role) {
     return <Navigate to={"/choose-role"} />;

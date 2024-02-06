@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import Bottom from "./bottom";
 import Header from "./header";
 
 const StepFormWrapper = ({
@@ -21,7 +20,7 @@ const StepFormWrapper = ({
     <div className={`p-2 flex flex-col gap-4   m-4 rounded-lg ${className}`}>
       <Header {...{ goToStep, totalSteps, step, setper }} />
       {children}
-      <Bottom {...{ isFirstStep, isLastStep, nextStep, prevStep }} />
+      {/* <Bottom {...{ isFirstStep, isLastStep, nextStep, prevStep }} /> */}
     </div>
   );
 };

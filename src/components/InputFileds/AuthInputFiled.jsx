@@ -19,6 +19,7 @@ const AuthInputFiled = ({
   placeholder,
   options,
   disabled,
+  wrapperMessage,
 }) => {
   if (type === "select") {
     return (
@@ -61,13 +62,80 @@ const AuthInputFiled = ({
                       IndicatorSeparator: () => null,
                     }}
                     options={options}
-                    // {...field}
                     onChange={(value) => {
-                      console.log(
-                        `🚀 ~ file: AuthInputFiled.jsx:64 ~ value:`,
-                        value
-                      );
                       field.onChange(value.value);
+                    }}
+                  />
+                </div>
+              </>
+            )}
+          />
+          <div className="h-4 !mb-1">
+            <ErrorMessage
+              errors={errors}
+              name={name}
+              render={({ message }) => (
+                <p className="text-sm text-red-500">{message}</p>
+              )}
+            />
+          </div>
+        </div>
+      </>
+    );
+  }
+  if (type === "mutltiselect") {
+    return (
+      <>
+        <div className="space-y-1 w-full ">
+          <label
+            htmlFor={name}
+            className={`${
+              error && "text-red-500"
+            } font-semibold text-gray-500 text-md`}
+          >
+            {label}
+          </label>
+          <Controller
+            control={control}
+            name={name}
+            id={name}
+            render={({ field }) => (
+              <>
+                <div
+                  className={`${
+                    readOnly && "bg-[ghostwhite]"
+                  } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+                >
+                  <Icon className="text-gray-700" />
+                  <Select
+                    aria-errormessage="error"
+                    placeholder={placeholder}
+                    isMulti
+                    styles={{
+                      control: (styles) => ({
+                        ...styles,
+                        borderWidth: "0px",
+                        boxShadow: "none",
+                      }),
+                    }}
+                    className={`${
+                      readOnly && "bg-[ghostwhite]"
+                    } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                    components={{
+                      IndicatorSeparator: () => null,
+                    }}
+                    options={options}
+                    onChange={(value) => {
+                      field.onChange(
+                        value.map((item) => {
+                          return item.value;
+                        })
+                      );
+                      console.log(
+                        value.map((item) => {
+                          return item.value;
+                        })
+                      );
                     }}
                   />
                 </div>
@@ -249,7 +317,7 @@ const AuthInputFiled = ({
           htmlFor={name}
           className={`${
             error && "text-red-500"
-          } font-semibold text-gray-500 text-sm md:text-md`}
+          } font-semibold  text-gray-500 text-md`}
         >
           {label}
         </label>
@@ -300,7 +368,7 @@ const AuthInputFiled = ({
         htmlFor={name}
         className={`${
           error && "text-red-500"
-        } font-semibold text-gray-500 text-sm md:text-md`}
+        } font-semibold text-gray-500 text-md`}
       >
         {label}
       </label>
