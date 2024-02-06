@@ -22,7 +22,7 @@ import Selector from "./selector";
 
 const OrganizationLocations = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const { handleAlert } = useContext(TestContext);
   const organizationId = useParams().organisationId;
   let countryData = Country.getAllCountries();
@@ -361,43 +361,41 @@ const OrganizationLocations = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {locationList?.map((location, index) =>
-                  
-                      (
-                        <tr
-                          key={index}
-                          className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                            } border-b dark:border-neutral-500 !font-medium`}
+                  {locationList?.map((location, index) => (
+                    <tr
+                      key={index}
+                      className={`${
+                        index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                      } border-b dark:border-neutral-500 !font-medium`}
+                    >
+                      <td className="py-2 px-3">{index + 1}</td>
+                      <td className="py-2 px-3">{location.continent}</td>
+                      <td className="py-2 px-3">{location.country}</td>
+                      <td className="py-2 px-3">{location.state}</td>
+                      <td className="py-2 px-3">{location.city}</td>
+                      <td className="py-2 px-3">{location.shortName}</td>
+                      <td className="py-2 px-3">
+                        {`${location.addressLine1} ${location.addressLine2} ${location.pinCode}`}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-2">
+                        <IconButton
+                          onClick={() => handleEditLocation(index)}
+                          aria-label="edit"
                         >
-                          <td className="py-2 px-3">{index + 1}</td>
-                          <td className="py-2 px-3">{location.continent}</td>
-                          <td className="py-2 px-3">{location.country}</td>
-                          <td className="py-2 px-3">{location.state}</td>
-                          <td className="py-2 px-3">{location.city}</td>
-                          <td className="py-2 px-3">{location.shortName}</td>
-                          <td className="py-2 px-3">
-                            {`${location.addressLine1} ${location.addressLine2} ${location.pinCode}`}
-                          </td>
-                          <td className="whitespace-nowrap px-3 py-2">
-                            <IconButton
-                              onClick={() => handleEditLocation(index)}
-                              aria-label="edit"
-                            >
-                              <Edit className="!text-xl" color="success" />
-                            </IconButton>
-                            <IconButton
-                              onClick={() => {
-                                handleDeleteLocationConfirmation(index);
-                                setDeleteIndex(index);
-                              }}
-                              aria-label="delete"
-                            >
-                              <Delete className="!text-xl" color="error" />
-                            </IconButton>
-                          </td>
-                        </tr>
-                      )
-                    )}
+                          <Edit className="!text-xl" color="success" />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => {
+                            handleDeleteLocationConfirmation(index);
+                            setDeleteIndex(index);
+                          }}
+                          aria-label="delete"
+                        >
+                          <Delete className="!text-xl" color="error" />
+                        </IconButton>
+                      </td>
+                    </tr>
+                  ))}
                   {/* {isLoading ? (
                     <SkeletonForLeaveTypes />
                   ) : (

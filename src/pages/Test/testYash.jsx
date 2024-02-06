@@ -25,7 +25,7 @@ function useInterval(callback, delay) {
 
 export default function TestYash() {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const [watchId, setWatchId] = useState(null);
   const [isWatching, setIsWatching] = useState(false);
   let map;

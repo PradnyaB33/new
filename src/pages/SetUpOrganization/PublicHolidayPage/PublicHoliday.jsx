@@ -38,7 +38,7 @@ const PublicHoliday = () => {
   const [locations, setLocations] = useState([]);
   const [selectedHolidayId, setSelectedHolidayId] = useState(null);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
 
   // todo - data to post
 

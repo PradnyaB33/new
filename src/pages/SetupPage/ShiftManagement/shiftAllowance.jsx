@@ -18,7 +18,7 @@ import Mapped from "./components/mapped-form";
 
 const ShiftManagement = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   // const { handleAlert } = useContext(TestContext);

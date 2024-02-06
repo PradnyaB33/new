@@ -4,7 +4,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 
 const useAuthToken = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   return authToken;
 };
 

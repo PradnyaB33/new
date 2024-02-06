@@ -49,7 +49,7 @@ const SignIn = () => {
 
     {
       onSuccess: (response) => {
-        Cookies.set("aeigs", response.data.token);
+        Cookies.set("aegis", response.data.token);
 
         handleAlert(
           true,

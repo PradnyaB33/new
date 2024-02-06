@@ -29,7 +29,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 const ShiftModal = ({ handleClose, open, id, shiftId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
 
   const { data, isLoading } = useQuery(
     ["shift", shiftId],

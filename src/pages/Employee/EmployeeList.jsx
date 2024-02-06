@@ -8,7 +8,7 @@ import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployee
 
 const EmployeeList = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const [nameSearch, setNameSearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const [deptSearch, setDeptSearch] = useState("");

@@ -10,7 +10,7 @@ import EmployeeLeaveRequest from "./Components/List/EmployeLeaveReqest";
 
 const DashboardManger = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
 

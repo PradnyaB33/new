@@ -16,7 +16,7 @@ import UserProfile from "../../hooks/UserData/useUser";
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const token = cookies["aeigs"];
+  const token = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const userId = user._id;

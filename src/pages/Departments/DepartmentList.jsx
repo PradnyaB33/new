@@ -41,7 +41,7 @@ const DepartmentList = () => {
   const { cookies } = useContext(UseContext);
   const [locationID, setLocationID] = useState("");
   const [deptID, setDeptID] = useState("");
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const { organisationId } = useParams();
   const queryClient = useQueryClient();
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);

@@ -10,7 +10,7 @@ Chart.register(CategoryScale);
 
 const HRgraph = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
 

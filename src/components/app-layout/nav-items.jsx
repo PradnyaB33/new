@@ -36,7 +36,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 const NavItems = ({ toggleDrawer }) => {
   const [userRole, setUserRole] = useState(null);
   const { cookies } = useContext(UseContext);
-  const token = cookies["aeigs"];
+  const token = cookies["aegis"];
 
   useEffect(() => {
     try {

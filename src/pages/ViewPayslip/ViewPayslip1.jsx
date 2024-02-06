@@ -1,16 +1,16 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
-import UserProfile from "../../hooks/UserData/useUser";
-import { UseContext } from "../../State/UseState/UseContext";
 import { Divider, Paper } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import axios from "axios";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { UseContext } from "../../State/UseState/UseContext";
+import UserProfile from "../../hooks/UserData/useUser";
 const ViewPayslip1 = () => {
   const pdfRef = useRef();
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const employeeId = user._id;

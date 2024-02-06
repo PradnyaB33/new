@@ -7,7 +7,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 
 const LeaveRejectmodal = ({ open, handleClose, id }) => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const [message, setMessage] = useState("");
   const queryClient = useQueryClient();
 

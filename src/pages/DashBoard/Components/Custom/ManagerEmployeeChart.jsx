@@ -12,7 +12,7 @@ Chart.register(CategoryScale);
 
 const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   // const RemainingLeaves = useLeaveTable();

@@ -1,12 +1,12 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Button, Divider, IconButton, Modal } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
 
 const style = {
   position: "absolute",
@@ -20,7 +20,7 @@ const style = {
 const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
   const [selectedDay, setSelectedDay] = useState("");
 

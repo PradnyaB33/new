@@ -9,7 +9,7 @@ import { UseContext } from "../../../../State/UseState/UseContext";
 
 const LeaveDisplayList = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
 
   const GetLastLeaves = async () => {
     const { data } = await axios.get(
