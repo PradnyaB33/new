@@ -53,7 +53,7 @@ const Step1 = ({ nextStep }) => {
     isTrial,
   } = useOrg();
 
-  const { control, formState, handleSubmit, getValues } = useForm({
+  const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       orgName: orgName,
       foundation_date: foundation_date,
@@ -77,8 +77,9 @@ const Step1 = ({ nextStep }) => {
     await setStep1Data(data);
     nextStep();
   };
-  console.log(`🚀 ~ file: step-1.jsx:71 ~ errors:`, errors);
-  console.log("getValues", getValues());
+  if (creator === undefined) {
+  }
+
   return (
     <div>
       <form
@@ -110,8 +111,8 @@ const Step1 = ({ nextStep }) => {
             icon={CorporateFare}
             control={control}
             type="text"
-            placeholder="Organisation Name"
-            label="Organisation Name *"
+            placeholder="Organization Name"
+            label="Organization Name *"
             errors={errors}
             error={errors.name}
           />
@@ -186,8 +187,8 @@ const Step1 = ({ nextStep }) => {
             icon={Description}
             control={control}
             type="text"
-            placeholder="Organisational Description "
-            label="Organisational Description  *"
+            placeholder="Organizational Description "
+            label="Organizational Description  *"
             errors={errors}
             error={errors.description}
           />
@@ -196,8 +197,8 @@ const Step1 = ({ nextStep }) => {
             icon={FactoryOutlined}
             control={control}
             type="not-select"
-            placeholder="Location Addresss "
-            label="Location Addresss  *"
+            placeholder="Location Address "
+            label="Location Address  *"
             errors={errors}
             error={errors.location}
           />

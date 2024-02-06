@@ -4,7 +4,7 @@ import Setup from "../Setup";
 
 const Subscription = () => {
   // const { cookies } = useContext(UseContext);
-  // const authToken = cookies["aeigs"];
+  // const authToken = cookies["aegis"];
   // const queryClient = useQueryClient();
 
   // const handleClickOpen = (scrollType) => () => {

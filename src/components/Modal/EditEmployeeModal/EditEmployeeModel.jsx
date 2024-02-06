@@ -20,7 +20,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
   // define the state for storing the employee data
   const [formData, setFormData] = useState({

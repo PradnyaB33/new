@@ -13,7 +13,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 const SalaryCalculate = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const token = cookies["aeigs"];
+  const token = cookies["aegis"];
   const { userId, organisationId } = useParams();
   const [selectedDate, setSelectedDate] = useState(dayjs("2022-04-17"));
   const [numDaysInMonth, setNumDaysInMonth] = useState(0);

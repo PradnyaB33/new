@@ -21,7 +21,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const params = useParams();
   console.log(`🚀 ~ file: EmpTypeModal.jsx:26 ~ params:`, params);
 

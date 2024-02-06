@@ -16,7 +16,7 @@ const containerStyle = {
 const TestMap = () => {
   const [waypoints, setWaypoints] = useState([]);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
 
   useEffect(() => {
     (async () => {

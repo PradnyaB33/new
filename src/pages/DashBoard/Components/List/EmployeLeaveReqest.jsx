@@ -10,7 +10,7 @@ import { UseContext } from "../../../../State/UseState/UseContext";
 
 const EmployeeLeaveRequest = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
 
   // const GetLastLeaves = async () => {
   //   const { data } = await axios.get(

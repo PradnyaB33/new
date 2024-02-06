@@ -8,15 +8,15 @@ import {
   Divider,
   IconButton,
 } from "@mui/material";
-import React, { useContext, useState } from "react";
-import { UseContext } from "../../../State/UseState/UseContext";
 import axios from "axios";
+import React, { useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
 const CreateSalaryModel = ({ handleClose, open, empId }) => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const [errorMessage, setErrorMessage] = useState("");
   const [deduction, setDeduction] = useState("");
   const [employee_pf, setEmployeePf] = useState("");

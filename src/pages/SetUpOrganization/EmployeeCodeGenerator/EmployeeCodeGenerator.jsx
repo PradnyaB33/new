@@ -1,27 +1,26 @@
-import React, { useContext } from "react";
-import Setup from "../Setup";
-import { BorderColor } from "@mui/icons-material";
+import { BorderColor, Delete, Warning } from "@mui/icons-material";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
-import { Button, IconButton } from "@mui/material";
-import { useState } from "react";
-import axios from "axios";
-import { useParams } from "react-router-dom";
-import { UseContext } from "../../../State/UseState/UseContext";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import CreateEmpCodeModel from "../../../components/Modal/EmpCodeModel/CreateEmpCodeModel";
-import EditEmpCodeModel from "../../../components/Modal/EmpCodeModel/EditEmpCodeModel";
-import { Delete, Warning } from "@mui/icons-material";
 import {
+  Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
 } from "@mui/material";
+import axios from "axios";
+import React, { useContext, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
+import CreateEmpCodeModel from "../../../components/Modal/EmpCodeModel/CreateEmpCodeModel";
+import EditEmpCodeModel from "../../../components/Modal/EmpCodeModel/EditEmpCodeModel";
+import Setup from "../Setup";
 const EmployeeCodeGenerator = () => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
   const { organisationId } = useParams();
   // state for delete the employee code

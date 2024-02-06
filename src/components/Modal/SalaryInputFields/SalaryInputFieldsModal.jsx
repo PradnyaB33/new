@@ -30,7 +30,7 @@ const filter = createFilterOptions();
 const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
 
   let salaryComponentArray = [
     { title: "Basic" },

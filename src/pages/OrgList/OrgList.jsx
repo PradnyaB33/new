@@ -9,7 +9,7 @@ import Organisation from "../Home/components/Organisation";
 
 const OrgList = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
 
   const { data, isLoading } = useQuery("orglist", async () => {
     try {

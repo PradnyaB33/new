@@ -10,7 +10,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 const Home = () => {
   const redirect = useNavigate();
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const { handleAlert } = useContext(TestContext);
 
   const getOrgList = async () => {
