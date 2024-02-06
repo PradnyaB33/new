@@ -177,20 +177,20 @@ const EmployeeList = () => {
                   .map((item, id) => (
                     <tr className="!font-medium border-b" key={id}>
                       <td className="!text-left pl-8 py-3">{id + 1}</td>
-                      <td className="py-3">{item?.first_name}</td>
-                      <td className="py-3">{item?.last_name}</td>
-                      <td className="py-3">{item?.email}</td>
-                      <td className="py-3">
+                      <td className="py-3 pl-8">{item?.first_name}</td>
+                      <td className="py-3 pl-8">{item?.last_name}</td>
+                      <td className="py-3 pl-8">{item?.email}</td>
+                      <td className="py-3 pl-8">
                         {item?.worklocation?.map((location, index) => (
                           <span key={index}>{location?.city}</span>
                         ))}
                       </td>
-                      <td className="py-3">
+                      <td className="py-3 pl-8 ">
                         {item?.deptname?.map((dept, index) => (
                           <span key={index}>{dept?.departmentName}</span>
                         ))}
                       </td>
-                      <td className="py-3">{item?.phone_number}</td>
+                      <td className="py-3 pl-8 ">{item?.phone_number}</td>
                       <td className="whitespace-nowrap px-6 py-2">
                         <IconButton
                           onClick={() => handleEditModalOpen(item._id)}

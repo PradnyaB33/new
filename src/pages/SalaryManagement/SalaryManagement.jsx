@@ -188,10 +188,10 @@ const SalaryManagement = () => {
                   ?.map((item, id) => (
                     <tr className="!font-medium border-b" key={id}>
                       <td className="!text-left pl-8 py-3">{id + 1}</td>
-                      <td className="py-3">{item?.first_name}</td>
-                      <td className="py-3">{item?.last_name}</td>
-                      <td className="py-3">{item?.email}</td>
-                      <td className="py-3">
+                      <td className="py-3 pl-8">{item?.first_name}</td>
+                      <td className="py-3 pl-8 ">{item?.last_name}</td>
+                      <td className="py-3 pl-8">{item?.email}</td>
+                      <td className="py-3 pl-8">
                         {item?.worklocation?.map((location, index) => (
                           <span key={index}>{location?.city}</span>
                         ))}
@@ -203,13 +203,10 @@ const SalaryManagement = () => {
                           );
                         })}
                       </td>
-                      <td className="py-3">{item?.salarystructure?.name}</td>
+                      <td className="py-3 pl-8">
+                        {item?.salarystructure?.name}
+                      </td>
                       <td>
-                        {/* <Event
-                          onClick={() => handleCreateModalOpen(item._id)}
-                          className="cursor-pointer"
-                          style={{ color: "blue", fontSize: 24 }}
-                        /> */}
                         <button
                           type="submit"
                           onClick={() => handleCreateModalOpen(item._id)}
@@ -219,15 +216,6 @@ const SalaryManagement = () => {
                         </button>
                       </td>
                       <td>
-                        {/* <AttachMoneyIcon
-                          onClick={() =>
-                            navigate(
-                              `/organisation/${organisationId}/salary-calculate/${item._id}`
-                            )
-                          }
-                          className="cursor-pointer"
-                          style={{ color: "green", fontSize: 24 }}
-                        /> */}
                         <button
                           type="submit"
                           onClick={() =>
