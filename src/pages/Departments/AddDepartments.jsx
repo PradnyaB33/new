@@ -2,7 +2,6 @@ import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import React, { useContext, useEffect, useState } from "react";
-import UserSelf from "../UserSelfLearning/UserSelf";
 import {
   Checkbox,
   Container,
@@ -201,7 +200,6 @@ const AddDepartments = () => {
 
   return (
     <>
-      <UserSelf message="After Adding Department Go to Add Employee Page" />
       <div className="w-full h-[auto] bg-white">
         <form
           style={{

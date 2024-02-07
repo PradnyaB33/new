@@ -7,7 +7,7 @@ import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import UserProfile from "../../hooks/UserData/useUser";
-import UserSelf from "../UserSelfLearning/UserSelf";
+
 const RolePage = () => {
   const [selected, setSelected] = useState(null);
   const { handleAlert } = useContext(TestContext);
@@ -106,7 +106,6 @@ const RolePage = () => {
 
   return (
     <>
-      <UserSelf message="Please Choose The Profile." />
       <div className="h-screen flex flex-col items-center">
         {!user ? (
           <>

@@ -6,7 +6,7 @@ import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import Organisation from "../Home/components/Organisation";
-import UserSelf from "../UserSelfLearning/UserSelf";
+
 const OrgList = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -30,7 +30,6 @@ const OrgList = () => {
 
   return (
     <>
-      <UserSelf message="Please First Go to Setup Page and then Go to DashBoard" />
       <div className="bg-gray-50 h-screen">
         <div className="md:p-10  sm:p-4 p-1 py-4  !pb-6">
           <div className="flex justify-between items-center">

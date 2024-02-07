@@ -153,116 +153,389 @@ const App = () => {
       />
       <Route
         path="/organisation/:organisationId/add-department"
-        element={<AddDepartments />}
+        element={
+          <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+            ]}
+          >
+            <AddDepartments />
+          </RequireAuth>
+        }
       />
       <Route
         path="organisation/:organisationId/department-list"
-        element={<DepartmentList />}
+        element={
+          <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+            ]}
+          >
+            <DepartmentList />
+          </RequireAuth>
+        }
       />
-      <Route path="/organisation/:id" element={<SingleOrganisation />} />
-      <Route path="/employee-profile" element={<EmployeeProfile />} />
+      <Route
+        path="/organisation/:id"
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <SingleOrganisation />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/employee-profile"
+        element={
+          <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "Hr",
+              "Manager",
+              "Employee",
+            ]}
+          >
+            <EmployeeProfile />
+          </RequireAuth>
+        }
+      />
       <Route
         path="/organisation/:organisationId/employee-onboarding"
-        element={<EmployeeAdd />}
+        element={
+          <RequireAuth
+            permission={["Super-Admin", "Delegate-Super Admin", "Hr"]}
+          >
+            <EmployeeAdd />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/employee-offboarding"
-        element={<DeleteEmployee />}
+        element={
+          <RequireAuth
+            permission={["Super-Admin", "Delegate-Super Admin", "Hr"]}
+          >
+            <DeleteEmployee />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/employee-list"
-        element={<EmployeeList />}
+        element={
+          <RequireAuth
+            permission={["Super-Admin", "Delegate-Super Admin", "Hr"]}
+          >
+            <EmployeeList />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/setup/input-field"
-        element={<Inputfield />}
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <Inputfield />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/salary-management"
-        element={<SalaryManagement />}
+        element={
+          <RequireAuth
+            permission={["Super-Admin", "Delegate-Super Admin", "Hr"]}
+          >
+            <SalaryManagement />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/salary-calculate/:userId"
-        element={<SalaryCalculate />}
+        element={
+          <RequireAuth
+            permission={["Super-Admin", "Delegate-Super Admin", "Hr"]}
+          >
+            <SalaryCalculate />
+          </RequireAuth>
+        }
       />
-      <Route path="/organisation/view-payslip" element={<ViewPayslip1 />} />
+      <Route
+        path="/organisation/view-payslip"
+        element={
+          <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "Hr",
+              "Manager",
+              "Employee",
+            ]}
+          >
+            <ViewPayslip1 />
+          </RequireAuth>
+        }
+      />
       <Route
         path="/terms-and-conditions"
-        element={<TermsAndConditionsPage />}
+        element={
+          <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "Hr",
+              "Manager",
+              "Employee",
+            ]}
+          >
+            <TermsAndConditionsPage />
+          </RequireAuth>
+        }
       />
 
       <Route
         path="/organisation/:organisationId/setup/set-employee-salary-calculate-day"
-        element={<EmployeeSalaryCalculateDay />}
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <EmployeeSalaryCalculateDay />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/setup/set-shifts"
-        element={<Shifts />}
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <Shifts />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/setup/set-weekend-holiday"
-        element={<WeekendHoliday />}
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <WeekendHoliday />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/setup/add-roles"
-        element={<AddRoles />}
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <AddRoles />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/setup/set-designation"
-        element={<Designation />}
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <Designation />
+          </RequireAuth>
+        }
       />
-      <Route path="/set-shifts/:id" element={<Shifts />} />
-      <Route path="/add-inputfield/:id" element={<Inputfield />} />
-      <Route path="/setup/add-roles/:id" element={<AddRoles />} />
+      <Route
+        path="/set-shifts/:id"
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <Shifts />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/add-inputfield/:id"
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <Inputfield />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/setup/add-roles/:id"
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <AddRoles />
+          </RequireAuth>
+        }
+      />
       <Route
         path="/organisation/:organisationId/setup/leave-types"
-        element={<LeaveTypes />}
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <LeaveTypes />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/setup/set-public-holiday"
-        element={<PublicHoliday />}
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <PublicHoliday />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/setup/set-shifts"
-        element={<Shifts />}
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <Shifts />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/setup/set-employement-types"
-        element={<EmployementTypes />}
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <EmployementTypes />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/setup/subscription"
-        element={<Subscription />}
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <Subscription />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/setup/set-employee-code-generator"
-        element={<EmployeeCodeGenerator />}
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <EmployeeCodeGenerator />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/setup/add-organization-locations"
-        element={<OrganizationLocations />}
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <OrganizationLocations />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/setup/set-salary-input-selection"
-        element={<SalaryInput />}
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <SalaryInput />
+          </RequireAuth>
+        }
       />
-      <Route path="/setup/:organisationId" element={<Setup />} />
-      <Route path="/set-designation" element={<Designation />} />
-      <Route path="/add-inputfield/:id" element={<Inputfield />} />
+      <Route
+        path="/setup/:organisationId"
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <Setup />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/set-designation"
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <Designation />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/add-inputfield/:id"
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <Inputfield />
+          </RequireAuth>
+        }
+      />
 
-      <Route path="/setup/:id/public-holidays" element={<PublicHoliday />} />
+      <Route
+        path="/setup/:id/public-holidays"
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <PublicHoliday />
+          </RequireAuth>
+        }
+      />
       <Route
         path="/organisation/:organisationId/setup/set-email"
-        element={<EmailSetting />}
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <EmailSetting />
+          </RequireAuth>
+        }
       />
-      <Route path="/notification" element={<Notification />} />
+      <Route
+        path="/notification"
+        element={
+          <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "Hr",
+              "Manager",
+              "Employee",
+            ]}
+          >
+            <Notification />
+          </RequireAuth>
+        }
+      />
       <Route
         path="/organisation/:organisationId/dept-deletion"
-        element={<DepartmentDeletion />}
+        element={
+          <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+            ]}
+          >
+            <DepartmentDeletion />
+          </RequireAuth>
+        }
       />
       <Route path="/application" element={<Application />} />
       <Route path="/leave" element={<LeaveRequisition />} />
-      <Route path="/shift-management" element={<ShiftManagement />} />
+      <Route
+        path="/shift-management"
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <ShiftManagement />
+          </RequireAuth>
+        }
+      />
       <Route
         path="/organisation/:id/department/:departmentId"
         element={<SingleDepartment />}
@@ -270,7 +543,20 @@ const App = () => {
       {/* Removable component */}
       <Route
         path="/del-department-by-location"
-        element={<DeleteDepartment />}
+        element={
+          <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+            ]}
+          >
+            <DeleteDepartment />
+          </RequireAuth>
+        }
       />
       <Route path="*" element={<NotFound />} />
     </Routes>

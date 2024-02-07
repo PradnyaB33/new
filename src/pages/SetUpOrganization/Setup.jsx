@@ -3,7 +3,7 @@ import React from "react";
 import { Link, useParams } from "react-router-dom";
 import BackComponent from "../../components/BackComponent/BackComponent";
 import useSetupSideNav from "../../hooks/Nav/useSetupSideNav";
-import UserSelf from "../UserSelfLearning/UserSelf";
+
 const Setup = ({ children }) => {
   const { organisationId } = useParams("");
 
@@ -11,7 +11,6 @@ const Setup = ({ children }) => {
 
   return (
     <>
-      <UserSelf message="Setup All Things." />
       <section className=" bg-gray-50 min-h-screen w-full">
         <header className="md:block hidden text-xl w-full pt-6 bg-white shadow-md p-4">
           <BackComponent />

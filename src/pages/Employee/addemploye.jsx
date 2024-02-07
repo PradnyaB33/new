@@ -29,7 +29,6 @@ import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import useAddEmpForm from "../../hooks/useAddEmpForm";
-import UserSelf from "../UserSelfLearning/UserSelf";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -642,7 +641,6 @@ const EmployeeAdd = () => {
 
   return (
     <>
-      <UserSelf message="Please Add the Employee and Assign the Role to Employee" />
       <div
         style={{
           display: "flex",
