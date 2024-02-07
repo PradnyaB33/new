@@ -618,7 +618,23 @@ const App = () => {
         }
       />
       <Route path="/application" element={<Application />} />
-      <Route path="/leave" element={<LeaveRequisition />} />
+      <Route
+        path="/leave"
+        element={
+          <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+            ]}
+          >
+            <LeaveRequisition />
+          </RequireAuth>
+        }
+      />
       <Route
         path="/shift-management"
         element={
