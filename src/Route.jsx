@@ -56,7 +56,6 @@ import TrackingMap2 from "./pages/Test/testMap";
 import TestNaresh from "./pages/Test/testNaresh";
 import TrackingMap3 from "./pages/Test/testYash";
 import EmployeeProfile from "./pages/UserProfile/UserProfile";
-//import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 import Loader from "./components/app-loader/page";
 import ViewPayslip1 from "./pages/ViewPayslip/ViewPayslip1";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
@@ -285,7 +284,7 @@ function RequireAuth({ children, permission }) {
 
   const user = getCurrentUser();
   const role = getCurrentRole();
-  const isPermission = permission.includes("role");
+  const isPermission = permission.includes(role);
 
   if (user && !role) {
     return <Navigate to={"/choose-role"} />;
