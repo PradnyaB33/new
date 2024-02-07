@@ -70,7 +70,7 @@ const App = () => {
       <Route
         path="/"
         element={
-          <RequireAuth permission={"Super-Admin"}>
+          <RequireAuth permission={["Super-Admin"]}>
             <Home />
           </RequireAuth>
         }
@@ -90,17 +90,101 @@ const App = () => {
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/choose-role" element={<RolePage />} />
       <Route path="/sign-up" element={<Signup />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/waiting" element={<WaitMain />} />
-      <Route path="/verify/:token/" element={<AnimationComponent />} />
-      <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Route
+        path="/forgot-password"
+        element={
+          <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "Hr",
+              "Manager",
+              "Employee",
+            ]}
+          >
+            <ForgotPassword />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/waiting"
+        element={
+          <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "Hr",
+              "Manager",
+              "Employee",
+            ]}
+          >
+            <WaitMain />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/verify/:token/"
+        element={
+          <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "Hr",
+              "Manager",
+              "Employee",
+            ]}
+          >
+            <AnimationComponent />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/reset-password/:token"
+        element={
+          <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "Hr",
+              "Manager",
+              "Employee",
+            ]}
+          >
+            <ResetPassword />
+          </RequireAuth>
+        }
+      />
       {/* Login Routes */}
 
       {/* //TODO Setup Sidebar */}
       <Route
         path="/organisation/:organisationId/setup"
         element={
-          <RequireAuth permission={"Super-Admin"}>
+          <RequireAuth permission={["Super-Admin"]}>
             <SetupSideNav />
           </RequireAuth>
         }
@@ -142,11 +226,18 @@ const App = () => {
         }
       />
       {/* Dashboard Routes */}
-      <Route path="/add-organisation" element={<NewOranisationForm />} />
+      <Route
+        path="/add-organisation"
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+            <NewOranisationForm />
+          </RequireAuth>
+        }
+      />
       <Route
         path="/organizationList"
         element={
-          <RequireAuth permission={"Super-Admin"}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
             <OrgList />
           </RequireAuth>
         }
@@ -531,14 +622,27 @@ const App = () => {
       <Route
         path="/shift-management"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth>
             <ShiftManagement />
           </RequireAuth>
         }
       />
       <Route
         path="/organisation/:id/department/:departmentId"
-        element={<SingleDepartment />}
+        element={
+          <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+            ]}
+          >
+            <SingleDepartment />
+          </RequireAuth>
+        }
       />
       {/* Removable component */}
       <Route
