@@ -48,9 +48,7 @@ const Step1 = ({ nextStep }) => {
     contact_number,
     description,
     logo_url,
-    creator,
     setStep1Data,
-    setCreator,
     isTrial,
   } = useOrg();
 
