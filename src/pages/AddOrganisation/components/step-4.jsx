@@ -175,7 +175,7 @@ const Step4 = () => {
         </div>
         <div className="row-span-1 items-center justify-center flex">
           <Button onClick={mutate} variant="contained">
-            Confirm And Pay
+            Submit
           </Button>
         </div>
       </div>

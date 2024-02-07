@@ -97,7 +97,7 @@ const Step2MiniForm = ({
         />
       </div>
       <Button type="submit" variant="contained" className="!w-max !mx-auto">
-        Submit
+        Skip
       </Button>
     </form>
   );
