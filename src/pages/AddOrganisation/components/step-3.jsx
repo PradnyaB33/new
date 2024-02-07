@@ -85,7 +85,7 @@ const Step3 = ({ nextStep }) => {
             );
           })}
         <Button type="submit" variant="contained" className="!w-max !mx-auto">
-          Submit
+          Confirm & Pay
         </Button>
       </form>
     </div>
