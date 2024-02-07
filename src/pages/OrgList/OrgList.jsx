@@ -42,10 +42,10 @@ const OrgList = () => {
               </Avatar>
               <div>
                 <h1 className="md:text-2xl text-xl font-semibold">
-                  Organisations
+                  Organizations
                 </h1>
                 <p className="md:text-lg text-sm ">
-                  Select and manage your oragnization
+                  Select and Manage Your Oragnization
                 </p>
               </div>
             </div>
