@@ -107,7 +107,7 @@ const Notification = () => {
         {data?.leaveRequests?.length === 0 ? (
           <div className="flex items-center gap-4  bg-sky-100 p-4 px-8 rounded-md shadow-lg">
             <NotificationImportant className="!text-4xl" />
-            <h1 className="text-2xl font-semibold">No notification for you </h1>
+            <h1 className="text-2xl font-semibold">No Notification</h1>
           </div>
         ) : (
           ""
