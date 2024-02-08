@@ -38,11 +38,11 @@ const NewOranisationForm = () => {
   };
   const stepper = [
     {
-      label: "Organization details",
+      label: "Organization Details",
       icon: Person,
     },
     {
-      label: "Package info",
+      label: "Package Info",
       icon: InventorySharp,
     },
     {
@@ -50,7 +50,7 @@ const NewOranisationForm = () => {
       icon: PlusOneOutlined,
     },
     {
-      label: "All done",
+      label: "All Done",
       icon: Check,
     },
   ];
