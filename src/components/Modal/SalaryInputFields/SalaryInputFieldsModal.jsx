@@ -390,7 +390,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
               className="text-md mb-2"
               htmlFor="name"
             >
-              Enter employment types
+              Enter employment type.
             </FormLabel>
             <FormControl
               error={errors.empTypes.length > 0}

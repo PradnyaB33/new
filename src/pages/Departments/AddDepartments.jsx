@@ -1,8 +1,3 @@
-import Button from "@mui/material/Button";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import React, { useContext, useEffect, useState } from "react";
-import UserSelf from "../UserSelfLearning/UserSelf";
 import {
   Checkbox,
   Container,
@@ -10,12 +5,17 @@ import {
   Typography,
 } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
 import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import UserSelf from "../UserSelfLearning/UserSelf";
 const AddDepartments = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -433,7 +433,7 @@ const AddDepartments = () => {
                   name="dept_id"
                   size="small"
                   className="w-full"
-                  label="Department Id"
+                  label="Department ID"
                   id="dept_id"
                   value={dept_id}
                   onChange={handleDepartmentIdChange}

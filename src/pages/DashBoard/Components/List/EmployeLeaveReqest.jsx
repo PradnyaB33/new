@@ -102,7 +102,7 @@ const EmployeeLeaveRequest = () => {
               <Info className="!text-2xl" />
               <h1 className="text-xl font-semibold">No record found</h1>
             </article>
-            <p>Currenlty no leave request is in pending</p>
+            <p>Currently no leave request is pending</p>
           </div>
         )}
       </div>

@@ -119,7 +119,7 @@ const EmployementTypes = () => {
                   <ManageAccountsOutlined className="!text-lg text-white" />
                 </div>
                 <h1 className="!text-lg tracking-wide">
-                  Create Employeement types for organization
+                  Create Employment Types
                 </h1>
               </div>
               <Button
@@ -178,7 +178,7 @@ const EmployementTypes = () => {
                 <article className="flex items-center mb-1 text-red-500 gap-2">
                   <Info className="!text-2xl" />
                   <h1 className="text-xl font-semibold">
-                    Employement Types Not found
+                    Employment Types Not found
                   </h1>
                 </article>
                 <p>

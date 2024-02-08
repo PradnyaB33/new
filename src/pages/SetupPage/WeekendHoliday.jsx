@@ -1,5 +1,4 @@
-import React, { useState, useContext } from "react";
-import Setup from "../SetUpOrganization/Setup";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
 import {
   Button,
@@ -10,12 +9,13 @@ import {
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
-import { useParams } from "react-router";
-import axios from "axios";
-import { useQuery, useQueryClient } from "react-query";
-import { UseContext } from "../../State/UseState/UseContext";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import Skeleton from "@mui/material/Skeleton";
+import axios from "axios";
+import React, { useContext, useState } from "react";
+import { useQuery, useQueryClient } from "react-query";
+import { useParams } from "react-router";
+import { UseContext } from "../../State/UseState/UseContext";
+import Setup from "../SetUpOrganization/Setup";
 
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -30,13 +30,13 @@ const SkeletonRow = () => (
           variant="circle"
           width={50}
           height={50}
-          style={{borderRadius:"50%"}}
+          style={{ borderRadius: "50%" }}
         />
         <Skeleton
           variant="circle"
           width={50}
           height={50}
-          style={{borderRadius:"50%"}}
+          style={{ borderRadius: "50%" }}
         />
       </div>
     </td>
@@ -56,7 +56,9 @@ const WeekdaySelector = ({ selectedDays, handleDayToggle, getColor }) => {
             onClick={() => handleDayToggle(day, index)}
             className="text-2xl"
             style={{
-              backgroundColor: selectedDays.includes(day) ? getColor(day) : 'gray',
+              backgroundColor: selectedDays.includes(day)
+                ? getColor(day)
+                : "gray",
               borderRadius: "50%",
               width: "55px",
               height: "55px",
@@ -98,7 +100,7 @@ const WeekendHoliday = () => {
 
   const handleSubmit = async () => {
     try {
-      const daysArray = selectedDays.map(day => ({ day }));
+      const daysArray = selectedDays.map((day) => ({ day }));
 
       if (editItem) {
         await axios.patch(
@@ -124,10 +126,10 @@ const WeekendHoliday = () => {
 
         console.log(daysArray);
 
-        await axios.post(
-          `${process.env.REACT_APP_API}/route/weekend/create`,
-          { days: daysArray, organizationId }
-        );
+        await axios.post(`${process.env.REACT_APP_API}/route/weekend/create`, {
+          days: daysArray,
+          organizationId,
+        });
         console.log("Successfully created");
         setAppAlert({
           alert: true,
@@ -208,14 +210,14 @@ const WeekendHoliday = () => {
               <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                 <WeekendOutlinedIcon className="!text-lg text-white" />
               </div>
-              <h1 className="!text-lg tracking-wide">Weekly off</h1>
+              <h1 className="!text-lg tracking-wide">Weekly Off</h1>
             </div>
             <Button
               className="!font-semibold !bg-sky-500 flex items-center gap-2"
               variant="contained"
               onClick={handleOpenClose}
             >
-              Add Weekly off
+              Add Weekly Off
             </Button>
           </div>
 
@@ -242,10 +244,16 @@ const WeekendHoliday = () => {
                     <SkeletonRow />
                   </>
                 ) : (
-                  data && data?.map((item, idx) => (
+                  data &&
+                  data?.map((item, idx) => (
                     <tr className="!font-medium border-b !space-y-3" key={idx}>
-                      <td className="!text-left !pl-9 !mr-5 w-1/12 ">{idx + 1}</td>
-                      <td style={{ marginRight: "1rem" }} className="w-2/12 pt-2 pb-2">
+                      <td className="!text-left !pl-9 !mr-5 w-1/12 ">
+                        {idx + 1}
+                      </td>
+                      <td
+                        style={{ marginRight: "1rem" }}
+                        className="w-2/12 pt-2 pb-2"
+                      >
                         <div className="flex gap-1">
                           {item.days.map((day, dayIdx) => (
                             <Chip

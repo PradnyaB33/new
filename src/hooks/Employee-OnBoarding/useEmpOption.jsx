@@ -6,12 +6,12 @@ const useEmpOption = (organisationId) => {
     DesignationCall,
     SalaryTempCall,
     EmpTypesCall,
-    InputFieldCall,
+    // InputFieldCall,
     ManagerListCall,
     ShiftCall,
     CostNumberCall,
     EmpRoleListCall,
-    AdditionalListCall,
+    // AdditionalListCall,
     LocationListCall,
     EmpCodeCall,
   } = useEmpQuery(organisationId);
@@ -36,7 +36,7 @@ const useEmpOption = (organisationId) => {
 
   const Manageroptions = ManagerList?.manager?.map((item) => {
     return {
-      value: item?.managerId._id,
+      value: item?.managerId?._id,
       label: `${item?.managerId?.first_name} ${item?.managerId?.last_name}`,
     };
   });

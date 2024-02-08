@@ -171,7 +171,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
     else if (endDateTime === null)
       return handleError("end time field is mandatory");
     else if (selectedDays.length <= 0)
-      return handleError("Please select Week days");
+      return handleError("Please select Week Days");
 
     try {
       const data = {
@@ -362,7 +362,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
             style={{ width: "100%", justifyContent: "center", gap: "2px" }}
           >
             <label className="text-md" htmlFor="demo-simple-select-label">
-              Select week days
+              Select Week Days
             </label>
             <ToggleButtonGroup
               value={selectedDays}

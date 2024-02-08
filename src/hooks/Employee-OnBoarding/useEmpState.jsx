@@ -7,7 +7,6 @@ const useEmpState = create((set) => {
     first_name: undefined,
     last_name: undefined,
     email: undefined,
-    gender: undefined,
     phone_number: undefined,
     address: undefined,
     citizenship: undefined,

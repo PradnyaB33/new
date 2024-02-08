@@ -58,7 +58,7 @@ const Subscription = () => {
                   <ManageAccountsOutlined className="!text-lg text-white" />
                 </div>
                 <h1 className="!text-lg tracking-wide">
-                  Create Employeement types for organization
+                  Create Employment Types
                 </h1>
               </div>
             </div>

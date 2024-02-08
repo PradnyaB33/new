@@ -40,11 +40,13 @@ const SignIn = () => {
   }, []);
 
   const handleLogin = useMutation(
-    (data) => {
-      const res = axios.post(
+    async (data) => {
+      const res = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/login`,
         data
       );
+
+      console.log(res);
       return res;
     },
 
@@ -60,23 +62,12 @@ const SignIn = () => {
 
         redirect("/choose-role");
 
-        // if (response?.data?.role === "Super-Admin") {
-        // } else if (response?.data?.role === "Hr") {
-        //   redirect(
-        //     `/organisation/${response.data.user.organizationId}/dashboard/HR-dashboard`
-        //   );
-        // } else if (response?.data?.role === "Manager") {
-        //   redirect(
-        //     `/organisation/${response.data.user.organizationId}/dashboard/manager-dashboard`
-        //   );
-        // } else if (response?.data?.role === "Employee") {
-        //   redirect("/organisation/dashboard/employee-dashboard");
-        // }
-
         window.location.reload();
       },
 
       onError: (error) => {
+        console.log(error);
+
         handleAlert(
           true,
           "error",
@@ -94,7 +85,7 @@ const SignIn = () => {
       return false;
     }
     const data = { email, password };
-    await handleLogin.mutateAsync(data);
+    await handleLogin.mutate(data);
   };
 
   return (

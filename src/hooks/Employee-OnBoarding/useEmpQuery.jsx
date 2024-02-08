@@ -150,14 +150,14 @@ const useEmpQuery = ({ organisationId }) => {
   };
 
   const AdditionalListCall = () => {
-    const { data: addtionalFields } = useQuery({
+    const { data: addtionalFields, isLoading: addtionalLoading } = useQuery({
       queryKey: ["additionalFields"],
       queryFn: () =>
         getEmployeeDataApi(
           `${process.env.REACT_APP_API}/route/inputfield/${organisationId}`
         ),
     });
-    return addtionalFields;
+    return { addtionalFields, addtionalLoading };
   };
 
   return {

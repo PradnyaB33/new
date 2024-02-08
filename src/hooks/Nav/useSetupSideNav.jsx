@@ -87,7 +87,7 @@ const useSetupSideNav = (organisationId) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
-      label: "Salary Input Field selection",
+      label: "Salary Management ",
       icon: PriceChangeOutlined,
       href: `/organisation/${organisationId}/setup/set-salary-input-selection`,
       active:
@@ -119,7 +119,7 @@ const useSetupSideNav = (organisationId) => {
       ),
     },
     {
-      label: "Weekly off",
+      label: "Weekly Off",
       icon: WeekendOutlinedIcon,
       href: `/organisation/${organisationId}/setup/set-weekend-holiday`,
       active:

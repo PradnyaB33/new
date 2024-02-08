@@ -130,9 +130,7 @@ const EmployeeCodeGenerator = () => {
               <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                 <EventNoteOutlinedIcon className="!text-lg text-white" />
               </div>
-              <h1 className="!text-lg tracking-wide">
-                Employee Code Generation
-              </h1>
+              <h1 className="!text-lg tracking-wide">Generate Employee Code</h1>
             </div>
             <Button
               className="!font-semibold !bg-sky-500 flex items-center gap-2"
