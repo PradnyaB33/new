@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 // Components
 import SetupSideNav from "./components/SideNav/SetupSideNav";
+import Loader from "./components/app-loader/page";
 import AnimationComponent from "./components/emailverify/verification-animation";
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
@@ -56,7 +57,6 @@ import TrackingMap2 from "./pages/Test/testMap";
 import TestNaresh from "./pages/Test/testNaresh";
 import TrackingMap3 from "./pages/Test/testYash";
 import EmployeeProfile from "./pages/UserProfile/UserProfile";
-import Loader from "./components/app-loader/page";
 import ViewPayslip1 from "./pages/ViewPayslip/ViewPayslip1";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import SingleDepartment from "./pages/single-department/single-department";
@@ -621,16 +621,7 @@ const App = () => {
       <Route
         path="/leave"
         element={
-          <RequireAuth
-            permission={[
-              "Super-Admin",
-              "Delegate-Super Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-            ]}
-          >
+          <RequireAuth permission={["Employee"]}>
             <LeaveRequisition />
           </RequireAuth>
         }

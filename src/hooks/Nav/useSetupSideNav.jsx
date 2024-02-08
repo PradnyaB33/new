@@ -6,6 +6,7 @@ import {
   PersonAddAlt1Outlined,
   PriceChangeOutlined,
   SellOutlined,
+  TimeToLeaveOutlined,
 } from "@mui/icons-material";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
@@ -32,7 +33,7 @@ const useSetupSideNav = (organisationId) => {
     },
     {
       label: "Leave Types",
-      icon: BeachAccessOutlined,
+      icon: TimeToLeaveOutlined,
       href: `/organisation/${organisationId}/setup/leave-types`,
       active:
         location.pathname ===
