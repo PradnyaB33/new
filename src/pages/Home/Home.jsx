@@ -7,7 +7,7 @@ import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import UserSelf from "../UserSelfLearning/UserSelf";
+
 const Home = () => {
   const redirect = useNavigate();
   const { cookies } = useContext(UseContext);
@@ -56,7 +56,6 @@ const Home = () => {
 
   return (
     <>
-      <UserSelf message="Please Go to Organization." />
       <div className="md:p-8 py-4 px-0 bg-white h-screen">
         <div className="flex items-center h-[70vh] justify-center w-full">
           <div className="md:!w-max w-full md:px-8 px-0 flex justify-end items-end  flex-col">

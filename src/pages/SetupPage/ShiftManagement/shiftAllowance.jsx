@@ -114,7 +114,7 @@ const ShiftManagement = () => {
           <Link to={"/"}>
             <WestIcon className="mx-4 !text-xl" />
           </Link>
-          Shift Management section
+          Shift Management
         </header>
 
         <div className="flex flex-col-reverse md:flex-row w-full justify-start p-6 gap-4">

@@ -26,7 +26,7 @@ const LeaveRejectmodal = ({ open, handleClose, id }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("employee-leave");
-        handleClose(); // Close the modal after successful rejection
+        handleClose();
       },
     }
   );
@@ -72,7 +72,7 @@ const LeaveRejectmodal = ({ open, handleClose, id }) => {
               onChange={(e) => setMessage(e.target.value)}
               size="small"
               id="outlined-basic"
-              label="Enter desc for rejecting the leave request"
+              label="Enter Description for rejecting the leave request"
               variant="outlined"
             />
           </div>
@@ -80,7 +80,14 @@ const LeaveRejectmodal = ({ open, handleClose, id }) => {
             <Button
               type="button"
               size="small"
-              onClick={handleClose}
+              onClick={async (e) => {
+                console.log(
+                  `🚀 ~ file: LeaveRejectmodal.jsx:84 ~ e:`,
+                  handleClose
+                );
+
+                await handleClose();
+              }}
               color="error"
               variant="contained"
             >

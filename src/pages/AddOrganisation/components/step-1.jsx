@@ -36,6 +36,7 @@ const organizationSchema = z.object({
 });
 const Step1 = ({ nextStep }) => {
   const { decodedToken } = useGetUser();
+  console.log(`🚀 ~ file: step-1.jsx:39 ~ decodedToken:`, decodedToken);
   const {
     orgName,
     foundation_date,
@@ -47,9 +48,7 @@ const Step1 = ({ nextStep }) => {
     contact_number,
     description,
     logo_url,
-    creator,
     setStep1Data,
-    setCreator,
     isTrial,
   } = useOrg();
 
@@ -64,7 +63,7 @@ const Step1 = ({ nextStep }) => {
       location: location,
       contact_number: contact_number,
       description: description,
-      creator: creator === undefined ? setCreator(decodedToken) : creator,
+      creator: decodedToken.user._id,
       logo_url: logo_url,
       isTrial: isTrial,
     },
@@ -213,7 +212,7 @@ const Step1 = ({ nextStep }) => {
           </div>
         </div>
         <Button type="submit" variant="contained" className="!w-max !mx-auto">
-          Submit
+          Next
         </Button>
       </form>
     </div>

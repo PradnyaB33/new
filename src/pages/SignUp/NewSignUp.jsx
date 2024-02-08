@@ -22,7 +22,7 @@ import { TestContext } from "../../State/Function/Main";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import TermsCondition from "../../components/termscondition/termsCondition";
 import UserProfile from "../../hooks/UserData/useUser";
-import UserSelf from "../UserSelfLearning/UserSelf";
+
 const SignIn = () => {
   const { handleAlert } = useContext(TestContext);
   const location = useLocation();
@@ -204,7 +204,6 @@ const SignIn = () => {
 
   return (
     <>
-      <UserSelf message="First Create Your Account For Organization." />
       <section className="flex  w-full">
         {/* Left Section */}
         <div className="w-[30%] h-auto lg:flex hidden text-white flex-col items-center justify-center relative ">

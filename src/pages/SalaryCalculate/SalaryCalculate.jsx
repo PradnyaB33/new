@@ -503,8 +503,11 @@ const SalaryCalculate = () => {
                             Designation :
                           </td>
                           <td>
-                            {availableEmployee?.designation[0]
-                              ?.designationName || ""}
+                            {(availableEmployee?.designation &&
+                              availableEmployee?.designation.length > 0 &&
+                              availableEmployee?.designation[0]
+                                ?.designationName) ||
+                              ""}
                           </td>
                         </tr>
                         <tr>

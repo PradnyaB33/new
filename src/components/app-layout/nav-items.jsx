@@ -615,7 +615,7 @@ const NavItems = ({ toggleDrawer }) => {
                           }}
                           style={{ fontSize: "10px" }}
                           className="text-white text-sm"
-                          primary={"Add Organization"}
+                          primary={"Add Organisation"}
                         />
                       </ListItemButton>
                     </Link>
@@ -657,7 +657,7 @@ const NavItems = ({ toggleDrawer }) => {
                           }}
                           style={{ fontSize: "10px" }}
                           className="text-white text-sm"
-                          primary={"Delete Organization"}
+                          primary={"Delete Organisation"}
                         />
                       </ListItemButton>
                     </Link>

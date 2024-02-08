@@ -17,7 +17,7 @@ import LineGraph from "./Components/Bar/LineGraph";
 import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
 import SkeletonFilterSection from "./Components/Skeletons/SkeletonFilterSection";
-import UserSelf from "../UserSelfLearning/UserSelf";
+
 const SuperAdmin = () => {
   const { organisationId } = useParams();
   const queryClient = useQueryClient();
@@ -49,7 +49,6 @@ const SuperAdmin = () => {
 
   return (
     <>
-      <UserSelf message="Please First Add Department" />
       <section className=" bg-gray-50  min-h-screen w-full ">
         <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
           {/* <BackComponent /> */}
