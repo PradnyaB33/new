@@ -25,7 +25,10 @@ const organizationSchema = z.object({
   email: z.string().email(),
   organization_linkedin_url: z.string(),
   location: z.string(),
-  contact_number: z.string(),
+  contact_number: z
+    .string()
+    .max(10, { message: "contact number must be 10 digits" })
+    .min(10, { message: "contact number must be 10 digits" }),
   description: z.string(),
   creator: z.string(),
   logo_url: z.any(),
@@ -33,6 +36,7 @@ const organizationSchema = z.object({
 });
 const Step1 = ({ nextStep }) => {
   const { decodedToken } = useGetUser();
+  console.log(`🚀 ~ file: step-1.jsx:39 ~ decodedToken:`, decodedToken);
   const {
     orgName,
     foundation_date,
@@ -44,13 +48,11 @@ const Step1 = ({ nextStep }) => {
     contact_number,
     description,
     logo_url,
-    creator,
     setStep1Data,
-    setCreator,
     isTrial,
   } = useOrg();
 
-  const { control, formState, handleSubmit, getValues } = useForm({
+  const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       orgName: orgName,
       foundation_date: foundation_date,
@@ -61,7 +63,7 @@ const Step1 = ({ nextStep }) => {
       location: location,
       contact_number: contact_number,
       description: description,
-      creator: creator === undefined ? setCreator(decodedToken) : creator,
+      creator: decodedToken.user._id,
       logo_url: logo_url,
       isTrial: isTrial,
     },
@@ -69,13 +71,12 @@ const Step1 = ({ nextStep }) => {
   });
   const { errors } = formState;
   console.log(`🚀 ~ file: step-1.jsx:79 ~ errors:`, errors);
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(`🚀 ~ file: step-1.jsx:68 ~ data:`, data);
-    setStep1Data(data);
+    await setStep1Data(data);
     nextStep();
   };
-  console.log(`🚀 ~ file: step-1.jsx:71 ~ errors:`, errors);
-  console.log("getValues", getValues());
+
   return (
     <div>
       <form
@@ -101,14 +102,14 @@ const Step1 = ({ nextStep }) => {
             />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4 px-4">
+        <div className="grid md:grid-cols-2 md:gap-4 gap-0 px-4 grid-cols-1">
           <AuthInputFiled
             name="orgName"
             icon={CorporateFare}
             control={control}
             type="text"
-            placeholder="Organisation Name"
-            label="Organisation Name *"
+            placeholder="Organization Name"
+            label="Organization Name *"
             errors={errors}
             error={errors.name}
           />
@@ -137,8 +138,8 @@ const Step1 = ({ nextStep }) => {
             icon={CorporateFare}
             control={control}
             type="text"
-            placeholder="Linkding url "
-            label="Linkding url  *"
+            placeholder="LinkedIn url "
+            label="LinkedIn url  *"
             errors={errors}
             error={errors.organization_linkedin_url}
           />
@@ -183,8 +184,8 @@ const Step1 = ({ nextStep }) => {
             icon={Description}
             control={control}
             type="text"
-            placeholder="Organisational Description "
-            label="Organisational Description  *"
+            placeholder="Organizational Description "
+            label="Organizational Description  *"
             errors={errors}
             error={errors.description}
           />
@@ -193,8 +194,8 @@ const Step1 = ({ nextStep }) => {
             icon={FactoryOutlined}
             control={control}
             type="not-select"
-            placeholder="Location Addresss "
-            label="Location Addresss  *"
+            placeholder="Location Address "
+            label="Location Address  *"
             errors={errors}
             error={errors.location}
           />
@@ -211,7 +212,7 @@ const Step1 = ({ nextStep }) => {
           </div>
         </div>
         <Button type="submit" variant="contained" className="!w-max !mx-auto">
-          Submit
+          Next
         </Button>
       </form>
     </div>

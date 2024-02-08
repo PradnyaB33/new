@@ -1,22 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
-  Typography,
   TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
+  Typography,
 } from "@mui/material";
 import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { UseContext } from "../../State/UseState/UseContext";
-import { useParams } from "react-router-dom";
 
 const DepartmentDeletion = () => {
   const { setAppAlert, cookies } = useContext(UseContext);
@@ -26,7 +26,7 @@ const DepartmentDeletion = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showConfirmationExcel, setShowConfirmationExcel] = useState(false);
   const organizationId = useParams().organisationId;
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   var deptLocationId;
 
   useEffect(() => {

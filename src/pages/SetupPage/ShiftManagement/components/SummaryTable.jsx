@@ -9,7 +9,7 @@ import { UseContext } from "../../../../State/UseState/UseContext";
 
 const SummaryTable = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const { data, isLoading, isError } = useQuery(
     "employee-summary-table",
     async () => {

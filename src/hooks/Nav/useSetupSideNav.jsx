@@ -6,6 +6,7 @@ import {
   PersonAddAlt1Outlined,
   PriceChangeOutlined,
   SellOutlined,
+  TimeToLeaveOutlined,
 } from "@mui/icons-material";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
@@ -32,7 +33,7 @@ const useSetupSideNav = (organisationId) => {
     },
     {
       label: "Leave Types",
-      icon: BeachAccessOutlined,
+      icon: TimeToLeaveOutlined,
       href: `/organisation/${organisationId}/setup/leave-types`,
       active:
         location.pathname ===
@@ -50,6 +51,15 @@ const useSetupSideNav = (organisationId) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
+      label: "Add Location",
+      icon: AddLocationAltOutlined,
+      href: `/organisation/${organisationId}/setup/add-organization-locations`,
+      active:
+        location.pathname ===
+        `/organization/${organisationId}/setup/add-organization-locations`,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+    },
+    {
       label: "Public Holidays",
       icon: BeachAccessOutlined,
       href: `/organisation/${organisationId}/setup/set-public-holiday`,
@@ -59,15 +69,6 @@ const useSetupSideNav = (organisationId) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
 
-    {
-      label: "Add Location",
-      icon: AddLocationAltOutlined,
-      href: `/organisation/${organisationId}/setup/add-organization-locations`,
-      active:
-        location.pathname ===
-        `/organization/${organisationId}/setup/add-organization-locations`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
-    },
     {
       label: "Additional Employee Data",
       icon: PersonAddAlt1OutlinedIcon,

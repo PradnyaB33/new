@@ -5,7 +5,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 
 const useLeaveTable = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
 
   const { data, isLoading, isError, error } = useQuery(
     "employee-leave-table",

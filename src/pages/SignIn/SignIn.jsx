@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import UserProfile from "../../hooks/UserData/useUser";
 import useSignup from "../../hooks/useLoginForm";
+
 const SignIn = () => {
   const { setEmail, setPassword, email, password } = useSignup();
   // const [selectRole, setSelectRole] = useState("");
@@ -49,7 +50,7 @@ const SignIn = () => {
 
     {
       onSuccess: (response) => {
-        Cookies.set("aeigs", response.data.token);
+        Cookies.set("aegis", response.data.token);
 
         handleAlert(
           true,

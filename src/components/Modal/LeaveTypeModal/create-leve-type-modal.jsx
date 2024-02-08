@@ -24,7 +24,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 const CreteLeaveTypeModal = ({ handleClose, open }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
   const param = useParams();
   const leaveTypeSchema = z.object({

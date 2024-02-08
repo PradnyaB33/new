@@ -5,7 +5,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 
 const useGetUser = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const decodedToken = jwtDecode(authToken);
   return { authToken, decodedToken };
 };

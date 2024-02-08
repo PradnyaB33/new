@@ -51,7 +51,7 @@ const Step2MiniForm = ({
       className="item-center flex flex-col"
       noValidate
     >
-      <div className="grid grid-cols-2 gap-4 px-4">
+      <div className="grid md:grid-cols-2 md:gap-4 p-4">
         <AuthInputFiled
           name="remotePunching"
           icon={LocationOnOutlined}
@@ -97,7 +97,7 @@ const Step2MiniForm = ({
         />
       </div>
       <Button type="submit" variant="contained" className="!w-max !mx-auto">
-        Submit
+        Skip
       </Button>
     </form>
   );

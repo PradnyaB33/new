@@ -1,20 +1,20 @@
 // Header.tsx
 import React from "react";
 
-const Header = ({ totalSteps, step, goToStep, setper }) => {
+const Header = ({ totalSteps, step, goToStep, stepper }) => {
   const stepLabels = Array.from({ length: totalSteps }, (_, index) =>
     (index + 1).toString()
   );
 
   return (
     <div className="!w-full !flex gap-1">
-      {setper?.length > 0 ? (
-        setper?.map((data, index) => (
+      {stepper?.length > 0 ? (
+        stepper?.map((data, index) => (
           <React.Fragment key={index}>
             <div className="flex flex-col items-center">
               <div
                 onClick={() => goToStep(index + 1)}
-                className={`cursor-pointer  flex items-center   gap-2 flex-col  border-gray-200 !text-xs rounded-full p-2 border-[.5px] first-letter:
+                className={` transition-bg duration-600 ease-in-out cursor-pointer  flex items-center gap-2 flex-col border-gray-200 !text-xs rounded-full md:p-2 p-[8px] border-[.5px] first-letter:
              ${step < index + 1 ? "!bg-white" : "!bg-primary"}
             
             `}
@@ -23,7 +23,7 @@ const Header = ({ totalSteps, step, goToStep, setper }) => {
                   <data.icon
                     className={`  ${
                       step < index + 1 ? "!text-black" : "!text-white"
-                    } !text-md  !font-thin `}
+                    } !text-md md:!text-md  !font-thin `}
                   />
                 ) : (
                   <h1
@@ -36,7 +36,7 @@ const Header = ({ totalSteps, step, goToStep, setper }) => {
                 )}
               </div>
               <h1
-                className={`w-max  ${
+                className={`w-max hidden md:block  ${
                   step < index + 1 ? "!text-black" : "!text-primary"
                 }`}
               >

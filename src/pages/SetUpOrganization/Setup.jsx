@@ -3,6 +3,7 @@ import React from "react";
 import { Link, useParams } from "react-router-dom";
 import BackComponent from "../../components/BackComponent/BackComponent";
 import useSetupSideNav from "../../hooks/Nav/useSetupSideNav";
+
 const Setup = ({ children }) => {
   const { organisationId } = useParams("");
 

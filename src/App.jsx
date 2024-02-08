@@ -22,7 +22,7 @@ function App() {
             <TopLoadingBar />
             <AppLoader />
             <AppAlert />
-            {/* change as per requirement currently removed css : -  mt-[60px] */}
+
             <div
               className={`h-full ${
                 !isNavEnabled.some((value) => {

@@ -1,17 +1,21 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, Button, Divider, IconButton, Modal } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Modal,
+  OutlinedInput,
+  Select,
+} from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
+import { useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  OutlinedInput,
-} from "@mui/material";
-import { useQueryClient } from "react-query";
 
 const style = {
   position: "absolute",
@@ -25,7 +29,7 @@ const style = {
 const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const [numChracterInPrefix, setNumCharacterInPrefix] = useState(1);
   const [startWith, setStartWith] = useState("");
   const [inputFields, setinputFields] = useState({

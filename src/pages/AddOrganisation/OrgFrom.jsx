@@ -1,3 +1,9 @@
+import {
+  Check,
+  InventorySharp,
+  Person,
+  PlusOneOutlined,
+} from "@mui/icons-material";
 import StepFormWrapper from "../../components/step-form/wrapper";
 import useMultiStepForm from "../../hooks/useStepForm";
 import Step1 from "./components/step-1";
@@ -30,10 +36,28 @@ const NewOranisationForm = () => {
         return null;
     }
   };
+  const stepper = [
+    {
+      label: "Organization Details",
+      icon: Person,
+    },
+    {
+      label: "Package Info",
+      icon: InventorySharp,
+    },
+    {
+      label: "Package Count",
+      icon: PlusOneOutlined,
+    },
+    {
+      label: "All Done",
+      icon: Check,
+    },
+  ];
 
   return (
     <div className="pt-10">
-      <div className="m-4 ">
+      <div className="m-4 md:w-[700px] w-auto md:m-auto border-gray-400 border p-4 rounded-lg">
         <StepFormWrapper
           {...{
             goToStep,
@@ -43,6 +67,7 @@ const NewOranisationForm = () => {
             isLastStep,
             nextStep,
             prevStep,
+            stepper,
           }}
         >
           {useSwitch(step)}
