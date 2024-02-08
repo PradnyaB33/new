@@ -51,9 +51,9 @@ const TestMap = () => {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(lat1 * (Math.PI / 180)) *
-        Math.cos(lat2 * (Math.PI / 180)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
 
@@ -103,40 +103,43 @@ const TestMap = () => {
     lng: waypoints[waypoints.length - 1]?.lng,
   };
 
+  console.log(GoogleMap);
   return (
     <div>
-      <LoadScript googleMapsApiKey="AIzaSyDaA2q3L--j40-GgojdeFSJ4RywKGtFQ2k">
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={center}
-          zoom={15}
-          options={{
-            zoomControl: false,
-            streetViewControl: false,
-            mapTypeControl: false,
-            fullscreenControl: false,
-          }}
-        >
-          {waypoints?.length > 0 && (
-            <Marker
-              position={center}
-              icon={{
-                url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
-              }}
-            />
-          )}
-          {waypoints?.length > 0 && (
-            <Marker
-              position={destination}
-              icon={{
-                url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-              }}
-            />
-          )}
-          {waypoints?.length > 0 && (
-            <Polyline path={waypoints} options={{ strokeColor: "blue" }} />
-          )}
-        </GoogleMap>
+      <LoadScript
+        onError={(error) => console.error("Error loading Google Maps:", error)}>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        googleMapsApiKey="AIzaSyDaA2q3L--j40-GgojdeFSJ4RywKGtFQ2k"
+        center={center}
+        zoom={15}
+        options={{
+          zoomControl: false,
+          streetViewControl: false,
+          mapTypeControl: false,
+          fullscreenControl: false,
+        }}
+      >
+        {waypoints?.length > 0 && (
+          <Marker
+            position={center}
+            icon={{
+              url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+            }}
+          />
+        )}
+        {waypoints?.length > 0 && (
+          <Marker
+            position={destination}
+            icon={{
+              url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+            }}
+          />
+        )}
+        {waypoints?.length > 0 && (
+          <Polyline path={waypoints} options={{ strokeColor: "blue" }} />
+        )}
+      </GoogleMap>
       </LoadScript>
 
       {waypoints?.length > 0 && (

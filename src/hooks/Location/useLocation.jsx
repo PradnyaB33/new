@@ -67,12 +67,51 @@ const useLocationStore = () => {
     setStart(true);
   };
 
-  const stopLocationTracking = () => {
+  const stopLocationTracking = async () => {
     setCount(0);
 
-    setStart(false);
-  };
+    const position = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      });
+    });
 
+    const { latitude, longitude } = position.coords;
+
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/punch/getone`,
+        { headers: { Authorization: authToken } }
+      );
+
+      const existingData = response.data.punch;
+      console.log(existingData.end);
+
+      if (!existingData.end) {
+        existingData.end = new Date();
+      }
+
+      existingData.locations.push({
+        lat: latitude,
+        lng: longitude,
+        time: new Date(),
+      });
+
+      await axios.post(
+        `${process.env.REACT_APP_API}/route/punch/create`,  // Use 'create' endpoint for initial document creation
+        existingData,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+
+      setStart(false);
+    } catch (error) {
+      console.error("Error updating punch data", error);
+    }
+  };
   return {
     start,
     data,

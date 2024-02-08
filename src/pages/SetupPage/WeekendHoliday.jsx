@@ -125,6 +125,11 @@ const WeekendHoliday = () => {
 
         console.log(daysArray);
 
+        if(daysArray.length > 3) {
+          throw new Error("Weekend cannot have more than 3 days");
+        }
+          
+
         await axios.post(
           `${process.env.REACT_APP_API}/route/weekend/create`,
           { days: daysArray, organizationId }
