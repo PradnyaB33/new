@@ -159,7 +159,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
           <div className="flex gap-4 items-center">
             <div className="space-y-2">
               <label className="text-md" htmlFor="demo-simple-select-label">
-                Employee id prefix (yes or no)
+                Employee ID prefix (yes or no)
               </label>
               <FormControl size="small" className="w-full">
                 <InputLabel id="demo-simple-select-label">
@@ -184,7 +184,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
                 </label>
                 <FormControl size="small" className="w-full" variant="outlined">
                   <InputLabel htmlFor="outlined-adornment-password">
-                    Add Charater Employee Id
+                    Add Charater for Employee ID
                   </InputLabel>
                   <OutlinedInput
                     type="number"
@@ -198,7 +198,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
           </div>
 
           <label className="text-md" htmlFor="demo-simple-select-label">
-            Employee id starts with
+            Employee ID starts with
           </label>
           <FormControl size="small" className="w-full" variant="outlined">
             <InputLabel htmlFor="outlined-adornment-password">
