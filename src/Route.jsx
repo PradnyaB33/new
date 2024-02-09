@@ -632,7 +632,7 @@ const App = () => {
       <Route
         path="/shift-management"
         element={
-          <RequireAuth>
+          <RequireAuth permission={["Employee", "Hr"]}>
             <ShiftManagement />
           </RequireAuth>
         }
@@ -684,7 +684,7 @@ function RequireAuth({ children, permission }) {
 
   const user = getCurrentUser();
   const role = getCurrentRole();
-  const isPermission = permission.includes(role);
+  const isPermission = permission?.includes(role);
 
   if (user && !role) {
     return <Navigate to={"/choose-role"} />;

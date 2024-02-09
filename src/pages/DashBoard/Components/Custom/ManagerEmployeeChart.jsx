@@ -1,7 +1,13 @@
 import React, { useContext, useState } from "react";
 
 import { Info, WorkHistory } from "@mui/icons-material";
-import { Autocomplete, Avatar, Card, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  Avatar,
+  Card,
+  CircularProgress,
+  TextField,
+} from "@mui/material";
 import axios from "axios";
 import { CategoryScale, Chart } from "chart.js";
 import { Bar } from "react-chartjs-2";
@@ -42,6 +48,22 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
   //   },
   // };
 
+  const options = {
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        grid: {
+          display: true,
+        },
+      },
+    },
+    maintainAspectRatio: false,
+  };
+
   const getYearLeaves = async () => {
     const { data } = await axios.get(
       `${process.env.REACT_APP_API}/route/leave/getYearLeaves/${userId}`,
@@ -54,7 +76,7 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
     return data;
   };
 
-  const { data: LeaveYearData } = useQuery(
+  const { data: LeaveYearData, isLoading: leaveYearLoading } = useQuery(
     ["leaveData", userId],
     getYearLeaves
   );
@@ -188,13 +210,23 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
               </Card>
             ) : (
               <div className="flex flex-col gap-2">
-                <div className="w-[70%]">
-                  <Bar
-                    data={data}
-                    style={{
-                      padding: "15px",
-                    }}
-                  />
+                <div className="flex  justify-center w-full px-5 py-4 h-[340px]">
+                  {leaveYearLoading ? (
+                    <CircularProgress />
+                  ) : (
+                    // ) : LeaveYearData?.length <= 0 ? (
+                    //   <div className="my-1 w-[90%] rounded-md flex items-center space-x-4 justify-center h-[10vh] bg-orange-200 font-bold ">
+                    //     <Warning />
+                    //     <h1 className="text-2xl ">No data found for this user</h1>
+                    //       </div>
+                    <Bar
+                      options={options}
+                      data={data}
+                      style={{
+                        padding: "15px",
+                      }}
+                    />
+                  )}
                 </div>
 
                 {/* <Card className="w-[45%]" elevation={0}>
