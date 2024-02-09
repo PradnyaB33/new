@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
-import UserProfile from "../../hooks/UserData/useUser";
+import UserProfile from "../../hooks/auth/useUser";
 
 const RolePage = () => {
   const [selected, setSelected] = useState(null);
@@ -79,9 +79,11 @@ const RolePage = () => {
           );
         } else if (response?.data?.role === "Employee") {
           redirect("/organisation/dashboard/employee-dashboard");
+        } else {
+          redirect("/organisation/dashboard/employee-dashboard");
         }
 
-        window.location.reload();
+        // window.location.reload();
       },
 
       onError: (error) => {

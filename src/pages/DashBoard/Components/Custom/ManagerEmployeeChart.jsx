@@ -7,7 +7,7 @@ import { CategoryScale, Chart } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { useQuery } from "react-query";
 import { UseContext } from "../../../../State/UseState/UseContext";
-import UserProfile from "../../../../hooks/UserData/useUser";
+import UserProfile from "../../../../hooks/auth/useUser";
 Chart.register(CategoryScale);
 
 const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
@@ -135,6 +135,21 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
       setuserId(user._id);
     }
   };
+  const options = {
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        grid: {
+          display: true,
+        },
+      },
+    },
+    maintainAspectRatio: false,
+  };
 
   return (
     <>
@@ -147,8 +162,8 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
             >
               <WorkHistory className="!text-lg" />
             </Avatar>
-            <h1 className="text-xl font-semibold py-3">
-              Employee Attendence Overview
+            <h1 className="md:text-xl text-lg font-semibold py-3">
+              Attendence Overview
             </h1>
           </div>
           <Autocomplete
@@ -157,12 +172,12 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
             sx={{ width: 300 }}
             size="small"
             onChange={handleSelect}
-            options={EmployeeDataOfManager?.data[0]?.reporteeIds}
-            getOptionLabel={(option) => option.first_name}
+            options={EmployeeDataOfManager?.data[0]?.reporteeIds ?? []}
+            getOptionLabel={(option) => option?.first_name}
             renderOption={(props, option) => (
               <li className="flex" {...props}>
                 <p>
-                  {option.first_name} {option.last_name}
+                  {option?.first_name} {option?.last_name}
                 </p>
               </li>
             )}
@@ -188,8 +203,9 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
               </Card>
             ) : (
               <div className="flex flex-col gap-2">
-                <div className="w-[70%]">
+                <div className="h-[250px] md:h-[340px] w-full ">
                   <Bar
+                    options={options}
                     data={data}
                     style={{
                       padding: "15px",

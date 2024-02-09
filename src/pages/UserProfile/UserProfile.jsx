@@ -12,7 +12,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import UserProfile from "../../hooks/UserData/useUser";
+import UserProfile from "../../hooks/auth/useUser";
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);

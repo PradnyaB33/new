@@ -4,6 +4,7 @@ import {
   Business,
   Category,
   CircleNotifications,
+  Dashboard,
   Description,
   Event,
   Groups,
@@ -21,7 +22,7 @@ import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
-import UserProfile from "../../../hooks/UserData/useUser";
+import UserProfile from "../../../hooks/auth/useUser";
 import TestAccordian from "./TestAccordian";
 
 const TestNavItems = ({ toggleDrawer }) => {
@@ -47,12 +48,34 @@ const TestNavItems = ({ toggleDrawer }) => {
     }
   };
 
-  const { getCurrentUser } = UserProfile();
+  const { getCurrentUser, getCurrentRole } = UserProfile();
+  const role = getCurrentRole();
   const user = getCurrentUser();
   const [isVisible, setisVisible] = useState(true);
 
   let navItems = useMemo(
     () => ({
+      Home: {
+        open: true,
+        icon: <Category className=" !text-[1.2em] text-[#67748E]" />,
+        isVisible: true,
+        routes: [
+          {
+            key: "dashboard",
+            isVisible: false,
+            link:
+              role === "Manager"
+                ? `organisation/${orgId}/dashboard/manager-dashboard`
+                : role === "Hr"
+                ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                : role === "Employee"
+                ? "/organisation/dashboard/employee-dashboard"
+                : "",
+            icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Dashboard",
+          },
+        ],
+      },
       "Self Help": {
         open: true,
         icon: <Category className=" !text-[1.2em] text-[#67748E]" />,
@@ -86,13 +109,6 @@ const TestNavItems = ({ toggleDrawer }) => {
         isVisible: true,
         icon: <NotificationsActive className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
-          {
-            key: "createNotification",
-            isVisible: true,
-            link: "/create-notification",
-            icon: <AddAlert className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Create Notification",
-          },
           {
             key: "listNotification",
             isVisible: true,
@@ -139,18 +155,18 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "shiftManagement",
-            isVisible: ["Super-Admin", "Hr"].some((item) => {
-              return user?.profile?.includes(item);
-            }),
+            isVisible:
+              isVisible &&
+              ["Super-Admin", "Hr", "Manager", "Delegate-Super Admin"].includes(
+                role
+              ),
             link: "/shift-management",
             icon: <Event className=" !text-[1.2em] text-[#67748E]" />,
             text: "Shift Management",
           },
           {
             key: "createsalary",
-            isVisible: ["Super-Admin", "Hr"].some((item) => {
-              return user?.profile?.includes(item);
-            }),
+            isVisible: isVisible && ["Super-Admin", "Hr"].includes(role),
             link: `/organisation/${orgId}/salary-management`,
             icon: <Event className=" !text-[1.2em] text-[#67748E]" />,
             text: "Salary Management",
@@ -162,15 +178,15 @@ const TestNavItems = ({ toggleDrawer }) => {
         icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
         isVisible:
           window.location.pathname?.includes("organisation") &&
-          ["Super-Admin", "Hr", "Manager"]?.some((item) => {
-            return user?.profile?.includes(item);
-          }),
+          ["Super-Admin", "Hr", "Manager", "Delegate-Super Admin"]?.includes(
+            role
+          ),
         routes: [
           {
             key: "onboarding",
-            isVisible: ["Super-Admin", "Hr", "Manager"].some((item) => {
-              return user?.profile?.includes(item);
-            }),
+            isVisible: ["Super-Admin", "Hr", "Delegate-Super Admin"].includes(
+              role
+            ),
             link: `organisation/${orgId}/employee-onboarding`,
             icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
             text: "Onboarding",
@@ -178,18 +194,22 @@ const TestNavItems = ({ toggleDrawer }) => {
 
           {
             key: "offboarding",
-            isVisible: ["Super-Admin", "Hr", "Manager"].some((item) => {
-              return user?.profile?.includes(item);
-            }),
+            isVisible: ["Super-Admin", "Hr", "Delegate-Super Admin"].includes(
+              role
+            ),
             link: `organisation/${orgId}/employee-offboarding`,
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
             text: "Offboarding",
           },
           {
             key: "employeeList",
-            isVisible: ["Super-Admin", "Hr", "Manager"].some((item) => {
-              return user?.profile?.includes(item);
-            }),
+            isVisible: [
+              "Super-Admin",
+              "Hr",
+              "Manager",
+              "Department-Head",
+              "Delegate-Super Admin",
+            ].includes(role),
             link: `organisation/${orgId}/employee-list`,
             icon: <Groups className=" !text-[1.2em] text-[#67748E]" />,
             text: "Employee List",
@@ -200,47 +220,33 @@ const TestNavItems = ({ toggleDrawer }) => {
         open: false,
         isVisible:
           window.location.pathname.includes("organisation") &&
-          user?.profile?.includes("Super-Admin", "Hr", "Manager"),
+          [
+            "Super-Admin",
+            "Delegate-Super Admin",
+            "Hr",
+            "Department-Head",
+          ].includes(role),
         // : false
         icon: <Business className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
             key: "addDepartment",
-            isVisible: ["Super-Admin", "Hr"].some((item) => {
-              return user?.profile?.includes(item);
-            }),
+            isVisible: ["Super-Admin", "Hr", "Department-Head"].includes(role),
             link: `/organisation/${orgId}/add-department`,
             icon: <AddAlert className=" !text-[1.2em] text-[#67748E]" />,
             text: "Add Department",
           },
-          // {
-          //   key: "updateDepartment",
-          // isVisible: false,
-          //link: "/department-update",
-          //   icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
-          //   text: "Update Department",
-          // },
-          // {
-          //   key: "deleteDepartment",
-          // isVisible: false,//
-          // link: "/department-delete",
-          //   icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
-          //   text: "Delete Department",
-          // },
+
           {
             key: "deptDeletion",
-            isVisible: ["Super-Admin", "Hr"].some((item) => {
-              return user?.profile?.includes(item);
-            }),
+            isVisible: ["Super-Admin", "Hr", "Department-Head"].includes(role),
             link: `/organisation/${orgId}/dept-deletion`,
             icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Bulk Deletion",
           },
           {
             key: "departmentList",
-            isVisible: ["Super-Admin", "Hr"].some((item) => {
-              return user?.profile?.includes(item);
-            }),
+            isVisible: ["Super-Admin", "Hr", "Department-Head"].includes(role),
             link: `/organisation/${orgId}/department-list`,
             icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Manage Departments",
@@ -249,41 +255,20 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
       Organisation: {
         open: false,
-        isVisible: user?.profile?.includes("Super-Admin", "Hr"),
+        isVisible: ["Super-Admin"].includes(role),
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
             key: "addOrganisation",
-            isVisible: ["Super-Admin"].some((item) => {
-              return user?.profile?.includes(item);
-            }),
+            isVisible: ["Super-Admin", "Delegate-Super Admin"].includes(role),
             link: "/add-organisation",
             icon: <AddAlert className=" !text-[1.2em] text-[#67748E]" />,
             text: "Add Organisation",
           },
-          // {
-          //   key: "updateOrganisation",
-          //   isVisible: ["Super-Admin"].some((item) => {
-          //     return user?.profile?.includes(item);
-          //   }),
-          //   link: "/organisation-update",
-          //   icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
-          //   text: "Update Organisation",
-          // },
-          // {
-          //   key: "deleteOrganisation",
-          //   isVisible: ["Super-Admin"].some((item) => {
-          //     return user?.profile?.includes(item);
-          //   }),
-          //   link: "/organisation-delete",
-          //   icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
-          //   text: "Delete Organisation",
-          // },
+
           {
             key: "organisationList",
-            isVisible: ["Super-Admin"].some((item) => {
-              return user?.profile?.includes(item);
-            }),
+            isVisible: ["Super-Admin", "Delegate-Super Admin"].includes(role),
             link: "/organizationList",
             icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Organisation List",
