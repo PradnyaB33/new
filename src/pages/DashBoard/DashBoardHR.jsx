@@ -8,6 +8,7 @@ import {
 } from "@mui/icons-material";
 import { default as React } from "react";
 import { useQueryClient } from "react-query";
+import { useLocation } from "react-router-dom/dist";
 import Select from "react-select";
 import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
 import useEmployee from "../../hooks/Dashboard/useEmployee";
@@ -21,6 +22,7 @@ const DashBoardHR = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const { employee, employeeLoading } = useEmployee(user.organizationId);
+  const location = useLocation("");
 
   const queryClient = useQueryClient();
 
@@ -47,8 +49,10 @@ const DashBoardHR = () => {
 
   return (
     <section className=" bg-gray-50  min-h-screen w-full ">
-      <header className="text-xl w-full px-8 pt-6 bg-white shadow-md   p-4">
-        HR Dashboard
+      <header className="text-xl font-bold w-full px-8 pt-6 bg-white !text-[#67748E] shadow-md  p-4">
+        {location.pathname?.includes("/DH-dashboard")
+          ? "Department Head Dashboard"
+          : "HR Dashboard"}
       </header>
       <div className="md:px-8 px-2 w-full">
         <div className="flex flex-1 mt-6 flex-wrap w-full justify-between gap-2 md:gap-5 ">
