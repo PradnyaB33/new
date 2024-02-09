@@ -57,37 +57,18 @@ const DashboardManger = () => {
       <header className="text-xl w-full px-8 pt-6 bg-white shadow-md   p-4">
         Manager Dashboard
       </header>
-      {/* <BackComponent /> */}
-      {/* <Link to={"/organizationList"}>
-          <West className="mx-4 !text-xl" />
-        </Link> */}
-      <div className=" px-8 w-full">
-        {/* <div className="flex items-center gap-3">
-          <Avatar
-            className="!bg-blue-500  h-[100px] text-4xl p-1 shadow-sm"
-            variant="rounded"
-            sx={{ width: "46", height: "46" }}
-          >
-            <DashboardOutlined />
-          </Avatar>
-          <div>
-            <h1 className="text-2xl font-semibold">Manager Dashboard</h1>
-            <p>Manage your employees and view the insights</p>
-          </div>
-        </div> */}
 
-        {/* <h1 className="text-xl text-[#152745] font-semibold">
-          Manager Dashboard
-        </h1> */}
-
+      <div className=" lg:px-8 sm:px-4 px-2 w-full">
         <div className="flex mt-6">
-          <div className="w-full flex gap-5">
-            <div className="flex flex-col h-max w-[70%] 2xl:w-[70%] gap-3">
-              <div className="flex h-max w-full justify-between gap-3">
+          <div className="w-full lg:flex-row flex-col flex gap-5">
+            <div className="flex flex-col h-max w-full lg:w-[70%] gap-3">
+              <div className="flex flex-1  flex-wrap w-full justify-between gap-2 md:gap-5 ">
                 <SuperAdminCard
                   icon={Groups}
                   title={"Total Employees"}
-                  data={EmployeeDataOfManager?.data[0]?.reporteeIds?.length}
+                  data={
+                    EmployeeDataOfManager?.data[0]?.reporteeIds?.length ?? 0
+                  }
                   color={"!bg-sky-500"}
                 />
                 <SuperAdminCard
@@ -110,9 +91,9 @@ const DashboardManger = () => {
                 />
               </div>
             </div>
-            <div className="w-[30%] 2xl:w-[30%]  space-y-3">
+
+            <div className="w-full lg:w-[30%]  space-y-3">
               <EmployeeLeaveRequest />
-              {/* <EmployeeLeaveRequest /> */}
             </div>
           </div>
         </div>

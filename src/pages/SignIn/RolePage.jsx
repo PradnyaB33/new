@@ -79,9 +79,11 @@ const RolePage = () => {
           );
         } else if (response?.data?.role === "Employee") {
           redirect("/organisation/dashboard/employee-dashboard");
+        } else {
+          redirect("/organisation/dashboard/employee-dashboard");
         }
 
-        window.location.reload();
+        // window.location.reload();
       },
 
       onError: (error) => {

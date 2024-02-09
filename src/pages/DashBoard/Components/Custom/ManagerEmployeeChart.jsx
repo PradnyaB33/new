@@ -169,8 +169,8 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
             >
               <WorkHistory className="!text-lg" />
             </Avatar>
-            <h1 className="text-xl font-semibold py-3">
-              Employee Attendence Overview
+            <h1 className="md:text-xl text-lg font-semibold py-3">
+              Attendence Overview
             </h1>
           </div>
           <Autocomplete
@@ -179,12 +179,12 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
             sx={{ width: 300 }}
             size="small"
             onChange={handleSelect}
-            options={EmployeeDataOfManager?.data[0]?.reporteeIds}
-            getOptionLabel={(option) => option.first_name}
+            options={EmployeeDataOfManager?.data[0]?.reporteeIds ?? []}
+            getOptionLabel={(option) => option?.first_name}
             renderOption={(props, option) => (
               <li className="flex" {...props}>
                 <p>
-                  {option.first_name} {option.last_name}
+                  {option?.first_name} {option?.last_name}
                 </p>
               </li>
             )}
