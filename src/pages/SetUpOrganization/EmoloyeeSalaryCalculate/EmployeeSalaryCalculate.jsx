@@ -205,7 +205,7 @@ const EmployeeSalaryCalculateDay = () => {
                   </h1>
                 </article>
                 <p>
-                  salary computation day have not been set up for your
+                  Salary computation day have not been set up for your
                   organization. Please create the 'Salary Computation Day'
                 </p>
               </section>
