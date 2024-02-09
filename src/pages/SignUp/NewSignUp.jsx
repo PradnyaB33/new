@@ -21,7 +21,7 @@ import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import TermsCondition from "../../components/termscondition/termsCondition";
-import UserProfile from "../../hooks/auth/useUser";
+import UserProfile from "../../hooks/UserData/useUser";
 
 const SignIn = () => {
   const { handleAlert } = useContext(TestContext);

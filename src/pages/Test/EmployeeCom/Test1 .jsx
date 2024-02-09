@@ -55,11 +55,10 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
         message: "Invalid Aadhaar Card Number",
       }),
     pan_card_number: z.string(),
-    gender: z.string(),
     bank_account_no: z.string(),
   });
 
-  const { control, formState, handleSubmit, getValues } = useForm({
+  const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       first_name: first_name,
       last_name: last_name,

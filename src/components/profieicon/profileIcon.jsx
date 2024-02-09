@@ -9,7 +9,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Cookies from "js-cookie";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import UserProfile from "../../hooks/auth/useUser";
+import UserProfile from "../../hooks/UserData/useUser";
 
 export default function ProfileIcon() {
   const navigate = useNavigate();

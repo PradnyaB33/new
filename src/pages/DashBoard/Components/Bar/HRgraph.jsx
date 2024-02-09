@@ -5,7 +5,7 @@ import axios from "axios";
 import { CategoryScale, Chart } from "chart.js";
 import { useQuery } from "react-query";
 import { UseContext } from "../../../../State/UseState/UseContext";
-import UserProfile from "../../../../hooks/auth/useUser";
+import UserProfile from "../../../../hooks/UserData/useUser";
 Chart.register(CategoryScale);
 
 const HRgraph = () => {

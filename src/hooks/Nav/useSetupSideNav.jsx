@@ -15,7 +15,7 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
 import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
 import { useLocation } from "react-router-dom";
-import UserProfile from "../auth/useUser";
+import UserProfile from "../UserData/useUser";
 
 const useSetupSideNav = (organisationId) => {
   const location = useLocation();

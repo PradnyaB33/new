@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
-import UserProfile from "../../hooks/auth/useUser";
+import UserProfile from "../../hooks/UserData/useUser";
 
 const RolePage = () => {
   const [selected, setSelected] = useState(null);

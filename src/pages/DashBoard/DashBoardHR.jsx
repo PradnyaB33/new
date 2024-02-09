@@ -11,7 +11,7 @@ import { useQueryClient } from "react-query";
 import Select from "react-select";
 import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
 import useEmployee from "../../hooks/Dashboard/useEmployee";
-import UserProfile from "../../hooks/auth/useUser";
+import UserProfile from "../../hooks/UserData/useUser";
 import LineGraph from "./Components/Bar/LineGraph";
 import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";

@@ -13,7 +13,7 @@ import { CategoryScale, Chart } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { useQuery } from "react-query";
 import { UseContext } from "../../../../State/UseState/UseContext";
-import UserProfile from "../../../../hooks/auth/useUser";
+import UserProfile from "../../../../hooks/UserData/useUser";
 Chart.register(CategoryScale);
 
 const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
@@ -156,21 +156,6 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
     } else {
       setuserId(user._id);
     }
-  };
-  const options = {
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-      },
-      y: {
-        grid: {
-          display: true,
-        },
-      },
-    },
-    maintainAspectRatio: false,
   };
 
   return (

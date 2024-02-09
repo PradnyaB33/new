@@ -22,7 +22,7 @@ import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
-import UserProfile from "../../../hooks/auth/useUser";
+import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
 
 const TestNavItems = ({ toggleDrawer }) => {
@@ -48,9 +48,8 @@ const TestNavItems = ({ toggleDrawer }) => {
     }
   };
 
-  const { getCurrentUser, getCurrentRole } = UserProfile();
+  const { getCurrentRole } = UserProfile();
   const role = getCurrentRole();
-  const user = getCurrentUser();
   const [isVisible, setisVisible] = useState(true);
 
   let navItems = useMemo(

@@ -6,7 +6,7 @@ import React, { useContext, useEffect } from "react";
 import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
-import UserProfile from "../../hooks/auth/useUser";
+import UserProfile from "../../hooks/UserData/useUser";
 import useSignup from "../../hooks/useLoginForm";
 
 const SignIn = () => {
