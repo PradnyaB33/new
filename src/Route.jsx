@@ -211,6 +211,14 @@ const App = () => {
           </RequireAuth>
         }
       />
+      <Route
+        path="/organisation/:organisationId/dashboard/DH-dashboard"
+        element={
+          <RequireAuth permission={"Department-Head"}>
+            <DashBoardHR />
+          </RequireAuth>
+        }
+      />
 
       <Route
         path="/organisation/:organisationId/dashboard/manager-dashboard"

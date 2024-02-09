@@ -21,6 +21,7 @@ const BackComponent = () => {
     "/terms-and-conditions",
     "choose-role",
     "employeeTest",
+    "/DH-dashboard",
     // "/organizationList",
     // "/organisation/employee-dashboard",
     // "/organisation",
