@@ -21,11 +21,7 @@ const NavAccordian = ({
   isVisible,
 }) => {
   const [open, setOpen] = useState(valueBoolean);
-  // const params = useMatch("/organisation/:id");
-  // console.log(
-  //   `🚀 ~ file: accordian.jsx:23 ~ params?.params?.id:`,
-  //   params?.params?.id
-  // );
+
   return (
     <>
       <List className="my-4">

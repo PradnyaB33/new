@@ -1,20 +1,16 @@
-import { TextField } from "@mui/material";
+import { Container, TextField } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
+import { useQueryClient } from "react-query";
+import { useNavigate, useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import { useParams } from "react-router-dom";
-import { useQueryClient } from "react-query";
 import CreateSalaryModel from "../../components/Modal/CreateSalaryModel/CreateSalaryModel";
-import { useNavigate } from "react-router-dom";
-import { Event } from "@mui/icons-material";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import { Container } from "@mui/material";
 
 const SalaryManagement = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const [nameSearch, setNameSearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const [deptSearch, setDeptSearch] = useState("");
@@ -190,10 +186,10 @@ const SalaryManagement = () => {
                   ?.map((item, id) => (
                     <tr className="!font-medium border-b" key={id}>
                       <td className="!text-left pl-8 py-3">{id + 1}</td>
-                      <td className="py-3">{item?.first_name}</td>
-                      <td className="py-3">{item?.last_name}</td>
-                      <td className="py-3">{item?.email}</td>
-                      <td className="py-3">
+                      <td className="py-3 pl-8">{item?.first_name}</td>
+                      <td className="py-3 pl-8 ">{item?.last_name}</td>
+                      <td className="py-3 pl-8">{item?.email}</td>
+                      <td className="py-3 pl-8">
                         {item?.worklocation?.map((location, index) => (
                           <span key={index}>{location?.city}</span>
                         ))}
@@ -205,24 +201,30 @@ const SalaryManagement = () => {
                           );
                         })}
                       </td>
-                      <td className="py-3">{item?.salarystructure?.name}</td>
-                      <td>
-                        <Event
-                          onClick={() => handleCreateModalOpen(item._id)}
-                          className="cursor-pointer"
-                          style={{ color: "blue", fontSize: 24 }}
-                        />
+                      <td className="py-3 pl-8">
+                        {item?.salarystructure?.name}
                       </td>
                       <td>
-                        <AttachMoneyIcon
+                        <button
+                          type="submit"
+                          onClick={() => handleCreateModalOpen(item._id)}
+                          className="flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                        >
+                          Create Salary
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          type="submit"
                           onClick={() =>
                             navigate(
                               `/organisation/${organisationId}/salary-calculate/${item._id}`
                             )
                           }
-                          className="cursor-pointer"
-                          style={{ color: "green", fontSize: 24 }}
-                        />
+                          className="flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                        >
+                          Calculate Salary
+                        </button>
                       </td>
                     </tr>
                   ))}

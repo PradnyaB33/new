@@ -4,7 +4,6 @@ import Grid from "@mui/material/Grid";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-// import { PDFDownloadLink } from "@react-pdf/renderer";
 import axios from "axios";
 import dayjs from "dayjs";
 import React, { useContext, useEffect, useState } from "react";
@@ -14,7 +13,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 const SalaryCalculate = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const token = cookies["aeigs"];
+  const token = cookies["aegis"];
   const { userId, organisationId } = useParams();
   const [selectedDate, setSelectedDate] = useState(dayjs("2022-04-17"));
   const [numDaysInMonth, setNumDaysInMonth] = useState(0);
@@ -57,7 +56,6 @@ const SalaryCalculate = () => {
     fetchAvailableEmployee();
     // eslint-disable-next-line
   }, []);
-
   console.log(availableEmployee);
 
   // pull holiday's count based on organization id
@@ -84,19 +82,20 @@ const SalaryCalculate = () => {
   }, []);
 
   const countPublicHolidaysInCurrentMonth = () => {
-    const currentDate = dayjs(); // Get current date using dayjs
-    const currentMonth = currentDate.month() + 1; // Adding 1 to get 1-based index
-    const currentYear = currentDate.year();
+    const selectedMonth = selectedDate.format("M");
+    const selectedYear = selectedDate.format("YYYY");
+
     const holidaysInCurrentMonth = publicHolidays.filter((holiday) => {
       const holidayDate = dayjs(holiday.date);
       return (
-        holidayDate.month() + 1 === currentMonth &&
-        holidayDate.year() === currentYear
+        holidayDate.month() + 1 === parseInt(selectedMonth) && // Month is zero-based in dayjs
+        holidayDate.year() === parseInt(selectedYear)
       );
     });
 
     return holidaysInCurrentMonth.length;
   };
+
   let publicHolidaysCount = countPublicHolidaysInCurrentMonth();
 
   // pull weekend based on organization id
@@ -126,7 +125,7 @@ const SalaryCalculate = () => {
     .map((item) => item.days.map((dayItem) => dayItem.day))
     .flat();
 
-  // // get the weekend count in that organization
+  // get the weekend count in that organization
   const countWeekendDaysInMonth = () => {
     const selectedMonth = dayjs(selectedDate); // selectedDate is the chosen date
     const daysInMonth = selectedMonth.daysInMonth();
@@ -145,7 +144,7 @@ const SalaryCalculate = () => {
   // // Call the function to count weekend days in the selected month
   const weekendCount = countWeekendDaysInMonth();
 
-  // pull the data such as paidLeaveDays , unpaidLeave days , available Days
+  // pull the data such as paidLeaveDays , unpaidLeave days
   const fetchDataAndFilter = async () => {
     try {
       const response = await axios.get(
@@ -246,7 +245,7 @@ const SalaryCalculate = () => {
     availableEmployee?.salaryComponent?.["Travel allowance"] || ""
   );
   let variableAllowance = calculateSalaryComponent(
-    availableEmployee?.salaryComponent?.["Varialble allowance"] || ""
+    availableEmployee?.salaryComponent?.["Variable allowance"] || ""
   );
 
   // calculate the total gross salary
@@ -504,8 +503,11 @@ const SalaryCalculate = () => {
                             Designation :
                           </td>
                           <td>
-                            {availableEmployee?.designation[0]
-                              ?.designationName || ""}
+                            {(availableEmployee?.designation &&
+                              availableEmployee?.designation.length > 0 &&
+                              availableEmployee?.designation[0]
+                                ?.designationName) ||
+                              ""}
                           </td>
                         </tr>
                         <tr>
@@ -519,8 +521,8 @@ const SalaryCalculate = () => {
                           </td>
                           <td>
                             {(availableEmployee?.deptname &&
-                              availableEmployee.deptname.length > 0 &&
-                              availableEmployee.deptname[0]?.departmentName) ||
+                              availableEmployee?.deptname.length > 0 &&
+                              availableEmployee?.deptname[0]?.departmentName) ||
                               ""}
                           </td>
                         </tr>
@@ -533,11 +535,7 @@ const SalaryCalculate = () => {
                           >
                             PAN No :
                           </td>
-                          <td>
-                            {availableEmployee?.additionalInfo?.[
-                              "Pan Card Number"
-                            ] || ""}
-                          </td>
+                          <td>{availableEmployee?.pan_card_number}</td>
                         </tr>
 
                         <tr>
@@ -919,20 +917,6 @@ const SalaryCalculate = () => {
                   margin: "20px",
                 }}
               >
-                {/* <button
-                  onClick={handleGeneratePDF}
-                  style={{
-                    padding: "8px 38px",
-                    borderRadius: "5px",
-                    backgroundColor: "green",
-                    color: "#fff",
-                    cursor: "pointer",
-                    marginRight: "10px", // Add margin-right for spacing
-                  }}
-                >
-                  Generate PDF
-                </button> */}
-
                 <button
                   onClick={saveSallaryDetail}
                   style={{
@@ -947,40 +931,6 @@ const SalaryCalculate = () => {
                 >
                   Submit Salary Details
                 </button>
-              </div>
-
-              <div style={{ margin: "20px" }}>
-                {/* {employeeData && (
-                  <PDFDownloadLink
-                    document={
-                      <PDFDocument
-                        employeeData={employeeData}
-                        totalDeduction={totalDeduction}
-                        totalGrossSalary={totalGrossSalary}
-                        totalNetSalary={totalNetSalary}
-                        basicSalary={basicSalary}
-                        hraSalary={hraSalary}
-                        daSalary={daSalary}
-                        foodAllowance={foodAllowance}
-                        salesAllowance={salesAllowance}
-                        specialAllowance={specialAllowance}
-                        travelAllowance={travelAllowance}
-                        variableAllowance={variableAllowance}
-                        publicHolidaysCount={publicHolidaysCount}
-                        formattedDate={formattedDate}
-                        noOfDaysInMonth={numDaysInMonth}
-                        paidLeaveDays={paidLeaveDays}
-                        unPaidLeaveDays={unPaidLeaveDays}
-                        noOfDaysEmployeePresent={noOfDaysEmployeePresent}
-                      />
-                    }
-                    fileName="SalarySlip.pdf"
-                  >
-                    {({ blob, url, loading, error }) =>
-                      loading ? "Generating PDF..." : "Download PDF"
-                    }
-                  </PDFDownloadLink>
-                )} */}
               </div>
             </div>
           </Paper>

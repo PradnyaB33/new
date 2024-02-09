@@ -30,7 +30,7 @@ const filter = createFilterOptions();
 const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
 
   let salaryComponentArray = [
     { title: "Basic" },
@@ -390,7 +390,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
               className="text-md mb-2"
               htmlFor="name"
             >
-              Enter employment types
+              Enter employment type.
             </FormLabel>
             <FormControl
               error={errors.empTypes.length > 0}

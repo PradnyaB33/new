@@ -5,7 +5,7 @@ const ViewPayslip = () => {
   const { handleAlert } = useContext(TestContext);
   console.log(`🚀 ~ file: ViewPayslip.jsx:6 ~ handleAlert:`, handleAlert);
   // const { cookies } = useContext(UseContext);
-  // const authToken = cookies["aeigs"];
+  // const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const employeeId = user._id;

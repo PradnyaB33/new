@@ -7,6 +7,7 @@ import {
   ListItemText,
   OutlinedInput,
   TextField,
+  Typography,
 } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -15,7 +16,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Select from "@mui/material/Select";
-import { Typography } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -29,7 +29,6 @@ import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import useAddEmpForm from "../../hooks/useAddEmpForm";
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -43,10 +42,9 @@ const MenuProps = {
 const EmployeeAdd = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const { organisationId } = useParams();
   const [userId, setUserId] = useState(null);
-  const [empId, setEmpId] = useState(null);
   const [showFields, setShowFields] = useState(false);
   const [ageError, setAgeError] = useState(false);
   const [shift_allocation, setShiftAllocation] = useState("");
@@ -318,7 +316,68 @@ const EmployeeAdd = () => {
     fetchAvailableCostCenter();
     // eslint-disable-next-line
   }, []);
-  console.log(availaleCostCenterId);
+  const [availaleShiftAllocation, setAvailableShiftAllocation] = useState([]);
+  const fetchAvailableShiftAllocation = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/shifts/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setAvailableShiftAllocation(response.data.shifts);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchAvailableShiftAllocation();
+    // eslint-disable-next-line
+  }, []);
+
+  //  generate employee id
+  const [employeeId, setEmployeeId] = useState([]);
+  const [empId, setEmpId] = useState("");
+  const [counter, setCounter] = useState(1);
+
+  const fetchEmployeeId = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/get/employee-code/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setEmployeeId(response.data.getEmployeeCode);
+      // Assuming there's only one prefix in the response
+      const fetchedPrefix = response.data.getEmployeeCode[0]?.code || "";
+      setEmpId(generateEmployeeId(fetchedPrefix, counter));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const generateEmployeeId = (prefix, count) => {
+    return `${prefix}${count}`;
+  };
+
+  const handleEmpIdChange = (e) => {
+    setEmpId(e.target.value);
+  };
+
+  const incrementCounter = () => {
+    setCounter((prevCounter) => prevCounter + 1);
+    setEmpId(generateEmployeeId(employeeId[0]?.code || "", counter + 1));
+  };
+
+  useEffect(() => {
+    fetchEmployeeId();
+    // eslint-disable-next-line
+  }, []);
 
   const [profile, setProfile] = React.useState([]);
   const handleChange = (event) => {
@@ -439,12 +498,6 @@ const EmployeeAdd = () => {
     });
   };
 
-  const shiftAllocation = [
-    { shiftId: 1, shiftName: "Morning Shift" },
-    { shiftId: 2, shiftName: "Afternoon Shift" },
-    { shiftId: 3, shiftName: "Night Shift" },
-  ];
-
   const toggleFields = () => {
     setShowFields((prev) => !prev);
   };
@@ -542,8 +595,6 @@ const EmployeeAdd = () => {
         } else {
           // Reset dynamicFields and profile state
           setDynamicFields({
-            shifts_allocation: "",
-            dept_cost_no: "",
             middalName: "",
             martial_state: "",
             primary_nationality: "",
@@ -551,8 +602,6 @@ const EmployeeAdd = () => {
             permanant_address: "",
             relative_info: "",
             emer_contact: "",
-            adhar_card_number: "",
-            pan_card_number: "",
           });
           setProfile([]);
           // Reset other state variables as needed
@@ -573,7 +622,11 @@ const EmployeeAdd = () => {
           setWorkLocation("");
           setDateOfBirth("");
           setJoiningDate("");
-
+          setDeptCostCenterNo("");
+          setShiftAllocation("");
+          setAdharCardNumber("");
+          setPanCardNumber("");
+          setGender("");
           handleAlert(true, "success", response.data.message);
         }
       }
@@ -757,7 +810,7 @@ const EmployeeAdd = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-14">
+              <div className="flex items-center gap-14 mb-4">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
@@ -816,25 +869,24 @@ const EmployeeAdd = () => {
                   </FormControl>
                 </div>
               </div>
+              <div className="w-full">
+                <FormControl sx={{ width: 625 }}>
+                  <TextField
+                    size="small"
+                    type="number"
+                    label="Phone Number"
+                    name="phone_number"
+                    id="phone_number"
+                    value={phone_number}
+                    onChange={handlePhoneNumberChange}
+                    fullWidth
+                    margin="normal"
+                    required
+                  />
+                </FormControl>
+              </div>
 
               <div className="flex items-center gap-14">
-                <div className="w-full">
-                  <FormControl sx={{ width: 280 }}>
-                    <TextField
-                      size="small"
-                      type="number"
-                      label="Phone Number"
-                      name="phone_number"
-                      id="phone_number"
-                      value={phone_number}
-                      onChange={handlePhoneNumberChange}
-                      fullWidth
-                      margin="normal"
-                      required
-                    />
-                  </FormControl>
-                </div>
-
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
@@ -844,12 +896,29 @@ const EmployeeAdd = () => {
                       name="Emp Id"
                       id="empId"
                       value={empId}
-                      onChange={(e) => setEmpId(e.target.value)}
+                      onChange={handleEmpIdChange}
                       fullWidth
                       margin="normal"
                       required
                     />
                   </FormControl>
+                </div>
+                <div sx={{ width: 280 }}>
+                  <button
+                    onClick={incrementCounter}
+                    style={{
+                      width: 200,
+                      marginRight: "100px",
+                      padding: "5px",
+                      backgroundColor: "#4CAF50", // Green color
+                      color: "white",
+                      border: "none",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Generate Next Employee ID
+                  </button>
                 </div>
               </div>
               <div className="flex items-center gap-14">
@@ -893,7 +962,7 @@ const EmployeeAdd = () => {
                   <TextField
                     size="small"
                     type="text"
-                    label="Citizenship status"
+                    label="Citizenship Status"
                     name="citizenship"
                     id="citizenship"
                     value={citizenship}
@@ -1170,11 +1239,12 @@ const EmployeeAdd = () => {
                       <MenuItem value="" disabled>
                         Shift Allocation
                       </MenuItem>
-                      {shiftAllocation?.map((shift) => (
-                        <MenuItem key={shift.shiftId} value={shift.shiftName}>
-                          {shift.shiftName}
-                        </MenuItem>
-                      ))}
+                      {Array.isArray(availaleShiftAllocation) &&
+                        availaleShiftAllocation?.map((shift) => (
+                          <MenuItem key={shift?._id} value={shift?.shiftName}>
+                            {shift?.shiftName}
+                          </MenuItem>
+                        ))}
                     </Select>
                   </FormControl>
                 </div>

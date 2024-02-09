@@ -13,7 +13,7 @@ const AddRoles = () => {
   const { organisationId } = useParams("");
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
 
   const fetchProfiles = async () => {
@@ -97,7 +97,7 @@ const AddRoles = () => {
               <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                 <PersonAddOutlined className="!text-lg text-white" />
               </div>
-              <h1 className="!text-lg">Add Roles for organization</h1>
+              <h1 className="!text-lg">Add Roles </h1>
             </div>
             {isLoading ? (
               <div className="space-y-4 flex flex-col flex-wrap">

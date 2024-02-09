@@ -7,7 +7,12 @@ module.exports = {
     // "./node_modules/tw-elements/dist/js/**/*.js",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fillAvailable: {
+        width: "webkit-fill-available",
+        height: "webkit-fill-available",
+      },
+    },
   },
   plugins: [require("tw-elements/dist/plugin.cjs")],
 };

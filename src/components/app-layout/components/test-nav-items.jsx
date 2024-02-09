@@ -28,7 +28,7 @@ import TestAccordian from "./TestAccordian";
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
-  const token = cookies["aeigs"];
+  const token = cookies["aegis"];
   const location = useLocation();
   const [decodedToken, setDecodedToken] = useState("");
 
@@ -120,7 +120,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
-      "Pay-roll": {
+      Payroll: {
         open: false,
         isVisible: true,
         icon: <Payment className=" !text-[1.2em] text-[#67748E]" />,

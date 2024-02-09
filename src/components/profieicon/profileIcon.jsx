@@ -33,7 +33,7 @@ export default function ProfileIcon() {
     // console.log(cookies.aeigs);
     navigate("/sign-in");
     window.location.reload();
-    Cookies.remove("aeigs");
+    Cookies.remove("aegis");
     Cookies.remove("role");
   };
 

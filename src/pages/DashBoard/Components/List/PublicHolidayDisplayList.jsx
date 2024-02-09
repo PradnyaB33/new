@@ -10,7 +10,7 @@ import PublicSkeletonComponent from "../SkeletonComponents/PublicSkeletonCompone
 
 const PublicHolidayDisplayList = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
 
   const GetUpcomingHoliday = async () => {
     const data = await axios.get(
@@ -44,7 +44,7 @@ const PublicHolidayDisplayList = () => {
               >
                 <BeachAccessOutlined />
               </Avatar>
-              <h1 className="text-xl py-3">Upcoming Public holiday</h1>
+              <h1 className="text-xl py-3">Upcoming Public Holiday</h1>
             </div>
             {/* <button className=" flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
             View All
@@ -56,7 +56,7 @@ const PublicHolidayDisplayList = () => {
             <div className="p-5 ">
               <div className="space-x-2 items-center text-red-600  flex">
                 <WarningOutlined className="text-xl text-red-600" />
-                <h1 className="text-xl">Currently No vacation available</h1>
+                <h1 className="text-xl">No vacation available</h1>
               </div>
             </div>
           ) : (

@@ -5,6 +5,8 @@ import {
   ManageAccountsOutlined,
   PersonAddAlt1Outlined,
   PriceChangeOutlined,
+  SellOutlined,
+  TimeToLeaveOutlined,
 } from "@mui/icons-material";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
@@ -31,7 +33,7 @@ const useSetupSideNav = (organisationId) => {
     },
     {
       label: "Leave Types",
-      icon: BeachAccessOutlined,
+      icon: TimeToLeaveOutlined,
       href: `/organisation/${organisationId}/setup/leave-types`,
       active:
         location.pathname ===
@@ -49,6 +51,15 @@ const useSetupSideNav = (organisationId) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
+      label: "Add Location",
+      icon: AddLocationAltOutlined,
+      href: `/organisation/${organisationId}/setup/add-organization-locations`,
+      active:
+        location.pathname ===
+        `/organization/${organisationId}/setup/add-organization-locations`,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+    },
+    {
       label: "Public Holidays",
       icon: BeachAccessOutlined,
       href: `/organisation/${organisationId}/setup/set-public-holiday`,
@@ -58,15 +69,6 @@ const useSetupSideNav = (organisationId) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
 
-    {
-      label: "Add Location",
-      icon: AddLocationAltOutlined,
-      href: `/organisation/${organisationId}/setup/add-organization-locations`,
-      active:
-        location.pathname ===
-        `/organization/${organisationId}/setup/add-organization-locations`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
-    },
     {
       label: "Additional Employee Data",
       icon: PersonAddAlt1OutlinedIcon,
@@ -86,7 +88,7 @@ const useSetupSideNav = (organisationId) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
-      label: "Salary Input Field selection",
+      label: "Salary Management ",
       icon: PriceChangeOutlined,
       href: `/organisation/${organisationId}/setup/set-salary-input-selection`,
       active:
@@ -118,7 +120,7 @@ const useSetupSideNav = (organisationId) => {
       ),
     },
     {
-      label: "Weekly off",
+      label: "Weekly Off",
       icon: WeekendOutlinedIcon,
       href: `/organisation/${organisationId}/setup/set-weekend-holiday`,
       active:
@@ -144,6 +146,15 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/set-employee-code-generator`,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+    },
+    {
+      label: "Subscription",
+      icon: SellOutlined,
+      href: `/organisation/${organisationId}/setup/subscription`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/subscription`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
   ];

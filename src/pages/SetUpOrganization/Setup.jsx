@@ -3,6 +3,7 @@ import React from "react";
 import { Link, useParams } from "react-router-dom";
 import BackComponent from "../../components/BackComponent/BackComponent";
 import useSetupSideNav from "../../hooks/Nav/useSetupSideNav";
+
 const Setup = ({ children }) => {
   const { organisationId } = useParams("");
 
@@ -17,7 +18,7 @@ const Setup = ({ children }) => {
             <West className="mx-4 !text-xl" />
           </Link>
           {/* <BackComponent /> */}
-          Organization Setup Page
+          Organisation Setup Page
         </header>
         <article className="md:p-4 p-0 w-full h-full flex gap-4">
           <aside className="hidden md:flex md:w-[30%] lg:!w-[20%]  h-max  flex-col items-center shadow-lg justify-center bg-white">

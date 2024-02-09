@@ -9,7 +9,7 @@ import { UseContext } from "../../../../State/UseState/UseContext";
 
 const LeaveDisplayList = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  const authToken = cookies["aegis"];
 
   const GetLastLeaves = async () => {
     const { data } = await axios.get(
@@ -39,7 +39,7 @@ const LeaveDisplayList = () => {
             >
               <BeachAccessOutlined />
             </Avatar>
-            <h1 className="text-xl py-3">Last taken leaves</h1>
+            <h1 className="text-xl py-3">Last Taken Leaves</h1>
           </div>
           {/* <button className=" flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
             View All

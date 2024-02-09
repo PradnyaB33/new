@@ -33,13 +33,13 @@ const EmployeeLeavePie = () => {
     <article className="mb-2 w-full h-max bg-white rounded-md shadow-md">
       {isLoading ? (
         <div className="p-4 !pb-2 space-y-2">
-          <h1 className="text-xl">Total Leave's Left</h1>
+          <h1 className="text-xl">Total Leaves Left</h1>
           <Skeleton variant="rounded" height={150} animation="wave" />
         </div>
       ) : (
         <>
           <div className="px-4 pt-4">
-            <h1 className="text-xl">Total Leave's Left</h1>
+            <h1 className="text-xl">Total Leaves Left</h1>
           </div>
           <div className="p-2 flex items-center  w-full">
             <Pie data={data} options={options} />
