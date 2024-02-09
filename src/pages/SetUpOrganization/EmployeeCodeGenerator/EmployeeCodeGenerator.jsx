@@ -1,4 +1,4 @@
-import { BorderColor, Delete, Warning } from "@mui/icons-material";
+import { BorderColor, Delete, Info, Warning } from "@mui/icons-material";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import {
   Button,
@@ -17,6 +17,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import CreateEmpCodeModel from "../../../components/Modal/EmpCodeModel/CreateEmpCodeModel";
 import EditEmpCodeModel from "../../../components/Modal/EmpCodeModel/EditEmpCodeModel";
 import Setup from "../Setup";
+import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
 const EmployeeCodeGenerator = () => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
@@ -74,7 +75,7 @@ const EmployeeCodeGenerator = () => {
     }
   };
 
-  const { data: employeeCodes } = useQuery({
+  const { data: employeeCodes, isLoading } = useQuery({
     queryKey: ["employee-code"],
     queryFn: getEmployeeCodeData,
   });
@@ -140,44 +141,60 @@ const EmployeeCodeGenerator = () => {
               Generate Employee Code
             </Button>
           </div>
-
-          <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
-            <table className="min-w-full bg-white  text-left !text-sm font-light">
-              <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
-                <tr className="!font-semibold ">
-                  <th scope="col" className="!text-left pl-8 py-3 ">
-                    SR NO
-                  </th>
-                  <th scope="col" className="py-3 ">
-                    Employee Code
-                  </th>
-                  <th scope="col" className="px-6 py-3 ">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {employeeCodes?.map((empCode, id) => (
-                  <tr className="!font-medium border-b" key={id}>
-                    <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                    <td className="py-3 ">{empCode?.code}</td>
-                    <td className="whitespace-nowrap px-6 py-2">
-                      <IconButton
-                        onClick={() => handleEditModalOpen(empCode?._id)}
-                      >
-                        <BorderColor className="!text-xl" color="success" />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => handleDeleteConfirmation(empCode?._id)}
-                      >
-                        <Delete className="!text-xl" color="error" />
-                      </IconButton>
-                    </td>
+          {isLoading ? (
+            <EmployeeTypeSkeleton />
+          ) : employeeCodes?.length > 0 ? (
+            <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
+              <table className="min-w-full bg-white  text-left !text-sm font-light">
+                <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
+                  <tr className="!font-semibold ">
+                    <th scope="col" className="!text-left pl-8 py-3 ">
+                      SR NO
+                    </th>
+                    <th scope="col" className="py-3 ">
+                      Employee Code
+                    </th>
+                    <th scope="col" className="px-6 py-3 ">
+                      Actions
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {employeeCodes?.map((empCode, id) => (
+                    <tr className="!font-medium border-b" key={id}>
+                      <td className="!text-left pl-8 py-3 ">{id + 1}</td>
+                      <td className="py-3 ">{empCode?.code}</td>
+                      <td className="whitespace-nowrap px-6 py-2">
+                        <IconButton
+                          onClick={() => handleEditModalOpen(empCode?._id)}
+                        >
+                          <BorderColor className="!text-xl" color="success" />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => handleDeleteConfirmation(empCode?._id)}
+                        >
+                          <Delete className="!text-xl" color="error" />
+                        </IconButton>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+              <article className="flex items-center mb-1 text-red-500 gap-2">
+                <Info className="!text-2xl" />
+                <h1 className="text-xl font-semibold">
+                  Employee code is not found
+                </h1>
+              </article>
+              <p>
+                Employee code have not been set up for your organization. Please
+                create the 'Employee Code'
+              </p>
+            </section>
+          )}
         </article>
       </Setup>
       {/* this dialogue for delete the employee code */}
@@ -220,7 +237,7 @@ const EmployeeCodeGenerator = () => {
         open={createModalOpen}
         organisationId={organisationId}
       />
-      s{/* for update */}
+      {/* for update */}
       <EditEmpCodeModel
         handleClose={handleEditModelClose}
         organisationId={organisationId}
