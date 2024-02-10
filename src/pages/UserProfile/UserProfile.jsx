@@ -23,7 +23,6 @@ const EmployeeProfile = () => {
   const [additionalPhoneNumber, setAdditionalPhoneNumber] = useState("");
   const [chatId, setChatId] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
-  const [selectedImage, setSelectedImage] = useState(null);
 
   // Function to fetch additional details of the employee
   const [availableUserProfileData, setAvailableProfileData] = useState({});
@@ -58,7 +57,6 @@ const EmployeeProfile = () => {
           additional_phone_number: additionalPhoneNumber,
           chat_id: chatId,
           status_message: statusMessage,
-          user_logo_url: selectedImage,
         },
         {
           headers: {
@@ -83,51 +81,6 @@ const EmployeeProfile = () => {
       );
     }
   };
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-
-    if (file) {
-      // Read the selected file as a data URL
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        // Set the selected image preview
-        setSelectedImage(reader.result);
-      };
-
-      // Append the file to FormData
-      formData.append("file", file);
-      console.log(formData);
-      console.log(selectedImage);
-    } else {
-      console.error("No file selected.");
-    }
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API}/route/employee/upload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: token,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        setSelectedImage(response.data.url);
-        handleAlert(true, "success", "Image uploaded successfully!");
-      }
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      handleAlert(
-        true,
-        "error",
-        error.response ? error.response.data.message : error.message
-      );
-    }
-  };
 
   return (
     <div>
@@ -145,45 +98,7 @@ const EmployeeProfile = () => {
 
         <Grid container spacing={2}>
           {/* Profile Picture */}
-          <Grid item xs={12} md={4}>
-            {selectedImage && (
-              <img
-                src={selectedImage}
-                alt="Profile Picture"
-                style={{
-                  width: "60%",
-                  maxHeight: "200px",
-                  objectFit: "cover",
-                  borderRadius: "50%",
-                  marginLeft: "30%",
-                }}
-              />
-            )}
-            <input
-              type="file"
-              id="imageInput"
-              accept="image/*"
-              style={{ display: "none" }}
-              onChange={handleImageChange}
-            />
-            <label htmlFor="imageInput">
-              <Button
-                style={{
-                  backgroundColor: "#1976D2",
-                  color: "#fff",
-                  padding: "5px 20px",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                  marginTop: "10px",
-                  marginLeft: "35%",
-                }}
-                component="span"
-              >
-                Select Image
-              </Button>
-            </label>
-          </Grid>
+          <Grid item xs={12} md={4}></Grid>
 
           {/* Additional Details */}
           <Grid item xs={12} md={8}>
