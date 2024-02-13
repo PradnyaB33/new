@@ -123,15 +123,8 @@ const Step4 = () => {
         },
         modal: {
           ondismiss: function () {
-            let txt;
-            if (confirm("Are you sure, you want to close the form?")) {
-              txt = "You pressed OK!";
-              mutate2(data.organisation._id);
-              console.log("Checkout form closed by the user");
-            } else {
-              txt = "You pressed Cancel!";
-              console.log("Complete the Payment");
-            }
+            mutate2(data.organisation._id);
+            console.log("Checkout form closed by the user");
           },
         },
       };
@@ -162,6 +155,9 @@ const Step4 = () => {
   }
 
   if (isLoading) {
+    return <Loader />;
+  }
+  if (isLoading2) {
     return <Loader />;
   }
   return (
