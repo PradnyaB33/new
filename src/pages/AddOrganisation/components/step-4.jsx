@@ -106,8 +106,13 @@ const Step4 = () => {
         theme: {
           color: "#1976d2",
         },
+        ondismiss: function () {
+          console.log("User closed the Razorpay popup");
+          // Perform any necessary actions here
+        },
       };
       const razor = new window.Razorpay(options);
+      console.log(`🚀 ~ file: step-4.jsx:111 ~ razor:`, razor);
       razor.open();
     },
     onError: async (data) => {

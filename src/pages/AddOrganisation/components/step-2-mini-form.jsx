@@ -39,8 +39,9 @@ const Step2MiniForm = ({
     },
     resolver: zodResolver(organizationSchema),
   });
-  const { errors } = formState;
+  const { errors, isDirty } = formState;
   const onSubmit = (data) => {
+    console.log(`🚀 ~ file: step-2-mini-form.jsx:43 ~ isDirty:`, isDirty);
     console.log(`🚀 ~ file: step-2.jsx:71 ~ data:`, data);
     setStep2Data(data);
     nextStep();
@@ -97,7 +98,7 @@ const Step2MiniForm = ({
         />
       </div>
       <Button type="submit" variant="contained" className="!w-max !mx-auto">
-        Skip
+        {remotePunching || isDirty ? "Next" : "Skip"}
       </Button>
     </form>
   );
