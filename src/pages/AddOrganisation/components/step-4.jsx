@@ -18,6 +18,21 @@ const Step4 = () => {
   const data = useOrg();
   console.log(`🚀 ~ file: step-4.jsx:18 ~ data:`, data);
   const { authToken, decodedToken } = useGetUser();
+  const handleDismiss = async (id) => {
+    console.log("id", id);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authToken,
+      },
+    };
+    const response = await axios.delete(
+      `${process.env.REACT_APP_API}/route/organization/delete/${id}`,
+      config
+    );
+    console.log(`🚀 ~ file: step-4.jsx:77 ~ response:`, response);
+    return response.data;
+  };
   const handleForm = async () => {
     const config = {
       headers: {
@@ -106,9 +121,18 @@ const Step4 = () => {
         theme: {
           color: "#1976d2",
         },
-        ondismiss: function () {
-          console.log("User closed the Razorpay popup");
-          // Perform any necessary actions here
+        modal: {
+          ondismiss: function () {
+            let txt;
+            if (confirm("Are you sure, you want to close the form?")) {
+              txt = "You pressed OK!";
+              mutate2(data.organisation._id);
+              console.log("Checkout form closed by the user");
+            } else {
+              txt = "You pressed Cancel!";
+              console.log("Complete the Payment");
+            }
+          },
         },
       };
       const razor = new window.Razorpay(options);
@@ -121,6 +145,9 @@ const Step4 = () => {
         data?.response?.data?.message || "Please fill all madatory field"
       );
     },
+  });
+  const { mutate: mutate2, isLoading: isLoading2 } = useMutation({
+    mutationFn: handleDismiss,
   });
   const valueObject = {
     memberCount: 40,
