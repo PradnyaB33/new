@@ -28,11 +28,21 @@ const useEmpState = create((set) => {
     companyemail: undefined,
     profile: undefined,
     shift_allocation: undefined,
+    "Shifts allocation": undefined,
+    "Martial status": undefined,
+    Education: undefined,
+    "Relative Information": undefined,
+    "Primary nationality": undefined,
     data: undefined,
 
     // Setter function for updating multiple properties at once
     setStep2Data: (remotePunching) => {
       set({ ...remotePunching });
+    },
+
+    setStep3Data: (data) => {
+      console.log(`🚀 ~ data:`, data);
+      set({ ...data });
     },
     setStep1Data: (orgName) => {
       console.log(`🚀 ~ file: Org.jsx:31 ~ orgName:`, orgName);

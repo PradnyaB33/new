@@ -7,22 +7,32 @@ import { useParams } from "react-router-dom";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useEmpQuery from "../../../hooks/Employee-OnBoarding/useEmpQuery";
+import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
 
-const Test3 = ({ isLastStep }) => {
+const Test3 = ({ isLastStep, nextStep }) => {
   const organisationId = useParams("");
   const { AdditionalListCall } = useEmpQuery(organisationId);
   const { addtionalFields, addtionalLoading } = AdditionalListCall();
-  console.log(`🚀 ~ addtionalFields:`, addtionalFields);
 
-  const EmployeeSchema = z.object({
-    "Shifts allocation": z.string(),
-    gender: z.string(),
-  });
+  const { setStep3Data, data } = useEmpState();
 
-  const { control, formState } = useForm({
-    defaultValues: {},
+  const EmployeeSchema = z.object({}).catchall(z.string());
+
+  const { control, formState, handleSubmit } = useForm({
+    defaultValues: {
+      "Shifts allocation": undefined,
+      "Martial status": undefined,
+      Education: undefined,
+      "Relative Information": undefined,
+      "Primary nationality": undefined,
+    },
     resolver: zodResolver(EmployeeSchema),
   });
+
+  const onSubmit = (testData) => {
+    setStep3Data(testData);
+    nextStep();
+  };
 
   const { errors } = formState;
 
@@ -37,19 +47,26 @@ const Test3 = ({ isLastStep }) => {
     <div className="w-full mt-4">
       <h1 className="text-2xl mb-4 font-bold">Additional info</h1>
 
-      <form className="w-full flex  flex-1 flex-col">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full flex  flex-1 flex-col"
+      >
         <div className="grid grid-cols-2 w-full gap-3">
           {addtionalFields?.inputField?.inputDetail?.map((input, id) => (
-            <AuthInputFiled
-              name={input.label}
-              placeholder={input.label}
-              label={input.placeholder}
-              icon={ContactMail}
-              control={control}
-              type={input.inputType}
-              errors={errors}
-              error={errors.label}
-            />
+            <>
+              {input.isActive && (
+                <AuthInputFiled
+                  name={input.label}
+                  placeholder={input.label}
+                  label={input.placeholder}
+                  icon={ContactMail}
+                  control={control}
+                  type={input.inputType}
+                  errors={errors}
+                  error={errors.label}
+                />
+              )}
+            </>
           ))}
         </div>
 
