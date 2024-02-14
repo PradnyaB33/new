@@ -93,7 +93,6 @@ const Step4 = () => {
       formData,
       config
     );
-    console.log(`🚀 ~ file: step-4.jsx:77 ~ response:`, response);
     return response.data;
   };
 
