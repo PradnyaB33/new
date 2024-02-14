@@ -2,7 +2,7 @@ name:  🚀 Main to QA Branch
 
 on:
   schedule:
-    - cron: '30 1 * * *'  # This will trigger the workflow every day at 7:00 pm IST (1:30 pm UTC)
+   - cron: '00 13 * * *'  # This will trigger the workflow every day at 7:00 pm IST (1:30 pm UTC)
 
   workflow_dispatch:
 
