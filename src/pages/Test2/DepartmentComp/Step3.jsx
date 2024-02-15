@@ -48,7 +48,7 @@ const Step3 = () => {
             src="/completed.svg"
             className="rounded-sm shadow-2xl"
             style={{
-              height: "500px",
+              height: "450px",
               marginLeft: "30%",
               width: "600px",
               marginBottom: "20px",
