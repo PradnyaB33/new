@@ -21,6 +21,7 @@ const AuthInputFiled = ({
   placeholder,
   options,
   disabled,
+  value,
   wrapperMessage,
 }) => {
   if (type === "select") {
@@ -57,16 +58,16 @@ const AuthInputFiled = ({
                         boxShadow: "none",
                       }),
                     }}
-                    defaultInputValue={field.value}
                     className={`${
                       readOnly && "bg-[ghostwhite]"
                     } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
                     components={{
                       IndicatorSeparator: () => null,
                     }}
+                    value={value}
                     options={options}
                     onChange={(value) => {
-                      field.onChange(value.value);
+                      field.onChange(value);
                     }}
                   />
                 </div>
@@ -114,6 +115,7 @@ const AuthInputFiled = ({
                     aria-errormessage="error"
                     placeholder={placeholder}
                     isMulti
+                    value={field?.value}
                     styles={{
                       control: (styles) => ({
                         ...styles,

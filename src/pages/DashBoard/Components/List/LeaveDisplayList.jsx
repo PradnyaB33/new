@@ -1,5 +1,5 @@
 import { BeachAccessOutlined } from "@mui/icons-material";
-import { Avatar } from "@mui/material";
+import { Avatar, Chip } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import axios from "axios";
 import { format } from "date-fns";
@@ -50,7 +50,21 @@ const LeaveDisplayList = () => {
         {previousLeaves?.map((item, id) => (
           <>
             <div key={id} className="p-4">
-              <h1 className="text-md font-semibold">{item.title}</h1>
+              <div className="flex gap-4 w-full items-center">
+                <h1 className="text-md font-semibold">{item.title}</h1>
+                <Chip
+                  color={`${
+                    item.status === "Approved"
+                      ? "primary"
+                      : item.status === "Pending"
+                      ? "default"
+                      : "error"
+                  }`}
+                  size="small"
+                  variant="outlined"
+                  label={item.status}
+                />
+              </div>
               <p className="text-lg">
                 {format(new Date(item.start), "PP")} -{" "}
                 {format(new Date(item.end), "PP")}{" "}

@@ -16,21 +16,19 @@ const Test3 = ({ isLastStep, nextStep }) => {
 
   const { setStep3Data, data } = useEmpState();
 
-  const EmployeeSchema = z.object({}).catchall(z.string());
+  const EmployeeSchema = z.object({}).catchall(z.string().optional());
 
   const { control, formState, handleSubmit } = useForm({
     defaultValues: {
-      "Shifts allocation": undefined,
-      "Martial status": undefined,
-      Education: undefined,
-      "Relative Information": undefined,
-      "Primary nationality": undefined,
+      ...data,
     },
     resolver: zodResolver(EmployeeSchema),
   });
 
   const onSubmit = (testData) => {
     setStep3Data(testData);
+    console.log("function runnning");
+
     nextStep();
   };
 

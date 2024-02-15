@@ -55,7 +55,7 @@ const TestNavItems = ({ toggleDrawer }) => {
   let navItems = useMemo(
     () => ({
       Home: {
-        open: true,
+        open: false,
         icon: <Category className=" !text-[1.2em] text-[#67748E]" />,
         isVisible: true,
         routes: [
@@ -313,15 +313,17 @@ const TestNavItems = ({ toggleDrawer }) => {
           //   isVisible={isVisible}
           //   valueBoolean={navItems[role].open}
           // />
-          <TestAccordian
-            key={role}
-            role={role}
-            icon={icon}
-            routes={routes}
-            toggleDrawer={toggleDrawer}
-            isVisible={isVisible}
-            valueBoolean={navItems[role].open}
-          />
+          <>
+            <TestAccordian
+              key={role}
+              role={role}
+              icon={icon}
+              routes={routes}
+              toggleDrawer={toggleDrawer}
+              isVisible={isVisible}
+              valueBoolean={navItems[role].open}
+            />
+          </>
         );
       })}
     </>

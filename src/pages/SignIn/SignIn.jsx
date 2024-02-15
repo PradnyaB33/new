@@ -1,4 +1,4 @@
-import { Email, Key } from "@mui/icons-material";
+import { Email, Lock } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -39,6 +39,23 @@ const SignIn = () => {
     // eslint-disable-next-line
   }, []);
 
+  const handleRole = useMutation(
+    (data) => {
+      const res = axios.post(
+        `${process.env.REACT_APP_API}/route/employee/changerole`,
+        data
+      );
+      return res;
+    },
+    {
+      onSuccess: (response) => {
+        Cookies.set("role", response?.data?.roleToken);
+        console.log("Token Accepted");
+        window.location.reload();
+      },
+    }
+  );
+
   const handleLogin = useMutation(
     async (data) => {
       const res = await axios.post(
@@ -51,7 +68,7 @@ const SignIn = () => {
     },
 
     {
-      onSuccess: (response) => {
+      onSuccess: async (response) => {
         Cookies.set("aegis", response.data.token);
 
         handleAlert(
@@ -60,9 +77,35 @@ const SignIn = () => {
           `Welcome ${response.data.user.first_name} you are logged in successfully`
         );
 
-        redirect("/choose-role");
+        // redirect("/choose-role");
+        console.log(user?.data);
 
-        window.location.reload();
+        if (response.data.user?.profile?.includes("Super-Admin")) {
+          handleRole.mutate({
+            role: "Super-Admin",
+            email: response.data.user?.email,
+          });
+          return redirect("/");
+        } else if (response.data.user?.profile.includes("Hr")) {
+          handleRole.mutate({ role: "Hr", email: response.data.user?.email });
+          return redirect(
+            `/organisation/${user?.organisationId}/dashboard/HR-dashboard`
+          );
+        } else if (response.data.user?.profile.includes("Manager")) {
+          handleRole.mutate({
+            role: "Manager",
+            email: response.data.user?.email,
+          });
+          return redirect(
+            `/organisation/${user?._id}/dashboard/manager-dashboard`
+          );
+        } else if (response.data.user?.profile.includes("Employee")) {
+          handleRole.mutate({
+            role: "Employee",
+            email: response.data.user?.email,
+          });
+          return redirect(`/organisation/dashboard/employee-dashboard`);
+        }
       },
 
       onError: (error) => {
@@ -85,7 +128,7 @@ const SignIn = () => {
       return false;
     }
     const data = { email, password };
-    await handleLogin.mutate(data);
+    handleLogin.mutate(data);
   };
 
   return (
@@ -166,13 +209,6 @@ const SignIn = () => {
                   >
                     Password
                   </label>
-
-                  <Link
-                    to="/forgot-password"
-                    className="font-medium transition-all hover:underline"
-                  >
-                    Forgot your password?
-                  </Link>
                 </div>
 
                 <div
@@ -180,7 +216,7 @@ const SignIn = () => {
                     "  flex rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px]"
                   }
                 >
-                  <Key className="text-gray-700" />
+                  <Lock className="text-gray-700" />
                   <input
                     name="password"
                     autoComplete="off"
@@ -194,6 +230,12 @@ const SignIn = () => {
                 </div>
               </div>
             </div>
+            <Link
+              to="/forgot-password"
+              className="font-medium text-right mt-2 transition-all hover:underline"
+            >
+              Forgot your password?
+            </Link>
 
             <div className="flex gap-5 mt-2">
               <button
@@ -201,7 +243,7 @@ const SignIn = () => {
                 disabled={handleLogin.isLoading}
                 className={`${
                   handleLogin.isLoading && "!bg-gray-200 shadow-lg"
-                } flex group justify-center  gap-2 items-center rounded-md h-[30px] px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500`}
+                } flex group justify-center w-full gap-2 items-center rounded-md h-[30px] px-4 py-3 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500`}
               >
                 {handleLogin.isLoading ? (
                   <>

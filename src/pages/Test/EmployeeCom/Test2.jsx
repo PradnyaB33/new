@@ -66,23 +66,52 @@ const Test2 = ({ isLastStep, nextStep }) => {
             "Password must contain at least one number, one special character, and be at least 8 characters long",
         }),
       confirmPassword: z.string(),
-      designation: z.string(),
-      worklocation: z.string(),
-      deptname: z.string(),
-      employmentType: z.string(),
+      designation: z.object({
+        label: z.string(),
+        value: z.string(),
+      }),
+      worklocation: z.object({
+        label: z.string(),
+        value: z.string(),
+      }),
+      deptname: z.object({
+        label: z.string(),
+        value: z.string(),
+      }),
+      employmentType: z.object({
+        label: z.string(),
+        value: z.string(),
+      }),
       empId: z.string(),
-      mgrempid: z.string(),
+
+      mgrempid: z
+        .object({
+          label: z.string(),
+          value: z.string(),
+        })
+        .optional(),
       joining_date: z.string(),
-      salarystructure: z.string(),
-      dept_cost_center_no: z.string(),
+      salarystructure: z.object({
+        label: z.string(),
+        value: z.string(),
+      }),
+      dept_cost_center_no: z.object({
+        label: z.string(),
+        value: z.string(),
+      }),
       companyemail: z.string().email(),
       profile: z.string().array().optional(),
-      shift_allocation: z.string(),
+      shift_allocation: z.object({
+        label: z.string(),
+        value: z.string(),
+      }),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Password don't match",
       path: ["confirmPassword"],
     });
+
+  console.log(empId);
 
   const { control, formState, handleSubmit, getValues } = useForm({
     defaultValues: {
@@ -134,6 +163,7 @@ const Test2 = ({ isLastStep, nextStep }) => {
         <div className="grid grid-cols-3 w-full gap-3">
           <AuthInputFiled
             name="deptname"
+            value={deptname}
             icon={AddBusiness}
             control={control}
             type="select"
@@ -217,6 +247,7 @@ const Test2 = ({ isLastStep, nextStep }) => {
             name="designation"
             icon={Work}
             control={control}
+            value={designation}
             placeholder="Desg"
             label="Select Designation *"
             type="select"
@@ -226,6 +257,7 @@ const Test2 = ({ isLastStep, nextStep }) => {
           />
           <AuthInputFiled
             name="shift_allocation"
+            value={shift_allocation}
             icon={Today}
             control={control}
             type="select"
@@ -239,6 +271,7 @@ const Test2 = ({ isLastStep, nextStep }) => {
         <div className="grid grid-cols-2 w-full gap-3">
           <AuthInputFiled
             name="dept_cost_center_no"
+            value={dept_cost_center_no}
             icon={ClosedCaption}
             control={control}
             options={cosnotoptions}
@@ -250,6 +283,7 @@ const Test2 = ({ isLastStep, nextStep }) => {
           />
           <AuthInputFiled
             name="worklocation"
+            value={worklocation}
             icon={LocationCity}
             control={control}
             type="select"
@@ -262,6 +296,7 @@ const Test2 = ({ isLastStep, nextStep }) => {
         </div>
         <div className="grid grid-cols-2 w-full gap-3">
           <AuthInputFiled
+            value={employmentType}
             name="employmentType"
             icon={Badge}
             control={control}
@@ -274,6 +309,7 @@ const Test2 = ({ isLastStep, nextStep }) => {
           />
           <AuthInputFiled
             name="salarystructure"
+            value={salarystructure}
             icon={MonetizationOn}
             control={control}
             type="select"
