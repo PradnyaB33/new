@@ -15,6 +15,7 @@ const Test3 = ({ isLastStep, nextStep }) => {
   const { addtionalFields, addtionalLoading } = AdditionalListCall();
 
   const { setStep3Data, data } = useEmpState();
+  console.log(`🚀 ~ file: Test3.jsx:18 ~ data:`, data);
 
   const EmployeeSchema = z.object({}).catchall(z.string().optional());
 

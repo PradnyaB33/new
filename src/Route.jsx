@@ -51,6 +51,7 @@ import RolePage from "./pages/SignIn/RolePage";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 import EmployeeTest from "./pages/Test/EmployeeTest";
+import DepartmentTest from "./pages/Test2/DepartmentTest";
 import EditablePolyline from "./pages/Test/test2";
 import TrackingMap from "./pages/Test/test3";
 import TrackingMap2 from "./pages/Test/testMap";
@@ -78,6 +79,10 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/employeeTest"
         element={<EmployeeTest />}
+      />
+      <Route
+        path="/organisation/:organisationId/departmentTest"
+        element={<DepartmentTest />}
       />
       <Route path="/paymentfailed" element={<PaymentFailed />} />
 
