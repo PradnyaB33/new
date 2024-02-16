@@ -22,7 +22,7 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useEmpOption from "../../../hooks/Employee-OnBoarding/useEmpOption";
 import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
 
-const Test2 = ({ isLastStep, nextStep }) => {
+const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   const organisationId = useParams("");
   const {
     Departmentoptions,
@@ -188,6 +188,7 @@ const Test2 = ({ isLastStep, nextStep }) => {
             icon={PersonPin}
             control={control}
             type="mutltiselect"
+            value={profile}
             placeholder="roles"
             label="Choose Role "
             errors={errors}
@@ -320,7 +321,16 @@ const Test2 = ({ isLastStep, nextStep }) => {
           />
         </div>
 
-        <div className="flex items-end w-full justify-end">
+        <div className="flex items-end w-full justify-between">
+          <button
+            type="button"
+            onClick={() => {
+              prevStep();
+            }}
+            className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+          >
+            prev
+          </button>
           <button
             type="submit"
             disabled={isLastStep}

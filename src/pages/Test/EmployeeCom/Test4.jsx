@@ -3,10 +3,11 @@ import axios from "axios";
 import React from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
+import { useNavigate, useParams } from "react-router-dom";
 import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
 import useAuthToken from "../../../hooks/Token/useAuth";
 
-const Test4 = () => {
+const Test4 = ({ prevStep }) => {
   const {
     first_name,
     last_name,
@@ -31,9 +32,13 @@ const Test4 = () => {
     companyemail,
     shift_allocation,
     data,
+    profile,
   } = useEmpState();
 
   const authToken = useAuthToken();
+
+  const { organisationId } = useParams("");
+  const navigate = useNavigate();
 
   const handleSubmit = useMutation(
     () => {
@@ -41,6 +46,7 @@ const Test4 = () => {
         first_name,
         last_name,
         email,
+        profile,
         password,
         phone_number,
         address,
@@ -61,6 +67,7 @@ const Test4 = () => {
         salarystructure: salarystructure.value,
         dept_cost_center_no: dept_cost_center_no.value,
         shift_allocation: shift_allocation.value,
+        organizationId: organisationId,
       };
       const response = axios.post(
         `${process.env.REACT_APP_API}/route/employee/add-employee`,
@@ -77,9 +84,12 @@ const Test4 = () => {
     {
       onSuccess: (response) => {
         toast.success("Employee added successfully");
+        navigate(`/organisation/${organisationId}/employee-list`);
       },
       onError: (error) => {
-        toast.error("Error", error);
+        if (error.response.status === 400) {
+          toast.error("Email already  registerd");
+        }
       },
     }
   );
@@ -117,10 +127,10 @@ const Test4 = () => {
               <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
                 Personal details
               </h1>
-              <div className="grid w-full grid-flow-row  grid-flow-cols">
+              <div className="grid w-full grid-cols-3">
                 <div className=" p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500  text-sm">Full name</h1>
-                  <p className="">
+                  <h1 className="text-gray-500 w-full text-sm">Full name</h1>
+                  <p className="w-full">
                     {first_name} {last_name}
                   </p>
                 </div>
@@ -179,8 +189,8 @@ const Test4 = () => {
                   <p className="">{empId}</p>
                 </div>
                 <div className="p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Department</h1>
-                  <p className="">{deptname?.label}</p>
+                  <h1 className="text-gray-500 text-sm">Profile</h1>
+                  <p className="">{profile?.map((item) => item)}</p>
                 </div>
                 <div className="p-2 rounded-sm ">
                   <h1 className="text-gray-500 text-sm">Company email</h1>
@@ -229,19 +239,32 @@ const Test4 = () => {
                 </div>
               </div>
 
-              <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
-                Additional details
-              </h1>
-              <div className="grid grid-cols-3 justify-between">
-                {Object.entries(data)?.map(([key, value]) => (
-                  <div className="p-2 rounded-sm ">
-                    <h1 className="text-gray-500 text-sm">{key}</h1>
-                    <p className="">{value}</p>
+              {data && (
+                <>
+                  <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
+                    Additional details
+                  </h1>
+                  <div className="grid grid-cols-3 justify-between">
+                    {Object.entries(data)?.map(([key, value]) => (
+                      <div className="p-2 rounded-sm ">
+                        <h1 className="text-gray-500 text-sm">{key}</h1>
+                        <p className="">{value}</p>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </>
+              )}
             </div>
-            <div className="flex items-end w-full justify-end">
+            <div className="flex items-end w-full justify-between">
+              <button
+                type="button"
+                onClick={() => {
+                  prevStep();
+                }}
+                className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+              >
+                prev
+              </button>
               <button
                 onClick={() => handleSubmit.mutate()}
                 className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"

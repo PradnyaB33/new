@@ -9,13 +9,13 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useEmpQuery from "../../../hooks/Employee-OnBoarding/useEmpQuery";
 import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
 
-const Test3 = ({ isLastStep, nextStep }) => {
+const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
   const organisationId = useParams("");
   const { AdditionalListCall } = useEmpQuery(organisationId);
   const { addtionalFields, addtionalLoading } = AdditionalListCall();
 
-  const { setStep3Data, data } = useEmpState();
-  console.log(`🚀 ~ file: Test3.jsx:18 ~ data:`, data);
+  const { setStep3Data, data, profile } = useEmpState();
+  console.log(`🚀 ~ file: Test3.jsx:18 ~ data:`, profile);
 
   const EmployeeSchema = z.object({}).catchall(z.string().optional());
 
@@ -28,8 +28,6 @@ const Test3 = ({ isLastStep, nextStep }) => {
 
   const onSubmit = (testData) => {
     setStep3Data(testData);
-    console.log("function runnning");
-
     nextStep();
   };
 
@@ -69,7 +67,16 @@ const Test3 = ({ isLastStep, nextStep }) => {
           ))}
         </div>
 
-        <div className="flex items-end w-full justify-end">
+        <div className="flex items-end w-full justify-between">
+          <button
+            type="button"
+            onClick={() => {
+              prevStep();
+            }}
+            className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+          >
+            prev
+          </button>
           <button
             type="submit"
             disabled={isLastStep}

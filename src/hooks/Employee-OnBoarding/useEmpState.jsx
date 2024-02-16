@@ -1,8 +1,6 @@
 import { create } from "zustand";
 
 const useEmpState = create((set) => {
-  // Get decodedToken synchronously at the time of store creation
-
   return {
     first_name: undefined,
     last_name: undefined,
