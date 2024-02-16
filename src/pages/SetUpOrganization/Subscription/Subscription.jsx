@@ -3,7 +3,7 @@ import axios from "axios";
 import moment from "moment";
 import React from "react";
 import toast from "react-hot-toast";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import useGetUser from "../../../hooks/Token/useUser";
 import Setup from "../Setup";
@@ -11,8 +11,8 @@ import SubscriptionCard from "./components/subscription-card";
 import SubscriptionRow from "./components/subscriptionRow";
 
 const Subscription = () => {
-  const { decodedToken, authToken } = useGetUser();
-  const queryClient = useQueryClient();
+  const { authToken } = useGetUser();
+
   const { organisationId } = useParams();
 
   // Get Query
