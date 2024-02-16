@@ -39,6 +39,7 @@ const Test2 = ({ isLastStep, nextStep }) => {
   const {
     confirmPassword,
     designation,
+    profile,
     worklocation,
     deptname,
     employmentType,
@@ -111,14 +112,12 @@ const Test2 = ({ isLastStep, nextStep }) => {
       path: ["confirmPassword"],
     });
 
-  console.log(empId);
-
   const { control, formState, handleSubmit, getValues } = useForm({
     defaultValues: {
       confirmPassword: confirmPassword,
       password: password,
       designation: designation,
-      profile: [],
+      profile: profile,
       worklocation: worklocation,
       deptname: deptname,
       employmentType: employmentType,

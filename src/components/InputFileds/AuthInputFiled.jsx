@@ -101,6 +101,7 @@ const AuthInputFiled = ({
           </label>
           <Controller
             control={control}
+            value={value}
             name={name}
             id={name}
             render={({ field }) => (
@@ -115,7 +116,6 @@ const AuthInputFiled = ({
                     aria-errormessage="error"
                     placeholder={placeholder}
                     isMulti
-                    value={field?.value}
                     styles={{
                       control: (styles) => ({
                         ...styles,
@@ -133,7 +133,7 @@ const AuthInputFiled = ({
                     onChange={(value) => {
                       field.onChange(
                         value.map((item) => {
-                          return item.value;
+                          return item;
                         })
                       );
                       console.log(
