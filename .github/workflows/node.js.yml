@@ -1,10 +1,10 @@
-  name: 🚀 Build and Deploy
+name: 🚀 Build and Deploy
 
 on:
   push:
     branches:
       - main
-
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
