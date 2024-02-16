@@ -35,7 +35,7 @@ const InputFieldModal = ({ handleClose, open, id, empTypeId }) => {
     options: z.string().array().optional(),
   });
 
-  const { control, formState, handleSubmit, getValues, watch } = useForm({
+  const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
       name: undefined,
       label: undefined,

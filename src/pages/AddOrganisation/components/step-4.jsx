@@ -16,10 +16,8 @@ import { convertCamelToTitle } from "./step-3";
 
 const Step4 = () => {
   const data = useOrg();
-  console.log(`🚀 ~ file: step-4.jsx:18 ~ data:`, data);
   const { authToken, decodedToken } = useGetUser();
   const handleDismiss = async (id) => {
-    console.log("id", id);
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -41,6 +39,11 @@ const Step4 = () => {
       },
     };
 
+    console.log(`🚀 ~ file: step-4.jsx:45 ~ data:`, data);
+    console.log(
+      `🚀 ~ file: step-4.jsx:61 ~  !data.industry_type:`,
+      !data.isTrial
+    );
     if (data.data === undefined) {
       return "Please Select Plan And Package";
     }
@@ -52,15 +55,13 @@ const Step4 = () => {
       !data.web_url ||
       !data.industry_type ||
       !data.email ||
-      !data.isTrial ||
       !data.location ||
       !data.contact_number ||
       !data.description ||
       !data.creator
     ) {
       console.log("Please fill all mandatory field");
-      toast.error("please fill all mandatory  field");
-      throw new Error();
+      throw new Error("Please fill all mandatory field");
     }
 
     const formData = new FormData();
@@ -93,6 +94,7 @@ const Step4 = () => {
       formData,
       config
     );
+    console.log(`🚀 ~ file: step-4.jsx:96 ~ response:`, response);
     return response.data;
   };
 

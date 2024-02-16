@@ -1,8 +1,6 @@
 import { create } from "zustand";
 
 const useEmpState = create((set) => {
-  // Get decodedToken synchronously at the time of store creation
-
   return {
     first_name: undefined,
     last_name: undefined,
@@ -15,6 +13,7 @@ const useEmpState = create((set) => {
     gender: undefined,
     bank_account_no: undefined,
     date_of_birth: undefined,
+    password: undefined,
     confirmPassword: undefined,
     designation: undefined,
     worklocation: undefined,
@@ -26,9 +25,8 @@ const useEmpState = create((set) => {
     salarystructure: undefined,
     dept_cost_center_no: undefined,
     companyemail: undefined,
-    profile: undefined,
+    profile: [],
     shift_allocation: undefined,
-
     data: undefined,
 
     // Setter function for updating multiple properties at once

@@ -24,6 +24,12 @@ const AuthInputFiled = ({
   value,
   wrapperMessage,
 }) => {
+  const [focusedInput, setFocusedInput] = React.useState(null);
+
+  const handleFocus = (fieldName) => {
+    setFocusedInput(fieldName);
+  };
+
   if (type === "select") {
     return (
       <>
@@ -87,6 +93,69 @@ const AuthInputFiled = ({
       </>
     );
   }
+  if (type === "naresh-select") {
+    return (
+      <>
+        <div className="space-y-1 w-full ">
+          <label
+            htmlFor={name}
+            className={`${
+              error && "text-red-500"
+            } font-semibold text-gray-500 text-md`}
+          >
+            {label}
+          </label>
+          <Controller
+            control={control}
+            name={name}
+            id={name}
+            render={({ field }) => (
+              <>
+                <div
+                  className={`${
+                    readOnly && "bg-[ghostwhite]"
+                  } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+                >
+                  <Icon className="text-gray-700" />
+                  <Select
+                    aria-errormessage=""
+                    placeholder={placeholder}
+                    styles={{
+                      control: (styles) => ({
+                        ...styles,
+                        borderWidth: "0px",
+                        boxShadow: "none",
+                      }),
+                    }}
+                    defaultInputValue={field.value}
+                    className={`${
+                      readOnly && "bg-[ghostwhite]"
+                    } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                    components={{
+                      IndicatorSeparator: () => null,
+                    }}
+                    options={options}
+                    onChange={(value) => {
+                      field.onChange(value.value);
+                    }}
+                  />
+                </div>
+              </>
+            )}
+          />
+          <div className="h-4 !mb-1">
+            <ErrorMessage
+              errors={errors}
+              name={name}
+              render={({ message }) => (
+                <p className="text-sm text-red-500">{message}</p>
+              )}
+            />
+          </div>
+        </div>
+      </>
+    );
+  }
   if (type === "mutltiselect") {
     return (
       <>
@@ -115,7 +184,6 @@ const AuthInputFiled = ({
                     aria-errormessage="error"
                     placeholder={placeholder}
                     isMulti
-                    value={field?.value}
                     styles={{
                       control: (styles) => ({
                         ...styles,
@@ -406,9 +474,15 @@ const AuthInputFiled = ({
           render={({ field }) => (
             <>
               <div
-                className={`${
-                  readOnly && "bg-[ghostwhite]"
-                } flex rounded-md items-center px-2 border-gray-200 border-[.5px] bg-white py-1 md:py-[6px]`}
+                onFocus={() => {
+                  handleFocus(name);
+                }}
+                onBlur={() => setFocusedInput(null)}
+                className={`${readOnly && "bg-[ghostwhite]"} ${
+                  focusedInput === name
+                    ? "border-blue-500 border-[2px]"
+                    : "border-gray-200 border-[.5px]"
+                } flex rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
               >
                 <textarea
                   type={type}
@@ -457,9 +531,15 @@ const AuthInputFiled = ({
         render={({ field }) => (
           <>
             <div
-              className={`${
-                readOnly && "bg-[ghostwhite]"
-              } flex rounded-md items-center px-2  border-gray-200 border-[.5px] bg-white py-1 md:py-[6px]`}
+              onFocus={() => {
+                handleFocus(name);
+              }}
+              onBlur={() => setFocusedInput(null)}
+              className={`${readOnly && "bg-[ghostwhite]"} ${
+                focusedInput === name
+                  ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
+                  : "outline-none border-gray-200 border-[.5px]"
+              } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
             >
               {Icon && (
                 <Icon className="text-gray-700 md:text-lg !text-[1em]" />
