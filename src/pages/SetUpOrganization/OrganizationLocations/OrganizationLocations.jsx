@@ -1,4 +1,4 @@
-import { Add, AddLocationAltOutlined, Delete, Edit } from "@mui/icons-material";
+import { Add, Info } from "@mui/icons-material";
 import {
   Button,
   Dialog,
@@ -8,7 +8,6 @@ import {
   DialogTitle,
   IconButton,
   TextField,
-  Typography,
 } from "@mui/material";
 import axios from "axios";
 import { Country, State } from "country-state-city";
@@ -19,7 +18,8 @@ import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../Setup";
 import Selector from "./selector";
-
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 const OrganizationLocations = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -311,12 +311,10 @@ const OrganizationLocations = () => {
             <div className="p-4  border-b-[.5px] border-gray-300 flex items-center justify-between gap-3 w-full">
               <div className="flex gap-3">
                 {" "}
-                <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+                {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                   <AddLocationAltOutlined className="!text-lg text-white" />
-                </div>
-                <h1 className="!text-lg tracking-wide">
-                  Add Organization Location
-                </h1>
+                </div> */}
+                <h1 className="!text-lg tracking-wide"> Location</h1>
               </div>
               <Button
                 className="!bg-[#0ea5e9]"
@@ -329,7 +327,13 @@ const OrganizationLocations = () => {
             </div>
 
             {locationList.length === 0 ? (
-              <Typography variant="body1">No Locations Added</Typography>
+              <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+                <article className="flex items-center mb-1 text-red-500 gap-2">
+                  <Info className="text-2xl" />
+                  <h1 className="text-xl font-semibold">Add Location</h1>
+                </article>
+                <p>No location found. Please add a location.</p>
+              </section>
             ) : (
               <table className="min-w-full bg-white text-left text-sm font-light">
                 <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
@@ -379,41 +383,25 @@ const OrganizationLocations = () => {
                       </td>
                       <td className="whitespace-nowrap px-3 py-2">
                         <IconButton
-                          onClick={() => handleEditLocation(index)}
+                          color="primary"
                           aria-label="edit"
+                          onClick={() => handleEditLocation(index)}
                         >
-                          <Edit className="!text-xl" color="success" />
+                          <EditOutlinedIcon />
                         </IconButton>
                         <IconButton
                           onClick={() => {
                             handleDeleteLocationConfirmation(index);
                             setDeleteIndex(index);
                           }}
+                          color="error"
                           aria-label="delete"
                         >
-                          <Delete className="!text-xl" color="error" />
+                          <DeleteOutlineIcon />
                         </IconButton>
                       </td>
                     </tr>
                   ))}
-                  {/* {isLoading ? (
-                    <SkeletonForLeaveTypes />
-                  ) : (
-                    <>{locationList
-                      .sort((a, b) => {
-                        if (a.continent !== b.continent) {
-                          return a.continent.localeCompare(b.continent);
-                        }
-                        return a.country.localeCompare(b.country);
-                      }).map((location, index) => (
-                          <LeaveTypeEditBox
-                            key={index}
-                            leaveType={location}
-                            index={index}
-                          />
-                        ))}
-                    </>
-                  )} */}
                 </tbody>
               </table>
             )}
@@ -550,7 +538,40 @@ const OrganizationLocations = () => {
                     fullWidth
                   />
                 </DialogContent>
-                <DialogActions>
+                <div className="flex gap-4 mt-4 justify-center mb-4">
+                  <Button
+                    onClick={handleClose}
+                    color="error"
+                    variant="outlined"
+                  >
+                    <FormattedMessage id="cancel" defaultMessage="Cancel" />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      if (editIndex !== null) {
+                        handleUpdateLocation(editIndex);
+                      } else {
+                        handleAddLocation();
+                      }
+                    }}
+                    variant="contained"
+                    color="primary"
+                  >
+                    {editIndex !== null ? (
+                      <FormattedMessage
+                        id="saveChanges"
+                        defaultMessage="Save Changes"
+                      />
+                    ) : (
+                      <FormattedMessage
+                        id="addLocation"
+                        defaultMessage="Add Location"
+                      />
+                    )}
+                  </Button>
+                </div>
+
+                {/* <DialogActions>
                   <Button onClick={handleClose} color="secondary">
                     <FormattedMessage id="cancel" defaultMessage="Cancel" />
                   </Button>
@@ -576,7 +597,7 @@ const OrganizationLocations = () => {
                       />
                     )}
                   </Button>
-                </DialogActions>
+                </DialogActions> */}
               </Dialog>
               <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
                 <DialogTitle>Confirm Deletion</DialogTitle>

@@ -166,7 +166,7 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
               className="text-md"
               htmlFor="demo-simple-select-label"
             >
-              Enter Employment Type
+              Add Employment Type
             </FormLabel>
             <FormControl
               error={error}
@@ -187,7 +187,7 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
             {error && <p className="text-red-500">*{error}</p>}
           </div>
 
-          <div className="flex gap-4  mt-4 justify-end">
+          <div className="flex gap-4  mt-4  justify-center">
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>

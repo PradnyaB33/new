@@ -100,7 +100,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
         className="border-none !z-10 shadow-md outline-none rounded-md gap-2 flex flex-col"
       >
         <Typography variant="h3" className="!font-bold !text-lg border-b ">
-          Create Leave Type
+          Add Leave Type
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Stack spacing={2} width={400}>
@@ -187,7 +187,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
               />
             </FormControl>
             <Button disabled={isFormClean} type="submit" variant="contained">
-              Create leave types
+              Submit
             </Button>
           </Stack>
         </form>

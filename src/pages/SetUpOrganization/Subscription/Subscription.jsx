@@ -1,4 +1,3 @@
-import { ManageAccountsOutlined } from "@mui/icons-material";
 import React from "react";
 import Setup from "../Setup";
 
@@ -54,12 +53,10 @@ const Subscription = () => {
           <article className="SetupSection bg-white w-full md:w-[80%]  h-max shadow-md rounded-sm border  items-center">
             <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
               <div className="flex items-center  gap-3 ">
-                <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+                {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                   <ManageAccountsOutlined className="!text-lg text-white" />
-                </div>
-                <h1 className="!text-lg tracking-wide">
-                  Create Employment Types
-                </h1>
+                </div> */}
+                <h1 className="!text-lg tracking-wide">Subcription</h1>
               </div>
             </div>
             <div>subscription</div>

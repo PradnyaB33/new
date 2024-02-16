@@ -171,7 +171,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
             />
           </div>
 
-          <div className="flex gap-4  mt-4 justify-end">
+          <div className="flex gap-4  mt-4  justify-center">
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>
