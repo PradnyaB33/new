@@ -318,8 +318,8 @@ const Designation = () => {
                 </thead>
                 <tbody >
                   {designation.length === 0 ? (
-                    <tr className="w-full !font-medium border-b text relative text-center">
-                      No designations found !
+                    <tr className="!w-full !font-medium border-b text relative">
+                      <td className="font-bold p-3">No designations found</td>
                     </tr>
                   ) : (
                     designation.map((data, id) => (

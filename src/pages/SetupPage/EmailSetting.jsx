@@ -96,7 +96,7 @@ const EmailSetting = () => {
 
       //! adding the newly created email to the emails state
 
-      setEmails([...emails, response.data.email]); 
+      setEmails([...emails, response.data.email]);
       setEmail("");
       setError("");
     } catch (error) {
@@ -164,11 +164,11 @@ const EmailSetting = () => {
     }
   };
 
- 
-  
+
+
   const handleEditEmailChange = (event) => {
-    const lowerCaseEditEmail = event.target.value.toLowerCase();      
-     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const lowerCaseEditEmail = event.target.value.toLowerCase();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!lowerCaseEditEmail.trim()) {
       setError("Email is required");
@@ -247,9 +247,10 @@ const EmailSetting = () => {
                 </thead>
                 <tbody>
                   {emails.length === 0 ? (
-                    <tr className=" text py-3 text-center">
-
-                      No Emails found
+                    <tr className="font-bold">
+                      <td className="p-3 w-full">
+                        No Emails found
+                      </td>
                     </tr>
                   ) :
                     (emails.map((data, idx) => (
@@ -281,7 +282,7 @@ const EmailSetting = () => {
                   Add Email
                 </DialogTitle>
                 <DialogContent>
-                  <div className='flex items-center justify-center gap-5'>
+                  <div className='flex items-center justify-center gap-2 flex-col'>
                     <TextField
                       style={{ marginBottom: "1rem", marginTop: "1rem" }}
                       required
@@ -291,12 +292,14 @@ const EmailSetting = () => {
                       label="Email ID"
                       type="email"
                       value={email}
+                      fullWidth
                       onChange={handleEmailChange}
                       error={Boolean(error)}
                       helperText={error}
                     />
                     <Button
                       color='warning'
+                      fullWidth
                       variant='contained'
                       onClick={handleCheck}
                     >

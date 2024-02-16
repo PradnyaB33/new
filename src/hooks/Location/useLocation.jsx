@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import useAuthToken from "../Token/useAuth";
 
@@ -7,7 +7,7 @@ const useLocationStore = () => {
   const [start, setStart] = useState(false);
   const [count, setCount] = useState(0);
   const authToken = useAuthToken();
-
+  const ID = "";
   const fetchLocationData = async () => {
     console.log("i am from hook");
 
@@ -67,9 +67,7 @@ const useLocationStore = () => {
     setStart(true);
   };
 
-  const stopLocationTracking = async () => {
-    setCount(0);
-
+  const postEndTime = async () => {
     const position = await new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, reject, {
         enableHighAccuracy: true,
@@ -87,31 +85,42 @@ const useLocationStore = () => {
       );
 
       const existingData = response.data.punch;
-      console.log(existingData.end);
+      const ID = existingData._id;
 
+      // Check if the existing data already has an 'end' field
       if (!existingData.end) {
-        existingData.end = new Date();
+        existingData.end = new Date(); // Set the 'end' field to the current date
       }
 
+      // Append the new location to the existing locations array
       existingData.locations.push({
         lat: latitude,
         lng: longitude,
         time: new Date(),
       });
 
-      await axios.post(
-        `${process.env.REACT_APP_API}/route/punch/create`,  // Use 'create' endpoint for initial document creation
+      // Update the existing document with the modified data
+      await axios.patch(
+        `${process.env.REACT_APP_API}/route/punch/update/${ID}`,
         existingData,
         {
           headers: { Authorization: authToken },
         }
       );
 
-      setStart(false);
+      setStart(false); // Stop location tracking after punching out
     } catch (error) {
       console.error("Error updating punch data", error);
+      setStart(false);
     }
   };
+
+
+  const stopLocationTracking = async () => {
+    setCount(0);
+    await postEndTime()
+  };
+
   return {
     start,
     data,

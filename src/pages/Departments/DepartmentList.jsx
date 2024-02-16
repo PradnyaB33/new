@@ -50,26 +50,42 @@ const DepartmentList = () => {
 
   useEffect(() => {
     (async () => {
-      const resp = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-department-head/${organisationId}`,
-        {
-          headers: { Authorization: authToken },
-        }
-      );
-      setHeadList(resp.data.employees);
-      console.log(resp.data.employees);
+
+      try {
+        const resp = await axios.get(
+          `${process.env.REACT_APP_API}/route/employee/get-department-head/${organisationId}`,
+          {
+            headers: { Authorization: authToken },
+          }
+        );
+        setHeadList(resp?.data.employees);
+        console.log(resp?.data.employees);
+
+      }
+      catch (error) {
+        console.log(error.message);
+      }
+
     })();
   }, [authToken, organisationId]);
   useEffect(() => {
     (async () => {
-      const resp = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-department-delegate-head/${organisationId}`,
-        {
-          headers: { Authorization: authToken },
-        }
-      );
-      setDelegateHeadList(resp.data.employees);
-      console.log(resp.data.employees);
+      try {
+        const resp = await axios.get(
+          `${process.env.REACT_APP_API}/route/employee/get-department-delegate-head/${organisationId}`,
+          {
+            headers: { Authorization: authToken },
+          }
+        );
+        setDelegateHeadList(resp.data.employees);
+        console.log(resp.data.employees);
+
+      }
+
+      catch (error) {
+        console.log(error.message);
+      }
+
     })();
     // eslint-disable-next-line
   }, []);
@@ -223,9 +239,11 @@ const DepartmentList = () => {
   return (
     <>
       {departmentList?.length === 0 ? (
-        <Typography variant="h5" className="text-center mb-2 text-red-600">
-          <Warning /> No departments added, please add department first.
-        </Typography>
+        <div className="w-full h-full">
+          <Typography variant="h5" className="text-center !mt-5 text-red-600">
+            <Warning /> <span className="!mt-3"> No departments added, please add department first.</span>
+          </Typography>
+        </div>
       ) : (
         <div className="p-4">
           <Typography variant="h4" className="text-center mb-6">
@@ -258,9 +276,8 @@ const DepartmentList = () => {
               {departmentList?.map((department, id) => (
                 <tr
                   key={id}
-                  className={`${
-                    id % 2 === 0 ? "bg-gray-50" : "bg-white"
-                  } border-b dark:border-neutral-500 !font-medium`}
+                  className={`${id % 2 === 0 ? "bg-gray-50" : "bg-white"
+                    } border-b dark:border-neutral-500 !font-medium`}
                 >
                   <td className="py-2 px-3">{id + 1}</td>
                   <td className="py-2 px-3">
@@ -398,9 +415,9 @@ const DepartmentList = () => {
                 id="demo-simple-select"
                 value={departmentLocation}
                 label="Select Location"
-                // Add label prop for better alignment
+              // Add label prop for better alignment
               >
-                {locations.map((data, index) => (
+                {locations?.map((data, index) => (
                   <MenuItem key={index} value={data.shortName}>
                     {data?.shortName}
                   </MenuItem>
@@ -532,9 +549,9 @@ const DepartmentList = () => {
                 value={departmentHeadName}
                 label="Add department Head Name"
                 onChange={(e) => handleDataChange(e, "head")}
-                // Add label prop for better alignment
+              // Add label prop for better alignment
               >
-                {headList.map((data, index) => (
+                {headList?.map((data, index) => (
                   <MenuItem
                     key={index}
                     value={data.first_name + " " + data.last_name}
@@ -568,9 +585,9 @@ const DepartmentList = () => {
                 value={departmentHeadDelegateName}
                 label="Add Department head delegate name"
                 onChange={(e) => handleDataChange(e, "delegate")}
-                // Add label prop for better alignment
+              // Add label prop for better alignment
               >
-                {delegateHeadList.map((data, index) => (
+                {delegateHeadList?.map((data, index) => (
                   <MenuItem
                     key={index}
                     value={data.first_name + " " + data.last_name}
