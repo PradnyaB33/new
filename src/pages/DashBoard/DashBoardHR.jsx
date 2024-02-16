@@ -8,6 +8,7 @@ import {
 } from "@mui/icons-material";
 import { default as React } from "react";
 import { useQueryClient } from "react-query";
+import { useLocation } from "react-router-dom/dist";
 import Select from "react-select";
 import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
 import useEmployee from "../../hooks/Dashboard/useEmployee";
@@ -21,6 +22,7 @@ const DashBoardHR = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const { employee, employeeLoading } = useEmployee(user.organizationId);
+  const location = useLocation("");
 
   const queryClient = useQueryClient();
 
@@ -47,8 +49,10 @@ const DashBoardHR = () => {
 
   return (
     <section className=" bg-gray-50  min-h-screen w-full ">
-      <header className="text-xl w-full px-8 pt-6 bg-white shadow-md   p-4">
-        HR Dashboard
+      <header className="text-xl font-bold w-full px-8 pt-6 bg-white !text-[#67748E] shadow-md  p-4">
+        {location.pathname?.includes("/DH-dashboard")
+          ? "Department Head Dashboard"
+          : "HR Dashboard"}
       </header>
       <div className="md:px-8 px-2 w-full">
         <div className="flex flex-1 mt-6 flex-wrap w-full justify-between gap-2 md:gap-5 ">
@@ -90,82 +94,86 @@ const DashBoardHR = () => {
                 <Dashboard className="!text-[#67748E]" />
                 <h1 className="text-md font-bold text-[#67748E]">Dashboard</h1>
               </div>
-              <div className="flex w-[80%] gap-6 items-center justify-end">
-                <button
-                  onClick={() => {
-                    setLocations("");
-                    setDepartment("");
-                    setManager("");
-                    queryClient.invalidateQueries("organization-attenedence");
-                  }}
-                  className="!w-max flex justify-center h-[25px]  gap-2 items-center rounded-md px-1 text-sm font-semibold text-[#152745]  hover:bg-gray-50 focus-visible:outline-gray-100"
-                >
-                  <FilterAltOff className="!text-[1.4em] text-[#152745] " />
-                  Remove Filter
-                </button>
+              {location.pathname?.includes("/HR-dashboard") && (
+                <div className="flex w-[80%] gap-6 items-center justify-end">
+                  <button
+                    onClick={() => {
+                      setLocations("");
+                      setDepartment("");
+                      setManager("");
+                      queryClient.invalidateQueries("organization-attenedence");
+                    }}
+                    className="!w-max flex justify-center h-[25px]  gap-2 items-center rounded-md px-1 text-sm font-semibold text-[#152745]  hover:bg-gray-50 focus-visible:outline-gray-100"
+                  >
+                    <FilterAltOff className="!text-[1.4em] text-[#152745] " />
+                    Remove Filter
+                  </button>
 
-                <Select
-                  placeholder={"Departments"}
-                  onChange={(dept) => {
-                    setDepartment(dept.value);
-                    setLocations("");
-                    setManager("");
-                    queryClient.invalidateQueries("department-attenedence");
-                  }}
-                  components={{
-                    IndicatorSeparator: () => null,
-                  }}
-                  styles={customStyles}
-                  value={
-                    department
-                      ? Departmentoptions?.find(
-                          (option) => option.value === department
-                        )
-                      : ""
-                  } // Add this line
-                  options={Departmentoptions}
-                />
+                  <Select
+                    placeholder={"Departments"}
+                    onChange={(dept) => {
+                      setDepartment(dept.value);
+                      setLocations("");
+                      setManager("");
+                      queryClient.invalidateQueries("department-attenedence");
+                    }}
+                    components={{
+                      IndicatorSeparator: () => null,
+                    }}
+                    styles={customStyles}
+                    value={
+                      department
+                        ? Departmentoptions?.find(
+                            (option) => option.value === department
+                          )
+                        : ""
+                    } // Add this line
+                    options={Departmentoptions}
+                  />
 
-                <Select
-                  placeholder={"Manager"}
-                  components={{
-                    IndicatorSeparator: () => null,
-                  }}
-                  onChange={(Managers) => {
-                    setManager(Managers.value);
-                    setDepartment("");
-                    setLocations("");
-                    queryClient.invalidateQueries("manager-attenedence");
-                  }}
-                  value={
-                    manager
-                      ? managerOptions.find((item) => item.name === manager)
-                      : ""
-                  }
-                  styles={customStyles}
-                  options={managerOptions}
-                />
+                  <Select
+                    placeholder={"Manager"}
+                    components={{
+                      IndicatorSeparator: () => null,
+                    }}
+                    onChange={(Managers) => {
+                      setManager(Managers.value);
+                      setDepartment("");
+                      setLocations("");
+                      queryClient.invalidateQueries("manager-attenedence");
+                    }}
+                    value={
+                      manager
+                        ? managerOptions.find((item) => item.name === manager)
+                        : ""
+                    }
+                    styles={customStyles}
+                    options={managerOptions}
+                  />
 
-                <Select
-                  placeholder={"Location"}
-                  components={{
-                    IndicatorSeparator: () => null,
-                  }}
-                  onChange={(loc) => {
-                    setLocations(loc.value);
-                    setDepartment("");
-                    setManager("");
-                    queryClient.invalidateQueries("location-attenedence");
-                  }}
-                  value={
-                    locations
-                      ? locationOptions.find((item) => item.name === locations)
-                      : ""
-                  }
-                  styles={customStyles}
-                  options={locationOptions}
-                />
-              </div>
+                  <Select
+                    placeholder={"Location"}
+                    components={{
+                      IndicatorSeparator: () => null,
+                    }}
+                    onChange={(loc) => {
+                      setLocations(loc.value);
+                      setDepartment("");
+                      setManager("");
+                      queryClient.invalidateQueries("location-attenedence");
+                    }}
+                    value={
+                      locations
+                        ? locationOptions.find(
+                            (item) => item.name === locations
+                          )
+                        : ""
+                    }
+                    styles={customStyles}
+                    options={locationOptions}
+                  />
+                </div>
+              )}
             </div>
           </div>
         )}

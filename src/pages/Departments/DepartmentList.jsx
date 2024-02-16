@@ -247,7 +247,7 @@ const DepartmentList = () => {
       ) : (
         <div className="p-4">
           <Typography variant="h4" className="text-center mb-6">
-            Department List
+            Departments List
           </Typography>
           <table className="min-w-full bg-white text-left text-sm font-light">
             <thead className="border-b bg-gray-300 font-medium dark:border-neutral-500">
@@ -262,7 +262,7 @@ const DepartmentList = () => {
                   Department Head
                 </th>
                 <th scope="col" className="px-3 py-3 ">
-                  Department Head Delegate
+                  Delegate Department Head
                 </th>
                 <th scope="col" className="px-3 py-3 ">
                   Department Location
@@ -292,7 +292,7 @@ const DepartmentList = () => {
 
                   <td className="py-2 px-3">
                     {department?.departmentLocation
-                      ? department.departmentLocation.city
+                      ? department?.departmentLocation?.city
                       : ""}
                   </td>
                   <td className="whitespace-nowrap px-3 py-2">

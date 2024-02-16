@@ -51,6 +51,7 @@ import RolePage from "./pages/SignIn/RolePage";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 import EmployeeTest from "./pages/Test/EmployeeTest";
+import DepartmentTest from "./pages/Test2/DepartmentTest";
 import EditablePolyline from "./pages/Test/test2";
 import TrackingMap from "./pages/Test/test3";
 import TrackingMap2 from "./pages/Test/testMap";
@@ -70,12 +71,19 @@ const App = () => {
       <Route
         path="/"
         element={
-          <RequireAuth permission={["Super-Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Hr"]}>
             <Home />
           </RequireAuth>
         }
       />
-      <Route path="/organisation/employeeTest" element={<EmployeeTest />} />
+      <Route
+        path="/organisation/:organisationId/employeeTest"
+        element={<EmployeeTest />}
+      />
+      <Route
+        path="/organisation/:organisationId/departmentTest"
+        element={<DepartmentTest />}
+      />
       <Route path="/paymentfailed" element={<PaymentFailed />} />
 
       <Route path="/test" element={<EditablePolyline />} />
@@ -204,6 +212,14 @@ const App = () => {
         path="/organisation/:organisationId/dashboard/HR-dashboard"
         element={
           <RequireAuth permission={"Hr"}>
+            <DashBoardHR />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/organisation/:organisationId/dashboard/DH-dashboard"
+        element={
+          <RequireAuth permission={"Department-Head"}>
             <DashBoardHR />
           </RequireAuth>
         }
@@ -629,7 +645,7 @@ const App = () => {
       <Route
         path="/shift-management"
         element={
-          <RequireAuth>
+          <RequireAuth permission={["Employee", "Hr"]}>
             <ShiftManagement />
           </RequireAuth>
         }
@@ -681,7 +697,7 @@ function RequireAuth({ children, permission }) {
 
   const user = getCurrentUser();
   const role = getCurrentRole();
-  const isPermission = permission.includes(role);
+  const isPermission = permission?.includes(role);
 
   if (user && !role) {
     return <Navigate to={"/choose-role"} />;

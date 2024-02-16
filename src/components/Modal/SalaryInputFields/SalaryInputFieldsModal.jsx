@@ -390,7 +390,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
               className="text-md mb-2"
               htmlFor="name"
             >
-              Enter employment types
+              Enter employment type.
             </FormLabel>
             <FormControl
               error={errors.empTypes.length > 0}
@@ -618,7 +618,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
             </Tooltip>
           </div>
 
-          <DialogActions>
+          <DialogActions sx={{ justifyContent: "center" }}>
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>

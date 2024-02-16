@@ -1,4 +1,4 @@
-//todo 
+//todo
 import React, { useState, useContext, useEffect } from "react";
 import {
   Button,
@@ -13,10 +13,9 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext"; // Adjust the path based on your project structure
 import Setup from "../SetUpOrganization/Setup";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-
+import { Add, Info } from "@mui/icons-material";
 const EmailSetting = () => {
   const id = useParams().organisationId;
   const { setAppAlert } = useContext(UseContext);
@@ -216,16 +215,17 @@ const EmailSetting = () => {
           <article className="SetupSection bg-white w-[80%] h-max shadow-md rounded-sm border items-center">
             <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
               <div className="flex items-center gap-3">
-                <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+                {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                   <EmailOutlinedIcon className="!text-lg text-white" />
-                </div>
-                <h1 className="!text-lg tracking-wide">Add Emails</h1>
+                </div> */}
+                <h1 className="!text-lg tracking-wide">Email</h1>
               </div>
               <Button
                 className="!font-semibold !bg-sky-500 flex items-center gap-2"
                 variant="contained"
                 onClick={() => setHandleOpen(true)}
               >
+                <Add />
                 Add Email
               </Button>
             </div>
@@ -277,10 +277,22 @@ const EmailSetting = () => {
                     )))}
                 </tbody>
               </table>
-              <Dialog open={handleOpen} onClose={handleClose} maxWidth="sm" fullWidth>
-                <DialogTitle>
-                  Add Email
-                </DialogTitle>
+              {emails.length === 0 && (
+                <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+                  <article className="flex items-center mb-1 text-red-500 gap-2">
+                    <Info className="text-2xl" />
+                    <h1 className="text-xl font-semibold">Add Email</h1>
+                  </article>
+                  <p>No email found. Please add an email.</p>
+                </section>
+              )}
+              <Dialog
+                open={handleOpen}
+                onClose={handleClose}
+                maxWidth="sm"
+                fullWidth
+              >
+                <DialogTitle>Add Email</DialogTitle>
                 <DialogContent>
                   <div className='flex items-center justify-center gap-2 flex-col'>
                     <TextField
@@ -335,12 +347,15 @@ const EmailSetting = () => {
                 </DialogContent>
               </Dialog>
 
-              <Dialog open={handleUpdateOpen} onClose={handleClose} maxWidth="sm" fullWidth>
-                <DialogTitle>
-                  Edit Email
-                </DialogTitle>
+              <Dialog
+                open={handleUpdateOpen}
+                onClose={handleClose}
+                maxWidth="sm"
+                fullWidth
+              >
+                <DialogTitle>Edit Email</DialogTitle>
                 <DialogContent>
-                  <div className='flex flex-col gap-5 my-5'>
+                  <div className="flex flex-col gap-5 my-5">
                     <TextField
                       required
                       name="emailId"
@@ -353,9 +368,21 @@ const EmailSetting = () => {
                       error={Boolean(error)}
                       helperText={error}
                     />
-                    <div className='flex gap-5 mt-5'>
-                      <Button color='warning' variant='contained' onClick={handleUpdate}>edit</Button>
-                      <Button variant='contained' onClick={handleClose}>cancel</Button>
+                    <div className="flex gap-5 mt-5 justify-center">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleUpdate}
+                      >
+                        edit
+                      </Button>
+                      <Button
+                        color="error"
+                        variant="outlined"
+                        onClick={handleClose}
+                      >
+                        cancel
+                      </Button>
                     </div>
                   </div>
                 </DialogContent>

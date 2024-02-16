@@ -1,6 +1,4 @@
-import React, { useState, useContext } from "react";
-import Setup from "../SetUpOrganization/Setup";
-import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {
   Button,
   Dialog,
@@ -10,13 +8,14 @@ import {
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
-import { useParams } from "react-router";
-import axios from "axios";
-import { useQuery, useQueryClient } from "react-query";
-import { UseContext } from "../../State/UseState/UseContext";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import Skeleton from "@mui/material/Skeleton";
-
+import axios from "axios";
+import React, { useContext, useState } from "react";
+import { useQuery, useQueryClient } from "react-query";
+import { useParams } from "react-router";
+import { UseContext } from "../../State/UseState/UseContext";
+import Setup from "../SetUpOrganization/Setup";
+import { Add, Info } from "@mui/icons-material";
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const SkeletonRow = () => (
@@ -99,7 +98,7 @@ const WeekendHoliday = () => {
 
   const handleSubmit = async () => {
     try {
-      const daysArray = selectedDays.map(day => ({ day }));
+      const daysArray = selectedDays.map((day) => ({ day }));
 
       if (editItem) {
         await axios.patch(
@@ -211,10 +210,10 @@ const WeekendHoliday = () => {
         <article className="SetupSection bg-white w-[80%] h-max shadow-md rounded-sm border items-center">
           <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center gap-3 ">
-              <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+              {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                 <WeekendOutlinedIcon className="!text-lg text-white" />
-              </div>
-              <h1 className="!text-lg tracking-wide">Weekly off</h1>
+              </div> */}
+              <h1 className="!text-lg tracking-wide">Weekly Off</h1>
             </div>
             <Button
               className="!font-semibold !bg-sky-500 flex items-center gap-2"
@@ -244,14 +243,19 @@ const WeekendHoliday = () => {
                 {!data?.length ? (
                   <>
                     <tr>
-                      <td className="font-bold p-3">No holidays found</td>
                     </tr>
                   </>
                 ) : (
-                  data && data?.map((item, idx) => (
+                  data &&
+                  data?.map((item, idx) => (
                     <tr className="!font-medium border-b !space-y-3" key={idx}>
-                      <td className="!text-left !pl-9 !mr-5 w-1/12 ">{idx + 1}</td>
-                      <td style={{ marginRight: "1rem" }} className="w-2/12 pt-2 pb-2">
+                      <td className="!text-left !pl-9 !mr-5 w-1/12 ">
+                        {idx + 1}
+                      </td>
+                      <td
+                        style={{ marginRight: "1rem" }}
+                        className="w-2/12 pt-2 pb-2"
+                      >
                         <div className="flex gap-1">
                           {item.days.map((day, dayIdx) => (
                             <Chip
@@ -294,6 +298,15 @@ const WeekendHoliday = () => {
                 )}
               </tbody>
             </table>
+            {data && data.length === 0 && (
+              <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+                <article className="flex items-center mb-1 text-red-500 gap-2">
+                  <Info className="text-2xl" />
+                  <h1 className="text-xl font-semibold">Add Weekly Off</h1>
+                </article>
+                <p>No weekly offs found. Please add a weekly off.</p>
+              </section>
+            )}
 
             <Dialog
               open={deleteModel}
@@ -335,18 +348,18 @@ const WeekendHoliday = () => {
                       getColor={getColor}
                     />
                   </div>
-                  <div className="flex gap-5 !pt-5">
+                  <div className="flex gap-5 !pt-5 justify-center">
                     <Button
                       onClick={handleSubmit}
                       variant="contained"
-                      color="secondary"
+                      color="primary"
                     >
                       {editItem ? "Update" : "Set"}
                     </Button>
                     <Button
                       onClick={handleOpenClose}
-                      variant="contained"
                       color="error"
+                      variant="outlined"
                     >
                       Cancel
                     </Button>

@@ -171,7 +171,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
     else if (endDateTime === null)
       return handleError("end time field is mandatory");
     else if (selectedDays.length <= 0)
-      return handleError("Please select Week days");
+      return handleError("Please select Week Days");
 
     try {
       const data = {
@@ -259,7 +259,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
       >
         <div className="flex justify-between py-4 items-center  px-4">
           <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
-            {shiftId ? "Edit shift" : "Create a shift"}
+            {shiftId ? "Edit Shift" : "Add Shift"}
           </h1>
           <IconButton onClick={handleClose}>
             <CloseIcon className="!text-[16px]" />
@@ -362,7 +362,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
             style={{ width: "100%", justifyContent: "center", gap: "2px" }}
           >
             <label className="text-md" htmlFor="demo-simple-select-label">
-              Select week days
+              Select Week Days
             </label>
             <ToggleButtonGroup
               value={selectedDays}
@@ -394,7 +394,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
               ))}
             </ToggleButtonGroup>
           </div>
-          <div className="flex gap-4  mt-4 justify-end">
+          <div className="flex gap-4  mt-4  justify-center">
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>

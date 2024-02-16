@@ -31,7 +31,28 @@ const organizationSchema = z.object({
     .min(10, { message: "contact number must be 10 digits" }),
   description: z.string(),
   creator: z.string(),
-  logo_url: z.any(),
+  logo_url: z
+    .any()
+    .refine(
+      (doc) => {
+        if (doc.size <= 5 * 1024) {
+          return false;
+        } else {
+          return true;
+        }
+      },
+      { message: "Image size must be minimum of 5 kb" }
+    )
+    .refine(
+      (doc) => {
+        if (doc.size >= 50 * 1024) {
+          return false;
+        } else {
+          return true;
+        }
+      },
+      { message: "Image size maximum 50kb" }
+    ),
   isTrial: z.boolean(),
 });
 const Step1 = ({ nextStep }) => {
@@ -147,7 +168,7 @@ const Step1 = ({ nextStep }) => {
             name="industry_type"
             icon={FactoryOutlined}
             control={control}
-            type="select"
+            type="naresh-select"
             placeholder="Type of Industry "
             label="Type of Industry  *"
             errors={errors}

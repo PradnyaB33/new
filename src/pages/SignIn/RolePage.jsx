@@ -79,6 +79,12 @@ const RolePage = () => {
           );
         } else if (response?.data?.role === "Employee") {
           redirect("/organisation/dashboard/employee-dashboard");
+        } else if (response?.data?.role === "Department-Head") {
+          redirect(
+            `/organisation/${user.organizationId}/dashboard/DH-dashboard`
+          );
+        } else {
+          redirect("/organisation/dashboard/employee-dashboard");
         }
 
         window.location.reload();

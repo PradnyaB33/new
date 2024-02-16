@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - qa-branch
-
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,7 +20,7 @@ jobs:
       - name: 🏗️ Build
         run: |
           touch .env
-          echo "${{secrets.PROD_ENV_FILE}}" > .env
+          echo "${{secrets.QA_ENV_FILE}}" > .env
           cat .env
           npm run build
 

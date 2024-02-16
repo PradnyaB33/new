@@ -57,13 +57,13 @@ const EmployeeLeaveRequest = () => {
             >
               <BeachAccessOutlined className="!text-xl" />
             </Avatar>
-            <h1 className="text-lg text-[#152745] font-semibold">
+            <h1 className="text-[#152745] font-semibold">
               Employee Leave Request
             </h1>
           </div>
           <Link
             to={"/notification"}
-            className=" flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-sm font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+            className=" flex group justify-center   gap-2 items-center rounded-md h-max px-4 py-1 text-sm font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
           >
             View All
           </Link>
@@ -102,7 +102,7 @@ const EmployeeLeaveRequest = () => {
               <Info className="!text-2xl" />
               <h1 className="text-xl font-semibold">No record found</h1>
             </article>
-            <p>Currenlty no leave request is in pending</p>
+            <p>Currently no leave request is pending</p>
           </div>
         )}
       </div>

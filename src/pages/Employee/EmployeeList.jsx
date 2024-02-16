@@ -18,6 +18,8 @@ const EmployeeList = () => {
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
 
+  console.log(availableEmployee, "avialabel days");
+
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;

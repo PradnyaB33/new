@@ -91,7 +91,7 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
       >
         <div className="flex justify-between py-4 items-center  px-4">
           <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
-            Employee Code Generate
+            Generate Employee Code
           </h1>
           <IconButton onClick={handleClose}>
             <CloseIcon className="!text-[16px]" />
@@ -106,7 +106,7 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
           <div className="flex gap-4 items-center">
             <div className="space-y-2">
               <label className="text-md" htmlFor="demo-simple-select-label">
-                Employee id prefix (yes or no)
+                Employee ID prefix (yes or no)
               </label>
               <FormControl size="small" className="w-full">
                 <InputLabel id="demo-simple-select-label">
@@ -145,7 +145,7 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
           </div>
 
           <label className="text-md" htmlFor="demo-simple-select-label">
-            Employee id starts with
+            Employee ID starts with
           </label>
           <FormControl size="small" className="w-full" variant="outlined">
             <InputLabel htmlFor="outlined-adornment-password">
@@ -163,7 +163,7 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
           </FormControl>
         </div>
 
-        <div className="flex gap-4 mt-4 justify-end mr-4">
+        <div className="flex gap-4 mt-4  justify-center mr-4">
           <Button onClick={handleClose} color="error" variant="outlined">
             Cancel
           </Button>

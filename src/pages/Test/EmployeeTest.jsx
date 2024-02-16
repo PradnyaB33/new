@@ -1,8 +1,8 @@
 import {
-  BuildOutlined,
-  ImportContacts,
+  AddCircle,
+  Business,
+  CheckCircle,
   Person,
-  Person2Outlined,
   West,
 } from "@mui/icons-material";
 import React from "react";
@@ -32,28 +32,28 @@ const EmployeeTest = () => {
     },
     {
       label: "Company info",
-      icon: BuildOutlined,
+      icon: Business,
     },
     {
-      label: "important info",
-      icon: ImportContacts,
+      label: "Additional fields",
+      icon: AddCircle,
     },
     {
-      label: "test info",
-      icon: Person2Outlined,
+      label: "Confirm",
+      icon: CheckCircle,
     },
   ];
 
   const useSwitch = (step) => {
     switch (step) {
       case 1:
-        return <Test1 {...{ nextStep }} />;
+        return <Test1 {...{ nextStep, prevStep, isLastStep, isFirstStep }} />;
       case 2:
-        return <Test2 {...{ nextStep }} />;
+        return <Test2 {...{ nextStep, prevStep, isLastStep, isFirstStep }} />;
       case 3:
-        return <Test3 {...{ nextStep }} />;
+        return <Test3 {...{ nextStep, prevStep, isLastStep, isFirstStep }} />;
       case 4:
-        return <Test4 {...{ nextStep }} />;
+        return <Test4 {...{ nextStep, prevStep, isLastStep, isFirstStep }} />;
 
       default:
         return null;
@@ -70,32 +70,6 @@ const EmployeeTest = () => {
       </header>
 
       <section className="px-8 flex space-x-2 py-6">
-        {/* <article
-          className=" bg-gradient-to-r
-           from-sky-600
-           to-blue-300 h-auto w-max flex-col bg-white flex px-6 py-20  items-center "
-        > */}
-        {/* <div class=" h-[225px] w-[225px] rounded-lg overflow-hidden">
-            <img
-              class="w-full h-full object-cover"
-              src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt="none"
-            />
-          </div>
-
-          <div className="flex items-center flex-col py-2 justify-center gap-2">
-            <h1 className="font-bold text-lg">Jhon Show Doe</h1>
-
-            <div>
-              <div className="py-[2px] bg-slate-50 border-b-gray-200 border-[.5px] px-3 rounded-full text-blue-400 text-[.6rem]">
-                Employee
-              </div>
-            </div>
-          </div> */}
-        {/* 
-          <img className="h-[400px]" src="/Employee.svg" alt="none" />
-        </article> */}
-
         <article className="w-full rounded-lg bg-white ">
           <div className=" w-full px-5 ">
             <StepFormWrapper
@@ -104,9 +78,9 @@ const EmployeeTest = () => {
                 totalSteps,
                 step,
                 isFirstStep,
-                isLastStep,
                 nextStep,
                 prevStep,
+                isLastStep,
                 stepper,
               }}
             >

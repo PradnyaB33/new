@@ -16,8 +16,21 @@ import { convertCamelToTitle } from "./step-3";
 
 const Step4 = () => {
   const data = useOrg();
-  console.log(`🚀 ~ file: step-4.jsx:18 ~ data:`, data);
   const { authToken, decodedToken } = useGetUser();
+  const handleDismiss = async (id) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authToken,
+      },
+    };
+    const response = await axios.delete(
+      `${process.env.REACT_APP_API}/route/organization/delete/${id}`,
+      config
+    );
+    console.log(`🚀 ~ file: step-4.jsx:77 ~ response:`, response);
+    return response.data;
+  };
   const handleForm = async () => {
     const config = {
       headers: {
@@ -26,6 +39,11 @@ const Step4 = () => {
       },
     };
 
+    console.log(`🚀 ~ file: step-4.jsx:45 ~ data:`, data);
+    console.log(
+      `🚀 ~ file: step-4.jsx:61 ~  !data.industry_type:`,
+      !data.isTrial
+    );
     if (data.data === undefined) {
       return "Please Select Plan And Package";
     }
@@ -37,15 +55,13 @@ const Step4 = () => {
       !data.web_url ||
       !data.industry_type ||
       !data.email ||
-      !data.isTrial ||
       !data.location ||
       !data.contact_number ||
       !data.description ||
       !data.creator
     ) {
       console.log("Please fill all mandatory field");
-      toast.error("please fill all mandatory  field");
-      throw new Error();
+      throw new Error("Please fill all mandatory field");
     }
 
     const formData = new FormData();
@@ -78,7 +94,7 @@ const Step4 = () => {
       formData,
       config
     );
-    console.log(`🚀 ~ file: step-4.jsx:77 ~ response:`, response);
+    console.log(`🚀 ~ file: step-4.jsx:96 ~ response:`, response);
     return response.data;
   };
 
@@ -106,8 +122,15 @@ const Step4 = () => {
         theme: {
           color: "#1976d2",
         },
+        modal: {
+          ondismiss: function () {
+            mutate2(data.organisation._id);
+            console.log("Checkout form closed by the user");
+          },
+        },
       };
       const razor = new window.Razorpay(options);
+      console.log(`🚀 ~ file: step-4.jsx:111 ~ razor:`, razor);
       razor.open();
     },
     onError: async (data) => {
@@ -116,6 +139,9 @@ const Step4 = () => {
         data?.response?.data?.message || "Please fill all madatory field"
       );
     },
+  });
+  const { mutate: mutate2, isLoading: isLoading2 } = useMutation({
+    mutationFn: handleDismiss,
   });
   const valueObject = {
     memberCount: 40,
@@ -130,6 +156,9 @@ const Step4 = () => {
   }
 
   if (isLoading) {
+    return <Loader />;
+  }
+  if (isLoading2) {
     return <Loader />;
   }
   return (

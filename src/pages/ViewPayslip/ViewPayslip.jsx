@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { TestContext } from "../../State/Function/Main";
-import UserProfile from "../../hooks/UserData/useUser";
+import UserProfile from "../../hooks/auth/useUser";
 const ViewPayslip = () => {
   const { handleAlert } = useContext(TestContext);
   console.log(`🚀 ~ file: ViewPayslip.jsx:6 ~ handleAlert:`, handleAlert);

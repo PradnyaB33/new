@@ -91,7 +91,7 @@ const SignIn = () => {
       confirmPassword: z.string(),
     })
     .refine((data) => data.password === data.confirmPassword, {
-      message: "Password don't match",
+      message: "Password does'nt   match",
       path: ["confirmPassword"],
     });
 

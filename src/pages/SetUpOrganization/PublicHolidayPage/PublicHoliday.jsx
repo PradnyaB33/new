@@ -274,9 +274,7 @@ const PublicHoliday = () => {
               <tbody>
                 {holidays?.length === 0 ? (
                   <tr className="w-full !font-medium border-b text relative text-center">
-                    <td className="font-bold p-3">
-                      No holidays found
-                    </td>
+                    No holidays found !
                   </tr>
                 ) : (
                   holidays?.map((data, id) => (
