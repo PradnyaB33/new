@@ -168,7 +168,7 @@ const Step1 = ({ nextStep }) => {
             name="industry_type"
             icon={FactoryOutlined}
             control={control}
-            type="select"
+            type="naresh-select"
             placeholder="Type of Industry "
             label="Type of Industry  *"
             errors={errors}
