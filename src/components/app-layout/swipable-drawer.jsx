@@ -5,6 +5,7 @@ import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import * as React from "react";
 import { useCallback } from "react"; // Import useCallback
 import { useLocation } from "react-router-dom";
+import ChangeRole from "../InputFileds/ChangeRole";
 import ProfileIcon from "../profieicon/profileIcon";
 import NotificationIcon from "./components/NotificationIcon";
 import TestNavItems from "./components/test-nav-items";
@@ -92,6 +93,7 @@ export default function SwipeableTemporaryDrawer() {
             className="w-full"
           />
         </div> */}
+        <ChangeRole />
         {list}
       </SwipeableDrawer>
     </div>

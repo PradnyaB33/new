@@ -120,7 +120,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             control={control}
             type="date"
             placeholder="dd-mm-yyyy"
-            label="Date of joining *"
+            label="Date of Birth *"
             errors={errors}
             error={errors.date_of_birth}
           />
