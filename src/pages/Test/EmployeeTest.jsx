@@ -47,13 +47,13 @@ const EmployeeTest = () => {
   const useSwitch = (step) => {
     switch (step) {
       case 1:
-        return <Test1 {...{ nextStep }} />;
+        return <Test1 {...{ nextStep, prevStep, isLastStep, isFirstStep }} />;
       case 2:
-        return <Test2 {...{ nextStep }} />;
+        return <Test2 {...{ nextStep, prevStep, isLastStep, isFirstStep }} />;
       case 3:
-        return <Test3 {...{ nextStep }} />;
+        return <Test3 {...{ nextStep, prevStep, isLastStep, isFirstStep }} />;
       case 4:
-        return <Test4 {...{ nextStep }} />;
+        return <Test4 {...{ nextStep, prevStep, isLastStep, isFirstStep }} />;
 
       default:
         return null;
@@ -78,9 +78,9 @@ const EmployeeTest = () => {
                 totalSteps,
                 step,
                 isFirstStep,
-                isLastStep,
                 nextStep,
                 prevStep,
+                isLastStep,
                 stepper,
               }}
             >

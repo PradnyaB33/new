@@ -24,6 +24,12 @@ const AuthInputFiled = ({
   value,
   wrapperMessage,
 }) => {
+  const [focusedInput, setFocusedInput] = React.useState(null);
+
+  const handleFocus = (fieldName) => {
+    setFocusedInput(fieldName);
+  };
+
   if (type === "select") {
     return (
       <>
@@ -178,7 +184,6 @@ const AuthInputFiled = ({
                     aria-errormessage="error"
                     placeholder={placeholder}
                     isMulti
-                    value={field?.value}
                     styles={{
                       control: (styles) => ({
                         ...styles,
@@ -469,9 +474,15 @@ const AuthInputFiled = ({
           render={({ field }) => (
             <>
               <div
-                className={`${
-                  readOnly && "bg-[ghostwhite]"
-                } flex rounded-md items-center px-2 border-gray-200 border-[.5px] bg-white py-1 md:py-[6px]`}
+                onFocus={() => {
+                  handleFocus(name);
+                }}
+                onBlur={() => setFocusedInput(null)}
+                className={`${readOnly && "bg-[ghostwhite]"} ${
+                  focusedInput === name
+                    ? "border-blue-500 border-[2px]"
+                    : "border-gray-200 border-[.5px]"
+                } flex rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
               >
                 <textarea
                   type={type}
@@ -520,9 +531,15 @@ const AuthInputFiled = ({
         render={({ field }) => (
           <>
             <div
-              className={`${
-                readOnly && "bg-[ghostwhite]"
-              } flex rounded-md items-center px-2  border-gray-200 border-[.5px] bg-white py-1 md:py-[6px]`}
+              onFocus={() => {
+                handleFocus(name);
+              }}
+              onBlur={() => setFocusedInput(null)}
+              className={`${readOnly && "bg-[ghostwhite]"} ${
+                focusedInput === name
+                  ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
+                  : "outline-none border-gray-200 border-[.5px]"
+              } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
             >
               {Icon && (
                 <Icon className="text-gray-700 md:text-lg !text-[1em]" />

@@ -44,16 +44,11 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
 
     phone_number: z
       .string()
-      .min(10, { message: "Phone Number must be 10 digit" })
-      .regex(/^[0-9]+$/),
+      .min(10, { message: "Phone Number must be 10 digit" }),
     address: z.string(),
     date_of_birth: z.string(),
     citizenship: z.string().min(3, { message: "min 3 character required" }),
-    adhar_card_number: z
-      .string()
-      .refine((val) => /^\d{4}\s?\d{4}\s?\d{4}$/.test(val), {
-        message: "Invalid Aadhaar Card Number",
-      }),
+    adhar_card_number: z.string(),
     pan_card_number: z.string(),
     bank_account_no: z.string(),
   });
@@ -142,7 +137,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             name="phone_number"
             icon={ContactEmergency}
             control={control}
-            type="text"
+            type="number"
             placeholder="1234567890"
             label="Contact 1 *"
             errors={errors}
@@ -222,7 +217,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             name="adhar_card_number"
             icon={AccountBox}
             control={control}
-            type="text"
+            type="number"
             placeholder="Addhar no"
             label="Employee Addhar no *"
             errors={errors}
@@ -245,7 +240,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             name="bank_account_no"
             icon={AccountBalance}
             control={control}
-            type="text"
+            type="number"
             placeholder="account no"
             label="Bank Account No*"
             errors={errors}
@@ -263,7 +258,16 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           />
         </div>
 
-        <div className="flex items-end w-full justify-end">
+        <div className="flex items-center w-full justify-between">
+          <button
+            type="button"
+            onClick={prevStep}
+            disabled={isFirstStep}
+            className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+          >
+            prev
+          </button>
+
           <button
             type="submit"
             disabled={isLastStep}

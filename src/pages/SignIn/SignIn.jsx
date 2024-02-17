@@ -70,7 +70,6 @@ const SignIn = () => {
     {
       onSuccess: async (response) => {
         Cookies.set("aegis", response.data.token);
-
         handleAlert(
           true,
           "success",
@@ -78,7 +77,6 @@ const SignIn = () => {
         );
 
         // redirect("/choose-role");
-        console.log(user?.data);
 
         if (response.data.user?.profile?.includes("Super-Admin")) {
           handleRole.mutate({

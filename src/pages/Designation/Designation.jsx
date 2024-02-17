@@ -13,12 +13,11 @@ import {
 } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Setup from "../SetUpOrganization/Setup";
 import { UseContext } from "../../State/UseState/UseContext";
-
+import { Add, Info } from "@mui/icons-material";
 const Designation = () => {
   const [click, setClick] = useState(false);
   const { organisationId } = useParams();
@@ -229,7 +228,7 @@ const Designation = () => {
             alert: true,
             type: "success",
             msg: "designation deleted successfully",
-          })
+          });
           fetchDesignations();
         })
         .catch((error) => {
@@ -287,17 +286,18 @@ const Designation = () => {
           <article className="SetupSection bg-white w-[80%]  h-max shadow-md rounded-sm border  items-center">
             <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
               <div className="flex items-center gap-3 ">
-                <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+                {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                   <BadgeOutlinedIcon className="!text-lg text-white" />
-                </div>
-                <h1 className="!text-lg tracking-wide">Add Designation</h1>
+                </div> */}
+                <h1 className="!text-lg tracking-wide">Designation</h1>
               </div>
               <Button
                 className="!font-semibold !bg-sky-500 flex items-center gap-2"
                 onClick={handleAddDesignation}
                 variant="contained"
               >
-                Create Designation
+                <Add />
+                Add Designation
               </Button>
             </div>
 
@@ -316,37 +316,40 @@ const Designation = () => {
                     </th>
                   </tr>
                 </thead>
-                <tbody >
-                  {designation.length === 0 ? (
-                    <tr className="w-full !font-medium border-b text relative text-center">
-                      No designations found !
+                <tbody>
+                  {designation.map((data, id) => (
+                    <tr className="!font-medium border-b" key={id}>
+                      <td className="!text-left pl-9">{id + 1}</td>
+                      <td className=" py-3">{data?.designationName}</td>
+                      <td className="px-2">
+                        <IconButton
+                          color="primary"
+                          aria-label="edit"
+                          onClick={() => handleClickEdit(data._id)}
+                        >
+                          <EditOutlinedIcon />
+                        </IconButton>
+                        <IconButton
+                          color="error"
+                          aria-label="delete"
+                          onClick={() => handleDeleteDesignation(data._id)}
+                        >
+                          <DeleteOutlineIcon />
+                        </IconButton>
+                      </td>
                     </tr>
-                  ) : (
-                    designation.map((data, id) => (
-                      <tr className="!font-medium border-b" key={id}>
-                        <td className="!text-left pl-9">{id + 1}</td>
-                        <td className=" py-3">{data?.designationName}</td>
-                        <td className="px-2">
-                          <IconButton
-                            color="primary"
-                            aria-label="edit"
-                            onClick={() => handleClickEdit(data._id)}
-                          >
-                            <EditOutlinedIcon />
-                          </IconButton>
-                          <IconButton
-                            color="error"
-                            aria-label="delete"
-                            onClick={() => handleDeleteDesignation(data._id)}
-                          >
-                            <DeleteOutlineIcon />
-                          </IconButton>
-                        </td>
-                      </tr>
-                    ))
-                  )}
+                  ))}
                 </tbody>
               </table>
+              {designation.length === 0 && (
+                <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+                  <article className="flex items-center mb-1 text-red-500 gap-2">
+                    <Info className="text-2xl" />
+                    <h1 className="text-xl font-semibold">Add Designation</h1>
+                  </article>
+                  <p>No designation found. Please add a designation.</p>
+                </section>
+              )}
             </div>
             <Dialog open={click} onClose={handleClose} maxWidth="sm" fullWidth>
               <DialogTitle>
@@ -444,16 +447,19 @@ const Designation = () => {
                 />
                 {!designationId}
               </DialogContent>
-              <DialogActions>
-                <div className="flex flex-col w-[95%] m-auto gap-3 mb-2">
-                  <Button variant="contained" color="primary" onClick={handleAddDesignation}>
-                    {editMode ? "Update" : "Add"}
-                  </Button>
-                  <Button variant="contained" fullWidth color="error" onClick={handleClose}>
-                    Cancel
-                  </Button>
-                </div>
-              </DialogActions>
+
+              <div className="mt-5  mb-4 flex gap-5 justify-center">
+                <Button
+                  onClick={handleAddDesignation}
+                  variant="contained"
+                  color="primary"
+                >
+                  {editMode ? "Submit" : "Submit"}
+                </Button>
+                <Button color="error" variant="outlined" onClick={handleClose}>
+                  cancel
+                </Button>
+              </div>
             </Dialog>
 
             <Dialog
@@ -470,10 +476,20 @@ const Designation = () => {
               </DialogContent>
               <DialogActions>
                 <div className="flex w-[95%] flex-col gap-3 m-auto mb-2">
-                  <Button variant="contained" fullWidth color="error" onClick={handleConfirmDelete}>
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    color="error"
+                    onClick={handleConfirmDelete}
+                  >
                     Delete
                   </Button>
-                  <Button variant="contained" fullWidth color="primary" onClick={handleCloseConfirmationDialog}>
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    color="primary"
+                    onClick={handleCloseConfirmationDialog}
+                  >
                     Cancel
                   </Button>
                 </div>

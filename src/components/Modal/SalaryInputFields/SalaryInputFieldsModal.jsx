@@ -618,7 +618,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
             </Tooltip>
           </div>
 
-          <DialogActions>
+          <DialogActions sx={{ justifyContent: "center" }}>
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>

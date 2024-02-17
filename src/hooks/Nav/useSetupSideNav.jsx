@@ -24,7 +24,7 @@ const useSetupSideNav = (organisationId) => {
 
   const linkData = [
     {
-      label: "Add Roles",
+      label: "Manage Roles",
       icon: PersonAddAlt1Outlined,
       href: `/organisation/${organisationId}/setup/add-roles`,
       active:
@@ -32,7 +32,7 @@ const useSetupSideNav = (organisationId) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
-      label: "Leave Types",
+      label: "Leaves",
       icon: TimeToLeaveOutlined,
       href: `/organisation/${organisationId}/setup/leave-types`,
       active:
@@ -42,7 +42,7 @@ const useSetupSideNav = (organisationId) => {
     },
 
     {
-      label: "Shift Types",
+      label: "Shifts",
       icon: EventAvailableOutlined,
       href: `/organisation/${organisationId}/setup/set-shifts`,
       active:
@@ -51,7 +51,7 @@ const useSetupSideNav = (organisationId) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
-      label: "Add Location",
+      label: "Location",
       icon: AddLocationAltOutlined,
       href: `/organisation/${organisationId}/setup/add-organization-locations`,
       active:
@@ -79,7 +79,7 @@ const useSetupSideNav = (organisationId) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
-      label: "Employement type",
+      label: "Employment",
       icon: ManageAccountsOutlined,
       href: `/organisation/${organisationId}/setup/set-employement-types`,
       active:
@@ -88,7 +88,7 @@ const useSetupSideNav = (organisationId) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
-      label: "Salary Management ",
+      label: "Salary Template",
       icon: PriceChangeOutlined,
       href: `/organisation/${organisationId}/setup/set-salary-input-selection`,
       active:
@@ -99,7 +99,7 @@ const useSetupSideNav = (organisationId) => {
       ),
     },
     {
-      label: "Add Designation",
+      label: "Designation",
       icon: BadgeOutlinedIcon,
       href: `/organisation/${organisationId}/setup/set-designation`,
       active:
@@ -140,7 +140,7 @@ const useSetupSideNav = (organisationId) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
-      label: "Employee Code Generator",
+      label: "Employee Code",
       icon: AssignmentIndOutlinedIcon,
       href: `/organisation/${organisationId}/setup/set-employee-code-generator`,
       active:
