@@ -51,12 +51,12 @@ import RolePage from "./pages/SignIn/RolePage";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 import EmployeeTest from "./pages/Test/EmployeeTest";
-import DepartmentTest from "./pages/Test2/DepartmentTest";
 import EditablePolyline from "./pages/Test/test2";
 import TrackingMap from "./pages/Test/test3";
 import TrackingMap2 from "./pages/Test/testMap";
 import TestNaresh from "./pages/Test/testNaresh";
 import TrackingMap3 from "./pages/Test/testYash";
+import DepartmentTest from "./pages/Test2/DepartmentTest";
 import EmployeeProfile from "./pages/UserProfile/UserProfile";
 import ViewPayslip1 from "./pages/ViewPayslip/ViewPayslip1";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
@@ -637,7 +637,7 @@ const App = () => {
       <Route
         path="/leave"
         element={
-          <RequireAuth permission={["Employee"]}>
+          <RequireAuth permission={["Employee", "Super-Admin"]}>
             <LeaveRequisition />
           </RequireAuth>
         }

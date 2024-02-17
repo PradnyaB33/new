@@ -1,4 +1,4 @@
-import { NotificationsOutlined, PersonOutline } from "@mui/icons-material";
+import { PersonOutline } from "@mui/icons-material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Divider } from "@mui/material";
@@ -97,14 +97,6 @@ export default function ProfileIcon() {
               className="flex gap-4  !text-sm items-center justify-center !py-3 hover:!bg-gray-100  "
             >
               <PersonOutline className="!text-[19px]" /> Profile
-            </MenuItem>
-
-            <MenuItem
-              key="notification"
-              className="flex gap-4  items-center justify-center !text-sm !py-3 hover:!bg-gray-100  "
-              onClick={() => handleNavigate("/notification")}
-            >
-              <NotificationsOutlined className="!text-[19px]" /> Notification
             </MenuItem>
 
             <MenuItem key="sign-out" className="!p-0" onClick={handleSignOut}>

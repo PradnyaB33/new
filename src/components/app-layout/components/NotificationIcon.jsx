@@ -1,31 +1,46 @@
-import { Popover, Transition } from "@headlessui/react";
-import { Notifications } from "@mui/icons-material";
+import { Download, Notifications } from "@mui/icons-material";
 import { Badge } from "@mui/material";
+import axios from "axios";
 import React from "react";
-import Tabs from "./Tabs";
+import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
+import useGetUser from "../../../hooks/Token/useUser";
 
 const NotificationIcon = () => {
+  const { authToken } = useGetUser();
+  const { data, isLoading, isError, error, isFetching } = useQuery(
+    "employee-leave",
+    async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/leave/get`,
+          {
+            headers: { Authorization: authToken },
+          }
+        );
+        return response.data;
+      } catch (err) {
+        console.log(`🚀 ~ file: notification.jsx:37 ~ err:`, err);
+        throw err;
+      }
+    }
+  );
   return (
-    <Popover className="relative">
-      <Badge variant={"standerd"} color={"error"} badgeContent={"3"}>
-        <Popover.Button>
-          <Notifications />
-        </Popover.Button>
-      </Badge>
-
-      <Transition
-        enter="transition"
-        enterFrom=" scale-95 opacity-0"
-        enterTo=" scale-100 opacity-100"
-        leave="transition"
-        leaveFrom=" scale-100 opacity-100"
-        leaveTo=" scale-95 opacity-0"
+    <Link to={"/notification"}>
+      <Badge
+        variant={"standard"}
+        color={isFetching ? "secondary" : "error"}
+        badgeContent={
+          isFetching ? (
+            <Download className="!text-[10px] text-white" />
+          ) : (
+            data?.leaveRequests?.length
+          )
+        }
       >
-        <Popover.Panel className={"absolute w-[400px]  right-[10px] z-0 "}>
-          <Tabs />
-        </Popover.Panel>
-      </Transition>
-    </Popover>
+        <Notifications className="text-white" />
+      </Badge>
+    </Link>
   );
 };
 

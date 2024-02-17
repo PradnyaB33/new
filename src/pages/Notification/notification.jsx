@@ -19,7 +19,6 @@ const Notification = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [open, setOpen] = useState(false);
-  console.log(`🚀 ~ file: notification.jsx:22 ~ open:`, open);
   const [id, setid] = useState("");
   const { handleAlert } = useContext(TestContext);
 
