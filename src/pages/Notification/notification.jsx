@@ -147,7 +147,7 @@ const Notification = () => {
                   </div>
 
                   <div className="space-y-4 w-full flex flex-col items-center md:items-start justify-center">
-                    <h1 className="text-xl px-4 md:!px-0 italic font-semibold ">
+                    <h1 className="text-xl px-4 md:!px-0 font-semibold ">
                       {items?.employeeId?.first_name} has raised a leave request
                       from {items.description} Leave from{" "}
                       {format(new Date(items.start), "PP")} to{" "}
@@ -173,7 +173,6 @@ const Notification = () => {
                             }
                             // startIcon={<CheckIcon />}
                             sx={{
-                              fontStyle: "italic",
                               fontSize: "12px",
                               padding: "5px 30px",
                               textTransform: "capitalize",
@@ -191,7 +190,6 @@ const Notification = () => {
                             }
                             variant="contained"
                             sx={{
-                              fontStyle: "italic",
                               fontSize: "12px",
                               padding: "5px 30px",
                               textTransform: "capitalize",

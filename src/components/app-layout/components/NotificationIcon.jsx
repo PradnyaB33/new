@@ -8,23 +8,20 @@ import useGetUser from "../../../hooks/Token/useUser";
 
 const NotificationIcon = () => {
   const { authToken } = useGetUser();
-  const { data, isLoading, isError, error, isFetching } = useQuery(
-    "employee-leave",
-    async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API}/route/leave/get`,
-          {
-            headers: { Authorization: authToken },
-          }
-        );
-        return response.data;
-      } catch (err) {
-        console.log(`🚀 ~ file: notification.jsx:37 ~ err:`, err);
-        throw err;
-      }
+  const { data, isFetching } = useQuery("employee-leave", async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/leave/get`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+      return response.data;
+    } catch (err) {
+      console.log(`🚀 ~ file: notification.jsx:37 ~ err:`, err);
+      throw err;
     }
-  );
+  });
   return (
     <Link to={"/notification"}>
       <Badge
