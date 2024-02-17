@@ -315,7 +315,7 @@ const OrganizationLocations = () => {
                   <AddLocationAltOutlined className="!text-lg text-white" />
                 </div>
                 <h1 className="!text-lg tracking-wide">
-                  Add Organization Location
+                  Add Organisation Location
                 </h1>
               </div>
               <Button

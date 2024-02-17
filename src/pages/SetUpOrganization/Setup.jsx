@@ -26,7 +26,7 @@ const Setup = ({ children }) => {
               <div className="rounded-full h-[30px] w-[30px] flex items-center justify-center">
                 <SettingsOutlined className="!text-md text-sky-400 hover:!rotate-180  cursor-pointer" />
               </div>
-              <h1 className="!text-lg tracking-wide">Setup Settings</h1>
+              <h1 className="!text-lg tracking-wide">Setup</h1>
             </div>
 
             {linkData?.map((item, id) => (

@@ -33,7 +33,7 @@ const Subscription = () => {
     onSuccess: (data) => {
       console.log(
         `🚀 ~ file: Subscription.jsx:38 ~  moment.unix(data?.subscription.created_at):`,
-        moment.unix(data?.subscription.created_at)
+        data
       );
       console.log(
         `🚀 ~ file: Subscription.jsx:38 ~  moment.unix(data?.subscription?.charge_at):`,
@@ -102,8 +102,8 @@ const Subscription = () => {
                 />
                 <SubscriptionRow
                   loading={isLoading}
-                  leftText={"Plan Description"}
-                  rightText={`${data?.plan?.item?.description}`}
+                  leftText={"Allowed Employee Count"}
+                  rightText={`${data?.subscription?.quantity} Employees ex`}
                 />
                 <SubscriptionRow
                   loading={isLoading}
@@ -114,6 +114,12 @@ const Subscription = () => {
                   loading={isLoading}
                   leftText={"Billing Frequency"}
                   rightText={`${data?.plan?.period}`}
+                />
+                <SubscriptionRow
+                  loading={isLoading}
+                  leftText={"Payment Link"}
+                  rightText={`${data?.subscription?.short_url}`}
+                  isUrl={true}
                 />
               </div>
               <div className="col-span-1 text-brand/primary-blue grid justify-center text-xl font-bold">
@@ -148,9 +154,10 @@ const Subscription = () => {
                 Active Packages
               </h1>
               <div className="w-full flex flex-row flex-wrap gap-8">
-                {data?.organisation?.packages.map((doc) => {
+                {data?.organisation?.packages.map((doc, i) => {
                   return (
                     <SubscriptionCard
+                      key={i}
                       header={doc?.name}
                       description={doc?.description}
                     />
