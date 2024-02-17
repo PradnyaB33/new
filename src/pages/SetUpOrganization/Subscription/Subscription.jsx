@@ -103,7 +103,7 @@ const Subscription = () => {
                 <SubscriptionRow
                   loading={isLoading}
                   leftText={"Allowed Employee Count"}
-                  rightText={`${data?.subscription?.quantity} Employees ex`}
+                  rightText={`${data?.subscription?.quantity} Employees`}
                 />
                 <SubscriptionRow
                   loading={isLoading}
@@ -163,6 +163,11 @@ const Subscription = () => {
                     />
                   );
                 })}
+                <SubscriptionCard
+                  header={"Add Packages"}
+                  description={"You can add packages here"}
+                  button={true}
+                />
               </div>
             </div>
           </article>

@@ -2,7 +2,7 @@ import { MoreVert } from "@mui/icons-material";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import React from "react";
 
-export default function SubscriptionCard({ header, description }) {
+export default function SubscriptionCard({ header, description, button }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -17,9 +17,11 @@ export default function SubscriptionCard({ header, description }) {
         <div className="text-xl font-bold text-Brand-neutrals/brand-neutrals-4 hover:underline cursor-pointer">
           {header}
         </div>
-        <IconButton onClick={handleClick}>
-          <MoreVert className=" !text-xl" />
-        </IconButton>
+        {!button && (
+          <IconButton onClick={handleClick}>
+            <MoreVert className=" !text-xl" />
+          </IconButton>
+        )}
         <Menu
           id="basic-menu"
           anchorEl={anchorEl}
