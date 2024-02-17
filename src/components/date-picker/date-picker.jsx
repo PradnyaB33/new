@@ -45,7 +45,7 @@ const AppDatePicker = ({
       setDelete(true);
       setUpdate(false);
     } else {
-      setDelete(true);
+      setDelete(false);
       setUpdate(true);
     }
   };
