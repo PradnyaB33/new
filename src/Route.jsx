@@ -98,28 +98,7 @@ const App = () => {
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/choose-role" element={<RolePage />} />
       <Route path="/sign-up" element={<Signup />} />
-      <Route
-        path="/forgot-password"
-        element={
-          <RequireAuth
-            permission={[
-              "Super-Admin",
-              "Delegate-Super Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "Hr",
-              "Manager",
-              "Employee",
-            ]}
-          >
-            <ForgotPassword />
-          </RequireAuth>
-        }
-      />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route
         path="/waiting"
         element={
@@ -404,25 +383,7 @@ const App = () => {
       />
       <Route
         path="/terms-and-conditions"
-        element={
-          <RequireAuth
-            permission={[
-              "Super-Admin",
-              "Delegate-Super Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "Hr",
-              "Manager",
-              "Employee",
-            ]}
-          >
-            <TermsAndConditionsPage />
-          </RequireAuth>
-        }
+        element={<TermsAndConditionsPage />}
       />
 
       <Route
