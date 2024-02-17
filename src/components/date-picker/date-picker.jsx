@@ -24,7 +24,6 @@ const AppDatePicker = ({
 }) => {
   const localizer = momentLocalizer(moment);
   const [Delete, setDelete] = useState(false);
-  console.log(`🚀 ~ file: date-picker.jsx:27 ~ Delete:`, Delete);
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
