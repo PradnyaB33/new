@@ -66,7 +66,7 @@ const LeaveTable = () => {
   }
   if (isLoading) {
     return (
-      <article className="w-[350px] h-max py-6 bg-white shadow-xl rounded-lg ">
+      <article className="w-full md:w-[350px] h-max py-6 bg-white shadow-xl rounded-lg ">
         <h1 className="text-xl px-8 font-semibold flex items-center gap-3 ">
           <AccountBalanceIcon className="text-gray-400" /> Balance Leaves
           <Tooltip title="Click to get Summary for current month">
@@ -106,7 +106,7 @@ const LeaveTable = () => {
     setAnchorEl(null);
   };
   return (
-    <article className="w-[350px] h-max bg-white shadow-lg rounded-lg ">
+    <article className="md:w-[350px] w-full h-max bg-white shadow-lg rounded-lg ">
       <h1 className="text-xl py-6 px-6 font-semibold flex items-center gap-3 justify-between">
         <AccountBalanceIcon className="text-gray-400" />
         <div>Balance Leaves</div>

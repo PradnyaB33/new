@@ -24,6 +24,7 @@ const AppDatePicker = ({
 }) => {
   const localizer = momentLocalizer(moment);
   const [Delete, setDelete] = useState(false);
+  console.log(`🚀 ~ file: date-picker.jsx:27 ~ Delete:`, Delete);
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -42,7 +43,7 @@ const AppDatePicker = ({
     setSelectedLeave(event);
     setCalendarOpen(true);
     if (event.title === "Selected Leave") {
-      setDelete(false);
+      setDelete(true);
       setUpdate(false);
     } else {
       setDelete(true);
@@ -61,7 +62,7 @@ const AppDatePicker = ({
       return {
         style: {
           pointerEvents: "none",
-          backgroundColor: "#cd1111",
+          backgroundColor: "#f7bfbf",
         },
       };
     }
@@ -202,6 +203,7 @@ const AppDatePicker = ({
       );
     } else {
     }
+    setDelete(false);
   };
   useEffect(() => {
     // Add click event listener when component mounts
@@ -271,7 +273,7 @@ const AppDatePicker = ({
           variant="contained"
           onClick={handleDelete}
           className="rbc-event-content"
-          disabled={Delete}
+          disabled={!Delete}
         >
           Delete
         </Button>
