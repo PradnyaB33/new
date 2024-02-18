@@ -1,9 +1,4 @@
-import {
-  AccessTimeFilled,
-  EventAvailableOutlined,
-  Info,
-  MoreTime,
-} from "@mui/icons-material";
+import { EventAvailableOutlined, Info, MoreTime } from "@mui/icons-material";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import DeleteIcon from "@mui/icons-material/Delete";
 import WarningIcon from "@mui/icons-material/Warning";
@@ -21,7 +16,6 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import dayjs from "dayjs";
-import randomColor from "randomcolor";
 import React, { useContext, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -196,10 +190,10 @@ const Shifts = () => {
                                   </td>
                                   <td className="whitespace-nowrap font-semibold px-6 py-2">
                                     <Chip
-                                      icon={<AccessTimeFilled />}
+                                      // icon={<AccessTimeFilled />}
                                       size="small"
                                       variant="outlined"
-                                      color="success"
+                                      // color="success"
                                       label={convertTo12HourFormat(
                                         items.startTime
                                       )}
@@ -207,30 +201,26 @@ const Shifts = () => {
                                   </td>
                                   <td className="whitespace-nowrap font-semibold px-6 py-2">
                                     <Chip
-                                      icon={<AccessTimeFilled />}
+                                      // icon={<AccessTimeFilled />}
                                       variant="outlined"
                                       size="small"
-                                      color="success"
+                                      // color="success"
                                       label={convertTo12HourFormat(
                                         items.endTime
                                       )}
                                     />
                                   </td>
 
-                                  <td className="whitespace-nowrap text-left px-6 py-2">
+                                  <td className="whitespace-nowrap !text-left px-6 py-2">
                                     <AvatarGroup max={6}>
                                       {items?.selectedDays.map((item) => (
                                         <Avatar
                                           src="dsadsa"
                                           key={item}
-                                          className="!text-xs "
+                                          className="!text-xs !bg-sky-500 !text-white "
                                           sx={{
                                             width: 35,
                                             height: 35,
-                                            backgroundColor: randomColor({
-                                              seed: item,
-                                              luminosity: "dark",
-                                            }),
                                           }}
                                         >
                                           {item.slice(0, 3)}
@@ -311,7 +301,7 @@ const Shifts = () => {
         <DialogContent>
           <p>
             Please confirm your decision to delete the shift, as this action
-            cannot be undone.
+            cannot be retrive.
           </p>
         </DialogContent>
         <DialogActions>

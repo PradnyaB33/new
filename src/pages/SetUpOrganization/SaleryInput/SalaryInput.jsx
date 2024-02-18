@@ -131,7 +131,7 @@ const SalaryInput = () => {
                 <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                   <PriceChangeOutlined className="!text-lg text-white" />
                 </div>
-                <h1 className="!text-lg tracking-wide">Salary Management</h1>
+                <h1 className="!text-lg tracking-wide">Salary Template</h1>
               </div>
               <Button
                 className="!font-semibold !bg-sky-500 flex items-center gap-2"
@@ -208,7 +208,7 @@ const SalaryInput = () => {
                     Salary template Not found
                   </h1>
                 </article>
-                <p>for the organization. Please create a Employeement Types.</p>
+                <p>Please create salary template</p>
               </section>
             )}
           </article>

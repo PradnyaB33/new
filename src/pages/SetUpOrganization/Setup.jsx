@@ -11,7 +11,7 @@ const Setup = ({ children }) => {
 
   return (
     <>
-      <section className=" bg-gray-50 min-h-screen w-full">
+      <section className="bg-gray-50 min-h-screen w-full">
         <header className="md:block hidden text-xl w-full pt-6 bg-white shadow-md p-4">
           <BackComponent />
           <Link to={"/organizationList"}>

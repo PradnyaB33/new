@@ -56,7 +56,7 @@ const useSetupSideNav = (organisationId) => {
       href: `/organisation/${organisationId}/setup/add-organization-locations`,
       active:
         location.pathname ===
-        `/organization/${organisationId}/setup/add-organization-locations`,
+        `/organisation/${organisationId}/setup/add-organization-locations`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
@@ -79,7 +79,7 @@ const useSetupSideNav = (organisationId) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
-      label: "Employement type",
+      label: "Employment type",
       icon: ManageAccountsOutlined,
       href: `/organisation/${organisationId}/setup/set-employement-types`,
       active:
@@ -88,7 +88,7 @@ const useSetupSideNav = (organisationId) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
-      label: "Salary Management ",
+      label: "Salary Template",
       icon: PriceChangeOutlined,
       href: `/organisation/${organisationId}/setup/set-salary-input-selection`,
       active:

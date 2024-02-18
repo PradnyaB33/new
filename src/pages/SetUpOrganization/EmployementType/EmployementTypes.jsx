@@ -127,7 +127,7 @@ const EmployementTypes = () => {
                 onClick={() => handleOpen("paper")}
                 variant="contained"
               >
-                Create Employeement types
+                Create Employment types
               </Button>
             </div>
 
@@ -182,7 +182,7 @@ const EmployementTypes = () => {
                   </h1>
                 </article>
                 <p>
-                  Employeement types have not been set up for your organization.
+                  Employment types have not been set up for your organization.
                   Please create the 'Employeement types'
                 </p>
               </section>

@@ -142,18 +142,9 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
         isValid = false;
       }
 
-      // if (!structure.manuallyInput.trim()) {
-      //   error.manuallyInput = "Manually Input is required";
-      //   isValid = false;
-      // }
-
-      // if (!structure.calculation.trim()) {
-      //   error.calculation = "Calculation is required";
-      //   isValid = false;
-      // }
-
       structuresError[index] = error;
     });
+
     newErrors.salaryStructures = structuresError;
 
     setErrors(newErrors);
@@ -167,9 +158,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
         desc: "",
       });
       setEmpTypes("");
-      setSalaryStructures([
-        { salaryComponent: "", manuallyInput: "", calculation: "" },
-      ]);
+      setSalaryStructures([{ salaryComponent: "" }]);
       setErrors({
         name: "",
         desc: "",
@@ -207,6 +196,16 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   };
 
   const handleSalaryStructureChange = (index, field, value) => {
+    if (salaryStructures.some((ext) => ext.salaryComponent === value)) {
+      setSalaryStructures((prevStructures) => {
+        const newStructures = [...prevStructures];
+        newStructures.splice(index);
+        return newStructures;
+      });
+      handleAlert(true, "warning", "You cannot select same salary component");
+      return false;
+    }
+
     setSalaryStructures((prevStructures) => {
       const newStructures = [...prevStructures];
       newStructures[index][field] = value;
@@ -217,7 +216,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   const handleAddRow = () => {
     setSalaryStructures((prevStructures) => [
       ...prevStructures,
-      { salaryComponent: "", manuallyInput: "", calculation: "" },
+      { salaryComponent: "" },
     ]);
   };
 
