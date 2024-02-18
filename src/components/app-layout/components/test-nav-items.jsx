@@ -61,7 +61,7 @@ const TestNavItems = ({ toggleDrawer }) => {
         routes: [
           {
             key: "dashboard",
-            isVisible: false,
+            isVisible: true,
             link:
               role === "Manager"
                 ? `organisation/${orgId}/dashboard/manager-dashboard`
@@ -69,7 +69,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                 ? `/organisation/${orgId}/dashboard/HR-dashboard`
                 : role === "Employee"
                 ? "/organisation/dashboard/employee-dashboard"
-                : "",
+                : "/organizationList",
             icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
             text: "Dashboard",
           },

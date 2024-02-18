@@ -163,7 +163,7 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
           </FormControl>
         </div>
 
-        <div className="flex gap-4 mt-4 justify-end mr-4">
+        <div className="flex gap-4 mt-4  justify-center mr-4">
           <Button onClick={handleClose} color="error" variant="outlined">
             Cancel
           </Button>

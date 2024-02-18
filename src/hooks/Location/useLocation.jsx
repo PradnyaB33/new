@@ -30,6 +30,7 @@ const useLocationStore = () => {
         },
       ],
     };
+    console.log(`🚀 ~ file: useLocation.jsx:33 ~ payload:`, payload);
 
     try {
       const response = await axios.post(
@@ -68,6 +69,7 @@ const useLocationStore = () => {
   };
 
   const stopLocationTracking = () => {
+    console.log('"fetchLocationData', data);
     setCount(0);
 
     setStart(false);

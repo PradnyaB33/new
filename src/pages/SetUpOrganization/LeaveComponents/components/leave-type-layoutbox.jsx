@@ -1,4 +1,3 @@
-import { Delete, Edit } from "@mui/icons-material";
 import {
   Button,
   Chip,
@@ -15,7 +14,8 @@ import { useQueryClient } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
 import { UseContext } from "../../../../State/UseState/UseContext";
 import LeaveTypeModal from "../../../../components/Modal/LeaveTypeModal/leave-type-modal";
-
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 const LeaveTypeEditBox = ({ leaveType, index }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -90,11 +90,15 @@ const LeaveTypeEditBox = ({ leaveType, index }) => {
       </td>
       <td className="whitespace-nowrap px-6 py-2">{leaveType.count}</td>
       <td className="whitespace-nowrap px-6 py-2">
-        <IconButton onClick={handleDeleteTypeConfirmation}>
-          <Delete className="!text-xl" color="error" />
+        <IconButton onClick={handleEditType} color="primary" aria-label="edit">
+          <EditOutlinedIcon />
         </IconButton>
-        <IconButton onClick={handleEditType}>
-          <Edit className="!text-xl" color="success" />
+        <IconButton
+          onClick={handleDeleteTypeConfirmation}
+          color="error"
+          aria-label="delete"
+        >
+          <DeleteOutlineIcon />
         </IconButton>
       </td>
 

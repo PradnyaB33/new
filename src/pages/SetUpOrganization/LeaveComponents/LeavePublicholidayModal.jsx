@@ -99,7 +99,7 @@ const LeavePublicholidayModal = ({ open, handleClose, id }) => {
             variant="contained"
             color="primary"
           >
-            Apply
+            Submit
           </Button>
         </div>
       </Box>

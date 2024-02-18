@@ -1,4 +1,3 @@
-import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
@@ -24,7 +23,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../Setup";
-
+import { Add, Info } from "@mui/icons-material";
 const PublicHoliday = () => {
   const id = useParams().organisationId;
   const { setAppAlert } = useContext(UseContext);
@@ -236,9 +235,9 @@ const PublicHoliday = () => {
         <article className="SetupSection bg-white w-[80%] h-max shadow-md rounded-sm border items-center">
           <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center gap-3 ">
-              <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+              {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                 <BadgeOutlinedIcon className="!text-lg text-white" />
-              </div>
+              </div> */}
               <h1 className="!text-lg tracking-wide">Public Holidays</h1>
             </div>
             <Button
@@ -246,7 +245,8 @@ const PublicHoliday = () => {
               variant="contained"
               onClick={() => setOpenModal(true)}
             >
-              Add Holiday
+              <Add />
+              Add Public Holidays
             </Button>
           </div>
 
@@ -272,40 +272,43 @@ const PublicHoliday = () => {
                 </tr>
               </thead>
               <tbody>
-                {holidays?.length === 0 ? (
-                  <tr className="w-full !font-medium border-b text relative text-center">
-                    No holidays found !
+                {holidays?.map((data, id) => (
+                  <tr className="!font-medium border-b" key={id}>
+                    <td className="!text-left pl-9">{id + 1}</td>
+                    <td className="py-3">{data.name}</td>
+                    <td className="py-3">
+                      {data && format(new Date(data?.date), "PP")}
+                    </td>
+                    <td className="py-3 px-4">{data.type}</td>
+                    <td className="px-2">
+                      <IconButton
+                        color="primary"
+                        aria-label="edit"
+                        onClick={() => handleOperateEdit(data._id)}
+                      >
+                        <EditOutlinedIcon />
+                      </IconButton>
+                      <IconButton
+                        color="error"
+                        aria-label="delete"
+                        onClick={() => handleOperateDelete(data._id)}
+                      >
+                        <DeleteOutlineIcon />
+                      </IconButton>
+                    </td>
                   </tr>
-                ) : (
-                  holidays?.map((data, id) => (
-                    <tr className="!font-medium border-b" key={id}>
-                      <td className="!text-left pl-9">{id + 1}</td>
-                      <td className=" py-3">{data.name}</td>
-                      <td className="py-3">
-                        {data && format(new Date(data?.date), "PP")}
-                      </td>
-                      <td className="py-3 px-4">{data.type}</td>
-                      <td className="px-2">
-                        <IconButton
-                          color="primary"
-                          aria-label="edit"
-                          onClick={() => handleOperateEdit(data._id)}
-                        >
-                          <EditOutlinedIcon />
-                        </IconButton>
-                        <IconButton
-                          color="error"
-                          aria-label="delete"
-                          onClick={() => handleOperateDelete(data._id)}
-                        >
-                          <DeleteOutlineIcon />
-                        </IconButton>
-                      </td>
-                    </tr>
-                  ))
-                )}
+                ))}
               </tbody>
             </table>
+            {holidays?.length === 0 && (
+              <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+                <article className="flex items-center mb-1 text-red-500 gap-2">
+                  <Info className="!text-2xl" />
+                  <h1 className="text-xl font-semibold">Add Public Holidays</h1>
+                </article>
+                <p>No public holidays found. Please add the public holidays</p>
+              </section>
+            )}
             <Dialog
               open={openModal}
               onClose={handleClose}
@@ -382,21 +385,23 @@ const PublicHoliday = () => {
                       ))}
                     </Select>
                   </FormControl>
+                  <div className="flex gap-4  mt-4  justify-center">
+                    <Button
+                      onClick={handleClose}
+                      color="error"
+                      variant="outlined"
+                    >
+                      Cancel
+                    </Button>
 
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    onClick={handleSubmit}
-                  >
-                    Add
-                  </Button>
-                  <Button
-                    onClick={handleClose}
-                    color="error"
-                    variant="contained"
-                  >
-                    Cancel
-                  </Button>
+                    <Button
+                      onClick={handleSubmit}
+                      variant="contained"
+                      color="primary"
+                    >
+                      Submit
+                    </Button>
+                  </div>
                 </div>
               </DialogContent>
             </Dialog>
@@ -470,15 +475,15 @@ const PublicHoliday = () => {
                       </FormControl>
                     </div>
 
-                    <div className="mt-5 flex gap-5">
+                    <div className="mt-5 flex gap-5 justify-center">
                       <Button
                         onClick={doTheOperation}
-                        color="warning"
                         variant="contained"
+                        color="primary"
                       >
                         {operation}
                       </Button>
-                      <Button variant="contained" color="primary">
+                      <Button color="error" variant="outlined">
                         cancel
                       </Button>
                     </div>

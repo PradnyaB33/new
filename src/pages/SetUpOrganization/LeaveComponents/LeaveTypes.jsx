@@ -1,4 +1,4 @@
-import { Add, BeachAccessOutlined } from "@mui/icons-material";
+import { Add, Info } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
@@ -54,10 +54,10 @@ const LeaveTypes = ({ open, handleClose, id }) => {
           <div className="p-4  border-b-[.5px] flex items-center  gap-3 w-full border-gray-300 justify-between">
             <div className="flex gap-3">
               {" "}
-              <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+              {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                 <BeachAccessOutlined className="!text-lg text-white" />
-              </div>
-              <h1 className="!text-lg tracking-wide">Create Leave Types</h1>
+              </div> */}
+              <h1 className="!text-lg tracking-wide">Leaves</h1>
             </div>
             <Button
               className="!bg-[#0ea5e9]"
@@ -65,7 +65,7 @@ const LeaveTypes = ({ open, handleClose, id }) => {
               onClick={handleCreateLeave}
             >
               <Add />
-              Create Leave Types
+              Add Leave
             </Button>
           </div>
 
@@ -110,9 +110,13 @@ const LeaveTypes = ({ open, handleClose, id }) => {
             </tbody>
           </table>
           {data?.length === 0 ? (
-            <p className="w-full m-auto font-bold text-center">
-              No leave types available create one.
-            </p>
+            <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+              <article className="flex items-center mb-1 text-red-500 gap-2">
+                <Info className="!text-2xl" />
+                <h1 className="text-xl font-semibold">Add Leave </h1>
+              </article>
+              <p>No leave found. Please add types of leave</p>
+            </section>
           ) : (
             ""
           )}

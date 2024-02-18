@@ -1,5 +1,4 @@
-import { BorderColor, Delete, Info, Warning } from "@mui/icons-material";
-import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
+import { Info, Warning } from "@mui/icons-material";
 import {
   Button,
   Dialog,
@@ -18,6 +17,9 @@ import CreateEmpCodeModel from "../../../components/Modal/EmpCodeModel/CreateEmp
 import EditEmpCodeModel from "../../../components/Modal/EmpCodeModel/EditEmpCodeModel";
 import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
+import { Add } from "@mui/icons-material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 const EmployeeCodeGenerator = () => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
@@ -128,17 +130,18 @@ const EmployeeCodeGenerator = () => {
         <article className="SetupSection bg-white w-[100%] md:w-[80%]  h-max shadow-md rounded-sm border  items-center">
           <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
             <div className="flex items-center  gap-3 ">
-              <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+              {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                 <EventNoteOutlinedIcon className="!text-lg text-white" />
-              </div>
-              <h1 className="!text-lg tracking-wide">Generate Employee Code</h1>
+              </div> */}
+              <h1 className="!text-lg tracking-wide">Employee Code</h1>
             </div>
             <Button
               className="!font-semibold !bg-sky-500 flex items-center gap-2"
               variant="contained"
               onClick={handleCreateModalOpen}
             >
-              Generate Employee Code
+              <Add />
+              Add Employee Code
             </Button>
           </div>
           {isLoading ? (
@@ -166,14 +169,18 @@ const EmployeeCodeGenerator = () => {
                       <td className="py-3 ">{empCode?.code}</td>
                       <td className="whitespace-nowrap px-6 py-2">
                         <IconButton
+                          color="primary"
+                          aria-label="edit"
                           onClick={() => handleEditModalOpen(empCode?._id)}
                         >
-                          <BorderColor className="!text-xl" color="success" />
+                          <EditOutlinedIcon />
                         </IconButton>
                         <IconButton
+                          color="error"
+                          aria-label="delete"
                           onClick={() => handleDeleteConfirmation(empCode?._id)}
                         >
-                          <Delete className="!text-xl" color="error" />
+                          <DeleteOutlineIcon />
                         </IconButton>
                       </td>
                     </tr>
@@ -185,14 +192,9 @@ const EmployeeCodeGenerator = () => {
             <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
               <article className="flex items-center mb-1 text-red-500 gap-2">
                 <Info className="!text-2xl" />
-                <h1 className="text-xl font-semibold">
-                  Employee code is not found
-                </h1>
+                <h1 className="text-xl font-semibold">Add Employee Code</h1>
               </article>
-              <p>
-                Employee code have not been set up for your organization. Please
-                create the 'Employee Code'
-              </p>
+              <p>No employee code found. Please add the employee code.</p>
             </section>
           )}
         </article>

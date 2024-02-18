@@ -1,4 +1,3 @@
-import InputIcon from "@mui/icons-material/Input";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -78,9 +77,9 @@ const Inputfield = () => {
         <Setup>
           <div className="SetupSection bg-white lg:w-4/5 md:w-3/4 w-full shadow-md rounded-sm border items-center mx-auto">
             <div className="p-4  border-b-[.5px] flex items-center  gap-3 w-full border-gray-300">
-              <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+              {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                 <InputIcon className="!text-lg text-white" />
-              </div>
+              </div> */}
               <h1 className="!text-lg">Additional Employee Data</h1>
             </div>
 
@@ -107,7 +106,7 @@ const Inputfield = () => {
                 onClick={sendRequestToBackend}
                 className="flex justify-center rounded-md px-3 py-2 text-sm font-semibold text-white bg-sky-500 hover:bg-sky-600 focus-visible:outline-sky-600 w-full lg:w-auto"
               >
-                Apply Changes
+                Submit
               </button>
             </div>
           </div>

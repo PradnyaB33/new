@@ -259,7 +259,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
       >
         <div className="flex justify-between py-4 items-center  px-4">
           <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
-            {shiftId ? "Edit shift" : "Create a shift"}
+            {shiftId ? "Edit Shift" : "Add Shift"}
           </h1>
           <IconButton onClick={handleClose}>
             <CloseIcon className="!text-[16px]" />
@@ -394,7 +394,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
               ))}
             </ToggleButtonGroup>
           </div>
-          <div className="flex gap-4  mt-4 justify-end">
+          <div className="flex gap-4  mt-4  justify-center">
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>

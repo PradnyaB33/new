@@ -1,10 +1,6 @@
-import {
-  BorderColor,
-  Delete,
-  Info,
-  ManageAccountsOutlined,
-  Warning,
-} from "@mui/icons-material";
+import { Add, Info, Warning } from "@mui/icons-material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Button,
   Dialog,
@@ -22,7 +18,6 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import EmpTypeModal from "../../../components/Modal/EmployeeTypesModal/EmpTypeModal";
 import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
-
 const EmployementTypes = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -115,19 +110,18 @@ const EmployementTypes = () => {
           <article className="SetupSection bg-white w-full md:w-[80%]  h-max shadow-md rounded-sm border  items-center">
             <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
               <div className="flex items-center  gap-3 ">
-                <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+                {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                   <ManageAccountsOutlined className="!text-lg text-white" />
-                </div>
-                <h1 className="!text-lg tracking-wide">
-                  Create Employment Types
-                </h1>
+                </div> */}
+                <h1 className="!text-lg tracking-wide">Employment</h1>
               </div>
               <Button
                 className="!font-semibold !bg-sky-500 flex items-center gap-2"
                 onClick={() => handleOpen("paper")}
                 variant="contained"
               >
-                Create Employment types
+                <Add />
+                Add Employment
               </Button>
             </div>
 
@@ -156,16 +150,20 @@ const EmployementTypes = () => {
                         <td className="py-3 ">{emptype?.title}</td>
                         <td className="whitespace-nowrap px-6 py-2">
                           <IconButton
+                            color="primary"
+                            aria-label="edit"
+                            onClick={() => handleEditModalOpen(emptype._id)}
+                          >
+                            <EditOutlinedIcon />
+                          </IconButton>
+                          <IconButton
+                            color="error"
+                            aria-label="delete"
                             onClick={() =>
                               handleDeleteConfirmation(emptype._id)
                             }
                           >
-                            <Delete className="!text-xl" color="error" />
-                          </IconButton>
-                          <IconButton
-                            onClick={() => handleEditModalOpen(emptype._id)}
-                          >
-                            <BorderColor className="!text-xl" color="success" />
+                            <DeleteOutlineIcon />
                           </IconButton>
                         </td>
                       </tr>
@@ -177,14 +175,9 @@ const EmployementTypes = () => {
               <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
                 <article className="flex items-center mb-1 text-red-500 gap-2">
                   <Info className="!text-2xl" />
-                  <h1 className="text-xl font-semibold">
-                    Employment Types Not found
-                  </h1>
+                  <h1 className="text-xl font-semibold">Add Employment</h1>
                 </article>
-                <p>
-                  Employment types have not been set up for your organization.
-                  Please create the 'Employeement types'
-                </p>
+                <p>No employment found. Please add types of employment.</p>
               </section>
             )}
           </article>

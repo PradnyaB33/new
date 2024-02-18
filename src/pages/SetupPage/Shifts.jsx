@@ -1,6 +1,6 @@
-import { EventAvailableOutlined, Info, MoreTime } from "@mui/icons-material";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Add, Info } from "@mui/icons-material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import WarningIcon from "@mui/icons-material/Warning";
 import {
   Avatar,
@@ -24,7 +24,6 @@ import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import ShiftModal from "../../components/Modal/shift/ShiftModal";
 import Setup from "../SetUpOrganization/Setup";
-
 const Shifts = () => {
   const { organisationId } = useParams("");
   const { cookies } = useContext(UseContext);
@@ -111,18 +110,19 @@ const Shifts = () => {
           <article className="SetupSection bg-white w-[80%]  h-max shadow-md rounded-sm border  items-center">
             <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
               <div className="flex items-center  gap-3 ">
-                <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+                {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                   <EventAvailableOutlined className="!text-lg text-white" />
-                </div>
-                <h1 className="!text-lg tracking-wide">Create Shifts</h1>
+                </div> */}
+
+                <h1 className="!text-lg tracking-wide">Shifts</h1>
               </div>
               <Button
                 className="!font-semibold !bg-sky-500 flex items-center gap-2"
                 onClick={handleOpen}
                 variant="contained"
               >
-                <MoreTime className="!text-md" />
-                Create Shift
+                <Add className="!text-md" />
+                Add Shift
               </Button>
             </div>
 
@@ -228,31 +228,25 @@ const Shifts = () => {
                                       ))}
                                     </AvatarGroup>
                                   </td>
-                                  {/* <td className=" px-6  flex gap-6 flex-wrap  py-2">
-                              {items?.selectedDays.map((item) => (
-                                <Badge badgeContent={item} color="primary" />
-                              ))}
-                            </td> */}
+
                                   <td className="whitespace-nowrap px-6 py-2">
                                     <IconButton
-                                      onClick={() =>
-                                        handleDeleteConfirmation(items._id)
-                                      }
-                                    >
-                                      <DeleteIcon
-                                        className="!text-xl"
-                                        color="error"
-                                      />
-                                    </IconButton>
-                                    <IconButton
+                                      color="primary"
+                                      aria-label="edit"
                                       onClick={() =>
                                         handleEditModalOpen(items._id)
                                       }
                                     >
-                                      <BorderColorIcon
-                                        className="!text-xl"
-                                        color="success"
-                                      />
+                                      <EditOutlinedIcon />
+                                    </IconButton>
+                                    <IconButton
+                                      color="error"
+                                      aria-label="delete"
+                                      onClick={() =>
+                                        handleDeleteConfirmation(items._id)
+                                      }
+                                    >
+                                      <DeleteOutlineIcon />
                                     </IconButton>
                                   </td>
                                 </tr>
@@ -263,15 +257,10 @@ const Shifts = () => {
                     ) : (
                       <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
                         <article className="flex items-center mb-1 text-red-500 gap-2">
-                          <Info className="!text-2xl" />
-                          <h1 className="text-xl font-semibold">
-                            Shift Not found
-                          </h1>
+                          <Info className="text-2xl" />
+                          <h1 className="text-xl font-semibold">Add Shift</h1>
                         </article>
-                        <p>
-                          There are no shifts for the organization. Please
-                          create a shift to view the preview.
-                        </p>
+                        <p>No shifts found. Please add type of shift.</p>
                       </section>
                     )}
                   </div>

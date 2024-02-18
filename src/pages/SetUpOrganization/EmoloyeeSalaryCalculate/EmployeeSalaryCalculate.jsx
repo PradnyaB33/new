@@ -1,5 +1,4 @@
-import { BorderColor, Delete, Info, Warning } from "@mui/icons-material";
-import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
+import { Info, Warning } from "@mui/icons-material";
 import {
   Button,
   Dialog,
@@ -18,6 +17,9 @@ import CreateEmpSalCalDayModel from "../../../components/Modal/EmployeeSalaryDay
 import EmpSalaryDayModal from "../../../components/Modal/EmployeeSalaryDayModal/EmpSalaryDayModal";
 import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
+import { Add } from "@mui/icons-material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 const EmployeeSalaryCalculateDay = () => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
@@ -133,9 +135,9 @@ const EmployeeSalaryCalculateDay = () => {
           <article className="SetupSection bg-white w-[100%] md:w-[80%]  h-max shadow-md rounded-sm border  items-center">
             <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
               <div className="flex items-center  gap-3 ">
-                <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+                {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                   <EventNoteOutlinedIcon className="!text-lg text-white" />
-                </div>
+                </div> */}
                 <h1 className="!text-lg tracking-wide">
                   Salary Computation Day
                 </h1>
@@ -145,7 +147,8 @@ const EmployeeSalaryCalculateDay = () => {
                 variant="contained"
                 onClick={handleCreateModalOpen}
               >
-                Create Salary Computation Day
+                <Add />
+                Add Salary Computation Day
               </Button>
             </div>
 
@@ -175,19 +178,20 @@ const EmployeeSalaryCalculateDay = () => {
                           <td className="py-3 ">{empSalCal.selectedDay}</td>
                           <td className="whitespace-nowrap px-6 py-2">
                             <IconButton
+                              color="primary"
+                              aria-label="edit"
                               onClick={() => handleEditModalOpen(empSalCal._id)}
                             >
-                              <BorderColor
-                                className="!text-xl"
-                                color="success"
-                              />
+                              <EditOutlinedIcon />
                             </IconButton>
                             <IconButton
+                              color="error"
+                              aria-label="delete"
                               onClick={() =>
                                 handleDeleteConfirmation(empSalCal._id)
                               }
                             >
-                              <Delete className="!text-xl" color="error" />
+                              <DeleteOutlineIcon />
                             </IconButton>
                           </td>
                         </tr>
@@ -201,12 +205,12 @@ const EmployeeSalaryCalculateDay = () => {
                 <article className="flex items-center mb-1 text-red-500 gap-2">
                   <Info className="!text-2xl" />
                   <h1 className="text-xl font-semibold">
-                    Salary computation day is not found
+                    Add Salary Computation Day
                   </h1>
                 </article>
                 <p>
-                  Salary computation day have not been set up for your
-                  organization. Please create the 'Salary Computation Day'
+                  No salary computation day found. Please add the salary
+                  computation day
                 </p>
               </section>
             )}

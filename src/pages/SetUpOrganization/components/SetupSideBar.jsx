@@ -59,7 +59,7 @@ const SetupSideBar = ({ children }) => {
         <article className="py-4 px-8 w-full h-full flex gap-4">
           <aside className="w-[20%] h-max flex flex-col items-center shadow-md justify-center bg-white">
             <div className="p-4 border-b-[.5px] w-full border-gray-300">
-              <h1 className="!text-lg tracking-wide">Setup Settings</h1>
+              <h1 className="!text-lg tracking-wide">Setup</h1>
             </div>
 
             {data.map((item, id) => (

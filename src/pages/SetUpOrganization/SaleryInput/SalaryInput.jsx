@@ -1,11 +1,6 @@
-import {
-  BorderColor,
-  Delete,
-  Info,
-  MoreHoriz,
-  PriceChangeOutlined,
-  Warning,
-} from "@mui/icons-material";
+import { Add, Info, MoreHoriz, Warning } from "@mui/icons-material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Button,
   Dialog,
@@ -25,7 +20,6 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import SalaryInputFieldsModal from "../../../components/Modal/SalaryInputFields/SalaryInputFieldsModal";
 import Setup from "../Setup";
 import SkeletonSalaryInput from "./SkeletonSalaryInput";
-
 const SalaryInput = () => {
   const { organisationId } = useParams();
   const { cookies } = useContext(UseContext);
@@ -128,9 +122,9 @@ const SalaryInput = () => {
           <article className="SetupSection bg-white w-[80%]  h-max shadow-md rounded-sm border  items-center">
             <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
               <div className="flex items-center  gap-3 ">
-                <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+                {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                   <PriceChangeOutlined className="!text-lg text-white" />
-                </div>
+                </div> */}
                 <h1 className="!text-lg tracking-wide">Salary Template</h1>
               </div>
               <Button
@@ -138,7 +132,8 @@ const SalaryInput = () => {
                 onClick={handleOpen}
                 variant="contained"
               >
-                Create salary template
+                <Add />
+                Add salary template
               </Button>
             </div>
 
@@ -185,14 +180,18 @@ const SalaryInput = () => {
                         </td>
                         <td className="whitespace-nowrap px-6 py-2">
                           <IconButton
-                            onClick={() => handleDeleteConfirmation(item._id)}
-                          >
-                            <Delete className="!text-xl" color="error" />
-                          </IconButton>
-                          <IconButton
+                            color="primary"
+                            aria-label="edit"
                             onClick={() => handleEditModalOpen(item._id)}
                           >
-                            <BorderColor className="!text-xl" color="success" />
+                            <EditOutlinedIcon />
+                          </IconButton>
+                          <IconButton
+                            color="error"
+                            aria-label="delete"
+                            onClick={() => handleDeleteConfirmation(item._id)}
+                          >
+                            <DeleteOutlineIcon />
                           </IconButton>
                         </td>
                       </tr>
@@ -204,11 +203,9 @@ const SalaryInput = () => {
               <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
                 <article className="flex items-center mb-1 text-red-500 gap-2">
                   <Info className="!text-2xl" />
-                  <h1 className="text-xl font-semibold">
-                    Salary template Not found
-                  </h1>
+                  <h1 className="text-xl font-semibold">Add Salary Template</h1>
                 </article>
-                <p>Please create salary template</p>
+                <p>No salary template found .Please add a salary template.</p>
               </section>
             )}
           </article>
