@@ -323,8 +323,9 @@ const Designation = () => {
                     </tr>
                   ) : (
                     designation.map((data, id) => (
-                      <tr className="!font-medium border-b" key={id}>
-                        <td className="!text-left pl-9">{id + 1}</td>
+                      <tr className={`${id % 2 === 0 ? "bg-gray-50" : "bg-white"
+                        } border-b dark:border-neutral-500 !font-medium`}>
+                        <td className="!text-left pl-9 py-4">{id + 1}</td>
                         <td className=" py-3">{data?.designationName}</td>
                         <td className="px-2">
                           <IconButton

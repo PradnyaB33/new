@@ -248,9 +248,6 @@ const EmailSetting = () => {
                 <tbody>
                   {emails.length === 0 ? (
                     <tr className="font-bold">
-                      <td className="p-3 w-full">
-                        No Emails found
-                      </td>
                     </tr>
                   ) :
                     (emails.map((data, idx) => (

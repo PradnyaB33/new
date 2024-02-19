@@ -278,8 +278,10 @@ const PublicHoliday = () => {
                   </tr>
                 ) : (
                   holidays?.map((data, id) => (
-                    <tr className="!font-medium border-b" key={id}>
-                      <td className="!text-left pl-9">{id + 1}</td>
+                    <tr key={id}
+                      className={`${id % 2 === 0 ? "bg-gray-50" : "bg-white"
+                        } border-b dark:border-neutral-500 !font-medium`}>
+                      <td className="!text-left pl-9 py-4">{id + 1}</td>
                       <td className=" py-3">{data.name}</td>
                       <td className="py-3">
                         {data && format(new Date(data?.date), "PP")}
@@ -402,7 +404,7 @@ const PublicHoliday = () => {
             </Dialog>
 
             <Dialog fullWidth open={actionModal} onClose={handleClose}>
-              <DialogTitle>Are you sure about this ?</DialogTitle>
+              <DialogTitle>Edit Public Holidays</DialogTitle>
               <DialogContent>
                 {operation === "edit" ? (
                   <>
@@ -478,7 +480,7 @@ const PublicHoliday = () => {
                       >
                         {operation}
                       </Button>
-                      <Button variant="contained" color="primary">
+                      <Button onClick={handleClose} variant="contained" color="primary">
                         cancel
                       </Button>
                     </div>

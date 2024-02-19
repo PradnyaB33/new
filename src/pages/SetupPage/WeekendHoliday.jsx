@@ -248,7 +248,8 @@ const WeekendHoliday = () => {
                 ) : (
                   data &&
                   data?.map((item, idx) => (
-                    <tr className="!font-medium border-b !space-y-3" key={idx}>
+                    <tr className={`${idx % 2 === 0 ? "bg-gray-50" : "bg-white"
+                      } border-b dark:border-neutral-500 !font-medium`} key={idx}>
                       <td className="!text-left !pl-9 !mr-5 w-1/12 ">
                         {idx + 1}
                       </td>
@@ -263,12 +264,12 @@ const WeekendHoliday = () => {
                               label={day.day}
                               className="text-sm"
                               style={{
-                                backgroundColor: getColor(day.day),
+                                backgroundColor: "#e5e7eb",
                                 borderRadius: "50%",
                                 width: "50px",
                                 height: "50px",
                                 cursor: "pointer",
-                                border: "1px solid gray",
+                                border: "2px solid gray",
                                 color: "black",
                                 fontWeight: "bolder",
                                 fontSize: "12.5px",
