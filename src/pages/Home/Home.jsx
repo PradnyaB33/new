@@ -90,14 +90,14 @@ const Home = () => {
               ) : data?.organizations.length <= 0 ? (
                 <Link className="!w-max !block" to={"/add-organisation"}>
                   <button className="!w-max flex group justify-center  gap-2 items-center rounded-md px-4 py-3 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
-                    Create your organisation{" "}
+                    Create Your Organisation{" "}
                     <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
                   </button>
                 </Link>
               ) : (
                 <Link to={"/organizationList"} className="!w-max !block">
                   <button className=" flex  group justify-center gap-2 items-center rounded-md p-2 !text-xs md:px-6 md:py-3 md:!text-[1em] font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
-                    Go to Organisation{" "}
+                    Go To Organisation{" "}
                     <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
                   </button>
                 </Link>

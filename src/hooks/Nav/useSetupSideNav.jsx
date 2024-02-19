@@ -1,22 +1,21 @@
 import {
   AddLocationAltOutlined,
-  BeachAccessOutlined,
-  EventAvailableOutlined,
   ManageAccountsOutlined,
-  PersonAddAlt1Outlined,
-  PriceChangeOutlined,
   SellOutlined,
-  TimeToLeaveOutlined,
 } from "@mui/icons-material";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
-import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
-import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
 import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
 import { useLocation } from "react-router-dom";
 import UserProfile from "../UserData/useUser";
-
+import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
+import WorkOffOutlinedIcon from "@mui/icons-material/WorkOffOutlined";
+import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
+import HolidayVillageOutlinedIcon from "@mui/icons-material/HolidayVillageOutlined";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
+import PersonPinOutlinedIcon from "@mui/icons-material/PersonPinOutlined";
 const useSetupSideNav = (organisationId) => {
   const location = useLocation();
   const { getCurrentUser } = UserProfile();
@@ -25,7 +24,7 @@ const useSetupSideNav = (organisationId) => {
   const linkData = [
     {
       label: "Manage Roles",
-      icon: PersonAddAlt1Outlined,
+      icon: GroupOutlinedIcon,
       href: `/organisation/${organisationId}/setup/add-roles`,
       active:
         location.pathname === `/organisation/${organisationId}/setup/add-roles`,
@@ -33,7 +32,7 @@ const useSetupSideNav = (organisationId) => {
     },
     {
       label: "Leaves",
-      icon: TimeToLeaveOutlined,
+      icon: WorkOffOutlinedIcon,
       href: `/organisation/${organisationId}/setup/leave-types`,
       active:
         location.pathname ===
@@ -43,7 +42,7 @@ const useSetupSideNav = (organisationId) => {
 
     {
       label: "Shifts",
-      icon: EventAvailableOutlined,
+      icon: ScheduleOutlinedIcon,
       href: `/organisation/${organisationId}/setup/set-shifts`,
       active:
         location.pathname ===
@@ -61,7 +60,7 @@ const useSetupSideNav = (organisationId) => {
     },
     {
       label: "Public Holidays",
-      icon: BeachAccessOutlined,
+      icon: HolidayVillageOutlinedIcon,
       href: `/organisation/${organisationId}/setup/set-public-holiday`,
       active:
         location.pathname ===
@@ -71,7 +70,7 @@ const useSetupSideNav = (organisationId) => {
 
     {
       label: "Additional Employee Data",
-      icon: PersonAddAlt1OutlinedIcon,
+      icon: PersonOutlineOutlinedIcon,
       href: `/organisation/${organisationId}/setup/input-field`,
       active:
         location.pathname ===
@@ -89,7 +88,7 @@ const useSetupSideNav = (organisationId) => {
     },
     {
       label: "Salary Template",
-      icon: PriceChangeOutlined,
+      icon: MonetizationOnOutlinedIcon,
       href: `/organisation/${organisationId}/setup/set-salary-input-selection`,
       active:
         location.pathname ===
@@ -100,7 +99,7 @@ const useSetupSideNav = (organisationId) => {
     },
     {
       label: "Designation",
-      icon: BadgeOutlinedIcon,
+      icon: AssignmentIndOutlinedIcon,
       href: `/organisation/${organisationId}/setup/set-designation`,
       active:
         location.pathname ===
@@ -132,7 +131,7 @@ const useSetupSideNav = (organisationId) => {
     },
     {
       label: "Salary Computation Day",
-      icon: DateRangeOutlinedIcon,
+      icon: EventNoteOutlinedIcon,
       href: `/organisation/${organisationId}/setup/set-employee-salary-calculate-day`,
       active:
         location.pathname ===
@@ -141,7 +140,7 @@ const useSetupSideNav = (organisationId) => {
     },
     {
       label: "Employee Code",
-      icon: AssignmentIndOutlinedIcon,
+      icon: PersonPinOutlinedIcon,
       href: `/organisation/${organisationId}/setup/set-employee-code-generator`,
       active:
         location.pathname ===

@@ -390,7 +390,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
               ))}
             </ToggleButtonGroup>
           </div>
-          <div className="flex gap-4  mt-4  justify-center">
+          <div className="flex gap-4  mt-4  justify-end">
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>

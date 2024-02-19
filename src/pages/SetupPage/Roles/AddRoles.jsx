@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../../SetUpOrganization/Setup";
-
+import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 const AddRoles = () => {
   const { organisationId } = useParams("");
   const { cookies } = useContext(UseContext);
@@ -92,9 +92,9 @@ const AddRoles = () => {
         <Setup>
           <div className="SetupSection bg-white w-[100%] lg:!w-[80%] md:!w-[70%]   shadow-md rounded-sm border  items-center">
             <div className="p-4  border-b-[.5px] flex items-center  gap-3 w-full border-gray-300">
-              {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
-                <PersonAddAlt1Outlined className="!text-lg text-white" />
-              </div> */}
+              <div className="flex items-center justify-center">
+                <GroupOutlinedIcon />
+              </div>
               <h1 className="!text-lg">Manage Roles</h1>
             </div>
             {isLoading ? (

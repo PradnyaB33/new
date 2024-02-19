@@ -24,6 +24,8 @@ import { useParams } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../Setup";
 import { Add, Info } from "@mui/icons-material";
+import HolidayVillageOutlinedIcon from "@mui/icons-material/HolidayVillageOutlined";
+
 const PublicHoliday = () => {
   const id = useParams().organisationId;
   const { setAppAlert } = useContext(UseContext);
@@ -235,9 +237,9 @@ const PublicHoliday = () => {
         <article className="SetupSection bg-white w-[80%] h-max shadow-md rounded-sm border items-center">
           <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center gap-3 ">
-              {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
-                <BadgeOutlinedIcon className="!text-lg text-white" />
-              </div> */}
+              <div className="flex items-center justify-center">
+                <HolidayVillageOutlinedIcon />
+              </div>
               <h1 className="!text-lg tracking-wide">Public Holidays</h1>
             </div>
             <Button
@@ -249,268 +251,267 @@ const PublicHoliday = () => {
               Add Public Holidays
             </Button>
           </div>
-
-          <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-            <table className="min-w-full bg-white text-left !text-sm font-light">
-              <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-                <tr className="!font-semibold ">
-                  <th scope="col" className="!text-left pl-8 py-3 w-1/12">
-                    SR NO
-                  </th>
-                  <th scope="col" className="py-3 w-2/12">
-                    Holiday Name
-                  </th>
-                  <th scope="col" className="px-6 py-3 w-2/12">
-                    Date
-                  </th>
-                  <th scope="col" className="px-6 py-3 w-2/12">
-                    Type
-                  </th>
-                  <th scope="col" className="px-6 py-3 w-2/12">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {holidays?.map((data, id) => (
-                  <tr className="!font-medium border-b" key={id}>
-                    <td className="!text-left pl-9">{id + 1}</td>
-                    <td className="py-3">{data.name}</td>
-                    <td className="py-3">
-                      {data && format(new Date(data?.date), "PP")}
-                    </td>
-                    <td className="py-3 px-4">{data.type}</td>
-                    <td className="px-2">
-                      <IconButton
-                        color="primary"
-                        aria-label="edit"
-                        onClick={() => handleOperateEdit(data._id)}
-                      >
-                        <EditOutlinedIcon />
-                      </IconButton>
-                      <IconButton
-                        color="error"
-                        aria-label="delete"
-                        onClick={() => handleOperateDelete(data._id)}
-                      >
-                        <DeleteOutlineIcon />
-                      </IconButton>
-                    </td>
+          {holidays.length > 0 ? (
+            <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
+              <table className="min-w-full bg-white text-left !text-sm font-light">
+                <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+                  <tr className="!font-semibold ">
+                    <th scope="col" className="!text-left pl-8 py-3 w-1/12">
+                      SR NO
+                    </th>
+                    <th scope="col" className="py-3 w-2/12">
+                      Holiday Name
+                    </th>
+                    <th scope="col" className="px-6 py-3 w-2/12">
+                      Date
+                    </th>
+                    <th scope="col" className="px-6 py-3 w-2/12">
+                      Type
+                    </th>
+                    <th scope="col" className="px-6 py-3 w-2/12">
+                      Actions
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-            {holidays?.length === 0 && (
-              <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
-                <article className="flex items-center mb-1 text-red-500 gap-2">
-                  <Info className="!text-2xl" />
-                  <h1 className="text-xl font-semibold">Add Public Holidays</h1>
-                </article>
-                <p>No public holidays found. Please add the public holidays</p>
-              </section>
-            )}
-            <Dialog
-              open={openModal}
-              onClose={handleClose}
-              maxWidth="sm"
-              fullWidth
-            >
-              <DialogTitle>Add holiday</DialogTitle>
-              <DialogContent className="flex gap-3 flex-col">
-                <div className="flex gap-3 flex-col mt-3">
-                  <TextField
-                    required
-                    size="small"
-                    className="w-full"
-                    label="Holiday name"
-                    type="text"
-                    name="name"
-                    value={inputdata.name}
-                    onChange={handleData}
-                  />
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer
-                      className="w-full"
-                      components={["DatePicker"]}
-                      required
-                    >
-                      <DatePicker
-                        label="Date"
-                        value={inputdata.date}
-                        onChange={(newDate) => {
-                          setInputData({
-                            ...inputdata,
-                            date: newDate,
-                          });
-                          console.log(newDate);
-                        }}
-                        slotProps={{
-                          textField: { size: "small", fullWidth: true },
-                        }}
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                  <FormControl size="small" fullWidth>
-                    <InputLabel id="holiday-type-label">
-                      Holiday type
-                    </InputLabel>
-                    <Select
-                      labelId="holiday-type-label"
-                      id="demo-simple-select"
-                      label="holiday type"
-                      className="mb-[8px]"
-                      value={inputdata.type}
-                      name="type"
-                      onChange={handleData}
-                    >
-                      <MenuItem value="Optional">Optional</MenuItem>
-                      <MenuItem value="Mandatory">Mandatory</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <FormControl size="small" fullWidth>
-                    <InputLabel id="region-label">Region</InputLabel>
-                    <Select
-                      labelId="region-label"
-                      id="demo-simple-select"
-                      label="Region"
-                      className="mb-[8px]"
-                      onChange={handleData}
-                      value={inputdata.region}
-                      name="region"
-                    >
-                      {locations.map((location, idx) => (
-                        <MenuItem key={idx} value={location.shortName}>
-                          {location.shortName}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <div className="flex gap-4  mt-4  justify-center">
-                    <Button
-                      onClick={handleClose}
-                      color="error"
-                      variant="outlined"
-                    >
-                      Cancel
-                    </Button>
+                </thead>
+                <tbody>
+                  {holidays?.map((data, id) => (
+                    <tr className="!font-medium border-b" key={id}>
+                      <td className="!text-left pl-9">{id + 1}</td>
+                      <td className="py-3">{data.name}</td>
+                      <td className="py-3">
+                        {data && format(new Date(data?.date), "PP")}
+                      </td>
+                      <td className="py-3 px-4">{data.type}</td>
+                      <td className="px-2">
+                        <IconButton
+                          color="primary"
+                          aria-label="edit"
+                          onClick={() => handleOperateEdit(data._id)}
+                        >
+                          <EditOutlinedIcon />
+                        </IconButton>
+                        <IconButton
+                          color="error"
+                          aria-label="delete"
+                          onClick={() => handleOperateDelete(data._id)}
+                        >
+                          <DeleteOutlineIcon />
+                        </IconButton>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+              <article className="flex items-center mb-1 text-red-500 gap-2">
+                <Info className="!text-2xl" />
+                <h1 className="text-lg font-semibold">Add Public Holidays</h1>
+              </article>
+              <p>No public holidays found. Please add the public holidays</p>
+            </section>
+          )}
 
+          <Dialog
+            open={openModal}
+            onClose={handleClose}
+            maxWidth="sm"
+            fullWidth
+          >
+            <DialogTitle>Add holiday</DialogTitle>
+            <DialogContent className="flex gap-3 flex-col">
+              <div className="flex gap-3 flex-col mt-3">
+                <TextField
+                  required
+                  size="small"
+                  className="w-full"
+                  label="Holiday name"
+                  type="text"
+                  name="name"
+                  value={inputdata.name}
+                  onChange={handleData}
+                />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer
+                    className="w-full"
+                    components={["DatePicker"]}
+                    required
+                  >
+                    <DatePicker
+                      label="Date"
+                      value={inputdata.date}
+                      onChange={(newDate) => {
+                        setInputData({
+                          ...inputdata,
+                          date: newDate,
+                        });
+                        console.log(newDate);
+                      }}
+                      slotProps={{
+                        textField: { size: "small", fullWidth: true },
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+                <FormControl size="small" fullWidth>
+                  <InputLabel id="holiday-type-label">Holiday type</InputLabel>
+                  <Select
+                    labelId="holiday-type-label"
+                    id="demo-simple-select"
+                    label="holiday type"
+                    className="mb-[8px]"
+                    value={inputdata.type}
+                    name="type"
+                    onChange={handleData}
+                  >
+                    <MenuItem value="Optional">Optional</MenuItem>
+                    <MenuItem value="Mandatory">Mandatory</MenuItem>
+                  </Select>
+                </FormControl>
+                <FormControl size="small" fullWidth>
+                  <InputLabel id="region-label">Region</InputLabel>
+                  <Select
+                    labelId="region-label"
+                    id="demo-simple-select"
+                    label="Region"
+                    className="mb-[8px]"
+                    onChange={handleData}
+                    value={inputdata.region}
+                    name="region"
+                  >
+                    {locations.map((location, idx) => (
+                      <MenuItem key={idx} value={location.shortName}>
+                        {location.shortName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <div className="flex gap-4  mt-4  justify-end">
+                  <Button
+                    onClick={handleClose}
+                    color="error"
+                    variant="outlined"
+                  >
+                    Cancel
+                  </Button>
+
+                  <Button
+                    onClick={handleSubmit}
+                    variant="contained"
+                    color="primary"
+                  >
+                    Submit
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog fullWidth open={actionModal} onClose={handleClose}>
+            <DialogTitle>Are you sure about this ?</DialogTitle>
+            <DialogContent>
+              {operation === "edit" ? (
+                <>
+                  <div className="flex gap-3 flex-col mt-3">
+                    <TextField
+                      required
+                      size="small"
+                      className="w-full"
+                      label="Holiday name"
+                      type="text"
+                      name="name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={["DatePicker"]} required>
+                        <DatePicker
+                          label="Holiday date"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                              fullWidth: true,
+                              style: { marginBottom: "8px" },
+                            },
+                          }}
+                          value={inputdata.date}
+                          onChange={(newDate) => handleDateChange(newDate)}
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                    <FormControl size="small" fullWidth>
+                      <InputLabel id="holiday-type-label">
+                        Holiday type
+                      </InputLabel>
+                      <Select
+                        labelId="holiday-type-label"
+                        id="demo-simple-select"
+                        label="holiday type"
+                        className="mb-[8px]"
+                        value={type}
+                        name="type"
+                        onChange={(e) => setType(e.target.value)}
+                      >
+                        <MenuItem value="Optional">Optional</MenuItem>
+                        <MenuItem value="Mandatory">Mandatory</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <FormControl size="small" fullWidth>
+                      <InputLabel id="region-label">Region</InputLabel>
+                      <Select
+                        labelId="region-label"
+                        id="demo-simple-select"
+                        label="Region"
+                        className="mb-[8px]"
+                        onChange={(e) => setRegion(e.target.value)}
+                        value={region}
+                        name="region"
+                      >
+                        {locations.map((location, idx) => (
+                          <MenuItem key={idx} value={location.shortName}>
+                            {location.shortName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </div>
+
+                  <div className="mt-5 flex gap-5 justify-end">
                     <Button
-                      onClick={handleSubmit}
+                      onClick={doTheOperation}
                       variant="contained"
                       color="primary"
                     >
-                      Submit
+                      {operation}
+                    </Button>
+                    <Button color="error" variant="outlined">
+                      cancel
                     </Button>
                   </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-
-            <Dialog fullWidth open={actionModal} onClose={handleClose}>
-              <DialogTitle>Are you sure about this ?</DialogTitle>
-              <DialogContent>
-                {operation === "edit" ? (
-                  <>
-                    <div className="flex gap-3 flex-col mt-3">
-                      <TextField
-                        required
-                        size="small"
-                        className="w-full"
-                        label="Holiday name"
-                        type="text"
-                        name="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={["DatePicker"]} required>
-                          <DatePicker
-                            label="Holiday date"
-                            slotProps={{
-                              textField: {
-                                size: "small",
-                                fullWidth: true,
-                                style: { marginBottom: "8px" },
-                              },
-                            }}
-                            value={inputdata.date}
-                            onChange={(newDate) => handleDateChange(newDate)}
-                          />
-                        </DemoContainer>
-                      </LocalizationProvider>
-                      <FormControl size="small" fullWidth>
-                        <InputLabel id="holiday-type-label">
-                          Holiday type
-                        </InputLabel>
-                        <Select
-                          labelId="holiday-type-label"
-                          id="demo-simple-select"
-                          label="holiday type"
-                          className="mb-[8px]"
-                          value={type}
-                          name="type"
-                          onChange={(e) => setType(e.target.value)}
-                        >
-                          <MenuItem value="Optional">Optional</MenuItem>
-                          <MenuItem value="Mandatory">Mandatory</MenuItem>
-                        </Select>
-                      </FormControl>
-                      <FormControl size="small" fullWidth>
-                        <InputLabel id="region-label">Region</InputLabel>
-                        <Select
-                          labelId="region-label"
-                          id="demo-simple-select"
-                          label="Region"
-                          className="mb-[8px]"
-                          onChange={(e) => setRegion(e.target.value)}
-                          value={region}
-                          name="region"
-                        >
-                          {locations.map((location, idx) => (
-                            <MenuItem key={idx} value={location.shortName}>
-                              {location.shortName}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </div>
-
-                    <div className="mt-5 flex gap-5 justify-center">
-                      <Button
-                        onClick={doTheOperation}
-                        variant="contained"
-                        color="primary"
-                      >
-                        {operation}
-                      </Button>
-                      <Button color="error" variant="outlined">
-                        cancel
-                      </Button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="flex gap-5 py-5">
-                      <Button
-                        onClick={doTheOperation}
-                        variant="contained"
-                        color="secondary"
-                      >
-                        {operation}
-                      </Button>
-                      <Button
-                        onClick={handleClose}
-                        color="error"
-                        variant="contained"
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  </>
-                )}
-              </DialogContent>
-            </Dialog>
-          </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex gap-5 py-5">
+                    <Button
+                      onClick={handleClose}
+                      color="error"
+                      variant="contained"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={doTheOperation}
+                      variant="contained"
+                      color="secondary"
+                    >
+                      {operation}
+                    </Button>
+                  </div>
+                </>
+              )}
+            </DialogContent>
+          </Dialog>
         </article>
       </Setup>
     </section>

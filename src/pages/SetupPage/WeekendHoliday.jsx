@@ -5,6 +5,7 @@ import {
   DialogActions,
   DialogContent,
   IconButton,
+  DialogTitle,
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
@@ -16,6 +17,8 @@ import { useParams } from "react-router";
 import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
 import { Add, Info } from "@mui/icons-material";
+import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
+
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const SkeletonRow = () => (
@@ -206,9 +209,9 @@ const WeekendHoliday = () => {
         <article className="SetupSection bg-white w-[80%] h-max shadow-md rounded-sm border items-center">
           <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center gap-3 ">
-              {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
-                <WeekendOutlinedIcon className="!text-lg text-white" />
-              </div> */}
+              <div className="flex items-center justify-center">
+                <WeekendOutlinedIcon />
+              </div>
               <h1 className="!text-lg tracking-wide">Weekly Off</h1>
             </div>
             <Button
@@ -221,150 +224,151 @@ const WeekendHoliday = () => {
             </Button>
           </div>
 
-          <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-            <table className="min-w-full bg-white text-left !text-sm font-light">
-              <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-                <tr className="!font-semibold ">
-                  <th scope="col" className="!text-left pl-8 py-3 w-1/12">
-                    SR NO
-                  </th>
-                  <th scope="col" className="py-3 w-2/12 !mr-6">
-                    Days
-                  </th>
-                  <th scope="col" className="px-6 py-3 w-2/12">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {isLoading ? (
-                  <>
-                    <SkeletonRow />
-                    <SkeletonRow />
-                    <SkeletonRow />
-                  </>
-                ) : (
-                  data &&
-                  data?.map((item, idx) => (
-                    <tr className="!font-medium border-b !space-y-3" key={idx}>
-                      <td className="!text-left !pl-9 !mr-5 w-1/12 ">
-                        {idx + 1}
-                      </td>
-                      <td
-                        style={{ marginRight: "1rem" }}
-                        className="w-2/12 pt-2 pb-2"
+          {data && data.length > 0 ? (
+            <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
+              <table className="min-w-full bg-white text-left !text-sm font-light">
+                <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+                  <tr className="!font-semibold ">
+                    <th scope="col" className="!text-left pl-8 py-3 w-1/12">
+                      SR NO
+                    </th>
+                    <th scope="col" className="py-3 w-2/12 !mr-6">
+                      Days
+                    </th>
+                    <th scope="col" className="px-6 py-3 w-2/12">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {isLoading ? (
+                    <>
+                      <SkeletonRow />
+                      <SkeletonRow />
+                      <SkeletonRow />
+                    </>
+                  ) : (
+                    data.map((item, idx) => (
+                      <tr
+                        className="!font-medium border-b !space-y-3"
+                        key={idx}
                       >
-                        <div className="flex gap-1">
-                          {item.days.map((day, dayIdx) => (
-                            <Chip
-                              key={dayIdx}
-                              label={day.day}
-                              className="text-sm"
-                              style={{
-                                backgroundColor: getColor(day.day),
-                                borderRadius: "50%",
-                                width: "50px",
-                                height: "50px",
-                                cursor: "pointer",
-                                border: "1px solid gray",
-                                color: "white",
-                                fontSize: "12.5px",
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            />
-                          ))}
-                        </div>
-                      </td>
-                      <td className="px-6 w-2/12">
-                        <IconButton
-                          color="error"
-                          aria-label="delete"
-                          style={{ paddingTop: "0.8rem" }}
-                          onClick={() => {
-                            setID(item._id);
-                            setDeleteModel(true);
-                            console.log(ID);
-                          }}
+                        <td className="!text-left !pl-9 !mr-5 w-1/12 ">
+                          {idx + 1}
+                        </td>
+                        <td
+                          style={{ marginRight: "1rem" }}
+                          className="w-2/12 pt-2 pb-2"
                         >
-                          <DeleteOutlineIcon />
-                        </IconButton>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-            {data && data.length === 0 && (
-              <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
-                <article className="flex items-center mb-1 text-red-500 gap-2">
-                  <Info className="text-2xl" />
-                  <h1 className="text-xl font-semibold">Add Weekly Off</h1>
-                </article>
-                <p>No weekly offs found. Please add a weekly off.</p>
-              </section>
-            )}
+                          <div className="flex gap-1">
+                            {item.days.map((day, dayIdx) => (
+                              <Chip
+                                key={dayIdx}
+                                label={day.day}
+                                className="text-sm"
+                                style={{
+                                  backgroundColor: getColor(day.day),
+                                  borderRadius: "50%",
+                                  width: "50px",
+                                  height: "50px",
+                                  cursor: "pointer",
+                                  border: "1px solid gray",
+                                  color: "white",
+                                  fontSize: "12.5px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              />
+                            ))}
+                          </div>
+                        </td>
+                        <td className="px-6 w-2/12">
+                          <IconButton
+                            color="error"
+                            aria-label="delete"
+                            style={{ paddingTop: "0.8rem" }}
+                            onClick={() => {
+                              setID(item._id);
+                              setDeleteModel(true);
+                            }}
+                          >
+                            <DeleteOutlineIcon />
+                          </IconButton>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+              <article className="flex items-center mb-1 text-red-500 gap-2">
+                <Info className="text-2xl" />
+                <h1 className="text-lg font-semibold">Add Weekly Off</h1>
+              </article>
+              <p>No weekly offs found. Please add a weekly off.</p>
+            </section>
+          )}
 
-            <Dialog
-              open={deleteModel}
-              onClose={() => setDeleteModel(false)}
-              fullWidth
-            >
-              <DialogActions>
-                <DialogContent>
-                  <div className="flex flex-col gap-5">
-                    <h1 className="text-center text-2xl">Are you sure !</h1>
-                    <div className="flex gap-5">
-                      <Button
-                        variant="contained"
-                        color="error"
-                        onClick={handleDelete}
-                      >
-                        Yes
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => setDeleteModel(false)}
-                      >
-                        No
-                      </Button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </DialogActions>
-            </Dialog>
-            <Dialog open={openModel} onClose={handleOpenClose} fullWidth>
-              <DialogActions>
-                <DialogContent>
-                  <h1 className="!text-3xl text-center mb-8">Select days</h1>
-                  <div className="mb-6">
-                    <WeekdaySelector
-                      selectedDays={selectedDays}
-                      handleDayToggle={handleDayToggle}
-                      getColor={getColor}
-                    />
-                  </div>
-                  <div className="flex gap-5 !pt-5 justify-center">
-                    <Button
-                      onClick={handleSubmit}
-                      variant="contained"
-                      color="primary"
-                    >
-                      {editItem ? "Update" : "Set"}
-                    </Button>
-                    <Button
-                      onClick={handleOpenClose}
-                      color="error"
-                      variant="outlined"
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </DialogContent>
-              </DialogActions>
-            </Dialog>
-          </div>
+          <Dialog open={deleteModel} onClose={() => setDeleteModel(false)}>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogContent>
+              <p>
+                Please confirm your decision to delete this weekly off, as this
+                action cannot be undone.
+              </p>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={() => setDeleteModel(false)}
+                variant="outlined"
+                color="primary"
+                size="small"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={handleDelete}
+                color="error"
+              >
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          <Dialog open={openModel} onClose={handleOpenClose} fullWidth>
+            <DialogActions>
+              <DialogContent>
+                <h1 className="!text-3xl text-center mb-8">Select days</h1>
+                <div className="mb-6">
+                  <WeekdaySelector
+                    selectedDays={selectedDays}
+                    handleDayToggle={handleDayToggle}
+                    getColor={getColor}
+                  />
+                </div>
+                <div className="flex gap-5 !pt-5  justify-end ">
+                  <Button
+                    onClick={handleOpenClose}
+                    color="error"
+                    variant="outlined"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleSubmit}
+                    variant="contained"
+                    color="primary"
+                  >
+                    {editItem ? "Apply" : "Submit"}
+                  </Button>
+                </div>
+              </DialogContent>
+            </DialogActions>
+          </Dialog>
         </article>
       </Setup>
     </section>
