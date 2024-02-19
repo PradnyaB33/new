@@ -42,8 +42,6 @@ const LeaveTypes = ({ open, handleClose, id }) => {
   );
 
   const handleCreateLeave = () => {
-    console.log("he");
-
     setConfirmOpen(true);
   };
 
@@ -124,7 +122,9 @@ const LeaveTypes = ({ open, handleClose, id }) => {
       </Setup>
       <CreteLeaveTypeModal
         open={confirmOpen}
-        handleClose={() => setConfirmOpen(false)}
+        handleClose={() => {
+          setConfirmOpen(false);
+        }}
       />
     </section>
   );

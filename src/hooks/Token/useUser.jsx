@@ -8,7 +8,7 @@ const useGetUser = () => {
   const authToken = cookies["aegis"];
   let decodedToken = null;
   if (authToken) {
-    jwtDecode(authToken);
+    decodedToken = jwtDecode(authToken);
   }
   return { authToken, decodedToken };
 };
