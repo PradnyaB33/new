@@ -5,7 +5,7 @@ import { useParams } from "react-router";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
-
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 const Inputfield = () => {
   const { organisationId } = useParams("");
   const { cookies } = useContext(UseContext);
@@ -77,9 +77,9 @@ const Inputfield = () => {
         <Setup>
           <div className="SetupSection bg-white lg:w-4/5 md:w-3/4 w-full shadow-md rounded-sm border items-center mx-auto">
             <div className="p-4  border-b-[.5px] flex items-center  gap-3 w-full border-gray-300">
-              {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
-                <InputIcon className="!text-lg text-white" />
-              </div> */}
+              <div className="flex items-center justify-center">
+                <PersonOutlineOutlinedIcon />
+              </div>
               <h1 className="!text-lg">Additional Employee Data</h1>
             </div>
 

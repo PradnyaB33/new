@@ -16,6 +16,16 @@ body {
   text-align: center;
 }
 
+.bluegrad {
+  background: rgb(3, 61, 215);
+  background: linear-gradient(
+    83deg,
+    rgba(3, 61, 215, 1) 2%,
+    rgba(2, 96, 255, 1) 37%,
+    rgba(0, 212, 255, 1) 100%
+  );
+}
+
 .bg__gradient {
   /* height: 800px;
   width: 800px; */

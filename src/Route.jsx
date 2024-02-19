@@ -20,12 +20,12 @@ import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
 import DeleteEmployee from "./pages/Employee/DeleteEmployee";
 import EmployeeList from "./pages/Employee/EmployeeList";
-import EmployeeAdd from "./pages/Employee/addemploye";
 import Home from "./pages/Home/Home";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
 import PaymentFailed from "./pages/Payment/page";
+import IncomeTax from "./pages/Payroll/IncomeTax";
 import SalaryCalculate from "./pages/SalaryCalculate/SalaryCalculate";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeSalaryCalculateDay from "./pages/SetUpOrganization/EmoloyeeSalaryCalculate/EmployeeSalaryCalculate";
@@ -307,7 +307,8 @@ const App = () => {
           <RequireAuth
             permission={["Super-Admin", "Delegate-Super Admin", "Hr"]}
           >
-            <EmployeeAdd />
+            {/* <EmployeeAdd /> */}
+            <EmployeeTest />
           </RequireAuth>
         }
       />
@@ -594,6 +595,7 @@ const App = () => {
           </RequireAuth>
         }
       />
+      <Route path="/income-tax" element={<IncomeTax />} />
       <Route path="/application" element={<Application />} />
       <Route
         path="/leave"

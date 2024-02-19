@@ -112,7 +112,8 @@ const LeaveTypeEditBox = ({ leaveType, index }) => {
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this leave type?
+            Please confirm your decision to delete the leave, as this action
+            cannot be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -120,11 +121,18 @@ const LeaveTypeEditBox = ({ leaveType, index }) => {
             onClick={() => {
               setConfirmOpen(false);
             }}
+            variant="outlined"
             color="primary"
+            size="small"
           >
             Cancel
           </Button>
-          <Button onClick={handleDeleteType} color="primary">
+          <Button
+            variant="contained"
+            size="small"
+            onClick={handleDeleteType}
+            color="error"
+          >
             Delete
           </Button>
         </DialogActions>

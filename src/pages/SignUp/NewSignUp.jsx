@@ -140,7 +140,7 @@ const SignIn = () => {
         handleAlert(
           true,
           "success",
-          "otp has been send successfully on your device"
+          "OTP has been send successfully on your device"
         );
         setdisplay(true);
         setTime(1);
@@ -189,7 +189,7 @@ const SignIn = () => {
 
   const phone = getValues("phone");
   const SendOtp = () => {
-    OtpRequest.mutateAsync(phone);
+    OtpRequest.mutate(phone);
   };
 
   const VerifyOtp = () => {
@@ -199,26 +199,20 @@ const SignIn = () => {
       handleAlert(true, "warning", "Otp and number are required fields");
       return false;
     }
-    VerifyOtpRequest.mutateAsync(data);
+    VerifyOtpRequest.mutate(data);
   };
 
   return (
     <>
       <section className="flex  w-full">
         {/* Left Section */}
-        <div className="w-[30%] h-auto lg:flex hidden text-white flex-col items-center justify-center relative ">
-          <div className="bg__gradient  h-screen inset-0  "></div>
-          <ul className="circles h-screen inset-0  ">
-            {[...Array(10)].map((_, index) => (
-              <li key={index}></li>
-            ))}
-          </ul>
-          <div className="space-y-2 mb-8 flex-col flex items-center justify-center">
-            {/* image here */}
+        <article className="!w-[40%] bluegrad  h-auto lg:block hidden text-white flex-col  ">
+          <div className="space-y-2 mb-8 h-screen flex-col flex items-center justify-center">
+            <img src="/HRMS.svg" className="w-[70%]" alt="none" />
           </div>
-        </div>
+        </article>
         {/* Right Section */}
-        <article className="lg:w-[70%]   h-max min-h-screen bg-white  w-full md:block flex items-center flex-col justify-center">
+        <article className="lg:!w-[60%] w-full h-max min-h-screen  md:block flex items-center flex-col justify-center">
           <div className="md:flex hidden  w-full py-4 px-8  gap-4 items-center justify-center lg:justify-end">
             <p>
               {location.pathname === "/sign-up"
@@ -239,27 +233,28 @@ const SignIn = () => {
           <form
             onSubmit={handleSubmit(onSubmit)}
             autoComplete="off"
-            className="flex md:px-20 my-10 !px-8 w-full md:w-max bg-white flex-col h-fit gap-1"
+            className="flex   my-10 !px-20 lg:w-[80%] w-full bg-white flex-col h-fit gap-1"
           >
-            <div className="flex md:space-x-4 space-x-2 mb-4 items-center">
-              <img
+            <div className="flex-col gap-4 w-max !flex md:space-x-4  space-x-2 mb-4 ">
+              {/* <img
                 src="/logo.svg"
-                className="md:h-[45px] !h-[35px]"
+                className="md:h-[60px] !h-[50px]"
                 alt="logo"
-              />
+              /> */}
               <div className="flex flex-col space-y-1">
                 {/* <div className="mb-4"> */}
-                <h1 className="font-[600] text-2xl md:text-3xl">
-                  Register for AEGIS Account
+                <h1 className="font-bold text-2xl md:text-3xl">
+                  Register Account
                 </h1>
-                <p className="md:text-lg text-sm">
+
+                {/* <p className="md:text-lg text-sm">
                   Enter your credentials below
-                </p>
+                </p> */}
                 {/* </div> */}
               </div>
             </div>
-            {/* <div className="flex space-x-4 items-center">
-              <img src="/logo.svg" className="h-[45px]" alt="logo" />
+            {/* gap-4 <div className="flex space-x-4 items-center">
+              <img src="/logo.svg" className="h-[906x]" alt="80ogo" />
               <div className="flex flex-col space-y-1">
                 <h1 className="font-[600] text-3xl">
                   Register for AEGIS Account
@@ -267,7 +262,7 @@ const SignIn = () => {
                 <p className="text-lg">Enter your credentials below</p>
               </div>
             </div> */}
-            <div className="flex md:flex-row flex-col gap-2">
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
               {/* First Name */}
               <AuthInputFiled
                 name="first_name"
@@ -276,7 +271,7 @@ const SignIn = () => {
                 type="text"
                 placeholder="jhon"
                 label="First Name *"
-                maxLimit={10}
+                maxLimit={15}
                 errors={errors}
                 error={errors.first_name}
               />
@@ -288,7 +283,7 @@ const SignIn = () => {
                 placeholder="xyz"
                 label="Middle Name"
                 errors={errors}
-                maxLimit={10}
+                maxLimit={15}
                 error={errors.middle_name}
               />
             </div>
@@ -301,11 +296,11 @@ const SignIn = () => {
               label="Last Name *"
               placeholder="Doe"
               errors={errors}
-              maxLimit={10}
+              maxLimit={15}
               error={errors.last_name}
             />
             {/* Phone Number */}
-            <div className="flex  items-center gap-2">
+            <div className="grid grid-cols-2 items-center gap-2">
               <AuthInputFiled
                 name="phone"
                 icon={Phone}
@@ -338,13 +333,13 @@ const SignIn = () => {
                       "bg-gray-400 text-gray-900"
                     }`}
                   >
-                    Get Otp
+                    Get OTP
                   </button>
                 </div>
               )}
               {isTimeVisible && (
                 <p>
-                  Resend otp {Math.floor(time / 60)}:
+                  Resend OTP {Math.floor(time / 60)}:
                   {(time % 60).toString().padStart(2, "0")}
                 </p>
               )}
@@ -373,7 +368,7 @@ const SignIn = () => {
                   onClick={VerifyOtp}
                   className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
                 >
-                  Verify Otp
+                  Verify OTP
                 </button>
               </div>
             )}
@@ -388,7 +383,7 @@ const SignIn = () => {
               error={errors.email}
             />
 
-            <div className="flex md:flex-row flex-col gap-2">
+            <div className="grid md:grid-cols-2 grid-cols-1  gap-2">
               <AuthInputFiled
                 name="password"
                 icon={Lock}
@@ -417,13 +412,13 @@ const SignIn = () => {
             <div className="flex gap-5 mt-2">
               <button
                 type="submit"
-                className=" flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                className=" flex group justify-center w-full  gap-2 items-center rounded-md h-max px-4 py-2 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
               >
                 Register Account
               </button>
             </div>
 
-            <p className="flex md:hidden gap-2 my-2">
+            <p className="flex gap-2 my-2">
               Aleady have an account?
               <Link
                 to={location.pathname === "/sign-up" ? "/sign-in" : "/sign-up"}

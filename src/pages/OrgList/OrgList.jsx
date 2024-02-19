@@ -45,13 +45,13 @@ const OrgList = () => {
                   Organisations
                 </h1>
                 <p className="md:text-lg text-sm ">
-                  Select and Manage Your Oragnisation
+                  Select and Manage Your Organisation
                 </p>
               </div>
             </div>
 
             <Link to={"/add-organisation"}>
-              <button className=" flex  group justify-center gap-2 items-center rounded-md md:px-6 md:py-[.3rem] text-xs p-2  md:text-sm text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
+              <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
                 Add Organisation
               </button>
             </Link>

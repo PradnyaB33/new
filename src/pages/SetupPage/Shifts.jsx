@@ -1,5 +1,7 @@
-import { AccessTimeFilled, Info } from "@mui/icons-material";
-import WarningIcon from "@mui/icons-material/Warning";
+import { Add, Info } from "@mui/icons-material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+
 import {
   Avatar,
   AvatarGroup,
@@ -14,7 +16,6 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import dayjs from "dayjs";
-import randomColor from "randomcolor";
 import React, { useContext, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -23,9 +24,7 @@ import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import ShiftModal from "../../components/Modal/shift/ShiftModal";
 import Setup from "../SetUpOrganization/Setup";
-import { Add } from "@mui/icons-material";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
 const Shifts = () => {
   const { organisationId } = useParams("");
   const { cookies } = useContext(UseContext);
@@ -34,6 +33,7 @@ const Shifts = () => {
   const { handleAlert } = useContext(TestContext);
 
   const [error, setError] = useState("");
+  console.log(error);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
 
   const [open, setOpen] = React.useState(false);
@@ -112,9 +112,9 @@ const Shifts = () => {
           <article className="SetupSection bg-white w-[80%]  h-max shadow-md rounded-sm border  items-center">
             <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
               <div className="flex items-center  gap-3 ">
-                {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
-                  <EventAvailableOutlined className="!text-lg text-white" />
-                </div> */}
+                <div className="flex items-center justify-center">
+                  <ScheduleOutlinedIcon />
+                </div>
 
                 <h1 className="!text-lg tracking-wide">Shifts</h1>
               </div>
@@ -177,9 +177,7 @@ const Shifts = () => {
                                 <tr
                                   id={index}
                                   key={index}
-                                  className={`${
-                                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                                  } border-b dark:border-neutral-500`}
+                                  className={`${"bg-white"} border-b dark:border-neutral-500`}
                                 >
                                   <td className="whitespace-nowrap px-6 py-2 font-medium">
                                     {index + 1}
@@ -192,10 +190,10 @@ const Shifts = () => {
                                   </td>
                                   <td className="whitespace-nowrap font-semibold px-6 py-2">
                                     <Chip
-                                      icon={<AccessTimeFilled />}
+                                      // icon={<AccessTimeFilled />}
                                       size="small"
                                       variant="outlined"
-                                      color="success"
+                                      // color="success"
                                       label={convertTo12HourFormat(
                                         items.startTime
                                       )}
@@ -203,30 +201,26 @@ const Shifts = () => {
                                   </td>
                                   <td className="whitespace-nowrap font-semibold px-6 py-2">
                                     <Chip
-                                      icon={<AccessTimeFilled />}
+                                      // icon={<AccessTimeFilled />}
                                       variant="outlined"
                                       size="small"
-                                      color="success"
+                                      // color="success"
                                       label={convertTo12HourFormat(
                                         items.endTime
                                       )}
                                     />
                                   </td>
 
-                                  <td className="whitespace-nowrap text-left px-6 py-2">
+                                  <td className="whitespace-nowrap !text-left px-6 py-2">
                                     <AvatarGroup max={6}>
                                       {items?.selectedDays.map((item) => (
                                         <Avatar
                                           src="dsadsa"
                                           key={item}
-                                          className="!text-xs "
+                                          className="!text-xs !bg-sky-500 !text-white "
                                           sx={{
                                             width: 35,
                                             height: 35,
-                                            backgroundColor: randomColor({
-                                              seed: item,
-                                              luminosity: "dark",
-                                            }),
                                           }}
                                         >
                                           {item.slice(0, 3)}
@@ -264,7 +258,7 @@ const Shifts = () => {
                       <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
                         <article className="flex items-center mb-1 text-red-500 gap-2">
                           <Info className="text-2xl" />
-                          <h1 className="text-xl font-semibold">Add Shift</h1>
+                          <h1 className="text-lg font-semibold">Add Shift</h1>
                         </article>
                         <p>No shifts found. Please add type of shift.</p>
                       </section>
@@ -290,9 +284,7 @@ const Shifts = () => {
         open={deleteConfirmation !== null}
         onClose={handleCloseConfirmation}
       >
-        <DialogTitle color={error}>
-          <WarningIcon color="error" /> Are you sure to delete the shift?
-        </DialogTitle>
+        <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <p>
             Please confirm your decision to delete the shift, as this action

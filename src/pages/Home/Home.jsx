@@ -58,11 +58,11 @@ const Home = () => {
     <>
       <div className="md:p-8 py-4 px-0 bg-white h-screen">
         <div className="flex items-center h-[70vh] justify-center w-full">
-          <div className="md:!w-max w-full md:px-8 px-0 flex justify-end items-end  flex-col">
-            <div className="w-full md:w-max md:px-0 px-2">
+          <div className="xl:!w-max w-full md:px-8 px-0 flex justify-center items-center xl:justify-end xl:items-end  flex-col">
+            <div className="w-full  lg:w-max md:px-0 px-2">
               <h1 className="md:text-[2.30rem] w-max xs:text-[1.5rem] font-thin">
                 Welcome to{" "}
-                <span className="md:text-[2.30rem] w-max xs:text-[1.5rem]  gradinet font-semibold text-blue-500 ">
+                <span className="md:text-[2.30rem] xl:text-left text-center w-max xs:text-[1.5rem]  gradinet font-semibold text-blue-500 ">
                   AEGIS
                 </span>{" "}
               </h1>
@@ -70,7 +70,7 @@ const Home = () => {
                 Unleashing
                 <span className="gradinet font-bold">
                   {" "}
-                  Organizational Excellence
+                  Organisational Excellence
                 </span>
               </h1>
 
@@ -90,14 +90,14 @@ const Home = () => {
               ) : data?.organizations.length <= 0 ? (
                 <Link className="!w-max !block" to={"/add-organisation"}>
                   <button className="!w-max flex group justify-center  gap-2 items-center rounded-md px-4 py-3 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
-                    Create your organization{" "}
+                    Create Your Organisation{" "}
                     <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
                   </button>
                 </Link>
               ) : (
                 <Link to={"/organizationList"} className="!w-max !block">
                   <button className=" flex  group justify-center gap-2 items-center rounded-md p-2 !text-xs md:px-6 md:py-3 md:!text-[1em] font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
-                    Go to Organization{" "}
+                    Go To Organisation{" "}
                     <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
                   </button>
                 </Link>
@@ -105,8 +105,8 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="md:block hidden">
-            <img src="Home.svg" className="h-[350px]" alt="none" />
+          <div className="xl:block hidden">
+            <img src="Home.svg" className="h-[400px]" alt="none" />
           </div>
         </div>
       </div>

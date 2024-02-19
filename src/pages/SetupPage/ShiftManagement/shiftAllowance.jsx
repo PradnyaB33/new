@@ -54,43 +54,6 @@ const ShiftManagement = () => {
     }
   );
 
-  // no need to create new shift here
-  // const createLeaves = async () => {
-  //   newAppliedLeaveEvents.forEach(async (value) => {
-  //     try {
-  //       await axios.post(
-  //         `${process.env.REACT_APP_API}/route/leave/create`,
-  //         value,
-  //         {
-  //           headers: {
-  //             Authorization: authToken,
-  //           },
-  //         }
-  //       );
-  //     } catch (error) {
-  //       console.error(`🚀 ~ error:`, error);
-  //       handleAlert(
-  //         true,
-  //         "error",
-  //         error?.response?.data?.message || "Leaves not created succcesfully"
-  //       );
-  //     }
-  //   });
-  // };
-  // const leaveMutation = useMutation(createLeaves, {
-  //   onSuccess: () => {
-  //     console.log("success");
-
-  //     queryclient.invalidateQueries("employee-leave-table");
-  //     queryclient.invalidateQueries("employee-leave-table");
-  //     queryclient.invalidateQueries("employee-summary-table");
-  //     queryclient.invalidateQueries("employee-leave-table-without-default");
-  //     setNewAppliedLeaveEvents([]);
-  //   },
-  //   onError: (error) => {
-  //     console.error(error);
-  //   },
-  // });
   const handleInputChange = () => {
     setCalendarOpen(true);
     setSelectedLeave(null);
