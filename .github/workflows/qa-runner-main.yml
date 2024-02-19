@@ -5,6 +5,10 @@ on:
     branches:
       - qa-branch
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Main to QA Branch"]
+    types:
+      - completed
 jobs:
   build:
     runs-on: ubuntu-latest
