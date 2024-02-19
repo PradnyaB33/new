@@ -175,9 +175,7 @@ const Shifts = () => {
                                 <tr
                                   id={index}
                                   key={index}
-                                  className={`${
-                                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                                  } border-b dark:border-neutral-500`}
+                                  className={`${"bg-white"} border-b dark:border-neutral-500`}
                                 >
                                   <td className="whitespace-nowrap px-6 py-2 font-medium">
                                     {index + 1}

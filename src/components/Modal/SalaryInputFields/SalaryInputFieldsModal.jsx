@@ -107,9 +107,11 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
     salaryLength: "",
   });
 
-  const validateForm = () => {
+  const validateForm = (data) => {
     const newErrors = { ...errors };
     let isValid = true;
+
+    console.log(data);
 
     if (!userInput.name.trim()) {
       newErrors.name = "Name is required";
@@ -117,6 +119,18 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
     } else {
       newErrors.name = "";
     }
+
+    const found = [];
+
+    const isExists = data?.salaryStructure.some((item) => {
+      if (found.find((salary) => salary === item.salaryComponent)) {
+        return true;
+      }
+      found.push(item.salaryComponent);
+      return false;
+    });
+
+    console.log(isExists);
 
     if (!empTypes) {
       newErrors.empTypes = "Employment Types is required";
@@ -127,6 +141,14 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
 
     if (salaryStructures.length <= 0) {
       newErrors.salaryLength = "Please add at list one salary input";
+      isValid = false;
+    } else {
+      newErrors.salaryLength = "";
+    }
+
+    if (isExists) {
+      newErrors.salaryLength =
+        "You can't select same salary component multiple times";
       isValid = false;
     } else {
       newErrors.salaryLength = "";
@@ -196,16 +218,6 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   };
 
   const handleSalaryStructureChange = (index, field, value) => {
-    if (salaryStructures.some((ext) => ext.salaryComponent === value)) {
-      setSalaryStructures((prevStructures) => {
-        const newStructures = [...prevStructures];
-        newStructures.splice(index);
-        return newStructures;
-      });
-      handleAlert(true, "warning", "You cannot select same salary component");
-      return false;
-    }
-
     setSalaryStructures((prevStructures) => {
       const newStructures = [...prevStructures];
       newStructures[index][field] = value;
@@ -281,16 +293,15 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const isValid = validateForm();
+    const data = {
+      salaryStructure: salaryStructures,
+      ...userInput,
+      empType: empTypes,
+    };
+    const isValid = validateForm(data);
 
     if (isValid) {
       try {
-        const data = {
-          salaryStructure: salaryStructures,
-          ...userInput,
-          empType: empTypes,
-        };
-
         if (salaryId) {
           await EditSalaryTemplate.mutateAsync(data);
         } else {

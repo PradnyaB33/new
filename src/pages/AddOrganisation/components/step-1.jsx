@@ -84,7 +84,7 @@ const Step1 = ({ nextStep }) => {
       location: location,
       contact_number: contact_number,
       description: description,
-      creator: decodedToken.user._id,
+      creator: decodedToken?.user?._id,
       logo_url: logo_url,
       isTrial: isTrial,
     },

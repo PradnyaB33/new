@@ -6,7 +6,7 @@ import {
   Groups,
   LocationOn,
 } from "@mui/icons-material";
-import { default as React } from "react";
+import { default as React, useEffect } from "react";
 import { useQueryClient } from "react-query";
 import { useLocation } from "react-router-dom/dist";
 import Select from "react-select";
@@ -45,7 +45,14 @@ const DashBoardHR = () => {
     setDepartment,
     salaryData,
     absentEmployee,
+    getAttendenceData,
   } = useDashboardFilter(user.organizationId);
+
+  useEffect(() => {
+    if (location.pathname?.includes("/DH-dashboard")) {
+      getAttendenceData();
+    }
+  }, []);
 
   return (
     <section className=" bg-gray-50  min-h-screen w-full ">

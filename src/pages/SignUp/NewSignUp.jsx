@@ -140,7 +140,7 @@ const SignIn = () => {
         handleAlert(
           true,
           "success",
-          "otp has been send successfully on your device"
+          "OTP has been send successfully on your device"
         );
         setdisplay(true);
         setTime(1);
@@ -189,7 +189,7 @@ const SignIn = () => {
 
   const phone = getValues("phone");
   const SendOtp = () => {
-    OtpRequest.mutateAsync(phone);
+    OtpRequest.mutate(phone);
   };
 
   const VerifyOtp = () => {
@@ -199,7 +199,7 @@ const SignIn = () => {
       handleAlert(true, "warning", "Otp and number are required fields");
       return false;
     }
-    VerifyOtpRequest.mutateAsync(data);
+    VerifyOtpRequest.mutate(data);
   };
 
   return (
@@ -207,20 +207,6 @@ const SignIn = () => {
       <section className="flex  w-full">
         {/* Left Section */}
         <article className="!w-[40%] bluegrad  h-auto lg:block hidden text-white flex-col  ">
-          {/* <div className="bg__gradient  h-screen inset-0  "></div>
-          <ul className="circles h-screen inset-0  ">
-            {[...Array(10)].map((_, index) => (
-              <li key={index}></li>
-            ))}
-          </ul> */}
-
-          {/* <div className="p-8">
-            <img
-              src="/logo.svg"
-              className="md:h-[60px] !h-[50px] "
-              alt="logo"
-            />
-          </div> */}
           <div className="space-y-2 mb-8 h-screen flex-col flex items-center justify-center">
             <img src="/HRMS.svg" className="w-[70%]" alt="none" />
           </div>
@@ -347,13 +333,13 @@ const SignIn = () => {
                       "bg-gray-400 text-gray-900"
                     }`}
                   >
-                    Get Otp
+                    Get OTP
                   </button>
                 </div>
               )}
               {isTimeVisible && (
                 <p>
-                  Resend otp {Math.floor(time / 60)}:
+                  Resend OTP {Math.floor(time / 60)}:
                   {(time % 60).toString().padStart(2, "0")}
                 </p>
               )}
@@ -382,7 +368,7 @@ const SignIn = () => {
                   onClick={VerifyOtp}
                   className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
                 >
-                  Verify Otp
+                  Verify OTP
                 </button>
               </div>
             )}

@@ -45,7 +45,7 @@ const OrgList = () => {
                   Organisations
                 </h1>
                 <p className="md:text-lg text-sm ">
-                  Select and Manage Your Oragnisation
+                  Select and Manage Your Organisation
                 </p>
               </div>
             </div>
