@@ -60,6 +60,7 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
           },
         }
       );
+      console.log(response);
       handleAlert(true, "success", response.data.message);
       setTimeout(() => {
         handleAlert(false, "success", "");
@@ -106,7 +107,7 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
           <div className="flex gap-4 items-center">
             <div className="space-y-2">
               <label className="text-md" htmlFor="demo-simple-select-label">
-                Employee ID prefix (yes or no)
+                Employee ID prefix (Yes or No)
               </label>
               <FormControl size="small" className="w-full">
                 <InputLabel id="demo-simple-select-label">
@@ -118,7 +119,7 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
                   onChange={handleInputChange}
                   label=" prefix character"
                 >
-                  <MenuItem value={true}>yes</MenuItem>
+                  <MenuItem value={true}>Yes</MenuItem>
                   <MenuItem value={false}>No</MenuItem>
                 </Select>
               </FormControl>
@@ -163,12 +164,12 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
           </FormControl>
         </div>
 
-        <div className="flex gap-4 mt-4  justify-center mr-4">
+        <div className="flex gap-4 mt-4   justify-end mr-4 mb-4">
           <Button onClick={handleClose} color="error" variant="outlined">
             Cancel
           </Button>
           <Button onClick={handleSubmit} variant="contained" color="primary">
-            Apply
+            Submit
           </Button>
         </div>
       </Box>

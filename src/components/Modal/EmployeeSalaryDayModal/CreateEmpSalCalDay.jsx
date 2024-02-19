@@ -140,12 +140,12 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
             />
           </div>
 
-          <div className="flex gap-4  mt-4  justify-center">
+          <div className="flex gap-4 mt-4 mr-4  mb-4 justify-end ">
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>
             <Button onClick={handleSubmit} variant="contained" color="primary">
-              Apply
+              Submit
             </Button>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { Info, Warning } from "@mui/icons-material";
+import { Info } from "@mui/icons-material";
 import {
   Button,
   Dialog,
@@ -20,6 +20,8 @@ import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
 import { Add } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
+
 const EmployeeSalaryCalculateDay = () => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
@@ -135,9 +137,9 @@ const EmployeeSalaryCalculateDay = () => {
           <article className="SetupSection bg-white w-[100%] md:w-[80%]  h-max shadow-md rounded-sm border  items-center">
             <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
               <div className="flex items-center  gap-3 ">
-                {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
-                  <EventNoteOutlinedIcon className="!text-lg text-white" />
-                </div> */}
+                <div className="flex items-center justify-center">
+                  <EventNoteOutlinedIcon />
+                </div>
                 <h1 className="!text-lg tracking-wide">
                   Salary Computation Day
                 </h1>
@@ -204,7 +206,7 @@ const EmployeeSalaryCalculateDay = () => {
               <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
                 <article className="flex items-center mb-1 text-red-500 gap-2">
                   <Info className="!text-2xl" />
-                  <h1 className="text-xl font-semibold">
+                  <h1 className="text-lg font-semibold">
                     Add Salary Computation Day
                   </h1>
                 </article>
@@ -223,14 +225,11 @@ const EmployeeSalaryCalculateDay = () => {
         open={deleteConfirmation !== null}
         onClose={handleCloseConfirmation}
       >
-        <DialogTitle color={"error"}>
-          <Warning color="error" /> All information of salary computation day
-          will be deleted. Are you sure you want to delete it?
-        </DialogTitle>
+        <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <p>
             Please confirm your decision to delete this salary computation day,
-            as this action cannot be retrived
+            as this action cannot be undone.
           </p>
         </DialogContent>
         <DialogActions>

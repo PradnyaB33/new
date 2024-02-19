@@ -1,4 +1,4 @@
-import { Add, Info, MoreHoriz, Warning } from "@mui/icons-material";
+import { Add, Info, MoreHoriz } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
@@ -20,6 +20,8 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import SalaryInputFieldsModal from "../../../components/Modal/SalaryInputFields/SalaryInputFieldsModal";
 import Setup from "../Setup";
 import SkeletonSalaryInput from "./SkeletonSalaryInput";
+import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+
 const SalaryInput = () => {
   const { organisationId } = useParams();
   const { cookies } = useContext(UseContext);
@@ -122,9 +124,9 @@ const SalaryInput = () => {
           <article className="SetupSection bg-white w-[80%]  h-max shadow-md rounded-sm border  items-center">
             <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
               <div className="flex items-center  gap-3 ">
-                {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
-                  <PriceChangeOutlined className="!text-lg text-white" />
-                </div> */}
+                <div className=" flex items-center justify-center">
+                  <MonetizationOnOutlinedIcon />
+                </div>
                 <h1 className="!text-lg tracking-wide">Salary Template</h1>
               </div>
               <Button
@@ -203,7 +205,7 @@ const SalaryInput = () => {
               <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
                 <article className="flex items-center mb-1 text-red-500 gap-2">
                   <Info className="!text-2xl" />
-                  <h1 className="text-xl font-semibold">Add Salary Template</h1>
+                  <h1 className="text-lg font-semibold">Add Salary Template</h1>
                 </article>
                 <p>No salary template found .Please add a salary template.</p>
               </section>
@@ -276,13 +278,11 @@ const SalaryInput = () => {
         open={deleteConfirmation !== null}
         onClose={handleCloseConfirmation}
       >
-        <DialogTitle color={"error"}>
-          <Warning color="error" /> Are you sure to delete the Salary Template?
-        </DialogTitle>
+        <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <p>
             Please confirm your decision to delete this salary template, as this
-            action cannot be undone
+            action cannot be undone.
           </p>
         </DialogContent>
         <DialogActions>
