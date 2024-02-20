@@ -1,10 +1,12 @@
 import { ErrorMessage } from "@hookform/error-message/dist";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  Badge,
   CalendarMonthOutlined,
-  CorporateFare,
   Description,
   FactoryOutlined,
+  Link,
+  LinkedIn,
   LocalPostOffice,
   TodayOutlined,
 } from "@mui/icons-material";
@@ -41,7 +43,6 @@ const organizationSchema = z.object({
 });
 const Step1 = ({ nextStep }) => {
   const { decodedToken } = useGetUser();
-  console.log(`🚀 ~ file: step-1.jsx:39 ~ decodedToken:`, decodedToken);
 
   const {
     orgName,
@@ -111,13 +112,13 @@ const Step1 = ({ nextStep }) => {
         <div className="grid md:grid-cols-2 md:gap-4 gap-0 px-4 grid-cols-1">
           <AuthInputFiled
             name="orgName"
-            icon={CorporateFare}
+            icon={Badge}
             control={control}
             type="text"
             placeholder="Organization Name"
             label="Organization Name *"
             errors={errors}
-            error={errors.name}
+            error={errors.orgName}
           />
           <AuthInputFiled
             name="foundation_date"
@@ -131,7 +132,7 @@ const Step1 = ({ nextStep }) => {
           />
           <AuthInputFiled
             name="web_url"
-            icon={CorporateFare}
+            icon={Link}
             control={control}
             type="text"
             placeholder="Web Url "
@@ -141,7 +142,7 @@ const Step1 = ({ nextStep }) => {
           />
           <AuthInputFiled
             name="organization_linkedin_url"
-            icon={CorporateFare}
+            icon={LinkedIn}
             control={control}
             type="text"
             placeholder="LinkedIn url "
