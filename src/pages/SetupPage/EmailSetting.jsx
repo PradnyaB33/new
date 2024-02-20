@@ -90,7 +90,7 @@ const EmailSetting = () => {
       setAppAlert({
         alert: true,
         type: "success",
-        msg: "Email created successfully!",
+        msg: "Email created successfully.",
       });
 
       setNewHandleOpen(false);
@@ -134,7 +134,7 @@ const EmailSetting = () => {
       setAppAlert({
         alert: true,
         type: "success",
-        msg: "Email Deleted Successfully.",
+        msg: "Email deleted successfully.",
       });
       setEmails(emails.filter((data) => data._id !== editEmailId));
       setHandleDeleteOpen(false);
@@ -162,7 +162,7 @@ const EmailSetting = () => {
       setEditEmail(emailDetails.email);
     } catch (error) {
       console.log(error);
-      console.log("Error occurred while fetching email details");
+      console.log("An Error occurred while fetching email details");
     }
   };
 
@@ -189,7 +189,7 @@ const EmailSetting = () => {
       setAppAlert({
         alert: true,
         type: "success",
-        msg: "Email Updated Successfully.",
+        msg: "Email updated successfully.",
       });
       setEmails(
         emails.map((data) =>

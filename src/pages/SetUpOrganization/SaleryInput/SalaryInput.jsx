@@ -92,11 +92,7 @@ const SalaryInput = () => {
       onSuccess: () => {
         // Invalidate and refetch the data after successful deletion
         queryClient.invalidateQueries("salaryTemplates");
-        handleAlert(
-          true,
-          "success",
-          "Salary Template Types deleted succesfully"
-        );
+        handleAlert(true, "success", "Salary Template  deleted succesfully.");
       },
     }
   );

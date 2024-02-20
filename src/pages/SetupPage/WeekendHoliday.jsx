@@ -110,11 +110,11 @@ const WeekendHoliday = () => {
           { days: daysArray }
         );
 
-        console.log("Successfully updated");
+        console.log("Day updated successfully.");
         setAppAlert({
           alert: true,
           type: "success",
-          msg: "Days Updated Successfully!",
+          msg: "Day updated successfully!",
         });
       } else {
         const existingWeekend = await axios.get(
@@ -136,7 +136,7 @@ const WeekendHoliday = () => {
         setAppAlert({
           alert: true,
           type: "success",
-          msg: "Days Created Successfully!",
+          msg: "Weekend created successfully.",
         });
       }
 
@@ -165,7 +165,7 @@ const WeekendHoliday = () => {
       setAppAlert({
         alert: true,
         type: "success",
-        msg: "Weekend Deleted Successfully!",
+        msg: "Weekend deleted successfully.",
       });
       handleOpenClose();
       queryClient.invalidateQueries("days");

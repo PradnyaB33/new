@@ -139,11 +139,11 @@ const DepartmentDeletion = () => {
       console.log(file);
 
       if (!file) {
-        console.error("Please upload an Excel file.");
+        console.error("Please upload an excel file.");
         setAppAlert({
           alert: true,
           type: "error",
-          msg: "Please upload an Excel file.",
+          msg: "Please upload an excel file.",
         });
         return;
       }
@@ -161,7 +161,7 @@ const DepartmentDeletion = () => {
             setAppAlert({
               alert: true,
               type: "error",
-              msg: "Delete column not found in the Excel sheet.",
+              msg: "Delete column not found in the excel sheet.",
             });
             return;
           }
@@ -222,7 +222,7 @@ const DepartmentDeletion = () => {
                   setAppAlert({
                     alert: true,
                     type: "success",
-                    msg: "Departments deleted from the Excel sheet!",
+                    msg: "Departments deleted from the Excel sheet.",
                   });
                   setSelectedLocation("");
                 })
@@ -286,7 +286,7 @@ const DepartmentDeletion = () => {
         setAppAlert({
           alert: true,
           type: "success",
-          msg: "Department deleted successfully!",
+          msg: "Department deleted successfully.",
         });
       } catch (error) {
         console.error("Error deleting department:", error);
@@ -485,7 +485,7 @@ const DepartmentDeletion = () => {
         open={showConfirmationExcel}
         onClose={() => handleConfirmation(false)}
       >
-        <DialogTitle>Confirmation</DialogTitle>
+        <DialogTitle>Delete Confirmation</DialogTitle>
         <DialogContent>
           <Typography>
             Are you sure you want to delete these departments?

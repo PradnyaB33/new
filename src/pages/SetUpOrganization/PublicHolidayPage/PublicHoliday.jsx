@@ -78,7 +78,7 @@ const PublicHoliday = () => {
       setAppAlert({
         alert: true,
         type: "error",
-        msg: "An error occurred while fetching holidays",
+        msg: "An Error occurred while fetching holidays",
       });
     }
   }, [id, setHolidays, setAppAlert]);
@@ -132,7 +132,7 @@ const PublicHoliday = () => {
       setAppAlert({
         alert: true,
         type: "success",
-        msg: "Holiday created successfully!",
+        msg: "Holiday created successfully.",
       });
       fetchHolidays();
     } catch (error) {
@@ -140,7 +140,7 @@ const PublicHoliday = () => {
       setAppAlert({
         alert: true,
         type: "error",
-        msg: "An error occurred while creating holiday",
+        msg: "An Error occurred while creating holiday.",
       });
     }
   };
@@ -186,12 +186,12 @@ const PublicHoliday = () => {
           patchData
         )
         .then((response) => {
-          console.log("Successfully updated");
+          console.log("Holiday  updated successfully.");
           setOpenModal(false);
           setAppAlert({
             alert: true,
             type: "success",
-            msg: "updated successfully!",
+            msg: "Holiday  updated successfully.",
           });
           fetchHolidays();
         })
@@ -203,12 +203,12 @@ const PublicHoliday = () => {
         await axios.delete(
           `${process.env.REACT_APP_API}/route/holiday/delete/${id}`
         );
-        console.log("Successfully deleted");
+        console.log("Holiday deleted successfully.");
         setOpenModal(false);
         setAppAlert({
           alert: true,
           type: "success",
-          msg: "deleted successfully!",
+          msg: "Holiday deleted successfully.",
         });
         fetchHolidays(); // Refresh holidays after delete
       } catch (error) {

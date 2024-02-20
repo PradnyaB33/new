@@ -124,7 +124,7 @@ const EmployeeSalaryCalculateDay = () => {
         handleAlert(
           true,
           "success",
-          " Salary Computation Day deleted succesfully"
+          " Salary computation day deleted succesfully."
         );
       },
     }

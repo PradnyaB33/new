@@ -100,7 +100,7 @@ const EmployementTypes = () => {
       onSuccess: () => {
         // Invalidate and refetch the data after successful deletion
         queryClient.invalidateQueries("empTypes");
-        handleAlert(true, "success", "Employeement types deleted succesfully");
+        handleAlert(true, "success", "An Employment Type deleted succesfully");
       },
     }
   );
