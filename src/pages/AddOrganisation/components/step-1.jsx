@@ -58,6 +58,7 @@ const organizationSchema = z.object({
 const Step1 = ({ nextStep }) => {
   const { decodedToken } = useGetUser();
   console.log(`🚀 ~ file: step-1.jsx:39 ~ decodedToken:`, decodedToken);
+
   const {
     orgName,
     foundation_date,

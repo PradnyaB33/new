@@ -24,13 +24,12 @@ import dayjs from "dayjs";
 import randomColor from "randomcolor";
 import React, { useContext, useState } from "react";
 import { FaArrowCircleRight } from "react-icons/fa";
-import { useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 
 const Organisation = ({ item }) => {
-  console.log(`🚀 ~ file: Organisation.jsx:33 ~ item:`, item);
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [editConfirmation, setEditConfirmation] = useState(null);
@@ -128,12 +127,42 @@ const Organisation = ({ item }) => {
     }
   };
 
+  const {
+    data: subscriptionDetails,
+    isFetching,
+    isLoading,
+  } = useQuery({
+    queryKey: [`${item._id}-subscription`],
+    queryFn: async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/subscription/${item._id}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data;
+    },
+    onSuccess: async (data) => {
+      console.log(`🚀 ~ file: Organisation.jsx:144 ~ data:`, data);
+    },
+    onError: async (data) => {
+      console.error(`🚀 ~ file: Organisation.jsx:144 ~ data:`, data);
+    },
+  });
+  console.log(
+    `🚀 ~ file: Organisation.jsx:154 ~  isFetching,
+    isLoading,:`,
+    isFetching,
+    isLoading
+  );
   const handleEdit = async (id) => {
     setEditConfirmation(true);
 
     try {
       const response = await axios.get(
-        `http://localhost:4000/route/organization/get/${id}`
+        `${process.env.REACT_APP_API}/route/organization/get/${id}`
       );
       const organizationData = response.data.organizations;
 
@@ -183,6 +212,13 @@ const Organisation = ({ item }) => {
   const getRandomColor = () => {
     return randomColor();
   };
+  console.log(
+    "details of subscriptions",
+    subscriptionDetails?.subscription?.status?.includes(
+      ["active"] ||
+        subscriptionDetails?.subscription?.status?.includes(["authenticated"])
+    )
+  );
   return (
     <>
       <div
@@ -249,12 +285,27 @@ const Organisation = ({ item }) => {
             </button>
           </Link>
 
-          <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
-            <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
-              Go to Dashboard
-              <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
-            </button>
-          </Link>
+          {subscriptionDetails?.subscription?.status?.includes(["active"]) ||
+          subscriptionDetails?.subscription?.status?.includes([
+            "authenticated",
+          ]) ? (
+            <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
+              <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
+                Go to Dashboard
+                <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
+              </button>
+            </Link>
+          ) : (
+            <Link
+              target="blank"
+              to={`${subscriptionDetails?.subscription?.short_url}`}
+            >
+              <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
+                Continue subscription
+                <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
+              </button>
+            </Link>
+          )}
         </div>
       </div>
 

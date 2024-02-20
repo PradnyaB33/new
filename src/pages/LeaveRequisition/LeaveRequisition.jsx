@@ -209,7 +209,7 @@ const LeaveRequisition = () => {
                     onClick={() => setCalendarOpen(true)}
                     variant="text"
                     size="large"
-                    className="text-center !italic w-fit !m-auto"
+                    className="text-center w-fit !m-auto !capitalize !underline "
                   >
                     {" "}
                     {!isLoading
