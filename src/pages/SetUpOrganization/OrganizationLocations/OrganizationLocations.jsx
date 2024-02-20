@@ -414,15 +414,19 @@ const OrganizationLocations = () => {
               >
                 <DialogTitle>
                   {editIndex !== null ? (
-                    <FormattedMessage
-                      id="editLocation"
-                      defaultMessage="Edit Location"
-                    />
+                    <span className="text-xl pl-2 font-semibold font-sans">
+                      <FormattedMessage
+                        id="editLocation"
+                        defaultMessage="Edit Location"
+                      />
+                    </span>
                   ) : (
-                    <FormattedMessage
-                      id="addLocation"
-                      defaultMessage="Add Location"
-                    />
+                    <span className="text-xl pl-2 font-semibold font-sans">
+                      <FormattedMessage
+                        id="addLocation"
+                        defaultMessage="Add Location"
+                      />
+                    </span>
                   )}
                 </DialogTitle>
                 <DialogContent>

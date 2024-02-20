@@ -332,7 +332,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
       aria-describedby="modal-modal-description"
     >
       <div className="flex w-full justify-between py-4 items-center  px-4">
-        <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
+        <h1 className="text-xl pl-2 font-semibold font-sans">
           {salaryId ? "Edit Salary Template" : "Create Salary Template"}
         </h1>
         <IconButton onClick={handleClose}>

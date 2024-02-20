@@ -137,8 +137,8 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
         className="border-none !z-10 !pt-0 !px-0 !w-[90%] lg:!w-[50%] md:!w-[60%] shadow-md outline-none rounded-md"
       >
         <div className="flex justify-between py-4 items-center  px-4">
-          <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
-            Update Salary Computation Day
+          <h1 className="text-xl pl-2 font-semibold font-sans">
+            Edit Salary Computation Day
           </h1>
           <IconButton onClick={handleClose}>
             <CloseIcon className="!text-[16px]" />

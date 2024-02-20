@@ -122,50 +122,8 @@ const App = () => {
           </RequireAuth>
         }
       />
-      <Route
-        path="/verify/:token/"
-        element={
-          <RequireAuth
-            permission={[
-              "Super-Admin",
-              "Delegate-Super Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "Hr",
-              "Manager",
-              "Employee",
-            ]}
-          >
-            <AnimationComponent />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/reset-password/:token"
-        element={
-          <RequireAuth
-            permission={[
-              "Super-Admin",
-              "Delegate-Super Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "Hr",
-              "Manager",
-              "Employee",
-            ]}
-          >
-            <ResetPassword />
-          </RequireAuth>
-        }
-      />
+      <Route path="/verify/:token/" element={<AnimationComponent />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
       {/* Login Routes */}
 
       {/* //TODO Setup Sidebar */}

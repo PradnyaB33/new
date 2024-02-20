@@ -342,7 +342,9 @@ const WeekendHoliday = () => {
           <Dialog open={openModel} onClose={handleOpenClose} fullWidth>
             <DialogActions>
               <DialogContent>
-                <h1 className="!text-3xl text-center mb-8">Select days</h1>
+                <h1 className="text-xl pl-2 font-semibold font-sans mb-4">
+                  Select Days
+                </h1>
                 <div className="mb-6">
                   <WeekdaySelector
                     selectedDays={selectedDays}

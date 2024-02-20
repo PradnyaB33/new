@@ -4,7 +4,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogTitle,
   FormControl,
   IconButton,
   InputLabel,
@@ -319,7 +318,9 @@ const PublicHoliday = () => {
             maxWidth="sm"
             fullWidth
           >
-            <DialogTitle>Add holiday</DialogTitle>
+            <h1 className="text-xl pl-2 font-semibold font-sans mt-4 ml-4">
+              Add Holiday
+            </h1>
             <DialogContent className="flex gap-3 flex-col">
               <div className="flex gap-3 flex-col mt-3">
                 <TextField
@@ -409,7 +410,9 @@ const PublicHoliday = () => {
           </Dialog>
 
           <Dialog fullWidth open={actionModal} onClose={handleClose}>
-            <DialogTitle>Are you sure about this ?</DialogTitle>
+            <h1 className="text-xl pl-2 font-semibold font-sans mt-4 ml-4">
+              Edit Holiday
+            </h1>
             <DialogContent>
               {operation === "edit" ? (
                 <>
@@ -478,15 +481,15 @@ const PublicHoliday = () => {
                   </div>
 
                   <div className="mt-5 flex gap-5 justify-end">
+                    <Button color="error" variant="outlined">
+                      cancel
+                    </Button>
                     <Button
                       onClick={doTheOperation}
                       variant="contained"
                       color="primary"
                     >
-                      {operation}
-                    </Button>
-                    <Button color="error" variant="outlined">
-                      cancel
+                      Apply
                     </Button>
                   </div>
                 </>
