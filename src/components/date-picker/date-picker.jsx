@@ -24,6 +24,7 @@ const AppDatePicker = ({
 }) => {
   const localizer = momentLocalizer(moment);
   const [Delete, setDelete] = useState(false);
+  console.log(data);
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -85,7 +86,6 @@ const AppDatePicker = ({
           `You cannot select ${currentDay} for leave`
         );
       }
-
       currentDate.add(1, "day");
     }
 

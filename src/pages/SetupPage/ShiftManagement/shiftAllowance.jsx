@@ -4,12 +4,12 @@ import React from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Link } from "react-router-dom";
 import "tailwindcss/tailwind.css";
-import AppDatePicker from "../../../components/date-picker/date-picker";
-import useLeaveData from "../../../hooks/Leave/useLeaveData";
+import AppDatePicker from "../../../components/date-picker/date-picker2";
+import useShiftData from "../../../hooks/ShiftData/useShiftData";
 import ShiftsTable from "./components/ShiftsTable";
 import Mapped from "./components/mapped-form";
 
-const LeaveRequisition = () => {
+const ShiftAllowance = () => {
   const {
     data,
     setCalendarOpen,
@@ -24,7 +24,8 @@ const LeaveRequisition = () => {
     setSelectedLeave,
     selectedLeave,
     setselectEvent,
-  } = useLeaveData();
+  } = useShiftData();
+  console.log(newAppliedLeaveEvents);
 
   // const { isLoading } = useQuery(
   //   "employee-leave-table-without-default",
@@ -100,14 +101,10 @@ const LeaveRequisition = () => {
           <Link to={"/"}>
             <West className="mx-4 !text-xl" />
           </Link>
-          Leave Request
+          Shift Management
         </header>
 
         <div className="flex flex-col-reverse md:flex-row w-full justify-start p-6 gap-4">
-          <div className="flex flex-col gap-4">
-            <ShiftsTable />
-          </div>
-
           <article className="md:w-[100%] space-y-2">
             {isLoading ? (
               <div className="space-y-2 mb-4 w-full h-max bg-white p-4 shadow-xl rounded-lg">
@@ -148,7 +145,7 @@ const LeaveRequisition = () => {
                     </Button>
                   </Badge>
                   <p className="!text-gray-400 font-semibold mb-2 text-xl">
-                    Select Leave Date
+                    select shifts
                   </p>
                 </div>
               </div>
@@ -168,14 +165,14 @@ const LeaveRequisition = () => {
             />
 
             {newAppliedLeaveEvents.length > 0 &&
-            Array.isArray(newAppliedLeaveEvents) ? (
+              Array.isArray(newAppliedLeaveEvents) ? (
               <>
                 <form
                   onSubmit={handleSubmit}
                   className="h-max !mt-4 space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg"
                 >
                   <h1 className="text-gray-400 font-semibold mb-4 text-md">
-                    Selected Leave's
+                    Your Shifts
                   </h1>
                   <div className="flex flex-col gap-4">
                     {newAppliedLeaveEvents?.map((item, index) => (
@@ -195,7 +192,7 @@ const LeaveRequisition = () => {
                         variant="contained"
                         className="font-bold m-auto w-fit"
                       >
-                        Apply for leave
+                        Apply for shift
                       </Button>
                     </div>
                   </div>
@@ -213,7 +210,7 @@ const LeaveRequisition = () => {
                   >
                     {" "}
                     {!isLoading
-                      ? "Apply For Leave"
+                      ? "Apply for shifts"
                       : "Wait Calendar is Loading"}
                   </Button>
                 </div>
@@ -226,4 +223,4 @@ const LeaveRequisition = () => {
   );
 };
 
-export default LeaveRequisition;
+export default ShiftAllowance;

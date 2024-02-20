@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import { CalendarMonth, Delete, Edit } from "@mui/icons-material";
 import {
   Badge,
@@ -8,7 +9,9 @@ import {
   Select,
 } from "@mui/material";
 import { differenceInDays, format, parseISO } from "date-fns";
-import React, { useState } from "react";
+import UserProfile from "../../../../hooks/UserData/useUser";
+import axios from "axios";
+import useShiftStore from "../store/useShiftStore";
 
 const Mapped = ({
   item,
@@ -19,6 +22,7 @@ const Mapped = ({
   setCalendarOpen,
 }) => {
   const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
+  const { setShiftName } = useShiftStore();
   const badgeStyle = {
     "& .MuiBadge-badge": {
       color: "#d1d5db",
@@ -29,16 +33,42 @@ const Mapped = ({
   };
 
   const handleChange = (event) => {
-    setLeavesTypes(event.target.value);
-    newAppliedLeaveEvents[index].leaveTypeDetailsId = event.target.value;
-    setNewAppliedLeaveEvents(newAppliedLeaveEvents);
+    const selectedShiftId = event.target.value;
+    setLeavesTypes(selectedShiftId);
+    const updatedEvents = newAppliedLeaveEvents.map((event, i) => {
+      if (i === index) {
+        return { ...event, leaveTypeDetailsId: selectedShiftId };
+      }
+      return event;
+    });
+    setNewAppliedLeaveEvents(updatedEvents);
   };
+
   const removeItem = (idToRemove) => {
     const updatedAppliedLeaveEvents = newAppliedLeaveEvents.filter(
       (_, i) => i !== idToRemove
     );
     setNewAppliedLeaveEvents(updatedAppliedLeaveEvents);
   };
+
+  const [sName, setSName] = useState([]);
+  const { authToken, handleAlert } = UserProfile();
+  useEffect(() => {
+    (async () => {
+      try {
+        const resp = await axios.get(`${process.env.REACT_APP_API}/route/getAllShifts`);
+        setSName(resp.data.shifts);
+        console.log(resp.data.shifts);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
+
+  const handleChange2 = (name) => {
+    setShiftName(name);
+  };
+
   return (
     <div
       key={index}
@@ -84,7 +114,7 @@ const Mapped = ({
       <div className="flex lg:w-fit lg:justify-end justify-between w-full items-center gap-2">
         <FormControl sx={{ width: 180 }} size="small" fullWidth>
           <InputLabel id="demo-simple-select-label">
-            Select Leave Type
+            Select Shift Type
           </InputLabel>
           <Select
             defaultValue={leavesTypes}
@@ -95,25 +125,20 @@ const Mapped = ({
             label="Select Leave Type"
             onChange={handleChange}
           >
-            {subtractedLeaves?.map((item, index) => {
+            {sName?.map((item, index) => {
               return (
-                item.isActive && (
-                  <MenuItem
-                    selected={leavesTypes === item.leaveTypeDetailsId}
-                    id={index}
-                    key={index}
-                    value={item._id}
-                  >
-                    <div className="flex justify-between w-full">
-                      <div>{item.leaveName} </div>
-                      <div
-                        style={{ background: item.color }}
-                        className={`w-4 h-4 rounded-full my-auto`}
-                      ></div>
-                    </div>
-                  </MenuItem>
-                )
-              );
+                <MenuItem
+                  selected={leavesTypes === item.leaveTypeDetailsId}
+                  id={index}
+                  key={index}
+                  value={item._id}
+                  onClick={() => handleChange2(item.shiftName)}
+                >
+                  <div className="flex justify-between w-full">
+                    <div>{item.shiftName} </div>
+                  </div>
+                </MenuItem>
+              )
             })}
           </Select>
         </FormControl>
