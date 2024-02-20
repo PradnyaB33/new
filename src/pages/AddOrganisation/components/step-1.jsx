@@ -218,7 +218,7 @@ const Step1 = ({ nextStep }) => {
               icon={CalendarMonthOutlined}
               control={control}
               type="checkbox"
-              label="Do you want 7 day Trial  *"
+              label="Do you want 7 day Trial"
               errors={errors}
               error={errors.location}
             />
