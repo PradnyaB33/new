@@ -21,7 +21,7 @@ import { useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 const DeleteEmployee = () => {
   const { handleAlert } = useContext(TestContext);
   const { setAppAlert, cookies } = useContext(UseContext);
@@ -549,9 +549,11 @@ const DeleteEmployee = () => {
                       <td className="py-3 pl-8">{item?.phone_number}</td>
                       <td className="whitespace-nowrap px-6 py-2">
                         <IconButton
+                          color="error"
+                          aria-label="delete"
                           onClick={() => handleDeleteConfirmation(item?._id)}
                         >
-                          <Delete className="!text-xl" color="error" />
+                          <DeleteOutlineIcon />
                         </IconButton>
                       </td>
                     </tr>

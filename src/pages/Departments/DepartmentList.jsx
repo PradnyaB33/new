@@ -1,4 +1,4 @@
-import { Delete, Edit, Warning } from "@mui/icons-material";
+import { Warning } from "@mui/icons-material";
 import {
   Button,
   Checkbox,
@@ -21,7 +21,8 @@ import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 const DepartmentList = () => {
   const { handleAlert } = useContext(TestContext);
   const [departmentName, setDepartmentName] = useState("");
@@ -281,15 +282,17 @@ const DepartmentList = () => {
                   <td className="whitespace-nowrap px-3 py-2">
                     <IconButton
                       onClick={() => handleUpdate(id)}
+                      color="primary"
                       aria-label="edit"
                     >
-                      <Edit className="!text-xl" color="success" />
+                      <EditOutlinedIcon />
                     </IconButton>
                     <IconButton
                       onClick={() => handleDeleteConfirmation(department?._id)}
+                      color="error"
                       aria-label="delete"
                     >
-                      <Delete className="!text-xl" color="error" />
+                      <DeleteOutlineIcon />
                     </IconButton>
                   </td>
                 </tr>

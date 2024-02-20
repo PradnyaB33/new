@@ -11,6 +11,7 @@ import {
   Select,
   TextField,
   Typography,
+  Tooltip,
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -300,108 +301,6 @@ const DepartmentDeletion = () => {
   };
 
   return (
-    // <Container
-    //   style={{
-    //     width: "500px",
-    //     position: "relative",
-    //     top: "5rem",
-    //     boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-    //     paddingTop: "1rem",
-    //   }}
-    // >
-    //   <Typography style={{ fontSize: "1.5rem" }}>Delete Department</Typography>
-    //   <FormControl
-    //     required
-    //     style={{
-    //       width: "100%",
-    //       marginBottom: 30,
-    //       marginTop: 20,
-    //     }}
-    //     size="small"
-    //     variant="outlined"
-    //   >
-    //     <InputLabel
-    //       id="holiday-type-label"
-    //       style={{
-    //         backgroundColor: "white",
-    //         paddingLeft: 8,
-    //       }}
-    //     >
-    //       Select Location
-    //     </InputLabel>
-    //     <Select
-    //       labelId="holiday-type-label"
-    //       id="demo-simple-select"
-    //       name="location"
-    //       value={selectedLocation}
-    //       onChange={handleLocationChange}
-    //       label="Select Location"
-    //     >
-    //       {locations.map((data, index) => (
-    //         <MenuItem key={index} value={data.shortName}>
-    //           {data.shortName}
-    //         </MenuItem>
-    //       ))}
-    //     </Select>
-    //   </FormControl>
-
-    //   <TextField
-    //     type="file"
-    //     id="fileInput"
-    //     className="w-full rounded"
-    //     onChange={() => setShowConfirmationExcel(true)}
-    //   />
-    //   <div className="flex gap-5 w-full my-5">
-    //     <Button
-    //       variant="contained"
-    //       color="warning"
-    //       style={{ marginBottom: "2rem" }}
-    //       onClick={generateExcel}
-    //     >
-    //       Generate Excel
-    //     </Button>
-    //   </div>
-
-    //   {/* Confirmation Dialog */}
-    //   <Dialog open={showConfirmation} onClose={() => handleConfirmation(false)}>
-    //     <DialogTitle>Confirmation</DialogTitle>
-    //     <DialogContent>
-    //       <Typography>
-    //         Are you sure you want to delete this department?
-    //       </Typography>
-    //     </DialogContent>
-    //     <DialogActions>
-    //       <Button onClick={() => handleConfirmation(false)} color="primary">
-    //         Cancel
-    //       </Button>
-    //       <Button onClick={handleDelete} color="primary">
-    //         Delete
-    //       </Button>
-    //     </DialogActions>
-    //   </Dialog>
-    //   <Dialog
-    //     open={showConfirmationExcel}
-    //     onClose={() => handleConfirmation(false)}
-    //   >
-    //     <DialogTitle>Confirmation</DialogTitle>
-    //     <DialogContent>
-    //       <Typography>
-    //         Are you sure you want to delete these departments?
-    //       </Typography>
-    //     </DialogContent>
-    //     <DialogActions>
-    //       <Button
-    //         onClick={() => setShowConfirmationExcel(false)}
-    //         color="primary"
-    //       >
-    //         Cancel
-    //       </Button>
-    //       <Button onClick={handleDeleteFromExcel} color="primary">
-    //         Delete
-    //       </Button>
-    //     </DialogActions>
-    //   </Dialog>
-    // </Container>
     <Container
       style={{
         width: "100%",
@@ -411,7 +310,29 @@ const DepartmentDeletion = () => {
         paddingTop: "1rem",
       }}
     >
-      <Typography style={{ fontSize: "1.5rem" }}>Delete Department</Typography>
+      <Tooltip
+        title={
+          <span>
+            To perform bulk deletion:
+            <ol>
+              <li>Select the location whatever you want to delete .</li>
+              <li>
+                Click on generate excel button. Excel file will be generating.
+              </li>
+              <li>
+                Write "delete" in front of department id in the Excel sheet.
+              </li>
+              <li>Save the file.</li>
+              <li>Click on the choose flle</li>
+              <li>Open the dialogue box for delete the department</li>
+            </ol>
+          </span>
+        }
+      >
+        <Typography style={{ fontSize: "1.5rem" }}>
+          Delete Department
+        </Typography>
+      </Tooltip>
       <FormControl
         required
         style={{
@@ -466,7 +387,7 @@ const DepartmentDeletion = () => {
 
       {/* Confirmation Dialog */}
       <Dialog open={showConfirmation} onClose={() => handleConfirmation(false)}>
-        <DialogTitle>Confirmation</DialogTitle>
+        <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <Typography>
             Are you sure you want to delete this department?
@@ -476,7 +397,12 @@ const DepartmentDeletion = () => {
           <Button onClick={() => handleConfirmation(false)} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDelete} color="primary">
+          <Button
+            onClick={handleDelete}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
             Delete
           </Button>
         </DialogActions>
@@ -485,7 +411,7 @@ const DepartmentDeletion = () => {
         open={showConfirmationExcel}
         onClose={() => handleConfirmation(false)}
       >
-        <DialogTitle>Delete Confirmation</DialogTitle>
+        <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <Typography>
             Are you sure you want to delete these departments?
@@ -494,11 +420,18 @@ const DepartmentDeletion = () => {
         <DialogActions>
           <Button
             onClick={() => setShowConfirmationExcel(false)}
+            variant="outlined"
             color="primary"
+            size="small"
           >
             Cancel
           </Button>
-          <Button onClick={handleDeleteFromExcel} color="primary">
+          <Button
+            variant="contained"
+            size="small"
+            onClick={handleDeleteFromExcel}
+            color="error"
+          >
             Delete
           </Button>
         </DialogActions>

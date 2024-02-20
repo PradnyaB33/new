@@ -639,6 +639,8 @@ function RequireSubscription({ children }) {
   const param = useParams();
   console.log(`🚀 ~ file: Route.jsx:682 ~ param:`, param);
 
+  const { getCurrentUser, getCurrentRole } = UserProfile();
+
   const user = getCurrentUser();
   const role = getCurrentRole();
 
