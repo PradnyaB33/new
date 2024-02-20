@@ -32,17 +32,8 @@ const organizationSchema = z.object({
   description: z.string(),
   creator: z.string(),
   logo_url: z
-    .any()
-    .refine(
-      (doc) => {
-        if (doc.size <= 5 * 1024) {
-          return false;
-        } else {
-          return true;
-        }
-      },
-      { message: "Image size must be minimum of 5 kb" }
-    )
+    .string()
+    .url({ message: "Kindly provide and valid url" })
     .refine(
       (doc) => {
         if (doc.size >= 50 * 1024) {
