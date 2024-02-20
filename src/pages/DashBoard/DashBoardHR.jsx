@@ -52,6 +52,7 @@ const DashBoardHR = () => {
     if (location.pathname?.includes("/DH-dashboard")) {
       getAttendenceData();
     }
+    // eslint-disable-next-line
   }, []);
 
   return (

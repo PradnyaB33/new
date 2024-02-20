@@ -18,7 +18,7 @@ function CustomTabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -47,22 +47,100 @@ export default function TDSTab1() {
   };
 
   return (
-    <Box sx={{ width: "100%", p: 0 }}>
-      <Box sx={{ p: 0, borderBottom: 1, borderColor: "divider" }}>
+    <Box
+      sx={{
+        width: "100%",
+        p: 0,
+        "& .MuiTabs-root": {
+          padding: 0,
+        },
+        "& .MuiTab-root": {
+          padding: 0,
+        },
+      }}
+    >
+      <Box
+        sx={{
+          p: 0,
+          borderBottom: 1,
+          borderColor: "divider",
+          "& .MuiTabs-root": {
+            padding: 0,
+          },
+          "& .MuiTab-root": {
+            padding: 0,
+          },
+        }}
+      >
         <Tabs
           value={value}
           onChange={handleChange}
+          sx={{
+            "& .MuiTabs-root": {
+              padding: 0,
+            },
+            "& .MuiTab-root": {
+              padding: 0,
+            },
+          }}
           aria-label="basic tabs example"
-          className="bg-white mt-4 !p-0"
+          className="bg-white mt-4 space-x-4 !p-0"
         >
-          <Tab label="Item One" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
+          <Tab
+            className="!px-4"
+            sx={{
+              "& .MuiTabs-root": {
+                padding: 0,
+              },
+              "& .MuiTab-root": {
+                padding: 0,
+              },
+            }}
+            label="Income Tax Declarations"
+            {...a11yProps(0)}
+          />
+          <Tab
+            className="!px-4"
+            sx={{
+              "& .MuiTabs-root": {
+                padding: 0,
+              },
+              "& .MuiTab-root": {
+                padding: 0,
+              },
+            }}
+            label="Investment Proof Submission"
+            {...a11yProps(1)}
+          />
         </Tabs>
       </Box>
-      <CustomTabPanel value={value} index={0}>
+      <CustomTabPanel
+        sx={{
+          p: 0,
+          "& .MuiTabs-root": {
+            padding: 0,
+          },
+          "& .MuiTab-root": {
+            padding: 0,
+          },
+        }}
+        value={value}
+        index={0}
+      >
         <Tab1 />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
+      <CustomTabPanel
+        sx={{
+          "& .MuiTabs-root": {
+            padding: 0,
+          },
+          "& .MuiTab-root": {
+            padding: 0,
+          },
+        }}
+        value={value}
+        index={1}
+      >
         Item Two
       </CustomTabPanel>
     </Box>
