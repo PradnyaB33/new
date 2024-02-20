@@ -64,10 +64,14 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
         queryClient.invalidateQueries({ queryKey: ["empTypes"] });
         handleClose();
         setTitleEmpType("");
-        handleAlert(true, "success", "Employee types generated succesfully");
+        handleAlert(
+          true,
+          "success",
+          "An Employment Type generated succesfully"
+        );
       },
       onError: () => {
-        setError("An error occurred while creating a new employe Type");
+        setError("An Error occurred while creating a new an employment type.");
       },
     }
   );
@@ -87,10 +91,10 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["empTypes"] });
         handleClose();
-        handleAlert(true, "success", "Employee Types updated succesfully");
+        handleAlert(true, "success", "An Employment Type updated succesfully.");
       },
       onError: () => {
-        setError("An error occurred while creating a neemppTypet");
+        setError("An Error occurred while an employment type.");
       },
     }
   );

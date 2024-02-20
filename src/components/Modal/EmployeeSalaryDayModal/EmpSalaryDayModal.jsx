@@ -55,7 +55,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
       setEmpSalCalDay(response.data.empSalaryCalDayData);
     } catch (error) {
       console.error(error);
-      handleAlert(true, "error", "Failed to fetch  Salary Computation Day");
+      handleAlert(true, "error", "Failed to fetch  salary computation day.");
     }
   };
   useEffect(() => {
@@ -87,7 +87,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
       } catch (error) {
         throw new Error(
           error.response.data.message ||
-            "Failed to updated Salary Computation Day"
+            "Failed to updated salary computation day."
         );
       }
     },
@@ -98,7 +98,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
         handleAlert(
           true,
           "success",
-          "Salary Computation Day Updated Successfully.."
+          "Salary computation day updated successfully."
         );
         window.location.reload();
       },
@@ -120,7 +120,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
       handleAlert(
         true,
         "error",
-        "An error occurred while  updating  Salary Computation Day"
+        "An Error occurred while  updating  salary computation day."
       );
     }
   };

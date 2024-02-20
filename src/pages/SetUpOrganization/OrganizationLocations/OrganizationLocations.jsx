@@ -141,7 +141,7 @@ const OrganizationLocations = () => {
         !addressLine1 ||
         !organizationId
       ) {
-        handleAlert(true, "error", "All fields are mandatory");
+        handleAlert(true, "error", "All fields are mandatory.");
         return false;
       }
       await axios.post(
@@ -164,7 +164,7 @@ const OrganizationLocations = () => {
       );
       setLocationList(response.data.locationsData);
 
-      handleAlert(true, "success", "Location added successfully");
+      handleAlert(true, "success", "Location added successfully.");
       handleClose();
     } catch (error) {
       console.error(error.response.data.message);
@@ -254,7 +254,7 @@ const OrganizationLocations = () => {
       );
       setLocationList(response.data.locationsData);
       console.log(locationList);
-      handleAlert(true, "success", "Location updated successfully");
+      handleAlert(true, "success", "Location updated successfully.");
       handleClose();
     } catch (error) {
       console.error("error is: ", error.response.data.error);
@@ -284,7 +284,7 @@ const OrganizationLocations = () => {
 
       setLocationList(response.data.locationsData);
 
-      handleAlert(true, "success", "Location deleted successfully");
+      handleAlert(true, "success", "Location deleted successfully.");
     } catch (error) {
       console.error(error.response.data.message);
       handleAlert(true, "error", error.response.data.error);

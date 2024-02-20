@@ -52,7 +52,7 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
       handleAlert(
         true,
         "error",
-        "An error occurred while Creating  Salary Computation Day"
+        "An Error occurred while creating  salary computation day."
       );
     }
   };
@@ -72,7 +72,7 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
       } catch (error) {
         throw new Error(
           error.response.data.message ||
-            "Failed to create Salary Computation Day"
+            "Failed to create salary computation day"
         );
       }
     },
@@ -84,7 +84,7 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
         handleAlert(
           true,
           "success",
-          " Salary Computation Day Created Successfully.."
+          "Salary computation day created successfully."
         );
         window.location.reload();
       },

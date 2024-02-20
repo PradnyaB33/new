@@ -24,9 +24,9 @@ export default function AppAlert() {
         open={appAlert.alert}
         autoHideDuration={5000}
         onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert
-          onClose={handleClose}
           severity={appAlert.type}
           componentsProps={{ closeButton: { className: " !text-2xl" } }}
           sx={{ width: "100%" }}

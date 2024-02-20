@@ -116,7 +116,7 @@ const Designation = () => {
           setAppAlert({
             alert: true,
             type: "success",
-            msg: "Designation Added successfully!",
+            msg: "Designation added successfully!",
           });
           console.log("Designation added successfully:", response.data);
           fetchDesignations();
@@ -150,7 +150,7 @@ const Designation = () => {
         setAppAlert({
           alert: true,
           type: "success",
-          msg: "Designation updated successfully!",
+          msg: "Designation updated successfully.",
         });
         fetchDesignations();
         handleClick();
@@ -214,11 +214,11 @@ const Designation = () => {
           `${process.env.REACT_APP_API}/route/designation/create/${designationToDelete}`
         )
         .then(() => {
-          console.log("Designation deleted successfully");
+          console.log("Designation deleted successfully.");
           setAppAlert({
             alert: true,
             type: "success",
-            msg: "designation deleted successfully",
+            msg: "Designation deleted successfully.",
           });
           fetchDesignations();
         })

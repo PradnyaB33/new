@@ -178,7 +178,7 @@ const AddDepartments = () => {
       handleAlert(
         true,
         "success",
-        `${dept_name} Department Added Successfully..`
+        `${dept_name} department ddded successfully..`
       );
     } catch (error) {
       console.error("Error creating department:", error);
