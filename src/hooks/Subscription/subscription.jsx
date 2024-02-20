@@ -24,10 +24,10 @@ const useSubscription = (organizationId) => {
     },
     queryKey: [`${organizationId}-subscription`],
     onSuccess: async (data) => {
-      console.log(`🚀 ~ file: Organisation.jsx:144 ~ data:`, data);
+      //   console.log(`🚀 ~ file: Organisation.jsx:144 ~ data:`, data);
     },
     onError: async (data) => {
-      console.error(`🚀 ~ file: Organisation.jsx:144 ~ data:`, data);
+      //   console.error(`🚀 ~ file: Organisation.jsx:144 ~ data:`, data);
     },
   });
   return { subscriptionDetails, subscriptionLoading, subscriptionFetching };
