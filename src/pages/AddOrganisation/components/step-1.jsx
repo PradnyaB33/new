@@ -31,28 +31,12 @@ const organizationSchema = z.object({
     .min(10, { message: "contact number must be 10 digits" }),
   description: z.string(),
   creator: z.string(),
-  logo_url: z
-    .any()
-    .refine(
-      (doc) => {
-        if (doc.size <= 5 * 1024) {
-          return false;
-        } else {
-          return true;
-        }
-      },
-      { message: "Image size must be minimum of 5 kb" }
-    )
-    .refine(
-      (doc) => {
-        if (doc.size >= 50 * 1024) {
-          return false;
-        } else {
-          return true;
-        }
-      },
-      { message: "Image size maximum 50kb" }
-    ),
+  logo_url: z.any().refine(
+    (file) => {
+      return !!file && file.size >= 5 * 1024 && file.size <= 50 * 1024;
+    },
+    { message: "Image size maximum 50kb" }
+  ),
   isTrial: z.boolean(),
 });
 const Step1 = ({ nextStep }) => {
@@ -227,7 +211,7 @@ const Step1 = ({ nextStep }) => {
               icon={CalendarMonthOutlined}
               control={control}
               type="checkbox"
-              label="Do you want 7 day Trial  *"
+              label="Do you want 7 day Trial"
               errors={errors}
               error={errors.location}
             />

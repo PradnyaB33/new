@@ -136,7 +136,7 @@ const Step4 = () => {
     onError: async (data) => {
       console.error(`🚀 ~ file: mini-form.jsx:48 ~ data:`, data);
       toast.error(
-        data?.response?.data?.message || "Please fill all madatory field"
+        data?.response?.data?.message || "Please fill all mandatory field"
       );
     },
   });
