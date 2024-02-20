@@ -416,7 +416,9 @@ const App = () => {
         path="/organisation/:organisationId/setup/add-roles"
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
-            <AddRoles />
+            <RequireSubscription>
+              <AddRoles />
+            </RequireSubscription>
           </RequireAuth>
         }
       />
@@ -676,31 +678,13 @@ function RequireAuth({ children, permission }) {
   return user && isPermission ? children : <Navigate to={"/"} />;
 }
 function RequireSubscription({ children }) {
+  const { organisationId } = useParams();
   const { subscriptionDetails, subscriptionLoading, subscriptionFetching } =
-    useSubscription();
-  const param = useParams();
-  console.log(`🚀 ~ file: Route.jsx:682 ~ param:`, param);
+    useSubscription(organisationId);
+  console.log(
+    `🚀 ~ file: Route.jsx:683 ~ subscriptionDetails:`,
+    subscriptionDetails
+  );
 
-  const user = getCurrentUser();
-  const role = getCurrentRole();
-
-  if (user && !role) {
-    return <Navigate to={"/choose-role"} />;
-  }
-
-  if (role || !window.location.pathname.includes("sign-in", "sign-up")) {
-    if (!role) return <Navigate to={"/sign-in"} />;
-    if (user) return children;
-    return <UnAuthorized />;
-  }
-
-  return user ? children : <Navigate to={"/"} />;
+  return children;
 }
-
-//   : user?.profile?.length < 2 ? (
-//   <Navigate to={"/organisation/employee-dashboard"} />
-// ) : user?.profile?.includes("Hr") ? (
-//   <Navigate to={"/organisation/HR-dashboard"} />
-// ) : (
-//   <Navigate to={"/organisation/employee-dashboard"} />
-// );

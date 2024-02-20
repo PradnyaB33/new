@@ -17,7 +17,6 @@ const SetupSideNav = () => {
           </div>
           <h1 className="!text-lg tracking-wide">Setup</h1>
         </div>
-
         {linkData?.map((item, id) => (
           <Link
             to={item?.href}
@@ -27,7 +26,7 @@ const SetupSideNav = () => {
                   hover:bg-sky-100 transition-all  flex w-full items-center text-gray-700   gap-4 px-4 py-3 cursor-pointer `}
           >
             <item.icon className="!text-2xl  group-hover:!text-blue-500 !font-thin " />
-            <h1 className="group-hover:!text-blue-500 ">{item?.label}</h1>
+            <h1 className="group-hover:!text-blue-500 ">{item?.label} </h1>
           </Link>
         ))}
       </aside>

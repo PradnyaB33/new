@@ -1,18 +1,18 @@
 import { ErrorMessage } from "@hookform/error-message/dist";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Badge,
+  BadgeOutlined,
   CalendarMonthOutlined,
-  Description,
+  DescriptionOutlined,
   FactoryOutlined,
   Link,
-  LinkedIn,
-  LocalPostOffice,
+  LocalPostOfficeOutlined,
   TodayOutlined,
 } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
+import { FaLinkedin } from "react-icons/fa";
 import { z } from "zod";
 import useOrg from "../../../State/Org/Org";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
@@ -112,7 +112,7 @@ const Step1 = ({ nextStep }) => {
         <div className="grid md:grid-cols-2 md:gap-4 gap-0 px-4 grid-cols-1">
           <AuthInputFiled
             name="orgName"
-            icon={Badge}
+            icon={BadgeOutlined}
             control={control}
             type="text"
             placeholder="Organization Name"
@@ -135,14 +135,14 @@ const Step1 = ({ nextStep }) => {
             icon={Link}
             control={control}
             type="text"
-            placeholder="Web Url "
+            placeholder="Web url "
             label="Web Url  *"
             errors={errors}
             error={errors.web_url}
           />
           <AuthInputFiled
             name="organization_linkedin_url"
-            icon={LinkedIn}
+            icon={FaLinkedin}
             control={control}
             type="text"
             placeholder="LinkedIn url "
@@ -168,7 +168,7 @@ const Step1 = ({ nextStep }) => {
           />
           <AuthInputFiled
             name="email"
-            icon={LocalPostOffice}
+            icon={LocalPostOfficeOutlined}
             control={control}
             type="email"
             placeholder="Organization Email "
@@ -188,7 +188,7 @@ const Step1 = ({ nextStep }) => {
           />
           <AuthInputFiled
             name="description"
-            icon={Description}
+            icon={DescriptionOutlined}
             control={control}
             type="text"
             placeholder="Organizational Description "
