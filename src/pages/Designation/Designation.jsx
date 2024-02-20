@@ -344,9 +344,9 @@ const Designation = () => {
             )}
 
             <Dialog open={click} onClose={handleClose} maxWidth="sm" fullWidth>
-              <DialogTitle>
+              <h1 className="text-xl pl-2 font-semibold font-sans mt-4 ml-4">
                 {editMode ? "Edit Designation" : "Add Designation"}
-              </DialogTitle>
+              </h1>
               <DialogContent>
                 <TextField
                   style={{ marginTop: "1rem", marginBottom: "1rem" }}
