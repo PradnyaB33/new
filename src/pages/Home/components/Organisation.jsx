@@ -151,6 +151,12 @@ const Organisation = ({ item }) => {
       console.error(`🚀 ~ file: Organisation.jsx:144 ~ data:`, data);
     },
   });
+  console.log(
+    `🚀 ~ file: Organisation.jsx:154 ~  isFetching,
+    isLoading,:`,
+    isFetching,
+    isLoading
+  );
   const handleEdit = async (id) => {
     setEditConfirmation(true);
 
