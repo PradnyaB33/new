@@ -52,7 +52,7 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
       handleAlert(
         true,
         "error",
-        "An error occurred while Creating  Salary Computation Day"
+        "An Error occurred while creating  salary computation day."
       );
     }
   };
@@ -72,7 +72,7 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
       } catch (error) {
         throw new Error(
           error.response.data.message ||
-            "Failed to create Salary Computation Day"
+            "Failed to create salary computation day"
         );
       }
     },
@@ -84,7 +84,7 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
         handleAlert(
           true,
           "success",
-          " Salary Computation Day Created Successfully.."
+          "Salary computation day created successfully."
         );
         window.location.reload();
       },
@@ -106,7 +106,7 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
         className="border-none !z-10 !pt-0 !px-0 !w-[90%] lg:!w-[50%] md:!w-[60%] shadow-md outline-none rounded-md"
       >
         <div className="flex justify-between py-4 items-center  px-4">
-          <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
+          <h1 className="text-xl pl-2 font-semibold font-sans">
             Salary Computation Day
           </h1>
           <IconButton onClick={handleClose}>

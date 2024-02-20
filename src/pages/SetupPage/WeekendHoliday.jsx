@@ -109,11 +109,11 @@ const WeekendHoliday = () => {
           { days: daysArray }
         );
 
-        console.log("Successfully updated");
+        console.log("Day updated successfully.");
         setAppAlert({
           alert: true,
           type: "success",
-          msg: "Days Updated Successfully!",
+          msg: "Day updated successfully!",
         });
       } else {
         const existingWeekend = await axios.get(
@@ -140,7 +140,7 @@ const WeekendHoliday = () => {
         setAppAlert({
           alert: true,
           type: "success",
-          msg: "Days Created Successfully!",
+          msg: "Weekend created successfully.",
         });
       }
 
@@ -169,7 +169,7 @@ const WeekendHoliday = () => {
       setAppAlert({
         alert: true,
         type: "success",
-        msg: "Weekend Deleted Successfully!",
+        msg: "Weekend deleted successfully.",
       });
       handleOpenClose();
       queryClient.invalidateQueries("days");
@@ -345,7 +345,9 @@ const WeekendHoliday = () => {
           <Dialog open={openModel} onClose={handleOpenClose} fullWidth>
             <DialogActions>
               <DialogContent>
-                <h1 className="!text-3xl text-center mb-8">Select days</h1>
+                <h1 className="text-xl pl-2 font-semibold font-sans mb-4">
+                  Select Days
+                </h1>
                 <div className="mb-6">
                   <WeekdaySelector
                     selectedDays={selectedDays}

@@ -24,10 +24,11 @@ import dayjs from "dayjs";
 import randomColor from "randomcolor";
 import React, { useContext, useState } from "react";
 import { FaArrowCircleRight } from "react-icons/fa";
-import { useQuery, useQueryClient } from "react-query";
-import { Link } from "react-router-dom";
+import { useQueryClient } from "react-query";
+import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import useSubscription from "../../../hooks/Subscription/subscription";
 
 const Organisation = ({ item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -39,7 +40,14 @@ const Organisation = ({ item }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-
+  const navigate = useNavigate();
+  const { subscriptionDetails, subscriptionLoading, subscriptionFetching } =
+    useSubscription(item?._id);
+  console.log(
+    `🚀 ~ file: Organisation.jsx:44 ~  subscriptionLoading, subscriptionFetching:`,
+    subscriptionLoading,
+    subscriptionFetching
+  );
   const data = {
     name: "",
     web_url: "",
@@ -105,7 +113,6 @@ const Organisation = ({ item }) => {
   // delete query for deleting Single Organization
   const handleDelete = async (id) => {
     try {
-      // console.log(id);
       const response = await axios.delete(
         `${process.env.REACT_APP_API}/route/organization/delete/${id}`,
         {
@@ -127,36 +134,6 @@ const Organisation = ({ item }) => {
     }
   };
 
-  const {
-    data: subscriptionDetails,
-    isFetching,
-    isLoading,
-  } = useQuery({
-    queryKey: [`${item._id}-subscription`],
-    queryFn: async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/subscription/${item._id}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      return response.data;
-    },
-    onSuccess: async (data) => {
-      console.log(`🚀 ~ file: Organisation.jsx:144 ~ data:`, data);
-    },
-    onError: async (data) => {
-      console.error(`🚀 ~ file: Organisation.jsx:144 ~ data:`, data);
-    },
-  });
-  console.log(
-    `🚀 ~ file: Organisation.jsx:154 ~  isFetching,
-    isLoading,:`,
-    isFetching,
-    isLoading
-  );
   const handleEdit = async (id) => {
     setEditConfirmation(true);
 
@@ -224,20 +201,29 @@ const Organisation = ({ item }) => {
       <div
         className={`border-b-[3px] border-${getRandomColor()} block min-w-[21rem] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-200 relative`}
       >
-        {Math.ceil(
-          (new Date(item.subscriptionStartDate) - new Date()) /
-            (1000 * 60 * 60 * 24)
-        ) > 0 && (
-          <div class="wrap">
-            <span class="ribbon6 text-white">
-              {Math.ceil(
-                (new Date(item.subscriptionStartDate) - new Date()) /
+        <tag>
+          {subscriptionDetails?.subscription?.status === "authenticated"
+            ? (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
+                new Date()) /
+                (1000 * 60 * 60 * 24) <=
+              0
+              ? "Please subscribe"
+              : `Your ${Math.ceil(
+                  (new Date(
+                    subscriptionDetails?.subscription?.charge_at * 1000
+                  ) -
+                    new Date()) /
+                    (1000 * 60 * 60 * 24)
+                )} Day Trial`
+            : subscriptionDetails?.subscription?.status === "active"
+            ? `Your next due is after ${Math.ceil(
+                (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
+                  new Date()) /
                   (1000 * 60 * 60 * 24)
-              )}{" "}
-              Day Trial{" "}
-            </span>
-          </div>
-        )}
+              )} days`
+            : "Basic Plan"}
+        </tag>
+        {/* )} */}
         <div className="border-b-2 flex items-center justify-between border-[#0000002d] px-6 py-3 text-black">
           <Avatar
             src={item?.logo_url}
@@ -265,7 +251,6 @@ const Organisation = ({ item }) => {
             </Menu>
           </div>
         </div>
-
         <div className="p-6 pt-6 pb-4">
           <h5 className="mb-2 text-xl font-semibold leading-tight text-black">
             {item.orgName}
@@ -273,34 +258,67 @@ const Organisation = ({ item }) => {
           <p className="text-md ">{item.description}</p>
         </div>
         <div className="p-6 py-4  flex gap-4">
-          <Link
-            to={
-              window.innerWidth <= 768
-                ? `/organisation/${item._id}/setup`
-                : `/organisation/${item._id}/setup/add-roles`
+          <button
+            onClick={() => {
+              let link;
+              if (window.innerWidth <= 768) {
+                link = `/organisation/${item._id}/setup`;
+              } else {
+                link = `/organisation/${item._id}/setup/add-roles`;
+              }
+              navigate(link);
+            }}
+            disabled={
+              (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
+                new Date()) /
+                (1000 * 60 * 60 * 24) <=
+              0
+                ? true
+                : false
             }
+            className=" flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
           >
-            <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
-              Setup
-            </button>
-          </Link>
+            Setup
+          </button>
 
-          {subscriptionDetails?.subscription?.status?.includes(["active"]) ||
-          subscriptionDetails?.subscription?.status?.includes([
-            "authenticated",
-          ]) ? (
+          {subscriptionDetails?.subscription?.status === "authenticated" ? (
+            (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
+              new Date()) /
+              (1000 * 60 * 60 * 24) <=
+            0 ? (
+              // Continue subscription if trial days are 0
+              <Link
+                target="blank"
+                to={`${subscriptionDetails?.subscription?.short_url}`}
+              >
+                <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
+                  Continue subscription
+                  <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
+                </button>
+              </Link>
+            ) : (
+              <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
+                <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
+                  Go to Dashboard
+                  <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
+                </button>
+              </Link>
+            )
+          ) : subscriptionDetails?.subscription?.status === "active" ? (
+            // Display "Go to Dashboard" button if the status is "active"
             <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
-              <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
+              <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
                 Go to Dashboard
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
               </button>
             </Link>
           ) : (
+            // Default to "Continue subscription" button
             <Link
               target="blank"
               to={`${subscriptionDetails?.subscription?.short_url}`}
             >
-              <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
+              <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
                 Continue subscription
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
               </button>

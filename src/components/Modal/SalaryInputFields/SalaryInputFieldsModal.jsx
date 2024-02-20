@@ -133,7 +133,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
     console.log(isExists);
 
     if (!empTypes) {
-      newErrors.empTypes = "Employment Types is required";
+      newErrors.empTypes = "An Employment Types is required";
       isValid = false;
     } else {
       newErrors.empTypes = "";
@@ -259,7 +259,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
         setEmpTypes("");
         setSalaryStructures("");
         handleClose();
-        handleAlert(true, "success", "Salary template generated succesfully");
+        handleAlert(true, "success", "Salary Template generated succesfully.");
       },
 
       onError: () => {
@@ -283,7 +283,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["salaryTemplates"] });
         handleClose();
-        handleAlert(true, "success", "Salary template updated succesfully");
+        handleAlert(true, "success", "Salary Template updated succesfully.");
       },
       onError: () => {
         handleAlert(true, "error", "Something went wrong");
@@ -332,7 +332,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
       aria-describedby="modal-modal-description"
     >
       <div className="flex w-full justify-between py-4 items-center  px-4">
-        <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
+        <h1 className="text-xl pl-2 font-semibold font-sans">
           {salaryId ? "Edit Salary Template" : "Create Salary Template"}
         </h1>
         <IconButton onClick={handleClose}>

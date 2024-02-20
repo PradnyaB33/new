@@ -5,7 +5,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogTitle,
   FormControl,
   IconButton,
   InputLabel,
@@ -79,7 +78,7 @@ const PublicHoliday = () => {
       setAppAlert({
         alert: true,
         type: "error",
-        msg: "An error occurred while fetching holidays",
+        msg: "An Error occurred while fetching holidays",
       });
     }
   }, [id, setHolidays, setAppAlert]);
@@ -133,7 +132,7 @@ const PublicHoliday = () => {
       setAppAlert({
         alert: true,
         type: "success",
-        msg: "Holiday created successfully!",
+        msg: "Holiday created successfully.",
       });
       fetchHolidays();
     } catch (error) {
@@ -141,7 +140,7 @@ const PublicHoliday = () => {
       setAppAlert({
         alert: true,
         type: "error",
-        msg: "An error occurred while creating holiday",
+        msg: "An Error occurred while creating holiday.",
       });
     }
   };
@@ -187,12 +186,12 @@ const PublicHoliday = () => {
           patchData
         )
         .then((response) => {
-          console.log("Successfully updated");
+          console.log("Holiday  updated successfully.");
           setOpenModal(false);
           setAppAlert({
             alert: true,
             type: "success",
-            msg: "updated successfully!",
+            msg: "Holiday  updated successfully.",
           });
           fetchHolidays();
         })
@@ -204,12 +203,12 @@ const PublicHoliday = () => {
         await axios.delete(
           `${process.env.REACT_APP_API}/route/holiday/delete/${id}`
         );
-        console.log("Successfully deleted");
+        console.log("Holiday deleted successfully.");
         setOpenModal(false);
         setAppAlert({
           alert: true,
           type: "success",
-          msg: "deleted successfully!",
+          msg: "Holiday deleted successfully.",
         });
         fetchHolidays(); // Refresh holidays after delete
       } catch (error) {
@@ -319,7 +318,9 @@ const PublicHoliday = () => {
             maxWidth="sm"
             fullWidth
           >
-            <DialogTitle>Add holiday</DialogTitle>
+            <h1 className="text-xl pl-2 font-semibold font-sans mt-4 ml-4">
+              Add Holiday
+            </h1>
             <DialogContent className="flex gap-3 flex-col">
               <div className="flex gap-3 flex-col mt-3">
                 <TextField
@@ -409,7 +410,13 @@ const PublicHoliday = () => {
           </Dialog>
 
           <Dialog fullWidth open={actionModal} onClose={handleClose}>
+<<<<<<< HEAD
             <DialogTitle>Edit Public Holidays</DialogTitle>
+=======
+            <h1 className="text-xl pl-2 font-semibold font-sans mt-4 ml-4">
+              Edit Holiday
+            </h1>
+>>>>>>> 558d23a996234e8c3a5b045369a9414221cb1981
             <DialogContent>
               {operation === "edit" ? (
                 <>
@@ -477,16 +484,27 @@ const PublicHoliday = () => {
                     </FormControl>
                   </div>
 
+<<<<<<< HEAD
                   <div className="mt-5 flex gap-5">
+=======
+                  <div className="mt-5 flex gap-5 justify-end">
+                    <Button color="error" variant="outlined">
+                      cancel
+                    </Button>
+>>>>>>> 558d23a996234e8c3a5b045369a9414221cb1981
                     <Button
                       onClick={doTheOperation}
                       color="warning"
                       variant="contained"
                     >
+<<<<<<< HEAD
                       {operation}
                     </Button>
                     <Button onClick={handleClose} variant="contained" color="primary">
                       cancel
+=======
+                      Apply
+>>>>>>> 558d23a996234e8c3a5b045369a9414221cb1981
                     </Button>
                   </div>
                 </>

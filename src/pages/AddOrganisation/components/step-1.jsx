@@ -1,16 +1,18 @@
 import { ErrorMessage } from "@hookform/error-message/dist";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  BadgeOutlined,
   CalendarMonthOutlined,
-  CorporateFare,
-  Description,
+  DescriptionOutlined,
   FactoryOutlined,
-  LocalPostOffice,
+  Link,
+  LocalPostOfficeOutlined,
   TodayOutlined,
 } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
+import { FaLinkedin } from "react-icons/fa";
 import { z } from "zod";
 import useOrg from "../../../State/Org/Org";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
@@ -41,7 +43,6 @@ const organizationSchema = z.object({
 });
 const Step1 = ({ nextStep }) => {
   const { decodedToken } = useGetUser();
-  console.log(`🚀 ~ file: step-1.jsx:39 ~ decodedToken:`, decodedToken);
 
   const {
     orgName,
@@ -111,13 +112,13 @@ const Step1 = ({ nextStep }) => {
         <div className="grid md:grid-cols-2 md:gap-4 gap-0 px-4 grid-cols-1">
           <AuthInputFiled
             name="orgName"
-            icon={CorporateFare}
+            icon={BadgeOutlined}
             control={control}
             type="text"
             placeholder="Organization Name"
             label="Organization Name *"
             errors={errors}
-            error={errors.name}
+            error={errors.orgName}
           />
           <AuthInputFiled
             name="foundation_date"
@@ -131,17 +132,17 @@ const Step1 = ({ nextStep }) => {
           />
           <AuthInputFiled
             name="web_url"
-            icon={CorporateFare}
+            icon={Link}
             control={control}
             type="text"
-            placeholder="Web Url "
+            placeholder="Web url "
             label="Web Url  *"
             errors={errors}
             error={errors.web_url}
           />
           <AuthInputFiled
             name="organization_linkedin_url"
-            icon={CorporateFare}
+            icon={FaLinkedin}
             control={control}
             type="text"
             placeholder="LinkedIn url "
@@ -167,7 +168,7 @@ const Step1 = ({ nextStep }) => {
           />
           <AuthInputFiled
             name="email"
-            icon={LocalPostOffice}
+            icon={LocalPostOfficeOutlined}
             control={control}
             type="email"
             placeholder="Organization Email "
@@ -187,7 +188,7 @@ const Step1 = ({ nextStep }) => {
           />
           <AuthInputFiled
             name="description"
-            icon={Description}
+            icon={DescriptionOutlined}
             control={control}
             type="text"
             placeholder="Organizational Description "

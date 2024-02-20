@@ -64,10 +64,14 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
         queryClient.invalidateQueries({ queryKey: ["empTypes"] });
         handleClose();
         setTitleEmpType("");
-        handleAlert(true, "success", "Employee types generated succesfully");
+        handleAlert(
+          true,
+          "success",
+          "An Employment Type generated succesfully"
+        );
       },
       onError: () => {
-        setError("An error occurred while creating a new employe Type");
+        setError("An Error occurred while creating a new an employment type.");
       },
     }
   );
@@ -87,10 +91,10 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["empTypes"] });
         handleClose();
-        handleAlert(true, "success", "Employee Types updated succesfully");
+        handleAlert(true, "success", "An Employment Type updated succesfully.");
       },
       onError: () => {
-        setError("An error occurred while creating a neemppTypet");
+        setError("An Error occurred while an employment type.");
       },
     }
   );
@@ -147,7 +151,7 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
         className="border-none !z-10 !pt-0 !px-0 !w-[90%] lg:!w-[50%] md:!w-[60%] shadow-md outline-none rounded-md"
       >
         <div className="flex justify-between py-4 items-center  px-4">
-          <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
+          <h1 className="text-xl pl-2 font-semibold font-sans">
             {empTypeId ? "Edit Employment Types" : "Create Employment Types"}
           </h1>
           <IconButton onClick={handleClose}>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
 
 // Components
 import SetupSideNav from "./components/SideNav/SetupSideNav";
@@ -8,6 +8,7 @@ import AnimationComponent from "./components/emailverify/verification-animation"
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
+import useSubscription from "./hooks/Subscription/subscription";
 import UserProfile from "./hooks/UserData/useUser";
 import NewOranisationForm from "./pages/AddOrganisation/OrgFrom";
 import Application from "./pages/Application/Application";
@@ -121,50 +122,8 @@ const App = () => {
           </RequireAuth>
         }
       />
-      <Route
-        path="/verify/:token/"
-        element={
-          <RequireAuth
-            permission={[
-              "Super-Admin",
-              "Delegate-Super Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "Hr",
-              "Manager",
-              "Employee",
-            ]}
-          >
-            <AnimationComponent />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/reset-password/:token"
-        element={
-          <RequireAuth
-            permission={[
-              "Super-Admin",
-              "Delegate-Super Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "Hr",
-              "Manager",
-              "Employee",
-            ]}
-          >
-            <ResetPassword />
-          </RequireAuth>
-        }
-      />
+      <Route path="/verify/:token/" element={<AnimationComponent />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
       {/* Login Routes */}
 
       {/* //TODO Setup Sidebar */}
@@ -415,7 +374,9 @@ const App = () => {
         path="/organisation/:organisationId/setup/add-roles"
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
-            <AddRoles />
+            <RequireSubscription>
+              <AddRoles />
+            </RequireSubscription>
           </RequireAuth>
         }
       />
@@ -674,11 +635,33 @@ function RequireAuth({ children, permission }) {
 
   return user && isPermission ? children : <Navigate to={"/"} />;
 }
+function RequireSubscription({ children }) {
+  const { organisationId } = useParams();
+  const { subscriptionDetails, subscriptionLoading, subscriptionFetching } =
+    useSubscription(organisationId);
+  console.log(
+    `🚀 ~ file: Route.jsx:683 ~ subscriptionDetails:`,
+    subscriptionDetails
+  );
 
-//   : user?.profile?.length < 2 ? (
-//   <Navigate to={"/organisation/employee-dashboard"} />
-// ) : user?.profile?.includes("Hr") ? (
-//   <Navigate to={"/organisation/HR-dashboard"} />
-// ) : (
-//   <Navigate to={"/organisation/employee-dashboard"} />
-// );
+<<<<<<< HEAD
+  const { getCurrentUser, getCurrentRole } = UserProfile();
+
+  const user = getCurrentUser();
+  const role = getCurrentRole();
+
+  if (user && !role) {
+    return <Navigate to={"/choose-role"} />;
+  }
+
+  if (role || !window.location.pathname.includes("sign-in", "sign-up")) {
+    if (!role) return <Navigate to={"/sign-in"} />;
+    if (user) return children;
+    return <UnAuthorized />;
+  }
+
+  return user ? children : <Navigate to={"/"} />;
+=======
+  return children;
+>>>>>>> 7c1a07d03a479c41a9ca1e4d5d85473cb38e1c75
+}

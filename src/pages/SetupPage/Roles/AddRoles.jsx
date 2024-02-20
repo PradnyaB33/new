@@ -47,7 +47,7 @@ const AddRoles = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["profiles"] });
-        handleAlert(true, "success", "Roles Created Successfully");
+        handleAlert(true, "success", "Roles created successfully.");
       },
       onError: () => {
         handleAlert(true, "error", "Error from server");

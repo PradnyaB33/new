@@ -90,7 +90,7 @@ const EmailSetting = () => {
       setAppAlert({
         alert: true,
         type: "success",
-        msg: "Email created successfully!",
+        msg: "Email created successfully.",
       });
 
       setNewHandleOpen(false);
@@ -134,7 +134,7 @@ const EmailSetting = () => {
       setAppAlert({
         alert: true,
         type: "success",
-        msg: "Email Deleted Successfully.",
+        msg: "Email deleted successfully.",
       });
       setEmails(emails.filter((data) => data._id !== editEmailId));
       setHandleDeleteOpen(false);
@@ -162,7 +162,7 @@ const EmailSetting = () => {
       setEditEmail(emailDetails.email);
     } catch (error) {
       console.log(error);
-      console.log("Error occurred while fetching email details");
+      console.log("An Error occurred while fetching email details");
     }
   };
 
@@ -191,7 +191,7 @@ const EmailSetting = () => {
       setAppAlert({
         alert: true,
         type: "success",
-        msg: "Email Updated Successfully.",
+        msg: "Email updated successfully.",
       });
       setEmails(
         emails.map((data) =>
@@ -294,7 +294,9 @@ const EmailSetting = () => {
               maxWidth="sm"
               fullWidth
             >
-              <DialogTitle>Add Email</DialogTitle>
+              <h1 className="text-xl pl-2 font-semibold font-sans mt-6 ml-4">
+                Add Email
+              </h1>
               <DialogContent>
                 <div className="flex items-center justify-center gap-5">
                   <TextField
@@ -353,7 +355,9 @@ const EmailSetting = () => {
               maxWidth="sm"
               fullWidth
             >
-              <DialogTitle>Edit Email</DialogTitle>
+              <h1 className="text-xl pl-2 font-semibold font-sans mt-4 ml-4">
+                Edit Email
+              </h1>
               <DialogContent>
                 <div className="flex flex-col gap-5 my-5">
                   <TextField

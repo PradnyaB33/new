@@ -72,7 +72,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
   });
 
   useEffect(() => {
-    console.log("Employee Codes Updated:", employeeCodes);
+    console.log("Employee Codes updated:", employeeCodes);
     if (employeeCodes && employeeCodes.length > 0) {
       setStartWith(employeeCodes[0]?.code || "");
       setNumCharacterInPrefix(employeeCodes[0]?.numChracterInPrefix || "");
@@ -95,7 +95,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
         return response.data;
       } catch (error) {
         throw new Error(
-          error.response.data.message || "Failed to Update Employee Code"
+          error.response.data.message || "Failed to update employee code."
         );
       }
     },
@@ -104,7 +104,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
         // Invalidate and refetch the data after successful submission
         queryClient.invalidateQueries(["employee-code"]);
         handleClose();
-        handleAlert(true, "success", "Employee Code Updated Successfully");
+        handleAlert(true, "success", "Employee code updated successfully.");
         setTimeout(() => {
           handleAlert(false, "success", "");
         }, 2000);
@@ -131,7 +131,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
       handleAlert(
         true,
         "error",
-        "An error occurred while  updating Employee Code"
+        "An Error occurred while  updating employee code."
       );
     }
   };
@@ -148,7 +148,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
         className="border-none !z-10 !pt-0 !px-0 !w-[90%] lg:!w-[50%] md:!w-[60%] shadow-md outline-none rounded-md"
       >
         <div className="flex justify-between py-4 items-center  px-4">
-          <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
+          <h1 className="text-xl pl-2 font-semibold font-sans">
             Edit Employee Code
           </h1>
           <IconButton onClick={handleClose}>

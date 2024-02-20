@@ -116,7 +116,7 @@ const Designation = () => {
           setAppAlert({
             alert: true,
             type: "success",
-            msg: "Designation Added successfully!",
+            msg: "Designation added successfully!",
           });
           console.log("Designation added successfully:", response.data);
           fetchDesignations();
@@ -150,7 +150,7 @@ const Designation = () => {
         setAppAlert({
           alert: true,
           type: "success",
-          msg: "Designation updated successfully!",
+          msg: "Designation updated successfully.",
         });
         fetchDesignations();
         handleClick();
@@ -214,11 +214,11 @@ const Designation = () => {
           `${process.env.REACT_APP_API}/route/designation/create/${designationToDelete}`
         )
         .then(() => {
-          console.log("Designation deleted successfully");
+          console.log("Designation deleted successfully.");
           setAppAlert({
             alert: true,
             type: "success",
-            msg: "designation deleted successfully",
+            msg: "Designation deleted successfully.",
           });
           fetchDesignations();
         })
@@ -344,9 +344,9 @@ const Designation = () => {
             )}
 
             <Dialog open={click} onClose={handleClose} maxWidth="sm" fullWidth>
-              <DialogTitle>
+              <h1 className="text-xl pl-2 font-semibold font-sans mt-4 ml-4">
                 {editMode ? "Edit Designation" : "Add Designation"}
-              </DialogTitle>
+              </h1>
               <DialogContent>
                 <TextField
                   style={{ marginTop: "1rem", marginBottom: "1rem" }}

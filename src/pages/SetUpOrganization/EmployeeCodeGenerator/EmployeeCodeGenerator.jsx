@@ -121,7 +121,7 @@ const EmployeeCodeGenerator = () => {
       onSuccess: () => {
         // Invalidate and refetch the data after successful deletion
         queryClient.invalidateQueries("employeecode");
-        handleAlert(true, "success", "Employee Code deleted succesfully");
+        handleAlert(true, "success", "Employee code deleted succesfully.");
       },
     }
   );
