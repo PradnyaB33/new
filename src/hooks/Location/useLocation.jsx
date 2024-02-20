@@ -54,6 +54,7 @@ const useLocationStore = () => {
         },
       ],
     };
+    console.log(`🚀 ~ file: useLocation.jsx:33 ~ payload:`, payload);
 
     try {
       const response = await axios.post(

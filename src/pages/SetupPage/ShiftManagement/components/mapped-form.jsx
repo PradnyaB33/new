@@ -13,13 +13,12 @@ import React, { useState } from "react";
 const Mapped = ({
   item,
   index,
-  shifts,
-  // newAppliedLeaveEvents,
-  // setNewAppliedLeaveEvents,
+  subtractedLeaves,
+  newAppliedLeaveEvents,
+  setNewAppliedLeaveEvents,
   setCalendarOpen,
 }) => {
   const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
-  const [shiftsTypes, setShiftsTypes] = useState(item);
   const badgeStyle = {
     "& .MuiBadge-badge": {
       color: "#d1d5db",
@@ -28,21 +27,18 @@ const Mapped = ({
       transition: "color 0.3s, background-color 0.3s, border-color 0.3s",
     },
   };
+
   const handleChange = (event) => {
-    // console.log(`🚀 ~ event:`, shifts);
-    // Remove below lines, these are added to solve warnings
-    setLeavesTypes(443423423);
-    setShiftsTypes(4234234234);
-    // setLeavesTypes(event.target.value);
-    // newAppliedLeaveEvents[index].leaveTypeDetailsId = event.target.value;
-    // setNewAppliedLeaveEvents(newAppliedLeaveEvents);
+    setLeavesTypes(event.target.value);
+    newAppliedLeaveEvents[index].leaveTypeDetailsId = event.target.value;
+    setNewAppliedLeaveEvents(newAppliedLeaveEvents);
   };
-  // const removeItem = (idToRemove) => {
-  //   const updatedAppliedLeaveEvents = newAppliedLeaveEvents.filter(
-  //     (_, i) => i !== idToRemove
-  //   );
-  //   setNewAppliedLeaveEvents(updatedAppliedLeaveEvents);
-  // };
+  const removeItem = (idToRemove) => {
+    const updatedAppliedLeaveEvents = newAppliedLeaveEvents.filter(
+      (_, i) => i !== idToRemove
+    );
+    setNewAppliedLeaveEvents(updatedAppliedLeaveEvents);
+  };
   return (
     <div
       key={index}
@@ -87,28 +83,33 @@ const Mapped = ({
       </div>
       <div className="flex lg:w-fit lg:justify-end justify-between w-full items-center gap-2">
         <FormControl sx={{ width: 180 }} size="small" fullWidth>
-          <InputLabel id="demo-simple-select-label">Select shift</InputLabel>
+          <InputLabel id="demo-simple-select-label">
+            Select Leave Type
+          </InputLabel>
           <Select
             defaultValue={leavesTypes}
             required
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={leavesTypes}
-            label="Select Shift"
+            label="Select Leave Type"
             onChange={handleChange}
           >
-            {shifts?.map((item, index) => {
+            {subtractedLeaves?.map((item, index) => {
               return (
                 item.isActive && (
                   <MenuItem
-                    selected={shiftsTypes === item.shiftName}
+                    selected={leavesTypes === item.leaveTypeDetailsId}
                     id={index}
                     key={index}
                     value={item._id}
                   >
                     <div className="flex justify-between w-full">
-                      <div>{item.shiftName} </div>
-                      <div className={`w-4 h-4 rounded-full my-auto`}></div>
+                      <div>{item.leaveName} </div>
+                      <div
+                        style={{ background: item.color }}
+                        className={`w-4 h-4 rounded-full my-auto`}
+                      ></div>
                     </div>
                   </MenuItem>
                 )
@@ -127,7 +128,7 @@ const Mapped = ({
         <Button
           type="button"
           className="!border-gray-300 group-hover:!border-gray-400"
-          // onClick={() => removeItem(index)}
+          onClick={() => removeItem(index)}
           variant="outlined"
         >
           <Delete className="text-gray-300 group-hover:text-red-500" />

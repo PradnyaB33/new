@@ -1,4 +1,6 @@
-import { Info, Warning } from "@mui/icons-material";
+import { Add, Info } from "@mui/icons-material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Button,
   Dialog,
@@ -16,9 +18,8 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import EmpTypeModal from "../../../components/Modal/EmployeeTypesModal/EmpTypeModal";
 import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
-import { Add } from "@mui/icons-material";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
+
 const EmployementTypes = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -111,9 +112,9 @@ const EmployementTypes = () => {
           <article className="SetupSection bg-white w-full md:w-[80%]  h-max shadow-md rounded-sm border  items-center">
             <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
               <div className="flex items-center  gap-3 ">
-                {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
-                  <ManageAccountsOutlined className="!text-lg text-white" />
-                </div> */}
+                <div className="flex items-center justify-center">
+                  <ManageAccountsOutlinedIcon />
+                </div>
                 <h1 className="!text-lg tracking-wide">Employment</h1>
               </div>
               <Button
@@ -176,7 +177,7 @@ const EmployementTypes = () => {
               <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
                 <article className="flex items-center mb-1 text-red-500 gap-2">
                   <Info className="!text-2xl" />
-                  <h1 className="text-xl font-semibold">Add Employment</h1>
+                  <h1 className="text-lg font-semibold">Add Employment</h1>
                 </article>
                 <p>No employment found. Please add types of employment.</p>
               </section>
@@ -199,14 +200,11 @@ const EmployementTypes = () => {
         open={deleteConfirmation !== null}
         onClose={handleCloseConfirmation}
       >
-        <DialogTitle color={"error"}>
-          <Warning color="error" /> Are you sure to delete the Employeement
-          types?
-        </DialogTitle>
+        <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <p>
             Please confirm your decision to delete this employement type, as
-            this action cannot be undone
+            this action cannot be undone.
           </p>
         </DialogContent>
         <DialogActions>

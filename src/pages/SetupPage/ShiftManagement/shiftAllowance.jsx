@@ -1,60 +1,46 @@
-import { CalendarMonth } from "@mui/icons-material";
-import WestIcon from "@mui/icons-material/West";
+import { CalendarMonth, West } from "@mui/icons-material";
 import { Badge, Button, Skeleton } from "@mui/material";
-import axios from "axios";
-import React, { useContext, useState } from "react";
+import React from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import "tailwindcss/tailwind.css";
-// import { TestContext } from "../../../State/Function/Main";
-import { UseContext } from "../../../State/UseState/UseContext";
 import AppDatePicker from "../../../components/date-picker/date-picker";
-import UserProfile from "../../../hooks/UserData/useUser";
-import ShiftTable from "./components/ShiftsTable";
+import useLeaveData from "../../../hooks/Leave/useLeaveData";
+import ShiftsTable from "./components/ShiftsTable";
 import Mapped from "./components/mapped-form";
 
-// Set up the localizer for moment.js
+const LeaveRequisition = () => {
+  const {
+    data,
+    setCalendarOpen,
+    isLoading,
+    handleSubmit,
+    handleInputChange,
+    newAppliedLeaveEvents,
+    setNewAppliedLeaveEvents,
+    isCalendarOpen,
+    handleUpdateFunction,
+    selectEvent,
+    setSelectedLeave,
+    selectedLeave,
+    setselectEvent,
+  } = useLeaveData();
 
-const ShiftManagement = () => {
-  const { cookies } = useContext(UseContext);
-  const authToken = cookies["aegis"];
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
-  // const { handleAlert } = useContext(TestContext);
-  const { shifts, setShifts } = useState([]);
-  // const [subtractedLeaves, setSubtractedLeaves] = useState([]);
-  const [isCalendarOpen, setCalendarOpen] = useState(false);
-  const [selectedLeave, setSelectedLeave] = useState(null);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([]);
-  const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
-  // const queryclient = useQueryClient();
-  const { isLoading } = useQuery(
-    // "employee-leave-table-without-default",
-    "shift-management",
-    async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/shifts/${user.organizationId}`,
-        {
-          headers: { Authorization: authToken },
-        }
-      );
-      // Below is to get shifts selected
-      // setAppliedLeaveEvents([...response.data.currentYearLeaves]);
-      // This is to get all shifts
-      setShifts(response.data.shifts);
-      console.log("THis is complete", response.data);
-      return response.data;
-      //
-      // Below are taken leaves
-      // setAppliedLeaveEvents([...response.data.currentYearLeaves]);
-      // Below are all leaves
-      // setSubtractedLeaves(response.data.LeaveTypedEdited);
-    }
-  );
-
-  // no need to create new shift here
+  // const { isLoading } = useQuery(
+  //   "employee-leave-table-without-default",
+  //   async () => {
+  //     const response = await axios.get(
+  //       `${process.env.REACT_APP_API}/route/leave/getEmployeeCurrentYearLeave`,
+  //       {
+  //         headers: { Authorization: authToken },
+  //       }
+  //     );
+  //     setAppliedLeaveEvents([...response.data.currentYearLeaves]);
+  //     setSubtractedLeaves(response.data.LeaveTypedEdited);
+  //     console.log("THis is complete", response.data);
+  //     return response.data;
+  //   }
+  // );
   // const createLeaves = async () => {
   //   newAppliedLeaveEvents.forEach(async (value) => {
   //     try {
@@ -91,35 +77,35 @@ const ShiftManagement = () => {
   //     console.error(error);
   //   },
   // });
-  const handleInputChange = () => {
-    setCalendarOpen(true);
-    setSelectedLeave(null);
-  };
+  // const handleInputChange = () => {
+  //   setCalendarOpen(true);
+  //   setSelectedLeave(null);
+  // };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
 
-    setCalendarOpen(false);
+  //   setCalendarOpen(false);
 
-    setCalendarOpen(false);
-    setAnchorEl("");
+  //   setCalendarOpen(false);
+  //   setAnchorEl("");
 
-    // leaveMutation.mutate();
-  };
+  //   leaveMutation.mutate();
+  // };
 
   return (
     <>
       <section className="">
         <header className="text-xl pt-6 bg-gray-50 shadow-md font-semibold p-4">
           <Link to={"/"}>
-            <WestIcon className="mx-4 !text-xl" />
+            <West className="mx-4 !text-xl" />
           </Link>
-          Shift Management
+          Leave Request
         </header>
 
         <div className="flex flex-col-reverse md:flex-row w-full justify-start p-6 gap-4">
           <div className="flex flex-col gap-4">
-            <ShiftTable />
+            <ShiftsTable />
           </div>
 
           <article className="md:w-[100%] space-y-2">
@@ -162,25 +148,26 @@ const ShiftManagement = () => {
                     </Button>
                   </Badge>
                   <p className="!text-gray-400 font-semibold mb-2 text-xl">
-                    Set Shifts for days
+                    Select Leave Date
                   </p>
                 </div>
               </div>
             )}
 
             <AppDatePicker
-              isCalendarOpen={isCalendarOpen}
+              data={data}
+              handleUpdateFunction={handleUpdateFunction}
+              selectEvent={selectEvent}
+              setselectEvent={setselectEvent}
               setCalendarOpen={setCalendarOpen}
-              anchorEl={anchorEl}
-              appliedLeaveEvents={appliedLeaveEvents}
-              setAppliedLeaveEvents={setAppliedLeaveEvents}
               setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
-              newAppliedLeaveEvents={newAppliedLeaveEvents}
               selectedLeave={selectedLeave}
               setSelectedLeave={setSelectedLeave}
+              newAppliedLeaveEvents={newAppliedLeaveEvents}
+              isCalendarOpen={isCalendarOpen}
             />
 
-            {newAppliedLeaveEvents?.length > 0 &&
+            {newAppliedLeaveEvents.length > 0 &&
             Array.isArray(newAppliedLeaveEvents) ? (
               <>
                 <form
@@ -191,15 +178,15 @@ const ShiftManagement = () => {
                     Selected Leave's
                   </h1>
                   <div className="flex flex-col gap-4">
-                    {shifts?.map((item, index) => (
+                    {newAppliedLeaveEvents?.map((item, index) => (
                       <Mapped
                         key={index}
                         setCalendarOpen={setCalendarOpen}
-                        shifts={shifts}
+                        subtractedLeaves={data?.LeaveTypedEdited}
                         item={item}
                         index={index}
-                        // newAppliedLeaveEvents={newAppliedLeaveEvents}
-                        // setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
+                        newAppliedLeaveEvents={newAppliedLeaveEvents}
+                        setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
                       />
                     ))}
                     <div className="w-full m-auto flex justify-center my-4">
@@ -208,7 +195,7 @@ const ShiftManagement = () => {
                         variant="contained"
                         className="font-bold m-auto w-fit"
                       >
-                        Apply for Shifts allowance
+                        Apply for leave
                       </Button>
                     </div>
                   </div>
@@ -222,11 +209,11 @@ const ShiftManagement = () => {
                     onClick={() => setCalendarOpen(true)}
                     variant="text"
                     size="large"
-                    className="text-center !italic w-fit !m-auto"
+                    className="text-center w-fit !m-auto !capitalize !underline "
                   >
                     {" "}
                     {!isLoading
-                      ? "Apply for Shifts allowance"
+                      ? "Apply For Leave"
                       : "Wait Calendar is Loading"}
                   </Button>
                 </div>
@@ -239,4 +226,4 @@ const ShiftManagement = () => {
   );
 };
 
-export default ShiftManagement;
+export default LeaveRequisition;

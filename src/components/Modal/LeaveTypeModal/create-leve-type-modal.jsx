@@ -15,7 +15,7 @@ import axios from "axios";
 import randomColor from "randomcolor";
 import React, { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
@@ -35,22 +35,21 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
   });
   const form = useForm({
     defaultValues: {
-      leaveName: "",
+      leaveName: undefined,
       color: randomColor(),
       isActive: true,
-      count: "",
+      count: undefined,
     },
     resolver: zodResolver(leaveTypeSchema),
   });
 
   const { handleSubmit, control, formState } = form;
   const { errors } = formState;
+
   const isFormClean = Object.keys(formState.dirtyFields).length === 0;
 
-  const onSubmit = async (data) => {
-    console.log(data);
-    try {
-      // Make the PATCH request using axios
+  const mainFunc = useMutation(
+    async (data) => {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/leave-types/${param.organisationId}`,
         data,
@@ -60,21 +59,33 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
           },
         }
       );
-      // Handle success
-      handleAlert(true, "success", response.data.message);
-      // Invalidate the query to refetch the data
-      queryClient.invalidateQueries("leaveTypes");
-      // Close the modal
-      handleClose();
+      return response.data;
+    },
+    {
+      onSuccess: (data) => {
+        handleAlert(true, "success", data.message);
+        // Invalidate the query to refetch the data
+        queryClient.invalidateQueries("leaveTypes");
+        handleClose();
+      },
+      onError: (data) => {
+        console.log(`🚀 ~ file: create-leve-type-modal.jsx:72 ~ data:`, data);
+        console.log("error");
+        handleAlert(
+          true,
+          "error",
+          data?.response?.data?.message ||
+            "Failed to update leave type. Please try again."
+        );
+      },
+    }
+  );
+  const onSubmit = async (data) => {
+    try {
+      mainFunc.mutate(data);
     } catch (error) {
       // Handle error
       console.error(error);
-      handleAlert(
-        true,
-        "error",
-        error?.response?.data?.message ||
-          "Failed to update leave type. Please try again."
-      );
     }
   };
 
@@ -89,7 +100,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
 
   return (
     <Modal
-      keepMounted={false}
+      keepMounted={true}
       open={open}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"

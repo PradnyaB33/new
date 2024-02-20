@@ -597,22 +597,16 @@ const DepartmentList = () => {
                 ))}
               </Select>
             </FormControl>
-            <div className="flex gap-3 mt-4 ">
-              <Button
-                color="success"
-                size="small"
-                onClick={handleUpdateRequest}
-                variant="contained"
-              >
-                Apply
+            <div className="flex gap-3 mt-4  justify-end">
+              <Button onClick={handleClose} color="error" variant="outlined">
+                Cancel
               </Button>
               <Button
-                size="small"
-                onClick={handleClose}
-                color="error"
+                onClick={handleUpdateRequest}
                 variant="contained"
+                color="primary"
               >
-                Cancel
+                Apply
               </Button>
             </div>
           </DialogContent>

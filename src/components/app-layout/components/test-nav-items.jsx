@@ -1,12 +1,9 @@
 import {
-  AccessTime,
-  AddAlert,
   Business,
   Category,
   CircleNotifications,
   Dashboard,
   Description,
-  Event,
   Groups,
   ListAlt,
   MonetizationOn,
@@ -24,6 +21,14 @@ import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
+import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
+import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
@@ -61,7 +66,7 @@ const TestNavItems = ({ toggleDrawer }) => {
         routes: [
           {
             key: "dashboard",
-            isVisible: false,
+            isVisible: true,
             link:
               role === "Manager"
                 ? `organisation/${orgId}/dashboard/manager-dashboard`
@@ -69,7 +74,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                 ? `/organisation/${orgId}/dashboard/HR-dashboard`
                 : role === "Employee"
                 ? "/organisation/dashboard/employee-dashboard"
-                : "",
+                : "/organizationList",
             icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
             text: "Dashboard",
           },
@@ -91,7 +96,9 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "attendance",
             isVisible: true,
             link: "/leave",
-            icon: <AccessTime className=" !text-[1.2em] text-[#67748E]" />,
+            icon: (
+              <AccessTimeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
             text: "Attendance",
           },
           {
@@ -160,14 +167,18 @@ const TestNavItems = ({ toggleDrawer }) => {
                 role
               ),
             link: "/shift-management",
-            icon: <Event className=" !text-[1.2em] text-[#67748E]" />,
+            icon: (
+              <ScheduleOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
             text: "Shift Management",
           },
           {
             key: "createsalary",
             isVisible: isVisible && ["Super-Admin", "Hr"].includes(role),
             link: `/organisation/${orgId}/salary-management`,
-            icon: <Event className=" !text-[1.2em] text-[#67748E]" />,
+            icon: (
+              <AccountBalanceWalletOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
             text: "Salary Management",
           },
         ],
@@ -232,7 +243,9 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "addDepartment",
             isVisible: ["Super-Admin", "Hr", "Department-Head"].includes(role),
             link: `/organisation/${orgId}/add-department`,
-            icon: <AddAlert className=" !text-[1.2em] text-[#67748E]" />,
+            icon: (
+              <AddCircleOutlineOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
             text: "Add Department",
           },
 
@@ -240,14 +253,18 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "deptDeletion",
             isVisible: ["Super-Admin", "Hr", "Department-Head"].includes(role),
             link: `/organisation/${orgId}/dept-deletion`,
-            icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
+            icon: (
+              <DeleteForeverOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
             text: "Bulk Deletion",
           },
           {
             key: "departmentList",
             isVisible: ["Super-Admin", "Hr", "Department-Head"].includes(role),
             link: `/organisation/${orgId}/department-list`,
-            icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
+            icon: (
+              <ListAltOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
             text: "Manage Departments",
           },
         ],
@@ -261,7 +278,9 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "addOrganisation",
             isVisible: ["Super-Admin", "Delegate-Super Admin"].includes(role),
             link: "/add-organisation",
-            icon: <AddAlert className=" !text-[1.2em] text-[#67748E]" />,
+            icon: (
+              <BusinessOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
             text: "Add Organisation",
           },
 
@@ -269,7 +288,9 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "organisationList",
             isVisible: ["Super-Admin", "Delegate-Super Admin"].includes(role),
             link: "/organizationList",
-            icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
+            icon: (
+              <AccountTreeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
             text: "Organisation List",
           },
         ],

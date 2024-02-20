@@ -18,21 +18,20 @@ import { useParams } from "react-router-dom";
 import Setup from "../SetUpOrganization/Setup";
 import { UseContext } from "../../State/UseState/UseContext";
 import { Add, Info } from "@mui/icons-material";
+import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
+
 const Designation = () => {
   const [click, setClick] = useState(false);
   const { organisationId } = useParams();
   const [designationIdRequired, setDesignationIdRequired] = useState(false);
   const { setAppAlert } = useContext(UseContext);
-
   const [prefixRequired, setPrefixRequired] = useState(false);
   const [prefixLength, setPrefixLength] = useState(0);
   const [numCharacters, setNumCharacters] = useState(1);
   const [designation, setDesignation] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [designationName, setDesignationName] = useState("");
-
   const [counter, setCounter] = useState(1);
-
   const [designationId, setDesignationId] = useState("");
   const [enterDesignationId, setEnterDesignationId] = useState(false);
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
@@ -40,14 +39,6 @@ const Designation = () => {
   const [trackedId, setTrackedId] = useState("");
   const [showUpdateConfirmationDialog, setShowUpdateConfirmationDialog] =
     useState(false);
-
-  // useEffect(() =>{
-  // !done for the day guys
-  // const filteredDesignations = designation.filter(
-  //     (d) => d.organizationId === organisationId
-  //   )
-
-  // },[])
 
   const handleClick = (id) => {
     setClick(!click);
@@ -286,9 +277,9 @@ const Designation = () => {
           <article className="SetupSection bg-white w-[80%]  h-max shadow-md rounded-sm border  items-center">
             <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
               <div className="flex items-center gap-3 ">
-                {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
-                  <BadgeOutlinedIcon className="!text-lg text-white" />
-                </div> */}
+                <div className=" flex items-center justify-center">
+                  <AssignmentIndOutlinedIcon />
+                </div>
                 <h1 className="!text-lg tracking-wide">Designation</h1>
               </div>
               <Button
@@ -300,32 +291,26 @@ const Designation = () => {
                 Add Designation
               </Button>
             </div>
-
-            <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-              <table className="min-w-full bg-white text-left !text-sm font-light">
-                <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-                  <tr className="!font-semibold ">
-                    <th scope="col" className="!text-left pl-8 py-3 w-1/12">
-                      SR NO
-                    </th>
-                    <th scope="col" className="py-3 w-8/12">
-                      Designation Name
-                    </th>
-                    <th scope="col" className="px-6 py-3 w-2/12">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody >
-                  {designation.length === 0 ? (
-                    <tr className="!w-full !font-medium border-b text relative">
-
+            {designation.length > 0 ? (
+              <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
+                <table className="min-w-full bg-white text-left !text-sm font-light">
+                  <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+                    <tr className="!font-semibold ">
+                      <th scope="col" className="!text-left pl-8 py-3 w-1/12">
+                        SR NO
+                      </th>
+                      <th scope="col" className="py-3 w-8/12">
+                        Designation Name
+                      </th>
+                      <th scope="col" className="px-6 py-3 w-2/12">
+                        Actions
+                      </th>
                     </tr>
-                  ) : (
-                    designation.map((data, id) => (
-                      <tr className={`${id % 2 === 0 ? "bg-gray-50" : "bg-white"
-                        } border-b dark:border-neutral-500 !font-medium`}>
-                        <td className="!text-left pl-9 py-4">{id + 1}</td>
+                  </thead>
+                  <tbody>
+                    {designation.map((data, id) => (
+                      <tr className="!font-medium border-b" key={id}>
+                        <td className="!text-left pl-9">{id + 1}</td>
                         <td className=" py-3">{data?.designationName}</td>
                         <td className="px-2">
                           <IconButton
@@ -344,20 +329,20 @@ const Designation = () => {
                           </IconButton>
                         </td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-              {designation.length === 0 && (
-                <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
-                  <article className="flex items-center mb-1 text-red-500 gap-2">
-                    <Info className="text-2xl" />
-                    <h1 className="text-xl font-semibold">Add Designation</h1>
-                  </article>
-                  <p>No designation found. Please add a designation.</p>
-                </section>
-              )}
-            </div>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+                <article className="flex items-center mb-1 text-red-500 gap-2">
+                  <Info className="text-2xl" />
+                  <h1 className="text-lg font-semibold">Add Designation</h1>
+                </article>
+                <p>No designation found. Please add a designation.</p>
+              </section>
+            )}
+
             <Dialog open={click} onClose={handleClose} maxWidth="sm" fullWidth>
               <DialogTitle>
                 {editMode ? "Edit Designation" : "Add Designation"}
@@ -455,21 +440,50 @@ const Designation = () => {
                 {!designationId}
               </DialogContent>
 
-              <div className="mt-5  mb-4 flex gap-5 justify-center">
+              <div className="mt-5  mb-4 flex  gap-2  mr-4 justify-end">
+                <Button color="error" variant="outlined" onClick={handleClose}>
+                  cancel
+                </Button>
                 <Button
                   onClick={handleAddDesignation}
                   variant="contained"
                   color="primary"
                 >
-                  {editMode ? "Submit" : "Submit"}
-                </Button>
-                <Button color="error" variant="outlined" onClick={handleClose}>
-                  cancel
+                  {editMode ? "Apply" : "Submit"}
                 </Button>
               </div>
             </Dialog>
-
             <Dialog
+              open={showConfirmationDialog}
+              onClose={handleCloseConfirmationDialog}
+            >
+              <DialogTitle>Confirm Deletion</DialogTitle>
+              <DialogContent>
+                <p>
+                  Please confirm your decision to delete this designation, as
+                  this action cannot be undone.
+                </p>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={handleCloseConfirmationDialog}
+                  variant="outlined"
+                  color="primary"
+                  size="small"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={handleConfirmDelete}
+                  color="error"
+                >
+                  Delete
+                </Button>
+              </DialogActions>
+            </Dialog>
+            {/* <Dialog
               open={showConfirmationDialog}
               onClose={handleCloseConfirmationDialog}
               maxWidth="sm"
@@ -501,8 +515,7 @@ const Designation = () => {
                   </Button>
                 </div>
               </DialogActions>
-            </Dialog>
-
+            </Dialog> */}
             <Dialog
               open={showUpdateConfirmationDialog}
               onClose={() => setShowUpdateConfirmationDialog(false)}

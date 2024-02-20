@@ -159,7 +159,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
           <div className="flex gap-4 items-center">
             <div className="space-y-2">
               <label className="text-md" htmlFor="demo-simple-select-label">
-                Employee ID prefix (yes or no)
+                Employee ID prefix (Yes or No)
               </label>
               <FormControl size="small" className="w-full">
                 <InputLabel id="demo-simple-select-label">
@@ -171,7 +171,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
                   onChange={handleInputChange}
                   label=" prefix character"
                 >
-                  <MenuItem value={true}>yes</MenuItem>
+                  <MenuItem value={true}>Yes</MenuItem>
                   <MenuItem value={false}>No</MenuItem>
                 </Select>
               </FormControl>
@@ -219,7 +219,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
         <div className="w-full">
           <Divider variant="fullWidth" orientation="horizontal" />
         </div>
-        <div className="flex gap-4 mt-4  justify-center mr-4">
+        <div className="flex gap-4 mt-4 mr-4  mb-4 justify-end ">
           <Button onClick={handleClose} color="error" variant="outlined">
             Cancel
           </Button>

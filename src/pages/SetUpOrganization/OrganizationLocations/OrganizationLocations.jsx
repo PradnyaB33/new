@@ -1,4 +1,6 @@
 import { Add, Info } from "@mui/icons-material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Button,
   Dialog,
@@ -18,8 +20,8 @@ import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../Setup";
 import Selector from "./selector";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import AddLocationAltOutlinedIcon from "@mui/icons-material/AddLocationAltOutlined";
+
 const OrganizationLocations = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -310,10 +312,9 @@ const OrganizationLocations = () => {
           <IntlProvider locale="en">
             <div className="p-4  border-b-[.5px] border-gray-300 flex items-center justify-between gap-3 w-full">
               <div className="flex gap-3">
-                {" "}
-                {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
-                  <AddLocationAltOutlined className="!text-lg text-white" />
-                </div> */}
+                <div className="flex items-center justify-center">
+                  <AddLocationAltOutlinedIcon />
+                </div>
                 <h1 className="!text-lg tracking-wide"> Location</h1>
               </div>
               <Button
@@ -330,7 +331,7 @@ const OrganizationLocations = () => {
               <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
                 <article className="flex items-center mb-1 text-red-500 gap-2">
                   <Info className="text-2xl" />
-                  <h1 className="text-xl font-semibold">Add Location</h1>
+                  <h1 className="text-lg font-semibold">Add Location</h1>
                 </article>
                 <p>No location found. Please add a location.</p>
               </section>
@@ -368,8 +369,9 @@ const OrganizationLocations = () => {
                   {locationList?.map((location, index) => (
                     <tr
                       key={index}
-                      className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                        } border-b dark:border-neutral-500 !font-medium`}
+                      className={`${
+                        index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                      } border-b dark:border-neutral-500 !font-medium`}
                     >
                       <td className="py-2 px-3">{index + 1}</td>
                       <td className="py-2 px-3">{location.continent}</td>
@@ -537,7 +539,7 @@ const OrganizationLocations = () => {
                     fullWidth
                   />
                 </DialogContent>
-                <div className="flex gap-4 mt-4 justify-center mb-4">
+                <div className="flex gap-4 mt-4 justify-end mb-4 mr-4">
                   <Button
                     onClick={handleClose}
                     color="error"
@@ -559,36 +561,7 @@ const OrganizationLocations = () => {
                     {editIndex !== null ? (
                       <FormattedMessage
                         id="saveChanges"
-                        defaultMessage="Save Changes"
-                      />
-                    ) : (
-                      <FormattedMessage
-                        id="addLocation"
-                        defaultMessage="Add Location"
-                      />
-                    )}
-                  </Button>
-                </div>
-
-                {/* <DialogActions>
-                  <Button onClick={handleClose} color="secondary">
-                    <FormattedMessage id="cancel" defaultMessage="Cancel" />
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      
-                      if (editIndex !== null) {
-                        handleUpdateLocation(editIndex);
-                      } else {
-                        handleAddLocation();
-                      }
-                    }}
-                    color="primary"
-                  >
-                    {editIndex !== null ? (
-                      <FormattedMessage
-                        id="saveChanges"
-                        defaultMessage="Save Changes"
+                        defaultMessage="Apply"
                       />
                     ) : (
                       <FormattedMessage
@@ -597,22 +570,30 @@ const OrganizationLocations = () => {
                       />
                     )}
                   </Button>
-                </DialogActions> */}
+                </div>
               </Dialog>
               <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
                 <DialogTitle>Confirm Deletion</DialogTitle>
                 <DialogContent>
                   <DialogContentText>
-                    Are you sure you want to delete this location?
+                    Please confirm your decision to delete this location, as
+                    this action cannot be undone.
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={() => setConfirmOpen(false)} color="primary">
+                  <Button
+                    onClick={() => setConfirmOpen(false)}
+                    variant="outlined"
+                    color="primary"
+                    size="small"
+                  >
                     Cancel
                   </Button>
                   <Button
+                    variant="contained"
+                    size="small"
                     onClick={() => handleDeleteLocation(deleteIndex)}
-                    color="primary"
+                    color="error"
                   >
                     Delete
                   </Button>

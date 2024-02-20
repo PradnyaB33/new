@@ -42,10 +42,10 @@ const AppDatePicker = ({
     setSelectedLeave(event);
     setCalendarOpen(true);
     if (event.title === "Selected Leave") {
-      setDelete(false);
+      setDelete(true);
       setUpdate(false);
     } else {
-      setDelete(true);
+      setDelete(false);
       setUpdate(true);
     }
   };
@@ -61,7 +61,7 @@ const AppDatePicker = ({
       return {
         style: {
           pointerEvents: "none",
-          backgroundColor: "#cd1111",
+          backgroundColor: "#f7bfbf",
         },
       };
     }
@@ -202,6 +202,7 @@ const AppDatePicker = ({
       );
     } else {
     }
+    setDelete(false);
   };
   useEffect(() => {
     // Add click event listener when component mounts
@@ -271,7 +272,7 @@ const AppDatePicker = ({
           variant="contained"
           onClick={handleDelete}
           className="rbc-event-content"
-          disabled={Delete}
+          disabled={!Delete}
         >
           Delete
         </Button>

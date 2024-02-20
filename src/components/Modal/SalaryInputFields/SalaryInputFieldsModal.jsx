@@ -107,9 +107,11 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
     salaryLength: "",
   });
 
-  const validateForm = () => {
+  const validateForm = (data) => {
     const newErrors = { ...errors };
     let isValid = true;
+
+    console.log(data);
 
     if (!userInput.name.trim()) {
       newErrors.name = "Name is required";
@@ -117,6 +119,18 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
     } else {
       newErrors.name = "";
     }
+
+    const found = [];
+
+    const isExists = data?.salaryStructure.some((item) => {
+      if (found.find((salary) => salary === item.salaryComponent)) {
+        return true;
+      }
+      found.push(item.salaryComponent);
+      return false;
+    });
+
+    console.log(isExists);
 
     if (!empTypes) {
       newErrors.empTypes = "Employment Types is required";
@@ -132,6 +146,14 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
       newErrors.salaryLength = "";
     }
 
+    if (isExists) {
+      newErrors.salaryLength =
+        "You can't select same salary component multiple times";
+      isValid = false;
+    } else {
+      newErrors.salaryLength = "";
+    }
+
     // Validate salary structures
     const structuresError = [];
     salaryStructures.forEach((structure, index) => {
@@ -142,18 +164,9 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
         isValid = false;
       }
 
-      // if (!structure.manuallyInput.trim()) {
-      //   error.manuallyInput = "Manually Input is required";
-      //   isValid = false;
-      // }
-
-      // if (!structure.calculation.trim()) {
-      //   error.calculation = "Calculation is required";
-      //   isValid = false;
-      // }
-
       structuresError[index] = error;
     });
+
     newErrors.salaryStructures = structuresError;
 
     setErrors(newErrors);
@@ -167,9 +180,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
         desc: "",
       });
       setEmpTypes("");
-      setSalaryStructures([
-        { salaryComponent: "", manuallyInput: "", calculation: "" },
-      ]);
+      setSalaryStructures([{ salaryComponent: "" }]);
       setErrors({
         name: "",
         desc: "",
@@ -217,7 +228,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   const handleAddRow = () => {
     setSalaryStructures((prevStructures) => [
       ...prevStructures,
-      { salaryComponent: "", manuallyInput: "", calculation: "" },
+      { salaryComponent: "" },
     ]);
   };
 
@@ -282,16 +293,15 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const isValid = validateForm();
+    const data = {
+      salaryStructure: salaryStructures,
+      ...userInput,
+      empType: empTypes,
+    };
+    const isValid = validateForm(data);
 
     if (isValid) {
       try {
-        const data = {
-          salaryStructure: salaryStructures,
-          ...userInput,
-          empType: empTypes,
-        };
-
         if (salaryId) {
           await EditSalaryTemplate.mutateAsync(data);
         } else {
@@ -618,7 +628,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
             </Tooltip>
           </div>
 
-          <DialogActions sx={{ justifyContent: "center" }}>
+          <DialogActions sx={{ justifyContent: "end" }}>
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>

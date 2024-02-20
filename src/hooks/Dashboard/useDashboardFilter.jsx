@@ -290,6 +290,8 @@ export default function useDashboardFilter(organisationId) {
     Departmentoptions,
     oraganizationLoading,
 
+    getAttendenceData,
+
     // Style
     customStyles,
 

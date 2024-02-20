@@ -78,11 +78,9 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
   }, [data]);
 
   useEffect(() => {
-    // Clear states when the modal is closed
     if (!open) {
       setWorkingFrom("");
       setShiftName("");
-      // Clear other state values accordingly
     }
   }, [open]);
 
@@ -111,9 +109,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
 
   const handleStartDateTimeChange = (newDateTime) => {
     setStartDateTime(newDateTime);
-    // Adjust end time when start time changes
     setEndDateTime(newDateTime.add(9, "hour"));
-    // Reset validation error
     setValidationError(false);
   };
 
@@ -191,8 +187,8 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
       }
       // Reset form state
       setError("");
-      setStartDateTime("");
-      setEndDateTime("");
+      // setStartDateTime("");
+      // setEndDateTime("");
       setWorkingFrom("");
       setShiftName("");
     } catch (error) {
@@ -394,7 +390,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
               ))}
             </ToggleButtonGroup>
           </div>
-          <div className="flex gap-4  mt-4  justify-center">
+          <div className="flex gap-4  mt-4  justify-end">
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>

@@ -132,7 +132,7 @@ const SignIn = () => {
   return (
     <>
       <section className="lg:min-h-screen  flex w-full">
-        <div className="!w-[30%]  md:justify-start lg:flex hidden text-white flex-col items-center justify-center lg:h-screen relative">
+        <div className="!w-[40%]  md:justify-start lg:flex hidden text-white flex-col items-center justify-center lg:h-screen relative">
           <div className="bg__gradient  absolute inset-0 "></div>
           <ul className="circles">
             <li></li>
@@ -149,32 +149,34 @@ const SignIn = () => {
           <div className="space-y-2 mb-8 flex-col flex items-center justify-center"></div>
         </div>
 
-        <article className="lg:w-[70%] h-screen  !bg-white w-full flex lg:justify-start justify-center  items-center lg:items-start flex-col ">
-          <div className="lg:flex hidden w-full  lg:py-2 lg:px-8 my-2 gap-4 items-center justify-center lg:justify-end">
+        <article className="lg:w-[60%] h-screen  !bg-white w-full flex lg:justify-start justify-center  items-center lg:items-start flex-col ">
+          {/* <div className="lg:flex hidden w-full  lg:py-2 lg:px-8 my-2 gap-4 items-center justify-center lg:justify-end">
             <p>Don't have an account ?</p>
             <Link to="/sign-up">
               <button className="py-[.22rem] text-sm uppercase  font-semibold rounded-sm px-6 border-[.5px] border-black hover:bg-black hover:text-white transition-all">
                 Create Account
               </button>
             </Link>
-          </div>
+          </div> */}
 
           <form
             onSubmit={onSubmit}
             autoComplete="off"
             className="flex  lg:px-20   w-max  justify-center flex-col  lg:h-[80vh]"
           >
-            <div className="flex space-x-4 lg:items-start items-center">
-              <img src="/logo.svg" className="h-[45px]" alt="logo" />
-              <div className="flex flex-col space-y-1">
+            <div className="flex flex-col space-x-4 lg:items-start items-center">
+              <div className="flex flex-col gap-1  w-full items-center justify-center space-y-1">
                 {/* <div className="mb-4"> */}
-                <h1 className="font-[600] text-3xl">Log into AEGIS Account</h1>
-                <p className="text-lg">Enter your login credentials below</p>
+                <img src="/logo.svg" className="h-[45px]" alt="logo" />
+                <h1 className="font-[600] text-center w-full text-3xl">
+                  Log in to AEGIS
+                </h1>
+                {/* <p className="text-lg">Enter your login credentials below</p> */}
                 {/* </div> */}
               </div>
             </div>
 
-            <div className="mt-6 space-y-2 ">
+            <div className="mt-6 w-[400px] space-y-2 ">
               <label
                 htmlFor={email}
                 className={" font-semibold text-gray-500 text-md"}
@@ -228,14 +230,8 @@ const SignIn = () => {
                 </div>
               </div>
             </div>
-            <Link
-              to="/forgot-password"
-              className="font-medium text-right mt-2 transition-all hover:underline"
-            >
-              Forgot your password?
-            </Link>
 
-            <div className="flex gap-5 mt-2">
+            <div className="flex gap-5 mt-4">
               <button
                 type="submit"
                 disabled={handleLogin.isLoading}
@@ -253,19 +249,25 @@ const SignIn = () => {
               </button>
             </div>
 
-            <p className="flex lg:hidden gap-2 my-2">
-              Don't have an account?
+            <div className="flex items-center justify-center  gap-2 my-2">
+              <Link
+                to="/forgot-password"
+                className="font-medium hover:font-bold transition-all "
+              >
+                Forgot password?
+              </Link>
+
               <Link
                 to={
                   window.location.pathname === "/sign-up"
                     ? "/sign-in"
                     : "/sign-up"
                 }
-                className="hover:underline"
+                className="font-medium text-blue-500 hover:font-bold transition-all "
               >
-                sign up
+                Sign up for AEGIS
               </Link>
-            </p>
+            </div>
           </form>
         </article>
       </section>
