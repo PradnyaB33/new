@@ -45,7 +45,12 @@ const AppDatePicker = ({
     if (event.title === "Selected Leave") {
       setDelete(true);
       setUpdate(false);
-    } else {
+    }
+    // else if (event.title === "Updated Leave") {
+    //   setDelete(true);
+    //   setUpdate(false);
+    // }
+    else {
       setDelete(false);
       setUpdate(true);
     }
@@ -102,6 +107,7 @@ const AppDatePicker = ({
           selectedEndDate.isAfter(moment(event.end).startOf("day")))
     );
 
+    console.log(`🚀 ~ file: date-picker.jsx:101 ~ isOverlap:`, isOverlap);
     if (isOverlap) {
       return handleAlert(
         true,
@@ -109,6 +115,10 @@ const AppDatePicker = ({
         "You have already selected this leave"
       );
     } else {
+      console.log(
+        `🚀 ~ file: date-picker.jsx:124 ~ newLeave.selectEvent:`,
+        selectedLeave
+      );
       const newLeave = {
         title: selectEvent ? "Updated Leave" : "Selected Leave",
         start: new Date(start).toISOString(),
@@ -135,46 +145,47 @@ const AppDatePicker = ({
     };
 
     return (
-      <div className="flex-row-reverse flex gap-4 items-center">
-        <Button
-          // variant="outlined"
-          color="error"
-          className="!h-full hover:!bg-[#da4f4f] hover:!text-white"
-          size="small"
-          onClick={() => setCalendarOpen(false)}
-        >
-          <Close />
-        </Button>
-        <Select
-          className="m-2"
-          size="small"
-          value={moment(toolbar.date).month()}
-          onChange={handleMonthChange}
-        >
-          {moment.months().map((month, index) => (
-            <MenuItem key={index} value={index}>
-              {month}
-            </MenuItem>
-          ))}
-        </Select>
-        <Select
-          className="m-2"
-          size="small"
-          value={moment(toolbar.date).year()}
-          onChange={handleYearChange}
-        >
-          {Array.from({ length: 10 }).map((_, index) => (
-            <MenuItem key={index} value={moment(toolbar.date).year() + index}>
-              {moment(toolbar.date).year() + index}
-            </MenuItem>
-          ))}
-        </Select>
-
-        <div className="fled w-full flex-row-reverse px-3 text-blue-500 italic font-extrabold">
+      <>
+        <div className="flex-row-reverse flex gap-4 items-center">
+          <Button
+            // variant="outlined"
+            color="error"
+            className="!h-full hover:!bg-[#da4f4f] hover:!text-white"
+            size="small"
+            onClick={() => setCalendarOpen(false)}
+          >
+            <Close />
+          </Button>
+          <Select
+            className="m-2"
+            size="small"
+            value={moment(toolbar.date).month()}
+            onChange={handleMonthChange}
+          >
+            {moment.months().map((month, index) => (
+              <MenuItem key={index} value={index}>
+                {month}
+              </MenuItem>
+            ))}
+          </Select>
+          <Select
+            className="m-2"
+            size="small"
+            value={moment(toolbar.date).year()}
+            onChange={handleYearChange}
+          >
+            {Array.from({ length: 10 }).map((_, index) => (
+              <MenuItem key={index} value={moment(toolbar.date).year() + index}>
+                {moment(toolbar.date).year() + index}
+              </MenuItem>
+            ))}
+          </Select>
+        </div>
+        <div className="flex w-full flex-row-reverse px-3 text-blue-500 italic font-extrabold text-xs h-[20px]">
           {" "}
           {selectEvent ? "Please select dates for you leaves" : ""}
         </div>
-      </div>
+      </>
     );
   };
   const handleClickAway = (event) => {
@@ -200,7 +211,6 @@ const AppDatePicker = ({
           );
         })
       );
-    } else {
     }
     setDelete(false);
   };
@@ -215,7 +225,10 @@ const AppDatePicker = ({
   }, []);
   return (
     <Popover
-      PaperProps={{ className: "w-full md:w-[70vw] xl:w-[60vw]" }}
+      PaperProps={{
+        className:
+          "w-full xl:w-[400px] xl:h-[470px] !bottom-0 !p-0 flex flex-col justify-between",
+      }}
       open={isCalendarOpen}
       onClose={() => setCalendarOpen(false)}
       components={{
@@ -225,12 +238,9 @@ const AppDatePicker = ({
         vertical: "bottom",
         horizontal: "right",
       }}
-      transformOrigin={{
-        vertical: "center",
-        horizontal: "center",
-      }}
+      style={{ height: "500px !important" }}
     >
-      <div className=" bg-white shadow-lg z-10">
+      <div className=" bg-white z-10">
         <div className="w-full">
           <Calendar
             localizer={localizer}
@@ -246,7 +256,7 @@ const AppDatePicker = ({
             startAccessor="start"
             endAccessor="end"
             style={{
-              height: "600px",
+              height: "400px",
               width: "100%",
               background: "#fff",
             }}
@@ -278,7 +288,10 @@ const AppDatePicker = ({
         </Button>
         <Button
           variant="contained"
-          onClick={handleUpdateFunction}
+          onClick={async () => {
+            await handleUpdateFunction();
+            setUpdate(false);
+          }}
           className="rbc-event-content"
           disabled={!update}
         >

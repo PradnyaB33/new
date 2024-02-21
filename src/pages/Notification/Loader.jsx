@@ -67,12 +67,12 @@ const Loader = () => {
                 <Stack direction="row" spacing={3}>
                   <Button
                     variant="contained"
+                    color="primary"
                     sx={{
                       fontStyle: "italic",
                       fontSize: "12px",
                       padding: "5px 30px",
                       textTransform: "capitalize",
-                      backgroundColor: "#42992D",
                     }}
                   >
                     <Skeleton height={20} width={60} />
