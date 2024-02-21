@@ -640,28 +640,14 @@ function RequireSubscription({ children }) {
   const { subscriptionDetails, subscriptionLoading, subscriptionFetching } =
     useSubscription(organisationId);
   console.log(
+    `🚀 ~ file: Route.jsx:641 ~  subscriptionLoading, subscriptionFetching :`,
+    subscriptionLoading,
+    subscriptionFetching
+  );
+  console.log(
     `🚀 ~ file: Route.jsx:683 ~ subscriptionDetails:`,
     subscriptionDetails
   );
 
-<<<<<<< HEAD
-  const { getCurrentUser, getCurrentRole } = UserProfile();
-
-  const user = getCurrentUser();
-  const role = getCurrentRole();
-
-  if (user && !role) {
-    return <Navigate to={"/choose-role"} />;
-  }
-
-  if (role || !window.location.pathname.includes("sign-in", "sign-up")) {
-    if (!role) return <Navigate to={"/sign-in"} />;
-    if (user) return children;
-    return <UnAuthorized />;
-  }
-
-  return user ? children : <Navigate to={"/"} />;
-=======
   return children;
->>>>>>> 7c1a07d03a479c41a9ca1e4d5d85473cb38e1c75
 }
