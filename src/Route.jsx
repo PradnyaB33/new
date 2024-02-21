@@ -642,8 +642,24 @@ function RequireSubscription({ children }) {
   console.log(
     `🚀 ~ file: Route.jsx:641 ~  subscriptionLoading, subscriptionFetching :`,
     subscriptionLoading,
-    subscriptionFetching
+    subscriptionFetching,
+    new Date(subscriptionDetails?.subscription?.charge_at * 1000),
+    new Date(),
+    Math.abs(
+      new Date(subscriptionDetails?.subscription?.charge_at * 1000) - new Date()
+    )
   );
+  console.log(
+    `🚀 ~ file: Route.jsx:652 ~  Math.abs(
+      new Date(subscriptionDetails?.subscription?.charge_at * 1000) - new Date()
+    ):`,
+    Math.ceil(
+      (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
+        new Date()) /
+        (1000 * 60 * 60 * 24)
+    )
+  );
+
   console.log(
     `🚀 ~ file: Route.jsx:683 ~ subscriptionDetails:`,
     subscriptionDetails

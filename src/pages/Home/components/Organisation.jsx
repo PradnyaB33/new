@@ -3,6 +3,7 @@ import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import {
   Avatar,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -43,11 +44,7 @@ const Organisation = ({ item }) => {
   const navigate = useNavigate();
   const { subscriptionDetails, subscriptionLoading, subscriptionFetching } =
     useSubscription(item?._id);
-  console.log(
-    `🚀 ~ file: Organisation.jsx:44 ~  subscriptionLoading, subscriptionFetching:`,
-    subscriptionLoading,
-    subscriptionFetching
-  );
+
   const data = {
     name: "",
     web_url: "",
@@ -82,7 +79,6 @@ const Organisation = ({ item }) => {
       );
 
       const imageURL = response.data.secure_url;
-      console.log("Image URL:", imageURL);
 
       setLogoUrl(imageURL);
     } catch (error) {
@@ -103,7 +99,6 @@ const Organisation = ({ item }) => {
   };
   // Delete Query for deleting single Organization
   const handleDeleteConfirmation = (id) => {
-    // console.log(id);
     setDeleteConfirmation(id);
   };
   const handleCloseConfirmation = () => {
@@ -113,7 +108,7 @@ const Organisation = ({ item }) => {
   // delete query for deleting Single Organization
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(
+      await axios.delete(
         `${process.env.REACT_APP_API}/route/organization/delete/${id}`,
         {
           headers: {
@@ -121,7 +116,6 @@ const Organisation = ({ item }) => {
           },
         }
       );
-      console.log(`🚀 ~ file: Organisation.jsx:63 ~ response:`, response);
       handleAlert(true, "success", "Organization deleted successfully");
       queryClient.invalidateQueries("orgData");
       // Reload the window to reflect the updated data
@@ -155,7 +149,7 @@ const Organisation = ({ item }) => {
         logo_url: organizationData.logo_url,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       // Handle error appropriately
     }
   };
@@ -189,13 +183,7 @@ const Organisation = ({ item }) => {
   const getRandomColor = () => {
     return randomColor();
   };
-  console.log(
-    "details of subscriptions",
-    subscriptionDetails?.subscription?.status?.includes(
-      ["active"] ||
-        subscriptionDetails?.subscription?.status?.includes(["authenticated"])
-    )
-  );
+
   const getMessage = () => {
     let message = "";
 
@@ -206,16 +194,16 @@ const Organisation = ({ item }) => {
             new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
               new Date()
           ) /
-            (1000 * 60 * 60 * 24) <=
+            (1000 * 60 * 60 * 24) >
           0
         ) {
-          message = `Your ${Math.ceil(
+          message = `${Math.ceil(
             (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
               new Date()) /
               (1000 * 60 * 60 * 24)
-          )} Day Trial`;
+          )} Day Trial left`;
         } else {
-          message = "Please subscribe";
+          message = "Sorry but payment not received";
         }
         break;
       case "active":
@@ -226,7 +214,8 @@ const Organisation = ({ item }) => {
         )} days`;
         break;
       case "pending":
-        message = "Your payment is pending. Please update your card details.";
+        message =
+          "Your payment is pending. Please update your card details. or please complete payment";
         break;
       case "halted":
         message =
@@ -234,11 +223,10 @@ const Organisation = ({ item }) => {
         break;
       case "cancelled":
         message =
-          "Your subscription is cancelled. To restart, please create a new subscription.";
+          "Your subscription is cancelled. To restart, raise query about it";
         break;
       case "paused":
-        message =
-          "Your subscription is paused. To resume, please unpause the subscription.";
+        message = "Your subscription is on paused";
         break;
       default:
         message = "Basic Plan";
@@ -253,7 +241,17 @@ const Organisation = ({ item }) => {
       <div
         className={`border-b-[3px] border-${getRandomColor()} block min-w-[21rem] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-200 relative`}
       >
-        <tag>{getMessage()}</tag>
+        <tag className="tag">
+          {subscriptionLoading || subscriptionFetching ? (
+            <CircularProgress
+              className=" !text-white mx-12"
+              CircularProgress
+              size={20}
+            />
+          ) : (
+            getMessage()
+          )}
+        </tag>
         {/* )} */}
         <div className="border-b-2 flex items-center justify-between border-[#0000002d] px-6 py-3 text-black">
           <Avatar
@@ -299,17 +297,25 @@ const Organisation = ({ item }) => {
               }
               navigate(link);
             }}
-            disabled={
-              (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
-                new Date()) /
-                (1000 * 60 * 60 * 24) <=
-              0
-                ? true
-                : false
-            }
+            // disabled={
+            //   (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
+            //     new Date()) /
+            //     (1000 * 60 * 60 * 24) <=
+            //   0
+            //     ? true
+            //     : false
+            // }
             className=" flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
           >
-            Setup
+            {subscriptionLoading || subscriptionFetching ? (
+              <CircularProgress
+                className=" !text-white"
+                CircularProgress
+                size={20}
+              />
+            ) : (
+              "Setup"
+            )}
           </button>
 
           {subscriptionDetails?.subscription?.status === "authenticated" ? (
@@ -323,14 +329,22 @@ const Organisation = ({ item }) => {
                 to={`${subscriptionDetails?.subscription?.short_url}`}
               >
                 <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
-                  Continue subscription
+                  {subscriptionLoading || subscriptionFetching ? (
+                    <CircularProgress CircularProgress size={20} />
+                  ) : (
+                    "Continue subscription"
+                  )}
                   <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
                 </button>
               </Link>
             ) : (
               <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
                 <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
-                  Go to Dashboard
+                  {subscriptionLoading || subscriptionFetching ? (
+                    <CircularProgress CircularProgress size={20} />
+                  ) : (
+                    "Go to Dashboard"
+                  )}
                   <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
                 </button>
               </Link>
@@ -494,7 +508,6 @@ const Organisation = ({ item }) => {
                   value={inputdata.foundation_date}
                   onChange={(newDate) => {
                     setInputData({ ...inputdata, foundation_date: newDate });
-                    console.log(newDate);
                   }}
                   slotProps={{ textField: { size: "small", fullWidth: true } }}
                 />
