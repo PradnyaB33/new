@@ -107,6 +107,7 @@ const AppDatePicker = ({
           selectedEndDate.isAfter(moment(event.end).startOf("day")))
     );
 
+    console.log(`🚀 ~ file: date-picker.jsx:101 ~ isOverlap:`, isOverlap);
     if (isOverlap) {
       return handleAlert(
         true,
@@ -116,7 +117,7 @@ const AppDatePicker = ({
     } else {
       console.log(
         `🚀 ~ file: date-picker.jsx:124 ~ newLeave.selectEvent:`,
-        selectEvent
+        selectedLeave
       );
       const newLeave = {
         title: selectEvent ? "Updated Leave" : "Selected Leave",
