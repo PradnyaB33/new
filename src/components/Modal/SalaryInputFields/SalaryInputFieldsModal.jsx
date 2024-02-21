@@ -1,5 +1,4 @@
 import { Add, InfoOutlined, RemoveOutlined } from "@mui/icons-material";
-import CloseIcon from "@mui/icons-material/Close";
 import {
   Autocomplete,
   Button,
@@ -7,7 +6,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  Divider,
   FormControl,
   FormLabel,
   IconButton,
@@ -133,7 +131,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
     console.log(isExists);
 
     if (!empTypes) {
-      newErrors.empTypes = "Employment Types is required";
+      newErrors.empTypes = "An Employment Types is required";
       isValid = false;
     } else {
       newErrors.empTypes = "";
@@ -259,7 +257,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
         setEmpTypes("");
         setSalaryStructures("");
         handleClose();
-        handleAlert(true, "success", "Salary template generated succesfully");
+        handleAlert(true, "success", "Salary Template generated succesfully.");
       },
 
       onError: () => {
@@ -283,7 +281,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["salaryTemplates"] });
         handleClose();
-        handleAlert(true, "success", "Salary template updated succesfully");
+        handleAlert(true, "success", "Salary Template updated succesfully.");
       },
       onError: () => {
         handleAlert(true, "error", "Something went wrong");
@@ -332,19 +330,12 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
       aria-describedby="modal-modal-description"
     >
       <div className="flex w-full justify-between py-4 items-center  px-4">
-        <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
+        <h1 className="text-xl pl-2 font-semibold font-sans">
           {salaryId ? "Edit Salary Template" : "Create Salary Template"}
         </h1>
-        <IconButton onClick={handleClose}>
-          <CloseIcon className="!text-[16px]" />
-        </IconButton>
       </div>
 
       <DialogContent className="border-none  !pt-0 !px-0  shadow-md outline-none rounded-md">
-        <div className="w-full">
-          <Divider variant="fullWidth" orientation="horizontal" />
-        </div>
-
         <div className="px-5 space-y-4 mt-4">
           {/* {error && <p className="text-red-500">*{error}</p>} */}
 

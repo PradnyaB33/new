@@ -1,5 +1,4 @@
-import CloseIcon from "@mui/icons-material/Close";
-import { Box, Button, Divider, IconButton, Modal } from "@mui/material";
+import { Box, Button, Modal } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
@@ -55,7 +54,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
       setEmpSalCalDay(response.data.empSalaryCalDayData);
     } catch (error) {
       console.error(error);
-      handleAlert(true, "error", "Failed to fetch  Salary Computation Day");
+      handleAlert(true, "error", "Failed to fetch  salary computation day.");
     }
   };
   useEffect(() => {
@@ -87,7 +86,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
       } catch (error) {
         throw new Error(
           error.response.data.message ||
-            "Failed to updated Salary Computation Day"
+            "Failed to updated salary computation day."
         );
       }
     },
@@ -98,7 +97,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
         handleAlert(
           true,
           "success",
-          "Salary Computation Day Updated Successfully.."
+          "Salary computation day updated successfully."
         );
         window.location.reload();
       },
@@ -120,7 +119,7 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
       handleAlert(
         true,
         "error",
-        "An error occurred while  updating  Salary Computation Day"
+        "An Error occurred while  updating  salary computation day."
       );
     }
   };
@@ -137,16 +136,9 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
         className="border-none !z-10 !pt-0 !px-0 !w-[90%] lg:!w-[50%] md:!w-[60%] shadow-md outline-none rounded-md"
       >
         <div className="flex justify-between py-4 items-center  px-4">
-          <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
-            Update Salary Computation Day
+          <h1 className="text-xl pl-2 font-semibold font-sans">
+            Edit Salary Computation Day
           </h1>
-          <IconButton onClick={handleClose}>
-            <CloseIcon className="!text-[16px]" />
-          </IconButton>
-        </div>
-
-        <div className="w-full">
-          <Divider variant="fullWidth" orientation="horizontal" />
         </div>
 
         <div className="px-5 space-y-4 mt-4">

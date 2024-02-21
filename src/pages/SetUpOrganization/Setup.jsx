@@ -1,9 +1,9 @@
 import { West } from "@mui/icons-material";
+import SettingsOutlined from "@mui/icons-material/SettingsOutlined";
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import BackComponent from "../../components/BackComponent/BackComponent";
 import useSetupSideNav from "../../hooks/Nav/useSetupSideNav";
-import SettingsOutlined from "@mui/icons-material/SettingsOutlined";
 
 const Setup = ({ children }) => {
   const { organisationId } = useParams("");
@@ -17,7 +17,6 @@ const Setup = ({ children }) => {
           <Link to={"/organizationList"}>
             <West className="mx-4 !text-xl" />
           </Link>
-          {/* <BackComponent /> */}
           Organisation Setup
         </header>
         <article className="md:p-4 p-0 w-full h-full flex gap-4">

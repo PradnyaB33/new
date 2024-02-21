@@ -53,7 +53,7 @@ const AuthInputFiled = ({
                     readOnly && "bg-[ghostwhite]"
                   } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
                 >
-                  <Icon className="text-gray-700" />
+                  <Icon className="text-gray-700 text-sm" />
                   <Select
                     aria-errormessage=""
                     placeholder={placeholder}

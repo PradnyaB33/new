@@ -1,8 +1,9 @@
-import { Delete, Edit, MoreVert, Warning } from "@mui/icons-material";
+import { MoreVert } from "@mui/icons-material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import {
   Avatar,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -24,11 +25,13 @@ import dayjs from "dayjs";
 import randomColor from "randomcolor";
 import React, { useContext, useState } from "react";
 import { FaArrowCircleRight } from "react-icons/fa";
-import { useQuery, useQueryClient } from "react-query";
-import { Link } from "react-router-dom";
+import { useQueryClient } from "react-query";
+import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-
+import useSubscription from "../../../hooks/Subscription/subscription";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 const Organisation = ({ item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
@@ -39,6 +42,9 @@ const Organisation = ({ item }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
+  const navigate = useNavigate();
+  const { subscriptionDetails, subscriptionLoading, subscriptionFetching } =
+    useSubscription(item?._id);
 
   const data = {
     name: "",
@@ -74,7 +80,6 @@ const Organisation = ({ item }) => {
       );
 
       const imageURL = response.data.secure_url;
-      console.log("Image URL:", imageURL);
 
       setLogoUrl(imageURL);
     } catch (error) {
@@ -95,7 +100,6 @@ const Organisation = ({ item }) => {
   };
   // Delete Query for deleting single Organization
   const handleDeleteConfirmation = (id) => {
-    // console.log(id);
     setDeleteConfirmation(id);
   };
   const handleCloseConfirmation = () => {
@@ -105,8 +109,7 @@ const Organisation = ({ item }) => {
   // delete query for deleting Single Organization
   const handleDelete = async (id) => {
     try {
-      // console.log(id);
-      const response = await axios.delete(
+      await axios.delete(
         `${process.env.REACT_APP_API}/route/organization/delete/${id}`,
         {
           headers: {
@@ -114,7 +117,6 @@ const Organisation = ({ item }) => {
           },
         }
       );
-      console.log(`🚀 ~ file: Organisation.jsx:63 ~ response:`, response);
       handleAlert(true, "success", "Organization deleted successfully");
       queryClient.invalidateQueries("orgData");
       // Reload the window to reflect the updated data
@@ -127,36 +129,6 @@ const Organisation = ({ item }) => {
     }
   };
 
-  const {
-    data: subscriptionDetails,
-    isFetching,
-    isLoading,
-  } = useQuery({
-    queryKey: [`${item._id}-subscription`],
-    queryFn: async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/subscription/${item._id}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      return response.data;
-    },
-    onSuccess: async (data) => {
-      console.log(`🚀 ~ file: Organisation.jsx:144 ~ data:`, data);
-    },
-    onError: async (data) => {
-      console.error(`🚀 ~ file: Organisation.jsx:144 ~ data:`, data);
-    },
-  });
-  console.log(
-    `🚀 ~ file: Organisation.jsx:154 ~  isFetching,
-    isLoading,:`,
-    isFetching,
-    isLoading
-  );
   const handleEdit = async (id) => {
     setEditConfirmation(true);
 
@@ -178,7 +150,7 @@ const Organisation = ({ item }) => {
         logo_url: organizationData.logo_url,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       // Handle error appropriately
     }
   };
@@ -212,32 +184,76 @@ const Organisation = ({ item }) => {
   const getRandomColor = () => {
     return randomColor();
   };
-  console.log(
-    "details of subscriptions",
-    subscriptionDetails?.subscription?.status?.includes(
-      ["active"] ||
-        subscriptionDetails?.subscription?.status?.includes(["authenticated"])
-    )
-  );
+
+  const getMessage = () => {
+    let message = "";
+
+    switch (subscriptionDetails?.subscription?.status) {
+      case "authenticated":
+        if (
+          Math.ceil(
+            new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
+              new Date()
+          ) /
+            (1000 * 60 * 60 * 24) >
+          0
+        ) {
+          message = `${Math.ceil(
+            (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
+              new Date()) /
+              (1000 * 60 * 60 * 24)
+          )} Day Trial left`;
+        } else {
+          message = "Sorry but payment not received";
+        }
+        break;
+      case "active":
+        message = `Your next due is after ${Math.ceil(
+          (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
+            new Date()) /
+            (1000 * 60 * 60 * 24)
+        )} days`;
+        break;
+      case "pending":
+        message =
+          "Your payment is pending. Please update your card details. or please complete payment";
+        break;
+      case "halted":
+        message =
+          "Your subscription is halted. Please update your card details.";
+        break;
+      case "cancelled":
+        message =
+          "Your subscription is cancelled. To restart, raise query about it";
+        break;
+      case "paused":
+        message = "Your subscription is on paused";
+        break;
+      default:
+        message = "Basic Plan";
+        break;
+    }
+
+    return message;
+  };
+
   return (
     <>
       <div
         className={`border-b-[3px] border-${getRandomColor()} block min-w-[21rem] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-200 relative`}
       >
-        {Math.ceil(
-          (new Date(item.subscriptionStartDate) - new Date()) /
-            (1000 * 60 * 60 * 24)
-        ) > 0 && (
-          <div class="wrap">
-            <span class="ribbon6 text-white">
-              {Math.ceil(
-                (new Date(item.subscriptionStartDate) - new Date()) /
-                  (1000 * 60 * 60 * 24)
-              )}{" "}
-              Day Trial{" "}
-            </span>
-          </div>
-        )}
+        <tag className="tag">
+          {subscriptionLoading || subscriptionFetching ? (
+            <CircularProgress
+              className=" !text-white mx-12"
+              CircularProgress
+              size={20}
+            />
+          ) : (
+            getMessage()
+          )}
+        </tag>
+        {/* )} */}
         <div className="border-b-2 flex items-center justify-between border-[#0000002d] px-6 py-3 text-black">
           <Avatar
             src={item?.logo_url}
@@ -255,17 +271,22 @@ const Organisation = ({ item }) => {
               onClose={handleClose}
             >
               <MenuItem onClick={() => handleEdit(item._id)}>
-                <Edit style={{ color: "green", marginRight: "10px" }} />
-                <span>Update</span>
+                <EditOutlinedIcon
+                  color="primary"
+                  aria-label="edit"
+                  style={{ marginRight: "10px" }}
+                />
               </MenuItem>
               <MenuItem onClick={() => handleDeleteConfirmation(item._id)}>
-                <Delete style={{ color: "red", marginRight: "10px" }} />
-                <span>Delete</span>
+                <DeleteOutlineIcon
+                  color="error"
+                  aria-label="delete"
+                  style={{ marginRight: "10px" }}
+                />
               </MenuItem>
             </Menu>
           </div>
         </div>
-
         <div className="p-6 pt-6 pb-4">
           <h5 className="mb-2 text-xl font-semibold leading-tight text-black">
             {item.orgName}
@@ -273,34 +294,83 @@ const Organisation = ({ item }) => {
           <p className="text-md ">{item.description}</p>
         </div>
         <div className="p-6 py-4  flex gap-4">
-          <Link
-            to={
-              window.innerWidth <= 768
-                ? `/organisation/${item._id}/setup`
-                : `/organisation/${item._id}/setup/add-roles`
-            }
+          <button
+            onClick={() => {
+              let link;
+              if (window.innerWidth <= 768) {
+                link = `/organisation/${item._id}/setup`;
+              } else {
+                link = `/organisation/${item._id}/setup/add-roles`;
+              }
+              navigate(link);
+            }}
+            // disabled={
+            //   (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
+            //     new Date()) /
+            //     (1000 * 60 * 60 * 24) <=
+            //   0
+            //     ? true
+            //     : false
+            // }
+            className=" flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
           >
-            <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
-              Setup
-            </button>
-          </Link>
+            {subscriptionLoading || subscriptionFetching ? (
+              <CircularProgress
+                className=" !text-white"
+                CircularProgress
+                size={20}
+              />
+            ) : (
+              "Setup"
+            )}
+          </button>
 
-          {subscriptionDetails?.subscription?.status?.includes(["active"]) ||
-          subscriptionDetails?.subscription?.status?.includes([
-            "authenticated",
-          ]) ? (
+          {subscriptionDetails?.subscription?.status === "authenticated" ? (
+            (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
+              new Date()) /
+              (1000 * 60 * 60 * 24) <=
+            0 ? (
+              // Continue subscription if trial days are 0
+              <Link
+                target="blank"
+                to={`${subscriptionDetails?.subscription?.short_url}`}
+              >
+                <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
+                  {subscriptionLoading || subscriptionFetching ? (
+                    <CircularProgress CircularProgress size={20} />
+                  ) : (
+                    "Continue subscription"
+                  )}
+                  <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
+                </button>
+              </Link>
+            ) : (
+              <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
+                <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
+                  {subscriptionLoading || subscriptionFetching ? (
+                    <CircularProgress CircularProgress size={20} />
+                  ) : (
+                    "Go to Dashboard"
+                  )}
+                  <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
+                </button>
+              </Link>
+            )
+          ) : subscriptionDetails?.subscription?.status === "active" ? (
+            // Display "Go to Dashboard" button if the status is "active"
             <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
-              <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
+              <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
                 Go to Dashboard
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
               </button>
             </Link>
           ) : (
+            // Default to "Continue subscription" button
             <Link
               target="blank"
               to={`${subscriptionDetails?.subscription?.short_url}`}
             >
-              <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
+              <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
                 Continue subscription
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
               </button>
@@ -313,14 +383,11 @@ const Organisation = ({ item }) => {
         open={deleteConfirmation !== null}
         onClose={handleCloseConfirmation}
       >
-        <DialogTitle color={"error"}>
-          <Warning color="error" /> All information in this orgnisation will be
-          deleted. Are you sure you want to delete it?
-        </DialogTitle>
+        <DialogTitle>Confirm deletion</DialogTitle>
         <DialogContent>
           <p>
             Please confirm your decision to delete this Organization, as this
-            action cannot be retrived
+            action cannot be undone.
           </p>
         </DialogContent>
         <DialogActions>
@@ -445,7 +512,6 @@ const Organisation = ({ item }) => {
                   value={inputdata.foundation_date}
                   onChange={(newDate) => {
                     setInputData({ ...inputdata, foundation_date: newDate });
-                    console.log(newDate);
                   }}
                   slotProps={{ textField: { size: "small", fullWidth: true } }}
                 />
@@ -484,22 +550,22 @@ const Organisation = ({ item }) => {
         </DialogContent>
 
         <DialogActions>
-          <Button
-            variant="contained"
-            size="small"
-            color="success"
-            onClick={() => handleEditConfirmation(item._id)}
-          >
-            Edit
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            size="small"
-            onClick={handleCloseConfirmation}
-          >
-            Cancel
-          </Button>
+          <div className="flex gap-4 mt-4 mr-4  mb-4 justify-end ">
+            <Button
+              onClick={handleCloseConfirmation}
+              color="error"
+              variant="outlined"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => handleEditConfirmation(item._id)}
+              variant="contained"
+              color="primary"
+            >
+              Apply
+            </Button>
+          </div>
         </DialogActions>
       </Dialog>
     </>

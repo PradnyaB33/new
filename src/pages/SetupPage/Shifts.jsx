@@ -88,7 +88,7 @@ const Shifts = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("shifts");
-        handleAlert(true, "success", "Shift deleted succesfully");
+        handleAlert(true, "success", "Shift deleted succesfully.");
       },
     }
   );

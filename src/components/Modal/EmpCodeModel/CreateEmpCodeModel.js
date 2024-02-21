@@ -1,15 +1,13 @@
-import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
-  Divider,
   FormControl,
-  IconButton,
   InputLabel,
   MenuItem,
   Modal,
   OutlinedInput,
   Select,
+  Typography,
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
@@ -35,6 +33,7 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
   const [inputFields, setinputFields] = useState({
     isPrefix: false,
   });
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const queryClient = useQueryClient();
 
   const handleInputChange = (event) => {
@@ -47,6 +46,8 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setFormSubmitted(true);
+    if (!startWith) return;
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/create/employee-code-generator/${organisationId}`,
@@ -66,6 +67,7 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
         handleAlert(false, "success", "");
       }, 2000);
       setStartWith("");
+      setNumCharacterInPrefix(1);
       setinputFields({ isPrefix: false });
       handleClose();
 
@@ -91,19 +93,12 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
         className="border-none !z-10 !pt-0 !px-0 !w-[90%] lg:!w-[50%] md:!w-[60%] shadow-md outline-none rounded-md"
       >
         <div className="flex justify-between py-4 items-center  px-4">
-          <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
+          <h1 className="text-xl pl-2 font-semibold font-sans">
             Generate Employee Code
           </h1>
-          <IconButton onClick={handleClose}>
-            <CloseIcon className="!text-[16px]" />
-          </IconButton>
         </div>
 
-        <div className="w-full">
-          <Divider variant="fullWidth" orientation="horizontal" />
-        </div>
-
-        <div className="overflow-auto !p-4 flex flex-col items-start gap-4 border-[.5px] border-gray-200">
+        <div className="overflow-auto !p-4 flex flex-col items-start gap-4 ">
           <div className="flex gap-4 items-center">
             <div className="space-y-2">
               <label className="text-md" htmlFor="demo-simple-select-label">
@@ -116,6 +111,7 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
                 <Select
                   id={"isPrefix"}
                   name="isPrefix"
+                  value={inputFields.isPrefix}
                   onChange={handleInputChange}
                   label=" prefix character"
                 >
@@ -128,11 +124,11 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
             {inputFields.isPrefix && (
               <div className="space-y-2 ">
                 <label className="text-md" htmlFor="demo-simple-select-label">
-                  Number of charater in prefix
+                  Number of character in prefix
                 </label>
                 <FormControl size="small" className="w-full" variant="outlined">
                   <InputLabel htmlFor="outlined-adornment-password">
-                    Add Charater Employee Id
+                    Add Character Employee Id
                   </InputLabel>
                   <OutlinedInput
                     type="number"
@@ -154,7 +150,7 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
             </InputLabel>
             <OutlinedInput
               type="text"
-              label="start with"
+              label="start with *"
               value={startWith}
               onChange={(e) => setStartWith(e.target.value)}
               inputProps={{
@@ -163,6 +159,11 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
             />
           </FormControl>
         </div>
+        {!startWith && formSubmitted && (
+          <Typography variant="body2" color="error" className="px-4">
+            Required.
+          </Typography>
+        )}
 
         <div className="flex gap-4 mt-4   justify-end mr-4 mb-4">
           <Button onClick={handleClose} color="error" variant="outlined">

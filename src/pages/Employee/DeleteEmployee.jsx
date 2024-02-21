@@ -1,4 +1,4 @@
-import { Delete, GetApp, Publish, Warning } from "@mui/icons-material";
+import { Delete, GetApp, Publish } from "@mui/icons-material";
 import {
   Button,
   Checkbox,
@@ -12,6 +12,7 @@ import {
   MenuItem,
   TextField,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -20,7 +21,7 @@ import { useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 const DeleteEmployee = () => {
   const { handleAlert } = useContext(TestContext);
   const { setAppAlert, cookies } = useContext(UseContext);
@@ -232,7 +233,7 @@ const DeleteEmployee = () => {
       const fileInput = document.getElementById("fileInput");
       const file = fileInput.files[0];
       if (!file) {
-        console.error("Please upload an Excel file.");
+        console.error("Please upload an excel file.");
         setAppAlert({
           alert: true,
           type: "error",
@@ -253,7 +254,7 @@ const DeleteEmployee = () => {
             setAppAlert({
               alert: true,
               type: "error",
-              msg: "Delete column not found in the Excel sheet.",
+              msg: "Delete column not found in the excel sheet.",
             });
             return;
           }
@@ -307,14 +308,14 @@ const DeleteEmployee = () => {
               setAppAlert({
                 alert: true,
                 type: "success",
-                msg: "Employee deleted from the Excel sheet!",
+                msg: "Employee deleted from the Excel sheet.",
               });
             } catch (error) {
               console.error("Error deleting employee:", error);
               setAppAlert({
                 alert: true,
                 type: "error",
-                msg: "Failed to delete employee from Excel. Please try again.",
+                msg: "Failed to delete employee from excel. Please try again.",
               });
             }
           }
@@ -346,9 +347,9 @@ const DeleteEmployee = () => {
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
-          <h1 className="text-lg pl-2 font-semibold text-center modal-title py-2">
-            Delete Employee
-          </h1>
+          <Typography variant="h4" className="text-center mb-6 mt-2">
+            Employee
+          </Typography>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center  gap-3 ">
@@ -548,9 +549,11 @@ const DeleteEmployee = () => {
                       <td className="py-3 pl-8">{item?.phone_number}</td>
                       <td className="whitespace-nowrap px-6 py-2">
                         <IconButton
+                          color="error"
+                          aria-label="delete"
                           onClick={() => handleDeleteConfirmation(item?._id)}
                         >
-                          <Delete className="!text-xl" color="error" />
+                          <DeleteOutlineIcon />
                         </IconButton>
                       </td>
                     </tr>
@@ -646,14 +649,11 @@ const DeleteEmployee = () => {
         open={deleteConfirmation !== null}
         onClose={handleCloseConfirmation}
       >
-        <DialogTitle color={"error"}>
-          <Warning color="error" /> All information of employee will be deleted.
-          Are you sure you want to delete it?
-        </DialogTitle>
+        <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <p>
             Please confirm your decision to delete this employee, as this action
-            cannot be retrived
+            cannot be undone.
           </p>
         </DialogContent>
         <DialogActions>
@@ -681,14 +681,11 @@ const DeleteEmployee = () => {
         open={deleteMultiEmpConfirmation}
         onClose={() => setDeleteMultiEmpConfirmation(false)}
       >
-        <DialogTitle color={"error"}>
-          <Warning color="error" /> All information of employees will be
-          deleted. Are you sure you want to delete it?
-        </DialogTitle>
+        <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <p>
             Please confirm your decision to delete this selected employee, as
-            this action cannot be retrived
+            this action cannot be undone.
           </p>
         </DialogContent>
         <DialogActions>
@@ -716,14 +713,11 @@ const DeleteEmployee = () => {
         open={showConfirmationExcel}
         onClose={() => setShowConfirmationExcel(false)}
       >
-        <DialogTitle color={"error"}>
-          <Warning color="error" /> All information of employees will be
-          deleted. Are you sure you want to delete it?
-        </DialogTitle>
+        <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <p>
             Please confirm your decision to delete this employee, as this action
-            cannot be retrived
+            cannot be undone.
           </p>
         </DialogContent>
         <DialogActions>

@@ -4,13 +4,15 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogTitle,
   FormControl,
   IconButton,
   InputLabel,
   MenuItem,
   Select,
   TextField,
+  DialogTitle,
+  DialogActions,
+  Typography,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -40,7 +42,7 @@ const PublicHoliday = () => {
   const [selectedHolidayId, setSelectedHolidayId] = useState(null);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-
+  const [formSubmitted, setFormSubmitted] = useState(false);
   // todo - data to post
 
   const [inputdata, setInputData] = useState({
@@ -78,7 +80,7 @@ const PublicHoliday = () => {
       setAppAlert({
         alert: true,
         type: "error",
-        msg: "An error occurred while fetching holidays",
+        msg: "An Error occurred while fetching holidays",
       });
     }
   }, [id, setHolidays, setAppAlert]);
@@ -123,6 +125,8 @@ const PublicHoliday = () => {
     }));
   };
   const handleSubmit = async () => {
+    setFormSubmitted(true);
+    if (!inputdata.name && !inputdata.type && !inputdata.region) return;
     try {
       await axios.post(`${process.env.REACT_APP_API}/route/holiday/create`, {
         ...inputdata,
@@ -132,7 +136,7 @@ const PublicHoliday = () => {
       setAppAlert({
         alert: true,
         type: "success",
-        msg: "Holiday created successfully!",
+        msg: "Holiday created successfully.",
       });
       fetchHolidays();
     } catch (error) {
@@ -140,7 +144,7 @@ const PublicHoliday = () => {
       setAppAlert({
         alert: true,
         type: "error",
-        msg: "An error occurred while creating holiday",
+        msg: "An Error occurred while creating holiday.",
       });
     }
   };
@@ -186,12 +190,12 @@ const PublicHoliday = () => {
           patchData
         )
         .then((response) => {
-          console.log("Successfully updated");
+          console.log("Holiday  updated successfully.");
           setOpenModal(false);
           setAppAlert({
             alert: true,
             type: "success",
-            msg: "updated successfully!",
+            msg: "Holiday  updated successfully.",
           });
           fetchHolidays();
         })
@@ -203,12 +207,12 @@ const PublicHoliday = () => {
         await axios.delete(
           `${process.env.REACT_APP_API}/route/holiday/delete/${id}`
         );
-        console.log("Successfully deleted");
+        console.log("Holiday deleted successfully.");
         setOpenModal(false);
         setAppAlert({
           alert: true,
           type: "success",
-          msg: "deleted successfully!",
+          msg: "Holiday deleted successfully.",
         });
         fetchHolidays(); // Refresh holidays after delete
       } catch (error) {
@@ -319,7 +323,9 @@ const PublicHoliday = () => {
             maxWidth="sm"
             fullWidth
           >
-            <DialogTitle>Add holiday</DialogTitle>
+            <h1 className="text-xl pl-2 font-semibold font-sans mt-4 ml-4">
+              Add Holiday
+            </h1>
             <DialogContent className="flex gap-3 flex-col">
               <div className="flex gap-3 flex-col mt-3">
                 <TextField
@@ -332,6 +338,12 @@ const PublicHoliday = () => {
                   value={inputdata.name}
                   onChange={handleData}
                 />
+                {!inputdata.name && formSubmitted && (
+                  <Typography variant="body2" color="error">
+                    Required.
+                  </Typography>
+                )}
+
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer
                     className="w-full"
@@ -369,6 +381,11 @@ const PublicHoliday = () => {
                     <MenuItem value="Mandatory">Mandatory</MenuItem>
                   </Select>
                 </FormControl>
+                {!inputdata.type && formSubmitted && (
+                  <Typography variant="body2" color="error">
+                    Required.
+                  </Typography>
+                )}
                 <FormControl size="small" fullWidth>
                   <InputLabel id="region-label">Region</InputLabel>
                   <Select
@@ -387,6 +404,11 @@ const PublicHoliday = () => {
                     ))}
                   </Select>
                 </FormControl>
+                {!inputdata.region && formSubmitted && (
+                  <Typography variant="body2" color="error">
+                    Required.
+                  </Typography>
+                )}
                 <div className="flex gap-4  mt-4  justify-end">
                   <Button
                     onClick={handleClose}
@@ -409,10 +431,12 @@ const PublicHoliday = () => {
           </Dialog>
 
           <Dialog fullWidth open={actionModal} onClose={handleClose}>
-            <DialogTitle>Are you sure about this ?</DialogTitle>
             <DialogContent>
               {operation === "edit" ? (
                 <>
+                  <h1 className="text-xl pl-2 font-semibold font-sans">
+                    Edit Holiday
+                  </h1>
                   <div className="flex gap-3 flex-col mt-3">
                     <TextField
                       required
@@ -478,36 +502,45 @@ const PublicHoliday = () => {
                   </div>
 
                   <div className="mt-5 flex gap-5 justify-end">
+                    <Button color="error" variant="outlined">
+                      cancel
+                    </Button>
                     <Button
                       onClick={doTheOperation}
                       variant="contained"
                       color="primary"
                     >
-                      {operation}
-                    </Button>
-                    <Button color="error" variant="outlined">
-                      cancel
+                      Apply
                     </Button>
                   </div>
                 </>
               ) : (
                 <>
-                  <div className="flex gap-5 py-5">
+                  <DialogTitle>Confirm Deletion</DialogTitle>
+                  <DialogContent>
+                    <p>
+                      Please confirm your decision to delete this salary
+                      computation day, as this action cannot be undone.
+                    </p>
+                  </DialogContent>
+                  <DialogActions>
                     <Button
                       onClick={handleClose}
-                      color="error"
-                      variant="contained"
+                      variant="outlined"
+                      color="primary"
+                      size="small"
                     >
                       Cancel
                     </Button>
                     <Button
-                      onClick={doTheOperation}
                       variant="contained"
-                      color="secondary"
+                      size="small"
+                      onClick={doTheOperation}
+                      color="error"
                     >
-                      {operation}
+                      Delete
                     </Button>
-                  </div>
+                  </DialogActions>
                 </>
               )}
             </DialogContent>
@@ -519,26 +552,3 @@ const PublicHoliday = () => {
 };
 
 export default PublicHoliday;
-
-//todo this is select field of organization
-//  <FormControl
-//               required
-//               style={{ marginTop: "20px", width: "80%", height: "10px" }}
-//               size="small"
-//             >
-//               <InputLabel id="demo-simple-select-label">Industry Type</InputLabel>
-//               <Select
-//                 labelId="demo-simple-select-label"
-//                 id="demo-simple-select"
-//                 name="industry_type"
-//                 value={inputdata.industry_type}
-//                 onChange={handleData}
-//                 inputRef={
-//                   firstEmptyField === "industry_type" ? firstEmptyFieldRef : null
-//                 }
-//               >
-//                 <MenuItem value="IT">IT</MenuItem>
-//                 <MenuItem value="MECH">MECH</MenuItem>
-//                 <MenuItem value="ACCOUNTS">ACCOUNTS</MenuItem>
-//               </Select>
-//             </FormControl>

@@ -3,13 +3,13 @@ import {
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   FormControl,
   FormControlLabel,
   FormLabel,
   Modal,
   Stack,
   TextField,
-  Typography,
 } from "@mui/material";
 import axios from "axios";
 import randomColor from "randomcolor";
@@ -48,7 +48,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
 
   const isFormClean = Object.keys(formState.dirtyFields).length === 0;
 
-  const mainFunc = useMutation(
+  const { mutate, isLoading } = useMutation(
     async (data) => {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/leave-types/${param.organisationId}`,
@@ -63,6 +63,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
     },
     {
       onSuccess: (data) => {
+        form.reset();
         handleAlert(true, "success", data.message);
         // Invalidate the query to refetch the data
         queryClient.invalidateQueries("leaveTypes");
@@ -82,7 +83,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
   );
   const onSubmit = async (data) => {
     try {
-      mainFunc.mutate(data);
+      mutate(data);
     } catch (error) {
       // Handle error
       console.error(error);
@@ -100,7 +101,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
 
   return (
     <Modal
-      keepMounted={true}
+      keepMounted={false}
       open={open}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
@@ -110,9 +111,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
         sx={style}
         className="border-none !z-10 shadow-md outline-none rounded-md gap-2 flex flex-col"
       >
-        <Typography variant="h3" className="!font-bold !text-lg border-b ">
-          Add Leave Type
-        </Typography>
+        <h1 className="text-xl pl-2 font-semibold font-sans">Add Leave Type</h1>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Stack spacing={2} width={400}>
             <FormControl component="fieldset">
@@ -179,7 +178,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
               />
             </FormControl>
             <FormControl component="fieldset">
-              <FormLabel component="legend">Is Active</FormLabel>
+              <FormLabel component="legend">Is active</FormLabel>
               <Controller
                 name="isActive"
                 control={control}
@@ -193,11 +192,17 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
                     }
                     label="is Active"
                   />
-                  // <Checkbox className="w-fit" {...field} />
                 )}
               />
             </FormControl>
-            <Button disabled={isFormClean} type="submit" variant="contained">
+            <Button
+              disabled={isFormClean || isLoading}
+              type="submit"
+              variant="contained"
+            >
+              <div className="w-6 h-6">
+                {isLoading && <CircularProgress size={20} />}
+              </div>
               Submit
             </Button>
           </Stack>

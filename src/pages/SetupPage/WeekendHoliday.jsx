@@ -6,6 +6,7 @@ import {
   DialogContent,
   IconButton,
   DialogTitle,
+  Typography,
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
@@ -84,6 +85,7 @@ const WeekendHoliday = () => {
   const [deleteModel, setDeleteModel] = useState(false);
   const [ID, setID] = useState("");
   const queryClient = useQueryClient();
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const handleDayToggle = (day, index) => {
     const updatedDays = selectedDays.includes(day)
@@ -100,7 +102,10 @@ const WeekendHoliday = () => {
     return `hsl(${hue}, 80%, 40%)`;
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormSubmitted(true);
+    if (!selectedDays.length) return;
     try {
       const daysArray = selectedDays.map((day) => ({ day }));
 
@@ -110,11 +115,11 @@ const WeekendHoliday = () => {
           { days: daysArray }
         );
 
-        console.log("Successfully updated");
+        console.log("Day updated successfully.");
         setAppAlert({
           alert: true,
           type: "success",
-          msg: "Days Updated Successfully!",
+          msg: "Day updated successfully!",
         });
       } else {
         const existingWeekend = await axios.get(
@@ -136,7 +141,7 @@ const WeekendHoliday = () => {
         setAppAlert({
           alert: true,
           type: "success",
-          msg: "Days Created Successfully!",
+          msg: "Weekend created successfully.",
         });
       }
 
@@ -165,7 +170,7 @@ const WeekendHoliday = () => {
       setAppAlert({
         alert: true,
         type: "success",
-        msg: "Weekend Deleted Successfully!",
+        msg: "Weekend deleted successfully.",
       });
       handleOpenClose();
       queryClient.invalidateQueries("days");
@@ -342,7 +347,9 @@ const WeekendHoliday = () => {
           <Dialog open={openModel} onClose={handleOpenClose} fullWidth>
             <DialogActions>
               <DialogContent>
-                <h1 className="!text-3xl text-center mb-8">Select days</h1>
+                <h1 className="text-xl pl-2 font-semibold font-sans mb-4">
+                  Select Days
+                </h1>
                 <div className="mb-6">
                   <WeekdaySelector
                     selectedDays={selectedDays}
@@ -350,6 +357,12 @@ const WeekendHoliday = () => {
                     getColor={getColor}
                   />
                 </div>
+
+                {!selectedDays.length && formSubmitted && (
+                  <Typography variant="body2" color="error">
+                    Days are required.
+                  </Typography>
+                )}
                 <div className="flex gap-5 !pt-5  justify-end ">
                   <Button
                     onClick={handleOpenClose}

@@ -1,4 +1,4 @@
-import { Delete, Edit, Warning } from "@mui/icons-material";
+import { Warning } from "@mui/icons-material";
 import {
   Button,
   Checkbox,
@@ -21,7 +21,8 @@ import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 const DepartmentList = () => {
   const { handleAlert } = useContext(TestContext);
   const [departmentName, setDepartmentName] = useState("");
@@ -229,7 +230,7 @@ const DepartmentList = () => {
       ) : (
         <div className="p-4">
           <Typography variant="h4" className="text-center mb-6">
-            Departments List
+            Departments
           </Typography>
           <table className="min-w-full bg-white text-left text-sm font-light">
             <thead className="border-b bg-gray-300 font-medium dark:border-neutral-500">
@@ -281,15 +282,17 @@ const DepartmentList = () => {
                   <td className="whitespace-nowrap px-3 py-2">
                     <IconButton
                       onClick={() => handleUpdate(id)}
+                      color="primary"
                       aria-label="edit"
                     >
-                      <Edit className="!text-xl" color="success" />
+                      <EditOutlinedIcon />
                     </IconButton>
                     <IconButton
                       onClick={() => handleDeleteConfirmation(department?._id)}
+                      color="error"
                       aria-label="delete"
                     >
-                      <Delete className="!text-xl" color="error" />
+                      <DeleteOutlineIcon />
                     </IconButton>
                   </td>
                 </tr>
@@ -304,10 +307,7 @@ const DepartmentList = () => {
         open={deleteConfirmation !== null}
         onClose={handleCloseConfirmation}
       >
-        <DialogTitle color={"error"}>
-          <Warning color="error" /> All information of Department will be
-          deleted. Are you sure you want to delete it?
-        </DialogTitle>
+        <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <p>
             Please confirm your decision to delete this department, as this
@@ -524,13 +524,13 @@ const DepartmentList = () => {
                   paddingLeft: 8, // Adjust left padding for better alignment
                 }}
               >
-                Add Department Head Name
+                Department Head Name
               </InputLabel>
               <Select
                 labelId="holiday-type-label"
                 id="demo-simple-select"
                 value={departmentHeadName}
-                label="Add department Head Name"
+                label="department Head Name"
                 onChange={(e) => handleDataChange(e, "head")}
                 // Add label prop for better alignment
               >
@@ -560,13 +560,13 @@ const DepartmentList = () => {
                   paddingLeft: 8, // Adjust left padding for better alignment
                 }}
               >
-                Add Department Head Delegate Name
+                Delegate Department Head Name
               </InputLabel>
               <Select
                 labelId="holiday-type-label"
                 id="demo-simple-select"
                 value={departmentHeadDelegateName}
-                label="Add Department head delegate name"
+                label="Delegate Department Head Name"
                 onChange={(e) => handleDataChange(e, "delegate")}
                 // Add label prop for better alignment
               >

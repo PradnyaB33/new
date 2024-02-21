@@ -8,7 +8,6 @@ import {
   Modal,
   Stack,
   TextField,
-  Typography,
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext } from "react";
@@ -87,9 +86,7 @@ const LeaveTypeModal = ({ handleClose, open, id, leaveType }) => {
         sx={style}
         className="border-none !z-10 shadow-md outline-none rounded-md gap-2 flex flex-col"
       >
-        <Typography variant="h3" className="!font-bold !text-lg border-b ">
-          Update Leave Type
-        </Typography>
+        <h1 className="text-xl font-semibold font-sans">Edit Leave Type</h1>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Stack spacing={2} width={400}>
             <FormControl component="fieldset">
