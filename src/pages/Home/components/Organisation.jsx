@@ -196,33 +196,64 @@ const Organisation = ({ item }) => {
         subscriptionDetails?.subscription?.status?.includes(["authenticated"])
     )
   );
+  const getMessage = () => {
+    let message = "";
+
+    switch (subscriptionDetails?.subscription?.status) {
+      case "authenticated":
+        if (
+          Math.ceil(
+            new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
+              new Date()
+          ) /
+            (1000 * 60 * 60 * 24) <=
+          0
+        ) {
+          message = `Your ${Math.ceil(
+            (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
+              new Date()) /
+              (1000 * 60 * 60 * 24)
+          )} Day Trial`;
+        } else {
+          message = "Please subscribe";
+        }
+        break;
+      case "active":
+        message = `Your next due is after ${Math.ceil(
+          (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
+            new Date()) /
+            (1000 * 60 * 60 * 24)
+        )} days`;
+        break;
+      case "pending":
+        message = "Your payment is pending. Please update your card details.";
+        break;
+      case "halted":
+        message =
+          "Your subscription is halted. Please update your card details.";
+        break;
+      case "cancelled":
+        message =
+          "Your subscription is cancelled. To restart, please create a new subscription.";
+        break;
+      case "paused":
+        message =
+          "Your subscription is paused. To resume, please unpause the subscription.";
+        break;
+      default:
+        message = "Basic Plan";
+        break;
+    }
+
+    return message;
+  };
+
   return (
     <>
       <div
         className={`border-b-[3px] border-${getRandomColor()} block min-w-[21rem] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-200 relative`}
       >
-        <tag>
-          {subscriptionDetails?.subscription?.status === "authenticated"
-            ? (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
-                new Date()) /
-                (1000 * 60 * 60 * 24) <=
-              0
-              ? "Please subscribe"
-              : `Your ${Math.ceil(
-                  (new Date(
-                    subscriptionDetails?.subscription?.charge_at * 1000
-                  ) -
-                    new Date()) /
-                    (1000 * 60 * 60 * 24)
-                )} Day Trial`
-            : subscriptionDetails?.subscription?.status === "active"
-            ? `Your next due is after ${Math.ceil(
-                (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
-                  new Date()) /
-                  (1000 * 60 * 60 * 24)
-              )} days`
-            : "Basic Plan"}
-        </tag>
+        <tag>{getMessage()}</tag>
         {/* )} */}
         <div className="border-b-2 flex items-center justify-between border-[#0000002d] px-6 py-3 text-black">
           <Avatar
