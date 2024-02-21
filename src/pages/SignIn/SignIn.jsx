@@ -63,7 +63,6 @@ const SignIn = () => {
         data
       );
 
-      console.log(res);
       return res;
     },
 
@@ -107,7 +106,7 @@ const SignIn = () => {
       },
 
       onError: (error) => {
-        console.log(error);
+        console.error(error);
 
         handleAlert(
           true,

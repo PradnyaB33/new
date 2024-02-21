@@ -27,7 +27,6 @@ const MyLogin = () => {
     },
   });
 
-  console.log(formState.errors);
   return (
     <div className="pt-16">
       <form onSubmit={handleSubmit(loginMutate)} noValidate>

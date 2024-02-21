@@ -552,7 +552,7 @@ button:active {
   background: #3b82f6;
   text-align: center;
 }
-tag {
+.tag {
   display: block;
   padding: 8px 14px;
   position: absolute;
@@ -562,16 +562,16 @@ tag {
   color: white;
   border-top-right-radius: 7px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
 
-  &::after {
-    display: block;
-    content: "";
-    height: 14px;
-    width: 14px;
-    position: absolute;
-    background-color: #3b82f6;
-    right: 0;
-    bottom: -14px;
-    border-bottom-right-radius: 14px;
-  }
+.tag::after {
+  display: block;
+  content: "";
+  height: 14px;
+  width: 14px;
+  position: absolute;
+  background-color: #3b82f6;
+  right: 0;
+  bottom: -14px;
+  border-bottom-right-radius: 14px;
 }

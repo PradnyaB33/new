@@ -63,8 +63,8 @@ const Step3 = ({ nextStep }) => {
           icon={CorporateFare}
           control={control}
           type="number"
-          placeholder={`How Many Member will be in your Organisation`}
-          label={`Organisation MemberCount *`}
+          placeholder={`How many member will be in your organisation`}
+          label={`Organisation member count *`}
           errors={errors}
           error={errors.memberCount}
         />
