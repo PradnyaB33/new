@@ -410,13 +410,9 @@ const PublicHoliday = () => {
           </Dialog>
 
           <Dialog fullWidth open={actionModal} onClose={handleClose}>
-<<<<<<< HEAD
-            <DialogTitle>Edit Public Holidays</DialogTitle>
-=======
             <h1 className="text-xl pl-2 font-semibold font-sans mt-4 ml-4">
               Edit Holiday
             </h1>
->>>>>>> 558d23a996234e8c3a5b045369a9414221cb1981
             <DialogContent>
               {operation === "edit" ? (
                 <>
@@ -484,27 +480,16 @@ const PublicHoliday = () => {
                     </FormControl>
                   </div>
 
-<<<<<<< HEAD
-                  <div className="mt-5 flex gap-5">
-=======
                   <div className="mt-5 flex gap-5 justify-end">
                     <Button color="error" variant="outlined">
                       cancel
                     </Button>
->>>>>>> 558d23a996234e8c3a5b045369a9414221cb1981
                     <Button
                       onClick={doTheOperation}
                       color="warning"
                       variant="contained"
                     >
-<<<<<<< HEAD
-                      {operation}
-                    </Button>
-                    <Button onClick={handleClose} variant="contained" color="primary">
-                      cancel
-=======
                       Apply
->>>>>>> 558d23a996234e8c3a5b045369a9414221cb1981
                     </Button>
                   </div>
                 </>

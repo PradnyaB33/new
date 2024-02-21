@@ -644,7 +644,6 @@ function RequireSubscription({ children }) {
     subscriptionDetails
   );
 
-<<<<<<< HEAD
   const { getCurrentUser, getCurrentRole } = UserProfile();
 
   const user = getCurrentUser();
@@ -661,7 +660,5 @@ function RequireSubscription({ children }) {
   }
 
   return user ? children : <Navigate to={"/"} />;
-=======
   return children;
->>>>>>> 7c1a07d03a479c41a9ca1e4d5d85473cb38e1c75
 }
