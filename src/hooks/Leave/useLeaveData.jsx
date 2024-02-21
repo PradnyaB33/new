@@ -55,6 +55,7 @@ const useLeaveData = () => {
       queryclient.invalidateQueries("employee-leave-table");
       queryclient.invalidateQueries("employee-summary-table");
       queryclient.invalidateQueries("employee-leave-table-without-default");
+      handleAlert(true, "success", "Applied for leave successfully");
       setNewAppliedLeaveEvents([]);
     },
     onError: (error) => {
@@ -74,31 +75,16 @@ const useLeaveData = () => {
   };
 
   const handleUpdateFunction = (e) => {
-    console.log(
-      `🚀 ~ file: useLeaveData.jsx:88 ~ selectedLeave._id:`,
-      selectedLeave
-    );
     setselectEvent(true);
-    // newAppliedLeaveEvents
-    console.log(
-      `🚀 ~ file: useLeaveData.jsx:87 ~ data:`,
-      data?.currentYearLeaves
-    );
+
     let array = data?.currentYearLeaves.filter((item) => {
       return item._id !== selectedLeave?._id;
     });
-    console.log(
-      `🚀 ~ file: useLeaveData.jsx:93 ~ data?.currentYearLeaves:`,
-      data?.currentYearLeaves
-    );
-    console.log(`🚀 ~ file: useLeaveData.jsx:84 ~ array:`, array);
-    // setAppliedLeaveEvents(array);
+    console.log(`🚀 ~ file: useLeaveData.jsx:82 ~ array:`, array);
     queryclient.setQueryData("employee-leave-table-without-default", (old) => {
-      console.log(`🚀 ~ file: useLeaveData.jsx:100 ~ old:`, old);
       old.currentYearLeaves = old?.currentYearLeaves.filter((item) => {
         return item._id !== selectedLeave?._id;
       });
-      console.log(`🚀 ~ file: useLeaveData.jsx:104 ~ old:`, old);
       return { ...old };
     });
   };

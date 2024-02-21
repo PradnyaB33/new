@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -47,7 +48,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
 
   const isFormClean = Object.keys(formState.dirtyFields).length === 0;
 
-  const mainFunc = useMutation(
+  const { mutate, isLoading } = useMutation(
     async (data) => {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/leave-types/${param.organisationId}`,
@@ -62,6 +63,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
     },
     {
       onSuccess: (data) => {
+        form.reset();
         handleAlert(true, "success", data.message);
         // Invalidate the query to refetch the data
         queryClient.invalidateQueries("leaveTypes");
@@ -81,7 +83,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
   );
   const onSubmit = async (data) => {
     try {
-      mainFunc.mutate(data);
+      mutate(data);
     } catch (error) {
       // Handle error
       console.error(error);
@@ -99,7 +101,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
 
   return (
     <Modal
-      keepMounted={true}
+      keepMounted={false}
       open={open}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
@@ -176,7 +178,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
               />
             </FormControl>
             <FormControl component="fieldset">
-              <FormLabel component="legend">Is Active</FormLabel>
+              <FormLabel component="legend">Is active</FormLabel>
               <Controller
                 name="isActive"
                 control={control}
@@ -190,24 +192,19 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
                     }
                     label="is Active"
                   />
-                  // <Checkbox className="w-fit" {...field} />
                 )}
               />
             </FormControl>
-
-            <div className="flex gap-4 mt-4   justify-end mr-4 mb-4">
-              <Button onClick={handleClose} color="error" variant="outlined">
-                Cancel
-              </Button>
-              <Button
-                disabled={isFormClean}
-                variant="contained"
-                color="primary"
-                type="submit"
-              >
-                Submit
-              </Button>
-            </div>
+            <Button
+              disabled={isFormClean || isLoading}
+              type="submit"
+              variant="contained"
+            >
+              <div className="w-6 h-6">
+                {isLoading && <CircularProgress size={20} />}
+              </div>
+              Submit
+            </Button>
           </Stack>
         </form>
       </Box>
