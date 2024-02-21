@@ -58,12 +58,12 @@ const WeekdaySelector = ({ selectedDays, handleDayToggle, getColor }) => {
             onClick={() => handleDayToggle(day, index)}
             className="text-2xl"
             style={{
-              backgroundColor: selectedDays.includes(day) ? getColor(day) : '#dbdbdb',
+              backgroundColor: selectedDays.includes(day) ? "#0ea5e9" : 'white',
               borderRadius: "50%",
               width: "55px",
               height: "55px",
               cursor: "pointer",
-              color: "black",
+              color: selectedDays.includes(day) ? "white" : "black",
               fontWeight: "bold",
               border: "1px solid gray",
             }}
@@ -270,7 +270,7 @@ const WeekendHoliday = () => {
                                 label={day.day}
                                 className="text-sm"
                                 style={{
-                                  backgroundColor: getColor(day.day),
+                                  backgroundColor: "#0ea5e9",
                                   borderRadius: "50%",
                                   width: "50px",
                                   height: "50px",
