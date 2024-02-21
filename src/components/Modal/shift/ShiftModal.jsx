@@ -1,11 +1,8 @@
-import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
   CircularProgress,
-  Divider,
   FormControl,
-  IconButton,
   InputLabel,
   MenuItem,
   Modal,
@@ -257,13 +254,6 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
           <h1 className="text-xl pl-2 font-semibold font-sans">
             {shiftId ? "Edit Shift" : "Add Shift"}
           </h1>
-          <IconButton onClick={handleClose}>
-            <CloseIcon className="!text-[16px]" />
-          </IconButton>
-        </div>
-
-        <div className="w-full">
-          <Divider variant="fullWidth" orientation="horizontal" />
         </div>
 
         <div className="px-5 space-y-4 mt-4">

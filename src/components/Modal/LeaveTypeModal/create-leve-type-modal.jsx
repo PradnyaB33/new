@@ -194,9 +194,20 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
                 )}
               />
             </FormControl>
-            <Button disabled={isFormClean} type="submit" variant="contained">
-              Submit
-            </Button>
+
+            <div className="flex gap-4 mt-4   justify-end mr-4 mb-4">
+              <Button onClick={handleClose} color="error" variant="outlined">
+                Cancel
+              </Button>
+              <Button
+                disabled={isFormClean}
+                variant="contained"
+                color="primary"
+                type="submit"
+              >
+                Submit
+              </Button>
+            </div>
           </Stack>
         </form>
       </Box>

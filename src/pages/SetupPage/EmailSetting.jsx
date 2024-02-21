@@ -308,7 +308,12 @@ const EmailSetting = () => {
                     value={email}
                     onChange={handleEmailChange}
                     error={Boolean(error)}
-                    helperText={error}
+                    // helperText={error}
+                    helperText={
+                      <div style={{ height: "5px", width: "280px" }}>
+                        {error}
+                      </div>
+                    }
                   />
                   <Button
                     variant="contained"
@@ -368,7 +373,7 @@ const EmailSetting = () => {
                     value={editEmail}
                     onChange={handleEditEmailChange}
                     error={Boolean(error)}
-                    helperText={error}
+                    // helperText={error}
                   />
                   <div className="flex gap-5 mt-5  justify-end">
                     <Button

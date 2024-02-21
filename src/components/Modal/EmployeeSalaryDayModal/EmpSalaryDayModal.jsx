@@ -1,5 +1,4 @@
-import CloseIcon from "@mui/icons-material/Close";
-import { Box, Button, Divider, IconButton, Modal } from "@mui/material";
+import { Box, Button, Modal } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
@@ -140,13 +139,6 @@ const EmpSalaryDayModal = ({ handleClose, open, id, empSalCalId }) => {
           <h1 className="text-xl pl-2 font-semibold font-sans">
             Edit Salary Computation Day
           </h1>
-          <IconButton onClick={handleClose}>
-            <CloseIcon className="!text-[16px]" />
-          </IconButton>
-        </div>
-
-        <div className="w-full">
-          <Divider variant="fullWidth" orientation="horizontal" />
         </div>
 
         <div className="px-5 space-y-4 mt-4">
