@@ -38,7 +38,7 @@ const NewOranisationForm = () => {
   };
   const stepper = [
     {
-      label: "Organization Details",
+      label: "Organisation Details",
       icon: Person,
     },
     {

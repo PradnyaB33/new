@@ -1,5 +1,4 @@
 import { Add, InfoOutlined, RemoveOutlined } from "@mui/icons-material";
-import CloseIcon from "@mui/icons-material/Close";
 import {
   Autocomplete,
   Button,
@@ -7,7 +6,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  Divider,
   FormControl,
   FormLabel,
   IconButton,
@@ -335,16 +333,9 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
         <h1 className="text-xl pl-2 font-semibold font-sans">
           {salaryId ? "Edit Salary Template" : "Create Salary Template"}
         </h1>
-        <IconButton onClick={handleClose}>
-          <CloseIcon className="!text-[16px]" />
-        </IconButton>
       </div>
 
       <DialogContent className="border-none  !pt-0 !px-0  shadow-md outline-none rounded-md">
-        <div className="w-full">
-          <Divider variant="fullWidth" orientation="horizontal" />
-        </div>
-
         <div className="px-5 space-y-4 mt-4">
           {/* {error && <p className="text-red-500">*{error}</p>} */}
 

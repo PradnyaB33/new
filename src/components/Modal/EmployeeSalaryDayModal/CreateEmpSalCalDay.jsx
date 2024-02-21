@@ -1,5 +1,4 @@
-import CloseIcon from "@mui/icons-material/Close";
-import { Box, Button, Divider, IconButton, Modal } from "@mui/material";
+import { Box, Button, Modal, Typography } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
@@ -23,7 +22,7 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
   const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
   const [selectedDay, setSelectedDay] = useState("");
-
+  const [formSubmitted, setFormSubmitted] = useState(false);
   // Generate an array of options for salary calculation days
   const salaryCalculationDays = [
     { value: "first_day_of_next_month", label: "First day of next month" },
@@ -42,6 +41,8 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
   // add the data
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFormSubmitted(true);
+    if (!selectedDay) return;
     try {
       const data = {
         selectedDay,
@@ -109,13 +110,6 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
           <h1 className="text-xl pl-2 font-semibold font-sans">
             Salary Computation Day
           </h1>
-          <IconButton onClick={handleClose}>
-            <CloseIcon className="!text-[16px]" />
-          </IconButton>
-        </div>
-
-        <div className="w-full">
-          <Divider variant="fullWidth" orientation="horizontal" />
         </div>
 
         <div className="px-5 space-y-4 mt-4">
@@ -139,6 +133,12 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
               )}
             />
           </div>
+
+          {!selectedDay && formSubmitted && (
+            <Typography variant="body2" color="error">
+              Required.
+            </Typography>
+          )}
 
           <div className="flex gap-4 mt-4 mr-4  mb-4 justify-end ">
             <Button onClick={handleClose} color="error" variant="outlined">
