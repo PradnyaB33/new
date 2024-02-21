@@ -32,13 +32,34 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
     date_of_birth,
   } = useEmpState();
 
+  const isAtLeastNineteenYearsOld = (value) => {
+    const currentDate = new Date();
+    const dob = new Date(value);
+    const differenceInYears = currentDate.getFullYear() - dob.getFullYear();
+    const monthDiff = currentDate.getMonth() - dob.getMonth();
+
+    // If the birth month is after the current month, reduce the age by 1
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && currentDate.getDate() < dob.getDate())
+    ) {
+      differenceInYears--;
+    }
+
+    return differenceInYears >= 19;
+  };
+
   const EmployeeSchema = z.object({
     first_name: z
       .string()
-      .min(3, { message: "Minimum three character required" }),
+      .min(1, { message: "Minimum 1 character required" })
+      .max(15, { message: "Maximum 15 character allowed" })
+      .regex(/^[a-zA-Z]+$/, { message: "Only character allowed" }),
     last_name: z
       .string()
-      .min(3, { message: "Minimum three character required" }),
+      .min(1, { message: "Minimum 1 character required" })
+      .max(15, { message: "Maximum 15 character allowed" })
+      .regex(/^[a-zA-Z]+$/, { message: "Only character allowed" }),
     gender: z.string(),
     email: z.string().email(),
 
@@ -46,8 +67,13 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
       .string()
       .min(10, { message: "Phone Number must be 10 digit" }),
     address: z.string(),
-    date_of_birth: z.string(),
-    citizenship: z.string().min(3, { message: "min 3 character required" }),
+    date_of_birth: z.string().refine(isAtLeastNineteenYearsOld, {
+      message: "Employee must be at least 19 years old",
+    }),
+    citizenship: z
+      .string()
+      .min(3, { message: "min 3 character required" })
+      .regex(/^[a-zA-Z]+$/, { message: "Only character allowed" }),
     adhar_card_number: z.string(),
     pan_card_number: z.string(),
     bank_account_no: z.string(),
@@ -150,8 +176,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           icon={Person}
           control={control}
           type="textarea"
-          placeholder="*******"
-          label="Permanant Address *"
+          placeholder="Permanent Address"
+          label="Permanent Address *"
           errors={errors}
           error={errors.address}
         />
@@ -218,8 +244,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             icon={AccountBox}
             control={control}
             type="number"
-            placeholder="Addhar no"
-            label="Employee Addhar no *"
+            placeholder="Aadhaar No"
+            label="Employee Aadhaar No *"
             errors={errors}
             error={errors.adhar_card_number}
           />
@@ -229,7 +255,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             control={control}
             type="text"
             placeholder="PAN"
-            label="Employee PAN no *"
+            label="Employee PAN NO *"
             errors={errors}
             error={errors.pan_card_number}
           />

@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import * as React from "react";
 import Tab1 from "./Tab1";
+import Tab2 from "./Tab2";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -51,40 +52,28 @@ export default function TDSTab1() {
       sx={{
         width: "100%",
         p: 0,
-        "& .MuiTabs-root": {
-          padding: 0,
-        },
-        "& .MuiTab-root": {
-          padding: 0,
-        },
       }}
     >
       <Box
         sx={{
           p: 0,
-          borderBottom: 1,
-          borderColor: "divider",
-          "& .MuiTabs-root": {
-            padding: 0,
-          },
-          "& .MuiTab-root": {
-            padding: 0,
-          },
         }}
       >
         <Tabs
           value={value}
+          inkBarStyle={{ background: "blue" }}
           onChange={handleChange}
           sx={{
-            "& .MuiTabs-root": {
-              padding: 0,
+            "& .MuiTabs-indicator": {
+              display: "none",
             },
-            "& .MuiTab-root": {
-              padding: 0,
+            "& .MuiTab-root.Mui-selected": {
+              color: "white",
+              backgroundColor: "#1976d2",
             },
           }}
           aria-label="basic tabs example"
-          className="bg-white mt-4 space-x-4 !p-0"
+          className="bg-white mt-4 space-x-4 !p-0 border-[.5px] border-gray-200"
         >
           <Tab
             className="!px-4"
@@ -96,7 +85,7 @@ export default function TDSTab1() {
                 padding: 0,
               },
             }}
-            label="Income Tax Declarations"
+            label="Income From Salary"
             {...a11yProps(0)}
           />
           <Tab
@@ -109,7 +98,59 @@ export default function TDSTab1() {
                 padding: 0,
               },
             }}
-            label="Investment Proof Submission"
+            label="Income From House Property"
+            {...a11yProps(1)}
+          />
+          <Tab
+            className="!px-4"
+            sx={{
+              "& .MuiTabs-root": {
+                padding: 0,
+              },
+              "& .MuiTab-root": {
+                padding: 0,
+              },
+            }}
+            label="Income from other sources"
+            {...a11yProps(1)}
+          />
+          <Tab
+            className="!px-4"
+            sx={{
+              "& .MuiTabs-root": {
+                padding: 0,
+              },
+              "& .MuiTab-root": {
+                padding: 0,
+              },
+            }}
+            label="Deduction under chapter VI A"
+            {...a11yProps(1)}
+          />
+          <Tab
+            className="!px-4"
+            sx={{
+              "& .MuiTabs-root": {
+                padding: 0,
+              },
+              "& .MuiTab-root": {
+                padding: 0,
+              },
+            }}
+            label="Total Taxable Income"
+            {...a11yProps(1)}
+          />
+          <Tab
+            className="!px-4"
+            sx={{
+              "& .MuiTabs-root": {
+                padding: 0,
+              },
+              "& .MuiTab-root": {
+                padding: 0,
+              },
+            }}
+            label="Tax Payable"
             {...a11yProps(1)}
           />
         </Tabs>
@@ -141,7 +182,7 @@ export default function TDSTab1() {
         value={value}
         index={1}
       >
-        Item Two
+        <Tab2 />
       </CustomTabPanel>
     </Box>
   );
