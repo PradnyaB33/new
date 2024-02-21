@@ -52,14 +52,14 @@ const Notification = () => {
   return (
     <>
       <Box
-        className="py-2 space-y-5 h-max"
+        className="py-2"
         sx={{
           flexGrow: 1,
           p: 5,
         }}
       ></Box>
 
-      <>
+      <div className="flex flex-col gap-8 px-8">
         {data?.leaveRequests?.length === 0 ? (
           <div className="flex items-center gap-4  bg-sky-100 p-4 px-8 rounded-md shadow-lg">
             <NotificationImportant className="!text-4xl" />
@@ -72,7 +72,7 @@ const Notification = () => {
           console.log(`🚀 ~ items:`, dayjs(items.end).diff(dayjs(items.start)));
           return <LeaveRejectmodal key={i} items={items} />;
         })}
-      </>
+      </div>
     </>
   );
 };

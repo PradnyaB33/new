@@ -79,11 +79,11 @@ const useLeaveData = () => {
     let array = data?.currentYearLeaves.filter((item) => {
       return item._id !== selectedLeave?._id;
     });
+    console.log(`🚀 ~ file: useLeaveData.jsx:82 ~ array:`, array);
     queryclient.setQueryData("employee-leave-table-without-default", (old) => {
       old.currentYearLeaves = old?.currentYearLeaves.filter((item) => {
         return item._id !== selectedLeave?._id;
       });
-      console.log(`🚀 ~ file: useLeaveData.jsx:104 ~ old:`, old);
       return { ...old };
     });
   };

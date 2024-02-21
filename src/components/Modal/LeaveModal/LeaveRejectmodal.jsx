@@ -140,15 +140,11 @@ const LeaveRejectmodal = ({ items }) => {
                     <Button
                       variant="contained"
                       onClick={() => acceptLeaveMutation({ id: items._id })}
-                      // startIcon={<CheckIcon />}
+                      color="primary"
                       sx={{
                         fontSize: "12px",
                         padding: "5px 30px",
                         textTransform: "capitalize",
-                        backgroundColor: "#42992D",
-                        "&:hover": {
-                          backgroundColor: "#42992D",
-                        },
                       }}
                     >
                       Accept
