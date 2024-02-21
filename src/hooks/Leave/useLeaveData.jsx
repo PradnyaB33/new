@@ -55,6 +55,7 @@ const useLeaveData = () => {
       queryclient.invalidateQueries("employee-leave-table");
       queryclient.invalidateQueries("employee-summary-table");
       queryclient.invalidateQueries("employee-leave-table-without-default");
+      handleAlert(true, "success", "Applied for leave successfully");
       setNewAppliedLeaveEvents([]);
     },
     onError: (error) => {

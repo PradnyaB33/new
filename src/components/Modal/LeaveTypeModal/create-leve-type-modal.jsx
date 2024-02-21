@@ -178,7 +178,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
               />
             </FormControl>
             <FormControl component="fieldset">
-              <FormLabel component="legend">Is Active</FormLabel>
+              <FormLabel component="legend">Is active</FormLabel>
               <Controller
                 name="isActive"
                 control={control}
@@ -192,7 +192,6 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
                     }
                     label="is Active"
                   />
-                  // <Checkbox className="w-fit" {...field} />
                 )}
               />
             </FormControl>
