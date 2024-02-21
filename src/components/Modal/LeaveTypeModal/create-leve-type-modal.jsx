@@ -62,6 +62,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
     },
     {
       onSuccess: (data) => {
+        form.reset();
         handleAlert(true, "success", data.message);
         // Invalidate the query to refetch the data
         queryClient.invalidateQueries("leaveTypes");
@@ -99,7 +100,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
 
   return (
     <Modal
-      keepMounted={true}
+      keepMounted={false}
       open={open}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
