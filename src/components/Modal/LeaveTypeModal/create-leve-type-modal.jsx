@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -47,7 +48,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
 
   const isFormClean = Object.keys(formState.dirtyFields).length === 0;
 
-  const mainFunc = useMutation(
+  const { mutate, isLoading } = useMutation(
     async (data) => {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/leave-types/${param.organisationId}`,
@@ -82,7 +83,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
   );
   const onSubmit = async (data) => {
     try {
-      mainFunc.mutate(data);
+      mutate(data);
     } catch (error) {
       // Handle error
       console.error(error);
@@ -195,7 +196,14 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
                 )}
               />
             </FormControl>
-            <Button disabled={isFormClean} type="submit" variant="contained">
+            <Button
+              disabled={isFormClean || isLoading}
+              type="submit"
+              variant="contained"
+            >
+              <div className="w-6 h-6">
+                {isLoading && <CircularProgress size={20} />}
+              </div>
               Submit
             </Button>
           </Stack>
