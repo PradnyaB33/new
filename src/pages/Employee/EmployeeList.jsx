@@ -1,11 +1,10 @@
-import { BorderColor } from "@mui/icons-material";
 import { Container, IconButton, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
-
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 const EmployeeList = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -195,9 +194,11 @@ const EmployeeList = () => {
                       <td className="py-3 pl-8 ">{item?.phone_number}</td>
                       <td className="whitespace-nowrap px-6 py-2">
                         <IconButton
+                          color="primary"
+                          aria-label="edit"
                           onClick={() => handleEditModalOpen(item._id)}
                         >
-                          <BorderColor className="!text-xl" color="success" />
+                          <EditOutlinedIcon />
                         </IconButton>
                       </td>
                     </tr>
