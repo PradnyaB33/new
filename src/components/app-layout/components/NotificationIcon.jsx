@@ -18,7 +18,7 @@ const NotificationIcon = () => {
       );
       return response.data;
     } catch (err) {
-      console.log(`🚀 ~ file: notification.jsx:37 ~ err:`, err);
+      console.error(`🚀 ~ file: notification.jsx:37 ~ err:`, err);
       throw err;
     }
   });

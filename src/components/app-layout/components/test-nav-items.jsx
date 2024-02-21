@@ -15,20 +15,20 @@ import {
   Settings,
   TrendingUp,
 } from "@mui/icons-material";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
+import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
+import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
-import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
-import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
-import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
-import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
@@ -321,30 +321,19 @@ const TestNavItems = ({ toggleDrawer }) => {
 
   return (
     <>
-      {Object.keys(navItems).map((role) => {
+      {Object.keys(navItems).map((role, i) => {
         const { icon, routes, isVisible } = navItems[role];
 
         return (
-          // <NavAccordian
-          //   key={role}
-          //   role={role}
-          //   icon={icon}
-          //   routes={routes}
-          //   toggleDrawer={toggleDrawer}
-          //   isVisible={isVisible}
-          //   valueBoolean={navItems[role].open}
-          // />
-          <>
-            <TestAccordian
-              key={role}
-              role={role}
-              icon={icon}
-              routes={routes}
-              toggleDrawer={toggleDrawer}
-              isVisible={isVisible}
-              valueBoolean={navItems[role].open}
-            />
-          </>
+          <TestAccordian
+            key={i}
+            role={role}
+            icon={icon}
+            routes={routes}
+            toggleDrawer={toggleDrawer}
+            isVisible={isVisible}
+            valueBoolean={navItems[role].open}
+          />
         );
       })}
     </>
