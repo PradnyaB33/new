@@ -6,6 +6,8 @@ import PropTypes from "prop-types";
 import * as React from "react";
 import Tab1 from "./Tab1";
 import Tab2 from "./Tab2";
+import Tab3 from "./Tab3";
+import Tab4 from "./Tab4";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -129,60 +131,23 @@ export default function TDSTab1() {
           />
           <Tab
             className="!px-4"
-            sx={{
-              "& .MuiTabs-root": {
-                padding: 0,
-              },
-              "& .MuiTab-root": {
-                padding: 0,
-              },
-            }}
             label="Total Taxable Income"
             {...a11yProps(1)}
           />
-          <Tab
-            className="!px-4"
-            sx={{
-              "& .MuiTabs-root": {
-                padding: 0,
-              },
-              "& .MuiTab-root": {
-                padding: 0,
-              },
-            }}
-            label="Tax Payable"
-            {...a11yProps(1)}
-          />
+          <Tab className="!px-4" label="Tax Payable" {...a11yProps(1)} />
         </Tabs>
       </Box>
-      <CustomTabPanel
-        sx={{
-          p: 0,
-          "& .MuiTabs-root": {
-            padding: 0,
-          },
-          "& .MuiTab-root": {
-            padding: 0,
-          },
-        }}
-        value={value}
-        index={0}
-      >
+      <CustomTabPanel value={value} index={0}>
         <Tab1 />
       </CustomTabPanel>
-      <CustomTabPanel
-        sx={{
-          "& .MuiTabs-root": {
-            padding: 0,
-          },
-          "& .MuiTab-root": {
-            padding: 0,
-          },
-        }}
-        value={value}
-        index={1}
-      >
+      <CustomTabPanel value={value} index={1}>
         <Tab2 />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+        <Tab3 />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={3}>
+        <Tab4 />
       </CustomTabPanel>
     </Box>
   );

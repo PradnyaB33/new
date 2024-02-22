@@ -31,8 +31,6 @@ const TDSTable1 = () => {
   const [year, setYear] = useState(2024);
   const [tdsData, setTDSData] = useState(createTDSArray(year));
 
-  console.log(tdsData);
-
   const handleYearChange = (event) => {
     const newYear = parseInt(event.target.value);
     setYear(newYear);
