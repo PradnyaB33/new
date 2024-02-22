@@ -11,7 +11,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import useOrg from "../../../State/Org/Org";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-
+import { CheckCircleOutline } from "@mui/icons-material";
+import { Assessment } from "@mui/icons-material";
+import { EqualizerOutlined } from "@mui/icons-material";
 const organizationSchema = z.object({
   remotePunching: z.boolean(),
   performanceManagement: z.boolean(),
@@ -55,7 +57,7 @@ const Step2MiniForm = ({
       <div className="grid md:grid-cols-2 md:gap-4 p-4">
         <AuthInputFiled
           name="remotePunching"
-          icon={LocationOnOutlined}
+          icon={CheckCircleOutline}
           control={control}
           type="checkbox"
           placeholder="Remote Punching"
@@ -65,7 +67,7 @@ const Step2MiniForm = ({
         />
         <AuthInputFiled
           name="performanceManagement"
-          icon={TimelineOutlined}
+          icon={Assessment}
           control={control}
           type="checkbox"
           placeholder="Performance Management"
