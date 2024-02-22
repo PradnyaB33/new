@@ -40,6 +40,15 @@ const AppDatePicker = ({
         setNewData(newArr);
     }, [arr]);
 
+    const getLatestShifts = async() =>{
+        try {
+            const resp = await axios.get(`${process.env.REACT_APP_API}/route/shiftApply/get`)
+            console.log(resp);
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
     const { data: data2 } = useQuery("employee-disable-weekends", async () => {
         const response = await axios.get(
             `${process.env.REACT_APP_API}/route/weekend/get`,
@@ -248,9 +257,7 @@ const AppDatePicker = ({
                         event.start !== selectedLeave.start ||
                         event.end !== selectedLeave.end
                     )
-                );
-                setSelectedLeave(null); // Reset selectedLeave state
-                setDelete(false); // Toggle delete state
+                )
             } else {
                 console.log("This operation cannot be done");
             }

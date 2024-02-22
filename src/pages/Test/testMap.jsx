@@ -4,9 +4,7 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 import axios from "axios";
-import { Helmet } from 'react-helmet';
-import React, { useContext, useEffect, useState } from "react";
-// import { UseContext } from "../../State/UseState/UseContext";
+import React, { useEffect, useState } from "react";
 import useGetUser from "../../hooks/Token/useUser"
 
 const containerStyle = {
@@ -18,7 +16,6 @@ console.log(window.google.maps);
 
 const TestMap = () => {
   const [waypoints, setWaypoints] = useState([]);
-  const [polyLine, setPolyLine] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
   const { authToken } = useGetUser();
 

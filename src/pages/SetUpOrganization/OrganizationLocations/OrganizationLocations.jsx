@@ -1,6 +1,4 @@
 import { Add, Info } from "@mui/icons-material";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Button,
   Dialog,
@@ -20,8 +18,8 @@ import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../Setup";
 import Selector from "./selector";
-import AddLocationAltOutlinedIcon from "@mui/icons-material/AddLocationAltOutlined";
-
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 const OrganizationLocations = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -141,7 +139,7 @@ const OrganizationLocations = () => {
         !addressLine1 ||
         !organizationId
       ) {
-        handleAlert(true, "error", "All fields are mandatory.");
+        handleAlert(true, "error", "All fields are mandatory");
         return false;
       }
       await axios.post(
@@ -164,7 +162,7 @@ const OrganizationLocations = () => {
       );
       setLocationList(response.data.locationsData);
 
-      handleAlert(true, "success", "Location added successfully.");
+      handleAlert(true, "success", "Location added successfully");
       handleClose();
     } catch (error) {
       console.error(error.response.data.message);
@@ -254,7 +252,7 @@ const OrganizationLocations = () => {
       );
       setLocationList(response.data.locationsData);
       console.log(locationList);
-      handleAlert(true, "success", "Location updated successfully.");
+      handleAlert(true, "success", "Location updated successfully");
       handleClose();
     } catch (error) {
       console.error("error is: ", error.response.data.error);
@@ -284,7 +282,7 @@ const OrganizationLocations = () => {
 
       setLocationList(response.data.locationsData);
 
-      handleAlert(true, "success", "Location deleted successfully.");
+      handleAlert(true, "success", "Location deleted successfully");
     } catch (error) {
       console.error(error.response.data.message);
       handleAlert(true, "error", error.response.data.error);
@@ -312,9 +310,10 @@ const OrganizationLocations = () => {
           <IntlProvider locale="en">
             <div className="p-4  border-b-[.5px] border-gray-300 flex items-center justify-between gap-3 w-full">
               <div className="flex gap-3">
-                <div className="flex items-center justify-center">
-                  <AddLocationAltOutlinedIcon />
-                </div>
+                {" "}
+                {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+                  <AddLocationAltOutlined className="!text-lg text-white" />
+                </div> */}
                 <h1 className="!text-lg tracking-wide"> Location</h1>
               </div>
               <Button
@@ -331,7 +330,7 @@ const OrganizationLocations = () => {
               <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
                 <article className="flex items-center mb-1 text-red-500 gap-2">
                   <Info className="text-2xl" />
-                  <h1 className="text-lg font-semibold">Add Location</h1>
+                  <h1 className="text-xl font-semibold">Add Location</h1>
                 </article>
                 <p>No location found. Please add a location.</p>
               </section>
@@ -369,9 +368,8 @@ const OrganizationLocations = () => {
                   {locationList?.map((location, index) => (
                     <tr
                       key={index}
-                      className={`${
-                        index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                      } border-b dark:border-neutral-500 !font-medium`}
+                      className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                        } border-b dark:border-neutral-500 !font-medium`}
                     >
                       <td className="py-2 px-3">{index + 1}</td>
                       <td className="py-2 px-3">{location.continent}</td>
@@ -414,19 +412,15 @@ const OrganizationLocations = () => {
               >
                 <DialogTitle>
                   {editIndex !== null ? (
-                    <span className="text-xl pl-2 font-semibold font-sans">
-                      <FormattedMessage
-                        id="editLocation"
-                        defaultMessage="Edit Location"
-                      />
-                    </span>
+                    <FormattedMessage
+                      id="editLocation"
+                      defaultMessage="Edit Location"
+                    />
                   ) : (
-                    <span className="text-xl pl-2 font-semibold font-sans">
-                      <FormattedMessage
-                        id="addLocation"
-                        defaultMessage="Add Location"
-                      />
-                    </span>
+                    <FormattedMessage
+                      id="addLocation"
+                      defaultMessage="Add Location"
+                    />
                   )}
                 </DialogTitle>
                 <DialogContent>
@@ -543,7 +537,7 @@ const OrganizationLocations = () => {
                     fullWidth
                   />
                 </DialogContent>
-                <div className="flex gap-4 mt-4 justify-end mb-4 mr-4">
+                <div className="flex gap-4 mt-4 justify-center mb-4">
                   <Button
                     onClick={handleClose}
                     color="error"
@@ -565,7 +559,36 @@ const OrganizationLocations = () => {
                     {editIndex !== null ? (
                       <FormattedMessage
                         id="saveChanges"
-                        defaultMessage="Apply"
+                        defaultMessage="Save Changes"
+                      />
+                    ) : (
+                      <FormattedMessage
+                        id="addLocation"
+                        defaultMessage="Add Location"
+                      />
+                    )}
+                  </Button>
+                </div>
+
+                {/* <DialogActions>
+                  <Button onClick={handleClose} color="secondary">
+                    <FormattedMessage id="cancel" defaultMessage="Cancel" />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      
+                      if (editIndex !== null) {
+                        handleUpdateLocation(editIndex);
+                      } else {
+                        handleAddLocation();
+                      }
+                    }}
+                    color="primary"
+                  >
+                    {editIndex !== null ? (
+                      <FormattedMessage
+                        id="saveChanges"
+                        defaultMessage="Save Changes"
                       />
                     ) : (
                       <FormattedMessage
@@ -574,30 +597,22 @@ const OrganizationLocations = () => {
                       />
                     )}
                   </Button>
-                </div>
+                </DialogActions> */}
               </Dialog>
               <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
                 <DialogTitle>Confirm Deletion</DialogTitle>
                 <DialogContent>
                   <DialogContentText>
-                    Please confirm your decision to delete this location, as
-                    this action cannot be undone.
+                    Are you sure you want to delete this location?
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                  <Button
-                    onClick={() => setConfirmOpen(false)}
-                    variant="outlined"
-                    color="primary"
-                    size="small"
-                  >
+                  <Button onClick={() => setConfirmOpen(false)} color="primary">
                     Cancel
                   </Button>
                   <Button
-                    variant="contained"
-                    size="small"
                     onClick={() => handleDeleteLocation(deleteIndex)}
-                    color="error"
+                    color="primary"
                   >
                     Delete
                   </Button>
