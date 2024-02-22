@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import { CalendarMonth, Delete, Edit } from "@mui/icons-material";
 import {
   Badge,
@@ -6,20 +7,23 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Snackbar,
 } from "@mui/material";
 import { differenceInDays, format, parseISO } from "date-fns";
-import React, { useState } from "react";
+import UserProfile from "../../../../hooks/UserData/useUser";
+import axios from "axios";
+import useShiftStore from "../store/useShiftStore";
 
 const Mapped = ({
   item,
   index,
-  shifts,
-  // newAppliedLeaveEvents,
-  // setNewAppliedLeaveEvents,
+  subtractedLeaves,
+  newAppliedLeaveEvents,
+  setNewAppliedLeaveEvents,
   setCalendarOpen,
 }) => {
   const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
-  const [shiftsTypes, setShiftsTypes] = useState(item);
+  const { setShiftName } = useShiftStore();
   const badgeStyle = {
     "& .MuiBadge-badge": {
       color: "#d1d5db",
@@ -28,21 +32,55 @@ const Mapped = ({
       transition: "color 0.3s, background-color 0.3s, border-color 0.3s",
     },
   };
+  const { authToken, handleAlert } = UserProfile();
+  const [sName, setSName] = useState([]);
+  const [openAlert, setOpenAlert] = useState(false); // State for alert visibility
+
+  // Fetch initial shift types
+  useEffect(() => {
+    (async () => {
+      try {
+        const resp = await axios.get(`${process.env.REACT_APP_API}/route/getAllShifts`);
+        setSName(resp.data.shifts);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, []);
+
   const handleChange = (event) => {
-    // console.log(`🚀 ~ event:`, shifts);
-    // Remove below lines, these are added to solve warnings
-    setLeavesTypes(443423423);
-    setShiftsTypes(4234234234);
-    // setLeavesTypes(event.target.value);
-    // newAppliedLeaveEvents[index].leaveTypeDetailsId = event.target.value;
-    // setNewAppliedLeaveEvents(newAppliedLeaveEvents);
+    const selectedShiftId = event.target.value;
+    setLeavesTypes(selectedShiftId);
   };
-  // const removeItem = (idToRemove) => {
-  //   const updatedAppliedLeaveEvents = newAppliedLeaveEvents.filter(
-  //     (_, i) => i !== idToRemove
-  //   );
-  //   setNewAppliedLeaveEvents(updatedAppliedLeaveEvents);
-  // };
+
+  const handleUpdate = () => {
+    // Clear the selected shift
+    setLeavesTypes('');
+    // Open the calendar for selection
+    setCalendarOpen(true);
+  };
+
+  console.log(newAppliedLeaveEvents);
+  const removeItem = (idToRemove) => {
+    console.log('Removing item with id:', idToRemove);
+    console.log('Current newAppliedLeaveEvents:', newAppliedLeaveEvents);
+
+    const updatedAppliedLeaveEvents = newAppliedLeaveEvents.filter(
+      (_, i) => i !== idToRemove
+    );
+    setNewAppliedLeaveEvents(updatedAppliedLeaveEvents);
+  };
+  const handleChange2 = (name) => {
+    setShiftName(name);
+  };
+
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenAlert(false);
+  };
+
   return (
     <div
       key={index}
@@ -87,47 +125,39 @@ const Mapped = ({
       </div>
       <div className="flex lg:w-fit lg:justify-end justify-between w-full items-center gap-2">
         <FormControl sx={{ width: 180 }} size="small" fullWidth>
-          <InputLabel id="demo-simple-select-label">Select shift</InputLabel>
+          <InputLabel id="demo-simple-select-label">
+            Select Shift Type
+          </InputLabel>
           <Select
             defaultValue={leavesTypes}
             required
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={leavesTypes}
-            label="Select Shift"
+            label="Select Leave Type"
             onChange={handleChange}
           >
-            {shifts?.map((item, index) => {
+            {sName?.map((item, index) => {
               return (
-                item.isActive && (
-                  <MenuItem
-                    selected={shiftsTypes === item.shiftName}
-                    id={index}
-                    key={index}
-                    value={item._id}
-                  >
-                    <div className="flex justify-between w-full">
-                      <div>{item.shiftName} </div>
-                      <div className={`w-4 h-4 rounded-full my-auto`}></div>
-                    </div>
-                  </MenuItem>
-                )
-              );
+                <MenuItem
+                  selected={leavesTypes === item.leaveTypeDetailsId}
+                  id={index}
+                  key={index}
+                  value={item._id}
+                  onClick={() => handleChange2(item.shiftName)}
+                >
+                  <div className="flex justify-between w-full">
+                    <div>{item.shiftName} </div>
+                  </div>
+                </MenuItem>
+              )
             })}
           </Select>
         </FormControl>
         <Button
           type="button"
-          onClick={() => setCalendarOpen(true)}
-          variant="outlined"
           className="!border-gray-300 group-hover:!border-gray-400"
-        >
-          <Edit className="text-gray-300 group-hover:text-gray-500" />
-        </Button>
-        <Button
-          type="button"
-          className="!border-gray-300 group-hover:!border-gray-400"
-          // onClick={() => removeItem(index)}
+          onClick={() => removeItem(index)}
           variant="outlined"
         >
           <Delete className="text-gray-300 group-hover:text-red-500" />

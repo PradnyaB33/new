@@ -59,14 +59,13 @@ const WeekdaySelector = ({ selectedDays, handleDayToggle, getColor }) => {
             onClick={() => handleDayToggle(day, index)}
             className="text-2xl"
             style={{
-              backgroundColor: selectedDays.includes(day)
-                ? getColor(day)
-                : "gray",
+              backgroundColor: selectedDays.includes(day) ? "#0ea5e9" : 'white',
               borderRadius: "50%",
               width: "55px",
               height: "55px",
               cursor: "pointer",
-              color: "white",
+              color: selectedDays.includes(day) ? "white" : "black",
+              fontWeight: "bold",
               border: "1px solid gray",
             }}
           />
@@ -98,8 +97,8 @@ const WeekendHoliday = () => {
 
   const getColor = (day) => {
     const index = daysOfWeek.indexOf(day);
-    const hue = (index * 40) % 360;
-    return `hsl(${hue}, 80%, 40%)`;
+    const hue = (index * 50) % 360;
+    return `hsl(${hue}, 80%, 60%)`;
   };
 
   const handleSubmit = async (e) => {
@@ -133,10 +132,15 @@ const WeekendHoliday = () => {
 
         console.log(daysArray);
 
-        await axios.post(`${process.env.REACT_APP_API}/route/weekend/create`, {
-          days: daysArray,
-          organizationId,
-        });
+        if (daysArray.length > 3) {
+          throw new Error("Weekend cannot have more than 3 days");
+        }
+
+
+        await axios.post(
+          `${process.env.REACT_APP_API}/route/weekend/create`,
+          { days: daysArray, organizationId }
+        );
         console.log("Successfully created");
         setAppAlert({
           alert: true,
@@ -224,8 +228,7 @@ const WeekendHoliday = () => {
               variant="contained"
               onClick={handleOpenClose}
             >
-              <Add />
-              Add Weekly Off
+              Add Days
             </Button>
           </div>
 
@@ -272,7 +275,7 @@ const WeekendHoliday = () => {
                                 label={day.day}
                                 className="text-sm"
                                 style={{
-                                  backgroundColor: getColor(day.day),
+                                  backgroundColor: "#0ea5e9",
                                   borderRadius: "50%",
                                   width: "50px",
                                   height: "50px",

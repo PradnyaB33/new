@@ -51,30 +51,44 @@ const DepartmentList = () => {
 
   useEffect(() => {
     (async () => {
-      const resp = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-department-head/${organisationId}`,
-        {
-          headers: { Authorization: authToken },
-        }
-      );
-      setHeadList(resp.data.employees);
-      console.log(resp.data.employees);
+
+      try {
+        const resp = await axios.get(
+          `${process.env.REACT_APP_API}/route/employee/get-department-head/${organisationId}`,
+          {
+            headers: { Authorization: authToken },
+          }
+        );
+        setHeadList(resp?.data.employees);
+
+      }
+      catch (error) {
+        console.log(error.message);
+      }
+
     })();
   }, [authToken, organisationId]);
   useEffect(() => {
     (async () => {
-      const resp = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-department-delegate-head/${organisationId}`,
-        {
-          headers: { Authorization: authToken },
-        }
-      );
-      setDelegateHeadList(resp.data.employees);
-      console.log(resp.data.employees);
+      try {
+        const resp = await axios.get(
+          `${process.env.REACT_APP_API}/route/employee/get-department-delegate-head/${organisationId}`,
+          {
+            headers: { Authorization: authToken },
+          }
+        );
+        setDelegateHeadList(resp.data.employees);
+        console.log(resp.data.employees);
+
+      }
+
+      catch (error) {
+        console.log(error.message);
+      }
+
     })();
     // eslint-disable-next-line
   }, []);
-  console.log(departmentList);
   const fetchDepartmentList = async () => {
     try {
       const response = await axios.get(
@@ -137,7 +151,6 @@ const DepartmentList = () => {
       )
       .then((response) => {
         setLocations(response.data.locationsData);
-        console.log("locations are: ", response.data);
       })
       .catch((error) => console.error("Error fetching locations:", error));
   }, [authToken, organisationId]);
@@ -224,81 +237,84 @@ const DepartmentList = () => {
   return (
     <>
       {departmentList?.length === 0 ? (
-        <Typography variant="h5" className="text-center mb-2 text-red-600">
-          <Warning /> No departments added, please add department first.
-        </Typography>
-      ) : (
-        <div className="p-4">
-          <Typography variant="h4" className="text-center mb-6">
-            Departments
+        <div className="w-full h-full">
+          <Typography variant="h5" className="text-center !mt-5 text-red-600">
+            <Warning /> <span className="!mt-3"> No departments added, please add department first.</span>
           </Typography>
-          <table className="min-w-full bg-white text-left text-sm font-light">
-            <thead className="border-b bg-gray-300 font-medium dark:border-neutral-500">
-              <tr className="!font-medium">
-                <th scope="col" className="px-3 py-3 whitespace-nowrap">
-                  Sr. No
-                </th>
-                <th scope="col" className="px-3 py-3 ">
-                  Department Name
-                </th>
-                <th scope="col" className="px-3 py-3 ">
-                  Department Head
-                </th>
-                <th scope="col" className="px-3 py-3 ">
-                  Delegate Department Head
-                </th>
-                <th scope="col" className="px-3 py-3 ">
-                  Department Location
-                </th>
-                <th scope="col" className="px-3 py-3 ">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {departmentList?.map((department, id) => (
-                <tr
-                  key={id}
-                  className={`${
-                    id % 2 === 0 ? "bg-gray-50" : "bg-white"
-                  } border-b dark:border-neutral-500 !font-medium`}
-                >
-                  <td className="py-2 px-3">{id + 1}</td>
-                  <td className="py-2 px-3">
-                    {department?.departmentName || ""}
-                  </td>
-                  <td className="py-2 px-3">
-                    {department?.departmentHeadName || ""}
-                  </td>
-                  <td className="py-2 px-3">
-                    {department?.departmentHeadDelegateName || ""}
-                  </td>
-
-                  <td className="py-2 px-3">
-                    {department?.departmentLocation
-                      ? department?.departmentLocation?.city
-                      : ""}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-2">
-                    <IconButton
-                      onClick={() => handleUpdate(id)}
-                      color="primary"
-                      aria-label="edit"
-                    >
-                      <EditOutlinedIcon />
-                    </IconButton>
-                    <IconButton
-                      onClick={() => handleDeleteConfirmation(department?._id)}
-                      color="error"
-                      aria-label="delete"
-                    >
-                      <DeleteOutlineIcon />
-                    </IconButton>
-                  </td>
+        </div>
+      ) : (
+        <div style={{ border: "2px solid gray", borderRadius: "20px" }} className="w-[75vw] m-auto h-full">
+          <div className="p-4">
+            <Typography variant="h4" className="text-center mb-6">
+              Departments
+            </Typography>
+            <table style={{ borderRadius: "20px" }} className="min-w-full bg-white text-left text-sm font-light">
+              <thead className="border-b bg-gray-300 font-medium dark:border-neutral-500">
+                <tr className="!font-medium">
+                  <th scope="col" className="px-3 py-3 whitespace-nowrap">
+                    Sr. No
+                  </th>
+                  <th scope="col" className="px-3 py-3 ">
+                    Department Name
+                  </th>
+                  <th scope="col" className="px-3 py-3 ">
+                    Department Head
+                  </th>
+                  <th scope="col" className="px-3 py-3 ">
+                    Delegate Department Head
+                  </th>
+                  <th scope="col" className="px-3 py-3 ">
+                    Department Location
+                  </th>
+                  <th scope="col" className="px-3 py-3 ">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {departmentList?.map((department, id) => (
+                  <tr
+                    key={id}
+                    className={`${id % 2 === 0 ? "bg-gray-50" : "bg-white"
+                      } border-b dark:border-neutral-500 !font-medium`}
+                  >
+                    <td className="py-2 px-3">{id + 1}</td>
+                    <td className="py-2 px-3">
+                      {department?.departmentName || ""}
+                    </td>
+                    <td className="py-2 px-3">
+                      {department?.departmentHeadName || ""}
+                    </td>
+                    <td className="py-2 px-3">
+                      {department?.departmentHeadDelegateName || ""}
+                    </td>
+
+                    <td className="py-2 px-3">
+                      {department?.departmentLocation
+                        ? department?.departmentLocation?.city
+                        : ""}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-2">
+                      <IconButton
+                        onClick={() => handleUpdate(id)}
+                        color="primary"
+                        aria-label="edit"
+                      >
+                        <EditOutlinedIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => handleDeleteConfirmation(department?._id)}
+                        color="error"
+                        aria-label="delete"
+                      >
+                        <DeleteOutlineIcon />
+                      </IconButton>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
@@ -398,11 +414,17 @@ const DepartmentList = () => {
                 id="demo-simple-select"
                 value={departmentLocation}
                 label="Select Location"
-                // Add label prop for better alignment
+              // Add label prop for better alignment
               >
-                {locations.map((data, index) => (
+                {locations?.map((data, index) => (
                   <MenuItem key={index} value={data.shortName}>
-                    {data?.shortName}
+                    {!data ? (
+                      <MenuItem>
+                        No location present!
+                      </MenuItem>
+                    )
+                      :
+                      (data?.shortName)}
                   </MenuItem>
                 ))}
               </Select>
@@ -532,14 +554,19 @@ const DepartmentList = () => {
                 value={departmentHeadName}
                 label="department Head Name"
                 onChange={(e) => handleDataChange(e, "head")}
-                // Add label prop for better alignment
+              // Add label prop for better alignment
               >
-                {headList.map((data, index) => (
+                {headList?.map((data, index) => (
                   <MenuItem
                     key={index}
                     value={data.first_name + " " + data.last_name}
                   >
-                    {data.first_name + " " + data.last_name}
+                    {!data ? (
+                      <MenuItem>
+                        No department head present!
+                      </MenuItem>
+                    ) :
+                      (data.first_name + " " + data.last_name)}
                   </MenuItem>
                 ))}
               </Select>
@@ -568,14 +595,21 @@ const DepartmentList = () => {
                 value={departmentHeadDelegateName}
                 label="Delegate Department Head Name"
                 onChange={(e) => handleDataChange(e, "delegate")}
-                // Add label prop for better alignment
+              // Add label prop for better alignment
               >
-                {delegateHeadList.map((data, index) => (
+                {delegateHeadList?.map((data, index) => (
                   <MenuItem
                     key={index}
                     value={data.first_name + " " + data.last_name}
                   >
-                    {data?.first_name + " " + data?.last_name}
+                    {!data ? (
+                      <MenuItem>
+                        No delegate head present!
+                      </MenuItem>
+                    )
+                      :
+                      (data?.first_name + " " + data?.last_name)
+                    }
                   </MenuItem>
                 ))}
               </Select>

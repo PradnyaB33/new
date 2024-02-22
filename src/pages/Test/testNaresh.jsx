@@ -34,7 +34,7 @@ export default function TestNaresh() {
             </Button>
             <div>{count}</div>
             <div>lattitude is {data?.latitude}</div>
-            <div>longiture is{data?.longitude}</div>
+            <div>longitude is{data?.longitude}</div>
           </div>
         </div>
       </div>

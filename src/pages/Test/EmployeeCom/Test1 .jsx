@@ -32,22 +32,50 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
     date_of_birth,
   } = useEmpState();
 
+  const isAtLeastNineteenYearsOld = (value) => {
+    const currentDate = new Date();
+    const dob = new Date(value);
+    const differenceInYears = currentDate.getFullYear() - dob.getFullYear();
+    const monthDiff = currentDate.getMonth() - dob.getMonth();
+
+    // If the birth month is after the current month, reduce the age by 1
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && currentDate.getDate() < dob.getDate())
+    ) {
+      differenceInYears--;
+    }
+
+    return differenceInYears >= 19;
+  };
+
   const EmployeeSchema = z.object({
     first_name: z
       .string()
-      .min(3, { message: "Minimum three character required" }),
+      .min(1, { message: "Minimum 1 character required" })
+      .max(15, { message: "Maximum 15 character allowed" })
+      .regex(/^[a-zA-Z]+$/, { message: "Only character allowed" }),
     last_name: z
       .string()
-      .min(3, { message: "Minimum three character required" }),
+      .min(1, { message: "Minimum 1 character required" })
+      .max(15, { message: "Maximum 15 character allowed" })
+      .regex(/^[a-zA-Z]+$/, { message: "Only character allowed" }),
     gender: z.string(),
     email: z.string().email(),
-
     phone_number: z
       .string()
-      .min(10, { message: "Phone Number must be 10 digit" }),
+      .max(10, { message: "Phone Number must be 10 digits" })
+      .refine((value) => value.length === 10, {
+        message: "Phone Number must be exactly 10 digits",
+      }),
     address: z.string(),
-    date_of_birth: z.string(),
-    citizenship: z.string().min(3, { message: "min 3 character required" }),
+    date_of_birth: z.string().refine(isAtLeastNineteenYearsOld, {
+      message: "Employee must be at least 19 years old",
+    }),
+    citizenship: z
+      .string()
+      .min(3, { message: "min 3 character required" })
+      .regex(/^[a-zA-Z]+$/, { message: "Only character allowed" }),
     adhar_card_number: z.string(),
     pan_card_number: z.string(),
     bank_account_no: z.string(),
@@ -93,7 +121,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             control={control}
             type="text"
             placeholder="Jhon"
-            label="Employee first name *"
+            label="Employee First Name *"
             errors={errors}
             error={errors.first_name}
           />
@@ -104,7 +132,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             control={control}
             type="text"
             placeholder="Doe"
-            label="Employee last name *"
+            label="Employee Last Name *"
             errors={errors}
             error={errors.last_name}
           />
@@ -127,8 +155,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             icon={Email}
             control={control}
             type="text"
-            placeholder="Organisation Name"
-            label="Employee Personal Email *"
+            placeholder="Employee Email"
+            label="Employee  Email *"
             errors={errors}
             error={errors.email}
           />
@@ -150,8 +178,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           icon={Person}
           control={control}
           type="textarea"
-          placeholder="*******"
-          label="Permanant Address *"
+          placeholder="Address"
+          label="Permanent Address *"
           errors={errors}
           error={errors.address}
         />
@@ -161,7 +189,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             htmlFor={"gender"}
             className={`${
               errors.gender && "text-red-500"
-            } font-semibold text-gray-500 text-sm md:text-md`}
+            }  text-gray-500  font-bold  text-sm md:text-md`}
           >
             Gender *
           </label>
@@ -218,8 +246,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             icon={AccountBox}
             control={control}
             type="number"
-            placeholder="Addhar no"
-            label="Employee Addhar no *"
+            placeholder="Aadhaar No"
+            label="Employee Aadhar No *"
             errors={errors}
             error={errors.adhar_card_number}
           />
@@ -228,8 +256,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             icon={AccountBox}
             control={control}
             type="text"
-            placeholder="PAN"
-            label="Employee PAN no *"
+            placeholder="Employee Pan No"
+            label="Employee Pan No *"
             errors={errors}
             error={errors.pan_card_number}
           />
@@ -241,7 +269,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             icon={AccountBalance}
             control={control}
             type="number"
-            placeholder="account no"
+            placeholder="Bank Account No"
             label="Bank Account No*"
             errors={errors}
             error={errors.bank_account_no}
@@ -251,27 +279,19 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             icon={LocationOn}
             control={control}
             type="text"
-            placeholder="citizan ship"
-            label="CitizanShip status *"
+            placeholder="Citizenship Status."
+            label="Citizenship Status. *"
             errors={errors}
             error={errors.citizenship}
+            pattern="[A-Za-z\s]+"
           />
         </div>
 
-        <div className="flex items-center w-full justify-between">
-          <button
-            type="button"
-            onClick={prevStep}
-            disabled={isFirstStep}
-            className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-          >
-            prev
-          </button>
-
+        <div class="flex justify-end">
           <button
             type="submit"
             disabled={isLastStep}
-            className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+            class="!w-max flex group justify-center px-6 gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
           >
             Next
           </button>

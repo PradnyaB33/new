@@ -579,7 +579,7 @@ const App = () => {
       <Route
         path="/shift-management"
         element={
-          <RequireAuth permission={["Employee", "Hr"]}>
+          <RequireAuth permission={["Employee", "Super-Admin"]}>
             <ShiftManagement />
           </RequireAuth>
         }

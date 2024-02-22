@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import "tw-elements/dist/css/tw-elements.min.css";
 import App from "./App";
 import "./index.css";
-
+import './services/i18n'
 import { QueryClient, QueryClientProvider } from "react-query";
 import reportWebVitals from "./reportWebVitals";
 // import "bootstrap/dist/css/bootstrap.min.css";

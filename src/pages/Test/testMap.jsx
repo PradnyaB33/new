@@ -1,44 +1,53 @@
 import {
   GoogleMap,
-  LoadScript,
   Marker,
   Polyline,
 } from "@react-google-maps/api";
 import axios from "axios";
+import { Helmet } from 'react-helmet';
 import React, { useContext, useEffect, useState } from "react";
-import { UseContext } from "../../State/UseState/UseContext";
+// import { UseContext } from "../../State/UseState/UseContext";
+import useGetUser from "../../hooks/Token/useUser"
 
 const containerStyle = {
   width: "100%",
-  height: "92vh",
+  height: "91.5vh",
 };
+
+console.log(window.google.maps);
 
 const TestMap = () => {
   const [waypoints, setWaypoints] = useState([]);
-  const { cookies } = useContext(UseContext);
-  const authToken = cookies["aegis"];
+  const [polyLine, setPolyLine] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const { authToken } = useGetUser();
 
   useEffect(() => {
     (async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API}/route/punch/getone`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
+          `${process.env.REACT_APP_API}/route/punch/getone`, {
+          headers: {
+            Authorization: authToken,
+          },
+        }
         );
-        const newWaypoints = response.data.punch.map((punch) => ({
+
+        // Handle potential data fetching errors
+        if (response.data.error) {
+          console.error("Error fetching waypoints:", response.data.error);
+          return; // Prevent setting invalid waypoints
+        }
+
+        const newWaypoints = response.data.punch.locations?.map((punch) => ({
           lat: parseFloat(punch.lat),
           lng: parseFloat(punch.lng),
         }));
 
-        // Smooth the waypoints using a simple moving average
         const smoothedWaypoints = smoothWaypoints(newWaypoints, 3);
         setWaypoints(smoothedWaypoints);
       } catch (error) {
-        console.log(error);
+        console.error("Error:", error);
       }
     })();
   }, [authToken]);
@@ -50,9 +59,9 @@ const TestMap = () => {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(lat1 * (Math.PI / 180)) *
-        Math.cos(lat2 * (Math.PI / 180)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
 
@@ -74,6 +83,26 @@ const TestMap = () => {
     }
     return total;
   }, 0);
+
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setCurrentLocation({ lat: latitude, lng: longitude });
+        },
+        (error) => {
+          console.error("Error getting current location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  };
+
+  useEffect(() => {
+    getCurrentLocation()
+  }, [])
 
   const smoothWaypoints = (waypoints, windowSize) => {
     return waypoints?.map((waypoint, index, array) => {
@@ -102,47 +131,49 @@ const TestMap = () => {
     lng: waypoints[waypoints.length - 1]?.lng,
   };
 
+  console.log(waypoints);
+
+
   return (
     <div>
-      <LoadScript googleMapsApiKey="AIzaSyDaA2q3L--j40-GgojdeFSJ4RywKGtFQ2k">
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={center}
-          zoom={15}
-          options={{
-            zoomControl: false,
-            streetViewControl: false,
-            mapTypeControl: false,
-            fullscreenControl: false,
-          }}
-        >
-          {waypoints?.length > 0 && (
-            <Marker
-              position={center}
-              icon={{
-                url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
-              }}
-            />
-          )}
-          {waypoints?.length > 0 && (
-            <Marker
-              position={destination}
-              icon={{
-                url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-              }}
-            />
-          )}
-          {waypoints?.length > 0 && (
-            <Polyline path={waypoints} options={{ strokeColor: "blue" }} />
-          )}
-        </GoogleMap>
-      </LoadScript>
+      <GoogleMap
+        googleMapsApiKey="AIzaSyDaA2q3L--j40-GgojdeFSJ4RywKGtFQ2k"
+        mapContainerStyle={containerStyle}
+        onLoad={() => console.log("Map loaded")}
+        zoom={15}
+        center={currentLocation}
+        options={{
+          zoomControl: false,
+          streetViewControl: false,
+          mapTypeControl: false,
+          fullscreenControl: false,
+        }}
+      >
+
+        {currentLocation && !waypoints?.length && <Marker label={{ text: "current location", }} position={currentLocation} />}
+
+        {waypoints?.length > 0 && (
+          <><Marker
+            icon={{
+              url: "https://img.icons8.com/ios/50/000000/marker.png",
+              scaledSize: new window.google.maps.Size(35, 35),
+            }}
+            label={{ text: "source", }}
+            position={center}
+            style={{ filter: "hue-rotate(180deg)" }}
+          />
+            <Polyline path={waypoints} options={{ strokeColor: "#7a3eff", strokeWeight: 5, }} />
+            <Marker label={{ text: "destination", color: "black" }} position={destination} />
+          </>
+        )}
+      </GoogleMap>
 
       {waypoints?.length > 0 && (
         <p className="absolute top-24 z-[99999999] bg-black text-gray-50">
-          Total Distance Traveled: {totalDistance.toFixed(2)} kilometers
+          Total Distance Travelled : {totalDistance.toFixed(2)} Kilometers
         </p>
       )}
+
     </div>
   );
 };

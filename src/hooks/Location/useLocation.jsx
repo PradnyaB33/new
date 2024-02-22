@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import useAuthToken from "../Token/useAuth";
 
@@ -7,7 +7,31 @@ const useLocationStore = () => {
   const [start, setStart] = useState(false);
   const [count, setCount] = useState(0);
   const authToken = useAuthToken();
+  const [punches, setPunches] = useState([]);
+  const empID = "";
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const resp = await axios.get(`${process.env.REACT_APP_API}/route/punch/getone`,)
+        console.log(resp?.data.punch.employeeId);
+        empID = resp?.data.punch.employeeId
+      } catch (error) {
+
+      }
+    })()
+  })
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const resp = await axios.get(`${process.env.REACT_APP_API}/route/punch/get/${empID}`)
+        setPunches(resp.data.punch)
+      } catch (error) {
+
+      }
+    })()
+  })
   const fetchLocationData = async () => {
     console.log("i am from hook");
 
@@ -68,11 +92,88 @@ const useLocationStore = () => {
     setStart(true);
   };
 
-  const stopLocationTracking = () => {
-    console.log('"fetchLocationData', data);
-    setCount(0);
+  const postEndTime = async () => {
+    const position = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      });
+    });
 
-    setStart(false);
+    const { latitude, longitude } = position.coords;
+
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/punch/getone`,
+        { headers: { Authorization: authToken } }
+      );
+
+      const existingData = response.data.punch;
+      console.log(existingData);
+      const ID = existingData._id;
+
+      // Check if the existing data already has an 'end' field
+      if (!existingData.end) {
+        // Create a copy of existingData to avoid mutations
+        const updatedData = { ...existingData };
+
+        // Set the 'end' field to the current date
+        updatedData.end = new Date();
+
+        // Append the new location to the existing locations array
+        updatedData.locations.push({
+          lat: latitude,
+          lng: longitude,
+          time: new Date(),
+        });
+
+        // Update the existing document with the modified data
+        await axios.patch(
+          `${process.env.REACT_APP_API}/route/punch/update/${ID}`,
+          updatedData, // Send the updated copy
+          {
+            headers: { Authorization: authToken },
+          }
+        );
+
+        setStart(false); // Stop location tracking after punching out
+      } else {
+        // If the 'end' field is already present, create a new document
+        const payload = {
+          start: new Date(), // Start a new punch in
+          locations: [
+            {
+              lat: latitude,
+              lng: longitude,
+              time: new Date(),
+            },
+          ],
+        };
+
+        // Send a POST request to create a new punch document
+        const createResponse = await axios.post(
+          `${process.env.REACT_APP_API}/route/punch/create`,
+          payload,
+          {
+            headers: { Authorization: authToken },
+          }
+        );
+
+        // Handle response if needed
+
+        setStart(false); // Stop location tracking after punching out
+      }
+    } catch (error) {
+      console.error("Error updating punch data", error);
+      setStart(false);
+    }
+  };
+
+
+  const stopLocationTracking = async () => {
+    setCount(0);
+    await postEndTime()
   };
 
   return {

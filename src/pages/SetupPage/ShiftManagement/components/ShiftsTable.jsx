@@ -9,7 +9,7 @@ import { TestContext } from "../../../../State/Function/Main";
 import { UseContext } from "../../../../State/UseState/UseContext";
 import SummaryTable from "./SummaryTable";
 
-const ShiftTable = () => {
+const ShiftsTable = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -66,14 +66,11 @@ const ShiftTable = () => {
   }
   if (isLoading) {
     return (
-      <article className="w-[350px] h-max py-6 bg-white shadow-xl rounded-lg ">
+      <article className="w-full md:w-[350px] h-max py-6 bg-white shadow-xl rounded-lg ">
         <h1 className="text-xl px-8 font-semibold flex items-center gap-3 ">
-          <AccountBalanceIcon className="text-gray-400" /> Balance for Shifts
+          <AccountBalanceIcon className="text-gray-400" /> Balance Leaves
           <Tooltip title="Click to get Summary for current month">
-            <IconButton
-            // aria-describedby={Popid}
-            // onClick={(event) => handlePopClick(event, item)}
-            >
+            <IconButton>
               <MoreHoriz className="!text-[19px] text-black" />
             </IconButton>
           </Tooltip>
@@ -109,10 +106,10 @@ const ShiftTable = () => {
     setAnchorEl(null);
   };
   return (
-    <article className="w-[350px] h-max bg-white shadow-lg rounded-lg ">
+    <article className="md:w-[350px] w-full h-max bg-white shadow-lg rounded-lg ">
       <h1 className="text-xl py-6 px-6 font-semibold flex items-center gap-3 justify-between">
         <AccountBalanceIcon className="text-gray-400" />
-        <div>Balance for Shifts</div>
+        <div>Balance Leaves</div>
         <Tooltip title="Click to get Summary for current month">
           <IconButton onClick={handlePopoverOpen}>
             <MoreVert className="!text-[19px] text-black" />
@@ -159,4 +156,4 @@ const ShiftTable = () => {
   );
 };
 
-export default ShiftTable;
+export default ShiftsTable;

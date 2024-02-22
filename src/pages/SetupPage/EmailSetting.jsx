@@ -166,6 +166,8 @@ const EmailSetting = () => {
     }
   };
 
+
+
   const handleEditEmailChange = (event) => {
     const lowerCaseEditEmail = event.target.value.toLowerCase();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

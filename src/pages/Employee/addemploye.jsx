@@ -450,7 +450,7 @@ const EmployeeAdd = () => {
       }
     } catch (error) {
       console.error(error);
-      handleAlert(true, "error", "Failed to fetch input feild");
+      handleAlert(true, "error", "Failed to fetch input field");
     }
   };
 

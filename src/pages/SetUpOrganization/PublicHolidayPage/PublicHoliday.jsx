@@ -1,3 +1,4 @@
+import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
@@ -251,8 +252,7 @@ const PublicHoliday = () => {
               variant="contained"
               onClick={() => setOpenModal(true)}
             >
-              <Add />
-              Add Public Holidays
+              Add Holiday
             </Button>
           </div>
           {holidays.length > 0 ? (
@@ -507,8 +507,8 @@ const PublicHoliday = () => {
                     </Button>
                     <Button
                       onClick={doTheOperation}
+                      color="warning"
                       variant="contained"
-                      color="primary"
                     >
                       Apply
                     </Button>
