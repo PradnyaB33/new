@@ -1,16 +1,11 @@
-import {
-  Check,
-  InventorySharp,
-  Person,
-  PlusOneOutlined,
-} from "@mui/icons-material";
+import { Check, InventorySharp, PlusOneOutlined } from "@mui/icons-material";
 import StepFormWrapper from "../../components/step-form/wrapper";
 import useMultiStepForm from "../../hooks/useStepForm";
 import Step1 from "./components/step-1";
 import Step2 from "./components/step-2";
 import Step3 from "./components/step-3";
 import Step4 from "./components/step-4";
-
+import { Business } from "@mui/icons-material";
 const NewOranisationForm = () => {
   const {
     step,
@@ -39,7 +34,7 @@ const NewOranisationForm = () => {
   const stepper = [
     {
       label: "Organisation Details",
-      icon: Person,
+      icon: Business,
     },
     {
       label: "Package Info",

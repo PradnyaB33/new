@@ -18,7 +18,10 @@ import useOrg from "../../../State/Org/Org";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useGetUser from "../../../hooks/Token/useUser";
 import ImageInput from "./image-input";
-
+import { Business } from "@mui/icons-material";
+import { Phone } from "@mui/icons-material";
+import { Description } from "@mui/icons-material";
+import { LocationOn } from "@mui/icons-material";
 const organizationSchema = z.object({
   orgName: z.string(),
   foundation_date: z.string(),
@@ -112,7 +115,7 @@ const Step1 = ({ nextStep }) => {
         <div className="grid md:grid-cols-2 md:gap-4 gap-0 px-4 grid-cols-1">
           <AuthInputFiled
             name="orgName"
-            icon={BadgeOutlined}
+            icon={Business}
             control={control}
             type="text"
             placeholder="Organisation Name"
@@ -135,7 +138,7 @@ const Step1 = ({ nextStep }) => {
             icon={Link}
             control={control}
             type="text"
-            placeholder="Web url "
+            placeholder="Web Url "
             label="Web Url  *"
             errors={errors}
             error={errors.web_url}
@@ -178,7 +181,7 @@ const Step1 = ({ nextStep }) => {
           />
           <AuthInputFiled
             name="contact_number"
-            icon={FactoryOutlined}
+            icon={Phone}
             control={control}
             type="number"
             placeholder="Contact Number "
@@ -188,7 +191,7 @@ const Step1 = ({ nextStep }) => {
           />
           <AuthInputFiled
             name="description"
-            icon={DescriptionOutlined}
+            icon={Description}
             control={control}
             type="text"
             placeholder="Organisational Description "
@@ -198,7 +201,7 @@ const Step1 = ({ nextStep }) => {
           />
           <AuthInputFiled
             name="location"
-            icon={FactoryOutlined}
+            icon={LocationOn}
             control={control}
             type="not-select"
             placeholder="Location Address "
