@@ -13,6 +13,7 @@ const Test4 = ({ prevStep }) => {
     last_name,
     email,
     phone_number,
+    mgrempid,
     address,
     citizenship,
     adhar_card_number,
@@ -35,6 +36,8 @@ const Test4 = ({ prevStep }) => {
     profile,
   } = useEmpState();
 
+  console.log(profile);
+
   const authToken = useAuthToken();
 
   const { organisationId } = useParams("");
@@ -52,6 +55,7 @@ const Test4 = ({ prevStep }) => {
         address,
         citizenship,
         adhar_card_number,
+        mgrempid: mgrempid.value,
         pan_card_number,
         gender,
         bank_account_no,
@@ -84,7 +88,7 @@ const Test4 = ({ prevStep }) => {
     {
       onSuccess: (response) => {
         toast.success("Employee added successfully");
-        navigate(`/organisation/${organisationId}/employee-list`);
+        // navigate(`/organisation/${organisationId}/employee-list`);
       },
       onError: (error) => {
         if (error.response.status === 400) {

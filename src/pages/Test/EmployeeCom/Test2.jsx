@@ -174,6 +174,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
           />
           <AuthInputFiled
             name="mgrempid"
+            value={mgrempid}
             icon={PersonAddAlt}
             control={control}
             type="select"

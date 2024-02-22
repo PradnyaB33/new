@@ -32,13 +32,34 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
     date_of_birth,
   } = useEmpState();
 
+  const isAtLeastNineteenYearsOld = (value) => {
+    const currentDate = new Date();
+    const dob = new Date(value);
+    const differenceInYears = currentDate.getFullYear() - dob.getFullYear();
+    const monthDiff = currentDate.getMonth() - dob.getMonth();
+
+    // If the birth month is after the current month, reduce the age by 1
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && currentDate.getDate() < dob.getDate())
+    ) {
+      differenceInYears--;
+    }
+
+    return differenceInYears >= 19;
+  };
+
   const EmployeeSchema = z.object({
     first_name: z
       .string()
-      .min(3, { message: "Minimum three character required" }),
+      .min(1, { message: "Minimum 1 character required" })
+      .max(15, { message: "Maximum 15 character allowed" })
+      .regex(/^[a-zA-Z]+$/, { message: "Only character allowed" }),
     last_name: z
       .string()
-      .min(3, { message: "Minimum three character required" }),
+      .min(1, { message: "Minimum 1 character required" })
+      .max(15, { message: "Maximum 15 character allowed" })
+      .regex(/^[a-zA-Z]+$/, { message: "Only character allowed" }),
     gender: z.string(),
     email: z.string().email(),
     phone_number: z
@@ -48,17 +69,16 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
         message: "Phone Number must be exactly 10 digits",
       }),
     address: z.string(),
-    date_of_birth: z.string(),
-    citizenship: z.string(),
-    adhar_card_number: z.string().refine((value) => /^\d+$/.test(value), {
-      message: "Aadhar card number must contain only digits",
+    date_of_birth: z.string().refine(isAtLeastNineteenYearsOld, {
+      message: "Employee must be at least 19 years old",
     }),
-    pan_card_number: z.string().refine((value) => /^\d+$/.test(value), {
-      message: "PAN card number must contain only digits",
-    }),
-    bank_account_no: z.string().refine((value) => /^\d+$/.test(value), {
-      message: "Bank account number must contain only digits",
-    }),
+    citizenship: z
+      .string()
+      .min(3, { message: "min 3 character required" })
+      .regex(/^[a-zA-Z]+$/, { message: "Only character allowed" }),
+    adhar_card_number: z.string(),
+    pan_card_number: z.string(),
+    bank_account_no: z.string(),
   });
 
   const { control, formState, handleSubmit } = useForm({
