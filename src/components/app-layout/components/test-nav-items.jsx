@@ -29,6 +29,7 @@ import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
+import WorkIcon from "@mui/icons-material/Work";
 
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
@@ -71,10 +72,10 @@ const TestNavItems = ({ toggleDrawer }) => {
               role === "Manager"
                 ? `organisation/${orgId}/dashboard/manager-dashboard`
                 : role === "Hr"
-                ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                : role === "Employee"
-                ? "/organisation/dashboard/employee-dashboard"
-                : "/organizationList",
+                  ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                  : role === "Employee"
+                    ? "/organisation/dashboard/employee-dashboard"
+                    : "/organizationList",
             icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
             text: "Dashboard",
           },
@@ -100,6 +101,15 @@ const TestNavItems = ({ toggleDrawer }) => {
               <AccessTimeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
             text: "Attendance",
+          },
+          {
+            key: "shiftManagement",
+            isVisible: true,
+            link: "/shift-management",
+            icon: (
+              <WorkIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Shift Management",
           },
           {
             key: "accountSettings",
