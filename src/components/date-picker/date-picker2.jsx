@@ -2,7 +2,7 @@ import { Close } from "@mui/icons-material";
 import { Button, MenuItem, Popover, Select } from "@mui/material";
 import moment from "moment";
 import { momentLocalizer } from "react-big-calendar";
-import { QueryClient, useQuery } from "react-query";
+import { useQuery } from "react-query";
 
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -40,10 +40,15 @@ const AppDatePicker = ({
         setNewData(newArr);
     }, [arr]);
 
-    const getLatestShifts = async() =>{
+    const getLatestShifts = async () => {
         try {
-            const resp = await axios.get(`${process.env.REACT_APP_API}/route/shiftApply/get`)
-            console.log(resp);
+            const resp = await axios.get(`${process.env.REACT_APP_API}/route/shiftApply/get`, {
+                headers: {
+                    Authorization: authToken
+                }
+            })
+            console.log(resp.data.requests);
+            setNewData(resp.data.requests)
         } catch (error) {
             console.log(error.message);
         }
@@ -98,6 +103,7 @@ const AppDatePicker = ({
 
     const handleSelectSlot = ({ start, end }) => {
         console.log(selectedLeave);
+        getLatestShifts()
         const selectedStartDate = moment(start).startOf("day");
         const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
         const currentDate = moment(selectedStartDate);
@@ -116,16 +122,14 @@ const AppDatePicker = ({
 
             currentDate.add(1, "day");
         }
-        if (data && data.requests && Array.isArray(data.requests)) {
-            const isOverlapWithData = data.requests.some(event => {
+        if (newData && Array.isArray(newData)) {
+            const isOverlapWithData = newData.some(event => {
                 const eventStartDate = moment(event.start);
                 const eventEndDate = moment(event.end);
 
                 return (
-                    // Check if selected slot starts or ends within existing event
                     (moment(start).isSameOrAfter(eventStartDate) && moment(start).isBefore(eventEndDate)) ||
                     (moment(end).isAfter(eventStartDate) && moment(end).isSameOrBefore(eventEndDate)) ||
-                    // Check if existing event is within selected slot
                     (moment(start).isSameOrBefore(eventStartDate) && moment(end).isSameOrAfter(eventEndDate))
                 );
             });
@@ -246,6 +250,7 @@ const AppDatePicker = ({
                 setNewAppliedLeaveEvents(prevEvents =>
                     prevEvents.filter(event => event._id !== selectedLeave._id)
                 );
+                getLatestShifts()
                 setSelectedLeave(null); // Reset selectedLeave state
                 setDelete(false); // Toggle delete state
                 console.log("Shift deleted successfully");
