@@ -2,6 +2,7 @@ import React from "react";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 
 // Components
+import PaymentNotReceived from "./components/Payment/not-recieved";
 import SetupSideNav from "./components/SideNav/SetupSideNav";
 import Loader from "./components/app-loader/page";
 import AnimationComponent from "./components/emailverify/verification-animation";
@@ -12,6 +13,7 @@ import useSubscription from "./hooks/Subscription/subscription";
 import UserProfile from "./hooks/UserData/useUser";
 import NewOranisationForm from "./pages/AddOrganisation/OrgFrom";
 import Application from "./pages/Application/Application";
+import Billing from "./pages/Billing/page";
 import DashBoardHR from "./pages/DashBoard/DashBoardHR";
 import Dashboard from "./pages/DashBoard/Dashboard";
 import DashboardManger from "./pages/DashBoard/DashboardManger";
@@ -97,6 +99,14 @@ const App = () => {
       <Route path="/test6" element={<TrackingMap3 />} />
       {/* Login Routes */}
       <Route path="/sign-in" element={<SignIn />} />
+      <Route
+        path="/billing"
+        element={
+          <RequireAuth permission={["Super-Admin"]}>
+            <Billing />
+          </RequireAuth>
+        }
+      />
       <Route path="/choose-role" element={<RolePage />} />
       <Route path="/sign-up" element={<Signup />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -664,6 +674,15 @@ function RequireSubscription({ children }) {
     `🚀 ~ file: Route.jsx:683 ~ subscriptionDetails:`,
     subscriptionDetails
   );
+
+  if (
+    subscriptionDetails?.subscription?.status ===
+    ("pending" || "halted" || "paused")
+  ) {
+    return (
+      <PaymentNotReceived link={subscriptionDetails?.subscription?.short_url} />
+    );
+  }
 
   return children;
 }

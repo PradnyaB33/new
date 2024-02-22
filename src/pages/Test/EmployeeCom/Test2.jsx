@@ -153,8 +153,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             icon={Work}
             control={control}
             type="text"
-            placeholder="emp123"
-            label="Employeement code *"
+            placeholder="Employee Code"
+            label="Employee Code *"
             errors={errors}
             error={errors.empId}
           />
@@ -166,8 +166,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             icon={AddBusiness}
             control={control}
             type="select"
-            placeholder="Dept"
-            label="Choose Department  *"
+            placeholder="Department"
+            label="Select Department  *"
             errors={errors}
             error={errors.deptname}
             options={Departmentoptions}
@@ -179,7 +179,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             control={control}
             type="select"
             placeholder="Manager"
-            label="Choose Manager *"
+            label="Select Manager *"
             errors={errors}
             error={errors.mgrempid}
             options={Manageroptions}
@@ -190,8 +190,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             control={control}
             type="mutltiselect"
             value={profile}
-            placeholder="roles"
-            label="Choose Role "
+            placeholder="Role"
+            label="Select Role "
             errors={errors}
             error={errors.profile}
             options={RolesOptions}
@@ -204,7 +204,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             icon={ContactMail}
             control={control}
             type="text"
-            placeholder="company@gmail.com"
+            placeholder="Email"
             label="Company Email *"
             errors={errors}
             error={errors.companyemail}
@@ -216,7 +216,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             control={control}
             type="date"
             placeholder="dd-mm-yyyy"
-            label="Date of joining *"
+            label="Date of Joining *"
             errors={errors}
             error={errors.joining_date}
           />
@@ -227,7 +227,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             icon={Key}
             control={control}
             type="password"
-            placeholder="*******"
+            placeholder=""
             label="Password *"
             errors={errors}
             error={errors.password}
@@ -237,8 +237,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             icon={KeyOff}
             control={control}
             type="password"
-            placeholder="*******"
-            label="Confirm password *"
+            placeholder=""
+            label="Confirm Password *"
             errors={errors}
             error={errors.confirmPassword}
           />
@@ -249,7 +249,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             icon={Work}
             control={control}
             value={designation}
-            placeholder="Desg"
+            placeholder="Designation"
             label="Select Designation *"
             type="select"
             options={Designationoption}
@@ -277,8 +277,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             control={control}
             options={cosnotoptions}
             type="select"
-            placeholder="costno"
-            label="Select Cost No *"
+            placeholder="Department Cost No"
+            label="Select Department Cost No*"
             errors={errors}
             error={errors.dept_cost_center_no}
           />
@@ -288,7 +288,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             icon={LocationCity}
             control={control}
             type="select"
-            placeholder="location"
+            placeholder="Location"
             label="Select Location *"
             options={locationoption}
             errors={errors}
@@ -302,8 +302,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             icon={Badge}
             control={control}
             type="select"
-            placeholder="Emp Temp"
-            label="Select Employeement types *"
+            placeholder="Employment Type "
+            label="Select Employment Type *"
             options={empTypesoption}
             errors={errors}
             error={errors.employmentType}

@@ -42,7 +42,7 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
   }
   return (
     <div className="w-full mt-4">
-      <h1 className="text-2xl mb-4 font-bold">Additional info</h1>
+      <h1 className="text-2xl mb-4 font-bold">Additional Info</h1>
 
       <form
         onSubmit={handleSubmit(onSubmit)}

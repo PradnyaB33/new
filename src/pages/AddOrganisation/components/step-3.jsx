@@ -84,6 +84,7 @@ const Step3 = ({ nextStep }) => {
               />
             );
           })}
+
         <Button type="submit" variant="contained" className="!w-max !mx-auto">
           Confirm & Pay
         </Button>
