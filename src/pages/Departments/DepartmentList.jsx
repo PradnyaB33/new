@@ -60,7 +60,6 @@ const DepartmentList = () => {
           }
         );
         setHeadList(resp?.data.employees);
-        console.log(resp?.data.employees);
 
       }
       catch (error) {
@@ -90,7 +89,6 @@ const DepartmentList = () => {
     })();
     // eslint-disable-next-line
   }, []);
-  console.log(departmentList);
   const fetchDepartmentList = async () => {
     try {
       const response = await axios.get(
@@ -153,7 +151,6 @@ const DepartmentList = () => {
       )
       .then((response) => {
         setLocations(response.data.locationsData);
-        console.log("locations are: ", response.data);
       })
       .catch((error) => console.error("Error fetching locations:", error));
   }, [authToken, organisationId]);
@@ -246,76 +243,78 @@ const DepartmentList = () => {
           </Typography>
         </div>
       ) : (
-        <div className="p-4">
-          <Typography variant="h4" className="text-center mb-6">
-            Departments
-          </Typography>
-          <table className="min-w-full bg-white text-left text-sm font-light">
-            <thead className="border-b bg-gray-300 font-medium dark:border-neutral-500">
-              <tr className="!font-medium">
-                <th scope="col" className="px-3 py-3 whitespace-nowrap">
-                  Sr. No
-                </th>
-                <th scope="col" className="px-3 py-3 ">
-                  Department Name
-                </th>
-                <th scope="col" className="px-3 py-3 ">
-                  Department Head
-                </th>
-                <th scope="col" className="px-3 py-3 ">
-                  Delegate Department Head
-                </th>
-                <th scope="col" className="px-3 py-3 ">
-                  Department Location
-                </th>
-                <th scope="col" className="px-3 py-3 ">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {departmentList?.map((department, id) => (
-                <tr
-                  key={id}
-                  className={`${id % 2 === 0 ? "bg-gray-50" : "bg-white"
-                    } border-b dark:border-neutral-500 !font-medium`}
-                >
-                  <td className="py-2 px-3">{id + 1}</td>
-                  <td className="py-2 px-3">
-                    {department?.departmentName || ""}
-                  </td>
-                  <td className="py-2 px-3">
-                    {department?.departmentHeadName || ""}
-                  </td>
-                  <td className="py-2 px-3">
-                    {department?.departmentHeadDelegateName || ""}
-                  </td>
-
-                  <td className="py-2 px-3">
-                    {department?.departmentLocation
-                      ? department?.departmentLocation?.city
-                      : ""}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-2">
-                    <IconButton
-                      onClick={() => handleUpdate(id)}
-                      color="primary"
-                      aria-label="edit"
-                    >
-                      <EditOutlinedIcon />
-                    </IconButton>
-                    <IconButton
-                      onClick={() => handleDeleteConfirmation(department?._id)}
-                      color="error"
-                      aria-label="delete"
-                    >
-                      <DeleteOutlineIcon />
-                    </IconButton>
-                  </td>
+        <div style={{ border: "2px solid gray", borderRadius: "20px" }} className="w-[75vw] m-auto h-full">
+          <div className="p-4">
+            <Typography variant="h4" className="text-center mb-6">
+              Departments
+            </Typography>
+            <table style={{ borderRadius: "20px" }} className="min-w-full bg-white text-left text-sm font-light">
+              <thead className="border-b bg-gray-300 font-medium dark:border-neutral-500">
+                <tr className="!font-medium">
+                  <th scope="col" className="px-3 py-3 whitespace-nowrap">
+                    Sr. No
+                  </th>
+                  <th scope="col" className="px-3 py-3 ">
+                    Department Name
+                  </th>
+                  <th scope="col" className="px-3 py-3 ">
+                    Department Head
+                  </th>
+                  <th scope="col" className="px-3 py-3 ">
+                    Delegate Department Head
+                  </th>
+                  <th scope="col" className="px-3 py-3 ">
+                    Department Location
+                  </th>
+                  <th scope="col" className="px-3 py-3 ">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {departmentList?.map((department, id) => (
+                  <tr
+                    key={id}
+                    className={`${id % 2 === 0 ? "bg-gray-50" : "bg-white"
+                      } border-b dark:border-neutral-500 !font-medium`}
+                  >
+                    <td className="py-2 px-3">{id + 1}</td>
+                    <td className="py-2 px-3">
+                      {department?.departmentName || ""}
+                    </td>
+                    <td className="py-2 px-3">
+                      {department?.departmentHeadName || ""}
+                    </td>
+                    <td className="py-2 px-3">
+                      {department?.departmentHeadDelegateName || ""}
+                    </td>
+
+                    <td className="py-2 px-3">
+                      {department?.departmentLocation
+                        ? department?.departmentLocation?.city
+                        : ""}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-2">
+                      <IconButton
+                        onClick={() => handleUpdate(id)}
+                        color="primary"
+                        aria-label="edit"
+                      >
+                        <EditOutlinedIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => handleDeleteConfirmation(department?._id)}
+                        color="error"
+                        aria-label="delete"
+                      >
+                        <DeleteOutlineIcon />
+                      </IconButton>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
@@ -419,7 +418,13 @@ const DepartmentList = () => {
               >
                 {locations?.map((data, index) => (
                   <MenuItem key={index} value={data.shortName}>
-                    {data?.shortName}
+                    {!data ? (
+                      <MenuItem>
+                        No location present!
+                      </MenuItem>
+                    )
+                      :
+                      (data?.shortName)}
                   </MenuItem>
                 ))}
               </Select>
@@ -556,7 +561,12 @@ const DepartmentList = () => {
                     key={index}
                     value={data.first_name + " " + data.last_name}
                   >
-                    {data.first_name + " " + data.last_name}
+                    {!data ? (
+                      <MenuItem>
+                        No department head present!
+                      </MenuItem>
+                    ) :
+                      (data.first_name + " " + data.last_name)}
                   </MenuItem>
                 ))}
               </Select>
@@ -592,7 +602,14 @@ const DepartmentList = () => {
                     key={index}
                     value={data.first_name + " " + data.last_name}
                   >
-                    {data?.first_name + " " + data?.last_name}
+                    {!data ? (
+                      <MenuItem>
+                        No delegate head present!
+                      </MenuItem>
+                    )
+                      :
+                      (data?.first_name + " " + data?.last_name)
+                    }
                   </MenuItem>
                 ))}
               </Select>

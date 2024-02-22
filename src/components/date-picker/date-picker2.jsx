@@ -2,7 +2,7 @@ import { Close } from "@mui/icons-material";
 import { Button, MenuItem, Popover, Select } from "@mui/material";
 import moment from "moment";
 import { momentLocalizer } from "react-big-calendar";
-import { useQuery } from "react-query";
+import { QueryClient, useQuery } from "react-query";
 
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -21,15 +21,25 @@ const AppDatePicker = ({
     setSelectedLeave,
     newAppliedLeaveEvents,
     isCalendarOpen,
+    disabledShiftId
 }) => {
     const localizer = momentLocalizer(moment);
     const [Delete, setDelete] = useState(false);
     const [update, setUpdate] = useState(false);
     const { handleAlert } = useContext(TestContext);
+    const [newData, setNewData] = useState([])
     const { cookies } = useContext(UseContext);
     const authToken = cookies["aegis"];
+    const arr = data;
+    const arrayOfData = arr && arr.requests ? arr.requests : [];
 
-    console.log(data);
+    useEffect(() => {
+        const newArr = arrayOfData.filter((item) => {
+            return item._id !== disabledShiftId;
+        });
+        setNewData(newArr);
+    }, [arr]);
+
     const { data: data2 } = useQuery("employee-disable-weekends", async () => {
         const response = await axios.get(
             `${process.env.REACT_APP_API}/route/weekend/get`,
@@ -41,6 +51,12 @@ const AppDatePicker = ({
         return response.data;
     });
     const handleSelectEvent = (event) => {
+        if (event.title === "Selected Leave") {
+            const filteredEvents = newAppliedLeaveEvents.filter(
+                (item) => item.title !== "Selected Leave"
+            );
+            setNewAppliedLeaveEvents(filteredEvents);
+        }
         setSelectedLeave(event);
         setCalendarOpen(true);
         if (event.title === "Selected Leave") {
@@ -72,6 +88,7 @@ const AppDatePicker = ({
     };
 
     const handleSelectSlot = ({ start, end }) => {
+        console.log(selectedLeave);
         const selectedStartDate = moment(start).startOf("day");
         const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
         const currentDate = moment(selectedStartDate);
@@ -90,6 +107,26 @@ const AppDatePicker = ({
 
             currentDate.add(1, "day");
         }
+        if (data && data.requests && Array.isArray(data.requests)) {
+            const isOverlapWithData = data.requests.some(event => {
+                const eventStartDate = moment(event.start);
+                const eventEndDate = moment(event.end);
+
+                return (
+                    // Check if selected slot starts or ends within existing event
+                    (moment(start).isSameOrAfter(eventStartDate) && moment(start).isBefore(eventEndDate)) ||
+                    (moment(end).isAfter(eventStartDate) && moment(end).isSameOrBefore(eventEndDate)) ||
+                    // Check if existing event is within selected slot
+                    (moment(start).isSameOrBefore(eventStartDate) && moment(end).isSameOrAfter(eventEndDate))
+                );
+            });
+
+            if (isOverlapWithData) {
+                return handleAlert(true, "error", "This slot overlaps with an existing event.");
+            }
+        }
+
+
 
         const isOverlap = [
             ...newAppliedLeaveEvents,
@@ -110,12 +147,11 @@ const AppDatePicker = ({
                 "You have already selected this leave"
             );
         } else {
+
             const newLeave = {
                 title: selectEvent ? "Updated Shift" : "Selected Shift",
                 start: new Date(start).toISOString(),
                 end: new Date(end).toISOString(),
-                color: selectEvent ? "black" : "blue",
-                leaveTypeDetailsId: "",
             };
 
             setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
@@ -173,7 +209,7 @@ const AppDatePicker = ({
 
                 <div className="fled w-full flex-row-reverse px-3 text-blue-500 italic font-extrabold">
                     {" "}
-                    {selectEvent ? "Please select dates for you leaves" : ""}
+                    {selectEvent ? "select the dates to update" : ""}
                 </div>
             </div>
         );
@@ -189,19 +225,43 @@ const AppDatePicker = ({
         } else {
         }
     };
-    const handleDelete = () => {
-        if (selectedLeave) {
-            setNewAppliedLeaveEvents(prevEvents =>
-                prevEvents.filter(event =>
-                    event.title !== selectedLeave.title ||
-                    event.start !== selectedLeave.start ||
-                    event.end !== selectedLeave.end
-                )
-            );
-            setSelectedLeave(null);
-            setDelete(false);
+    const handleDelete = async () => {
+        try {
+            if (selectedLeave._id) {
+                await axios.delete(`${process.env.REACT_APP_API}/route/shiftApply/delete/${selectedLeave._id}`, {
+                    headers: {
+                        Authorization: authToken
+                    }
+                });
+                // Update newAppliedLeaveEvents state after successful deletion
+                setNewAppliedLeaveEvents(prevEvents =>
+                    prevEvents.filter(event => event._id !== selectedLeave._id)
+                );
+                setSelectedLeave(null); // Reset selectedLeave state
+                setDelete(false); // Toggle delete state
+                console.log("Shift deleted successfully");
+            } else if (selectedLeave) {
+                // If selectedLeave does not have an _id, filter it out from newAppliedLeaveEvents
+                setNewAppliedLeaveEvents(prevEvents =>
+                    prevEvents.filter(event =>
+                        event.title !== selectedLeave.title ||
+                        event.start !== selectedLeave.start ||
+                        event.end !== selectedLeave.end
+                    )
+                );
+                setSelectedLeave(null); // Reset selectedLeave state
+                setDelete(false); // Toggle delete state
+            } else {
+                console.log("This operation cannot be done");
+            }
+        } catch (error) {
+            console.log("Error deleting shift:", error);
         }
     };
+
+
+
+
     useEffect(() => {
         // Add click event listener when component mounts
         document.addEventListener("click", handleClickAway);
@@ -213,7 +273,7 @@ const AppDatePicker = ({
     }, []);
     return (
         <Popover
-            PaperProps={{ className: "w-full md:w-[70vw] xl:w-[60vw]" }}
+            PaperProps={{ className: "w-full xl:w-[400px] xl:h-[470px] !bottom-0 !p-0 flex flex-col justify-between" }}
             open={isCalendarOpen}
             onClose={() => setCalendarOpen(false)}
             components={{
@@ -223,10 +283,7 @@ const AppDatePicker = ({
                 vertical: "bottom",
                 horizontal: "right",
             }}
-            transformOrigin={{
-                vertical: "center",
-                horizontal: "center",
-            }}
+            style={{ height: "500px !important" }}
         >
             <div className=" bg-white shadow-lg z-10">
                 <div className="w-full">
@@ -237,12 +294,12 @@ const AppDatePicker = ({
                             toolbar: CustomToolbar,
                         }}
                         events={data
-                            ? [...data?.requests, ...newAppliedLeaveEvents]
+                            ? [...newData, ...newAppliedLeaveEvents]
                             : [...newAppliedLeaveEvents]}
                         startAccessor="start"
                         endAccessor="end"
                         style={{
-                            height: "600px",
+                            height: "400px",
                             width: "100%",
                             background: "#fff",
                         }}
@@ -267,14 +324,6 @@ const AppDatePicker = ({
                     disabled={!selectedLeave}
                 >
                     Delete
-                </Button>
-                <Button
-                    variant="contained"
-                    onClick={handleUpdateFunction}
-                    className="rbc-event-content"
-                    disabled={!update}
-                >
-                    Update
                 </Button>
             </div>
         </Popover>

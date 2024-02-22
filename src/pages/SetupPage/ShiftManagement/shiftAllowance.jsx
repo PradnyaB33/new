@@ -24,75 +24,10 @@ const ShiftAllowance = () => {
     setSelectedLeave,
     selectedLeave,
     setselectEvent,
+    isUpdating,
+    disabledShiftId,
   } = useShiftData();
-  console.log(newAppliedLeaveEvents);
-
-  // const { isLoading } = useQuery(
-  //   "employee-leave-table-without-default",
-  //   async () => {
-  //     const response = await axios.get(
-  //       `${process.env.REACT_APP_API}/route/leave/getEmployeeCurrentYearLeave`,
-  //       {
-  //         headers: { Authorization: authToken },
-  //       }
-  //     );
-  //     setAppliedLeaveEvents([...response.data.currentYearLeaves]);
-  //     setSubtractedLeaves(response.data.LeaveTypedEdited);
-  //     console.log("THis is complete", response.data);
-  //     return response.data;
-  //   }
-  // );
-  // const createLeaves = async () => {
-  //   newAppliedLeaveEvents.forEach(async (value) => {
-  //     try {
-  //       await axios.post(
-  //         `${process.env.REACT_APP_API}/route/leave/create`,
-  //         value,
-  //         {
-  //           headers: {
-  //             Authorization: authToken,
-  //           },
-  //         }
-  //       );
-  //     } catch (error) {
-  //       console.error(`🚀 ~ error:`, error);
-  //       handleAlert(
-  //         true,
-  //         "error",
-  //         error?.response?.data?.message || "Leaves not created succcesfully"
-  //       );
-  //     }
-  //   });
-  // };
-  // const leaveMutation = useMutation(createLeaves, {
-  //   onSuccess: () => {
-  //     console.log("success");
-
-  //     queryclient.invalidateQueries("employee-leave-table");
-  //     queryclient.invalidateQueries("employee-leave-table");
-  //     queryclient.invalidateQueries("employee-summary-table");
-  //     queryclient.invalidateQueries("employee-leave-table-without-default");
-  //     setNewAppliedLeaveEvents([]);
-  //   },
-  //   onError: (error) => {
-  //     console.error(error);
-  //   },
-  // });
-  // const handleInputChange = () => {
-  //   setCalendarOpen(true);
-  //   setSelectedLeave(null);
-  // };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   setCalendarOpen(false);
-
-  //   setCalendarOpen(false);
-  //   setAnchorEl("");
-
-  //   leaveMutation.mutate();
-  // };
+  console.log(selectedLeave);
 
   return (
     <>
@@ -106,6 +41,7 @@ const ShiftAllowance = () => {
 
         <div className="flex flex-col-reverse md:flex-row w-full justify-start p-6 gap-4">
           <article className="md:w-[100%] space-y-2">
+            {/* Calendar display */}
             {isLoading ? (
               <div className="space-y-2 mb-4 w-full h-max bg-white p-4 shadow-xl rounded-lg">
                 <div className="flex items-center gap-8 px-2">
@@ -151,6 +87,7 @@ const ShiftAllowance = () => {
               </div>
             )}
 
+            {/* Date picker */}
             <AppDatePicker
               data={data}
               handleUpdateFunction={handleUpdateFunction}
@@ -162,8 +99,10 @@ const ShiftAllowance = () => {
               setSelectedLeave={setSelectedLeave}
               newAppliedLeaveEvents={newAppliedLeaveEvents}
               isCalendarOpen={isCalendarOpen}
+              disabledShiftId={disabledShiftId}
             />
 
+            {/* Shifts form */}
             {newAppliedLeaveEvents.length > 0 &&
               Array.isArray(newAppliedLeaveEvents) ? (
               <>
@@ -175,6 +114,7 @@ const ShiftAllowance = () => {
                     Your Shifts
                   </h1>
                   <div className="flex flex-col gap-4">
+                    {/* Mapping through newAppliedLeaveEvents */}
                     {newAppliedLeaveEvents?.map((item, index) => (
                       <Mapped
                         key={index}
@@ -184,6 +124,8 @@ const ShiftAllowance = () => {
                         index={index}
                         newAppliedLeaveEvents={newAppliedLeaveEvents}
                         setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
+                        isUpdating={isUpdating} // Pass isUpdating to Mapped component
+                        isDisabled={item._id === disabledShiftId} // Check if the current shift is disabled
                       />
                     ))}
                     <div className="w-full m-auto flex justify-center my-4">
@@ -199,6 +141,7 @@ const ShiftAllowance = () => {
                 </form>
               </>
             ) : (
+              // Render if no shifts available
               <>
                 <div className="w-full h-max grid justify-center relative gap-4 !mt-4 space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg">
                   <Button
@@ -208,7 +151,6 @@ const ShiftAllowance = () => {
                     size="large"
                     className="text-center w-fit !m-auto !capitalize !underline "
                   >
-                    {" "}
                     {!isLoading
                       ? "Apply for shifts"
                       : "Wait Calendar is Loading"}

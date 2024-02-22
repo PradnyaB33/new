@@ -7,6 +7,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Snackbar,
 } from "@mui/material";
 import { differenceInDays, format, parseISO } from "date-fns";
 import UserProfile from "../../../../hooks/UserData/useUser";
@@ -31,42 +32,53 @@ const Mapped = ({
       transition: "color 0.3s, background-color 0.3s, border-color 0.3s",
     },
   };
-
-  const handleChange = (event) => {
-    const selectedShiftId = event.target.value;
-    setLeavesTypes(selectedShiftId);
-    const updatedEvents = newAppliedLeaveEvents.map((event, i) => {
-      if (i === index) {
-        return { ...event, leaveTypeDetailsId: selectedShiftId };
-      }
-      return event;
-    });
-    setNewAppliedLeaveEvents(updatedEvents);
-  };
-
-  const removeItem = (idToRemove) => {
-    const updatedAppliedLeaveEvents = newAppliedLeaveEvents.filter(
-      (_, i) => i !== idToRemove
-    );
-    setNewAppliedLeaveEvents(updatedAppliedLeaveEvents);
-  };
-
-  const [sName, setSName] = useState([]);
   const { authToken, handleAlert } = UserProfile();
+  const [sName, setSName] = useState([]);
+  const [openAlert, setOpenAlert] = useState(false); // State for alert visibility
+
+  // Fetch initial shift types
   useEffect(() => {
     (async () => {
       try {
         const resp = await axios.get(`${process.env.REACT_APP_API}/route/getAllShifts`);
         setSName(resp.data.shifts);
-        console.log(resp.data.shifts);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     })();
   }, []);
 
+  const handleChange = (event) => {
+    const selectedShiftId = event.target.value;
+    setLeavesTypes(selectedShiftId);
+  };
+
+  const handleUpdate = () => {
+    // Clear the selected shift
+    setLeavesTypes('');
+    // Open the calendar for selection
+    setCalendarOpen(true);
+  };
+
+  console.log(newAppliedLeaveEvents);
+  const removeItem = (idToRemove) => {
+    console.log('Removing item with id:', idToRemove);
+    console.log('Current newAppliedLeaveEvents:', newAppliedLeaveEvents);
+
+    const updatedAppliedLeaveEvents = newAppliedLeaveEvents.filter(
+      (_, i) => i !== idToRemove
+    );
+    setNewAppliedLeaveEvents(updatedAppliedLeaveEvents);
+  };
   const handleChange2 = (name) => {
     setShiftName(name);
+  };
+
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenAlert(false);
   };
 
   return (
@@ -142,14 +154,6 @@ const Mapped = ({
             })}
           </Select>
         </FormControl>
-        <Button
-          type="button"
-          onClick={() => setCalendarOpen(true)}
-          variant="outlined"
-          className="!border-gray-300 group-hover:!border-gray-400"
-        >
-          <Edit className="text-gray-300 group-hover:text-gray-500" />
-        </Button>
         <Button
           type="button"
           className="!border-gray-300 group-hover:!border-gray-400"
