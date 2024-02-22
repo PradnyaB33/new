@@ -1,32 +1,12 @@
 import { Avatar, Skeleton } from "@mui/material";
-import axios from "axios";
-import React, { useContext } from "react";
+import React from "react";
 import { IoBusiness } from "react-icons/io5";
-import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import { UseContext } from "../../State/UseState/UseContext";
+import useOrgList from "../../hooks/QueryHook/Orglist/hook";
 import Organisation from "../Home/components/Organisation";
 
 const OrgList = () => {
-  const { cookies } = useContext(UseContext);
-  const authToken = cookies["aegis"];
-
-  const { data, isLoading } = useQuery("orglist", async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/organization/get`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      throw error; // Rethrow the error to be caught by React Query
-    }
-  });
+  const { data, isLoading } = useOrgList();
 
   return (
     <>
