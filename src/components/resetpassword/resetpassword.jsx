@@ -50,7 +50,7 @@ const ResetPassword = () => {
                 required
                 size="small"
                 type="password"
-                label="Password"
+                label="Enter New Password"
                 name="password"
                 id="password"
                 value={password}

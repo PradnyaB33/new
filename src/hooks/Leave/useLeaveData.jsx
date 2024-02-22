@@ -50,11 +50,20 @@ const useLeaveData = () => {
     });
   };
   const leaveMutation = useMutation(createLeaves, {
-    onSuccess: () => {
-      queryclient.invalidateQueries("employee-leave-table");
-      queryclient.invalidateQueries("employee-leave-table");
-      queryclient.invalidateQueries("employee-summary-table");
-      queryclient.invalidateQueries("employee-leave-table-without-default");
+    onSuccess: async () => {
+      await queryclient.invalidateQueries({
+        queryKey: ["employee-leave-table"],
+      });
+      await queryclient.invalidateQueries({
+        queryKey: ["employee-leave-table"],
+      });
+      await queryclient.invalidateQueries({
+        queryKey: ["employee-summary-table"],
+      });
+      await queryclient.invalidateQueries(
+        "employee-leave-table-without-default"
+      );
+      handleAlert(true, "success", "Applied for leave successfully");
       setNewAppliedLeaveEvents([]);
     },
     onError: (error) => {

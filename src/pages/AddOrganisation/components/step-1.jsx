@@ -115,8 +115,8 @@ const Step1 = ({ nextStep }) => {
             icon={BadgeOutlined}
             control={control}
             type="text"
-            placeholder="Organization Name"
-            label="Organization Name *"
+            placeholder="Organisation Name"
+            label="Organisation Name *"
             errors={errors}
             error={errors.orgName}
           />
@@ -145,8 +145,8 @@ const Step1 = ({ nextStep }) => {
             icon={FaLinkedin}
             control={control}
             type="text"
-            placeholder="LinkedIn url "
-            label="LinkedIn url  *"
+            placeholder="LinkedIn Url "
+            label="LinkedIn Url  *"
             errors={errors}
             error={errors.organization_linkedin_url}
           />
@@ -171,8 +171,8 @@ const Step1 = ({ nextStep }) => {
             icon={LocalPostOfficeOutlined}
             control={control}
             type="email"
-            placeholder="Organization Email "
-            label="Organization Email  *"
+            placeholder="Organisation Email "
+            label="Organisation Email  *"
             errors={errors}
             error={errors.email}
           />
@@ -191,8 +191,8 @@ const Step1 = ({ nextStep }) => {
             icon={DescriptionOutlined}
             control={control}
             type="text"
-            placeholder="Organizational Description "
-            label="Organizational Description  *"
+            placeholder="Organisational Description "
+            label="Organisational Description  *"
             errors={errors}
             error={errors.description}
           />

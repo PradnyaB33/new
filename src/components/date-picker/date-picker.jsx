@@ -45,12 +45,7 @@ const AppDatePicker = ({
     if (event.title === "Selected Leave") {
       setDelete(true);
       setUpdate(false);
-    }
-    // else if (event.title === "Updated Leave") {
-    //   setDelete(true);
-    //   setUpdate(false);
-    // }
-    else {
+    } else {
       setDelete(false);
       setUpdate(true);
     }
@@ -75,6 +70,25 @@ const AppDatePicker = ({
     return {};
   };
 
+  const checkOverlappingMistake = (
+    array1,
+    selectedStartDate,
+    selectedEndDate
+  ) => {
+    array1.some(
+      (event) =>
+        (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
+          selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
+        (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
+          selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
+        (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
+          selectedEndDate.isAfter(moment(event.end).startOf("day")))
+    );
+  };
+  console.log(
+    `🚀 ~ file: date-picker.jsx:87 ~ checkOverlappingMistake:`,
+    checkOverlappingMistake
+  );
   const handleSelectSlot = ({ start, end }) => {
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
@@ -107,7 +121,6 @@ const AppDatePicker = ({
           selectedEndDate.isAfter(moment(event.end).startOf("day")))
     );
 
-    console.log(`🚀 ~ file: date-picker.jsx:101 ~ isOverlap:`, isOverlap);
     if (isOverlap) {
       return handleAlert(
         true,
@@ -115,16 +128,13 @@ const AppDatePicker = ({
         "You have already selected this leave"
       );
     } else {
-      console.log(
-        `🚀 ~ file: date-picker.jsx:124 ~ newLeave.selectEvent:`,
-        selectedLeave
-      );
       const newLeave = {
         title: selectEvent ? "Updated Leave" : "Selected Leave",
         start: new Date(start).toISOString(),
         end: new Date(end).toISOString(),
         color: selectEvent ? "black" : "blue",
         leaveTypeDetailsId: "",
+        _id: selectedLeave?._id ? selectedLeave?._id : null,
       };
 
       setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);

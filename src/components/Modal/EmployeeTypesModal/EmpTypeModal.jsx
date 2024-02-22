@@ -1,12 +1,9 @@
-import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
   CircularProgress,
-  Divider,
   FormControl,
   FormLabel,
-  IconButton,
   InputLabel,
   Modal,
   OutlinedInput,
@@ -154,30 +151,14 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
           <h1 className="text-xl pl-2 font-semibold font-sans">
             {empTypeId ? "Edit Employment Types" : "Create Employment Types"}
           </h1>
-          <IconButton onClick={handleClose}>
-            <CloseIcon className="!text-[16px]" />
-          </IconButton>
-        </div>
-
-        <div className="w-full">
-          <Divider variant="fullWidth" orientation="horizontal" />
         </div>
 
         <div className="px-5 space-y-4 mt-4">
           <div className="space-y-2 ">
-            <FormLabel
-              error={error}
-              className="text-md"
-              htmlFor="demo-simple-select-label"
-            >
+            <FormLabel className="text-md" htmlFor="demo-simple-select-label">
               Add Employment Type
             </FormLabel>
-            <FormControl
-              error={error}
-              size="small"
-              sx={{ width: "100%" }}
-              variant="outlined"
-            >
+            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
                 Add Employment type
               </InputLabel>

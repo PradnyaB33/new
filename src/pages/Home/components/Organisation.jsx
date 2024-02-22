@@ -1,4 +1,4 @@
-import { Delete, Edit, MoreVert, Warning } from "@mui/icons-material";
+import { MoreVert } from "@mui/icons-material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import {
   Avatar,
@@ -30,7 +30,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useSubscription from "../../../hooks/Subscription/subscription";
-
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 const Organisation = ({ item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
@@ -270,12 +271,18 @@ const Organisation = ({ item }) => {
               onClose={handleClose}
             >
               <MenuItem onClick={() => handleEdit(item._id)}>
-                <Edit style={{ color: "green", marginRight: "10px" }} />
-                <span>Update</span>
+                <EditOutlinedIcon
+                  color="primary"
+                  aria-label="edit"
+                  style={{ marginRight: "10px" }}
+                />
               </MenuItem>
               <MenuItem onClick={() => handleDeleteConfirmation(item._id)}>
-                <Delete style={{ color: "red", marginRight: "10px" }} />
-                <span>Delete</span>
+                <DeleteOutlineIcon
+                  color="error"
+                  aria-label="delete"
+                  style={{ marginRight: "10px" }}
+                />
               </MenuItem>
             </Menu>
           </div>
@@ -376,14 +383,11 @@ const Organisation = ({ item }) => {
         open={deleteConfirmation !== null}
         onClose={handleCloseConfirmation}
       >
-        <DialogTitle color={"error"}>
-          <Warning color="error" /> All information in this orgnisation will be
-          deleted. Are you sure you want to delete it?
-        </DialogTitle>
+        <DialogTitle>Confirm deletion</DialogTitle>
         <DialogContent>
           <p>
             Please confirm your decision to delete this Organization, as this
-            action cannot be retrived
+            action cannot be undone.
           </p>
         </DialogContent>
         <DialogActions>
@@ -546,22 +550,22 @@ const Organisation = ({ item }) => {
         </DialogContent>
 
         <DialogActions>
-          <Button
-            variant="contained"
-            size="small"
-            color="success"
-            onClick={() => handleEditConfirmation(item._id)}
-          >
-            Edit
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            size="small"
-            onClick={handleCloseConfirmation}
-          >
-            Cancel
-          </Button>
+          <div className="flex gap-4 mt-4 mr-4  mb-4 justify-end ">
+            <Button
+              onClick={handleCloseConfirmation}
+              color="error"
+              variant="outlined"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => handleEditConfirmation(item._id)}
+              variant="contained"
+              color="primary"
+            >
+              Apply
+            </Button>
+          </div>
         </DialogActions>
       </Dialog>
     </>

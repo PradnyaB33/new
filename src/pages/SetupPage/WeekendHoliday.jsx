@@ -6,6 +6,7 @@ import {
   DialogContent,
   IconButton,
   DialogTitle,
+  Typography,
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
@@ -83,6 +84,7 @@ const WeekendHoliday = () => {
   const [deleteModel, setDeleteModel] = useState(false);
   const [ID, setID] = useState("");
   const queryClient = useQueryClient();
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const handleDayToggle = (day, index) => {
     const updatedDays = selectedDays.includes(day)
@@ -99,7 +101,10 @@ const WeekendHoliday = () => {
     return `hsl(${hue}, 80%, 60%)`;
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormSubmitted(true);
+    if (!selectedDays.length) return;
     try {
       const daysArray = selectedDays.map((day) => ({ day }));
 
@@ -355,6 +360,12 @@ const WeekendHoliday = () => {
                     getColor={getColor}
                   />
                 </div>
+
+                {!selectedDays.length && formSubmitted && (
+                  <Typography variant="body2" color="error">
+                    Days are required.
+                  </Typography>
+                )}
                 <div className="flex gap-5 !pt-5  justify-end ">
                   <Button
                     onClick={handleOpenClose}
