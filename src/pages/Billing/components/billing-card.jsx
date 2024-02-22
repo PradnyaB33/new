@@ -1,16 +1,25 @@
 import {
+  AttachMoney,
+  ControlPoint,
+  FilterNone,
   GroupAdd,
   KeyboardArrowDown,
   KeyboardArrowUp,
+  Loop,
   Message,
   Pause,
+  People,
   PlayArrow,
+  QuestionMark,
   Repeat,
+  Shield,
+  ShoppingBag,
   Subscriptions,
 } from "@mui/icons-material";
 import { Button, Menu, MenuItem, alpha, styled } from "@mui/material";
 import moment from "moment";
 import React from "react";
+import { Circle } from "react-leaflet";
 import { Link } from "react-router-dom";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import DescriptionBox from "./descripton-box";
@@ -68,9 +77,74 @@ const BillingCard = ({ doc }) => {
     setAnchorEl(null);
   };
   const { data, isLoading } = useSubscriptionGet({ organisationId: doc._id });
+  const getPackage = () => {
+    console.log(
+      `🚀 ~ file: billing-card.jsx:64 ~ data?.organisation?.packages:`,
+      data?.organisation?.packages
+    );
+    let message = "";
+    if (
+      data?.organisation?.packages?.length < 5 &&
+      data?.organisation?.packages?.length > 0
+    ) {
+      message = "Intermediate";
+    } else if (data?.organisation?.packages?.length === 0) {
+      message = "Enterprize";
+    } else {
+      message = "Basic";
+    }
+    return message;
+  };
   console.log(`🚀 ~ file: billing-card.jsx:71 ~ isLoading:`, isLoading);
   console.log(`🚀 ~ file: billing-card.jsx:71 ~ data:`, data);
+  const getMessage = () => {
+    let message = "";
 
+    switch (data?.subscription?.status) {
+      case "authenticated":
+        if (
+          Math.ceil(
+            new Date(data?.subscription?.charge_at * 1000) - new Date()
+          ) /
+            (1000 * 60 * 60 * 24) >
+          0
+        ) {
+          message = `${Math.ceil(
+            (new Date(data?.subscription?.charge_at * 1000) - new Date()) /
+              (1000 * 60 * 60 * 24)
+          )} Day Trial left`;
+        } else {
+          message = "Sorry but payment not received";
+        }
+        break;
+      case "active":
+        message = `Your next due is after ${Math.ceil(
+          (new Date(data?.subscription?.charge_at * 1000) - new Date()) /
+            (1000 * 60 * 60 * 24)
+        )} days`;
+        break;
+      case "pending":
+        message =
+          "Your payment is pending. Please update your card details. or please complete payment";
+        break;
+      case "halted":
+        message =
+          "Your subscription is halted. Please update your card details.";
+        break;
+      case "cancelled":
+        message =
+          "Your subscription is cancelled. To restart, raise query about it";
+        break;
+      case "paused":
+        message = "Your subscription is on paused";
+        break;
+      default:
+        message = "Basic Plan";
+        break;
+    }
+
+    return message;
+  };
   return (
     <div className="shadow-xl bg-Brand-Purple/brand-purple-1 rounded-md grid grid-cols-6">
       <div className=" col-span-5 pl-4 pt-4 pb-4 gap-4 flex flex-col">
@@ -130,17 +204,45 @@ const BillingCard = ({ doc }) => {
           />
           <DescriptionBox
             Icon={Message}
-            descriptionText={"Message"}
-            mainText={
-              moment
-                .unix(data?.subscription?.charge_at)
-                .startOf("day")
-                .isSame(moment().startOf("day"))
-                ? "Your subscription start date is today please complete auto pay"
-                : "Your subscription plan is active"
-            }
+            descriptionText={"MeWssage"}
+            mainText={getMessage()}
           />
-
+          <DescriptionBox
+            Icon={AttachMoney}
+            descriptionText={"Billing frequency"}
+            mainText={"Quarterly"}
+          />
+          <DescriptionBox
+            Icon={ShoppingBag}
+            descriptionText={"Purchased Plan"}
+            mainText={getPackage()}
+          />
+          <DescriptionBox
+            Icon={FilterNone}
+            descriptionText={"Active packages"}
+            mainText={data?.organisation?.packages?.length}
+          />
+          <DescriptionBox
+            Icon={People}
+            descriptionText={"Allowed employee count"}
+            mainText={data?.subscription?.quantity}
+          />
+          <DescriptionBox
+            Icon={Circle}
+            descriptionText={"Subscription status"}
+            mainText={data?.subscription?.quantity}
+          />
+          {/* {data?.subscription?.status === ("active" || "authenticated") && ( */}
+          <DescriptionBox
+            Icon={Loop}
+            descriptionText={"Your next renewal is after"}
+            mainText={`${moment
+              .duration(
+                moment.unix(data?.subscription?.charge_at).diff(moment())
+              )
+              .days()} days`}
+          />
+          {/* )} */}
           {moment
             .unix(data?.subscription?.charge_at)
             .startOf("day")
@@ -157,9 +259,27 @@ const BillingCard = ({ doc }) => {
         </div>
       </div>
       <div className=" col-span-1 flex justify-center items-center">
-        <div className="bg-success-400 flex justify-center items-start p-8 rounded-full">
-          <Repeat className="text-white " fontSize="large" />
-        </div>
+        {data?.subscription?.status === "active" ? (
+          <div className="bg-[#5FF062] flex justify-center items-start p-8 rounded-full">
+            <Repeat className="text-white " fontSize="large" />
+          </div>
+        ) : data?.subscription?.status === "authenticated" ? (
+          <div className="bg-[#ba67e1] flex justify-center items-start p-8 rounded-full animate-pulse">
+            <Shield className="text-white " fontSize="large" />
+          </div>
+        ) : data?.subscription?.status === "pending" ? (
+          <div className="bg-[#E8A454] flex justify-center items-start p-8 rounded-full animate-pulse">
+            <PriorityHigh className="text-white " fontSize="large" />
+          </div>
+        ) : data?.subscription?.status === "expired" ? (
+          <div className="bg-[#6578DB] flex justify-center items-start p-8 rounded-full animate-pulse">
+            <ControlPoint className="text-white " fontSize="large" />
+          </div>
+        ) : data?.subscription?.status === "halted" ? (
+          <div className="bg-[#F46B6B] flex justify-center items-start p-8 rounded-full animate-pulse">
+            <QuestionMark className="text-white " fontSize="large" />
+          </div>
+        ) : null}
       </div>
     </div>
   );

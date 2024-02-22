@@ -9,9 +9,10 @@ const Billing = () => {
   return (
     <div className="p-4">
       Billing
-      {data?.organizations?.map((doc, i) => {
-        return <BillingCard key={i} doc={doc} />;
-      })}
+      {!isLoading &&
+        data?.organizations?.map((doc, i) => {
+          return <BillingCard key={i} doc={doc} />;
+        })}
     </div>
   );
 };
