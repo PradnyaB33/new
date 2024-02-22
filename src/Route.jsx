@@ -2,6 +2,7 @@ import React from "react";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 
 // Components
+import PaymentNotReceived from "./components/Payment/not-recieved";
 import SetupSideNav from "./components/SideNav/SetupSideNav";
 import Loader from "./components/app-loader/page";
 import AnimationComponent from "./components/emailverify/verification-animation";
@@ -664,6 +665,15 @@ function RequireSubscription({ children }) {
     `🚀 ~ file: Route.jsx:683 ~ subscriptionDetails:`,
     subscriptionDetails
   );
+
+  if (
+    subscriptionDetails?.subscription?.status ===
+    ("pending" || "halted" || "paused")
+  ) {
+    return (
+      <PaymentNotReceived link={subscriptionDetails?.subscription?.short_url} />
+    );
+  }
 
   return children;
 }
