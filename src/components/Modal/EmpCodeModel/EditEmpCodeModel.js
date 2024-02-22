@@ -1,10 +1,7 @@
-import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
-  Divider,
   FormControl,
-  IconButton,
   InputLabel,
   MenuItem,
   Modal,
@@ -151,11 +148,8 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
           <h1 className="text-xl pl-2 font-semibold font-sans">
             Edit Employee Code
           </h1>
-          <IconButton onClick={handleClose}>
-            <CloseIcon className="!text-[16px]" />
-          </IconButton>
         </div>
-        <div className="overflow-auto !p-4 flex flex-col items-start gap-4 border-[.5px] border-gray-200">
+        <div className="overflow-auto !p-4 flex flex-col items-start gap-4">
           <div className="flex gap-4 items-center">
             <div className="space-y-2">
               <label className="text-md" htmlFor="demo-simple-select-label">
@@ -216,9 +210,6 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
           </FormControl>
         </div>
 
-        <div className="w-full">
-          <Divider variant="fullWidth" orientation="horizontal" />
-        </div>
         <div className="flex gap-4 mt-4 mr-4  mb-4 justify-end ">
           <Button onClick={handleClose} color="error" variant="outlined">
             Cancel

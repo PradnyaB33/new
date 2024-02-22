@@ -21,6 +21,8 @@ import { Add, Info } from "@mui/icons-material";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 
 const Designation = () => {
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
   const [click, setClick] = useState(false);
   const { organisationId } = useParams();
   const [designationIdRequired, setDesignationIdRequired] = useState(false);
@@ -39,6 +41,7 @@ const Designation = () => {
   const [trackedId, setTrackedId] = useState("");
   const [showUpdateConfirmationDialog, setShowUpdateConfirmationDialog] =
     useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const handleClick = (id) => {
     setClick(!click);
@@ -95,15 +98,8 @@ const Designation = () => {
   const handleAddDesignation = () => {
     setPrefixRequired(false);
     setClick(true);
-    if (!designationName.trim()) {
-      // todo setDesignationError("Designation Name is required.");
-      return;
-    }
-
-    if (designationIdRequired && !designationId.trim()) {
-      // ! setDesignationError("Designation ID is required.");
-      return;
-    }
+    setFormSubmitted(true);
+    if (!designationName) return;
 
     if (editMode) {
       setShowUpdateConfirmationDialog(true);
@@ -111,7 +107,11 @@ const Designation = () => {
       generateDesignationIds();
 
       axios
-        .post(`${process.env.REACT_APP_API}/route/designation/create`, data)
+        .post(`${process.env.REACT_APP_API}/route/designation/create`, data, {
+          headers: {
+            Authorization: authToken,
+          },
+        })
         .then((response) => {
           setAppAlert({
             alert: true,
@@ -120,7 +120,7 @@ const Designation = () => {
           });
           console.log("Designation added successfully:", response.data);
           fetchDesignations();
-          handleClose(); // ? Close the dialog after adding
+          handleClose(); // Close the dialog after adding
         })
         .catch((error) => {
           setAppAlert({
@@ -359,7 +359,11 @@ const Designation = () => {
                   value={designationName}
                   onChange={(e) => setDesignationName(e.target.value)}
                 />
-
+                {!designationName && formSubmitted && (
+                  <Typography variant="body2" color="error" className="px-4">
+                    Required.
+                  </Typography>
+                )}
                 {designationIdRequired && (
                   <>
                     {prefixRequired && (
@@ -428,7 +432,6 @@ const Designation = () => {
 
                 <TextField
                   style={{ marginTop: "1rem" }}
-                  required
                   name="designationId"
                   size="small"
                   className="w-full"
