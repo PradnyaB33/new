@@ -6,8 +6,13 @@ import { useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
 import useAuthToken from "../../../hooks/Token/useAuth";
+import UserProfile from "../../../hooks/UserData/useUser";
 
 const Test4 = ({ prevStep }) => {
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
+  const creatorId = user._id;
+  console.log(creatorId);
   const {
     first_name,
     last_name,
@@ -68,6 +73,7 @@ const Test4 = ({ prevStep }) => {
         dept_cost_center_no: dept_cost_center_no.value,
         shift_allocation: shift_allocation.value,
         organizationId: organisationId,
+        creatorId,
       };
       const response = axios.post(
         `${process.env.REACT_APP_API}/route/employee/add-employee`,

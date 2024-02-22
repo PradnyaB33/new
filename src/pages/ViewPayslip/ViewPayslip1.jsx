@@ -45,7 +45,9 @@ const ViewPayslip1 = () => {
     fetchEmployeeData();
     // eslint-disable-next-line
   }, []);
-
+  console.log(employeeInfo);
+  console.log(salaryInfo);
+  console.log(organisationInfo);
   // get employee salary calculation day based on organization id
   const fetchEmpSalCalculationDay = async () => {
     try {
@@ -126,7 +128,7 @@ const ViewPayslip1 = () => {
 
   //   Example usage:
   let emp_sal_cal_date = getActualDate(empSalCalDay);
-
+  console.log(emp_sal_cal_date);
   // Get the current system date
   const currentDate = new Date();
   const currentDay = currentDate.getDate();
@@ -142,15 +144,16 @@ const ViewPayslip1 = () => {
   const shouldDisplayPreviousMonth =
     currentDay >= parseInt(emp_sal_cal_date.split("_")[0], 10) ||
     empSalCalDay === "last_day_of_current_month";
-
+  console.log(shouldDisplayPreviousMonth);
   // Filter salary details for the relevant previous month
   const previousMonthSalary = shouldDisplayPreviousMonth
     ? salaryInfo.find(
         (salary) =>
-          salary.month === previousMonth.getMonth() + 1 &&
+          salary.month === previousMonth.getMonth() + 1 ||
           salary.year === previousMonth.getFullYear()
       )
     : null;
+
   console.log(previousMonthSalary);
   // get the unpaid , paid , and publicHoliday from previous month
   const unpaidLeave = previousMonthSalary?.unPaidLeaveDays;
