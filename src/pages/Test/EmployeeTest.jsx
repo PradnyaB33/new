@@ -27,15 +27,15 @@ const EmployeeTest = () => {
 
   const stepper = [
     {
-      label: "Personal details",
+      label: "Personal Details",
       icon: Person,
     },
     {
-      label: "Company info",
+      label: "Company Info",
       icon: Business,
     },
     {
-      label: "Additional fields",
+      label: "Additional Fields",
       icon: AddCircle,
     },
     {
