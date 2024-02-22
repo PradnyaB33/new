@@ -1,72 +1,15 @@
 import { Skeleton } from "@mui/material";
-import axios from "axios";
 import moment from "moment";
 import React from "react";
-import toast from "react-hot-toast";
-import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import useGetUser from "../../../hooks/Token/useUser";
+import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import Setup from "../Setup";
 import SubscriptionCard from "./components/subscription-card";
 import SubscriptionRow from "./components/subscriptionRow";
 
 const Subscription = () => {
-  const { authToken } = useGetUser();
-
   const { organisationId } = useParams();
-
-  // Get Query
-  const getSubscription = async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/organization/subscription/${organisationId}`,
-      {
-        headers: {
-          Authorization: authToken,
-        },
-      }
-    );
-    return response.data;
-  };
-  const { data, isLoading } = useQuery({
-    queryKey: [`subscription-${organisationId}`],
-    queryFn: getSubscription,
-    onSuccess: (data) => {
-      console.log(
-        `🚀 ~ file: Subscription.jsx:38 ~  moment.unix(data?.subscription.created_at):`,
-        data
-      );
-      console.log(
-        `🚀 ~ file: Subscription.jsx:38 ~  moment.unix(data?.subscription?.charge_at):`,
-        moment.unix(data?.subscription?.charge_at)
-      );
-      console.log(
-        `🚀 ~ file: Subscription.jsx:38 ~  moment():`,
-        moment.duration(moment().diff(data?.subscription?.charge_at)).days()
-      );
-    },
-    onError: (error) => {
-      toast.error("Something went wrong");
-    },
-  });
-
-  // const deleteMutation = useMutation(
-  //   (id) =>
-  //     axios.delete(
-  //       `${process.env.REACT_APP_API}/route/employment-types/${id}`,
-  //       {
-  //         headers: {
-  //           Authorization: authToken,
-  //         },
-  //       }
-  //     ),
-  //   {
-  //     onSuccess: () => {
-  //       // Invalidate and refetch the data after successful deletion
-  //       queryClient.invalidateQueries("empTypes");
-  //       handleAlert(true, "success", "Employeement types deleted succesfully");
-  //     },
-  //   }
-  // );
+  const { data, isLoading } = useSubscriptionGet({ organisationId });
 
   return (
     <>
