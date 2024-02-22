@@ -142,7 +142,7 @@ const ViewPayslip1 = () => {
   const shouldDisplayPreviousMonth =
     currentDay >= parseInt(emp_sal_cal_date.split("_")[0], 10) ||
     empSalCalDay === "last_day_of_current_month";
-
+  console.log("payslip");
   // Filter salary details for the relevant previous month
   const previousMonthSalary = shouldDisplayPreviousMonth
     ? salaryInfo.find(
