@@ -20,10 +20,11 @@ import {
 } from "@mui/icons-material";
 import { Button, Menu, MenuItem, alpha, styled } from "@mui/material";
 import moment from "moment";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import DescriptionBox from "./descripton-box";
+import PackageForm from "./manage-package-form";
 const StyledMenu = styled((props) => (
   <Menu
     style={{ background: "rgb(244 247 254 / var(--tw-bg-opacity))" }}
@@ -71,6 +72,8 @@ const StyledMenu = styled((props) => (
 const BillingCard = ({ doc }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -78,11 +81,9 @@ const BillingCard = ({ doc }) => {
     setAnchorEl(null);
   };
   const { data, isLoading } = useSubscriptionGet({ organisationId: doc._id });
+  console.log(`🚀 ~ file: billing-card.jsx:84 ~ isLoading:`, isLoading);
+  console.log(`🚀 ~ file: billing-card.jsx:84 ~ data:`, data);
   const getPackage = () => {
-    console.log(
-      `🚀 ~ file: billing-card.jsx:64 ~ data?.organisation?.packages:`,
-      data?.organisation?.packages
-    );
     let message = "";
     if (
       data?.organisation?.packages?.length < 5 &&
@@ -96,8 +97,6 @@ const BillingCard = ({ doc }) => {
     }
     return message;
   };
-  console.log(`🚀 ~ file: billing-card.jsx:71 ~ isLoading:`, isLoading);
-  console.log(`🚀 ~ file: billing-card.jsx:71 ~ data:`, data);
   const getMessage = () => {
     let message = "";
 
@@ -187,7 +186,12 @@ const BillingCard = ({ doc }) => {
               <PlayArrow />
               Resume subscription
             </MenuItem>
-            <MenuItem onClick={handleClose} disableRipple>
+            <MenuItem
+              onClick={() => {
+                setConfirmOpen(true);
+              }}
+              disableRipple
+            >
               <FilterNone />
               Add package
             </MenuItem>
@@ -286,6 +290,14 @@ const BillingCard = ({ doc }) => {
           </div>
         ) : null}
       </div>
+      <PackageForm
+        open={confirmOpen}
+        handleClose={() => {
+          setConfirmOpen(false);
+          handleClose();
+        }}
+        packages={data?.organisation?.packages}
+      />
     </div>
   );
 };
