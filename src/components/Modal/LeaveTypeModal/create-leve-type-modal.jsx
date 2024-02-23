@@ -111,7 +111,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
         sx={style}
         className="border-none !z-10 shadow-md outline-none rounded-md gap-2 flex flex-col"
       >
-        <h1 className="text-xl pl-2 font-semibold font-sans">Add Leave Type</h1>
+        <h1 className="text-xl pl-2 font-semibold font-sans">Add leave type</h1>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Stack spacing={2} width={400}>
             <FormControl component="fieldset">
