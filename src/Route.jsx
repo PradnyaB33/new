@@ -2,6 +2,7 @@ import React from "react";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 
 // Components
+import moment from "moment";
 import PaymentNotReceived from "./components/Payment/not-recieved";
 import SetupSideNav from "./components/SideNav/SetupSideNav";
 import Loader from "./components/app-loader/page";
@@ -54,11 +55,6 @@ import RolePage from "./pages/SignIn/RolePage";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 import EmployeeTest from "./pages/Test/EmployeeTest";
-import EditablePolyline from "./pages/Test/test2";
-import TrackingMap from "./pages/Test/test3";
-import TrackingMap2 from "./pages/Test/testMap";
-import TestNaresh from "./pages/Test/testNaresh";
-import TrackingMap3 from "./pages/Test/testYash";
 import DepartmentTest from "./pages/Test2/DepartmentTest";
 import EmployeeProfile from "./pages/UserProfile/UserProfile";
 import ViewPayslip1 from "./pages/ViewPayslip/ViewPayslip1";
@@ -89,14 +85,14 @@ const App = () => {
       />
       <Route path="/paymentfailed" element={<PaymentFailed />} />
 
-      <Route path="/test" element={<EditablePolyline />} />
+      {/* <Route path="/test" element={<EditablePolyline />} /> */}
       <Route path="/loading" element={<Loader />} />
       <Route path="/testOrg" element={<NewOranisationForm />} />
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
-      <Route path="/test3" element={<TestNaresh />} />
+      {/* <Route path="/test3" element={<TestNaresh />} />
       <Route path="/test2" element={<TrackingMap />} />
       <Route path="/test5" element={<TrackingMap2 />} />
-      <Route path="/test6" element={<TrackingMap3 />} />
+      <Route path="/test6" element={<TrackingMap3 />} /> */}
       {/* Login Routes */}
       <Route path="/sign-in" element={<SignIn />} />
       <Route
@@ -650,29 +646,8 @@ function RequireSubscription({ children }) {
   const { subscriptionDetails, subscriptionLoading, subscriptionFetching } =
     useSubscription(organisationId);
   console.log(
-    `🚀 ~ file: Route.jsx:641 ~  subscriptionLoading, subscriptionFetching :`,
-    subscriptionLoading,
-    subscriptionFetching,
-    new Date(subscriptionDetails?.subscription?.charge_at * 1000),
-    new Date(),
-    Math.abs(
-      new Date(subscriptionDetails?.subscription?.charge_at * 1000) - new Date()
-    )
-  );
-  console.log(
-    `🚀 ~ file: Route.jsx:652 ~  Math.abs(
-      new Date(subscriptionDetails?.subscription?.charge_at * 1000) - new Date()
-    ):`,
-    Math.ceil(
-      (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
-        new Date()) /
-        (1000 * 60 * 60 * 24)
-    )
-  );
-
-  console.log(
-    `🚀 ~ file: Route.jsx:683 ~ subscriptionDetails:`,
-    subscriptionDetails
+    `🚀 ~ file: Route.jsx:651 ~ subscriptionDetails:`,
+    moment.unix(subscriptionDetails?.subscription?.charge_at)
   );
 
   if (
