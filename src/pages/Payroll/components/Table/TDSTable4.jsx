@@ -190,18 +190,18 @@ const TDSTable4 = () => {
     setTableData(newData);
   };
 
-  const handleProperty1 = (e, itemIndex, id) => {
-    const newData = [...tableData];
-    newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property1 =
-      e.target.value;
-    setTableData(newData);
-  };
-  const handleProperty2 = (e, itemIndex, id) => {
-    const newData = [...tableData];
-    newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property2 =
-      e.target.value;
-    setTableData(newData);
-  };
+  // const handleProperty1 = (e, itemIndex, id) => {
+  //   const newData = [...tableData];
+  //   newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property1 =
+  //     e.target.value;
+  //   setTableData(newData);
+  // };
+  // const handleProperty2 = (e, itemIndex, id) => {
+  //   const newData = [...tableData];
+  //   newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property2 =
+  //     e.target.value;
+  //   setTableData(newData);
+  // };
 
   const handleSaveClick = (index) => {
     setEditStatus({ ...editStatus, [index]: null });

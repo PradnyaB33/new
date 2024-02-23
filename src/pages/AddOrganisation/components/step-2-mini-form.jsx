@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  Assessment,
   BarChartOutlined,
+  CheckCircleOutline,
   ExtensionOutlined,
-  LocationOnOutlined,
-  TimelineOutlined,
 } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import React from "react";
@@ -11,9 +11,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import useOrg from "../../../State/Org/Org";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import { CheckCircleOutline } from "@mui/icons-material";
-import { Assessment } from "@mui/icons-material";
-import { EqualizerOutlined } from "@mui/icons-material";
 const organizationSchema = z.object({
   remotePunching: z.boolean(),
   performanceManagement: z.boolean(),

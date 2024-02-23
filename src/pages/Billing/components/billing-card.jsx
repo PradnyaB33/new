@@ -10,6 +10,7 @@ import {
   Pause,
   People,
   PlayArrow,
+  PriorityHigh,
   QuestionMark,
   Repeat,
   Shield,

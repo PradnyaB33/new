@@ -7,31 +7,26 @@ const useLocationStore = () => {
   const [start, setStart] = useState(false);
   const [count, setCount] = useState(0);
   const authToken = useAuthToken();
-  const [punches, setPunches] = useState([]);
-  const empID = "";
+  const [empID, setempID] = useState("");
+  // const [punches, setPunches] = useState([]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const resp = await axios.get(`${process.env.REACT_APP_API}/route/punch/getone`,)
-        console.log(resp?.data.punch.employeeId);
-        empID = resp?.data.punch.employeeId
-      } catch (error) {
-
-      }
-    })()
-  })
+    async function fetchData() {
+      const resp = await axios.get(
+        `${process.env.REACT_APP_API}/route/punch/getone`
+      );
+      console.log(resp?.data.punch.employeeId);
+      setempID(resp?.data.punch.employeeId);
+    }
+    fetchData();
+  }, [empID]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const resp = await axios.get(`${process.env.REACT_APP_API}/route/punch/get/${empID}`)
-        setPunches(resp.data.punch)
-      } catch (error) {
-
-      }
-    })()
-  })
+    async function fetchData2() {
+      await axios.get(`${process.env.REACT_APP_API}/route/punch/get/${empID}`);
+    }
+    fetchData2();
+  }, [empID]);
   const fetchLocationData = async () => {
     console.log("i am from hook");
 
@@ -152,7 +147,7 @@ const useLocationStore = () => {
         };
 
         // Send a POST request to create a new punch document
-        const createResponse = await axios.post(
+        await axios.post(
           `${process.env.REACT_APP_API}/route/punch/create`,
           payload,
           {
@@ -170,10 +165,9 @@ const useLocationStore = () => {
     }
   };
 
-
   const stopLocationTracking = async () => {
     setCount(0);
-    await postEndTime()
+    await postEndTime();
   };
 
   return {

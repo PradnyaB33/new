@@ -1,18 +1,19 @@
-import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
+import { Info } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import HolidayVillageOutlinedIcon from "@mui/icons-material/HolidayVillageOutlined";
 import {
   Button,
   Dialog,
+  DialogActions,
   DialogContent,
+  DialogTitle,
   FormControl,
   IconButton,
   InputLabel,
   MenuItem,
   Select,
   TextField,
-  DialogTitle,
-  DialogActions,
   Typography,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -26,8 +27,6 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../Setup";
-import { Add, Info } from "@mui/icons-material";
-import HolidayVillageOutlinedIcon from "@mui/icons-material/HolidayVillageOutlined";
 
 const PublicHoliday = () => {
   const id = useParams().organisationId;
