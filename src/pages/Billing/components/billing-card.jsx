@@ -80,23 +80,9 @@ const BillingCard = ({ doc }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const { data, isLoading } = useSubscriptionGet({ organisationId: doc._id });
-  console.log(`🚀 ~ file: billing-card.jsx:84 ~ isLoading:`, isLoading);
+  const { data } = useSubscriptionGet({ organisationId: doc._id });
   console.log(`🚀 ~ file: billing-card.jsx:84 ~ data:`, data);
-  const getPackage = () => {
-    let message = "";
-    if (
-      data?.organisation?.packages?.length < 5 &&
-      data?.organisation?.packages?.length > 0
-    ) {
-      message = "Intermediate";
-    } else if (data?.organisation?.packages?.length === 0) {
-      message = "Enterprize";
-    } else {
-      message = "Basic";
-    }
-    return message;
-  };
+
   const getMessage = () => {
     let message = "";
 
@@ -193,7 +179,7 @@ const BillingCard = ({ doc }) => {
               disableRipple
             >
               <FilterNone />
-              Add package
+              Manage Subscription
             </MenuItem>
           </StyledMenu>
         </div>
@@ -224,7 +210,7 @@ const BillingCard = ({ doc }) => {
           <DescriptionBox
             Icon={ShoppingBag}
             descriptionText={"Purchased Plan"}
-            mainText={getPackage()}
+            mainText={data?.plan?.item?.name}
           />
           <DescriptionBox
             Icon={FilterNone}
@@ -239,9 +225,8 @@ const BillingCard = ({ doc }) => {
           <DescriptionBox
             Icon={Circle}
             descriptionText={"Subscription status"}
-            mainText={data?.subscription?.quantity}
+            mainText={data?.subscription?.status}
           />
-          {/* {data?.subscription?.status === ("active" || "authenticated") && ( */}
           <DescriptionBox
             Icon={Loop}
             descriptionText={"Your next renewal is after"}
@@ -251,7 +236,6 @@ const BillingCard = ({ doc }) => {
               )
               .days()} days`}
           />
-          {/* )} */}
           {moment
             .unix(data?.subscription?.charge_at)
             .startOf("day")
@@ -290,14 +274,16 @@ const BillingCard = ({ doc }) => {
           </div>
         ) : null}
       </div>
-      <PackageForm
-        open={confirmOpen}
-        handleClose={() => {
-          setConfirmOpen(false);
-          handleClose();
-        }}
-        packages={data?.organisation?.packages}
-      />
+      {data?.organisation?.packages && (
+        <PackageForm
+          open={confirmOpen}
+          handleClose={() => {
+            setConfirmOpen(false);
+            handleClose();
+          }}
+          packages={data?.organisation?.packages}
+        />
+      )}
     </div>
   );
 };

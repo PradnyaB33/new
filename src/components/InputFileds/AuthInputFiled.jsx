@@ -590,8 +590,8 @@ const AuthInputFiled = ({
         control={control}
         name={name}
         id={name}
-        render={({ field }) => (
-          <>
+        render={({ field }) => {
+          return (
             <div
               onFocus={() => {
                 handleFocus(name);
@@ -618,8 +618,8 @@ const AuthInputFiled = ({
                 formNoValidate
               />
             </div>
-          </>
-        )}
+          );
+        }}
       />
       <div className="h-4 w-[200px]  !z-50   !mb-1">
         <ErrorMessage

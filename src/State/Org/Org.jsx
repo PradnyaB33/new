@@ -17,10 +17,14 @@ const useOrg = create((set) => {
     creator: undefined, // Using the obtained decoded token
     logo_url: undefined,
     isTrial: false,
-    remotePunching: false,
-    performanceManagement: false,
-    analyticsAndReporting: false,
-    skillMatrices: false,
+    remotePunchingPackage: false,
+    performancePackage: false,
+    basicTrainingPackage: false,
+    communicationPackage: false,
+    loanManagementPackage: false,
+    cateringFoodPackage: false,
+    analyticsAndReportingPackage: false,
+    skillMatrixPackage: false,
     data: undefined,
 
     // Setter function for updating multiple properties at once
