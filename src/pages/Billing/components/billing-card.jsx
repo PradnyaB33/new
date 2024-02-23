@@ -187,6 +187,10 @@ const BillingCard = ({ doc }) => {
               <PlayArrow />
               Resume subscription
             </MenuItem>
+            <MenuItem onClick={handleClose} disableRipple>
+              <FilterNone />
+              Add package
+            </MenuItem>
           </StyledMenu>
         </div>
 
@@ -205,7 +209,7 @@ const BillingCard = ({ doc }) => {
           />
           <DescriptionBox
             Icon={Message}
-            descriptionText={"MeWssage"}
+            descriptionText={"Message"}
             mainText={getMessage()}
           />
           <DescriptionBox
@@ -261,7 +265,7 @@ const BillingCard = ({ doc }) => {
       </div>
       <div className=" col-span-1 flex justify-center items-center">
         {data?.subscription?.status === "active" ? (
-          <div className="bg-[#5FF062] flex justify-center items-start p-8 rounded-full">
+          <div className="bg-[#5FF062] flex justify-center items-start p-8 rounded-full animate-pulse">
             <Repeat className="text-white " fontSize="large" />
           </div>
         ) : data?.subscription?.status === "authenticated" ? (
