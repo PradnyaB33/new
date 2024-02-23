@@ -646,6 +646,11 @@ function RequireSubscription({ children }) {
   const { subscriptionDetails, subscriptionLoading, subscriptionFetching } =
     useSubscription(organisationId);
   console.log(
+    `🚀 ~ file: Route.jsx:647 ~ subscriptionLoading, subscriptionFetching:`,
+    subscriptionLoading,
+    subscriptionFetching
+  );
+  console.log(
     `🚀 ~ file: Route.jsx:651 ~ subscriptionDetails:`,
     moment.unix(subscriptionDetails?.subscription?.charge_at)
   );
