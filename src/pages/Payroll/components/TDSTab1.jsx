@@ -129,12 +129,6 @@ export default function TDSTab1() {
             label="Deduction under chapter VI A"
             {...a11yProps(1)}
           />
-          <Tab
-            className="!px-4"
-            label="Total Taxable Income"
-            {...a11yProps(1)}
-          />
-          <Tab className="!px-4" label="Tax Payable" {...a11yProps(1)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>

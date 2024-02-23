@@ -59,7 +59,7 @@ const Test4 = ({ prevStep }) => {
         address,
         citizenship,
         adhar_card_number,
-        mgrempid: mgrempid.value,
+        mgrempid: mgrempid?.value,
         pan_card_number,
         gender,
         bank_account_no,

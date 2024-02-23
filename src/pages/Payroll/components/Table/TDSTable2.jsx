@@ -1,8 +1,15 @@
 import { DeleteOutlined, EditOutlined } from "@mui/icons-material";
 import { Button, IconButton } from "@mui/material";
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useContext, useState } from "react";
+import { TestContext } from "../../../../State/Function/Main";
+import useAuthToken from "../../../../hooks/Token/useAuth";
+import UserProfile from "../../../../hooks/UserData/useUser";
 
 const TDSTable2 = () => {
+  const authToken = useAuthToken();
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
   const [tableData, setTableData] = useState([
     {
       "(A) Self Occupied Property (Loss)": [
@@ -12,6 +19,7 @@ const TDSTable2 = () => {
           property2: 0,
           amount: 0,
           proof: "",
+          maxAmount: 200000,
           status: "Not Submitted",
         },
         {
@@ -19,11 +27,13 @@ const TDSTable2 = () => {
           property1: 0,
           property2: 0,
           amount: 0,
+          maxAmount: 30000,
           proof: "",
           status: "Not Submitted",
         },
         {
           name: "After 1/4/99 & completed after 5 years from the end of FY of borrowing",
+          maxAmount: 15000,
           property1: 0,
           property2: 0,
           amount: 0,
@@ -33,6 +43,7 @@ const TDSTable2 = () => {
         {
           name: "After 1/4/99 & completed within 5 years from the end of FY of borrowing",
           property1: 0,
+          maxAmount: 15000,
           property2: 0,
           amount: 0,
           proof: "",
@@ -55,7 +66,7 @@ const TDSTable2 = () => {
           status: "Not Submitted",
         },
         {
-          name: "Less : Standard Deduction",
+          name: "Net Annual Value",
           amount: 0,
           proof: "",
           status: "Not Submitted",
@@ -97,7 +108,7 @@ const TDSTable2 = () => {
       ],
     },
   ]);
-
+  const { handleAlert } = useContext(TestContext);
   const [editStatus, setEditStatus] = useState({});
 
   const handleEditClick = (itemIndex, fieldIndex) => {
@@ -131,8 +142,50 @@ const TDSTable2 = () => {
     setTableData(newData);
   };
 
-  const handleSaveClick = (index) => {
-    setEditStatus({ ...editStatus, [index]: null });
+  const handleSaveClick = async (index, id) => {
+    const newData = [...tableData];
+    console.log(Object.keys(newData[index])[0]);
+
+    const value = newData[index][Object.keys(newData[index])[0]][id];
+    const requestData = {
+      empId: user._id,
+      financialYear: "2023-2024",
+      sectionName: Object.keys(newData[index])[0],
+      investmentTypeName:
+        newData[index][Object.keys(newData[index])[0]][id].name,
+      requestData: {
+        property1: newData[index][Object.keys(newData[index])[0]][id].property1,
+        property2: newData[index][Object.keys(newData[index])[0]][id].property2,
+        declaration:
+          newData[index][Object.keys(newData[index])[0]][id].amount > 0
+            ? newData[index][Object.keys(newData[index])[0]][id].amount
+            : Number(value.property1) + Number(value.property2) >
+              value?.maxAmount
+            ? value?.maxAmount
+            : Number(value.property1) + Number(value.property2),
+        proof: "Proof URL",
+      },
+    };
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API}/route/tds/createHouseProperty`,
+        requestData,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      handleAlert(true, "success", `Data uploaded successfully`);
+    } catch (error) {
+      console.log(error);
+    }
+
+    setEditStatus({
+      ...editStatus,
+      [index]: null,
+    });
   };
 
   const handleClose = (index) => {
@@ -155,12 +208,17 @@ const TDSTable2 = () => {
                 <th scope="col" className="py-3">
                   Deduction Name
                 </th>
-                <th scope="col" className="py-3">
-                  property 1
-                </th>
-                <th scope="col" className="py-3">
-                  property 2
-                </th>
+                {Object.keys(item)[0] ===
+                  "(A) Self Occupied Property (Loss)" && (
+                  <>
+                    <th scope="col" className="py-3">
+                      property 1
+                    </th>
+                    <th scope="col" className="py-3">
+                      property 2
+                    </th>
+                  </>
+                )}
                 <th scope="col" className="py-3">
                   Declaration
                 </th>
@@ -180,48 +238,54 @@ const TDSTable2 = () => {
                 <tr className="!font-medium h-20 border-b" key={id}>
                   <td className="!text-left pl-8 ">{id + 1}</td>
                   <td className=" truncate text-left">{ele.name}</td>
-                  <td className=" text-left">
-                    {ele.property1 &&
-                    editStatus[itemIndex] === id &&
-                    editStatus[itemIndex] === id ? (
-                      <div className="border-gray-200 w-max  flex border-[.5px]">
-                        <h1 className="text-lg bg-gray-300 py-2  h-full px-2">
-                          INR
-                        </h1>
-                        <input
-                          type="number"
-                          className="border-none py-2  outline-none px-2 "
-                          value={ele.property1}
-                          onChange={(e) => handleProperty1(e, itemIndex, id)}
-                        />
-                      </div>
-                    ) : (
-                      "INR " + ele.property1
-                    )}
-                  </td>
-                  <td className=" text-left">
-                    {ele.property2 &&
-                    editStatus[itemIndex] === id &&
-                    editStatus[itemIndex] === id ? (
-                      <div className="border-gray-200 w-max  flex border-[.5px]">
-                        <h1 className="text-lg bg-gray-300 py-2  h-full px-2">
-                          INR
-                        </h1>
-                        <input
-                          type="number"
-                          className="border-none py-2  outline-none px-2 "
-                          value={ele.property2}
-                          onChange={(e) => handleProperty2(e, itemIndex, id)}
-                        />
-                      </div>
-                    ) : (
-                      "INR " + ele.property2
-                    )}
-                  </td>
+                  {Object.keys(item)[0] ===
+                    "(A) Self Occupied Property (Loss)" && (
+                    <>
+                      <td className=" text-left">
+                        {editStatus[itemIndex] === id ? (
+                          <div className="border-gray-200 w-max  flex border-[.5px]">
+                            <h1 className="text-lg bg-gray-300 py-2  h-full px-2">
+                              INR
+                            </h1>
+                            <input
+                              type="number"
+                              className="border-none py-2  outline-none px-2 "
+                              value={ele.property1}
+                              onChange={(e) =>
+                                handleProperty1(e, itemIndex, id)
+                              }
+                            />
+                          </div>
+                        ) : (
+                          "INR " + ele.property1
+                        )}
+                      </td>
+                      <td className=" text-left">
+                        {editStatus[itemIndex] === id ? (
+                          <div className="border-gray-200 w-max  flex border-[.5px]">
+                            <h1 className="text-lg bg-gray-300 py-2  h-full px-2">
+                              INR
+                            </h1>
+                            <input
+                              type="number"
+                              className="border-none py-2  outline-none px-2 "
+                              value={ele.property2}
+                              onChange={(e) =>
+                                handleProperty2(e, itemIndex, id)
+                              }
+                            />
+                          </div>
+                        ) : (
+                          "INR " + ele.property2
+                        )}
+                      </td>
+                    </>
+                  )}
                   <td className=" text-left ">
                     {ele.property1 || ele.property2 ? (
-                      ele.property1 + ele.property2
-                    ) : editStatus[itemIndex] === id &&
+                      "INR " + (Number(ele.property1) + Number(ele.property2))
+                    ) : Object.keys(item)[0] !==
+                        "(A) Self Occupied Property (Loss)" &&
                       editStatus[itemIndex] === id ? (
                       <div className="border-gray-200 w-max  flex border-[.5px]">
                         <h1 className="text-lg bg-gray-300 py-2  h-full px-2">
@@ -259,7 +323,7 @@ const TDSTable2 = () => {
                         <Button
                           color="primary"
                           aria-label="save"
-                          onClick={() => handleSaveClick(itemIndex)}
+                          onClick={() => handleSaveClick(itemIndex, id)}
                         >
                           Save
                         </Button>
