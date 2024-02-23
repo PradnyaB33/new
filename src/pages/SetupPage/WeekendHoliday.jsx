@@ -1,11 +1,13 @@
+import { Info } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  IconButton,
   DialogTitle,
+  IconButton,
   Typography,
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
@@ -17,8 +19,6 @@ import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router";
 import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
-import { Add, Info } from "@mui/icons-material";
-import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
 
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -59,7 +59,7 @@ const WeekdaySelector = ({ selectedDays, handleDayToggle, getColor }) => {
             onClick={() => handleDayToggle(day, index)}
             className="text-2xl"
             style={{
-              backgroundColor: selectedDays.includes(day) ? "#0ea5e9" : 'white',
+              backgroundColor: selectedDays.includes(day) ? "#0ea5e9" : "white",
               borderRadius: "50%",
               width: "55px",
               height: "55px",
@@ -136,11 +136,10 @@ const WeekendHoliday = () => {
           throw new Error("Weekend cannot have more than 3 days");
         }
 
-
-        await axios.post(
-          `${process.env.REACT_APP_API}/route/weekend/create`,
-          { days: daysArray, organizationId }
-        );
+        await axios.post(`${process.env.REACT_APP_API}/route/weekend/create`, {
+          days: daysArray,
+          organizationId,
+        });
         console.log("Successfully created");
         setAppAlert({
           alert: true,

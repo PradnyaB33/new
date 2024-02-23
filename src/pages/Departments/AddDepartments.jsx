@@ -35,7 +35,7 @@ const AddDepartments = () => {
   const [numCharacters, setNumCharacters] = useState(1);
   const [numberCharacters, setNumberCharacters] = useState(1);
   const [departmentNameError, setDepartmentNameError] = useState("");
-
+  const [formSubmitted, setFormSubmitted] = useState(false);
   // fetch the location
   const [locationsData, setLocationsData] = useState([]);
   useEffect(() => {
@@ -129,7 +129,9 @@ const AddDepartments = () => {
   //   add the department data
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setFormSubmitted(true);
+    if (!dept_location && !dept_name && !dept_id && !dept_cost_center_id)
+      return;
     try {
       const departmentData = {
         departmentName: dept_name,
@@ -255,6 +257,11 @@ const AddDepartments = () => {
                 helperText={departmentNameError}
               />
             </FormControl>
+            {!dept_name && formSubmitted && (
+              <Typography variant="body2" color="error">
+                Department name is required.
+              </Typography>
+            )}
             <FormControl sx={{ width: "100%", marginTop: "1rem" }}>
               <TextField
                 size="small"
@@ -268,6 +275,7 @@ const AddDepartments = () => {
             </FormControl>
             <FormControl sx={{ width: "100%", marginTop: "1rem" }}>
               <Select
+                required
                 value={dept_location}
                 onChange={(e) => setDepartmentLocation(e.target.value)}
                 displayEmpty
@@ -284,6 +292,12 @@ const AddDepartments = () => {
                   ))}
               </Select>
             </FormControl>
+            {!dept_location && formSubmitted && (
+              <Typography variant="body2" color="error">
+                Department location is required.
+              </Typography>
+            )}
+
             <FormControl sx={{ width: "100%", marginTop: "1rem" }}>
               <TextField
                 size="small"
@@ -438,6 +452,11 @@ const AddDepartments = () => {
                 />
               </FormControl>
             </div>
+            {!dept_id && formSubmitted && (
+              <Typography variant="body2" color="error">
+                Department name is required.
+              </Typography>
+            )}
 
             <div
               style={{
@@ -504,7 +523,11 @@ const AddDepartments = () => {
                 />
               </FormControl>
             </div>
-
+            {!dept_cost_center_id && formSubmitted && (
+              <Typography variant="body2" color="error">
+                Department name is required.
+              </Typography>
+            )}
             <div className="flex justify-center">
               <Button
                 className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"

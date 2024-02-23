@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import useOrg from "../../../State/Org/Org";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-
+import { PeopleAltOutlined } from "@mui/icons-material";
 // Assuming you have a schema for Step 3 data
 export function convertCamelToTitle(packageName) {
   return packageName.replace(/([A-Z])/g, " $1").replace(/^./, function (str) {
@@ -60,11 +60,11 @@ const Step3 = ({ nextStep }) => {
       >
         <AuthInputFiled
           name={`memberCount`}
-          icon={CorporateFare}
+          icon={PeopleAltOutlined}
           control={control}
           type="number"
           placeholder={`How many member will be in your organisation`}
-          label={`Organisation member count *`}
+          label={`Organisation Member Count *`}
           errors={errors}
           error={errors.memberCount}
         />

@@ -3,7 +3,7 @@ import axios from "axios";
 import React from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
@@ -46,7 +46,6 @@ const Test4 = ({ prevStep }) => {
   const authToken = useAuthToken();
 
   const { organisationId } = useParams("");
-  const navigate = useNavigate();
 
   const handleSubmit = useMutation(
     () => {

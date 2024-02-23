@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import "tailwindcss/tailwind.css";
 import AppDatePicker from "../../../components/date-picker/date-picker2";
 import useShiftData from "../../../hooks/ShiftData/useShiftData";
-import ShiftsTable from "./components/ShiftsTable";
 import Mapped from "./components/mapped-form";
 
 const ShiftAllowance = () => {
@@ -104,7 +103,7 @@ const ShiftAllowance = () => {
 
             {/* Shifts form */}
             {newAppliedLeaveEvents.length > 0 &&
-              Array.isArray(newAppliedLeaveEvents) ? (
+            Array.isArray(newAppliedLeaveEvents) ? (
               <>
                 <form
                   onSubmit={handleSubmit}

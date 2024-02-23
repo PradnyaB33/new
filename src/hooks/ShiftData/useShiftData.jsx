@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
@@ -9,14 +9,14 @@ const useShiftData = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { shiftName } = useShiftStore();
-  const [id, setId] = useState(null)
+  const [id, setId] = useState(null);
   const [isCalendarOpen, setCalendarOpen] = useState(false);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
   const queryclient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
   const [selectedLeave, setSelectedLeave] = useState(null);
   const [disabledShiftId, setDisabledShiftId] = useState(null);
-  const [isUpdating, setIsUpdating] = useState(false);
+  // const [isUpdating, setIsUpdating] = useState(false);
   const [selectEvent, setselectEvent] = useState(false);
 
   const { data, isLoading, isError, error } = useQuery(
@@ -112,8 +112,8 @@ const useShiftData = () => {
     );
     setselectEvent(true);
     setSelectedLeave(null);
-    setIsUpdating(true);
-    setId(selectedLeave._id)
+    // setIsUpdating(true);
+    setId(selectedLeave._id);
 
     let array = data?.requests.filter((item) => {
       return item._id !== selectedLeave?._id;
@@ -125,7 +125,7 @@ const useShiftData = () => {
       return { ...old };
     });
     setDisabledShiftId(selectedLeave._id);
-    setSelectedLeave(array)
+    setSelectedLeave(array);
     console.log(selectedLeave);
   };
   return {

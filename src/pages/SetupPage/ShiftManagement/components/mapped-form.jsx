@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { CalendarMonth, Delete, Edit } from "@mui/icons-material";
+import { CalendarMonth, Delete } from "@mui/icons-material";
 import {
   Badge,
   Button,
@@ -7,17 +6,16 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Snackbar,
 } from "@mui/material";
-import { differenceInDays, format, parseISO } from "date-fns";
-import UserProfile from "../../../../hooks/UserData/useUser";
 import axios from "axios";
+import { differenceInDays, format, parseISO } from "date-fns";
+import React, { useEffect, useState } from "react";
 import useShiftStore from "../store/useShiftStore";
 
 const Mapped = ({
   item,
   index,
-  subtractedLeaves,
+  // subtractedLeaves,
   newAppliedLeaveEvents,
   setNewAppliedLeaveEvents,
   setCalendarOpen,
@@ -33,13 +31,15 @@ const Mapped = ({
     },
   };
   const [sName, setSName] = useState([]);
-  const [openAlert, setOpenAlert] = useState(false); // State for alert visibility
+  // const [openAlert, setOpenAlert] = useState(false); // State for alert visibility
 
   // Fetch initial shift types
   useEffect(() => {
     (async () => {
       try {
-        const resp = await axios.get(`${process.env.REACT_APP_API}/route/getAllShifts`);
+        const resp = await axios.get(
+          `${process.env.REACT_APP_API}/route/getAllShifts`
+        );
         setSName(resp.data.shifts);
       } catch (error) {
         console.error(error);
@@ -52,17 +52,17 @@ const Mapped = ({
     setLeavesTypes(selectedShiftId);
   };
 
-  const handleUpdate = () => {
-    // Clear the selected shift
-    setLeavesTypes('');
-    // Open the calendar for selection
-    setCalendarOpen(true);
-  };
+  // const handleUpdate = () => {
+  //   // Clear the selected shift
+  //   setLeavesTypes("");
+  //   // Open the calendar for selection
+  //   setCalendarOpen(true);
+  // };
 
   console.log(newAppliedLeaveEvents);
   const removeItem = (idToRemove) => {
-    console.log('Removing item with id:', idToRemove);
-    console.log('Current newAppliedLeaveEvents:', newAppliedLeaveEvents);
+    console.log("Removing item with id:", idToRemove);
+    console.log("Current newAppliedLeaveEvents:", newAppliedLeaveEvents);
 
     const updatedAppliedLeaveEvents = newAppliedLeaveEvents.filter(
       (_, i) => i !== idToRemove
@@ -73,12 +73,12 @@ const Mapped = ({
     setShiftName(name);
   };
 
-  const handleAlertClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenAlert(false);
-  };
+  // const handleAlertClose = (event, reason) => {
+  //   if (reason === "clickaway") {
+  //     return;
+  //   }
+  //   // setOpenAlert(false);
+  // };
 
   return (
     <div
@@ -149,7 +149,7 @@ const Mapped = ({
                     <div>{item.shiftName} </div>
                   </div>
                 </MenuItem>
-              )
+              );
             })}
           </Select>
         </FormControl>

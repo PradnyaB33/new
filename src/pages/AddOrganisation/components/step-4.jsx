@@ -48,27 +48,26 @@ const Step4 = () => {
       return "Please Select Plan And Package";
     }
 
-    if (
-      !data.logo_url ||
-      !data.orgName ||
-      !data.foundation_date ||
-      !data.web_url ||
-      !data.industry_type ||
-      !data.email ||
-      !data.location ||
-      !data.contact_number ||
-      !data.description ||
-      !data.creator
-    ) {
-      console.log("Please fill all mandatory field");
-      throw new Error("Please fill all mandatory field");
-    }
+    // if (
+    //   !data.logo_url ||
+    //   !data.orgName ||
+    //   !data.foundation_date ||
+    //   !data.web_url ||
+    //   !data.industry_type ||
+    //   !data.email ||
+    //   !data.location ||
+    //   !data.contact_number ||
+    //   !data.description ||
+    //   !data.creator
+    // ) {
+    //   console.log("Please fill all mandatory field");
+    //   throw new Error("Please fill all mandatory field");
+    // }
 
     const formData = new FormData();
 
     // Append file to FormData
     formData.append("logo_url", data.logo_url);
-
     formData.append("orgName", data.orgName);
     formData.append("foundation_date", data.foundation_date);
     formData.append("web_url", data.web_url);
