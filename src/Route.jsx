@@ -63,6 +63,7 @@ import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
+import TestNotification from "./pages/Test/TestNotification";
 
 const App = () => {
   return (
@@ -104,6 +105,7 @@ const App = () => {
         }
       />
       <Route path="/choose-role" element={<RolePage />} />
+      <Route path="/emp-notification" element={<TestNotification />} />
       <Route path="/sign-up" element={<Signup />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route
