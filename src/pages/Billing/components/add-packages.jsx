@@ -34,10 +34,6 @@ const MiniPackagesForm = ({ handleClose, open, setPackage }) => {
   });
   const { errors, isDirty } = formState;
   function onSubmit(data) {
-    console.log(`🚀 ~ file: manage-package-form.jsx:34 ~ data:`, [
-      data.package,
-      "0",
-    ]);
     setPackage((prevData) => [...prevData, [data.package, "0"]]);
     handleClose();
   }

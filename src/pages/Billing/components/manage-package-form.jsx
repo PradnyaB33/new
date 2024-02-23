@@ -13,13 +13,11 @@ const style = {
   transform: "translate(-50%, -50%)",
   bgcolor: "background.paper",
   p: 4,
+  width: 350,
 };
 const PackageForm = ({ handleClose, open, packages }) => {
   const [mainPackages, setmainPackages] = useState(packages);
-  console.log(
-    `🚀 ~ file: manage-package-form.jsx:19 ~ mainPackages:`,
-    mainPackages
-  );
+
   const [close, setClose] = useState(false);
   const packageSchema = z.object(
     Object.fromEntries(mainPackages?.map((doc) => [doc[0], z.string()]))
@@ -62,7 +60,7 @@ const PackageForm = ({ handleClose, open, packages }) => {
                 name={doc[0]}
                 icon={FilterCenterFocusOutlined}
                 control={control}
-                type="text"
+                type="number"
                 placeholder={transformString(doc[0])}
                 label={`${transformString(doc[0])} *`}
                 errors={errors}
