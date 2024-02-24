@@ -63,7 +63,7 @@ import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
-
+import Form16 from "./pages/Form16/Form16";
 const App = () => {
   return (
     <Routes>
@@ -326,7 +326,7 @@ const App = () => {
         }
       />
       <Route
-        path="/organisation/view-payslip"
+        path="/organisation/:organisationId/view-payslip"
         element={
           <RequireAuth
             permission={[
@@ -344,6 +344,28 @@ const App = () => {
             ]}
           >
             <ViewPayslip1 />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/organisation/:organisationId/form-16"
+        element={
+          <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "Hr",
+              "Manager",
+              "Employee",
+            ]}
+          >
+            <Form16 />
           </RequireAuth>
         }
       />
