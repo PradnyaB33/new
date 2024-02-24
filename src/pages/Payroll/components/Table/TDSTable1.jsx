@@ -1,5 +1,6 @@
+import { CircularProgress } from "@mui/material";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 
@@ -47,7 +48,11 @@ const TDSTable1 = () => {
 
   const [year, setYear] = useState();
 
-  const { data: financialData } = useQuery({
+  const {
+    data: financialData,
+    isFetching,
+    isLoading,
+  } = useQuery({
     queryKey: ["salaryFinacialYear"],
     queryFn: async () => {
       try {
@@ -67,10 +72,6 @@ const TDSTable1 = () => {
   });
 
   const [tdsData, setTDSData] = useState(createTDSArray(financialData));
-
-  useEffect(() => {
-    createTDSArray(financialData);
-  }, [financialData, tdsData]);
 
   const totalHRA = tdsData.reduce((total, i) => total + Number(i.HRA), 0);
   const totalGrossSalary = tdsData.reduce(
@@ -92,83 +93,91 @@ const TDSTable1 = () => {
   };
 
   return (
-    <div className="mt-2 space-y-2">
-      <label htmlFor="year">Select Year: </label>
-      <input
-        type="number"
-        id="year"
-        name="year"
-        value={year}
-        onChange={handleYearChange}
-      />
+    <>
+      {isLoading || isFetching ? (
+        <div className="flex items-center justify-center w-full">
+          <CircularProgress />
+        </div>
+      ) : (
+        <div className="mt-2 space-y-2">
+          <label htmlFor="year">Select Year: </label>
+          <input
+            type="number"
+            id="year"
+            name="year"
+            value={year}
+            onChange={handleYearChange}
+          />
 
-      <table className="min-w-full bg-white border-gray-200 border-[.5px]  text-left !text-sm font-light">
-        <thead className="border-b bg-gray-200 font-bold">
-          <tr className="!font-semibold ">
-            <th scope="col" className="px-3 py-3">
-              Salary Breakup
-            </th>
-            <th scope="col" className="py-3">
-              Total
-            </th>
-            {tdsData.map((item) => (
-              <th scope="col" className="py-3">
-                {item.month}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="!font-medium h-20 border-b">
-            <td className="py-4 px-4">BASIC</td>
-            <td>{totalBasic}</td>
-            {tdsData.map((item) => (
-              <td>{item.Basic}</td>
-            ))}
-          </tr>
+          <table className="min-w-full bg-white border-gray-200 border-[.5px]  text-left !text-sm font-light">
+            <thead className="border-b bg-gray-200 font-bold">
+              <tr className="!font-semibold ">
+                <th scope="col" className="px-3 py-3">
+                  Salary Breakup
+                </th>
+                <th scope="col" className="py-3">
+                  Total
+                </th>
+                {tdsData.map((item) => (
+                  <th scope="col" className="py-3">
+                    {item.month}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="!font-medium h-20 border-b">
+                <td className="py-4 px-4">BASIC</td>
+                <td>{totalBasic}</td>
+                {tdsData.map((item) => (
+                  <td>{item.Basic}</td>
+                ))}
+              </tr>
 
-          <tr className="!font-medium h-20 border-b">
-            <td className="py-4 px-4">HRA</td>
-            <td>{totalHRA}</td>
+              <tr className="!font-medium h-20 border-b">
+                <td className="py-4 px-4">HRA</td>
+                <td>{totalHRA}</td>
 
-            {tdsData.map((item) => (
-              <td>{item.HRA}</td>
-            ))}
-          </tr>
-          <tr className="!font-medium h-20 border-b">
-            <td className="py-4 px-4">DA</td>
-            <td>{Math.round(totalDA)}</td>
-            {tdsData.map((item) => (
-              <td>{item.DA}</td>
-            ))}
-          </tr>
+                {tdsData.map((item) => (
+                  <td>{item.HRA}</td>
+                ))}
+              </tr>
+              <tr className="!font-medium h-20 border-b">
+                <td className="py-4 px-4">DA</td>
+                <td>{Math.round(totalDA)}</td>
+                {tdsData.map((item) => (
+                  <td>{item.DA}</td>
+                ))}
+              </tr>
 
-          <tr className="!font-medium h-10 border-b">
-            <td className="py-4 px-4 font-bold">Gross Salary</td>
-            <td className="font-bold">INR {totalGrossSalary}</td>
-            {tdsData.map((item) => (
-              <td className="font-bold">{item.GrossSalary}</td>
-            ))}
-          </tr>
+              <tr className="!font-medium h-10 border-b">
+                <td className="py-4 px-4 font-bold">Gross Salary</td>
+                <td className="font-bold">INR {totalGrossSalary}</td>
+                {tdsData.map((item) => (
+                  <td className="font-bold">{item.GrossSalary}</td>
+                ))}
+              </tr>
 
-          <tr className="!font-medium h-20  border-b">
-            <td className="py-4 px-4">PF</td>
-            <td className="pr-4">0</td>
-            {tdsData.map((item) => (
-              <td>{item.PF}</td>
-            ))}
-          </tr>
+              <tr className="!font-medium h-20  border-b">
+                <td className="py-4 px-4">PF</td>
+                <td className="pr-4">0</td>
+                {tdsData.map((item) => (
+                  <td>{item.PF}</td>
+                ))}
+              </tr>
 
-          <tr className="!font-medium  bg-neutral-600 text-white h-10 border-b">
-            <td className="py-4 px-4 font-bold">NetSalary</td>
-            <td className="font-bold">{totalNetSalary}</td>
-            {tdsData.map((item) => (
-              <td className="font-bold">{item.NetSalary}</td>
-            ))}
-          </tr>
-        </tbody>
-      </table>
-    </div>
+              <tr className="!font-medium  bg-neutral-600 text-white h-10 border-b">
+                <td className="py-4 px-4 font-bold">NetSalary</td>
+                <td className="font-bold">{totalNetSalary}</td>
+                {tdsData.map((item) => (
+                  <td className="font-bold">{item.NetSalary}</td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
+    </>
   );
 };
 
