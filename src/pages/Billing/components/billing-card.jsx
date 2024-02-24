@@ -23,6 +23,7 @@ import moment from "moment";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
+import useSubscriptionMutation from "../../../hooks/QueryHook/Subscription/mutation";
 import DescriptionBox from "./descripton-box";
 import PackageForm from "./manage-package-form";
 const StyledMenu = styled((props) => (
@@ -81,6 +82,8 @@ const BillingCard = ({ doc }) => {
     setAnchorEl(null);
   };
   const { data } = useSubscriptionGet({ organisationId: doc._id });
+  const { pauseSubscriptionMutation, resumeSubscriptionMutation } =
+    useSubscriptionMutation();
   console.log(`🚀 ~ file: billing-card.jsx:84 ~ data:`, data);
 
   const getMessage = () => {
@@ -164,14 +167,34 @@ const BillingCard = ({ doc }) => {
             open={open}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleClose} disableRipple>
-              <Pause />
-              Pause subscription
-            </MenuItem>
-            <MenuItem onClick={handleClose} disableRipple>
-              <PlayArrow />
-              Resume subscription
-            </MenuItem>
+            {data?.subscription?.status === "active" && (
+              <MenuItem
+                onClick={async () => {
+                  await pauseSubscriptionMutation.mutate(
+                    data?.subscription?.id
+                  );
+                  handleClose();
+                }}
+                disableRipple
+              >
+                <Pause />
+                Pause subscription
+              </MenuItem>
+            )}
+            {data?.subscription?.status === "paused" && (
+              <MenuItem
+                onClick={async () => {
+                  await resumeSubscriptionMutation.mutate(
+                    data?.subscription?.id
+                  );
+                  handleClose();
+                }}
+                disableRipple
+              >
+                <PlayArrow />
+                Resume subscription
+              </MenuItem>
+            )}
             <MenuItem
               onClick={() => {
                 setConfirmOpen(true);
@@ -268,13 +291,17 @@ const BillingCard = ({ doc }) => {
           <div className="bg-[#6578DB] flex justify-center items-start p-8 rounded-full animate-pulse">
             <ControlPoint className="text-white " fontSize="large" />
           </div>
+        ) : data?.subscription?.status === "paused" ? (
+          <div className="bg-[chocolate] flex justify-center items-start p-8 rounded-full animate-pulse">
+            <PlayArrow className="text-white " fontSize="large" />
+          </div>
         ) : data?.subscription?.status === "halted" ? (
           <div className="bg-[#F46B6B] flex justify-center items-start p-8 rounded-full animate-pulse">
             <QuestionMark className="text-white " fontSize="large" />
           </div>
         ) : null}
       </div>
-      {data?.organisation?.packages && (
+      {data?.organisation?.packages && data?.organisation && (
         <PackageForm
           open={confirmOpen}
           handleClose={() => {
@@ -282,6 +309,7 @@ const BillingCard = ({ doc }) => {
             handleClose();
           }}
           packages={data?.organisation?.packages}
+          organisation={data?.organisation}
         />
       )}
     </div>

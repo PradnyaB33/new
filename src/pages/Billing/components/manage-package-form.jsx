@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
+import useSubscriptionMutation from "../../../hooks/QueryHook/Subscription/mutation";
 import MiniPackagesForm from "./add-packages";
 const style = {
   position: "absolute",
@@ -22,9 +23,10 @@ const style = {
   height: 450,
   overflow: "auto",
 };
-const PackageForm = ({ handleClose, open, packages }) => {
+const PackageForm = ({ handleClose, open, packages, organisation }) => {
   const { handleAlert } = useContext(TestContext);
   const [mainPackages, setmainPackages] = useState(packages);
+  const { updateSubscriptionMutation } = useSubscriptionMutation();
 
   const [close, setClose] = useState(false);
   const packageSchema = z.object(
@@ -54,6 +56,10 @@ const PackageForm = ({ handleClose, open, packages }) => {
   const { errors, isDirty } = formState;
   function onSubmit(data) {
     console.log(`🚀 ~ file: manage-package-form.jsx:34 ~ data:`, data);
+    updateSubscriptionMutation.mutate({
+      subscriptionId: organisation?.subscriptionDetails?.id,
+      data,
+    });
   }
   return (
     <Modal

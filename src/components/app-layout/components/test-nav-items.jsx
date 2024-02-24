@@ -2,6 +2,7 @@ import {
   Business,
   Category,
   CircleNotifications,
+  CurrencyRupee,
   Dashboard,
   Description,
   Groups,
@@ -23,13 +24,13 @@ import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
+import WorkIcon from "@mui/icons-material/Work";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
-import WorkIcon from "@mui/icons-material/Work";
 
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
@@ -86,13 +87,6 @@ const TestNavItems = ({ toggleDrawer }) => {
         icon: <Category className=" !text-[1.2em] text-[#67748E]" />,
         isVisible: true,
         routes: [
-          // {
-          //   key: "orglist",
-          //   isVisible: false,
-          //   link: "/organizationList",
-          //   icon: <SwipeLeftAlt className=" !text-[1.2em] text-[#67748E]" />,
-          //   text: "Go to Organisation",
-          // },
           {
             key: "attendance",
             isVisible: true,
@@ -115,6 +109,13 @@ const TestNavItems = ({ toggleDrawer }) => {
             link: `/employee-profile`,
             icon: <Settings className="text-[#67748E]" />,
             text: "Account Settings",
+          },
+          {
+            key: "billing",
+            isVisible: ["Super-Admin"].includes(role) ? true : false,
+            link: `/billing`,
+            icon: <CurrencyRupee className="text-[#67748E]" />,
+            text: "Billing",
           },
         ],
       },
