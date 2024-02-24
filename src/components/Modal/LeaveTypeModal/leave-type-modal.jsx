@@ -151,7 +151,6 @@ const LeaveTypeModal = ({ handleClose, open, id, leaveType }) => {
                     }
                     label="is Active"
                   />
-                  // <Checkbox className="w-fit" {...field} />
                 )}
               />
             </FormControl>
