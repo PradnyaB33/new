@@ -41,6 +41,10 @@ const SignIn = () => {
 
   const handleRole = useMutation(
     (data) => {
+      console.log(
+        `🚀 ~ file: SignIn.jsx:47 ~ process.env.REACT_APP_API:`,
+        process.env.REACT_APP_API
+      );
       const res = axios.post(
         `${process.env.REACT_APP_API}/route/employee/changerole`,
         data
