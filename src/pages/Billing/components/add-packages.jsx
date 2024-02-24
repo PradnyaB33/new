@@ -14,7 +14,47 @@ const style = {
   p: 4,
   width: 450,
 };
-const MiniPackagesForm = ({ handleClose, open, setPackage }) => {
+const MiniPackagesForm = ({ handleClose, open, setPackage, billedPackage }) => {
+  const uniqueValues = new Set(billedPackage.map((item) => item[0]));
+  const filterArray = [
+    {
+      value: "basicPackageCount",
+      label: "Basic package 35₹ /employee",
+    },
+    {
+      value: "remotePunchingPackageCount",
+      label: "Remote punching 35₹ /employee",
+    },
+    {
+      value: "performancePackageCount",
+      label: "Performance evaluation 35₹ /employee",
+    },
+
+    {
+      value: "basicTrainingPackageCount",
+      label: "Basic training package 35₹ /employee",
+    },
+    {
+      value: "communicationPackageCount",
+      label: "Communication package 35₹ /employee",
+    },
+    {
+      value: "loanManagementPackageCount",
+      label: "Loan management package 35₹ /employee",
+    },
+    {
+      value: "cateringFoodPackageCount",
+      label: "Catering Food package 35₹ /employee",
+    },
+    {
+      value: "analyticsAndReportingPackageCount",
+      label: "Analytics and reporting package 35₹ /employee",
+    },
+    {
+      value: "skillMatrixPackageCount",
+      label: "Skill Matrix package 35₹ /employee",
+    },
+  ].filter((doc) => !uniqueValues.has(doc.value));
   const packageSchema = z.object({
     package: z.enum([
       "basicPackageCount",
@@ -24,17 +64,19 @@ const MiniPackagesForm = ({ handleClose, open, setPackage }) => {
       "communicationPackageCount",
       "loanManagementPackageCount",
       "cateringFoodPackageCount",
+      "skillMatrixPackageCount",
+      "analyticsAndReportingPackageCount",
     ]),
   });
-  let defaultValues = {};
 
-  const { control, formState, handleSubmit } = useForm({
-    defaultValues,
+  const { control, formState, handleSubmit, reset } = useForm({
+    defaultValues: { package: undefined },
     resolver: zodResolver(packageSchema),
   });
   const { errors, isDirty } = formState;
   function onSubmit(data) {
     setPackage((prevData) => [...prevData, [data.package, "0"]]);
+    reset();
     handleClose();
   }
   return (
@@ -64,45 +106,7 @@ const MiniPackagesForm = ({ handleClose, open, setPackage }) => {
             label="Select package  *"
             errors={errors}
             error={errors.package}
-            options={[
-              {
-                value: "basicPackageCount",
-                label: "Basic package 35₹ /employee",
-              },
-              {
-                value: "remotePunchingPackageCount",
-                label: "Remote punching 35₹ /employee",
-              },
-              {
-                value: "performancePackageCount",
-                label: "Performance evaluation 35₹ /employee",
-              },
-
-              {
-                value: "basicTrainingPackageCount",
-                label: "Basic training package 35₹ /employee",
-              },
-              {
-                value: "communicationPackageCount",
-                label: "Communication package 35₹ /employee",
-              },
-              {
-                value: "loanManagementPackageCount",
-                label: "Loan management package 35₹ /employee",
-              },
-              {
-                value: "cateringFoodPackageCount",
-                label: "Catering Food package 35₹ /employee",
-              },
-              {
-                value: "analyticsAndReportingPackageCount",
-                label: "Analytics and reporting package 35₹ /employee",
-              },
-              {
-                value: "skillMatrixPackageCount",
-                label: "Analytics and reporting package 35₹ /employee",
-              },
-            ]}
+            options={filterArray}
           />
           <Button variant="contained" disabled={!isDirty} type="submit">
             Add
@@ -114,14 +118,3 @@ const MiniPackagesForm = ({ handleClose, open, setPackage }) => {
 };
 
 export default MiniPackagesForm;
-function transformString(inputString, excludedWords = []) {
-  return inputString
-    .split(/(?=[A-Z])/)
-    .map((word) => {
-      console.log(`🚀 ~ file: manage-package-form.jsx:74 ~ word:`, word);
-      const formattedWord = word.charAt(0).toUpperCase() + word.slice(1);
-      return excludedWords.includes(formattedWord) ? "" : formattedWord;
-    })
-    .join(" ")
-    .trim();
-}
