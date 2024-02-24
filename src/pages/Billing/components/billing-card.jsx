@@ -291,6 +291,10 @@ const BillingCard = ({ doc }) => {
           <div className="bg-[#6578DB] flex justify-center items-start p-8 rounded-full animate-pulse">
             <ControlPoint className="text-white " fontSize="large" />
           </div>
+        ) : data?.subscription?.status === "paused" ? (
+          <div className="bg-[chocolate] flex justify-center items-start p-8 rounded-full animate-pulse">
+            <PlayArrow className="text-white " fontSize="large" />
+          </div>
         ) : data?.subscription?.status === "halted" ? (
           <div className="bg-[#F46B6B] flex justify-center items-start p-8 rounded-full animate-pulse">
             <QuestionMark className="text-white " fontSize="large" />
