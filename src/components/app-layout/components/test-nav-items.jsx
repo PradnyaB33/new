@@ -72,10 +72,10 @@ const TestNavItems = ({ toggleDrawer }) => {
               role === "Manager"
                 ? `organisation/${orgId}/dashboard/manager-dashboard`
                 : role === "Hr"
-                  ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                  : role === "Employee"
-                    ? "/organisation/dashboard/employee-dashboard"
-                    : "/organizationList",
+                ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                : role === "Employee"
+                ? "/organisation/dashboard/employee-dashboard"
+                : "/organizationList",
             icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
             text: "Dashboard",
           },
@@ -106,9 +106,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "shiftManagement",
             isVisible: true,
             link: "/shift-management",
-            icon: (
-              <WorkIcon className=" !text-[1.2em] text-[#67748E]" />
-            ),
+            icon: <WorkIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Shift Management",
           },
           {
@@ -151,7 +149,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "payslip",
             isVisible: true,
-            link: `organisation/view-payslip`,
+            link: `/organisation/${orgId}/view-payslip`,
             icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Pay Slip",
           },
@@ -165,7 +163,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "form-16",
             isVisible: true,
-            link: "/form-16",
+            link: `/organisation/${orgId}/form-16`,
             icon: <Description className=" !text-[1.2em] text-[#67748E]" />,
             text: "Form-16",
           },
