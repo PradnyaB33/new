@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Button,
@@ -8,6 +8,7 @@ import {
   FormControlLabel,
   Radio,
 } from "@mui/material";
+import { TestContext } from "../../../State/Function/Main";
 
 const style = {
   position: "absolute",
@@ -18,22 +19,97 @@ const style = {
   p: 4,
 };
 
-const Form16UploadModal = ({ handleClose, open }) => {
-  const [selectedYear, setSelectedYear] = useState("current");
-  const [selectedFile, setSelectedFile] = useState(null);
+const Form16UploadModal = ({
+  handleClose,
+  open,
+  organizationId,
+  employeeId,
+}) => {
+  const { handleAlert } = useContext(TestContext);
+  // state
+  const [year, setYear] = useState("current");
+  const [file, setFile] = useState(null);
 
+  // user is able to change the  year from current to previous
   const handleYearChange = (event) => {
-    setSelectedYear(event.target.value);
+    setYear(event.target.value);
   };
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    const selectedFile = event.target.files[0];
+    const fileSizeLimit = 150 * 1024; // 50kb in bytes
+
+    if (selectedFile && selectedFile.size > fileSizeLimit) {
+      handleAlert(true, "error", "File size exceeds the limit of 50kb.");
+    } else {
+      setFile(selectedFile);
+    }
   };
 
-  console.log(selectedFile);
+  const handleUpload = async () => {
+    try {
+      // Check if file is already uploaded for the given organization and employee
+      const response = await fetch(
+        `${process.env.REACT_APP_API}/route/check/form16`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            organizationId,
+            employeeId,
+            year,
+          }),
+        }
+      );
+      const data = await response.json();
 
-  const handleUpload = () => {
-    handleClose();
+      if (data.exists) {
+        // File already exists, prompt user to confirm before proceeding
+        const confirmed = window.confirm(
+          "Form 16 file is already uploaded. Do you want to upload it again?"
+        );
+        if (!confirmed) {
+          handleClose();
+          return;
+        }
+      }
+    } catch (error) {
+      console.error("Error checking Form 16 file:", error);
+      handleAlert(error);
+      return;
+    }
+
+    // Proceed with file upload if not already uploaded
+    if (!file) {
+      handleAlert(true, "success", "Please select the file to upload.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("organizationId", organizationId);
+    formData.append("employeeId", employeeId);
+    formData.append("year", year);
+    formData.append("form16FileUrl", file);
+
+    // Make a POST request to upload the form
+    fetch(`${process.env.REACT_APP_API}/route/add/form16`, {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => {
+        if (response.ok) {
+          handleAlert(true, "success", "Form 16 file uploaded Successfully.");
+          handleClose();
+        } else {
+          handleAlert("Error uploading Form 16.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error uploading Form 16:", error);
+        handleAlert(error);
+      });
   };
 
   return (
@@ -59,7 +135,7 @@ const Form16UploadModal = ({ handleClose, open }) => {
               <RadioGroup
                 aria-label="year"
                 name="year"
-                value={selectedYear}
+                value={year}
                 onChange={handleYearChange}
               >
                 <FormControlLabel

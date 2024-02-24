@@ -216,6 +216,7 @@ const Form16 = () => {
                           className="cursor-pointer"
                         />
                         <Menu
+                          elevation={2}
                           anchorEl={anchorEl}
                           open={Boolean(anchorEl)}
                           onClose={handleCloseIcon}
@@ -350,9 +351,9 @@ const Form16 = () => {
       {/* for upload*/}
       <Form16UploadModal
         handleClose={handleClose}
-        organisationId={organisationId}
+        organizationId={organisationId}
         open={uploadModalOpen}
-        empId={empId}
+        employeeId={empId}
       />
     </>
   );
