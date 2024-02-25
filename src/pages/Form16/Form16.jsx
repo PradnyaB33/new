@@ -11,10 +11,12 @@ import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import { MoreVert } from "@mui/icons-material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import DeleteIcon from "@mui/icons-material/Delete";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import Tooltip from "@mui/material/Tooltip";
 import Form16UploadModal from "../../components/Modal/Form16Modal/Form16UploadModal";
+import Form16Download from "../../components/Modal/Form16Modal/Form16Download";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Form16DeleteModal from "../../components/Modal/Form16Modal/Form16DeleteModal";
 const Form16 = () => {
   // state and other thing
   const { cookies } = useContext(UseContext);
@@ -81,7 +83,7 @@ const Form16 = () => {
     setAnchorEl(null);
   };
 
-  // Modal states and function for edit
+  // Modal states and function for upload
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [empId, setEmpId] = useState(null);
 
@@ -90,11 +92,37 @@ const Form16 = () => {
     setUploadModalOpen(true);
     setEmpId(empId);
   };
+  //   for close
   const handleClose = () => {
     setEmpId(null);
     setUploadModalOpen(false);
   };
 
+  // Modal states and function for download or view form 16
+  const [downloadModalOpen, setDownLoadModalOpen] = useState(false);
+  // for open
+  const handleDownLoadModalOpen = (empId) => {
+    setDownLoadModalOpen(true);
+    setEmpId(empId);
+  };
+  //   for close
+  const handleDownLoadModalClose = () => {
+    setEmpId(null);
+    setDownLoadModalOpen(false);
+  };
+
+  // Modal states and function for delete form 16
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  // for open
+  const handleDeleteModalOpen = (empId) => {
+    setDeleteModalOpen(true);
+    setEmpId(empId);
+  };
+  //   for close
+  const handleDeleteModalClose = () => {
+    setEmpId(null);
+    setDeleteModalOpen(false);
+  };
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
@@ -236,7 +264,9 @@ const Form16 = () => {
                             </MenuItem>
                           </Tooltip>
                           <Tooltip title="Button for downloading or view  form 16">
-                            <MenuItem>
+                            <MenuItem
+                              onClick={() => handleDownLoadModalOpen(item._id)}
+                            >
                               <GetAppIcon
                                 color="primary"
                                 aria-label="edit"
@@ -247,13 +277,15 @@ const Form16 = () => {
                               />
                             </MenuItem>
                           </Tooltip>
-                          <Tooltip title="Button for deleting form 16">
-                            <MenuItem>
+                          <Tooltip title="Button for deleting  form 16">
+                            <MenuItem
+                              onClick={() => handleDeleteModalOpen(item._id)}
+                            >
                               <DeleteIcon
                                 color="primary"
                                 aria-label="edit"
                                 style={{
-                                  color: "#4caf50",
+                                  color: "#2196f3",
                                   marginRight: "10px",
                                 }}
                               />
@@ -353,6 +385,22 @@ const Form16 = () => {
         handleClose={handleClose}
         organizationId={organisationId}
         open={uploadModalOpen}
+        employeeId={empId}
+      />
+
+      {/* for download or view  */}
+      <Form16Download
+        handleClose={handleDownLoadModalClose}
+        organizationId={organisationId}
+        open={downloadModalOpen}
+        employeeId={empId}
+      />
+
+      {/* for delete form 16 */}
+      <Form16DeleteModal
+        handleClose={handleDeleteModalClose}
+        organizationId={organisationId}
+        open={deleteModalOpen}
         employeeId={empId}
       />
     </>
