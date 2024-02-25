@@ -1,5 +1,5 @@
-import React from "react";
 import { Box, Button, Modal } from "@mui/material";
+import React from "react";
 const style = {
   position: "absolute",
   top: "50%",
@@ -42,7 +42,10 @@ const Form16Download = ({ handleClose, open, employeeId, organizationId }) => {
             height="500px"
             data="https://aegis-dev.s3.ap-south-1.amazonaws.com/65d86909299bc72288c0b994-salaryslip%20%289%29.pdf"
             className="w-full "
-          />
+            title="main"
+          >
+            pdf
+          </object>
 
           <div className="px-5 space-y-4 mt-4">
             <div className="flex gap-4  mt-4 mr-4 justify-end mb-4 ">
