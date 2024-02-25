@@ -31,25 +31,30 @@ const AppDatePicker = ({
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const arr = data;
-  const arrayOfData = arr && arr.requests ? arr.requests : [];
+  console.log(Delete);
+  console.log(update);
 
   useEffect(() => {
+    const arrayOfData = arr && arr.requests ? arr.requests : [];
     const newArr = arrayOfData.filter((item) => {
       return item._id !== disabledShiftId;
     });
     setNewData(newArr);
-  }, [arr]);
+  }, [disabledShiftId, arr]);
 
   const getLatestShifts = async () => {
     try {
-      const resp = await axios.get(
-        `${process.env.REACT_APP_API}/route/shiftApply/get`
-      );
-      console.log(resp);
+      const resp = await axios.get(`${process.env.REACT_APP_API}/route/shiftApply/get`, {
+        headers: {
+          Authorization: authToken
+        }
+      })
+      console.log(resp.data.requests);
+      setNewData(resp.data.requests)
     } catch (error) {
       console.log(error.message);
     }
-  };
+  }
 
   const { data: data2 } = useQuery("employee-disable-weekends", async () => {
     const response = await axios.get(
@@ -100,6 +105,7 @@ const AppDatePicker = ({
 
   const handleSelectSlot = ({ start, end }) => {
     console.log(selectedLeave);
+    getLatestShifts()
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
     const currentDate = moment(selectedStartDate);
@@ -118,20 +124,15 @@ const AppDatePicker = ({
 
       currentDate.add(1, "day");
     }
-    if (data && data.requests && Array.isArray(data.requests)) {
-      const isOverlapWithData = data.requests.some((event) => {
+    if (newData && Array.isArray(newData)) {
+      const isOverlapWithData = newData.some(event => {
         const eventStartDate = moment(event.start);
         const eventEndDate = moment(event.end);
 
         return (
-          // Check if selected slot starts or ends within existing event
-          (moment(start).isSameOrAfter(eventStartDate) &&
-            moment(start).isBefore(eventEndDate)) ||
-          (moment(end).isAfter(eventStartDate) &&
-            moment(end).isSameOrBefore(eventEndDate)) ||
-          // Check if existing event is within selected slot
-          (moment(start).isSameOrBefore(eventStartDate) &&
-            moment(end).isSameOrAfter(eventEndDate))
+          (moment(start).isSameOrAfter(eventStartDate) && moment(start).isBefore(eventEndDate)) ||
+          (moment(end).isAfter(eventStartDate) && moment(end).isSameOrBefore(eventEndDate)) ||
+          (moment(start).isSameOrBefore(eventStartDate) && moment(end).isSameOrAfter(eventEndDate))
         );
       });
 
@@ -241,31 +242,28 @@ const AppDatePicker = ({
   const handleDelete = async () => {
     try {
       if (selectedLeave._id) {
-        await axios.delete(
-          `${process.env.REACT_APP_API}/route/shiftApply/delete/${selectedLeave._id}`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
+        await axios.delete(`${process.env.REACT_APP_API}/route/shiftApply/delete/${selectedLeave._id}`, {
+          headers: {
+            Authorization: authToken
           }
-        );
+        });
         // Update newAppliedLeaveEvents state after successful deletion
-        setNewAppliedLeaveEvents((prevEvents) =>
-          prevEvents.filter((event) => event._id !== selectedLeave._id)
+        setNewAppliedLeaveEvents(prevEvents =>
+          prevEvents.filter(event => event._id !== selectedLeave._id)
         );
+        getLatestShifts()
         setSelectedLeave(null); // Reset selectedLeave state
         setDelete(false); // Toggle delete state
         console.log("Shift deleted successfully");
       } else if (selectedLeave) {
         // If selectedLeave does not have an _id, filter it out from newAppliedLeaveEvents
-        setNewAppliedLeaveEvents((prevEvents) =>
-          prevEvents.filter(
-            (event) =>
-              event.title !== selectedLeave.title ||
-              event.start !== selectedLeave.start ||
-              event.end !== selectedLeave.end
+        setNewAppliedLeaveEvents(prevEvents =>
+          prevEvents.filter(event =>
+            event.title !== selectedLeave.title ||
+            event.start !== selectedLeave.start ||
+            event.end !== selectedLeave.end
           )
-        );
+        )
       } else {
         console.log("This operation cannot be done");
       }
@@ -273,6 +271,9 @@ const AppDatePicker = ({
       console.log("Error deleting shift:", error);
     }
   };
+
+
+
 
   useEffect(() => {
     // Add click event listener when component mounts

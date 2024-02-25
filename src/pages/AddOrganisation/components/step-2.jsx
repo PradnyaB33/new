@@ -4,21 +4,29 @@ import Step2MiniForm from "./step-2-mini-form";
 
 const Step2 = ({ nextStep }) => {
   const {
-    remotePunching,
-    performanceManagement,
-    analyticsAndReporting,
-    skillMatrices,
+    remotePunchingPackage,
+    performancePackage,
+    basicTrainingPackage,
+    communicationPackage,
+    loanManagementPackage,
+    cateringFoodPackage,
+    analyticsAndReportingPackage,
+    skillMatrixPackage,
   } = useOrg();
 
   return (
     <div>
-      {(remotePunching === false || remotePunching === true) && (
+      {(remotePunchingPackage === false || remotePunchingPackage === true) && (
         <Step2MiniForm
           {...{
-            remotePunching,
-            performanceManagement,
-            analyticsAndReporting,
-            skillMatrices,
+            remotePunchingPackage,
+            performancePackage,
+            basicTrainingPackage,
+            communicationPackage,
+            loanManagementPackage,
+            cateringFoodPackage,
+            analyticsAndReportingPackage,
+            skillMatrixPackage,
             nextStep,
           }}
         />

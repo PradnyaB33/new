@@ -9,12 +9,10 @@ import SwipeableTemporaryDrawer from "./components/app-layout/swipable-drawer";
 import AppAlert from "./utils/AppAlert/AppAlert";
 import AppLoader from "./utils/AppLoader/AppLoader";
 import TopLoadingBar from "./utils/TopLoadingBar/TopLoadingBar";
-import { useTransition } from "react";
 
 function App() {
   const location = useLocation();
   const isNavEnabled = ["/sign-in", "/sign-up", "/terms-and-conditions"];
-  const {t} = useTransition()
 
   return (
     <>

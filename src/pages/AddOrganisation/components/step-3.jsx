@@ -1,12 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CorporateFare } from "@mui/icons-material";
+import { CorporateFare, PeopleAltOutlined } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import useOrg from "../../../State/Org/Org";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import { PeopleAltOutlined } from "@mui/icons-material";
 // Assuming you have a schema for Step 3 data
 export function convertCamelToTitle(packageName) {
   return packageName.replace(/([A-Z])/g, " $1").replace(/^./, function (str) {
@@ -15,18 +14,27 @@ export function convertCamelToTitle(packageName) {
 }
 const Step3 = ({ nextStep }) => {
   const {
-    remotePunching,
-    performanceManagement,
-    analyticsAndReporting,
-    skillMatrices,
+    remotePunchingPackage,
+    performancePackage,
+    basicTrainingPackage,
+    communicationPackage,
+    loanManagementPackage,
+    cateringFoodPackage,
+    analyticsAndReportingPackage,
+    skillMatrixPackage,
     setStep3Data,
     data,
   } = useOrg();
+
   const universalSelection = {
-    remotePunching,
-    performanceManagement,
-    analyticsAndReporting,
-    skillMatrices,
+    remotePunchingPackage,
+    performancePackage,
+    basicTrainingPackage,
+    communicationPackage,
+    loanManagementPackage,
+    cateringFoodPackage,
+    analyticsAndReportingPackage,
+    skillMatrixPackage,
   };
   const step3Schema = z.object({
     ...Object.fromEntries(
@@ -34,7 +42,7 @@ const Step3 = ({ nextStep }) => {
         .filter((packageName) => universalSelection[packageName])
         .map((packageName) => [`${packageName}Count`, z.string().min(1)])
     ),
-    memberCount: z.string().min(1),
+    basicPackageCount: z.string().min(1),
   });
 
   const { control, handleSubmit, formState } = useForm({
@@ -42,10 +50,9 @@ const Step3 = ({ nextStep }) => {
     defaultValues: data,
   });
   const { errors } = formState;
+  console.log(`🚀 ~ file: step-3.jsx:53 ~ errors:`, errors);
   const onSubmit = (data) => {
-    console.log(`🚀 ~ file: step-3.jsx:46 ~ data:`, data);
     setStep3Data(data);
-
     nextStep();
   };
 
@@ -59,14 +66,14 @@ const Step3 = ({ nextStep }) => {
         noValidate
       >
         <AuthInputFiled
-          name={`memberCount`}
+          name={`basicPackageCount`}
           icon={PeopleAltOutlined}
           control={control}
           type="number"
           placeholder={`How many member will be in your organisation`}
           label={`Organisation Member Count *`}
           errors={errors}
-          error={errors.memberCount}
+          error={errors.basicPackageCount}
         />
         {Object.keys(universalSelection)
           .filter((packageName) => universalSelection[packageName])

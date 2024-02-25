@@ -38,7 +38,10 @@ const SignIn = () => {
     }
     // eslint-disable-next-line
   }, []);
-
+  console.log(
+    `🚀 ~ file: SignIn.jsx:47 ~ process.env.REACT_APP_API:`,
+    process.env.REACT_APP_API
+  );
   const handleRole = useMutation(
     (data) => {
       const res = axios.post(
