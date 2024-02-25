@@ -274,23 +274,23 @@ const TDSTable2 = () => {
             <div className=" my-2 p-4">
               <h1 className="text-xl"> {Object.keys(item)[0]}</h1>
             </div>
-            {itemIndex === 1 && item.netValue1 && (
+            {itemIndex === 1 && (
               <div className="grid bg-white border-[.5px] border-gray-200 grid-cols-6 gap-4 p-4">
                 <div>
                   <h1 className="text-gray-600">Net Annual Value :</h1>
-                  <p className="text-xl">INR {item.netValue1}</p>
+                  <p className="text-xl">INR {item?.netValue1}</p>
                 </div>
                 <div>
                   <h1 className="text-gray-600">
                     Less : Standard Deduction :{" "}
                   </h1>
-                  <p className="text-xl">INR {item.standard1}</p>
+                  <p className="text-xl">INR {item?.standard1}</p>
                 </div>
                 <div className="w-max">
                   <h1 className="text-gray-600">
                     Net Income / (Loss) from this House
                   </h1>
-                  <p className="text-xl">INR {item.netHouseTotal1}</p>
+                  <p className="text-xl">INR {item?.netHouseTotal1}</p>
                 </div>
               </div>
             )}

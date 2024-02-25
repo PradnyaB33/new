@@ -23,6 +23,8 @@ const AuthInputFiled = ({
   disabled,
   value,
   wrapperMessage,
+  min,
+  max,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
 

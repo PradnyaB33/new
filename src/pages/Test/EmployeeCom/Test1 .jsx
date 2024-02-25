@@ -76,7 +76,10 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
       .string()
       .min(3, { message: "min 3 character required" })
       .regex(/^[a-zA-Z]+$/, { message: "Only character allowed" }),
-    adhar_card_number: z.string(),
+    adhar_card_number: z
+      .string()
+      .regex(/^(?:0|[1-9]\d*)$/, { message: "aadhar number cant be negative" })
+      .max(12, { message: "min 3 character required" }),
     pan_card_number: z.string(),
     bank_account_no: z.string(),
   });
@@ -143,7 +146,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             control={control}
             type="date"
             placeholder="dd-mm-yyyy"
-            label="Date of Birth *"
+            label="Date Of Birth *"
             errors={errors}
             error={errors.date_of_birth}
           />
@@ -167,7 +170,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             control={control}
             type="number"
             placeholder="1234567890"
-            label="Contact 1 *"
+            label="Contact *"
             errors={errors}
             error={errors.phone_number}
           />
@@ -179,7 +182,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           control={control}
           type="textarea"
           placeholder="Address"
-          label="Permanent Address *"
+          label="Current Address *"
           errors={errors}
           error={errors.address}
         />
@@ -246,7 +249,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             icon={AccountBox}
             control={control}
             type="number"
-            placeholder="Aadhaar No"
+            placeholder="Aadhar No"
             label="Employee Aadhar No *"
             errors={errors}
             error={errors.adhar_card_number}
@@ -256,7 +259,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             icon={AccountBox}
             control={control}
             type="text"
-            placeholder="Employee Pan No"
+            placeholder="Employee PAN No"
             label="Employee Pan No *"
             errors={errors}
             error={errors.pan_card_number}
