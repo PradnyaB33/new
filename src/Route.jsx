@@ -24,6 +24,7 @@ import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
 import DeleteEmployee from "./pages/Employee/DeleteEmployee";
 import EmployeeList from "./pages/Employee/EmployeeList";
+import Form16 from "./pages/Form16/Form16";
 import Home from "./pages/Home/Home";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
@@ -59,11 +60,11 @@ import DepartmentTest from "./pages/Test2/DepartmentTest";
 import EmployeeProfile from "./pages/UserProfile/UserProfile";
 import ViewPayslip1 from "./pages/ViewPayslip/ViewPayslip1";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
+import AddDelegate from "./pages/add-delegate/AddDelegate";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
-import Form16 from "./pages/Form16/Form16";
 const App = () => {
   return (
     <Routes>
@@ -78,6 +79,14 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/employeeTest"
         element={<EmployeeTest />}
+      />
+      <Route
+        path="/add-delegate/"
+        element={
+          <RequireAuth permission={["Super-Admin"]}>
+            <AddDelegate />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/departmentTest"
