@@ -673,8 +673,7 @@ function RequireAuth({ children, permission }) {
 }
 function RequireSubscription({ children }) {
   const { organisationId } = useParams();
-  const { subscriptionDetails, subscriptionLoading, subscriptionFetching } =
-    useSubscription(organisationId);
+  const { subscriptionDetails } = useSubscription(organisationId);
 
   if (
     subscriptionDetails?.subscription?.status ===
