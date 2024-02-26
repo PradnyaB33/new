@@ -40,7 +40,6 @@ const AppDatePicker = ({
     return response.data;
   });
   const handleSelectEvent = (event) => {
-    console.log(`🚀 ~ file: date-picker.jsx:43 ~ event:`, event);
     setLeaveText(
       `The application for ${new Date(event.start).toDateString()} is ${
         event?.status
