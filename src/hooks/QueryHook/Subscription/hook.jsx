@@ -4,7 +4,6 @@ import { useQuery } from "react-query";
 import useGetUser from "../../Token/useUser";
 
 const useSubscriptionGet = ({ organisationId }) => {
-  console.log(`🚀 ~ file: hook.jsx:7 ~ organisationId:`, organisationId);
   const { authToken } = useGetUser();
   const getSubscription = async () => {
     const response = await axios.get(
