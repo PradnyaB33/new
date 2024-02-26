@@ -10,7 +10,6 @@ import {
   TodayOutlined,
 } from "@mui/icons-material";
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
-import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
@@ -31,6 +30,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
     bank_account_no,
     date_of_birth,
   } = useEmpState();
+
+  console.log("test");
 
   const isAtLeastNineteenYearsOld = (value) => {
     const currentDate = new Date();
@@ -78,10 +79,21 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
       .regex(/^[a-zA-Z]+$/, { message: "Only character allowed" }),
     adhar_card_number: z
       .string()
-      .regex(/^(?:0|[1-9]\d*)$/, { message: "aadhar number cant be negative" })
-      .max(12, { message: "min 3 character required" }),
-    pan_card_number: z.string(),
-    bank_account_no: z.string(),
+      .length(12, { message: "Aadhar number must be 12 digits." })
+      .regex(/^(?:0|[1-9]\d*)$/, {
+        message: "Aadhar number cannot be negative.",
+      }),
+    pan_card_number: z
+      .string()
+      .regex(/^([A-Z]){5}([0-9]){4}([A-Z]){1}$/, {
+        message: "Invalid PAN No.",
+      })
+      .regex(/^[^*@]+$/, {
+        message: "A PAN No cannot contain a special character, e.g., *,#.",
+      }),
+    bank_account_no: z.string().regex(/^(?:0|[1-9]\d*)$/, {
+      message: "Bank number cannot be negative.",
+    }),
   });
 
   const { control, formState, handleSubmit } = useForm({
@@ -104,7 +116,6 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
   const { errors } = formState;
 
   const onSubmit = async (data) => {
-    console.log(`🚀 ~ data:`, data);
     setStep1Data(data);
     nextStep();
   };

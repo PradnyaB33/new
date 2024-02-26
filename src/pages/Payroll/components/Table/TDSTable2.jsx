@@ -9,6 +9,7 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
+import useIncomeHouse from "../../../../hooks/IncomeTax/useIncomeHouse";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
 
@@ -17,6 +18,7 @@ const TDSTable2 = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const queryClient = useQueryClient();
+  const { setTotalHeads } = useIncomeHouse();
 
   const [tableData, setTableData] = useState([
     {
@@ -81,9 +83,12 @@ const TDSTable2 = () => {
           status: "Not Submitted",
         },
       ],
-      netValue1: 0,
-      standard1: 0,
-      netHouseTotal1: 0,
+
+      secondData2: {
+        netValue1: 0,
+        standard1: 0,
+        netHouseTotal1: 0,
+      },
     },
     {
       "(C) Let out property (Enter name of Property)": [
@@ -107,6 +112,11 @@ const TDSTable2 = () => {
           status: "Not Submitted",
         },
       ],
+      secondData3: {
+        netValue1: 0,
+        standard1: 0,
+        netHouseTotal1: 0,
+      },
     },
   ]);
 
@@ -135,6 +145,7 @@ const TDSTable2 = () => {
       // Extracting relevant data from the backend response
       const sectionData = res?.incomeFromHouse?.section;
 
+      setTotalHeads(res.totalHeads.toFixed(2));
       // Updating the tableData state based on the backend response
       const updatedTableData = tableData.map((section) => {
         const sectionName = Object.keys(section)[0];
@@ -143,14 +154,12 @@ const TDSTable2 = () => {
         );
 
         if (matchingSection) {
-          // Update the investmentType array directly in the existing section
           section[sectionName].forEach((item) => {
             const matchingItem = matchingSection.investmentType.find(
               (originalItem) => originalItem.name === item.name
             );
 
             if (matchingItem) {
-              // Update the properties of the existing item
               Object.assign(item, matchingItem);
             }
           });
@@ -162,9 +171,16 @@ const TDSTable2 = () => {
       const tableDataWithMaximumAllowable = updatedTableData.map((data) => ({
         ...data,
         maximumAllowable: res?.firstSectionDeclarationSum,
-        netValue1: res?.netValueSecondProperty,
-        standard1: res?.standardDeduction,
-        netHouseTotal1: res?.actualDeduction,
+        secondData2: {
+          netValue1: res.secondData2.netValue,
+          standard1: res.secondData2.deductedAmount,
+          netHouseTotal1: res.secondData2.ActualDeductedValue,
+        },
+        secondData3: {
+          netValue1: res.secondData3.netValue,
+          standard1: res.secondData3.deductedAmount,
+          netHouseTotal1: res.secondData3.ActualDeductedValue,
+        },
       }));
 
       // Update state with tableData including maximumAllowable
@@ -257,10 +273,8 @@ const TDSTable2 = () => {
     setEditStatus({ [index]: null });
   };
 
-  console.log(tableData);
-
   return (
-    <div className="mt-2 space-y-2">
+    <div className="mt-2 space-y-4">
       {incomeHouseLoading || isFetching || !isFetched ? (
         <div className="flex items-center justify-center w-full">
           <CircularProgress />
@@ -278,19 +292,51 @@ const TDSTable2 = () => {
               <div className="grid bg-white border-[.5px] border-gray-200 grid-cols-6 gap-4 p-4">
                 <div>
                   <h1 className="text-gray-600">Net Annual Value :</h1>
-                  <p className="text-xl">INR {item?.netValue1}</p>
+                  <p className="text-xl">
+                    INR {item?.secondData2?.netValue1.toFixed(2)}
+                  </p>
                 </div>
                 <div>
                   <h1 className="text-gray-600">
                     Less : Standard Deduction :{" "}
                   </h1>
-                  <p className="text-xl">INR {item?.standard1}</p>
+                  <p className="text-xl">
+                    INR {item?.secondData2.standard1?.toFixed(2)}
+                  </p>
                 </div>
                 <div className="w-max">
                   <h1 className="text-gray-600">
                     Net Income / (Loss) from this House
                   </h1>
-                  <p className="text-xl">INR {item?.netHouseTotal1}</p>
+                  <p className="text-xl">
+                    INR {item?.secondData2.netHouseTotal1?.toFixed(2)}
+                  </p>
+                </div>
+              </div>
+            )}
+            {itemIndex === 2 && (
+              <div className="grid bg-white border-[.5px] border-gray-200 grid-cols-6 gap-4 p-4">
+                <div>
+                  <h1 className="text-gray-600">Net Annual Value :</h1>
+                  <p className="text-xl">
+                    INR {item?.secondData3?.netValue1.toFixed(2)}
+                  </p>
+                </div>
+                <div>
+                  <h1 className="text-gray-600">
+                    Less : Standard Deduction :{" "}
+                  </h1>
+                  <p className="text-xl">
+                    INR {item?.secondData3.standard1?.toFixed(2)}
+                  </p>
+                </div>
+                <div className="w-max">
+                  <h1 className="text-gray-600">
+                    Net Income / (Loss) from this House
+                  </h1>
+                  <p className="text-xl">
+                    INR {item?.secondData3.netHouseTotal1?.toFixed(2)}
+                  </p>
                 </div>
               </div>
             )}
@@ -363,7 +409,7 @@ const TDSTable2 = () => {
                               />
                             </div>
                           ) : (
-                            "INR " + ele.property1
+                            ele.property1 && "INR " + ele?.property1
                           )}
                         </td>
                         <td className="px-2 text-left ">
@@ -382,7 +428,7 @@ const TDSTable2 = () => {
                               />
                             </div>
                           ) : (
-                            "INR " + ele.property2
+                            ele.property2 && "INR " + ele.property2
                           )}
                         </td>
                       </>
@@ -405,7 +451,7 @@ const TDSTable2 = () => {
                           />
                         </div>
                       ) : (
-                        "INR " + ele.declaration
+                        "INR " + ele.declaration?.toFixed(2)
                       )}
                     </td>
                     <td className=" text-left ">
@@ -484,7 +530,7 @@ const TDSTable2 = () => {
                     <td className="px-2 text-left "></td>
                     <td className="px-2 text-left "></td>
                     <td className="px-2 text-left text-lg font-semibold ">
-                      INR {item.maximumAllowable}
+                      INR {item.maximumAllowable?.toFixed(2)}
                     </td>
                     <td className="px-2 text-left "></td>
                   </tr>
