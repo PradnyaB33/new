@@ -31,6 +31,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
     date_of_birth,
   } = useEmpState();
 
+  console.log("test");
+
   const isAtLeastNineteenYearsOld = (value) => {
     const currentDate = new Date();
     const dob = new Date(value);
