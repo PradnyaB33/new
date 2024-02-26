@@ -40,9 +40,33 @@ const Step3 = ({ nextStep }) => {
     ...Object.fromEntries(
       Object.keys(universalSelection)
         .filter((packageName) => universalSelection[packageName])
-        .map((packageName) => [`${packageName}Count`, z.string().min(1)])
+        .map((packageName) => [
+          `${packageName}Count`,
+          z.string().refine(
+            (doc) => {
+              if (Number(doc) > 1) {
+                return true;
+              } else {
+                return false;
+              }
+            },
+            { message: "Number should be greater than 1" }
+          ),
+        ])
     ),
-    basicPackageCount: z.string().min(1),
+    basicPackageCount: z
+      .string()
+      .min(1)
+      .refine(
+        (doc) => {
+          if (Number(doc) > 1) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+        { message: "Number should be greater than 1" }
+      ),
   });
 
   const { control, handleSubmit, formState } = useForm({
