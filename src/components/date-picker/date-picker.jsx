@@ -24,10 +24,10 @@ const AppDatePicker = ({
 }) => {
   const localizer = momentLocalizer(moment);
   const [Delete, setDelete] = useState(false);
-  console.log(data);
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
+  const [leaveText, setLeaveText] = useState("");
   const authToken = cookies["aegis"];
   const { data: data2 } = useQuery("employee-disable-weekends", async () => {
     const response = await axios.get(
@@ -40,6 +40,12 @@ const AppDatePicker = ({
     return response.data;
   });
   const handleSelectEvent = (event) => {
+    console.log(`🚀 ~ file: date-picker.jsx:43 ~ event:`, event);
+    setLeaveText(
+      `The application for ${new Date(event.start).toDateString()} is ${
+        event?.status
+      } in state`
+    );
     setSelectedLeave(event);
     setCalendarOpen(true);
     if (event.title === "Selected Leave") {
@@ -70,25 +76,22 @@ const AppDatePicker = ({
     return {};
   };
 
-  const checkOverlappingMistake = (
-    array1,
-    selectedStartDate,
-    selectedEndDate
-  ) => {
-    array1.some(
-      (event) =>
-        (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
-          selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
-        (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
-          selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
-        (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
-          selectedEndDate.isAfter(moment(event.end).startOf("day")))
-    );
-  };
-  console.log(
-    `🚀 ~ file: date-picker.jsx:87 ~ checkOverlappingMistake:`,
-    checkOverlappingMistake
-  );
+  // const checkOverlappingMistake = (
+  //   array1,
+  //   selectedStartDate,
+  //   selectedEndDate
+  // ) => {
+  //   array1.some(
+  //     (event) =>
+  //       (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
+  //         selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
+  //       (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
+  //         selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
+  //       (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
+  //         selectedEndDate.isAfter(moment(event.end).startOf("day")))
+  //   );
+  // };
+
   const handleSelectSlot = ({ start, end }) => {
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
@@ -191,9 +194,9 @@ const AppDatePicker = ({
             ))}
           </Select>
         </div>
-        <div className="flex w-full flex-row-reverse px-3 text-blue-500 italic font-extrabold text-xs h-[20px]">
+        <div className="flex w-full flex-row-reverse px-3 text-red-500 italic font-extrabold text-xs h-[20px]">
           {" "}
-          {selectEvent ? "Please select dates for you leaves" : ""}
+          {selectEvent ? "Please select dates for you leaves" : leaveText}
         </div>
       </>
     );
@@ -206,6 +209,8 @@ const AppDatePicker = ({
         element.contains(event.target)
       )
     ) {
+      console.log("hello");
+      setLeaveText("");
     } else {
     }
   };

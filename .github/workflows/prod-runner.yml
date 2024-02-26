@@ -5,6 +5,10 @@ on:
     branches:
       - prod-branch
   workflow_dispatch:
+  workflow_run:
+    workflows: ["🚀 QA to PROD Branch"]
+    types:
+      - completed  
 
 jobs:
   build:
