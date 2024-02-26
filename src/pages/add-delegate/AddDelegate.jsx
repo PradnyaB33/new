@@ -43,8 +43,8 @@ const AddDelegate = () => {
       aria-describedby="modal-modal-description"
     >
       <Box
-        sx={style}
-        className="border-none !z-10 shadow-md outline-none rounded-md gap-2 flex flex-col"
+        // sx={style}
+        className="border-none !z-10 shadow-md outline-none rounded-md gap-2 flex flex-col absolute top-1/2 left-1/2 translate-x-1/2 translate-y-1/2 bg-white p-4 w-[450px] h-[350px]"
       >
         <h1 className="text-xl pl-2 font-semibold font-sans">
           Manage subscription
@@ -54,7 +54,57 @@ const AddDelegate = () => {
           className="flex flex-col gap-4 w-full"
           noValidate
         >
-          <div className="flex items-center justify-between w-full">
+          <div className="flex flex-col flex-wrap w-full">
+            <AuthInputFiled
+              name={"name"}
+              icon={FilterCenterFocusOutlined}
+              control={control}
+              type="number"
+              placeholder={"name"}
+              label={`name *`}
+              errors={errors}
+              error={errors.name}
+            />
+            <AuthInputFiled
+              name={"name"}
+              icon={FilterCenterFocusOutlined}
+              control={control}
+              type="number"
+              placeholder={"name"}
+              label={`name *`}
+              errors={errors}
+              error={errors.name}
+            />
+            <AuthInputFiled
+              name={"name"}
+              icon={FilterCenterFocusOutlined}
+              control={control}
+              type="number"
+              placeholder={"name"}
+              label={`name *`}
+              errors={errors}
+              error={errors.name}
+            />
+            <AuthInputFiled
+              name={"name"}
+              icon={FilterCenterFocusOutlined}
+              control={control}
+              type="number"
+              placeholder={"name"}
+              label={`name *`}
+              errors={errors}
+              error={errors.name}
+            />
+            <AuthInputFiled
+              name={"name"}
+              icon={FilterCenterFocusOutlined}
+              control={control}
+              type="number"
+              placeholder={"name"}
+              label={`name *`}
+              errors={errors}
+              error={errors.name}
+            />
             <AuthInputFiled
               name={"name"}
               icon={FilterCenterFocusOutlined}
