@@ -2,7 +2,6 @@ import React from "react";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 
 // Components
-import moment from "moment";
 import PaymentNotReceived from "./components/Payment/not-recieved";
 import SetupSideNav from "./components/SideNav/SetupSideNav";
 import Loader from "./components/app-loader/page";
@@ -676,15 +675,6 @@ function RequireSubscription({ children }) {
   const { organisationId } = useParams();
   const { subscriptionDetails, subscriptionLoading, subscriptionFetching } =
     useSubscription(organisationId);
-  console.log(
-    `🚀 ~ file: Route.jsx:647 ~ subscriptionLoading, subscriptionFetching:`,
-    subscriptionLoading,
-    subscriptionFetching
-  );
-  console.log(
-    `🚀 ~ file: Route.jsx:651 ~ subscriptionDetails:`,
-    moment.unix(subscriptionDetails?.subscription?.charge_at)
-  );
 
   if (
     subscriptionDetails?.subscription?.status ===
