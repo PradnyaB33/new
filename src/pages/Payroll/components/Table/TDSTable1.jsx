@@ -100,14 +100,14 @@ const TDSTable1 = () => {
         </div>
       ) : (
         <div className="mt-2 space-y-2">
-          <label htmlFor="year">Select Year: </label>
+          {/* <label htmlFor="year">Select Year: </label>
           <input
             type="number"
             id="year"
             name="year"
             value={year}
             onChange={handleYearChange}
-          />
+          /> */}
 
           <table className="min-w-full bg-white border-gray-200 border-[.5px]  text-left !text-sm font-light">
             <thead className="border-b bg-gray-200 font-bold">
@@ -128,7 +128,7 @@ const TDSTable1 = () => {
             <tbody>
               <tr className="!font-medium h-20 border-b">
                 <td className="py-4 px-4">BASIC</td>
-                <td>{totalBasic}</td>
+                <td>{totalBasic.toFixed(2)}</td>
                 {tdsData.map((item) => (
                   <td>{item.Basic}</td>
                 ))}
@@ -136,39 +136,39 @@ const TDSTable1 = () => {
 
               <tr className="!font-medium h-20 border-b">
                 <td className="py-4 px-4">HRA</td>
-                <td>{totalHRA}</td>
+                <td>{totalHRA.toFixed(2)}</td>
 
                 {tdsData.map((item) => (
-                  <td>{item.HRA}</td>
+                  <td>{item?.HRA?.toFixed(2)}</td>
                 ))}
               </tr>
               <tr className="!font-medium h-20 border-b">
                 <td className="py-4 px-4">DA</td>
-                <td>{Math.round(totalDA)}</td>
+                <td>{totalDA?.toFixed(2) ?? 0.0}</td>
                 {tdsData.map((item) => (
-                  <td>{item.DA}</td>
-                ))}
-              </tr>
-
-              <tr className="!font-medium h-10 border-b">
-                <td className="py-4 px-4 font-bold">Gross Salary</td>
-                <td className="font-bold">INR {totalGrossSalary}</td>
-                {tdsData.map((item) => (
-                  <td className="font-bold">{item.GrossSalary}</td>
+                  <td>{item?.DA}</td>
                 ))}
               </tr>
 
               <tr className="!font-medium h-20  border-b">
                 <td className="py-4 px-4">PF</td>
-                <td className="pr-4">0</td>
+                <td className="pr-4">0.00</td>
                 {tdsData.map((item) => (
-                  <td>{item.PF}</td>
+                  <td>{item.PF.toFixed(2)}</td>
                 ))}
               </tr>
 
-              <tr className="!font-medium  bg-neutral-600 text-white h-10 border-b">
+              <tr className="!font-medium h-20 border-b">
+                <td className="py-4 px-4 font-bold">Gross Salary</td>
+                <td className="font-bold"> {totalGrossSalary.toFixed(2)}</td>
+                {tdsData.map((item) => (
+                  <td className="font-bold">{item?.GrossSalary?.toFixed(2)}</td>
+                ))}
+              </tr>
+
+              <tr className="!font-medium   h-20 border-b">
                 <td className="py-4 px-4 font-bold">NetSalary</td>
-                <td className="font-bold">{totalNetSalary}</td>
+                <td className="font-bold">{totalNetSalary.toFixed(2)}</td>
                 {tdsData.map((item) => (
                   <td className="font-bold">{item.NetSalary}</td>
                 ))}

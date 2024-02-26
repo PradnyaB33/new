@@ -3,7 +3,7 @@ import axios from "axios";
 import React from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
@@ -39,9 +39,10 @@ const Test4 = ({ prevStep }) => {
     shift_allocation,
     data,
     profile,
+    emptyState,
   } = useEmpState();
 
-  console.log(profile);
+  const navigate = useNavigate("");
 
   const authToken = useAuthToken();
 
@@ -93,7 +94,8 @@ const Test4 = ({ prevStep }) => {
     {
       onSuccess: (response) => {
         toast.success("Employee added successfully");
-        // navigate(`/organisation/${organisationId}/employee-list`);
+        emptyState();
+        navigate(`/organisation/${organisationId}/employee-list`);
       },
       onError: (error) => {
         if (error.response.status === 400) {

@@ -623,7 +623,7 @@ const AuthInputFiled = ({
           );
         }}
       />
-      <div className="h-4 w-[200px]  !z-50   !mb-1">
+      <div className="h-4 w-max !z-50   !mb-1">
         <ErrorMessage
           errors={errors}
           name={name}
