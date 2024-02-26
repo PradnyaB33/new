@@ -46,7 +46,7 @@ const TDSTable1 = () => {
     }));
   };
 
-  const [year, setYear] = useState();
+  // const [year, setYear] = useState();
 
   const {
     data: financialData,
@@ -64,6 +64,7 @@ const TDSTable1 = () => {
             },
           }
         );
+        setTDSData(createTDSArray(salaryData.data));
         return salaryData.data;
       } catch (error) {
         console.log(error);
@@ -86,11 +87,11 @@ const TDSTable1 = () => {
   );
   const totalDA = tdsData.reduce((total, i) => total + Number(i.DA), 0);
 
-  const handleYearChange = (event) => {
-    const newYear = parseInt(event.target.value);
-    setYear(newYear);
-    setTDSData(createTDSArray(newYear));
-  };
+  // const handleYearChange = (event) => {
+  //   const newYear = parseInt(event.target.value);
+  //   setYear(newYear);
+  //   setTDSData(createTDSArray(newYear));
+  // };
 
   return (
     <>
