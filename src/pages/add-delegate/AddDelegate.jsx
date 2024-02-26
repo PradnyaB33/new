@@ -17,6 +17,7 @@ const style = {
   height: 450,
   overflow: "auto",
 };
+console.log(`🚀 ~ file: AddDelegate.jsx:20 ~ style:`, style);
 const packageSchema = z.object({
   name: z.string(),
 });
