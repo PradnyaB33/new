@@ -14,8 +14,6 @@ const Form16DeleteModal = ({
   employeeId,
   organizationId,
 }) => {
-  console.log(employeeId);
-  console.log(organizationId);
   return (
     <>
       <Modal
