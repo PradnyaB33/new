@@ -14,6 +14,7 @@ import {
   PersonAdd,
   PersonRemove,
   Settings,
+  SupervisorAccount,
   TrendingUp,
 } from "@mui/icons-material";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
@@ -116,6 +117,13 @@ const TestNavItems = ({ toggleDrawer }) => {
             link: `/billing`,
             icon: <CurrencyRupee className="text-[#67748E]" />,
             text: "Billing",
+          },
+          {
+            key: "add-delegate-super-admin",
+            isVisible: ["Super-Admin"].includes(role) ? true : false,
+            link: `/add-delegate`,
+            icon: <SupervisorAccount className="text-[#67748E]" />,
+            text: "Add delegate super admin",
           },
         ],
       },
