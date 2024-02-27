@@ -143,8 +143,8 @@ const Step4 = () => {
     mutationFn: handleDismiss,
   });
   const valueObject = {
-    memberCount: 40,
-    remotePunchingCount: 1000,
+    basicPackageCount: 35,
+    remotePunchingPackageCount: 55,
     performanceManagementCount: 40,
     analyticsAndReportingCount: 40,
     skillMatricesCount: 40,
@@ -174,6 +174,7 @@ const Step4 = () => {
           {Object.entries(data.data)
             .reverse()
             .map((doc) => {
+              console.log(`🚀 ~ file: step-4.jsx:177 ~ doc:`, doc);
               return (
                 <Accordion className="">
                   <AccordionSummary
