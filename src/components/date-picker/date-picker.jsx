@@ -42,7 +42,7 @@ const AppDatePicker = ({
   });
   const handleSelectEvent = (event) => {
     setLeaveText(
-      `The application for ${format(new Date(event.start), "dd MM yyyy")} is ${
+      `The application for ${format(new Date(event.start), "dd-MM-yyyy")} is ${
         event?.status
       } state`
     );
