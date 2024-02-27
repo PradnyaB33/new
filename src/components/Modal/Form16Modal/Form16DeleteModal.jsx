@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Box, Button, Modal } from "@mui/material";
+import axios from "axios";
+import { TestContext } from "../../../State/Function/Main";
 const style = {
   position: "absolute",
   top: "50%",
@@ -14,6 +16,22 @@ const Form16DeleteModal = ({
   employeeId,
   organizationId,
 }) => {
+  const { handleAlert } = useContext(TestContext);
+  const handleDelete = async () => {
+    try {
+      // Make API request to delete Form 16
+      await axios.delete(
+        `${process.env.REACT_APP_API}/route/delete/form16/${organizationId}/${employeeId}`
+      );
+      handleAlert(true, "success", "Form 16 deleted succesfully.");
+      // Close the modal after successful deletion
+      handleClose();
+    } catch (error) {
+      console.error("Error deleting Form 16:", error);
+      // Handle error here (e.g., show error message to user)
+    }
+  };
+
   return (
     <>
       <Modal
@@ -37,7 +55,11 @@ const Form16DeleteModal = ({
               <Button onClick={handleClose} color="error" variant="outlined">
                 Cancel
               </Button>
-              <Button variant="contained" color="primary">
+              <Button
+                onClick={handleDelete}
+                variant="contained"
+                color="primary"
+              >
                 Delete Form 16
               </Button>
             </div>
