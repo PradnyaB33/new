@@ -3,7 +3,7 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { IconButton, Popover, Skeleton, Tooltip } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
 import { UseContext } from "../../../../State/UseState/UseContext";
@@ -13,8 +13,48 @@ const ShiftsTable = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const [anchorEl, setAnchorEl] = useState(null);
-
+  const [shifts, setShifts] = useState([]);
   const authToken = cookies["aegis"];
+  const [pending, setPending] = useState([])
+  const [approved, setApproved] = useState([])
+  const [rejected, setRejected] = useState([])
+
+  const getSHifts = async () => {
+    try {
+      const resp = await axios.get(
+        `${process.env.REACT_APP_API}/route/shiftApply/get`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setShifts(resp.data.requests);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getSHifts();
+  }, [shifts]);
+
+  useEffect(() =>{
+   const pendingArr = shifts.filter((item, idx) =>{
+      return item.status === "Pending"
+    })
+
+   const approvedArr = shifts.filter((item, idx) =>{
+      return item.status === "Approved"
+    })
+    const rejectedArr = shifts.filter((item, idx) =>{
+      return item.status === "Rejected"
+    })
+    setPending(pendingArr)
+    setApproved(approvedArr)
+    setRejected(rejectedArr)
+  
+  },[shifts])
+
+
   const { data, isLoading, isError, error } = useQuery(
     "employee-leave-table",
     async () => {
@@ -109,7 +149,7 @@ const ShiftsTable = () => {
     <article className="md:w-[350px] w-full h-max bg-white shadow-lg rounded-lg ">
       <h1 className="text-xl py-6 px-6 font-semibold flex items-center gap-3 justify-between">
         <AccountBalanceIcon className="text-gray-400" />
-        <div>Balance Leaves</div>
+        <div>Summary of shifts</div>
         <Tooltip title="Click to get Summary for current month">
           <IconButton onClick={handlePopoverOpen}>
             <MoreVert className="!text-[19px] text-black" />
@@ -117,27 +157,37 @@ const ShiftsTable = () => {
         </Tooltip>
       </h1>
       <div className="w-full">
-        {data?.leaveTypes?.map((item, index) => {
-          return (
-            <div key={index} style={{ background: item.color }}>
-              <div className="flex justify-between items-center py-6 px-6">
-                <h1 className="text-md text-gray-200 font-bold tracking-wide">
-                  {item.leaveName}
-                </h1>
-                <h1 className="text-lg tracking-wide font-bold text-gray-200">
-                  {item.count}
-                </h1>
-              </div>
-            </div>
-          );
-        })}
-        <div className="flex justify-between items-center py-6 px-6">
-          <h1 className="text-md text-gray-200 font-bold tracking-wide">
-            Total Leave Balance
-          </h1>
-          <h1 className="text-lg tracking-wide text-gray-400">
-            {data.totalCoutn}
-          </h1>
+        <div className="bg-[#7f567b]">
+          <div className="flex justify-between items-center py-6 px-6">
+            <h1 className="text-md text-gray-200 font-bold tracking-wide">
+              Applied Shifts
+            </h1>
+            <h1 className="text-lg tracking-wide font-bold text-gray-200">{shifts.length}</h1>
+          </div>
+        </div>
+        <div className="bg-[#7f567b]">
+          <div className="flex justify-between items-center py-6 px-6">
+            <h1 className="text-md text-gray-200 font-bold tracking-wide">
+              Approved Shifts
+            </h1>
+            <h1 className="text-lg tracking-wide font-bold text-gray-200">{approved.length}</h1>
+          </div>
+        </div>
+        <div className="bg-[#7f567b]">
+          <div className="flex justify-between items-center py-6 px-6">
+            <h1 className="text-md text-gray-200 font-bold tracking-wide">
+              Pending Shifts
+            </h1>
+            <h1 className="text-lg tracking-wide font-bold text-gray-200">{pending.length}</h1>
+          </div>
+        </div>
+        <div className="bg-[#7f567b]">
+          <div className="flex justify-between items-center py-6 px-6">
+            <h1 className="text-md text-gray-200 font-bold tracking-wide">
+              Rejected Shifts
+            </h1>
+            <h1 className="text-lg tracking-wide font-bold text-gray-200">{rejected.length}</h1>
+          </div>
         </div>
       </div>
 

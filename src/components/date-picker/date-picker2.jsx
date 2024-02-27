@@ -302,7 +302,10 @@ const AppDatePicker = ({
       style={{ height: "500px !important" }}
     >
       <div className=" bg-white shadow-lg z-10">
+
+       
         <div className="w-full">
+        {selectedLeave?.status && <div className="text-center font-semibold">your request for this shift is <span style={{color: (selectedLeave.status === "Approved" ? "green" : "black" || selectedLeave.status === "Pending" ? "yellow" : "black" || selectedLeave.status === "Rejected" ? "red" : "black" )}}>{selectedLeave.status}</span> </div> }
           <Calendar
             localizer={localizer}
             views={["month"]}
@@ -327,6 +330,7 @@ const AppDatePicker = ({
             datePropGetter={selectedLeave}
             dayPropGetter={dayPropGetter}
           />
+          
         </div>
       </div>
 

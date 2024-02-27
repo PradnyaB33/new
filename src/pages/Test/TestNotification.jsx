@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
 import axios from "axios";
@@ -6,6 +6,7 @@ import axios from "axios";
 const TestNotification = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
+  const [showData, setShowData] = useState(true)
 
   const { data, isLoading, isError, error } = useQuery(
     "emp-notification",
@@ -19,6 +20,14 @@ const TestNotification = () => {
       return response.data;
     }
   );
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowData(false);
+    }, 2000); 
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const newArr = data?.requests.filter((item) => {
     return item.status === "Accepted";
