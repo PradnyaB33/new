@@ -13,6 +13,7 @@ export function convertCamelToTitle(packageName) {
   });
 }
 const Step3 = ({ nextStep }) => {
+  let func;
   const {
     remotePunchingPackage,
     performancePackage,
@@ -44,7 +45,7 @@ const Step3 = ({ nextStep }) => {
           `${packageName}Count`,
           z.string().refine(
             (doc) => {
-              if (Number(doc) > 1) {
+              if (Number(doc) >= 1) {
                 return true;
               } else {
                 return false;
@@ -57,24 +58,35 @@ const Step3 = ({ nextStep }) => {
     basicPackageCount: z
       .string()
       .min(1)
-      .refine(
-        (doc) => {
-          if (Number(doc) > 1) {
-            return true;
-          } else {
-            return false;
+      .superRefine((value, ctx) => {
+        if (Number(value) < 1) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.too_small,
+            message: "Number should be greater than 1",
+          });
+        } else {
+          const array = Object.entries(func()).filter(
+            (doc) => doc[0] !== "basicPackageCount"
+          );
+          const result = array.every((doc) => {
+            return doc[1] <= value;
+          });
+          if (result === false) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.too_small,
+              message: "Number should greater than other count ",
+            });
           }
-        },
-        { message: "Number should be greater than 1" }
-      ),
+        }
+      }),
   });
 
-  const { control, handleSubmit, formState } = useForm({
+  const { control, handleSubmit, formState, getValues } = useForm({
     resolver: zodResolver(step3Schema),
     defaultValues: data,
   });
+  func = getValues;
   const { errors } = formState;
-  console.log(`🚀 ~ file: step-3.jsx:53 ~ errors:`, errors);
   const onSubmit = (data) => {
     setStep3Data(data);
     nextStep();
