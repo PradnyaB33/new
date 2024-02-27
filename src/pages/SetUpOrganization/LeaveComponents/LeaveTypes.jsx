@@ -49,12 +49,18 @@ const LeaveTypes = ({ open, handleClose, id }) => {
     <section className="bg-gray-50 min-h-screen w-full">
       <Setup>
         <div className="SetupSection w-[80%] h-full bg-white   shadow-xl  rounded-sm">
-          <div className="p-4  border-b-[.5px] flex items-center  gap-3 w-full border-gray-300 justify-between">
+          <div className="p-4  border-b-[.5px] flex   gap-3 w-full border-gray-300 justify-between">
             <div className="flex gap-3">
-              <div className="flex items-center justify-center">
+              <div className="mt-1">
                 <WorkOffOutlinedIcon />
               </div>
-              <h1 className="!text-lg tracking-wide">Leaves</h1>
+              <div>
+                <h1 className="!text-lg">Leaves</h1>
+                <p className="text-xs text-gray-600">
+                  Create multiple types of leaves which will applicable to all
+                  employees. Ex: Casual leaves, Sick leaves.
+                </p>
+              </div>
             </div>
             <Button
               className="!bg-[#0ea5e9]"

@@ -29,11 +29,17 @@ const LeaveRequisition = () => {
   return (
     <>
       <section className="">
-        <header className="text-xl pt-6 bg-gray-50 shadow-md font-semibold p-4">
+        <header className="text-xl pt-6 bg-gray-50 shadow-md p-4">
           <Link to={"/"}>
             <West className="mx-4 !text-xl" />
           </Link>
           Leave Request
+          <div>
+            <p className="text-xs text-gray-600 pl-12">
+              Submit your leave requests here for timely approval and efficient
+              management .
+            </p>
+          </div>
         </header>
 
         <div className="flex flex-col-reverse md:flex-row w-full justify-start p-6 gap-4">

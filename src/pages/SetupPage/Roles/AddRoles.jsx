@@ -91,12 +91,18 @@ const AddRoles = () => {
       <section className="bg-gray-50 min-h-screen w-full">
         <Setup>
           <div className="SetupSection bg-white w-[100%] lg:!w-[80%] md:!w-[70%]   shadow-md rounded-sm border  items-center">
-            <div className="p-4  border-b-[.5px] flex items-center  gap-3 w-full border-gray-300">
-              <div className="flex items-center justify-center">
+            <div className="p-4 border-b-[.5px] flex   gap-4 w-full border-gray-300">
+              <div className="mt-1">
                 <GroupOutlinedIcon />
               </div>
-              <h1 className="!text-lg">Manage Roles</h1>
+              <div>
+                <h1 className="!text-lg">Manage Roles</h1>
+                <p className="text-xs text-gray-600">
+                  Select multiple roles to able to manage your organisation.
+                </p>
+              </div>
             </div>
+
             {isLoading ? (
               <div className="space-y-4 flex flex-col flex-wrap">
                 {Array.from({ length: 5 }, (_, id) => (

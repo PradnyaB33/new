@@ -76,11 +76,19 @@ const Inputfield = () => {
       <section className="bg-gray-50 min-h-screen w-full">
         <Setup>
           <div className="SetupSection bg-white lg:w-4/5 md:w-3/4 w-full shadow-md rounded-sm border items-center mx-auto">
-            <div className="p-4  border-b-[.5px] flex items-center  gap-3 w-full border-gray-300">
-              <div className="flex items-center justify-center">
-                <PersonOutlineOutlinedIcon />
+            <div className="p-4  border-b-[.5px] flex   gap-3 w-full border-gray-300">
+              <div className="flex gap-3 ">
+                <div className="mt-1">
+                  <PersonOutlineOutlinedIcon />
+                </div>
               </div>
-              <h1 className="!text-lg">Additional Employee Data</h1>
+              <div>
+                <h1 className="!text-lg">Additional Employee Data</h1>
+                <p className="text-xs text-gray-600">
+                  Select checkbox to know additional information about your
+                  employee.
+                </p>
+              </div>
             </div>
 
             <div className="flex flex-col flex-wrap">
