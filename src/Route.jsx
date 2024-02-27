@@ -383,7 +383,7 @@ const App = () => {
       />
 
       <Route
-        path="/organisation/:organisationId/setup/set-employee-salary-calculate-day"
+        path="/organisation/:organisationId/setup/salary-computation-day"
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
             <EmployeeSalaryCalculateDay />
@@ -399,7 +399,7 @@ const App = () => {
         }
       />
       <Route
-        path="/organisation/:organisationId/setup/set-weekend-holiday"
+        path="/organisation/:organisationId/setup/weekly-off"
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
             <WeekendHoliday />
@@ -417,7 +417,7 @@ const App = () => {
         }
       />
       <Route
-        path="/organisation/:organisationId/setup/set-designation"
+        path="/organisation/:organisationId/setup/designation"
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
             <Designation />
@@ -489,7 +489,7 @@ const App = () => {
         }
       />
       <Route
-        path="/organisation/:organisationId/setup/set-employee-code-generator"
+        path="/organisation/:organisationId/setup/employee-code"
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
             <EmployeeCodeGenerator />
@@ -546,7 +546,7 @@ const App = () => {
         }
       />
       <Route
-        path="/organisation/:organisationId/setup/set-email"
+        path="/organisation/:organisationId/setup/email"
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
             <EmailSetting />
