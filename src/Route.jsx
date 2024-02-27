@@ -2,7 +2,6 @@ import React from "react";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 
 // Components
-import moment from "moment";
 import PaymentNotReceived from "./components/Payment/not-recieved";
 import SetupSideNav from "./components/SideNav/SetupSideNav";
 import Loader from "./components/app-loader/page";
@@ -24,6 +23,7 @@ import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
 import DeleteEmployee from "./pages/Employee/DeleteEmployee";
 import EmployeeList from "./pages/Employee/EmployeeList";
+import Form16 from "./pages/Form16/Form16";
 import Home from "./pages/Home/Home";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
@@ -59,6 +59,7 @@ import DepartmentTest from "./pages/Test2/DepartmentTest";
 import EmployeeProfile from "./pages/UserProfile/UserProfile";
 import ViewPayslip1 from "./pages/ViewPayslip/ViewPayslip1";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
+import AddDelegate from "./pages/add-delegate/AddDelegate";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
@@ -79,6 +80,14 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/employeeTest"
         element={<EmployeeTest />}
+      />
+      <Route
+        path="/add-delegate/"
+        element={
+          <RequireAuth permission={["Super-Admin"]}>
+            <AddDelegate />
+          </RequireAuth>
+        }
       />
       <Route
         path="/organisation/:organisationId/departmentTest"
@@ -328,7 +337,7 @@ const App = () => {
         }
       />
       <Route
-        path="/organisation/view-payslip"
+        path="/organisation/:organisationId/view-payslip"
         element={
           <RequireAuth
             permission={[
@@ -350,12 +359,34 @@ const App = () => {
         }
       />
       <Route
+        path="/organisation/:organisationId/form-16"
+        element={
+          <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "Hr",
+              "Manager",
+              "Employee",
+            ]}
+          >
+            <Form16 />
+          </RequireAuth>
+        }
+      />
+      <Route
         path="/terms-and-conditions"
         element={<TermsAndConditionsPage />}
       />
 
       <Route
-        path="/organisation/:organisationId/setup/set-employee-salary-calculate-day"
+        path="/organisation/:organisationId/setup/salary-computation-day"
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
             <EmployeeSalaryCalculateDay />
@@ -371,7 +402,7 @@ const App = () => {
         }
       />
       <Route
-        path="/organisation/:organisationId/setup/set-weekend-holiday"
+        path="/organisation/:organisationId/setup/weekly-off"
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
             <WeekendHoliday />
@@ -389,7 +420,7 @@ const App = () => {
         }
       />
       <Route
-        path="/organisation/:organisationId/setup/set-designation"
+        path="/organisation/:organisationId/setup/designation"
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
             <Designation />
@@ -461,7 +492,7 @@ const App = () => {
         }
       />
       <Route
-        path="/organisation/:organisationId/setup/set-employee-code-generator"
+        path="/organisation/:organisationId/setup/employee-code"
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
             <EmployeeCodeGenerator />
@@ -518,7 +549,7 @@ const App = () => {
         }
       />
       <Route
-        path="/organisation/:organisationId/setup/set-email"
+        path="/organisation/:organisationId/setup/email"
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
             <EmailSetting />
@@ -645,17 +676,7 @@ function RequireAuth({ children, permission }) {
 }
 function RequireSubscription({ children }) {
   const { organisationId } = useParams();
-  const { subscriptionDetails, subscriptionLoading, subscriptionFetching } =
-    useSubscription(organisationId);
-  console.log(
-    `🚀 ~ file: Route.jsx:647 ~ subscriptionLoading, subscriptionFetching:`,
-    subscriptionLoading,
-    subscriptionFetching
-  );
-  console.log(
-    `🚀 ~ file: Route.jsx:651 ~ subscriptionDetails:`,
-    moment.unix(subscriptionDetails?.subscription?.charge_at)
-  );
+  const { subscriptionDetails } = useSubscription(organisationId);
 
   if (
     subscriptionDetails?.subscription?.status ===

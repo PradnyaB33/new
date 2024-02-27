@@ -3,7 +3,7 @@ import axios from "axios";
 import React from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
@@ -39,9 +39,10 @@ const Test4 = ({ prevStep }) => {
     shift_allocation,
     data,
     profile,
+    emptyState,
   } = useEmpState();
 
-  console.log(profile);
+  const navigate = useNavigate("");
 
   const authToken = useAuthToken();
 
@@ -59,7 +60,7 @@ const Test4 = ({ prevStep }) => {
         address,
         citizenship,
         adhar_card_number,
-        mgrempid: mgrempid.value,
+        mgrempid: mgrempid?.value,
         pan_card_number,
         gender,
         bank_account_no,
@@ -93,7 +94,8 @@ const Test4 = ({ prevStep }) => {
     {
       onSuccess: (response) => {
         toast.success("Employee added successfully");
-        // navigate(`/organisation/${organisationId}/employee-list`);
+        emptyState();
+        navigate(`/organisation/${organisationId}/employee-list`);
       },
       onError: (error) => {
         if (error.response.status === 400) {
@@ -134,17 +136,17 @@ const Test4 = ({ prevStep }) => {
           <>
             <div className="p-3">
               <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
-                Personal details
+                Personal Details
               </h1>
               <div className="grid w-full grid-cols-3">
                 <div className=" p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 w-full text-sm">Full name</h1>
+                  <h1 className="text-gray-500 w-full text-sm">Full Name</h1>
                   <p className="w-full">
                     {first_name} {last_name}
                   </p>
                 </div>
                 <div className="p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Personal email</h1>
+                  <h1 className="text-gray-500 text-sm">Personal Email</h1>
                   <p className="">{email}</p>
                 </div>
                 <div className="p-2 w-[30%] rounded-sm ">
@@ -159,11 +161,11 @@ const Test4 = ({ prevStep }) => {
                   <p className="">{gender}</p>
                 </div>
                 <div className="p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Date of joining</h1>
+                  <h1 className="text-gray-500 text-sm">Date Of Birth</h1>
                   <p className="">{date_of_birth}</p>
                 </div>
                 <div className="p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Permanat address</h1>
+                  <h1 className="text-gray-500 text-sm">Current Address</h1>
                   <p className="">{address}</p>
                 </div>
               </div>
@@ -174,22 +176,22 @@ const Test4 = ({ prevStep }) => {
                   <p className="">{adhar_card_number}</p>
                 </div>
                 <div className="p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Pan card</h1>
+                  <h1 className="text-gray-500 text-sm">PAN card</h1>
                   <p className="">{pan_card_number}</p>
                 </div>
                 <div className="p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">CitizenShip status</h1>
+                  <h1 className="text-gray-500 text-sm">Citizenship Status</h1>
                   <p className="">{citizenship}</p>
                 </div>
               </div>
 
               <div className="p-2 w-[30%] rounded-sm ">
-                <h1 className="text-gray-500 text-sm">Bank account</h1>
+                <h1 className="text-gray-500 text-sm">Bank Account</h1>
                 <p className="">{bank_account_no}</p>
               </div>
 
               <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
-                Company details
+                Company Details
               </h1>
 
               <div className="grid grid-cols-3 justify-between">
@@ -202,14 +204,14 @@ const Test4 = ({ prevStep }) => {
                   <p className="">{profile?.map((item) => item)}</p>
                 </div>
                 <div className="p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Company email</h1>
+                  <h1 className="text-gray-500 text-sm">Company Email</h1>
                   <p className="">{companyemail}</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-3 justify-between">
                 <div className=" p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Date of joining</h1>
+                  <h1 className="text-gray-500 text-sm">Date Of Joining</h1>
                   <p className="">{joining_date}</p>
                 </div>
                 <div className="p-2 rounded-sm ">
@@ -228,7 +230,7 @@ const Test4 = ({ prevStep }) => {
                   <p className="">{shift_allocation?.label}</p>
                 </div>
                 <div className="p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Department cost No</h1>
+                  <h1 className="text-gray-500 text-sm">Department Cost No</h1>
                   <p className="">{dept_cost_center_no?.label}</p>
                 </div>
                 <div className="p-2 rounded-sm ">
@@ -251,7 +253,7 @@ const Test4 = ({ prevStep }) => {
               {data && (
                 <>
                   <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
-                    Additional details
+                    Additional Details
                   </h1>
                   <div className="grid grid-cols-3 justify-between">
                     {Object.entries(data)?.map(([key, value]) => (
@@ -272,13 +274,13 @@ const Test4 = ({ prevStep }) => {
                 }}
                 className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
               >
-                prev
+                Prev
               </button>
               <button
                 onClick={() => handleSubmit.mutate()}
                 className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
               >
-                submit
+                Submit
               </button>
             </div>
           </>

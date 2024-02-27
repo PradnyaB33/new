@@ -23,6 +23,9 @@ const AuthInputFiled = ({
   disabled,
   value,
   wrapperMessage,
+  min,
+  max,
+  className,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
 
@@ -33,7 +36,7 @@ const AuthInputFiled = ({
   if (type === "select") {
     return (
       <>
-        <div className="space-y-1 w-full ">
+        <div className={`space-y-1 w-full ${className}`}>
           <label
             htmlFor={name}
             className={`${
@@ -96,7 +99,7 @@ const AuthInputFiled = ({
   if (type === "naresh-select") {
     return (
       <>
-        <div className="space-y-1 w-full ">
+        <div className={`space-y-1 w-full  ${className}`}>
           <label
             htmlFor={name}
             className={`${
@@ -159,7 +162,7 @@ const AuthInputFiled = ({
   if (type === "mutltiselect") {
     return (
       <>
-        <div className="space-y-1 w-full ">
+        <div className={`space-y-1 w-full  ${className}`}>
           <label
             htmlFor={name}
             className={`${
@@ -230,7 +233,7 @@ const AuthInputFiled = ({
   }
   if (type === "not-select") {
     return (
-      <div className="space-y-1 w-full relative">
+      <div className={`space-y-1 w-full relative  ${className}`}>
         <label
           htmlFor={name}
           className={`${
@@ -335,7 +338,7 @@ const AuthInputFiled = ({
   if (type === "autocomplete") {
     return (
       <>
-        <div className="space-y-1 w-full ">
+        <div className={`space-y-1 w-full  ${className}`}>
           <label
             htmlFor={name}
             className={`${
@@ -407,7 +410,7 @@ const AuthInputFiled = ({
 
   if (type === "checkbox") {
     return (
-      <div className="space-y-1 w-full ">
+      <div className={`space-y-1 w-full  ${className}`}>
         <Controller
           control={control}
           name={name}
@@ -458,7 +461,7 @@ const AuthInputFiled = ({
 
   if (type === "Typefile") {
     return (
-      <div className="space-y-1 ">
+      <div className={`space-y-1  ${className}`}>
         <label
           htmlFor={name}
           className={`${
@@ -520,7 +523,7 @@ const AuthInputFiled = ({
   }
   if (type === "textarea") {
     return (
-      <div className="space-y-1 ">
+      <div className={`space-y-1  ${className}`}>
         <label
           htmlFor={name}
           className={`${
@@ -577,7 +580,7 @@ const AuthInputFiled = ({
   }
 
   return (
-    <div className="space-y-1 ">
+    <div className={`space-y-1 min-w-11 ${className}`}>
       <label
         htmlFor={name}
         className={`${
@@ -621,7 +624,7 @@ const AuthInputFiled = ({
           );
         }}
       />
-      <div className="h-4 w-[200px]  !z-50   !mb-1">
+      <div className="h-4 w-max !z-50   !mb-1">
         <ErrorMessage
           errors={errors}
           name={name}

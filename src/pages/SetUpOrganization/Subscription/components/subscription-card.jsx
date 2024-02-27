@@ -15,7 +15,7 @@ export default function SubscriptionCard({ header, description, button }) {
     <div className="bg-brand-primary-blue/brand-primary-blue-1 flex flex-col justify-between p-4 gap-8 rounded-lg relative">
       <div className="flex justify-between items-center w-full gap-20">
         <div className="text-xl font-bold text-Brand-neutrals/brand-neutrals-4 hover:underline cursor-pointer">
-          {header}
+          {transformString(header)}
         </div>
         {!button && (
           <IconButton onClick={handleClick}>
@@ -40,4 +40,14 @@ export default function SubscriptionCard({ header, description, button }) {
       </div>
     </div>
   );
+}
+function transformString(inputString, excludedWords = []) {
+  return inputString
+    .split(/(?=[A-Z])/)
+    .map((word) => {
+      const formattedWord = word.charAt(0).toUpperCase() + word.slice(1);
+      return excludedWords.includes(formattedWord) ? "" : formattedWord;
+    })
+    .join(" ")
+    .trim();
 }

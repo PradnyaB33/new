@@ -100,10 +100,10 @@ const useSetupSideNav = (organisationId) => {
     {
       label: "Designation",
       icon: AssignmentIndOutlinedIcon,
-      href: `/organisation/${organisationId}/setup/set-designation`,
+      href: `/organisation/${organisationId}/setup/designation`,
       active:
         location.pathname ===
-        `/organisation/${organisationId}/setup/set-designation`,
+        `/organisation/${organisationId}/setup/designation`,
       isVisible: user?.profile?.some((role) =>
         ["Super-Admin", "HR"].includes(role)
       ),
@@ -111,9 +111,9 @@ const useSetupSideNav = (organisationId) => {
     {
       label: "Email Setting",
       icon: EmailOutlinedIcon,
-      href: `/organisation/${organisationId}/setup/set-email`,
+      href: `/organisation/${organisationId}/setup/email`,
       active:
-        location.pathname === `/organisation/${organisationId}/setup/set-email`,
+        location.pathname === `/organisation/${organisationId}/setup/email`,
       isVisible: user?.profile?.some((role) =>
         ["Super-Admin", "HR"].includes(role)
       ),
@@ -121,10 +121,10 @@ const useSetupSideNav = (organisationId) => {
     {
       label: "Weekly Off",
       icon: WeekendOutlinedIcon,
-      href: `/organisation/${organisationId}/setup/set-weekend-holiday`,
+      href: `/organisation/${organisationId}/setup/weekly-off`,
       active:
         location.pathname ===
-        `/organisation/${organisationId}/setup/set-weekend-holiday`,
+        `/organisation/${organisationId}/setup/weekly-off`,
       isVisible: user?.profile?.some((role) =>
         ["Super-Admin", "HR"].includes(role)
       ),
@@ -132,19 +132,19 @@ const useSetupSideNav = (organisationId) => {
     {
       label: "Salary Computation Day",
       icon: EventNoteOutlinedIcon,
-      href: `/organisation/${organisationId}/setup/set-employee-salary-calculate-day`,
+      href: `/organisation/${organisationId}/setup/salary-computation-day`,
       active:
         location.pathname ===
-        `/organisation/${organisationId}/setup/set-employee-salary-calculate-day`,
+        `/organisation/${organisationId}/setup/salary-computation-day`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
       label: "Employee Code",
       icon: PersonPinOutlinedIcon,
-      href: `/organisation/${organisationId}/setup/set-employee-code-generator`,
+      href: `/organisation/${organisationId}/setup/employee-code`,
       active:
         location.pathname ===
-        `/organisation/${organisationId}/setup/set-employee-code-generator`,
+        `/organisation/${organisationId}/setup/employee-code`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {

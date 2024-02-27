@@ -10,7 +10,6 @@ import {
   TodayOutlined,
 } from "@mui/icons-material";
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
-import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
@@ -31,6 +30,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
     bank_account_no,
     date_of_birth,
   } = useEmpState();
+
+  console.log("test");
 
   const isAtLeastNineteenYearsOld = (value) => {
     const currentDate = new Date();
@@ -76,9 +77,23 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
       .string()
       .min(3, { message: "min 3 character required" })
       .regex(/^[a-zA-Z]+$/, { message: "Only character allowed" }),
-    adhar_card_number: z.string(),
-    pan_card_number: z.string(),
-    bank_account_no: z.string(),
+    adhar_card_number: z
+      .string()
+      .length(12, { message: "Aadhar number must be 12 digits." })
+      .regex(/^(?:0|[1-9]\d*)$/, {
+        message: "Aadhar number cannot be negative.",
+      }),
+    pan_card_number: z
+      .string()
+      .regex(/^([A-Z]){5}([0-9]){4}([A-Z]){1}$/, {
+        message: "Invalid PAN No.",
+      })
+      .regex(/^[^*@]+$/, {
+        message: "A PAN No cannot contain a special character, e.g., *,#.",
+      }),
+    bank_account_no: z.string().regex(/^(?:0|[1-9]\d*)$/, {
+      message: "Bank number cannot be negative.",
+    }),
   });
 
   const { control, formState, handleSubmit } = useForm({
@@ -101,7 +116,6 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
   const { errors } = formState;
 
   const onSubmit = async (data) => {
-    console.log(`🚀 ~ data:`, data);
     setStep1Data(data);
     nextStep();
   };
@@ -143,7 +157,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             control={control}
             type="date"
             placeholder="dd-mm-yyyy"
-            label="Date of Birth *"
+            label="Date Of Birth *"
             errors={errors}
             error={errors.date_of_birth}
           />
@@ -167,7 +181,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             control={control}
             type="number"
             placeholder="1234567890"
-            label="Contact 1 *"
+            label="Contact *"
             errors={errors}
             error={errors.phone_number}
           />
@@ -179,7 +193,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           control={control}
           type="textarea"
           placeholder="Address"
-          label="Permanent Address *"
+          label="Current Address *"
           errors={errors}
           error={errors.address}
         />
@@ -246,7 +260,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             icon={AccountBox}
             control={control}
             type="number"
-            placeholder="Aadhaar No"
+            placeholder="Aadhar No"
             label="Employee Aadhar No *"
             errors={errors}
             error={errors.adhar_card_number}
@@ -256,7 +270,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             icon={AccountBox}
             control={control}
             type="text"
-            placeholder="Employee Pan No"
+            placeholder="Employee PAN No"
             label="Employee Pan No *"
             errors={errors}
             error={errors.pan_card_number}
@@ -287,11 +301,11 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           />
         </div>
 
-        <div class="flex justify-end">
+        <div className="flex justify-end">
           <button
             type="submit"
             disabled={isLastStep}
-            class="!w-max flex group justify-center px-6 gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+            className="!w-max flex group justify-center px-6 gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
           >
             Next
           </button>

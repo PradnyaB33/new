@@ -329,10 +329,14 @@ const DepartmentDeletion = () => {
           </span>
         }
       >
-        <Typography style={{ fontSize: "1.5rem" }}>
-          Delete Department
+        <Typography variant="h4" className="text-center mb-6 mt-2">
+          Departments
         </Typography>
       </Tooltip>
+      <p className="text-xs text-gray-600  text-center">
+        Add multiple departments for your orgnisation.
+      </p>
+
       <FormControl
         required
         style={{

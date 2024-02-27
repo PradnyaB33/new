@@ -50,13 +50,33 @@ const useEmpOption = (organisationId) => {
 
   const RolesOptions =
     empRolesList?.roles &&
-    Object.entries(empRolesList?.roles).map(([key]) => {
-      return {
-        value: key, // Extract the _id property from the role object
-        label: key, // Use the role name as the label
-      };
-    });
-
+    Object.entries(empRolesList?.roles)
+      .filter(([key, other], index) => other?.isActive)
+      .map(([key, other], index) => {
+        return {
+          value: key, // Extract the _id property from the role object
+          label: key, // Use the role name as the label
+        };
+      });
+  // const RolesOptions =
+  //   empRolesList?.roles &&
+  //   Object.entries(empRolesList?.roles).map(([key, other], index) => {
+  //     console.log(`🚀 ~ file: useEmpOption.jsx:54 ~ other:`, other);
+  //     console.log(`🚀 ~ file: useEmpOption.jsx:54 ~ key:`, key);
+  //     console.log(
+  //       `🚀 ~ file: useEmpOption.jsx:57 ~ other?.isActive :`,
+  //       other?.isActive
+  //     );
+  //     if (other?.isActive === true) {
+  //       return {
+  //         value: key, // Extract the _id property from the role object
+  //         label: key, // Use the role name as the label
+  //       };
+  //     } else {
+  //       return null;
+  //     }
+  //   });
+  console.log(`🚀 ~ file: useEmpOption.jsx:52 ~ RolesOptions:`, RolesOptions);
   const Shiftoptions = shiftList?.shifts?.map((item) => {
     return {
       value: item?._id,

@@ -1,11 +1,24 @@
-import { Container, IconButton, TextField, Typography } from "@mui/material";
+import {
+  Container,
+  TextField,
+  Typography,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
-import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-const EmployeeList = () => {
+import { MoreVert } from "@mui/icons-material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import GetAppIcon from "@mui/icons-material/GetApp";
+import Tooltip from "@mui/material/Tooltip";
+import Form16UploadModal from "../../components/Modal/Form16Modal/Form16UploadModal";
+import Form16Download from "../../components/Modal/Form16Modal/Form16Download";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Form16DeleteModal from "../../components/Modal/Form16Modal/Form16DeleteModal";
+const Form16 = () => {
+  // state and other thing
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [nameSearch, setNameSearch] = useState("");
@@ -17,8 +30,7 @@ const EmployeeList = () => {
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
 
-  console.log(availableEmployee, "avialabel days");
-
+  //employee fetch
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
@@ -45,8 +57,8 @@ const EmployeeList = () => {
     fetchAvailableEmployee(currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
-  console.log(availableEmployee);
 
+  //   pagination
   const prePage = () => {
     if (currentPage !== 1) {
       fetchAvailableEmployee(currentPage - 1);
@@ -62,32 +74,65 @@ const EmployeeList = () => {
   const changePage = (id) => {
     fetchAvailableEmployee(id);
   };
-  // Modal states and function
-
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [employeeId, setemployeeId] = useState(null);
-
-  const handleEditModalOpen = (employeeId) => {
-    setEditModalOpen(true);
-    setemployeeId(employeeId);
+  //   for morevert icon
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleClick = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+  const handleCloseIcon = () => {
+    setAnchorEl(null);
   };
 
+  // Modal states and function for upload
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
+  const [empId, setEmpId] = useState(null);
+
+  // for open
+  const handleEditModalOpen = (empId) => {
+    setUploadModalOpen(true);
+    setEmpId(empId);
+  };
+  //   for close
   const handleClose = () => {
-    setemployeeId(null);
-    setEditModalOpen(false);
+    setEmpId(null);
+    setUploadModalOpen(false);
   };
 
+  // Modal states and function for download or view form 16
+  const [downloadModalOpen, setDownLoadModalOpen] = useState(false);
+  // for open
+  const handleDownLoadModalOpen = (empId) => {
+    setDownLoadModalOpen(true);
+    setEmpId(empId);
+  };
+  //   for close
+  const handleDownLoadModalClose = () => {
+    setEmpId(null);
+    setDownLoadModalOpen(false);
+  };
+
+  // Modal states and function for delete form 16
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  // for open
+  const handleDeleteModalOpen = (empId) => {
+    setDeleteModalOpen(true);
+    setEmpId(empId);
+  };
+  //   for close
+  const handleDeleteModalClose = () => {
+    setEmpId(null);
+    setDeleteModalOpen(false);
+  };
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
-          <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
-            Employee
+          <Typography variant="h4" className="text-center mb-6 mt-2">
+            Form 16
           </Typography>
-          <p className="text-xs text-gray-600 pl-10 text-center">
-            Edit employee data here by using edit button.
+          <p className="text-xs text-gray-600 text-center">
+            Upload , download , and view form-16 of your employee here.
           </p>
-
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center gap-3 mb-3 md:mb-0">
               <TextField
@@ -143,8 +188,8 @@ const EmployeeList = () => {
                   <th scope="col" className="!text-left pl-8 py-3">
                     Phone Number
                   </th>
-                  <th scope="col" className="px-6 py-3">
-                    Actions
+                  <th scope="col" className="pl-8 py-3">
+                    Action
                   </th>
                 </tr>
               </thead>
@@ -195,14 +240,60 @@ const EmployeeList = () => {
                         ))}
                       </td>
                       <td className="py-3 pl-8 ">{item?.phone_number}</td>
-                      <td className="whitespace-nowrap px-6 py-2">
-                        <IconButton
-                          color="primary"
-                          aria-label="edit"
-                          onClick={() => handleEditModalOpen(item._id)}
+                      <td className="py-3 pl-8 ">
+                        <MoreVert
+                          onClick={(e) => handleClick(e, item)}
+                          className="cursor-pointer"
+                        />
+                        <Menu
+                          elevation={2}
+                          anchorEl={anchorEl}
+                          open={Boolean(anchorEl)}
+                          onClose={handleCloseIcon}
                         >
-                          <EditOutlinedIcon />
-                        </IconButton>
+                          <Tooltip title="Button for uploading form 16">
+                            <MenuItem
+                              onClick={() => handleEditModalOpen(item._id)}
+                            >
+                              <CloudUploadIcon
+                                color="primary"
+                                aria-label="edit"
+                                style={{
+                                  color: "#f50057",
+                                  marginRight: "10px",
+                                }}
+                              />
+                            </MenuItem>
+                          </Tooltip>
+                          <Tooltip title="Button for downloading or view  form 16">
+                            <MenuItem
+                              onClick={() => handleDownLoadModalOpen(item._id)}
+                            >
+                              <GetAppIcon
+                                color="primary"
+                                aria-label="edit"
+                                style={{
+                                  color: "#2196f3",
+                                  marginRight: "10px",
+                                }}
+                              />
+                            </MenuItem>
+                          </Tooltip>
+                          <Tooltip title="Button for deleting  form 16">
+                            <MenuItem
+                              onClick={() => handleDeleteModalOpen(item._id)}
+                            >
+                              <DeleteIcon
+                                color="primary"
+                                aria-label="edit"
+                                style={{
+                                  color: "#2196f3",
+                                  marginRight: "10px",
+                                }}
+                              />
+                            </MenuItem>
+                          </Tooltip>
+                        </Menu>
                       </td>
                     </tr>
                   ))}
@@ -250,7 +341,7 @@ const EmployeeList = () => {
                     }}
                   >
                     <a
-                      href={`#${n}`}
+                      href={`//${n}`}
                       style={{
                         color: currentPage === n ? "#fff" : "#007bff",
                         backgroundColor:
@@ -291,15 +382,31 @@ const EmployeeList = () => {
         </article>
       </Container>
 
-      {/* edit model */}
-      <EditModelOpen
+      {/* for upload*/}
+      <Form16UploadModal
         handleClose={handleClose}
-        open={editModalOpen}
-        employeeId={employeeId}
-        organisationId={organisationId}
+        organizationId={organisationId}
+        open={uploadModalOpen}
+        employeeId={empId}
+      />
+
+      {/* for download or view  */}
+      <Form16Download
+        handleClose={handleDownLoadModalClose}
+        organizationId={organisationId}
+        open={downloadModalOpen}
+        employeeId={empId}
+      />
+
+      {/* for delete form 16 */}
+      <Form16DeleteModal
+        handleClose={handleDeleteModalClose}
+        organizationId={organisationId}
+        open={deleteModalOpen}
+        employeeId={empId}
       />
     </>
   );
 };
 
-export default EmployeeList;
+export default Form16;

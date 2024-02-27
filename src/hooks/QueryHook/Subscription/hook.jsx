@@ -16,6 +16,7 @@ const useSubscriptionGet = ({ organisationId }) => {
     );
     return response.data;
   };
+
   const { data, isLoading } = useQuery({
     queryKey: [`subscription-${organisationId}`],
     queryFn: getSubscription,

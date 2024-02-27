@@ -89,6 +89,9 @@ const SalaryManagement = () => {
           <h1 className="text-lg pl-2 font-semibold text-center modal-title py-2">
             Salary Management
           </h1>
+          <p className="text-xs text-gray-600 text-center">
+            Create and calculate the salary of your employee here.
+          </p>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center gap-3 mb-3 md:mb-0">

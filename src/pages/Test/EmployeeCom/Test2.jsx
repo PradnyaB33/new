@@ -330,7 +330,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             }}
             className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
           >
-            prev
+            Prev
           </button>
           <button
             type="submit"

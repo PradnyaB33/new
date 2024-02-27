@@ -20,6 +20,8 @@ import Setup from "../Setup";
 import Selector from "./selector";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import AddLocationAltOutlinedIcon from "@mui/icons-material/AddLocationAltOutlined";
+
 const OrganizationLocations = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -308,13 +310,17 @@ const OrganizationLocations = () => {
       <Setup>
         <div className="SetupSection w-[80%] h-full bg-white   shadow-xl  rounded-sm">
           <IntlProvider locale="en">
-            <div className="p-4  border-b-[.5px] border-gray-300 flex items-center justify-between gap-3 w-full">
-              <div className="flex gap-3">
-                {" "}
-                {/* <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
-                  <AddLocationAltOutlined className="!text-lg text-white" />
-                </div> */}
-                <h1 className="!text-lg tracking-wide"> Location</h1>
+            <div className="p-4  border-b-[.5px] border-gray-300 flex  justify-between gap-3 w-full">
+              <div className="flex  gap-3 ">
+                <div className="mt-1">
+                  <AddLocationAltOutlinedIcon />
+                </div>
+                <div>
+                  <h1 className="!text-lg">Location</h1>
+                  <p className="text-xs text-gray-600">
+                    Add organization location here.
+                  </p>
+                </div>
               </div>
               <Button
                 className="!bg-[#0ea5e9]"
@@ -368,8 +374,9 @@ const OrganizationLocations = () => {
                   {locationList?.map((location, index) => (
                     <tr
                       key={index}
-                      className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                        } border-b dark:border-neutral-500 !font-medium`}
+                      className={`${
+                        index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                      } border-b dark:border-neutral-500 !font-medium`}
                     >
                       <td className="py-2 px-3">{index + 1}</td>
                       <td className="py-2 px-3">{location.continent}</td>

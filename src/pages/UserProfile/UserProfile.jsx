@@ -92,8 +92,13 @@ const EmployeeProfile = () => {
           padding: "20px",
         }}
       >
-        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <div style={{ textAlign: "center" }}>
           <h1 className="text-lg font-semibold md:text-xl">Account Setting</h1>
+        </div>
+        <div className=" mb-8">
+          <p className="text-xs text-gray-600  text-center">
+            Manage your account here.
+          </p>
         </div>
 
         <Grid container spacing={2}>

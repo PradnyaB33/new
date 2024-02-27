@@ -119,10 +119,9 @@ const LeaveRejectmodal = ({ items }) => {
 
             <div className="space-y-4 w-full flex flex-col items-center md:items-start justify-center">
               <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                {items?.employeeId?.first_name} has raised a leave request from{" "}
-                {items.description} Leave from{" "}
-                {format(new Date(items.start), "PP")} to{" "}
-                {format(new Date(items.end), "PP")}
+                {items?.employeeId?.first_name} has raised a leave request on{" "}
+                {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
+                {format(new Date(items.end), "dd-MM-yyyy")}
               </h1>
 
               <Chip
