@@ -51,7 +51,6 @@ const DepartmentList = () => {
 
   useEffect(() => {
     (async () => {
-
       try {
         const resp = await axios.get(
           `${process.env.REACT_APP_API}/route/employee/get-department-head/${organisationId}`,
@@ -60,12 +59,9 @@ const DepartmentList = () => {
           }
         );
         setHeadList(resp?.data.employees);
-
-      }
-      catch (error) {
+      } catch (error) {
         console.log(error.message);
       }
-
     })();
   }, [authToken, organisationId]);
   useEffect(() => {
@@ -79,13 +75,9 @@ const DepartmentList = () => {
         );
         setDelegateHeadList(resp.data.employees);
         console.log(resp.data.employees);
-
-      }
-
-      catch (error) {
+      } catch (error) {
         console.log(error.message);
       }
-
     })();
     // eslint-disable-next-line
   }, []);
@@ -239,16 +231,29 @@ const DepartmentList = () => {
       {departmentList?.length === 0 ? (
         <div className="w-full h-full">
           <Typography variant="h5" className="text-center !mt-5 text-red-600">
-            <Warning /> <span className="!mt-3"> No departments added, please add department first.</span>
+            <Warning />{" "}
+            <span className="!mt-3">
+              {" "}
+              No departments added, please add department first.
+            </span>
           </Typography>
         </div>
       ) : (
-        <div style={{ border: "2px solid gray", borderRadius: "20px" }} className="w-[75vw] m-auto h-full">
+        <div
+          style={{ border: "2px solid gray", borderRadius: "20px" }}
+          className="w-[75vw] m-auto h-full"
+        >
           <div className="p-4">
             <Typography variant="h4" className="text-center mb-6">
               Departments
             </Typography>
-            <table style={{ borderRadius: "20px" }} className="min-w-full bg-white text-left text-sm font-light">
+            <p className="text-xs text-gray-600  text-center">
+              Manage your departments here.
+            </p>
+            <table
+              style={{ borderRadius: "20px" }}
+              className="min-w-full bg-white text-left text-sm font-light"
+            >
               <thead className="border-b bg-gray-300 font-medium dark:border-neutral-500">
                 <tr className="!font-medium">
                   <th scope="col" className="px-3 py-3 whitespace-nowrap">
@@ -275,8 +280,9 @@ const DepartmentList = () => {
                 {departmentList?.map((department, id) => (
                   <tr
                     key={id}
-                    className={`${id % 2 === 0 ? "bg-gray-50" : "bg-white"
-                      } border-b dark:border-neutral-500 !font-medium`}
+                    className={`${
+                      id % 2 === 0 ? "bg-gray-50" : "bg-white"
+                    } border-b dark:border-neutral-500 !font-medium`}
                   >
                     <td className="py-2 px-3">{id + 1}</td>
                     <td className="py-2 px-3">
@@ -303,7 +309,9 @@ const DepartmentList = () => {
                         <EditOutlinedIcon />
                       </IconButton>
                       <IconButton
-                        onClick={() => handleDeleteConfirmation(department?._id)}
+                        onClick={() =>
+                          handleDeleteConfirmation(department?._id)
+                        }
                         color="error"
                         aria-label="delete"
                       >
@@ -414,17 +422,15 @@ const DepartmentList = () => {
                 id="demo-simple-select"
                 value={departmentLocation}
                 label="Select Location"
-              // Add label prop for better alignment
+                // Add label prop for better alignment
               >
                 {locations?.map((data, index) => (
                   <MenuItem key={index} value={data.shortName}>
                     {!data ? (
-                      <MenuItem>
-                        No location present!
-                      </MenuItem>
-                    )
-                      :
-                      (data?.shortName)}
+                      <MenuItem>No location present!</MenuItem>
+                    ) : (
+                      data?.shortName
+                    )}
                   </MenuItem>
                 ))}
               </Select>
@@ -554,7 +560,7 @@ const DepartmentList = () => {
                 value={departmentHeadName}
                 label="department Head Name"
                 onChange={(e) => handleDataChange(e, "head")}
-              // Add label prop for better alignment
+                // Add label prop for better alignment
               >
                 {headList?.map((data, index) => (
                   <MenuItem
@@ -562,11 +568,10 @@ const DepartmentList = () => {
                     value={data.first_name + " " + data.last_name}
                   >
                     {!data ? (
-                      <MenuItem>
-                        No department head present!
-                      </MenuItem>
-                    ) :
-                      (data.first_name + " " + data.last_name)}
+                      <MenuItem>No department head present!</MenuItem>
+                    ) : (
+                      data.first_name + " " + data.last_name
+                    )}
                   </MenuItem>
                 ))}
               </Select>
@@ -595,7 +600,7 @@ const DepartmentList = () => {
                 value={departmentHeadDelegateName}
                 label="Delegate Department Head Name"
                 onChange={(e) => handleDataChange(e, "delegate")}
-              // Add label prop for better alignment
+                // Add label prop for better alignment
               >
                 {delegateHeadList?.map((data, index) => (
                   <MenuItem
@@ -603,13 +608,10 @@ const DepartmentList = () => {
                     value={data.first_name + " " + data.last_name}
                   >
                     {!data ? (
-                      <MenuItem>
-                        No delegate head present!
-                      </MenuItem>
-                    )
-                      :
-                      (data?.first_name + " " + data?.last_name)
-                    }
+                      <MenuItem>No delegate head present!</MenuItem>
+                    ) : (
+                      data?.first_name + " " + data?.last_name
+                    )}
                   </MenuItem>
                 ))}
               </Select>
