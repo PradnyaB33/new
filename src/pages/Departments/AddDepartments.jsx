@@ -456,7 +456,7 @@ const AddDepartments = () => {
             </div>
             {!dept_id && formSubmitted && (
               <Typography variant="body2" color="error">
-                Department name is required.
+                Department id is required.
               </Typography>
             )}
 
@@ -527,7 +527,7 @@ const AddDepartments = () => {
             </div>
             {!dept_cost_center_id && formSubmitted && (
               <Typography variant="body2" color="error">
-                Department name is required.
+                Department cost center id is required.
               </Typography>
             )}
             <div className="flex justify-center">
