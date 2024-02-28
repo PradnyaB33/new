@@ -18,7 +18,6 @@ import DashBoardHR from "./pages/DashBoard/DashBoardHR";
 import Dashboard from "./pages/DashBoard/Dashboard";
 import DashboardManger from "./pages/DashBoard/DashboardManger";
 import SuperAdmin from "./pages/DashBoard/SuperAdmin";
-import AddDepartments from "./pages/Departments/AddDepartments";
 import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
 import DeleteEmployee from "./pages/Employee/DeleteEmployee";
@@ -87,10 +86,7 @@ const App = () => {
           </RequireAuth>
         }
       />
-      <Route
-        path="/organisation/:organisationId/departmentTest"
-        element={<DepartmentTest />}
-      />
+
       <Route path="/paymentfailed" element={<PaymentFailed />} />
 
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
@@ -225,7 +221,7 @@ const App = () => {
               "Delegate-Department-Admin",
             ]}
           >
-            <AddDepartments />
+            <DepartmentTest />
           </RequireAuth>
         }
       />
