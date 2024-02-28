@@ -1,36 +1,40 @@
-import React from "react";
-import useOrg from "../../../State/Org/Org";
-import Step2MiniForm from "./step-2-mini-form";
-
+import { Button } from "@mui/material";
+import React, { useState } from "react";
+import PackageInfo from "./package-info";
+// Assuming you have a schema for Step 3 data
+export function convertCamelToTitle(packageName) {
+  return packageName.replace(/([A-Z])/g, " $1").replace(/^./, function (str) {
+    return str.toUpperCase();
+  });
+}
 const Step2 = ({ nextStep }) => {
-  const {
-    remotePunchingPackage,
-    performancePackage,
-    basicTrainingPackage,
-    communicationPackage,
-    loanManagementPackage,
-    cateringFoodPackage,
-    analyticsAndReportingPackage,
-    skillMatrixPackage,
-  } = useOrg();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <div>
-      {(remotePunchingPackage === false || remotePunchingPackage === true) && (
-        <Step2MiniForm
-          {...{
-            remotePunchingPackage,
-            performancePackage,
-            basicTrainingPackage,
-            communicationPackage,
-            loanManagementPackage,
-            cateringFoodPackage,
-            analyticsAndReportingPackage,
-            skillMatrixPackage,
-            nextStep,
+      <div className="item-center flex flex-col" noValidate>
+        <Button
+          onClick={() => setConfirmOpen(true)}
+          type="submit"
+          variant="contained"
+          className="!w-max !mx-auto"
+        >
+          Confirm & Pay
+        </Button>
+        <PackageInfo
+          open={confirmOpen}
+          handleClose={() => {
+            setConfirmOpen(false);
+            handleClose();
           }}
         />
-      )}
+      </div>
     </div>
   );
 };
