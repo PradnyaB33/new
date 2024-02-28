@@ -12,8 +12,6 @@ const style = {
 };
 
 const Form16Download = ({ handleClose, open, employeeId, organizationId }) => {
-  console.log(employeeId);
-  console.log(organizationId);
   // Get Query
   const { data: getForm16 } = useQuery(
     ["getForm16"],
@@ -57,8 +55,9 @@ const Form16Download = ({ handleClose, open, employeeId, organizationId }) => {
           <object
             type="application/pdf"
             width="100%"
-            height="500px"
+            height="400px"
             data={getForm16}
+            aria-label="Form 16 PDF"
             className="w-full "
           />
 
@@ -72,7 +71,7 @@ const Form16Download = ({ handleClose, open, employeeId, organizationId }) => {
                 variant="contained"
                 color="primary"
               >
-                Form 16
+                Download Form 16
               </Button>
             </div>
           </div>

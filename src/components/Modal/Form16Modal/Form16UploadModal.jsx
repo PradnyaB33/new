@@ -39,7 +39,7 @@ const Form16UploadModal = ({
     const fileSizeLimit = 150 * 1024;
 
     if (selectedFile && selectedFile.size > fileSizeLimit) {
-      setErrorMessage("File size exceeds the limit of 50kb.");
+      setErrorMessage("File size exceeds the limit of 150kb.");
     } else {
       setFile(selectedFile);
       setErrorMessage("");

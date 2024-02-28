@@ -1,7 +1,14 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Box, Button, Modal } from "@mui/material";
 import axios from "axios";
 import { TestContext } from "../../../State/Function/Main";
+import { useQuery } from "react-query";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 const style = {
   position: "absolute",
   top: "50%",
@@ -17,18 +24,42 @@ const Form16DeleteModal = ({
   organizationId,
 }) => {
   const { handleAlert } = useContext(TestContext);
+  // Get Query
+  const { data: form16 } = useQuery(
+    ["form16"],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/get/form16/${organizationId}/${employeeId}`
+      );
+      return response.data.data;
+    },
+    {
+      enabled: open,
+    }
+  );
+
+  // delete confirmation box
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  const handleDeleteConfirmation = (id) => {
+    setDeleteConfirmation(id);
+  };
+
+  const handleCloseConfirmation = () => {
+    setDeleteConfirmation(null);
+  };
+  // delete query
   const handleDelete = async () => {
     try {
-      // Make API request to delete Form 16
       await axios.delete(
         `${process.env.REACT_APP_API}/route/delete/form16/${organizationId}/${employeeId}`
       );
       handleAlert(true, "success", "Form 16 deleted succesfully.");
-      // Close the modal after successful deletion
+      setDeleteConfirmation(null);
       handleClose();
+      window.location.reload();
     } catch (error) {
       console.error("Error deleting Form 16:", error);
-      // Handle error here (e.g., show error message to user)
+      handleAlert(false, "error", "Error occured while form 16 deleted.");
     }
   };
 
@@ -49,6 +80,14 @@ const Form16DeleteModal = ({
               Delete Form 16
             </h1>
           </div>
+          <object
+            type="application/pdf"
+            width="100%"
+            height="400px"
+            data={form16}
+            aria-label="Form 16 PDF"
+            className="w-full"
+          />
 
           <div className="px-5 space-y-4 mt-4">
             <div className="flex gap-4  mt-4 mr-4 justify-end mb-4 ">
@@ -56,7 +95,7 @@ const Form16DeleteModal = ({
                 Cancel
               </Button>
               <Button
-                onClick={handleDelete}
+                onClick={() => handleDeleteConfirmation(employeeId)}
                 variant="contained"
                 color="primary"
               >
@@ -66,6 +105,37 @@ const Form16DeleteModal = ({
           </div>
         </Box>
       </Modal>
+
+      <Dialog
+        open={deleteConfirmation !== null}
+        onClose={handleCloseConfirmation}
+      >
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <p>
+            Please confirm your decision to delete this form 16, as this action
+            cannot be undone.
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleCloseConfirmation}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => handleDelete(deleteConfirmation)}
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
