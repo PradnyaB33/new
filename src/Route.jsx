@@ -171,7 +171,9 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/dashboard/DH-dashboard"
         element={
-          <RequireAuth permission={"Department-Head"}>
+          <RequireAuth
+            permission={["Department-Head", "Delegate-Department-Head"]}
+          >
             <DashBoardHR />
           </RequireAuth>
         }

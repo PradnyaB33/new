@@ -252,13 +252,19 @@ const TestNavItems = ({ toggleDrawer }) => {
             "Delegate-Super Admin",
             "Hr",
             "Department-Head",
+            "Delegate-Department-Head",
           ].includes(role),
         // : false
         icon: <Business className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
             key: "addDepartment",
-            isVisible: ["Super-Admin", "Hr", "Department-Head"].includes(role),
+            isVisible: [
+              "Super-Admin",
+              "Hr",
+              "Department-Head",
+              "Delegate-Department-Head",
+            ].includes(role),
             link: `/organisation/${orgId}/add-department`,
             icon: (
               <AddCircleOutlineOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
@@ -268,7 +274,12 @@ const TestNavItems = ({ toggleDrawer }) => {
 
           {
             key: "deptDeletion",
-            isVisible: ["Super-Admin", "Hr", "Department-Head"].includes(role),
+            isVisible: [
+              "Super-Admin",
+              "Hr",
+              "Department-Head",
+              "Delegate-Department-Head",
+            ].includes(role),
             link: `/organisation/${orgId}/dept-deletion`,
             icon: (
               <DeleteForeverOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
@@ -277,7 +288,12 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "departmentList",
-            isVisible: ["Super-Admin", "Hr", "Department-Head"].includes(role),
+            isVisible: [
+              "Super-Admin",
+              "Hr",
+              "Department-Head",
+              "Delegate-Department-Head",
+            ].includes(role),
             link: `/organisation/${orgId}/department-list`,
             icon: (
               <ListAltOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
