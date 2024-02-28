@@ -50,12 +50,12 @@ const Step3 = ({ nextStep }) => {
                 message: "Number should be greater than 1",
               });
             } else {
-              const result = value >= func().basicPackageCount;
+              const result = value <= func().basicPackageCount;
               if (result === false) {
                 ctx.addIssue({
                   code: z.ZodIssueCode.too_small,
                   message:
-                    "Count should me greater than organisation memeber count",
+                    "Count should me greater than organisation member count",
                 });
               }
             }
