@@ -43,42 +43,59 @@ const Step3 = ({ nextStep }) => {
         .filter((packageName) => universalSelection[packageName])
         .map((packageName) => [
           `${packageName}Count`,
-          z.string().refine(
-            (doc) => {
-              if (Number(doc) >= 1) {
-                return true;
-              } else {
-                return false;
+          z.string().superRefine((value, ctx) => {
+            if (Number(value) < 1) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.too_small,
+                message: "Number should be greater than 1",
+              });
+            } else {
+              const result = value >= func().basicPackageCount;
+              if (result === false) {
+                ctx.addIssue({
+                  code: z.ZodIssueCode.too_small,
+                  message:
+                    "Count should me greater than organisation memeber count",
+                });
               }
-            },
-            { message: "Number should be greater than 1" }
-          ),
+            }
+          }),
         ])
     ),
     basicPackageCount: z
       .string()
       .min(1)
-      .superRefine((value, ctx) => {
-        if (Number(value) < 1) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.too_small,
-            message: "Number should be greater than 1",
-          });
-        } else {
-          const array = Object.entries(func()).filter(
-            (doc) => doc[0] !== "basicPackageCount"
-          );
-          const result = array.every((doc) => {
-            return doc[1] <= value;
-          });
-          if (result === false) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.too_small,
-              message: "Number should greater than other count ",
-            });
+      .refine(
+        (doc) => {
+          if (Number(doc) >= 1) {
+            return true;
+          } else {
+            return false;
           }
-        }
-      }),
+        },
+        { message: "Number should be greater than 1" }
+      ),
+    // .superRefine((value, ctx) => {
+    //   if (Number(value) < 1) {
+    //     ctx.addIssue({
+    //       code: z.ZodIssueCode.too_small,
+    //       message: "Number should be greater than 1",
+    //     });
+    //   } else {
+    //     const array = Object.entries(func()).filter(
+    //       (doc) => doc[0] !== "basicPackageCount"
+    //     );
+    //     const result = array.every((doc) => {
+    //       return doc[1] <= value;
+    //     });
+    //     if (result === false) {
+    //       ctx.addIssue({
+    //         code: z.ZodIssueCode.too_small,
+    //         message: "Number should greater than other count ",
+    //       });
+    //     }
+    //   }
+    // }),
   });
 
   const { control, handleSubmit, formState, getValues } = useForm({
