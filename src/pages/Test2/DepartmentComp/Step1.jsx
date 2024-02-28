@@ -1,17 +1,22 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  AccountBox,
-  ContactEmergency,
-  Email,
-  Person,
-} from "@mui/icons-material";
+import { Business, Person } from "@mui/icons-material";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useDepartmentState from "../../../hooks/DepartmentHook/useDepartmentState";
-
+import useDeptOption from "../../../hooks/DepartmentHook/useDeptOption";
+import { useParams } from "react-router-dom";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import NotesIcon from "@mui/icons-material/Notes";
 const Step1 = ({ nextStep, isLastStep }) => {
+  const organisationId = useParams("");
+  const {
+    DepartmentLocationOptions,
+    DepartmentHeadOptions,
+    DelegateDepartmentHeadOptions,
+  } = useDeptOption(organisationId);
+
   const {
     setStep1Data,
     dept_name,
@@ -24,12 +29,21 @@ const Step1 = ({ nextStep, isLastStep }) => {
   const DepartmentSchema = z.object({
     dept_name: z.string().min(2, { message: "Minimum two character required" }),
     dept_description: z.string(),
-    dept_location: z.string(),
-    dept_head_name: z.string(),
-    dept_delegate_head_name: z.string(),
+    dept_location: z.object({
+      label: z.string(),
+      value: z.string(),
+    }),
+    dept_head_name: z.object({
+      label: z.string(),
+      value: z.string(),
+    }),
+    dept_delegate_head_name: z.object({
+      label: z.string(),
+      value: z.string(),
+    }),
   });
 
-  const { control, formState, handleSubmit } = useForm({
+  const { control, formState, handleSubmit, getValues } = useForm({
     defaultValues: {
       dept_name: dept_name,
       dept_description: dept_description,
@@ -44,6 +58,7 @@ const Step1 = ({ nextStep, isLastStep }) => {
 
   const onSubmit = async (data) => {
     console.log(`🚀 ~ data:`, data);
+    console.log(getValues());
     setStep1Data(data);
     nextStep();
   };
@@ -59,7 +74,7 @@ const Step1 = ({ nextStep, isLastStep }) => {
         <div className="grid grid-cols-2 w-full gap-3">
           <AuthInputFiled
             name="dept_name"
-            icon={Email}
+            icon={Business}
             control={control}
             type="text"
             placeholder="Department Name"
@@ -67,50 +82,55 @@ const Step1 = ({ nextStep, isLastStep }) => {
             errors={errors}
             error={errors.dept_name}
           />
-
           <AuthInputFiled
             name="dept_location"
-            icon={ContactEmergency}
+            value={dept_location}
+            icon={LocationOnIcon}
             control={control}
-            type="text"
+            type="select"
             placeholder="Department Location"
-            label="Department Location"
+            label="Select Department Location*"
             errors={errors}
-            error={errors.phone_number}
+            error={errors.dept_location}
+            options={DepartmentLocationOptions}
           />
         </div>
 
         <AuthInputFiled
           name="dept_description"
-          icon={Person}
+          icon={NotesIcon}
           control={control}
           type="textarea"
           placeholder="Department Description"
           label="Department Description"
           errors={errors}
-          error={errors.address}
+          error={errors.dept_description}
         />
 
         <div className="grid grid-cols-2 w-full gap-2">
           <AuthInputFiled
             name="dept_head_name"
-            icon={AccountBox}
+            value={dept_head_name}
+            icon={Person}
             control={control}
-            type="text"
-            placeholder="Department Head Name"
-            label=" Select Department Head Name"
+            type="select"
+            placeholder="Department Head"
+            label="Select Department Head"
             errors={errors}
             error={errors.dept_head_name}
+            options={DepartmentHeadOptions}
           />
           <AuthInputFiled
             name="dept_delegate_head_name"
-            icon={AccountBox}
+            value={dept_delegate_head_name}
+            icon={Person}
             control={control}
-            type="text"
-            placeholder="Delegate Department Head Name"
-            label="Select Delegate Department Head Name"
+            type="select"
+            placeholder="Delegate Department Head"
+            label="Select Delegate Department Head"
             errors={errors}
-            error={errors.pan_card_number}
+            error={errors.dept_delegate_head_name}
+            options={DelegateDepartmentHeadOptions}
           />
         </div>
 

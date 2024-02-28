@@ -74,14 +74,6 @@ const useEmpState = create((set) => {
         data: undefined,
       });
     },
-    // setStep3Data: (data) => {
-    //   set({ data: data });
-    // },
-    // setCreator: (creator) => set({ creator: creator.user._id }),
-    // logData: () => {
-    //   const currentState = set(); // Access the current state
-    //   console.log("store Data", currentState);
-    // },
   };
 });
 

@@ -1,13 +1,13 @@
-import { Business, CheckCircle, West } from "@mui/icons-material";
+import { CheckCircle, West } from "@mui/icons-material";
 import React from "react";
 import StepFormWrapper from "../../components/step-form/wrapper";
 import useMultiStepForm from "../../hooks/useStepForm";
 import Step1 from "./DepartmentComp/Step1";
 import Step2 from "./DepartmentComp/Step2";
 import Step3 from "./DepartmentComp/Step3";
-import PersonIcon from "@mui/icons-material/Person";
-
+import { Work } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 const DepartmentTest = () => {
   const {
     step,
@@ -22,11 +22,11 @@ const DepartmentTest = () => {
   const stepper = [
     {
       label: "Department details",
-      icon: PersonIcon,
+      icon: Work,
     },
     {
       label: "Cost Center info",
-      icon: Business,
+      icon: MonetizationOnIcon,
     },
     {
       label: "Confirm",
