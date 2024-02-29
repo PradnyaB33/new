@@ -190,19 +190,6 @@ const TDSTable4 = () => {
     setTableData(newData);
   };
 
-  // const handleProperty1 = (e, itemIndex, id) => {
-  //   const newData = [...tableData];
-  //   newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property1 =
-  //     e.target.value;
-  //   setTableData(newData);
-  // };
-  // const handleProperty2 = (e, itemIndex, id) => {
-  //   const newData = [...tableData];
-  //   newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property2 =
-  //     e.target.value;
-  //   setTableData(newData);
-  // };
-
   const handleSaveClick = (index) => {
     setEditStatus({ ...editStatus, [index]: null });
   };
@@ -214,74 +201,83 @@ const TDSTable4 = () => {
   return (
     <div className="mt-2 space-y-2">
       {tableData.map((item, itemIndex) => (
-        <div className="bg-white border-[.5px] border-gray-200" key={itemIndex}>
-          <div className=" my-2 p-4">
+        <div className="bg-white " key={itemIndex}>
+          <div className="border-[.25px] border-b-0 border-gray-300  p-4">
             <h1 className="text-xl"> {Object.keys(item)[0]}</h1>
           </div>
-          <table className="min-w-full bg-white  text-left !text-sm font-light">
+          <table className="table-auto border border-collapse min-w-full bg-white  text-left   !text-sm font-light">
             <thead className="border-b bg-gray-100 font-bold">
               <tr className="!font-semibold ">
-                <th scope="col" className="!text-left pl-8 py-3">
+                <th scope="col" className="!text-left pl-8 w-max py-3 border">
                   SR NO
                 </th>
-                <th scope="col" className="py-3">
+                <th scope="col" className="py-3 px-2 border">
                   Deduction Name
                 </th>
 
-                <th scope="col" className="py-3">
+                <th scope="col" className="py-3 px-2 border">
                   Declaration
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-2 py-3 border">
                   Proof submitted
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-2 py-3 border">
                   Status
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-2 py-3 border">
                   Actions
                 </th>
               </tr>
             </thead>
             <tbody>
               {item[Object.keys(item)[0]].map((ele, id) => (
-                <tr className="!font-medium h-20 border-b" key={id}>
-                  <td className="!text-left pl-8 ">{id + 1}</td>
-                  <td className=" truncate text-left">{ele.name}</td>
+                <tr className="!font-medium h-14 border-b" key={id}>
+                  <td className="!text-left pl-8 border w-[100px]">{id + 1}</td>
+                  <td className=" truncate text-left w-[500px] border px-2">
+                    {ele.name}
+                  </td>
 
-                  <td className=" text-left ">
+                  <td className=" text-left  !p-0 w-[200px] border ">
                     {editStatus[itemIndex] === id &&
                     editStatus[itemIndex] === id ? (
-                      <div className="border-gray-200 w-max flex border-[.5px]">
-                        <h1 className="text-lg bg-gray-300 py-2  h-full px-2">
+                      <div className="flex gap-2 ">
+                        <h1 className="text-lg bg-gray-300 border h-14 px-4 flex items-center ">
                           INR
                         </h1>
                         <input
                           type="number"
-                          className="border-none py-2   outline-none px-2 "
+                          className="border-none w-max  h-14 outline-none"
                           value={ele.amount}
                           onChange={(e) => handleAmountChange(e, itemIndex, id)}
                         />
                       </div>
                     ) : (
-                      <h1 className="">INR {ele.amount}</h1>
+                      <h1 className="px-2">INR {ele.amount}</h1>
                     )}
                   </td>
-                  <td className=" text-left">
+                  <td className="text-left  w-[200px]  border">
                     {editStatus[itemIndex] === id &&
                     editStatus[itemIndex] === id ? (
-                      <input
-                        type="file"
-                        value={ele.proof}
-                        onChange={(e) => handleProofChange(e, itemIndex, id)}
-                      />
-                    ) : ele.proof ? (
-                      ele.proof
+                      <div className="px-2">
+                        <label className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+                          Upload File
+                          <input
+                            type="file"
+                            className="hidden"
+                            onChange={(e) => handleProofChange(e, itemIndex)}
+                          />
+                        </label>
+                      </div>
+                    ) : item.proof ? (
+                      item.proof
                     ) : (
-                      "No proof found"
+                      <p className="px-2">No proof found</p>
                     )}
                   </td>
-                  <td className=" text-left">{ele.status}</td>
-                  <td className="whitespace-nowrap px-6 ">
+                  <td className=" text-left border px-2 w-[200px]">
+                    {ele.status}
+                  </td>
+                  <td className="whitespace-nowrap px-2  w-[220px]">
                     {editStatus[itemIndex] === id ? (
                       <div className="space-x-2">
                         <Button
