@@ -49,7 +49,7 @@ const PricingCard = ({
   const [confirmOpen, setConfirmOpen] = useState(false);
   return (
     <div
-      className={`group shadow-xl w-[360px] relative rounded-lg bg-brand-primary-blue/brand-primary-blue-1 p-[20px] flex flex-col gap-2 border  hover:border-brand/primary-blue ${
+      className={`group shadow-xl w-[320px] relative rounded-lg bg-brand-primary-blue/brand-primary-blue-1 p-[20px] flex flex-col gap-2 border  hover:border-brand/primary-blue ${
         value?.packageId === packageId
           ? "border-brand/primary-blue"
           : "border-Brand-washed-blue/brand-washed-blue-8"
@@ -69,11 +69,11 @@ const PricingCard = ({
       >
         <QuestionMark className="text-white" />
       </IconButton>
-      <h1 className="text-4xl font-medium">{h1}</h1>
-      <h3 className="text-2xl font-bold">
+      <h1 className="text-2xl font-medium">{h1}</h1>
+      <h3 className="text-lg font-bold">
         ₹ {price} <span className="text-sm font-medium">/emp</span>
       </h3>
-      <div className="text-sm">billed quaterly</div>
+      <div className="text-sm">billed quarterly</div>
       {/* <div
         className="text-brand/primary-blue cursor-pointer"
         onClick={() => setConfirmOpen(true)}
