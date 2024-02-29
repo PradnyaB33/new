@@ -80,10 +80,10 @@ const PricingCard = ({
       >
         {descriptionText}
       </div> */}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 text-sm">
         {mapArray.map((doc, key) => {
           return (
-            <div key={key} className="flex gap-4">
+            <div key={key} className="flex gap-2">
               <div className="w-6 h-6 text-center">✓</div>
               <div className=" text-Brand-washed-blue/brand-washed-blue-10">
                 {doc?.packageName}
@@ -92,18 +92,11 @@ const PricingCard = ({
           );
         })}
         <div
-          className="flex gap-4 text-brand/primary-blue cursor-pointer"
-          onClick={async () => {
-            console.log("hllo");
-            try {
-              await setConfirmOpen(true);
-            } catch (error) {
-              console.log(`🚀 ~ file: pricing-card.jsx:94 ~ error:`, error);
-            }
-          }}
+          className="flex gap-2 text-brand/primary-blue cursor-pointer"
+          onClick={async () => setConfirmOpen(true)}
         >
           <div className="w-6 h-6 text-center ">
-            <AddCircle className="" />
+            <AddCircle className="text-xs" fontSize="small" />
           </div>
           <div>{downDescriptionText}</div>
         </div>
