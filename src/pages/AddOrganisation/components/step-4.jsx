@@ -7,11 +7,13 @@ import useOrg from "../../../State/Org/Org";
 import PackageInfo from "../../../components/Modal/PackagesModal/package-info";
 import Loader from "../../../components/app-loader/page";
 import useGetUser from "../../../hooks/Token/useUser";
+import { packageArray } from "../../../utils/Data/data";
 import PricingCard from "./step-2-components/pricing-card";
 
 const Step4 = () => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const data = useOrg();
+  console.log(`🚀 ~ file: step-4.jsx:15 ~ data:`, data);
   const { authToken, decodedToken } = useGetUser();
   const handleDismiss = async (id) => {
     const config = {
@@ -40,7 +42,7 @@ const Step4 = () => {
       `🚀 ~ file: step-4.jsx:61 ~  !data.industry_type:`,
       !data.isTrial
     );
-    if (data.data === undefined) {
+    if (data.packageInfo === undefined) {
       return "Please Select Plan And Package";
     }
 
@@ -121,7 +123,7 @@ const Step4 = () => {
   });
 
   console.log(`🚀 ~ file: step-4.jsx:126 ~ data?.data:`, data?.data);
-  if (data?.packageId === undefined) {
+  if (data?.packageInfo === undefined) {
     return "Please Select Plan And Package";
   }
 
@@ -131,25 +133,32 @@ const Step4 = () => {
   if (isLoading2) {
     return <Loader />;
   }
+  console.log(
+    `🚀 ~ file: step-4.jsx:150 ~ getPrice(data?.packageInfo?.packageName):`,
+    getPrice(data?.packageInfo?.packageName)
+  );
+  console.log(
+    `🚀 ~ file: step-4.jsx:172 ~ data?.packageInfo?.packageName:`,
+    data?.packageInfo?.packageName
+  );
   return (
-    <div className="px-4 grid md:grid-cols-6 grid-cols-1 bg-[#f8fafb] p-4 rounded-md">
-      <div className="grid md:col-span-2 col-span-1 items-center">
-        <img src="/payment.svg" className="h-[350px]" alt="" />
-      </div>
-      <div className=" grid col-span-4 p-8 gap-2 grid-rows-3 md:grid-rows-4">
-        <div className=" !row-span-1">
+    <div className="px-4 grid bg-[#f8fafb] p-4 rounded-md items-center">
+      <div className="p-8 gap-2 flex flex-col items-center">
+        <div className=" ">
           <h2 className="text-2xl font-bold ">Your Package Pricing</h2>
           <p className=" text-gray-500">You have selected Basic Package </p>
         </div>
         <div className="flex flex-col gap-2 !row-span-4">
           <PricingCard
             setConfirmOpen={setConfirmOpen}
-            // onChange={field.onChange}
+            h1={data?.packageInfo?.packageName}
             packageId={process.env.REACT_APP_BASICPLAN || "plan_NgWEcv4vEvrZFc"}
             value={data?.packageId}
+            price={getPrice(data?.packageInfo?.packageName)}
+            mapArray={returnArray(data?.packageInfo?.packageName)}
           />
         </div>
-        <div className="row-span-1 items-center justify-center flex">
+        <div className="flex">
           <Button onClick={mutate} variant="contained">
             Submit
           </Button>
@@ -166,3 +175,27 @@ const Step4 = () => {
 };
 
 export default Step4;
+
+const returnArray = (plan = "Basic Plan") => {
+  if (plan === "Basic Plan") {
+    return packageArray.filter((doc, index) => doc.Basic === "✓" && index < 5);
+  } else if (plan === "Intermediate Plan") {
+    return packageArray
+      .filter((doc, index) => doc.Intermediate === "✓" && index < 5)
+      .reverse();
+  } else {
+    return packageArray
+      .filter((doc, index) => doc.Enterprise === "✓")
+      .reverse()
+      .filter((doc, index) => index < 5);
+  }
+};
+const getPrice = (plan) => {
+  if (plan === "Basic Plan") {
+    return 55;
+  } else if (plan === "Intermediate Plan") {
+    return 85;
+  } else {
+    return 115;
+  }
+};

@@ -17,12 +17,12 @@ const useOrg = create((set) => {
     creator: undefined, // Using the obtained decoded token
     logo_url: undefined,
     isTrial: false,
-    packageId: undefined,
+    packageInfo: undefined,
     count: undefined,
 
     // Setter function for updating multiple properties at once
-    setStep2Data: (packageId) => {
-      set({ packageId });
+    setStep2Data: (packageInfo) => {
+      set({ packageInfo });
     },
     setStep1Data: async (orgName) => {
       await set({
