@@ -10,7 +10,7 @@ const PriceInput = ({ field }) => {
         packageId={process.env.REACT_APP_BASICPLAN || "plan_NgWEcv4vEvrZFc"}
         value={field.value}
         mapArray={packageArray.filter(
-          (doc, index) => doc.Basic === "✓" && index <= 5
+          (doc, index) => doc.Basic === "✓" && index <= 6
         )}
       />
       <PricingCard
@@ -18,7 +18,7 @@ const PriceInput = ({ field }) => {
         price={85}
         downDescriptionText="Click to 19 more packages"
         mapArray={packageArray
-          .filter((doc, index) => doc.Intermediate === "✓" && index <= 5)
+          .filter((doc, index) => doc.Intermediate === "✓" && index <= 6)
           .reverse()}
         packageId={process.env.REACT_APP_INTERMEDIATE || "plan_NgWFMMrbumeC2U"}
         onChange={field.onChange}
@@ -32,7 +32,7 @@ const PriceInput = ({ field }) => {
         mapArray={packageArray
           .filter((doc, index) => doc.Enterprise === "✓")
           .reverse()
-          .filter((doc, index) => index <= 5)}
+          .filter((doc, index) => index <= 6)}
         packageId={process.env.REACT_APP_ENTERPRISE || "plan_NgWFtyZ4Ifd8WD"}
         onChange={field.onChange}
         value={field.value}
