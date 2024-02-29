@@ -244,11 +244,21 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                                 marginLeft: "200%",
                               }}
                               value={inputValue[item.salaryComponent] || ""} // Set value from state
+                              // onChange={(e) => {
+                              //   handleInputChange(
+                              //     item.salaryComponent,
+                              //     e.target.value
+                              //   );
+                              // }}
                               onChange={(e) => {
-                                handleInputChange(
-                                  item.salaryComponent,
-                                  e.target.value
-                                );
+                                const inputValue = e.target.value;
+                                // Check if the input value is a valid number and greater than or equal to 0
+                                if (!isNaN(inputValue) && inputValue >= 0) {
+                                  handleInputChange(
+                                    item.salaryComponent,
+                                    inputValue
+                                  );
+                                }
                               }}
                             />
                           </td>
@@ -261,19 +271,23 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                   <td className="!text-left pl-8 pr-8 py-3">
                     Professinal Tax (Deduction)
                   </td>
-                  <td className="py-3 ">
-                    <input
-                      type="number"
-                      placeholder="Enter the input"
-                      style={{
-                        padding: "10px",
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                      }}
-                      value={deduction}
-                      onChange={(e) => setDeduction(e.target.value)}
-                    />
-                  </td>
+                  <input
+                    type="number"
+                    placeholder="Enter the input"
+                    style={{
+                      padding: "10px",
+                      border: "1px solid #ccc",
+                      borderRadius: "4px",
+                    }}
+                    value={deduction}
+                    onChange={(e) => {
+                      const inputValue = e.target.value;
+                      // Check if the input value is a valid number and greater than or equal to 0
+                      if (!isNaN(inputValue) && inputValue >= 0) {
+                        setDeduction(inputValue);
+                      }
+                    }}
+                  />
                 </tr>
                 <tr>
                   <td className="!text-left pl-8 pr-8 py-3">Employee PF</td>
@@ -287,7 +301,12 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                         borderRadius: "4px",
                       }}
                       value={employee_pf}
-                      onChange={(e) => setEmployeePf(e.target.value)}
+                      onChange={(e) => {
+                        const inputValue1 = e.target.value;
+                        if (!isNaN(inputValue1) && inputValue1 >= 0) {
+                          setEmployeePf(inputValue1);
+                        }
+                      }}
                     />
                   </td>
                 </tr>
@@ -303,7 +322,12 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                         borderRadius: "4px",
                       }}
                       value={esic}
-                      onChange={(e) => setEsic(e.target.value)}
+                      onChange={(e) => {
+                        const inputValue2 = e.target.value;
+                        if (!isNaN(inputValue2) && inputValue2 >= 0) {
+                          setEsic(inputValue2);
+                        }
+                      }}
                     />
                   </td>
                 </tr>
