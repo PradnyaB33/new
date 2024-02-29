@@ -1,13 +1,16 @@
 import { Button } from "@mui/material";
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import useOrg from "../../../State/Org/Org";
+import PackageInfo from "../../../components/Modal/PackagesModal/package-info";
 import Loader from "../../../components/app-loader/page";
 import useGetUser from "../../../hooks/Token/useUser";
+import PricingCard from "./step-2-components/pricing-card";
 
 const Step4 = () => {
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const data = useOrg();
   const { authToken, decodedToken } = useGetUser();
   const handleDismiss = async (id) => {
@@ -40,22 +43,6 @@ const Step4 = () => {
     if (data.data === undefined) {
       return "Please Select Plan And Package";
     }
-
-    // if (
-    //   !data.logo_url ||
-    //   !data.orgName ||
-    //   !data.foundation_date ||
-    //   !data.web_url ||
-    //   !data.industry_type ||
-    //   !data.email ||
-    //   !data.location ||
-    //   !data.contact_number ||
-    //   !data.description ||
-    //   !data.creator
-    // ) {
-    //   console.log("Please fill all mandatory field");
-    //   throw new Error("Please fill all mandatory field");
-    // }
 
     const formData = new FormData();
 
@@ -152,13 +139,26 @@ const Step4 = () => {
       <div className=" grid col-span-4 p-8 gap-2 grid-rows-3 md:grid-rows-4">
         <div className=" !row-span-1">
           <h2 className="text-2xl font-bold ">Your Package Pricing</h2>
-          <p className=" text-gray-500">Organization Package </p>
+          <p className=" text-gray-500">You have selected Basic Package </p>
         </div>
-        <div className="flex flex-col gap-2 !row-span-4">ok</div>
+        <div className="flex flex-col gap-2 !row-span-4">
+          <PricingCard
+            setConfirmOpen={setConfirmOpen}
+            // onChange={field.onChange}
+            packageId={process.env.REACT_APP_BASICPLAN || "plan_NgWEcv4vEvrZFc"}
+            value={data?.packageId}
+          />
+        </div>
         <div className="row-span-1 items-center justify-center flex">
           <Button onClick={mutate} variant="contained">
             Submit
           </Button>
+          <PackageInfo
+            open={confirmOpen}
+            handleClose={() => {
+              setConfirmOpen(false);
+            }}
+          />
         </div>
       </div>
     </div>

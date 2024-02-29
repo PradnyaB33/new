@@ -17,7 +17,7 @@ const PricingCard = ({
   descriptionText = "You get 17 packages !",
   downDescriptionText = "10 + more",
   setConfirmOpen,
-  onChange,
+  onChange = () => null,
   packageId,
   value,
 }) => {
