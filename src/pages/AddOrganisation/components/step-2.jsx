@@ -15,7 +15,7 @@ const packageSchema = z.object({
 });
 const Step2 = ({ nextStep }) => {
   const { packageInfo, setStep2Data } = useOrg();
-  const { handleSubmit, control, setValue, formState } = useForm({
+  const { handleSubmit, control, formState } = useForm({
     defaultValues: {
       packageInfo,
     },
