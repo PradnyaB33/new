@@ -28,19 +28,23 @@ const Step1 = ({ nextStep, isLastStep }) => {
 
   const DepartmentSchema = z.object({
     dept_name: z.string().min(2, { message: "Minimum two character required" }),
-    dept_description: z.string(),
+    dept_description: z.string().optional(),
     dept_location: z.object({
       label: z.string(),
       value: z.string(),
     }),
-    dept_head_name: z.object({
-      label: z.string(),
-      value: z.string(),
-    }),
-    dept_delegate_head_name: z.object({
-      label: z.string(),
-      value: z.string(),
-    }),
+    dept_head_name: z
+      .object({
+        label: z.string(),
+        value: z.string(),
+      })
+      .optional(),
+    dept_delegate_head_name: z
+      .object({
+        label: z.string(),
+        value: z.string(),
+      })
+      .optional(),
   });
 
   const { control, formState, handleSubmit, getValues } = useForm({
@@ -55,7 +59,7 @@ const Step1 = ({ nextStep, isLastStep }) => {
   });
 
   const { errors } = formState;
-
+  console.log(errors);
   const onSubmit = async (data) => {
     console.log(`🚀 ~ data:`, data);
     console.log(getValues());

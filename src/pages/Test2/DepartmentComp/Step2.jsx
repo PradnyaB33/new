@@ -17,8 +17,8 @@ const Step2 = ({ isLastStep, nextStep }) => {
   } = useDepartmentState();
 
   const DepartmentSchema = z.object({
-    dept_cost_center_name: z.string(),
-    dept_cost_center_description: z.string(),
+    dept_cost_center_name: z.string().optional(),
+    dept_cost_center_description: z.string().optional(),
     dept_id: z.string(),
     dept_cost_center_id: z.string(),
   });
