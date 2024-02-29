@@ -1,15 +1,16 @@
 import { Box, Modal } from "@mui/material";
 import React from "react";
+
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
   bgcolor: "background.paper",
-  p: 4,
   width: "80vw",
   height: "80vh",
 };
+
 const PackageInfo = ({ handleClose, open, setPackage, billedPackage }) => {
   return (
     <Modal
@@ -21,34 +22,59 @@ const PackageInfo = ({ handleClose, open, setPackage, billedPackage }) => {
     >
       <Box
         sx={style}
-        className="border-none !z-10 shadow-md outline-none rounded-md gap-2 flex flex-col"
+        className="border-none !z-10 shadow-md outline-none rounded-md flex flex-col overflow-auto"
       >
         <table className="min-w-full bg-white text-left text-sm font-light">
-          <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-            <tr className="!font-medium">
-              <th scope="col" className="px-6 py-3 ">
+          <thead className="border-b bg-brand-primary-blue/brand-primary-blue-1 font-bold text-lg dark:border-neutral-500 sticky top-0 text-brand/primary-blue">
+            <tr className="!font-bold text-lg">
+              <th scope="col" className="px-6 py-3">
                 Packages
               </th>
-              <th scope="col" className="px-6 py-3 ">
+              <th scope="col" className="px-6 py-3 text-center">
                 Basic
               </th>
-              <th scope="col" className="px-6 py-3 ">
+              <th scope="col" className="px-6 py-3 text-center">
                 Intermediate
               </th>
-              <th scope="col" className="px-6 py-3 ">
+              <th scope="col" className="px-6 py-3 text-center">
                 Enterprise
               </th>
             </tr>
           </thead>
-          <tbody>
-            <tr className={` "bg-gray-50" border-b dark:border-neutral-500`}>
-              <td className="whitespace-nowrap px-6 py-2 font-medium">
-                index{" "}
-              </td>
-              <td className="whitespace-nowrap px-6 py-2">ok</td>
-              <td className="whitespace-nowrap px-6 py-2">:hi</td>
-              <td className="whitespace-nowrap px-6 py-2">op</td>
-            </tr>
+          <tbody className="overflow-y-scroll h-full">
+            {packageArray.map((doc, key) => {
+              return (
+                <tr
+                  key={key}
+                  className={`bg-gray-50 border-b dark:border-neutral-500 font-bold`}
+                >
+                  <td className="whitespace-nowrap px-6 py-2 font-bold">
+                    {doc.packageName}
+                  </td>
+                  <td
+                    className={`whitespace-nowrap px-6 py-2 text-center ${
+                      doc.Basic === "✓" ? "text-black" : "text-red-600"
+                    }`}
+                  >
+                    {doc.Basic === "✓" ? "✓" : "X"}
+                  </td>
+                  <td
+                    className={`whitespace-nowrap px-6 py-2 text-center ${
+                      doc.Intermediate === "✓" ? "text-black" : "text-red-600"
+                    }`}
+                  >
+                    {doc.Intermediate === "✓" ? "✓" : "X"}
+                  </td>
+                  <td
+                    className={`whitespace-nowrap px-6 py-2 text-center ${
+                      doc.Enterprise === "✓" ? "text-black" : "text-red-600"
+                    }`}
+                  >
+                    {doc.Enterprise === "✓" ? "✓" : "X"}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </Box>
@@ -62,9 +88,6 @@ const packageArray = [
   {
     packageName: "Access control",
     Basic: "-",
-    Intermediate: "✓",
-    Enterprise: "✓",
-    Basic: "✓",
     Intermediate: "✓",
     Enterprise: "✓",
   },

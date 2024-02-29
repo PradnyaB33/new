@@ -17,28 +17,20 @@ const useOrg = create((set) => {
     creator: undefined, // Using the obtained decoded token
     logo_url: undefined,
     isTrial: false,
-    remotePunchingPackage: false,
-    performancePackage: false,
-    basicTrainingPackage: false,
-    communicationPackage: false,
-    loanManagementPackage: false,
-    cateringFoodPackage: false,
-    analyticsAndReportingPackage: false,
-    skillMatrixPackage: false,
-    data: undefined,
+    packageId: undefined,
+    count: undefined,
 
     // Setter function for updating multiple properties at once
-    setStep2Data: (remotePunching) => {
-      set({ ...remotePunching });
+    setStep2Data: (packageId) => {
+      set({ packageId });
     },
     setStep1Data: async (orgName) => {
-      console.log(`🚀 ~ file: Org.jsx:31 ~ orgName:`, orgName);
       await set({
         ...orgName,
       });
     },
-    setStep3Data: (data) => {
-      set({ data: data });
+    setStep3Data: (count) => {
+      set({ count });
     },
     setCreator: (creator) => set({ creator: creator.user._id }),
     logData: () => {
