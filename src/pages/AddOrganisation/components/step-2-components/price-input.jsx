@@ -3,7 +3,7 @@ import PricingCard from "./pricing-card";
 
 const PriceInput = ({ field, setConfirmOpen }) => {
   return (
-    <div className={`flex gap-4`}>
+    <div className={`flex gap-4 flex-wrap justify-center`}>
       <PricingCard
         setConfirmOpen={setConfirmOpen}
         onChange={field.onChange}

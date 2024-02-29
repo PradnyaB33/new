@@ -1,10 +1,4 @@
-import { ExpandMore } from "@mui/icons-material";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Button,
-} from "@mui/material";
+import { Button } from "@mui/material";
 import axios from "axios";
 import React from "react";
 import toast from "react-hot-toast";
@@ -12,7 +6,6 @@ import { useMutation } from "react-query";
 import useOrg from "../../../State/Org/Org";
 import Loader from "../../../components/app-loader/page";
 import useGetUser from "../../../hooks/Token/useUser";
-import { convertCamelToTitle } from "./step-3";
 
 const Step4 = () => {
   const data = useOrg();
@@ -82,11 +75,8 @@ const Step4 = () => {
     formData.append("contact_number", data.contact_number);
     formData.append("description", data.description);
     formData.append("creator", data.creator);
-    formData.append("remotePunching", data.remotePunching);
-    formData.append("performanceManagement", data.performanceManagement);
-    formData.append("analyticsAndReporting", data.analyticsAndReporting);
-    formData.append("skillMatrices", data.skillMatrices);
-    formData.append("data", JSON.stringify(data.data));
+    formData.append("packageId", data.packageId);
+    formData.append("count", data.count);
 
     const response = await axios.post(
       `${process.env.REACT_APP_API}/route/organization`,
@@ -142,15 +132,9 @@ const Step4 = () => {
   const { mutate: mutate2, isLoading: isLoading2 } = useMutation({
     mutationFn: handleDismiss,
   });
-  const valueObject = {
-    basicPackageCount: 35,
-    remotePunchingPackageCount: 55,
-    performanceManagementCount: 40,
-    analyticsAndReportingCount: 40,
-    skillMatricesCount: 40,
-  };
+
   console.log(`🚀 ~ file: step-4.jsx:126 ~ data?.data:`, data?.data);
-  if (data?.data === undefined) {
+  if (data?.packageId === undefined) {
     return "Please Select Plan And Package";
   }
 
@@ -163,45 +147,14 @@ const Step4 = () => {
   return (
     <div className="px-4 grid md:grid-cols-6 grid-cols-1 bg-[#f8fafb] p-4 rounded-md">
       <div className="grid md:col-span-2 col-span-1 items-center">
-        <img src="/payment.svg" className="h-[100px]" alt="" />
+        <img src="/payment.svg" className="h-[350px]" alt="" />
       </div>
       <div className=" grid col-span-4 p-8 gap-2 grid-rows-3 md:grid-rows-4">
         <div className=" !row-span-1">
           <h2 className="text-2xl font-bold ">Your Package Pricing</h2>
           <p className=" text-gray-500">Organization Package </p>
         </div>
-        <div className="flex flex-col gap-2 !row-span-4">
-          {Object.entries(data.data)
-            .reverse()
-            .map((doc) => {
-              console.log(`🚀 ~ file: step-4.jsx:177 ~ doc:`, doc);
-              return (
-                <Accordion className="">
-                  <AccordionSummary
-                    expandIcon={<ExpandMore />}
-                    aria-controls="panel1-content"
-                    id="panel1-header"
-                  >
-                    {convertCamelToTitle(doc[0]) === "Member Count"
-                      ? "Basic Package"
-                      : convertCamelToTitle(doc[0])}
-                  </AccordionSummary>
-                  <AccordionDetails className="!px-4">
-                    <div className="grid grid-cols-2 w-full">
-                      <div className="col-span-1 text-left underline">
-                        {" "}
-                        {valueObject[doc[0]]}Rs × {doc[1]} Employees
-                      </div>
-                      <div className="col-span-1 text-center">
-                        {" "}
-                        {valueObject[doc[0]] * doc[1]}
-                      </div>
-                    </div>
-                  </AccordionDetails>
-                </Accordion>
-              );
-            })}
-        </div>
+        <div className="flex flex-col gap-2 !row-span-4">ok</div>
         <div className="row-span-1 items-center justify-center flex">
           <Button onClick={mutate} variant="contained">
             Submit
