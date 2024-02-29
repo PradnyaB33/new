@@ -1,4 +1,5 @@
-import { AddCircle } from "@mui/icons-material";
+import { AddCircle, QuestionMark } from "@mui/icons-material";
+import { Button, IconButton } from "@mui/material";
 import React, { useState } from "react";
 import PackageInfo from "../../../../components/Modal/PackagesModal/package-info";
 const array = [
@@ -38,35 +39,47 @@ const PricingCard = ({
   h1 = "Basic Plan",
   price = 55,
   mapArray = array,
-  descriptionText = "You get 17 packages !",
-  downDescriptionText = "10 + more",
+  downDescriptionText = "Click to 11 more packages",
   onChange = () => null,
   packageId,
   value,
+  disabled = false,
+  button = true,
 }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   return (
     <div
-      className={`group w-[360px] h-fit rounded-lg bg-brand-primary-blue/brand-primary-blue-1 p-[20px] flex flex-col gap-3 border  hover:border-brand/primary-blue ${
+      className={`group shadow-xl w-[360px] relative rounded-lg bg-brand-primary-blue/brand-primary-blue-1 p-[20px] flex flex-col gap-2 border  hover:border-brand/primary-blue ${
         value?.packageId === packageId
           ? "border-brand/primary-blue"
           : "border-Brand-washed-blue/brand-washed-blue-8"
       }`}
       onClick={() => {
-        onChange({ packageName: h1, packageId });
+        if (!disabled) {
+          onChange({ packageName: h1, packageId });
+        }
       }}
     >
+      <div className=""></div>
+      <IconButton
+        color="info"
+        className="h-8 w-8 !absolute !bg-brand/primary-blue right-4 top-4"
+        aria-label="check"
+        onClick={() => setConfirmOpen(true)}
+      >
+        <QuestionMark className="text-white" />
+      </IconButton>
       <h1 className="text-4xl font-medium">{h1}</h1>
       <h3 className="text-2xl font-bold">
         ₹ {price} <span className="text-sm font-medium">/emp</span>
       </h3>
       <div className="text-sm">billed quaterly</div>
-      <div
+      {/* <div
         className="text-brand/primary-blue cursor-pointer"
         onClick={() => setConfirmOpen(true)}
       >
         {descriptionText}
-      </div>
+      </div> */}
       <div className="flex flex-col gap-2">
         {mapArray.map((doc, key) => {
           return (
@@ -95,12 +108,16 @@ const PricingCard = ({
           <div>{downDescriptionText}</div>
         </div>
       </div>
-      <button
-        type="submit"
-        className="bg-brand/primary-blue w-full rounded-md p-1 text-white"
-      >
-        Get Started
-      </button>
+      {button && (
+        <Button
+          type="submit"
+          className="bg-brand/primary-blue w-full rounded-md p-1 text-white"
+          disabled={disabled}
+          variant="contained"
+        >
+          Get Started
+        </Button>
+      )}
       <PackageInfo
         open={confirmOpen}
         handleClose={() => {

@@ -156,6 +156,7 @@ const Step4 = () => {
             value={data?.packageId}
             price={getPrice(data?.packageInfo?.packageName)}
             mapArray={returnArray(data?.packageInfo?.packageName)}
+            button={false}
           />
         </div>
         <div className="flex">
@@ -178,16 +179,16 @@ export default Step4;
 
 const returnArray = (plan = "Basic Plan") => {
   if (plan === "Basic Plan") {
-    return packageArray.filter((doc, index) => doc.Basic === "✓" && index < 5);
+    return packageArray.filter((doc, index) => doc.Basic === "✓" && index <= 5);
   } else if (plan === "Intermediate Plan") {
     return packageArray
-      .filter((doc, index) => doc.Intermediate === "✓" && index < 5)
+      .filter((doc, index) => doc.Intermediate === "✓" && index <= 5)
       .reverse();
   } else {
     return packageArray
       .filter((doc, index) => doc.Enterprise === "✓")
       .reverse()
-      .filter((doc, index) => index < 5);
+      .filter((doc, index) => index <= 5);
   }
 };
 const getPrice = (plan) => {
