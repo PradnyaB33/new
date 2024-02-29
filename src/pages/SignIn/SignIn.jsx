@@ -29,6 +29,13 @@ const SignIn = () => {
         return redirect(
           `/organisation/${user?.organisationId}/dashboard/HR-dashboard`
         );
+      else if (
+        role === "Delegate-Department-Head" ||
+        role === "Department-Head"
+      )
+        return redirect(
+          `/organisation/${user?.organisationId}/dashboard/DH-dashboard`
+        );
       else if (role === "Manager")
         return redirect(
           `/organisation/${user?._id}/dashboard/manager-dashboard`
@@ -99,6 +106,14 @@ const SignIn = () => {
           return redirect(
             `/organisation/${user?._id}/dashboard/manager-dashboard`
           );
+        } else if (
+          response.data.user?.profile.includes("Delegate-Department-Head")
+        ) {
+          handleRole.mutate({
+            role: "Delegate-Department-Head",
+            email: response.data.user?.email,
+          });
+          return redirect(`/organisation/${user?._id}/dashboard/DH-dashboard`);
         } else if (response.data.user?.profile.includes("Employee")) {
           handleRole.mutate({
             role: "Employee",

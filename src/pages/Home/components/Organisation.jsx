@@ -421,8 +421,9 @@ const Organisation = ({ item }) => {
         fullWidth
       >
         <DialogTitle className="!font-semibold !text-2xl">
-          Edit Organization
+          Edit Organisation
         </DialogTitle>
+
         <DialogContent>
           <div className="flex flex-col gap-4 mt-3">
             <TextField

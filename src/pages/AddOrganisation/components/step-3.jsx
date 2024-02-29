@@ -13,6 +13,7 @@ export function convertCamelToTitle(packageName) {
   });
 }
 const Step3 = ({ nextStep }) => {
+  let func;
   const {
     remotePunchingPackage,
     performancePackage,
@@ -40,17 +41,69 @@ const Step3 = ({ nextStep }) => {
     ...Object.fromEntries(
       Object.keys(universalSelection)
         .filter((packageName) => universalSelection[packageName])
-        .map((packageName) => [`${packageName}Count`, z.string().min(1)])
+        .map((packageName) => [
+          `${packageName}Count`,
+          z.string().superRefine((value, ctx) => {
+            if (Number(value) < 1) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.too_small,
+                message: "Number should be greater than 1",
+              });
+            } else {
+              const result = value <= func().basicPackageCount;
+              if (result === false) {
+                ctx.addIssue({
+                  code: z.ZodIssueCode.too_small,
+                  message:
+                    "Count should me greater than organisation member count",
+                });
+              }
+            }
+          }),
+        ])
     ),
-    basicPackageCount: z.string().min(1),
+    basicPackageCount: z
+      .string()
+      .min(1)
+      .refine(
+        (doc) => {
+          if (Number(doc) >= 1) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+        { message: "Number should be greater than 1" }
+      ),
+    // .superRefine((value, ctx) => {
+    //   if (Number(value) < 1) {
+    //     ctx.addIssue({
+    //       code: z.ZodIssueCode.too_small,
+    //       message: "Number should be greater than 1",
+    //     });
+    //   } else {
+    //     const array = Object.entries(func()).filter(
+    //       (doc) => doc[0] !== "basicPackageCount"
+    //     );
+    //     const result = array.every((doc) => {
+    //       return doc[1] <= value;
+    //     });
+    //     if (result === false) {
+    //       ctx.addIssue({
+    //         code: z.ZodIssueCode.too_small,
+    //         message: "Number should greater than other count ",
+    //       });
+    //     }
+    //   }
+    // }),
   });
 
-  const { control, handleSubmit, formState } = useForm({
+  const { control, handleSubmit, formState, getValues } = useForm({
     resolver: zodResolver(step3Schema),
     defaultValues: data,
   });
+  func = getValues;
   const { errors } = formState;
-  console.log(`🚀 ~ file: step-3.jsx:53 ~ errors:`, errors);
   const onSubmit = (data) => {
     setStep3Data(data);
     nextStep();

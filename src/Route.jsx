@@ -2,7 +2,6 @@ import React from "react";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 
 // Components
-import moment from "moment";
 import PaymentNotReceived from "./components/Payment/not-recieved";
 import SetupSideNav from "./components/SideNav/SetupSideNav";
 import Loader from "./components/app-loader/page";
@@ -19,7 +18,6 @@ import DashBoardHR from "./pages/DashBoard/DashBoardHR";
 import Dashboard from "./pages/DashBoard/Dashboard";
 import DashboardManger from "./pages/DashBoard/DashboardManger";
 import SuperAdmin from "./pages/DashBoard/SuperAdmin";
-import AddDepartments from "./pages/Departments/AddDepartments";
 import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
 import DeleteEmployee from "./pages/Employee/DeleteEmployee";
@@ -88,10 +86,7 @@ const App = () => {
           </RequireAuth>
         }
       />
-      <Route
-        path="/organisation/:organisationId/departmentTest"
-        element={<DepartmentTest />}
-      />
+
       <Route path="/paymentfailed" element={<PaymentFailed />} />
 
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
@@ -172,7 +167,9 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/dashboard/DH-dashboard"
         element={
-          <RequireAuth permission={"Department-Head"}>
+          <RequireAuth
+            permission={["Department-Head", "Delegate-Department-Head"]}
+          >
             <DashBoardHR />
           </RequireAuth>
         }
@@ -224,7 +221,7 @@ const App = () => {
               "Delegate-Department-Admin",
             ]}
           >
-            <AddDepartments />
+            <DepartmentTest />
           </RequireAuth>
         }
       />
@@ -384,7 +381,7 @@ const App = () => {
       />
 
       <Route
-        path="/organisation/:organisationId/setup/set-employee-salary-calculate-day"
+        path="/organisation/:organisationId/setup/salary-computation-day"
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
             <EmployeeSalaryCalculateDay />
@@ -400,7 +397,7 @@ const App = () => {
         }
       />
       <Route
-        path="/organisation/:organisationId/setup/set-weekend-holiday"
+        path="/organisation/:organisationId/setup/weekly-off"
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
             <WeekendHoliday />
@@ -418,7 +415,7 @@ const App = () => {
         }
       />
       <Route
-        path="/organisation/:organisationId/setup/set-designation"
+        path="/organisation/:organisationId/setup/designation"
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
             <Designation />
@@ -490,7 +487,7 @@ const App = () => {
         }
       />
       <Route
-        path="/organisation/:organisationId/setup/set-employee-code-generator"
+        path="/organisation/:organisationId/setup/employee-code"
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
             <EmployeeCodeGenerator />
@@ -547,7 +544,7 @@ const App = () => {
         }
       />
       <Route
-        path="/organisation/:organisationId/setup/set-email"
+        path="/organisation/:organisationId/setup/email"
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
             <EmailSetting />
@@ -674,17 +671,7 @@ function RequireAuth({ children, permission }) {
 }
 function RequireSubscription({ children }) {
   const { organisationId } = useParams();
-  const { subscriptionDetails, subscriptionLoading, subscriptionFetching } =
-    useSubscription(organisationId);
-  console.log(
-    `🚀 ~ file: Route.jsx:647 ~ subscriptionLoading, subscriptionFetching:`,
-    subscriptionLoading,
-    subscriptionFetching
-  );
-  console.log(
-    `🚀 ~ file: Route.jsx:651 ~ subscriptionDetails:`,
-    moment.unix(subscriptionDetails?.subscription?.charge_at)
-  );
+  const { subscriptionDetails } = useSubscription(organisationId);
 
   if (
     subscriptionDetails?.subscription?.status ===

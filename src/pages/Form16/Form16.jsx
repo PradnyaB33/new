@@ -130,7 +130,9 @@ const Form16 = () => {
           <Typography variant="h4" className="text-center mb-6 mt-2">
             Form 16
           </Typography>
-
+          <p className="text-xs text-gray-600 text-center">
+            Upload , download , and view form-16 of your employee here.
+          </p>
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center gap-3 mb-3 md:mb-0">
               <TextField

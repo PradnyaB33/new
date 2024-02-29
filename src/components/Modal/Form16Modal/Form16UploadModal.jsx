@@ -9,7 +9,6 @@ import {
   Radio,
 } from "@mui/material";
 import { TestContext } from "../../../State/Function/Main";
-
 const style = {
   position: "absolute",
   top: "50%",
@@ -29,7 +28,7 @@ const Form16UploadModal = ({
   // state
   const [year, setYear] = useState("current");
   const [file, setFile] = useState(null);
-
+  const [errorMessage, setErrorMessage] = useState("");
   // user is able to change the  year from current to previous
   const handleYearChange = (event) => {
     setYear(event.target.value);
@@ -37,12 +36,13 @@ const Form16UploadModal = ({
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
-    const fileSizeLimit = 150 * 1024; // 50kb in bytes
+    const fileSizeLimit = 150 * 1024;
 
     if (selectedFile && selectedFile.size > fileSizeLimit) {
-      handleAlert(true, "error", "File size exceeds the limit of 50kb.");
+      setErrorMessage("File size exceeds the limit of 150kb.");
     } else {
       setFile(selectedFile);
+      setErrorMessage("");
     }
   };
 
@@ -81,12 +81,10 @@ const Form16UploadModal = ({
       return;
     }
 
-    // Proceed with file upload if not already uploaded
     if (!file) {
-      handleAlert(true, "success", "Please select the file to upload.");
+      setErrorMessage("Please select the file to upload.");
       return;
     }
-
     const formData = new FormData();
     formData.append("organizationId", organizationId);
     formData.append("employeeId", employeeId);
@@ -158,6 +156,9 @@ const Form16UploadModal = ({
               onChange={handleFileChange}
               style={{ marginTop: "10px" }}
             />
+            {errorMessage && (
+              <p className="text-red-500 mt-2">{errorMessage}</p>
+            )}
           </div>
 
           <div className="px-5 space-y-4 mt-4">

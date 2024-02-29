@@ -5,6 +5,7 @@ import { momentLocalizer } from "react-big-calendar";
 import { useQuery } from "react-query";
 
 import axios from "axios";
+import { format } from "date-fns";
 import React, { useContext, useEffect, useState } from "react";
 import { Calendar } from "react-big-calendar";
 import { TestContext } from "../../State/Function/Main";
@@ -41,9 +42,9 @@ const AppDatePicker = ({
   });
   const handleSelectEvent = (event) => {
     setLeaveText(
-      `The application for ${new Date(event.start).toDateString()} is ${
+      `The application for ${format(new Date(event.start), "dd-MM-yyyy")} is ${
         event?.status
-      } in state`
+      } state`
     );
     setSelectedLeave(event);
     setCalendarOpen(true);

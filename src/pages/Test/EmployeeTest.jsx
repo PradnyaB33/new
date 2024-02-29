@@ -67,6 +67,10 @@ const EmployeeTest = () => {
           <West className="mx-4 !text-xl" />
         </Link>
         Employee Onboarding
+        <p className="text-xs text-gray-600  pl-12">
+          Welcome your employees by creating their profiles here. Before doing
+          so, you need to add departments.
+        </p>
       </header>
 
       <section className="px-8 flex space-x-2 py-6">

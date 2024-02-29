@@ -30,7 +30,14 @@ const PackageForm = ({ handleClose, open, packages, organisation }) => {
 
   const [close, setClose] = useState(false);
   const packageSchema = z.object(
-    Object.fromEntries(mainPackages?.map((doc) => [doc[0], z.string()]))
+    Object.fromEntries(
+      mainPackages?.map((doc) => [
+        doc[0],
+        z.string().refine((doc) => Number(doc) > 0, {
+          message: "Number should be greater than 1",
+        }),
+      ])
+    )
   );
   let defaultValues = Object.fromEntries(
     mainPackages?.map((doc) => [doc[0], doc[1]])

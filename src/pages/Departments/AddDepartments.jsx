@@ -217,7 +217,7 @@ const AddDepartments = () => {
               display: "flex",
               backgroundColor: "#fefdff",
               paddingTop: "20px",
-              paddingBottom: "30px",
+              // paddingBottom: "30px",
               paddingLeft: "20px",
               paddingRight: "20px",
               borderRadius: "10px",
@@ -241,7 +241,9 @@ const AddDepartments = () => {
             >
               Add Department
             </Typography>
-
+            <p className="text-xs text-gray-600 text-center">
+              Add multiple departments for your organisation.
+            </p>
             {/* Input Fields */}
             <FormControl sx={{ width: "100%", marginTop: "1rem" }}>
               <TextField
@@ -454,7 +456,7 @@ const AddDepartments = () => {
             </div>
             {!dept_id && formSubmitted && (
               <Typography variant="body2" color="error">
-                Department name is required.
+                Department id is required.
               </Typography>
             )}
 
@@ -525,7 +527,7 @@ const AddDepartments = () => {
             </div>
             {!dept_cost_center_id && formSubmitted && (
               <Typography variant="body2" color="error">
-                Department name is required.
+                Department cost center id is required.
               </Typography>
             )}
             <div className="flex justify-center">
