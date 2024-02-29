@@ -56,7 +56,7 @@ const NewOranisationForm = () => {
 
   return (
     <div className="pt-10">
-      <div className="m-4 md:w-[700px] lg:w-[900px] w-auto md:m-auto border-gray-400 border p-4 rounded-lg">
+      <div className="m-4 2xl:w-[1200px] xl:w-[90%] lg:w-[90%] w-auto md:m-auto border-gray-400 border p-4 rounded-lg">
         <StepFormWrapper
           {...{
             goToStep,
