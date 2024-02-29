@@ -23,6 +23,7 @@ import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+
 const DepartmentList = () => {
   const { handleAlert } = useContext(TestContext);
   const [departmentName, setDepartmentName] = useState("");
@@ -58,6 +59,7 @@ const DepartmentList = () => {
             headers: { Authorization: authToken },
           }
         );
+        console.log(resp);
         setHeadList(resp?.data.employees);
       } catch (error) {
         console.log(error.message);
@@ -74,13 +76,13 @@ const DepartmentList = () => {
           }
         );
         setDelegateHeadList(resp.data.employees);
-        console.log(resp.data.employees);
       } catch (error) {
         console.log(error.message);
       }
     })();
     // eslint-disable-next-line
   }, []);
+
   const fetchDepartmentList = async () => {
     try {
       const response = await axios.get(
@@ -101,7 +103,7 @@ const DepartmentList = () => {
     fetchDepartmentList();
     // eslint-disable-next-line
   }, [deptID, locationID]);
-
+  console.log(departmentList);
   // Delete Query for deleting Single Department
   const handleDeleteConfirmation = (id) => {
     setDeleteConfirmation(id);
@@ -289,10 +291,10 @@ const DepartmentList = () => {
                       {department?.departmentName || ""}
                     </td>
                     <td className="py-2 px-3">
-                      {department?.departmentHeadName || ""}
+                      {department?.departmentHeadName?.first_name || ""}
                     </td>
                     <td className="py-2 px-3">
-                      {department?.departmentHeadDelegateName || ""}
+                      {department?.departmentHeadDelegateName?.first_name || ""}
                     </td>
 
                     <td className="py-2 px-3">
