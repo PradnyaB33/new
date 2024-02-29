@@ -16,9 +16,7 @@ const Header = ({ totalSteps, step, goToStep, stepper }) => {
                 // disabled={step - 1 < index + 1 ? true : false}
                 onClick={() => goToStep(index + 1)}
                 className={` transition-bg duration-600 ease-in-out cursor-pointer  flex items-center gap-2 flex-col border-gray-200 !text-xs rounded-full md:p-2 p-[8px] border-[.5px] first-letter:
-             ${step < index + 1 ? "!bg-white" : "!bg-primary"}
-            
-            `}
+             ${step < index + 1 ? "!bg-white" : "!bg-primary"}`}
               >
                 {data?.icon ? (
                   <data.icon
