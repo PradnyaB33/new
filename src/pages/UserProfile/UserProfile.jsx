@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import {
   Button,
   Divider,
@@ -12,19 +12,26 @@ import axios from "axios";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
+import { getSignedUrl, uploadFile } from "../../services/api";
 
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
+  const [url, setUrl] = useState();
   const user = getCurrentUser();
   const userId = user._id;
   const [additionalPhoneNumber, setAdditionalPhoneNumber] = useState("");
   const [chatId, setChatId] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
-
+  const [pic, setPic] = useState();
+  const [selectedImageUrl, setSelectedImageUrl] = useState(null);
+  const [file, setFile] = useState();
+  const fileInputRef = useRef();
+  const [clicked, setClicked] = useState(false);
   const [availableUserProfileData, setAvailableProfileData] = useState({});
+
   const fetchAvailableUserProfileData = async () => {
     try {
       const response = await axios.get(
@@ -43,17 +50,41 @@ const EmployeeProfile = () => {
   };
 
   useEffect(() => {
+    console.log("file", file);
+  }, [file]);
+
+  useEffect(() => {
     fetchAvailableUserProfileData();
   }, []);
 
+  const handleImageChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile && selectedFile.type.startsWith("image/")) {
+      setFile(selectedFile);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUrl(reader.result);
+      };
+      reader.readAsDataURL(selectedFile);
+    } else {
+      handleAlert(true, "error", "Please select a valid image file.");
+    }
+  };
+
   const handleAddAdditionalDetails = async () => {
     try {
+      if (file) {
+        const signedUrlResponse = await getSignedUrl();
+        const signedUrl = signedUrlResponse.url;
+        await uploadFile(signedUrl, file);
+      }
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/profile/add/${userId}`,
         {
           additional_phone_number: additionalPhoneNumber,
           chat_id: chatId,
           status_message: statusMessage,
+          profile_pic: url,
         },
         {
           headers: {
@@ -98,13 +129,42 @@ const EmployeeProfile = () => {
           </p>
         </div>
 
-        <Grid container spacing={2}>
+        <div className="flex justify-around items-center w-full h-[25vh]">
           {/* Profile Picture */}
-          <Grid item xs={12} md={4}></Grid>
+          <div className="w-[50%]">
+            <div>
+              <input
+                style={{ display: "none" }}
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              <div className="w-full h-full flex flex-col justify-center items-center">
+                {url && (
+                  <img
+                    src={url}
+                    alt="Selected"
+                    style={{
+                      width: "150px",
+                      height: "150px",
+                      borderRadius: "50%",
+                    }}
+                  />
+                )}
+                <button
+                  onClick={() => fileInputRef.current.click()}
+                  className="flex justify-center h-full bg-[#0050A6] pt-1 pb-1 pr-4 pl-4 rounded-3xl font-semibold mt-2 text-white"
+                >
+                  Select Profile Picture
+                </button>
+              </div>
+            </div>
+          </div>
 
           {/* Additional Details */}
-          <Grid item xs={12} md={8}>
-            <div>
+          <div className="w-[50%]">
+            <div className="w-full h-full flex flex-col justify-center items-center">
               <h1
                 style={{
                   fontSize: "24px",
@@ -133,8 +193,8 @@ const EmployeeProfile = () => {
                 </h1>
               </div>
             </div>
-          </Grid>
-        </Grid>
+          </div>
+        </div>
 
         <div className="w-full py-6">
           <Divider variant="fullWidth" orientation="horizontal" />
