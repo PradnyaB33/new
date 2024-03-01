@@ -52,15 +52,19 @@ const Form16Download = ({ handleClose, open, employeeId, organizationId }) => {
               Download Form 16
             </h1>
           </div>
-          <object
-            type="application/pdf"
-            width="100%"
-            height="400px"
-            data={getForm16}
-            aria-label="Form 16 PDF"
-            className="w-full "
-          />
 
+          {getForm16 ? (
+            <object
+              type="application/pdf"
+              width="100%"
+              height="400px"
+              data={getForm16}
+              aria-label="Form 16 PDF"
+              className="w-full"
+            />
+          ) : (
+            <p className="text-center mt-4">Form 16 is not uploaded.</p>
+          )}
           <div className="px-5 space-y-4 mt-4">
             <div className="flex gap-4  mt-4 mr-4 justify-end mb-4 ">
               <Button onClick={handleClose} color="error" variant="outlined">
