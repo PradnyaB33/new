@@ -119,8 +119,8 @@ const Shifts = () => {
                 <div>
                   <h1 className="!text-lg">Shifts</h1>
                   <p className="text-xs text-gray-600">
-                    Create multiple types of leaves which will applicable to all
-                    employees. Ex: Casual leaves, Sick leaves.
+                    Create multiple types of shifts applicable to all employees.
+                    Ex: morning, afternoon.
                   </p>
                 </div>
               </div>

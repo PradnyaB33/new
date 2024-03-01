@@ -138,8 +138,7 @@ const EmployeeCodeGenerator = () => {
               <div>
                 <h1 className="!text-lg">Employee Code</h1>
                 <p className="text-xs text-gray-600">
-                  Generate the employee code when employee code will done by
-                  system and will be visible to your employees.
+                  Generate the employee code .
                 </p>
               </div>
             </div>
