@@ -64,7 +64,7 @@ const Step4 = () => {
     formData.append("contact_number", data.contact_number);
     formData.append("description", data.description);
     formData.append("creator", data.creator);
-    formData.append("packageId", data.packageId);
+    formData.append("packageInfo", data?.packageInfo?.packageId);
     formData.append("count", data.count);
 
     const response = await axios.post(
@@ -81,7 +81,6 @@ const Step4 = () => {
     onSuccess: async (data) => {
       const options = {
         key: data?.key,
-        amount: "50000",
         currency: "INR",
         name: "Aegis Plan for software", //your business name
         description: "Get Access to all premium keys",
@@ -121,29 +120,19 @@ const Step4 = () => {
   const { mutate: mutate2, isLoading: isLoading2 } = useMutation({
     mutationFn: handleDismiss,
   });
-
-  console.log(`🚀 ~ file: step-4.jsx:126 ~ data?.data:`, data?.data);
   if (data?.packageInfo === undefined) {
     return "Please Select Plan And Package";
   }
-
   if (isLoading) {
     return <Loader />;
   }
   if (isLoading2) {
     return <Loader />;
   }
-  console.log(
-    `🚀 ~ file: step-4.jsx:150 ~ getPrice(data?.packageInfo?.packageName):`,
-    getPrice(data?.packageInfo?.packageName)
-  );
-  console.log(
-    `🚀 ~ file: step-4.jsx:172 ~ data?.packageInfo?.packageName:`,
-    data?.packageInfo?.packageName
-  );
+
   return (
     <div className="px-4 grid bg-[#f8fafb] p-4 rounded-md items-center">
-      <div className="p-8 gap-2 flex flex-col items-center">
+      <div className="p-4 gap-4 flex flex-col items-center">
         <div className=" ">
           <h2 className="text-2xl font-bold ">Your Package Pricing</h2>
           <p className=" text-gray-500">You have selected Basic Package </p>

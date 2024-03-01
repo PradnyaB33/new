@@ -67,7 +67,7 @@ const PricingCard = ({
         aria-label="check"
         onClick={() => setConfirmOpen(true)}
       >
-        <QuestionMark className="text-white" />
+        <QuestionMark className="text-white text-xs" />
       </IconButton>
       <h1 className="text-2xl font-medium">{h1}</h1>
       <h3 className="text-lg font-bold">

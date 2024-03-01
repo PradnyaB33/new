@@ -73,7 +73,7 @@ const AuthInputFiled = ({
                     components={{
                       IndicatorSeparator: () => null,
                     }}
-                    value={value}
+                    value={field?.value}
                     options={options}
                     onChange={(value) => {
                       field.onChange(value);
