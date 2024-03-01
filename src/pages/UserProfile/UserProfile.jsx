@@ -3,7 +3,6 @@ import {
   Button,
   Divider,
   FormControl,
-  Grid,
   InputLabel,
   Paper,
   TextField,
@@ -19,43 +18,37 @@ const EmployeeProfile = () => {
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
-  const [url, setUrl] = useState();
   const user = getCurrentUser();
   const userId = user._id;
+  const [url, setUrl] = useState();
   const [additionalPhoneNumber, setAdditionalPhoneNumber] = useState("");
   const [chatId, setChatId] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
-  const [pic, setPic] = useState();
-  const [selectedImageUrl, setSelectedImageUrl] = useState(null);
   const [file, setFile] = useState();
   const fileInputRef = useRef();
-  const [clicked, setClicked] = useState(false);
   const [availableUserProfileData, setAvailableProfileData] = useState({});
 
-  const fetchAvailableUserProfileData = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get/profile/${userId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      setAvailableProfileData(response.data.employee);
-    } catch (error) {
-      handleAlert(true, "error", "Failed to fetch User Profile Data");
-      console.error("Error fetching user profile data:", error);
-    }
-  };
+
 
   useEffect(() => {
-    console.log("file", file);
-  }, [file]);
-
-  useEffect(() => {
+    const fetchAvailableUserProfileData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/employee/get/profile/${userId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setAvailableProfileData(response.data.employee);
+      } catch (error) {
+        handleAlert(true, "error", "Failed to fetch User Profile Data");
+        console.error("Error fetching user profile data:", error);
+      }
+    };
     fetchAvailableUserProfileData();
-  }, []);
+  }, [handleAlert, token, userId]);
 
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -73,10 +66,11 @@ const EmployeeProfile = () => {
 
   const handleAddAdditionalDetails = async () => {
     try {
+      let imageUrl
       if (file) {
         const signedUrlResponse = await getSignedUrl();
         const signedUrl = signedUrlResponse.url;
-        await uploadFile(signedUrl, file);
+        imageUrl =  await uploadFile(signedUrl, file);
       }
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/profile/add/${userId}`,
@@ -84,7 +78,7 @@ const EmployeeProfile = () => {
           additional_phone_number: additionalPhoneNumber,
           chat_id: chatId,
           status_message: statusMessage,
-          profile_pic: url,
+          user_logo_url: imageUrl.Location.split('?')[0],
         },
         {
           headers: {
@@ -130,7 +124,6 @@ const EmployeeProfile = () => {
         </div>
 
         <div className="flex justify-around items-center w-full h-[25vh]">
-          {/* Profile Picture */}
           <div className="w-[50%]">
             <div>
               <input
@@ -141,9 +134,9 @@ const EmployeeProfile = () => {
                 onChange={handleImageChange}
               />
               <div className="w-full h-full flex flex-col justify-center items-center">
-                {url && (
+                {(url || availableUserProfileData?.user_logo_url) && (
                   <img
-                    src={url}
+                    src={url || availableUserProfileData?.user_logo_url}
                     alt="Selected"
                     style={{
                       width: "150px",
@@ -156,13 +149,12 @@ const EmployeeProfile = () => {
                   onClick={() => fileInputRef.current.click()}
                   className="flex justify-center h-full bg-[#0050A6] pt-1 pb-1 pr-4 pl-4 rounded-3xl font-semibold mt-2 text-white"
                 >
-                  Select Profile Picture
+                 {availableUserProfileData.user_logo_url ? "Update Profile Picture" : "Select Profile Picture"}
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Additional Details */}
           <div className="w-[50%]">
             <div className="w-full h-full flex flex-col justify-center items-center">
               <h1
@@ -200,7 +192,7 @@ const EmployeeProfile = () => {
           <Divider variant="fullWidth" orientation="horizontal" />
         </div>
 
-        {/* Additional Information Fields */}
+
         <div className="w-full px-4">
           <InputLabel htmlFor="additionalPhoneNumber">
             Additional Phone Number
