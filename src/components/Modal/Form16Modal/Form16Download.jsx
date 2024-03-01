@@ -1,5 +1,7 @@
 import React from "react";
 import { Box, Button, Modal } from "@mui/material";
+import axios from "axios";
+import { useQuery } from "react-query";
 const style = {
   position: "absolute",
   top: "50%",
@@ -10,12 +12,25 @@ const style = {
 };
 
 const Form16Download = ({ handleClose, open, employeeId, organizationId }) => {
-  let pdfPath =
-    "https://aegis-dev.s3.ap-south-1.amazonaws.com/65d86909299bc72288c0b994-salaryslip%20%289%29.pdf";
+  // Get Query
+  const { data: getForm16 } = useQuery(
+    ["getForm16"],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/get/form16/${organizationId}/${employeeId}`
+      );
+      return response.data.data;
+    },
+    {
+      enabled: open,
+    }
+  );
+  console.log(getForm16, true);
+
   const handleDownload = () => {
     // You can use any method to trigger the download, such as creating an invisible link and clicking it
     const link = document.createElement("a");
-    link.href = pdfPath;
+    link.href = getForm16;
     link.download = "Form16.pdf";
     link.click();
   };
@@ -40,8 +55,9 @@ const Form16Download = ({ handleClose, open, employeeId, organizationId }) => {
           <object
             type="application/pdf"
             width="100%"
-            height="500px"
-            data="https://aegis-dev.s3.ap-south-1.amazonaws.com/65d86909299bc72288c0b994-salaryslip%20%289%29.pdf"
+            height="400px"
+            data={getForm16}
+            aria-label="Form 16 PDF"
             className="w-full "
           />
 
@@ -55,7 +71,7 @@ const Form16Download = ({ handleClose, open, employeeId, organizationId }) => {
                 variant="contained"
                 color="primary"
               >
-                Form 16
+                Download Form 16
               </Button>
             </div>
           </div>

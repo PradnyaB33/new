@@ -16,7 +16,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
@@ -149,12 +148,7 @@ const SignIn = () => {
 
       onError: (data) => {
         if (data?.response?.status === 500) {
-          Swal.fire({
-            title: "Warning",
-            text: `${data?.response?.data?.message}`,
-            icon: "warning",
-            confirmButtonText: "ok",
-          });
+          handleAlert(true, "warning", `${data?.response?.data?.message}`);
         }
         if (data?.response?.data?.success === false)
           handleAlert(true, "error", data?.response?.data?.message);
@@ -172,12 +166,7 @@ const SignIn = () => {
         }
 
         if (data?.data?.success === true) {
-          Swal.fire({
-            title: "Congratulation",
-            text: "OTP verifed successfully",
-            icon: "success",
-            confirmButtonText: "ok",
-          });
+          handleAlert(true, "success", `OTP verified successfully`);
           setdisplay(false);
           setIsVerified(true);
           setIsTimeVisible(false);
@@ -206,62 +195,38 @@ const SignIn = () => {
     <>
       <section className="flex  w-full">
         {/* Left Section */}
-        <article className="!w-[40%] bluegrad  h-auto lg:block hidden text-white flex-col  ">
-          <div className="space-y-2 mb-8 h-screen flex-col flex items-center justify-center">
-            <img src="/HRMS.svg" className="w-[70%]" alt="none" />
-          </div>
-        </article>
+        <div className="!w-[40%]  md:justify-start lg:flex hidden text-white flex-col items-center justify-center lg:h-screen relative">
+          <div className="bg__gradient  absolute inset-0 "></div>
+          <ul className="circles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+          <div className="space-y-2 mb-8 flex-col flex items-center justify-center"></div>
+        </div>
         {/* Right Section */}
-        <article className="lg:!w-[60%] w-full h-max min-h-screen  md:block flex items-center flex-col justify-center">
-          <div className="md:flex hidden  w-full py-4 px-8  gap-4 items-center justify-center lg:justify-end">
-            <p>
-              {location.pathname === "/sign-up"
-                ? "Already have an account?"
-                : "Don't have an account?"}
-            </p>
-            <Link
-              to={location.pathname === "/sign-up" ? "/sign-in" : "/sign-up"}
-            >
-              <button className="py-[.22rem] text-sm uppercase font-semibold rounded-sm px-6 border-[.5px] border-black hover:bg-black hover:text-white transition-all">
-                {location.pathname === "/sign-up"
-                  ? "Sign In"
-                  : "Create Account"}
-              </button>
-            </Link>
-          </div>
-
+        <article className="lg:!w-[60%] w-full h-auto bg-white min-h-screen  md:block flex items-center flex-col justify-center">
           <form
             onSubmit={handleSubmit(onSubmit)}
             autoComplete="off"
-            className="flex   my-10 !px-20 lg:w-[80%] w-full bg-white flex-col h-fit gap-1"
+            className="flex   my-16 !px-20 lg:w-[80%] w-full bg-white flex-col h-fit gap-1"
           >
             <div className="flex-col gap-4 w-max !flex md:space-x-4  space-x-2 mb-4 ">
-              {/* <img
-                src="/logo.svg"
-                className="md:h-[60px] !h-[50px]"
-                alt="logo"
-              /> */}
               <div className="flex flex-col space-y-1">
                 {/* <div className="mb-4"> */}
                 <h1 className="font-bold text-2xl md:text-3xl">
                   Register Account
                 </h1>
-
-                {/* <p className="md:text-lg text-sm">
-                  Enter your credentials below
-                </p> */}
-                {/* </div> */}
               </div>
             </div>
-            {/* gap-4 <div className="flex space-x-4 items-center">
-              <img src="/logo.svg" className="h-[906x]" alt="80ogo" />
-              <div className="flex flex-col space-y-1">
-                <h1 className="font-[600] text-3xl">
-                  Register for AEGIS Account
-                </h1>
-                <p className="text-lg">Enter your credentials below</p>
-              </div>
-            </div> */}
+
             <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
               {/* First Name */}
               <AuthInputFiled
@@ -419,7 +384,7 @@ const SignIn = () => {
             </div>
 
             <p className="flex gap-2 my-2">
-              Aleady have an account?
+              Already have an account?
               <Link
                 to={location.pathname === "/sign-up" ? "/sign-in" : "/sign-up"}
                 className="hover:underline"

@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FilterCenterFocusOutlined } from "@mui/icons-material";
+import { FilterCenterFocusOutlined, Person } from "@mui/icons-material";
 import { Box, Button, Modal } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -10,13 +10,14 @@ const packageSchema = z.object({
   first_name: z.string(),
   last_name: z.string(),
   middle_name: z.string(),
-  email: z.string().isEmail,
-  password: z.string(),
-  phone_number: z.string(),
   joining_date: z.date(),
-  gender: z.date(),
-  profile: z.enum(["Employee", "Delegate Super Admin"]),
-  citizenship: z.enum(["Indian", "Delegate Super Admin"]),
+  email: z.string().isEmail,
+  phone_number: z.string(),
+  password: z.string(),
+  date_of_birth: z.date(),
+  gender: z.enum(["Male", "Female", "Other"]),
+  profile: z.enum(["Delegate Super Admin"]),
+  citizenship: z.string(),
 });
 const AddDelegate = () => {
   const { control, formState, handleSubmit } = useForm({
@@ -40,7 +41,7 @@ const AddDelegate = () => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box className="border-none !z-10 shadow-md outline-none rounded-md gap-2 flex flex-col absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] bg-white p-4 h-[350px] overflow-auto md:w-[48rem] w-[350px]">
+      <Box className="border-none !z-10 shadow-md outline-none rounded-md gap-2 flex flex-col absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] bg-white p-4 overflow-auto md:w-[48rem] w-[350px] h-fit items-center">
         <h1 className="text-xl pl-2 font-semibold font-sans">
           Add delegate super admin
         </h1>
@@ -51,18 +52,18 @@ const AddDelegate = () => {
         >
           <div className="flex flex-col flex-wrap w-full">
             <AuthInputFiled
-              name={"name"}
-              icon={FilterCenterFocusOutlined}
+              name={"first_name"}
+              icon={Person}
               control={control}
-              type="number"
-              placeholder={"name"}
-              label={`name *`}
+              type="text"
+              placeholder={"Sahil"}
+              label={`First Name *`}
               errors={errors}
-              error={errors.name}
+              error={errors.first_name}
               className={""}
             />
             <AuthInputFiled
-              name={"name"}
+              name={"middle_name"}
               icon={FilterCenterFocusOutlined}
               control={control}
               type="number"

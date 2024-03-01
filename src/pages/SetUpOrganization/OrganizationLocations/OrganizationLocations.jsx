@@ -544,7 +544,7 @@ const OrganizationLocations = () => {
                     fullWidth
                   />
                 </DialogContent>
-                <div className="flex gap-4 mt-4 justify-center mb-4">
+                <div className="flex gap-4 mt-4  justify-end mb-4 mr-6">
                   <Button
                     onClick={handleClose}
                     color="error"
@@ -566,36 +566,7 @@ const OrganizationLocations = () => {
                     {editIndex !== null ? (
                       <FormattedMessage
                         id="saveChanges"
-                        defaultMessage="Save Changes"
-                      />
-                    ) : (
-                      <FormattedMessage
-                        id="addLocation"
-                        defaultMessage="Add Location"
-                      />
-                    )}
-                  </Button>
-                </div>
-
-                {/* <DialogActions>
-                  <Button onClick={handleClose} color="secondary">
-                    <FormattedMessage id="cancel" defaultMessage="Cancel" />
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      
-                      if (editIndex !== null) {
-                        handleUpdateLocation(editIndex);
-                      } else {
-                        handleAddLocation();
-                      }
-                    }}
-                    color="primary"
-                  >
-                    {editIndex !== null ? (
-                      <FormattedMessage
-                        id="saveChanges"
-                        defaultMessage="Save Changes"
+                        defaultMessage="Apply"
                       />
                     ) : (
                       <FormattedMessage
@@ -604,7 +575,7 @@ const OrganizationLocations = () => {
                       />
                     )}
                   </Button>
-                </DialogActions> */}
+                </div>
               </Dialog>
               <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
                 <DialogTitle>Confirm Deletion</DialogTitle>

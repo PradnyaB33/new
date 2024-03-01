@@ -1,11 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ContactMail, TodayOutlined } from "@mui/icons-material";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useDepartmentState from "../../../hooks/DepartmentHook/useDepartmentState";
-
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import NotesIcon from "@mui/icons-material/Notes";
+import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 const Step2 = ({ isLastStep, nextStep }) => {
   const {
     dept_cost_center_name,
@@ -16,8 +17,8 @@ const Step2 = ({ isLastStep, nextStep }) => {
   } = useDepartmentState();
 
   const DepartmentSchema = z.object({
-    dept_cost_center_name: z.string(),
-    dept_cost_center_description: z.string(),
+    dept_cost_center_name: z.string().optional(),
+    dept_cost_center_description: z.string().optional(),
     dept_id: z.string(),
     dept_cost_center_id: z.string(),
   });
@@ -50,7 +51,7 @@ const Step2 = ({ isLastStep, nextStep }) => {
         <div className="grid grid-cols-2 w-full gap-3">
           <AuthInputFiled
             name="dept_cost_center_name"
-            icon={ContactMail}
+            icon={MonetizationOnIcon}
             control={control}
             type="text"
             placeholder="Department Cost Center Name"
@@ -60,7 +61,7 @@ const Step2 = ({ isLastStep, nextStep }) => {
           />
           <AuthInputFiled
             name="dept_cost_center_description"
-            icon={TodayOutlined}
+            icon={NotesIcon}
             control={control}
             type="text"
             placeholder="Department Cost Center Description"
@@ -73,7 +74,7 @@ const Step2 = ({ isLastStep, nextStep }) => {
         <div className="grid grid-cols-2 w-full gap-3">
           <AuthInputFiled
             name="dept_id"
-            icon={ContactMail}
+            icon={FormatListNumberedIcon}
             control={control}
             type="text"
             placeholder="Department ID"
@@ -83,7 +84,7 @@ const Step2 = ({ isLastStep, nextStep }) => {
           />
           <AuthInputFiled
             name="dept_cost_center_id"
-            icon={TodayOutlined}
+            icon={FormatListNumberedIcon}
             control={control}
             type="text"
             placeholder="Department Cost Center Id"
