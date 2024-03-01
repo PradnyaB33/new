@@ -5,6 +5,7 @@ import {
   FormControl,
   InputLabel,
   Paper,
+  Skeleton,
   TextField,
 } from "@mui/material";
 import axios from "axios";
@@ -23,12 +24,11 @@ const EmployeeProfile = () => {
   const [url, setUrl] = useState();
   const [additionalPhoneNumber, setAdditionalPhoneNumber] = useState("");
   const [chatId, setChatId] = useState("");
+  const [fetched, setFetched] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
   const [file, setFile] = useState();
   const fileInputRef = useRef();
   const [availableUserProfileData, setAvailableProfileData] = useState({});
-
-
 
   useEffect(() => {
     const fetchAvailableUserProfileData = async () => {
@@ -42,6 +42,12 @@ const EmployeeProfile = () => {
           }
         );
         setAvailableProfileData(response.data.employee);
+        setChatId(response.data.employee.chat_id);
+        setAdditionalPhoneNumber(
+          response.data.employee.additional_phone_number
+        );
+        setStatusMessage(response.data.employee.status_message);
+        setFetched(true);
       } catch (error) {
         handleAlert(true, "error", "Failed to fetch User Profile Data");
         console.error("Error fetching user profile data:", error);
@@ -66,11 +72,11 @@ const EmployeeProfile = () => {
 
   const handleAddAdditionalDetails = async () => {
     try {
-      let imageUrl
+      let imageUrl;
       if (file) {
         const signedUrlResponse = await getSignedUrl();
         const signedUrl = signedUrlResponse.url;
-        imageUrl =  await uploadFile(signedUrl, file);
+        imageUrl = await uploadFile(signedUrl, file);
       }
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/profile/add/${userId}`,
@@ -78,7 +84,7 @@ const EmployeeProfile = () => {
           additional_phone_number: additionalPhoneNumber,
           chat_id: chatId,
           status_message: statusMessage,
-          user_logo_url: imageUrl.Location.split('?')[0],
+          user_logo_url: imageUrl?.Location.split("?")[0],
         },
         {
           headers: {
@@ -110,7 +116,7 @@ const EmployeeProfile = () => {
         sx={{
           width: "100%",
           maxWidth: "800px",
-          margin: "10% auto",
+          margin: "6% auto",
           padding: "20px",
         }}
       >
@@ -134,7 +140,7 @@ const EmployeeProfile = () => {
                 onChange={handleImageChange}
               />
               <div className="w-full h-full flex flex-col justify-center items-center">
-                {(url || availableUserProfileData?.user_logo_url) && (
+                {url || availableUserProfileData?.user_logo_url ? (
                   <img
                     src={url || availableUserProfileData?.user_logo_url}
                     alt="Selected"
@@ -144,12 +150,16 @@ const EmployeeProfile = () => {
                       borderRadius: "50%",
                     }}
                   />
+                ) : (
+                  <Skeleton variant="circular" width="150px" height="150px" />
                 )}
                 <button
                   onClick={() => fileInputRef.current.click()}
-                  className="flex justify-center h-full bg-[#0050A6] pt-1 pb-1 pr-4 pl-4 rounded-3xl font-semibold mt-2 text-white"
+                  className="flex justify-center h-full bg-[#1976d2] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
                 >
-                 {availableUserProfileData.user_logo_url ? "Update Profile Picture" : "Select Profile Picture"}
+                  {availableUserProfileData.user_logo_url
+                    ? "Update Profile Picture"
+                    : "Select Profile Picture"}
                 </button>
               </div>
             </div>
@@ -175,13 +185,45 @@ const EmployeeProfile = () => {
                   className="text-lg"
                   style={{ color: "#000", textAlign: "center" }}
                 >
-                  Status: {availableUserProfileData?.status_message || ""}
+                  {!availableUserProfileData.status_message && !fetched ? (
+                    <div className="w-full">
+                      <Skeleton
+                        variant="text"
+                        width="200px"
+                        className="flex m-auto"
+                        sx={{ fontSize: "1rem" }}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      Status:{" "}
+                      <span className="font-semibold">
+                        {availableUserProfileData?.status_message || "NA"}
+                      </span>
+                    </>
+                  )}
                 </h1>
                 <h1
                   className="text-lg"
                   style={{ color: "#000", textAlign: "center" }}
                 >
-                  Chat Id: {availableUserProfileData?.chat_id || ""}
+                  {!availableUserProfileData.chat_id && !fetched ? (
+                    <div className="w-full">
+                      <Skeleton
+                        variant="text"
+                        width="200px"
+                        className="flex m-auto"
+                        sx={{ fontSize: "1rem" }}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      Chat Id:{" "}
+                      <span className="font-semibold">
+                        {availableUserProfileData?.chat_id || "NA"}
+                      </span>
+                    </>
+                  )}
                 </h1>
               </div>
             </div>
@@ -191,7 +233,6 @@ const EmployeeProfile = () => {
         <div className="w-full py-6">
           <Divider variant="fullWidth" orientation="horizontal" />
         </div>
-
 
         <div className="w-full px-4">
           <InputLabel htmlFor="additionalPhoneNumber">

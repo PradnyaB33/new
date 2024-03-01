@@ -24,7 +24,7 @@ export default function ProfileIcon() {
   const [availableUserProfileData, setAvailableProfileData] = useState()
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  const userId = user._id;
+  const userId = user?._id;
 
   useEffect(() => {
     const fetchAvailableUserProfileData = async () => {
@@ -100,7 +100,7 @@ export default function ProfileIcon() {
               <div className="w-max flex gap-3 pt-4 pb-6  items-center  h-max rounded-full ">
                 <Avatar
                   variant="circular"
-                  src={availableUserProfileData?.user_logo_url}
+                  src={ "" || availableUserProfileData?.user_logo_url}
                   alt="none"
                   sx={{ width: 35, height: 35 }}
                   className="!rounded-[50%]
