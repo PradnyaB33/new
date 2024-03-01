@@ -16,6 +16,7 @@ import {
   Settings,
   SupervisorAccount,
   TrendingUp,
+  Work,
 } from "@mui/icons-material";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
@@ -25,7 +26,6 @@ import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
-import WorkIcon from "@mui/icons-material/Work";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -97,13 +97,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Attendance",
           },
-          {
-            key: "shiftManagement",
-            isVisible: true,
-            link: "/shift-management",
-            icon: <WorkIcon className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Shift Management",
-          },
+
           {
             key: "accountSettings",
             isVisible: true,
@@ -178,6 +172,13 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "shiftManagement",
+            isVisible: true,
+            link: "/shift-management",
+            icon: <Work className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Shift Allowance",
+          },
+          {
+            key: "shiftManagement",
             isVisible:
               isVisible &&
               ["Super-Admin", "Hr", "Manager", "Delegate-Super Admin"].includes(
@@ -187,7 +188,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: (
               <ScheduleOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
-            text: "Shift Management",
+            text: "Shift Allowance",
           },
           {
             key: "createsalary",

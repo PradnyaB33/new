@@ -1,7 +1,9 @@
 import React from "react";
+import useOther from "../../../hooks/IncomeTax/useOther";
 import TDSTable3 from "./Table/TDSTable3";
 
 const Tab3 = () => {
+  const { totalHeads } = useOther();
   return (
     <div className="overflow-auto !p-0 ">
       <div className="flex items-center justify-between ">
@@ -16,12 +18,9 @@ const Tab3 = () => {
       <div className="grid bg-white border-[.5px] border-gray-200 grid-cols-6 gap-4 p-4">
         <div>
           <h1 className="text-gray-600">Amount Declared</h1>
-          <p className="text-xl">INR 0</p>
+          <p className="text-xl">INR {totalHeads.toFixed(2)}</p>
         </div>
-        <div>
-          <h1 className="text-gray-600">Amount Declared</h1>
-          <p className="text-xl">INR 0</p>
-        </div>
+
         <div>
           <h1 className="text-gray-600">Pending Approval Amount</h1>
           <p className="text-xl">INR 0</p>

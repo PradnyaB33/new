@@ -18,7 +18,6 @@ import DashBoardHR from "./pages/DashBoard/DashBoardHR";
 import Dashboard from "./pages/DashBoard/Dashboard";
 import DashboardManger from "./pages/DashBoard/DashboardManger";
 import SuperAdmin from "./pages/DashBoard/SuperAdmin";
-import AddDepartments from "./pages/Departments/AddDepartments";
 import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
 import DeleteEmployee from "./pages/Employee/DeleteEmployee";
@@ -70,7 +69,7 @@ const App = () => {
       <Route
         path="/"
         element={
-          <RequireAuth permission={["Super-Admin", "Hr"]}>
+          <RequireAuth permission={["Super-Admin", "HR"]}>
             <Home />
           </RequireAuth>
         }
@@ -87,10 +86,7 @@ const App = () => {
           </RequireAuth>
         }
       />
-      <Route
-        path="/organisation/:organisationId/departmentTest"
-        element={<DepartmentTest />}
-      />
+
       <Route path="/paymentfailed" element={<PaymentFailed />} />
 
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
@@ -127,7 +123,7 @@ const App = () => {
               "Delegate-Department-Admin",
               "Accountant",
               "Delegate-Accountant",
-              "Hr",
+              "HR",
               "Manager",
               "Employee",
             ]}
@@ -163,7 +159,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/dashboard/HR-dashboard"
         element={
-          <RequireAuth permission={"Hr"}>
+          <RequireAuth permission={"HR"}>
             <DashBoardHR />
           </RequireAuth>
         }
@@ -225,7 +221,7 @@ const App = () => {
               "Delegate-Department-Admin",
             ]}
           >
-            <AddDepartments />
+            <DepartmentTest />
           </RequireAuth>
         }
       />
@@ -267,7 +263,7 @@ const App = () => {
               "Delegate-Department-Admin",
               "Accountant",
               "Delegate-Accountant",
-              "Hr",
+              "HR",
               "Manager",
               "Employee",
             ]}
@@ -280,7 +276,7 @@ const App = () => {
         path="/organisation/:organisationId/employee-onboarding"
         element={
           <RequireAuth
-            permission={["Super-Admin", "Delegate-Super Admin", "Hr"]}
+            permission={["Super-Admin", "Delegate-Super Admin", "HR"]}
           >
             {/* <EmployeeAdd /> */}
             <EmployeeTest />
@@ -291,7 +287,7 @@ const App = () => {
         path="/organisation/:organisationId/employee-offboarding"
         element={
           <RequireAuth
-            permission={["Super-Admin", "Delegate-Super Admin", "Hr"]}
+            permission={["Super-Admin", "Delegate-Super Admin", "HR"]}
           >
             <DeleteEmployee />
           </RequireAuth>
@@ -301,7 +297,7 @@ const App = () => {
         path="/organisation/:organisationId/employee-list"
         element={
           <RequireAuth
-            permission={["Super-Admin", "Delegate-Super Admin", "Hr"]}
+            permission={["Super-Admin", "Delegate-Super Admin", "HR"]}
           >
             <EmployeeList />
           </RequireAuth>
@@ -319,7 +315,7 @@ const App = () => {
         path="/organisation/:organisationId/salary-management"
         element={
           <RequireAuth
-            permission={["Super-Admin", "Delegate-Super Admin", "Hr"]}
+            permission={["Super-Admin", "Delegate-Super Admin", "HR"]}
           >
             <SalaryManagement />
           </RequireAuth>
@@ -329,7 +325,7 @@ const App = () => {
         path="/organisation/:organisationId/salary-calculate/:userId"
         element={
           <RequireAuth
-            permission={["Super-Admin", "Delegate-Super Admin", "Hr"]}
+            permission={["Super-Admin", "Delegate-Super Admin", "HR"]}
           >
             <SalaryCalculate />
           </RequireAuth>
@@ -348,7 +344,7 @@ const App = () => {
               "Delegate-Department-Admin",
               "Accountant",
               "Delegate-Accountant",
-              "Hr",
+              "HR",
               "Manager",
               "Employee",
             ]}
@@ -370,7 +366,7 @@ const App = () => {
               "Delegate-Department-Admin",
               "Accountant",
               "Delegate-Accountant",
-              "Hr",
+              "HR",
               "Manager",
               "Employee",
             ]}
@@ -568,7 +564,7 @@ const App = () => {
               "Delegate-Department-Admin",
               "Accountant",
               "Delegate-Accountant",
-              "Hr",
+              "HR",
               "Manager",
               "Employee",
             ]}

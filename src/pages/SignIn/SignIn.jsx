@@ -167,15 +167,6 @@ const SignIn = () => {
         </div>
 
         <article className="lg:w-[60%] h-screen  !bg-white w-full flex lg:justify-start justify-center  items-center lg:items-start flex-col ">
-          {/* <div className="lg:flex hidden w-full  lg:py-2 lg:px-8 my-2 gap-4 items-center justify-center lg:justify-end">
-            <p>Don't have an account ?</p>
-            <Link to="/sign-up">
-              <button className="py-[.22rem] text-sm uppercase  font-semibold rounded-sm px-6 border-[.5px] border-black hover:bg-black hover:text-white transition-all">
-                Create Account
-              </button>
-            </Link>
-          </div> */}
-
           <form
             onSubmit={onSubmit}
             autoComplete="off"
@@ -183,13 +174,10 @@ const SignIn = () => {
           >
             <div className="flex flex-col space-x-4 lg:items-start items-center">
               <div className="flex flex-col gap-1  w-full items-center justify-center space-y-1">
-                {/* <div className="mb-4"> */}
                 <img src="/logo.svg" className="h-[45px]" alt="logo" />
                 <h1 className="font-[600] text-center w-full text-3xl">
                   Log in to AEGIS
                 </h1>
-                {/* <p className="text-lg">Enter your login credentials below</p> */}
-                {/* </div> */}
               </div>
             </div>
 
