@@ -19,10 +19,6 @@ const Tab4 = () => {
           <p className="text-xl">INR 0</p>
         </div>
         <div>
-          <h1 className="text-gray-600">Amount Declared</h1>
-          <p className="text-xl">INR 0</p>
-        </div>
-        <div>
           <h1 className="text-gray-600">Pending Approval Amount</h1>
           <p className="text-xl">INR 0</p>
         </div>
