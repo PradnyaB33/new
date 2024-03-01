@@ -89,7 +89,7 @@ const ShiftAllowance = () => {
                     </Button>
                   </Badge>
                   <p className="!text-gray-400 font-semibold mb-2 text-xl">
-                    select shifts
+                    Select Shifts
                   </p>
                 </div>
               </div>

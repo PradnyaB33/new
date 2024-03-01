@@ -146,47 +146,43 @@ const ShiftsTable = () => {
     setAnchorEl(null);
   };
   return (
-    <article className="md:w-[350px] w-full h-max bg-white shadow-lg rounded-lg ">
-      <h1 className="text-xl py-6 px-6 font-semibold flex items-center gap-3 justify-between">
+    <article className="md:w-[350px] w-full h-max shadow-lg rounded-lg border-2">
+      <h1 className="text-xl py-6 px-6 font-semibold flex items-center gap-3 justify-between border-b-2">
         <AccountBalanceIcon className="text-gray-400" />
-        <div>Summary of shifts</div>
-        <Tooltip title="Click to get Summary for current month">
-          <IconButton onClick={handlePopoverOpen}>
-            <MoreVert className="!text-[19px] text-black" />
-          </IconButton>
-        </Tooltip>
+        <div className="">Summary of Shifts</div>
+        <div className="pr-5"></div>
       </h1>
       <div className="w-full">
-        <div className="bg-[#7f567b]">
-          <div className="flex justify-between items-center py-6 px-6">
-            <h1 className="text-md text-gray-200 font-bold tracking-wide">
-              Applied Shifts
+        <div >
+          <div className="flex justify-between items-center py-6 px-6 border-b-2">
+            <h1 className="text-md text-black font-bold tracking-wide">
+              Applied
             </h1>
-            <h1 className="text-lg tracking-wide font-bold text-gray-200">{shifts.length}</h1>
+            <h1 className="text-lg tracking-wide font-bold text-black">{shifts.length}</h1>
           </div>
         </div>
-        <div className="bg-[#7f567b]">
-          <div className="flex justify-between items-center py-6 px-6">
-            <h1 className="text-md text-gray-200 font-bold tracking-wide">
-              Approved Shifts
+        <div>
+          <div className="flex justify-between items-center py-6 px-6 border-b-2">
+            <h1 className="text-md text-black font-bold tracking-wide">
+              Approved
             </h1>
-            <h1 className="text-lg tracking-wide font-bold text-gray-200">{approved.length}</h1>
+            <h1 className="text-lg tracking-wide font-bold text-black">{approved.length}</h1>
           </div>
         </div>
-        <div className="bg-[#7f567b]">
-          <div className="flex justify-between items-center py-6 px-6">
-            <h1 className="text-md text-gray-200 font-bold tracking-wide">
-              Pending Shifts
+        <div >
+          <div className="flex justify-between items-center py-6 px-6 border-b-2">
+            <h1 className="text-md text-black font-bold tracking-wide">
+              Pending For Approval
             </h1>
-            <h1 className="text-lg tracking-wide font-bold text-gray-200">{pending.length}</h1>
+            <h1 className="text-lg tracking-wide font-bold text-black">{pending.length}</h1>
           </div>
         </div>
-        <div className="bg-[#7f567b]">
+        <div >
           <div className="flex justify-between items-center py-6 px-6">
-            <h1 className="text-md text-gray-200 font-bold tracking-wide">
-              Rejected Shifts
+            <h1 className="text-md text-black font-bold tracking-wide">
+              Rejected
             </h1>
-            <h1 className="text-lg tracking-wide font-bold text-gray-200">{rejected.length}</h1>
+            <h1 className="text-lg tracking-wide font-bold text-black">{rejected.length}</h1>
           </div>
         </div>
       </div>

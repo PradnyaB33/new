@@ -24,7 +24,6 @@ const EmployeeProfile = () => {
   const [chatId, setChatId] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
 
-  // Function to fetch additional details of the employee
   const [availableUserProfileData, setAvailableProfileData] = useState({});
   const fetchAvailableUserProfileData = async () => {
     try {
@@ -45,10 +44,8 @@ const EmployeeProfile = () => {
 
   useEffect(() => {
     fetchAvailableUserProfileData();
-    // eslint-disable-next-line
   }, []);
 
-  // Function to handle adding additional details
   const handleAddAdditionalDetails = async () => {
     try {
       const response = await axios.post(

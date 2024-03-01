@@ -507,12 +507,12 @@ const PublicHoliday = () => {
                   </div>
 
                   <div className="mt-5 flex gap-5 justify-end">
-                    <Button color="error" variant="outlined">
+                    <Button color="error" variant="outlined" onClick={handleClose}>
                       cancel
                     </Button>
                     <Button
                       onClick={doTheOperation}
-                      color="warning"
+                      color="primary"
                       variant="contained"
                     >
                       Apply

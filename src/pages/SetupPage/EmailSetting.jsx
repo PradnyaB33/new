@@ -345,8 +345,8 @@ const EmailSetting = () => {
                     add
                   </Button>
                   <Button
-                    color="warning"
-                    variant="contained"
+                    color="error"
+                    variant="outlined"
                     onClick={handleClose}
                   >
                     cancel
