@@ -107,7 +107,7 @@ const Notification = () => {
         {
           data?.leaveRequests?.map((items, idx) => {
             console.log(`🚀 ~ items:`, dayjs(items.end).diff(dayjs(items.start)));
-            return <ShiftRejectModel key={idx} items={items} />
+            return <LeaveRejectmodal key={idx} items={items} />
           })
         }
       </div>
