@@ -315,7 +315,7 @@ const SalaryCalculate = () => {
         handleAlert(
           true,
           "success",
-          " Monthly Salary Detail added Successfully"
+          "Monthly Salary Detail added Successfully"
         );
         basicSalary = 0;
         hraSalary = 0;
@@ -340,16 +340,20 @@ const SalaryCalculate = () => {
         }, 5000);
       }
     } catch (error) {
-      console.error("Error adding Monthly salary data:", error);
-      handleAlert(true, "error", "Something went wrong");
+      if (error.response && error.response.status === 400) {
+        // If salary for the given month and year already exists
+        handleAlert(
+          true,
+          "error",
+          "Salary for this month and year already exists"
+        );
+      } else {
+        // For other errors
+        console.error("Error adding salary details:", error);
+        handleAlert(true, "error", "Failed to add salary details");
+      }
     }
   };
-
-  // const [employeeData, setEmployeeData] = useState(null); // Employee data state
-
-  // const handleGeneratePDF = () => {
-  //   setEmployeeData(availableEmployee);
-  // };
 
   return (
     <>
