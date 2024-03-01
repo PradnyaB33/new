@@ -33,13 +33,14 @@ const Step3 = ({ prevStep }) => {
         departmentName: dept_name,
         departmentDescription: dept_description,
         departmentLocation: dept_location.value,
-        dept_head_name: dept_head_name.value,
-        dept_delegate_head_name: dept_delegate_head_name.value,
+        departmentHeadName: dept_head_name?.value || "",
+        departmentHeadDelegateName: dept_delegate_head_name?.value || "",
         costCenterName: dept_cost_center_name,
         costCenterDescription: dept_cost_center_description,
         departmentId: dept_id,
         dept_cost_center_id: dept_cost_center_id,
       };
+      console.log("deptdata", deptData);
       const response = axios.post(
         `${process.env.REACT_APP_API}/route/department/create/${organisationId}`,
         deptData,
