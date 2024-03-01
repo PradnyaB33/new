@@ -13,20 +13,30 @@ const useDepartmentState = create((set) => {
     dept_delegate_head_name: undefined,
     data: undefined,
 
-    // Setter function for updating multiple properties at once
-    setStep2Data: (remotePunching) => {
-      set({ ...remotePunching });
+    setStep1Data: (data) => {
+      set((state) => ({
+        ...state,
+        dept_name: data.dept_name,
+        dept_description: data.dept_description,
+        dept_location: data.dept_location,
+        dept_head_name: data.dept_head_name,
+        dept_delegate_head_name: data.dept_delegate_head_name,
+      }));
     },
-
+    setStep2Data: (data) => {
+      set((state) => ({
+        ...state,
+        dept_cost_center_name: data.dept_cost_center_name,
+        dept_cost_center_description: data.dept_cost_center_description,
+        dept_id: data.dept_id,
+        dept_cost_center_id: data.dept_cost_center_id,
+      }));
+    },
     setStep3Data: (data) => {
-      console.log(`🚀 ~ data:`, data);
-      set({ data: { ...data } });
-    },
-    setStep1Data: (orgName) => {
-      console.log(`🚀 ~ file: Org.jsx:31 ~ orgName:`, orgName);
-      set({
-        ...orgName,
-      });
+      set((state) => ({
+        ...state,
+        data: { ...data },
+      }));
     },
     emptyState: () => {
       set({
