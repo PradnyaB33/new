@@ -276,6 +276,27 @@ const SalaryCalculate = () => {
 
   const saveSallaryDetail = async () => {
     try {
+      // Check if the selected year is in the future
+      const currentYear = dayjs().format("YYYY");
+      const selectedYear = selectedDate.format("YYYY");
+      const employeeJoiningYear = dayjs(availableEmployee?.joining_date).format(
+        "YYYY"
+      );
+
+      if (parseInt(selectedYear) > parseInt(currentYear)) {
+        handleAlert(true, "error", "Cannot calculate salary for future years");
+        return;
+      }
+
+      if (parseInt(selectedYear) < parseInt(employeeJoiningYear)) {
+        handleAlert(
+          true,
+          "error",
+          "Cannot calculate salary for years before employee's joining date"
+        );
+        return;
+      }
+
       const data = {
         employeeId: userId,
         basicSalary,
