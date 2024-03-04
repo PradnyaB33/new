@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AttachMoney } from "@mui/icons-material";
+import { AttachMoney, Numbers } from "@mui/icons-material";
 import { Box, Button, Modal } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -29,7 +29,7 @@ const PackageForm = ({ handleClose, open, packages, organisation }) => {
     planDetails: z.object({
       value: z.string(),
       label: z.string(),
-      // isDisabled: z.boolean(),
+      isDisabled: z.boolean(),
     }),
     count: z.string(),
   });
@@ -39,7 +39,7 @@ const PackageForm = ({ handleClose, open, packages, organisation }) => {
       planDetails: {
         value: organisation?.subscriptionDetails?.plan_id,
         label: "Aegis Basic Plan",
-        // isDisabled: false,
+        isDisabled: false,
       },
       count: organisation?.subscriptionDetails?.quantity,
     },
@@ -56,6 +56,7 @@ const PackageForm = ({ handleClose, open, packages, organisation }) => {
     updateSubscriptionMutation.mutate({
       subscriptionId: organisation?.subscriptionDetails?.id,
       data,
+      handleClose,
     });
   }
   return (
@@ -92,21 +93,31 @@ const PackageForm = ({ handleClose, open, packages, organisation }) => {
                 value:
                   process.env?.REACT_APP_BASICPLAN || "plan_NgWEcv4vEvrZFc",
                 label: "Aegis Basic Plan",
-                // isDisabled: false,
+                isDisabled: false,
               },
               {
                 value:
                   process.env?.REACT_APP_INTERMEDIATE || "plan_NgWFMMrbumeC2U",
                 label: "Aegis Intermediate Plan",
-                // isDisabled: false,
+                isDisabled: false,
               },
               {
                 value:
                   process.env?.REACT_APP_ENTERPRISE || "plan_NgWFtyZ4Ifd8WD",
                 label: "Aegis Enterprize Plan",
-                // isDisabled: true,
+                isDisabled: true,
               },
             ]}
+          />
+          <AuthInputFiled
+            name="count"
+            icon={Numbers}
+            control={control}
+            type="number"
+            placeholder="Member Count "
+            label="Member Count *"
+            errors={errors}
+            error={errors.count}
           />
           <Button variant="contained" disabled={!isDirty} type="submit">
             Submit
