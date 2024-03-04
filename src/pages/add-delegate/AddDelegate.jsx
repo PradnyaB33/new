@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
+import useDelegateSuperAdmin from "../../hooks/QueryHook/Delegate/mutation";
 const packageSchema = z.object({
   first_name: z.string(),
   last_name: z.string(),
@@ -31,6 +32,7 @@ const packageSchema = z.object({
   citizenship: z.string(),
 });
 const AddDelegate = () => {
+  const { addDelegateMutation } = useDelegateSuperAdmin();
   const { control, formState, handleSubmit, getValues } = useForm({
     defaultValues: {
       first_name: undefined,
@@ -49,8 +51,9 @@ const AddDelegate = () => {
   });
   const { errors, isDirty } = formState;
   const navigate = useNavigate();
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log("data", data);
+    await addDelegateMutation.mutate(data);
   };
   console.log(`🚀 ~ file: AddDelegate.jsx:56 ~ getValues:`, getValues());
 
