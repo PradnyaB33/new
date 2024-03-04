@@ -141,10 +141,8 @@ const TDSTable3 = () => {
 
   const handleAmountChange = (e, itemIndex) => {
     const newData = [...tableData];
-    if (e.target.value > 0) {
-      newData[itemIndex].amount = e.target.value;
-      setTableData(newData);
-    }
+    newData[itemIndex].amount = e.target.value;
+    setTableData(newData);
   };
 
   const handleProofChange = (e, itemIndex) => {
@@ -267,19 +265,13 @@ const TDSTable3 = () => {
                 `}
                   key={itemIndex}
                 >
-                  <td className="!text-left pl-8  w-max border ">
+                  <td className="!text-left pl-8 leading-7 text-[16px] w-max border ">
                     {item.name === "Income taxable under the head Other Sources"
                       ? ""
                       : itemIndex + 1}
                   </td>
                   <td
-                    className={`
-                  ${
-                    item.name ===
-                      "Income taxable under the head Other Sources" &&
-                    "!text-bold"
-                  } 
-                  truncate text-left border px-2`}
+                    className={`truncate text-left leading-7 text-[16px] border px-2`}
                   >
                     <p
                       className={`
@@ -297,13 +289,13 @@ const TDSTable3 = () => {
                   <td className=" text-left !p-0 w-[200px] border ">
                     {editStatus[itemIndex] && editStatus[itemIndex] ? (
                       <div className="flex gap-2 h-14">
-                        <h1 className="text-lg bg-gray-300 border h-auto px-4  flex items-center ">
+                        <h1 className="leading-7 text-[16px] bg-gray-300 border h-auto px-4  flex items-center ">
                           INR
                         </h1>
                         <input
                           type="number"
                           className="border-none w-[90px] h-auto outline-none  "
-                          value={item.amount}
+                          value={parseFloat(item.amount)}
                           onChange={(e) => handleAmountChange(e, itemIndex)}
                         />
                       </div>
@@ -313,15 +305,15 @@ const TDSTable3 = () => {
                         ${
                           item.name ===
                             "Income taxable under the head Other Sources" &&
-                          "!font-bold text-lg"
+                          "!font-bold text-lg "
                         } 
-                        px-2`}
+                        px-2 leading-7 text-[16px]`}
                       >
-                        INR {item.amount.toFixed(2)}
+                        INR {parseFloat(item.amount).toFixed(2)}
                       </p>
                     )}
                   </td>
-                  <td className="text-left  w-[200px]  border">
+                  <td className="text-left leading-7 text-[16px] w-[200px]  border">
                     {item.name ===
                     "Income taxable under the head Other Sources" ? (
                       ""
@@ -343,7 +335,7 @@ const TDSTable3 = () => {
                     )}
                   </td>
 
-                  <td className=" text-left border px-2">
+                  <td className=" text-left  leading-7 text-[16px]  border px-2">
                     {item.name ===
                     "Income taxable under the head Other Sources" ? (
                       ""
