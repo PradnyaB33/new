@@ -13,21 +13,23 @@ const Header = ({ totalSteps, step, goToStep, stepper }) => {
           <React.Fragment key={index}>
             <div className="flex flex-col items-center">
               <button
-                // disabled={step - 1 < index + 1 ? true : false}
+                disabled={step - 1 < index + 1 ? true : false}
                 onClick={() => goToStep(index + 1)}
                 className={` transition-bg duration-600 ease-in-out cursor-pointer  flex items-center gap-2 flex-col border-gray-200 !text-xs rounded-full md:p-2 p-[8px] border-[.5px] first-letter:
-             ${step < index + 1 ? "!bg-white" : "!bg-primary"}`}
+             ${
+               step < index + 1 ? "!bg-white" : "!bg-primary"
+             } disabled:text-gray-500 disabled:cursor-not-allowed`}
               >
                 {data?.icon ? (
                   <data.icon
                     className={`  ${
-                      step < index + 1 ? "!text-black" : "!text-white"
+                      step < index + 1 ? "" : "!text-white"
                     } !text-md md:!text-md  !font-thin `}
                   />
                 ) : (
                   <h1
                     className={`  ${
-                      step < index + 1 ? "!text-black" : "!text-white"
+                      step < index + 1 ? "" : "!text-white"
                     } !text-lg text-center !font-thin w-[24px]`}
                   >
                     {index + 1}

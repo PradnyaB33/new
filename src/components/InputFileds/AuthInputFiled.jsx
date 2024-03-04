@@ -27,6 +27,8 @@ const AuthInputFiled = ({
   max,
   className,
 }) => {
+  console.log(`🚀 ~ file: AuthInputFiled.jsx:30 ~ errors:`, errors);
+  console.log(`🚀 ~ file: ${name}.jsx:30 ~ error:`, error);
   const [focusedInput, setFocusedInput] = React.useState(null);
 
   const handleFocus = (fieldName) => {
