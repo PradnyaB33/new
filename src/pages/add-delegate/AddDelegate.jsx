@@ -21,12 +21,11 @@ const packageSchema = z.object({
   first_name: z.string(),
   last_name: z.string(),
   middle_name: z.string(),
-  joining_date: z.date(),
-  email: z.string().isEmail(),
-  phone_number: z.string(),
-  // .min(10).max(10)
+  joining_date: z.string(),
+  email: z.string().email(),
+  phone_number: z.string().min(10).max(10),
   password: z.string(),
-  date_of_birth: z.date(),
+  date_of_birth: z.string(),
   gender: z.enum(["Male", "Female", "Other"]),
   profile: z.enum(["Delegate Super Admin"]),
   citizenship: z.string(),
@@ -83,7 +82,7 @@ const AddDelegate = () => {
               placeholder={"eg. Sahil"}
               label={`First Name *`}
               errors={errors}
-              error={errors.first_name}
+              error={errors?.first_name}
               className={"!min-w-80 !max-w-64"}
             />
             <AuthInputFiled
@@ -95,7 +94,7 @@ const AddDelegate = () => {
               placeholder={"eg. Hanmant"}
               label={`Middle name *`}
               errors={errors}
-              error={errors.middle_name}
+              error={errors?.middle_name}
             />
             <AuthInputFiled
               className={"!min-w-80 !max-w-64"}
@@ -106,7 +105,7 @@ const AddDelegate = () => {
               placeholder={"eg. Barge"}
               label={`Last name *`}
               errors={errors}
-              error={errors.last_name}
+              error={errors?.last_name}
             />
             <AuthInputFiled
               className={"!min-w-80 !max-w-64"}
@@ -117,7 +116,7 @@ const AddDelegate = () => {
               placeholder={"eg. Barge"}
               label={`Joining Date *`}
               errors={errors}
-              error={errors.joining_date}
+              error={errors?.joining_date}
             />
             <AuthInputFiled
               className={"!min-w-80 !max-w-64"}
@@ -128,7 +127,7 @@ const AddDelegate = () => {
               placeholder={"eg. sahilbarge@gmail.com"}
               label={`Enter your email *`}
               errors={errors}
-              error={errors.email}
+              error={errors?.email}
             />
             <AuthInputFiled
               className={"!min-w-80 !max-w-64"}
@@ -139,7 +138,7 @@ const AddDelegate = () => {
               placeholder={"eg. 33333-44444"}
               label={`Enter your phone number*`}
               errors={errors}
-              error={errors.phone_number}
+              error={errors?.phone_number}
             />
             <AuthInputFiled
               className={"!min-w-80 !max-w-64"}
@@ -150,7 +149,7 @@ const AddDelegate = () => {
               placeholder={"Password here"}
               label={`Enter your password *`}
               errors={errors}
-              error={errors.password}
+              error={errors?.password}
             />
             <AuthInputFiled
               className={"!min-w-80 !max-w-64"}
@@ -161,7 +160,7 @@ const AddDelegate = () => {
               placeholder={"date_of_birth here"}
               label={`Date of birth *`}
               errors={errors}
-              error={errors.date_of_birth}
+              error={errors?.date_of_birth}
             />
             <AuthInputFiled
               className={"!min-w-80 !max-w-64"}
@@ -172,7 +171,7 @@ const AddDelegate = () => {
               placeholder={"eg. Male"}
               label={`Select gender *`}
               errors={errors}
-              error={errors.gender}
+              error={errors?.gender}
               options={[
                 { value: "Male", label: "Male" },
                 { value: "Female", label: "Female" },
@@ -188,7 +187,7 @@ const AddDelegate = () => {
               placeholder={"eg. Indian"}
               label={`Citizenship *`}
               errors={errors}
-              error={errors.citizenship}
+              error={errors?.citizenship}
             />
           </div>
 

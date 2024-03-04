@@ -135,13 +135,3 @@ const PackageForm = ({ handleClose, open, packages, organisation }) => {
 };
 
 export default PackageForm;
-function transformString(inputString, excludedWords = []) {
-  return inputString
-    .split(/(?=[A-Z])/)
-    .map((word) => {
-      const formattedWord = word.charAt(0).toUpperCase() + word.slice(1);
-      return excludedWords.includes(formattedWord) ? "" : formattedWord;
-    })
-    .join(" ")
-    .trim();
-}
