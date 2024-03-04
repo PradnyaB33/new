@@ -9,7 +9,8 @@ const useSubscriptionMutation = () => {
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
 
-  const updateSubscription = async ({ subscriptionId, data }) => {
+  const updateSubscription = async ({ subscriptionId, data, handleClose }) => {
+    console.log(`🚀 ~ file: mutation.jsx:13 ~ handleClose:`, handleClose);
     console.log(`🚀 ~ file: mutation.jsx:9 ~ data:`, data);
     console.log(`🚀 ~ file: mutation.jsx:9 ~ subscriptionId:`, subscriptionId);
     const response = await axios.patch(
@@ -21,6 +22,8 @@ const useSubscriptionMutation = () => {
         },
       }
     );
+    response.data.handleClose = handleClose;
+    console.log(`🚀 ~ file: mutation.jsx:26 ~   response.data:`, response.data);
     return response.data;
   };
   const pauseSubscription = async (subscriptionId) => {
@@ -55,6 +58,7 @@ const useSubscriptionMutation = () => {
         queryKey: [`subscription-${data.organisation._id}`],
       });
       handleAlert(true, "success", `Subscription updated successfully`);
+      data.handleClose();
     },
     onError: (data) => {
       console.log(data);

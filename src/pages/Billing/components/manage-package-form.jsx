@@ -31,7 +31,9 @@ const PackageForm = ({ handleClose, open, packages, organisation }) => {
       label: z.string(),
       isDisabled: z.boolean(),
     }),
-    count: z.string(),
+    count: z
+      .string()
+      .refine((doc) => Number(doc) > 0, { message: "Count is greater than 0" }),
   });
 
   const { control, formState, handleSubmit, getValues } = useForm({

@@ -6,14 +6,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import useOrg from "../../../State/Org/Org";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-// Assuming you have a schema for Step 3 data
-export function convertCamelToTitle(packageName) {
-  return packageName.replace(/([A-Z])/g, " $1").replace(/^./, function (str) {
-    return str.toUpperCase();
-  });
-}
+
 const packageCountSchema = z.object({
-  count: z.string(),
+  count: z
+    .string()
+    .refine((doc) => Number(doc) > 0, { message: "Count is greater than 0" }),
 });
 const Step3 = ({ nextStep }) => {
   const { count, setStep3Data } = useOrg();
@@ -40,7 +37,7 @@ const Step3 = ({ nextStep }) => {
           name="count"
           icon={Calculate}
           control={control}
-          type="text"
+          type="number"
           placeholder="Member Count"
           label="Member Count *"
           errors={errors}
