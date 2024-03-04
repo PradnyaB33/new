@@ -17,7 +17,8 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
-import useDelegateSuperAdmin from "../../hooks/QueryHook/Delegate/mutation";
+import useGetDelegateSuperAdmin from "../../hooks/QueryHook/Delegate-Super-Admin/hook";
+import useDelegateSuperAdmin from "../../hooks/QueryHook/Delegate-Super-Admin/mutation";
 const packageSchema = z.object({
   first_name: z.string(),
   last_name: z.string(),
@@ -28,11 +29,13 @@ const packageSchema = z.object({
   password: z.string(),
   date_of_birth: z.string(),
   gender: z.enum(["Male", "Female", "Other"]),
-  profile: z.enum(["Delegate Super Admin"]),
+  profile: z.enum(["Delegate-Super-Admin"]),
   citizenship: z.string(),
 });
 const AddDelegate = () => {
   const { addDelegateMutation } = useDelegateSuperAdmin();
+  const { data, isLoading } = useGetDelegateSuperAdmin();
+  console.log(`🚀 ~ file: AddDelegate.jsx:38 ~ data:`, data);
   const { control, formState, handleSubmit, getValues } = useForm({
     defaultValues: {
       first_name: undefined,
@@ -44,7 +47,7 @@ const AddDelegate = () => {
       password: undefined,
       date_of_birth: undefined,
       gender: undefined,
-      profile: "Delegate Super Admin",
+      profile: "Delegate-Super-Admin",
       citizenship: undefined,
     },
     resolver: zodResolver(packageSchema),
