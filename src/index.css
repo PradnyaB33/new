@@ -8,6 +8,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+* {
+  font-family: "Calibri" !important;
+}
+
 .gradinet {
   background: linear-gradient(45deg, #2196f3, #00bcd4);
   -webkit-background-clip: text;
@@ -65,17 +73,9 @@ body {
   }
 }
 
-* {
-  font-family: "Calibri" !important;
-}
-
 :root {
   --primary-color: #0e1630; /* Replace #FF0000 with your desired color value */
   --secondary-color: #1d6eb7; /* Replace #FF0000 with your desired color value */
-}
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
 }
 
 ul {

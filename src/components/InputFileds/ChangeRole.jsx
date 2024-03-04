@@ -1,15 +1,16 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import React from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import UserProfile from "../../hooks/UserData/useUser";
 
 const ChangeRole = () => {
-  const { getCurrentUser, getCurrentRole } = UserProfile();
+  const { getCurrentUser, useGetCurrentRole } = UserProfile();
+  const queryClient = useQueryClient();
   const user = getCurrentUser();
-  const roles = getCurrentRole();
+  const roles = useGetCurrentRole();
   const redirect = useNavigate();
   const options = user?.profile
     ?.map((item) => {
@@ -32,9 +33,9 @@ const ChangeRole = () => {
     },
 
     {
-      onSuccess: (response) => {
+      onSuccess: async (response) => {
         Cookies.set("role", response?.data?.roleToken);
-
+        window.location.reload();
         if (response?.data?.role === "Super-Admin") {
           redirect("/");
         } else if (response?.data?.role === "HR") {
@@ -47,7 +48,6 @@ const ChangeRole = () => {
           );
         } else if (response?.data?.role === "Employee") {
           redirect("/organisation/dashboard/employee-dashboard");
-          console.log("Role changed to employee");
         } else if (response?.data?.role === "Department-Head") {
           redirect(
             `/organisation/${user.organizationId}/dashboard/DH-dashboard`
@@ -56,7 +56,7 @@ const ChangeRole = () => {
           redirect("/organisation/dashboard/employee-dashboard");
         }
 
-        window.location.reload();
+        queryClient.invalidateQueries({ queryKey: ["role"] });
       },
 
       onError: (error) => {
@@ -89,13 +89,9 @@ const ChangeRole = () => {
           }}
           // defaultInputValue={field.value}
           className={`${"bg-[ghostwhite]"} bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
-          // components={{
-          //   IndicatorSeparator: () => null,
-          // }}
           options={options}
           onChange={(value) => {
             handleRole.mutate({ role: value.value, email: user?.email });
-            console.log(value.value);
           }}
         />
       </div>

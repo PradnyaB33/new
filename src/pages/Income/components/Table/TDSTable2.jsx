@@ -367,45 +367,47 @@ const TDSTable2 = () => {
                       </div>
                     </div>
                   )}
-                  <table className="min-w-full bg-white  text-left !text-sm font-light">
+                  <table className="table-auto border border-collapse min-w-full bg-white  text-left   !text-sm font-light">
                     <thead className="border-b bg-gray-100 font-bold">
                       <tr className="!font-semibold ">
-                        <th scope="col" className="!text-left pl-8 py-3">
+                        <th scope="col" className="!text-left pl-8 py-3 border">
                           SR NO
                         </th>
-                        <th scope="col" className="py-3">
+                        <th scope="col" className="py-3 border">
                           Deduction Name
                         </th>
                         {Object.keys(item)[0] ===
                           "(A) Self Occupied Property (Loss)" && (
                           <>
-                            <th scope="col" className="px-2 py-3">
+                            <th scope="col" className="px-2 py-3 border">
                               property 1
                             </th>
-                            <th scope="col" className="px-2 *:py-3">
+                            <th scope="col" className="px-2 border *:py-3">
                               property 2
                             </th>
                           </>
                         )}
-                        <th scope="col" className="py-3 px-2">
+                        <th scope="col" className="py-3 px-2 border">
                           Declaration
                         </th>
-                        <th scope="col" className="py-3">
+                        <th scope="col" className="py-3 border">
                           Proof submitted
                         </th>
-                        <th scope="col" className="py-3">
+                        <th scope="col" className="py-3 border">
                           Status
                         </th>
-                        <th scope="col" className=" py-3">
+                        <th scope="col" className=" py-3 border">
                           Actions
                         </th>
                       </tr>
                     </thead>
                     <tbody>
                       {item[Object.keys(item)[0]].map((ele, id) => (
-                        <tr className="!font-medium h-20 border-b" key={id}>
-                          <td className="!text-left pl-8 ">{id + 1}</td>
-                          <td className=" truncate text-left ">
+                        <tr className="!font-medium  h-14 border-b" key={id}>
+                          <td className="leading-7 text-[16px] !text-left pl-8 border w-[100px]">
+                            {id + 1}
+                          </td>
+                          <td className="leading-7 text-[16px] truncate text-left w-[500px] border px-2">
                             <div className=" flex items-center gap-2">
                               {ele.name}
 
@@ -420,15 +422,15 @@ const TDSTable2 = () => {
                           {Object.keys(item)[0] ===
                             "(A) Self Occupied Property (Loss)" && (
                             <>
-                              <td className=" text-left px-2 ">
+                              <td className="leading-7 text-[16px] h-14 text-left px-2  w-[220px] border ">
                                 {editStatus[itemIndex] === id ? (
-                                  <div className="border-gray-200 w-max  flex border-[.5px]">
-                                    <h1 className=" bg-gray-300 py-2  h-full px-2">
+                                  <div className="flex gap-2 !py-0 h-full ">
+                                    <h1 className="text-lg h-full !py-0 text-center w-[30%] bg-gray-200 border justify-center   flex items-center ">
                                       INR
                                     </h1>
                                     <input
                                       type="number"
-                                      className="border-none py-2  outline-none px-2 "
+                                      className="border-none w-[70%]   outline-none"
                                       value={ele.property1}
                                       onChange={(e) =>
                                         handleProperty1(e, itemIndex, id)
@@ -439,7 +441,7 @@ const TDSTable2 = () => {
                                   ele.property1 && "INR " + ele?.property1
                                 )}
                               </td>
-                              <td className="px-2 text-left ">
+                              <td className="leading-7 text-[16px] h-14 text-left  px-2  w-[220px] border ">
                                 {editStatus[itemIndex] === id ? (
                                   <div className="border-gray-200 w-max  flex border-[.5px]">
                                     <h1 className=" bg-gray-300 py-2  h-full px-2">
@@ -460,7 +462,7 @@ const TDSTable2 = () => {
                               </td>
                             </>
                           )}
-                          <td className="px-2 text-left ">
+                          <td className="leading-7 text-[16px] h-14 text-left  !p-0 w-[220px] border ">
                             {Object.keys(item)[0] !==
                               "(A) Self Occupied Property (Loss)" &&
                             editStatus[itemIndex] === id ? (
@@ -481,22 +483,28 @@ const TDSTable2 = () => {
                               "INR " + ele.declaration?.toFixed(2)
                             )}
                           </td>
-                          <td className=" text-left ">
+                          <td className="text-left h-14 px-2 leading-7 text-[16px] w-[200px]  border ">
                             {editStatus[itemIndex] === id &&
                             editStatus[itemIndex] === id ? (
-                              <input
-                                type="file"
-                                onChange={(e) =>
-                                  handleProofChange(e, itemIndex, id)
-                                }
-                              />
+                              <div className="px-2">
+                                <label className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 text-sm rounded cursor-pointer">
+                                  Upload File
+                                  <input
+                                    type="file"
+                                    className="hidden"
+                                    onChange={(e) =>
+                                      handleProofChange(e, itemIndex)
+                                    }
+                                  />
+                                </label>
+                              </div>
                             ) : ele.proof ? (
                               ele.proof
                             ) : (
                               "No proof found"
                             )}
                           </td>
-                          <td className="text-left">
+                          <td className="text-left w-[200px] border px-2">
                             {ele.status === "Pending" ? (
                               <div className="flex items-center  gap-2">
                                 <Error className="text-yellow-400 " />
@@ -506,7 +514,7 @@ const TDSTable2 = () => {
                               <h1 className=" ">{ele.status}</h1>
                             )}
                           </td>
-                          <td className="whitespace-nowrap  px-6 ">
+                          <td className="whitespace-nowrap leading-7 text-[16px] px-2   w-[220px]">
                             {editStatus[itemIndex] === id ? (
                               <div className="space-x-2">
                                 <Button

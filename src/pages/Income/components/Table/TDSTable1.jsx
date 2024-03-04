@@ -4,7 +4,15 @@ import {
   EditOutlined,
   Error,
 } from "@mui/icons-material";
-import { Button, CircularProgress, IconButton } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+} from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
@@ -13,81 +21,138 @@ import useOther from "../../../../hooks/IncomeTax/useOther";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
 
-const TDSTable3 = () => {
+const TDSTable1 = () => {
   const authToken = useAuthToken();
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const queryClient = useQueryClient();
   const { setTotalHeads } = useOther();
 
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+
+  const handleDeleteConfirmation = (id) => {
+    setDeleteConfirmation(id);
+  };
+
+  const handleCloseConfirmation = () => {
+    setDeleteConfirmation(null);
+  };
+
   const { handleAlert } = useContext(TestContext);
   const [tableData, setTableData] = useState([
     {
-      name: "Bank interest (SB account)",
+      name: "Gross Salary",
       amount: 0,
       proof: "",
-      status: "Not Submitted",
-    },
-    {
-      name: "Bank Interest (Term Deposit)",
-      amount: 0,
-      proof: "",
-      status: "Not Submitted",
-    },
-    {
-      name: "NSC Interest for the year",
-      amount: 0,
-      proof: "",
-      status: "Not Submitted",
-    },
-    {
-      name: "Post office deposit",
-      amount: 0,
-      proof: "",
-      status: "Not Submitted",
-    },
-    {
-      name: "Dividend",
-      amount: 0,
-      proof: "",
-      status: "Not Submitted",
-    },
-    {
-      name: "Family Pension",
-      amount: 0,
-      proof: "",
-      status: "Not Submitted",
-    },
-    {
-      name: "Less : Deduction on Family Pension Income Sec. 57(IIA)",
-      amount: 0,
-      proof: "-",
       status: "Auto",
     },
     {
-      name: "Less : Gifts up to Rs. 50,000/- Dec. 56(2)",
+      name: "Exemption on gratuity",
       amount: 0,
       proof: "",
       status: "Not Submitted",
     },
     {
-      name: "Income taxable under the head Other Sources",
+      name: "Exemption on Leave encashment",
+      amount: 0,
+      proof: "",
+      status: "Not Submitted",
+    },
+    {
+      name: "Exemption on voluntary retirement",
+      amount: 0,
+      proof: "",
+      status: "Not Submitted",
+    },
+    {
+      name: "Daily Allowance",
+      amount: 0,
+      proof: "",
+      status: "Not Submitted",
+    },
+    {
+      name: "Conveyance Allowance",
+      amount: 0,
+      proof: "",
+      status: "Not Submitted",
+    },
+    {
+      name: "Transport Allowance for a specially-abled person",
+      amount: 0,
+      proof: "-",
+      status: "Not Submitted",
+    },
+    {
+      name: "Perquisites for official purposes",
+      amount: 0,
+      proof: "",
+      status: "Not Submitted",
+    },
+    {
+      name: "Taxable Salary",
+      amount: 0,
+      proof: "",
+      status: "",
+    },
+    {
+      name: "Less : Professional Tax",
+      amount: 0,
+      proof: "",
+      status: "",
+    },
+    {
+      name: "Income taxable under the head Salaries",
       amount: 0,
       proof: "",
       status: "",
     },
   ]);
 
+  const [totalGross, setTotalGross] = useState(0);
+  console.log(totalGross);
+
+  let deduction = 0;
+
+  const {
+    isFetched: salaryFetch,
+    isFetching: salaryFetching,
+    isLoading,
+  } = useQuery({
+    queryKey: ["finacialYearData"],
+    queryFn: async () => {
+      try {
+        const salaryData = await axios.get(
+          `${process.env.REACT_APP_API}/route/employeeSalary/getEmployeeSalaryPerFinancialYear?fromDate=5-2023&toDate=3-2024`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        return salaryData.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    onSuccess: (res) => {
+      let data = res.reduce((total, item) => {
+        return total + parseFloat(item.salary.totalGrossSalary);
+      }, 0);
+
+      setTotalGross(data);
+    },
+  });
+
   const {
     isLoading: incomeHouseLoading,
     isFetching,
     isFetched,
   } = useQuery({
-    queryKey: ["incomeOther"],
+    queryKey: ["incomeSalary"],
     queryFn: async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API}/route/tds/OtherIncome/2023-2024`,
+          `${process.env.REACT_APP_API}/route/tds/salaryIncome/2023-2024`,
           {
             headers: {
               Authorization: authToken,
@@ -100,16 +165,27 @@ const TDSTable3 = () => {
       }
     },
     onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ["finacialYearData"] });
+      deduction = totalGross - res.totalDeductions;
+
       const updatedTableData = tableData.map((item) => {
-        const matchingItem = res.incomeFromOther.investmentType.find(
+        const matchingItem = res.incomeFromSalary.investmentType.find(
           (investment) => investment.name === item.name
         );
 
-        if (item.name === "Income taxable under the head Other Sources") {
+        if (item.name === "Income taxable under the head Salaries") {
           return {
             ...item,
-            amount: res.totalAddition,
+            amount: deduction,
             status: "",
+            proof: "",
+          };
+        }
+        if (item.name === "Gross Salary") {
+          return {
+            ...item,
+            amount: totalGross,
+            status: "Auto",
             proof: "",
           };
         }
@@ -166,7 +242,7 @@ const TDSTable3 = () => {
     };
     try {
       await axios.post(
-        `${process.env.REACT_APP_API}/route/tds/OtherIncome`,
+        `${process.env.REACT_APP_API}/route/tds/salaryIncome`,
         requestData,
         {
           headers: {
@@ -176,7 +252,7 @@ const TDSTable3 = () => {
       );
 
       handleAlert(true, "success", `Data uploaded successfully`);
-      queryClient.invalidateQueries({ queryKey: ["incomeOther"] });
+      queryClient.invalidateQueries({ queryKey: ["incomeSalary"] });
     } catch (error) {
       console.log(error);
     }
@@ -184,7 +260,8 @@ const TDSTable3 = () => {
     setEditStatus({ ...editStatus, [index]: null });
   };
 
-  const handleDelete = async (index, id) => {
+  const handleDelete = async (index) => {
+    console.log(index);
     const newData = [...tableData];
     const value = newData[index];
     const requestData = {
@@ -210,10 +287,12 @@ const TDSTable3 = () => {
       );
 
       handleAlert(true, "success", `Data deleted successfully`);
-      queryClient.invalidateQueries({ queryKey: ["incomeOther"] });
+      queryClient.invalidateQueries({ queryKey: ["incomeSalary"] });
     } catch (error) {
       console.log(error);
     }
+
+    handleCloseConfirmation();
   };
 
   const handleClose = (index) => {
@@ -226,8 +305,13 @@ const TDSTable3 = () => {
   };
 
   return (
-    <div className="mt-2 space-y-2">
-      {incomeHouseLoading || isFetching || !isFetched ? (
+    <div className="">
+      {isLoading ||
+      incomeHouseLoading ||
+      isFetching ||
+      !isFetched ||
+      !salaryFetch ||
+      salaryFetching ? (
         <div className="flex items-center justify-center w-full">
           <CircularProgress />
         </div>
@@ -266,18 +350,15 @@ const TDSTable3 = () => {
                   key={itemIndex}
                 >
                   <td className="!text-left pl-8 leading-7 text-[16px] w-max border ">
-                    {item.name === "Income taxable under the head Other Sources"
+                    {item.name === "Income taxable under the head Salaries"
                       ? ""
                       : itemIndex + 1}
                   </td>
-                  <td
-                    className={`truncate text-left leading-7 text-[16px] border px-2`}
-                  >
+                  <td className="leading-7 text-[16px] truncate text-left w-[500px] border px-2">
                     <p
                       className={`
                   ${
-                    item.name ===
-                      "Income taxable under the head Other Sources" &&
+                    item.name === "Income taxable under the head Salaries" &&
                     "!font-bold text-lg"
                   } 
                  `}
@@ -304,7 +385,7 @@ const TDSTable3 = () => {
                         className={`
                         ${
                           item.name ===
-                            "Income taxable under the head Other Sources" &&
+                            "Income taxable under the head Salaries" &&
                           "!font-bold text-lg "
                         } 
                         px-2 leading-7 text-[16px]`}
@@ -314,8 +395,7 @@ const TDSTable3 = () => {
                     )}
                   </td>
                   <td className="text-left leading-7 text-[16px] w-[200px]  border">
-                    {item.name ===
-                    "Income taxable under the head Other Sources" ? (
+                    {item.name === "Income taxable under the head Salaries" ? (
                       ""
                     ) : editStatus[itemIndex] && editStatus[itemIndex] ? (
                       <div className="px-2">
@@ -336,8 +416,7 @@ const TDSTable3 = () => {
                   </td>
 
                   <td className=" text-left  leading-7 text-[16px]  border px-2">
-                    {item.name ===
-                    "Income taxable under the head Other Sources" ? (
+                    {item.name === "Income taxable under the head Salaries" ? (
                       ""
                     ) : item.status === "Pending" ? (
                       <div className="flex items-center  gap-2">
@@ -356,8 +435,8 @@ const TDSTable3 = () => {
                   <td className="whitespace-nowrap px-2  w-[220px]">
                     {item.name ===
                       "Less : Deduction on Family Pension Income Sec. 57(IIA)" ||
-                    item.name ===
-                      "Income taxable under the head Other Sources" ? (
+                    item.name === "Income taxable under the head Salaries" ||
+                    item.status === "Auto" ? (
                       ""
                     ) : editStatus[itemIndex] && editStatus[itemIndex] ? (
                       <div className="space-x-2">
@@ -390,7 +469,7 @@ const TDSTable3 = () => {
                         <IconButton
                           color="error"
                           aria-label="delete"
-                          onClick={() => handleDelete(itemIndex)}
+                          onClick={() => handleDeleteConfirmation(itemIndex)}
                         >
                           <DeleteOutlined />
                         </IconButton>
@@ -403,8 +482,39 @@ const TDSTable3 = () => {
           </table>
         </div>
       )}
+
+      <Dialog
+        open={deleteConfirmation !== null}
+        onClose={handleCloseConfirmation}
+      >
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <p>
+            Please confirm your decision to delete this salary template, as this
+            action cannot be undone.
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleCloseConfirmation}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => handleDelete(deleteConfirmation)}
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
 
-export default TDSTable3;
+export default TDSTable1;

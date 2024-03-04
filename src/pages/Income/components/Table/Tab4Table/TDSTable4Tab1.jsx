@@ -2,8 +2,7 @@ import { DeleteOutlined, EditOutlined } from "@mui/icons-material";
 import { Button, IconButton, Pagination, Stack } from "@mui/material";
 import React, { useState } from "react";
 
-const TDSTable4 = () => {
-  const [page, setPage] = useState(1);
+const TDSTable4Tab1 = () => {
   const rowsPerPage = 10; // Define the number of rows per page
   const [tableData, setTableData] = useState([
     {
@@ -99,87 +98,17 @@ const TDSTable4 = () => {
           proof: "",
           status: "Not Submitted",
         },
-        {
-          section: "80D",
-          name: "80D - Mediclaim Insurance (Self & dependent)",
-          amount: 0,
-          proof: "",
-          status: "Not Submitted",
-        },
-        {
-          section: "80D",
-          name: "80D - Mediclaim Insurance (Parents)",
-          amount: 0,
-          proof: "",
-          status: "Not Submitted",
-        },
-        {
-          section: "80E",
-          name: "80E - Interest on education loan",
-          amount: 0,
-          proof: "",
-          status: "Not Submitted",
-        },
-        {
-          section: "80EE",
-          name: "80EE - Interest on Home Loan as per conditions mentioned therein",
-          amount: 0,
-          proof: "",
-          status: "Not Submitted",
-        },
-        {
-          section: "80DD",
-          name: "80DD - Medical Treatment of handicapped Dependent",
-          amount: 0,
-          proof: "",
-          status: "Not Submitted",
-        },
-        {
-          section: "80DDB",
-          name: "80DDB - 80DDB Expenditure on Selected Medical Treatment",
-          amount: 0,
-          proof: "",
-          status: "Not Submitted",
-        },
-        {
-          section: "80G",
-          name: "80G, 80GGA, 80GGC Donation to approved funds",
-          amount: 0,
-          proof: "",
-          status: "Not Submitted",
-        },
-        {
-          section: "80GG",
-          name: "80GG For Rent to an Individual, not receiving HRA (File Form 10BA)",
-          amount: 0,
-          proof: "",
-          status: "Not Submitted",
-        },
-        {
-          section: "80TTA",
-          name: "80TTA - SB interest received by Normal Citizen",
-          amount: 0,
-          proof: "",
-          status: "Not Submitted",
-        },
-        {
-          section: "80TTB",
-          name: "80TTB - Interest on SB Act. & deposits received by Sr. & very Sr. Citizen",
-          amount: 0,
-          proof: "",
-          status: "Not Submitted",
-        },
-        {
-          section: "80U",
-          name: "80U - Physically Disable Assess",
-          amount: 0,
-          proof: "",
-          status: "Not Submitted",
-        },
       ],
     },
   ]);
 
+  const [page, setPage] = useState(1);
+  const totalRowCount = tableData.reduce(
+    (acc, curr) => acc + curr.Section.length,
+    0
+  );
+
+  const pages = Math.ceil(totalRowCount / rowsPerPage);
   const [editStatus, setEditStatus] = useState({});
 
   const handleEditClick = (itemIndex, fieldIndex) => {
@@ -364,10 +293,12 @@ const TDSTable4 = () => {
         className="border-[.5px] border-gray-200 border-t-0 px-4 py-2 h-full  items-center w-full justify-between "
       >
         <div>
-          <h1>Showing {page} to 3 of 34 entries</h1>
+          <h1>
+            Showing {page} to 2 of {totalRowCount} entries
+          </h1>
         </div>
         <Pagination
-          count={3}
+          count={pages}
           page={page}
           color="primary"
           shape="rounded"
@@ -378,4 +309,4 @@ const TDSTable4 = () => {
   );
 };
 
-export default TDSTable4;
+export default TDSTable4Tab1;

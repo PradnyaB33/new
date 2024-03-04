@@ -4,10 +4,9 @@ import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import * as React from "react";
-import Tab1 from "./Tab1";
-import Tab2 from "./Tab2";
-import Tab3 from "./Tab3";
-import Tab4 from "./Tab4";
+import Tab2 from "../Tab2";
+import TDSTable4 from "../Table/Tab4Table/TDSTable4Tab1";
+import TDSTable4Tab2 from "../Table/Tab4Table/TDSTable4Tab2";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -16,7 +15,7 @@ function CustomTabPanel(props) {
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
+      id={`second-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
@@ -38,11 +37,11 @@ CustomTabPanel.propTypes = {
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
+    "aria-controls": `second-tabpanel-${index}`,
   };
 }
 
-export default function TDSTab1() {
+export default function TDSTab5() {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -79,69 +78,29 @@ export default function TDSTab1() {
         >
           <Tab
             className="!px-4"
-            sx={{
-              "& .MuiTabs-root": {
-                padding: 0,
-              },
-              "& .MuiTab-root": {
-                padding: 0,
-              },
-            }}
-            label="Income From Salary"
+            label="Section 80C 1.5 Lakh"
             {...a11yProps(0)}
           />
           <Tab
             className="!px-4"
-            sx={{
-              "& .MuiTabs-root": {
-                padding: 0,
-              },
-              "& .MuiTab-root": {
-                padding: 0,
-              },
-            }}
+            label="Section 80CCD NPS (Max. ₹ 50,000/-)"
+            {...a11yProps(1)}
+          />
+          <Tab
+            className="!px-4"
             label="Income From House Property"
-            {...a11yProps(1)}
-          />
-          <Tab
-            className="!px-4"
-            sx={{
-              "& .MuiTabs-root": {
-                padding: 0,
-              },
-              "& .MuiTab-root": {
-                padding: 0,
-              },
-            }}
-            label="Income from other sources"
-            {...a11yProps(1)}
-          />
-          <Tab
-            className="!px-4"
-            sx={{
-              "& .MuiTabs-root": {
-                padding: 0,
-              },
-              "& .MuiTab-root": {
-                padding: 0,
-              },
-            }}
-            label="Deduction under chapter VI A"
-            {...a11yProps(1)}
+            {...a11yProps(2)}
           />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <Tab1 />
+        <TDSTable4 />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <Tab2 />
+        <TDSTable4Tab2 />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <Tab3 />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={3}>
-        <Tab4 />
+        <Tab2 />
       </CustomTabPanel>
     </Box>
   );

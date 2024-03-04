@@ -16,9 +16,9 @@ const SignIn = () => {
   // const { setCookie } = useContext(UseContext);
   const redirect = useNavigate();
 
-  const { getCurrentUser, getCurrentRole } = UserProfile();
+  const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
-  const role = getCurrentRole();
+  const role = useGetCurrentRole();
   useEffect(() => {
     if (user && !role) {
       redirect("/choose-role");

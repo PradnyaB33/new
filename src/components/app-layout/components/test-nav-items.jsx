@@ -56,8 +56,8 @@ const TestNavItems = ({ toggleDrawer }) => {
     }
   };
 
-  const { getCurrentRole } = UserProfile();
-  const role = getCurrentRole();
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
   const [isVisible, setisVisible] = useState(true);
 
   let navItems = useMemo(

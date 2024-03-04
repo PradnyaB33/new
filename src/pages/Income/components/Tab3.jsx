@@ -18,7 +18,7 @@ const Tab3 = () => {
       <div className="grid bg-white border-[.5px] border-gray-200 grid-cols-6 gap-4 p-4">
         <div>
           <h1 className="text-gray-600">Amount Declared</h1>
-          <p className="text-xl">INR {totalHeads.toFixed(2)}</p>
+          <p className="text-xl">INR {totalHeads}</p>
         </div>
 
         <div>
