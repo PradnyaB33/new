@@ -34,7 +34,7 @@ const packageSchema = z.object({
 });
 const AddDelegate = () => {
   const { addDelegateMutation } = useDelegateSuperAdmin();
-  const { data, isLoading } = useGetDelegateSuperAdmin();
+  const { data } = useGetDelegateSuperAdmin();
   console.log(`🚀 ~ file: AddDelegate.jsx:38 ~ data:`, data);
   const { control, formState, handleSubmit, getValues } = useForm({
     defaultValues: {
