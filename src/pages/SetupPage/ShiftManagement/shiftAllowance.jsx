@@ -1,6 +1,6 @@
 import { CalendarMonth, West } from "@mui/icons-material";
 import { Badge, Button, Skeleton } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Link } from "react-router-dom";
 import "tailwindcss/tailwind.css";
@@ -141,6 +141,7 @@ const ShiftAllowance = () => {
                         type="submit"
                         variant="contained"
                         className="font-bold m-auto w-fit"
+                        onClick={() => window.location.reload()}
                       >
                         Apply for shift
                       </Button>
@@ -160,7 +161,7 @@ const ShiftAllowance = () => {
                     className="text-center w-fit !m-auto !capitalize !underline "
                   >
                     {!isLoading
-                      ? "Apply for shifts"
+                      ? "Apply for Shifts"
                       : "Wait Calendar is Loading"}
                   </Button>
                 </div>

@@ -13,18 +13,45 @@ import {
 import axios from "axios";
 import { format } from "date-fns";
 import dayjs from "dayjs";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Loader from "../../../pages/Notification/Loader";
+import UserProfile from "../../../hooks/UserData/useUser";
 
 const LeaveRejectmodal = ({ items }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const queryClient = useQueryClient();
   const [updateCount, setUpdateCount] = useState(0);
+  const [emp, setEmp] = useState();
+  let isAcc = false;
+  const profileArr = user.profile;
+
+  profileArr.forEach((element) => {
+    if (element === "Accountant") {
+      isAcc = true;
+    }
+  });
+
+  useEffect(() => {
+    (async () => {
+      const resp = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/get`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setEmp(resp?.data.getManager);
+      console.log(" employeedata", resp.data);
+    })();
+  }, [authToken]);
 
   const handleClose = () => {
     setOpen(false);
@@ -61,7 +88,7 @@ const LeaveRejectmodal = ({ items }) => {
       },
     }
   );
-  const { mutate: acceptLeaveMutation, isLoading: mutateLoading } = useMutation(
+  const { mutate: acceptLeaveMutation } = useMutation(
     ({ id }) =>
       axios.post(
         `${process.env.REACT_APP_API}/route/shiftApply/accept/${id}`,
@@ -74,18 +101,33 @@ const LeaveRejectmodal = ({ items }) => {
       ),
     {
       onSuccess: () => {
+        window.location.reload();
         setUpdateCount(updateCount + 1);
-        queryClient.invalidateQueries("shift-request");
-        handleClose()
       },
     }
   );
-  if (mutateLoading) {
-    return <Loader />;
-  }
+  const { mutate: acceptAccMutation } = useMutation(
+    ({ id }) =>
+      axios.post(
+        `${process.env.REACT_APP_API}/route/shiftApply/acceptAcc/${id}`,
+        { message: "Your Request is successfully approved" },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      ),
+    {
+      onSuccess: () => {
+        window.location.reload();
+        setUpdateCount(updateCount + 1);
+      },
+    }
+  );
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    rejectRequestMutation.mutate(); // Trigger the mutation
+    rejectRequestMutation.mutate();
   };
 
   return (
@@ -123,10 +165,9 @@ const LeaveRejectmodal = ({ items }) => {
 
             <div className="space-y-4 w-full flex flex-col items-center md:items-start justify-center">
               <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                {items?.employeeId} has raised a shift request from{" "}
-                {items.description} {" "}
-                {format(new Date(items.start), "PP")} to{" "}
-                {format(new Date(items.end), "PP")}
+                {emp?.first_name} {emp?.last_name} has raised a shift request
+                from {items.description} {format(new Date(items.start), "PP")}{" "}
+                to {format(new Date(items.end), "PP")}
               </h1>
 
               <Chip
@@ -138,7 +179,49 @@ const LeaveRejectmodal = ({ items }) => {
                 }}
               />
 
-              {items.status === "Pending" ? (
+              {isAcc ? (
+                items.status === "Approved" ? (
+                  <Box sx={{ mt: 3, mb: 3 }}>
+                    <Stack direction="row" spacing={3}>
+                      <Button
+                        variant="contained"
+                        onClick={() => acceptAccMutation({ id: items._id })}
+                        color="primary"
+                        sx={{
+                          fontSize: "12px",
+                          padding: "5px 30px",
+                          textTransform: "capitalize",
+                        }}
+                      >
+                        Accept
+                      </Button>
+                      <Button
+                        onClick={() => setOpen(true)}
+                        variant="contained"
+                        sx={{
+                          fontSize: "12px",
+                          padding: "5px 30px",
+                          textTransform: "capitalize",
+                          backgroundColor: "#BB1F11",
+                          "&:hover": {
+                            backgroundColor: "#BB1F11",
+                          },
+                        }}
+                      >
+                        Reject
+                      </Button>
+                    </Stack>
+                  </Box>
+                ) : items.status === "Rejected" ? (
+                  <Box>
+                    <Chip label="Request rejected" color="error" />
+                  </Box>
+                ) : (
+                  <Box>
+                    <Chip label="Request Approved" color="success" />
+                  </Box>
+                )
+              ) : items.status === "Pending" ? (
                 <Box sx={{ mt: 3, mb: 3 }}>
                   <Stack direction="row" spacing={3}>
                     <Button
