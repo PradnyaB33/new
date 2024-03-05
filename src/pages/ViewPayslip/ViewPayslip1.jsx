@@ -159,15 +159,12 @@ const ViewPayslip1 = () => {
   const unpaidLeave = previousMonthSalary?.unPaidLeaveDays;
   const paidLeave = previousMonthSalary?.paidLeaveDays;
   const publicHoliday = previousMonthSalary?.publicHolidaysCount;
-
-  // generating and downlaoding the pdf
+  const img = organisationInfo?.logo_url;
+  console.log(img);
+  // generating and downlaoding the pdg
   const downloadPDF = () => {
     const input = pdfRef.current;
-    html2canvas(
-      input,
-      { logging: true, letterRendering: 1, useCORS: true },
-      { scale: 2 }
-    ).then((canvas) => {
+    html2canvas(input, { scale: 2 }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4", true);
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -219,7 +216,7 @@ const ViewPayslip1 = () => {
                       }}
                     >
                       <img
-                        src={organisationInfo?.logo_url || ""}
+                        src={organisationInfo?.logo_url}
                         alt="Organziation"
                         style={{
                           borderRadius: "50%",
