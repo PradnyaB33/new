@@ -235,11 +235,11 @@ const BillingCard = ({ doc }) => {
             descriptionText={"Purchased Plan"}
             mainText={data?.plan?.item?.name}
           />
-          <DescriptionBox
+          {/* <DescriptionBox
             Icon={FilterNone}
             descriptionText={"Active packages"}
             mainText={data?.organisation?.packages?.length}
-          />
+          /> */}
           <DescriptionBox
             Icon={People}
             descriptionText={"Allowed employee count"}

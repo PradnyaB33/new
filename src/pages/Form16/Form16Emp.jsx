@@ -34,7 +34,7 @@ const Form16Emp = () => {
       <div className=" mt-5">
         {getForm16 ? (
           <>
-            <Typography variant="h4" className=" text-center pl-10  mb-6  mb-5">
+            <Typography variant="h4" className="text-center pl-10">
               Form 16
             </Typography>
             <object
