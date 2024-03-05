@@ -16,6 +16,7 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import PersonPinOutlinedIcon from "@mui/icons-material/PersonPinOutlined";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
 const useSetupSideNav = (organisationId) => {
   const location = useLocation();
   const { getCurrentUser } = UserProfile();
@@ -145,6 +146,15 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/employee-code`,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+    },
+    {
+      label: "Loan Management",
+      icon: CreditCardIcon,
+      href: `/organisation/${organisationId}/setup/loan-management`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/loan-management`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
