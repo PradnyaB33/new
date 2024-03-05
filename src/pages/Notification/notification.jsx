@@ -109,7 +109,7 @@ const Notification = () => {
       ></Box>
 
       <div className="flex flex-col gap-8 px-8">
-        {data?.leaveRequests?.length === 0 ||
+        {/* {data?.leaveRequests?.length === 0 ||
         newData?.requests?.length === 0 ? (
           <>
             <div className="flex items-center gap-4  bg-sky-100 p-4 px-8 rounded-md shadow-lg">
@@ -119,7 +119,7 @@ const Notification = () => {
           </>
         ) : (
           ""
-        )}
+        )} */}
         {newData?.requests?.map((items, idx) => {
           console.log("items", items);
           return <ShiftRejectModel key={idx} items={items} />;
