@@ -20,11 +20,12 @@ const SignIn = () => {
   const user = getCurrentUser();
   const role = getCurrentRole();
   useEffect(() => {
-    if (user && !role) {
-      redirect("/choose-role");
-    }
+    // if (user && !role) {
+    //   redirect("/choose-role");
+    // }
     if (user?._id && role) {
-      if (role === "Super-Admin") return redirect("/");
+      if (role === ("Super-Admin" || "Delegate-Super-Admin"))
+        return redirect("/");
       else if (role === "Hr")
         return redirect(
           `/organisation/${user?.organisationId}/dashboard/HR-dashboard`
@@ -90,6 +91,14 @@ const SignIn = () => {
         if (response.data.user?.profile?.includes("Super-Admin")) {
           handleRole.mutate({
             role: "Super-Admin",
+            email: response.data.user?.email,
+          });
+          return redirect("/");
+        } else if (
+          response.data.user?.profile?.includes("Delegate-Super-Admin")
+        ) {
+          handleRole.mutate({
+            role: "Delegate-Super-Admin",
             email: response.data.user?.email,
           });
           return redirect("/");

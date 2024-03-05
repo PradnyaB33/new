@@ -1,21 +1,19 @@
-import { ExpandMore } from "@mui/icons-material";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Button,
-} from "@mui/material";
+import { Button } from "@mui/material";
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import useOrg from "../../../State/Org/Org";
+import PackageInfo from "../../../components/Modal/PackagesModal/package-info";
 import Loader from "../../../components/app-loader/page";
 import useGetUser from "../../../hooks/Token/useUser";
-import { convertCamelToTitle } from "./step-3";
+import { packageArray } from "../../../utils/Data/data";
+import PricingCard from "./step-2-components/pricing-card";
 
 const Step4 = () => {
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const data = useOrg();
+  console.log(`🚀 ~ file: step-4.jsx:15 ~ data:`, data);
   const { authToken, decodedToken } = useGetUser();
   const handleDismiss = async (id) => {
     const config = {
@@ -44,25 +42,9 @@ const Step4 = () => {
       `🚀 ~ file: step-4.jsx:61 ~  !data.industry_type:`,
       !data.isTrial
     );
-    if (data.data === undefined) {
+    if (data.packageInfo === undefined) {
       return "Please Select Plan And Package";
     }
-
-    // if (
-    //   !data.logo_url ||
-    //   !data.orgName ||
-    //   !data.foundation_date ||
-    //   !data.web_url ||
-    //   !data.industry_type ||
-    //   !data.email ||
-    //   !data.location ||
-    //   !data.contact_number ||
-    //   !data.description ||
-    //   !data.creator
-    // ) {
-    //   console.log("Please fill all mandatory field");
-    //   throw new Error("Please fill all mandatory field");
-    // }
 
     const formData = new FormData();
 
@@ -82,11 +64,8 @@ const Step4 = () => {
     formData.append("contact_number", data.contact_number);
     formData.append("description", data.description);
     formData.append("creator", data.creator);
-    formData.append("remotePunching", data.remotePunching);
-    formData.append("performanceManagement", data.performanceManagement);
-    formData.append("analyticsAndReporting", data.analyticsAndReporting);
-    formData.append("skillMatrices", data.skillMatrices);
-    formData.append("data", JSON.stringify(data.data));
+    formData.append("packageInfo", data?.packageInfo?.packageId);
+    formData.append("count", data.count);
 
     const response = await axios.post(
       `${process.env.REACT_APP_API}/route/organization`,
@@ -102,7 +81,6 @@ const Step4 = () => {
     onSuccess: async (data) => {
       const options = {
         key: data?.key,
-        amount: "50000",
         currency: "INR",
         name: "Aegis Plan for software", //your business name
         description: "Get Access to all premium keys",
@@ -142,70 +120,44 @@ const Step4 = () => {
   const { mutate: mutate2, isLoading: isLoading2 } = useMutation({
     mutationFn: handleDismiss,
   });
-  const valueObject = {
-    basicPackageCount: 35,
-    remotePunchingPackageCount: 55,
-    performanceManagementCount: 40,
-    analyticsAndReportingCount: 40,
-    skillMatricesCount: 40,
-  };
-  console.log(`🚀 ~ file: step-4.jsx:126 ~ data?.data:`, data?.data);
-  if (data?.data === undefined) {
+  if (data?.packageInfo === undefined) {
     return "Please Select Plan And Package";
   }
-
   if (isLoading) {
     return <Loader />;
   }
   if (isLoading2) {
     return <Loader />;
   }
+
   return (
-    <div className="px-4 grid md:grid-cols-6 grid-cols-1 bg-[#f8fafb] p-4 rounded-md">
-      <div className="grid md:col-span-2 col-span-1 items-center">
-        <img src="/payment.svg" className="h-[100px]" alt="" />
-      </div>
-      <div className=" grid col-span-4 p-8 gap-2 grid-rows-3 md:grid-rows-4">
-        <div className=" !row-span-1">
+    <div className="px-4 grid bg-[#f8fafb] p-4 rounded-md items-center">
+      <div className="p-4 gap-4 flex flex-col items-center">
+        <div className=" ">
           <h2 className="text-2xl font-bold ">Your Package Pricing</h2>
-          <p className=" text-gray-500">Organization Package </p>
+          <p className=" text-gray-500">You have selected Basic Package </p>
         </div>
         <div className="flex flex-col gap-2 !row-span-4">
-          {Object.entries(data.data)
-            .reverse()
-            .map((doc) => {
-              console.log(`🚀 ~ file: step-4.jsx:177 ~ doc:`, doc);
-              return (
-                <Accordion className="">
-                  <AccordionSummary
-                    expandIcon={<ExpandMore />}
-                    aria-controls="panel1-content"
-                    id="panel1-header"
-                  >
-                    {convertCamelToTitle(doc[0]) === "Member Count"
-                      ? "Basic Package"
-                      : convertCamelToTitle(doc[0])}
-                  </AccordionSummary>
-                  <AccordionDetails className="!px-4">
-                    <div className="grid grid-cols-2 w-full">
-                      <div className="col-span-1 text-left underline">
-                        {" "}
-                        {valueObject[doc[0]]}Rs × {doc[1]} Employees
-                      </div>
-                      <div className="col-span-1 text-center">
-                        {" "}
-                        {valueObject[doc[0]] * doc[1]}
-                      </div>
-                    </div>
-                  </AccordionDetails>
-                </Accordion>
-              );
-            })}
+          <PricingCard
+            setConfirmOpen={setConfirmOpen}
+            h1={data?.packageInfo?.packageName}
+            packageId={process.env.REACT_APP_BASICPLAN || "plan_NgWEcv4vEvrZFc"}
+            value={data?.packageId}
+            price={getPrice(data?.packageInfo?.packageName)}
+            mapArray={returnArray(data?.packageInfo?.packageName)}
+            button={false}
+          />
         </div>
-        <div className="row-span-1 items-center justify-center flex">
+        <div className="flex">
           <Button onClick={mutate} variant="contained">
             Submit
           </Button>
+          <PackageInfo
+            open={confirmOpen}
+            handleClose={() => {
+              setConfirmOpen(false);
+            }}
+          />
         </div>
       </div>
     </div>
@@ -213,3 +165,27 @@ const Step4 = () => {
 };
 
 export default Step4;
+
+const returnArray = (plan = "Basic Plan") => {
+  if (plan === "Basic Plan") {
+    return packageArray.filter((doc, index) => doc.Basic === "✓" && index <= 5);
+  } else if (plan === "Intermediate Plan") {
+    return packageArray
+      .filter((doc, index) => doc.Intermediate === "✓" && index <= 5)
+      .reverse();
+  } else {
+    return packageArray
+      .filter((doc, index) => doc.Enterprise === "✓")
+      .reverse()
+      .filter((doc, index) => index <= 5);
+  }
+};
+const getPrice = (plan) => {
+  if (plan === "Basic Plan") {
+    return 55;
+  } else if (plan === "Intermediate Plan") {
+    return 85;
+  } else {
+    return 115;
+  }
+};
