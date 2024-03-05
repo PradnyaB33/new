@@ -1,12 +1,11 @@
 import axios from "axios";
 import { useContext } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import useGetUser from "../../Token/useUser";
 
 const useDelegateSuperAdmin = () => {
   const { authToken } = useGetUser();
-  const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
 
   const createDelegate = async (data) => {
