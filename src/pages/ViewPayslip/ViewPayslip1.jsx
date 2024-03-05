@@ -160,10 +160,14 @@ const ViewPayslip1 = () => {
   const paidLeave = previousMonthSalary?.paidLeaveDays;
   const publicHoliday = previousMonthSalary?.publicHolidaysCount;
 
-  // generating and downlaoding the pdg
+  // generating and downlaoding the pdf
   const downloadPDF = () => {
     const input = pdfRef.current;
-    html2canvas(input, { scale: 2 }).then((canvas) => {
+    html2canvas(
+      input,
+      { logging: true, letterRendering: 1, useCORS: true },
+      { scale: 2 }
+    ).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4", true);
       const pdfWidth = pdf.internal.pageSize.getWidth();
