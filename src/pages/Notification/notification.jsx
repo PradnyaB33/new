@@ -1,15 +1,15 @@
-import { NotificationImportant } from "@mui/icons-material";
+// import { NotificationImportant } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import axios from "axios";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 import React, { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import LeaveRejectmodal from "../../components/Modal/LeaveModal/LeaveRejectmodal";
 import ShiftRejectModel from "../../components/Modal/ShiftRequestModal/ShiftRejectModel";
-import Error from "./Error";
-import Loader from "./Loader";
+// import Error from "./Error";
+// import Loader from "./Loader";
 import UserProfile from "../../hooks/UserData/useUser";
 
 const Notification = () => {
@@ -28,28 +28,25 @@ const Notification = () => {
     }
   });
 
-  const { data } = useQuery(
-    "employee-leave",
-    async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API}/route/leave/get`,
-          {
-            headers: { Authorization: authToken },
-          }
-        );
-        return response.data;
-      } catch (err) {
-        console.log(`🚀 ~ file: notification.jsx:37 ~ err:`, err);
-        // handleAlert(
-        //   true,
-        //   "error",
-        //   err.response.data.message || "Server is under Maintainance"
-        // );
-        throw err;
-      }
+  const { data } = useQuery("employee-leave", async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/leave/get`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+      return response.data;
+    } catch (err) {
+      console.log(`🚀 ~ file: notification.jsx:37 ~ err:`, err);
+      // handleAlert(
+      //   true,
+      //   "error",
+      //   err.response.data.message || "Server is under Maintainance"
+      // );
+      throw err;
     }
-  );
+  });
 
   const checkStatus = async () => {
     try {
@@ -77,6 +74,7 @@ const Notification = () => {
 
   useEffect(() => {
     checkStatus();
+    // eslint-disable-next-line
   }, []);
 
   console.log(

@@ -30,6 +30,7 @@ const ShiftsTable = () => {
 
   useEffect(() => {
     getSHifts();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -47,7 +48,6 @@ const ShiftsTable = () => {
     setApproved(approvedArr);
     setRejected(rejectedArr);
   }, [shifts]);
-
 
   const handlePopoverClose = () => {
     setAnchorEl(null);

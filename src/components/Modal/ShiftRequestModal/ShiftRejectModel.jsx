@@ -16,7 +16,7 @@ import dayjs from "dayjs";
 import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { UseContext } from "../../../State/UseState/UseContext";
-import Loader from "../../../pages/Notification/Loader";
+// import Loader from "../../../pages/Notification/Loader";
 import UserProfile from "../../../hooks/UserData/useUser";
 
 const LeaveRejectmodal = ({ items }) => {
