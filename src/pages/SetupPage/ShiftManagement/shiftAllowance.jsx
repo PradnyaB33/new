@@ -89,7 +89,7 @@ const ShiftAllowance = () => {
                     </Button>
                   </Badge>
                   <p className="!text-gray-400 font-semibold mb-2 text-xl">
-                    select shifts
+                    Select Shifts
                   </p>
                 </div>
               </div>
@@ -141,6 +141,7 @@ const ShiftAllowance = () => {
                         type="submit"
                         variant="contained"
                         className="font-bold m-auto w-fit"
+                        onClick={() => window.location.reload()}
                       >
                         Apply for shift
                       </Button>
@@ -160,7 +161,7 @@ const ShiftAllowance = () => {
                     className="text-center w-fit !m-auto !capitalize !underline "
                   >
                     {!isLoading
-                      ? "Apply for shifts"
+                      ? "Apply for Shifts"
                       : "Wait Calendar is Loading"}
                   </Button>
                 </div>
