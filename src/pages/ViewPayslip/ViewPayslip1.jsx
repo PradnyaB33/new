@@ -164,7 +164,12 @@ const ViewPayslip1 = () => {
   // generating and downlaoding the pdg
   const downloadPDF = () => {
     const input = pdfRef.current;
-    html2canvas(input, { scale: 2 }).then((canvas) => {
+    html2canvas(input, {
+      scale: 2,
+      useCORS: true,
+      logging: true,
+      letterRendering: 1,
+    }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4", true);
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -217,7 +222,7 @@ const ViewPayslip1 = () => {
                     >
                       <img
                         src={organisationInfo?.logo_url}
-                        alt="Organziation"
+                        alt={organisationInfo?.logo_url}
                         style={{
                           borderRadius: "50%",
                           width: "120px",
