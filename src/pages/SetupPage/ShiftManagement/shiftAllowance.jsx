@@ -7,6 +7,7 @@ import "tailwindcss/tailwind.css";
 import AppDatePicker from "../../../components/date-picker/date-picker2";
 import useShiftData from "../../../hooks/ShiftData/useShiftData";
 import Mapped from "./components/mapped-form";
+import ShiftsTable from './components/ShiftsTable'
 
 const ShiftAllowance = () => {
   const {
@@ -44,6 +45,9 @@ const ShiftAllowance = () => {
         </header>
 
         <div className="flex flex-col-reverse md:flex-row w-full justify-start p-6 gap-4">
+        <div className="flex flex-col gap-4">
+          <ShiftsTable />
+          </div>
           <article className="md:w-[100%] space-y-2">
             {/* Calendar display */}
             {isLoading ? (
@@ -85,7 +89,7 @@ const ShiftAllowance = () => {
                     </Button>
                   </Badge>
                   <p className="!text-gray-400 font-semibold mb-2 text-xl">
-                    select shifts
+                    Select Shifts
                   </p>
                 </div>
               </div>
@@ -137,6 +141,7 @@ const ShiftAllowance = () => {
                         type="submit"
                         variant="contained"
                         className="font-bold m-auto w-fit"
+                        onClick={() => window.location.reload()}
                       >
                         Apply for shift
                       </Button>
@@ -156,7 +161,7 @@ const ShiftAllowance = () => {
                     className="text-center w-fit !m-auto !capitalize !underline "
                   >
                     {!isLoading
-                      ? "Apply for shifts"
+                      ? "Apply for Shifts"
                       : "Wait Calendar is Loading"}
                   </Button>
                 </div>

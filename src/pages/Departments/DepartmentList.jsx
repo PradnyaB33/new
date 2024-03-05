@@ -242,10 +242,9 @@ const DepartmentList = () => {
         </div>
       ) : (
         <div
-          style={{ border: "2px solid gray", borderRadius: "20px" }}
           className="w-[75vw] m-auto h-full"
         >
-          <div className="p-4">
+          <div className="p-4 ">
             <Typography variant="h4" className="text-center mb-6">
               Departments
             </Typography>
@@ -254,7 +253,7 @@ const DepartmentList = () => {
             </p>
             <table
               style={{ borderRadius: "20px" }}
-              className="min-w-full bg-white text-left text-sm font-light"
+              className="min-w-full bg-white text-left text-sm font-light  shadow-md"
             >
               <thead className="border-b bg-gray-300 font-medium dark:border-neutral-500">
                 <tr className="!font-medium">

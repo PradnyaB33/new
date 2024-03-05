@@ -122,7 +122,7 @@ const Organisation = ({ item }) => {
           },
         }
       );
-      handleAlert(true, "success", "Organization deleted successfully");
+      handleAlert(true, "success", "Organization Deleted Successfully");
       queryClient.invalidateQueries("orgData");
       // Reload the window to reflect the updated data
       window.location.reload();
@@ -177,7 +177,7 @@ const Organisation = ({ item }) => {
         }
       );
 
-      handleAlert(true, "success", "Organization updated successfully");
+      handleAlert(true, "success", "Organization Updated Successfully");
       queryClient.invalidateQueries("orgData");
       // Close the dialog
       handleCloseConfirmation();
@@ -442,7 +442,7 @@ const Organisation = ({ item }) => {
               onChange={handleData}
               value={inputdata.web_url}
               size="small"
-              label="Url Of Website"
+              label="URL Of Website"
               type="text"
               fullWidth
             />
@@ -468,7 +468,7 @@ const Organisation = ({ item }) => {
             </FormControl>
             <TextField
               required
-              label="organization email"
+              label="Organization Email"
               name="email"
               onChange={handleData}
               value={inputdata.email}
@@ -493,7 +493,7 @@ const Organisation = ({ item }) => {
               value={inputdata.contact_number}
               size="small"
               type="number"
-              label="contact number"
+              label="Contact Number"
               fullWidth
             />
             <TextField

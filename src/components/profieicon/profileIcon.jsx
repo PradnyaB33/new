@@ -7,18 +7,44 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Cookies from "js-cookie";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserProfile from "../../hooks/UserData/useUser";
+import axios from "axios";
+import { UseContext } from "../../State/UseState/UseContext";
 
 export default function ProfileIcon() {
   const navigate = useNavigate();
+
   // const { removeCookie, cookies } = useContext(UseContext);
   const [anchorEl, setAnchorEl] = useState(null);
+  const { cookies } = useContext(UseContext);
+  const token = cookies["aegis"];
   const open = Boolean(anchorEl);
-
+  const [availableUserProfileData, setAvailableProfileData] = useState()
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
+  const userId = user?._id;
+
+  useEffect(() => {
+    const fetchAvailableUserProfileData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/employee/get/profile/${userId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setAvailableProfileData(response.data.employee);
+      } catch (error) {
+        console.error("Error fetching user profile data:", error);
+      }
+    };
+    fetchAvailableUserProfileData();
+  }, [token, userId, ]);
+
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -74,7 +100,7 @@ export default function ProfileIcon() {
               <div className="w-max flex gap-3 pt-4 pb-6  items-center  h-max rounded-full ">
                 <Avatar
                   variant="circular"
-                  src=""
+                  src={ "" || availableUserProfileData?.user_logo_url}
                   alt="none"
                   sx={{ width: 35, height: 35 }}
                   className="!rounded-[50%]
