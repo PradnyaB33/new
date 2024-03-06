@@ -64,7 +64,7 @@ import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 import TestMap from "./pages/Test/testMap";
-import TestNaresh from "./pages/Test/testNaresh";
+import TestYash from "./pages/Test/testYash";
 import MissedPunch from "./pages/RemotePunchIn/MissedPunch";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 
@@ -105,7 +105,7 @@ const App = () => {
       
       <Route path="/test6" element={<TrackingMap3 />} /> */}
       {/* Login Routes */}
-      <Route path="/test3" element={<TestNaresh />} />
+      <Route path="/test3" element={<TestYash />} />
       <Route path="/missedPunch" element={<MissedPunch />} />
       <Route path="/test5" element={<TestMap />} />
       <Route path="/sign-in" element={<SignIn />} />
