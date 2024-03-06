@@ -4,15 +4,14 @@ import React, { useContext } from "react";
 import { FaArrowCircleRight } from "react-icons/fa";
 import "react-multi-carousel/lib/styles.css";
 import { useQuery } from "react-query";
-import { Link, useNavigate } from "react-router-dom";
-import { TestContext } from "../../State/Function/Main";
+import { Link } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 
 const Home = () => {
-  const redirect = useNavigate();
+  // const redirect = useNavigate();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-  const { handleAlert } = useContext(TestContext);
+  // const { handleAlert } = useContext(TestContext);
 
   const getOrgList = async () => {
     const response = await axios.get(
