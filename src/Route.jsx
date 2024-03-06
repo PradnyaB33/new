@@ -64,7 +64,7 @@ import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 import TestMap from "./pages/Test/testMap";
-import TestNaresh from './pages/Test/TestNaresh'
+import TestNaresh from "./pages/Test/testNaresh";
 import MissedPunch from "./pages/RemotePunchIn/MissedPunch";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 
