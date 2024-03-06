@@ -22,9 +22,13 @@ const UserProfile = () => {
   const useGetCurrentRole = () => {
     const { data } = useQuery({
       queryKey: ["role"],
-      queryFn: () => {
+      queryFn: async () => {
         if (roletoken) {
-          const decodedToken = jwtDecode(roletoken);
+          const decodedToken = await jwtDecode(roletoken);
+          console.log(
+            `🚀 ~ file: useUser.jsx:28 ~ decodedToken:`,
+            decodedToken
+          );
           if (decodedToken) {
             console.log(decodedToken?.role);
             return decodedToken?.role;

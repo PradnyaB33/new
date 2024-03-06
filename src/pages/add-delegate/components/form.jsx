@@ -30,9 +30,9 @@ const packageSchema = z.object({
   gender: z.enum(["Male", "Female", "Other"]),
   profile: z.enum(["Delegate-Super-Admin"]),
   citizenship: z.string(),
+  _id: z.string(),
 });
 const MiniForm = ({ data }) => {
-  console.log(`🚀 ~ file: form.jsx:34 ~ data:`, data);
   const { addDelegateMutation } = useDelegateSuperAdmin();
 
   const { control, formState, handleSubmit, getValues } = useForm({
@@ -41,17 +41,18 @@ const MiniForm = ({ data }) => {
       last_name: data?.delegateSuperAdmin?.last_name,
       middle_name: data?.delegateSuperAdmin?.middle_name,
       joining_date: moment(data?.delegateSuperAdmin?.joining_date).format(
-        "yyyy-MM-dd"
+        "yyyy-MM-DD"
       ),
       email: data?.delegateSuperAdmin?.email,
       phone_number: data?.delegateSuperAdmin?.phone_number,
       password: undefined,
       date_of_birth: moment(data?.delegateSuperAdmin?.date_of_birth).format(
-        "yyyy-MM-dd"
+        "yyyy-MM-DD"
       ),
       gender: data?.delegateSuperAdmin?.gender,
       profile: "Delegate-Super-Admin",
       citizenship: data?.delegateSuperAdmin?.citizenship,
+      _id: data?.delegateSuperAdmin?._id || "",
     },
     resolver: zodResolver(packageSchema),
   });

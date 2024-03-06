@@ -33,6 +33,7 @@ import SalaryCalculate from "./pages/SalaryCalculate/SalaryCalculate";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeSalaryCalculateDay from "./pages/SetUpOrganization/EmoloyeeSalaryCalculate/EmployeeSalaryCalculate";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
+import EmpLoanMgt from "./pages/SetUpOrganization/EmployeeLoanManagement/EmpLoanMgt";
 import EmployementTypes from "./pages/SetUpOrganization/EmployementType/EmployementTypes";
 import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
 import OrganizationLocations from "./pages/SetUpOrganization/OrganizationLocations/OrganizationLocations";
@@ -62,7 +63,6 @@ import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
-import EmpLoanMgt from "./pages/SetUpOrganization/EmployeeLoanManagement/EmpLoanMgt";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 
 const App = () => {
@@ -669,7 +669,8 @@ function RequireAuth({ children, permission }) {
   const role = useGetCurrentRole();
   const isPermission = permission?.includes(role);
 
-  if (role || !window.location.pathname.includes("sign-in", "sign-up")) {
+  if (role && !window.location.pathname.includes("sign-in", "sign-up")) {
+    console.log(`🚀 ~ file: Route.jsx:670 ~ role:`, !role);
     if (!role) return <Navigate to={"/sign-in"} />;
     if (user && isPermission) return children;
     return <UnAuthorized />;
