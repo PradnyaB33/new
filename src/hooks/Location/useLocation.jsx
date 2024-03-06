@@ -7,7 +7,6 @@ const useLocationStore = () => {
   const [start, setStart] = useState(false);
   const [count, setCount] = useState(0);
   const authToken = useAuthToken();
-  const [empID, setempID] = useState("");
   // const [punches, setPunches] = useState([]);
 
   // useEffect(() => {
@@ -35,7 +34,8 @@ const useLocationStore = () => {
       });
     }
     fetchData2();
-  }, [empID]);
+    // eslint-disable-next-line
+  }, []);
   const fetchLocationData = async () => {
     console.log("i am from hook");
 
