@@ -7,8 +7,11 @@ import {
   OutlinedInput,
   FormLabel,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-
+import React, { useContext, useEffect, useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
+import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
+import axios from "axios";
 const style = {
   position: "absolute",
   top: "50%",
@@ -19,10 +22,17 @@ const style = {
 };
 
 const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
+  const { handleAlert } = useContext(TestContext);
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
+  const queryClient = useQueryClient();
   const [loanName, setLoanName] = useState("");
   const [loanValue, setLoanValue] = useState("");
   const [rateOfInterestApplied, setRateOfInterestApplied] = useState("No");
   const [rateOfInterest, setRateOfInterest] = useState("");
+  const [error, setError] = useState("");
+  const [rateOfInterestError, setRateOfInterestError] = useState("");
+
   useEffect(() => {
     if (parseInt(loanValue) > 20000) {
       setRateOfInterestApplied("Yes");
@@ -30,10 +40,54 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
       setRateOfInterestApplied("No");
     }
   }, [loanValue]);
-  const handleSubmit = (e) => {
+
+  const AddLoanType = useMutation(
+    (data) =>
+      axios.post(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/add-loan-type`,
+        data,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      ),
+
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["loanType"] });
+        handleClose();
+        setLoanName("");
+        setLoanValue("");
+        setRateOfInterestApplied("No");
+        setRateOfInterest("");
+        handleAlert(true, "success", "Loan Type added succssfully");
+      },
+      onError: () => {
+        setError("An Error occurred while creating a loan type.");
+      },
+    }
+  );
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const data = {
+        loanName: loanName,
+        loanValue: loanValue,
+        rateOfInterestApplied: rateOfInterestApplied,
+        rateOfInterest: rateOfInterest,
+      };
+      if (loanName.length <= 0) {
+        setError("Loan name field is Mandatory");
+        return false;
+      }
+      await AddLoanType.mutateAsync(data);
+    } catch (error) {
+      console.error(error);
+      setError("An error occurred while creating a laon type");
+    }
   };
-  console.log(organisationId);
   return (
     <>
       <Modal
@@ -69,9 +123,18 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
                   id="outlined-adornment-password"
                   label="Add Loan Name"
                   value={loanName}
-                  onChange={(e) => setLoanName(e.target.value)}
+                  onChange={(e) => {
+                    const newValue = e.target.value;
+                    if (!newValue.trim()) {
+                      setError("Loan Name field is mandatory");
+                    } else {
+                      setError("");
+                    }
+                    setLoanName(newValue);
+                  }}
                 />
               </FormControl>
+              {error && <p className="text-red-500">*{error}</p>}
             </div>
             <div className="space-y-2 ">
               <FormLabel className="text-md" htmlFor="demo-simple-select-label">
@@ -89,7 +152,13 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
                   id="outlined-adornment-password"
                   label="Add Loan Value"
                   value={loanValue}
-                  onChange={(e) => setLoanValue(e.target.value)}
+                  onChange={(e) => {
+                    const newValue = e.target.value;
+                    // Check if the input value is a valid number and greater than or equal to 0
+                    if (!isNaN(newValue) && newValue >= 0) {
+                      setLoanValue(newValue);
+                    }
+                  }}
                 />
               </FormControl>
             </div>
@@ -129,9 +198,30 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
                   id="outlined-adornment-password"
                   label="Add Loan Name"
                   value={rateOfInterest}
-                  onChange={(e) => setRateOfInterest(e.target.value)}
+                  onChange={(e) => {
+                    const newValue = e.target.value;
+                    if (!isNaN(newValue) && newValue >= 0) {
+                      setRateOfInterest(newValue);
+                      setRateOfInterestError("");
+                    } else {
+                      setRateOfInterestError(
+                        "Rate of interest should be a non-negative number"
+                      );
+                    }
+                    // Check if the input value follows the percentage format (e.g., 5.5, 7.5)
+                    if (!/^\d+(\.\d+)?$/.test(newValue)) {
+                      setRateOfInterestError(
+                        "Rate of interest should follow the percentage format (e.g., 5.5, 7.5)"
+                      );
+                    } else {
+                      setRateOfInterestError("");
+                    }
+                  }}
                 />
               </FormControl>
+              {rateOfInterestError && (
+                <p className="text-red-500">*{rateOfInterestError}</p>
+              )}
             </div>
             <div className="flex gap-4  mt-4  justify-end">
               <Button onClick={handleClose} color="error" variant="outlined">
