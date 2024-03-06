@@ -1,6 +1,6 @@
 import { Skeleton } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { FaArrowCircleRight } from "react-icons/fa";
 import "react-multi-carousel/lib/styles.css";
 import { useQuery } from "react-query";
@@ -45,14 +45,14 @@ const Home = () => {
   //   // eslint-disable-next-line
   // }, [authToken]);
 
-  useEffect(() => {
-    if (!authToken) {
-      // Redirect to the login page
-      redirect("/sign-in");
-      handleAlert(true, "warning", "Please login first.");
-    }
-    // eslint-disable-next-line
-  }, [redirect, cookies, handleAlert, authToken]);
+  // useEffect(() => {
+  //   if (!authToken) {
+  //     // Redirect to the login page
+  //     redirect("/sign-in");
+  //     handleAlert(true, "warning", "Please login first.");
+  //   }
+  //   // eslint-disable-next-line
+  // }, [redirect, cookies, handleAlert, authToken]);
 
   return (
     <>

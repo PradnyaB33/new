@@ -1,9 +1,10 @@
 import axios from "axios";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import useGetUser from "../../Token/useUser";
 
 const useDelegateSuperAdmin = () => {
-  const { authToken } = useGetUser();
+  const { authToken, decodedToken } = useGetUser();
+  const queryClient = useQueryClient();
 
   const createDelegate = async (data) => {
     console.log(`🚀 ~ file: mutation.jsx:13 ~ data:`, data);
@@ -24,6 +25,9 @@ const useDelegateSuperAdmin = () => {
     mutationFn: createDelegate,
     onSuccess: (data) => {
       console.log(data);
+      queryClient.invalidateQueries({
+        queryKey: [`delegate-super-admin-${decodedToken?.user?._id}`],
+      });
     },
     onError: (data) => {
       console.log(data);
