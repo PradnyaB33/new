@@ -24,15 +24,16 @@ import DeleteEmployee from "./pages/Employee/DeleteEmployee";
 import EmployeeList from "./pages/Employee/EmployeeList";
 import Form16 from "./pages/Form16/Form16";
 import Home from "./pages/Home/Home";
+import IncomeTax from "./pages/Income/IncomeTax";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
 import PaymentFailed from "./pages/Payment/page";
-import IncomeTax from "./pages/Payroll/IncomeTax";
 import SalaryCalculate from "./pages/SalaryCalculate/SalaryCalculate";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeSalaryCalculateDay from "./pages/SetUpOrganization/EmoloyeeSalaryCalculate/EmployeeSalaryCalculate";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
+import EmpLoanMgt from "./pages/SetUpOrganization/EmployeeLoanManagement/EmpLoanMgt";
 import EmployementTypes from "./pages/SetUpOrganization/EmployementType/EmployementTypes";
 import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
 import OrganizationLocations from "./pages/SetUpOrganization/OrganizationLocations/OrganizationLocations";
@@ -306,7 +307,12 @@ const App = () => {
         path="/organisation/:organisationId/employee-list"
         element={
           <RequireAuth
-            permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            permission={[
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "HR",
+              "Manager",
+            ]}
           >
             <EmployeeList />
           </RequireAuth>
@@ -394,6 +400,14 @@ const App = () => {
         element={
           <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <EmployeeSalaryCalculateDay />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/organisation/:organisationId/setup/loan-management"
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+            <EmpLoanMgt />
           </RequireAuth>
         }
       />
@@ -660,24 +674,20 @@ const App = () => {
 export default App;
 
 function RequireAuth({ children, permission }) {
-  const { getCurrentUser, getCurrentRole } = UserProfile();
+  const { getCurrentUser, useGetCurrentRole } = UserProfile();
 
   const user = getCurrentUser();
-  const role = getCurrentRole();
+  const role = useGetCurrentRole();
   const isPermission = permission?.includes(role);
 
-  if (user && !role) {
-    return <Navigate to={"/choose-role"} />;
-  }
-
-  if (role || !window.location.pathname.includes("sign-in", "sign-up")) {
+  if (role && !window.location.pathname.includes("sign-in", "sign-up")) {
     if (!role) return <Navigate to={"/sign-in"} />;
     if (user && isPermission) return children;
     return <UnAuthorized />;
   }
-
-  return user && isPermission ? children : <Navigate to={"/"} />;
+  return user && isPermission && children;
 }
+
 function RequireSubscription({ children }) {
   const { organisationId } = useParams();
   const { subscriptionDetails } = useSubscription(organisationId);

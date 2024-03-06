@@ -44,6 +44,14 @@ const useEmpState = create((set) => {
         ...orgName,
       });
     },
+
+    updateField: (fieldName, value) => {
+      set((state) => ({
+        ...state,
+        [fieldName]: value,
+      }));
+    },
+
     emptyState: () => {
       set({
         first_name: undefined,

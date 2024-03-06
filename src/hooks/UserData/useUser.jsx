@@ -1,5 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { useContext } from "react";
+import { useQuery } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
 
 const UserProfile = () => {
@@ -18,18 +19,30 @@ const UserProfile = () => {
     }
   };
 
-  const getCurrentRole = () => {
-    if (roletoken) {
-      const decodedToken = jwtDecode(roletoken);
-      if (decodedToken) {
-        return decodedToken?.role;
-      } else {
-        return "guest";
-      }
-    }
+  const useGetCurrentRole = () => {
+    const { data } = useQuery({
+      queryKey: ["role"],
+      queryFn: async () => {
+        if (roletoken) {
+          const decodedToken = await jwtDecode(roletoken);
+          console.log(
+            `🚀 ~ file: useUser.jsx:28 ~ decodedToken:`,
+            decodedToken
+          );
+          if (decodedToken) {
+            console.log(decodedToken?.role);
+            return decodedToken?.role;
+          } else {
+            return null;
+          }
+        }
+      },
+    });
+
+    return data;
   };
 
-  return { getCurrentUser, getCurrentRole };
+  return { getCurrentUser, useGetCurrentRole };
 };
 
 export default UserProfile;

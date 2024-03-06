@@ -1,12 +1,14 @@
 import React from "react";
-import TDSTable4 from "./Table/TDSTable4";
+import useOther from "../../../hooks/IncomeTax/useOther";
+import TDSTable3 from "./Table/TDSTable3";
 
-const Tab4 = () => {
+const Tab3 = () => {
+  const { totalHeads } = useOther();
   return (
     <div className="overflow-auto !p-0 ">
       <div className="flex items-center justify-between ">
         <div className="w-full p-4  ">
-          <h1 className="text-2xl ">Less : Deduction under chapter VI A</h1>
+          <h1 className="text-2xl ">(III) Income from Other Sources</h1>
           <p>
             Below are the declarations done so far by you for any modifications
             click on action
@@ -16,8 +18,9 @@ const Tab4 = () => {
       <div className="grid bg-white border-[.5px] border-gray-200 grid-cols-6 gap-4 p-4">
         <div>
           <h1 className="text-gray-600">Amount Declared</h1>
-          <p className="text-xl">INR 0</p>
+          <p className="text-xl">INR {totalHeads}</p>
         </div>
+
         <div>
           <h1 className="text-gray-600">Pending Approval Amount</h1>
           <p className="text-xl">INR 0</p>
@@ -31,9 +34,9 @@ const Tab4 = () => {
           <p className="text-xl">INR 0</p>
         </div>
       </div>
-      <TDSTable4 />
+      <TDSTable3 />
     </div>
   );
 };
 
-export default Tab4;
+export default Tab3;

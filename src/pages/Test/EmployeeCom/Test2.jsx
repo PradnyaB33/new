@@ -132,6 +132,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     resolver: zodResolver(EmployeeSchema),
   });
 
+  console.log(shift_allocation);
+
   const { errors } = formState;
   const onsubmit = (data) => {
     console.log(getValues());
