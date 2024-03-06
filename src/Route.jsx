@@ -63,6 +63,9 @@ import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
+import TestMap from "./pages/Test/testMap";
+import TestNaresh from './pages/Test/TestNaresh'
+import MissedPunch from "./pages/RemotePunchIn/MissedPunch";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 
 const App = () => {
@@ -99,9 +102,12 @@ const App = () => {
       {/* <Route path="/test" element={<EditablePolyline />} /> */}
       {/* <Route path="/test3" element={<TestNaresh />} />
       <Route path="/test2" element={<TrackingMap />} />
-      <Route path="/test5" element={<TrackingMap2 />} />
+      
       <Route path="/test6" element={<TrackingMap3 />} /> */}
       {/* Login Routes */}
+      <Route path="/test3" element={<TestNaresh />} />
+      <Route path="/missedPunch" element={<MissedPunch />} />
+      <Route path="/test5" element={<TestMap />} />
       <Route path="/sign-in" element={<SignIn />} />
       <Route
         path="/billing"

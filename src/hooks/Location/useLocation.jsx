@@ -10,20 +10,29 @@ const useLocationStore = () => {
   const [empID, setempID] = useState("");
   // const [punches, setPunches] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      const resp = await axios.get(
-        `${process.env.REACT_APP_API}/route/punch/getone`
-      );
-      console.log(resp?.data.punch.employeeId);
-      setempID(resp?.data.punch.employeeId);
-    }
-    fetchData();
-  }, [empID]);
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     const resp = await axios.get(
+  //       `${process.env.REACT_APP_API}/route/punch/getone`,
+  //       {
+  //         headers: {
+  //           Authorization: authToken,
+  //         },
+  //       }
+  //     );
+  //     console.log(resp?.data.punch.employeeId);
+  //     setempID(resp?.data.punch.employeeId);
+  //   }
+  //   fetchData();
+  // }, [empID]);
 
   useEffect(() => {
     async function fetchData2() {
-      await axios.get(`${process.env.REACT_APP_API}/route/punch/get/${empID}`);
+      await axios.get(`${process.env.REACT_APP_API}/route/punch/getPunch/1`, {
+        headers: {
+          Authorization: authToken,
+        },
+      });
     }
     fetchData2();
   }, [empID]);
@@ -40,7 +49,6 @@ const useLocationStore = () => {
 
     const { latitude, longitude, speed, accuracy } = position.coords;
     const payload = {
-      start: new Date(),
       locations: [
         {
           lat: latitude,
@@ -53,7 +61,7 @@ const useLocationStore = () => {
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API}/route/punch/create`,
+        `${process.env.REACT_APP_API}/route/punch/create/test`,
         payload,
         {
           headers: { Authorization: authToken },
