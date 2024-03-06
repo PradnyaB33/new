@@ -20,6 +20,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import { UseContext } from "../../../State/UseState/UseContext";
 import { TestContext } from "../../../State/Function/Main";
+import EditLoanTypeModal from "../../../components/Modal/LoanTypeModal/EditLoanTypeModal";
 const EmpLoanMgt = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -38,9 +39,10 @@ const EmpLoanMgt = () => {
           },
         }
       );
-      return response.data;
+      return response.data.data;
     }
   );
+  console.log(getEmployeeLoan);
   // for add
   const [addModalOpen, setAddModalOpen] = useState(false);
 
@@ -85,6 +87,20 @@ const EmpLoanMgt = () => {
       },
     }
   );
+
+  // for update
+
+  const [editLoanModalOpen, setEditLoanModalOpen] = useState(false);
+  const [loanId, setLoanId] = useState(null);
+
+  const handleEditModalOpen = (loanId) => {
+    setEditLoanModalOpen(true);
+    queryClient.invalidateQueries(["loanType", loanId]);
+    setLoanId(loanId);
+  };
+  const handleEditModalClose = () => {
+    setEditLoanModalOpen(false);
+  };
   return (
     <>
       <section className="bg-gray-50 min-h-screen w-full">
@@ -121,7 +137,7 @@ const EmpLoanMgt = () => {
                       <th scope="col" className="!text-left pl-8 py-3 ">
                         SR NO
                       </th>
-                      <th scope="col" className="py-3 ">
+                      <th scope="col" className="px-6 py-3">
                         Loan Name
                       </th>
                       <th scope="col" className="px-6 py-3 ">
@@ -133,23 +149,32 @@ const EmpLoanMgt = () => {
                       <th scope="col" className="px-6 py-3 ">
                         Rate of interest in %
                       </th>
+                      <th scope="col" className=" px-9 py-3 ">
+                        Action
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {getEmployeeLoan?.map((empLoan, id) => (
                       <tr className="!font-medium border-b" key={id}>
                         <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                        <td className="py-3 ">{empLoan?.loanName}</td>
-                        <td className="py-3 ">{empLoan?.loanValue}</td>
-                        <td className="py-3 ">
+                        <td className="!text-left  pl-4 py-3 ">
+                          {empLoan?.loanName}
+                        </td>
+                        <td className="!text-left pl-4 py-3 ">
+                          {empLoan?.loanValue}
+                        </td>
+                        <td className="!text-left pl-5 py-3 ">
                           {empLoan?.rateOfInterestApplied}
                         </td>
-                        <td className="py-3 ">{empLoan?.rateOfInterest}</td>
+                        <td className="!text-left  pl-5 py-3 ">
+                          {empLoan?.rateOfInterest}
+                        </td>
                         <td className="whitespace-nowrap px-6 py-2">
                           <IconButton
                             color="primary"
                             aria-label="edit"
-                            //onClick={() => handleEditModalOpen(empCode?._id)}
+                            onClick={() => handleEditModalOpen(empLoan?._id)}
                           >
                             <EditOutlinedIcon />
                           </IconButton>
@@ -188,6 +213,13 @@ const EmpLoanMgt = () => {
         />
       </section>
 
+      {/* for update */}
+      <EditLoanTypeModal
+        handleClose={handleEditModalClose}
+        organisationId={organisationId}
+        open={editLoanModalOpen}
+        loanId={loanId}
+      />
       {/* for delete */}
       <Dialog
         open={deleteConfirmation !== null}
