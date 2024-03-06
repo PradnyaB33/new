@@ -18,6 +18,7 @@ import React, { useContext, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
 import useOther from "../../../../hooks/IncomeTax/useOther";
+import useTDS from "../../../../hooks/IncomeTax/useTDS";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
 
@@ -27,6 +28,7 @@ const TDSTable1 = () => {
   const user = getCurrentUser();
   const queryClient = useQueryClient();
   const { setTotalHeads } = useOther();
+  const { setGrossTotal, grossTotal } = useTDS();
 
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
 
@@ -50,10 +52,12 @@ const TDSTable1 = () => {
       name: "Exemption on gratuity",
       amount: 0,
       proof: "",
+      approvedAmount: 0,
       status: "Not Submitted",
     },
     {
       name: "Exemption on Leave encashment",
+      approvedAmount: 0,
       amount: 0,
       proof: "",
       status: "Not Submitted",
@@ -63,53 +67,58 @@ const TDSTable1 = () => {
       amount: 0,
       proof: "",
       status: "Not Submitted",
+      approvedAmount: 0,
     },
     {
       name: "Daily Allowance",
       amount: 0,
       proof: "",
       status: "Not Submitted",
+      approvedAmount: 0,
     },
     {
       name: "Conveyance Allowance",
       amount: 0,
       proof: "",
       status: "Not Submitted",
+      approvedAmount: 0,
     },
     {
       name: "Transport Allowance for a specially-abled person",
       amount: 0,
       proof: "-",
       status: "Not Submitted",
+      approvedAmount: 0,
     },
     {
       name: "Perquisites for official purposes",
       amount: 0,
       proof: "",
       status: "Not Submitted",
+      approvedAmount: 0,
     },
     {
       name: "Taxable Salary",
       amount: 0,
       proof: "",
       status: "",
+      approvedAmount: 0,
     },
     {
       name: "Less : Professional Tax",
       amount: 0,
       proof: "",
       status: "",
+      approvedAmount: 0,
     },
     {
       name: "Income taxable under the head Salaries",
       amount: 0,
       proof: "",
       status: "",
+      approvedAmount: 0,
     },
   ]);
-
-  const [totalGross, setTotalGross] = useState(0);
-  console.log(totalGross);
 
   let deduction = 0;
 
@@ -135,11 +144,12 @@ const TDSTable1 = () => {
       }
     },
     onSuccess: (res) => {
+      console.log(res);
       let data = res.reduce((total, item) => {
-        return total + parseFloat(item.salary.totalGrossSalary);
+        return total + parseFloat(item.totalGrossSalary);
       }, 0);
 
-      setTotalGross(data);
+      setGrossTotal(data);
     },
   });
 
@@ -166,7 +176,7 @@ const TDSTable1 = () => {
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["finacialYearData"] });
-      deduction = totalGross - res.totalDeductions;
+      deduction = grossTotal - res.totalDeductions;
 
       const updatedTableData = tableData.map((item) => {
         const matchingItem = res.incomeFromSalary.investmentType.find(
@@ -184,7 +194,7 @@ const TDSTable1 = () => {
         if (item.name === "Gross Salary") {
           return {
             ...item,
-            amount: totalGross,
+            amount: grossTotal,
             status: "Auto",
             proof: "",
           };
@@ -330,6 +340,9 @@ const TDSTable1 = () => {
                 <th scope="col" className="py-3 px-2 border">
                   Declaration
                 </th>
+                <th scope="col" className="py-3 px-2 border">
+                  Approved Amount
+                </th>
                 <th scope="col" className=" py-3 px-2 border">
                   Proof submitted
                 </th>
@@ -349,7 +362,7 @@ const TDSTable1 = () => {
                 `}
                   key={itemIndex}
                 >
-                  <td className="!text-left pl-8 leading-7 text-[16px] w-max border ">
+                  <td className="!text-left pl-8 leading-7 text-[16px] w-[100px] border ">
                     {item.name === "Income taxable under the head Salaries"
                       ? ""
                       : itemIndex + 1}
@@ -394,6 +407,35 @@ const TDSTable1 = () => {
                       </p>
                     )}
                   </td>
+                  {item.name !== "Gross Salary" ? (
+                    <td className=" text-left !p-0 w-[200px] border ">
+                      <p
+                        className={`
+                        ${
+                          item.name ===
+                            "Income taxable under the head Salaries" &&
+                          "!font-bold text-lg "
+                        } 
+                        px-2 leading-7 text-[16px]`}
+                      >
+                        INR {parseFloat(item.approvedAmount).toFixed(2)}
+                      </p>
+                    </td>
+                  ) : (
+                    <td className=" text-left !p-0 w-[200px] ">
+                      <p
+                        className={`
+                        ${
+                          item.name ===
+                            "Income taxable under the head Salaries" &&
+                          "!font-bold text-lg "
+                        } 
+                        px-2 leading-7 text-[16px]`}
+                      >
+                        Auto Accepted
+                      </p>
+                    </td>
+                  )}
                   <td className="text-left leading-7 text-[16px] w-[200px]  border">
                     {item.name === "Income taxable under the head Salaries" ? (
                       ""
@@ -415,7 +457,7 @@ const TDSTable1 = () => {
                     )}
                   </td>
 
-                  <td className=" text-left  leading-7 text-[16px]  border px-2">
+                  <td className=" text-left  leading-7 text-[16px] w-[200px]  border px-2">
                     {item.name === "Income taxable under the head Salaries" ? (
                       ""
                     ) : item.status === "Pending" ? (

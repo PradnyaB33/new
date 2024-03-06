@@ -408,7 +408,7 @@ const TDSTable2 = () => {
                             {id + 1}
                           </td>
                           <td className="leading-7 text-[16px] truncate text-left w-[500px] border px-2">
-                            <div className=" flex items-center gap-2">
+                            <div className=" flex px-2 items-center gap-2">
                               {ele.name}
 
                               <Tooltip
@@ -424,7 +424,7 @@ const TDSTable2 = () => {
                             <>
                               <td className="leading-7 text-[16px] h-14 text-left px-2  w-[220px] border ">
                                 {editStatus[itemIndex] === id ? (
-                                  <div className="flex gap-2 !py-0 h-full ">
+                                  <div className="flex gap-2 px-2 !py-0 h-full ">
                                     <h1 className="text-lg h-full !py-0 text-center w-[30%] bg-gray-200 border justify-center   flex items-center ">
                                       INR
                                     </h1>
@@ -480,7 +480,9 @@ const TDSTable2 = () => {
                                 />
                               </div>
                             ) : (
-                              "INR " + ele.declaration?.toFixed(2)
+                              <div className="px-2">
+                                INR {ele.declaration?.toFixed(2)}
+                              </div>
                             )}
                           </td>
                           <td className="text-left h-14 px-2 leading-7 text-[16px] w-[200px]  border ">

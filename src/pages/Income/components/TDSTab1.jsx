@@ -76,7 +76,7 @@ export default function TDSTab1() {
             },
           }}
           aria-label="basic tabs example"
-          className="bg-white mt-4 space-x-4 !p-0 border-[.5px] border-gray-200"
+          className="bg-white  space-x-4 !p-0 border-[.5px] border-gray-200"
         >
           <Tab className="!px-4" label="My Declarations" {...a11yProps(0)} />
           <Tab className="!px-4" label="Income From Salary" {...a11yProps(1)} />

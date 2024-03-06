@@ -24,13 +24,13 @@ const SalaryDetails = () => {
 
     if (data && data.length > 0) {
       return data.map((item) => ({
-        month: item.salary.formattedDate,
-        HRA: Number(item.salary.hraSalary),
-        DA: item.salary.daSalary,
-        Basic: item.salary.basicSalary,
-        GrossSalary: Number(item.salary.totalGrossSalary),
+        month: item.formattedDate,
+        HRA: Number(item.hraSalary),
+        DA: item.daSalary,
+        Basic: item.basicSalary,
+        GrossSalary: Number(item.totalGrossSalary),
         PF: 0,
-        NetSalary: item.salary.totalNetSalary,
+        NetSalary: item.totalNetSalary,
       }));
     }
 
@@ -65,13 +65,14 @@ const SalaryDetails = () => {
           }
         );
         setTDSData(createTDSArray(salaryData.data));
-        return salaryData.data;
+        return salaryData;
       } catch (error) {
         console.log(error);
       }
     },
   });
 
+  console.log(financialData);
   const [tdsData, setTDSData] = useState(createTDSArray(financialData));
 
   const totalHRA = tdsData.reduce((total, i) => total + Number(i.HRA), 0);
@@ -196,37 +197,6 @@ const SalaryDetails = () => {
           </table>
         </div>
       )}
-
-      <div className="overflow-auto !p-0 ">
-        <div className="flex items-center justify-between ">
-          <div className="w-full p-4  ">
-            <h1 className="text-2xl ">(III) Income from Other Sources</h1>
-            <p>
-              Below are the declarations done so far by you for any
-              modifications click on action
-            </p>
-          </div>
-        </div>
-        <div className="grid bg-white border-[.5px] border-gray-200 grid-cols-6 gap-4 p-4">
-          <div>
-            <h1 className="text-gray-600">Amount Declared</h1>
-            <p className="text-xl">INR10000</p>
-          </div>
-
-          <div>
-            <h1 className="text-gray-600">Pending Approval Amount</h1>
-            <p className="text-xl">INR 0</p>
-          </div>
-          <div>
-            <h1 className="text-gray-600">Amount Accepted</h1>
-            <p className="text-xl">INR 0</p>
-          </div>
-          <div>
-            <h1 className="text-gray-600">Amount Rejected</h1>
-            <p className="text-xl">INR 0</p>
-          </div>
-        </div>
-      </div>
     </>
   );
 };

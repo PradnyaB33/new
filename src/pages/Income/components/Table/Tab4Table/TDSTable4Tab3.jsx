@@ -1,9 +1,4 @@
-import {
-  CheckCircle,
-  DeleteOutlined,
-  EditOutlined,
-  Error,
-} from "@mui/icons-material";
+import { DeleteOutlined, EditOutlined } from "@mui/icons-material";
 import {
   Button,
   CircularProgress,
@@ -18,7 +13,7 @@ import { TestContext } from "../../../../../State/Function/Main";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../../hooks/UserData/useUser";
 
-const TDSTable4Tab1 = () => {
+const TDSTable4Tab3 = () => {
   const rowsPerPage = 10; // Define the number of rows per page
   const authToken = useAuthToken();
   const { getCurrentUser } = UserProfile();
@@ -27,94 +22,87 @@ const TDSTable4Tab1 = () => {
   const user = getCurrentUser();
   const [tableData, setTableData] = useState([
     {
-      Section80: [
+      "Section80 50000": [
         {
-          section: "80 C",
-          name: "Life insurance",
+          section: "80D",
+          name: "Mediclaim Insurance (Self & dependent)",
+          declaration: 0,
+          maxAmount: 25000,
+          proof: "",
+          status: "Not Submitted",
+        },
+        {
+          section: "80D",
+          name: "Mediclaim Insurance (Parents)",
+          declaration: 0,
+          maxAmount: 50000,
+          proof: "",
+          status: "Not Submitted",
+        },
+        {
+          section: "80E",
+          maxAmount: 10000,
+          name: "Interest on education loan",
+          declaration: 0,
+          proof: "",
+
+          status: "Not Submitted",
+        },
+        {
+          section: "80EE",
+          name: "Interest on Home Loan as per conditions mentioned",
+          maxAmount: 1000,
           declaration: 0,
           proof: "",
           status: "Not Submitted",
         },
         {
-          section: "80 C",
-          name: "Provident Fund",
-          declaration: 0,
-          proof: "",
-          status: "Auto",
-        },
-        {
-          section: "80 C",
-          name: "Public Provident Fund",
+          section: "80DD",
+          name: "Medical Treatment of handicapped Dependent",
           declaration: 0,
           proof: "",
           status: "Not Submitted",
         },
         {
-          section: "80 C",
-          name: "NSC investment + Accrued interest",
+          section: "80DDB",
+          name: "Expenditure on Selected Medical Treatment",
+          declaration: 0,
+          maxAmount: 40000,
+          proof: "",
+          status: "Not Submitted",
+        },
+        {
+          section: "80G, 80GGA, 80GGC",
+          name: "80G, 80GGA, 80GGC Donation to approved funds",
           declaration: 0,
           proof: "",
           status: "Not Submitted",
         },
         {
-          section: "80 C",
-          name: "Housing loan principal repayment",
+          section: "80GG",
+          name: "For Rent to an Individual, not receiving HRA (File Form 10BA)",
+          declaration: 0,
+          maxAmount: 16200,
+          proof: "",
+          status: "Not Submitted",
+        },
+        {
+          section: "80TTA",
+          name: "SB interest received by Normal Citizen",
           declaration: 0,
           proof: "",
           status: "Not Submitted",
         },
         {
-          section: "80 C",
-          name: "Sukanya Samriddhi Account",
+          section: "80TTB",
+          name: "Interest on SB Act. & deposits received by Sr. & very Sr. Citizen",
           declaration: 0,
           proof: "",
           status: "Not Submitted",
         },
         {
-          section: "80 C",
-          name: "Tuition fees for 2 children",
-          declaration: 0,
-          proof: "",
-          status: "Not Submitted",
-        },
-        {
-          section: "80 C",
-          name: "Tax Saving Fixed deposit in Bank (5 years)",
-          declaration: 0,
-          proof: "",
-          status: "Not Submitted",
-        },
-        {
-          section: "80 C",
-          name: "Tax Saving Bonds",
-          declaration: 0,
-          proof: "",
-          status: "Not Submitted",
-        },
-        {
-          section: "80 C",
-          name: "E.L.S.S (Tax Saving Mutual Fund)",
-          declaration: 0,
-          proof: "",
-          status: "Not Submitted",
-        },
-        {
-          section: "80 CCC",
-          name: "Pension Plan from Insurance Companies/Mutual Funds (u/s 80CCC)",
-          declaration: 0,
-          proof: "",
-          status: "Not Submitted",
-        },
-        {
-          section: "80 CCD",
-          name: "Contribution to NPS notified by the Central Government",
-          declaration: 0,
-          proof: "",
-          status: "Not Submitted",
-        },
-        {
-          section: "80 CCH",
-          name: "All contributions to Agniveer Corpus Fund",
+          section: "80U",
+          name: "Physically Disable Assesse",
           declaration: 0,
           proof: "",
           status: "Not Submitted",
@@ -219,7 +207,11 @@ const TDSTable4Tab1 = () => {
       requestData: {
         section: value.section,
         status: "Pending",
-        declaration: value.declaration,
+        declaration: value.maxAmount
+          ? value.declaration < value.maxAmount
+            ? value.declaration
+            : value.maxAmount
+          : value.declaration,
         proof: "",
       },
     };
@@ -367,24 +359,10 @@ const TDSTable4Tab1 = () => {
                           )}
                         </td>
                         <td className=" text-left leading-7 text-[16px] border px-2 w-[200px]">
-                          {ele.status === "Pending" ? (
-                            <div className="flex items-center  gap-2">
-                              <Error className="text-yellow-400 " />
-                              {ele.status}
-                            </div>
-                          ) : ele.status === "Auto" ? (
-                            <div className="flex items-center  gap-2">
-                              <CheckCircle className="text-green-400 " />
-                              {ele.status}
-                            </div>
-                          ) : (
-                            <p>{ele.status}</p>
-                          )}
+                          {ele.status}
                         </td>
                         <td className="whitespace-nowrap leading-7 text-[16px] px-2   w-[220px]">
-                          {ele.name === "Provident Fund" ? (
-                            ""
-                          ) : editStatus[itemIndex] === id ? (
+                          {editStatus[itemIndex] === id ? (
                             <div className="space-x-1 w-[200px]">
                               <Button
                                 color="primary"
@@ -431,9 +409,7 @@ const TDSTable4Tab1 = () => {
             className="border-[.5px] border-gray-200 border-t-0 px-4 py-2 h-full  items-center w-full justify-between "
           >
             <div>
-              <h1>
-                Showing {page} to 2 of {totalRowCount} entries
-              </h1>
+              <h1>Showing {page} to 1 of 10 entries</h1>
             </div>
             <Pagination
               count={pages}
@@ -449,4 +425,4 @@ const TDSTable4Tab1 = () => {
   );
 };
 
-export default TDSTable4Tab1;
+export default TDSTable4Tab3;

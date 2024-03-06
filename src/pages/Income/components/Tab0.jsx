@@ -1,4 +1,5 @@
-import React from "react";
+import { default as React } from "react";
+import TDSTable0 from "./Table/myDeclarations/TDSTable0";
 
 const Tab0 = () => {
   return (
@@ -9,6 +10,8 @@ const Tab0 = () => {
           <p>Below are the declarations done by you</p>
         </div>
       </div>
+
+      <TDSTable0 />
     </div>
   );
 };

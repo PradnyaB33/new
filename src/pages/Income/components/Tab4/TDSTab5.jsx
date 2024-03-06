@@ -4,9 +4,9 @@ import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import * as React from "react";
-import Tab2 from "../Tab2";
 import TDSTable4 from "../Table/Tab4Table/TDSTable4Tab1";
 import TDSTable4Tab2 from "../Table/Tab4Table/TDSTable4Tab2";
+import TDSTable4Tab3 from "../Table/Tab4Table/TDSTable4Tab3";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -86,11 +86,7 @@ export default function TDSTab5() {
             label="Section 80CCD NPS (Max. ₹ 50,000/-)"
             {...a11yProps(1)}
           />
-          <Tab
-            className="!px-4"
-            label="Income From House Property"
-            {...a11yProps(2)}
-          />
+          <Tab className="!px-4" label="Other Sections" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -100,7 +96,7 @@ export default function TDSTab5() {
         <TDSTable4Tab2 />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <Tab2 />
+        <TDSTable4Tab3 />
       </CustomTabPanel>
     </Box>
   );
