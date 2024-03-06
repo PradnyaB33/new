@@ -24,11 +24,11 @@ import DeleteEmployee from "./pages/Employee/DeleteEmployee";
 import EmployeeList from "./pages/Employee/EmployeeList";
 import Form16 from "./pages/Form16/Form16";
 import Home from "./pages/Home/Home";
+import IncomeTax from "./pages/Income/IncomeTax";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
 import PaymentFailed from "./pages/Payment/page";
-import IncomeTax from "./pages/Payroll/IncomeTax";
 import SalaryCalculate from "./pages/SalaryCalculate/SalaryCalculate";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeSalaryCalculateDay from "./pages/SetUpOrganization/EmoloyeeSalaryCalculate/EmployeeSalaryCalculate";
@@ -663,15 +663,11 @@ const App = () => {
 export default App;
 
 function RequireAuth({ children, permission }) {
-  const { getCurrentUser, getCurrentRole } = UserProfile();
+  const { getCurrentUser, useGetCurrentRole } = UserProfile();
 
   const user = getCurrentUser();
-  const role = getCurrentRole();
+  const role = useGetCurrentRole();
   const isPermission = permission?.includes(role);
-
-  if (user && !role) {
-    return <Navigate to={"/choose-role"} />;
-  }
 
   if (role || !window.location.pathname.includes("sign-in", "sign-up")) {
     if (!role) return <Navigate to={"/sign-in"} />;
@@ -681,6 +677,7 @@ function RequireAuth({ children, permission }) {
 
   return user && isPermission ? children : <Navigate to={"/"} />;
 }
+
 function RequireSubscription({ children }) {
   const { organisationId } = useParams();
   const { subscriptionDetails } = useSubscription(organisationId);

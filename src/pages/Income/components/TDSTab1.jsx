@@ -4,10 +4,11 @@ import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import * as React from "react";
+import Tab0 from "./Tab0";
 import Tab1 from "./Tab1";
 import Tab2 from "./Tab2";
 import Tab3 from "./Tab3";
-import Tab4 from "./Tab4";
+import Tab4 from "./Tab4/Tab4";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -75,72 +76,40 @@ export default function TDSTab1() {
             },
           }}
           aria-label="basic tabs example"
-          className="bg-white mt-4 space-x-4 !p-0 border-[.5px] border-gray-200"
+          className="bg-white  space-x-4 !p-0 border-[.5px] border-gray-200"
         >
+          <Tab className="!px-4" label="My Declarations" {...a11yProps(0)} />
+          <Tab className="!px-4" label="Income From Salary" {...a11yProps(1)} />
           <Tab
             className="!px-4"
-            sx={{
-              "& .MuiTabs-root": {
-                padding: 0,
-              },
-              "& .MuiTab-root": {
-                padding: 0,
-              },
-            }}
-            label="Income From Salary"
-            {...a11yProps(0)}
-          />
-          <Tab
-            className="!px-4"
-            sx={{
-              "& .MuiTabs-root": {
-                padding: 0,
-              },
-              "& .MuiTab-root": {
-                padding: 0,
-              },
-            }}
             label="Income From House Property"
             {...a11yProps(1)}
           />
           <Tab
             className="!px-4"
-            sx={{
-              "& .MuiTabs-root": {
-                padding: 0,
-              },
-              "& .MuiTab-root": {
-                padding: 0,
-              },
-            }}
             label="Income from other sources"
             {...a11yProps(1)}
           />
           <Tab
             className="!px-4"
-            sx={{
-              "& .MuiTabs-root": {
-                padding: 0,
-              },
-              "& .MuiTab-root": {
-                padding: 0,
-              },
-            }}
             label="Deduction under chapter VI A"
             {...a11yProps(1)}
           />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <Tab1 />
+        <Tab0 />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <Tab2 />
+        <Tab1 />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <Tab3 />
+        <Tab2 />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
+        <Tab3 />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={4}>
         <Tab4 />
       </CustomTabPanel>
     </Box>
