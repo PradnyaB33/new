@@ -46,7 +46,7 @@ const TDSTable0 = () => {
     },
     onSuccess: (res) => {
       let data = res.reduce((total, item) => {
-        return total + parseFloat(item.totalGrossSalary);
+        return total + parseFloat(item?.totalGrossSalary);
       }, 0);
 
       setGrossTotal(data);
@@ -99,14 +99,14 @@ const TDSTable0 = () => {
     onSuccess: (tds) => {
       const tdsSalary = tds?.incomeFromSalarySource?.investmentType.reduce(
         (accumulator, investmentType) => {
-          return accumulator + Number(investmentType.declaration);
+          return accumulator + Number(investmentType?.declaration);
         },
         0
       );
       const salaryDeduction = grossTotal - tdsSalary;
       setSalaryTax(salaryDeduction);
 
-      const isSelfProperty = tds.incomeFromHouseProperty?.section.find(
+      const isSelfProperty = tds?.incomeFromHouseProperty?.section.find(
         (section) =>
           section?.sectionName === "(A) Self Occupied Property (Loss)"
       );
@@ -116,7 +116,7 @@ const TDSTable0 = () => {
       if (isSelfProperty) {
         let data = isSelfProperty?.investmentType.reduce(
           (accumulator, investmentType) => {
-            return accumulator + investmentType.declaration;
+            return accumulator + investmentType?.declaration;
           },
           0
         );
@@ -128,12 +128,12 @@ const TDSTable0 = () => {
         SelfProperty = data;
       }
 
-      const section2 = tds.incomeFromHouseProperty?.section?.find(
+      const section2 = tds?.incomeFromHouseProperty?.section?.find(
         (section) =>
           section?.sectionName ===
           "(B) Let out property (Enter name of Property)"
       );
-      const section3 = tds.incomeFromHouseProperty?.section?.find(
+      const section3 = tds?.incomeFromHouseProperty?.section?.find(
         (section) =>
           section?.sectionName ===
           "(C) Let out property (Enter name of Property)"
@@ -150,18 +150,18 @@ const TDSTable0 = () => {
         property2.ActualDeductedValue;
       setPropertyTax(totalHeads);
 
-      const otherDeduction = getTotalIncome(tds.incomeFromOtherSources);
+      const otherDeduction = getTotalIncome(tds?.incomeFromOtherSources);
       setOtherIncomeTax(otherDeduction);
 
-      const section80C = tds.sectionDeduction?.section.find(
+      const section80C = tds?.sectionDeduction?.section.find(
         (section) => section?.sectionName === "Section80"
       );
 
-      const section50 = tds.sectionDeduction?.section.find(
+      const section50 = tds?.sectionDeduction?.section.find(
         (section) => section?.sectionName === "Section 80CCD NPS"
       );
 
-      const others = tds.sectionDeduction?.section.find(
+      const others = tds?.sectionDeduction?.section.find(
         (section) => section?.sectionName === "Section80 50000"
       );
 
@@ -170,9 +170,9 @@ const TDSTable0 = () => {
       let Others = 0;
 
       if (section80C) {
-        let data = section80C?.investmentType.reduce(
+        let data = section80C?.investmentType?.reduce(
           (accumulator, investmentType) => {
-            return accumulator + investmentType.declaration;
+            return accumulator + investmentType?.declaration;
           },
           0
         );
@@ -184,7 +184,7 @@ const TDSTable0 = () => {
       }
 
       if (section50) {
-        let data = section50?.investmentType.reduce(
+        let data = section50?.investmentType?.reduce(
           (accumulator, investmentType) => {
             return accumulator + investmentType.declaration;
           },
@@ -197,7 +197,7 @@ const TDSTable0 = () => {
       }
 
       if (others) {
-        let data = others?.investmentType.reduce(
+        let data = others?.investmentType?.reduce(
           (accumulator, investmentType) => {
             return accumulator + investmentType.declaration;
           },
@@ -295,14 +295,14 @@ const TDSTable0 = () => {
 
   const getTaxbleAmount = (amount) => {
     let taxableAmount = 0;
-    if (amount < 300001) {
+    if (amount < 250000) {
       taxableAmount = 0;
-    } else if (amount >= 300001 && amount <= 500000) {
+    } else if (amount >= 250000 && amount <= 500000) {
       taxableAmount = (amount - 250000) * 0.05;
     } else if (amount >= 500001 && amount <= 1000000) {
-      taxableAmount = (amount - 500000 + 10000) * 0.2;
+      taxableAmount = (amount - 500000 + 12500) * 0.2;
     } else if (amount > 1000000) {
-      taxableAmount = (amount - 1000000 + 110000) * 0.3;
+      taxableAmount = (amount - 1000000 + 112500) * 0.3;
     }
 
     return taxableAmount.toFixed(2);
