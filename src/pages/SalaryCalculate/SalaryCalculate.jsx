@@ -265,6 +265,10 @@ const SalaryCalculate = () => {
   let deduction = availableEmployee?.deduction || "";
   let employee_pf = availableEmployee?.employee_pf || "";
   let esic = availableEmployee?.esic || "";
+  // Convert each individual deduction to have two decimal places
+  deduction = parseFloat(deduction).toFixed(2);
+  employee_pf = parseFloat(employee_pf).toFixed(2);
+  esic = parseFloat(esic).toFixed(2);
 
   // Calculate total deduction by adding all deductions
   let totalDeductions =
@@ -847,7 +851,7 @@ const SalaryCalculate = () => {
                             >
                               Professional Tax :
                             </td>
-                            <td>{availableEmployee?.deduction || ""}</td>
+                            <td>{deduction}</td>
                           </tr>
                           <tr>
                             <td
@@ -857,7 +861,7 @@ const SalaryCalculate = () => {
                             >
                               Employee PF :
                             </td>
-                            <td>{availableEmployee?.employee_pf || ""}</td>
+                            <td>{employee_pf}</td>
                           </tr>
                           <tr>
                             <td
@@ -867,7 +871,7 @@ const SalaryCalculate = () => {
                             >
                               ESIC :
                             </td>
-                            <td>{availableEmployee?.esic || ""}</td>
+                            <td>{esic}</td>
                           </tr>
                           <div>
                             <Divider

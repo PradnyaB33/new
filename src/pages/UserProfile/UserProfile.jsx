@@ -1,17 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import {
   Button,
   Divider,
   FormControl,
-  Grid,
   InputLabel,
   Paper,
+  Skeleton,
   TextField,
 } from "@mui/material";
 import axios from "axios";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
+import { getSignedUrl, uploadFile } from "../../services/api";
 
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
@@ -20,43 +21,70 @@ const EmployeeProfile = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const userId = user._id;
+  const [url, setUrl] = useState();
   const [additionalPhoneNumber, setAdditionalPhoneNumber] = useState("");
   const [chatId, setChatId] = useState("");
+  const [fetched, setFetched] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
-
-  // Function to fetch additional details of the employee
+  const [file, setFile] = useState();
+  const fileInputRef = useRef();
   const [availableUserProfileData, setAvailableProfileData] = useState({});
-  const fetchAvailableUserProfileData = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get/profile/${userId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      setAvailableProfileData(response.data.employee);
-    } catch (error) {
-      handleAlert(true, "error", "Failed to fetch User Profile Data");
-      console.error("Error fetching user profile data:", error);
+
+  useEffect(() => {
+    const fetchAvailableUserProfileData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/employee/get/profile/${userId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setAvailableProfileData(response.data.employee);
+        setChatId(response.data.employee.chat_id);
+        setAdditionalPhoneNumber(
+          response.data.employee.additional_phone_number
+        );
+        setStatusMessage(response.data.employee.status_message);
+        setFetched(true);
+      } catch (error) {
+        handleAlert(true, "error", "Failed to fetch User Profile Data");
+        console.error("Error fetching user profile data:", error);
+      }
+    };
+    fetchAvailableUserProfileData();
+  }, [handleAlert, token, userId]);
+
+  const handleImageChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile && selectedFile.type.startsWith("image/")) {
+      setFile(selectedFile);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUrl(reader.result);
+      };
+      reader.readAsDataURL(selectedFile);
+    } else {
+      handleAlert(true, "error", "Please select a valid image file.");
     }
   };
 
-  useEffect(() => {
-    fetchAvailableUserProfileData();
-    // eslint-disable-next-line
-  }, []);
-
-  // Function to handle adding additional details
   const handleAddAdditionalDetails = async () => {
     try {
+      let imageUrl;
+      if (file) {
+        const signedUrlResponse = await getSignedUrl();
+        const signedUrl = signedUrlResponse.url;
+        imageUrl = await uploadFile(signedUrl, file);
+      }
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/profile/add/${userId}`,
         {
           additional_phone_number: additionalPhoneNumber,
           chat_id: chatId,
           status_message: statusMessage,
+          user_logo_url: imageUrl?.Location.split("?")[0],
         },
         {
           headers: {
@@ -88,7 +116,7 @@ const EmployeeProfile = () => {
         sx={{
           width: "100%",
           maxWidth: "800px",
-          margin: "10% auto",
+          margin: "6% auto",
           padding: "20px",
         }}
       >
@@ -101,13 +129,44 @@ const EmployeeProfile = () => {
           </p>
         </div>
 
-        <Grid container spacing={2}>
-          {/* Profile Picture */}
-          <Grid item xs={12} md={4}></Grid>
-
-          {/* Additional Details */}
-          <Grid item xs={12} md={8}>
+        <div className="flex justify-around items-center w-full h-[25vh]">
+          <div className="w-[50%]">
             <div>
+              <input
+                style={{ display: "none" }}
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              <div className="w-full h-full flex flex-col justify-center items-center">
+                {url || availableUserProfileData?.user_logo_url ? (
+                  <img
+                    src={url || availableUserProfileData?.user_logo_url}
+                    alt="Selected"
+                    style={{
+                      width: "150px",
+                      height: "150px",
+                      borderRadius: "50%",
+                    }}
+                  />
+                ) : (
+                  <Skeleton variant="circular" width="150px" height="150px" />
+                )}
+                <button
+                  onClick={() => fileInputRef.current.click()}
+                  className="flex justify-center h-full bg-[#1976d2] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
+                >
+                  {availableUserProfileData.user_logo_url
+                    ? "Update Profile Picture"
+                    : "Select Profile Picture"}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-[50%]">
+            <div className="w-full h-full flex flex-col justify-center items-center">
               <h1
                 style={{
                   fontSize: "24px",
@@ -126,24 +185,55 @@ const EmployeeProfile = () => {
                   className="text-lg"
                   style={{ color: "#000", textAlign: "center" }}
                 >
-                  Status: {availableUserProfileData?.status_message || ""}
+                  {!availableUserProfileData.status_message && !fetched ? (
+                    <div className="w-full">
+                      <Skeleton
+                        variant="text"
+                        width="200px"
+                        className="flex m-auto"
+                        sx={{ fontSize: "1rem" }}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      Status:{" "}
+                      <span className="font-semibold">
+                        {availableUserProfileData?.status_message || "NA"}
+                      </span>
+                    </>
+                  )}
                 </h1>
                 <h1
                   className="text-lg"
                   style={{ color: "#000", textAlign: "center" }}
                 >
-                  Chat Id: {availableUserProfileData?.chat_id || ""}
+                  {!availableUserProfileData.chat_id && !fetched ? (
+                    <div className="w-full">
+                      <Skeleton
+                        variant="text"
+                        width="200px"
+                        className="flex m-auto"
+                        sx={{ fontSize: "1rem" }}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      Chat Id:{" "}
+                      <span className="font-semibold">
+                        {availableUserProfileData?.chat_id || "NA"}
+                      </span>
+                    </>
+                  )}
                 </h1>
               </div>
             </div>
-          </Grid>
-        </Grid>
+          </div>
+        </div>
 
         <div className="w-full py-6">
           <Divider variant="fullWidth" orientation="horizontal" />
         </div>
 
-        {/* Additional Information Fields */}
         <div className="w-full px-4">
           <InputLabel htmlFor="additionalPhoneNumber">
             Additional Phone Number

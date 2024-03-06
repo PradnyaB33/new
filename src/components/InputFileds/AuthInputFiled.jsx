@@ -3,8 +3,10 @@ import { CircularProgress } from "@mui/material";
 import { default as React } from "react";
 import { Controller } from "react-hook-form";
 import PlacesAutocomplete from "react-places-autocomplete";
+import { Link } from "react-router-dom";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
+import useEmpState from "../../hooks/Employee-OnBoarding/useEmpState";
 
 // import Autocomplete from "react-google-autocomplete";
 
@@ -22,12 +24,14 @@ const AuthInputFiled = ({
   options,
   disabled,
   value,
+
   wrapperMessage,
   min,
   max,
   className,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
+  const { updateField } = useEmpState();
 
   const handleFocus = (fieldName) => {
     setFocusedInput(fieldName);
@@ -76,6 +80,7 @@ const AuthInputFiled = ({
                     value={field?.value}
                     options={options}
                     onChange={(value) => {
+                      updateField(name, value);
                       field.onChange(value);
                     }}
                   />
@@ -441,7 +446,15 @@ const AuthInputFiled = ({
                   error && "text-red-500"
                 } font-semibold text-gray-500 text-md`}
               >
-                {label}
+                {label}{" "}
+                {name === "isChecked" && (
+                  <Link
+                    href="/terms-and-conditions"
+                    className="font-semibold text-blue-500 hover:underline text-md  "
+                  >
+                    Terms and Conditions
+                  </Link>
+                )}
               </label>
             </div>
           )}

@@ -14,9 +14,9 @@ const RolePage = () => {
   const [role, setRole] = useState();
   const redirect = useNavigate();
 
-  const { getCurrentUser, getCurrentRole } = UserProfile();
+  const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
-  const roles = getCurrentRole();
+  const roles = useGetCurrentRole();
 
   useEffect(() => {
     if (!user) {

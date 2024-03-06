@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Badge,
+  CalendarMonthOutlined,
   CheckCircle,
   DriveFileRenameOutlineOutlined,
   Email,
@@ -19,7 +20,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
-import TermsCondition from "../../components/termscondition/termsCondition";
 import UserProfile from "../../hooks/UserData/useUser";
 
 const SignIn = () => {
@@ -88,6 +88,9 @@ const SignIn = () => {
             "Password must contain at least one number, one special character, and be at least 8 characters long",
         }),
       confirmPassword: z.string(),
+      isChecked: z.boolean().refine((value) => value === true, {
+        message: "Please accept the Terms and Conditions to sign up.",
+      }),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Password does'nt   match",
@@ -372,7 +375,29 @@ const SignIn = () => {
               />
             </div>
 
-            <TermsCondition />
+            <div className="flex items-center ">
+              <div className="w-max">
+                <AuthInputFiled
+                  name="isChecked"
+                  icon={CalendarMonthOutlined}
+                  control={control}
+                  type="checkbox"
+                  label={`I accept the`}
+                  errors={errors}
+                  error={errors.isChecked}
+                />
+              </div>
+              {/* <div className="w-max  space-y-1">
+                <Link
+                  href="/terms-and-conditions"
+                  className="font-semibold text-blue-500 hover:underline text-md  "
+                >
+                  Terms and Conditions
+                </Link>
+                <div className="h-4 !mb-1"> </div>
+              </div> */}
+            </div>
+            {/* <TermsCondition /> */}
             {/* Signup Button */}
             <div className="flex gap-5 mt-2">
               <button

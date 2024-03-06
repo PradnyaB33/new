@@ -33,13 +33,15 @@ const Step3 = ({ prevStep }) => {
         departmentName: dept_name,
         departmentDescription: dept_description,
         departmentLocation: dept_location.value,
-        departmentHeadName: dept_head_name?.value || "",
-        departmentHeadDelegateName: dept_delegate_head_name?.value || "",
+        ...(dept_head_name && { departmentHeadName: dept_head_name.value }),
+        ...(dept_delegate_head_name && {
+          departmentHeadDelegateName: dept_delegate_head_name.value,
+        }),
         costCenterName: dept_cost_center_name,
-        costCenterDescription: dept_cost_center_description,
         departmentId: dept_id,
         dept_cost_center_id: dept_cost_center_id,
       };
+
       console.log("deptdata", deptData);
       const response = axios.post(
         `${process.env.REACT_APP_API}/route/department/create/${organisationId}`,
@@ -161,7 +163,9 @@ const Step3 = ({ prevStep }) => {
           <section className=" py-6 px-8 rounded-md w-full">
             <article className="flex items-center mb-1 text-red-500 gap-2">
               <Error className="!text-2xl" />
-              <h1 className="text-xl font-semibold">Kindly fill all fields</h1>
+              <h1 className="text-xl font-semibold">
+                Kindly fill, all the fields
+              </h1>
             </article>
             <p>
               Please fill in the fields from the previous steps to be able to

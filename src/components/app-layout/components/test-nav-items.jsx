@@ -56,8 +56,8 @@ const TestNavItems = ({ toggleDrawer }) => {
     }
   };
 
-  const { getCurrentRole } = UserProfile();
-  const role = getCurrentRole();
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
   const [isVisible, setisVisible] = useState(true);
 
   let navItems = useMemo(
@@ -73,7 +73,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             link:
               role === "Manager"
                 ? `organisation/${orgId}/dashboard/manager-dashboard`
-                : role === "Hr"
+                : role === "HR"
                 ? `/organisation/${orgId}/dashboard/HR-dashboard`
                 : role === "Employee"
                 ? "/organisation/dashboard/employee-dashboard"
@@ -171,7 +171,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             text: "Form-16",
           },
           {
-            key: "shiftManagement",
+            key: "shiftAllowance",
             isVisible: true,
             link: "/shift-management",
             icon: <Work className=" !text-[1.2em] text-[#67748E]" />,
@@ -181,18 +181,18 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "shiftManagement",
             isVisible:
               isVisible &&
-              ["Super-Admin", "Hr", "Manager", "Delegate-Super Admin"].includes(
+              ["Super-Admin", "HR", "Manager", "Delegate-Super Admin"].includes(
                 role
               ),
             link: "/shift-management",
             icon: (
               <ScheduleOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
-            text: "Shift Allowance",
+            text: "Shift Management",
           },
           {
             key: "createsalary",
-            isVisible: isVisible && ["Super-Admin", "Hr"].includes(role),
+            isVisible: isVisible && ["Super-Admin", "HR"].includes(role),
             link: `/organisation/${orgId}/salary-management`,
             icon: (
               <AccountBalanceWalletOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
@@ -206,13 +206,13 @@ const TestNavItems = ({ toggleDrawer }) => {
         icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
         isVisible:
           window.location.pathname?.includes("organisation") &&
-          ["Super-Admin", "Hr", "Manager", "Delegate-Super Admin"]?.includes(
+          ["Super-Admin", "HR", "Manager", "Delegate-Super Admin"]?.includes(
             role
           ),
         routes: [
           {
             key: "onboarding",
-            isVisible: ["Super-Admin", "Hr", "Delegate-Super Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/employee-onboarding`,
@@ -222,7 +222,7 @@ const TestNavItems = ({ toggleDrawer }) => {
 
           {
             key: "offboarding",
-            isVisible: ["Super-Admin", "Hr", "Delegate-Super Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/employee-offboarding`,
@@ -233,7 +233,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "employeeList",
             isVisible: [
               "Super-Admin",
-              "Hr",
+              "HR",
               "Manager",
               "Department-Head",
               "Delegate-Super Admin",
@@ -251,7 +251,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           [
             "Super-Admin",
             "Delegate-Super Admin",
-            "Hr",
+            "HR",
             "Department-Head",
             "Delegate-Department-Head",
           ].includes(role),
@@ -262,7 +262,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "addDepartment",
             isVisible: [
               "Super-Admin",
-              "Hr",
+              "HR",
               "Department-Head",
               "Delegate-Department-Head",
             ].includes(role),
@@ -277,7 +277,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "deptDeletion",
             isVisible: [
               "Super-Admin",
-              "Hr",
+              "HR",
               "Department-Head",
               "Delegate-Department-Head",
             ].includes(role),
@@ -291,7 +291,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "departmentList",
             isVisible: [
               "Super-Admin",
-              "Hr",
+              "HR",
               "Department-Head",
               "Delegate-Department-Head",
             ].includes(role),

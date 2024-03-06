@@ -16,26 +16,25 @@ const SignIn = () => {
   // const { setCookie } = useContext(UseContext);
   const redirect = useNavigate();
 
-  const { getCurrentUser, getCurrentRole } = UserProfile();
+  const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
-  const role = getCurrentRole();
+  const role = useGetCurrentRole();
   useEffect(() => {
     // if (user && !role) {
     //   redirect("/choose-role");
     // }
     if (user?._id && role) {
-      if (role === ("Super-Admin" || "Delegate-Super-Admin"))
-        return redirect("/");
-      else if (role === "Hr")
+      if (role === "Super-Admin") return redirect("/");
+      else if (role === "HR")
         return redirect(
-          `/organisation/${user?.organisationId}/dashboard/HR-dashboard`
+          `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
         );
       else if (
         role === "Delegate-Department-Head" ||
         role === "Department-Head"
       )
         return redirect(
-          `/organisation/${user?.organisationId}/dashboard/DH-dashboard`
+          `/organisation/${user?.organizationId}/dashboard/DH-dashboard`
         );
       else if (role === "Manager")
         return redirect(
@@ -105,7 +104,7 @@ const SignIn = () => {
         } else if (response.data.user?.profile.includes("Hr")) {
           handleRole.mutate({ role: "Hr", email: response.data.user?.email });
           return redirect(
-            `/organisation/${user?.organisationId}/dashboard/HR-dashboard`
+            `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
           );
         } else if (response.data.user?.profile.includes("Manager")) {
           handleRole.mutate({
