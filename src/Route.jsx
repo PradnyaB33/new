@@ -301,7 +301,12 @@ const App = () => {
         path="/organisation/:organisationId/employee-list"
         element={
           <RequireAuth
-            permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            permission={[
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "HR",
+              "Manager",
+            ]}
           >
             <EmployeeList />
           </RequireAuth>
