@@ -6,7 +6,7 @@ import Loader from "../app-loader/page";
 
 const AnimationComponent = () => {
   const svgContainerRef = useRef(null);
-  const { data, isLoading } = useVerifyUser();
+  const { isLoading } = useVerifyUser();
   if (isLoading) {
     return <Loader />;
   }
