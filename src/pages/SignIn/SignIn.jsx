@@ -36,6 +36,10 @@ const SignIn = () => {
         return redirect(
           `/organisation/${user?.organizationId}/dashboard/DH-dashboard`
         );
+      else if (role === "Accountant")
+        return redirect(
+          `/organisation/${user?._id}/dashboard/employee-dashboard`
+        );
       else if (role === "Manager")
         return redirect(
           `/organisation/${user?._id}/dashboard/manager-dashboard`
@@ -45,10 +49,7 @@ const SignIn = () => {
     }
     // eslint-disable-next-line
   }, []);
-  console.log(
-    `🚀 ~ file: SignIn.jsx:47 ~ process.env.REACT_APP_API:`,
-    process.env.REACT_APP_API
-  );
+
   const handleRole = useMutation(
     (data) => {
       const res = axios.post(
@@ -129,6 +130,7 @@ const SignIn = () => {
           });
           return redirect(`/organisation/dashboard/employee-dashboard`);
         }
+        window.location.reload();
       },
 
       onError: (error) => {

@@ -670,13 +670,11 @@ function RequireAuth({ children, permission }) {
   const isPermission = permission?.includes(role);
 
   if (role && !window.location.pathname.includes("sign-in", "sign-up")) {
-    console.log(`🚀 ~ file: Route.jsx:670 ~ role:`, !role);
     if (!role) return <Navigate to={"/sign-in"} />;
     if (user && isPermission) return children;
     return <UnAuthorized />;
   }
-
-  return user && isPermission ? children : <Navigate to={"/"} />;
+  return user && isPermission && children;
 }
 
 function RequireSubscription({ children }) {
