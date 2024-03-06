@@ -123,7 +123,7 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
       // Reset form state
     } catch (error) {
       console.error(error);
-      setError("An error occurred while creating a neemppTypet");
+      setError("An error occurred while creating a new employment type");
     }
   };
 
