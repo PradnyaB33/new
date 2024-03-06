@@ -6,6 +6,7 @@ import useLocationStore from "../../hooks/Location/useLocation";
 export default function TestYash() {
   const { startLocationTracking, stopLocationTracking, data, count, start } =
     useLocationStore();
+    console.log("hello from hook");
 
   return (
     <>
