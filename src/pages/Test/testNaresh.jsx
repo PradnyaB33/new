@@ -6,6 +6,7 @@ import useLocationStore from "../../hooks/Location/useLocation";
 export default function TestNaresh() {
   const { startLocationTracking, stopLocationTracking, data, count, start } =
     useLocationStore();
+  console.log("from hook");
 
   return (
     <>
