@@ -205,6 +205,25 @@ const NavItems = ({ toggleDrawer }) => {
                         />
                       </ListItemButton>
                     </Link>
+                    <Link
+                      onClick={() => toggleDrawer()}
+                      to="/leave"
+                      className="w-full"
+                    >
+                      <ListItemButton className="!p-2 !rounded-lg w-full">
+                        <ListItemIcon className="p-2 !min-w-[25px]">
+                          <MoneyIcon className="text-white" />
+                        </ListItemIcon>
+                        <ListItemText
+                          primaryTypographyProps={{
+                            style: { fontSize: 13 },
+                          }}
+                          style={{ fontSize: "10px" }}
+                          className="text-white text-sm"
+                          primary={"Allowance"}
+                        />
+                      </ListItemButton>
+                    </Link>
                   </ListItem>
                   <ListItem disablePadding>
                     <Link
