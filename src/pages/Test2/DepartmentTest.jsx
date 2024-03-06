@@ -21,7 +21,7 @@ const DepartmentTest = () => {
 
   const stepper = [
     {
-      label: "Department details",
+      label: "Department Details",
       icon: Work,
     },
     {

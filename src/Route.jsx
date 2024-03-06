@@ -50,7 +50,6 @@ import ShiftManagement from "./pages/SetupPage/ShiftManagement/shiftAllowance";
 import Shifts from "./pages/SetupPage/Shifts";
 import WeekendHoliday from "./pages/SetupPage/WeekendHoliday";
 import Inputfield from "./pages/SetupPage/inputfield";
-import RolePage from "./pages/SignIn/RolePage";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 import EmployeeTest from "./pages/Test/EmployeeTest";
@@ -63,13 +62,18 @@ import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
+import EmpLoanMgt from "./pages/SetUpOrganization/EmployeeLoanManagement/EmpLoanMgt";
+// import AccountantNotification from "./pages/Notification/AccountantNotification";
+
 const App = () => {
   return (
     <Routes>
       <Route
         path="/"
         element={
-          <RequireAuth permission={["Super-Admin", "HR"]}>
+          <RequireAuth
+            permission={["Super-Admin", "HR", "Delegate-Super-Admin"]}
+          >
             <Home />
           </RequireAuth>
         }
@@ -107,7 +111,7 @@ const App = () => {
           </RequireAuth>
         }
       />
-      <Route path="/choose-role" element={<RolePage />} />
+      {/* <Route path="/choose-role" element={<RolePage />} /> */}
       <Route path="/sign-up" element={<Signup />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route
@@ -116,7 +120,7 @@ const App = () => {
           <RequireAuth
             permission={[
               "Super-Admin",
-              "Delegate-Super Admin",
+              "Delegate-Super-Admin",
               "Department-Head",
               "Delegate-Department-Head",
               "Department-Admin",
@@ -195,7 +199,7 @@ const App = () => {
       <Route
         path="/add-organisation"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <NewOranisationForm />
           </RequireAuth>
         }
@@ -203,7 +207,7 @@ const App = () => {
       <Route
         path="/organizationList"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <OrgList />
           </RequireAuth>
         }
@@ -214,7 +218,7 @@ const App = () => {
           <RequireAuth
             permission={[
               "Super-Admin",
-              "Delegate-Super Admin",
+              "Delegate-Super-Admin",
               "Department-Head",
               "Delegate-Department-Head",
               "Department-Admin",
@@ -231,7 +235,7 @@ const App = () => {
           <RequireAuth
             permission={[
               "Super-Admin",
-              "Delegate-Super Admin",
+              "Delegate-Super-Admin",
               "Department-Head",
               "Delegate-Department-Head",
               "Department-Admin",
@@ -245,7 +249,7 @@ const App = () => {
       <Route
         path="/organisation/:id"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <SingleOrganisation />
           </RequireAuth>
         }
@@ -256,7 +260,7 @@ const App = () => {
           <RequireAuth
             permission={[
               "Super-Admin",
-              "Delegate-Super Admin",
+              "Delegate-Super-Admin",
               "Department-Head",
               "Delegate-Department-Head",
               "Department-Admin",
@@ -276,7 +280,7 @@ const App = () => {
         path="/organisation/:organisationId/employee-onboarding"
         element={
           <RequireAuth
-            permission={["Super-Admin", "Delegate-Super Admin", "HR"]}
+            permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
           >
             {/* <EmployeeAdd /> */}
             <EmployeeTest />
@@ -287,7 +291,7 @@ const App = () => {
         path="/organisation/:organisationId/employee-offboarding"
         element={
           <RequireAuth
-            permission={["Super-Admin", "Delegate-Super Admin", "HR"]}
+            permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
           >
             <DeleteEmployee />
           </RequireAuth>
@@ -297,7 +301,7 @@ const App = () => {
         path="/organisation/:organisationId/employee-list"
         element={
           <RequireAuth
-            permission={["Super-Admin", "Delegate-Super Admin", "HR"]}
+            permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
           >
             <EmployeeList />
           </RequireAuth>
@@ -306,7 +310,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/input-field"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <Inputfield />
           </RequireAuth>
         }
@@ -315,7 +319,7 @@ const App = () => {
         path="/organisation/:organisationId/salary-management"
         element={
           <RequireAuth
-            permission={["Super-Admin", "Delegate-Super Admin", "HR"]}
+            permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
           >
             <SalaryManagement />
           </RequireAuth>
@@ -325,7 +329,7 @@ const App = () => {
         path="/organisation/:organisationId/salary-calculate/:userId"
         element={
           <RequireAuth
-            permission={["Super-Admin", "Delegate-Super Admin", "HR"]}
+            permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
           >
             <SalaryCalculate />
           </RequireAuth>
@@ -337,7 +341,7 @@ const App = () => {
           <RequireAuth
             permission={[
               "Super-Admin",
-              "Delegate-Super Admin",
+              "Delegate-Super-Admin",
               "Department-Head",
               "Delegate-Department-Head",
               "Department-Admin",
@@ -359,7 +363,7 @@ const App = () => {
           <RequireAuth
             permission={[
               "Super-Admin",
-              "Delegate-Super Admin",
+              "Delegate-Super-Admin",
               "Department-Head",
               "Delegate-Department-Head",
               "Department-Admin",
@@ -383,15 +387,23 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/salary-computation-day"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <EmployeeSalaryCalculateDay />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/organisation/:organisationId/setup/loan-management"
+        element={
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+            <EmpLoanMgt />
           </RequireAuth>
         }
       />
       <Route
         path="/organisation/:organisationId/setup/set-shifts"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <Shifts />
           </RequireAuth>
         }
@@ -399,7 +411,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/weekly-off"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <WeekendHoliday />
           </RequireAuth>
         }
@@ -407,7 +419,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/add-roles"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <RequireSubscription>
               <AddRoles />
             </RequireSubscription>
@@ -417,7 +429,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/designation"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <Designation />
           </RequireAuth>
         }
@@ -425,7 +437,7 @@ const App = () => {
       <Route
         path="/set-shifts/:id"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <Shifts />
           </RequireAuth>
         }
@@ -433,7 +445,7 @@ const App = () => {
       <Route
         path="/add-inputfield/:id"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <Inputfield />
           </RequireAuth>
         }
@@ -441,7 +453,7 @@ const App = () => {
       <Route
         path="/setup/add-roles/:id"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <AddRoles />
           </RequireAuth>
         }
@@ -449,7 +461,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/leave-types"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <LeaveTypes />
           </RequireAuth>
         }
@@ -457,7 +469,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/set-public-holiday"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <PublicHoliday />
           </RequireAuth>
         }
@@ -465,7 +477,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/set-shifts"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <Shifts />
           </RequireAuth>
         }
@@ -473,7 +485,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/set-employement-types"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <EmployementTypes />
           </RequireAuth>
         }
@@ -481,7 +493,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/subscription"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <Subscription />
           </RequireAuth>
         }
@@ -489,7 +501,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/employee-code"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <EmployeeCodeGenerator />
           </RequireAuth>
         }
@@ -497,7 +509,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/add-organization-locations"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <OrganizationLocations />
           </RequireAuth>
         }
@@ -505,7 +517,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/set-salary-input-selection"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <SalaryInput />
           </RequireAuth>
         }
@@ -513,7 +525,7 @@ const App = () => {
       <Route
         path="/setup/:organisationId"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <Setup />
           </RequireAuth>
         }
@@ -521,7 +533,7 @@ const App = () => {
       <Route
         path="/set-designation"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <Designation />
           </RequireAuth>
         }
@@ -529,7 +541,7 @@ const App = () => {
       <Route
         path="/add-inputfield/:id"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <Inputfield />
           </RequireAuth>
         }
@@ -538,7 +550,7 @@ const App = () => {
       <Route
         path="/setup/:id/public-holidays"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <PublicHoliday />
           </RequireAuth>
         }
@@ -546,7 +558,7 @@ const App = () => {
       <Route
         path="/organisation/:organisationId/setup/email"
         element={
-          <RequireAuth permission={["Super-Admin", "Delegate-Super Admin"]}>
+          <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
             <EmailSetting />
           </RequireAuth>
         }
@@ -557,7 +569,7 @@ const App = () => {
           <RequireAuth
             permission={[
               "Super-Admin",
-              "Delegate-Super Admin",
+              "Delegate-Super-Admin",
               "Department-Head",
               "Delegate-Department-Head",
               "Department-Admin",
@@ -579,7 +591,7 @@ const App = () => {
           <RequireAuth
             permission={[
               "Super-Admin",
-              "Delegate-Super Admin",
+              "Delegate-Super-Admin",
               "Department-Head",
               "Delegate-Department-Head",
               "Department-Admin",
@@ -614,7 +626,7 @@ const App = () => {
           <RequireAuth
             permission={[
               "Super-Admin",
-              "Delegate-Super Admin",
+              "Delegate-Super-Admin",
               "Department-Head",
               "Delegate-Department-Head",
               "Department-Admin",
@@ -632,7 +644,7 @@ const App = () => {
           <RequireAuth
             permission={[
               "Super-Admin",
-              "Delegate-Super Admin",
+              "Delegate-Super-Admin",
               "Department-Head",
               "Delegate-Department-Head",
               "Department-Admin",

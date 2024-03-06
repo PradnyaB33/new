@@ -12,9 +12,23 @@ const Form16 = () => {
 
   // Determine which component to render based on the role
   const renderForm16Component = () => {
-    if (role.includes("Super-Admin" || "Hr")) {
+    if (role.includes("Super-Admin" || "HR")) {
       return <Form16Hr organisationId={organisationId} />;
-    } else if (role.includes("Employee")) {
+    } else if (
+      role.includes(
+        "Employee" ||
+          "Super-Admin" ||
+          "Delegate-Super-Admin" ||
+          "HR" ||
+          "Manager" ||
+          "Department-Head" ||
+          "Delegate-Department-Head" ||
+          "Department-Admin" ||
+          "Delegate-Department-Admin" ||
+          "Delegate-Accountant" ||
+          "Accountant"
+      )
+    ) {
       return <Form16Emp organisationId={organisationId} />;
     }
 

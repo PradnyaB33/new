@@ -284,10 +284,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                       const inputValue = e.target.value;
                       // Check if the input value is a valid number and greater than or equal to 0
                       if (!isNaN(inputValue) && inputValue >= 0) {
-                        // Format the input value to have two decimal places
-                        const formattedValue =
-                          parseFloat(inputValue).toFixed(2);
-                        setDeduction(formattedValue);
+                        setDeduction(inputValue);
                       }
                     }}
                   />
@@ -305,13 +302,9 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                       }}
                       value={employee_pf}
                       onChange={(e) => {
-                        const inputValue = e.target.value;
-                        // Check if the input value is a valid number and greater than or equal to 0
-                        if (!isNaN(inputValue) && inputValue >= 0) {
-                          // Format the input value to have two decimal places
-                          const formattedValue =
-                            parseFloat(inputValue).toFixed(2);
-                          setEmployeePf(formattedValue);
+                        const inputValue1 = e.target.value;
+                        if (!isNaN(inputValue1) && inputValue1 >= 0) {
+                          setEmployeePf(inputValue1);
                         }
                       }}
                     />
@@ -330,13 +323,9 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                       }}
                       value={esic}
                       onChange={(e) => {
-                        const inputValue = e.target.value;
-                        // Check if the input value is a valid number and greater than or equal to 0
-                        if (!isNaN(inputValue) && inputValue >= 0) {
-                          // Format the input value to have two decimal places
-                          const formattedValue =
-                            parseFloat(inputValue).toFixed(2);
-                          setEsic(formattedValue);
+                        const inputValue2 = e.target.value;
+                        if (!isNaN(inputValue2) && inputValue2 >= 0) {
+                          setEsic(inputValue2);
                         }
                       }}
                     />

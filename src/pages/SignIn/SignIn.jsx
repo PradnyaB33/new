@@ -93,8 +93,16 @@ const SignIn = () => {
             email: response.data.user?.email,
           });
           return redirect("/");
-        } else if (response.data.user?.profile.includes("HR")) {
-          handleRole.mutate({ role: "HR", email: response.data.user?.email });
+        } else if (
+          response.data.user?.profile?.includes("Delegate-Super-Admin")
+        ) {
+          handleRole.mutate({
+            role: "Delegate-Super-Admin",
+            email: response.data.user?.email,
+          });
+          return redirect("/");
+        } else if (response.data.user?.profile.includes("Hr")) {
+          handleRole.mutate({ role: "Hr", email: response.data.user?.email });
           return redirect(
             `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
           );

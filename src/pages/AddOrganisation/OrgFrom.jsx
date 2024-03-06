@@ -1,11 +1,15 @@
-import { Check, InventorySharp, PlusOneOutlined } from "@mui/icons-material";
+import {
+  Business,
+  Check,
+  InventorySharp,
+  PlusOneOutlined,
+} from "@mui/icons-material";
 import StepFormWrapper from "../../components/step-form/wrapper";
 import useMultiStepForm from "../../hooks/useStepForm";
 import Step1 from "./components/step-1";
 import Step2 from "./components/step-2";
 import Step3 from "./components/step-3";
 import Step4 from "./components/step-4";
-import { Business } from "@mui/icons-material";
 const NewOranisationForm = () => {
   const {
     step,
@@ -52,7 +56,7 @@ const NewOranisationForm = () => {
 
   return (
     <div className="pt-10">
-      <div className="m-4 md:w-[700px] w-auto md:m-auto border-gray-400 border p-4 rounded-lg">
+      <div className="m-4 2xl:w-[1200px] xl:w-[90%] lg:w-[90%] w-auto md:m-auto border-gray-400 border p-4 rounded-lg">
         <StepFormWrapper
           {...{
             goToStep,
