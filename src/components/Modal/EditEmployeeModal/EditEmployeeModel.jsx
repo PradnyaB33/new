@@ -46,7 +46,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     "Permanent Address": "",
     "Primary Nationality": "",
     "Relative Information": "",
-    "Martial Status": "",
+    "Marital Status": "",
     Education: "",
   });
   // define the state for stored salary tempalte of employee
@@ -350,8 +350,8 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
         Education: employeeData?.additionalInfo?.Education || "",
         "Emergency Contact":
           employeeData?.additionalInfo?.["Emergency Contact"] || "",
-        "Martial Status":
-          employeeData?.additionalInfo?.["Martial Status"] || "",
+        "Marital Status":
+          employeeData?.additionalInfo?.["Marital Status"] || "",
         "Middle Name": employeeData?.additionalInfo?.["Middle Name"] || "",
         "Permanent Address":
           employeeData?.additionalInfo?.["Permanent Address"] || "",
@@ -715,17 +715,17 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           <div className="space-y-2">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
-                Martial status
+                Marital status
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Martial status"
-                name="Martial status"
-                value={additionalInfo["Martial status"]}
+                label="Marital status"
+                name="Marital status"
+                value={additionalInfo["Marital status"]}
                 onChange={(e) =>
                   setAdditionalInfo((prevData) => ({
                     ...prevData,
-                    "Martial status": e.target.value,
+                    "Marital status": e.target.value,
                   }))
                 }
               />
