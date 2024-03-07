@@ -87,7 +87,13 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
       },
     }
   );
-
+  useEffect(() => {
+    if (parseInt(loanValue) > 20000) {
+      setRateOfInterestApplied("Yes");
+    } else {
+      setRateOfInterestApplied("No");
+    }
+  }, [loanValue]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
