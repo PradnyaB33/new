@@ -9,6 +9,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+import { UseContext } from "../../../State/UseState/UseContext";
 const style = {
   position: "absolute",
   top: "50%",
@@ -23,13 +24,21 @@ const Form16DeleteModal = ({
   employeeId,
   organizationId,
 }) => {
+  console.log(employeeId);
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
   const { handleAlert } = useContext(TestContext);
   // Get Query
   const { data: form16 } = useQuery(
     ["form16"],
     async () => {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/get/form16/${organizationId}/${employeeId}`
+        `${process.env.REACT_APP_API}/route/get/form16/${organizationId}/${employeeId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
       );
       return response.data.data;
     },

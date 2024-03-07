@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Box, Button, Modal } from "@mui/material";
 import axios from "axios";
 import { useQuery } from "react-query";
+import { UseContext } from "../../../State/UseState/UseContext";
 const style = {
   position: "absolute",
   top: "50%",
@@ -12,12 +13,20 @@ const style = {
 };
 
 const Form16Download = ({ handleClose, open, employeeId, organizationId }) => {
+  console.log(employeeId);
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
   // Get Query
   const { data: getForm16 } = useQuery(
     ["getForm16"],
     async () => {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/get/form16/${organizationId}/${employeeId}`
+        `${process.env.REACT_APP_API}/route/get/form16/${organizationId}/${employeeId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
       );
       return response.data.data;
     },
@@ -25,7 +34,6 @@ const Form16Download = ({ handleClose, open, employeeId, organizationId }) => {
       enabled: open,
     }
   );
-  console.log(getForm16, true);
 
   const handleDownload = () => {
     // You can use any method to trigger the download, such as creating an invisible link and clicking it
