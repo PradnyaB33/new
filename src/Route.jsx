@@ -16,6 +16,7 @@ import Application from "./pages/Application/Application";
 import Billing from "./pages/Billing/page";
 import DashBoardHR from "./pages/DashBoard/DashBoardHR";
 import Dashboard from "./pages/DashBoard/Dashboard";
+import DashboardDH from "./pages/DashBoard/DashboardDH";
 import DashboardManger from "./pages/DashBoard/DashboardManger";
 import SuperAdmin from "./pages/DashBoard/SuperAdmin";
 import DepartmentList from "./pages/Departments/DepartmentList";
@@ -29,6 +30,7 @@ import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
 import PaymentFailed from "./pages/Payment/page";
+import MissedPunch from "./pages/RemotePunchIn/MissedPunch";
 import SalaryCalculate from "./pages/SalaryCalculate/SalaryCalculate";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeSalaryCalculateDay from "./pages/SetUpOrganization/EmoloyeeSalaryCalculate/EmployeeSalaryCalculate";
@@ -54,6 +56,8 @@ import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 import EmployeeTest from "./pages/Test/EmployeeTest";
+import TestMap from "./pages/Test/testMap";
+import TestYash from "./pages/Test/testYash";
 import DepartmentTest from "./pages/Test2/DepartmentTest";
 import EmployeeProfile from "./pages/UserProfile/UserProfile";
 import ViewPayslip1 from "./pages/ViewPayslip/ViewPayslip1";
@@ -63,9 +67,6 @@ import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
-import TestMap from "./pages/Test/testMap";
-import TestYash from "./pages/Test/testYash";
-import MissedPunch from "./pages/RemotePunchIn/MissedPunch";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 
 const App = () => {
@@ -181,7 +182,7 @@ const App = () => {
           <RequireAuth
             permission={["Department-Head", "Delegate-Department-Head"]}
           >
-            <DashBoardHR />
+            <DashboardDH />
           </RequireAuth>
         }
       />

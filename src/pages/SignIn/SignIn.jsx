@@ -105,7 +105,7 @@ const SignIn = () => {
         } else if (response.data.user?.profile.includes("Hr")) {
           handleRole.mutate({ role: "Hr", email: response.data.user?.email });
           return redirect(
-            `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
+            `/organisation/${response.data.user?.organizationId}/dashboard/HR-dashboard`
           );
         } else if (response.data.user?.profile.includes("Manager")) {
           handleRole.mutate({
@@ -113,7 +113,15 @@ const SignIn = () => {
             email: response.data.user?.email,
           });
           return redirect(
-            `/organisation/${user?._id}/dashboard/manager-dashboard`
+            `/organisation/${response.data.user?.organizationId}/dashboard/manager-dashboard`
+          );
+        } else if (response.data.user?.profile.includes("Department-Head")) {
+          handleRole.mutate({
+            role: "Department-Head",
+            email: response.data.user?.email,
+          });
+          return redirect(
+            `/organisation/${response.data.user?.organizationId}/dashboard/DH-dashboard`
           );
         } else if (
           response.data.user?.profile.includes("Delegate-Department-Head")
@@ -122,7 +130,9 @@ const SignIn = () => {
             role: "Delegate-Department-Head",
             email: response.data.user?.email,
           });
-          return redirect(`/organisation/${user?._id}/dashboard/DH-dashboard`);
+          return redirect(
+            `/organisation/${response.data.user?.organizationId}/dashboard/DH-dashboard`
+          );
         } else if (response.data.user?.profile.includes("Employee")) {
           handleRole.mutate({
             role: "Employee",
