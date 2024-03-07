@@ -36,6 +36,7 @@ const UserProfile = () => {
             return null;
           }
         }
+        return null;
       },
     });
 
