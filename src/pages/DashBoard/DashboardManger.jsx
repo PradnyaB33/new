@@ -74,12 +74,12 @@ const DashboardManger = () => {
                 <SuperAdminCard
                   icon={AssignmentTurnedIn}
                   title={"Shift Allowance"}
-                  data={256}
+                  data={0}
                   color={"!bg-green-500"}
                 />
                 <SuperAdminCard
                   icon={ErrorOutline}
-                  data={256}
+                  data={0}
                   title={"Leave"}
                   color={"!bg-red-500"}
                 />

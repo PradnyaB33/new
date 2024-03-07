@@ -24,7 +24,6 @@ const AuthInputFiled = ({
   options,
   disabled,
   value,
-
   wrapperMessage,
   min,
   max,
