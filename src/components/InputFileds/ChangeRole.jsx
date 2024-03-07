@@ -56,7 +56,7 @@ const ChangeRole = () => {
         } else {
           redirect("/organisation/dashboard/employee-dashboard");
         }
-
+        window.location.reload();
         queryClient.invalidateQueries({ queryKey: ["role"] });
       },
 

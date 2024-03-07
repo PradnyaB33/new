@@ -2,6 +2,7 @@ import { AssignmentTurnedIn, ErrorOutline, Groups } from "@mui/icons-material";
 import axios from "axios";
 import React, { useContext } from "react";
 import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
@@ -11,6 +12,7 @@ import EmployeeLeaveRequest from "./Components/List/EmployeLeaveReqest";
 const DashboardManger = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
+  const { organisationId } = useParams("");
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
 
@@ -43,14 +45,38 @@ const DashboardManger = () => {
     return data;
   };
 
-  const { data: ManagerAttendece } = useQuery(
-    "manager-attendece",
-    getManagerAttendenceChart
-  );
-  console.log(
-    `🚀 ~ file: DashboardManger.jsx:47 ~ ManagerAttendece:`,
-    ManagerAttendece
-  );
+  useQuery("manager-attendece", getManagerAttendenceChart);
+
+  const { data: managerShift, isLoading: managerShiftLoading } = useQuery({
+    queryKey: ["deptEmployeeOnShift"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/route/leave/getManagerShifts/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return data;
+    },
+  });
+
+  const { data: managerAttendence, isLoading: managerAttendenceLoading } =
+    useQuery({
+      queryKey: ["deptEmployeeOnShift"],
+      queryFn: async () => {
+        const { data } = await axios.get(
+          `${process.env.REACT_APP_API}/route/leave/getTodaysAbsentUnderManager/${organisationId}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        return data;
+      },
+    });
 
   return (
     <section className=" bg-gray-50  min-h-screen w-full ">
@@ -74,12 +100,14 @@ const DashboardManger = () => {
                 <SuperAdminCard
                   icon={AssignmentTurnedIn}
                   title={"Shift Allowance"}
-                  data={256}
+                  isLoading={managerShiftLoading}
+                  data={managerShift ?? 0}
                   color={"!bg-green-500"}
                 />
                 <SuperAdminCard
                   icon={ErrorOutline}
-                  data={256}
+                  data={managerAttendence ?? 0}
+                  isLoading={managerAttendenceLoading}
                   title={"Leave"}
                   color={"!bg-red-500"}
                 />
