@@ -17,7 +17,6 @@ import Form16UploadModal from "../../components/Modal/Form16Modal/Form16UploadMo
 import Form16Download from "../../components/Modal/Form16Modal/Form16Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Form16DeleteModal from "../../components/Modal/Form16Modal/Form16DeleteModal";
-import UserProfile from "../../hooks/UserData/useUser";
 
 const Form16Hr = () => {
   // state and other thing
@@ -31,10 +30,7 @@ const Form16Hr = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
-  const role = user.profile;
-  console.log(role);
+
   //employee fetch
   const fetchAvailableEmployee = async (page) => {
     try {
@@ -81,8 +77,11 @@ const Form16Hr = () => {
   };
   //   for morevert icon
   const [anchorEl, setAnchorEl] = useState(null);
-  const handleClick = (e) => {
+  const [employeeId, setEmployeeId] = useState(null);
+
+  const handleClick = (e, id) => {
     setAnchorEl(e.currentTarget);
+    setEmployeeId(id);
   };
   const handleCloseIcon = () => {
     setAnchorEl(null);
@@ -90,42 +89,35 @@ const Form16Hr = () => {
 
   // Modal states and function for upload
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
-  const [empId, setEmpId] = useState(null);
 
   // for open
-  const handleEditModalOpen = (empId) => {
+  const handleUploadModalOpen = () => {
     setUploadModalOpen(true);
-    setEmpId(empId);
   };
   //   for close
-  const handleClose = () => {
-    setEmpId(null);
+  const handleUploadModalClose = () => {
     setUploadModalOpen(false);
   };
 
   // Modal states and function for download or view form 16
   const [downloadModalOpen, setDownLoadModalOpen] = useState(false);
   // for open
-  const handleDownLoadModalOpen = (empId) => {
+  const handleDownLoadModalOpen = () => {
     setDownLoadModalOpen(true);
-    setEmpId(empId);
   };
   //   for close
   const handleDownLoadModalClose = () => {
-    setEmpId(null);
     setDownLoadModalOpen(false);
   };
 
   // Modal states and function for delete form 16
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   // for open
-  const handleDeleteModalOpen = (empId) => {
+  const handleDeleteModalOpen = () => {
     setDeleteModalOpen(true);
-    setEmpId(empId);
   };
   //   for close
   const handleDeleteModalClose = () => {
-    setEmpId(null);
     setDeleteModalOpen(false);
   };
   return (
@@ -247,18 +239,21 @@ const Form16Hr = () => {
                       <td className="py-3 pl-8 ">{item?.phone_number}</td>
                       <td className="py-3 pl-8 ">
                         <MoreVert
-                          onClick={(e) => handleClick(e, item)}
+                          onClick={(e) => handleClick(e, item._id)} // Pass item._id to handleClick
                           className="cursor-pointer"
                         />
                         <Menu
                           elevation={2}
                           anchorEl={anchorEl}
+                          key={id}
                           open={Boolean(anchorEl)}
                           onClose={handleCloseIcon}
                         >
                           <Tooltip title="Button for uploading form 16">
                             <MenuItem
-                              onClick={() => handleEditModalOpen(item._id)}
+                              onClick={() => {
+                                handleUploadModalOpen();
+                              }}
                             >
                               <CloudUploadIcon
                                 color="primary"
@@ -271,9 +266,7 @@ const Form16Hr = () => {
                             </MenuItem>
                           </Tooltip>
                           <Tooltip title="Button for downloading or view  form 16">
-                            <MenuItem
-                              onClick={() => handleDownLoadModalOpen(item._id)}
-                            >
+                            <MenuItem onClick={() => handleDownLoadModalOpen()}>
                               <GetAppIcon
                                 color="primary"
                                 aria-label="edit"
@@ -285,9 +278,7 @@ const Form16Hr = () => {
                             </MenuItem>
                           </Tooltip>
                           <Tooltip title="Button for deleting  form 16">
-                            <MenuItem
-                              onClick={() => handleDeleteModalOpen(item._id)}
-                            >
+                            <MenuItem onClick={() => handleDeleteModalOpen()}>
                               <DeleteIcon
                                 color="primary"
                                 aria-label="edit"
@@ -389,10 +380,10 @@ const Form16Hr = () => {
 
       {/* for upload*/}
       <Form16UploadModal
-        handleClose={handleClose}
+        handleClose={handleUploadModalClose}
         organizationId={organisationId}
         open={uploadModalOpen}
-        employeeId={empId}
+        employeeId={employeeId}
       />
 
       {/* for download or view  */}
@@ -400,7 +391,7 @@ const Form16Hr = () => {
         handleClose={handleDownLoadModalClose}
         organizationId={organisationId}
         open={downloadModalOpen}
-        employeeId={empId}
+        employeeId={employeeId}
       />
 
       {/* for delete form 16 */}
@@ -408,7 +399,7 @@ const Form16Hr = () => {
         handleClose={handleDeleteModalClose}
         organizationId={organisationId}
         open={deleteModalOpen}
-        employeeId={empId}
+        employeeId={employeeId}
       />
     </>
   );

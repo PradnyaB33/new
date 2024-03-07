@@ -22,7 +22,7 @@ import SuperAdmin from "./pages/DashBoard/SuperAdmin";
 import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
 import DeleteEmployee from "./pages/Employee/DeleteEmployee";
-import EmployeeList from "./pages/Employee/EmployeeList";
+import Employee from "./pages/Employee/Employee";
 import Form16 from "./pages/Form16/Form16";
 import Home from "./pages/Home/Home";
 import IncomeTax from "./pages/Income/IncomeTax";
@@ -68,7 +68,6 @@ import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
-
 const App = () => {
   console.log("this is the real file");
   return (
@@ -316,7 +315,7 @@ const App = () => {
               "Manager",
             ]}
           >
-            <EmployeeList />
+            <Employee />
           </RequireAuth>
         }
       />

@@ -1,28 +1,36 @@
-import React from "react";
+import React, { useContext } from "react";
 import Alert from "@mui/material/Alert";
 import UserProfile from "../../hooks/UserData/useUser";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { Typography } from "@mui/material";
 import { Button } from "@mui/material";
+import { UseContext } from "../../State/UseState/UseContext";
 const Form16Emp = () => {
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   console.log(user);
   const employeeId = user._id;
   const organizationId = user.organizationId;
-  console.log(organizationId);
+
   console.log(employeeId);
-  // Get Query
   const { data: getForm16 } = useQuery(["getForm16"], async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/get/form16/${organizationId}/${employeeId}`
+      `${process.env.REACT_APP_API}/route/get/form16/${organizationId}/${employeeId}`,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
     );
     return response.data.data;
   });
+
   console.log(getForm16);
+
   const handleDownload = () => {
-    // You can use any method to trigger the download, such as creating an invisible link and clicking it
     const link = document.createElement("a");
     link.href = getForm16;
     link.download = "Form16.pdf";
@@ -31,7 +39,7 @@ const Form16Emp = () => {
 
   return (
     <>
-      <div className=" mt-5">
+      <div className="mt-5">
         {getForm16 ? (
           <>
             <Typography variant="h4" className="text-center pl-10">
@@ -58,7 +66,7 @@ const Form16Emp = () => {
             </div>
           </>
         ) : (
-          <div className="mt-1">
+          <div className=" ml-80 mt-1">
             <div>
               <img
                 src="/payslip.svg"
