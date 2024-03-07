@@ -1,11 +1,7 @@
-import {
-  GoogleMap,
-  Marker,
-  Polyline,
-} from "@react-google-maps/api";
+import { GoogleMap, Marker, Polyline } from "@react-google-maps/api";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import useGetUser from "../../hooks/Token/useUser"
+import useGetUser from "../../hooks/Token/useUser";
 
 const containerStyle = {
   width: "100%",
@@ -23,12 +19,14 @@ const TestMap = () => {
     (async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API}/route/punch/getone`, {
-          headers: {
-            Authorization: authToken,
-          },
-        }
+          `${process.env.REACT_APP_API}/route/punch/getone`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
         );
+        console.log(response.data.data);
 
         // Handle potential data fetching errors
         if (response.data.error) {
@@ -36,7 +34,7 @@ const TestMap = () => {
           return; // Prevent setting invalid waypoints
         }
 
-        const newWaypoints = response.data.punch.locations?.map((punch) => ({
+        const newWaypoints = response.data.data?.map((punch) => ({
           lat: parseFloat(punch.lat),
           lng: parseFloat(punch.lng),
         }));
@@ -56,9 +54,9 @@ const TestMap = () => {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(lat1 * (Math.PI / 180)) *
-      Math.cos(lat2 * (Math.PI / 180)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
 
@@ -98,8 +96,8 @@ const TestMap = () => {
   };
 
   useEffect(() => {
-    getCurrentLocation()
-  }, [])
+    getCurrentLocation();
+  }, []);
 
   const smoothWaypoints = (waypoints, windowSize) => {
     return waypoints?.map((waypoint, index, array) => {
@@ -130,7 +128,6 @@ const TestMap = () => {
 
   console.log(waypoints);
 
-
   return (
     <div>
       <GoogleMap
@@ -146,21 +143,32 @@ const TestMap = () => {
           fullscreenControl: false,
         }}
       >
-
-        {currentLocation && !waypoints?.length && <Marker label={{ text: "current location", }} position={currentLocation} />}
+        {currentLocation && !waypoints?.length && (
+          <Marker
+            label={{ text: "current location" }}
+            position={currentLocation}
+          />
+        )}
 
         {waypoints?.length > 0 && (
-          <><Marker
-            icon={{
-              url: "https://img.icons8.com/ios/50/000000/marker.png",
-              scaledSize: new window.google.maps.Size(35, 35),
-            }}
-            label={{ text: "source", }}
-            position={center}
-            style={{ filter: "hue-rotate(180deg)" }}
-          />
-            <Polyline path={waypoints} options={{ strokeColor: "#7a3eff", strokeWeight: 5, }} />
-            <Marker label={{ text: "destination", color: "black" }} position={destination} />
+          <>
+            <Marker
+              icon={{
+                url: "https://img.icons8.com/ios/50/000000/marker.png",
+                scaledSize: new window.google.maps.Size(35, 35),
+              }}
+              label={{ text: "source" }}
+              position={center}
+              style={{ filter: "hue-rotate(180deg)" }}
+            />
+            <Polyline
+              path={waypoints}
+              options={{ strokeColor: "#7a3eff", strokeWeight: 5 }}
+            />
+            <Marker
+              label={{ text: "destination", color: "black" }}
+              position={destination}
+            />
           </>
         )}
       </GoogleMap>
@@ -170,7 +178,6 @@ const TestMap = () => {
           Total Distance Travelled : {totalDistance.toFixed(2)} Kilometers
         </p>
       )}
-
     </div>
   );
 };
