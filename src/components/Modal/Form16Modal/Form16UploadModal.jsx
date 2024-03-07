@@ -9,6 +9,8 @@ import {
   Radio,
 } from "@mui/material";
 import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -24,6 +26,9 @@ const Form16UploadModal = ({
   organizationId,
   employeeId,
 }) => {
+  console.log(employeeId);
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
   const { handleAlert } = useContext(TestContext);
   // state
   const [year, setYear] = useState("current");
@@ -45,7 +50,6 @@ const Form16UploadModal = ({
       setErrorMessage("");
     }
   };
-
   const handleUpload = async () => {
     try {
       // Check if file is already uploaded for the given organization and employee
@@ -55,6 +59,7 @@ const Form16UploadModal = ({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: authToken,
           },
           body: JSON.stringify({
             organizationId,
@@ -94,12 +99,16 @@ const Form16UploadModal = ({
     // Make a POST request to upload the form
     fetch(`${process.env.REACT_APP_API}/route/add/form16`, {
       method: "POST",
+      headers: {
+        Authorization: authToken,
+      },
       body: formData,
     })
       .then((response) => {
         if (response.ok) {
           handleAlert(true, "success", "Form 16 file uploaded Successfully.");
           handleClose();
+          window.location.reload();
         } else {
           handleAlert("Error uploading Form 16.");
         }
