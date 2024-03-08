@@ -170,7 +170,7 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
               <WorkHistory className="!text-lg" />
             </Avatar>
             <h1 className="md:text-xl text-lg font-semibold py-3">
-              Attendence Overview
+              Attendance Overview
             </h1>
           </div>
           <Autocomplete

@@ -1,5 +1,11 @@
 import React from "react";
-import { Navigate, Route, Routes, useParams } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 
 // Components
 import PaymentNotReceived from "./components/Payment/not-recieved";
@@ -16,11 +22,13 @@ import Application from "./pages/Application/Application";
 import Billing from "./pages/Billing/page";
 import DashBoardHR from "./pages/DashBoard/DashBoardHR";
 import Dashboard from "./pages/DashBoard/Dashboard";
+import DashboardDH from "./pages/DashBoard/DashboardDH";
 import DashboardManger from "./pages/DashBoard/DashboardManger";
 import SuperAdmin from "./pages/DashBoard/SuperAdmin";
 import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
 import DeleteEmployee from "./pages/Employee/DeleteEmployee";
+import Employee from "./pages/Employee/Employee";
 import Form16 from "./pages/Form16/Form16";
 import Home from "./pages/Home/Home";
 import IncomeTax from "./pages/Income/IncomeTax";
@@ -28,7 +36,7 @@ import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
 import PaymentFailed from "./pages/Payment/page";
-import SalaryCalculate from "./pages/SalaryCalculate/SalaryCalculate";
+import MissedPunch from "./pages/RemotePunchIn/MissedPunch";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeSalaryCalculateDay from "./pages/SetUpOrganization/EmoloyeeSalaryCalculate/EmployeeSalaryCalculate";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
@@ -53,6 +61,8 @@ import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 import EmployeeTest from "./pages/Test/EmployeeTest";
+import TestMap from "./pages/Test/testMap";
+import TestYash from "./pages/Test/testYash";
 import DepartmentTest from "./pages/Test2/DepartmentTest";
 import EmployeeProfile from "./pages/UserProfile/UserProfile";
 import ViewPayslip1 from "./pages/ViewPayslip/ViewPayslip1";
@@ -61,11 +71,8 @@ import AddDelegate from "./pages/add-delegate/AddDelegate";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
-import UnAuthorized from "./utils/Forbidden/UnAuthorized";
-import TestMap from "./pages/Test/testMap";
-import TestYash from "./pages/Test/testYash";
-import MissedPunch from "./pages/RemotePunchIn/MissedPunch";
-import Employee from "./pages/Employee/Employee";
+//import UnAuthorized from "./utils/Forbidden/UnAuthorized";
+import TestFile from "./pages/SalaryCalculate/TestFile";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 const App = () => {
   console.log("this is the real file");
@@ -75,7 +82,15 @@ const App = () => {
         path="/"
         element={
           <RequireAuth
-            permission={["Super-Admin", "HR", "Delegate-Super-Admin"]}
+            permission={[
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "employee",
+            ]}
           >
             <Home />
           </RequireAuth>
@@ -180,7 +195,7 @@ const App = () => {
           <RequireAuth
             permission={["Department-Head", "Delegate-Department-Head"]}
           >
-            <DashBoardHR />
+            <DashboardDH />
           </RequireAuth>
         }
       />
@@ -342,10 +357,11 @@ const App = () => {
           <RequireAuth
             permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
           >
-            <SalaryCalculate />
+            <TestFile />
           </RequireAuth>
         }
       />
+
       <Route
         path="/organisation/:organisationId/view-payslip"
         element={
@@ -618,7 +634,19 @@ const App = () => {
       <Route
         path="/leave"
         element={
-          <RequireAuth permission={["Employee", "Super-Admin"]}>
+          <RequireAuth
+            permission={[
+              "Employee",
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "HR",
+              "Accountant",
+            ]}
+          >
             <LeaveRequisition />
           </RequireAuth>
         }
@@ -675,17 +703,18 @@ export default App;
 
 function RequireAuth({ children, permission }) {
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
-
+  const navigate = useNavigate("");
   const user = getCurrentUser();
   const role = useGetCurrentRole();
   const isPermission = permission?.includes(role);
 
-  if (role && !window.location.pathname.includes("sign-in", "sign-up")) {
+  if (!window.location.pathname.includes("sign-in", "sign-up")) {
     if (!role) return <Navigate to={"/sign-in"} />;
-    if (user && isPermission) return children;
-    return <UnAuthorized />;
+    if (!user && !isPermission) return navigate(-1);
+    return children;
   }
-  return user && isPermission && children;
+
+  return children;
 }
 
 function RequireSubscription({ children }) {

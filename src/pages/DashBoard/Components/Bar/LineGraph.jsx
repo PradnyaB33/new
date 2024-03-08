@@ -108,11 +108,11 @@ const LineGraph = ({ salarydata, isLoading = false }) => {
   return (
     <>
       {isLoading ? (
-        <div className="w-[50%] px-4 pb-4 flex flex-col shadow-md rounded-md bg-white  justify-center">
+        <div className=" px-4 pb-4 flex flex-col shadow-md rounded-md bg-white  justify-center">
           <h1 className="text-lg my-4 font-bold text-[#67748E]">
             <Skeleton variant="text" width={150} height={20} />
           </h1>
-          <div className="h-[250px] md:h-[340px] w-full ">
+          <div className="h-[370px] 2xl:h-[400px] w-full ">
             <Skeleton variant="rect" width="100%" height="100%" />
           </div>
         </div>

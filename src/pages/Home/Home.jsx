@@ -11,6 +11,7 @@ const Home = () => {
   // const redirect = useNavigate();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
+  console.log(`🚀 ~ file: Home.jsx:15 ~ authToken:`, authToken);
   // const { handleAlert } = useContext(TestContext);
 
   const getOrgList = async () => {
@@ -50,8 +51,7 @@ const Home = () => {
   //     redirect("/sign-in");
   //     handleAlert(true, "warning", "Please login first.");
   //   }
-  //   // eslint-disable-next-line
-  // }, [redirect, cookies, handleAlert, authToken]);
+  // }, [redirect, handleAlert, authToken]);
 
   return (
     <>

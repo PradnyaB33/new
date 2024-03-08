@@ -20,11 +20,9 @@ const SignIn = () => {
   const user = getCurrentUser();
   const role = useGetCurrentRole();
   useEffect(() => {
-    // if (user && !role) {
-    //   redirect("/choose-role");
-    // }
     if (user?._id && role) {
-      if (role === "Super-Admin") return redirect("/");
+      if (role === "Super-Admin" || role === "Delegate-Super-Admin")
+        return redirect("/");
       else if (role === "HR")
         return redirect(
           `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
@@ -48,7 +46,7 @@ const SignIn = () => {
         return redirect(`/organisation/dashboard/employee-dashboard`);
     }
     // eslint-disable-next-line
-  }, []);
+  }, [role]);
 
   const handleRole = useMutation(
     (data) => {
@@ -86,8 +84,6 @@ const SignIn = () => {
           `Welcome ${response.data.user.first_name} you are logged in successfully`
         );
 
-        // redirect("/choose-role");
-
         if (response.data.user?.profile?.includes("Super-Admin")) {
           handleRole.mutate({
             role: "Super-Admin",
@@ -102,10 +98,10 @@ const SignIn = () => {
             email: response.data.user?.email,
           });
           return redirect("/");
-        } else if (response.data.user?.profile.includes("Hr")) {
-          handleRole.mutate({ role: "Hr", email: response.data.user?.email });
+        } else if (response.data.user?.profile.includes("HR")) {
+          handleRole.mutate({ role: "HR", email: response.data.user?.email });
           return redirect(
-            `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
+            `/organisation/${response.data.user?.organizationId}/dashboard/HR-dashboard`
           );
         } else if (response.data.user?.profile.includes("Manager")) {
           handleRole.mutate({
@@ -113,7 +109,15 @@ const SignIn = () => {
             email: response.data.user?.email,
           });
           return redirect(
-            `/organisation/${user?._id}/dashboard/manager-dashboard`
+            `/organisation/${response.data.user?.organizationId}/dashboard/manager-dashboard`
+          );
+        } else if (response.data.user?.profile.includes("Department-Head")) {
+          handleRole.mutate({
+            role: "Department-Head",
+            email: response.data.user?.email,
+          });
+          return redirect(
+            `/organisation/${response.data.user?.organizationId}/dashboard/DH-dashboard`
           );
         } else if (
           response.data.user?.profile.includes("Delegate-Department-Head")
@@ -122,7 +126,9 @@ const SignIn = () => {
             role: "Delegate-Department-Head",
             email: response.data.user?.email,
           });
-          return redirect(`/organisation/${user?._id}/dashboard/DH-dashboard`);
+          return redirect(
+            `/organisation/${response.data.user?.organizationId}/dashboard/DH-dashboard`
+          );
         } else if (response.data.user?.profile.includes("Employee")) {
           handleRole.mutate({
             role: "Employee",

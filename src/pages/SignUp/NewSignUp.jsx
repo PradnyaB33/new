@@ -278,7 +278,7 @@ const SignIn = () => {
                 type={"number"}
                 errors={errors}
                 error={errors.phone}
-                placeholder={"123456789"}
+                placeholder={"1234567890"}
               />
 
               {isVerified ? (

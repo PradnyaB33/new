@@ -7,14 +7,13 @@ import Form16Hr from "./Form16Hr";
 
 const Form16 = () => {
   const { organisationId } = useParams();
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
-  const role = user.profile;
-
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
+  console.log(role);
   const renderForm16Component = () => {
-    if (role.includes("Super-Admin") || role.includes("HR")) {
+    if (role === "Super-Admin" || role === "HR") {
       return <Form16Hr organisationId={organisationId} />;
-    } else if (role.includes("Employee")) {
+    } else if (role === "Employee") {
       return <Form16Emp organisationId={organisationId} />;
     }
 
