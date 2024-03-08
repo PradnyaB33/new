@@ -1,6 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
@@ -12,6 +12,19 @@ const ChangeRole = () => {
   const user = getCurrentUser();
   const roles = useGetCurrentRole();
   const redirect = useNavigate();
+  const [selectedRole, setSelectedRole] = useState({
+    label: "",
+    value: "",
+  });
+
+  useEffect(() => {
+    setSelectedRole(() => ({
+      label: roles,
+      value: roles,
+    }));
+    // eslint-disable-next-line
+  }, [window.location.pathname]);
+
   const options = user?.profile
     ?.map((item) => {
       return {
@@ -88,7 +101,7 @@ const ChangeRole = () => {
               boxShadow: "none",
             }),
           }}
-          // defaultInputValue={field.value}
+          defaultInputValue={selectedRole.label}
           className={`${"bg-[ghostwhite]"} bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
           options={options}
           onChange={(value) => {

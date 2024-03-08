@@ -1,9 +1,9 @@
 import {
-  AccessTimeSharp,
+  AccessTime,
+  AdminPanelSettings,
   Dashboard,
   ErrorOutline,
   Groups,
-  LocationOn,
 } from "@mui/icons-material";
 import axios from "axios";
 import { default as React } from "react";
@@ -146,7 +146,7 @@ const DashboardDH = () => {
           />
           <SuperAdminCard
             color={"!bg-green-500"}
-            icon={AccessTimeSharp}
+            icon={AdminPanelSettings}
             data={managerCount?.deptEmployees?.length ?? 0}
             isLoading={managerCountLoading}
             title={"People's Manager"}
@@ -161,7 +161,7 @@ const DashboardDH = () => {
           <SuperAdminCard
             color={"!bg-orange-500"}
             isLoading={employeeDeptOnShiftLoading}
-            icon={LocationOn}
+            icon={AccessTime}
             data={employeeDeptOnShift ?? 0}
             title={"Special Shift"}
           />

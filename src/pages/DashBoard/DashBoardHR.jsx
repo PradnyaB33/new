@@ -38,6 +38,7 @@ const DashBoardHR = () => {
     customStyles,
     data,
     locations,
+    location: loc,
     setLocations,
     manager,
     setManager,
@@ -89,8 +90,8 @@ const DashBoardHR = () => {
             color={"!bg-orange-500"}
             isLoading={false}
             icon={LocationOn}
-            data={14}
-            title={"Special Shift"}
+            data={loc?.locationCount}
+            title={"Locations"}
           />
         </div>
         {oraganizationLoading ? (

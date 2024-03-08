@@ -20,11 +20,9 @@ const SignIn = () => {
   const user = getCurrentUser();
   const role = useGetCurrentRole();
   useEffect(() => {
-    // if (user && !role) {
-    //   redirect("/choose-role");
-    // }
     if (user?._id && role) {
-      if (role === "Super-Admin") return redirect("/");
+      if (role === "Super-Admin" || role === "Delegate-Super-Admin")
+        return redirect("/");
       else if (role === "HR")
         return redirect(
           `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
@@ -48,7 +46,7 @@ const SignIn = () => {
         return redirect(`/organisation/dashboard/employee-dashboard`);
     }
     // eslint-disable-next-line
-  }, []);
+  }, [role]);
 
   const handleRole = useMutation(
     (data) => {
@@ -86,8 +84,6 @@ const SignIn = () => {
           `Welcome ${response.data.user.first_name} you are logged in successfully`
         );
 
-        // redirect("/choose-role");
-
         if (response.data.user?.profile?.includes("Super-Admin")) {
           handleRole.mutate({
             role: "Super-Admin",
@@ -102,8 +98,8 @@ const SignIn = () => {
             email: response.data.user?.email,
           });
           return redirect("/");
-        } else if (response.data.user?.profile.includes("Hr")) {
-          handleRole.mutate({ role: "Hr", email: response.data.user?.email });
+        } else if (response.data.user?.profile.includes("HR")) {
+          handleRole.mutate({ role: "HR", email: response.data.user?.email });
           return redirect(
             `/organisation/${response.data.user?.organizationId}/dashboard/HR-dashboard`
           );
