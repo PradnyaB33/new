@@ -655,7 +655,7 @@ const ViewPayslip1 = () => {
             <div>
               <img
                 src="/payslip.svg"
-                style={{ height: "550px", marginRight: "40%" }}
+                style={{ height: "600px", marginLeft: "10%" }}
                 alt="none"
               />
             </div>
@@ -664,7 +664,7 @@ const ViewPayslip1 = () => {
                 severity="error"
                 sx={{
                   width: "100%",
-                  maxWidth: "500px",
+                  maxWidth: "650px",
                   marginLeft: "10%",
                   display: "flex",
                   justifyContent: "center",
