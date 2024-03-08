@@ -6,15 +6,14 @@ import EmployeeList from "./EmployeeList";
 import EmpUnderMgr from "./EmpUnderMgr";
 const Employee = () => {
   const { organisationId } = useParams();
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
-  const role = user.profile;
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
 
   // Determine which component to render based on the role
   const renderEmployeeComponent = () => {
-    if (role.includes("Super-Admin") || role.includes("HR")) {
+    if (role === "Super-Admin" || role === "HR") {
       return <EmployeeList organisationId={organisationId} />;
-    } else if (role.includes("Manager")) {
+    } else if (role === "Manager") {
       return <EmpUnderMgr organisationId={organisationId} />;
     }
 
