@@ -619,7 +619,18 @@ const App = () => {
       <Route
         path="/leave"
         element={
-          <RequireAuth permission={["Employee", "Super-Admin"]}>
+          <RequireAuth
+            permission={[
+              "Employee",
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "HR",
+            ]}
+          >
             <LeaveRequisition />
           </RequireAuth>
         }

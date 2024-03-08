@@ -38,29 +38,33 @@ const OrgList = () => {
           </div>
         </div>
 
-        {!isLoading && (
+        {isLoading ? (
+          <div className="flex flex-wrap sm:justify-start justify-center  gap-x-6 gap-y-2 sm:px-10">
+            <div
+              className={`border-b-[3px]  block min-w-[21rem] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-200`}
+            >
+              <div className="border-b-2 flex items-center justify-between border-[#0000002d] px-6 py-3 text-black">
+                <Avatar variant="rounded" sx={{ height: 35, width: 35 }} />
+              </div>
+              <div className="p-6 pt-6  pb-4">
+                <Skeleton
+                  animation="wave"
+                  height={35}
+                  width="60%"
+                  style={{ marginBottom: 6 }}
+                />
+                <Skeleton animation="wave" height={30} width="80%" />
+              </div>
+              <div className="p-6 py-4 flex gap-4">
+                <Skeleton variant="rounded" height={30} width="30%" />
+                <Skeleton variant="rounded" height={30} width="50%" />
+              </div>
+            </div>
+          </div>
+        ) : (
           <div className="flex flex-wrap sm:justify-start justify-center  gap-x-6 gap-y-2 sm:px-10">
             {data?.organizations?.length <= 0 ? (
-              <div
-                className={`border-b-[3px]  block min-w-[21rem] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-200`}
-              >
-                <div className="border-b-2 flex items-center justify-between border-[#0000002d] px-6 py-3 text-black">
-                  <Avatar variant="rounded" sx={{ height: 35, width: 35 }} />
-                </div>
-                <div className="p-6 pt-6  pb-4">
-                  <Skeleton
-                    animation="wave"
-                    height={35}
-                    width="60%"
-                    style={{ marginBottom: 6 }}
-                  />
-                  <Skeleton animation="wave" height={30} width="80%" />
-                </div>
-                <div className="p-6 py-4 flex gap-4">
-                  <Skeleton variant="rounded" height={30} width="30%" />
-                  <Skeleton variant="rounded" height={30} width="50%" />
-                </div>
-              </div>
+              <p>NO data</p>
             ) : (
               data?.organizations?.map((item, index) => (
                 <div className="h-max py-4" key={index}>
