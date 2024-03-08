@@ -2,7 +2,13 @@ import { GoogleMap, Marker, Polyline } from "@react-google-maps/api";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import useGetUser from "../../hooks/Token/useUser";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 
 const containerStyle = {
   width: "70%",
@@ -19,6 +25,9 @@ const TestMap = () => {
   const [selectedEmpId, setSelectedEmpId] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [allEmp, setAllEmp] = useState([]);
+  const [accepted1, setAccepted1] = useState(false);
+  const [accepted2, setAccepted2] = useState(false);
+  const [accepted3, setAccepted3] = useState(false);
 
   const fetchReportees = async () => {
     try {
@@ -31,7 +40,6 @@ const TestMap = () => {
         }
       );
       setAllEmp(resp.data.data[0].reporteeIds);
-      console.log(resp.data.data);
     } catch (error) {
       console.log(error.message);
     }
@@ -42,36 +50,36 @@ const TestMap = () => {
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API}/route/punch/getone`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        );
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `${process.env.REACT_APP_API}/route/punch/getone`,
+  //         {
+  //           headers: {
+  //             Authorization: authToken,
+  //           },
+  //         }
+  //       );
 
-        // Handle potential data fetching errors
-        if (response.data.error) {
-          console.error("Error fetching waypoints:", response.data.error);
-          return; // Prevent setting invalid waypoints
-        }
+  //       // Handle potential data fetching errors
+  //       if (response?.data.error) {
+  //         console.error("Error fetching waypoints:", response.data.error);
+  //         return; // Prevent setting invalid waypoints
+  //       }
 
-        const newWaypoints = response.data.data?.map((punch) => ({
-          lat: parseFloat(punch.lat),
-          lng: parseFloat(punch.lng),
-        }));
+  //       const newWaypoints = response.data.data?.map((punch) => ({
+  //         lat: parseFloat(punch.lat),
+  //         lng: parseFloat(punch.lng),
+  //       }));
 
-        const smoothedWaypoints = smoothWaypoints(newWaypoints, 3);
-        setWaypoints(smoothedWaypoints);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    })();
-  }, [authToken]);
+  //       const smoothedWaypoints = smoothWaypoints(newWaypoints, 3);
+  //       setWaypoints(smoothedWaypoints);
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   })();
+  // }, [authToken]);
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371;
@@ -142,16 +150,20 @@ const TestMap = () => {
     });
   };
 
-  const center = {
-    lat: parseFloat(waypoints[0]?.lat),
-    lng: parseFloat(waypoints[0]?.lng),
-  };
+  const center = waypoints[0]
+    ? {
+        lat: parseFloat(waypoints[0]?.lat),
+        lng: parseFloat(waypoints[0]?.lng),
+      }
+    : null;
 
-  const destination = {
-    lat: waypoints[waypoints.length - 1]?.lat,
-    lng: waypoints[waypoints.length - 1]?.lng,
-  };
-
+  const destination =
+    waypoints.length > 0
+      ? {
+          lat: waypoints[waypoints.length - 1]?.lat,
+          lng: waypoints[waypoints.length - 1]?.lng,
+        }
+      : null;
   const handleChange = (event, type) => {
     if (type === "employee") {
       const employeeId = event.target.value;
@@ -195,16 +207,16 @@ const TestMap = () => {
     const selectedPath = selectedDayLocation[id];
     console.log(selectedDayLocation);
     const newWaypoints = selectedPath.location.map((punch) => ({
-      lat: parseFloat(punch.lat),
-      lng: parseFloat(punch.lng),
+      lat: parseFloat(punch?.lat),
+      lng: parseFloat(punch?.lng),
     }));
 
     const smoothedWaypoints = smoothWaypoints(newWaypoints, 3);
     setWaypoints(smoothedWaypoints);
-    setCurrentLocation({
-      lat: waypoints[waypoints.length - 1].lat,
-      lng: waypoints[waypoints.length - 1].lng,
-    });
+    // setCurrentLocation({
+    //   lat: waypoints ? waypoints[waypoints.length - 1].lat : " ",
+    //   lng: waypoints ? waypoints[waypoints.length - 1].lng : " ",
+    // });
   };
 
   return (
@@ -261,6 +273,76 @@ const TestMap = () => {
                 Total Distance Travelled : {totalDistance.toFixed(2)} Kilometers
               </p>
             )}
+          </div>
+          <div className="mt-4 w-[25vw] h-[30vh]">
+            <div className="w-full shadow-md h-[130px] p-2">
+              <div className="text-gray-400 font-semibold text-sm">
+                05/03/2024
+              </div>
+              Employee1 has requested for remote punching from 09:30:45 AM to
+              4:00:23 PM
+              <div className="flex gap-3 mt-2">
+                {accepted1 ? (
+                  <Button color="success" size="small" variant="contained">
+                    Approved
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      variant="contained"
+                      size="small"
+                      onClick={() => setAccepted1(true)}
+                    >
+                      Accept
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="w-full shadow-md h-[130px] p-2">
+              <div className="text-gray-400 font-semibold text-sm">
+                06/03/2024
+              </div>
+              Employee1 has requested for remote punching from 08:30:45 AM to
+              10:10:01 AM
+              <div className="flex gap-3 mt-2">
+                {accepted2 ? (
+                  <Button variant="contained" size="small" color="success">
+                    Approved
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={() => setAccepted2(true)}
+                  >
+                    Accept
+                  </Button>
+                )}
+              </div>
+            </div>
+            <div className="w-full shadow-md h-[130px] p-2">
+              <div className="text-gray-400 font-semibold text-sm">
+                07/03/2024
+              </div>
+              Employee1 has requested for remote punching from 08:40:45 AM to
+              1:10:01 PM
+              <div className="flex gap-3 mt-2">
+                {accepted3 ? (
+                  <Button color="success" size="small" variant="contained">
+                    Approved
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={() => setAccepted3(true)}
+                  >
+                    Accept
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -28,7 +28,6 @@ const LeaveRejectmodal = ({ items }) => {
   const [message, setMessage] = useState("");
   const queryClient = useQueryClient();
   const [updateCount, setUpdateCount] = useState(0);
-  const [emp, setEmp] = useState();
   let isAcc = false;
   const profileArr = user.profile;
 
@@ -48,7 +47,6 @@ const LeaveRejectmodal = ({ items }) => {
           },
         }
       );
-      setEmp(resp?.data.getManager);
       console.log(" employeedata", resp.data);
     })();
   }, [authToken]);
@@ -83,6 +81,7 @@ const LeaveRejectmodal = ({ items }) => {
     {
       onSuccess: () => {
         setUpdateCount(updateCount + 1);
+        window.location.reload();
         queryClient.invalidateQueries("shift-request");
         handleClose();
       },
@@ -165,9 +164,9 @@ const LeaveRejectmodal = ({ items }) => {
 
             <div className="space-y-4 w-full flex flex-col items-center md:items-start justify-center">
               <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                {emp?.first_name} {emp?.last_name} has raised a shift request
-                from {items.description} {format(new Date(items.start), "PP")}{" "}
-                to {format(new Date(items.end), "PP")}
+                Employee1 has raised a shift request from {items.description}{" "}
+                {format(new Date(items.start), "PP")} to{" "}
+                {format(new Date(items.end), "PP")}
               </h1>
 
               <Chip
@@ -309,14 +308,7 @@ const LeaveRejectmodal = ({ items }) => {
               <Button
                 type="button"
                 size="small"
-                onClick={async (e) => {
-                  console.log(
-                    `🚀 ~ file: LeaveRejectmodal.jsx:84 ~ e:`,
-                    handleClose
-                  );
-
-                  await handleClose();
-                }}
+                onClick={handleClose}
                 color="error"
                 variant="contained"
               >
