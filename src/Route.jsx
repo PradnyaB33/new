@@ -65,14 +65,14 @@ import TestMap from "./pages/Test/testMap";
 import TestYash from "./pages/Test/testYash";
 import DepartmentTest from "./pages/Test2/DepartmentTest";
 import EmployeeProfile from "./pages/UserProfile/UserProfile";
-import ViewPayslip1 from "./pages/ViewPayslip/ViewPayslip1";
+import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import AddDelegate from "./pages/add-delegate/AddDelegate";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 //import UnAuthorized from "./utils/Forbidden/UnAuthorized";
-import TestFile from "./pages/SalaryCalculate/TestFile";
+import CalculateSalary from "./pages/SalaryCalculate/CalculateSalary";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 const App = () => {
   console.log("this is the real file");
@@ -357,7 +357,7 @@ const App = () => {
           <RequireAuth
             permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
           >
-            <TestFile />
+            <CalculateSalary />
           </RequireAuth>
         }
       />
@@ -380,7 +380,7 @@ const App = () => {
               "Employee",
             ]}
           >
-            <ViewPayslip1 />
+            <ViewPayslip />
           </RequireAuth>
         }
       />

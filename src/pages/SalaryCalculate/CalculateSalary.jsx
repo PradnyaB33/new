@@ -8,7 +8,7 @@ import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import axios from "axios";
 import dayjs from "dayjs";
-function TestFile() {
+function CalculateSalary() {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
@@ -627,4 +627,4 @@ function TestFile() {
   );
 }
 
-export default TestFile;
+export default CalculateSalary;
