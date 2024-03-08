@@ -67,6 +67,7 @@ import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
+import TestFile from "./pages/SalaryCalculate/TestFile";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 const App = () => {
   console.log("this is the real file");
@@ -343,10 +344,11 @@ const App = () => {
           <RequireAuth
             permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
           >
-            <SalaryCalculate />
+            <TestFile />
           </RequireAuth>
         }
       />
+
       <Route
         path="/organisation/:organisationId/view-payslip"
         element={

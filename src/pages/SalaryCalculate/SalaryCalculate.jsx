@@ -948,15 +948,7 @@ const SalaryCalculate = () => {
               >
                 <button
                   onClick={saveSallaryDetail}
-                  style={{
-                    padding: "10px 20px",
-                    borderRadius: "5px",
-                    backgroundColor: "#008CBA",
-                    color: "#fff",
-                    border: "none",
-                    fontSize: "1em",
-                    cursor: "pointer",
-                  }}
+                  class="px-4 py-2 rounded bg-blue-500 text-white border-none text-base cursor-pointer"
                 >
                   Submit Salary Details
                 </button>
