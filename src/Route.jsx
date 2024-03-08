@@ -37,7 +37,6 @@ import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
 import PaymentFailed from "./pages/Payment/page";
 import MissedPunch from "./pages/RemotePunchIn/MissedPunch";
-import SalaryCalculate from "./pages/SalaryCalculate/SalaryCalculate";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeSalaryCalculateDay from "./pages/SetUpOrganization/EmoloyeeSalaryCalculate/EmployeeSalaryCalculate";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
@@ -72,7 +71,8 @@ import AddDelegate from "./pages/add-delegate/AddDelegate";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
-import UnAuthorized from "./utils/Forbidden/UnAuthorized";
+//import UnAuthorized from "./utils/Forbidden/UnAuthorized";
+import TestFile from "./pages/SalaryCalculate/TestFile";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 const App = () => {
   console.log("this is the real file");

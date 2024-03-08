@@ -386,8 +386,8 @@ function TestFile() {
           </h3>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateCalendar
-              // value={selectedDate}
-              // onChange={handleDateChange}
+              value={selectedDate}
+              onChange={handleDateChange}
               views={["month", "year"]}
               openTo="month"
             />
@@ -397,17 +397,30 @@ function TestFile() {
 
       <div className="flex items-center justify-between mb-6">
         <img
-          src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+          src={availableEmployee?.organizationId?.logo_url || ""}
           alt="Company Logo"
           className="w-20 h-20 rounded-full"
         />
         <div>
           <p className="text-lg font-semibold">
-            Organization Name: Example Corp
+            Organization Name:
+            <span>{availableEmployee?.organizationId?.orgName || ""}</span>
           </p>
-          <p className="text-lg">Location: New York, USA</p>
-          <p className="text-lg">Contact Number: +1 123-456-7890</p>
-          <p className="text-lg">Organization Email: info@example.com</p>
+
+          <p className="text-lg">
+            Location:
+            <span>{availableEmployee?.organizationId?.location || ""}</span>
+          </p>
+          <p className="text-lg">
+            Contact Number:
+            <span>
+              {availableEmployee?.organizationId?.contact_number || ""}
+            </span>
+          </p>
+          <p className="text-lg">
+            Organization Email:
+            <span>{availableEmployee?.organizationId?.email || ""}</span>
+          </p>
         </div>
       </div>
       <hr className="mb-6" />
@@ -419,43 +432,67 @@ function TestFile() {
               <th class="px-4 py-2 border">Salary Slip</th>
               <th class="border"></th>
               <th class="px-4 py-2 border">Month</th>
-              <th class="px-4 py-2 border">January 2024</th>
+              <th class="px-4 py-2 border">{formattedDate}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td class="px-4 py-2 border">Employee Name:</td>
-              <td class="px-4 py-2 border">John Doe</td>
+              <td class="px-4 py-2 border">
+                {`${availableEmployee?.first_name} ${availableEmployee?.last_name}`}
+              </td>
               <td class="px-4 py-2 border">Date Of Joining:</td>
-              <td class="px-4 py-2 border">2020-01-01</td>
+              <td class="px-4 py-2 border">
+                {availableEmployee?.joining_date
+                  ? new Date(availableEmployee.joining_date).toLocaleDateString(
+                      "en-GB"
+                    )
+                  : ""}
+              </td>
             </tr>
             <tr>
               <td class="px-4 py-2 border">Degination:</td>
-              <td class="px-4 py-2 border">Software Engineer</td>
+              <td class="px-4 py-2 border">
+                {" "}
+                {(availableEmployee?.designation &&
+                  availableEmployee?.designation.length > 0 &&
+                  availableEmployee?.designation[0]?.designationName) ||
+                  ""}
+              </td>
               <td class="px-4 py-2 border">Unpaid Leaves:</td>
-              <td class="px-4 py-2 border">2</td>
+              <td class="px-4 py-2 border">{unPaidLeaveDays}</td>
             </tr>
             <tr>
               <td class="px-4 py-2 border">Department Name:</td>
-              <td class="px-4 py-2 border">IT</td>
+              <td class="px-4 py-2 border">
+                {" "}
+                {(availableEmployee?.deptname &&
+                  availableEmployee?.deptname.length > 0 &&
+                  availableEmployee?.deptname[0]?.departmentName) ||
+                  ""}
+              </td>
               <td class="px-4 py-2 border">No of Working Days Attended:</td>
-              <td class="px-4 py-2 border">25</td>
+              <td class="px-4 py-2 border">{noOfDaysEmployeePresent}</td>
             </tr>
             <tr>
               <td class="px-4 py-2 border">PAN No:</td>
-              <td class="px-4 py-2 border">DSQPD0535P</td>
+              <td class="px-4 py-2 border">
+                {availableEmployee?.pan_card_number}
+              </td>
               <td class="px-4 py-2 border">Paid Leaves:</td>
-              <td class="px-4 py-2 border">2</td>
+              <td class="px-4 py-2 border">{paidLeaveDays}</td>
             </tr>
             <tr>
               <td class="px-4 py-2 border">Bank Account Number:</td>
-              <td class="px-4 py-2 border">123456789012</td>
+              <td class="px-4 py-2 border">
+                {availableEmployee?.bank_account_no || ""}
+              </td>
               <td class="px-4 py-2 border">Public Holidays:</td>
-              <td class="px-4 py-2 border">2</td>
+              <td class="px-4 py-2 border">{publicHolidaysCount}</td>
             </tr>
             <tr>
               <td class="px-4 py-2 border"> No of Days in Month:</td>
-              <td class="px-4 py-2 border">30</td>
+              <td class="px-4 py-2 border">{numDaysInMonth}</td>
               <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>
             </tr>
@@ -483,49 +520,49 @@ function TestFile() {
             </tr>
             <tr>
               <td class="px-4 py-2 border">Basic :</td>
-              <td class="px-4 py-2 border">4500</td>
+              <td class="px-4 py-2 border">{basicSalary}</td>
               <td class="py-2 border">Professional Tax:</td>
-              <td class="py-2 border">1000</td>
+              <td class="py-2 border">{deduction}</td>
             </tr>
             <tr>
               <td class="px-4 py-2 border">DA :</td>
-              <td class="px-4 py-2 border">4500</td>
+              <td class="px-4 py-2 border">{daSalary}</td>
               <td class="py-2 border">Employee PF:</td>
-              <td class="py-2 border">2000</td>
+              <td class="py-2 border">{employee_pf}</td>
             </tr>
             <tr>
               <td class="px-4 py-2 border">HRA:</td>
-              <td class="px-4 py-2 border">4500</td>
+              <td class="px-4 py-2 border">{hraSalary}</td>
               <td class="py-2 border">ESIC :</td>
-              <td class="py-2 border">2500</td>
+              <td class="py-2 border">{esic}</td>
             </tr>
             <tr>
               <td class="px-4 py-2 border">Food allowance:</td>
-              <td class="px-4 py-2 border">4500</td>
+              <td class="px-4 py-2 border">{foodAllowance}</td>
               <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>
             </tr>
             <tr>
               <td class="px-4 py-2 border">Sales allowance:</td>
-              <td class="px-4 py-2 border">4500</td>
+              <td class="px-4 py-2 border">{salesAllowance}</td>
               <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>
             </tr>
             <tr>
               <td class="px-4 py-2 border">Special allowance:</td>
-              <td class="px-4 py-2 border">4500</td>
+              <td class="px-4 py-2 border">{specialAllowance}</td>
               <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>
             </tr>
             <tr>
               <td class="px-4 py-2 border">Travel allowance:</td>
-              <td class="px-4 py-2 border">4500</td>
+              <td class="px-4 py-2 border">{travelAllowance}</td>
               <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>
             </tr>
             <tr>
               <td class="px-4 py-2 border">Variable Pay allowance:</td>
-              <td class="px-4 py-2 border">4500</td>
+              <td class="px-4 py-2 border">{variableAllowance}</td>
               <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>
             </tr>
@@ -539,9 +576,9 @@ function TestFile() {
           <thead class="border">
             <tr class="bg-blue-200 border">
               <th class="px-4 py-2 border">Total Gross Salary :</th>
-              <th class="pl-24 py-2 border">30000</th>
+              <th class="pl-24 py-2 border"> {totalGrossSalary}</th>
               <th class="px-4 py-2 border">Total Deduction :</th>
-              <th class="px-4 py-2 border">3000</th>
+              <th class="px-4 py-2 border"> {totalDeduction}</th>
             </tr>
           </thead>
           <tbody class="border"></tbody>
@@ -555,7 +592,7 @@ function TestFile() {
             <tr class="bg-blue-200">
               <th class="px-4 py-2 ">Total Net Salary</th>
               <th></th>
-              <th class="px-4 py-2">50000</th>
+              <th class="px-4 py-2"> {totalNetSalary}</th>
               <th class="px-4 py-2"></th>
             </tr>
           </thead>
@@ -578,7 +615,10 @@ function TestFile() {
             margin: "20px",
           }}
         >
-          <button class="px-4 py-2 rounded bg-blue-500 text-white border-none text-base cursor-pointer">
+          <button
+            onClick={saveSallaryDetail}
+            class="px-4 py-2 rounded bg-blue-500 text-white border-none text-base cursor-pointer"
+          >
             Submit
           </button>
         </div>

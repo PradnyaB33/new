@@ -444,7 +444,7 @@ const SalaryCalculate = () => {
                 </Grid>
                 <Grid item xs={6} md={8}>
                   <h1 style={{ color: "red", fontSize: "1.2em" }}>
-                    {availableEmployee?.organizationId?.name || ""}
+                    {availableEmployee?.organizationId?.orgName || ""}
                   </h1>
                   <p style={{ fontSize: "1em", color: "#333" }}>
                     Address :
