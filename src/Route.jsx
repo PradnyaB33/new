@@ -1,5 +1,11 @@
 import React from "react";
-import { Navigate, Route, Routes, useParams } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 
 // Components
 import PaymentNotReceived from "./components/Payment/not-recieved";
@@ -66,7 +72,6 @@ import AddDelegate from "./pages/add-delegate/AddDelegate";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
-import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 const App = () => {
   console.log("this is the real file");
@@ -76,7 +81,15 @@ const App = () => {
         path="/"
         element={
           <RequireAuth
-            permission={["Super-Admin", "HR", "Delegate-Super-Admin"]}
+            permission={[
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "employee",
+            ]}
           >
             <Home />
           </RequireAuth>
@@ -629,6 +642,7 @@ const App = () => {
               "Department-Admin",
               "Delegate-Department-Admin",
               "HR",
+              "Accountant",
             ]}
           >
             <LeaveRequisition />
@@ -687,22 +701,18 @@ export default App;
 
 function RequireAuth({ children, permission }) {
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
-
+  const navigate = useNavigate("");
   const user = getCurrentUser();
   const role = useGetCurrentRole();
-  console.log(
-    `🚀 ~ file: Route.jsx:679 ~ role && !window.location.pathname.includes("sign-in", "sign-up"):`,
-    role !== null && !window.location.pathname.includes("sign-in", "sign-up")
-  );
-  console.log(`🚀 ~ file: Route.jsx:675 ~ role:`, role);
   const isPermission = permission?.includes(role);
 
   if (!window.location.pathname.includes("sign-in", "sign-up")) {
     if (!role) return <Navigate to={"/sign-in"} />;
-    if (user && isPermission) return children;
-    return <UnAuthorized />;
+    if (!user && !isPermission) return navigate(-1);
+    return children;
   }
-  return user && isPermission && children;
+
+  return children;
 }
 
 function RequireSubscription({ children }) {
