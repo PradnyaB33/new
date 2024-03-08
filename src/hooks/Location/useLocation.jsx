@@ -35,7 +35,7 @@ const useLocationStore = () => {
     }
     fetchData2();
     // eslint-disable-next-line
-  }, []);
+  }, [authToken]);
   const fetchLocationData = async () => {
     console.log("i am from hook");
 

@@ -14,7 +14,7 @@ const Form16 = () => {
   const renderForm16Component = () => {
     if (role.includes("Super-Admin") || role.includes("HR")) {
       return <Form16Hr organisationId={organisationId} />;
-    } else if (role.includes("Employee")) {
+    } else if (role.includes("Employee") || role.includes("HR")) {
       return <Form16Emp organisationId={organisationId} />;
     }
 
