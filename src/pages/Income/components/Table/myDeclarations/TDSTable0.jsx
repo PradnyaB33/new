@@ -97,7 +97,7 @@ const TDSTable0 = () => {
     },
 
     onSuccess: (tds) => {
-      const tdsSalary = tds?.incomeFromSalarySource?.investmentType.reduce(
+      const tdsSalary = tds?.incomeFromSalarySource?.investmentType?.reduce(
         (accumulator, investmentType) => {
           return accumulator + Number(investmentType?.declaration);
         },
@@ -114,7 +114,7 @@ const TDSTable0 = () => {
       let SelfProperty = 0;
 
       if (isSelfProperty) {
-        let data = isSelfProperty?.investmentType.reduce(
+        let data = isSelfProperty?.investmentType?.reduce(
           (accumulator, investmentType) => {
             return accumulator + investmentType?.declaration;
           },

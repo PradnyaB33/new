@@ -12,7 +12,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     // Update user when component mounts
     setUser(getCurrentUser());
-  }, [getCurrentUser]); // Ensure the effect runs when getCurrentUser changes
+  }, [role]); // Ensure the effect runs when getCurrentUser changes
 
   return (
     <AuthContext.Provider value={{ user, role }}>
