@@ -4,23 +4,27 @@ import {
   SellOutlined,
 } from "@mui/icons-material";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
-import { useLocation } from "react-router-dom";
-import UserProfile from "../UserData/useUser";
-import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
-import WorkOffOutlinedIcon from "@mui/icons-material/WorkOffOutlined";
-import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
-import HolidayVillageOutlinedIcon from "@mui/icons-material/HolidayVillageOutlined";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
-import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
-import PersonPinOutlinedIcon from "@mui/icons-material/PersonPinOutlined";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
+import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
+import HolidayVillageOutlinedIcon from "@mui/icons-material/HolidayVillageOutlined";
+import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import PersonPinOutlinedIcon from "@mui/icons-material/PersonPinOutlined";
+import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
+import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
+import WorkOffOutlinedIcon from "@mui/icons-material/WorkOffOutlined";
+import { useLocation } from "react-router-dom";
+import useSubscription from "../Subscription/subscription";
+import UserProfile from "../UserData/useUser";
 const useSetupSideNav = (organisationId) => {
   const location = useLocation();
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
+  const { subscriptionDetails, subscriptionLoading, subscriptionFetching } =
+    useSubscription(organisationId);
+  console.log(`🚀 ~ file: useSetupSideNav.jsx:26 ~ sub:`, subscriptionDetails);
 
   const linkData = [
     {
@@ -164,6 +168,14 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/subscription`,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+    },
+    {
+      label: "Remote Punching",
+      icon: SellOutlined,
+      href: `/organisation/${organisationId}/setup/subscription`,
+      active:
+        subscriptionDetails.plan_id === process.env.REACT_APP_INTERMEDIATE,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
   ];
