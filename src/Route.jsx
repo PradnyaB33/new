@@ -69,7 +69,6 @@ import NotFound from "./utils/Forbidden/NotFound";
 import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 const App = () => {
-  console.log("this is the real file");
   return (
     <Routes>
       <Route
@@ -679,11 +678,7 @@ function RequireAuth({ children, permission }) {
 
   const user = getCurrentUser();
   const role = useGetCurrentRole();
-  console.log(
-    `🚀 ~ file: Route.jsx:679 ~ role && !window.location.pathname.includes("sign-in", "sign-up"):`,
-    role !== null && !window.location.pathname.includes("sign-in", "sign-up")
-  );
-  console.log(`🚀 ~ file: Route.jsx:675 ~ role:`, role);
+
   const isPermission = permission?.includes(role);
 
   if (!window.location.pathname.includes("sign-in", "sign-up")) {

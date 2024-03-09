@@ -24,15 +24,11 @@ const AppDatePicker = ({
   disabledShiftId,
 }) => {
   const localizer = momentLocalizer(moment);
-  const [Delete, setDelete] = useState(false);
-  const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
   const [newData, setNewData] = useState([]);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const arr = data;
-  console.log(Delete);
-  console.log(update);
 
   useEffect(() => {
     const arrayOfData = arr && arr.requests ? arr.requests : [];
@@ -44,17 +40,19 @@ const AppDatePicker = ({
 
   const getLatestShifts = async () => {
     try {
-      const resp = await axios.get(`${process.env.REACT_APP_API}/route/shiftApply/get`, {
-        headers: {
-          Authorization: authToken
+      const resp = await axios.get(
+        `${process.env.REACT_APP_API}/route/shiftApply/get`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
         }
-      })
-      console.log(resp.data.requests);
-      setNewData(resp.data.requests)
+      );
+      setNewData(resp.data.requests);
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
-  }
+  };
 
   const { data: data2 } = useQuery("employee-disable-weekends", async () => {
     const response = await axios.get(
@@ -76,11 +74,7 @@ const AppDatePicker = ({
     setSelectedLeave(event);
     setCalendarOpen(true);
     if (event.title === "Selected Leave") {
-      setDelete(true);
-      setUpdate(false);
     } else {
-      setDelete(false);
-      setUpdate(true);
     }
   };
 
@@ -104,8 +98,7 @@ const AppDatePicker = ({
   };
 
   const handleSelectSlot = ({ start, end }) => {
-    console.log(selectedLeave);
-    getLatestShifts()
+    getLatestShifts();
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
     const currentDate = moment(selectedStartDate);
@@ -125,14 +118,17 @@ const AppDatePicker = ({
       currentDate.add(1, "day");
     }
     if (newData && Array.isArray(newData)) {
-      const isOverlapWithData = newData.some(event => {
+      const isOverlapWithData = newData.some((event) => {
         const eventStartDate = moment(event.start);
         const eventEndDate = moment(event.end);
 
         return (
-          (moment(start).isSameOrAfter(eventStartDate) && moment(start).isBefore(eventEndDate)) ||
-          (moment(end).isAfter(eventStartDate) && moment(end).isSameOrBefore(eventEndDate)) ||
-          (moment(start).isSameOrBefore(eventStartDate) && moment(end).isSameOrAfter(eventEndDate))
+          (moment(start).isSameOrAfter(eventStartDate) &&
+            moment(start).isBefore(eventEndDate)) ||
+          (moment(end).isAfter(eventStartDate) &&
+            moment(end).isSameOrBefore(eventEndDate)) ||
+          (moment(start).isSameOrBefore(eventStartDate) &&
+            moment(end).isSameOrAfter(eventEndDate))
         );
       });
 
@@ -242,38 +238,36 @@ const AppDatePicker = ({
   const handleDelete = async () => {
     try {
       if (selectedLeave._id) {
-        await axios.delete(`${process.env.REACT_APP_API}/route/shiftApply/delete/${selectedLeave._id}`, {
-          headers: {
-            Authorization: authToken
+        await axios.delete(
+          `${process.env.REACT_APP_API}/route/shiftApply/delete/${selectedLeave._id}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
           }
-        });
-        // Update newAppliedLeaveEvents state after successful deletion
-        setNewAppliedLeaveEvents(prevEvents =>
-          prevEvents.filter(event => event._id !== selectedLeave._id)
         );
-        getLatestShifts()
+        // Update newAppliedLeaveEvents state after successful deletion
+        setNewAppliedLeaveEvents((prevEvents) =>
+          prevEvents.filter((event) => event._id !== selectedLeave._id)
+        );
+        getLatestShifts();
         setSelectedLeave(null); // Reset selectedLeave state
-        setDelete(false); // Toggle delete state
-        console.log("Shift deleted successfully");
       } else if (selectedLeave) {
         // If selectedLeave does not have an _id, filter it out from newAppliedLeaveEvents
-        setNewAppliedLeaveEvents(prevEvents =>
-          prevEvents.filter(event =>
-            event.title !== selectedLeave.title ||
-            event.start !== selectedLeave.start ||
-            event.end !== selectedLeave.end
+        setNewAppliedLeaveEvents((prevEvents) =>
+          prevEvents.filter(
+            (event) =>
+              event.title !== selectedLeave.title ||
+              event.start !== selectedLeave.start ||
+              event.end !== selectedLeave.end
           )
-        )
+        );
       } else {
-        console.log("This operation cannot be done");
       }
     } catch (error) {
-      console.log("Error deleting shift:", error);
+      console.error("Error deleting shift:", error);
     }
   };
-
-
-
 
   useEffect(() => {
     // Add click event listener when component mounts
@@ -302,10 +296,26 @@ const AppDatePicker = ({
       style={{ height: "500px !important" }}
     >
       <div className=" bg-white shadow-lg z-10">
-
-       
         <div className="w-full">
-        {selectedLeave?.status && <div className="text-center font-semibold">The application for this shift is <span style={{color: (selectedLeave.status === "Approved" ? "green" : "black" || selectedLeave.status === "Pending" ? "#f2a81b" : "black" || selectedLeave.status === "Rejected" ? "red" : "black" )}}>{selectedLeave.status}</span></div> }
+          {selectedLeave?.status && (
+            <div className="text-center font-semibold">
+              The application for this shift is{" "}
+              <span
+                style={{
+                  color:
+                    selectedLeave.status === "Approved"
+                      ? "green"
+                      : "black" || selectedLeave.status === "Pending"
+                      ? "#f2a81b"
+                      : "black" || selectedLeave.status === "Rejected"
+                      ? "red"
+                      : "black",
+                }}
+              >
+                {selectedLeave.status}
+              </span>
+            </div>
+          )}
           <Calendar
             localizer={localizer}
             views={["month"]}
@@ -329,13 +339,19 @@ const AppDatePicker = ({
             onSelectEvent={handleSelectEvent}
             datePropGetter={selectedLeave}
             dayPropGetter={dayPropGetter}
-              eventPropGetter={(event) => ({
+            eventPropGetter={(event) => ({
               style: {
-                backgroundColor:( event?.status === "Pending" ? "orange" : "blue" || event?.status === "Approved" ? "green" : "blue" || event?.status === "Rejected" ? "red" : "blue"),
+                backgroundColor:
+                  event?.status === "Pending"
+                    ? "orange"
+                    : "blue" || event?.status === "Approved"
+                    ? "green"
+                    : "blue" || event?.status === "Rejected"
+                    ? "red"
+                    : "blue",
               },
             })}
           />
-          
         </div>
       </div>
 

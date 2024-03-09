@@ -55,7 +55,6 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
       enabled: open && empId !== null && empId !== undefined,
     }
   );
-  console.log(salaryInput);
   const handleInputChange = (name, value) => {
     const enteredValue = parseFloat(value);
     if (!isNaN(enteredValue) && enteredValue > 10000000) {
@@ -84,7 +83,6 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
       "Travel allowance": travelAllowance,
       "Sales allowance": salesAllowance,
     } = inputValue;
-    console.log(variableAllowance);
 
     const basicValue = parseFloat(Basic) || 0;
     const hraValue = parseFloat(HRA) || 0;
@@ -97,7 +95,6 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
     const deductionValue = parseFloat(deduction) || 0;
     const employeePfValue = parseFloat(employee_pf) || 0;
     const esicValue = parseFloat(esic) || 0;
-    console.log(variableAllowanceValue);
     const total =
       basicValue +
       hraValue +
@@ -134,7 +131,6 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
           },
         }
       );
-      console.log("response ", response);
       if (response.data.success) {
         handleAlert(true, "error", "Invalid authorization");
       } else {

@@ -27,7 +27,6 @@ const EditEmpProfileModal = ({ handleClose, open, userId }) => {
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
 
-  console.log(userId);
   // function to handle get additional detail of employee
   const [userData, setUserData] = useState("");
   const fetchAvailableUserProfileData = async () => {
@@ -40,7 +39,6 @@ const EditEmpProfileModal = ({ handleClose, open, userId }) => {
           },
         }
       );
-      console.log(response);
     } catch (error) {
       console.error(error);
       handleAlert(true, "error", "Failed to fetch User Profile Data");
@@ -51,7 +49,6 @@ const EditEmpProfileModal = ({ handleClose, open, userId }) => {
     fetchAvailableUserProfileData();
     // eslint-disable-next-line
   }, []);
-  console.log(userData);
 
   // fetch the data of emp sal cal day of employee which is already stored in database
   // useEffect(() => {
@@ -61,9 +58,7 @@ const EditEmpProfileModal = ({ handleClose, open, userId }) => {
   //     setChatId(userData?.chat_id || "");
   //   }
   // }, [userData]);
-  // console.log(additionalPhoneNumber);
-  // console.log(chatId);
-  // console.log(statusMessage);
+
   return (
     <Modal
       aria-labelledby="modal-modal-title"

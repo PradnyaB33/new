@@ -25,12 +25,8 @@ const UserProfile = () => {
       queryFn: async () => {
         if (roletoken) {
           const decodedToken = await jwtDecode(roletoken);
-          console.log(
-            `🚀 ~ file: useUser.jsx:28 ~ decodedToken:`,
-            decodedToken
-          );
+
           if (decodedToken) {
-            console.log(decodedToken?.role);
             return decodedToken?.role;
           } else {
             return null;
