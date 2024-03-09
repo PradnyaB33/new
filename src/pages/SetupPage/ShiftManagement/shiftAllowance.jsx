@@ -141,7 +141,6 @@ const ShiftAllowance = () => {
                         type="submit"
                         variant="contained"
                         className="font-bold m-auto w-fit"
-                        onClick={() => window.location.reload()}
                       >
                         Apply for shift
                       </Button>

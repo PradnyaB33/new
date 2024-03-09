@@ -89,6 +89,7 @@ const useShiftData = () => {
       queryclient.invalidateQueries("employee-summary-table");
       queryclient.invalidateQueries("employee-leave-table-without-default");
       setNewAppliedLeaveEvents([]);
+      window.location.reload();
     },
     onError: (error) => {
       console.error(error);

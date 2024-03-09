@@ -8,6 +8,7 @@ import {
   Groups,
   ListAlt,
   MonetizationOn,
+  MonetizationOnOutlined,
   NotificationsActive,
   Payment,
   PeopleAlt,
@@ -199,6 +200,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Salary Management",
           },
+          {
+            key: "loanmanagement",
+            isVisible: true,
+            link: `/organisation/${orgId}/loan-management`,
+            icon: (
+              <MonetizationOnOutlined className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Loan Management",
+          },
         ],
       },
       Employee: {
@@ -326,6 +336,32 @@ const TestNavItems = ({ toggleDrawer }) => {
               <AccountTreeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
             text: "Organisation List",
+          },
+        ],
+      },
+      RemotePunch: {
+        open: false,
+        isVisible: ["Employee", "Manager"].includes(role),
+        icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
+        routes: [
+          {
+            key: "addPunch",
+            isVisible: ["Employee"].includes(role),
+            link: "/test3",
+            icon: (
+              <BusinessOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Remote Punch-in-out",
+          },
+
+          {
+            key: "punchInList",
+            isVisible: ["Manager"].includes(role),
+            link: "/test5",
+            icon: (
+              <AccountTreeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Route Status",
           },
         ],
       },

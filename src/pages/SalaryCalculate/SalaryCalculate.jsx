@@ -444,7 +444,7 @@ const SalaryCalculate = () => {
                 </Grid>
                 <Grid item xs={6} md={8}>
                   <h1 style={{ color: "red", fontSize: "1.2em" }}>
-                    {availableEmployee?.organizationId?.name || ""}
+                    {availableEmployee?.organizationId?.orgName || ""}
                   </h1>
                   <p style={{ fontSize: "1em", color: "#333" }}>
                     Address :
@@ -948,15 +948,7 @@ const SalaryCalculate = () => {
               >
                 <button
                   onClick={saveSallaryDetail}
-                  style={{
-                    padding: "10px 20px",
-                    borderRadius: "5px",
-                    backgroundColor: "#008CBA",
-                    color: "#fff",
-                    border: "none",
-                    fontSize: "1em",
-                    cursor: "pointer",
-                  }}
+                  class="px-4 py-2 rounded bg-blue-500 text-white border-none text-base cursor-pointer"
                 >
                   Submit Salary Details
                 </button>

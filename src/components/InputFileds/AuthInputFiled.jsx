@@ -211,11 +211,6 @@ const AuthInputFiled = ({
                           return item.value;
                         })
                       );
-                      console.log(
-                        value.map((item) => {
-                          return item.value;
-                        })
-                      );
                     }}
                   />
                 </div>
@@ -383,11 +378,6 @@ const AuthInputFiled = ({
                     options={options}
                     onChange={(value) => {
                       field.onChange(
-                        value.map((item) => {
-                          return item.value;
-                        })
-                      );
-                      console.log(
                         value.map((item) => {
                           return item.value;
                         })

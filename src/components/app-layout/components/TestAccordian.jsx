@@ -11,10 +11,6 @@ const TestAccordian = ({
 }) => {
   //   const [open, setOpen] = useState(valueBoolean);
   // const params = useMatch("/organisation/:id");
-  // console.log(
-  //   `🚀 ~ file: accordian.jsx:23 ~ params?.params?.id:`,
-  //   params?.params?.id
-  // );
   return (
     <div className={`block ${!isVisible && "hidden"} `}>
       <div className="my-2 flex gap-3 px-4 text-sm items-center">

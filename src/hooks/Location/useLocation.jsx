@@ -7,23 +7,6 @@ const useLocationStore = () => {
   const [start, setStart] = useState(false);
   const [count, setCount] = useState(0);
   const authToken = useAuthToken();
-  // const [punches, setPunches] = useState([]);
-
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const resp = await axios.get(
-  //       `${process.env.REACT_APP_API}/route/punch/getone`,
-  //       {
-  //         headers: {
-  //           Authorization: authToken,
-  //         },
-  //       }
-  //     );
-  //     console.log(resp?.data.punch.employeeId);
-  //     setempID(resp?.data.punch.employeeId);
-  //   }
-  //   fetchData();
-  // }, [empID]);
 
   useEffect(() => {
     async function fetchData2() {
@@ -37,8 +20,6 @@ const useLocationStore = () => {
     // eslint-disable-next-line
   }, [authToken]);
   const fetchLocationData = async () => {
-    console.log("i am from hook");
-
     const position = await new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, reject, {
         enableHighAccuracy: true,
@@ -57,8 +38,6 @@ const useLocationStore = () => {
         },
       ],
     };
-    console.log(`🚀 ~ file: useLocation.jsx:33 ~ payload:`, payload);
-
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/punch/create/test`,
