@@ -55,7 +55,6 @@ const ChangeRole = () => {
         if (response?.data?.role === "Super-Admin") {
           redirect("/");
         } else if (response?.data?.role === "HR") {
-          console.log("runs");
           redirect(
             `/organisation/${user.organizationId}/dashboard/HR-dashboard`
           );
@@ -77,7 +76,7 @@ const ChangeRole = () => {
       },
 
       onError: (error) => {
-        console.log(error);
+        console.error(error);
       },
     }
   );

@@ -92,8 +92,8 @@ const InputFieldModal = ({ handleClose, open, id, empTypeId }) => {
         handleClose();
         setTitleEmpType("");
       },
-      onError: () => {
-        console.log("error");
+      onError: (error) => {
+        console.error("error");
       },
     }
   );
@@ -114,8 +114,8 @@ const InputFieldModal = ({ handleClose, open, id, empTypeId }) => {
         queryClient.invalidateQueries({ queryKey: ["empTypes"] });
         handleClose();
       },
-      onError: () => {
-        console.log("An error occurred while creating a neemppTypet");
+      onError: (error) => {
+        console.error("An error occurred while creating a neemppTypet");
       },
     }
   );
@@ -150,8 +150,6 @@ const InputFieldModal = ({ handleClose, open, id, empTypeId }) => {
   ];
 
   const onsubmit = async (data) => {
-    console.log(data);
-
     try {
       if (empTypeId) {
         await EditEmployeeType.mutate(data);
@@ -161,7 +159,6 @@ const InputFieldModal = ({ handleClose, open, id, empTypeId }) => {
       // Reset form state
     } catch (error) {
       console.error(error);
-      console.log("An error occurred while creating a neemppTypet");
     }
   };
 

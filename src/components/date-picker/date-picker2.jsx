@@ -24,15 +24,11 @@ const AppDatePicker = ({
   disabledShiftId,
 }) => {
   const localizer = momentLocalizer(moment);
-  const [Delete, setDelete] = useState(false);
-  const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
   const [newData, setNewData] = useState([]);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const arr = data;
-  console.log(Delete);
-  console.log(update);
 
   useEffect(() => {
     const arrayOfData = arr && arr.requests ? arr.requests : [];
@@ -55,7 +51,7 @@ const AppDatePicker = ({
       console.log(resp.data.requests);
       setNewData(resp.data.requests);
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
@@ -79,11 +75,7 @@ const AppDatePicker = ({
     setSelectedLeave(event);
     setCalendarOpen(true);
     if (event.title === "Selected Leave") {
-      setDelete(true);
-      setUpdate(false);
     } else {
-      setDelete(false);
-      setUpdate(true);
     }
   };
 
@@ -262,8 +254,6 @@ const AppDatePicker = ({
         );
         getLatestShifts();
         setSelectedLeave(null); // Reset selectedLeave state
-        setDelete(false); // Toggle delete state
-        console.log("Shift deleted successfully");
       } else if (selectedLeave) {
         // If selectedLeave does not have an _id, filter it out from newAppliedLeaveEvents
         setNewAppliedLeaveEvents((prevEvents) =>
@@ -275,10 +265,9 @@ const AppDatePicker = ({
           )
         );
       } else {
-        console.log("This operation cannot be done");
       }
     } catch (error) {
-      console.log("Error deleting shift:", error);
+      console.error("Error deleting shift:", error);
     }
   };
 

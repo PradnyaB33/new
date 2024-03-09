@@ -6,18 +6,7 @@ const LocationSearchInput = ({ field }) => {
   const [address, setAddress] = useState("");
 
   const handleChange = (newAddress) => {
-    console.log(
-      `🚀 ~ file: GoogleAutocomplete.jsx:13 ~ newAddress:`,
-      newAddress
-    );
     setAddress(newAddress);
-  };
-
-  const handleSelect = (selectedAddress) => {
-    console.log(
-      `🚀 ~ file: GoogleAutocomplete.jsx:17 ~ selectedAddress:`,
-      selectedAddress
-    );
   };
 
   return (

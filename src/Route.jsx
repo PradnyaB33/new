@@ -67,9 +67,9 @@ import NotFound from "./utils/Forbidden/NotFound";
 //import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 import RequireAuth, { AuthProvider } from "./context/AuthProvider";
 import CalculateSalary from "./pages/SalaryCalculate/CalculateSalary";
+//import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 const App = () => {
-  console.log("this is the real file");
   return (
     <AuthProvider>
       <Routes>

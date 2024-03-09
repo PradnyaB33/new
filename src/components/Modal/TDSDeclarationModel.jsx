@@ -87,7 +87,6 @@ const TDSDeclarationModel = ({ open, handleClose }) => {
   const month = monthsFromAprilToCurrent();
 
   const GrossSalary = (5 * 100) / (300000 - watch("amount"));
-  console.log(GrossSalary, month);
 
   const anualTDS = (500000 - watch("amount")) * GrossSalary * 12;
   const monthlyTDS = (500000 - watch("amount")) * GrossSalary * month;

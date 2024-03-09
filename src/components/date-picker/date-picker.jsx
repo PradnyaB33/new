@@ -209,7 +209,6 @@ const AppDatePicker = ({
         element.contains(event.target)
       )
     ) {
-      console.log("hello");
       setLeaveText("");
     } else {
     }
