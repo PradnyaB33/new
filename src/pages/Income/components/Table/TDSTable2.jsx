@@ -115,11 +115,7 @@ const TDSTable2 = () => {
     },
   ]);
 
-  const {
-    isLoading: incomeHouseLoading,
-    isFetching,
-    isFetched,
-  } = useQuery({
+  const { isLoading: incomeHouseLoading, isFetching } = useQuery({
     queryKey: ["incomeHouse"],
     queryFn: async () => {
       try {
@@ -140,7 +136,7 @@ const TDSTable2 = () => {
       // Extracting relevant data from the backend response
       const sectionData = res?.incomeFromHouse?.section;
 
-      setTotalHeads(res.totalHeads.toFixed(2));
+      setTotalHeads(res?.totalHeads);
       // Updating the tableData state based on the backend response
       const updatedTableData = tableData.map((section) => {
         const sectionName = Object.keys(section)[0];
@@ -163,18 +159,18 @@ const TDSTable2 = () => {
         return section;
       });
 
-      const tableDataWithMaximumAllowable = updatedTableData.map((data) => ({
+      const tableDataWithMaximumAllowable = updatedTableData?.map((data) => ({
         ...data,
         maximumAllowable: res?.firstSectionDeclarationSum,
         secondData2: {
-          netValue1: res.secondData2.netValue,
-          standard1: res.secondData2.deductedAmount,
-          netHouseTotal1: res.secondData2.ActualDeductedValue,
+          netValue1: res?.secondData2?.netValue,
+          standard1: res?.secondData2?.deductedAmount,
+          netHouseTotal1: res?.secondData2?.ActualDeductedValue,
         },
         secondData3: {
-          netValue1: res.secondData3.netValue,
-          standard1: res.secondData3.deductedAmount,
-          netHouseTotal1: res.secondData3.ActualDeductedValue,
+          netValue1: res?.secondData3?.netValue,
+          standard1: res?.secondData3?.deductedAmount,
+          netHouseTotal1: res?.secondData3?.ActualDeductedValue,
         },
       }));
 
@@ -299,7 +295,7 @@ const TDSTable2 = () => {
 
   return (
     <div className="mt-2 space-y-4">
-      {incomeHouseLoading || isFetching || !isFetched ? (
+      {incomeHouseLoading ? (
         <div className="flex items-center justify-center w-full">
           <CircularProgress />
         </div>
@@ -320,7 +316,7 @@ const TDSTable2 = () => {
                       <div>
                         <h1 className="text-gray-600">Net Annual Value :</h1>
                         <p className="text-xl">
-                          INR {item?.secondData2?.netValue1.toFixed(2)}
+                          {/* INR {item?.secondData2?.netValue1?.toFixed(2)} */}
                         </p>
                       </div>
                       <div>
@@ -328,7 +324,10 @@ const TDSTable2 = () => {
                           Less : Standard Deduction :{" "}
                         </h1>
                         <p className="text-xl">
-                          INR {item?.secondData2.standard1?.toFixed(2)}
+                          INR{" "}
+                          {item?.secondData2?.standard1 !== undefined
+                            ? item?.secondData2?.standard1?.toFixed(2)
+                            : 0}
                         </p>
                       </div>
                       <div className="w-max">
@@ -336,7 +335,10 @@ const TDSTable2 = () => {
                           Net Income / (Loss) from this House
                         </h1>
                         <p className="text-xl">
-                          INR {item?.secondData2.netHouseTotal1?.toFixed(2)}
+                          INR{" "}
+                          {item?.secondData2?.netHouseTotal1 !== undefined
+                            ? item?.secondData2?.netHouseTotal1?.toFixed(2)
+                            : 0}
                         </p>
                       </div>
                     </div>
@@ -346,7 +348,7 @@ const TDSTable2 = () => {
                       <div>
                         <h1 className="text-gray-600">Net Annual Value :</h1>
                         <p className="text-xl">
-                          INR {item?.secondData3?.netValue1.toFixed(2)}
+                          {/* INR {item?.secondData3?.netValue1?.toFixed(2)} */}
                         </p>
                       </div>
                       <div>
@@ -354,7 +356,7 @@ const TDSTable2 = () => {
                           Less : Standard Deduction :{" "}
                         </h1>
                         <p className="text-xl">
-                          INR {item?.secondData3.standard1?.toFixed(2)}
+                          {/* INR {item?.secondData3?.standard1?.toFixed(2)} */}
                         </p>
                       </div>
                       <div className="w-max">
@@ -362,7 +364,10 @@ const TDSTable2 = () => {
                           Net Income / (Loss) from this House
                         </h1>
                         <p className="text-xl">
-                          INR {item?.secondData3.netHouseTotal1?.toFixed(2)}
+                          INR{" "}
+                          {item?.secondData3?.netHouseTotal1 !== undefined
+                            ? item?.secondData3?.netHouseTotal1?.toFixed(2)
+                            : 0}
                         </p>
                       </div>
                     </div>
@@ -481,7 +486,7 @@ const TDSTable2 = () => {
                               </div>
                             ) : (
                               <div className="px-2">
-                                INR {ele.declaration?.toFixed(2)}
+                                {/* INR {ele?.declaration?.toFixed(2)} */}
                               </div>
                             )}
                           </td>
@@ -557,7 +562,7 @@ const TDSTable2 = () => {
                           </td>
                         </tr>
                       ))}
-                      {itemIndex === 0 && item.maximumAllowable && (
+                      {/* {itemIndex === 0 && item.maximumAllowable && (
                         <tr
                           className="!font-medium bg-gray-100  h-12 border-b"
                           key="max-allowable"
@@ -575,7 +580,7 @@ const TDSTable2 = () => {
                           </td>
                           <td className="px-2 text-left "></td>
                         </tr>
-                      )}
+                      )} */}
                     </tbody>
                   </table>
                 </div>
