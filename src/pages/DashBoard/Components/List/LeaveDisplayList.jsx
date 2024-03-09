@@ -1,4 +1,4 @@
-import { BeachAccessOutlined } from "@mui/icons-material";
+import { BeachAccessOutlined, WarningOutlined } from "@mui/icons-material";
 import { Avatar, Chip } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import axios from "axios";
@@ -47,32 +47,41 @@ const LeaveDisplayList = () => {
         </div>
         <Divider variant="fullWidth" orientation="horizontal" />
 
-        {previousLeaves?.map((item, id) => (
-          <>
-            <div key={id} className="p-4">
-              <div className="flex gap-4 w-full items-center">
-                <h1 className="text-md font-semibold">{item.title}</h1>
-                <Chip
-                  color={`${
-                    item.status === "Approved"
-                      ? "primary"
-                      : item.status === "Pending"
-                      ? "default"
-                      : "error"
-                  }`}
-                  size="small"
-                  variant="outlined"
-                  label={item.status}
-                />
-              </div>
-              <p className="text-lg">
-                {format(new Date(item.start), "PP")} -{" "}
-                {format(new Date(item.end), "PP")}{" "}
-              </p>
+        {previousLeaves?.length <= 0 ? (
+          <div className="p-5 ">
+            <div className="space-x-2 items-center text-red-600  flex">
+              <WarningOutlined className="text-xl text-red-600" />
+              <h1 className="text-xl">No leaves taken by you</h1>
             </div>
-            <Divider variant="fullWidth" orientation="horizontal" />
-          </>
-        ))}
+          </div>
+        ) : (
+          previousLeaves?.map((item, id) => (
+            <>
+              <div key={id} className="p-4">
+                <div className="flex gap-4 w-full items-center">
+                  <h1 className="text-md font-semibold">{item.title}</h1>
+                  <Chip
+                    color={`${
+                      item.status === "Approved"
+                        ? "primary"
+                        : item.status === "Pending"
+                        ? "default"
+                        : "error"
+                    }`}
+                    size="small"
+                    variant="outlined"
+                    label={item.status}
+                  />
+                </div>
+                <p className="text-lg">
+                  {format(new Date(item.start), "PP")} -{" "}
+                  {format(new Date(item.end), "PP")}{" "}
+                </p>
+              </div>
+              <Divider variant="fullWidth" orientation="horizontal" />
+            </>
+          ))
+        )}
       </div>
     </article>
   );

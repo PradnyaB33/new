@@ -22,7 +22,7 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   // const RemainingLeaves = useLeaveTable();
-  const [userId, setuserId] = useState(user?._id);
+  const [userId, setuserId] = useState();
 
   // const { data: remainingLeaves } = RemainingLeaves;
 
@@ -161,7 +161,7 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
   return (
     <>
       <Card elevation={3}>
-        <div className="flex w-full px-4 items-center justify-between">
+        <div className="flex flex-col w-full px-4 items-start justify-between">
           <div className="flex items-center gap-2 py-2  ">
             <Avatar
               variant="circle"
@@ -169,14 +169,13 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
             >
               <WorkHistory className="!text-lg" />
             </Avatar>
-            <h1 className="md:text-xl text-lg font-semibold py-3">
-              Attendance Overview
-            </h1>
+            <h1 className="md:text-xl text-lg py-3">Attendance Overview</h1>
           </div>
           <Autocomplete
             disablePortal
             id="combo-box-demo"
-            sx={{ width: 300 }}
+            className="w-full"
+            // sx={{ width: 300 }}
             size="small"
             onChange={handleSelect}
             options={EmployeeDataOfManager?.data[0]?.reporteeIds ?? []}
@@ -196,16 +195,20 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
 
         <div className="flex flex-col gap-2">
           <Card elevation={0} className="w-full ">
-            {MonthArray?.length <= 0 ? (
-              <Card
-                elevation={1}
-                className="!bg-gray-50  mx-4 py-6 px-8 rounded-md"
-              >
+            {!userId || userId === "" ? (
+              <Card elevation={0} className="  mx-4 py-6 ">
+                <article className="flex items-center mb-1 text-blue-500 gap-2">
+                  <Info className="!text-2xl" />
+                  <h1 className="text-xl ">
+                    Select the employee to view the employee attendance overview
+                  </h1>
+                </article>
+              </Card>
+            ) : MonthArray.length <= 0 ? (
+              <Card elevation={0} className="  mx-4 py-6 ">
                 <article className="flex items-center mb-1 text-red-500 gap-2">
                   <Info className="!text-2xl" />
-                  <h1 className="text-xl font-semibold">
-                    Leave Data Not found for this employee
-                  </h1>
+                  <h1 className="text-xl ">Data Not found for this employee</h1>
                 </article>
               </Card>
             ) : (

@@ -149,7 +149,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         onSubmit={handleSubmit(onsubmit)}
         className="w-full flex space-y-2  flex-1 flex-col"
       >
-        <div className="flex">
+        <div className="md:flex block w-full ">
           <AuthInputFiled
             name="empId"
             icon={Work}
@@ -161,7 +161,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             error={errors.empId}
           />
         </div>
-        <div className="grid grid-cols-3 w-full gap-3">
+        <div className="grid grid-cols-1  md:grid-cols-3 w-full gap-3">
           <AuthInputFiled
             name="deptname"
             value={deptname}
@@ -200,7 +200,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
           />
         </div>
 
-        <div className="grid grid-cols-2 w-full gap-3">
+        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
           <AuthInputFiled
             name="companyemail"
             icon={ContactMail}
@@ -223,7 +223,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             error={errors.joining_date}
           />
         </div>
-        <div className="grid grid-cols-2 w-full gap-3">
+        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
           <AuthInputFiled
             name="password"
             icon={Key}
@@ -245,7 +245,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             error={errors.confirmPassword}
           />
         </div>
-        <div className="grid grid-cols-2 w-full gap-3">
+        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
           <AuthInputFiled
             name="designation"
             icon={Work}
@@ -271,7 +271,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             error={errors.shift_allocation}
           />
         </div>
-        <div className="grid grid-cols-2 w-full gap-3">
+        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
           <AuthInputFiled
             name="dept_cost_center_no"
             value={dept_cost_center_no}
@@ -297,7 +297,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             error={errors.worklocation}
           />
         </div>
-        <div className="grid grid-cols-2 w-full gap-3">
+        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
           <AuthInputFiled
             value={employmentType}
             name="employmentType"

@@ -9,14 +9,11 @@ function Emailverify() {
   const param = useParams();
   useEffect(() => {
     const verifyEmailUrl = async () => {
-      console.log("Helo");
       try {
         const url = `${process.env.REACT_APP_API}/route/employee/verify/${param.token}`;
         const { data } = await axios.get(url);
-        console.log(data);
         setValidUrl(true);
       } catch (error) {
-        console.log("error", error);
         handleAlert(
           true,
           "error",

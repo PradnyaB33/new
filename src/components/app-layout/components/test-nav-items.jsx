@@ -8,6 +8,7 @@ import {
   Groups,
   ListAlt,
   MonetizationOn,
+  MonetizationOnOutlined,
   NotificationsActive,
   Payment,
   PeopleAlt,
@@ -198,6 +199,15 @@ const TestNavItems = ({ toggleDrawer }) => {
               <AccountBalanceWalletOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
             text: "Salary Management",
+          },
+          {
+            key: "loanmanagement",
+            isVisible: true,
+            link: `/organisation/${orgId}/loan-management`,
+            icon: (
+              <MonetizationOnOutlined className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Loan Management",
           },
         ],
       },

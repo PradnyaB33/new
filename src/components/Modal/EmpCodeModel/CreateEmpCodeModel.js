@@ -61,7 +61,6 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
           },
         }
       );
-      console.log(response);
       handleAlert(true, "success", response.data.message);
       setTimeout(() => {
         handleAlert(false, "success", "");
