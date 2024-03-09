@@ -32,6 +32,7 @@ import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
+import MonetizationOnOutlinedIcon from "@material-ui/icons/MonetizationOnOutlined";
 
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
@@ -198,6 +199,15 @@ const TestNavItems = ({ toggleDrawer }) => {
               <AccountBalanceWalletOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
             text: "Salary Management",
+          },
+          {
+            key: "loanmanagement",
+            isVisible: true,
+            link: `/organisation/${orgId}/loan-management`,
+            icon: (
+              <MonetizationOnOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Loan Management",
           },
         ],
       },

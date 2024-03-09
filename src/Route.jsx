@@ -71,8 +71,9 @@ import AddDelegate from "./pages/add-delegate/AddDelegate";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
-//import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 import CalculateSalary from "./pages/SalaryCalculate/CalculateSalary";
+import LoanManagement from "./pages/LoanManagement/LoanManagement";
+//import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 const App = () => {
   return (
@@ -347,6 +348,28 @@ const App = () => {
             permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
           >
             <SalaryManagement />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/organisation/:organisationId/loan-management"
+        element={
+          <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+              "Employee",
+            ]}
+          >
+            <LoanManagement />
           </RequireAuth>
         }
       />
