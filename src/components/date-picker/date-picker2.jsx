@@ -2,7 +2,7 @@ import { Close } from "@mui/icons-material";
 import { Button, MenuItem, Popover, Select } from "@mui/material";
 import moment from "moment";
 import { momentLocalizer } from "react-big-calendar";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -28,6 +28,7 @@ const AppDatePicker = ({
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
   const [newData, setNewData] = useState([]);
+  const queryClient = useQueryClient()
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const arr = data;
@@ -256,13 +257,13 @@ const AppDatePicker = ({
             },
           }
         );
-        // Update newAppliedLeaveEvents state after successful deletion
         setNewAppliedLeaveEvents((prevEvents) =>
           prevEvents.filter((event) => event._id !== selectedLeave._id)
         );
         getLatestShifts();
         setSelectedLeave(null); // Reset selectedLeave state
-        setDelete(false); // Toggle delete state
+        setDelete(false);
+        queryClient.invalidateQueries('table')
         console.log("Shift deleted successfully");
       } else if (selectedLeave) {
         // If selectedLeave does not have an _id, filter it out from newAppliedLeaveEvents
