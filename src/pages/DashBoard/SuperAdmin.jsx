@@ -65,8 +65,8 @@ const SuperAdmin = () => {
         <div className="flex  px-8    items-center !text-[#152745] gap-1"></div>
       </div> */}
 
-        <div className=" px-8 w-full">
-          <div className="flex mt-6 w-full justify-between gap-5">
+        <div className="md:px-8 px-2 w-full">
+          <div className="flex flex-1 mt-6 flex-wrap w-full justify-between gap-2 md:gap-5 ">
             <SuperAdminCard
               icon={Business}
               color={"!bg-red-500"}
@@ -190,11 +190,11 @@ const SuperAdmin = () => {
             </div>
           )}
 
-          <div className="w-full gap-4 mt-4 flex items-center">
-            <div className="w-[50%]">
+          <div className="w-full md:gap-4 md:space-y-0 space-y-3 mt-4 flex md:flex-row flex-col items-center">
+            <div className="w-[100%] md:w-[50%]">
               <LineGraph salarydata={salaryData} />
             </div>
-            <div className="w-[50%]">
+            <div className="w-[100%] md:w-[50%]">
               <AttendenceBar
                 isLoading={oraganizationLoading}
                 attendenceData={data}

@@ -156,6 +156,12 @@ const SignIn = () => {
     handleLogin.mutate(data);
   };
 
+  const [focusedInput, setFocusedInput] = React.useState(null);
+
+  const handleFocus = (fieldName) => {
+    setFocusedInput(fieldName);
+  };
+
   return (
     <>
       <section className="lg:min-h-screen  flex w-full">
@@ -199,9 +205,13 @@ const SignIn = () => {
                 Email Address
               </label>
               <div
-                className={
-                  "  flex  rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px]"
-                }
+                className={`
+                flex  rounded-md px-2  bg-white py-[6px]
+                ${
+                  focusedInput === "email"
+                    ? "outline-blue-500 outline-3 !border-blue-500 border-[2px]"
+                    : "border-gray-200 border-[.5px]"
+                }`}
               >
                 <Email className="text-gray-700" />
                 <input
@@ -209,38 +219,53 @@ const SignIn = () => {
                   autoComplete="off"
                   id="email"
                   placeholder="abc@gmail.com"
+                  onFocus={() => {
+                    handleFocus("email");
+                  }}
+                  onBlur={() => setFocusedInput(null)}
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   type="email"
-                  className={" border-none  bg-white w-full outline-none px-2"}
+                  className={` 
+                  
+                 
+                  border-none  bg-white w-full outline-none px-2`}
                 />
               </div>
 
               <div className="space-y-1 !mt-5 w-full ">
-                <div className="flex items-center justify-between">
-                  <label
-                    htmlFor={password}
-                    className={" font-semibold text-gray-500 text-md"}
-                  >
-                    Password
-                  </label>
-                </div>
+                <label
+                  htmlFor={password}
+                  className={" font-semibold text-gray-500 text-md"}
+                >
+                  Password
+                </label>
 
                 <div
-                  className={
-                    "  flex rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px]"
-                  }
+                  className={`
+                flex  rounded-md px-2  bg-white py-[6px]
+                ${
+                  focusedInput === "password"
+                    ? "outline-blue-500 outline-3 !border-blue-500 border-[2px]"
+                    : "border-gray-200 border-[.5px]"
+                }`}
                 >
                   <Lock className="text-gray-700" />
                   <input
                     name="password"
                     autoComplete="off"
                     id="password"
+                    onFocus={() => {
+                      handleFocus("password");
+                    }}
+                    onBlur={() => setFocusedInput(null)}
                     type="password"
                     placeholder="*****"
                     label="Password"
                     onChange={(event) => setPassword(event.target.value)}
-                    className={" border-none bg-white w-full outline-none px-2"}
+                    className={` 
+                 
+                    border-none bg-white w-full outline-none px-2`}
                   />
                 </div>
               </div>
