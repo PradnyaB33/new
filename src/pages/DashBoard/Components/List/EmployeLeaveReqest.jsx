@@ -57,9 +57,7 @@ const EmployeeLeaveRequest = () => {
             >
               <BeachAccessOutlined className="!text-xl" />
             </Avatar>
-            <h1 className="text-[#152745] font-semibold">
-              Employee Leave Request
-            </h1>
+            <h1 className="md:text-xl text-lg py-3">Employee Leave Request</h1>
           </div>
           <Link
             to={"/notification"}

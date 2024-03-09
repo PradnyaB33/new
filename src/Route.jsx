@@ -708,10 +708,15 @@ function RequireAuth({ children, permission }) {
   const role = useGetCurrentRole();
   const isPermission = permission?.includes(role);
 
-  if (!window.location.pathname.includes("sign-in", "sign-up")) {
-    if (!role) return <Navigate to={"/sign-in"} />;
-    if (!user && !isPermission) return navigate(-1);
-    return children;
+  // Check if the current path includes either "sign-in" or "sign-up"
+  const isAuthPage =
+    window.location.pathname.includes("sign-in") ||
+    window.location.pathname.includes("sign-up");
+
+  if (!isAuthPage) {
+    if (user && isPermission) return children;
+    if (!user) return <Navigate to={"/sign-in"} />;
+    if (!isPermission) return navigate(-1);
   }
 
   return children;
