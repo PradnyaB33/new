@@ -45,7 +45,7 @@ const TDSTable0 = () => {
       }
     },
     onSuccess: (res) => {
-      let data = res.reduce((total, item) => {
+      let data = res?.reduce((total, item) => {
         return total + parseFloat(item?.totalGrossSalary);
       }, 0);
 
@@ -186,7 +186,7 @@ const TDSTable0 = () => {
       if (section50) {
         let data = section50?.investmentType?.reduce(
           (accumulator, investmentType) => {
-            return accumulator + investmentType.declaration;
+            return accumulator + investmentType?.declaration;
           },
           0
         );
@@ -199,7 +199,7 @@ const TDSTable0 = () => {
       if (others) {
         let data = others?.investmentType?.reduce(
           (accumulator, investmentType) => {
-            return accumulator + investmentType.declaration;
+            return accumulator + investmentType?.declaration;
           },
           0
         );
@@ -254,12 +254,12 @@ const TDSTable0 = () => {
 
   function getPropertyValues(sec) {
     const netValue =
-      sec.investmentType[0].declaration - sec.investmentType[1].declaration;
+      sec?.investmentType[0]?.declaration - sec?.investmentType[1]?.declaration;
 
     const deductedAmount = (netValue * 30) / 100;
 
-    const ActualDeductedValue = sec.investmentType[2].declaration
-      ? netValue - deductedAmount - sec.investmentType[2].declaration
+    const ActualDeductedValue = sec?.investmentType[2]?.declaration
+      ? netValue - deductedAmount - sec?.investmentType[2]?.declaration
       : netValue - deductedAmount;
 
     return {
@@ -273,18 +273,18 @@ const TDSTable0 = () => {
     let data = 0;
     let deduction = 0;
 
-    incomeFromOther.investmentType.forEach((investmentType) => {
+    incomeFromOther?.investmentType?.forEach((investmentType) => {
       if (
-        investmentType.name !== "Income taxable under the head Other Sources"
+        investmentType?.name !== "Income taxable under the head Other Sources"
       ) {
         if (investmentType) {
           if (
-            investmentType.name ===
+            investmentType?.name ===
             "Less : Deduction on Family Pension Income Sec. 57(IIA)"
           ) {
-            deduction = investmentType.declaration;
+            deduction = investmentType?.declaration;
           } else {
-            data += investmentType.declaration;
+            data += investmentType?.declaration;
           }
         }
       }

@@ -178,8 +178,8 @@ const TDSTable1 = () => {
       queryClient.invalidateQueries({ queryKey: ["finacialYearData"] });
       deduction = grossTotal - res.totalDeductions;
 
-      const updatedTableData = tableData.map((item) => {
-        const matchingItem = res.incomeFromSalary.investmentType.find(
+      const updatedTableData = tableData?.map((item) => {
+        const matchingItem = res?.incomeFromSalary?.investmentType.find(
           (investment) => investment.name === item.name
         );
 
