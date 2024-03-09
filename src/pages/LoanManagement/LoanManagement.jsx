@@ -4,8 +4,18 @@ import { Add, Info } from "@mui/icons-material";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import LoanManagementSkeleton from "./LoanManagementSkeleton";
 import LoanManagementPieChart from "./LoanManagementPieChart";
-
+import CreateLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/CreateLoanMgtModal";
+import { useParams } from "react-router-dom";
 const LoanManagement = () => {
+  const { organisationId } = useParams();
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const handleCreateModalOpen = () => {
+    setCreateModalOpen(true);
+  };
+  const handleCreateModalClose = () => {
+    setCreateModalOpen(false);
+  };
+
   let isLoading;
   const [LoanManagementData, setLoanManagementData] = useState([
     {
@@ -53,7 +63,7 @@ const LoanManagement = () => {
             <Button
               className="!font-semibold !bg-sky-500 flex items-center gap-2"
               variant="contained"
-              //onClick={handleCreateModalOpen}
+              onClick={handleCreateModalOpen}
             >
               <Add />
               Apply For Loan
@@ -132,6 +142,13 @@ const LoanManagement = () => {
           )}
         </article>
       </section>
+
+      {/* for create */}
+      <CreateLoanMgtModal
+        handleClose={handleCreateModalClose}
+        open={createModalOpen}
+        organisationId={organisationId}
+      />
     </>
   );
 };
