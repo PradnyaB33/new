@@ -19,34 +19,28 @@ const SignIn = () => {
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
+
   useEffect(() => {
-    if (user?._id && role) {
-      if (role === "Super-Admin" || role === "Delegate-Super-Admin")
-        return redirect("/");
-      else if (role === "HR")
-        return redirect(
-          `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
-        );
-      else if (
-        role === "Delegate-Department-Head" ||
-        role === "Department-Head"
-      )
-        return redirect(
-          `/organisation/${user?.organizationId}/dashboard/DH-dashboard`
-        );
-      else if (role === "Accountant")
-        return redirect(
-          `/organisation/${user?._id}/dashboard/employee-dashboard`
-        );
-      else if (role === "Manager")
-        return redirect(
-          `/organisation/${user?._id}/dashboard/manager-dashboard`
-        );
-      else if (role === "Employee")
-        return redirect(`/organisation/dashboard/employee-dashboard`);
-    }
+    if (role === "Super-Admin" || role === "Delegate-Super-Admin")
+      return redirect("/");
+    else if (role === "HR")
+      return redirect(
+        `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
+      );
+    else if (role === "Delegate-Department-Head" || role === "Department-Head")
+      return redirect(
+        `/organisation/${user?.organizationId}/dashboard/DH-dashboard`
+      );
+    else if (role === "Accountant")
+      return redirect(
+        `/organisation/${user?._id}/dashboard/employee-dashboard`
+      );
+    else if (role === "Manager")
+      return redirect(`/organisation/${user?._id}/dashboard/manager-dashboard`);
+    else if (role === "Employee")
+      return redirect(`/organisation/dashboard/employee-dashboard`);
     // eslint-disable-next-line
-  }, [role]);
+  }, [window.location.pathname, role]);
 
   const handleRole = useMutation(
     (data) => {

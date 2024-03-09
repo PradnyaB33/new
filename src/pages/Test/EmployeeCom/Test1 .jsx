@@ -128,7 +128,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
         onSubmit={handleSubmit(onSubmit)}
         className="w-full flex  flex-1 space-y-2 flex-col"
       >
-        <div className="grid grid-cols-3 w-full gap-3">
+        <div className="grid md:grid-cols-3 grid-cols-1 w-full gap-3">
           <AuthInputFiled
             name="first_name"
             icon={Person}
@@ -163,7 +163,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           />
         </div>
 
-        <div className="grid grid-cols-2 w-full gap-3">
+        <div className="grid grid-cols-1  md:!grid-cols-2 w-full gap-3">
           <AuthInputFiled
             name="email"
             icon={Email}
@@ -254,7 +254,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 w-full gap-2">
+        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-2">
           <AuthInputFiled
             name="adhar_card_number"
             icon={AccountBox}
@@ -277,7 +277,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           />
         </div>
 
-        <div className="grid grid-cols-2 w-full gap-2">
+        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-2">
           <AuthInputFiled
             name="bank_account_no"
             icon={AccountBalance}
