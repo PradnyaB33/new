@@ -1,8 +1,11 @@
-import React, { useContext, useEffect } from "react";
-import { TestContext } from "../../State/Function/Main";
-import UserProfile from "../../hooks/auth/useUser";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import React, { useContext, useEffect, useState } from "react";
+import { UseContext } from "../../State/UseState/UseContext";
+import UserProfile from "../../hooks/UserData/useUser";
+import axios from "axios";
+import Alert from "@mui/material/Alert";
 const ViewPayslip = () => {
-  const pdfRef = useRef();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
@@ -153,50 +156,327 @@ const ViewPayslip = () => {
   const paidLeave = previousMonthSalary?.paidLeaveDays;
   const publicHoliday = previousMonthSalary?.publicHolidaysCount;
 
-  //   function to generate the pdf
-  const handleGeneratePDF = () => {
-    setGeneratePdf(true);
+  // download the pdf
+  const exportPDF = () => {
+    const input = document.getElementById("App");
+    html2canvas(input, {
+      logging: true,
+      letterRendering: 1,
+      useCORS: true,
+    }).then((canvas) => {
+      const imgWidth = 200;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const imgData = canvas.toDataURL("img/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+      pdf.save("payslip.pdf");
+    });
   };
-
   return (
     <>
-      <section className="min-h-screen flex w-full">
-        <div className="!w-[30%]  lg:flex hidden text-white flex-col items-center justify-center h-screen relative"></div>
-
-        <div style={{ marginTop: "20%", marginLeft: "20%" }}>
-          <button
-            onClick={handleGeneratePDF}
-            style={{
-              padding: "10px 20px",
-              borderRadius: "5px",
-              backgroundColor: "#008CBA",
-              color: "#fff",
-              border: "none",
-              fontSize: "1em",
-              cursor: "pointer",
-            }}
-          >
-            Generate PDF
-          </button>
-          {/* Conditionally render the PDFDownloadLink */}
-          {generatePdf && employeeInfo && (
-            <PDFDownloadLink
-              document={
-                <PaySlipPdf
-                  employeeInfo={employeeInfo}
-                  organisationInfo={organisationInfo}
-                  salaryInfo={previousMonthSalary}
+      <div style={{ marginTop: "5%" }}>
+        {salaryInfo &&
+        employeeInfo &&
+        organisationInfo &&
+        previousMonthSalary ? (
+          <div id="App">
+            <div className="container mx-auto p-6">
+              <div className="flex items-center justify-between mb-6">
+                <img
+                  src={organisationInfo?.logo_url}
+                  alt={organisationInfo?.logo_url}
+                  className="w-20 h-20 rounded-full"
                 />
-              }
-              fileName="payslip.pdf"
+                <div>
+                  <p className="text-lg font-semibold">
+                    Organization Name:
+                    <span>{organisationInfo?.orgName || ""}</span>
+                  </p>
+
+                  <p className="text-lg">
+                    Location:
+                    <span>{organisationInfo?.location || ""}</span>
+                  </p>
+                  <p className="text-lg">
+                    Contact Number:
+                    <span>{organisationInfo?.contact_number || ""}</span>
+                  </p>
+                  <p className="text-lg">
+                    Organization Email:
+                    <span> {organisationInfo?.email || ""}</span>
+                  </p>
+                </div>
+              </div>
+              <hr className="mb-6" />
+              {/* 1st table */}
+              <div>
+                <table class="w-full border border-collapse">
+                  <thead>
+                    <tr class="bg-blue-200">
+                      <th class="px-4 py-2 border">Salary Slip</th>
+                      <th class="border"></th>
+                      <th class="px-4 py-2 border">Month</th>
+                      <th class="px-4 py-2 border">
+                        {previousMonthSalary?.formattedDate || ""}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="px-4 py-2 border">Employee Name:</td>
+                      <td class="px-4 py-2 border">
+                        {`${employeeInfo?.first_name} ${employeeInfo?.last_name}`}
+                      </td>
+                      <td class="px-4 py-2 border">Date Of Joining:</td>
+                      <td class="px-4 py-2 border">
+                        {employeeInfo?.joining_date
+                          ? new Date(
+                              employeeInfo.joining_date
+                            ).toLocaleDateString("en-GB")
+                          : ""}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2 border">Degination:</td>
+                      <td class="px-4 py-2 border">
+                        {employeeInfo?.designation &&
+                        employeeInfo?.designation !== null &&
+                        employeeInfo?.designation !== undefined &&
+                        employeeInfo.designation.length > 0
+                          ? employeeInfo.designation[0].designationName
+                          : ""}
+                      </td>
+                      <td class="px-4 py-2 border">Unpaid Leaves:</td>
+                      <td class="px-4 py-2 border"> {unpaidLeave}</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2 border">Department Name:</td>
+                      <td class="px-4 py-2 border">
+                        {(employeeInfo?.deptname &&
+                          employeeInfo?.deptname !== null &&
+                          employeeInfo?.deptname !== undefined &&
+                          employeeInfo?.deptname.length > 0 &&
+                          employeeInfo?.deptname[0]?.departmentName) ||
+                          ""}
+                      </td>
+                      <td class="px-4 py-2 border">
+                        No of Working Days Attended:
+                      </td>
+                      <td class="px-4 py-2 border">
+                        {" "}
+                        {previousMonthSalary?.noOfDaysEmployeePresent || ""}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2 border">PAN No:</td>
+                      <td class="px-4 py-2 border">
+                        {employeeInfo?.pan_card_number}
+                      </td>
+                      <td class="px-4 py-2 border">Paid Leaves:</td>
+                      <td class="px-4 py-2 border">{paidLeave}</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2 border">Bank Account Number:</td>
+                      <td class="px-4 py-2 border">
+                        {employeeInfo?.bank_account_no || ""}
+                      </td>
+                      <td class="px-4 py-2 border">Public Holidays:</td>
+                      <td class="px-4 py-2 border"> {publicHoliday}</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2 border"> No of Days in Month:</td>
+                      <td class="px-4 py-2 border">
+                        {previousMonthSalary?.numDaysInMonth || ""}
+                      </td>
+                      <td class="px-4 py-2 border"></td>
+                      <td class="px-4 py-2 border"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              {/* 2nd table */}
+              <div>
+                <table class="w-full border border-collapse">
+                  <thead>
+                    <tr class="bg-blue-200">
+                      <th class="px-4 py-2 border">Income</th>
+                      <th class="border"></th>
+                      <th class="px-4 py-2 border">Deduction</th>
+                      <th class="px-4 py-2 border"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="px-4 py-2 border">Particulars</td>
+                      <td class="py-2 border">Amount</td>
+                      <td class="py-2 border">Particulars</td>
+                      <td class="py-2 border">Amount</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2 border">Basic :</td>
+                      <td class="px-4 py-2 border">
+                        {previousMonthSalary?.basicSalary || ""}
+                      </td>
+                      <td class="py-2 border">Professional Tax:</td>
+                      <td class="py-2 border">
+                        {employeeInfo?.deduction || ""}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2 border">DA :</td>
+                      <td class="px-4 py-2 border">
+                        {previousMonthSalary?.daSalary || ""}
+                      </td>
+                      <td class="py-2 border">Employee PF:</td>
+                      <td class="py-2 border">
+                        {employeeInfo?.employee_pf || ""}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2 border">HRA:</td>
+                      <td class="px-4 py-2 border">
+                        {previousMonthSalary?.hraSalary || ""}
+                      </td>
+                      <td class="py-2 border">ESIC :</td>
+                      <td class="py-2 border">{employeeInfo?.esic || ""}</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2 border">Food allowance:</td>
+                      <td class="px-4 py-2 border">
+                        {previousMonthSalary?.foodAllowance || ""}
+                      </td>
+                      <td class="px-4 py-2 border"></td>
+                      <td class="px-4 py-2 border"></td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2 border">Sales allowance:</td>
+                      <td class="px-4 py-2 border">
+                        {previousMonthSalary?.salesAllowance || ""}
+                      </td>
+                      <td class="px-4 py-2 border"></td>
+                      <td class="px-4 py-2 border"></td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2 border">Special allowance:</td>
+                      <td class="px-4 py-2 border">
+                        {" "}
+                        {previousMonthSalary?.specialAllowance || ""}
+                      </td>
+                      <td class="px-4 py-2 border"></td>
+                      <td class="px-4 py-2 border"></td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2 border">Travel allowance:</td>
+                      <td class="px-4 py-2 border">
+                        {" "}
+                        {previousMonthSalary?.travelAllowance || ""}
+                      </td>
+                      <td class="px-4 py-2 border"></td>
+                      <td class="px-4 py-2 border"></td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2 border">Variable Pay allowance:</td>
+                      <td class="px-4 py-2 border">
+                        {" "}
+                        {previousMonthSalary?.variableAllowance || ""}
+                      </td>
+                      <td class="px-4 py-2 border"></td>
+                      <td class="px-4 py-2 border"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              {/* total gross salary and deduction */}
+              <div>
+                <table class="w-full border border-collapse">
+                  <thead class="border">
+                    <tr class="bg-blue-200 border">
+                      <th class="px-4 py-2 border">Total Gross Salary :</th>
+                      <th class="pl-24 py-2 border">
+                        {" "}
+                        {previousMonthSalary?.totalGrossSalary || ""}
+                      </th>
+                      <th class="px-4 py-2 border">Total Deduction :</th>
+                      <th class="px-4 py-2 border">
+                        {" "}
+                        {previousMonthSalary?.totalDeduction || ""}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="border"></tbody>
+                </table>
+              </div>
+
+              {/* total net salaey */}
+              <div>
+                <table class="w-full mt-10 border ">
+                  <thead>
+                    <tr class="bg-blue-200">
+                      <th class="px-4 py-2 ">Total Net Salary</th>
+                      <th></th>
+                      <th class="px-4 py-2">
+                        {previousMonthSalary?.totalNetSalary || ""}
+                      </th>
+                      <th class="px-4 py-2"></th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
             >
-              {({ loading }) =>
-                loading ? "Generating PDF..." : "Download PDF"
-              }
-            </PDFDownloadLink>
-          )}
-        </div>
-      </section>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: "20px",
+                }}
+              >
+                <button
+                  onClick={() => exportPDF()}
+                  class="px-4 py-2 rounded bg-blue-500 text-white border-none text-base cursor-pointer"
+                >
+                  Download PDF
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-1">
+            <div>
+              <img
+                src="/payslip.svg"
+                style={{ height: "600px", marginLeft: "10%" }}
+                alt="none"
+              />
+            </div>
+            <div>
+              <Alert
+                severity="error"
+                sx={{
+                  width: "100%",
+                  maxWidth: "650px",
+                  marginLeft: "10%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                "Your payment cycle is not completed for this month. Since
+                you've recently joined. Kindly reach out to the HR department
+                for further assistance. Thank you for your understanding."
+              </Alert>
+            </div>
+          </div>
+        )}
+      </div>
     </>
   );
 };

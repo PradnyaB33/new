@@ -329,6 +329,32 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
+      RemotePunch: {
+        open: false,
+        isVisible: ["Employee", "Manager"].includes(role),
+        icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
+        routes: [
+          {
+            key: "addPunch",
+            isVisible: ["Employee"].includes(role),
+            link: "/test3",
+            icon: (
+              <BusinessOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Remote Punch-in-out",
+          },
+
+          {
+            key: "punchInList",
+            isVisible: ["Manager"].includes(role),
+            link: "/test5",
+            icon: (
+              <AccountTreeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Route Status",
+          },
+        ],
+      },
     }),
     // eslint-disable-next-line
     [isVisible, orgId]

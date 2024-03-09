@@ -69,8 +69,8 @@ const Form16Emp = () => {
           <div className=" ml-80 mt-1">
             <div>
               <img
-                src="/payslip.svg"
-                style={{ height: "550px", marginRight: "40%" }}
+                src="/form16.jpg"
+                style={{ height: "600px", marginLeft: "10%" }}
                 alt="none"
               />
             </div>
@@ -79,7 +79,7 @@ const Form16Emp = () => {
                 severity="error"
                 sx={{
                   width: "100%",
-                  maxWidth: "500px",
+                  maxWidth: "600px",
                   marginLeft: "10%",
                   display: "flex",
                   justifyContent: "center",

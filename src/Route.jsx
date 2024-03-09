@@ -1,5 +1,11 @@
 import React from "react";
-import { Navigate, Route, Routes, useParams } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 
 // Components
 import PaymentNotReceived from "./components/Payment/not-recieved";
@@ -31,7 +37,6 @@ import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
 import PaymentFailed from "./pages/Payment/page";
 import MissedPunch from "./pages/RemotePunchIn/MissedPunch";
-import SalaryCalculate from "./pages/SalaryCalculate/SalaryCalculate";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeSalaryCalculateDay from "./pages/SetUpOrganization/EmoloyeeSalaryCalculate/EmployeeSalaryCalculate";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
@@ -60,13 +65,14 @@ import TestMap from "./pages/Test/testMap";
 import TestYash from "./pages/Test/testYash";
 import DepartmentTest from "./pages/Test2/DepartmentTest";
 import EmployeeProfile from "./pages/UserProfile/UserProfile";
-import ViewPayslip1 from "./pages/ViewPayslip/ViewPayslip1";
+import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import AddDelegate from "./pages/add-delegate/AddDelegate";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
-import UnAuthorized from "./utils/Forbidden/UnAuthorized";
+//import UnAuthorized from "./utils/Forbidden/UnAuthorized";
+import CalculateSalary from "./pages/SalaryCalculate/CalculateSalary";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 const App = () => {
   return (
@@ -75,7 +81,15 @@ const App = () => {
         path="/"
         element={
           <RequireAuth
-            permission={["Super-Admin", "HR", "Delegate-Super-Admin"]}
+            permission={[
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "employee",
+            ]}
           >
             <Home />
           </RequireAuth>
@@ -342,10 +356,11 @@ const App = () => {
           <RequireAuth
             permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
           >
-            <SalaryCalculate />
+            <CalculateSalary />
           </RequireAuth>
         }
       />
+
       <Route
         path="/organisation/:organisationId/view-payslip"
         element={
@@ -364,7 +379,7 @@ const App = () => {
               "Employee",
             ]}
           >
-            <ViewPayslip1 />
+            <ViewPayslip />
           </RequireAuth>
         }
       />
@@ -618,7 +633,19 @@ const App = () => {
       <Route
         path="/leave"
         element={
-          <RequireAuth permission={["Employee", "Super-Admin"]}>
+          <RequireAuth
+            permission={[
+              "Employee",
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "HR",
+              "Accountant",
+            ]}
+          >
             <LeaveRequisition />
           </RequireAuth>
         }
@@ -675,18 +702,23 @@ export default App;
 
 function RequireAuth({ children, permission }) {
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
-
+  const navigate = useNavigate("");
   const user = getCurrentUser();
   const role = useGetCurrentRole();
-
   const isPermission = permission?.includes(role);
 
-  if (!window.location.pathname.includes("sign-in", "sign-up")) {
-    if (!role) return <Navigate to={"/sign-in"} />;
+  // Check if the current path includes either "sign-in" or "sign-up"
+  const isAuthPage =
+    window.location.pathname.includes("sign-in") ||
+    window.location.pathname.includes("sign-up");
+
+  if (!isAuthPage) {
     if (user && isPermission) return children;
-    return <UnAuthorized />;
+    if (!user) return <Navigate to={"/sign-in"} />;
+    if (!isPermission) return navigate(-1);
   }
-  return user && isPermission && children;
+
+  return children;
 }
 
 function RequireSubscription({ children }) {

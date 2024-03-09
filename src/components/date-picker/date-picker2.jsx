@@ -48,6 +48,7 @@ const AppDatePicker = ({
           },
         }
       );
+      console.log(resp.data.requests);
       setNewData(resp.data.requests);
     } catch (error) {
       console.error(error.message);
@@ -98,6 +99,7 @@ const AppDatePicker = ({
   };
 
   const handleSelectSlot = ({ start, end }) => {
+    console.log(selectedLeave);
     getLatestShifts();
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
@@ -305,11 +307,11 @@ const AppDatePicker = ({
                   color:
                     selectedLeave.status === "Approved"
                       ? "green"
-                      : "black" || selectedLeave.status === "Pending"
+                      : selectedLeave.status === "Pending"
                       ? "#f2a81b"
-                      : "black" || selectedLeave.status === "Rejected"
+                      : selectedLeave.status === "Rejected"
                       ? "red"
-                      : "black",
+                      : "Yellow",
                 }}
               >
                 {selectedLeave.status}
@@ -339,18 +341,32 @@ const AppDatePicker = ({
             onSelectEvent={handleSelectEvent}
             datePropGetter={selectedLeave}
             dayPropGetter={dayPropGetter}
-            eventPropGetter={(event) => ({
-              style: {
-                backgroundColor:
-                  event?.status === "Pending"
-                    ? "orange"
-                    : "blue" || event?.status === "Approved"
-                    ? "green"
-                    : "blue" || event?.status === "Rejected"
-                    ? "red"
-                    : "blue",
-              },
-            })}
+            eventPropGetter={(event) => {
+              let backgroundColor = "blue";
+
+              if (event?.status) {
+                switch (event.status) {
+                  case "Pending":
+                    backgroundColor = "orange";
+                    break;
+                  case "Rejected":
+                    backgroundColor = "red";
+                    break;
+                  case "Approved":
+                    backgroundColor = "green";
+                    break;
+                  default:
+                    backgroundColor = "blue";
+                    break;
+                }
+              }
+
+              return {
+                style: {
+                  backgroundColor,
+                },
+              };
+            }}
           />
         </div>
       </div>
