@@ -1,20 +1,20 @@
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import { Popover } from "@mui/material";
+import { Popover, Skeleton } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { UseContext } from "../../../../State/UseState/UseContext";
 import SummaryTable from "./SummaryTable";
+import { useQuery } from "react-query";
 
 const ShiftsTable = () => {
   const { cookies } = useContext(UseContext);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [shifts, setShifts] = useState([]);
   const authToken = cookies["aegis"];
   const [pending, setPending] = useState([]);
   const [approved, setApproved] = useState([]);
   const [rejected, setRejected] = useState([]);
 
-  const getSHifts = async () => {
+  const { data, isLoading } = useQuery("table", async () => {
     try {
       const resp = await axios.get(
         `${process.env.REACT_APP_API}/route/shiftApply/get`,
@@ -24,30 +24,38 @@ const ShiftsTable = () => {
           },
         }
       );
-      setShifts(resp.data.requests);
-    } catch (error) {}
-  };
+      const pendingArr = resp.data.requests.filter((item, idx) => {
+        return item.status === "Pending";
+      });
 
-  useEffect(() => {
-    getSHifts();
-    // eslint-disable-next-line
-  }, []);
+      const approvedArr = resp.data.requests.filter((item, idx) => {
+        return item.status === "Approved";
+      });
+      const rejectedArr = resp.data.requests.filter((item, idx) => {
+        return item.status === "Rejected";
+      });
+      setPending(pendingArr);
+      setApproved(approvedArr);
+      setRejected(rejectedArr);
+      return resp.data.requests;
+    } catch (error) {
+      console.log(error.message);
+    }
+  });
 
-  useEffect(() => {
-    const pendingArr = shifts.filter((item, idx) => {
-      return item.status === "Pending";
-    });
+  if (isLoading) {
+    return (
+      <div className="w-full h-[30vh]">
+        <span className="font-semibold text-center text-2xl">Loading...</span>
+        <Skeleton
+          variant="rectangular"
+          className="md:w-[350px] w-full md:h-[30vh] h-[25vh] rounded-lg border-2"
+        />
+      </div>
+    );
+  }
 
-    const approvedArr = shifts.filter((item, idx) => {
-      return item.status === "Approved";
-    });
-    const rejectedArr = shifts.filter((item, idx) => {
-      return item.status === "Rejected";
-    });
-    setPending(pendingArr);
-    setApproved(approvedArr);
-    setRejected(rejectedArr);
-  }, [shifts]);
+  console.log(data.length);
 
   const handlePopoverClose = () => {
     setAnchorEl(null);
@@ -66,7 +74,7 @@ const ShiftsTable = () => {
               Applied
             </h1>
             <h1 className="text-lg tracking-wide font-bold text-black">
-              {shifts.length}
+              {data?.length}
             </h1>
           </div>
         </div>

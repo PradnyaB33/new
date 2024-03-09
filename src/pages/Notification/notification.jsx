@@ -2,9 +2,8 @@
 import Box from "@mui/material/Box";
 import axios from "axios";
 // import dayjs from "dayjs";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { useQuery } from "react-query";
-import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import LeaveRejectmodal from "../../components/Modal/LeaveModal/LeaveRejectmodal";
 import ShiftRejectModel from "../../components/Modal/ShiftRequestModal/ShiftRejectModel";
@@ -18,8 +17,6 @@ const Notification = () => {
   let isAcc = false;
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  const [newData, setNewData] = useState([]);
-  const { handleAlert } = useContext(TestContext);
   const profileArr = user.profile;
 
   profileArr.forEach((element) => {
@@ -48,7 +45,7 @@ const Notification = () => {
     }
   });
 
-  const checkStatus = async () => {
+  const { data: data2 } = useQuery("shift-request", async () => {
     try {
       let url;
       if (isAcc) {
@@ -59,31 +56,16 @@ const Notification = () => {
       const response = await axios.get(url, {
         headers: { Authorization: authToken },
       });
-      console.log(response, response);
-      setNewData(response.data);
-    } catch (err) {
-      console.log(`🚀 ~ file: notification.jsx:37 ~ err:`, err);
-      handleAlert(
-        true,
-        "error",
-        err.response.data.message || "Server is under Maintenance"
+      const data = response.data.requests.filter(
+        (item) => item.status === "Pending"
       );
-      throw err;
+      return data;
+    } catch (error) {
+      console.log(error.message);
+      throw error;
     }
-  };
+  });
 
-  useEffect(() => {
-    checkStatus();
-    // eslint-disable-next-line
-  }, []);
-
-  console.log(
-    "newData",
-    newData?.requests
-    // ?.map((items, idx) => {
-    //   console.log(items);
-    // })
-  );
 
   // if (isError) {
   //   return <Error error={error} />;
@@ -118,7 +100,7 @@ const Notification = () => {
         ) : (
           ""
         )} */}
-        {newData?.requests?.map((items, idx) => {
+        {data2?.map((items, idx) => {
           console.log("items", items);
           return <ShiftRejectModel key={idx} items={items} />;
           // return <div>hello</div>;

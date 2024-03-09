@@ -26,7 +26,7 @@ import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOu
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
-import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
+import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -120,6 +120,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <SupervisorAccount className="text-[#67748E]" />,
             text: "Add delegate super admin",
           },
+          {
+            key: "shiftManagement",
+            isVisible: ["Employee"].includes(role),
+            link: "/shift-management",
+            icon: (
+              <HomeRepairServiceOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Shift Management",
+          },
         ],
       },
       Notification: {
@@ -173,23 +182,14 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "shiftAllowance",
-            isVisible: true,
-            link: "/shift-management",
-            icon: <Work className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Shift Allowance",
-          },
-          {
-            key: "shiftManagement",
             isVisible:
               isVisible &&
               ["Super-Admin", "HR", "Manager", "Delegate-Super Admin"].includes(
                 role
               ),
             link: "/shift-management",
-            icon: (
-              <ScheduleOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-            ),
-            text: "Shift Management",
+            icon: <Work className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Shift Allowance",
           },
           {
             key: "createsalary",
