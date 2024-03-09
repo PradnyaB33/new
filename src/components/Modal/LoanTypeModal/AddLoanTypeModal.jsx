@@ -196,7 +196,7 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
                 </InputLabel>
                 <OutlinedInput
                   id="outlined-adornment-password"
-                  label="Add Loan Name"
+                  label="Rate of Interest in %"
                   value={rateOfInterest}
                   onChange={(e) => {
                     const newValue = e.target.value;
