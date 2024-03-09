@@ -295,7 +295,7 @@ const TDSTable2 = () => {
 
   return (
     <div className="mt-2 space-y-4">
-      {incomeHouseLoading ? (
+      {incomeHouseLoading || isFetching ? (
         <div className="flex items-center justify-center w-full">
           <CircularProgress />
         </div>
