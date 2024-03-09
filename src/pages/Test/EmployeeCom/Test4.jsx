@@ -134,11 +134,11 @@ const Test4 = ({ prevStep }) => {
         companyemail &&
         joining_date ? (
           <>
-            <div className="p-3">
+            <div className="md:p-3 py-1 ">
               <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
                 Personal Details
               </h1>
-              <div className="grid w-full grid-cols-3">
+              <div className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ">
                 <div className=" p-2 w-[30%] rounded-sm ">
                   <h1 className="text-gray-500 w-full text-sm">Full Name</h1>
                   <p className="w-full">
@@ -146,7 +146,9 @@ const Test4 = ({ prevStep }) => {
                   </p>
                 </div>
                 <div className="p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Personal Email</h1>
+                  <h1 className="text-gray-500 text-sm w-full">
+                    Personal Email
+                  </h1>
                   <p className="">{email}</p>
                 </div>
                 <div className="p-2 w-[30%] rounded-sm ">
@@ -155,31 +157,35 @@ const Test4 = ({ prevStep }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3">
-                <div className=" p-2 w-[30%] rounded-sm ">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+                <div className=" p-2 w-[30%] rounded-sm w-full">
                   <h1 className="text-gray-500 text-sm">Gender</h1>
                   <p className="">{gender}</p>
                 </div>
                 <div className="p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Date Of Birth</h1>
+                  <h1 className="text-gray-500 text-sm w-full">
+                    Date Of Birth
+                  </h1>
                   <p className="">{date_of_birth}</p>
                 </div>
                 <div className="p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Current Address</h1>
+                  <h1 className="text-gray-500 text-sm w-full">
+                    Current Address
+                  </h1>
                   <p className="">{address}</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-3">
+              <div className="grid grid-cols-1 sm:!grid-cols-2 md:!grid-cols-3 justify-between">
                 <div className=" p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Aadhar No</h1>
+                  <h1 className="text-gray-500 text-sm w-full">Aadhar No</h1>
                   <p className="">{adhar_card_number}</p>
                 </div>
                 <div className="p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">PAN card</h1>
+                  <h1 className="text-gray-500 text-sm w-full">PAN card</h1>
                   <p className="">{pan_card_number}</p>
                 </div>
-                <div className="p-2 w-[30%] rounded-sm ">
+                <div className="p-2 w-[30%] rounded-sm w-full">
                   <h1 className="text-gray-500 text-sm">Citizenship Status</h1>
                   <p className="">{citizenship}</p>
                 </div>
@@ -194,58 +200,66 @@ const Test4 = ({ prevStep }) => {
                 Company Details
               </h1>
 
-              <div className="grid grid-cols-3 justify-between">
-                <div className=" p-2 rounded-sm ">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
+                <div className=" p-2 rounded-sm w-full">
                   <h1 className="text-gray-500 text-sm">Employee No</h1>
                   <p className="">{empId}</p>
                 </div>
                 <div className="p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Profile</h1>
+                  <h1 className="text-gray-500 text-sm w-full">Profile</h1>
                   <p className="">{profile?.map((item) => item)}</p>
                 </div>
-                <div className="p-2 rounded-sm ">
+                <div className="p-2 rounded-sm w-full">
                   <h1 className="text-gray-500 text-sm">Company Email</h1>
                   <p className="">{companyemail}</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 justify-between">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
                 <div className=" p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Date Of Joining</h1>
+                  <h1 className="text-gray-500 text-sm w-full">
+                    Date Of Joining
+                  </h1>
                   <p className="">{joining_date}</p>
                 </div>
                 <div className="p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Department</h1>
+                  <h1 className="text-gray-500 text-sm w-full">Department</h1>
                   <p className="">{deptname?.label}</p>
                 </div>
                 <div className="p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Designation</h1>
+                  <h1 className="text-gray-500 text-sm w-full">Designation</h1>
                   <p className="">{designation?.label}</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 justify-between">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
                 <div className=" p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Shift</h1>
+                  <h1 className="text-gray-500 text-sm w-full">Shift</h1>
                   <p className="">{shift_allocation?.label}</p>
                 </div>
                 <div className="p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Department Cost No</h1>
+                  <h1 className="text-gray-500 text-sm w-full">
+                    Department Cost No
+                  </h1>
                   <p className="">{dept_cost_center_no?.label}</p>
                 </div>
                 <div className="p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Location</h1>
+                  <h1 className="text-gray-500 text-sm w-full">Location</h1>
                   <p className="">{worklocation?.label}</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 justify-between">
-                <div className=" p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Employment Types</h1>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
+                <div className=" p-2 rounded-sm">
+                  <h1 className="text-gray-500 w-full text-sm">
+                    Employment Types
+                  </h1>
                   <p className="">{employmentType?.label}</p>
                 </div>
                 <div className="p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Salary Template</h1>
+                  <h1 className="text-gray-500 text-sm w-full">
+                    Salary Template
+                  </h1>
                   <p className="">{salarystructure?.label}</p>
                 </div>
               </div>

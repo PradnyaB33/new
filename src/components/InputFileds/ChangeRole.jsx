@@ -11,6 +11,7 @@ const ChangeRole = () => {
   const queryClient = useQueryClient();
   const user = getCurrentUser();
   const roles = useGetCurrentRole();
+
   const redirect = useNavigate();
   const [selectedRole, setSelectedRole] = useState({
     label: "",
@@ -18,12 +19,14 @@ const ChangeRole = () => {
   });
 
   useEffect(() => {
-    setSelectedRole(() => ({
+    setSelectedRole({
       label: roles,
       value: roles,
-    }));
+    });
+
+    console.log(roles, selectedRole);
     // eslint-disable-next-line
-  }, [window.location.pathname]);
+  }, [window.location.pathname, roles]);
 
   const options = user?.profile
     ?.map((item) => {
@@ -101,7 +104,10 @@ const ChangeRole = () => {
               boxShadow: "none",
             }),
           }}
-          defaultInputValue={selectedRole.label}
+          value={{
+            label: roles,
+            value: roles,
+          }}
           className={`${"bg-[ghostwhite]"} bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
           options={options}
           onChange={(value) => {

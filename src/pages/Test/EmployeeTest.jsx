@@ -72,9 +72,9 @@ const EmployeeTest = () => {
         </p>
       </header>
 
-      <section className="px-8 flex space-x-2 py-6">
+      <section className="md:px-8 flex space-x-2 md:py-6">
         <article className="w-full rounded-lg bg-white ">
-          <div className=" w-full px-5 ">
+          <div className=" w-full md:px-5 px-1 ">
             <StepFormWrapper
               {...{
                 goToStep,
