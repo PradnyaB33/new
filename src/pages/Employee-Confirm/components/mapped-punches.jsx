@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import useGetSinglePunch from "../../../hooks/QueryHook/Remote-Punch/components/hook";
 
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -17,13 +17,13 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
   return distance;
 };
 
-const MappedPunches = ({ Id }) => {
-  const { data, isLoading } = useGetSinglePunch({ Id });
-  console.log(`🚀 ~ file: mapped-punches.jsx:6 ~ data:`, data);
+const MappedPunches = ({ Id, setPunchObjectId }) => {
+  const { data } = useGetSinglePunch({ Id });
 
   return (
-    <div className="w-full h-80 overflow-y-auto">
+    <div className="w-full h-80 overflow-y-auto cursor-pointer">
       {data?.punchData?.punchData?.map((doc, idx) => {
+        console.log(`🚀 ~ file: mapped-punches.jsx:27 ~ doc:`, doc);
         let distance = 0;
         let totalDistance = 0;
         if (doc.data && idx < doc.data.length - 1) {
@@ -43,10 +43,16 @@ const MappedPunches = ({ Id }) => {
           <div
             key={idx}
             className="w-full h-auto bg-[#e2f1ff] flex flex-col mb-3"
+            onClick={() => setPunchObjectId(doc._id)}
           >
             <div className="flex w-full items-center h-full p-5">
               <div className="mr-3">
-                <div className="w-[55px] h-[55px] bg-black rounded-full"></div>
+                <img
+                  src={doc?.image}
+                  height={55}
+                  width={55}
+                  className="w-[55px] h-[55px] bg-black rounded-full object-cover"
+                ></img>
               </div>
               <div className="pl-5 flex flex-col ">
                 <h1>
