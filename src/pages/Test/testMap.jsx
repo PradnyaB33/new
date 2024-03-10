@@ -18,6 +18,7 @@ const containerStyle = {
 
 const TestMap = () => {
   const [waypoints, setWaypoints] = useState([]);
+  console.log(`🚀 ~ file: testMap.jsx:21 ~ waypoints:`, waypoints);
   const [currentLocation, setCurrentLocation] = useState(null);
   const { authToken } = useGetUser();
   const [selectedDayLocation, setSelectedDayLocation] = useState();
@@ -179,6 +180,7 @@ const TestMap = () => {
       lat: parseFloat(punch?.lat),
       lng: parseFloat(punch?.lng),
     }));
+    console.log(`🚀 ~ file: testMap.jsx:183 ~ newWaypoints:`, newWaypoints);
 
     const smoothedWaypoints = smoothWaypoints(newWaypoints, 3);
     setWaypoints(smoothedWaypoints);
