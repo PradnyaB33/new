@@ -28,6 +28,7 @@ const AppDatePicker = ({
   const [newData, setNewData] = useState([]);
   const queryClient = useQueryClient()
   const { cookies } = useContext(UseContext);
+  const { setAppAlert } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const arr = data;
 
@@ -255,7 +256,11 @@ const AppDatePicker = ({
         getLatestShifts();
         setSelectedLeave(null); // Reset selectedLeave state
         queryClient.invalidateQueries('table')
-        console.log("Shift deleted successfully");
+        setAppAlert({
+          alert: true,
+          type: "success",
+          msg: "Request Deleted Successfully",
+        });
       } else if (selectedLeave) {
         // If selectedLeave does not have an _id, filter it out from newAppliedLeaveEvents
         setNewAppliedLeaveEvents((prevEvents) =>

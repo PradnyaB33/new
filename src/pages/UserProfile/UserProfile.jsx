@@ -61,7 +61,7 @@ const EmployeeProfile = () => {
     if (selectedFile && selectedFile.type.startsWith("image/")) {
       setFile(selectedFile);
       const reader = new FileReader();
-      reader.onloadend = () => {
+      reader.onloaddend = () => {
         setUrl(reader.result);
       };
       reader.readAsDataURL(selectedFile);
