@@ -67,7 +67,10 @@ import WaitMain from "./pages/Waiting-comp/waiting-main";
 import AddDelegate from "./pages/add-delegate/AddDelegate";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
+import RemoteEmployee from "./pages/Test/RemoteEmployee";
+import RemoteManager from "./pages/Test/RemoteManager";
 import NotFound from "./utils/Forbidden/NotFound";
+import RemoteNotification from "./pages/Test/RemoteNotification";
 const App = () => {
   return (
     <AuthProvider>
@@ -123,6 +126,9 @@ const App = () => {
         />
         <Route path="/missedPunch" element={<MissedPunch />} />
         <Route path="/test5" element={<TestMap />} />
+        <Route path="/remote/emp" element={<RemoteEmployee />} />
+        <Route path="/remote/mg" element={<RemoteManager />} />
+        <Route path="/remote/notification" element={<RemoteNotification />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route
           path="/billing"
