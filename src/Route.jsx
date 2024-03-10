@@ -21,6 +21,7 @@ import DashboardManger from "./pages/DashBoard/DashboardManger";
 import SuperAdmin from "./pages/DashBoard/SuperAdmin";
 import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
+import EmployeeConfirmation from "./pages/Employee-Confirm/page";
 import DeleteEmployee from "./pages/Employee/DeleteEmployee";
 import Employee from "./pages/Employee/Employee";
 import Form16 from "./pages/Form16/Form16";
@@ -58,6 +59,9 @@ import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 import EmployeeTest from "./pages/Test/EmployeeTest";
+import RemoteEmployee from "./pages/Test/RemoteEmployee";
+import RemoteManager from "./pages/Test/RemoteManager";
+import RemoteNotification from "./pages/Test/RemoteNotification";
 import TestMap from "./pages/Test/testMap";
 import TestYash from "./pages/Test/testYash";
 import DepartmentTest from "./pages/Test2/DepartmentTest";
@@ -67,10 +71,7 @@ import WaitMain from "./pages/Waiting-comp/waiting-main";
 import AddDelegate from "./pages/add-delegate/AddDelegate";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
-import RemoteEmployee from "./pages/Test/RemoteEmployee";
-import RemoteManager from "./pages/Test/RemoteManager";
 import NotFound from "./utils/Forbidden/NotFound";
-import RemoteNotification from "./pages/Test/RemoteNotification";
 const App = () => {
   return (
     <AuthProvider>
@@ -127,6 +128,10 @@ const App = () => {
         <Route path="/missedPunch" element={<MissedPunch />} />
         <Route path="/test5" element={<TestMap />} />
         <Route path="/remote/emp" element={<RemoteEmployee />} />
+        <Route
+          path="/remote/employee-confirmation"
+          element={<EmployeeConfirmation />}
+        />
         <Route path="/remote/mg" element={<RemoteManager />} />
         <Route path="/remote/notification" element={<RemoteNotification />} />
         <Route path="/sign-in" element={<SignIn />} />

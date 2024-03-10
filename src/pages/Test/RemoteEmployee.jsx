@@ -1,15 +1,9 @@
-import {
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { GoogleMap, Marker, Polyline } from "@react-google-maps/api";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import useGetUser from "../../hooks/Token/useUser";
-import CheckIcon from "@mui/icons-material/Check";
 
 const containerStyle = {
   width: "80%",
@@ -17,7 +11,7 @@ const containerStyle = {
   border: "2px solid gray",
 };
 
-const RemoteEmployee= () => {
+const RemoteEmployee = () => {
   const [waypoints, setWaypoints] = useState([]);
   const [currentLocation, setCurrentLocation] = useState(null);
   const { authToken } = useGetUser();
