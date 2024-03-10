@@ -6,13 +6,13 @@ import useSelfieStore from "./zustand-store";
 
 const useStartPunch = () => {
   const { authToken } = useGetUser();
-  const { punchObjectId, setCount, start, setLocation } = useSelfieStore();
+  const { punchObjectId, start, setLocation } = useSelfieStore();
   const { getUserLocation } = useLocationMutation();
   const { data: objectData, mutate } = getUserLocation;
   const fetchLocationData = async () => {
     mutate();
 
-    const { latitude, longitude, speed, accuracy } = objectData;
+    const { latitude, longitude } = objectData;
     const payload = {
       lat: latitude,
       lng: longitude,

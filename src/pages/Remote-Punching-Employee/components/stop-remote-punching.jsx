@@ -4,10 +4,10 @@ import React, { useEffect } from "react";
 import useStartPunch from "../../../hooks/QueryHook/Location/independant-use-query";
 
 const StopRemotePunch = ({ setStart }) => {
-  const { data, refetch } = useStartPunch();
+  const { refetch } = useStartPunch();
   useEffect(() => {
     refetch();
-  }, []);
+  }, [refetch]);
 
   return (
     <Fab

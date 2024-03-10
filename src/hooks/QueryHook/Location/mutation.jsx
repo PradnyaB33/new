@@ -15,7 +15,6 @@ const useLocationMutation = () => {
     media,
     setStart,
     locationArray,
-    count,
   } = useSelfieStore();
   console.log(`🚀 ~ file: mutation.jsx:20 ~ locationArray:`, locationArray);
   let map = null;
@@ -40,7 +39,6 @@ const useLocationMutation = () => {
   const getUserLocation = useMutation({
     mutationFn: fetchLocationData,
     onSuccess: (data) => {
-      console.log(`🚀 ~ file: mutation.jsx:42 ~ data:`, data);
       handleAlert(true, "success", "Geolocation decoded");
       if (window.google.maps) {
         // Initialize the map
@@ -81,14 +79,18 @@ const useLocationMutation = () => {
     },
   });
   const fetchLocationId = async () => {
-    const data = await axios.post(`${process.env.REACT_APP_API}/route`, data, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authToken,
-      },
-    });
+    const response = await axios.post(
+      `${process.env.REACT_APP_API}/route`,
+      // data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+      }
+    );
 
-    return data.data;
+    return response.data;
   };
 
   const getLocationId = useMutation({
