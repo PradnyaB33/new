@@ -1,4 +1,3 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
 import {
   Button,
   Divider,
@@ -9,6 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "axios";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
@@ -58,6 +58,7 @@ const EmployeeProfile = () => {
 
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
+    console.log(`🚀 ~ file: UserProfile.jsx:61 ~ selectedFile:`, selectedFile);
     if (selectedFile && selectedFile.type.startsWith("image/")) {
       setFile(selectedFile);
       const reader = new FileReader();

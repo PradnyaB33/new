@@ -9,6 +9,7 @@ import AnimationComponent from "./components/emailverify/verification-animation"
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
+import RequireAuth, { AuthProvider } from "./context/AuthProvider";
 import useSubscription from "./hooks/Subscription/subscription";
 import NewOranisationForm from "./pages/AddOrganisation/OrgFrom";
 import Application from "./pages/Application/Application";
@@ -26,10 +27,13 @@ import Form16 from "./pages/Form16/Form16";
 import Home from "./pages/Home/Home";
 import IncomeTax from "./pages/Income/IncomeTax";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
+import LoanManagement from "./pages/LoanManagement/LoanManagement";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
 import PaymentFailed from "./pages/Payment/page";
+import EmployeeRemotePunch from "./pages/Remote-Punching-Employee/page";
 import MissedPunch from "./pages/RemotePunchIn/MissedPunch";
+import CalculateSalary from "./pages/SalaryCalculate/CalculateSalary";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeSalaryCalculateDay from "./pages/SetUpOrganization/EmoloyeeSalaryCalculate/EmployeeSalaryCalculate";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
@@ -64,12 +68,6 @@ import AddDelegate from "./pages/add-delegate/AddDelegate";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
-//import UnAuthorized from "./utils/Forbidden/UnAuthorized";
-import RequireAuth, { AuthProvider } from "./context/AuthProvider";
-import CalculateSalary from "./pages/SalaryCalculate/CalculateSalary";
-import LoanManagement from "./pages/LoanManagement/LoanManagement";
-//import UnAuthorized from "./utils/Forbidden/UnAuthorized";
-// import AccountantNotification from "./pages/Notification/AccountantNotification";
 const App = () => {
   return (
     <AuthProvider>
@@ -119,6 +117,10 @@ const App = () => {
       <Route path="/test6" element={<TrackingMap3 />} /> */}
         {/* Login Routes */}
         <Route path="/test3" element={<TestYash />} />
+        <Route
+          path="/employee-remote-punching"
+          element={<EmployeeRemotePunch />}
+        />
         <Route path="/missedPunch" element={<MissedPunch />} />
         <Route path="/test5" element={<TestMap />} />
         <Route path="/sign-in" element={<SignIn />} />

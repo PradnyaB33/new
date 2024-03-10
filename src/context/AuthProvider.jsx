@@ -6,13 +6,16 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
+
   const [user, setUser] = useState(null); // Initialize user as null initially
   const role = useGetCurrentRole(); // Call useGetCurrentRole directly here
 
   useEffect(() => {
     // Update user when component mounts
     setUser(getCurrentUser());
-  }, [getCurrentUser]); // Ensure the effect runs when getCurrentUser changes
+    console.log("run");
+    // eslint-disable-next-line
+  }, []); // Ensure the effect runs when getCurrentUser changes
 
   return (
     <AuthContext.Provider value={{ user, role }}>
