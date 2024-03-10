@@ -4,7 +4,6 @@ import useGetUser from "../../Token/useUser";
 
 const useGetDelegateSuperAdmin = () => {
   const { authToken, decodedToken } = useGetUser();
-  console.log(`🚀 ~ file: hook.jsx:7 ~ decodedToken:`, decodedToken);
   const { data, isLoading } = useQuery(
     `delegate-super-admin-${decodedToken?.user?._id}`,
     async () => {

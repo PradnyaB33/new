@@ -3,9 +3,9 @@ import useGetSinglePunch from "../../../hooks/QueryHook/Remote-Punch/components/
 
 const GoogleMap = ({ Id }) => {
   const { data, isLoading } = useGetSinglePunch(Id);
+  console.log(`🚀 ~ file: map.jsx:6 ~ data:`, data);
   return (
     <div>
-      {" "}
       {/* <GoogleMap
         googleMapsApiKey="AIzaSyDaA2q3L--j40-GgojdeFSJ4RywKGtFQ2k"
         mapContainerStyle={{
@@ -69,6 +69,7 @@ const GoogleMap = ({ Id }) => {
           </>
         )}
       </GoogleMap> */}
+      jo
     </div>
   );
 };
