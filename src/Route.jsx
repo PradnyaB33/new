@@ -132,7 +132,7 @@ const App = () => {
           path="/remote/employee-confirmation"
           element={<EmployeeConfirmation />}
         />
-        <Route path="/remote/mg" element={<RemoteManager />} />
+        <Route path="/remote/mg/:id" element={<RemoteManager />} />
         <Route path="/remote/notification" element={<RemoteNotification />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route
