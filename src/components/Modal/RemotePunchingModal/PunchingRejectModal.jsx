@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import React from "react";
+import useNotificationRemotePunching from "../../../hooks/QueryHook/Remote-Punch/components/mutation";
 
 const calculateDistance = (coords) => {
   let totalDistance = 0;
@@ -28,6 +29,7 @@ const calculateDistance = (coords) => {
 };
 
 const PunchingRejectModal = ({ items, length }) => {
+  const { notifyAccountantMutation } = useNotificationRemotePunching();
   const distanceTraveled =
     items.punchData[0].data && items.punchData[0].data.length > 1
       ? calculateDistance(items.punchData[0].data)
@@ -75,7 +77,11 @@ const PunchingRejectModal = ({ items, length }) => {
             </Button>
           </div>
           <div className="flex gap-3 mt-3">
-            <Button variant="contained" size="small">
+            <Button
+              onClick={() => notifyAccountantMutation.mutate(items._id)}
+              variant="contained"
+              size="small"
+            >
               Accept
             </Button>
             <Button variant="contained" color="error" size="small">
