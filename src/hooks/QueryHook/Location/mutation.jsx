@@ -15,10 +15,8 @@ const useLocationMutation = () => {
     media,
     setStart,
     locationArray,
-    count,
   } = useSelfieStore();
   console.log(`🚀 ~ file: mutation.jsx:20 ~ locationArray:`, locationArray);
-  let map = null;
 
   const fetchLocationData = async () => {
     const position = await new Promise((resolve, reject) => {
@@ -40,88 +38,46 @@ const useLocationMutation = () => {
   const getUserLocation = useMutation({
     mutationFn: fetchLocationData,
     onSuccess: (data) => {
-      console.log(`🚀 ~ file: mutation.jsx:42 ~ data:`, data);
       handleAlert(true, "success", "Geolocation decoded");
-      if (window.google.maps) {
-        // Initialize the map
-        const mapOptions = {
-          center: { lat: data?.latitude, lng: data?.longitude },
-          zoom: 18,
-          mapTypeControl: false,
-        };
+      // if (window.google.maps) {
+      //   // Initialize the map
+      //   const mapOptions = {
+      //     center: { lat: data?.latitude, lng: data?.longitude },
+      //     zoom: 18,
+      //     mapTypeControl: false,
+      //   };
 
-        // Create the map
-        if (map !== null) {
-          map = new window.google.maps.Map(
-            document.getElementById("map"),
-            mapOptions
-          );
-        }
+      //   // Create the map
+      //   // if (map !== null) {
+      //   map = new window.google.maps.Map(
+      //     document.getElementById("map"),
+      //     mapOptions
+      //   );
+      //   // }
 
-        // Add a marker
-        new window.google.maps.Marker({
-          position: { lat: data?.latitude, lng: data?.longitude },
-          map: map,
-          title: "Your Location!",
-        });
-        const polyline = new window.google.maps.Polyline({
-          path: locationArray,
-          geodesic: true,
-          strokeColor: "#FF0000", // Color of the polyline
-          strokeOpacity: 1.0,
-          strokeWeight: 4,
-        });
-        console.log(`🚀 ~ file: mutation.jsx:71 ~ polyline:`, polyline);
-        polyline.setMap(map);
-      }
+      //   // Add a marker
+      //   new window.google.maps.Marker({
+      //     position: { lat: data?.latitude, lng: data?.longitude },
+      //     map: map,
+      //     title: "Your Location!",
+      //   });
+      //   const polyline = new window.google.maps.Polyline({
+      //     path: locationArray,
+      //     geodesic: true,
+      //     strokeColor: "#FF0000", // Color of the polyline
+      //     strokeOpacity: 1.0,
+      //     strokeWeight: 4,
+      //   });
+      //   console.log(`🚀 ~ file: mutation.jsx:71 ~ polyline:`, polyline);
+      //   polyline.setMap(map);
+      // }
     },
     onError: (data) => {
       console.error(data);
       handleAlert(true, "error", data.message);
     },
   });
-  const fetchLocationId = async () => {
-    const data = await axios.post(`${process.env.REACT_APP_API}/route`, data, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authToken,
-      },
-    });
 
-    return data.data;
-  };
-
-  const getLocationId = useMutation({
-    mutationFn: fetchLocationId,
-    onSuccess: (data) => {
-      handleAlert(true, "success", "Geolocation decoded");
-      if (window.google.maps) {
-        // Initialize the map
-        const mapOptions = {
-          center: { lat: data?.latitude, lng: data?.longitude },
-          zoom: 8,
-          mapTypeControl: false,
-        };
-
-        // Create the map
-        const map = new window.google.maps.Map(
-          document.getElementById("map"),
-          mapOptions
-        );
-
-        // Add a marker
-        new window.google.maps.Marker({
-          position: { lat: data?.latitude, lng: data?.longitude },
-          map: map,
-          title: "Your Location!",
-        });
-      }
-    },
-    onError: (data) => {
-      console.error(data);
-      handleAlert(true, "error", data.message);
-    },
-  });
   const fetchUserImage = async () => {
     const stream = await new Promise((resolve, reject) => {
       navigator.mediaDevices
@@ -217,10 +173,55 @@ const useLocationMutation = () => {
 
   return {
     getUserLocation,
-    getLocationId,
     getUserImage,
     getImageUrl,
   };
 };
 
 export default useLocationMutation;
+// const fetchLocationId = async () => {
+//   const response = await axios.post(
+//     `${process.env.REACT_APP_API}/route`,
+//     // data,
+//     {
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: authToken,
+//       },
+//     }
+//   );
+
+//   return response.data;
+// };
+
+// const getLocationId = useMutation({
+//   mutationFn: fetchLocationId,
+//   onSuccess: (data) => {
+//     handleAlert(true, "success", "Geolocation decoded");
+//     if (window.google.maps) {
+//       // Initialize the map
+//       const mapOptions = {
+//         center: { lat: data?.latitude, lng: data?.longitude },
+//         zoom: 8,
+//         mapTypeControl: false,
+//       };
+
+//       // Create the map
+//       const map = new window.google.maps.Map(
+//         document.getElementById("map"),
+//         mapOptions
+//       );
+
+//       // Add a marker
+//       new window.google.maps.Marker({
+//         position: { lat: data?.latitude, lng: data?.longitude },
+//         map: map,
+//         title: "Your Location!",
+//       });
+//     }
+//   },
+//   onError: (data) => {
+//     console.error(data);
+//     handleAlert(true, "error", data.message);
+//   },
+// });

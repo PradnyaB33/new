@@ -5,7 +5,7 @@ import useLocationMutation from "../../../hooks/QueryHook/Location/mutation";
 import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
 import StopRemotePunch from "./stop-remote-punching";
 
-export default function FabIcons({}) {
+export default function FabIcons() {
   const { start, setStart } = useSelfieStore();
   const { getUserImage } = useLocationMutation();
 
