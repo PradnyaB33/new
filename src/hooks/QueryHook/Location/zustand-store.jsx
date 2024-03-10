@@ -22,12 +22,10 @@ const useSelfieStore = create((set) => ({
   setCount: (count) => {
     set((state) => ({ count: state.count + count }));
   },
-  setLocation: (locationArray) => {
-    console.log(
-      `🚀 ~ file: zustand-store.jsx:26 ~ locationArray:`,
-      locationArray
-    );
-    set({ locationArray });
+  setLocation: (locationObject) => {
+    set((state) => ({
+      locationArray: [...state.locationArray, locationObject],
+    }));
   },
 }));
 

@@ -1,16 +1,80 @@
 import { Chip } from "@mui/material";
+import { GoogleMap, Marker, Polyline } from "@react-google-maps/api";
 import React from "react";
 import SelfieForm from "../../components/Modal/Selfi-Image/Selfie";
 import useLocationHook from "../../hooks/QueryHook/Location/hook";
+import useSelfieStore from "../../hooks/QueryHook/Location/zustand-store";
 import BasicSpeedDial from "./components/speed-dial";
 
 const EmployeeRemotePunch = () => {
   const { data } = useLocationHook();
+  const { locationArray } = useSelfieStore();
+  console.log(`🚀 ~ file: page.jsx:13 ~ data:`, data);
 
   return (
     <div className="w-full h-full bg-slate-200">
       <div className="flex  items-center justify-center h-[92vh]">
-        <div id="map" style={{ height: "100%", width: "100%" }}></div>;
+        <GoogleMap
+          googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}
+          mapContainerStyle={{
+            width: "100%",
+            height: "91.8vh",
+          }}
+          onLoad={() => console.log("Map loaded")}
+          zoom={12}
+          center={{ lat: data?.latitude, lng: data?.longitude }}
+          options={{
+            zoomControl: false,
+            streetViewControl: false,
+            mapTypeControl: false,
+            fullscreenControl: false,
+          }}
+        >
+          <Marker
+            label={{ text: "current location" }}
+            position={{ lat: data?.latitude, lng: data?.longitude }}
+          />
+
+          <Marker
+            label={{
+              text: "Source",
+              fontWeight: "bold",
+              fontSize: "1rem",
+            }}
+            position={{
+              lat: locationArray[0]?.lat,
+              lng: locationArray[0]?.lng,
+            }}
+            icon={{
+              url: "https://maps.gstatic.com/mapfiles/ms2/micons/blue.png",
+              scaledSize: new window.google.maps.Size(40, 40),
+              fillColor: "blue",
+              fillOpacity: 1,
+              strokeColor: "blue",
+              strokeWeight: 4,
+            }}
+          />
+          <Polyline
+            path={locationArray}
+            options={{ strokeColor: "#7a3eff", strokeWeight: 5 }}
+          />
+          <Marker
+            label={{
+              text: "Destination",
+              fontWeight: "bold",
+              fontSize: "1rem",
+            }}
+            position={{ lat: data?.latitude, lng: data?.longitude }}
+            icon={{
+              url: "https://maps.gstatic.com/mapfiles/ms2/micons/red.png",
+              scaledSize: new window.google.maps.Size(40, 40),
+              fillColor: "red",
+              fillOpacity: 1,
+              strokeColor: "blue",
+              strokeWeight: 2,
+            }}
+          />
+        </GoogleMap>
         <div className="top-12 right-12 rounded-xl absolute gap-4 p-10 flex flex-col items-start justify-center">
           <Chip
             label={`Latitude is ${data?.latitude}`}

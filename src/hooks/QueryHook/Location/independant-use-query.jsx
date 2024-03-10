@@ -11,8 +11,8 @@ const useStartPunch = () => {
   const { data: objectData, mutate } = getUserLocation;
   const fetchLocationData = async () => {
     mutate();
-
     const { latitude, longitude } = objectData;
+    setLocation({ lat: latitude, lng: longitude });
     const payload = {
       lat: latitude,
       lng: longitude,
@@ -38,7 +38,6 @@ const useStartPunch = () => {
         `🚀 ~ file: independant-use-query.jsx:37 ~ data:`,
         data?.punchObject?.data
       );
-      setLocation(data?.punchObject?.data);
     },
   });
   return { data, refetch };
