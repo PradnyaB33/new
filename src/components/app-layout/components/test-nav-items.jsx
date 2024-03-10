@@ -25,8 +25,8 @@ import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
+import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -167,7 +167,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             text: "Pay Slip",
           },
           {
-            key: "icomeTax",
+            key: "IncomeTax",
             isVisible: true,
             link: "/income-tax",
             icon: <TrendingUp className=" !text-[1.2em] text-[#67748E]" />,
@@ -347,7 +347,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "addPunch",
             isVisible: ["Employee"].includes(role),
-            link: "/test3",
+            link: "/employee-remote-punching",
             icon: (
               <BusinessOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
