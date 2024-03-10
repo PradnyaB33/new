@@ -1,7 +1,3 @@
-import { GoogleMap, Marker, Polyline } from "@react-google-maps/api";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import useGetUser from "../../hooks/Token/useUser";
 import {
   Button,
   FormControl,
@@ -9,6 +5,10 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
+import { GoogleMap, Marker, Polyline } from "@react-google-maps/api";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import useGetUser from "../../hooks/Token/useUser";
 
 const containerStyle = {
   width: "70%",
@@ -49,37 +49,6 @@ const TestMap = () => {
     fetchReportees();
     // eslint-disable-next-line
   }, []);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `${process.env.REACT_APP_API}/route/punch/getone`,
-  //         {
-  //           headers: {
-  //             Authorization: authToken,
-  //           },
-  //         }
-  //       );
-
-  //       // Handle potential data fetching errors
-  //       if (response?.data.error) {
-  //         console.error("Error fetching waypoints:", response.data.error);
-  //         return; // Prevent setting invalid waypoints
-  //       }
-
-  //       const newWaypoints = response.data.data?.map((punch) => ({
-  //         lat: parseFloat(punch.lat),
-  //         lng: parseFloat(punch.lng),
-  //       }));
-
-  //       const smoothedWaypoints = smoothWaypoints(newWaypoints, 3);
-  //       setWaypoints(smoothedWaypoints);
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     }
-  //   })();
-  // }, [authToken]);
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371;
@@ -213,10 +182,6 @@ const TestMap = () => {
 
     const smoothedWaypoints = smoothWaypoints(newWaypoints, 3);
     setWaypoints(smoothedWaypoints);
-    // setCurrentLocation({
-    //   lat: waypoints ? waypoints[waypoints.length - 1].lat : " ",
-    //   lng: waypoints ? waypoints[waypoints.length - 1].lng : " ",
-    // });
   };
 
   return (
