@@ -9,8 +9,10 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { differenceInDays, format, parseISO } from "date-fns";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import useShiftStore from "../store/useShiftStore";
+import UserProfile from "../../../../hooks/UserData/useUser";
+import { UseContext } from "../../../../State/UseState/UseContext";
 
 const Mapped = ({
   item,
@@ -21,7 +23,13 @@ const Mapped = ({
   setCalendarOpen,
 }) => {
   const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
   const { setShiftName } = useShiftStore();
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
+  const id = user.organizationId;
+  console.log("userId", id)
   const badgeStyle = {
     "& .MuiBadge-badge": {
       color: "#d1d5db",
@@ -31,33 +39,29 @@ const Mapped = ({
     },
   };
   const [sName, setSName] = useState([]);
-  // const [openAlert, setOpenAlert] = useState(false); // State for alert visibility
 
-  // Fetch initial shift types
   useEffect(() => {
     (async () => {
       try {
         const resp = await axios.get(
-          `${process.env.REACT_APP_API}/route/getAllShifts`
+          `${process.env.REACT_APP_API}/route/shifts/${id}`,{
+            headers:{
+              Authorization:authToken
+            }
+          }
         );
-        setSName(resp.data.shifts);
+        setSName(resp?.data.shifts)
       } catch (error) {
         console.error(error);
       }
     })();
+    // eslint-disable-next-line
   }, []);
 
   const handleChange = (event) => {
     const selectedShiftId = event.target.value;
     setLeavesTypes(selectedShiftId);
   };
-
-  // const handleUpdate = () => {
-  //   // Clear the selected shift
-  //   setLeavesTypes("");
-  //   // Open the calendar for selection
-  //   setCalendarOpen(true);
-  // };
 
   console.log(newAppliedLeaveEvents);
   const removeItem = (idToRemove) => {
@@ -73,12 +77,6 @@ const Mapped = ({
     setShiftName(name);
   };
 
-  // const handleAlertClose = (event, reason) => {
-  //   if (reason === "clickaway") {
-  //     return;
-  //   }
-  //   // setOpenAlert(false);
-  // };
 
   return (
     <div
@@ -146,6 +144,7 @@ const Mapped = ({
                   onClick={() => handleChange2(item.shiftName)}
                 >
                   <div className="flex justify-between w-full">
+                    {!item && "No Shifts Available"}
                     <div>{item.shiftName} </div>
                   </div>
                 </MenuItem>

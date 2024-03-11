@@ -56,7 +56,7 @@ const PublicHolidayDisplayList = () => {
             <div className="p-5 ">
               <div className="space-x-2 items-center text-red-600  flex">
                 <WarningOutlined className="text-xl text-red-600" />
-                <h1 className="text-xl">No vacation available</h1>
+                <h1 className="text-xl">No vacations</h1>
               </div>
             </div>
           ) : (

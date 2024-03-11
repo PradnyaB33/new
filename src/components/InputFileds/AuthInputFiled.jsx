@@ -1,8 +1,7 @@
 import { ErrorMessage } from "@hookform/error-message";
-import { CircularProgress } from "@mui/material";
 import { default as React } from "react";
+import Autocomplete, { usePlacesWidget } from "react-google-autocomplete";
 import { Controller } from "react-hook-form";
-import PlacesAutocomplete from "react-places-autocomplete";
 import { Link } from "react-router-dom";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
@@ -35,6 +34,10 @@ const AuthInputFiled = ({
   const handleFocus = (fieldName) => {
     setFocusedInput(fieldName);
   };
+  const { ref } = usePlacesWidget({
+    apiKey: process.env.REACT_APP_MAP_API_KEY,
+    onPlaceSelected: (place) => console.log(place),
+  });
 
   if (type === "select") {
     return (
@@ -253,70 +256,18 @@ const AuthInputFiled = ({
                 } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white py-[6px]`}
               >
                 <Icon className="text-gray-700" />
-                <PlacesAutocomplete
+
+                <Autocomplete
+                  apiKey={process.env.REACT_APP_MAP_API_KEY}
+                  ref={ref}
                   value={field.value}
-                  onChange={field.onChange}
-                  onSelect={(address) => field.onChange(address)}
-                >
-                  {({
-                    getInputProps,
-                    suggestions,
-                    getSuggestionItemProps,
-                    loading,
-                  }) => {
-                    return (
-                      <>
-                        <textarea
-                          value={field.value}
-                          rows={2}
-                          {...getInputProps({
-                            placeholder: "Search Places ...",
-                            className: `location-search-input ${
-                              readOnly && "bg-[ghostwhite]"
-                            } border-none bg-white w-full outline-none px-2`,
-                          })}
-                          type=""
-                        />
-                        <div
-                          className={`autocomplete-dropdown-container absolute w-full top-[6rem] bg-white z-40 !border-0  ${
-                            suggestions.length !== 0 &&
-                            "bg-[ghostwhite] !border-2 shadow-lg"
-                          }`}
-                        >
-                          {loading && <CircularProgress />}
-                          {suggestions.map((suggestion, i) => {
-                            const className = suggestion.active
-                              ? "suggestion-item--active"
-                              : "suggestion-item";
-                            // inline style for demonstration purpose
-                            const style = suggestion.active
-                              ? {
-                                  backgroundColor: "#fafafa",
-                                  cursor: "pointer",
-                                  padding: "4px",
-                                }
-                              : {
-                                  backgroundColor: "#ffffff",
-                                  cursor: "pointer",
-                                  padding: "4px",
-                                };
-                            return (
-                              <div
-                                key={i}
-                                {...getSuggestionItemProps(suggestion, {
-                                  className,
-                                  style,
-                                })}
-                              >
-                                <span>{suggestion.description}</span>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </>
-                    );
-                  }}
-                </PlacesAutocomplete>
+                  rows={2}
+                  placeholder="Search Places ..."
+                  className={`location-search-input ${
+                    readOnly && "bg-[ghostwhite]"
+                  } border-none bg-white w-full outline-none px-2`}
+                  {...field}
+                />
               </div>
             </>
           )}
