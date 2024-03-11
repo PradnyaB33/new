@@ -17,7 +17,12 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
   return distance;
 };
 
-const MappedPunches = ({ Id, setPunchObjectId, className = "" }) => {
+const MappedPunches = ({
+  Id,
+  setPunchObjectId,
+  className = "",
+  punchObjectId,
+}) => {
   const { data } = useGetSinglePunch({ Id });
 
   return (
@@ -42,7 +47,9 @@ const MappedPunches = ({ Id, setPunchObjectId, className = "" }) => {
         return (
           <div
             key={idx}
-            className="w-full h-auto bg-[#e2f1ff] flex flex-col mb-3"
+            className={`w-full rounded-lg h-auto bg-[#e2f1ff] flex flex-col mb-3 ${
+              punchObjectId === doc._id ? "border border-primary" : ""
+            }`}
             onClick={() => setPunchObjectId(doc._id)}
           >
             <div className="flex w-full items-center h-full p-5">

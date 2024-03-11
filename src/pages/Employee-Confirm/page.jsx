@@ -52,7 +52,9 @@ const EmployeeConfirmation = () => {
               Total Approximate Distance : Kilometers
             </p>
           </div>
-          {Id !== null && <MappedPunches {...{ Id, setPunchObjectId }} />}
+          {Id !== null && (
+            <MappedPunches {...{ Id, setPunchObjectId, punchObjectId }} />
+          )}
           {Id ? (
             <div className=" mt-5 flex justify-end">
               <Button

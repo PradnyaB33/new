@@ -7,11 +7,6 @@ import {
 import React from "react";
 console.log(`🚀 ~ file: Map-Component.jsx:2 ~ Autocomplete:`, Autocomplete);
 
-// const center = {
-//   lat: -3.745,
-//   lng: -38.523,
-// };
-
 const MapComponent = ({ isLoaded, data, locationArray }) => {
   console.log(`🚀 ~ file: Map-Component.jsx:4 ~ isLoaded:`, isLoaded);
   return isLoaded ? (

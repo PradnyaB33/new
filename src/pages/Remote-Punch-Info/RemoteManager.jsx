@@ -21,7 +21,12 @@ const RemoteManager = () => {
       <div className="z-50 p-6 flex flex-col mt-7 w-[30vw] bg-white gap-4">
         <div className="w-full flex flex-col bg-white h-full justify-between">
           <MappedPunches
-            {...{ Id: id, setPunchObjectId, className: "w-full" }}
+            {...{
+              Id: id,
+              setPunchObjectId,
+              className: "w-full",
+              punchObjectId,
+            }}
           />
           <div className=" mt-5 flex justify-end">
             <Button
