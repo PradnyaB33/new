@@ -4,7 +4,7 @@ import useGetUser from "../../Token/useUser";
 
 const useGetDelegateSuperAdmin = () => {
   const { authToken, decodedToken } = useGetUser();
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, isFetching } = useQuery(
     `delegate-super-admin-${decodedToken?.user?._id}`,
     async () => {
       try {
@@ -23,7 +23,7 @@ const useGetDelegateSuperAdmin = () => {
       }
     }
   );
-  return { data, isLoading };
+  return { data, isLoading, isFetching };
 };
 
 export default useGetDelegateSuperAdmin;
