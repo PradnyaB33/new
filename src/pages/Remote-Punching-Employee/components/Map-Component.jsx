@@ -11,6 +11,7 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
   console.log(`🚀 ~ file: Map-Component.jsx:4 ~ isLoaded:`, isLoaded);
   return isLoaded ? (
     <GoogleMap
+      key={process.env.REACT_APP_MAP_API_KEY}
       mapContainerStyle={{
         width: "100%",
         height: "91.8vh",
