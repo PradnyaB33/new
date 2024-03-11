@@ -1,8 +1,7 @@
 import React from "react";
-import useGetSinglePunch from "../../../hooks/QueryHook/Remote-Punch/components/hook";
 
 const GoogleMap = ({ Id }) => {
-  const { data } = useGetSinglePunch(Id);
+  // const { data } = useGetSinglePunch(Id);
   return (
     <div>
       {/* <GoogleMap
