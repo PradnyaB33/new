@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import useNotificationRemotePunching from "../../../hooks/QueryHook/Remote-Punch/components/mutation";
 
 const calculateDistance = (coords) => {
@@ -29,11 +30,16 @@ const calculateDistance = (coords) => {
 };
 
 const PunchingRejectModal = ({ items, length }) => {
+  const navigate = useNavigate();
   const { notifyAccountantMutation } = useNotificationRemotePunching();
   const distanceTraveled =
     items.punchData[0].data && items.punchData[0].data.length > 1
       ? calculateDistance(items.punchData[0].data)
       : 0;
+  const handleViewRouteClick = () => {
+    const id = items._id;
+    navigate(`/remote/mg/${id}`);
+  };
   console.log(items);
   return (
     <div className="w-full">
@@ -72,7 +78,11 @@ const PunchingRejectModal = ({ items, length }) => {
         </div>
         <div>
           <div>
-            <Button variant="contained" size="small">
+            <Button
+              variant="contained"
+              size="small"
+              onClick={handleViewRouteClick}
+            >
               View Route
             </Button>
           </div>
