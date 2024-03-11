@@ -4,13 +4,20 @@ import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
 import MiniForm from "./components/mini-form";
 
 const SelfieForm = () => {
-  const { open, setOpen } = useSelfieStore();
+  const { open, setOpen, media } = useSelfieStore();
+  console.log(`🚀 ~ file: Selfie.jsx:8 ~ media:`, media);
 
   return (
     <Modal
       open={open}
-      onClose={() => {
+      onClose={async () => {
         setOpen(false);
+        const tracks = await media.getTracks();
+        console.log(`🚀 ~ file: Selfie.jsx:16 ~ tracks:`, tracks);
+        tracks.forEach(async (track) => {
+          console.log(`🚀 ~ file: Selfie.jsx:18 ~ track:`, track);
+          await track?.stop(); // Stop each track in the media stream
+        });
       }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
