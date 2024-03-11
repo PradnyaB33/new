@@ -1,7 +1,6 @@
 import React from "react";
 
 const GoogleMap = ({ Id }) => {
-  // const { data } = useGetSinglePunch(Id);
   return (
     <div>
       {/* <GoogleMap
