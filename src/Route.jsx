@@ -60,7 +60,6 @@ import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 import EmployeeTest from "./pages/Test/EmployeeTest";
-import RemoteEmployee from "./pages/Test/RemoteEmployee";
 import RemoteNotification from "./pages/Test/RemoteNotification";
 import TestMap from "./pages/Test/testMap";
 import TestYash from "./pages/Test/testYash";
@@ -127,7 +126,8 @@ const App = () => {
         />
         <Route path="/missedPunch" element={<MissedPunch />} />
         <Route path="/test5" element={<TestMap />} />
-        <Route path="/remote/emp" element={<RemoteEmployee />} />
+        {/* <Route path="/remote/emp" element={<RemoteEmployee />} /> */}
+        {/* this component need to update */}
         <Route
           path="/remote/employee-confirmation"
           element={<EmployeeConfirmation />}
