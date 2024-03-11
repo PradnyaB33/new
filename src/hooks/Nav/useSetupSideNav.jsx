@@ -22,8 +22,7 @@ const useSetupSideNav = (organisationId) => {
   const location = useLocation();
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  const { subscriptionDetails, subscriptionLoading, subscriptionFetching } =
-    useSubscription(organisationId);
+  const { subscriptionDetails } = useSubscription(organisationId);
   console.log(`🚀 ~ file: useSetupSideNav.jsx:26 ~ sub:`, subscriptionDetails);
 
   const linkData = [
