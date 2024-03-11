@@ -34,7 +34,7 @@ const AuthInputFiled = ({
   const handleFocus = (fieldName) => {
     setFocusedInput(fieldName);
   };
-  const { ref, autocompleteRef } = usePlacesWidget({
+  const { ref } = usePlacesWidget({
     apiKey: process.env.REACT_APP_MAP_API_KEY,
     onPlaceSelected: (place) => console.log(place),
   });
