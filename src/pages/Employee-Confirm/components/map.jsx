@@ -3,7 +3,6 @@ import useGetSinglePunch from "../../../hooks/QueryHook/Remote-Punch/components/
 
 const GoogleMap = ({ Id }) => {
   const { data } = useGetSinglePunch(Id);
-  console.log(`🚀 ~ file: map.jsx:6 ~ data:`, data);
   return (
     <div>
       {/* <GoogleMap
