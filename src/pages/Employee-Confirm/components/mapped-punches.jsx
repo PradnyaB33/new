@@ -17,13 +17,12 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
   return distance;
 };
 
-const MappedPunches = ({ Id, setPunchObjectId }) => {
+const MappedPunches = ({ Id, setPunchObjectId, className = "" }) => {
   const { data } = useGetSinglePunch({ Id });
 
   return (
-    <div className="w-full h-80 overflow-y-auto cursor-pointer">
+    <div className={`w-full h-80 ${className} overflow-y-auto cursor-pointer`}>
       {data?.punchData?.punchData?.map((doc, idx) => {
-        console.log(`🚀 ~ file: mapped-punches.jsx:27 ~ doc:`, doc);
         let distance = 0;
         let totalDistance = 0;
         if (doc.data && idx < doc.data.length - 1) {
@@ -38,6 +37,7 @@ const MappedPunches = ({ Id, setPunchObjectId }) => {
             ).toFixed(2) + " km";
           totalDistance += distance;
         }
+        console.log("totalDistance", totalDistance);
 
         return (
           <div
@@ -52,6 +52,7 @@ const MappedPunches = ({ Id, setPunchObjectId }) => {
                   height={55}
                   width={55}
                   className="w-[55px] h-[55px] bg-black rounded-full object-cover"
+                  alt="op"
                 ></img>
               </div>
               <div className="pl-5 flex flex-col ">
