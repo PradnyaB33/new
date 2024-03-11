@@ -8,10 +8,13 @@ import React from "react";
 console.log(`🚀 ~ file: Map-Component.jsx:2 ~ Autocomplete:`, Autocomplete);
 
 const MapComponent = ({ isLoaded, data, locationArray }) => {
-  console.log(`🚀 ~ file: Map-Component.jsx:4 ~ isLoaded:`, isLoaded);
+  console.log(
+    `🚀 ~ file: Map-Component.jsx:15 ~ process.env.REACT_APP_GOOGLE_MAPS_API_KEY:`,
+    process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+  );
   return isLoaded ? (
     <GoogleMap
-      key={process.env.REACT_APP_MAP_API_KEY}
+      key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
       mapContainerStyle={{
         width: "100%",
         height: "91.8vh",

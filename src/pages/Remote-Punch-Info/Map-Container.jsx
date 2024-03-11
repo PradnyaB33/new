@@ -13,7 +13,7 @@ const MapComponent = ({ punchObjectId, isLoaded }) => {
   );
   return isLoaded && data?.punchData ? (
     <GoogleMap
-      key={process.env.REACT_APP_MAP_API_KEY}
+      key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
       mapContainerStyle={{
         width: "70%",
         height: "91.8vh",

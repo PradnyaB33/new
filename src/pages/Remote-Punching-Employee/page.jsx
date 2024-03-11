@@ -12,13 +12,13 @@ const EmployeeRemotePunch = () => {
 
   const { locationArray } = useSelfieStore();
   console.log(
-    `🚀 ~ file: page.jsx:21 ~ process.env.REACT_APP_MAP_API_KEY:`,
-    process.env.REACT_APP_MAP_API_KEY
+    `🚀 ~ file: page.jsx:21 ~ process.env.REACT_APP_GOOGLE_MAPS_API_KEY:`,
+    process.env.REACT_APP_GOOGLE_MAPS_API_KEY
   );
 
   const { isLoaded } = useJsApiLoader({
-    id: process.env.REACT_APP_MAP_API_KEY,
-    googleMapsApiKey: process.env.REACT_APP_MAP_API_KEY,
+    id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   });
   return (
     <div className="w-full h-full bg-slate-200">
