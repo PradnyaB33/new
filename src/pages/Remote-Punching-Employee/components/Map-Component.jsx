@@ -1,17 +1,7 @@
-import {
-  Autocomplete,
-  GoogleMap,
-  Marker,
-  Polyline,
-} from "@react-google-maps/api";
+import { GoogleMap, Marker, Polyline } from "@react-google-maps/api";
 import React from "react";
-console.log(`🚀 ~ file: Map-Component.jsx:2 ~ Autocomplete:`, Autocomplete);
 
 const MapComponent = ({ isLoaded, data, locationArray }) => {
-  console.log(
-    `🚀 ~ file: Map-Component.jsx:15 ~ process.env.REACT_APP_GOOGLE_MAPS_API_KEY:`,
-    process.env.REACT_APP_GOOGLE_MAPS_API_KEY
-  );
   return isLoaded ? (
     <GoogleMap
       key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}

@@ -33,12 +33,7 @@ const useStartPunch = () => {
     refetchInterval: 10000,
     enabled: start,
     refetchIntervalInBackground: true,
-    onSuccess: (data) => {
-      console.log(
-        `🚀 ~ file: independant-use-query.jsx:37 ~ data:`,
-        data?.punchObject?.data
-      );
-    },
+    onSuccess: (data) => {},
   });
   return { data, refetch };
 };

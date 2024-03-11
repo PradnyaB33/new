@@ -13,7 +13,6 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     // Update user when component mounts
     setUser(getCurrentUser());
-    console.log("run");
     // eslint-disable-next-line
   }, []); // Ensure the effect runs when getCurrentUser changes
 

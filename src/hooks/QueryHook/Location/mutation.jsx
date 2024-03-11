@@ -14,9 +14,7 @@ const useLocationMutation = () => {
     setPunchObjectId,
     media,
     setStart,
-    locationArray,
   } = useSelfieStore();
-  console.log(`🚀 ~ file: mutation.jsx:20 ~ locationArray:`, locationArray);
 
   const fetchLocationData = async () => {
     const position = await new Promise((resolve, reject) => {

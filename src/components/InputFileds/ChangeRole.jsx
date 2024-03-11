@@ -24,7 +24,6 @@ const ChangeRole = () => {
       value: roles,
     });
 
-    console.log(roles, selectedRole);
     // eslint-disable-next-line
   }, [window.location.pathname, roles]);
 
