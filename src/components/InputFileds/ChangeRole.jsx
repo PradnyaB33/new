@@ -18,6 +18,7 @@ const ChangeRole = () => {
     value: "",
   });
 
+  console.log(`🚀 ~ file: ChangeRole.jsx:22 ~ selectedRole:`, selectedRole);
   useEffect(() => {
     setSelectedRole({
       label: roles,
