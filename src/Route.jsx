@@ -115,14 +115,8 @@ const App = () => {
 
         <Route path="/paymentfailed" element={<PaymentFailed />} />
 
-        {/* <Route path="/test" element={<EditablePolyline />} /> */}
         <Route path="/loading" element={<Loader />} />
         <Route path="/testOrg" element={<NewOranisationForm />} />
-        {/* <Route path="/test" element={<EditablePolyline />} /> */}
-        {/* <Route path="/test3" element={<TestNaresh />} />
-      <Route path="/test2" element={<TrackingMap />} />
-      
-      <Route path="/test6" element={<TrackingMap3 />} /> */}
         {/* Login Routes */}
         <Route path="/test3" element={<TestYash />} />
         <Route

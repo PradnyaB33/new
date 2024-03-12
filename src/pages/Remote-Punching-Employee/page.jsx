@@ -1,14 +1,18 @@
 import { Chip } from "@mui/material";
 import { useJsApiLoader } from "@react-google-maps/api";
-import React from "react";
+import React, { useEffect } from "react";
 import SelfieForm from "../../components/Modal/Selfi-Image/Selfie";
-import useLocationHook from "../../hooks/QueryHook/Location/hook";
+import useLocationMutation from "../../hooks/QueryHook/Location/mutation";
 import useSelfieStore from "../../hooks/QueryHook/Location/zustand-store";
 import MapComponent from "./components/Map-Component";
 import BasicSpeedDial from "./components/speed-dial";
 
 const EmployeeRemotePunch = () => {
-  const { data } = useLocationHook();
+  const { getUserLocation } = useLocationMutation();
+  const { data, mutate } = getUserLocation;
+  useEffect(() => {
+    mutate();
+  }, [mutate]);
 
   const { locationArray } = useSelfieStore();
 
