@@ -45,7 +45,7 @@ const NewOranisationForm = () => {
       icon: InventorySharp,
     },
     {
-      label: "Package Count",
+      label: "Member Count",
       icon: PlusOneOutlined,
     },
     {

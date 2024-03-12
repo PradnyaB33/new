@@ -7,6 +7,8 @@ const useSelfieStore = create((set) => ({
   start: false,
   count: 0,
   locationArray: [],
+  temporaryArray: [],
+  id: null,
   setOpen: (open) => {
     set({ open });
   },
@@ -27,6 +29,22 @@ const useSelfieStore = create((set) => ({
       locationArray: [...state.locationArray, locationObject],
     }));
   },
+  setTemporaryArray: ({ latitude, longitude }) => {
+    console.log(`🚀 ~ file: zustand-store.jsx:33 ~ { latitude, longitude }:`, {
+      latitude,
+      longitude,
+    });
+    set((state) => ({
+      temporaryArray: [
+        ...state.temporaryArray,
+        { lat: latitude, lng: longitude },
+      ],
+    }));
+  },
+  clearTemporaryArray: () => {
+    set({ temporaryArray: [] });
+  },
+  setId: (id) => set({ id }),
 }));
 
 export default useSelfieStore;

@@ -14,11 +14,10 @@ const ChangeRole = () => {
 
   const redirect = useNavigate();
   const [selectedRole, setSelectedRole] = useState({
-    label: "",
-    value: "",
+    label: roles,
+    value: roles,
   });
 
-  console.log(`🚀 ~ file: ChangeRole.jsx:22 ~ selectedRole:`, selectedRole);
   useEffect(() => {
     setSelectedRole({
       label: roles,
@@ -102,10 +101,7 @@ const ChangeRole = () => {
               boxShadow: "none",
             }),
           }}
-          value={{
-            label: roles,
-            value: roles,
-          }}
+          value={selectedRole}
           className={`${"bg-[ghostwhite]"} bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
           options={options}
           onChange={(value) => {
