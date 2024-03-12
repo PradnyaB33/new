@@ -3,7 +3,6 @@ import { useContext } from "react";
 import { useMutation, useQuery } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import useGetUser from "../../Token/useUser";
-import useLocationMutation from "./mutation";
 import useSelfieStore from "./zustand-store";
 
 const useStartPunch = () => {
@@ -22,7 +21,6 @@ const useStartPunch = () => {
     temporaryArray
   );
 
-  const { getUserLocation } = useLocationMutation();
   const { handleAlert } = useContext(TestContext);
   const fetchLocationData = async () => {
     startGeoLocationWatch.mutate();
