@@ -29,8 +29,7 @@ const useStartPunch = () => {
     const { latitude, longitude } = objectData;
     setLocation({ lat: latitude, lng: longitude });
     const payload = {
-      lat: latitude,
-      lng: longitude,
+      temporaryArray,
       punchObjectId,
     };
     const response = await axios.patch(
