@@ -34,6 +34,7 @@ const useLoanQuery = (organisationId) => {
       }
     }
   }, [getEmployeeLoanType, loanType, setRateOfInterest]);
+
   return { getEmployeeLoanType };
 };
 

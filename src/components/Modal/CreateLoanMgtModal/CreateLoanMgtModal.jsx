@@ -10,7 +10,7 @@ import {
   DialogContent,
   MenuItem,
 } from "@mui/material";
-import React from "react";
+import React, { useContext, useState } from "react";
 import useLaonState from "../../../hooks/LoanManagemet/useLaonState";
 import useLoanQuery from "../../../hooks/LoanManagemet/useLoanQuery";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -18,7 +18,16 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
+import useCalculation from "../../../hooks/LoanManagemet/useCalculation";
+import { UseContext } from "../../../State/UseState/UseContext";
+import { TestContext } from "../../../State/Function/Main";
+import { useMutation, useQueryClient } from "react-query";
+import axios from "axios";
 const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
+  const { cookies } = useContext(UseContext);
+  const { handleAlert } = useContext(TestContext);
+  const authToken = cookies["aegis"];
+  const [error, setError] = useState("");
   const {
     loanType,
     rateOfIntereset,
@@ -29,59 +38,66 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     setLoanType,
     setLoanAmount,
     setDisbursementDate,
-    setNoOfEmi,
-    setCompletedDate,
-    setPrincipalAmount,
-    setInteresetAmount,
-    setTotalDeduction,
   } = useLaonState();
 
   const { getEmployeeLoanType } = useLoanQuery(organisationId);
+  const {
+    interestPerMonth,
+    principalPerMonth,
+    totalDeductionPerMonth,
+    handleNoOfEmiChange,
+  } = useCalculation();
 
-  // calculate the loan completion datea
-  const handleNoOfEmiChange = (e) => {
-    const value = e.target.value;
-    setNoOfEmi(value);
-    calculateCompletionDate(loanDisbursementDate, value);
-  };
+  const queryClient = useQueryClient();
+  const AddLoanData = useMutation(
+    (data) =>
+      axios.post(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/add-loan-data`,
+        data,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      ),
 
-  const calculateCompletionDate = (disbursementDate, emiCount) => {
-    const monthsToAdd = parseInt(emiCount);
-    if (!isNaN(monthsToAdd)) {
-      const completionDate = dayjs(disbursementDate)
-        .add(monthsToAdd - 1, "month")
-        .format("MM-DD-YYYY");
-      setCompletedDate(completionDate);
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["loanData"] });
+        handleAlert(true, "success", "Loan data addded successfull");
+        window.location.reload();
+        handleClose();
+      },
+      onError: () => {},
+    }
+  );
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (loanType.length <= 0) {
+        setError("Loan type field is Mandatory");
+        return false;
+      }
+      const data = {
+        loanType: loanType,
+        rateOfIntereset: rateOfIntereset,
+        loanAmount: loanAmount,
+        loanDisbursementDate: loanDisbursementDate,
+        loanCompletedDate: loanCompletedDate,
+        noOfEmi: noOfEmi,
+        loanPrincipalAmount: principalPerMonth,
+        loanInteresetAmount: interestPerMonth,
+        totalDeduction: totalDeductionPerMonth,
+      };
+
+      await AddLoanData.mutateAsync(data);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", error);
     }
   };
 
-  // calculate the no of years
-  let emiCount = parseInt(noOfEmi);
-  const calculateNumberOfYears = () => {
-    let numberOfYears = emiCount / 12;
-    return numberOfYears;
-  };
-  //  calculate the  simple interest per month
-  const simpleInterest =
-    loanAmount * rateOfIntereset * calculateNumberOfYears();
-  console.log(simpleInterest);
-
-  // calculate interest amount monthly
-  const interestAmountPerMonth = simpleInterest / emiCount;
-  console.log(interestAmountPerMonth);
-
-  // calculate the total amount
-  const totalAmountRs = simpleInterest + parseInt(loanAmount);
-  console.log(totalAmountRs);
-
-  // calculate the principal amount monthly
-  const principalAmountPerMonth = totalAmountRs / emiCount;
-  console.log(principalAmountPerMonth);
-
-  // calculate the total deduction per month
-  const totalDeductionPerMonth =
-    interestAmountPerMonth + principalAmountPerMonth;
-  console.log(totalDeductionPerMonth);
   return (
     <Dialog
       PaperProps={{
@@ -132,6 +148,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   )}
                 </Select>
               </FormControl>
+              {error && <p className="text-red-500">*{error}</p>}
             </div>
             <div className="space-y-2 ">
               <FormLabel className="text-md" htmlFor="demo-simple-select-label">
@@ -142,9 +159,13 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                 sx={{ width: "100%" }}
                 variant="outlined"
               >
+                <InputLabel id="demo-simple-select-label">
+                  Rate of interest
+                </InputLabel>
                 <OutlinedInput
                   value={rateOfIntereset}
                   id="outlined-adornment-password"
+                  label="Rate of interest"
                 />
               </FormControl>
             </div>
@@ -218,16 +239,20 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
             </div>
             <div className="space-y-2 ">
               <FormLabel className="text-md" htmlFor="demo-simple-select-label">
-                Date
+                Loan completion date
               </FormLabel>
               <FormControl
                 size="small"
                 sx={{ width: "100%" }}
                 variant="outlined"
               >
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Loan completion date
+                </InputLabel>
                 <OutlinedInput
                   value={loanCompletedDate}
                   id="outlined-adornment-password"
+                  label=" Loan completion date"
                 />
               </FormControl>
             </div>
@@ -237,17 +262,21 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   className="text-md"
                   htmlFor="demo-simple-select-label"
                 >
-                  Loan principal amount monthly deducted
+                  Principal amount monthly deducted
                 </FormLabel>
+
                 <FormControl
                   size="small"
                   sx={{ width: "100%" }}
                   variant="outlined"
                 >
+                  <InputLabel htmlFor="outlined-adornment-password">
+                    Principal amount monthly
+                  </InputLabel>
                   <OutlinedInput
-                    value={principalAmountPerMonth}
-                    onChange={(e) => setPrincipalAmount(e.target.value)}
+                    value={principalPerMonth || ""}
                     id="outlined-adornment-password"
+                    label="Principal amount monthly"
                   />
                 </FormControl>
               </div>
@@ -256,7 +285,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   className="text-md"
                   htmlFor="demo-simple-select-label"
                 >
-                  Loan interest amount monthly deducted
+                  Interest amount monthly deducted
                 </FormLabel>
                 <FormControl
                   size="small"
@@ -264,20 +293,19 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   variant="outlined"
                 >
                   <InputLabel htmlFor="outlined-adornment-password">
-                    Loan interest amount
+                    Interest amount monthly
                   </InputLabel>
                   <OutlinedInput
-                    value={interestAmountPerMonth}
-                    onChange={(e) => setInteresetAmount(e.target.value)}
+                    value={interestPerMonth}
                     id="outlined-adornment-password"
-                    label="Loan interest amount"
+                    label="Interest amount monthly"
                   />
                 </FormControl>
               </div>
             </div>
             <div className="space-y-2 ">
               <FormLabel className="text-md" htmlFor="demo-simple-select-label">
-                Total deduction monthly
+                Total amount monthly deducted
               </FormLabel>
               <FormControl
                 size="small"
@@ -285,13 +313,12 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                 variant="outlined"
               >
                 <InputLabel htmlFor="outlined-adornment-password">
-                  Total deduction monthly
+                  Total amount monthly
                 </InputLabel>
                 <OutlinedInput
                   value={totalDeductionPerMonth}
-                  onChange={(e) => setTotalDeduction(e.target.value)}
                   id="outlined-adornment-password"
-                  label="Total deduction monthly"
+                  label="Total amount monthly"
                 />
               </FormControl>
             </div>
@@ -301,7 +328,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
               Cancel
             </Button>
 
-            <Button variant="contained" color="primary">
+            <Button onClick={handleSubmit} variant="contained" color="primary">
               Submit
             </Button>
           </DialogActions>
