@@ -18,17 +18,19 @@ const useStartPunch = () => {
     clearTemporaryArray,
   } = useSelfieStore();
   console.log(
-    `🚀 ~ file: independant-use-query.jsx:18 ~ temporaryArray:`,
+    `🚀 ~ file: independant-use-query.jsx:21 ~ temporaryArray:`,
     temporaryArray
   );
+
   const { getUserLocation } = useLocationMutation();
-  const { data: objectData, mutate } = getUserLocation;
   const { handleAlert } = useContext(TestContext);
   const fetchLocationData = async () => {
-    mutate();
     startGeoLocationWatch.mutate();
-    const { latitude, longitude } = objectData;
-    setLocation({ lat: latitude, lng: longitude });
+
+    console.log(
+      `🚀 ~ file: independant-use-query.jsx:18 ~ temporaryArray:`,
+      temporaryArray
+    );
     const payload = {
       temporaryArray,
       punchObjectId,
@@ -61,7 +63,7 @@ const useStartPunch = () => {
           latitude,
           longitude
         );
-        setTemporaryArray(latitude, longitude);
+        setTemporaryArray({ latitude, longitude });
         setLocation({ lat: latitude, lng: longitude });
       },
       () => {
@@ -90,7 +92,6 @@ const useStartPunch = () => {
       console.error(data);
     },
   });
-  console.log("startGeoLocationWatch", startGeoLocationWatch);
 
   return { data, refetch };
 };

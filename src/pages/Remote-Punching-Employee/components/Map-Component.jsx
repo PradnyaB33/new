@@ -14,7 +14,7 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
     >
       <Marker
         position={{ lat: data?.latitude, lng: data?.longitude }}
-        label={"Current Position"}
+        label={"Start Position"}
       />
       {locationArray?.length > 0 && (
         <Polyline

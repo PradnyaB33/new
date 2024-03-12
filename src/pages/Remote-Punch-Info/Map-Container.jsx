@@ -23,7 +23,7 @@ const MapComponent = ({ punchObjectId, isLoaded }) => {
           lat: data?.punchData?.data[0]?.lat,
           lng: data?.punchData?.data[0]?.lng,
         }}
-        label={"Current Position"}
+        label={"Start Position"}
       />
       {data?.punchData?.data?.length > 0 && (
         <Polyline
