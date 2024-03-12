@@ -18,7 +18,6 @@ const EmployeeConfirmation = () => {
   const { notifyManagerMutation } = useNotificationRemotePunching();
   const [Id, setId] = useState(null);
   const [punchObjectId, setPunchObjectId] = useState(null);
-  console.log(`🚀 ~ file: page.jsx:21 ~ punchObjectId:`, punchObjectId);
   return (
     <div className="w-full h-[100%] flex justify-between relative">
       <div className="z-50 p-6 flex flex-col mt-7 w-[30vw] bg-white gap-4">

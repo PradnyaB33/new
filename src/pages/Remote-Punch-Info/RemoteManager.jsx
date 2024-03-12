@@ -11,7 +11,6 @@ const RemoteManager = () => {
   const { notifyManagerMutation } = useNotificationRemotePunching();
   const { id } = useParams();
   const [punchObjectId, setPunchObjectId] = useState(null);
-  console.log(`🚀 ~ file: page.jsx:21 ~ punchObjectId:`, punchObjectId);
   const { isLoaded } = useJsApiLoader({
     id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,

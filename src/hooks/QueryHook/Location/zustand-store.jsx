@@ -30,10 +30,6 @@ const useSelfieStore = create((set) => ({
     }));
   },
   setTemporaryArray: ({ latitude, longitude }) => {
-    console.log(`🚀 ~ file: zustand-store.jsx:33 ~ { latitude, longitude }:`, {
-      latitude,
-      longitude,
-    });
     set((state) => ({
       temporaryArray: [
         ...state.temporaryArray,
