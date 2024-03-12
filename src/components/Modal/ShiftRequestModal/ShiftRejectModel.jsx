@@ -114,15 +114,43 @@ const LeaveRejectmodal = ({ items, key }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("shift-request");
+        setAppAlert({
+          alert: true,
+          type: "success",
+          msg: "Request Accepted Successfully",
+        });
+      },
+    }
+  );
+  const rejectAccRequestMutation = useMutation(
+    async () => {
+      await axios.post(
+        `${process.env.REACT_APP_API}/route/shiftApply/rejectAcc/${items._id}`,
+        { message },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: () => {
+        setAppAlert({
+          alert: true,
+          type: "success",
+          msg: "Request Rejected Successfully",
+        });
+        queryClient.invalidateQueries("shift-request");
+        handleClose();
       },
     }
   );
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    rejectRequestMutation.mutate();
+    rejectAccRequestMutation.mutate();
   };
-
 
   return (
     <>
