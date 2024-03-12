@@ -28,6 +28,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
   const [error, setError] = useState("");
+  const [errors, setErrors] = useState("");
   const {
     loanType,
     rateOfIntereset,
@@ -63,22 +64,19 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
 
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["loanData"] });
-        handleAlert(true, "success", "Loan data addded successfull");
+        queryClient.invalidateQueries({ queryKey: ["loanDatas"] });
+        handleAlert(true, "success", "Loan data added successfully");
         window.location.reload();
         handleClose();
       },
-      onError: () => {},
+      onError: () => {
+        setErrors("An Error occurred while creating a loan data.");
+      },
     }
   );
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (loanType.length <= 0) {
-        setError("Loan type field is Mandatory");
-        return false;
-      }
       const data = {
         loanType: loanType,
         rateOfIntereset: rateOfIntereset,
@@ -90,14 +88,17 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
         loanInteresetAmount: interestPerMonth,
         totalDeduction: totalDeductionPerMonth,
       };
-
+      if (!loanType) {
+        setError("Loan type field is Mandatory");
+        return false;
+      }
       await AddLoanData.mutateAsync(data);
     } catch (error) {
       console.error(error);
-      handleAlert(true, "error", error);
+      setErrors("An error occurred while creating a loan data");
     }
   };
-
+  console.log(errors);
   return (
     <Dialog
       PaperProps={{
@@ -124,13 +125,10 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
         <div className="px-5 space-y-4 mt-4">
           <div className="px-5 space-y-4 mt-4">
             <div className="space-y-2 ">
-              <FormLabel className="text-md mb-2" htmlFor="name">
-                Select loan type
-              </FormLabel>
+              <FormLabel className="text-md mb-2">Select loan type</FormLabel>
               <FormControl size="small" fullWidth>
-                <InputLabel id="demo-simple-select-label">Loan type</InputLabel>
+                <InputLabel>Loan type</InputLabel>
                 <Select
-                  id="demo-simple-select"
                   value={loanType}
                   onChange={(e) => setLoanType(e.target.value)}
                   label="loan type"
@@ -150,37 +148,29 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
               </FormControl>
               {error && <p className="text-red-500">*{error}</p>}
             </div>
+
             <div className="space-y-2 ">
-              <FormLabel className="text-md" htmlFor="demo-simple-select-label">
-                Rate of interest
-              </FormLabel>
+              <FormLabel className="text-md">Rate of interest</FormLabel>
               <FormControl
                 size="small"
                 sx={{ width: "100%" }}
                 variant="outlined"
               >
-                <InputLabel id="demo-simple-select-label">
-                  Rate of interest
-                </InputLabel>
+                <InputLabel>Rate of interest</InputLabel>
                 <OutlinedInput
                   value={rateOfIntereset}
-                  id="outlined-adornment-password"
                   label="Rate of interest"
                 />
               </FormControl>
             </div>
             <div className="space-y-2">
-              <FormLabel className="text-md" htmlFor="demo-simple-select-label">
-                Loan amount Rs
-              </FormLabel>
+              <FormLabel className="text-md">Loan amount Rs</FormLabel>
               <FormControl
                 size="small"
                 sx={{ width: "100%" }}
                 variant="outlined"
               >
-                <InputLabel htmlFor="outlined-adornment-password">
-                  Loan amount Rs
-                </InputLabel>
+                <InputLabel>Loan amount Rs</InputLabel>
                 <OutlinedInput
                   value={loanAmount}
                   onChange={(e) => {
@@ -218,7 +208,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
             </LocalizationProvider>
 
             <div className="space-y-2 ">
-              <FormLabel className="text-md" htmlFor="demo-simple-select-label">
+              <FormLabel className="text-md">
                 No of EMIs for loan prepayment
               </FormLabel>
               <FormControl
@@ -226,42 +216,31 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                 sx={{ width: "100%" }}
                 variant="outlined"
               >
-                <InputLabel htmlFor="outlined-adornment-password">
-                  No of EMIs
-                </InputLabel>
+                <InputLabel>No of EMIs</InputLabel>
                 <OutlinedInput
                   value={noOfEmi}
                   onChange={handleNoOfEmiChange}
-                  id="outlined-adornment-password"
                   label="No of EMIs"
                 />
               </FormControl>
             </div>
             <div className="space-y-2 ">
-              <FormLabel className="text-md" htmlFor="demo-simple-select-label">
-                Loan completion date
-              </FormLabel>
+              <FormLabel className="text-md">Loan completion date</FormLabel>
               <FormControl
                 size="small"
                 sx={{ width: "100%" }}
                 variant="outlined"
               >
-                <InputLabel htmlFor="outlined-adornment-password">
-                  Loan completion date
-                </InputLabel>
+                <InputLabel>Loan completion date</InputLabel>
                 <OutlinedInput
                   value={loanCompletedDate}
-                  id="outlined-adornment-password"
                   label=" Loan completion date"
                 />
               </FormControl>
             </div>
             <div className=" flex  gap-2 w-full">
               <div className="space-y-2  w-[50%]">
-                <FormLabel
-                  className="text-md"
-                  htmlFor="demo-simple-select-label"
-                >
+                <FormLabel className="text-md">
                   Principal amount monthly deducted
                 </FormLabel>
 
@@ -270,12 +249,9 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   sx={{ width: "100%" }}
                   variant="outlined"
                 >
-                  <InputLabel htmlFor="outlined-adornment-password">
-                    Principal amount monthly
-                  </InputLabel>
+                  <InputLabel>Principal amount monthly</InputLabel>
                   <OutlinedInput
                     value={principalPerMonth || ""}
-                    id="outlined-adornment-password"
                     label="Principal amount monthly"
                   />
                 </FormControl>
@@ -292,12 +268,9 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   sx={{ width: "100%" }}
                   variant="outlined"
                 >
-                  <InputLabel htmlFor="outlined-adornment-password">
-                    Interest amount monthly
-                  </InputLabel>
+                  <InputLabel>Interest amount monthly</InputLabel>
                   <OutlinedInput
                     value={interestPerMonth}
-                    id="outlined-adornment-password"
                     label="Interest amount monthly"
                   />
                 </FormControl>

@@ -26,32 +26,29 @@ const useCalculation = () => {
       setCompletedDate(completionDate);
     }
   };
+
   // calculate the rate of interest in %
   const roi = rateOfIntereset / 100;
-  console.log("roi", roi);
 
-  // calculate the simple interest
+  // Calculate simple interest
   const simpleInterest = parseInt(loanAmount) * roi * parseInt(noOfEmi);
-  console.log("simple interest", simpleInterest);
 
-  // calculate the interest per month
-  const interestMonthly = parseInt(simpleInterest) / parseInt(noOfEmi);
+  // Calculate interest per month
+  const interestMonthly = isNaN(simpleInterest)
+    ? 0
+    : simpleInterest / parseInt(noOfEmi);
   const interestPerMonth = interestMonthly.toFixed(2);
-  console.log("interest per month", interestPerMonth);
 
-  // calculate the total amount
-  const totalAmount = parseInt(simpleInterest) + parseInt(loanAmount);
-  console.log("total amount", totalAmount);
-
-  // calculate the principal monthly
-  const principalMonthly = parseInt(loanAmount) / parseInt(noOfEmi);
+  // Calculate principal monthly
+  const principalMonthly =
+    isNaN(loanAmount) || isNaN(noOfEmi)
+      ? 0
+      : parseInt(loanAmount) / parseInt(noOfEmi);
   const principalPerMonth = principalMonthly.toFixed(2);
-  console.log("principal monthly", principalPerMonth);
 
-  // calculate the total duduction
-  const totalDeductionMonthly = parseInt(interestPerMonth) + principalMonthly;
+  // Calculate total sdeduction
+  const totalDeductionMonthly = parseFloat(interestPerMonth) + principalMonthly;
   const totalDeductionPerMonth = totalDeductionMonthly.toFixed(2);
-  console.log("totalduction monthly", totalDeductionPerMonth);
 
   return {
     interestPerMonth,

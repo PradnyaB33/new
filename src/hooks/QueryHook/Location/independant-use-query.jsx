@@ -16,10 +16,6 @@ const useStartPunch = () => {
     setId,
     clearTemporaryArray,
   } = useSelfieStore();
-  console.log(
-    `🚀 ~ file: independant-use-query.jsx:21 ~ temporaryArray:`,
-    temporaryArray
-  );
 
   const { handleAlert } = useContext(TestContext);
   const fetchLocationData = async () => {
@@ -55,12 +51,12 @@ const useStartPunch = () => {
   const getNavigatorData = async () => {
     const id = navigator.geolocation.watchPosition(
       (positionCallback) => {
-        const { latitude, longitude } = positionCallback.coords;
         console.log(
-          `🚀 ~ file: independant-use-query.jsx:45 ~ latitude, longitude :`,
-          latitude,
-          longitude
+          `🚀 ~ file: independant-use-query.jsx:54 ~ positionCallback:`,
+          positionCallback
         );
+        const { latitude, longitude } = positionCallback.coords;
+
         setTemporaryArray({ latitude, longitude });
         setLocation({ lat: latitude, lng: longitude });
       },
@@ -83,7 +79,6 @@ const useStartPunch = () => {
   const startGeoLocationWatch = useMutation({
     mutationFn: getNavigatorData,
     onSuccess: (data) => {
-      console.log(`🚀 ~ file: independant-use-query.jsx:58 ~ data:`, data);
       setId(data);
     },
     onError: (data) => {
