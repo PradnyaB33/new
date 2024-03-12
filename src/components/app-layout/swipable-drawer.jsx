@@ -5,7 +5,7 @@ import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import * as React from "react";
 import { useCallback } from "react"; // Import useCallback
 import { useLocation } from "react-router-dom";
-import useGetUser from "../../hooks/Token/useUser";
+import UserProfile from "../../hooks/UserData/useUser";
 import ChangeRole from "../InputFileds/ChangeRole";
 import ProfileIcon from "../profieicon/profileIcon";
 import NotificationIcon from "./components/NotificationIcon";
@@ -14,11 +14,8 @@ import TestNavItems from "./components/test-nav-items";
 export default function SwipeableTemporaryDrawer() {
   const [open, setOpen] = React.useState(false);
   const location = useLocation();
-  const { decodedToken } = useGetUser();
-  console.log(
-    `🚀 ~ file: swipable-drawer.jsx:67 ~ decodedToken.user:`,
-    decodedToken.user
-  );
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
 
   // Use useCallback to memoize the toggleDrawer function
   const toggleDrawer = useCallback(() => {
@@ -67,9 +64,7 @@ export default function SwipeableTemporaryDrawer() {
             </Typography>
           </Badge>
           <div className="flex gap-2 items-center">
-            {!decodedToken?.user?.profile === ["Employee"] && (
-              <NotificationIcon />
-            )}
+            {role && role !== "Employee" && <NotificationIcon />}
 
             <ProfileIcon />
           </div>
