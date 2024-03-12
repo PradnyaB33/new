@@ -10,7 +10,7 @@ import {
   DialogContent,
   MenuItem,
 } from "@mui/material";
-import React from "react";
+import React, { useContext, useState } from "react";
 import useLaonState from "../../../hooks/LoanManagemet/useLaonState";
 import useLoanQuery from "../../../hooks/LoanManagemet/useLoanQuery";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -19,8 +19,15 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 import useCalculation from "../../../hooks/LoanManagemet/useCalculation";
-
+import { UseContext } from "../../../State/UseState/UseContext";
+import { TestContext } from "../../../State/Function/Main";
+import { useMutation, useQueryClient } from "react-query";
+import axios from "axios";
 const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
+  const { cookies } = useContext(UseContext);
+  const { handleAlert } = useContext(TestContext);
+  const authToken = cookies["aegis"];
+  const [error, setError] = useState("");
   const {
     loanType,
     rateOfIntereset,
@@ -40,6 +47,56 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     totalDeductionPerMonth,
     handleNoOfEmiChange,
   } = useCalculation();
+
+  const queryClient = useQueryClient();
+  const AddLoanData = useMutation(
+    (data) =>
+      axios.post(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/add-loan-data`,
+        data,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      ),
+
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["loanData"] });
+        handleAlert(true, "success", "Loan data addded successfull");
+        window.location.reload();
+        handleClose();
+      },
+      onError: () => {},
+    }
+  );
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (loanType.length <= 0) {
+        setError("Loan type field is Mandatory");
+        return false;
+      }
+      const data = {
+        loanType: loanType,
+        rateOfIntereset: rateOfIntereset,
+        loanAmount: loanAmount,
+        loanDisbursementDate: loanDisbursementDate,
+        loanCompletedDate: loanCompletedDate,
+        noOfEmi: noOfEmi,
+        loanPrincipalAmount: principalPerMonth,
+        loanInteresetAmount: interestPerMonth,
+        totalDeduction: totalDeductionPerMonth,
+      };
+
+      await AddLoanData.mutateAsync(data);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", error);
+    }
+  };
 
   return (
     <Dialog
@@ -91,6 +148,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   )}
                 </Select>
               </FormControl>
+              {error && <p className="text-red-500">*{error}</p>}
             </div>
             <div className="space-y-2 ">
               <FormLabel className="text-md" htmlFor="demo-simple-select-label">
@@ -101,9 +159,13 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                 sx={{ width: "100%" }}
                 variant="outlined"
               >
+                <InputLabel id="demo-simple-select-label">
+                  Rate of interest
+                </InputLabel>
                 <OutlinedInput
                   value={rateOfIntereset}
                   id="outlined-adornment-password"
+                  label="Rate of interest"
                 />
               </FormControl>
             </div>
@@ -184,9 +246,13 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                 sx={{ width: "100%" }}
                 variant="outlined"
               >
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Loan completion date
+                </InputLabel>
                 <OutlinedInput
                   value={loanCompletedDate}
                   id="outlined-adornment-password"
+                  label=" Loan completion date"
                 />
               </FormControl>
             </div>
@@ -232,22 +298,27 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   <OutlinedInput
                     value={interestPerMonth}
                     id="outlined-adornment-password"
+                    label="Interest amount monthly"
                   />
                 </FormControl>
               </div>
             </div>
             <div className="space-y-2 ">
               <FormLabel className="text-md" htmlFor="demo-simple-select-label">
-                Total deduction monthly
+                Total amount monthly deducted
               </FormLabel>
               <FormControl
                 size="small"
                 sx={{ width: "100%" }}
                 variant="outlined"
               >
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Total amount monthly
+                </InputLabel>
                 <OutlinedInput
                   value={totalDeductionPerMonth}
                   id="outlined-adornment-password"
+                  label="Total amount monthly"
                 />
               </FormControl>
             </div>
@@ -257,7 +328,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
               Cancel
             </Button>
 
-            <Button variant="contained" color="primary">
+            <Button onClick={handleSubmit} variant="contained" color="primary">
               Submit
             </Button>
           </DialogActions>
