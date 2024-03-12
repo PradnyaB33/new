@@ -15,6 +15,7 @@ const useStartPunch = () => {
     setTemporaryArray,
     temporaryArray,
     setId,
+    clearTemporaryArray,
   } = useSelfieStore();
   console.log(
     `🚀 ~ file: independant-use-query.jsx:18 ~ temporaryArray:`,
@@ -47,7 +48,9 @@ const useStartPunch = () => {
     refetchInterval: 10000,
     enabled: start,
     refetchIntervalInBackground: true,
-    onSuccess: (data) => {},
+    onSuccess: (data) => {
+      clearTemporaryArray();
+    },
   });
   const getNavigatorData = async () => {
     const id = navigator.geolocation.watchPosition(
