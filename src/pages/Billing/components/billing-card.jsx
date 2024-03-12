@@ -215,7 +215,7 @@ const BillingCard = ({ doc }) => {
           />
           <DescriptionBox
             Icon={Subscriptions}
-            descriptionText={"Subscription start date"}
+            descriptionText={"Subscription charge date"}
             mainText={moment
               .unix(data?.subscription?.charge_at)
               .format("MM/DD/YYYY")}

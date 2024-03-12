@@ -9,6 +9,7 @@ import AnimationComponent from "./components/emailverify/verification-animation"
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
+import RequireAuth, { AuthProvider } from "./context/AuthProvider";
 import useSubscription from "./hooks/Subscription/subscription";
 import NewOranisationForm from "./pages/AddOrganisation/OrgFrom";
 import Application from "./pages/Application/Application";
@@ -20,16 +21,21 @@ import DashboardManger from "./pages/DashBoard/DashboardManger";
 import SuperAdmin from "./pages/DashBoard/SuperAdmin";
 import DepartmentList from "./pages/Departments/DepartmentList";
 import Designation from "./pages/Designation/Designation";
+import EmployeeConfirmation from "./pages/Employee-Confirm/page";
 import DeleteEmployee from "./pages/Employee/DeleteEmployee";
 import Employee from "./pages/Employee/Employee";
 import Form16 from "./pages/Form16/Form16";
 import Home from "./pages/Home/Home";
 import IncomeTax from "./pages/Income/IncomeTax";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
+import LoanManagement from "./pages/LoanManagement/LoanManagement";
 import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
 import PaymentFailed from "./pages/Payment/page";
+import RemoteManager from "./pages/Remote-Punch-Info/RemoteManager";
+import EmployeeRemotePunch from "./pages/Remote-Punching-Employee/page";
 import MissedPunch from "./pages/RemotePunchIn/MissedPunch";
+import CalculateSalary from "./pages/SalaryCalculate/CalculateSalary";
 import SalaryManagement from "./pages/SalaryManagement/SalaryManagement";
 import EmployeeSalaryCalculateDay from "./pages/SetUpOrganization/EmoloyeeSalaryCalculate/EmployeeSalaryCalculate";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
@@ -54,6 +60,7 @@ import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/NewSignUp";
 import EmployeeTest from "./pages/Test/EmployeeTest";
+import RemoteNotification from "./pages/Test/RemoteNotification";
 import TestMap from "./pages/Test/testMap";
 import TestYash from "./pages/Test/testYash";
 import DepartmentTest from "./pages/Test2/DepartmentTest";
@@ -65,10 +72,8 @@ import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 //import UnAuthorized from "./utils/Forbidden/UnAuthorized";
-import RequireAuth, { AuthProvider } from "./context/AuthProvider";
 import TDSTab1 from "./pages/Income/components/TDSTab1";
 import DeclarationPage from "./pages/Income/components/accountantDeclarations/DeclarationPage";
-import CalculateSalary from "./pages/SalaryCalculate/CalculateSalary";
 //import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 const App = () => {
@@ -120,8 +125,20 @@ const App = () => {
       <Route path="/test6" element={<TrackingMap3 />} /> */}
         {/* Login Routes */}
         <Route path="/test3" element={<TestYash />} />
+        <Route
+          path="/employee-remote-punching"
+          element={<EmployeeRemotePunch />}
+        />
         <Route path="/missedPunch" element={<MissedPunch />} />
         <Route path="/test5" element={<TestMap />} />
+        {/* <Route path="/remote/emp" element={<RemoteEmployee />} /> */}
+        {/* this component need to update */}
+        <Route
+          path="/remote/employee-confirmation"
+          element={<EmployeeConfirmation />}
+        />
+        <Route path="/remote/mg/:id" element={<RemoteManager />} />
+        <Route path="/remote/notification" element={<RemoteNotification />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route
           path="/billing"
@@ -354,6 +371,28 @@ const App = () => {
               permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
             >
               <SalaryManagement />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/loan-management"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <LoanManagement />
             </RequireAuth>
           }
         />

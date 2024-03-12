@@ -64,7 +64,9 @@ const PublicHoliday = () => {
             },
           }
         )
-        .then((resp) => setLocations(resp.data.locationsData))
+        .then((resp) => {
+          setLocations(resp.data.locationsData);
+        })
         .catch((e) => console.log(e));
     })();
   }, [authToken, id]);
@@ -497,17 +499,27 @@ const PublicHoliday = () => {
                         value={region}
                         name="region"
                       >
-                        {locations.map((location, idx) => (
-                          <MenuItem key={idx} value={location.shortName}>
-                            {location.shortName}
-                          </MenuItem>
-                        ))}
+                        {locations.length > 0 ? (
+                          locations.map((location, idx) => (
+                            <MenuItem key={idx} value={location.shortName}>
+                              {location.shortName}
+                            </MenuItem>
+                          ))
+                        ) : (
+                            <MenuItem value={''}>
+                              add location first
+                            </MenuItem>
+                        )}
                       </Select>
                     </FormControl>
                   </div>
 
                   <div className="mt-5 flex gap-5 justify-end">
-                    <Button color="error" variant="outlined" onClick={handleClose}>
+                    <Button
+                      color="error"
+                      variant="outlined"
+                      onClick={handleClose}
+                    >
                       cancel
                     </Button>
                     <Button

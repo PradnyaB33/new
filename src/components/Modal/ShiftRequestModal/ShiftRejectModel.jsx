@@ -13,13 +13,13 @@ import {
 import axios from "axios";
 import { format } from "date-fns";
 import dayjs from "dayjs";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { UseContext } from "../../../State/UseState/UseContext";
 // import Loader from "../../../pages/Notification/Loader";
 import UserProfile from "../../../hooks/UserData/useUser";
 
-const LeaveRejectmodal = ({ items }) => {
+const LeaveRejectmodal = ({ items, key }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
@@ -27,7 +27,8 @@ const LeaveRejectmodal = ({ items }) => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const queryClient = useQueryClient();
-  const [updateCount, setUpdateCount] = useState(0);
+  const { setAppAlert } = useContext(UseContext);
+  // const [emp, setEmp] = useState([]);
   let isAcc = false;
   const profileArr = user.profile;
 
@@ -36,20 +37,6 @@ const LeaveRejectmodal = ({ items }) => {
       isAcc = true;
     }
   });
-
-  useEffect(() => {
-    (async () => {
-      const resp = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      console.log(" employeedata", resp.data);
-    })();
-  }, [authToken]);
 
   const handleClose = () => {
     setOpen(false);
@@ -80,8 +67,11 @@ const LeaveRejectmodal = ({ items }) => {
     },
     {
       onSuccess: () => {
-        setUpdateCount(updateCount + 1);
-        window.location.reload();
+        setAppAlert({
+          alert: true,
+          type: "success",
+          msg: "Request Rejected Successfully",
+        });
         queryClient.invalidateQueries("shift-request");
         handleClose();
       },
@@ -100,8 +90,13 @@ const LeaveRejectmodal = ({ items }) => {
       ),
     {
       onSuccess: () => {
-        window.location.reload();
-        setUpdateCount(updateCount + 1);
+        queryClient.invalidateQueries("shift-request");
+        queryClient.invalidateQueries("table");
+        setAppAlert({
+          alert: true,
+          type: "success",
+          msg: "Request Accepted Successfully",
+        });
       },
     }
   );
@@ -118,8 +113,7 @@ const LeaveRejectmodal = ({ items }) => {
       ),
     {
       onSuccess: () => {
-        window.location.reload();
-        setUpdateCount(updateCount + 1);
+        queryClient.invalidateQueries("shift-request");
       },
     }
   );
@@ -128,6 +122,7 @@ const LeaveRejectmodal = ({ items }) => {
     e.preventDefault();
     rejectRequestMutation.mutate();
   };
+
 
   return (
     <>
@@ -164,7 +159,11 @@ const LeaveRejectmodal = ({ items }) => {
 
             <div className="space-y-4 w-full flex flex-col items-center md:items-start justify-center">
               <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                Employee1 has raised a shift request from {items.description}{" "}
+                {/* {emp[key]?.employeeId.first_name +
+                  " " +
+                  emp[key]?.employeeId.last_name}{" "} */}
+                {items.employeeId.first_name + " " + items.employeeId.last_name}{" "}
+                has raised a shift request from {items.description}{" "}
                 {format(new Date(items.start), "PP")} to{" "}
                 {format(new Date(items.end), "PP")}
               </h1>
