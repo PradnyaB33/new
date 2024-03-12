@@ -15,7 +15,7 @@ export function AuthProvider({ children }) {
     setUser(getCurrentUser());
     setisLoading(false);
     // eslint-disable-next-line
-  }, [role]);
+  }, [role, window.location.pathname]);
   return (
     <AuthContext.Provider value={{ user, role, isLoading }}>
       {children}
