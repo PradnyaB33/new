@@ -97,7 +97,7 @@ const Notification = () => {
 
   console.log(data3);
   console.log(data2);
-  console.log(data);
+
   return (
     <>
       <Box
