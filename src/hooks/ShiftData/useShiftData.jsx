@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useContext, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import useShiftStore from "../../pages/SetupPage/ShiftManagement/store/useShiftStore";
 
@@ -13,7 +12,7 @@ const useShiftData = () => {
   const [isCalendarOpen, setCalendarOpen] = useState(false);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
   const queryclient = useQueryClient();
-  const { handleAlert } = useContext(TestContext);
+  const { setAppAlert } = useContext(UseContext);
   const [selectedLeave, setSelectedLeave] = useState(null);
   const [disabledShiftId, setDisabledShiftId] = useState(null);
   // const [isUpdating, setIsUpdating] = useState(false);
@@ -74,22 +73,17 @@ const useShiftData = () => {
       setDisabledShiftId(selectedLeave ? selectedLeave._id : id);
     } catch (error) {
       console.error("Error creating or updating shifts:", error);
-      handleAlert(
-        true,
-        "error",
-        error?.response?.data?.message || "Shifts operation failed"
-      );
     }
   };
 
   const leaveMutation = useMutation(createShifts, {
     onSuccess: () => {
+      queryclient.invalidateQueries("table");
       queryclient.invalidateQueries("employee-leave-table");
       queryclient.invalidateQueries("employee-leave-table");
       queryclient.invalidateQueries("employee-summary-table");
       queryclient.invalidateQueries("employee-leave-table-without-default");
       setNewAppliedLeaveEvents([]);
-      window.location.reload();
     },
     onError: (error) => {
       console.error(error);
@@ -97,10 +91,14 @@ const useShiftData = () => {
   });
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    queryclient.invalidateQueries("table");
     setCalendarOpen(false);
-
     leaveMutation.mutate();
+    setAppAlert({
+      alert: true,
+      type: "success",
+      msg: "Request Raised Successfully",
+    });
   };
   const handleInputChange = () => {
     setCalendarOpen(true);

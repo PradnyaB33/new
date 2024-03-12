@@ -2,11 +2,11 @@
 import Box from "@mui/material/Box";
 import axios from "axios";
 // import dayjs from "dayjs";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { useQuery } from "react-query";
-import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import LeaveRejectmodal from "../../components/Modal/LeaveModal/LeaveRejectmodal";
+import PunchingRejectModal from "../../components/Modal/RemotePunchingModal/PunchingRejectModal";
 import ShiftRejectModel from "../../components/Modal/ShiftRequestModal/ShiftRejectModel";
 // import Error from "./Error";
 // import Loader from "./Loader";
@@ -18,8 +18,6 @@ const Notification = () => {
   let isAcc = false;
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  const [newData, setNewData] = useState([]);
-  const { handleAlert } = useContext(TestContext);
   const profileArr = user.profile;
 
   profileArr.forEach((element) => {
@@ -48,7 +46,7 @@ const Notification = () => {
     }
   });
 
-  const checkStatus = async () => {
+  const { data: data2 } = useQuery("shift-request", async () => {
     try {
       let url;
       if (isAcc) {
@@ -59,43 +57,33 @@ const Notification = () => {
       const response = await axios.get(url, {
         headers: { Authorization: authToken },
       });
-      console.log(response, response);
-      setNewData(response.data);
+      const data = response.data.requests.filter(
+        (item) => item.status === "Pending"
+      );
+      return data;
+    } catch (error) {
+      console.log(error.message);
+      throw error;
+    }
+  });
+
+  const { data: data3 } = useQuery("punch-request", async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/punch-notification/notification-user`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+      return response.data.punchNotification;
     } catch (err) {
       console.log(`🚀 ~ file: notification.jsx:37 ~ err:`, err);
-      handleAlert(
-        true,
-        "error",
-        err.response.data.message || "Server is under Maintenance"
-      );
+
       throw err;
     }
-  };
+  });
 
-  useEffect(() => {
-    checkStatus();
-    // eslint-disable-next-line
-  }, []);
-
-  console.log(
-    "newData",
-    newData?.requests
-    // ?.map((items, idx) => {
-    //   console.log(items);
-    // })
-  );
-
-  // if (isError) {
-  //   return <Error error={error} />;
-  // }
-
-  // if (isLoading) {
-  //   return <Loader />;
-  // }
-
-  // if (isFetching) {
-  //   return <Loader />;
-  // }
+  console.log(data3);
   return (
     <>
       <Box
@@ -107,24 +95,16 @@ const Notification = () => {
       ></Box>
 
       <div className="flex flex-col gap-8 px-8">
-        {/* {data?.leaveRequests?.length === 0 ||
-        newData?.requests?.length === 0 ? (
-          <>
-            <div className="flex items-center gap-4  bg-sky-100 p-4 px-8 rounded-md shadow-lg">
-              <NotificationImportant className="!text-4xl" />
-              <h1 className="text-2xl font-semibold">No Notification</h1>
-            </div>
-          </>
-        ) : (
-          ""
-        )} */}
-        {newData?.requests?.map((items, idx) => {
+        {data2?.map((items, idx) => {
           console.log("items", items);
           return <ShiftRejectModel key={idx} items={items} />;
           // return <div>hello</div>;
         })}
         {data?.leaveRequests?.map((items, idx) => (
           <LeaveRejectmodal key={idx} items={items} />
+        ))}
+        {data3?.map((items, idx) => (
+          <PunchingRejectModal items={items} length={data3?.length} key={idx} />
         ))}
       </div>
     </>

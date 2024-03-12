@@ -11,6 +11,7 @@ const LocationSearchInput = ({ field }) => {
 
   return (
     <PlacesAutocomplete
+      key={process.env.REACT_APP_MAP_API_KEY}
       value={address}
       onChange={handleChange}
       onSelect={handleSelect}

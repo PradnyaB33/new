@@ -1,10 +1,13 @@
 import axios from "axios";
+import { useContext } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import { TestContext } from "../../../State/Function/Main";
 import useGetUser from "../../Token/useUser";
 
 const useDelegateSuperAdmin = () => {
   const { authToken, decodedToken } = useGetUser();
   const queryClient = useQueryClient();
+  const { handleAlert } = useContext(TestContext);
 
   const createDelegate = async (data) => {
     console.log(`🚀 ~ file: mutation.jsx:13 ~ data:`, data);
@@ -23,9 +26,10 @@ const useDelegateSuperAdmin = () => {
 
   const addDelegateMutation = useMutation({
     mutationFn: createDelegate,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       console.log(data);
-      queryClient.invalidateQueries({
+      handleAlert(true, "success", "Delegate super admin updated successfully");
+      await queryClient.invalidateQueries({
         queryKey: [`delegate-super-admin-${decodedToken?.user?._id}`],
       });
     },
