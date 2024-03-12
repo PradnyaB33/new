@@ -221,16 +221,23 @@ const SignIn = () => {
             autoComplete="off"
             className="flex   my-16 !px-20 lg:w-[80%] w-full bg-white flex-col h-fit gap-1"
           >
-            <div className="flex-col gap-4 w-max !flex md:space-x-4  space-x-2 mb-4 ">
-              <div className="flex flex-col space-y-1">
-                {/* <div className="mb-4"> */}
-                <h1 className="font-bold text-2xl md:text-3xl">
+            <div className="flex flex-col space-x-4 lg:items-start items-center">
+              <div className="flex flex-col gap-1  w-full items-center justify-center space-y-1">
+                <img src="/logo.svg" className="h-[45px]" alt="logo" />
+                <h1 className="font-[600] text-center w-full text-3xl">
                   Register Account
                 </h1>
               </div>
             </div>
+            {/* <div className="flex-col gap-4 w-max !flex md:space-x-4  space-x-2 mb-4 ">
+              <div className="flex flex-col space-y-1">
+                <h1 className="font-bold text-2xl md:text-3xl">
+                  Register Account
+                </h1>
+              </div>
+            </div> */}
 
-            <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
+            <div className="mt-6 grid md:grid-cols-2 grid-cols-1 gap-2">
               {/* First Name */}
               <AuthInputFiled
                 name="first_name"

@@ -2,10 +2,12 @@ import {
   AccessTimeSharp,
   Dashboard,
   ErrorOutline,
+  FilterAlt,
   FilterAltOff,
   Groups,
   LocationOn,
 } from "@mui/icons-material";
+import { IconButton, Popover } from "@mui/material";
 import { default as React, useEffect } from "react";
 import { useQueryClient } from "react-query";
 import { useLocation } from "react-router-dom/dist";
@@ -25,6 +27,19 @@ const DashBoardHR = () => {
   const location = useLocation("");
 
   const queryClient = useQueryClient();
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
 
   // custom hooks
 
@@ -103,8 +118,104 @@ const DashBoardHR = () => {
                 <Dashboard className="!text-[#67748E]" />
                 <h1 className="text-md font-bold text-[#67748E]">Dashboard</h1>
               </div>
+              <div className=" w-[80%]  md:hidden flex gap-6 items-center justify-end">
+                <IconButton onClick={handleClick}>
+                  <FilterAlt />
+                </IconButton>
+              </div>
+
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                sx={{
+                  height: "150px",
+                }}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+              >
+                <div className="w-full  items-center    p-2 flex gap-2 ">
+                  <button
+                    onClick={() => {
+                      setLocations("");
+                      setDepartment("");
+                      setManager("");
+                      queryClient.invalidateQueries("organization-attenedence");
+                    }}
+                    className="!w-max flex justify-center h-[25px]  gap-2 items-center rounded-md px-1 text-sm font-semibold text-[#152745]  hover:bg-gray-50 focus-visible:outline-gray-100"
+                  >
+                    <FilterAltOff className="!text-[1.4em] text-[#152745] " />
+                    Remove Filter
+                  </button>
+
+                  <Select
+                    placeholder={"Departments"}
+                    onChange={(dept) => {
+                      setDepartment(dept.value);
+                      setLocations("");
+                      setManager("");
+                      queryClient.invalidateQueries("department-attenedence");
+                    }}
+                    styles={customStyles}
+                    value={
+                      department
+                        ? Departmentoptions?.find(
+                            (option) => option.value === department
+                          )
+                        : ""
+                    } // Add this line
+                    options={Departmentoptions}
+                  />
+
+                  <Select
+                    placeholder={"Manager"}
+                    components={{
+                      IndicatorSeparator: () => null,
+                    }}
+                    onChange={(Managers) => {
+                      setManager(Managers.value);
+                      setDepartment("");
+                      setLocations("");
+                      queryClient.invalidateQueries("manager-attenedence");
+                    }}
+                    value={
+                      manager
+                        ? managerOptions.find((item) => item.name === manager)
+                        : ""
+                    }
+                    styles={customStyles}
+                    options={managerOptions}
+                  />
+
+                  <Select
+                    placeholder={"Location"}
+                    components={{
+                      IndicatorSeparator: () => null,
+                    }}
+                    onChange={(loc) => {
+                      setLocations(loc.value);
+                      setDepartment("");
+                      setManager("");
+                      queryClient.invalidateQueries("location-attenedence");
+                    }}
+                    value={
+                      locations
+                        ? locationOptions.find(
+                            (item) => item.name === locations
+                          )
+                        : ""
+                    }
+                    styles={customStyles}
+                    options={locationOptions}
+                  />
+                </div>
+              </Popover>
+
               {location.pathname?.includes("/HR-dashboard") && (
-                <div className="flex w-[80%] gap-6 items-center justify-end">
+                <div className=" w-[80%] hidden md:flex gap-6 items-center justify-end">
                   <button
                     onClick={() => {
                       setLocations("");
