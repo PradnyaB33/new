@@ -51,7 +51,6 @@ const ChangeRole = () => {
     {
       onSuccess: async (response) => {
         Cookies.set("role", response?.data?.roleToken);
-        window.location.reload();
         if (response?.data?.role === "Super-Admin") {
           redirect("/");
         } else if (response?.data?.role === "HR") {
@@ -71,8 +70,8 @@ const ChangeRole = () => {
         } else {
           redirect("/organisation/dashboard/employee-dashboard");
         }
-        window.location.reload();
         queryClient.invalidateQueries({ queryKey: ["role"] });
+        window.location.reload();
       },
 
       onError: (error) => {

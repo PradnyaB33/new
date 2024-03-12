@@ -1,8 +1,8 @@
-import { Email, Lock } from "@mui/icons-material";
+import { Email, Lock, Visibility, VisibilityOff } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
@@ -157,7 +157,8 @@ const SignIn = () => {
   };
 
   const [focusedInput, setFocusedInput] = React.useState(null);
-
+  const [visible, setVisible] = useState(false);
+  console.log(`🚀 ~ visible:`, visible);
   const handleFocus = (fieldName) => {
     setFocusedInput(fieldName);
   };
@@ -259,7 +260,7 @@ const SignIn = () => {
                       handleFocus("password");
                     }}
                     onBlur={() => setFocusedInput(null)}
-                    type="password"
+                    type={visible ? "text" : "password"}
                     placeholder="*****"
                     label="Password"
                     onChange={(event) => setPassword(event.target.value)}
@@ -267,6 +268,17 @@ const SignIn = () => {
                  
                     border-none bg-white w-full outline-none px-2`}
                   />
+
+                  <button
+                    type="button"
+                    onClick={() => setVisible(visible === true ? false : true)}
+                  >
+                    {visible ? (
+                      <VisibilityOff className="text-gray-700" />
+                    ) : (
+                      <Visibility className="text-gray-700" />
+                    )}
+                  </button>
                 </div>
               </div>
             </div>

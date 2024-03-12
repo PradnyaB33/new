@@ -66,6 +66,8 @@ import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 //import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 import RequireAuth, { AuthProvider } from "./context/AuthProvider";
+import TDSTab1 from "./pages/Income/components/TDSTab1";
+import DeclarationPage from "./pages/Income/components/accountantDeclarations/DeclarationPage";
 import CalculateSalary from "./pages/SalaryCalculate/CalculateSalary";
 //import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
@@ -173,7 +175,13 @@ const App = () => {
         <Route
           path="/organisation/dashboard/employee-dashboard"
           element={
-            <RequireAuth permission={"Employee"}>
+            <RequireAuth
+              permission={[
+                "Employee",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+              ]}
+            >
               <Dashboard />
             </RequireAuth>
           }
@@ -258,6 +266,7 @@ const App = () => {
                 "Delegate-Department-Head",
                 "Department-Admin",
                 "Delegate-Department-Admin",
+                "HR",
               ]}
             >
               <DepartmentList />
@@ -627,6 +636,11 @@ const App = () => {
           }
         />
         <Route path="/income-tax" element={<IncomeTax />} />
+        <Route path="/income-tax/declarations" element={<TDSTab1 />} />
+        <Route
+          path="/income-tax/accountant-declarations"
+          element={<DeclarationPage />}
+        />
         <Route path="/application" element={<Application />} />
         <Route
           path="/leave"
@@ -667,6 +681,7 @@ const App = () => {
                 "Delegate-Department-Head",
                 "Department-Admin",
                 "Delegate-Department-Admin",
+                "HR",
               ]}
             >
               <SingleDepartment />
@@ -685,6 +700,7 @@ const App = () => {
                 "Delegate-Department-Head",
                 "Department-Admin",
                 "Delegate-Department-Admin",
+                "HR",
               ]}
             >
               <DeleteDepartment />
