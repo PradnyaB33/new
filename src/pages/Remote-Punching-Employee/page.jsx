@@ -32,16 +32,23 @@ const EmployeeRemotePunch = () => {
         ) : (
           "Loading"
         )}
-        <div className="top-12 right-12 rounded-xl absolute gap-4 p-10 flex flex-col items-start justify-center">
+        <div className="top-12 right-12 rounded-xl absolute gap-4 p-10 flex flex-col items-end justify-center">
+          <Chip
+            label={`Please do not connect to any wi-fi till you location is fetching`}
+            className="!text-md"
+            onClick={(e) => console.log(e)}
+            variant="filled"
+            color="error"
+          />
           <Chip
             label={`Latitude is ${data?.latitude}`}
-            className="!bg-white !text-xl"
+            className="!bg-white !text-md"
             onClick={(e) => console.log(e)}
             variant="filled"
           />
           <Chip
             label={`Longitude is ${data?.longitude}`}
-            className="!bg-white !text-xl"
+            className="!bg-white !text-md"
             onClick={(e) => console.log(e)}
             variant="filled"
           />
