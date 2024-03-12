@@ -81,6 +81,12 @@ const Notification = () => {
           headers: { Authorization: authToken },
         }
       );
+      if(isAcc){
+        const finalData = response.data.punchNotification.filter((item) =>{
+          return item.status === 'M-approved'
+        })
+        return finalData
+      }
       return response.data.punchNotification;
     } catch (err) {
       console.log(`🚀 ~ file: notification.jsx:37 ~ err:`, err);
@@ -90,6 +96,8 @@ const Notification = () => {
   });
 
   console.log(data3);
+  console.log(data2);
+  console.log(data);
   return (
     <>
       <Box
