@@ -123,9 +123,8 @@ const TDSTable1 = () => {
   let deduction = 0;
 
   const {
-    isFetched: salaryFetch,
+    // isFetched: salaryFetch,
     isFetching: salaryFetching,
-    isLoading,
   } = useQuery({
     queryKey: ["finacialYearData"],
     queryFn: async () => {
@@ -153,11 +152,7 @@ const TDSTable1 = () => {
     },
   });
 
-  const {
-    isLoading: incomeHouseLoading,
-    isFetching,
-    isFetched,
-  } = useQuery({
+  useQuery({
     queryKey: ["incomeSalary"],
     queryFn: async () => {
       try {
@@ -178,8 +173,8 @@ const TDSTable1 = () => {
       queryClient.invalidateQueries({ queryKey: ["finacialYearData"] });
       deduction = grossTotal - res.totalDeductions;
 
-      const updatedTableData = tableData.map((item) => {
-        const matchingItem = res.incomeFromSalary.investmentType.find(
+      const updatedTableData = tableData?.map((item) => {
+        const matchingItem = res?.incomeFromSalary?.investmentType.find(
           (investment) => investment.name === item.name
         );
 
@@ -316,12 +311,7 @@ const TDSTable1 = () => {
 
   return (
     <div className="">
-      {isLoading ||
-      incomeHouseLoading ||
-      isFetching ||
-      !isFetched ||
-      !salaryFetch ||
-      salaryFetching ? (
+      {salaryFetching ? (
         <div className="flex items-center justify-center w-full">
           <CircularProgress />
         </div>

@@ -6,22 +6,7 @@ const useSelfieStore = create((set) => ({
   punchObjectId: null,
   start: false,
   count: 0,
-  locationArray: [
-    {
-      lng: parseFloat(73.7595417),
-      lat: parseFloat(18.6019794),
-      _id: "65edf534aeda17befde7f80d",
-      updatedAt: "2024-03-10T18:00:20.953Z",
-      createdAt: "2024-03-10T18:00:20.953Z",
-    },
-    {
-      lng: parseFloat(73.7595417),
-      lat: parseFloat(18.6019794),
-      _id: "65edf534aeda17befde7f80d",
-      updatedAt: "2024-03-10T18:00:20.953Z",
-      createdAt: "2024-03-10T18:00:20.953Z",
-    },
-  ],
+  locationArray: [],
   setOpen: (open) => {
     set({ open });
   },

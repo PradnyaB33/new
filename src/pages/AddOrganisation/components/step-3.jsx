@@ -20,7 +20,7 @@ const Step3 = ({ nextStep }) => {
     },
     resolver: zodResolver(packageCountSchema),
   });
-  const { errors, isDirty } = formState;
+  const { errors } = formState;
   const onSubmit = (data) => {
     console.log(`🚀 ~ file: step-3.jsx:26 ~ data:`, data);
     setStep3Data(data.count);
@@ -43,12 +43,7 @@ const Step3 = ({ nextStep }) => {
           errors={errors}
           error={errors.count}
         />
-        <Button
-          disabled={!isDirty}
-          type="submit"
-          variant="contained"
-          className="!w-max !mx-auto"
-        >
+        <Button type="submit" variant="contained" className="!w-max !mx-auto">
           Confirm & Pay
         </Button>
       </form>

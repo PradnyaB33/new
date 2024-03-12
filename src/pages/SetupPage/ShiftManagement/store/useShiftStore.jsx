@@ -1,7 +1,7 @@
-import create from 'zustand';
+import { create } from "zustand";
 
 const useShiftStore = create((set) => ({
-  shiftName: '',
+  shiftName: "",
   setShiftName: (newShiftName) => set({ shiftName: newShiftName }),
 }));
 

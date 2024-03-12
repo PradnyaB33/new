@@ -1,19 +1,13 @@
 import { Polyline } from "@mui/icons-material";
-import { Autocomplete, GoogleMap, Marker } from "@react-google-maps/api";
+import { GoogleMap, Marker } from "@react-google-maps/api";
 import React from "react";
 import useGetSinglePunchEntry from "../../hooks/QueryHook/Remote-Punch/components/get-sing-entry";
-console.log(`🚀 ~ file: Map-Component.jsx:2 ~ Autocomplete:`, Autocomplete);
 
 const MapComponent = ({ punchObjectId, isLoaded }) => {
   const { data } = useGetSinglePunchEntry({ Id: punchObjectId });
-  console.log(`🚀 ~ file: Map-Container.jsx:18 ~ data:`, data);
-  console.log(
-    `🚀 ~ file: Map-Container.jsx:21 ~ data?.punchData[0]?.lat:`,
-    data?.punchData
-  );
   return isLoaded && data?.punchData ? (
     <GoogleMap
-      key={process.env.REACT_APP_MAP_API_KEY}
+      key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
       mapContainerStyle={{
         width: "70%",
         height: "91.8vh",
