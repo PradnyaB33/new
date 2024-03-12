@@ -149,7 +149,11 @@ const LeaveRejectmodal = ({ items, key }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    rejectAccRequestMutation.mutate();
+    if (isAcc) {
+      rejectAccRequestMutation.mutate();
+    } else {
+      rejectRequestMutation.mutate();
+    }
   };
 
   return (
