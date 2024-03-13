@@ -28,7 +28,7 @@ const useNotificationRemotePunching = () => {
       await queryClient.invalidateQueries({
         queryKey: [`remote-punching-${decodedToken?.user?._id}`],
       });
-      handleAlert(true, "success", `Subscription updated successfully`);
+      handleAlert(true, "success", `Request approved successfully`);
     },
     onError: (data) => {
       console.error(data);
@@ -54,7 +54,7 @@ const useNotificationRemotePunching = () => {
       await queryClient.invalidateQueries({
         queryKey: [`punch-request`],
       });
-      handleAlert(true, "success", `Subscription updated successfully`);
+      handleAlert(true, "success", `Request approved successfully`);
     },
     onError: (data) => {
       console.error(data);

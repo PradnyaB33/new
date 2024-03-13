@@ -8,13 +8,8 @@ import useSelfieStore from "./zustand-store";
 const useLocationMutation = () => {
   const { handleAlert } = useContext(TestContext);
   const { authToken } = useGetUser();
-  const {
-    setOpen,
-    setMedia,
-    setPunchObjectId,
-    media,
-    setStart,
-  } = useSelfieStore();
+  const { setOpen, setMedia, setPunchObjectId, media, setStart } =
+    useSelfieStore();
 
   const fetchLocationData = async () => {
     const position = await new Promise((resolve, reject) => {
@@ -164,8 +159,8 @@ const useLocationMutation = () => {
       setStart(true);
     },
     onError: (data) => {
-      console.error(data);
-      handleAlert(true, "error", data.message);
+      console.error(`🚀 ~ file: mutation.jsx:167 ~ data:`, data?.response);
+      handleAlert(true, "error", data?.response?.data?.message);
     },
   });
 
