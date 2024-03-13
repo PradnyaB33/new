@@ -189,7 +189,7 @@ const ViewPayslip = () => {
                 />
                 <div>
                   <p className="text-lg font-semibold">
-                    Organization Name:
+                    Organisation Name:
                     <span>{organisationInfo?.orgName || ""}</span>
                   </p>
 
@@ -198,11 +198,11 @@ const ViewPayslip = () => {
                     <span>{organisationInfo?.location || ""}</span>
                   </p>
                   <p className="text-lg">
-                    Contact Number:
+                    Contact No:
                     <span>{organisationInfo?.contact_number || ""}</span>
                   </p>
                   <p className="text-lg">
-                    Organization Email:
+                    Organisation Email:
                     <span> {organisationInfo?.email || ""}</span>
                   </p>
                 </div>
@@ -237,7 +237,7 @@ const ViewPayslip = () => {
                       </td>
                     </tr>
                     <tr>
-                      <td class="px-4 py-2 border">Degination:</td>
+                      <td class="px-4 py-2 border">Designation:</td>
                       <td class="px-4 py-2 border">
                         {employeeInfo?.designation &&
                         employeeInfo?.designation !== null &&
@@ -276,7 +276,7 @@ const ViewPayslip = () => {
                       <td class="px-4 py-2 border">{paidLeave}</td>
                     </tr>
                     <tr>
-                      <td class="px-4 py-2 border">Bank Account Number:</td>
+                      <td class="px-4 py-2 border">Bank Account No:</td>
                       <td class="px-4 py-2 border">
                         {employeeInfo?.bank_account_no || ""}
                       </td>
@@ -342,7 +342,7 @@ const ViewPayslip = () => {
                       <td class="py-2 border">{employeeInfo?.esic || ""}</td>
                     </tr>
                     <tr>
-                      <td class="px-4 py-2 border">Food allowance:</td>
+                      <td class="px-4 py-2 border">Food Allowance:</td>
                       <td class="px-4 py-2 border">
                         {previousMonthSalary?.foodAllowance || ""}
                       </td>
@@ -350,7 +350,7 @@ const ViewPayslip = () => {
                       <td class="px-4 py-2 border"></td>
                     </tr>
                     <tr>
-                      <td class="px-4 py-2 border">Sales allowance:</td>
+                      <td class="px-4 py-2 border">Sales Allowance:</td>
                       <td class="px-4 py-2 border">
                         {previousMonthSalary?.salesAllowance || ""}
                       </td>
@@ -358,7 +358,7 @@ const ViewPayslip = () => {
                       <td class="px-4 py-2 border"></td>
                     </tr>
                     <tr>
-                      <td class="px-4 py-2 border">Special allowance:</td>
+                      <td class="px-4 py-2 border">Special Allowance:</td>
                       <td class="px-4 py-2 border">
                         {" "}
                         {previousMonthSalary?.specialAllowance || ""}
@@ -367,7 +367,7 @@ const ViewPayslip = () => {
                       <td class="px-4 py-2 border"></td>
                     </tr>
                     <tr>
-                      <td class="px-4 py-2 border">Travel allowance:</td>
+                      <td class="px-4 py-2 border">Travel Allowance:</td>
                       <td class="px-4 py-2 border">
                         {" "}
                         {previousMonthSalary?.travelAllowance || ""}
@@ -376,7 +376,7 @@ const ViewPayslip = () => {
                       <td class="px-4 py-2 border"></td>
                     </tr>
                     <tr>
-                      <td class="px-4 py-2 border">Variable Pay allowance:</td>
+                      <td class="px-4 py-2 border">Variable Pay Allowance:</td>
                       <td class="px-4 py-2 border">
                         {" "}
                         {previousMonthSalary?.variableAllowance || ""}
