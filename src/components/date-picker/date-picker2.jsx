@@ -26,7 +26,7 @@ const AppDatePicker = ({
   const localizer = momentLocalizer(moment);
   const { handleAlert } = useContext(TestContext);
   const [newData, setNewData] = useState([]);
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const { cookies } = useContext(UseContext);
   const { setAppAlert } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -50,7 +50,6 @@ const AppDatePicker = ({
           },
         }
       );
-      console.log(resp.data.requests);
       setNewData(resp.data.requests);
     } catch (error) {
       console.error(error.message);
@@ -101,7 +100,6 @@ const AppDatePicker = ({
   };
 
   const handleSelectSlot = ({ start, end }) => {
-    console.log(selectedLeave);
     getLatestShifts();
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
@@ -255,7 +253,7 @@ const AppDatePicker = ({
         );
         getLatestShifts();
         setSelectedLeave(null); // Reset selectedLeave state
-        queryClient.invalidateQueries('table')
+        queryClient.invalidateQueries("table");
         setAppAlert({
           alert: true,
           type: "success",

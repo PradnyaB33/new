@@ -1,21 +1,32 @@
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useContext } from "react";
+import { useMutation, useQuery } from "react-query";
+import { TestContext } from "../../../State/Function/Main";
 import useGetUser from "../../Token/useUser";
-import useLocationMutation from "./mutation";
 import useSelfieStore from "./zustand-store";
 
 const useStartPunch = () => {
   const { authToken } = useGetUser();
-  const { punchObjectId, start, setLocation } = useSelfieStore();
-  const { getUserLocation } = useLocationMutation();
-  const { data: objectData, mutate } = getUserLocation;
+  const {
+    punchObjectId,
+    start,
+    setLocation,
+    setTemporaryArray,
+    temporaryArray,
+    setId,
+    clearTemporaryArray,
+  } = useSelfieStore();
+
+  const { handleAlert } = useContext(TestContext);
   const fetchLocationData = async () => {
-    mutate();
-    const { latitude, longitude } = objectData;
-    setLocation({ lat: latitude, lng: longitude });
+    startGeoLocationWatch.mutate();
+
+    console.log(
+      `🚀 ~ file: independant-use-query.jsx:18 ~ temporaryArray:`,
+      temporaryArray
+    );
     const payload = {
-      lat: latitude,
-      lng: longitude,
+      temporaryArray,
       punchObjectId,
     };
     const response = await axios.patch(
@@ -34,12 +45,47 @@ const useStartPunch = () => {
     enabled: start,
     refetchIntervalInBackground: true,
     onSuccess: (data) => {
-      console.log(
-        `🚀 ~ file: independant-use-query.jsx:37 ~ data:`,
-        data?.punchObject?.data
-      );
+      clearTemporaryArray();
     },
   });
+  const getNavigatorData = async () => {
+    const id = navigator.geolocation.watchPosition(
+      (positionCallback) => {
+        console.log(
+          `🚀 ~ file: independant-use-query.jsx:54 ~ positionCallback:`,
+          positionCallback
+        );
+        const { latitude, longitude } = positionCallback.coords;
+
+        setTemporaryArray({ latitude, longitude });
+        setLocation({ lat: latitude, lng: longitude });
+      },
+      () => {
+        handleAlert(
+          true,
+          "error",
+          "Error Getting GeoLocation please reload webpage"
+        );
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      }
+    );
+    return id;
+  };
+
+  const startGeoLocationWatch = useMutation({
+    mutationFn: getNavigatorData,
+    onSuccess: (data) => {
+      setId(data);
+    },
+    onError: (data) => {
+      console.error(data);
+    },
+  });
+
   return { data, refetch };
 };
 

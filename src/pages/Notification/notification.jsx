@@ -51,16 +51,20 @@ const Notification = () => {
       let url;
       if (isAcc) {
         url = `${process.env.REACT_APP_API}/route/shiftApply/getForAccountant`;
+        const response = await axios.get(url, {
+          headers: { Authorization: authToken },
+        });
+        return response.data.requests;
       } else {
         url = `${process.env.REACT_APP_API}/route/shiftApply/getForManager`;
+        const response = await axios.get(url, {
+          headers: { Authorization: authToken },
+        });
+        const data = response.data.requests.filter(
+          (item) => item.status === "Pending"
+        );
+        return data;
       }
-      const response = await axios.get(url, {
-        headers: { Authorization: authToken },
-      });
-      const data = response.data.requests.filter(
-        (item) => item.status === "Pending"
-      );
-      return data;
     } catch (error) {
       console.log(error.message);
       throw error;
@@ -84,6 +88,7 @@ const Notification = () => {
   });
 
   console.log(data3);
+
   return (
     <>
       <Box

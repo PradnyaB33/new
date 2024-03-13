@@ -10,9 +10,9 @@ const useNotificationRemotePunching = () => {
   const { handleAlert } = useContext(TestContext);
 
   const notifyToManager = async (punchId) => {
-    const response = await axios.patch(
+    const response = await axios.post(
       `${process.env.REACT_APP_API}/route/punch/manager/${punchId}`,
-      { status: "M-Approved" },
+      { status: "Pending" },
       {
         headers: {
           Authorization: authToken,
