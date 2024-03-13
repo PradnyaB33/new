@@ -31,7 +31,8 @@ const calculateDistance = (coords) => {
 
 const PunchingRejectModal = ({ items, length }) => {
   const navigate = useNavigate();
-  const { notifyAccountantMutation } = useNotificationRemotePunching();
+  const { notifyAccountantMutation, RejectManagerMutation } =
+    useNotificationRemotePunching();
   const distanceTraveled =
     items.punchData[0].data && items.punchData[0].data.length > 1
       ? calculateDistance(items.punchData[0].data)
@@ -94,7 +95,12 @@ const PunchingRejectModal = ({ items, length }) => {
             >
               Accept
             </Button>
-            <Button variant="contained" color="error" size="small">
+            <Button
+              onClick={() => RejectManagerMutation.mutate(items._id)}
+              variant="contained"
+              color="error"
+              size="small"
+            >
               Reject
             </Button>
           </div>

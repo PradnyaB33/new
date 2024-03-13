@@ -241,9 +241,7 @@ const DepartmentList = () => {
           </Typography>
         </div>
       ) : (
-        <div
-          className="w-[75vw] m-auto h-full"
-        >
+        <div className="w-[75vw] m-auto h-full">
           <div className="p-4 ">
             <Typography variant="h4" className="text-center mb-6">
               Departments
@@ -279,12 +277,7 @@ const DepartmentList = () => {
               </thead>
               <tbody>
                 {departmentList?.map((department, id) => (
-                  <tr
-                    key={id}
-                    className={`${
-                      id % 2 === 0 ? "bg-gray-50" : "bg-white"
-                    } border-b dark:border-neutral-500 !font-medium`}
-                  >
+                  <tr key={id} className="bg-white border-b">
                     <td className="py-2 px-3">{id + 1}</td>
                     <td className="py-2 px-3">
                       {department?.departmentName || ""}
@@ -566,7 +559,7 @@ const DepartmentList = () => {
                 {headList?.map((data, index) => (
                   <MenuItem
                     key={index}
-                    value={data.first_name + " " + data.last_name}
+                    value={data._id}
                   >
                     {!data ? (
                       <MenuItem>No department head present!</MenuItem>
@@ -606,7 +599,7 @@ const DepartmentList = () => {
                 {delegateHeadList?.map((data, index) => (
                   <MenuItem
                     key={index}
-                    value={data.first_name + " " + data.last_name}
+                    value={data._id}
                   >
                     {!data ? (
                       <MenuItem>No delegate head present!</MenuItem>
