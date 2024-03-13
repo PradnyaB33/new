@@ -454,7 +454,7 @@ const App = () => {
           element={<TermsAndConditionsPage />}
         />
         <Route
-          path="/tab-terms-policy-cookies"
+          path="/terms-policy-cookies"
           element={<TabTermsPrivacyPolicy />}
         />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
