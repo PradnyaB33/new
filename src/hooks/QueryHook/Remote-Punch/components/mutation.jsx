@@ -38,7 +38,7 @@ const useNotificationRemotePunching = () => {
   const notifyToAccountant = async (punchId) => {
     const response = await axios.patch(
       `${process.env.REACT_APP_API}/route/punch/accountant/${punchId}`,
-      { status: "M-Approved" },
+      { status: "A-Approved" },
       {
         headers: {
           Authorization: authToken,

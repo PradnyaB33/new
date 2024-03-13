@@ -66,7 +66,6 @@ const Notification = () => {
         return data;
       }
 
-      return data;
     } catch (error) {
       console.log(error.message);
       throw error;
