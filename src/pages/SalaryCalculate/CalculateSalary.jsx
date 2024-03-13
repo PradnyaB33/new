@@ -27,6 +27,8 @@ function CalculateSalary() {
     setSelectedDate(date);
     const daysInMonth = date.daysInMonth();
     setNumDaysInMonth(daysInMonth);
+    setPaidLeaveDays(0);
+    setUnPaidLeaveDays(0);
   };
 
   // formate the data in this format eg(Dec-23)
@@ -54,7 +56,6 @@ function CalculateSalary() {
     fetchAvailableEmployee();
     // eslint-disable-next-line
   }, []);
-  console.log(availableEmployee);
 
   // pull holiday's count based on organization id
   const fetchHoliday = async () => {
@@ -86,7 +87,7 @@ function CalculateSalary() {
     const holidaysInCurrentMonth = publicHolidays.filter((holiday) => {
       const holidayDate = dayjs(holiday.date);
       return (
-        holidayDate.month() + 1 === parseInt(selectedMonth) && // Month is zero-based in dayjs
+        holidayDate.month() + 1 === parseInt(selectedMonth) &&
         holidayDate.year() === parseInt(selectedYear)
       );
     });
@@ -125,12 +126,12 @@ function CalculateSalary() {
 
   // get the weekend count in that organization
   const countWeekendDaysInMonth = () => {
-    const selectedMonth = dayjs(selectedDate); // selectedDate is the chosen date
+    const selectedMonth = dayjs(selectedDate);
     const daysInMonth = selectedMonth.daysInMonth();
     let weekendCount = 0;
     for (let i = 1; i <= daysInMonth; i++) {
       const currentDate = selectedMonth.date(i);
-      const dayOfWeek = currentDate.format("ddd"); // Get day of the week (e.g., "Sat", "Sun")
+      const dayOfWeek = currentDate.format("ddd");
       if (getWeekendbyOrganization.includes(dayOfWeek)) {
         // If the day falls on a weekend day defined by the organization
         weekendCount++;
@@ -139,7 +140,7 @@ function CalculateSalary() {
     return weekendCount;
   };
 
-  // // Call the function to count weekend days in the selected month
+  // Call the function to count weekend days in the selected month
   const weekendCount = countWeekendDaysInMonth();
 
   // pull the data such as paidLeaveDays , unpaidLeave days
