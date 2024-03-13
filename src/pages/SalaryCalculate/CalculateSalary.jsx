@@ -419,7 +419,7 @@ function CalculateSalary() {
             </span>
           </p>
           <p className="text-lg">
-            Organisation Email:
+            Email:
             <span>{availableEmployee?.organizationId?.email || ""}</span>
           </p>
         </div>
@@ -472,7 +472,7 @@ function CalculateSalary() {
                   availableEmployee?.deptname[0]?.departmentName) ||
                   ""}
               </td>
-              <td class="px-4 py-2 border">No of Working Days Attended:</td>
+              <td class="px-4 py-2 border">No Of Working Days Attended:</td>
               <td class="px-4 py-2 border">{noOfDaysEmployeePresent}</td>
             </tr>
             <tr>
@@ -492,7 +492,7 @@ function CalculateSalary() {
               <td class="px-4 py-2 border">{publicHolidaysCount}</td>
             </tr>
             <tr>
-              <td class="px-4 py-2 border"> No of Days in Month:</td>
+              <td class="px-4 py-2 border"> No Of Days in Month:</td>
               <td class="px-4 py-2 border">{numDaysInMonth}</td>
               <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>
