@@ -38,7 +38,7 @@ const useNotificationRemotePunching = () => {
   const notifyToAccountant = async (punchId) => {
     const response = await axios.patch(
       `${process.env.REACT_APP_API}/route/punch/accountant/${punchId}`,
-      { status: "M-Approved" },
+      { status: "A-Approved" },
       {
         headers: {
           Authorization: authToken,
@@ -62,9 +62,79 @@ const useNotificationRemotePunching = () => {
     },
   });
 
+  const handleRejectManager = async (punchId) => {
+    try {
+      const resp = await axios.post(
+        `${process.env.REACT_APP_API}/route/punch/manager/reject/:punchId`,
+        {
+          status: "M-Rejected",
+        },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return resp.data;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const RejectManagerMutation = useMutation({
+    mutationFn: handleRejectManager,
+    onSuccess: async (data) => {
+      console.log(data);
+      await queryClient.invalidateQueries({
+        queryKey: [`punch-request`],
+      });
+      handleAlert(true, "success", `Request Rejected Successfully`);
+    },
+    onError: (data) => {
+      console.error(data);
+      handleAlert(true, "error", `Request Not Rejected Successfully`);
+    },
+  });
+
+  const handleRejectAccountant = async (punchId) => {
+    try {
+      const resp = await axios.post(
+        `${process.env.REACT_APP_API}/route/punch/accoutant/reject/:punchId`,
+        {
+          status: "A-Rejected",
+        },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return resp.data;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const RejectAccountantMutation = useMutation({
+    mutationFn: handleRejectAccountant,
+    onSuccess: async (data) => {
+      console.log(data);
+      await queryClient.invalidateQueries({
+        queryKey: [`punch-request`],
+      });
+      handleAlert(true, "success", `Request Rejected Successfully`);
+    },
+    onError: (data) => {
+      console.error(data);
+      handleAlert(true, "error", `Request Not Rejected Successfully`);
+    },
+  });
+
   return {
     notifyManagerMutation,
     notifyAccountantMutation,
+    RejectManagerMutation,
+    RejectAccountantMutation,
   };
 };
 
