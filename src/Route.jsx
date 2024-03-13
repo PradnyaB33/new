@@ -8,7 +8,7 @@ import Loader from "./components/app-loader/page";
 import AnimationComponent from "./components/emailverify/verification-animation";
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
-import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
+import TermsAndConditionsPage from "./components/TermsPrivacyCookies/termsconditonpage";
 import RequireAuth, { AuthProvider } from "./context/AuthProvider";
 import useSubscription from "./hooks/Subscription/subscription";
 import NewOranisationForm from "./pages/AddOrganisation/OrgFrom";
@@ -76,6 +76,10 @@ import TDSTab1 from "./pages/Income/components/TDSTab1";
 import DeclarationPage from "./pages/Income/components/accountantDeclarations/DeclarationPage";
 //import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
+import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
+import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
+import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
+
 const App = () => {
   return (
     <AuthProvider>
@@ -449,7 +453,12 @@ const App = () => {
           path="/terms-and-conditions"
           element={<TermsAndConditionsPage />}
         />
-
+        <Route
+          path="/tab-terms-policy-cookies"
+          element={<TabTermsPrivacyPolicy />}
+        />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/cookies-policy" element={<CookiesPolicy />} />
         <Route
           path="/organisation/:organisationId/setup/salary-computation-day"
           element={

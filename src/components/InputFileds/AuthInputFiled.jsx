@@ -389,7 +389,7 @@ const AuthInputFiled = ({
                 {label}{" "}
                 {name === "isChecked" && (
                   <Link
-                    href="/terms-and-conditions"
+                    to="/terms-and-conditions"
                     className="font-semibold text-blue-500 hover:underline text-md  "
                   >
                     Terms and Conditions
