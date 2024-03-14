@@ -7,6 +7,7 @@ import MapComponent from "./Map-Container";
 const RemoteManager = () => {
   const { Id } = useParams();
   const [punchObjectId, setPunchObjectId] = useState(null);
+
   const { isLoaded } = useJsApiLoader({
     id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
