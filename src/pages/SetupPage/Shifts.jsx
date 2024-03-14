@@ -2,6 +2,7 @@ import { Add, Info } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
+import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
 import {
   Avatar,
   AvatarGroup,
@@ -24,7 +25,6 @@ import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import ShiftModal from "../../components/Modal/shift/ShiftModal";
 import Setup from "../SetUpOrganization/Setup";
-import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
 const Shifts = () => {
   const { organisationId } = useParams("");
   const { cookies } = useContext(UseContext);
@@ -155,7 +155,7 @@ const Shifts = () => {
                           <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                             <tr className="!font-medium shadow-lg">
                               <th scope="col" className="px-6 py-3 ">
-                                SR NO
+                                Sr. No
                               </th>
                               <th scope="col" className="px-6 py-3 ">
                                 Shift Name
@@ -217,7 +217,7 @@ const Shifts = () => {
                                     />
                                   </td>
 
-                                  <td className="whitespace-nowrap !text-left px-6 py-2">
+                                  <td className="flex items-start !text-left px-6 py-2">
                                     <AvatarGroup max={6}>
                                       {items?.selectedDays.map((item) => (
                                         <Avatar

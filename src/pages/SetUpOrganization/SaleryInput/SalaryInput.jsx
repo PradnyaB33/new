@@ -1,6 +1,7 @@
 import { Add, Info, MoreHoriz } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 import {
   Button,
   Dialog,
@@ -20,7 +21,6 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import SalaryInputFieldsModal from "../../../components/Modal/SalaryInputFields/SalaryInputFieldsModal";
 import Setup from "../Setup";
 import SkeletonSalaryInput from "./SkeletonSalaryInput";
-import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 
 const SalaryInput = () => {
   const { organisationId } = useParams();
@@ -148,7 +148,7 @@ const SalaryInput = () => {
                   <thead className="bg-gray-200  !font-medium ">
                     <tr className="!font-semibold ">
                       <th scope="col" className="!text-left px-6 py-3 ">
-                        SR NO
+                        Sr. No
                       </th>
                       <th className="py-3 ">Template Name</th>
                       <th className="px-6 py-3 ">Template Description</th>
@@ -166,7 +166,7 @@ const SalaryInput = () => {
                         key={id}
                       >
                         <td className="py-3 px-6">{id + 1}</td>
-                        <td className="px-6">{item.name}</td>
+                        <td>{item.name}</td>
                         <td className="px-6">
                           {item.desc.length <= 0 ? "No description" : item.desc}
                         </td>

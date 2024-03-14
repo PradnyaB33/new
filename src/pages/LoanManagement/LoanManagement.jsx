@@ -1,15 +1,15 @@
-import React, { useContext, useState } from "react";
-import { Button } from "@mui/material";
 import { Add, Info } from "@mui/icons-material";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
-import LoanManagementSkeleton from "./LoanManagementSkeleton";
-import LoanManagementPieChart from "./LoanManagementPieChart";
-import CreateLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/CreateLoanMgtModal";
-import { useParams } from "react-router-dom";
-import { useQuery } from "react-query";
+import { Button } from "@mui/material";
 import axios from "axios";
-import UserProfile from "../../hooks/UserData/useUser";
+import { default as React, useContext, useState } from "react";
+import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
+import CreateLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/CreateLoanMgtModal";
+import UserProfile from "../../hooks/UserData/useUser";
+import LoanManagementPieChart from "./LoanManagementPieChart";
+import LoanManagementSkeleton from "./LoanManagementSkeleton";
 
 const LoanManagement = () => {
   const { cookies } = useContext(UseContext);

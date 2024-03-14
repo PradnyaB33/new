@@ -188,7 +188,7 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
               </li>
             )}
             renderInput={(params) => (
-              <TextField {...params} label="Search employee" />
+              <TextField {...params} label="Search Employee" />
             )}
           />
         </div>
@@ -200,7 +200,7 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
                 <article className="flex items-center mb-1 text-blue-500 gap-2">
                   <Info className="!text-2xl" />
                   <h1 className="text-xl ">
-                    Select the employee to view the employee attendance overview
+                    Select the employee to see the attendance overview
                   </h1>
                 </article>
               </Card>

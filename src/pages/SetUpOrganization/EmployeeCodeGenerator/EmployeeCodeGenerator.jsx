@@ -1,4 +1,7 @@
-import { Info } from "@mui/icons-material";
+import { Add, Info } from "@mui/icons-material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import PersonPinOutlinedIcon from "@mui/icons-material/PersonPinOutlined";
 import {
   Button,
   Dialog,
@@ -17,10 +20,6 @@ import CreateEmpCodeModel from "../../../components/Modal/EmpCodeModel/CreateEmp
 import EditEmpCodeModel from "../../../components/Modal/EmpCodeModel/EditEmpCodeModel";
 import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
-import { Add } from "@mui/icons-material";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import PersonPinOutlinedIcon from "@mui/icons-material/PersonPinOutlined";
 
 const EmployeeCodeGenerator = () => {
   const { cookies } = useContext(UseContext);
@@ -159,7 +158,7 @@ const EmployeeCodeGenerator = () => {
                 <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                   <tr className="!font-semibold ">
                     <th scope="col" className="!text-left pl-8 py-3 ">
-                      SR NO
+                      Sr. No
                     </th>
                     <th scope="col" className="py-3 ">
                       Employee Code

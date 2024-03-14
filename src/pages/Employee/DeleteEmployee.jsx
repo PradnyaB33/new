@@ -1,4 +1,5 @@
 import { Delete, GetApp, Publish } from "@mui/icons-material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {
   Button,
   Checkbox,
@@ -21,7 +22,6 @@ import { useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 const DeleteEmployee = () => {
   const { handleAlert } = useContext(TestContext);
   const { setAppAlert, cookies } = useContext(UseContext);
@@ -470,7 +470,7 @@ const DeleteEmployee = () => {
                     Employee Selection
                   </th>
                   <th scope="col" className="!text-left pl-8 py-3">
-                    SR NO
+                    Sr. No
                   </th>
                   <th scope="col" className="!text-left pl-8 py-3">
                     First Name

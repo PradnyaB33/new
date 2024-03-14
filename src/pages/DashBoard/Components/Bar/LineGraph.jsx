@@ -1,6 +1,7 @@
 import { Skeleton } from "@mui/material";
 import React from "react";
 import { Line } from "react-chartjs-2";
+import Select from "react-select";
 
 const LineGraph = ({ salarydata, isLoading = false }) => {
   const option = {
@@ -23,6 +24,40 @@ const LineGraph = ({ salarydata, isLoading = false }) => {
     },
     maintainAspectRatio: false,
   };
+
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      border: 0,
+      background: "#f9fafb",
+      boxShadow: "none",
+      hover: {
+        cursor: "pointer !important",
+      },
+    }),
+    menu: (base) => ({
+      ...base,
+      width: "max-content",
+      minWidth: "100%",
+      right: 0,
+    }),
+    placeholder: (defaultStyles) => {
+      return {
+        ...defaultStyles,
+        color: "#000",
+      };
+    },
+  };
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 5 }, (_, index) => currentYear - index);
+
+  const yearOptions = years.map((year) => {
+    return {
+      value: year.toString(),
+      label: year,
+    };
+  });
 
   // Function to create a gradient background
   const createGradient = () => {
@@ -121,9 +156,27 @@ const LineGraph = ({ salarydata, isLoading = false }) => {
           className="w-full 
       px-4 pb-4  flex flex-col shadow-md rounded-md bg-white  justify-center"
         >
-          <h1 className="text-lg my-4 font-bold text-[#67748E]">
-            Salary Overview
-          </h1>
+          <div className="flex justify-between items-center">
+            <h1 className="text-lg my-4 font-bold text-[#67748E]">
+              Salary Overview
+            </h1>
+            <Select
+              placeholder={"Select year"}
+              // onChange={(dept) => {}}
+              components={{
+                IndicatorSeparator: () => null,
+              }}
+              styles={customStyles}
+              // value={
+              //   department
+              //     ? Departmentoptions?.find(
+              //         (option) => option.value === department
+              //       )
+              //     : ""
+              // } // Add this line
+              options={yearOptions}
+            />
+          </div>
           <div className="h-[250px] md:h-[340px] w-full ">
             <Line data={data} options={option} />
           </div>

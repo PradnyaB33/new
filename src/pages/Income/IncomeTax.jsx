@@ -1,9 +1,18 @@
 import { Calculate, Check, DoneAll, Settings, West } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import RegimeModel from "./components/accountantDeclarations/components/RegimeModel";
 
 const IncomeTax = () => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <>
       <section className=" min-h-[90vh]  h-auto  bg-gray-50 ">
@@ -22,7 +31,10 @@ const IncomeTax = () => {
               <h1 className="text-[1.2em]  text-gray-500">
                 TDS Declarations and others
               </h1>
-              <button className="!p-0 h-max !m-0 flex gap-2 text-blue-500">
+              <button
+                onClick={handleOpen}
+                className="!p-0 h-max !m-0 flex gap-2 text-blue-500"
+              >
                 <Settings />
                 Change Regime settings
               </button>
@@ -72,6 +84,7 @@ const IncomeTax = () => {
             </article>
           </div>
         </div>
+        <RegimeModel handleClose={handleClose} open={open} />
       </section>
     </>
   );

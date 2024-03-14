@@ -64,7 +64,7 @@ const DashboardManger = () => {
 
   const { data: managerAttendence, isLoading: managerAttendenceLoading } =
     useQuery({
-      queryKey: ["deptEmployeeOnShift"],
+      queryKey: ["deptEmployeeAbsent"],
       queryFn: async () => {
         const { data } = await axios.get(
           `${process.env.REACT_APP_API}/route/leave/getTodaysAbsentUnderManager/${organisationId}`,
@@ -108,7 +108,7 @@ const DashboardManger = () => {
                   icon={ErrorOutline}
                   data={managerAttendence ?? 0}
                   isLoading={managerAttendenceLoading}
-                  title={"Leave"}
+                  title={"Today's Leave"}
                   color={"!bg-red-500"}
                 />
               </div>

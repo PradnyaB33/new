@@ -1,6 +1,7 @@
 import { Add, Info } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import {
   Button,
   Dialog,
@@ -18,7 +19,6 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import EmpTypeModal from "../../../components/Modal/EmployeeTypesModal/EmpTypeModal";
 import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
-import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 
 const EmployementTypes = () => {
   const { cookies } = useContext(UseContext);
@@ -140,7 +140,7 @@ const EmployementTypes = () => {
                   <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                     <tr className="!font-semibold ">
                       <th scope="col" className="!text-left pl-8 py-3 ">
-                        SR NO
+                        Sr. No
                       </th>
                       <th scope="col" className="py-3 ">
                         Employment Title

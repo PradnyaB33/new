@@ -11,7 +11,7 @@ const SkeletonSalaryInput = () => {
         <thead className="bg-gray-200  !font-medium ">
           <tr className="!font-semibold ">
             <th scope="col" className="!text-left px-6 py-3 ">
-              SR NO
+              Sr. No
             </th>
             <th className="py-3 ">Template Name</th>
             <th className="px-6 py-3 ">Template Description</th>

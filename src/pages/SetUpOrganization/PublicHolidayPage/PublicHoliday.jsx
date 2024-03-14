@@ -268,18 +268,18 @@ const PublicHoliday = () => {
                 <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                   <tr className="!font-semibold ">
                     <th scope="col" className="!text-left pl-8 py-3 w-1/12">
-                      SR NO
+                      Sr. No
                     </th>
                     <th scope="col" className="py-3 w-2/12">
                       Holiday Name
                     </th>
-                    <th scope="col" className="px-6 py-3 w-2/12">
+                    <th scope="col" className=" py-3 w-2/12">
                       Date
                     </th>
-                    <th scope="col" className="px-6 py-3 w-2/12">
+                    <th scope="col" className=" py-3 w-2/12">
                       Type
                     </th>
-                    <th scope="col" className="px-6 py-3 w-2/12">
+                    <th scope="col" className=" py-3 w-2/12">
                       Actions
                     </th>
                   </tr>
@@ -288,12 +288,12 @@ const PublicHoliday = () => {
                   {holidays?.map((data, id) => (
                     <tr className="!font-medium border-b" key={id}>
                       <td className="!text-left pl-9">{id + 1}</td>
-                      <td className="py-3">{data.name}</td>
-                      <td className="py-3">
+                      <td className="py-3 text-left">{data.name}</td>
+                      <td className="py-3 text-left">
                         {data && format(new Date(data?.date), "PP")}
                       </td>
-                      <td className="py-3 px-4">{data.type}</td>
-                      <td className="px-2">
+                      <td className="py-3  text-left">{data.type}</td>
+                      <td className=" text-left">
                         <IconButton
                           color="primary"
                           aria-label="edit"
@@ -506,9 +506,7 @@ const PublicHoliday = () => {
                             </MenuItem>
                           ))
                         ) : (
-                            <MenuItem value={''}>
-                              add location first
-                            </MenuItem>
+                          <MenuItem value={""}>add location first</MenuItem>
                         )}
                       </Select>
                     </FormControl>
