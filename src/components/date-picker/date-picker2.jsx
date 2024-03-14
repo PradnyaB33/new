@@ -239,13 +239,13 @@ const AppDatePicker = ({
   };
   const handleDelete = async () => {
     try {
-      if(selectedLeave.status === "Approved"){
+      if (selectedLeave.status === "Approved") {
         setAppAlert({
-          alert:true,
-          type:"error",
-          msg:"Cannot Delete Approved Shift"
-        })
-        return
+          alert: true,
+          type: "error",
+          msg: "Cannot Delete Approved Shift",
+        });
+        return;
       }
       if (selectedLeave._id) {
         await axios.delete(
