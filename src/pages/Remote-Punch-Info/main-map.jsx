@@ -4,14 +4,13 @@ import React, { useState } from "react";
 const MainMap = ({ punchData, isLoaded }) => {
   console.log(`🚀 ~ file: main-map.jsx:6 ~ punchData:`, punchData);
   console.log(`🚀 ~ file: main-map.jsx:5 ~ isLoaded:`, isLoaded);
-  let lat = punchData?.data[0]?.lat;
-  let lng = punchData?.data[0]?.lng;
   const [center, setCenter] = useState({
     lat: punchData?.data[0]?.lat,
     lng: punchData?.data[0]?.lng,
   });
 
   console.log(`🚀 ~ file: main-map.jsx:15 ~ center:`, center);
+  console.log(`🚀 ~ file: main-map.jsx:14 ~ setCenter:`, setCenter);
   return (
     isLoaded && (
       <GoogleMap
