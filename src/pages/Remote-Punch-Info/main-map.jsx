@@ -1,49 +1,64 @@
-import { Check } from "@mui/icons-material";
+import { Polyline } from "@react-google-maps/api";
 import { GoogleMap, Marker } from "@react-google-maps/api";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const MainMap = ({ punchData, isLoaded }) => {
+  const [waypoints, setWaypoints] = useState([]);
   console.log(`🚀 ~ file: main-map.jsx:5 ~ isLoaded:`, isLoaded);
-  let lat = punchData?.data[0]?.lat;
-  let lng = punchData?.data[0]?.lng;
+  console.log("This is punchData", punchData);
+
+  useEffect(() => {
+    if (punchData && punchData.data && punchData.data.length > 0) {
+      const newWaypoints = punchData.data.map((punch) => ({
+        lat: parseFloat(punch.lat),
+        lng: parseFloat(punch.lng),
+      }));
+      setWaypoints(newWaypoints);
+    } else {
+      setWaypoints([]);
+    }
+  }, [punchData]);
 
   return (
-    isLoaded && (
-      <GoogleMap
-        key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
-        mapContainerStyle={{
-          width: "70%",
-          height: "91.8vh",
-        }}
-        center={{
-          lat: 18.6169974,
-          lng: 73.7724616,
-        }}
-        zoom={18}
-      >
-        {/* <Polyline
-          path={punchData?.data}
-          options={{ strokeColor: "#7a3eff", strokeWeight: 5 }}
-        />
-        <Marker
-          position={{
-            lat: punchData?.data[0]?.lat,
-            lng: punchData?.data[0]?.lng,
-          }}
-          label={"Starting Position"}
-        /> */}
+    <GoogleMap
+      key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+      mapContainerStyle={{
+        width: "70%",
+        height: "91.8vh",
+      }}
+      center={{
+        lat: waypoints[0]?.lat,
+        lng: waypoints[0]?.lng,
+      }}
+      zoom={18}
+    >
+      {isLoaded && (
         <>
-          <Marker
-            icon={<Check />}
-            center={{
-              lat: 18.6169974,
-              lng: 73.7724616,
-            }}
-            label={"Start Position"}
-          />
+          {waypoints.length > 0 && (
+            <>
+              <Marker
+                position={{
+                  lat: waypoints[0]?.lat,
+                  lng: waypoints[0]?.lng,
+                }}
+                label={"Starting Position"}
+              />
+              <Polyline
+                path={waypoints}
+                options={{ strokeColor: "#7a3eff", strokeWeight: 5 }}
+              />
+              <Marker
+                position={{
+                  lat: waypoints[waypoints.length - 1]?.lat,
+                  lng: waypoints[waypoints.length - 1]?.lng,
+                }}
+                label={"Starting Position"}
+              />
+            </>
+          )}
         </>
-      </GoogleMap>
-    )
+      )}
+    </GoogleMap>
   );
 };
 
