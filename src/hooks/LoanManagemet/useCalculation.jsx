@@ -50,10 +50,15 @@ const useCalculation = () => {
   const totalDeductionMonthly = parseFloat(interestPerMonth) + principalMonthly;
   const totalDeductionPerMonth = totalDeductionMonthly.toFixed(2);
 
+  // calculate total amount with simple interest
+  const totalAmountWithSimpleInterest = parseInt(loanAmount) + simpleInterest;
+  console.log(totalAmountWithSimpleInterest);
+
   return {
     interestPerMonth,
     principalPerMonth,
     totalDeductionPerMonth,
+    totalAmountWithSimpleInterest,
     handleNoOfEmiChange,
   };
 };
