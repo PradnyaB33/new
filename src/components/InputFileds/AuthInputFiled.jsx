@@ -38,7 +38,7 @@ const AuthInputFiled = ({
     setFocusedInput(fieldName);
   };
   const { ref } = usePlacesWidget({
-    apiKey: process.env.REACT_APP_MAP_API_KEY,
+    apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     onPlaceSelected: (place) => console.log(place),
   });
 
@@ -261,7 +261,7 @@ const AuthInputFiled = ({
                 <Icon className="text-gray-700" />
 
                 <Autocomplete
-                  apiKey={process.env.REACT_APP_MAP_API_KEY}
+                  apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
                   ref={ref}
                   value={field.value}
                   rows={2}
@@ -392,7 +392,7 @@ const AuthInputFiled = ({
                 {label}{" "}
                 {name === "isChecked" && (
                   <Link
-                    href="/terms-and-conditions"
+                    to="/terms-policy-cookies"
                     className="font-semibold text-blue-500 hover:underline text-md  "
                   >
                     Terms and Conditions

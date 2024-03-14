@@ -27,6 +27,8 @@ function CalculateSalary() {
     setSelectedDate(date);
     const daysInMonth = date.daysInMonth();
     setNumDaysInMonth(daysInMonth);
+    setPaidLeaveDays(0);
+    setUnPaidLeaveDays(0);
   };
 
   // formate the data in this format eg(Dec-23)
@@ -54,7 +56,6 @@ function CalculateSalary() {
     fetchAvailableEmployee();
     // eslint-disable-next-line
   }, []);
-  console.log(availableEmployee);
 
   // pull holiday's count based on organization id
   const fetchHoliday = async () => {
@@ -86,7 +87,7 @@ function CalculateSalary() {
     const holidaysInCurrentMonth = publicHolidays.filter((holiday) => {
       const holidayDate = dayjs(holiday.date);
       return (
-        holidayDate.month() + 1 === parseInt(selectedMonth) && // Month is zero-based in dayjs
+        holidayDate.month() + 1 === parseInt(selectedMonth) &&
         holidayDate.year() === parseInt(selectedYear)
       );
     });
@@ -125,12 +126,12 @@ function CalculateSalary() {
 
   // get the weekend count in that organization
   const countWeekendDaysInMonth = () => {
-    const selectedMonth = dayjs(selectedDate); // selectedDate is the chosen date
+    const selectedMonth = dayjs(selectedDate);
     const daysInMonth = selectedMonth.daysInMonth();
     let weekendCount = 0;
     for (let i = 1; i <= daysInMonth; i++) {
       const currentDate = selectedMonth.date(i);
-      const dayOfWeek = currentDate.format("ddd"); // Get day of the week (e.g., "Sat", "Sun")
+      const dayOfWeek = currentDate.format("ddd");
       if (getWeekendbyOrganization.includes(dayOfWeek)) {
         // If the day falls on a weekend day defined by the organization
         weekendCount++;
@@ -139,7 +140,7 @@ function CalculateSalary() {
     return weekendCount;
   };
 
-  // // Call the function to count weekend days in the selected month
+  // Call the function to count weekend days in the selected month
   const weekendCount = countWeekendDaysInMonth();
 
   // pull the data such as paidLeaveDays , unpaidLeave days
@@ -403,7 +404,7 @@ function CalculateSalary() {
         />
         <div>
           <p className="text-lg font-semibold">
-            Organization Name:
+            Organisation Name:
             <span>{availableEmployee?.organizationId?.orgName || ""}</span>
           </p>
 
@@ -412,13 +413,13 @@ function CalculateSalary() {
             <span>{availableEmployee?.organizationId?.location || ""}</span>
           </p>
           <p className="text-lg">
-            Contact Number:
+            Contact No:
             <span>
               {availableEmployee?.organizationId?.contact_number || ""}
             </span>
           </p>
           <p className="text-lg">
-            Organization Email:
+            Email:
             <span>{availableEmployee?.organizationId?.email || ""}</span>
           </p>
         </div>
@@ -451,7 +452,7 @@ function CalculateSalary() {
               </td>
             </tr>
             <tr>
-              <td class="px-4 py-2 border">Degination:</td>
+              <td class="px-4 py-2 border">Designation:</td>
               <td class="px-4 py-2 border">
                 {" "}
                 {(availableEmployee?.designation &&
@@ -471,7 +472,7 @@ function CalculateSalary() {
                   availableEmployee?.deptname[0]?.departmentName) ||
                   ""}
               </td>
-              <td class="px-4 py-2 border">No of Working Days Attended:</td>
+              <td class="px-4 py-2 border">No Of Working Days Attended:</td>
               <td class="px-4 py-2 border">{noOfDaysEmployeePresent}</td>
             </tr>
             <tr>
@@ -483,7 +484,7 @@ function CalculateSalary() {
               <td class="px-4 py-2 border">{paidLeaveDays}</td>
             </tr>
             <tr>
-              <td class="px-4 py-2 border">Bank Account Number:</td>
+              <td class="px-4 py-2 border">Bank Account No:</td>
               <td class="px-4 py-2 border">
                 {availableEmployee?.bank_account_no || ""}
               </td>
@@ -491,7 +492,7 @@ function CalculateSalary() {
               <td class="px-4 py-2 border">{publicHolidaysCount}</td>
             </tr>
             <tr>
-              <td class="px-4 py-2 border"> No of Days in Month:</td>
+              <td class="px-4 py-2 border"> No Of Days in Month:</td>
               <td class="px-4 py-2 border">{numDaysInMonth}</td>
               <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>
@@ -537,31 +538,31 @@ function CalculateSalary() {
               <td class="py-2 border">{esic}</td>
             </tr>
             <tr>
-              <td class="px-4 py-2 border">Food allowance:</td>
+              <td class="px-4 py-2 border">Food Allowance:</td>
               <td class="px-4 py-2 border">{foodAllowance}</td>
               <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>
             </tr>
             <tr>
-              <td class="px-4 py-2 border">Sales allowance:</td>
+              <td class="px-4 py-2 border">Sales Allowance:</td>
               <td class="px-4 py-2 border">{salesAllowance}</td>
               <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>
             </tr>
             <tr>
-              <td class="px-4 py-2 border">Special allowance:</td>
+              <td class="px-4 py-2 border">Special Allowance:</td>
               <td class="px-4 py-2 border">{specialAllowance}</td>
               <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>
             </tr>
             <tr>
-              <td class="px-4 py-2 border">Travel allowance:</td>
+              <td class="px-4 py-2 border">Travel Allowance:</td>
               <td class="px-4 py-2 border">{travelAllowance}</td>
               <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>
             </tr>
             <tr>
-              <td class="px-4 py-2 border">Variable Pay allowance:</td>
+              <td class="px-4 py-2 border">Variable Pay Allowance:</td>
               <td class="px-4 py-2 border">{variableAllowance}</td>
               <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>

@@ -20,7 +20,7 @@ export function AuthProvider({ children }) {
   }, []); // Ensure the effect runs when getCurrentUser changes
 
   return (
-    <AuthContext.Provider value={{ user, role, isLoading }}>
+    <AuthContext.Provider value={{ user, role }}>
       {children}
     </AuthContext.Provider>
   );

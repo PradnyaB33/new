@@ -1,13 +1,44 @@
 import { Add, Info } from "@mui/icons-material";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import { Button } from "@mui/material";
-import React, { useState } from "react";
+import axios from "axios";
+import {
+  default as React,
+  default as React,
+  useContext,
+  useState,
+} from "react";
+import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
+import { UseContext } from "../../State/UseState/UseContext";
 import CreateLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/CreateLoanMgtModal";
-import LoanManagementPieChart from "./LoanManagementPieChart";
-import LoanManagementSkeleton from "./LoanManagementSkeleton";
+import UserProfile from "../../hooks/UserData/useUser";
+
 const LoanManagement = () => {
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
   const { organisationId } = useParams();
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
+  const userId = user._id;
+
+  //for get loan data
+  const { data: getEmployeeLoanData, isLoading } = useQuery(
+    ["loanDatas", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/${userId}/get-loan-data`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
+
+  // for create
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
@@ -15,29 +46,6 @@ const LoanManagement = () => {
   const handleCreateModalClose = () => {
     setCreateModalOpen(false);
   };
-
-  let isLoading;
-  const [LoanManagementData, setLoanManagementData] = useState([
-    {
-      id: 1,
-      loanType: "Medical Loan",
-      loanStatus: "Approved",
-      loanAmountApplied: 30000,
-      loanAmountPaid: 10000,
-      loanAmountPending: 20000,
-      roi: 2.0,
-    },
-    {
-      id: 2,
-      loanType: "Medical Loan",
-      loanStatus: "Approved",
-      loanAmountApplied: 30000,
-      loanAmountPaid: 10000,
-      loanAmountPending: 20000,
-      roi: 2.0,
-    },
-  ]);
-  console.log(setLoanManagementData);
 
   return (
     <>
@@ -56,9 +64,7 @@ const LoanManagement = () => {
           </div>
           <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
             <div className="flex  gap-3 ">
-              <div>
-                <h1 className="!text-lg">Your Current Active Loans</h1>
-              </div>
+              <h1 className="!text-lg">Your Current Active Loans</h1>
             </div>
             <Button
               className="!font-semibold !bg-sky-500 flex items-center gap-2"
@@ -72,7 +78,7 @@ const LoanManagement = () => {
 
           {isLoading ? (
             <LoanManagementSkeleton />
-          ) : LoanManagementData?.length > 0 ? (
+          ) : getEmployeeLoanData?.length > 0 ? (
             <>
               <div className=" flex w-full ">
                 <div className="overflow-auto !p-0  border-[.5px] border-gray-200 w-[60%]">
@@ -86,7 +92,7 @@ const LoanManagement = () => {
                           Laon Type
                         </th>
                         <th scope="col" className="px-6 py-3 ">
-                          Loan Status
+                          Laon Status
                         </th>
                         <th scope="col" className="px-6 py-3 ">
                           Loan Amount applied
@@ -103,23 +109,21 @@ const LoanManagement = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {LoanManagementData?.map((loanMgtData, id) => (
+                      {getEmployeeLoanData?.map((loanMgtData, id) => (
                         <tr className="!font-medium border-b" key={id}>
                           <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                          <td className="py-3 pl-6">{loanMgtData.loanType}</td>
-                          <td className="py-3 pl-6 ">
-                            {loanMgtData.loanStatus}
-                          </td>
                           <td className="py-3 pl-6">
-                            {loanMgtData.loanAmountApplied}
+                            {loanMgtData.loanType?.loanName}
                           </td>
-                          <td className="py-3 pl-6 ">
-                            {loanMgtData.loanAmountPaid}
-                          </td>
+                          <td className="py-3 pl-6"></td>
                           <td className="py-3 pl-6">
-                            {loanMgtData.loanAmountPending}
+                            {loanMgtData.loanAmount}
                           </td>
-                          <td className="py-3 pl-6">{loanMgtData.roi}</td>
+                          <td className="py-3 pl-6"></td>
+                          <td className="py-3 pl-6"></td>
+                          <td className="py-3 pl-6">
+                            {loanMgtData.rateOfIntereset}
+                          </td>
                         </tr>
                       ))}
                     </tbody>

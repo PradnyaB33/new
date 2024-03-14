@@ -5,6 +5,7 @@ import {
   CurrencyRupee,
   Dashboard,
   Description,
+  Fingerprint,
   Groups,
   ListAlt,
   MonetizationOn,
@@ -348,20 +349,18 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "addPunch",
             isVisible: ["Employee"].includes(role),
             link: "/employee-remote-punching",
-            icon: (
-              <BusinessOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-            ),
+            icon: <Fingerprint className=" !text-[1.2em] text-[#67748E]" />,
             text: "Remote Punch-in-out",
           },
 
           {
             key: "punchInList",
-            isVisible: ["Manager"].includes(role),
-            link: "/test5",
+            isVisible: ["Employee"].includes(role),
+            link: "/remote/employee-confirmation",
             icon: (
               <AccountTreeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
-            text: "Route Status",
+            text: "Remote Punch confirmation",
           },
         ],
       },
