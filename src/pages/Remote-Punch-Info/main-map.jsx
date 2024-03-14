@@ -19,6 +19,8 @@ const MainMap = ({ punchData, isLoaded }) => {
     }
   }, [punchData]);
 
+  console.log(`🚀 ~ file: main-map.jsx:15 ~ center:`, center);
+  console.log(`🚀 ~ file: main-map.jsx:14 ~ setCenter:`, setCenter);
   return (
     <GoogleMap
       key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}

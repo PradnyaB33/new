@@ -3,7 +3,6 @@ import { useQuery } from "react-query";
 import useGetUser from "../../../Token/useUser";
 
 const useGetSinglePunch = ({ Id }) => {
-  console.log(`🚀 ~ file: hook.jsx:6 ~ Id:`, Id);
   const { authToken } = useGetUser();
   const { data, isLoading } = useQuery(`remote-punching-${Id}`, async () => {
     try {
