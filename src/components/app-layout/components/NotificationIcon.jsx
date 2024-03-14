@@ -19,7 +19,7 @@ const NotificationIcon = () => {
       return response.data;
     } catch (err) {
       console.error(`🚀 ~ file: notification.jsx:37 ~ err:`, err);
-      throw err;
+      // throw err;
     }
   });
   return (

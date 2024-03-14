@@ -14,7 +14,7 @@ import {
   TodayOutlined,
   Work,
 } from "@mui/icons-material";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { z } from "zod";
@@ -56,6 +56,9 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
 
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+  const [visiblePassword, setVisiblePassword] = useState(false);
+  const [visibleCPassword, setVisibleCPassword] = useState(false);
 
   const EmployeeSchema = z
     .object({
@@ -226,6 +229,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
           <AuthInputFiled
             name="password"
+            visible={visiblePassword}
+            setVisible={setVisiblePassword}
             icon={Key}
             control={control}
             type="password"
@@ -236,6 +241,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
           />
           <AuthInputFiled
             name="confirmPassword"
+            visible={visibleCPassword}
+            setVisible={setVisibleCPassword}
             icon={KeyOff}
             control={control}
             type="password"

@@ -95,7 +95,7 @@ const DashBoardHR = () => {
             title={"People's Manager"}
           />
           <SuperAdminCard
-            title={"Today's leave"}
+            title={"Today's Leave"}
             icon={ErrorOutline}
             color={"!bg-red-500"}
             data={absentEmployee}

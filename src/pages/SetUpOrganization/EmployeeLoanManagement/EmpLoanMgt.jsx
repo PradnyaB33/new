@@ -1,26 +1,25 @@
-import { Info } from "@mui/icons-material";
+import { Add, Info } from "@mui/icons-material";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Button,
-  IconButton,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
 } from "@mui/material";
+import axios from "axios";
 import React, { useContext, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
+import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
+import AddLoanTypeModal from "../../../components/Modal/LoanTypeModal/AddLoanTypeModal";
+import EditLoanTypeModal from "../../../components/Modal/LoanTypeModal/EditLoanTypeModal";
 import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
-import { Add } from "@mui/icons-material";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
-import AddLoanTypeModal from "../../../components/Modal/LoanTypeModal/AddLoanTypeModal";
-import { useParams } from "react-router-dom";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import axios from "axios";
-import { UseContext } from "../../../State/UseState/UseContext";
-import { TestContext } from "../../../State/Function/Main";
-import EditLoanTypeModal from "../../../components/Modal/LoanTypeModal/EditLoanTypeModal";
 const EmpLoanMgt = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -135,7 +134,7 @@ const EmpLoanMgt = () => {
                   <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                     <tr className="!font-semibold ">
                       <th scope="col" className="!text-left pl-8 py-3 ">
-                        SR NO
+                        Sr. No
                       </th>
                       <th scope="col" className="px-6 py-3">
                         Loan Name

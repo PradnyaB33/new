@@ -1,10 +1,10 @@
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Container, IconButton, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 const EmployeeList = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -123,7 +123,7 @@ const EmployeeList = () => {
               <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                 <tr className="!font-semibold">
                   <th scope="col" className="!text-left pl-8 py-3">
-                    SR NO
+                    Sr. No
                   </th>
                   <th scope="col" className="!text-left pl-8 py-3">
                     First Name

@@ -1,4 +1,5 @@
 import { ErrorMessage } from "@hookform/error-message";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { default as React } from "react";
 import Autocomplete, { usePlacesWidget } from "react-google-autocomplete";
 import { Controller } from "react-hook-form";
@@ -27,6 +28,8 @@ const AuthInputFiled = ({
   min,
   max,
   className,
+  visible,
+  setVisible,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -563,7 +566,9 @@ const AuthInputFiled = ({
                 <Icon className="text-gray-700 md:text-lg !text-[1em]" />
               )}
               <input
-                type={type}
+                type={
+                  type === "password" ? (visible ? "text" : "password") : type
+                }
                 maxLength={maxLimit && maxLimit}
                 readOnly={readOnly}
                 placeholder={placeholder}
@@ -573,6 +578,18 @@ const AuthInputFiled = ({
                 {...field}
                 formNoValidate
               />
+              {type === "password" && (
+                <button
+                  type="button"
+                  onClick={() => setVisible(visible === true ? false : true)}
+                >
+                  {visible ? (
+                    <VisibilityOff className="text-gray-700" />
+                  ) : (
+                    <Visibility className="text-gray-700" />
+                  )}
+                </button>
+              )}
             </div>
           );
         }}

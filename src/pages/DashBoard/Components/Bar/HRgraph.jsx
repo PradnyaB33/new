@@ -104,7 +104,7 @@ const HRgraph = () => {
       <article className=" bg-white  rounded-md shadow-xl">
         <div className="px-4 pb-2  flex justify-between items-center">
           <h1 className="text-lg  mt-4 font-bold text-[#67748E]">
-            Employee Attendence
+            Employee Attendance
           </h1>
         </div>
         <div className="md:w-[90%] w-[100%] h-[250px] md:h-[300px] px-0 md:px-4 flex items-center">

@@ -1,4 +1,7 @@
 import { Add, Info } from "@mui/icons-material";
+import AddLocationAltOutlinedIcon from "@mui/icons-material/AddLocationAltOutlined";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Button,
   Dialog,
@@ -18,9 +21,6 @@ import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../Setup";
 import Selector from "./selector";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import AddLocationAltOutlinedIcon from "@mui/icons-material/AddLocationAltOutlined";
 
 const OrganizationLocations = () => {
   const { cookies } = useContext(UseContext);
@@ -345,7 +345,7 @@ const OrganizationLocations = () => {
                 <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                   <tr className="!font-medium">
                     <th scope="col" className="px-3 py-3 whitespace-nowrap">
-                      Sr No
+                      Sr. No
                     </th>
                     <th scope="col" className="px-3 py-3 ">
                       Continent

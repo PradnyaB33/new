@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { Button } from "@mui/material";
 import { Add, Info } from "@mui/icons-material";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
-import LoanManagementSkeleton from "./LoanManagementSkeleton";
-import LoanManagementPieChart from "./LoanManagementPieChart";
-import CreateLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/CreateLoanMgtModal";
+import { Button } from "@mui/material";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import CreateLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/CreateLoanMgtModal";
+import LoanManagementPieChart from "./LoanManagementPieChart";
+import LoanManagementSkeleton from "./LoanManagementSkeleton";
 const LoanManagement = () => {
   const { organisationId } = useParams();
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -80,7 +80,7 @@ const LoanManagement = () => {
                     <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                       <tr className="!font-semibold ">
                         <th scope="col" className="!text-left pl-8 py-3 ">
-                          SR NO
+                          Sr. No
                         </th>
                         <th scope="col" className="px-6 py-3 ">
                           Laon Type

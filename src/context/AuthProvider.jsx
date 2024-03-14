@@ -8,12 +8,14 @@ export function AuthProvider({ children }) {
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
 
   const [user, setUser] = useState(null); // Initialize user as null initially
+  const [isLoading, setIsLoading] = useState(false); // Initialize user as null initially
+
   const role = useGetCurrentRole(); // Call useGetCurrentRole directly here
 
   useEffect(() => {
-    // Update user when component mounts
+    setIsLoading(true);
     setUser(getCurrentUser());
-    console.log("run");
+    setIsLoading(false);
     // eslint-disable-next-line
   }, []); // Ensure the effect runs when getCurrentUser changes
 
@@ -29,20 +31,18 @@ export function useAuth() {
 }
 
 function RequireAuth({ children, permission }) {
-  const { user, role, isLoading } = useAuth();
+  const { user, role } = useAuth();
   const navigate = useNavigate();
 
-  if (!isLoading) {
-    const isPermission = permission?.includes(role);
-    const isAuthPage =
-      window.location.pathname.includes("sign-in") ||
-      window.location.pathname.includes("sign-up");
+  const isPermission = permission?.includes(role);
+  const isAuthPage =
+    window.location.pathname.includes("sign-in") ||
+    window.location.pathname.includes("sign-up");
 
-    if (!isAuthPage) {
-      if (user && isPermission) return children;
-      if (!user) return <Navigate to={"/sign-in"} />;
-      if (!isPermission) return navigate(-1);
-    }
+  if (!isAuthPage && user) {
+    if (user && isPermission) return children;
+    if (!isPermission) return navigate(-1);
+    if (!user) return <Navigate to={"/sign-in"} />;
   }
   return children;
 }
