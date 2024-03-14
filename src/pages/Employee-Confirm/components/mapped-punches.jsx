@@ -30,6 +30,10 @@ const MappedPunches = ({
       {data?.punchData?.punchData?.map((doc, idx) => {
         let distance = 0;
         let totalDistance = 0;
+        console.log(
+          `🚀 ~ file: mapped-punches.jsx:33 ~ totalDistance:`,
+          totalDistance
+        );
         if (doc.data && idx < doc.data.length - 1) {
           const currentData = doc.data[idx];
           const nextData = doc.data[idx + 1];
