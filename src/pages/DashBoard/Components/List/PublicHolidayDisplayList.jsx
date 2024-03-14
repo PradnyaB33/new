@@ -61,13 +61,13 @@ const PublicHolidayDisplayList = () => {
             </div>
           ) : (
             upcomingHoliday?.data?.upcomingHolidays.map((item, id) => (
-              <>
-                <div key={id} className="p-4">
+              <div key={id}>
+                <div className="p-4">
                   <h1 className="text-md font-semibold">{item.name}</h1>
                   <p className="text-lg">{format(new Date(item.date), "PP")}</p>
                 </div>
                 <Divider variant="fullWidth" orientation="horizontal" />
-              </>
+              </div>
             ))
           )}
         </div>

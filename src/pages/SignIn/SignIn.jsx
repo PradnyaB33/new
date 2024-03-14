@@ -158,7 +158,6 @@ const SignIn = () => {
 
   const [focusedInput, setFocusedInput] = React.useState(null);
   const [visible, setVisible] = useState(false);
-  console.log(`🚀 ~ visible:`, visible);
   const handleFocus = (fieldName) => {
     setFocusedInput(fieldName);
   };

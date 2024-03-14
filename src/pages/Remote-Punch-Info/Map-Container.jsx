@@ -5,6 +5,7 @@ import useGetSinglePunchEntry from "../../hooks/QueryHook/Remote-Punch/component
 
 const MapComponent = ({ punchObjectId, isLoaded }) => {
   const { data } = useGetSinglePunchEntry({ Id: punchObjectId });
+  console.log(`🚀 ~ file: Map-Container.jsx:8 ~ data:`, data);
   return isLoaded && data?.punchData ? (
     <GoogleMap
       key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
