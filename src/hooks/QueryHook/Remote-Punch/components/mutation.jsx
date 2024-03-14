@@ -36,8 +36,14 @@ const useNotificationRemotePunching = () => {
     },
   });
   const notifyToAccountant = async (punchId) => {
+    let role;
+    if (decodedToken.user.profile.includes("Accountant")) {
+      role = "accountant";
+    } else if (decodedToken.user.profile.includes("Manager")) {
+      role = "manager";
+    }
     const response = await axios.patch(
-      `${process.env.REACT_APP_API}/route/punch/accountant/${punchId}`,
+      `${process.env.REACT_APP_API}/route/punch/${role}/accept/${punchId}`,
       { status: "A-Approved" },
       {
         headers: {
@@ -64,8 +70,14 @@ const useNotificationRemotePunching = () => {
 
   const handleRejectManager = async (punchId) => {
     try {
-      const resp = await axios.post(
-        `${process.env.REACT_APP_API}/route/punch/manager/reject/:punchId`,
+      let role;
+      if (decodedToken.user.profile.includes("Accountant")) {
+        role = "accountant";
+      } else if (decodedToken.user.profile.includes("Manager")) {
+        role = "manager";
+      }
+      const resp = await axios.patch(
+        `${process.env.REACT_APP_API}/route/punch/${role}/reject/${punchId}`,
         {
           status: "M-Rejected",
         },

@@ -56,8 +56,8 @@ const LeaveDisplayList = () => {
           </div>
         ) : (
           previousLeaves?.map((item, id) => (
-            <>
-              <div key={id} className="p-4">
+            <div key={id}>
+              <div className="p-4">
                 <div className="flex gap-4 w-full items-center">
                   <h1 className="text-md font-semibold">{item.title}</h1>
                   <Chip
@@ -79,7 +79,7 @@ const LeaveDisplayList = () => {
                 </p>
               </div>
               <Divider variant="fullWidth" orientation="horizontal" />
-            </>
+            </div>
           ))
         )}
       </div>
