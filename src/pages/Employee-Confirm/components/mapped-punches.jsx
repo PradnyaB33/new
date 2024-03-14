@@ -42,7 +42,6 @@ const MappedPunches = ({
             ).toFixed(2) + " km";
           totalDistance += distance;
         }
-        console.log("totalDistance", totalDistance);
 
         return (
           <div
