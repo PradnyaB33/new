@@ -31,6 +31,7 @@ const calculateDistance = (coords) => {
 
 const PunchingRejectModal = ({ items, length }) => {
   const navigate = useNavigate();
+
   const { notifyAccountantMutation, RejectManagerMutation } =
     useNotificationRemotePunching();
   const distanceTraveled =
@@ -39,7 +40,7 @@ const PunchingRejectModal = ({ items, length }) => {
       : 0;
   const handleViewRouteClick = () => {
     const id = items._id;
-    navigate(`/remote/mg/${id}`);
+    navigate(`/remote/info/${id}`);
   };
   console.log(items);
   return (
