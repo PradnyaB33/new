@@ -174,7 +174,16 @@ const useSetupSideNav = (organisationId) => {
       icon: SellOutlined,
       href: `/organisation/${organisationId}/setup/subscription`,
       active:
-        subscriptionDetails.plan_id === process.env.REACT_APP_INTERMEDIATE,
+        subscriptionDetails?.plan_id === process.env.REACT_APP_INTERMEDIATE,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+    },
+    {
+      label: "Remote Punching",
+      icon: SellOutlined,
+      href: `/organisation/${organisationId}/setup/remote-punching`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/remote-punching`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
   ];

@@ -80,6 +80,7 @@ import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
 import CustomCalander from "./pages/custom/Calendar";
+import RemoteSetup from "./pages/SetupPage/RemoteSetup";
 
 const App = () => {
   return (
@@ -597,6 +598,14 @@ const App = () => {
           element={
             <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
               <SalaryInput />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/setup/remote-punching"
+          element={
+            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+              <RemoteSetup />
             </RequireAuth>
           }
         />
