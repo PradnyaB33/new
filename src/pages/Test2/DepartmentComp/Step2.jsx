@@ -7,7 +7,7 @@ import useDepartmentState from "../../../hooks/DepartmentHook/useDepartmentState
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import NotesIcon from "@mui/icons-material/Notes";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-const Step2 = ({ isLastStep, nextStep }) => {
+const Step2 = ({ isLastStep, nextStep, prevStep }) => {
   const {
     dept_cost_center_name,
     dept_cost_center_description,
@@ -94,7 +94,16 @@ const Step2 = ({ isLastStep, nextStep }) => {
           />
         </div>
 
-        <div className="flex items-end w-full justify-end">
+        <div className="flex items-end w-full justify-between">
+          <button
+            type="button"
+            onClick={() => {
+              prevStep();
+            }}
+            className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+          >
+            Prev
+          </button>
           <button
             type="submit"
             disabled={isLastStep}

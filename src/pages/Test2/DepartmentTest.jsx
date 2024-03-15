@@ -39,9 +39,9 @@ const DepartmentTest = () => {
       case 1:
         return <Step1 {...{ nextStep }} />;
       case 2:
-        return <Step2 {...{ nextStep }} />;
+        return <Step2 {...{ nextStep, prevStep }} />;
       case 3:
-        return <Step3 {...{ nextStep }} />;
+        return <Step3 {...{ nextStep, prevStep }} />;
 
       default:
         return null;
