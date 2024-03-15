@@ -41,7 +41,7 @@ const MainMap = ({ punchData, isLoaded }) => {
                   lat: waypoints[0]?.lat,
                   lng: waypoints[0]?.lng,
                 }}
-                label={"Starting Position"}
+                label={"Source"}
               />
               <Polyline
                 path={waypoints}
@@ -52,7 +52,7 @@ const MainMap = ({ punchData, isLoaded }) => {
                   lat: waypoints[waypoints.length - 1]?.lat,
                   lng: waypoints[waypoints.length - 1]?.lng,
                 }}
-                label={"Starting Position"}
+                label={"Destination"}
               />
             </>
           )}
