@@ -1,4 +1,7 @@
-import { Info } from "@mui/icons-material";
+import { Add, Info } from "@mui/icons-material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import {
   Button,
   Dialog,
@@ -17,10 +20,6 @@ import CreateEmpSalCalDayModel from "../../../components/Modal/EmployeeSalaryDay
 import EmpSalaryDayModal from "../../../components/Modal/EmployeeSalaryDayModal/EmpSalaryDayModal";
 import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
-import { Add } from "@mui/icons-material";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 
 const EmployeeSalaryCalculateDay = () => {
   const { cookies } = useContext(UseContext);
@@ -166,7 +165,7 @@ const EmployeeSalaryCalculateDay = () => {
                   <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                     <tr className="!font-semibold ">
                       <th scope="col" className="!text-left pl-8 py-3 ">
-                        SR NO
+                        Sr. No
                       </th>
                       <th scope="col" className="py-3 ">
                         Salary Computation Day

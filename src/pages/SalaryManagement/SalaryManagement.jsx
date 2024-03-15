@@ -128,7 +128,7 @@ const SalaryManagement = () => {
               <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                 <tr className="!font-semibold">
                   <th scope="col" className="!text-left pl-8 py-3">
-                    SR NO
+                    Sr. No
                   </th>
                   <th scope="col" className="!text-left pl-8 py-3">
                     First Name

@@ -1,6 +1,6 @@
 import { AssignmentTurnedIn, ErrorOutline, Groups } from "@mui/icons-material";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
@@ -15,6 +15,11 @@ const DashboardManger = () => {
   const { organisationId } = useParams("");
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
+
+  const [selectedyear, setSelectedYear] = useState({
+    value: new Date().getFullYear(),
+    label: new Date().getFullYear(),
+  });
 
   const getAllEmployeeForManger = async () => {
     const { data } = await axios.get(
@@ -45,7 +50,7 @@ const DashboardManger = () => {
     return data;
   };
 
-  useQuery("manager-attendece", getManagerAttendenceChart);
+  useQuery(["manager-attendece"], getManagerAttendenceChart);
 
   const { data: managerShift, isLoading: managerShiftLoading } = useQuery({
     queryKey: ["deptEmployeeOnShift"],
@@ -64,7 +69,7 @@ const DashboardManger = () => {
 
   const { data: managerAttendence, isLoading: managerAttendenceLoading } =
     useQuery({
-      queryKey: ["deptEmployeeOnShift"],
+      queryKey: ["deptEmployeeAbsent"],
       queryFn: async () => {
         const { data } = await axios.get(
           `${process.env.REACT_APP_API}/route/leave/getTodaysAbsentUnderManager/${organisationId}`,
@@ -108,7 +113,7 @@ const DashboardManger = () => {
                   icon={ErrorOutline}
                   data={managerAttendence ?? 0}
                   isLoading={managerAttendenceLoading}
-                  title={"Leave"}
+                  title={"Today's Leave"}
                   color={"!bg-red-500"}
                 />
               </div>
@@ -116,6 +121,8 @@ const DashboardManger = () => {
               <div className="block  2xl:space-y-0 space-y-3">
                 <ManagerEmployeeChart
                   EmployeeDataOfManager={EmployeeDataOfManager}
+                  selectedyear={selectedyear}
+                  setSelectedYear={setSelectedYear}
                 />
               </div>
             </div>

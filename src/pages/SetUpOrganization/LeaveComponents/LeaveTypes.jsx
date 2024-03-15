@@ -1,4 +1,5 @@
 import { Add, Info } from "@mui/icons-material";
+import WorkOffOutlinedIcon from "@mui/icons-material/WorkOffOutlined";
 import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
@@ -9,7 +10,6 @@ import CreteLeaveTypeModal from "../../../components/Modal/LeaveTypeModal/create
 import Setup from "../Setup";
 import LeaveTypeEditBox from "./components/leave-type-layoutbox";
 import SkeletonForLeaveTypes from "./components/skeleton-for-leavetype";
-import WorkOffOutlinedIcon from "@mui/icons-material/WorkOffOutlined";
 const LeaveTypes = ({ open, handleClose, id }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -76,7 +76,7 @@ const LeaveTypes = ({ open, handleClose, id }) => {
               <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                 <tr className="!font-medium shadow-lg">
                   <th scope="col" className="px-6 py-3 ">
-                    SR NO
+                    Sr. No
                   </th>
                   <th scope="col" className="px-6 py-3 ">
                     Leave Name

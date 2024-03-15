@@ -55,7 +55,7 @@ const SuperAdmin = () => {
           <Link to={"/organizationList"}>
             <West className="mx-4 !text-xl" />
           </Link>
-          Organization Overview
+          Organisation Overview
         </header>
         {/* <Link to={"/organizationList"} className="my-4 px-8 flex gap-1">
         <KeyboardBackspace />

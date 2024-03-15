@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
-import { Bar } from "react-chartjs-2";
-
 import axios from "axios";
 import { CategoryScale, Chart } from "chart.js";
+import React, { useContext, useState } from "react";
+import { Bar } from "react-chartjs-2";
 import { useQuery } from "react-query";
+import Select from "react-select";
 import { UseContext } from "../../../../State/UseState/UseContext";
 import UserProfile from "../../../../hooks/UserData/useUser";
 Chart.register(CategoryScale);
@@ -14,9 +14,48 @@ const HRgraph = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
 
+  const [selectedyear, setSelectedYear] = useState({
+    value: new Date().getFullYear(),
+    label: new Date().getFullYear(),
+  });
+
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      background: "#f9fafb",
+      boxShadow: "none",
+      border: ".5px solid #f1f1f1",
+      hover: {
+        cursor: "pointer !important",
+      },
+    }),
+    menu: (base) => ({
+      ...base,
+      width: "max-content",
+      minWidth: "100%",
+      right: 0,
+    }),
+    placeholder: (defaultStyles) => {
+      return {
+        ...defaultStyles,
+        color: "#000",
+      };
+    },
+  };
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 5 }, (_, index) => currentYear - index);
+
+  const yearOptions = years.map((year) => {
+    return {
+      value: year.toString(),
+      label: year,
+    };
+  });
+
   const getYearLeaves = async () => {
     const { data } = await axios.get(
-      `${process.env.REACT_APP_API}/route/leave/getYearLeaves/${user?._id}`,
+      `${process.env.REACT_APP_API}/route/leave/getYearLeaves/${user?._id}/${selectedyear.value}`,
       {
         headers: {
           Authorization: authToken,
@@ -29,7 +68,10 @@ const HRgraph = () => {
     return filterData;
   };
 
-  const { data: LeaveYearData } = useQuery("leaveData", getYearLeaves);
+  const { data: LeaveYearData } = useQuery(
+    ["leaveData", selectedyear],
+    getYearLeaves
+  );
   const monthNames = [
     "January",
     "February",
@@ -102,34 +144,49 @@ const HRgraph = () => {
   return (
     <>
       <article className=" bg-white  rounded-md shadow-xl">
-        <div className="px-4 pb-2  flex justify-between items-center">
-          <h1 className="text-lg  mt-4 font-bold text-[#67748E]">
-            Employee Attendence
-          </h1>
-        </div>
-        <div className="md:w-[90%] w-[100%] h-[250px] md:h-[300px] px-0 md:px-4 flex items-center">
-          <Bar
-            data={data}
-            options={{
-              maintainAspectRatio: false,
-              responsive: true,
-              scales: {
-                x: {
-                  grid: {
-                    display: false,
+        <div
+          className="w-full 
+      px-4 pb-4  flex flex-col shadow-md rounded-md bg-white  justify-center"
+        >
+          <div className="flex  my-4 justify-between items-center">
+            <h1 className="text-lg  font-bold text-[#67748E]">
+              Employee Attendance
+            </h1>
+            <Select
+              placeholder={"Select year"}
+              onChange={(year) => {
+                setSelectedYear(year);
+              }}
+              components={{
+                IndicatorSeparator: () => null,
+              }}
+              styles={customStyles}
+              value={selectedyear} // Add this line
+              options={yearOptions}
+            />
+          </div>
+
+          <div className="md:w-[90%] w-[100%] h-[250px] md:h-[300px] px-0 md:px-4 flex items-center">
+            <Bar
+              data={data}
+              options={{
+                maintainAspectRatio: false,
+                responsive: true,
+                scales: {
+                  x: {
+                    grid: {
+                      display: false,
+                    },
+                  },
+                  y: {
+                    grid: {
+                      display: true,
+                    },
                   },
                 },
-                y: {
-                  grid: {
-                    display: true,
-                  },
-                },
-              },
-            }}
-            style={{
-              padding: "15px",
-            }}
-          />
+              }}
+            />
+          </div>
         </div>
       </article>
     </>

@@ -40,7 +40,7 @@ const SignIn = () => {
     else if (role === "Employee")
       return redirect(`/organisation/dashboard/employee-dashboard`);
     // eslint-disable-next-line
-  }, [window.location.pathname, role]);
+  }, [role, window.location.pathname]);
 
   const handleRole = useMutation(
     (data) => {
@@ -95,33 +95,33 @@ const SignIn = () => {
         } else if (response.data.user?.profile.includes("HR")) {
           handleRole.mutate({ role: "HR", email: response.data.user?.email });
           return redirect(
-            `/organisation/${response.data.user?.organizationId}/dashboard/HR-dashboard`
+            `/organisation/${response?.data?.user?.organizationId}/dashboard/HR-dashboard`
           );
-        } else if (response.data.user?.profile.includes("Manager")) {
+        } else if (response?.data?.user?.profile.includes("Manager")) {
           handleRole.mutate({
             role: "Manager",
             email: response.data.user?.email,
           });
           return redirect(
-            `/organisation/${response.data.user?.organizationId}/dashboard/manager-dashboard`
+            `/organisation/${response?.data?.user?.organizationId}/dashboard/manager-dashboard`
           );
         } else if (response.data.user?.profile.includes("Department-Head")) {
           handleRole.mutate({
             role: "Department-Head",
-            email: response.data.user?.email,
+            email: response?.data.user?.email,
           });
           return redirect(
-            `/organisation/${response.data.user?.organizationId}/dashboard/DH-dashboard`
+            `/organisation/${response?.data.user?.organizationId}/dashboard/DH-dashboard`
           );
         } else if (
-          response.data.user?.profile.includes("Delegate-Department-Head")
+          response?.data.user?.profile.includes("Delegate-Department-Head")
         ) {
           handleRole.mutate({
             role: "Delegate-Department-Head",
-            email: response.data.user?.email,
+            email: response?.data?.user?.email,
           });
           return redirect(
-            `/organisation/${response.data.user?.organizationId}/dashboard/DH-dashboard`
+            `/organisation/${response?.data?.user?.organizationId}/dashboard/DH-dashboard`
           );
         } else if (response.data.user?.profile.includes("Employee")) {
           handleRole.mutate({

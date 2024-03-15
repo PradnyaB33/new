@@ -1,23 +1,23 @@
 //todo
-import React, { useState, useContext, useEffect } from "react";
+import { Add, Info } from "@mui/icons-material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import {
   Button,
-  TextField,
-  IconButton,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
+  TextField,
   Typography,
-  DialogActions,
 } from "@mui/material";
 import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext"; // Adjust the path based on your project structure
 import Setup from "../SetUpOrganization/Setup";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { Add, Info } from "@mui/icons-material";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 
 const EmailSetting = () => {
   const id = useParams().organisationId;
@@ -239,7 +239,7 @@ const EmailSetting = () => {
                   <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                     <tr className="!font-semibold">
                       <th scope="col" className="!text-left pl-8 py-3 w-1/12">
-                        Sr No
+                        Sr. No
                       </th>
                       <th scope="col" className="py-3 w-8/12">
                         Email

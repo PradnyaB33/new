@@ -1,4 +1,7 @@
-import React, { useEffect, useState, useContext } from "react";
+import { Add, Info } from "@mui/icons-material";
+import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Button,
   Checkbox,
@@ -11,14 +14,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Setup from "../SetUpOrganization/Setup";
 import { UseContext } from "../../State/UseState/UseContext";
-import { Add, Info } from "@mui/icons-material";
-import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
+import Setup from "../SetUpOrganization/Setup";
 
 const Designation = () => {
   const { cookies } = useContext(UseContext);
@@ -302,7 +302,7 @@ const Designation = () => {
                   <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                     <tr className="!font-semibold ">
                       <th scope="col" className="!text-left pl-8 py-3 w-1/12">
-                        SR NO
+                        Sr. No
                       </th>
                       <th scope="col" className="py-3 w-8/12">
                         Designation Name

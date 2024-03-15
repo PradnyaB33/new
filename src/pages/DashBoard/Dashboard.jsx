@@ -1,5 +1,5 @@
 import Chart from "chart.js/auto";
-import React from "react";
+import React, { useState } from "react";
 
 import axios from "axios";
 import { CategoryScale } from "chart.js";
@@ -16,25 +16,29 @@ Chart.register(CategoryScale);
 const Dashboard = () => {
   const authToken = useAuthToken();
   const { getCurrentUser } = UserProfile();
+  const [selectedyear, setSelectedYear] = useState({
+    value: new Date().getFullYear(),
+    label: new Date().getFullYear(),
+  });
   const user = getCurrentUser();
   const getSalaryTemplate = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_API}/route/employeeSalary/viewpayslip/${user._id}/${user.organizationId}`,
+        `${process.env.REACT_APP_API}/route/employeeSalary/viewpayslip/${user._id}/${user.organizationId}/${selectedyear.value}`,
         {
           headers: {
             Authorization: authToken,
           },
         }
       );
-      return res.data.salaryDetails;
+      return res.data.employeeSalaryViaYear;
     } catch (error) {
       console.log(error);
     }
   };
 
   const { data: EmployeSalaryData } = useQuery(
-    "salary-template-employee",
+    ["salary-template-employee", selectedyear],
     getSalaryTemplate
   );
 
@@ -48,7 +52,11 @@ const Dashboard = () => {
           <div className="flex md:flex-row flex-col w-full justify-between gap-2">
             <div className="md:my-4 mb-1 flex md:gap-2 gap-1 flex-col md:!w-[60%] w-[100%] md:pb-2">
               <HRgraph />
-              <LineGraph salarydata={EmployeSalaryData} />
+              <LineGraph
+                salarydata={EmployeSalaryData}
+                selectedyear={selectedyear}
+                setSelectedYear={setSelectedYear}
+              />
               {/* <SinglePayGraph /> */}
             </div>
 

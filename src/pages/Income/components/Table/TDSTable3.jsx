@@ -258,7 +258,7 @@ const TDSTable3 = () => {
             <thead className="border-b bg-gray-100 font-bold">
               <tr className="!font-semibold ">
                 <th scope="col" className="!text-left pl-8 w-max py-3 border">
-                  SR NO
+                  Sr. No
                 </th>
                 <th scope="col" className="py-3 px-2 border">
                   Deduction Name

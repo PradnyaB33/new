@@ -42,7 +42,6 @@ const PunchingRejectModal = ({ items, length }) => {
     const id = items._id;
     navigate(`/remote/info/${id}`);
   };
-  console.log(items);
   return (
     <div className="w-full">
       <div className="w-full h-auto bg-white flex p-4 pl-8 pr-8 justify-between items-center shadow-md">
@@ -59,19 +58,12 @@ const PunchingRejectModal = ({ items, length }) => {
           </div>
           <div>
             <h1>
-              Start Time :{" "}
-              {new Date(
-                items.punchData[0].data[0]?.createdAt
-              ).toLocaleTimeString()}
+              Start Time : {new Date(items?.createdAt).toLocaleTimeString()}
             </h1>
             <h1>
               End Time:{" "}
               {items.punchData[0].data && items.punchData[0].data.length > 0
-                ? new Date(
-                    items.punchData[0].data[
-                      items.punchData[0].data.length - 1
-                    ].createdAt
-                  ).toLocaleTimeString()
+                ? new Date(items?.updatedAt).toLocaleTimeString()
                 : "N/A"}
             </h1>
             <h1>Total Distance Traveled: {distanceTraveled} Km </h1>

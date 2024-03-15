@@ -1,15 +1,15 @@
-import React, { useContext, useState } from "react";
-import { Button } from "@mui/material";
 import { Add, Info } from "@mui/icons-material";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
-import LoanManagementSkeleton from "./LoanManagementSkeleton";
-import LoanManagementPieChart from "./LoanManagementPieChart";
-import CreateLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/CreateLoanMgtModal";
-import { useParams } from "react-router-dom";
-import { useQuery } from "react-query";
+import { Button } from "@mui/material";
 import axios from "axios";
-import UserProfile from "../../hooks/UserData/useUser";
+import { default as React, useContext, useState } from "react";
+import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
+import CreateLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/CreateLoanMgtModal";
+import UserProfile from "../../hooks/UserData/useUser";
+import LoanManagementPieChart from "./LoanManagementPieChart";
+import LoanManagementSkeleton from "./LoanManagementSkeleton";
 
 const LoanManagement = () => {
   const { cookies } = useContext(UseContext);
@@ -34,9 +34,10 @@ const LoanManagement = () => {
       return response.data.data;
     }
   );
-  console.log(getEmployeeLoanData);
+
   // Function to calculate loan amount paid and pending
   const calculateLoanStatus = (loan) => {
+    const currentDate = new Date();
     const loanStartingDate = loan?.loanDisbursementDate
       ? new Date(loan?.loanDisbursementDate)
       : null;
@@ -44,26 +45,70 @@ const LoanManagement = () => {
       ? new Date(loan.loanCompletedDate)
       : null;
 
-    const formattedLoanStartingDate = loanStartingDate
-      ? loanStartingDate.toLocaleDateString("en-US")
-      : null;
-    const formattedLoanEndingDate = loanEndingDate
-      ? loanEndingDate.toLocaleDateString("en-US")
-      : null;
-
-    console.log(formattedLoanStartingDate);
-    console.log(formattedLoanEndingDate);
-
-    const loanAmounts = loan?.totalDeductionWithSi;
+    const loanAmount = loan?.totalDeductionWithSi;
     const totalDeductionPerMonth = loan?.totalDeduction;
 
-    // calculate the loan amount paid  and loan amount pending
-    const loanAmountPaid = Math.min(loanAmounts, totalDeductionPerMonth);
-    const loanAmountPending = loanAmounts - totalDeductionPerMonth;
+    let loanAmountPaid = 0;
+    let loanAmountPending = loanAmount;
+
+    if (currentDate < loanStartingDate) {
+      loanAmountPaid = 0;
+      loanAmountPending = loanAmount;
+    } else {
+      const elapsedMonths = Math.max(
+        0,
+        (currentDate.getFullYear() - loanStartingDate.getFullYear()) * 12 +
+          currentDate.getMonth() -
+          loanStartingDate.getMonth() +
+          1
+      );
+      loanAmountPaid = Math.min(
+        loanAmount,
+        totalDeductionPerMonth * elapsedMonths
+      );
+      loanAmountPending = loanAmount - loanAmountPaid;
+    }
+
+    let currentDateToCheck = new Date(loanStartingDate);
+    while (
+      currentDateToCheck <= loanEndingDate &&
+      currentDateToCheck <= currentDate
+    ) {
+      loanAmountPaid += totalDeductionPerMonth;
+      loanAmountPending -= totalDeductionPerMonth;
+      currentDateToCheck.setMonth(currentDateToCheck.getMonth() + 1);
+    }
+
     return { loanAmountPaid, loanAmountPending };
   };
 
-  // for create
+  // State to manage selected loans
+  const [selectedLoans, setSelectedLoans] = useState([]);
+
+  const handleCheckboxChange = (loan) => {
+    if (selectedLoans.includes(loan)) {
+      setSelectedLoans(
+        selectedLoans.filter((selectedLoan) => selectedLoan !== loan)
+      );
+    } else {
+      setSelectedLoans([...selectedLoans, loan]);
+    }
+  };
+  console.log(selectedLoans);
+
+  // Calculate total loan amount paid and pending based on selected loans
+  let totalPaidAmount = 0;
+  let totalPendingAmount = 0;
+
+  selectedLoans.forEach((selectedLoan) => {
+    const { loanAmountPaid, loanAmountPending } =
+      calculateLoanStatus(selectedLoan);
+    totalPaidAmount += loanAmountPaid;
+    totalPendingAmount += loanAmountPending;
+    console.log(totalPaidAmount);
+    console.log(totalPendingAmount);
+  });
+  // for create the loan data
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
@@ -110,6 +155,7 @@ const LoanManagement = () => {
                   <table className="min-w-full bg-white text-left text-sm font-light">
                     <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                       <tr className="font-semibold">
+                        <th scope="col" className="px-6 py-3"></th>
                         <th scope="col" className="text-left pl-8 py-3">
                           SR NO
                         </th>
@@ -142,6 +188,15 @@ const LoanManagement = () => {
                           calculateLoanStatus(loanMgtData);
                         return (
                           <tr className="font-medium border-b" key={id}>
+                            <td className="py-3 pl-6">
+                              <input
+                                type="checkbox"
+                                checked={selectedLoans.includes(loanMgtData)}
+                                onChange={() =>
+                                  handleCheckboxChange(loanMgtData)
+                                }
+                              />
+                            </td>
                             <td className="text-left pl-8 py-3">{id + 1}</td>
                             <td className="py-3 pl-6">
                               {loanMgtData.loanType?.loanName}
@@ -168,7 +223,10 @@ const LoanManagement = () => {
                 </div>
                 {/* pie chart for loan management */}
                 <div className="w-[30%]">
-                  <LoanManagementPieChart />
+                  <LoanManagementPieChart
+                    totalPaidAmount={totalPaidAmount}
+                    totalPendingAmount={totalPendingAmount}
+                  />
                 </div>
               </div>
             </>

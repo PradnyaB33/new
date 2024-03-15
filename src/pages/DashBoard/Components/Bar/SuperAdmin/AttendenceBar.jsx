@@ -74,6 +74,8 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
         },
       },
       y: {
+        min: 0,
+        max: 100,
         grid: {
           display: true,
         },

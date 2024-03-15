@@ -79,6 +79,7 @@ import DeclarationPage from "./pages/Income/components/accountantDeclarations/De
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
+import CustomCalander from "./pages/custom/Calendar";
 
 const App = () => {
   return (
@@ -104,10 +105,10 @@ const App = () => {
             </RequireAuth>
           }
         />
-        <Route
+        {/* <Route
           path="/organisation/:organisationId/employeeTest"
           element={<EmployeeTest />}
-        />
+        /> */}
         <Route
           path="/add-delegate/"
           element={
@@ -135,6 +136,7 @@ const App = () => {
           path="/remote/employee-confirmation"
           element={<EmployeeConfirmation />}
         />
+        <Route path="/custom/calendar" element={<CustomCalander />} />
         <Route path="/remote/info/:Id" element={<RemoteManager />} />
         <Route path="/remote/notification" element={<RemoteNotification />} />
         <Route path="/sign-in" element={<SignIn />} />
@@ -195,6 +197,7 @@ const App = () => {
                 "Employee",
                 "Department-Admin",
                 "Delegate-Department-Admin",
+                "Accountant",
               ]}
             >
               <Dashboard />
@@ -681,6 +684,10 @@ const App = () => {
         <Route path="/income-tax/declarations" element={<TDSTab1 />} />
         <Route
           path="/income-tax/accountant-declarations"
+          element={<DeclarationPage />}
+        />
+        <Route
+          path="/income-tax/accountant-declarations/:id"
           element={<DeclarationPage />}
         />
         <Route path="/application" element={<Application />} />
