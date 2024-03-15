@@ -14,6 +14,7 @@ import PriceChangeOutlinedIcon from "@mui/icons-material/PriceChangeOutlined";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router";
 import useAuthToken from "../../hooks/Token/useAuth";
+
 import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
 
@@ -41,9 +42,9 @@ const RemoteSetup = () => {
       onSuccess: (data) => {
         if (data && data.remotePunchingObject) {
           setFormData({
-            allowance: data.remotePunchingObject.allowance || false,
-            allowanceQuantity: data.remotePunchingObject.allowanceQuantity || 0,
-            dualWorkflow: data.remotePunchingObject.dualWorkflow || false,
+            allowance: data.remotePunchingObject.allowance,
+            allowanceQuantity: data.remotePunchingObject.allowanceQuantity,
+            dualWorkflow: data.remotePunchingObject.dualWorkflow,
           });
         }
       },
