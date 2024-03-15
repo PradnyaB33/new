@@ -179,251 +179,257 @@ const ViewPayslip = () => {
         employeeInfo &&
         organisationInfo &&
         previousMonthSalary ? (
-          <div id="App">
-            <div className="container mx-auto p-6">
-              <div className="flex items-center justify-between mb-6">
-                <img
-                  src={organisationInfo?.logo_url}
-                  alt={organisationInfo?.logo_url}
-                  className="w-20 h-20 rounded-full"
-                />
-                <div>
-                  <p className="text-lg font-semibold">
-                    Organisation Name:
-                    <span>{organisationInfo?.orgName || ""}</span>
-                  </p>
-
-                  <p className="text-lg">
-                    Location:
-                    <span>{organisationInfo?.location || ""}</span>
-                  </p>
-                  <p className="text-lg">
-                    Contact No:
-                    <span>{organisationInfo?.contact_number || ""}</span>
-                  </p>
-                  <p className="text-lg">
-                    Organisation Email:
-                    <span> {organisationInfo?.email || ""}</span>
-                  </p>
+          <>
+            <div id="App">
+              <div className="container mx-auto p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <img
+                    src={organisationInfo?.logo_url}
+                    alt={organisationInfo?.logo_url}
+                    className="w-20 h-20 rounded-full"
+                  />
+                  <div className="ml-4">
+                    <p className="text-lg font-semibold flex items-center">
+                      <span className=" mr-1">Organisation Name :</span>
+                      <span style={{ whiteSpace: "pre-wrap" }}>
+                        {organisationInfo?.orgName || ""}
+                      </span>
+                    </p>
+                    <p className="text-lg flex items-center">
+                      <span className=" mr-1">Location :</span>
+                      <span> {organisationInfo?.location || ""}</span>
+                    </p>
+                    <p className="text-lg flex items-center">
+                      <span className="mr-1">Contact No :</span>
+                      <span>{organisationInfo?.contact_number || ""}</span>
+                    </p>
+                    <p className="text-lg flex items-center">
+                      <span className="mr-1">Email :</span>
+                      <span>{organisationInfo?.email || ""}</span>
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <hr className="mb-6" />
-              {/* 1st table */}
-              <div>
-                <table class="w-full border border-collapse">
-                  <thead>
-                    <tr class="bg-blue-200">
-                      <th class="px-4 py-2 border">Salary Slip</th>
-                      <th class="border"></th>
-                      <th class="px-4 py-2 border">Month</th>
-                      <th class="px-4 py-2 border">
-                        {previousMonthSalary?.formattedDate || ""}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class="px-4 py-2 border">Employee Name:</td>
-                      <td class="px-4 py-2 border">
-                        {`${employeeInfo?.first_name} ${employeeInfo?.last_name}`}
-                      </td>
-                      <td class="px-4 py-2 border">Date Of Joining:</td>
-                      <td class="px-4 py-2 border">
-                        {employeeInfo?.joining_date
-                          ? new Date(
-                              employeeInfo.joining_date
-                            ).toLocaleDateString("en-GB")
-                          : ""}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">Designation:</td>
-                      <td class="px-4 py-2 border">
-                        {employeeInfo?.designation &&
-                        employeeInfo?.designation !== null &&
-                        employeeInfo?.designation !== undefined &&
-                        employeeInfo.designation.length > 0
-                          ? employeeInfo.designation[0].designationName
-                          : ""}
-                      </td>
-                      <td class="px-4 py-2 border">Unpaid Leaves:</td>
-                      <td class="px-4 py-2 border"> {unpaidLeave}</td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">Department Name:</td>
-                      <td class="px-4 py-2 border">
-                        {(employeeInfo?.deptname &&
-                          employeeInfo?.deptname !== null &&
-                          employeeInfo?.deptname !== undefined &&
-                          employeeInfo?.deptname.length > 0 &&
-                          employeeInfo?.deptname[0]?.departmentName) ||
-                          ""}
-                      </td>
-                      <td class="px-4 py-2 border">
-                        No of Working Days Attended:
-                      </td>
-                      <td class="px-4 py-2 border">
-                        {" "}
-                        {previousMonthSalary?.noOfDaysEmployeePresent || ""}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">PAN No:</td>
-                      <td class="px-4 py-2 border">
-                        {employeeInfo?.pan_card_number}
-                      </td>
-                      <td class="px-4 py-2 border">Paid Leaves:</td>
-                      <td class="px-4 py-2 border">{paidLeave}</td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">Bank Account No:</td>
-                      <td class="px-4 py-2 border">
-                        {employeeInfo?.bank_account_no || ""}
-                      </td>
-                      <td class="px-4 py-2 border">Public Holidays:</td>
-                      <td class="px-4 py-2 border"> {publicHoliday}</td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border"> No of Days in Month:</td>
-                      <td class="px-4 py-2 border">
-                        {previousMonthSalary?.numDaysInMonth || ""}
-                      </td>
-                      <td class="px-4 py-2 border"></td>
-                      <td class="px-4 py-2 border"></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
 
-              {/* 2nd table */}
-              <div>
-                <table class="w-full border border-collapse">
-                  <thead>
-                    <tr class="bg-blue-200">
-                      <th class="px-4 py-2 border">Income</th>
-                      <th class="border"></th>
-                      <th class="px-4 py-2 border">Deduction</th>
-                      <th class="px-4 py-2 border"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class="px-4 py-2 border">Particulars</td>
-                      <td class="py-2 border">Amount</td>
-                      <td class="py-2 border">Particulars</td>
-                      <td class="py-2 border">Amount</td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">Basic :</td>
-                      <td class="px-4 py-2 border">
-                        {previousMonthSalary?.basicSalary || ""}
-                      </td>
-                      <td class="py-2 border">Professional Tax:</td>
-                      <td class="py-2 border">
-                        {employeeInfo?.deduction || ""}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">DA :</td>
-                      <td class="px-4 py-2 border">
-                        {previousMonthSalary?.daSalary || ""}
-                      </td>
-                      <td class="py-2 border">Employee PF:</td>
-                      <td class="py-2 border">
-                        {employeeInfo?.employee_pf || ""}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">HRA:</td>
-                      <td class="px-4 py-2 border">
-                        {previousMonthSalary?.hraSalary || ""}
-                      </td>
-                      <td class="py-2 border">ESIC :</td>
-                      <td class="py-2 border">{employeeInfo?.esic || ""}</td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">Food Allowance:</td>
-                      <td class="px-4 py-2 border">
-                        {previousMonthSalary?.foodAllowance || ""}
-                      </td>
-                      <td class="px-4 py-2 border"></td>
-                      <td class="px-4 py-2 border"></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">Sales Allowance:</td>
-                      <td class="px-4 py-2 border">
-                        {previousMonthSalary?.salesAllowance || ""}
-                      </td>
-                      <td class="px-4 py-2 border"></td>
-                      <td class="px-4 py-2 border"></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">Special Allowance:</td>
-                      <td class="px-4 py-2 border">
-                        {" "}
-                        {previousMonthSalary?.specialAllowance || ""}
-                      </td>
-                      <td class="px-4 py-2 border"></td>
-                      <td class="px-4 py-2 border"></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">Travel Allowance:</td>
-                      <td class="px-4 py-2 border">
-                        {" "}
-                        {previousMonthSalary?.travelAllowance || ""}
-                      </td>
-                      <td class="px-4 py-2 border"></td>
-                      <td class="px-4 py-2 border"></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">Variable Pay Allowance:</td>
-                      <td class="px-4 py-2 border">
-                        {" "}
-                        {previousMonthSalary?.variableAllowance || ""}
-                      </td>
-                      <td class="px-4 py-2 border"></td>
-                      <td class="px-4 py-2 border"></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                <hr className="mb-6" />
+                {/* 1st table */}
+                <div>
+                  <table class="w-full border border-collapse">
+                    <thead>
+                      <tr class="bg-blue-200">
+                        <th class="px-4 py-2 border">Salary Slip</th>
+                        <th class="border"></th>
+                        <th class="px-4 py-2 border">Month</th>
+                        <th class="px-4 py-2 border">
+                          {previousMonthSalary?.formattedDate || ""}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="px-4 py-2 border">Employee Name:</td>
+                        <td class="px-4 py-2 border">
+                          {`${employeeInfo?.first_name} ${employeeInfo?.last_name}`}
+                        </td>
+                        <td class="px-4 py-2 border">Date Of Joining:</td>
+                        <td class="px-4 py-2 border">
+                          {employeeInfo?.joining_date
+                            ? new Date(
+                                employeeInfo.joining_date
+                              ).toLocaleDateString("en-GB")
+                            : ""}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-2 border">Designation:</td>
+                        <td class="px-4 py-2 border">
+                          {employeeInfo?.designation &&
+                          employeeInfo?.designation !== null &&
+                          employeeInfo?.designation !== undefined &&
+                          employeeInfo.designation.length > 0
+                            ? employeeInfo.designation[0].designationName
+                            : ""}
+                        </td>
+                        <td class="px-4 py-2 border">Unpaid Leaves:</td>
+                        <td class="px-4 py-2 border"> {unpaidLeave}</td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-2 border">Department Name:</td>
+                        <td class="px-4 py-2 border">
+                          {(employeeInfo?.deptname &&
+                            employeeInfo?.deptname !== null &&
+                            employeeInfo?.deptname !== undefined &&
+                            employeeInfo?.deptname.length > 0 &&
+                            employeeInfo?.deptname[0]?.departmentName) ||
+                            ""}
+                        </td>
+                        <td class="px-4 py-2 border">
+                          No of Working Days Attended:
+                        </td>
+                        <td class="px-4 py-2 border">
+                          {" "}
+                          {previousMonthSalary?.noOfDaysEmployeePresent || ""}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-2 border">PAN No:</td>
+                        <td class="px-4 py-2 border">
+                          {employeeInfo?.pan_card_number}
+                        </td>
+                        <td class="px-4 py-2 border">Paid Leaves:</td>
+                        <td class="px-4 py-2 border">{paidLeave}</td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-2 border">Bank Account No:</td>
+                        <td class="px-4 py-2 border">
+                          {employeeInfo?.bank_account_no || ""}
+                        </td>
+                        <td class="px-4 py-2 border">Public Holidays:</td>
+                        <td class="px-4 py-2 border"> {publicHoliday}</td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-2 border"> No of Days in Month:</td>
+                        <td class="px-4 py-2 border">
+                          {previousMonthSalary?.numDaysInMonth || ""}
+                        </td>
+                        <td class="px-4 py-2 border"></td>
+                        <td class="px-4 py-2 border"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
 
-              {/* total gross salary and deduction */}
-              <div>
-                <table class="w-full border border-collapse">
-                  <thead class="border">
-                    <tr class="bg-blue-200 border">
-                      <th class="px-4 py-2 border">Total Gross Salary :</th>
-                      <th class="pl-24 py-2 border">
-                        {" "}
-                        {previousMonthSalary?.totalGrossSalary || ""}
-                      </th>
-                      <th class="px-4 py-2 border">Total Deduction :</th>
-                      <th class="px-4 py-2 border">
-                        {" "}
-                        {previousMonthSalary?.totalDeduction || ""}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody class="border"></tbody>
-                </table>
-              </div>
+                {/* 2nd table */}
+                <div>
+                  <table class="w-full border border-collapse">
+                    <thead>
+                      <tr class="bg-blue-200">
+                        <th class="px-4 py-2 border">Income</th>
+                        <th class="border"></th>
+                        <th class="px-4 py-2 border">Deduction</th>
+                        <th class="px-4 py-2 border"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="px-4 py-2 border">Particulars</td>
+                        <td class="py-2 border">Amount</td>
+                        <td class="py-2 border">Particulars</td>
+                        <td class="py-2 border">Amount</td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-2 border">Basic :</td>
+                        <td class="px-4 py-2 border">
+                          {previousMonthSalary?.basicSalary || ""}
+                        </td>
+                        <td class="py-2 border">Professional Tax:</td>
+                        <td class="py-2 border">
+                          {employeeInfo?.deduction || ""}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-2 border">DA :</td>
+                        <td class="px-4 py-2 border">
+                          {previousMonthSalary?.daSalary || ""}
+                        </td>
+                        <td class="py-2 border">Employee PF:</td>
+                        <td class="py-2 border">
+                          {employeeInfo?.employee_pf || ""}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-2 border">HRA:</td>
+                        <td class="px-4 py-2 border">
+                          {previousMonthSalary?.hraSalary || ""}
+                        </td>
+                        <td class="py-2 border">ESIC :</td>
+                        <td class="py-2 border">{employeeInfo?.esic || ""}</td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-2 border">Food Allowance:</td>
+                        <td class="px-4 py-2 border">
+                          {previousMonthSalary?.foodAllowance || ""}
+                        </td>
+                        <td class="px-4 py-2 border"></td>
+                        <td class="px-4 py-2 border"></td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-2 border">Sales Allowance:</td>
+                        <td class="px-4 py-2 border">
+                          {previousMonthSalary?.salesAllowance || ""}
+                        </td>
+                        <td class="px-4 py-2 border"></td>
+                        <td class="px-4 py-2 border"></td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-2 border">Special Allowance:</td>
+                        <td class="px-4 py-2 border">
+                          {" "}
+                          {previousMonthSalary?.specialAllowance || ""}
+                        </td>
+                        <td class="px-4 py-2 border"></td>
+                        <td class="px-4 py-2 border"></td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-2 border">Travel Allowance:</td>
+                        <td class="px-4 py-2 border">
+                          {" "}
+                          {previousMonthSalary?.travelAllowance || ""}
+                        </td>
+                        <td class="px-4 py-2 border"></td>
+                        <td class="px-4 py-2 border"></td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-2 border">
+                          Variable Pay Allowance:
+                        </td>
+                        <td class="px-4 py-2 border">
+                          {" "}
+                          {previousMonthSalary?.variableAllowance || ""}
+                        </td>
+                        <td class="px-4 py-2 border"></td>
+                        <td class="px-4 py-2 border"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
 
-              {/* total net salaey */}
-              <div>
-                <table class="w-full mt-10 border ">
-                  <thead>
-                    <tr class="bg-blue-200">
-                      <th class="px-4 py-2 ">Total Net Salary</th>
-                      <th></th>
-                      <th class="px-4 py-2">
-                        {previousMonthSalary?.totalNetSalary || ""}
-                      </th>
-                      <th class="px-4 py-2"></th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
+                {/* total gross salary and deduction */}
+                <div>
+                  <table class="w-full border border-collapse">
+                    <thead class="border">
+                      <tr class="bg-blue-200 border">
+                        <th class="px-4 py-2 border">Total Gross Salary :</th>
+                        <th class="pl-24 py-2 border">
+                          {" "}
+                          {previousMonthSalary?.totalGrossSalary || ""}
+                        </th>
+                        <th class="px-4 py-2 border">Total Deduction :</th>
+                        <th class="px-4 py-2 border">
+                          {" "}
+                          {previousMonthSalary?.totalDeduction || ""}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="border"></tbody>
+                  </table>
+                </div>
+
+                {/* total net salaey */}
+                <div>
+                  <table class="w-full mt-10 border ">
+                    <thead>
+                      <tr class="bg-blue-200">
+                        <th class="px-4 py-2 ">Total Net Salary</th>
+                        <th></th>
+                        <th class="px-4 py-2">
+                          {previousMonthSalary?.totalNetSalary || ""}
+                        </th>
+                        <th class="px-4 py-2"></th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
               </div>
             </div>
             <div
@@ -448,7 +454,7 @@ const ViewPayslip = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </>
         ) : (
           <div className="mt-1">
             <div>
