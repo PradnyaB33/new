@@ -9,7 +9,7 @@ const useLoanQuery = (organisationId) => {
 
   const { loanType, setRateOfInterest } = useLaonState();
 
-  //for  Get Query
+  //for  Get Query to get loan type
   const { data: getEmployeeLoanType } = useQuery(
     ["loanType", organisationId],
     async () => {
@@ -35,7 +35,24 @@ const useLoanQuery = (organisationId) => {
     }
   }, [getEmployeeLoanType, loanType, setRateOfInterest]);
 
-  return { getEmployeeLoanType };
+  //for  Get Query to total salary
+  const { data: getTotalSalaryEmployee } = useQuery(
+    ["totalSalary", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/${organisationId}/total-salary`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      const totalSalary = response.data.totalSalary;
+      return totalSalary;
+    }
+  );
+
+  return { getEmployeeLoanType, getTotalSalaryEmployee };
 };
 
 export default useLoanQuery;

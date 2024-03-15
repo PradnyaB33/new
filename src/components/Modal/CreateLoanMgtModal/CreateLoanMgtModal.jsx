@@ -41,7 +41,9 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     setDisbursementDate,
   } = useLaonState();
 
-  const { getEmployeeLoanType } = useLoanQuery(organisationId);
+  const { getEmployeeLoanType, getTotalSalaryEmployee } =
+    useLoanQuery(organisationId);
+
   const {
     interestPerMonth,
     principalPerMonth,
@@ -75,6 +77,26 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
       },
     }
   );
+
+  const createLoanData = async (loanData) => {
+    const totalSalary = getTotalSalaryEmployee;
+
+    if (totalSalary < 0.5 * loanData.totalDeductionWithSi) {
+      handleAlert(
+        true,
+        "error",
+        "Total deduction should be at least 50% of your total monthly salary"
+      );
+      return;
+    }
+
+    try {
+      await AddLoanData.mutateAsync(loanData);
+    } catch (error) {
+      console.error("An error occurred while creating a loan data", error);
+      setErrors("An Error occurred while creating a loan data.");
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -89,12 +111,13 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
         loanInteresetAmount: interestPerMonth,
         totalDeduction: totalDeductionPerMonth,
         totalDeductionWithSi: totalAmountWithSimpleInterest,
+        totalSalary: getTotalSalaryEmployee,
       };
       if (!loanType) {
         setError("Loan type field is Mandatory");
         return false;
       }
-      await AddLoanData.mutateAsync(data);
+      await createLoanData(data);
     } catch (error) {
       console.error(error);
       setErrors("An error occurred while creating a loan data");

@@ -277,25 +277,53 @@ function CalculateSalary() {
   // calculate the totalNetSalary
   let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
 
-  const saveSallaryDetail = async () => {
+  const saveSalaryDetail = async () => {
     try {
       // Check if the selected year is in the future
       const currentYear = dayjs().format("YYYY");
+      const currentMonth = dayjs().format("MM");
       const selectedYear = selectedDate.format("YYYY");
+      const selectedMonth = selectedDate.format("MM");
       const employeeJoiningYear = dayjs(availableEmployee?.joining_date).format(
         "YYYY"
       );
+      const employeeJoiningMonth = dayjs(
+        availableEmployee?.joining_date
+      ).format("MM");
+      const day = dayjs();
+      console.log(day);
+      console.log({ currentMonth, currentYear, selectedMonth, selectedYear });
 
-      if (parseInt(selectedYear) > parseInt(currentYear)) {
-        handleAlert(true, "error", "Cannot calculate salary for future years");
-        return;
-      }
-
-      if (parseInt(selectedYear) < parseInt(employeeJoiningYear)) {
+      // Calculate the next month
+      const nextMonth =
+        parseInt(currentMonth) === 12 ? 1 : parseInt(currentMonth) + 1;
+      const nextYear =
+        parseInt(currentMonth) === 12
+          ? parseInt(currentYear) + 1
+          : parseInt(currentYear);
+      console.log(nextYear);
+      if (
+        parseInt(selectedYear) > parseInt(currentYear) ||
+        (parseInt(selectedYear) === parseInt(currentYear) &&
+          parseInt(selectedMonth) > parseInt(nextMonth))
+      ) {
         handleAlert(
           true,
           "error",
-          "Cannot calculate salary for years before employee's joining date"
+          "Cannot calculate salary for future months or years"
+        );
+        return;
+      }
+
+      if (
+        parseInt(selectedYear) < parseInt(employeeJoiningYear) ||
+        (parseInt(selectedYear) === parseInt(employeeJoiningYear) &&
+          parseInt(selectedMonth) < parseInt(employeeJoiningMonth))
+      ) {
+        handleAlert(
+          true,
+          "error",
+          "Cannot calculate salary for months before employee's joining date"
         );
         return;
       }
@@ -341,27 +369,7 @@ function CalculateSalary() {
           "success",
           "Monthly Salary Detail added Successfully"
         );
-        basicSalary = 0;
-        hraSalary = 0;
-        daSalary = 0;
-        foodAllowance = 0;
-        salesAllowance = 0;
-        specialAllowance = 0;
-        travelAllowance = 0;
-        variableAllowance = 0;
-        totalGrossSalary = 0;
-        totalDeduction = 0;
-        totalNetSalary = 0;
-        noOfDaysEmployeePresent = 0;
-        publicHolidaysCount = 0;
-        setNumDaysInMonth(0);
-        setUnPaidLeaveDays(0);
-        setPaidLeaveDays(0);
-
-        // Resetting alerts after a certain time
-        setTimeout(() => {
-          handleAlert(false, "", "");
-        }, 5000);
+        // Reset form values here
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
@@ -378,6 +386,7 @@ function CalculateSalary() {
       }
     }
   };
+
   return (
     <div className="container mx-auto p-6">
       <div className="flex items-center justify-center">
@@ -402,28 +411,30 @@ function CalculateSalary() {
           alt="Company Logo"
           className="w-20 h-20 rounded-full"
         />
-        <div>
-          <p className="text-lg font-semibold">
-            Organisation Name:
-            <span>{availableEmployee?.organizationId?.orgName || ""}</span>
+        <div className="ml-4">
+          <p className="text-lg font-semibold flex items-center">
+            <span className=" mr-1">Organisation Name :</span>
+            <span style={{ whiteSpace: "pre-wrap" }}>
+              {availableEmployee?.organizationId?.orgName || ""}
+            </span>
           </p>
-
-          <p className="text-lg">
-            Location:
+          <p className="text-lg flex items-center">
+            <span className=" mr-1">Location :</span>
             <span>{availableEmployee?.organizationId?.location || ""}</span>
           </p>
-          <p className="text-lg">
-            Contact No:
+          <p className="text-lg flex items-center">
+            <span className="mr-1">Contact No :</span>
             <span>
               {availableEmployee?.organizationId?.contact_number || ""}
             </span>
           </p>
-          <p className="text-lg">
-            Email:
+          <p className="text-lg flex items-center">
+            <span className="mr-1">Email :</span>
             <span>{availableEmployee?.organizationId?.email || ""}</span>
           </p>
         </div>
       </div>
+
       <hr className="mb-6" />
       {/* 1st table */}
       <div>
@@ -617,7 +628,7 @@ function CalculateSalary() {
           }}
         >
           <button
-            onClick={saveSallaryDetail}
+            onClick={saveSalaryDetail}
             class="px-4 py-2 rounded bg-blue-500 text-white border-none text-base cursor-pointer"
           >
             Submit
