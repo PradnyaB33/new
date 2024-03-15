@@ -104,10 +104,10 @@ const App = () => {
             </RequireAuth>
           }
         />
-        <Route
+        {/* <Route
           path="/organisation/:organisationId/employeeTest"
           element={<EmployeeTest />}
-        />
+        /> */}
         <Route
           path="/add-delegate/"
           element={

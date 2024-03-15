@@ -12,11 +12,16 @@ import axios from "axios";
 import { CategoryScale, Chart } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { useQuery } from "react-query";
+import Select from "react-select";
 import { UseContext } from "../../../../State/UseState/UseContext";
 import UserProfile from "../../../../hooks/UserData/useUser";
 Chart.register(CategoryScale);
 
-const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
+const ManagerEmployeeChart = ({
+  EmployeeDataOfManager,
+  selectedyear,
+  setSelectedYear,
+}) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
@@ -24,29 +29,39 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
   // const RemainingLeaves = useLeaveTable();
   const [userId, setuserId] = useState();
 
-  // const { data: remainingLeaves } = RemainingLeaves;
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      border: ".5px solid #f1f1f1",
+      background: "#f9fafb",
+      boxShadow: "none",
+      hover: {
+        cursor: "pointer !important",
+      },
+    }),
+    menu: (base) => ({
+      ...base,
+      width: "max-content",
+      minWidth: "100%",
+      right: 0,
+    }),
+    placeholder: (defaultStyles) => {
+      return {
+        ...defaultStyles,
+        color: "#000",
+      };
+    },
+  };
 
-  // const dataPie = {
-  //   labels: remainingLeaves?.leaveTypes?.map((item) => item.leaveName) ?? [],
-  //   datasets: [
-  //     {
-  //       label: "Total Leaves",
-  //       data: remainingLeaves?.leaveTypes?.map((item) => item.count) ?? [],
-  //       backgroundColor:
-  //         remainingLeaves?.leaveTypes?.map((item) => item.color) ?? [],
-  //     },
-  //   ],
-  // };
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 5 }, (_, index) => currentYear - index);
 
-  // const optionsPie = {
-  //   responsive: false,
-  //   plugins: {
-  //     legend: {
-  //       display: true,
-  //       position: "right",
-  //     },
-  //   },
-  // };
+  const yearOptions = years.map((year) => {
+    return {
+      value: year.toString(),
+      label: year,
+    };
+  });
 
   const options = {
     scales: {
@@ -66,7 +81,7 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
 
   const getYearLeaves = async () => {
     const { data } = await axios.get(
-      `${process.env.REACT_APP_API}/route/leave/getYearLeaves/${userId}`,
+      `${process.env.REACT_APP_API}/route/leave/getYearLeaves/${userId}/${selectedyear.value}`,
       {
         headers: {
           Authorization: authToken,
@@ -77,7 +92,7 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
   };
 
   const { data: LeaveYearData, isLoading: leaveYearLoading } = useQuery(
-    ["leaveData", userId],
+    ["leaveData", userId, selectedyear],
     getYearLeaves
   );
 
@@ -171,26 +186,44 @@ const ManagerEmployeeChart = ({ EmployeeDataOfManager }) => {
             </Avatar>
             <h1 className="md:text-xl text-lg py-3">Attendance Overview</h1>
           </div>
-          <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            className="w-full"
-            // sx={{ width: 300 }}
-            size="small"
-            onChange={handleSelect}
-            options={EmployeeDataOfManager?.data[0]?.reporteeIds ?? []}
-            getOptionLabel={(option) => option?.first_name}
-            renderOption={(props, option) => (
-              <li className="flex" {...props}>
-                <p>
-                  {option?.first_name} {option?.last_name}
-                </p>
-              </li>
-            )}
-            renderInput={(params) => (
-              <TextField {...params} label="Search Employee" />
-            )}
-          />
+
+          <div className="flex gap-2 w-full">
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              className="w-full"
+              // sx={{ width: 300 }}
+              size="small"
+              onChange={handleSelect}
+              options={EmployeeDataOfManager?.data[0]?.reporteeIds ?? []}
+              getOptionLabel={(option) => option?.first_name}
+              renderOption={(props, option) => (
+                <li className="flex" {...props}>
+                  <p>
+                    {option?.first_name} {option?.last_name}
+                  </p>
+                </li>
+              )}
+              renderInput={(params) => (
+                <TextField {...params} label="Search Employee" />
+              )}
+            />
+
+            <div className="w-[15%]">
+              <Select
+                placeholder={"Select year"}
+                onChange={(year) => {
+                  setSelectedYear(year);
+                }}
+                components={{
+                  IndicatorSeparator: () => null,
+                }}
+                styles={customStyles}
+                value={selectedyear} // Add this line
+                options={yearOptions}
+              />
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-col gap-2">

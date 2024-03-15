@@ -3,7 +3,12 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 import Select from "react-select";
 
-const LineGraph = ({ salarydata, isLoading = false }) => {
+const LineGraph = ({
+  salarydata,
+  isLoading = false,
+  setSelectedYear,
+  selectedyear,
+}) => {
   const option = {
     elements: {
       line: {
@@ -23,12 +28,13 @@ const LineGraph = ({ salarydata, isLoading = false }) => {
       },
     },
     maintainAspectRatio: false,
+    responsive: true,
   };
 
   const customStyles = {
     control: (base) => ({
       ...base,
-      border: 0,
+      border: ".5px solid #f1f1f1",
       background: "#f9fafb",
       boxShadow: "none",
       hover: {
@@ -160,22 +166,20 @@ const LineGraph = ({ salarydata, isLoading = false }) => {
             <h1 className="text-lg my-4 font-bold text-[#67748E]">
               Salary Overview
             </h1>
-            <Select
-              placeholder={"Select year"}
-              // onChange={(dept) => {}}
-              components={{
-                IndicatorSeparator: () => null,
-              }}
-              styles={customStyles}
-              // value={
-              //   department
-              //     ? Departmentoptions?.find(
-              //         (option) => option.value === department
-              //       )
-              //     : ""
-              // } // Add this line
-              options={yearOptions}
-            />
+            {window.location.pathname.includes("/employee-dashboard") && (
+              <Select
+                placeholder={"Select year"}
+                onChange={(year) => {
+                  setSelectedYear(year);
+                }}
+                components={{
+                  IndicatorSeparator: () => null,
+                }}
+                styles={customStyles}
+                value={selectedyear} // Add this line
+                options={yearOptions}
+              />
+            )}
           </div>
           <div className="h-[250px] md:h-[340px] w-full ">
             <Line data={data} options={option} />
