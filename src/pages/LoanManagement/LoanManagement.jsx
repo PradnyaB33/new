@@ -35,8 +35,10 @@ const LoanManagement = () => {
     }
   );
   console.log(getEmployeeLoanData);
+
   // Function to calculate loan amount paid and pending
   const calculateLoanStatus = (loan) => {
+    const currentDate = new Date();
     const loanStartingDate = loan?.loanDisbursementDate
       ? new Date(loan?.loanDisbursementDate)
       : null;
@@ -44,22 +46,40 @@ const LoanManagement = () => {
       ? new Date(loan.loanCompletedDate)
       : null;
 
-    const formattedLoanStartingDate = loanStartingDate
-      ? loanStartingDate.toLocaleDateString("en-US")
-      : null;
-    const formattedLoanEndingDate = loanEndingDate
-      ? loanEndingDate.toLocaleDateString("en-US")
-      : null;
-
-    console.log(formattedLoanStartingDate);
-    console.log(formattedLoanEndingDate);
-
-    const loanAmounts = loan?.totalDeductionWithSi;
+    const loanAmount = loan?.totalDeductionWithSi;
     const totalDeductionPerMonth = loan?.totalDeduction;
 
-    // calculate the loan amount paid  and loan amount pending
-    const loanAmountPaid = Math.min(loanAmounts, totalDeductionPerMonth);
-    const loanAmountPending = loanAmounts - totalDeductionPerMonth;
+    let loanAmountPaid = 0;
+    let loanAmountPending = loanAmount;
+
+    if (currentDate < loanStartingDate) {
+      loanAmountPaid = 0;
+      loanAmountPending = loanAmount;
+    } else {
+      const elapsedMonths = Math.max(
+        0,
+        (currentDate.getFullYear() - loanStartingDate.getFullYear()) * 12 +
+          currentDate.getMonth() -
+          loanStartingDate.getMonth() +
+          1
+      );
+      loanAmountPaid = Math.min(
+        loanAmount,
+        totalDeductionPerMonth * elapsedMonths
+      );
+      loanAmountPending = loanAmount - loanAmountPaid;
+    }
+
+    let currentDateToCheck = new Date(loanStartingDate);
+    while (
+      currentDateToCheck <= loanEndingDate &&
+      currentDateToCheck <= currentDate
+    ) {
+      loanAmountPaid += totalDeductionPerMonth;
+      loanAmountPending -= totalDeductionPerMonth;
+      currentDateToCheck.setMonth(currentDateToCheck.getMonth() + 1);
+    }
+
     return { loanAmountPaid, loanAmountPending };
   };
 

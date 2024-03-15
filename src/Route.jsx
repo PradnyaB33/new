@@ -79,6 +79,7 @@ import DeclarationPage from "./pages/Income/components/accountantDeclarations/De
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
+import CustomCalander from "./pages/custom/Calendar";
 
 const App = () => {
   return (
@@ -135,6 +136,7 @@ const App = () => {
           path="/remote/employee-confirmation"
           element={<EmployeeConfirmation />}
         />
+        <Route path="/custom/calendar" element={<CustomCalander />} />
         <Route path="/remote/info/:Id" element={<RemoteManager />} />
         <Route path="/remote/notification" element={<RemoteNotification />} />
         <Route path="/sign-in" element={<SignIn />} />
