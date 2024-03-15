@@ -34,7 +34,6 @@ const LoanManagement = () => {
       return response.data.data;
     }
   );
-  console.log(getEmployeeLoanData);
 
   // Function to calculate loan amount paid and pending
   const calculateLoanStatus = (loan) => {
@@ -83,7 +82,33 @@ const LoanManagement = () => {
     return { loanAmountPaid, loanAmountPending };
   };
 
-  // for create
+  // State to manage selected loans
+  const [selectedLoans, setSelectedLoans] = useState([]);
+
+  const handleCheckboxChange = (loan) => {
+    if (selectedLoans.includes(loan)) {
+      setSelectedLoans(
+        selectedLoans.filter((selectedLoan) => selectedLoan !== loan)
+      );
+    } else {
+      setSelectedLoans([...selectedLoans, loan]);
+    }
+  };
+  console.log(selectedLoans);
+
+  // Calculate total loan amount paid and pending based on selected loans
+  let totalPaidAmount = 0;
+  let totalPendingAmount = 0;
+
+  selectedLoans.forEach((selectedLoan) => {
+    const { loanAmountPaid, loanAmountPending } =
+      calculateLoanStatus(selectedLoan);
+    totalPaidAmount += loanAmountPaid;
+    totalPendingAmount += loanAmountPending;
+    console.log(totalPaidAmount);
+    console.log(totalPendingAmount);
+  });
+  // for create the loan data
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
@@ -130,6 +155,7 @@ const LoanManagement = () => {
                   <table className="min-w-full bg-white text-left text-sm font-light">
                     <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                       <tr className="font-semibold">
+                        <th scope="col" className="px-6 py-3"></th>
                         <th scope="col" className="text-left pl-8 py-3">
                           SR NO
                         </th>
@@ -162,6 +188,15 @@ const LoanManagement = () => {
                           calculateLoanStatus(loanMgtData);
                         return (
                           <tr className="font-medium border-b" key={id}>
+                            <td className="py-3 pl-6">
+                              <input
+                                type="checkbox"
+                                checked={selectedLoans.includes(loanMgtData)}
+                                onChange={() =>
+                                  handleCheckboxChange(loanMgtData)
+                                }
+                              />
+                            </td>
                             <td className="text-left pl-8 py-3">{id + 1}</td>
                             <td className="py-3 pl-6">
                               {loanMgtData.loanType?.loanName}
@@ -188,7 +223,10 @@ const LoanManagement = () => {
                 </div>
                 {/* pie chart for loan management */}
                 <div className="w-[30%]">
-                  <LoanManagementPieChart />
+                  <LoanManagementPieChart
+                    totalPaidAmount={totalPaidAmount}
+                    totalPendingAmount={totalPendingAmount}
+                  />
                 </div>
               </div>
             </>

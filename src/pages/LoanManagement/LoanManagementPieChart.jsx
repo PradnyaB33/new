@@ -3,12 +3,13 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-const LoanManagementPieChart = () => {
+
+const LoanManagementPieChart = ({ totalPaidAmount, totalPendingAmount }) => {
   const data = {
-    labels: ["One", "Two"],
+    labels: ["Amount Paid", "Amount Pending"],
     datasets: [
       {
-        data: [3, 6],
+        data: [totalPaidAmount, totalPendingAmount],
         backgroundColor: ["orangered", "purple"],
       },
     ],
@@ -23,12 +24,11 @@ const LoanManagementPieChart = () => {
       },
     },
   };
+
   return (
-    <>
-      <div className="px-20 py-16">
-        <Pie data={data} options={options} className="w-96 " />
-      </div>
-    </>
+    <div className="px-20 py-16">
+      <Pie data={data} options={options} className="w-96" />
+    </div>
   );
 };
 
