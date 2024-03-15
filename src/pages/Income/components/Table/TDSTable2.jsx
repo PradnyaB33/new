@@ -379,7 +379,7 @@ const TDSTable2 = () => {
                             scope="col"
                             className="!text-left pl-8 py-3 border"
                           >
-                            SR NO
+                            Sr. No
                           </th>
                           <th scope="col" className="py-3 border">
                             Deduction Name

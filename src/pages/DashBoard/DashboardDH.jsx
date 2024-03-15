@@ -9,7 +9,6 @@ import axios from "axios";
 import { default as React } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom/dist";
-import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
 import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
 import LineGraph from "./Components/Bar/LineGraph";
@@ -24,7 +23,7 @@ const DashboardDH = () => {
   const { organisationId } = useParams("");
 
   // custom hooks
-  const { oraganizationLoading } = useDashboardFilter(user.organizationId);
+  // const { oraganizationLoading } = useDashboardFilter(user.organizationId);
 
   const { data: deptAttendenceData } = useQuery({
     queryKey: ["deptAttendece"],
@@ -67,10 +66,10 @@ const DashboardDH = () => {
   });
 
   const { data: employeeCount, isLoading: employeeCountLoading } = useQuery({
-    queryKey: ["deptEmployeeLeaveCount"],
+    queryKey: ["deptEmployeeCount"],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/departmentHead/getAllManagers`,
+        `${process.env.REACT_APP_API}/route/departmentHead/getAllEmployees`,
         {
           headers: {
             Authorization: authToken,
@@ -85,7 +84,7 @@ const DashboardDH = () => {
     data: employeeDeptLeaveCount,
     isLoading: employeeDeptLeaveCountLoading,
   } = useQuery({
-    queryKey: ["deptEmployeeCount"],
+    queryKey: ["deptEmployeeLeaveCount"],
     queryFn: async () => {
       const { data } = await axios.get(
         `${process.env.REACT_APP_API}/route/leave/getDeptAbsent/${organisationId}`,
@@ -116,7 +115,7 @@ const DashboardDH = () => {
     });
 
   const { data: managerCount, isLoading: managerCountLoading } = useQuery({
-    queryKey: ["deptEmployeeCount"],
+    queryKey: ["deptManagerEmployeeCount"],
     queryFn: async () => {
       const { data } = await axios.get(
         `${process.env.REACT_APP_API}/route/departmentHead/getAllManagers`,
@@ -130,6 +129,8 @@ const DashboardDH = () => {
     },
   });
 
+  console.log(employeeCount);
+
   return (
     <section className=" bg-gray-50  min-h-screen w-full ">
       <header className="text-xl font-bold w-full px-8 pt-6 bg-white !text-[#67748E] shadow-md  p-4">
@@ -140,7 +141,7 @@ const DashboardDH = () => {
           <SuperAdminCard
             icon={Groups}
             color={"!bg-blue-500"}
-            data={employeeCount?.deptEmployees?.length ?? 0}
+            data={employeeCount ?? 0}
             isLoading={employeeCountLoading}
             title={"Overall Employees"}
           />
@@ -152,7 +153,7 @@ const DashboardDH = () => {
             title={"People's Manager"}
           />
           <SuperAdminCard
-            title={"Today's leave"}
+            title={"Today's Leave"}
             icon={ErrorOutline}
             color={"!bg-red-500"}
             data={employeeDeptLeaveCount ?? 0}
@@ -166,7 +167,7 @@ const DashboardDH = () => {
             title={"Special Shift"}
           />
         </div>
-        {oraganizationLoading ? (
+        {false ? (
           <SkeletonFilterSection />
         ) : (
           <div className="mt-4 w-full  bg-white shadow-md rounded-md  ">
@@ -185,7 +186,7 @@ const DashboardDH = () => {
           </div>
           <div className="w-[100%] md:w-[50%]">
             <AttendenceBar
-              isLoading={oraganizationLoading}
+              // isLoading={oraganizationLoading}
               attendenceData={deptAttendenceData}
             />
           </div>

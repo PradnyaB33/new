@@ -14,6 +14,7 @@ function App() {
   const location = useLocation();
   const isNavEnabled = ["/sign-in", "/sign-up", "/terms-and-conditions"];
 
+  //TODO: remove the issue
   return (
     <>
       <UseState>

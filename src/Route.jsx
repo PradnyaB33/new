@@ -195,6 +195,7 @@ const App = () => {
                 "Employee",
                 "Department-Admin",
                 "Delegate-Department-Admin",
+                "Accountant",
               ]}
             >
               <Dashboard />
@@ -681,6 +682,10 @@ const App = () => {
         <Route path="/income-tax/declarations" element={<TDSTab1 />} />
         <Route
           path="/income-tax/accountant-declarations"
+          element={<DeclarationPage />}
+        />
+        <Route
+          path="/income-tax/accountant-declarations/:id"
           element={<DeclarationPage />}
         />
         <Route path="/application" element={<Application />} />

@@ -58,11 +58,10 @@ const EmployeeProfile = () => {
 
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
-    console.log(`🚀 ~ file: UserProfile.jsx:61 ~ selectedFile:`, selectedFile);
     if (selectedFile && selectedFile.type.startsWith("image/")) {
       setFile(selectedFile);
       const reader = new FileReader();
-      reader.onloaddend = () => {
+      reader.onloadend = () => { 
         setUrl(reader.result);
       };
       reader.readAsDataURL(selectedFile);

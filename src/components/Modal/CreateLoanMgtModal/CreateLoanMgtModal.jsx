@@ -46,6 +46,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     interestPerMonth,
     principalPerMonth,
     totalDeductionPerMonth,
+    totalAmountWithSimpleInterest,
     handleNoOfEmiChange,
   } = useCalculation();
 
@@ -87,6 +88,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
         loanPrincipalAmount: principalPerMonth,
         loanInteresetAmount: interestPerMonth,
         totalDeduction: totalDeductionPerMonth,
+        totalDeductionWithSi: totalAmountWithSimpleInterest,
       };
       if (!loanType) {
         setError("Loan type field is Mandatory");
@@ -276,24 +278,51 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                 </FormControl>
               </div>
             </div>
-            <div className="space-y-2 ">
-              <FormLabel className="text-md" htmlFor="demo-simple-select-label">
-                Total amount monthly deducted
-              </FormLabel>
-              <FormControl
-                size="small"
-                sx={{ width: "100%" }}
-                variant="outlined"
-              >
-                <InputLabel htmlFor="outlined-adornment-password">
-                  Total amount monthly
-                </InputLabel>
-                <OutlinedInput
-                  value={totalDeductionPerMonth}
-                  id="outlined-adornment-password"
-                  label="Total amount monthly"
-                />
-              </FormControl>
+            <div className=" flex  gap-2 w-full">
+              <div className="space-y-2  w-[50%]">
+                <FormLabel
+                  className="text-md"
+                  htmlFor="demo-simple-select-label"
+                >
+                  Total amount monthly deducted
+                </FormLabel>
+                <FormControl
+                  size="small"
+                  sx={{ width: "100%" }}
+                  variant="outlined"
+                >
+                  <InputLabel htmlFor="outlined-adornment-password">
+                    Total amount monthly
+                  </InputLabel>
+                  <OutlinedInput
+                    value={totalDeductionPerMonth}
+                    id="outlined-adornment-password"
+                    label="Total amount monthly"
+                  />
+                </FormControl>
+              </div>
+              <div className="space-y-2 w-[50%]">
+                <FormLabel
+                  className="text-md"
+                  htmlFor="demo-simple-select-label"
+                >
+                  Total amount with simple interest
+                </FormLabel>
+                <FormControl
+                  size="small"
+                  sx={{ width: "100%" }}
+                  variant="outlined"
+                >
+                  <InputLabel htmlFor="outlined-adornment-password">
+                    Total amount with simple interest
+                  </InputLabel>
+                  <OutlinedInput
+                    value={totalAmountWithSimpleInterest}
+                    id="outlined-adornment-password"
+                    label="Total amount with simple interest"
+                  />
+                </FormControl>
+              </div>
             </div>
           </div>
           <DialogActions sx={{ justifyContent: "end" }}>

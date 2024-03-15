@@ -10,7 +10,6 @@ import { format } from "date-fns";
 import React, { useState } from "react";
 import useNotificationRemotePunching from "../../hooks/QueryHook/Remote-Punch/components/mutation";
 import useEmpConfirmation from "../../hooks/QueryHook/Remote-Punch/hook";
-import GoogleMap from "./components/map";
 import MappedPunches from "./components/mapped-punches";
 
 const EmployeeConfirmation = () => {
@@ -70,7 +69,6 @@ const EmployeeConfirmation = () => {
           )}
         </div>
       </div>
-      {Id !== null && <GoogleMap {...{ Id }} />}
     </div>
   );
 };

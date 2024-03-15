@@ -32,6 +32,9 @@ const SignIn = () => {
   const [isTimeVisible, setIsTimeVisible] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
 
+  const [visiblePassword, setVisiblePassword] = useState(false);
+  const [visibleCPassword, setVisibleCPassword] = useState(false);
+
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const navigate = useNavigate("");
@@ -361,6 +364,8 @@ const SignIn = () => {
             <div className="grid md:grid-cols-2 grid-cols-1  gap-2">
               <AuthInputFiled
                 name="password"
+                visible={visiblePassword}
+                setVisible={setVisiblePassword}
                 icon={Lock}
                 control={control}
                 type="password"
@@ -373,6 +378,8 @@ const SignIn = () => {
               <AuthInputFiled
                 name="confirmPassword"
                 icon={NoEncryption}
+                visible={visibleCPassword}
+                setVisible={setVisibleCPassword}
                 control={control}
                 type="password"
                 placeholder="****"

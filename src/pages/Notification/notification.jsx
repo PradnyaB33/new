@@ -103,7 +103,6 @@ const Notification = () => {
         {data2?.map((items, idx) => {
           console.log("items", items);
           return <ShiftRejectModel key={idx} items={items} />;
-          // return <div>hello</div>;
         })}
         {data?.leaveRequests?.map((items, idx) => (
           <LeaveRejectmodal key={idx} items={items} />

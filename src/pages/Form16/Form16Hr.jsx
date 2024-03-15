@@ -1,22 +1,22 @@
+import { MoreVert } from "@mui/icons-material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import DeleteIcon from "@mui/icons-material/Delete";
+import GetAppIcon from "@mui/icons-material/GetApp";
 import {
   Container,
-  TextField,
-  Typography,
   Menu,
   MenuItem,
+  TextField,
+  Typography,
 } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
-import { MoreVert } from "@mui/icons-material";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import GetAppIcon from "@mui/icons-material/GetApp";
-import Tooltip from "@mui/material/Tooltip";
-import Form16UploadModal from "../../components/Modal/Form16Modal/Form16UploadModal";
-import Form16Download from "../../components/Modal/Form16Modal/Form16Download";
-import DeleteIcon from "@mui/icons-material/Delete";
 import Form16DeleteModal from "../../components/Modal/Form16Modal/Form16DeleteModal";
+import Form16Download from "../../components/Modal/Form16Modal/Form16Download";
+import Form16UploadModal from "../../components/Modal/Form16Modal/Form16UploadModal";
 
 const Form16Hr = () => {
   // state and other thing
@@ -165,7 +165,7 @@ const Form16Hr = () => {
               <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                 <tr className="!font-semibold">
                   <th scope="col" className="!text-left pl-8 py-3">
-                    SR NO
+                    Sr. No
                   </th>
                   <th scope="col" className="!text-left pl-8 py-3">
                     First Name
