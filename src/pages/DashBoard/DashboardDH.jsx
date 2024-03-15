@@ -22,6 +22,8 @@ const DashboardDH = () => {
   const authToken = useAuthToken();
   const { organisationId } = useParams("");
 
+  console.log(user.deptname);
+
   // custom hooks
   // const { oraganizationLoading } = useDashboardFilter(user.organizationId);
 
