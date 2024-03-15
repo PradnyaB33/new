@@ -1,5 +1,4 @@
-import { Polyline } from "@react-google-maps/api";
-import { GoogleMap, Marker } from "@react-google-maps/api";
+import { GoogleMap, Marker, Polyline } from "@react-google-maps/api";
 import React, { useEffect, useState } from "react";
 
 const MainMap = ({ punchData, isLoaded }) => {
@@ -52,7 +51,7 @@ const MainMap = ({ punchData, isLoaded }) => {
                   lat: waypoints[waypoints.length - 1]?.lat,
                   lng: waypoints[waypoints.length - 1]?.lng,
                 }}
-                label={"Destination"}
+                label={"End Position"}
               />
             </>
           )}
