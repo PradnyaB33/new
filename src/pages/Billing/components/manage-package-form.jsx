@@ -41,7 +41,7 @@ const PackageForm = ({ handleClose, open, packages, organisation }) => {
         label: "Aegis Basic Plan",
         isDisabled: false,
       },
-      count: organisation?.subscriptionDetails?.quantity,
+      count: `${organisation?.subscriptionDetails?.quantity}`,
     },
     resolver: zodResolver(packageSchema),
   });

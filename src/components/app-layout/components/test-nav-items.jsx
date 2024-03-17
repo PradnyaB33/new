@@ -352,16 +352,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <Fingerprint className=" !text-[1.2em] text-[#67748E]" />,
             text: "Remote Punch-in-out",
           },
-
-          {
-            key: "punchInList",
-            isVisible: ["Employee"].includes(role),
-            link: "/remote/employee-confirmation",
-            icon: (
-              <AccountTreeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-            ),
-            text: "Remote Punch confirmation",
-          },
         ],
       },
     }),
