@@ -119,7 +119,7 @@ const TDSTable2 = () => {
     queryFn: async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API}/route/tds/getHouseProperty/2023-2024`,
+          `${process.env.REACT_APP_API}/route/tds/getInvestment/2023-2024/House`,
           {
             headers: {
               Authorization: authToken,
@@ -133,16 +133,16 @@ const TDSTable2 = () => {
     },
     onSuccess: (res) => {
       // Extracting relevant data from the backend response
-      const sectionData = res?.incomeFromHouse?.section;
       const updatedTableData = tableData.map((section) => {
+        console.log(res);
         const sectionName = Object.keys(section)[0];
-        const matchingSection = sectionData?.find(
-          (item) => item.sectionName === sectionName
+        const matchingSection = res?.filter(
+          (item) => item.subsectionname === sectionName
         );
 
         if (matchingSection) {
           section[sectionName].forEach((item) => {
-            const matchingItem = matchingSection.investmentType.find(
+            const matchingItem = matchingSection.find(
               (originalItem) => originalItem.name === item.name
             );
 
@@ -170,14 +170,11 @@ const TDSTable2 = () => {
         },
       }));
 
-      console.log("edned");
       setTableData(tableDataWithMaximumAllowable);
       return tableData;
     },
   });
 
-  console.log(fetchStatus, "status");
-  console.log(isFetching, isFetched, "status");
   const { handleAlert } = useContext(TestContext);
   const [editStatus, setEditStatus] = useState({});
 
@@ -247,9 +244,10 @@ const TDSTable2 = () => {
     const requestData = {
       empId: user._id,
       financialYear: "2023-2024",
-      sectionName: Object.keys(newData[index])[0],
-      investmentTypeName: value.name,
       requestData: {
+        sectionname: "House",
+        subsectionname: Object.keys(newData[index])[0],
+        name: value.name,
         property1: value.property1,
         property2: value.property2,
         status: "Pending",
@@ -267,7 +265,7 @@ const TDSTable2 = () => {
     };
     try {
       await axios.post(
-        `${process.env.REACT_APP_API}/route/tds/createHouseProperty`,
+        `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
         requestData,
         {
           headers: {
@@ -293,22 +291,19 @@ const TDSTable2 = () => {
   };
 
   return (
-    <div className="mt-2 space-y-4">
-      {isFetching ? (
+    <div>
+      {false ? (
         <div className="flex items-center justify-center w-full">
           <CircularProgress />
         </div>
       ) : (
         <div>
           {tableData.map((item, itemIndex) => (
-            <div
-              className="bg-white border-[.5px] border-gray-200"
-              key={itemIndex}
-            >
+            <div className="bg-white " key={itemIndex}>
               <div className="w-full overflow-x-auto">
                 <div className="inline-block min-w-full  ">
                   <div className="overflow-x-auto">
-                    <div className=" my-2 p-4">
+                    <div className=" p-4">
                       <h1 className="text-xl"> {Object.keys(item)[0]}</h1>
                     </div>
                     {itemIndex === 1 && (

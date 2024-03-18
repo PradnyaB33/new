@@ -79,8 +79,8 @@ import DeclarationPage from "./pages/Income/components/accountantDeclarations/De
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
-import CustomCalander from "./pages/custom/Calendar";
 import RemoteSetup from "./pages/SetupPage/RemoteSetup";
+import CustomCalander from "./pages/custom/Calendar";
 
 const App = () => {
   return (
@@ -168,6 +168,7 @@ const App = () => {
                 "HR",
                 "Manager",
                 "Employee",
+                7,
               ]}
             >
               <WaitMain />
