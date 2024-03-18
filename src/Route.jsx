@@ -200,6 +200,7 @@ const App = () => {
                 "Department-Admin",
                 "Delegate-Department-Admin",
                 "Accountant",
+                "Delegate-Accountant",
               ]}
             >
               <Dashboard />
@@ -353,6 +354,8 @@ const App = () => {
                 "Delegate-Super-Admin",
                 "HR",
                 "Manager",
+                "Department-Head",
+                "Accoutant",
               ]}
             >
               <Employee />

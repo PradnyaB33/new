@@ -123,6 +123,26 @@ const SignIn = () => {
           return redirect(
             `/organisation/${response?.data?.user?.organizationId}/dashboard/DH-dashboard`
           );
+        } else if (response.data.user?.profile.includes("Department-Admin")) {
+          handleRole.mutate({
+            role: "Department-Admin",
+            email: response.data.user?.email,
+          });
+          return redirect(`/organisation/dashboard/employee-dashboard`);
+        } else if (response.data.user?.profile.includes("Accountant")) {
+          handleRole.mutate({
+            role: "Accountant",
+            email: response.data.user?.email,
+          });
+          return redirect(`/organisation/dashboard/employee-dashboard`);
+        } else if (
+          response.data.user?.profile.includes("Delegate-Accountant")
+        ) {
+          handleRole.mutate({
+            role: "Delegate-Accountant",
+            email: response.data.user?.email,
+          });
+          return redirect(`/organisation/dashboard/employee-dashboard`);
         } else if (response.data.user?.profile.includes("Employee")) {
           handleRole.mutate({
             role: "Employee",
