@@ -26,33 +26,6 @@ const Home = () => {
     return response.data;
   };
   const { data, isLoading } = useQuery("orgDatas", getOrgList);
-
-  // const [userRole, setUserRole] = useState();
-
-  // useEffect(() => {
-  //   try {
-  //     if (authToken) {
-  //       const decodedToken = jwtDecode(authToken);
-  //       if (decodedToken && decodedToken.user) {
-  //         setUserRole(decodedToken.user);
-  //       } else {
-  //         setUserRole("guest");
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Failed to decode the authToken:", error);
-  //   }
-  //   // eslint-disable-next-line
-  // }, [authToken]);
-
-  // useEffect(() => {
-  //   if (!authToken) {
-  //     // Redirect to the login page
-  //     redirect("/sign-in");
-  //     handleAlert(true, "warning", "Please login first.");
-  //   }
-  // }, [redirect, handleAlert, authToken]);
-
   return (
     <>
       <div className="md:p-8 py-4 px-0 bg-white h-screen">
