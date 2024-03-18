@@ -19,7 +19,15 @@ const style = {
   overflow: "auto",
 };
 const PackageForm = ({ handleClose, open, packages, organisation }) => {
+  console.log(
+    `🚀 ~ file: manage-package-form.jsx:22 ~ organisation:`,
+    organisation
+  );
   const [mainPackages, setmainPackages] = useState(packages);
+  console.log(
+    `🚀 ~ file: manage-package-form.jsx:23 ~ mainPackages:`,
+    mainPackages
+  );
   const { updateSubscriptionMutation } = useSubscriptionMutation();
 
   const [close, setClose] = useState(false);
@@ -33,6 +41,10 @@ const PackageForm = ({ handleClose, open, packages, organisation }) => {
       .string()
       .refine((doc) => Number(doc) > 0, { message: "Count is greater than 0" }),
   });
+  console.log(
+    `🚀 ~ file: manage-package-form.jsx:54 ~ organisation?.subscriptionDetails?.quantity:`,
+    organisation?.subscriptionDetails?.quantity
+  );
 
   const { control, formState, handleSubmit, getValues } = useForm({
     defaultValues: {

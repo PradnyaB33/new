@@ -133,14 +133,7 @@ const BillingCard = ({ doc }) => {
 
     return message;
   };
-  console.log(
-    `🚀 ~ file: billing-card.jsx:315 ~ data?.organisation:`,
-    data?.organisation
-  );
-  console.log(
-    `🚀 ~ file: billing-card.jsx:315 ~ data?.organisation?.packages:`,
-    data?.organisation?.packages
-  );
+
   return (
     <div className="shadow-xl bg-Brand-Purple/brand-purple-1 rounded-md grid grid-cols-6">
       <div className=" col-span-5 pl-4 pt-4 pb-4 gap-4 flex flex-col">
@@ -204,7 +197,6 @@ const BillingCard = ({ doc }) => {
             )}
             <MenuItem
               onClick={() => {
-                console.log(`🚀 ~ file: billing-card.jsx:199 ~ o:`);
                 setConfirmOpen(true);
               }}
               disableRipple
@@ -305,17 +297,17 @@ const BillingCard = ({ doc }) => {
           </div>
         ) : null}
       </div>
-      {data?.organisation?.packages && data?.organisation && (
-        <PackageForm
-          open={confirmOpen}
-          handleClose={() => {
-            setConfirmOpen(false);
-            handleClose();
-          }}
-          packages={data?.organisation?.packages}
-          organisation={data?.organisation}
-        />
-      )}
+      {/* {data?.organisation?.packages && data?.organisation && ( */}
+      <PackageForm
+        open={confirmOpen}
+        handleClose={() => {
+          setConfirmOpen(false);
+          handleClose();
+        }}
+        packages={data?.organisation?.packages}
+        organisation={data?.organisation}
+      />
+      {/* )} */}
     </div>
   );
 };
