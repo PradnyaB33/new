@@ -95,32 +95,36 @@ const DeclarationPage = () => {
           {empData
             ?.filter((item) => {
               return searchEmp
-                ? item?.first_name
+                ? item?.employeeData?.first_name
                     .toLowerCase()
                     .includes(searchEmp.toLowerCase()) ||
-                    item?.last_name
+                    item?.employeeData?.last_name
                       .toLowerCase()
                       .includes(searchEmp.toLowerCase())
                 : item;
             })
             .map((ele) => (
               <Link
-                to={`/income-tax/accountant-declarations/${ele._id}`}
-                className={` px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50
-                ${ele._id === id && "bg-blue-400 text-white hover:bg-blue-300 "}
+                to={`/income-tax/accountant-declarations/${ele?.employeeData._id}`}
+                className={` px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center 
+                ${
+                  ele?.employeeData._id === id &&
+                  "bg-blue-400 text-white hover:bg-blue-300 "
+                }
                 `}
               >
                 <Avatar />
                 <div>
-                  <h1 className="text-[1.2rem]">
-                    {ele?.first_name} {ele?.last_name}
+                  <h1 className="text-[1.1rem]">
+                    {ele?.employeeData?.first_name}{" "}
+                    {ele?.employeeData?.last_name}
                   </h1>
                   <h1
                     className={`text-sm text-gray-500  ${
-                      ele._id === id && "text-white"
+                      ele?.employeeData._id === id && "text-white"
                     }`}
                   >
-                    {ele.email}
+                    {ele?.employeeData.email}
                   </h1>
                 </div>
               </Link>
