@@ -79,7 +79,7 @@ import DeclarationPage from "./pages/Income/components/accountantDeclarations/De
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
-import RemoteSetup from "./pages/SetupPage/RemoteSetup";
+import RemoteSetup from "./pages/SetupPage/Remote/RemoteSetup";
 import CustomCalander from "./pages/custom/Calendar";
 
 const App = () => {

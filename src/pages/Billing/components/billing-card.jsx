@@ -84,7 +84,6 @@ const BillingCard = ({ doc }) => {
   const { data } = useSubscriptionGet({ organisationId: doc._id });
   const { pauseSubscriptionMutation, resumeSubscriptionMutation } =
     useSubscriptionMutation();
-  console.log(`🚀 ~ file: billing-card.jsx:84 ~ data:`, data);
 
   const getMessage = () => {
     let message = "";
