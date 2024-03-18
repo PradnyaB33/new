@@ -1,17 +1,35 @@
-import { Info, Search, West } from "@mui/icons-material";
-import { Avatar } from "@mui/material";
+import {
+  Cancel,
+  CheckCircle,
+  Info,
+  RequestQuote,
+  Search,
+  West,
+} from "@mui/icons-material";
+import { Avatar, CircularProgress, IconButton, Tooltip } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import useAuthToken from "../../../../hooks/Token/useAuth";
+import TDSDeclarationModel from "./components/TDSDeclarationModel";
 
 const DeclarationPage = () => {
   const authToken = useAuthToken();
   const { id } = useParams();
+  const [investment, setInvestment] = useState({});
+  const [isReject, setIsReject] = useState(false);
+  console.log(`🚀 ~ investment:`, investment);
 
   const [searchEmp, setSearchEmp] = useState("");
-  const { data: empData } = useQuery({
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+    setInvestment({});
+  };
+
+  const { data: empData, isLoading: empLoading } = useQuery({
     queryKey: ["AccoutantEmp"],
     queryFn: async () => {
       try {
@@ -31,12 +49,12 @@ const DeclarationPage = () => {
     },
   });
 
-  const { data: empTDSData } = useQuery({
+  const { data: empTDSData, isLoading: empDataLoading } = useQuery({
     queryKey: ["EmpData", id],
     queryFn: async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API}/route/tds/getAllEmployeesUnderAccoutant/${id}/2023-2024`,
+          `${process.env.REACT_APP_API}/route/tds/getTDSWorkflow/${id}/2023-2024`,
           {
             headers: {
               Authorization: authToken,
@@ -49,9 +67,8 @@ const DeclarationPage = () => {
         console.log(error);
       }
     },
+    enabled: id !== undefined,
   });
-
-  console.log(empTDSData);
 
   return (
     <div>
@@ -62,8 +79,8 @@ const DeclarationPage = () => {
         Employee TDS Request
       </header>
       <section className="min-h-[90vh] flex  ">
-        <article className="w-[25%] overflow-auto max-h-[90vh] h-full bg-white border-r-[.5px] border-gray-200">
-          <div className="p-6 !py-2 ">
+        <article className="w-[25%] overflow-auto max-h-[90vh] h-full bg-white  border-gray-200">
+          <div className="p-6 !py-2  ">
             <div className="space-y-2">
               <div
                 // onFocus={() => {
@@ -92,88 +109,125 @@ const DeclarationPage = () => {
             </div>
           </div>
 
-          {empData
-            ?.filter((item) => {
-              return searchEmp
-                ? item?.first_name
-                    .toLowerCase()
-                    .includes(searchEmp.toLowerCase()) ||
-                    item?.last_name
+          {empLoading ? (
+            <div className="flex items-center justify-center my-2">
+              <CircularProgress />
+            </div>
+          ) : empData?.length < 1 ? (
+            <h1 className="px-6 text-lg text-center">No declarations</h1>
+          ) : (
+            empData?.length > 0 &&
+            empData
+              ?.filter((item) => {
+                return searchEmp
+                  ? item.empId?.first_name
                       .toLowerCase()
-                      .includes(searchEmp.toLowerCase())
-                : item;
-            })
-            .map((ele) => (
-              <Link
-                to={`/income-tax/accountant-declarations/${ele._id}`}
-                className={` px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50
-                ${ele._id === id && "bg-blue-400 text-white hover:bg-blue-300 "}
+                      .includes(searchEmp.toLowerCase()) ||
+                      item.empId?.last_name
+                        .toLowerCase()
+                        .includes(searchEmp.toLowerCase())
+                  : item.empId;
+              })
+              .map((ele) => (
+                <Link
+                  to={`/income-tax/accountant-declarations/${ele.empId._id}`}
+                  className={` px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50
+                ${
+                  ele.empId._id === id &&
+                  "bg-blue-500 text-white hover:!bg-blue-300 "
+                }
                 `}
-              >
-                <Avatar />
-                <div>
-                  <h1 className="text-[1.2rem]">
-                    {ele?.first_name} {ele?.last_name}
-                  </h1>
-                  <h1
-                    className={`text-sm text-gray-500  ${
-                      ele._id === id && "text-white"
-                    }`}
-                  >
-                    {ele.email}
-                  </h1>
-                </div>
-              </Link>
-            ))}
+                >
+                  <Avatar />
+                  <div>
+                    <h1 className="text-[1.2rem]">
+                      {ele.empId?.first_name} {ele?.empId.last_name}
+                    </h1>
+                    <h1
+                      className={`text-sm text-gray-500  ${
+                        ele.empId._id === id && "text-white"
+                      }`}
+                    >
+                      {ele.empId.email}
+                    </h1>
+                  </div>
+                </Link>
+              ))
+          )}
         </article>
 
-        <article className="w-[75%] min-h-[90vh]  bg-gray-50">
-          {id ? (
-            !empTDSData?.investments ? (
+        <article className="w-[75%] min-h-[90vh] border-l-[.5px]  bg-gray-50">
+          {empDataLoading ? (
+            <div className="flex items-center justify-center my-2">
+              <CircularProgress />
+            </div>
+          ) : id ? (
+            empTDSData?.length <= 0 || empTDSData?.investment?.length <= 0 ? (
               <div className="flex px-4 w-full items-center my-4">
-                <h1 className="text-lg w-full  text-gray-700 border bg-red-200 p-4 rounded-md">
+                <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
                   <Info /> No declarations found
                 </h1>
               </div>
             ) : (
               <>
-                <h1 className="bg-white border-b  p-4 text-xl">
-                  Employee Declarations
-                </h1>
-                <div className="bg-white ">
-                  <table className="table-auto border border-collapse min-w-full bg-white  text-left  !text-sm font-light">
-                    <thead className="border-b bg-gray-100 font-bold">
+                <div className="p-4 space-y-1 flex items-center gap-3">
+                  <Avatar className="text-white !bg-blue-500">
+                    <RequestQuote />
+                  </Avatar>
+                  <div>
+                    <h1 className=" text-xl">Employee Declarations</h1>
+                    <p className="text-sm">
+                      Here accoutant can able to view employee declarations and
+                      approvals
+                    </p>
+                  </div>
+                </div>
+                <div className=" px-4 ">
+                  <table className=" table-auto border  border-collapse min-w-full bg-white  text-left  !text-sm font-light">
+                    <thead className="border-b bg-blue-200  font-bold">
                       <tr className="!font-semibold ">
                         <th
                           scope="col"
-                          className="!text-center px-2 w-max py-3 border"
+                          className="!text-center px-2 leading-7 text-[16px] w-max py-3 border"
                         >
                           Sr. No
                         </th>
-                        <th scope="col" className="py-3 px-2 border">
+                        <th
+                          scope="col"
+                          className="py-3 leading-7 text-[16px] px-2 border"
+                        >
                           Declaration Name
                         </th>
 
-                        <th scope="col" className="py-3 px-2 border">
+                        <th
+                          scope="col"
+                          className="py-3 leading-7 text-[16px] px-2 border"
+                        >
                           Amount
                         </th>
-                        <th scope="col" className="py-3 px-2 border">
+                        <th
+                          scope="col"
+                          className="py-3 leading-7 text-[16px] px-2 border"
+                        >
                           Proofs
                         </th>
-                        <th scope="col" className="py-3 px-2 border">
+                        <th
+                          scope="col"
+                          className="py-3 px-2 leading-7 text-[16px] border"
+                        >
                           Actions
                         </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {empTDSData?.investments?.map((item, itemIndex) => (
+                      {empTDSData?.investment?.map((item, itemIndex) => (
                         <tr
                           className={`!font-medium h-14 border-b 
                 
                 `}
                           key={itemIndex}
                         >
-                          <td className="!text-center px-2 leading-7 text-[16px] w-[50px] border ">
+                          <td className="!text-center px-2 leading-7 text-[16px] w-[80px] border ">
                             {itemIndex + 1}
                           </td>
                           <td className="leading-7 text-[16px] truncate text-left w-[500px] border px-2">
@@ -198,14 +252,29 @@ const DeclarationPage = () => {
                               {item.proof ? item.proof : "No Proof Found"}
                             </p>
                           </td>
-                          <td className=" text-left !p-0 w-[200px] border ">
-                            <p
-                              className={`
-                     
-                        px-2 leading-7 text-[16px]`}
-                            >
-                              test
-                            </p>
+                          <td className=" text-left !px-2 w-[200px] border ">
+                            <Tooltip title="Accept declaration">
+                              <IconButton
+                                onClick={() => {
+                                  setInvestment(item);
+                                  setOpen(true);
+                                  setIsReject(false);
+                                }}
+                              >
+                                <CheckCircle color="success" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Reject declaration">
+                              <IconButton
+                                onClick={() => {
+                                  setInvestment(item);
+                                  setOpen(true);
+                                  setIsReject(true);
+                                }}
+                              >
+                                <Cancel color="error" />
+                              </IconButton>
+                            </Tooltip>
                           </td>
                         </tr>
                       ))}
@@ -219,10 +288,22 @@ const DeclarationPage = () => {
               <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
                 <Info /> Select Employee First to view his declarations
               </h1>
+
+              {/* <img
+                src="https://aegis-dev.s3.ap-south-1.amazonaws.com/remote-punching/65d86569d845df6738f87646/5f0cbf6977b8cc2f3661247706171db7"
+                alt="none"
+                height={500}
+              /> */}
             </div>
           )}
         </article>
       </section>
+      <TDSDeclarationModel
+        open={open}
+        handleClose={handleClose}
+        isReject={isReject}
+        investment={investment}
+      />
     </div>
   );
 };

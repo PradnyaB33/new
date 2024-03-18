@@ -194,7 +194,8 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "createsalary",
-            isVisible: isVisible && ["Super-Admin", "HR"].includes(role),
+            isVisible:
+              isVisible && ["Super-Admin", "HR", "Accountant"].includes(role),
             link: `/organisation/${orgId}/salary-management`,
             icon: (
               <AccountBalanceWalletOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
@@ -217,9 +218,14 @@ const TestNavItems = ({ toggleDrawer }) => {
         icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
         isVisible:
           window.location.pathname?.includes("organisation") &&
-          ["Super-Admin", "HR", "Manager", "Delegate-Super Admin"]?.includes(
-            role
-          ),
+          [
+            "Super-Admin",
+            "HR",
+            "Manager",
+            "Delegate-Super Admin",
+            "Department-Head",
+            "Department-Admin",
+          ]?.includes(role),
         routes: [
           {
             key: "onboarding",
@@ -248,6 +254,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               "Manager",
               "Department-Head",
               "Delegate-Super Admin",
+              "Department-Admin",
             ].includes(role),
             link: `organisation/${orgId}/employee-list`,
             icon: <Groups className=" !text-[1.2em] text-[#67748E]" />,
@@ -265,6 +272,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             "HR",
             "Department-Head",
             "Delegate-Department-Head",
+            "Department-Admin",
           ].includes(role),
         // : false
         icon: <Business className=" !text-[1.2em] text-[#67748E]" />,
@@ -276,6 +284,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               "HR",
               "Department-Head",
               "Delegate-Department-Head",
+              "Department-Admin",
             ].includes(role),
             link: `/organisation/${orgId}/add-department`,
             icon: (
@@ -291,6 +300,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               "HR",
               "Department-Head",
               "Delegate-Department-Head",
+              "Department-Admin",
             ].includes(role),
             link: `/organisation/${orgId}/dept-deletion`,
             icon: (
@@ -305,6 +315,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               "HR",
               "Department-Head",
               "Delegate-Department-Head",
+              "Department-Admin",
             ].includes(role),
             link: `/organisation/${orgId}/department-list`,
             icon: (

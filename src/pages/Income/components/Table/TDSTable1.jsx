@@ -1,4 +1,6 @@
 import {
+  Article,
+  Cancel,
   CheckCircle,
   DeleteOutlined,
   EditOutlined,
@@ -31,6 +33,7 @@ const TDSTable1 = () => {
   const { setGrossTotal, grossTotal } = useTDS();
 
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  const [pdf, setPdf] = useState(null);
 
   const handleDeleteConfirmation = (id) => {
     setDeleteConfirmation(id);
@@ -38,6 +41,13 @@ const TDSTable1 = () => {
 
   const handleCloseConfirmation = () => {
     setDeleteConfirmation(null);
+  };
+  const handlePDF = (id) => {
+    setPdf(id);
+  };
+
+  const handleClosePDF = () => {
+    setPdf(null);
   };
 
   const { handleAlert } = useContext(TestContext);
@@ -52,12 +62,14 @@ const TDSTable1 = () => {
       name: "Exemption on gratuity",
       amount: 0,
       proof: "",
-      approvedAmount: 0,
+
+      amountAccepted: 0,
       status: "Not Submitted",
     },
     {
       name: "Exemption on Leave encashment",
-      approvedAmount: 0,
+
+      amountAccepted: 0,
       amount: 0,
       proof: "",
       status: "Not Submitted",
@@ -67,57 +79,64 @@ const TDSTable1 = () => {
       amount: 0,
       proof: "",
       status: "Not Submitted",
-      approvedAmount: 0,
+
+      amountAccepted: 0,
     },
     {
       name: "Daily Allowance",
       amount: 0,
       proof: "",
       status: "Not Submitted",
-      approvedAmount: 0,
+
+      amountAccepted: 0,
     },
     {
       name: "Conveyance Allowance",
       amount: 0,
       proof: "",
       status: "Not Submitted",
-      approvedAmount: 0,
+
+      amountAccepted: 0,
     },
     {
       name: "Transport Allowance for a specially-abled person",
       amount: 0,
       proof: "-",
       status: "Not Submitted",
-      approvedAmount: 0,
+
+      amountAccepted: 0,
     },
     {
       name: "Perquisites for official purposes",
       amount: 0,
       proof: "",
       status: "Not Submitted",
-      approvedAmount: 0,
+
+      amountAccepted: 0,
     },
     {
       name: "Taxable Salary",
       amount: 0,
       proof: "",
       status: "",
-      approvedAmount: 0,
+
+      amountAccepted: 0,
     },
     {
       name: "Less : Professional Tax",
       amount: 0,
       proof: "",
       status: "",
-      approvedAmount: 0,
+      amountAccepted: 0,
     },
-    {
-      name: "Income taxable under the head Salaries",
-      amount: 0,
-      proof: "",
-      status: "",
-      approvedAmount: 0,
-    },
+    // {
+    //   name: "Income taxable under the head Salaries",
+    //   amount: 0,
+    //   proof: "",
+    //   status: "",
+    //
+    // amountAccepted: 0,
+    // },
   ]);
 
   let deduction = 0;
@@ -153,11 +172,11 @@ const TDSTable1 = () => {
   });
 
   useQuery({
-    queryKey: ["incomeSalary"],
+    queryKey: ["Salary"],
     queryFn: async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API}/route/tds/salaryIncome/2023-2024`,
+          `${process.env.REACT_APP_API}/route/tds/getInvestment/2023-2024/Salary`,
           {
             headers: {
               Authorization: authToken,
@@ -171,21 +190,21 @@ const TDSTable1 = () => {
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["finacialYearData"] });
-      deduction = grossTotal - res.totalDeductions;
-
+      // deduction = grossTotal - res.totalDeductions;
+      console.log(res);
       const updatedTableData = tableData?.map((item) => {
-        const matchingItem = res?.incomeFromSalary?.investmentType.find(
+        const matchingItem = res?.find(
           (investment) => investment.name === item.name
         );
 
-        if (item.name === "Income taxable under the head Salaries") {
-          return {
-            ...item,
-            amount: deduction,
-            status: "",
-            proof: "",
-          };
-        }
+        // if (item.name === "Income taxable under the head Salaries") {
+        //   return {
+        //     ...item,
+        //     amount: deduction,
+        //     status: "",
+        //     proof: "",
+        //   };
+        // }
         if (item.name === "Gross Salary") {
           return {
             ...item,
@@ -198,6 +217,7 @@ const TDSTable1 = () => {
           return {
             ...item,
             amount: matchingItem.declaration,
+            amountAccepted: matchingItem.amountAccepted,
             status: matchingItem.status,
             proof: matchingItem.proof,
           };
@@ -206,7 +226,7 @@ const TDSTable1 = () => {
         }
       });
 
-      setTotalHeads(res.totalAddition);
+      // setTotalHeads(res.totalAddition);
       setTableData(updatedTableData);
     },
   });
@@ -232,22 +252,54 @@ const TDSTable1 = () => {
     setTableData(newData);
   };
 
+  const handleDownload = (pdf) => {
+    // You can use any method to trigger the download, such as creating an invisible link and clicking it
+    const link = document.createElement("a");
+    link.href = pdf;
+    link.download = "File1.pdf";
+    link.click();
+  };
+  const uploadProof = async (tdsfile) => {
+    const data = await axios.get(
+      `${process.env.REACT_APP_API}/route/s3createFile/TDS`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+      }
+    );
+
+    await axios.put(data?.data?.url, tdsfile, {
+      headers: {
+        "Content-Type": tdsfile.type,
+      },
+    });
+
+    return data?.data?.url?.split("?")[0];
+  };
+
   const handleSaveClick = async (index) => {
     const newData = [...tableData];
     const value = newData[index];
-    const requestData = {
-      empId: user._id,
-      financialYear: "2023-2024",
-      name: value.name,
-      requestData: {
-        status: "Pending",
-        declaration: value.amount,
-        proof: "",
-      },
-    };
+    const tdsfile = newData[index].proof;
+
     try {
+      const uploadproof = await uploadProof(tdsfile);
+
+      const requestData = {
+        empId: user._id,
+        financialYear: "2023-2024",
+        requestData: {
+          name: value.name,
+          sectionname: "Salary",
+          status: "Pending",
+          declaration: value.amount,
+          proof: uploadproof,
+        },
+      };
       await axios.post(
-        `${process.env.REACT_APP_API}/route/tds/salaryIncome`,
+        `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
         requestData,
         {
           headers: {
@@ -256,8 +308,10 @@ const TDSTable1 = () => {
         }
       );
 
+      console.log(uploadproof);
+
       handleAlert(true, "success", `Data uploaded successfully`);
-      queryClient.invalidateQueries({ queryKey: ["incomeSalary"] });
+      queryClient.invalidateQueries({ queryKey: ["salary"] });
     } catch (error) {
       console.log(error);
     }
@@ -408,7 +462,10 @@ const TDSTable1 = () => {
                         } 
                         px-2 leading-7 text-[16px]`}
                       >
-                        INR {parseFloat(item.approvedAmount).toFixed(2)}
+                        INR{" "}
+                        {item.amountAccepted
+                          ? parseFloat(item.amountAccepted).toFixed(2)
+                          : 0}
                       </p>
                     </td>
                   ) : (
@@ -441,7 +498,15 @@ const TDSTable1 = () => {
                         </label>
                       </div>
                     ) : item.proof ? (
-                      item.proof
+                      typeof item.proof === "string" && (
+                        <div
+                          onClick={() => handlePDF(item.proof)}
+                          className="px-2 flex gap-2 items-center h-max w-max  cursor-pointer"
+                        >
+                          <Article className="text-blue-500" />
+                          <h1>View Proof</h1>
+                        </div>
+                      )
                     ) : (
                       <p className="px-2">No proof found</p>
                     )}
@@ -455,9 +520,14 @@ const TDSTable1 = () => {
                         <Error className="text-yellow-400 " />
                         {item.status}
                       </div>
-                    ) : item.status === "Auto" ? (
+                    ) : item.status === "Auto" || item.status === "Approved" ? (
                       <div className="flex items-center  gap-2">
                         <CheckCircle className="text-green-400 " />
+                        {item.status}
+                      </div>
+                    ) : item.status === "Reject" ? (
+                      <div className="flex items-center  gap-2">
+                        <Cancel className="text-red-400 " />
                         {item.status}
                       </div>
                     ) : (
@@ -514,6 +584,26 @@ const TDSTable1 = () => {
           </table>
         </div>
       )}
+
+      <Dialog open={pdf !== null} onClose={handleClosePDF}>
+        <DialogTitle>Document</DialogTitle>
+        <DialogContent>
+          <div className="scrollt ">
+            <object
+              type="application/pdf"
+              data={`${pdf}`}
+              alt="none"
+              aria-label="pdfSalary"
+              className="min-h-[60vh] !w-[400px] "
+            />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" onClick={() => handleDownload(pdf)}>
+            Download
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Dialog
         open={deleteConfirmation !== null}
