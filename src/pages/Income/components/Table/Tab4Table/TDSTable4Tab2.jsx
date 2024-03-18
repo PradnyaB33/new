@@ -2,6 +2,10 @@ import { DeleteOutlined, EditOutlined } from "@mui/icons-material";
 import {
   Button,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   IconButton,
   Pagination,
   Stack,
@@ -20,13 +24,61 @@ const TDSTable4Tab2 = () => {
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
   const user = getCurrentUser();
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  const [id, setId] = useState(null);
+
+  const handleDeleteConfirmation = (itemIndex, id) => {
+    setDeleteConfirmation(itemIndex);
+    setId(id);
+  };
+
+  const handleCloseConfirmation = () => {
+    setDeleteConfirmation(null);
+  };
+
+  const handleDelete = async (index, id) => {
+    console.log(index);
+    const newData = [...tableData];
+    const value = newData[index][Object.keys(newData[index])[0]][id];
+    const requestData = {
+      empId: user._id,
+      financialYear: "2023-2024",
+      requestData: {
+        name: value.name,
+        sectionname: "SectionDeduction",
+        status: "Not Submitted",
+        declaration: 0,
+        proof: "",
+      },
+    };
+
+    try {
+      await axios.patch(
+        `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
+        requestData,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      handleAlert(true, "success", `Data deleted successfully`);
+      queryClient.invalidateQueries({ queryKey: ["sectionDeduction2"] });
+    } catch (error) {
+      console.log(error);
+    }
+
+    handleCloseConfirmation();
+  };
+
   const [tableData, setTableData] = useState([
     {
       "Section 80CCD NPS": [
         {
           section: "80 CCD ",
           name: "Less: Additional Deduction under Sec 80CCD NPS (Max. ₹ 50,000/-)",
-          amount: 0,
+          declaration: 0,
           proof: "",
           status: "Not Submitted",
         },
@@ -39,11 +91,11 @@ const TDSTable4Tab2 = () => {
     isFetching,
     isFetched,
   } = useQuery({
-    queryKey: ["sectionDeduction"],
+    queryKey: ["sectionDeduction2"],
     queryFn: async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API}/route/tds/getSectionDeduction/2023-2024`,
+          `${process.env.REACT_APP_API}/route/tds/getInvestment/2023-2024/SectionDeduction`,
           {
             headers: {
               Authorization: authToken,
@@ -57,18 +109,17 @@ const TDSTable4Tab2 = () => {
     },
     onSuccess: (res) => {
       // Extracting relevant data from the backend response
-      const sectionData = res?.sectionData?.section;
 
       // Updating the tableData state based on the backend response
       const updatedTableData = tableData.map((section) => {
         const sectionName = Object.keys(section)[0];
-        const matchingSection = sectionData?.find(
-          (item) => item.sectionName === sectionName
+        const matchingSection = res?.filter(
+          (item) => item.subsectionname === sectionName
         );
 
         if (matchingSection) {
           section[sectionName].forEach((item) => {
-            const matchingItem = matchingSection.investmentType.find(
+            const matchingItem = matchingSection.find(
               (originalItem) => originalItem.name === item.name
             );
 
@@ -89,8 +140,6 @@ const TDSTable4Tab2 = () => {
       setTableData(tableDataWithMaximumAllowable);
     },
   });
-
-  console.log(tableData);
 
   const [page, setPage] = useState(1);
   const allSection80s = tableData.flatMap((data) => data.Section80);
@@ -124,10 +173,10 @@ const TDSTable4Tab2 = () => {
     const value = newData[index][Object.keys(newData[index])[0]][id];
     const requestData = {
       empId: user._id,
-      financialYear: "2023-2024",
-      sectionName: Object.keys(newData[index])[0],
-      investmentTypeName: value.name,
       requestData: {
+        name: value.name,
+        sectionname: "SectionDeduction",
+        subsectionname: Object.keys(newData[index])[0],
         section: value.section,
         status: "Pending",
         declaration: value.declaration,
@@ -136,7 +185,7 @@ const TDSTable4Tab2 = () => {
     };
     try {
       await axios.post(
-        `${process.env.REACT_APP_API}/route/tds/createSectionDeduction`,
+        `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
         requestData,
         {
           headers: {
@@ -156,33 +205,11 @@ const TDSTable4Tab2 = () => {
       [index]: null,
     });
   };
-
   const handleClose = (index) => {
     setEditStatus({ [index]: null });
   };
   return (
     <div className=" bg-white ">
-      {/* <div
-        className={`outline-none border-gray-300 border-x-[.5px] flex items-center px-4   border-y-0 bg-white `}
-      >
-        <div className="flex border-gray-300 h-full border-r-[.5px] items-center w-[20%]">
-          <input
-            type={"text"}
-            name="search"
-            placeholder={"Section"}
-            className={` placeholder:text-lg border-none bg-white w-full py-3 outline-none px-2  `}
-          />
-        </div>
-        <div className="flex px-2 items-center w-[80%]">
-          <Search className="text-gray-700 md:text-lg " />
-          <input
-            type={"text"}
-            name="search"
-            placeholder={"Search"}
-            className={` placeholder:text-lg border-none bg-white w-full py-2 outline-none px-2  `}
-          />
-        </div>
-      </div> */}
       {incomeHouseLoading || isFetching || !isFetched ? (
         <div className="flex items-center justify-center w-full">
           <CircularProgress />
@@ -309,7 +336,9 @@ const TDSTable4Tab2 = () => {
                               <IconButton
                                 color="error"
                                 aria-label="delete"
-                                onClick={() => handleEditClick(itemIndex, id)}
+                                onClick={() =>
+                                  handleDeleteConfirmation(itemIndex, id)
+                                }
                               >
                                 <DeleteOutlined />
                               </IconButton>
@@ -341,6 +370,37 @@ const TDSTable4Tab2 = () => {
           </Stack>
         </>
       )}
+
+      <Dialog
+        open={deleteConfirmation !== null}
+        onClose={handleCloseConfirmation}
+      >
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <p>
+            Please confirm your decision to delete this salary template, as this
+            action cannot be undone.
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleCloseConfirmation}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => handleDelete(deleteConfirmation, id)}
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

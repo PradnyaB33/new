@@ -27,9 +27,10 @@ const AuthInputFiled = ({
   wrapperMessage,
   min,
   max,
-  className,
+  className = "",
   visible,
   setVisible,
+  descriptionText = "",
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -358,7 +359,7 @@ const AuthInputFiled = ({
 
   if (type === "checkbox") {
     return (
-      <div className={`space-y-1 w-full  ${className}`}>
+      <div className={`space-y-1 min-w-11 ${className}`}>
         <Controller
           control={control}
           name={name}
@@ -379,9 +380,9 @@ const AuthInputFiled = ({
                 className={`${
                   readOnly && "bg-[ghostwhite]"
                 } border-none bg-white outline-none px-2`}
-                {...field}
                 disabled={disabled}
                 formNoValidate
+                {...field}
               />
               <label
                 htmlFor={name}
@@ -410,6 +411,9 @@ const AuthInputFiled = ({
               <p className="text-sm text-red-500">{message}</p>
             )}
           />
+          {descriptionText && (
+            <p className="text-sm text-gray-500 ">{descriptionText}</p>
+          )}
         </div>
       </div>
     );

@@ -1,7 +1,7 @@
 import { Calculate, Check, DoneAll, Settings, West } from "@mui/icons-material";
-import { Avatar } from "@mui/material";
+import { Avatar, IconButton } from "@mui/material";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import RegimeModel from "./components/accountantDeclarations/components/RegimeModel";
 
 const IncomeTax = () => {
@@ -10,16 +10,18 @@ const IncomeTax = () => {
     setOpen(true);
   };
 
+  const navigate = useNavigate();
+
   const handleClose = () => {
     setOpen(false);
   };
   return (
     <>
       <section className=" min-h-[90vh]  h-auto  bg-gray-50 ">
-        <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
-          <Link to={"/organizationList"}>
-            <West className="mx-4 !text-xl" />
-          </Link>
+        <header className="text-xl w-full pt-6 flex items-start gap-2 bg-white shadow-md   p-4">
+          <IconButton onClick={() => navigate(-1)}>
+            <West className=" !text-xl" />
+          </IconButton>
           Income Tax
         </header>
 

@@ -16,14 +16,20 @@ import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
 import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
 import WorkOffOutlinedIcon from "@mui/icons-material/WorkOffOutlined";
 import { useLocation } from "react-router-dom";
-import useSubscription from "../Subscription/subscription";
+import useSubscriptionGet from "../QueryHook/Subscription/hook";
 import UserProfile from "../UserData/useUser";
 const useSetupSideNav = (organisationId) => {
+  console.log(
+    `🚀 ~ file: useSetupSideNav.jsx:22 ~ organisationId:`,
+    organisationId
+  );
   const location = useLocation();
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  const { subscriptionDetails } = useSubscription(organisationId);
-  console.log(`🚀 ~ file: useSetupSideNav.jsx:26 ~ sub:`, subscriptionDetails);
+  const { data } = useSubscriptionGet({
+    organisationId: organisationId,
+  });
+  console.log(`🚀 ~ file: useSetupSideNav.jsx:26 ~ subscriptionDetails:`, data);
 
   const linkData = [
     {
@@ -160,22 +166,16 @@ const useSetupSideNav = (organisationId) => {
         `/organisation/${organisationId}/setup/loan-management`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
-    // {
-    //   label: "Subscription",
-    //   icon: SellOutlined,
-    //   href: `/organisation/${organisationId}/setup/subscription`,
-    //   active:
-    //     location.pathname ===
-    //     `/organisation/${organisationId}/setup/subscription`,
-    //   isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
-    // },
+
     {
       label: "Remote Punching",
       icon: SellOutlined,
-      href: `/organisation/${organisationId}/setup/subscription`,
+      href: `/organisation/${organisationId}/setup/remote-punching`,
       active:
-        subscriptionDetails.plan_id === process.env.REACT_APP_INTERMEDIATE,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+        location.pathname ===
+        `/organisation/${organisationId}/setup/remote-punching`,
+      isVisible:
+        data?.plan?.items?.name === "Aegis basic plan" || "Aegis basic plan",
     },
   ];
 
