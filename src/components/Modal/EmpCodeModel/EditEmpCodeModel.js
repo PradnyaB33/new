@@ -47,7 +47,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
         },
       }
     );
-    return response.data.data.data;
+    return response.data;
   });
   console.log(codeData);
 
