@@ -1,17 +1,16 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  Modal,
-  OutlinedInput,
-  FormLabel,
-} from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import { Box, Button, Modal } from "@mui/material";
+import React, { useContext, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import axios from "axios";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
+import LoanNameIcon from "@material-ui/icons/Title";
+import LoanValueIcon from "@material-ui/icons/AttachMoney";
+import RateOfInterestIcon from "@material-ui/icons/AttachMoney";
 const style = {
   position: "absolute",
   top: "50%",
@@ -26,20 +25,28 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
-  const [loanName, setLoanName] = useState("");
-  const [loanValue, setLoanValue] = useState("");
-  const [rateOfInterestApplied, setRateOfInterestApplied] = useState("No");
-  const [rateOfInterest, setRateOfInterest] = useState("");
-  const [error, setError] = useState("");
-  const [rateOfInterestError, setRateOfInterestError] = useState("");
+  const [error, setError] = useState();
 
-  useEffect(() => {
-    if (parseInt(loanValue) > 20000) {
-      setRateOfInterestApplied("Yes");
-    } else {
-      setRateOfInterestApplied("No");
-    }
-  }, [loanValue]);
+  const EmpLoanMgtSchema = z.object({
+    loanName: z.string(),
+    loanValue: z.string(),
+    rateOfInterest: z.string(),
+  });
+
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({
+    defaultValues: {
+      loanName: undefined,
+      loanValue: undefined,
+      rateOfInterest: undefined,
+    },
+    resolver: zodResolver(EmpLoanMgtSchema),
+  });
+
+  console.log(errors);
 
   const AddLoanType = useMutation(
     (data) =>
@@ -57,10 +64,6 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["loanType"] });
         handleClose();
-        setLoanName("");
-        setLoanValue("");
-        setRateOfInterestApplied("No");
-        setRateOfInterest("");
         handleAlert(true, "success", "Loan Type added succssfully");
       },
       onError: () => {
@@ -69,25 +72,16 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
     }
   );
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
     try {
-      const data = {
-        loanName: loanName,
-        loanValue: loanValue,
-        rateOfInterestApplied: rateOfInterestApplied,
-        rateOfInterest: rateOfInterest,
-      };
-      if (loanName.length <= 0) {
-        setError("Loan name field is Mandatory");
-        return false;
-      }
+      console.log(data);
       await AddLoanType.mutateAsync(data);
     } catch (error) {
       console.error(error);
       setError("An error occurred while creating a laon type");
     }
   };
+  console.log(error);
   return (
     <>
       <Modal
@@ -106,137 +100,57 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
             </h1>
           </div>
 
-          <div className="px-5 space-y-4 mt-4">
-            <div className="space-y-2 ">
-              <FormLabel className="text-md" htmlFor="demo-simple-select-label">
-                Add Loan Name
-              </FormLabel>
-              <FormControl
-                size="small"
-                sx={{ width: "100%" }}
-                variant="outlined"
-              >
-                <InputLabel htmlFor="outlined-adornment-password">
-                  Add Loan Name
-                </InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-password"
-                  label="Add Loan Name"
-                  value={loanName}
-                  onChange={(e) => {
-                    const newValue = e.target.value;
-                    if (!newValue.trim()) {
-                      setError("Loan Name field is mandatory");
-                    } else {
-                      setError("");
-                    }
-                    setLoanName(newValue);
-                  }}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="px-5 space-y-4 mt-4">
+              <div className="space-y-2 ">
+                <AuthInputFiled
+                  name="loanName"
+                  icon={LoanNameIcon}
+                  control={control}
+                  type="text"
+                  placeholder="loanName"
+                  label="Loan Name *"
+                  errors={errors}
+                  error={errors.loanName}
                 />
-              </FormControl>
-              {error && <p className="text-red-500">*{error}</p>}
-            </div>
-            <div className="space-y-2 ">
-              <FormLabel className="text-md" htmlFor="demo-simple-select-label">
-                Add Loan Value
-              </FormLabel>
-              <FormControl
-                size="small"
-                sx={{ width: "100%" }}
-                variant="outlined"
-              >
-                <InputLabel htmlFor="outlined-adornment-password">
-                  Add Loan Value
-                </InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-password"
-                  label="Add Loan Value"
-                  value={loanValue}
-                  onChange={(e) => {
-                    const newValue = e.target.value;
-                    // Check if the input value is a valid number and greater than or equal to 0
-                    if (!isNaN(newValue) && newValue >= 0) {
-                      setLoanValue(newValue);
-                    }
-                  }}
+              </div>
+              <div className="space-y-2 ">
+                <AuthInputFiled
+                  name="loanValue"
+                  icon={LoanValueIcon}
+                  control={control}
+                  type="number"
+                  placeholder="loanValue"
+                  label="Loan Value *"
+                  errors={errors}
+                  error={errors.loanValue}
                 />
-              </FormControl>
-            </div>
-            <div className="space-y-2 ">
-              <FormLabel className="text-md" htmlFor="demo-simple-select-label">
-                Rate of Interest applied
-              </FormLabel>
-              <FormControl
-                size="small"
-                sx={{ width: "100%" }}
-                variant="outlined"
-              >
-                <InputLabel htmlFor="outlined-adornment-password">
-                  Rate of Interest applied
-                </InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-password"
-                  label="Rate of Interest applied"
-                  value={rateOfInterestApplied}
-                  onChange={(e) => setRateOfInterestApplied(e.target.value)}
-                />
-              </FormControl>
-            </div>
-            <div className="space-y-2 ">
-              <FormLabel className="text-md" htmlFor="demo-simple-select-label">
-                Rate of Interest in %
-              </FormLabel>
-              <FormControl
-                size="small"
-                sx={{ width: "100%" }}
-                variant="outlined"
-              >
-                <InputLabel htmlFor="outlined-adornment-password">
-                  Rate of Interest in %
-                </InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-password"
-                  label="Rate of Interest in %"
-                  value={rateOfInterest}
-                  onChange={(e) => {
-                    const newValue = e.target.value;
-                    if (!isNaN(newValue) && newValue >= 0) {
-                      setRateOfInterest(newValue);
-                      setRateOfInterestError("");
-                    } else {
-                      setRateOfInterestError(
-                        "Rate of interest should be a non-negative number"
-                      );
-                    }
-                    // Check if the input value follows the percentage format (e.g., 5.5, 7.5)
-                    if (!/^\d+(\.\d+)?$/.test(newValue)) {
-                      setRateOfInterestError(
-                        "Rate of interest should follow the percentage format (e.g., 5.5, 7.5)"
-                      );
-                    } else {
-                      setRateOfInterestError("");
-                    }
-                  }}
-                />
-              </FormControl>
-              {rateOfInterestError && (
-                <p className="text-red-500">*{rateOfInterestError}</p>
-              )}
-            </div>
-            <div className="flex gap-4  mt-4  justify-end">
-              <Button onClick={handleClose} color="error" variant="outlined">
-                Cancel
-              </Button>
+              </div>
 
-              <Button
-                onClick={handleSubmit}
-                variant="contained"
-                color="primary"
-              >
-                Submit
-              </Button>
+              <div className="space-y-2 ">
+                <AuthInputFiled
+                  name="rateOfInterest"
+                  icon={RateOfInterestIcon}
+                  control={control}
+                  type="number"
+                  placeholder="rateOfInterest"
+                  label="Rate Of Interest "
+                  errors={errors}
+                  error={errors.rateOfInterest}
+                />
+              </div>
+              <div className="space-y-2 "></div>
+              <div className="flex gap-4  mt-4  justify-end">
+                <Button onClick={handleClose} color="error" variant="outlined">
+                  Cancel
+                </Button>
+
+                <Button type="submit" variant="contained" color="primary">
+                  Submit
+                </Button>
+              </div>
             </div>
-          </div>
+          </form>
         </Box>
       </Modal>
     </>

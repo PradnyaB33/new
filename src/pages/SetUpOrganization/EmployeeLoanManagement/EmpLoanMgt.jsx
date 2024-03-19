@@ -142,9 +142,7 @@ const EmpLoanMgt = () => {
                       <th scope="col" className="px-6 py-3 ">
                         Minimum Loan value allowed below 20000
                       </th>
-                      <th scope="col" className="px-6 py-3 ">
-                        Rate of Interest applied
-                      </th>
+
                       <th scope="col" className="px-6 py-3 ">
                         Rate of interest in %
                       </th>
@@ -163,10 +161,8 @@ const EmpLoanMgt = () => {
                         <td className="!text-left pl-4 py-3 ">
                           {empLoan?.loanValue}
                         </td>
-                        <td className="!text-left pl-5 py-3 ">
-                          {empLoan?.rateOfInterestApplied}
-                        </td>
-                        <td className="!text-left  pl-5 py-3 ">
+
+                        <td className="!text-left  pl-8 py-3 ">
                           {empLoan?.rateOfInterest}
                         </td>
                         <td className="whitespace-nowrap px-6 py-2">
