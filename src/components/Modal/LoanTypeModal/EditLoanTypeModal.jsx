@@ -1,17 +1,16 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  Modal,
-  OutlinedInput,
-  FormLabel,
-} from "@mui/material";
+import { Box, Button, Modal } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import LoanNameIcon from "@material-ui/icons/Title";
+import LoanValueIcon from "@material-ui/icons/AttachMoney";
+import RateOfInterestIcon from "@material-ui/icons/AttachMoney";
+import AuthInputFiled from "../../InputFileds/AuthInputFiled";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 const style = {
   position: "absolute",
@@ -28,10 +27,21 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
   const [error, setError] = useState("");
-  const [loanName, setLoanName] = useState("");
-  const [loanValue, setLoanValue] = useState("");
-  const [rateOfInterestApplied, setRateOfInterestApplied] = useState("No");
-  const [rateOfInterest, setRateOfInterest] = useState("");
+  console.log(error);
+  const EmpLoanMgtSchema = z.object({
+    loanName: z.string(),
+    loanValue: z.string(),
+    rateOfInterest: z.string(),
+  });
+
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    setValue,
+  } = useForm({
+    resolver: zodResolver(EmpLoanMgtSchema),
+  });
 
   //for  Get Query
   const { data: getLoanTypeById } = useQuery(
@@ -48,23 +58,15 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
       return response.data.data;
     }
   );
-  console.log(getLoanTypeById);
-  useEffect(() => {
-    if (getLoanTypeById?.loanName) {
-      setLoanName(getLoanTypeById?.loanName);
-    }
-    if (getLoanTypeById?.loanValue) {
-      setLoanValue(getLoanTypeById?.loanValue);
-    }
-    if (getLoanTypeById?.rateOfInterest) {
-      setRateOfInterest(getLoanTypeById?.rateOfInterest);
-    }
-    if (getLoanTypeById?.rateOfInterestApplied) {
-      setRateOfInterestApplied(getLoanTypeById?.rateOfInterestApplied);
-    }
-  }, [getLoanTypeById]);
 
-  console.log({ loanName, loanValue, rateOfInterest, rateOfInterestApplied });
+  useEffect(() => {
+    if (getLoanTypeById) {
+      setValue("loanName", getLoanTypeById.loanName);
+      setValue("loanValue", getLoanTypeById.loanValue.toString());
+      setValue("rateOfInterest", getLoanTypeById.rateOfInterest.toString());
+    }
+  }, [getLoanTypeById, setValue]);
+
   const EditLoanType = useMutation(
     (data) =>
       axios.put(
@@ -87,29 +89,16 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
       },
     }
   );
-  useEffect(() => {
-    if (parseInt(loanValue) > 20000) {
-      setRateOfInterestApplied("Yes");
-    } else {
-      setRateOfInterestApplied("No");
-    }
-  }, [loanValue]);
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+
+  const onSubmit = async (data) => {
     try {
-      const data = {
-        loanName: loanName,
-        loanValue: loanValue,
-        rateOfInterestApplied: rateOfInterestApplied,
-        rateOfInterest: rateOfInterest,
-      };
       await EditLoanType.mutateAsync(data);
     } catch (error) {
       console.error(error);
       setError("An error occurred while creating a new loan type.");
     }
   };
-  console.log(error);
+
   return (
     <Modal
       open={open}
@@ -126,80 +115,55 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
             Edit Loan Type
           </h1>
         </div>
-        <div className="px-5 space-y-4 mt-4">
-          <div className="space-y-2 ">
-            <FormLabel className="text-md" htmlFor="demo-simple-select-label">
-              Add Loan Name
-            </FormLabel>
-            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">
-                Add Loan Name
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                label="Add Loan Name"
-                value={loanName}
-                onChange={(e) => setLoanName(e.target.value)}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="px-5 space-y-4 mt-4">
+            <div className="space-y-2 ">
+              <AuthInputFiled
+                name="loanName"
+                icon={LoanNameIcon}
+                control={control}
+                type="text"
+                placeholder="loanName"
+                label="Loan Name *"
+                errors={errors}
+                error={errors.loanName}
               />
-            </FormControl>
-          </div>
-          <div className="space-y-2 ">
-            <FormLabel className="text-md" htmlFor="demo-simple-select-label">
-              Add Loan Value
-            </FormLabel>
-            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">
-                Add Loan Value
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                label="Add Loan Value"
-                value={loanValue}
-                onChange={(e) => setLoanValue(e.target.value)}
+            </div>
+            <div className="space-y-2 ">
+              <AuthInputFiled
+                name="loanValue"
+                icon={LoanValueIcon}
+                control={control}
+                type="number"
+                placeholder="loanValue"
+                label="Loan Value *"
+                errors={errors}
+                error={errors.loanValue}
               />
-            </FormControl>
-          </div>
-          <div className="space-y-2 ">
-            <FormLabel className="text-md" htmlFor="demo-simple-select-label">
-              Rate of Interest applied
-            </FormLabel>
-            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">
-                Rate of Interest applied
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                label="Rate of Interest applied"
-                value={rateOfInterestApplied}
-                onChange={(e) => setRateOfInterestApplied(e.target.value)}
+            </div>
+            <div className="space-y-2 ">
+              <AuthInputFiled
+                name="rateOfInterest"
+                icon={RateOfInterestIcon}
+                control={control}
+                type="number"
+                placeholder="rateOfInterest"
+                label="Rate Of Interest "
+                errors={errors}
+                error={errors.rateOfInterest}
               />
-            </FormControl>
+            </div>
           </div>
-          <div className="space-y-2 ">
-            <FormLabel className="text-md" htmlFor="demo-simple-select-label">
-              Rate of Interest in %
-            </FormLabel>
-            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">
-                Rate of Interest in %
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                label="Add Loan Name"
-                value={rateOfInterest}
-                onChange={(e) => setRateOfInterest(e.target.value)}
-              />
-            </FormControl>
+
+          <div className="flex gap-4 mt-4 mr-4  mb-4 justify-end ">
+            <Button onClick={handleClose} color="error" variant="outlined">
+              Cancel
+            </Button>
+            <Button type="submit" variant="contained" color="primary">
+              Apply
+            </Button>
           </div>
-        </div>
-        <div className="flex gap-4 mt-4 mr-4  mb-4 justify-end ">
-          <Button onClick={handleClose} color="error" variant="outlined">
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} variant="contained" color="primary">
-            Apply
-          </Button>
-        </div>
+        </form>
       </Box>
     </Modal>
   );
