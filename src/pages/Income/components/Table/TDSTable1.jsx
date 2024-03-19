@@ -20,7 +20,6 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
-import useOther from "../../../../hooks/IncomeTax/useOther";
 import useTDS from "../../../../hooks/IncomeTax/useTDS";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
@@ -30,7 +29,7 @@ const TDSTable1 = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const queryClient = useQueryClient();
-  const { setTotalHeads } = useOther();
+  // const { setTotalHeads } = useOther();
   const { setGrossTotal, grossTotal, setDeclared } = useTDS();
 
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
