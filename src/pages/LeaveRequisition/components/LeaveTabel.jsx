@@ -2,11 +2,10 @@ import { Help, MoreHoriz, MoreVert } from "@mui/icons-material";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { IconButton, Popover, Skeleton, Tooltip } from "@mui/material";
 import Divider from "@mui/material/Divider";
-import axios from "axios";
 import React, { useContext, useState } from "react";
-import { useQuery } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import useLeaveRequesationHook from "../../../hooks/QueryHook/Leave-Requsation/hook";
 import SummaryTable from "./summaryTable";
 
 const LeaveTable = () => {
@@ -15,24 +14,12 @@ const LeaveTable = () => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const authToken = cookies["aegis"];
-  const { data, isLoading, isError, error } = useQuery(
-    "employee-leave-table",
-    async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/leave/getEmployeeLeaveTable`,
-        {
-          headers: { Authorization: authToken },
-        }
-      );
-
-      return response.data;
-    }
-  );
+  const { data, isLoading, isError, error } = useLeaveRequesationHook();
 
   if (isError) {
     handleAlert(
       true,
-      "warning",
+      "error ",
       error?.response?.data?.message || "Sorry Server is under maintainance"
     );
     return (

@@ -30,8 +30,8 @@ const useSetupSideNav = (organisationId) => {
     organisationId: organisationId,
   });
   console.log(
-    `🚀 ~ file: useSetupSideNav.jsx:178 ~ data?.plan?.items?.name === "Aegis Intermediate Plan":`,
-    data?.plan?.items?.name === "Aegis Intermediate Plan"
+    `🚀 ~ file: useSetupSideNav.jsx:181 ~ data?.plan?.items?.name:`,
+    data?.plan?.item?.name
   );
 
   const linkData = [
@@ -177,7 +177,7 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/remote-punching`,
-      isVisible: data?.plan?.items?.name === "Aegis Intermediate Plan",
+      isVisible: data?.plan?.item?.name === "Aegis Intermediate Plan",
     },
   ];
 

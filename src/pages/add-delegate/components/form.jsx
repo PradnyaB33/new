@@ -13,7 +13,7 @@ import {
 } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import moment from "moment";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
@@ -34,6 +34,7 @@ const packageSchema = z.object({
 });
 const MiniForm = ({ data }) => {
   const { addDelegateMutation } = useDelegateSuperAdmin();
+  const [visible, setVisible] = useState("password");
 
   const { control, formState, handleSubmit, getValues } = useForm({
     defaultValues: {
@@ -110,6 +111,17 @@ const MiniForm = ({ data }) => {
           />
           <AuthInputFiled
             className={"!min-w-80 !max-w-64"}
+            name={"date_of_birth"}
+            icon={Celebration}
+            control={control}
+            type="date"
+            placeholder={"date_of_birth here"}
+            label={`Date of birth *`}
+            errors={errors}
+            error={errors?.date_of_birth}
+          />
+          <AuthInputFiled
+            className={"!min-w-80 !max-w-64"}
             name={"joining_date"}
             icon={CalendarMonth}
             control={control}
@@ -162,22 +174,13 @@ const MiniForm = ({ data }) => {
             name={"password"}
             icon={Password}
             control={control}
-            type="password"
-            placeholder={"Password here"}
+            type={visible}
+            placeholder={"**********"}
             label={`Enter your password *`}
             errors={errors}
             error={errors?.password}
-          />
-          <AuthInputFiled
-            className={"!min-w-80 !max-w-64"}
-            name={"date_of_birth"}
-            icon={Celebration}
-            control={control}
-            type="date"
-            placeholder={"date_of_birth here"}
-            label={`Date of birth *`}
-            errors={errors}
-            error={errors?.date_of_birth}
+            visible={visible}
+            setVisible={setVisible}
           />
 
           <AuthInputFiled
