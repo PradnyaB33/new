@@ -141,6 +141,7 @@ const TDSTable1 = () => {
   ]);
 
   let deduction = 0;
+  console.log(`🚀 ~ file: TDSTable1.jsx:144 ~ deduction:`, deduction);
 
   const {
     // isFetched: salaryFetch,
