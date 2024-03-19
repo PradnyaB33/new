@@ -122,6 +122,16 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
                 render={({ field }) => <TextField size="small" {...field} />}
               />
             </FormControl>
+            {/* <AuthInputFiled
+              name={"name"}
+              placeholder={"Enter input field name"}
+              label={"name"}
+              icon={DriveFileRenameOutlineOutlined}
+              control={control}
+              type="text"
+              errors={errors}
+              error={errors.name}
+            /> */}
             <FormControl component="fieldset">
               <FormLabel component="legend">count</FormLabel>
               <Controller

@@ -683,6 +683,7 @@ const App = () => {
               permission={[
                 "Super-Admin",
                 "Delegate-Super-Admin",
+                "HR",
                 "Department-Head",
                 "Delegate-Department-Head",
                 "Department-Admin",

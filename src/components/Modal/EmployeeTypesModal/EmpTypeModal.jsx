@@ -1,25 +1,25 @@
-import {
-  Box,
-  Button,
-  CircularProgress,
-  FormControl,
-  FormLabel,
-  InputLabel,
-  Modal,
-  OutlinedInput,
-} from "@mui/material";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Person } from "@mui/icons-material";
+import { Box, Button, CircularProgress, Modal } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
+import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import AuthInputFiled from "../../InputFileds/AuthInputFiled";
 
 const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
 
-  const { data } = useQuery(
+  const EmpSchema = z.object({
+    title: z.string().min(2, { message: "Minimum 2 character " }).max(15),
+  });
+
+  const { isLoading, isFetching } = useQuery(
     ["empType", empTypeId],
     async () => {
       if (open && empTypeId !== null) {
@@ -35,12 +35,24 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
       }
     },
     {
+      onSuccess: (data) => {
+        setValue("title", data?.empType?.title);
+      },
       enabled: open && empTypeId !== null && empTypeId !== undefined,
     }
   );
 
-  const [titleEmpType, setTitleEmpType] = useState("");
-  const [error, setError] = useState("");
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(EmpSchema),
+    defaultValues: {
+      title: undefined,
+    },
+  });
 
   const queryClient = useQueryClient();
 
@@ -60,7 +72,7 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["empTypes"] });
         handleClose();
-        setTitleEmpType("");
+
         handleAlert(
           true,
           "success",
@@ -68,7 +80,11 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
         );
       },
       onError: () => {
-        setError("An Error occurred while creating a new an employment type.");
+        handleAlert(
+          true,
+          "error",
+          "Issue while creating a data please try again."
+        );
       },
     }
   );
@@ -91,29 +107,23 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
         handleAlert(true, "success", "An Employment Type updated succesfully.");
       },
       onError: () => {
-        setError("An Error occurred while an employment type.");
+        handleAlert(
+          true,
+          "error",
+          "Issue while creating a data please try again."
+        );
       },
     }
   );
 
-  useEffect(() => {
-    if (data?.empType) {
-      setTitleEmpType(data?.empType?.title || "");
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data?.empType) {
+  //     setTitleEmpType(data?.empType?.title || "");
+  //   }
+  // }, [data]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
     try {
-      const data = {
-        title: titleEmpType,
-      };
-
-      if (titleEmpType.length <= 0) {
-        setError("Title field is Mandatory");
-        return false;
-      }
-
       if (empTypeId) {
         await EditEmployeeType.mutateAsync(data);
       } else {
@@ -123,7 +133,6 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
       // Reset form state
     } catch (error) {
       console.error(error);
-      setError("An error occurred while creating a new employment type");
     }
   };
 
@@ -154,7 +163,7 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
         </div>
 
         <div className="px-5 space-y-4 mt-4">
-          <div className="space-y-2 ">
+          {/* <div className="space-y-2 ">
             <FormLabel className="text-md" htmlFor="demo-simple-select-label">
               Add Employment Type
             </FormLabel>
@@ -170,40 +179,63 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
               />
             </FormControl>
             {error && <p className="text-red-500">*{error}</p>}
-          </div>
+          </div> */}
 
-          <div className="flex gap-4  mt-4  justify-end">
-            <Button onClick={handleClose} color="error" variant="outlined">
-              Cancel
-            </Button>
-            {empTypeId ? (
-              <Button
-                onClick={handleSubmit}
-                variant="contained"
-                color="primary"
-                disabled={EditEmployeeType.isLoading}
-              >
-                {EditEmployeeType.isLoading ? (
-                  <CircularProgress size={20} />
+          {isLoading || isFetching ? (
+            <CircularProgress />
+          ) : (
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              autoComplete="off"
+              className="flex   w-full bg-white flex-col h-fit gap-1"
+            >
+              {/* First Name */}
+              <AuthInputFiled
+                name="title"
+                icon={Person}
+                control={control}
+                type="text"
+                placeholder="EmpType"
+                label="Enter Employment Type *"
+                maxLimit={15}
+                errors={errors}
+                error={errors.title}
+              />
+
+              <div className="flex gap-4  mt-4  justify-end">
+                <Button onClick={handleClose} color="error" variant="outlined">
+                  Cancel
+                </Button>
+                {empTypeId ? (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    disabled={EditEmployeeType.isLoading}
+                  >
+                    {EditEmployeeType.isLoading ? (
+                      <CircularProgress size={20} />
+                    ) : (
+                      "Apply"
+                    )}
+                  </Button>
                 ) : (
-                  "Apply"
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    color="primary"
+                    disabled={AddEmployeeTypes.isLoading}
+                  >
+                    {AddEmployeeTypes.isLoading ? (
+                      <CircularProgress size={20} />
+                    ) : (
+                      "submit"
+                    )}
+                  </Button>
                 )}
-              </Button>
-            ) : (
-              <Button
-                onClick={handleSubmit}
-                variant="contained"
-                color="primary"
-                disabled={AddEmployeeTypes.isLoading}
-              >
-                {AddEmployeeTypes.isLoading ? (
-                  <CircularProgress size={20} />
-                ) : (
-                  "submit"
-                )}
-              </Button>
-            )}
-          </div>
+              </div>
+            </form>
+          )}
         </div>
       </Box>
     </Modal>

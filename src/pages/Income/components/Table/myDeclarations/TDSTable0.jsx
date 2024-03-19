@@ -45,11 +45,13 @@ const TDSTable0 = () => {
       }
     },
     onSuccess: (res) => {
-      let data = res?.reduce((total, item) => {
-        return total + parseFloat(item?.totalGrossSalary);
-      }, 0);
+      if (Array.isArray(res)) {
+        let data = res?.reduce((total, item) => {
+          return total + parseFloat(item?.totalGrossSalary);
+        }, 0);
 
-      setGrossTotal(data);
+        setGrossTotal(data);
+      }
     },
   });
 
