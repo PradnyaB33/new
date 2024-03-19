@@ -1,8 +1,10 @@
 import {
+  Cancel,
   CheckCircle,
   DeleteOutlined,
   EditOutlined,
   Error,
+  Pending,
 } from "@mui/icons-material";
 import {
   Button,
@@ -387,22 +389,30 @@ const TDSTable3 = () => {
                     )}
                   </td>
 
-                  <td className=" text-left  leading-7 text-[16px]  border px-2">
+                  <td className=" text-left  leading-7 text-[16px] w-[200px]  border px-2">
                     {item.name ===
                     "Income taxable under the head Other Sources" ? (
                       ""
                     ) : item.status === "Pending" ? (
                       <div className="flex items-center  gap-2">
-                        <Error className="text-yellow-400 " />
+                        <Pending className="text-yellow-400 " />
                         {item.status}
                       </div>
-                    ) : item.status === "Auto" ? (
+                    ) : item.status === "Auto" || item.status === "Approved" ? (
                       <div className="flex items-center  gap-2">
                         <CheckCircle className="text-green-400 " />
                         {item.status}
                       </div>
+                    ) : item.status === "Reject" ? (
+                      <div className="flex items-center  gap-2">
+                        <Cancel className="text-red-400 " />
+                        {item.status}
+                      </div>
                     ) : (
-                      <p>{item.status}</p>
+                      <div className="flex items-center  gap-2">
+                        <Error className="text-gray-400 " />
+                        <p>{item.status}</p>
+                      </div>
                     )}
                   </td>
                   <td className="whitespace-nowrap px-2  w-[220px]">

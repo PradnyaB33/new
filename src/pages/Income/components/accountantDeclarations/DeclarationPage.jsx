@@ -1,12 +1,24 @@
 import {
+  Article,
   Cancel,
   CheckCircle,
+  Close,
   Info,
   RequestQuote,
   Search,
   West,
 } from "@mui/icons-material";
-import { Avatar, CircularProgress, IconButton, Tooltip } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
@@ -19,7 +31,15 @@ const DeclarationPage = () => {
   const { id } = useParams();
   const [investment, setInvestment] = useState({});
   const [isReject, setIsReject] = useState(false);
-  console.log(`🚀 ~ investment:`, investment);
+  const [pdf, setPdf] = useState(null);
+
+  const handlePDF = (id) => {
+    setPdf(id);
+  };
+
+  const handleClosePDF = () => {
+    setPdf(null);
+  };
 
   const [searchEmp, setSearchEmp] = useState("");
   const [open, setOpen] = useState(false);
@@ -69,6 +89,8 @@ const DeclarationPage = () => {
     },
     enabled: id !== undefined,
   });
+
+  const handleDownload = (pdf) => {};
 
   return (
     <div>
@@ -184,7 +206,7 @@ const DeclarationPage = () => {
                 </div>
                 <div className=" px-4 ">
                   <table className=" table-auto border  border-collapse min-w-full bg-white  text-left  !text-sm font-light">
-                    <thead className="border-b bg-blue-200  font-bold">
+                    <thead className="border-b bg-gray-100  font-bold">
                       <tr className="!font-semibold ">
                         <th
                           scope="col"
@@ -249,7 +271,17 @@ const DeclarationPage = () => {
                      
                         px-2 leading-7 text-[16px]`}
                             >
-                              {item.proof ? item.proof : "No Proof Found"}
+                              {item.proof ? (
+                                <div
+                                  onClick={() => handlePDF(item.proof)}
+                                  className="px-2 flex gap-2 items-center h-max w-max  cursor-pointer"
+                                >
+                                  <Article className="text-blue-500" />
+                                  <h1>View Proof</h1>
+                                </div>
+                              ) : (
+                                "No Proof Found"
+                              )}
                             </p>
                           </td>
                           <td className=" text-left !px-2 w-[200px] border ">
@@ -304,6 +336,31 @@ const DeclarationPage = () => {
         isReject={isReject}
         investment={investment}
       />
+
+      <Dialog open={pdf !== null} onClose={handleClosePDF}>
+        <DialogTitle className="flex justify-between items-center">
+          <h1>Document</h1>
+          <IconButton onClick={handleClosePDF}>
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <div className="scrollt ">
+            <object
+              type="application/pdf"
+              data={`${pdf}`}
+              alt="none"
+              aria-label="pdfSalary"
+              className="min-h-[60vh] !w-[400px] "
+            />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" onClick={() => handleDownload(pdf)}>
+            Download
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
