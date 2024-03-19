@@ -133,6 +133,7 @@ const BillingCard = ({ doc }) => {
 
     return message;
   };
+
   return (
     <div className="shadow-xl bg-Brand-Purple/brand-purple-1 rounded-md grid grid-cols-6">
       <div className=" col-span-5 pl-4 pt-4 pb-4 gap-4 flex flex-col">
@@ -234,11 +235,7 @@ const BillingCard = ({ doc }) => {
             descriptionText={"Purchased Plan"}
             mainText={data?.plan?.item?.name}
           />
-          {/* <DescriptionBox
-            Icon={FilterNone}
-            descriptionText={"Active packages"}
-            mainText={data?.organisation?.packages?.length}
-          /> */}
+
           <DescriptionBox
             Icon={People}
             descriptionText={"Allowed employee count"}
@@ -300,17 +297,17 @@ const BillingCard = ({ doc }) => {
           </div>
         ) : null}
       </div>
-      {data?.organisation?.packages && data?.organisation && (
-        <PackageForm
-          open={confirmOpen}
-          handleClose={() => {
-            setConfirmOpen(false);
-            handleClose();
-          }}
-          packages={data?.organisation?.packages}
-          organisation={data?.organisation}
-        />
-      )}
+      {/* {data?.organisation?.packages && data?.organisation && ( */}
+      <PackageForm
+        open={confirmOpen}
+        handleClose={() => {
+          setConfirmOpen(false);
+          handleClose();
+        }}
+        packages={data?.organisation?.packages}
+        organisation={data?.organisation}
+      />
+      {/* )} */}
     </div>
   );
 };

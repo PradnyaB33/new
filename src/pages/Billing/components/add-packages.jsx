@@ -15,7 +15,8 @@ const style = {
   width: 450,
 };
 const MiniPackagesForm = ({ handleClose, open, setPackage, billedPackage }) => {
-  const uniqueValues = new Set(billedPackage.map((item) => item[0]));
+  console.log(`🚀 ~ file: add-packages.jsx:18 ~ billedPackage:`, billedPackage);
+  const uniqueValues = new Set(billedPackage?.map((item) => item[0]));
   const filterArray = [
     {
       value: "basicPackageCount",
