@@ -77,18 +77,20 @@ const MiniForm = ({ setArray, setOpenModal }) => {
         />
       </div>
       <div>
-        <GoogleMap
-          key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
-          mapContainerStyle={{
-            width: "100%",
-            height: "50vh",
-          }}
-          center={{
-            lat: 18.6229332,
-            lng: 73.7360171,
-          }}
-          zoom={18}
-        ></GoogleMap>
+        {isLoaded && (
+          <GoogleMap
+            key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+            mapContainerStyle={{
+              width: "100%",
+              height: "50vh",
+            }}
+            center={{
+              lat: 18.6229332,
+              lng: 73.7360171,
+            }}
+            zoom={18}
+          ></GoogleMap>
+        )}
       </div>
 
       <div className="w-full flex justify-center mt-4">

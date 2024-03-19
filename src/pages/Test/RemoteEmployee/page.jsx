@@ -7,11 +7,6 @@ import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import React, { useState } from "react";
 import MiniForm from "./components/MiniForm";
 
-const containerStyle = {
-  width: "100%",
-  height: "50vh",
-};
-
 const RemoteEmployee = () => {
   const [openModal, setOpenModal] = useState(false);
   const [array, setArray] = useState([]);
@@ -21,6 +16,7 @@ const RemoteEmployee = () => {
     id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   });
+  console.log(selectedIndex);
 
   const handleMenuItemClick = (index, event) => {
     setAnchorEl(null);
