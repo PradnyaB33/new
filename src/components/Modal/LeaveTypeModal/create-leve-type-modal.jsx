@@ -1,15 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Add, ToggleOn, WorkOffOutlined } from "@mui/icons-material";
 import {
   Box,
   Button,
-  Checkbox,
   CircularProgress,
   FormControl,
-  FormControlLabel,
   FormLabel,
   Modal,
   Stack,
-  TextField,
 } from "@mui/material";
 import axios from "axios";
 import randomColor from "randomcolor";
@@ -20,6 +18,7 @@ import { useParams } from "react-router-dom";
 import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import AuthInputFiled from "../../InputFileds/AuthInputFiled";
 
 const CreteLeaveTypeModal = ({ handleClose, open }) => {
   const { handleAlert } = useContext(TestContext);
@@ -29,7 +28,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
   const param = useParams();
   const leaveTypeSchema = z.object({
     leaveName: z.string(),
-    count: z.number({ required_error: "Count is required" }),
+    count: z.string({ required_error: "Count is required" }),
     color: z.string(),
     isActive: z.boolean(),
   });
@@ -114,46 +113,26 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
         <h1 className="text-xl pl-2 font-semibold font-sans">Add leave type</h1>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Stack spacing={2} width={400}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Type Name</FormLabel>
-              <Controller
-                name="leaveName"
-                control={control}
-                render={({ field }) => <TextField size="small" {...field} />}
-              />
-            </FormControl>
-            {/* <AuthInputFiled
-              name={"name"}
-              placeholder={"Enter input field name"}
-              label={"name"}
-              icon={DriveFileRenameOutlineOutlined}
+            <AuthInputFiled
+              name="leaveName"
+              icon={WorkOffOutlined}
               control={control}
               type="text"
+              placeholder="eg. Sick leave"
+              label="Leave Type Name *"
               errors={errors}
-              error={errors.name}
-            /> */}
-            <FormControl component="fieldset">
-              <FormLabel component="legend">count</FormLabel>
-              <Controller
-                name="count"
-                control={control}
-                render={({ field }) => {
-                  return (
-                    <TextField
-                      disabled={field.disabled}
-                      error={errors?.count ? true : false}
-                      helperText={errors?.count?.message}
-                      value={field.value}
-                      onChange={(e) => {
-                        field.onChange(parseInt(e.target.value));
-                      }}
-                      size="small"
-                      type="number"
-                    />
-                  );
-                }}
-              />
-            </FormControl>
+              error={errors.leaveName}
+            />
+            <AuthInputFiled
+              name="count"
+              icon={Add}
+              control={control}
+              type="number"
+              placeholder="eg. 4"
+              label="Enter Count *"
+              errors={errors}
+              error={errors.count}
+            />
             <FormControl component="fieldset">
               <FormLabel component="legend">Color</FormLabel>
               <Controller
@@ -187,24 +166,16 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
                 }}
               />
             </FormControl>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Is active</FormLabel>
-              <Controller
-                name="isActive"
-                control={control}
-                render={({ field }) => (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={field.value}
-                        onChange={field.onChange}
-                      />
-                    }
-                    label="is Active"
-                  />
-                )}
-              />
-            </FormControl>
+            <AuthInputFiled
+              name="isActive"
+              icon={ToggleOn}
+              control={control}
+              type="checkbox"
+              placeholder="eg. 4"
+              label="Is Active *"
+              errors={errors}
+              error={errors.count}
+            />
             <Button
               disabled={isFormClean || isLoading}
               type="submit"
