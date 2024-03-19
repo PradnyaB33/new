@@ -4,16 +4,13 @@ import { IconButton, Popover, Skeleton, Tooltip } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import React, { useContext, useState } from "react";
 import { TestContext } from "../../../State/Function/Main";
-import { UseContext } from "../../../State/UseState/UseContext";
 import useLeaveRequesationHook from "../../../hooks/QueryHook/Leave-Requsation/hook";
 import SummaryTable from "./summaryTable";
 
 const LeaveTable = () => {
   const { handleAlert } = useContext(TestContext);
-  const { cookies } = useContext(UseContext);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const authToken = cookies["aegis"];
   const { data, isLoading, isError, error } = useLeaveRequesationHook();
 
   if (isError) {
