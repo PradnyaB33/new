@@ -1,15 +1,13 @@
 import { CameraAltOutlined } from "@mui/icons-material";
 import React, { useRef, useState } from "react";
 
-const ImageInput = ({ field }) => {
-  const [selectedImage, setSelectedImage] = useState("");
+const ImageInput = ({ field, caching = false }) => {
+  const [selectedImage, setSelectedImage] = useState(field?.value);
   const hiddenInputRef = useRef(null);
   const handleFileChange = (e) => {
-    console.log(`🚀 ~ file: image-input.jsx:7 ~ e:`, e);
     const file = e.target.files[0];
-    console.log(`🚀 ~ file: image-input.jsx:9 ~ file:`, file);
 
-    // displayImage(file);
+    displayImage(file);
   };
   const displayImage = (file) => {
     const reader = new FileReader();
@@ -19,17 +17,27 @@ const ImageInput = ({ field }) => {
     };
 
     if (file) {
-      reader.readAsDataURL(file);
+      if (typeof file !== "string") {
+        reader.readAsDataURL(file);
+      }
     }
   };
   if (field.value) {
     displayImage(field.value);
   }
+
+  console.log(`🚀 ~ file: image-input.jsx:38 ~ selectedImage:`, selectedImage);
   return (
     <div
       className={`flex px-2 border-gray-200 border-[.5px] bg-[#f8f8ff59] py-[6px] items-center h-48 w-48 rounded-full justify-center hover:bg-[ghostwhite] cursor-pointer transition-all !bg-cover`}
       style={{
-        background: `linear-gradient(45deg, #f8f8ff59, #f8f8ff59), url(${selectedImage})`,
+        background: `linear-gradient(45deg, #f8f8ff59, #f8f8ff59), url(${
+          selectedImage
+            ? selectedImage.includes("data:image")
+              ? `${selectedImage}`
+              : `${selectedImage}?v=${Date.now()}`
+            : selectedImage
+        })`,
       }}
       onClick={() => {
         hiddenInputRef.current.click();

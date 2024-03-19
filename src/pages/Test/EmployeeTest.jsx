@@ -5,8 +5,9 @@ import {
   Person,
   West,
 } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import StepFormWrapper from "../../components/step-form/wrapper";
 import useMultiStepForm from "../../hooks/useStepForm";
 import Test1 from "./EmployeeCom/Test1 ";
@@ -24,6 +25,7 @@ const EmployeeTest = () => {
     totalSteps,
     goToStep,
   } = useMultiStepForm(4);
+  const navigate = useNavigate();
 
   const stepper = [
     {
@@ -62,14 +64,17 @@ const EmployeeTest = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen h-auto">
-      <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
-        <Link to={"/organizationList"}>
-          <West className="mx-4 !text-xl" />
-        </Link>
-        Employee Onboarding
-        <p className="text-xs text-gray-600  pl-12">
-          Welcome your employees by creating their profiles here.
-        </p>
+      <header className="text-xl w-full pt-6 flex items-start gap-2 bg-white shadow-md   p-4">
+        <IconButton onClick={() => navigate(-1)}>
+          <West className=" !text-xl" />
+        </IconButton>
+
+        <div>
+          Employee Onboarding
+          <p className="text-xs text-gray-600  ">
+            Welcome your employees by creating their profiles here.
+          </p>
+        </div>
       </header>
 
       <section className="md:px-8 flex space-x-2 md:py-6">

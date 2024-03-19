@@ -105,7 +105,7 @@ const TDSTable3 = () => {
     queryFn: async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API}/route/tds/OtherIncome/2023-2024`,
+          `${process.env.REACT_APP_API}/route/tds/getInvestment/2023-2024/Otherincome`,
           {
             headers: {
               Authorization: authToken,
@@ -119,18 +119,18 @@ const TDSTable3 = () => {
     },
     onSuccess: (res) => {
       const updatedTableData = tableData.map((item) => {
-        const matchingItem = res.incomeFromOther.investmentType.find(
+        const matchingItem = res.find(
           (investment) => investment.name === item.name
         );
 
-        if (item.name === "Income taxable under the head Other Sources") {
-          return {
-            ...item,
-            amount: res.totalAddition,
-            status: "",
-            proof: "",
-          };
-        }
+        // if (item.name === "Income taxable under the head Other Sources") {
+        //   return {
+        //     ...item,
+        //     amount: res.totalAddition,
+        //     status: "",
+        //     proof: "",
+        //   };
+        // }
         if (matchingItem) {
           return {
             ...item,
@@ -143,7 +143,7 @@ const TDSTable3 = () => {
         }
       });
 
-      setTotalHeads(res.totalAddition.toFixed(2));
+      // setTotalHeads(res.totalAddition.toFixed(2));
       setTableData(updatedTableData);
     },
   });
@@ -175,16 +175,48 @@ const TDSTable3 = () => {
     const requestData = {
       empId: user._id,
       financialYear: "2023-2024",
-      name: value.name,
       requestData: {
+        name: value.name,
+        sectionname: "Otherincome",
         status: "Pending",
         declaration: value.amount,
         proof: "",
       },
     };
     try {
+      if (value.name === "Family Pension") {
+        const data = {
+          empId: user._id,
+          financialYear: "2023-2024",
+          requestData: {
+            name: "Less : Deduction on Family Pension Income Sec. 57(IIA)",
+            sectionname: "Otherincome",
+            status: "Auto",
+            declaration:
+              value.amount <= 15000
+                ? Math.round(
+                    (requestData.requestData.declaration * 33.33) / 100
+                  )
+                : 15000,
+            proof: "",
+          },
+        };
+
+        await axios.post(
+          `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
+          data,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+
+        console.log("click it");
+      }
+
       await axios.post(
-        `${process.env.REACT_APP_API}/route/tds/OtherIncome`,
+        `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
         requestData,
         {
           headers: {
@@ -209,17 +241,18 @@ const TDSTable3 = () => {
     const requestData = {
       empId: user._id,
       financialYear: "2023-2024",
-      investmentTypeName: value.name,
       requestData: {
-        status: "Pending",
+        name: value.name,
+        sectionname: "Otherincome",
+        status: "Not Submitted",
         declaration: 0,
         proof: "",
       },
     };
 
     try {
-      await axios.post(
-        `${process.env.REACT_APP_API}/route/tds/deleteOtherIncome`,
+      await axios.patch(
+        `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
         requestData,
         {
           headers: {
@@ -328,7 +361,7 @@ const TDSTable3 = () => {
                         } 
                         px-2 leading-7 text-[16px]`}
                       >
-                        INR {parseFloat(item.amount.toFixed(2))}
+                        INR {parseFloat(item.amount)}
                       </p>
                     )}
                   </td>

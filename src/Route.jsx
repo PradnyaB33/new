@@ -79,9 +79,9 @@ import DeclarationPage from "./pages/Income/components/accountantDeclarations/De
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
+import RemoteSetup from "./pages/SetupPage/Remote/RemoteSetup";
 import CustomCalander from "./pages/custom/Calendar";
-import RemoteSetup from "./pages/SetupPage/RemoteSetup";
-import RemoteEmployee from "./pages/Test/RemoteEmployee";
+import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 
 const App = () => {
   return (
@@ -170,6 +170,7 @@ const App = () => {
                 "HR",
                 "Manager",
                 "Employee",
+                7,
               ]}
             >
               <WaitMain />
@@ -201,6 +202,7 @@ const App = () => {
                 "Department-Admin",
                 "Delegate-Department-Admin",
                 "Accountant",
+                "Delegate-Accountant",
               ]}
             >
               <Dashboard />
@@ -354,6 +356,8 @@ const App = () => {
                 "Delegate-Super-Admin",
                 "HR",
                 "Manager",
+                "Department-Head",
+                "Accoutant",
               ]}
             >
               <Employee />
