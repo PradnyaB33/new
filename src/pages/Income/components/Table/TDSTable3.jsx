@@ -27,6 +27,7 @@ const TDSTable3 = () => {
   const user = getCurrentUser();
   const queryClient = useQueryClient();
   const { setTotalHeads } = useOther();
+  console.log(`🚀 ~ file: TDSTable3.jsx:30 ~ setTotalHeads:`, setTotalHeads);
 
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
 
