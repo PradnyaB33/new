@@ -81,6 +81,7 @@ import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
 import CustomCalander from "./pages/custom/Calendar";
 import RemoteSetup from "./pages/SetupPage/RemoteSetup";
+import RemoteEmployee from "./pages/Test/RemoteEmployee";
 
 const App = () => {
   return (
@@ -123,6 +124,7 @@ const App = () => {
 
         <Route path="/loading" element={<Loader />} />
         <Route path="/testOrg" element={<NewOranisationForm />} />
+        <Route path="/remotePunching" element={<RemoteEmployee />} />
         {/* Login Routes */}
         <Route path="/test3" element={<TestYash />} />
         <Route
