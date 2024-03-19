@@ -81,6 +81,7 @@ import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
 import RemoteSetup from "./pages/SetupPage/Remote/RemoteSetup";
 import CustomCalander from "./pages/custom/Calendar";
+import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 
 const App = () => {
   return (
@@ -123,6 +124,7 @@ const App = () => {
 
         <Route path="/loading" element={<Loader />} />
         <Route path="/testOrg" element={<NewOranisationForm />} />
+        <Route path="/remotePunching" element={<RemoteEmployee />} />
         {/* Login Routes */}
         <Route path="/test3" element={<TestYash />} />
         <Route
@@ -683,6 +685,7 @@ const App = () => {
               permission={[
                 "Super-Admin",
                 "Delegate-Super-Admin",
+                "HR",
                 "Department-Head",
                 "Delegate-Department-Head",
                 "Department-Admin",

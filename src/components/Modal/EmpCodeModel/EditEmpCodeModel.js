@@ -1,19 +1,14 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Modal,
-  OutlinedInput,
-  Select,
-} from "@mui/material";
+import { Box, Button, Modal } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import AuthInputFiled from "../../InputFileds/AuthInputFiled";
+import React, { useContext, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import EmployeeCodeIcon from "@material-ui/icons/AssignmentInd";
 const style = {
   position: "absolute",
   top: "50%",
@@ -28,53 +23,39 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
-  const [startWith, setStartWith] = useState("");
-  const [numChracterInPrefix, setNumCharacterInPrefix] = useState(1);
-  const [inputFields, setinputFields] = useState({
-    isPrefix: true,
+
+  const EmpCodeSchema = z.object({
+    code: z.string(),
   });
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setinputFields((prevInput) => ({
-      ...prevInput,
-      [name]: value,
-    }));
-  };
-  // fetch the data of employee code
-  const getEmployeeCodeData = async () => {
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-        Authorization: authToken,
-      },
-    };
 
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/get/employee-code/${organisationId}`,
-        config
-      );
-
-      return response.data.getEmployeeCode;
-    } catch (error) {
-      // Handle errors if necessary
-      console.error("Error fetching employee codes:", error);
-      return [];
-    }
-  };
-
-  const { data: employeeCodes } = useQuery({
-    queryKey: ["employee-code"],
-    queryFn: getEmployeeCodeData,
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    setValue,
+  } = useForm({
+    resolver: zodResolver(EmpCodeSchema),
   });
+
+  //for  Get Query
+  const { data: codeData } = useQuery(["empCode", organisationId], async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/get/employee-code/${organisationId}/${empCodeId}`,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+    return response.data;
+  });
+  console.log(codeData);
 
   useEffect(() => {
-    console.log("Employee Codes updated:", employeeCodes);
-    if (employeeCodes && employeeCodes.length > 0) {
-      setStartWith(employeeCodes[0]?.code || "");
-      setNumCharacterInPrefix(employeeCodes[0]?.numChracterInPrefix || "");
+    if (codeData) {
+      setValue("code", codeData?.code);
     }
-  }, [employeeCodes]);
+  }, [codeData, setValue]);
 
   const EditEmployeeCode = useMutation(
     async (data) => {
@@ -97,14 +78,10 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
       }
     },
     {
-      onSuccess: (data) => {
-        // Invalidate and refetch the data after successful submission
-        queryClient.invalidateQueries(["employee-code"]);
+      onSuccess: () => {
+        queryClient.invalidateQueries(["empCode"]);
         handleClose();
         handleAlert(true, "success", "Employee code updated successfully.");
-        setTimeout(() => {
-          handleAlert(false, "success", "");
-        }, 2000);
       },
 
       onError: (error) => {
@@ -115,13 +92,8 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
   );
 
   // edit the data
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
     try {
-      const data = {
-        startWith,
-        numChracterInPrefix,
-      };
       await EditEmployeeCode.mutateAsync(data);
     } catch (error) {
       console.error(error);
@@ -149,75 +121,32 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
             Edit Employee Code
           </h1>
         </div>
-        <div className="overflow-auto !p-4 flex flex-col items-start gap-4">
-          <div className="flex gap-4 items-center">
-            <div className="space-y-2">
-              <label className="text-md" htmlFor="demo-simple-select-label">
-                Employee ID prefix (Yes or No)
-              </label>
-              <FormControl size="small" className="w-full">
-                <InputLabel id="demo-simple-select-label">
-                  prefix character
-                </InputLabel>
-                <Select
-                  id={"isPrefix"}
-                  name="isPrefix"
-                  onChange={handleInputChange}
-                  label=" prefix character"
-                >
-                  <MenuItem value={true}>Yes</MenuItem>
-                  <MenuItem value={false}>No</MenuItem>
-                </Select>
-              </FormControl>
-            </div>
 
-            {inputFields.isPrefix && (
-              <div className="space-y-2">
-                <label className="text-md" htmlFor="demo-simple-select-label">
-                  Number of charater in prefix
-                </label>
-                <FormControl size="small" className="w-full" variant="outlined">
-                  <InputLabel htmlFor="outlined-adornment-password">
-                    Add Charater for Employee ID
-                  </InputLabel>
-                  <OutlinedInput
-                    type="number"
-                    label="Add Character Employee id"
-                    value={numChracterInPrefix}
-                    onChange={(e) => setNumCharacterInPrefix(e.target.value)}
-                  />
-                </FormControl>
-              </div>
-            )}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="px-5 space-y-4 mt-4">
+            <div className="space-y-2 ">
+              <AuthInputFiled
+                name="code"
+                icon={EmployeeCodeIcon}
+                control={control}
+                type="text"
+                placeholder="employee code"
+                label="employee code *"
+                errors={errors}
+                error={errors.code}
+              />
+            </div>
           </div>
 
-          <label className="text-md" htmlFor="demo-simple-select-label">
-            Employee ID starts with
-          </label>
-          <FormControl size="small" className="w-full" variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-password">
-              start with
-            </InputLabel>
-            <OutlinedInput
-              type="text"
-              label="start with"
-              value={startWith}
-              onChange={(e) => setStartWith(e.target.value)}
-              inputProps={{
-                maxLength: numChracterInPrefix,
-              }}
-            />
-          </FormControl>
-        </div>
-
-        <div className="flex gap-4 mt-4 mr-4  mb-4 justify-end ">
-          <Button onClick={handleClose} color="error" variant="outlined">
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} variant="contained" color="primary">
-            Apply
-          </Button>
-        </div>
+          <div className="flex gap-4 mt-4 mr-4  mb-4 justify-end ">
+            <Button onClick={handleClose} color="error" variant="outlined">
+              Cancel
+            </Button>
+            <Button type="submit" variant="contained" color="primary">
+              Apply
+            </Button>
+          </div>
+        </form>
       </Box>
     </Modal>
   );

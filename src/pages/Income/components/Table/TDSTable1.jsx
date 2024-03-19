@@ -5,6 +5,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   Error,
+  Pending,
 } from "@mui/icons-material";
 import {
   Button,
@@ -19,7 +20,6 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
-import useOther from "../../../../hooks/IncomeTax/useOther";
 import useTDS from "../../../../hooks/IncomeTax/useTDS";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
@@ -29,9 +29,8 @@ const TDSTable1 = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const queryClient = useQueryClient();
-  const { setTotalHeads } = useOther();
-  console.log(`🚀 ~ file: TDSTable1.jsx:33 ~ setTotalHeads:`, setTotalHeads);
-  const { setGrossTotal, grossTotal } = useTDS();
+  // const { setTotalHeads } = useOther();
+  const { setGrossTotal, grossTotal, setDeclared } = useTDS();
 
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [pdf, setPdf] = useState(null);
@@ -102,7 +101,7 @@ const TDSTable1 = () => {
     {
       name: "Transport Allowance for a specially-abled person",
       amount: 0,
-      proof: "-",
+      proof: "",
       status: "Not Submitted",
 
       amountAccepted: 0,
@@ -119,7 +118,7 @@ const TDSTable1 = () => {
       name: "Taxable Salary",
       amount: 0,
       proof: "",
-      status: "",
+      status: "Not Submitted",
 
       amountAccepted: 0,
     },
@@ -127,14 +126,16 @@ const TDSTable1 = () => {
       name: "Less : Professional Tax",
       amount: 0,
       proof: "",
-      status: "",
+      status: "Not Submitted",
+
       amountAccepted: 0,
     },
     // {
     //   name: "Income taxable under the head Salaries",
     //   amount: 0,
     //   proof: "",
-    //   status: "",
+    // status: "Not Submitted",
+
     //
     // amountAccepted: 0,
     // },
@@ -165,11 +166,12 @@ const TDSTable1 = () => {
     },
     onSuccess: (res) => {
       console.log(res);
-      let data = res.reduce((total, item) => {
-        return total + parseFloat(item.totalGrossSalary);
-      }, 0);
 
-      setGrossTotal(data);
+      // let data = res.reduce((total, item) => {
+      //   return total + parseFloat(item.totalGrossSalary);
+      // }, 0);
+
+      setGrossTotal(0);
     },
   });
 
@@ -194,6 +196,36 @@ const TDSTable1 = () => {
       queryClient.invalidateQueries({ queryKey: ["finacialYearData"] });
       // deduction = grossTotal - res.totalDeductions;
       console.log(res);
+
+      const declaredAmount = res.reduce((i, a) => {
+        return (i += a.declaration);
+      }, 0);
+
+      const amountPending = res.reduce((i, a) => {
+        if (a.status === "Pending") {
+          return (i += a.declaration);
+        }
+        return i;
+      }, 0);
+
+      const amountReject = res.reduce((i, a) => {
+        if (a.status === "Reject") {
+          return (i += a.declaration);
+        }
+        return i;
+      }, 0);
+
+      const amountAccepted = res.reduce((i, a) => {
+        return (i += a.amountAccepted);
+      }, 0);
+
+      let data = {
+        declared: declaredAmount,
+        pending: amountPending,
+        accepted: amountAccepted,
+        rejected: amountReject,
+      };
+      setDeclared(data);
       const updatedTableData = tableData?.map((item) => {
         const matchingItem = res?.find(
           (investment) => investment.name === item.name
@@ -287,9 +319,13 @@ const TDSTable1 = () => {
     const tdsfile = newData[index].proof;
 
     try {
-      const uploadproof = await uploadProof(tdsfile);
+      let uploadproof = "";
 
-      const requestData = {
+      if (tdsfile) {
+        uploadproof = await uploadProof(tdsfile);
+      }
+
+      let requestData = {
         empId: user._id,
         financialYear: "2023-2024",
         requestData: {
@@ -297,9 +333,22 @@ const TDSTable1 = () => {
           sectionname: "Salary",
           status: "Pending",
           declaration: value.amount,
-          proof: uploadproof,
         },
       };
+
+      if (uploadProof) {
+        requestData = {
+          empId: user._id,
+          financialYear: "2023-2024",
+          requestData: {
+            name: value.name,
+            sectionname: "Salary",
+            status: "Pending",
+            declaration: value.amount,
+            proof: uploadproof,
+          },
+        };
+      }
       await axios.post(
         `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
         requestData,
@@ -310,10 +359,8 @@ const TDSTable1 = () => {
         }
       );
 
-      console.log(uploadproof);
-
       handleAlert(true, "success", `Data uploaded successfully`);
-      queryClient.invalidateQueries({ queryKey: ["salary"] });
+      queryClient.invalidateQueries({ queryKey: ["Salary"] });
     } catch (error) {
       console.log(error);
     }
@@ -328,9 +375,10 @@ const TDSTable1 = () => {
     const requestData = {
       empId: user._id,
       financialYear: "2023-2024",
-      investmentTypeName: value.name,
       requestData: {
-        status: "Pending",
+        name: value.name,
+        sectionname: "Salary",
+        status: "Not Submitted",
         declaration: 0,
         proof: "",
       },
@@ -338,7 +386,7 @@ const TDSTable1 = () => {
 
     try {
       await axios.post(
-        `${process.env.REACT_APP_API}/route/tds/deleteOtherIncome`,
+        `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
         requestData,
         {
           headers: {
@@ -348,7 +396,7 @@ const TDSTable1 = () => {
       );
 
       handleAlert(true, "success", `Data deleted successfully`);
-      queryClient.invalidateQueries({ queryKey: ["incomeSalary"] });
+      queryClient.invalidateQueries({ queryKey: ["Salary"] });
     } catch (error) {
       console.log(error);
     }
@@ -519,7 +567,7 @@ const TDSTable1 = () => {
                       ""
                     ) : item.status === "Pending" ? (
                       <div className="flex items-center  gap-2">
-                        <Error className="text-yellow-400 " />
+                        <Pending className="text-yellow-400 " />
                         {item.status}
                       </div>
                     ) : item.status === "Auto" || item.status === "Approved" ? (
@@ -533,14 +581,18 @@ const TDSTable1 = () => {
                         {item.status}
                       </div>
                     ) : (
-                      <p>{item.status}</p>
+                      <div className="flex items-center  gap-2">
+                        <Error className="text-gray-400 " />
+                        <p>{item.status}</p>
+                      </div>
                     )}
                   </td>
                   <td className="whitespace-nowrap px-2  w-[220px]">
                     {item.name ===
                       "Less : Deduction on Family Pension Income Sec. 57(IIA)" ||
                     item.name === "Income taxable under the head Salaries" ||
-                    item.status === "Auto" ? (
+                    item.status === "Auto" ||
+                    item.status === "Approved" ? (
                       ""
                     ) : editStatus[itemIndex] && editStatus[itemIndex] ? (
                       <div className="space-x-2">

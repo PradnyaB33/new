@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import useEmpState from "../../hooks/Employee-OnBoarding/useEmpState";
+import { salaryComponentArray } from "../Modal/SalaryInputFields/SalaryInputFieldsModal";
 
 // import Autocomplete from "react-google-autocomplete";
 
@@ -27,10 +28,9 @@ const AuthInputFiled = ({
   wrapperMessage,
   min,
   max,
-  className = "",
+  className,
   visible,
   setVisible,
-  descriptionText = "",
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -83,8 +83,8 @@ const AuthInputFiled = ({
                     components={{
                       IndicatorSeparator: () => null,
                     }}
-                    value={field?.value}
                     options={options}
+                    value={field?.value}
                     onChange={(value) => {
                       updateField(name, value);
                       field.onChange(value);
@@ -109,69 +109,65 @@ const AuthInputFiled = ({
   }
   if (type === "naresh-select") {
     return (
-      <div
-        className={`${
-          focusedInput === name
-            ? "outline-blue-500 outline-3 border-blue-500 border-[0.5px]"
-            : `space-y-1 w-full  ${className}`
-        }`}
-      >
-        <label
-          htmlFor={name}
-          className={`${
-            error && "text-red-500"
-          } font-semibold text-gray-500 text-md`}
-        >
-          {label}
-        </label>
-        <Controller
-          control={control}
-          name={name}
-          id={name}
-          render={({ field }) => (
-            <>
-              <div
-                className={`${
-                  readOnly && "bg-[ghostwhite]"
-                } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
-              >
-                <Icon className="text-gray-700" />
-                <Select
-                  aria-errormessage=""
-                  placeholder={placeholder}
-                  styles={{
-                    control: (styles) => ({
-                      ...styles,
-                      borderWidth: "0px",
-                      boxShadow: "none",
-                    }),
-                  }}
-                  defaultInputValue={field.value}
+      <>
+        <div className={`space-y-1 w-full  ${className}`}>
+          <label
+            htmlFor={name}
+            className={`${
+              error && "text-red-500"
+            } font-semibold text-gray-500 text-md`}
+          >
+            {label}
+          </label>
+          <Controller
+            control={control}
+            name={name}
+            id={name}
+            render={({ field }) => (
+              <>
+                <div
                   className={`${
                     readOnly && "bg-[ghostwhite]"
-                  } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
-                  components={{
-                    IndicatorSeparator: () => null,
-                  }}
-                  options={options}
-                  onChange={(value) => {
-                    field.onChange(value.value);
-                  }}
-                />
-              </div>
-            </>
-          )}
-        />
-        <div className="h-4 !mb-1">
-          <ErrorMessage
-            errors={errors}
-            name={name}
-            render={({ message }) => (
-              <p className="text-sm text-red-500">{message}</p>
+                  } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+                >
+                  <Icon className="text-gray-700" />
+                  <Select
+                    aria-errormessage=""
+                    placeholder={placeholder}
+                    styles={{
+                      control: (styles) => ({
+                        ...styles,
+                        borderWidth: "0px",
+                        boxShadow: "none",
+                      }),
+                    }}
+                    defaultInputValue={field.value}
+                    className={`${
+                      readOnly && "bg-[ghostwhite]"
+                    } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                    components={{
+                      IndicatorSeparator: () => null,
+                    }}
+                    options={options}
+                    onChange={(value) => {
+                      field.onChange(value.value);
+                    }}
+                  />
+                </div>
+              </>
             )}
           />
+          <div className="h-4 !mb-1">
+            <ErrorMessage
+              errors={errors}
+              name={name}
+              render={({ message }) => (
+                <p className="text-sm text-red-500">{message}</p>
+              )}
+            />
+          </div>
         </div>
-      </div>
+      </>
     );
   }
   if (type === "mutltiselect") {
@@ -314,11 +310,12 @@ const AuthInputFiled = ({
                 <div
                   className={`${
                     readOnly && "bg-[ghostwhite]"
-                  } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+                  } flex rounded-md px-2 border-gray-200 border-[.5px] !bg-white items-center`}
                 >
                   <Icon className="text-gray-700" />
                   <CreatableSelect
                     aria-errormessage="error"
+                    options={salaryComponentArray}
                     placeholder={placeholder}
                     isMulti
                     styles={{
@@ -326,6 +323,11 @@ const AuthInputFiled = ({
                         ...styles,
                         borderWidth: "0px",
                         boxShadow: "none",
+                        background: "white",
+                      }),
+                      menuList: (base) => ({
+                        ...base,
+                        backgroundColor: "white !important",
                       }),
                     }}
                     className={`${
@@ -334,13 +336,9 @@ const AuthInputFiled = ({
                     components={{
                       IndicatorSeparator: () => null,
                     }}
-                    options={options}
+                    value={field?.value}
                     onChange={(value) => {
-                      field.onChange(
-                        value.map((item) => {
-                          return item.value;
-                        })
-                      );
+                      field.onChange(value);
                     }}
                   />
                 </div>
@@ -363,7 +361,7 @@ const AuthInputFiled = ({
 
   if (type === "checkbox") {
     return (
-      <div className={`space-y-1 min-w-11 ${className}`}>
+      <div className={`space-y-1 w-full  ${className}`}>
         <Controller
           control={control}
           name={name}
@@ -384,9 +382,9 @@ const AuthInputFiled = ({
                 className={`${
                   readOnly && "bg-[ghostwhite]"
                 } border-none bg-white outline-none px-2`}
+                {...field}
                 disabled={disabled}
                 formNoValidate
-                {...field}
               />
               <label
                 htmlFor={name}
@@ -415,9 +413,6 @@ const AuthInputFiled = ({
               <p className="text-sm text-red-500">{message}</p>
             )}
           />
-          {descriptionText && (
-            <p className="text-sm text-gray-500 ">{descriptionText}</p>
-          )}
         </div>
       </div>
     );
@@ -447,7 +442,7 @@ const AuthInputFiled = ({
                 onBlur={() => setFocusedInput(null)}
                 className={`${readOnly && "bg-[ghostwhite]"} ${
                   focusedInput === name
-                    ? "outline-blue-500 outline-3 border-blue-500 border-[0.5px]"
+                    ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
                     : "outline-none border-gray-200 border-[.5px]"
                 } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
               >
@@ -509,7 +504,7 @@ const AuthInputFiled = ({
                 onBlur={() => setFocusedInput(null)}
                 className={`${readOnly && "bg-[ghostwhite]"} ${
                   focusedInput === name
-                    ? "border-blue-500 border-[0.5px]"
+                    ? "border-blue-500 border-[2px]"
                     : "border-gray-200 border-[.5px]"
                 } flex rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
               >
@@ -566,7 +561,7 @@ const AuthInputFiled = ({
               onBlur={() => setFocusedInput(null)}
               className={`${readOnly && "bg-[ghostwhite]"} ${
                 focusedInput === name
-                  ? "outline-blue-500 outline-3 border-blue-500 border-[0.5px]"
+                  ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
                   : "outline-none border-gray-200 border-[.5px]"
               } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
             >
@@ -579,6 +574,7 @@ const AuthInputFiled = ({
                 }
                 maxLength={maxLimit && maxLimit}
                 readOnly={readOnly}
+                value={field.value}
                 placeholder={placeholder}
                 className={`${
                   readOnly && "bg-[ghostwhite]"
