@@ -571,6 +571,7 @@ const AuthInputFiled = ({
                 }
                 maxLength={maxLimit && maxLimit}
                 readOnly={readOnly}
+                value={field.value}
                 placeholder={placeholder}
                 className={`${
                   readOnly && "bg-[ghostwhite]"

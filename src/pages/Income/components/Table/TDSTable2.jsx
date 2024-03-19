@@ -174,6 +174,10 @@ const TDSTable2 = () => {
       return tableData;
     },
   });
+  console.log(
+    `🚀 ~ file: TDSTable2.jsx:225 ~ { isFetching, isFetched, fetchStatus }:`,
+    { isFetching, isFetched, fetchStatus }
+  );
 
   const { handleAlert } = useContext(TestContext);
   const [editStatus, setEditStatus] = useState({});
