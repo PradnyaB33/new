@@ -11,9 +11,6 @@ const RemoteSetup = () => {
   const { organisationId } = useParams();
 
   const { data, isLoading, mutate } = useSetupRemotePunching(organisationId);
-  console.log(`🚀 ~ file: RemoteSetup.jsx:24 ~ data:`, data);
-
-  console.log(data);
 
   return (
     <>
