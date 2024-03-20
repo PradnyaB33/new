@@ -1,7 +1,7 @@
 import { GoogleMap } from "@react-google-maps/api";
 import React from "react";
 
-const RightSide = () => {
+const RightSide = ({ center }) => {
   return (
     <>
       {" "}
@@ -11,10 +11,7 @@ const RightSide = () => {
           width: "80%",
           height: "91.8vh",
         }}
-        center={{
-          lat: 18.6229332,
-          lng: 73.7360171,
-        }}
+        center={center}
         zoom={18}
       ></GoogleMap>
     </>

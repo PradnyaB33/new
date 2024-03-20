@@ -39,8 +39,6 @@ export default function ProfileIcon() {
     return response.data.emp;
   });
 
-  console.log(data);
-
   useEffect(() => {
     const fetchAvailableUserProfileData = async () => {
       try {

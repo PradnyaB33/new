@@ -17,23 +17,30 @@ const PlaceAutoComplete = ({
   placeholder,
   errors,
   apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+  center,
 }) => {
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const [address, setAddress] = useState("");
   const handleSelect = async (option, onChange) => {
-    console.log(`🚀 ~ file: Auto.jsx:39 ~ option:`, option);
-    const response = await geocodeByPlaceId(option.placeId);
-    console.log(
-      `🚀 ~ file: Auto.jsx:43 ~ response:`,
-      response[0]?.geometry?.location?.toJSON()
-    );
-    // onChange({ address: option, lat });
+    if (option === null) {
+      console.log(`🚀 ~ file: places-autocomplete.jsx:30 ~ center:`, center);
+      onChange({
+        address: "",
+        position: center,
+      });
+    } else {
+      const response = await geocodeByPlaceId(option.placeId);
+
+      onChange({
+        address: option?.description,
+        position: response[0]?.geometry?.location?.toJSON(),
+      });
+    }
   };
 
   useEffect(() => {
     let script;
     // Check if script is already loaded
-    console.log(`🚀 ~ file: places-autocomplete.jsx:36 ~ window:`, window);
     if (!window.google) {
       script = document.createElement("script");
       script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
@@ -59,7 +66,7 @@ const PlaceAutoComplete = ({
     setAddress(address);
   };
   return (
-    <div className={`space-y-1 w-full  ${className}`}>
+    <div className={`space-y-1 min-w-11  ${className}`}>
       <label
         htmlFor={name}
         className={`${
@@ -79,24 +86,16 @@ const PlaceAutoComplete = ({
                 readOnly && "bg-[ghostwhite]"
               } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
             >
-              <Icon className="text-gray-700" />
+              {Icon && <Icon className="text-gray-700" />}
               <PlacesAutocomplete
                 value={address}
                 onChange={handleChange}
                 onSelect={(value) => handleSelect(value, field.onChange)}
               >
-                {({
-                  getInputProps,
-                  suggestions,
-                  getSuggestionItemProps,
-                  loading,
-                }) => {
-                  console.log(
-                    `🚀 ~ file: places-autocomplete.jsx:92 ~ suggestions:`,
-                    suggestions
-                  );
+                {({ getInputProps, suggestions, loading }) => {
                   return (
                     <Select
+                      isLoading={loading}
                       placeholder={placeholder}
                       defaultValue={{ label: "Select...", value: address }}
                       styles={{
@@ -108,7 +107,7 @@ const PlaceAutoComplete = ({
                       }}
                       className={`${
                         readOnly && "bg-[ghostwhite]"
-                      } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                      } bg-white min-w-44 w-full !outline-none px-2 !shadow-none !border-none !border-0`}
                       components={{
                         IndicatorSeparator: () => null,
                       }}
@@ -117,17 +116,12 @@ const PlaceAutoComplete = ({
                       getOptionValue={(option) => option.placeId}
                       autoFocus
                       onInputChange={(value) => {
-                        console.log(
-                          `🚀 ~ file: places-autocomplete.jsx:123 ~ value:`,
-                          value
-                        );
                         getInputProps().onChange({
                           target: { value: value },
                         });
                       }}
                       filterOption={false}
                       onChange={(value) => {
-                        console.log(`🚀 ~ file: Auto.jsx:111 ~ value:`, value);
                         handleSelect(value, field.onChange);
                         //   field.onChange(value);
                       }}
