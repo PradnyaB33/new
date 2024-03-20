@@ -82,7 +82,6 @@ import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPriv
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
 import RemoteSetup from "./pages/SetupPage/Remote/RemoteSetup";
-import Auto from "./pages/Test/Auto";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import CustomCalander from "./pages/custom/Calendar";
 
@@ -710,7 +709,6 @@ const App = () => {
           element={<DeclarationPage />}
         />
         <Route path="/application" element={<Application />} />
-        <Route path="/fd" element={<Auto />} />
         <Route
           path="/leave"
           element={
