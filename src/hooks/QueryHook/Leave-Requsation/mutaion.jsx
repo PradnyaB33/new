@@ -37,6 +37,7 @@ const useLeaveRequisitionMutation = () => {
     newArray.map((value) => {
       newLeaveCount += calculateDays(value.start, value?.end);
       console.log(`🚀 ~ file: mutaion.jsx:32 ~ newLeaveCount:`, newLeaveCount);
+      return null;
     });
     if (maxCount >= newLeaveCount + item?.count) {
       handleAlert(true, "error ", "You don't have balance for it so check ");
