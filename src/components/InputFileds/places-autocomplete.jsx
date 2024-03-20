@@ -58,6 +58,7 @@ const PlaceAutoComplete = ({
         document.body.removeChild(script);
       }
     };
+    // eslint-disable-next-line
   }, []);
   if (!scriptLoaded) {
     return "Loading Script"; // or return a loading spinner

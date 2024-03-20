@@ -3,7 +3,11 @@ import { Dialog, DialogActions, DialogContent } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useJsApiLoader } from "@react-google-maps/api";
-import React, { useEffect, useState } from "react";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { useMutation } from "react-query";
+import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
 import MappedForm from "./components/MappedForm";
 import MiniForm from "./components/MiniForm";
 import RightSide from "./components/rightSide";
@@ -12,6 +16,28 @@ const RemoteEmployee = () => {
   const [openModal, setOpenModal] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const { handleAlert } = useContext(TestContext);
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
+
+  const applyMutation = useMutation(
+    (id) =>
+      axios.delete(`${process.env.REACT_APP_API}/route`, {
+        headers: {
+          Authorization: authToken,
+        },
+      }),
+    {
+      onSuccess: () => {
+        handleAlert(
+          true,
+          "success",
+          "Missed Punch Request Is Raised Successfully."
+        );
+      },
+    }
+  );
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
       console.log(position?.coords);

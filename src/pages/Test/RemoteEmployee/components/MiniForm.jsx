@@ -78,6 +78,7 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter }) => {
       lng: watch("location.position.lng"),
     };
     map && map.setCenter(position);
+    // eslint-disable-next-line
   }, [watch("location.address"), watch("location.address")]);
 
   return (

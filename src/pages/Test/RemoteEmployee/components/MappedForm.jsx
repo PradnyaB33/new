@@ -15,10 +15,6 @@ const MappedForm = ({ item, index, setArray, setOpenModal }) => {
               <span className="text-slate-600">{item.start}</span>
             </h1>
             <h1>
-              <span className="text-sm">End Time</span> :{" "}
-              <span className="text-slate-600">{item.end}</span>
-            </h1>
-            <h1>
               <span className="text-sm">Address</span> :{" "}
               <span className="text-slate-600">{item.location}</span>
             </h1>
