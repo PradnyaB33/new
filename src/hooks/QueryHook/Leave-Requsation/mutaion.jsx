@@ -14,7 +14,7 @@ const useLeaveRequisitionMutation = () => {
 
     return daysDifference;
   }
-  function checkLeaveProblem(
+  async function checkLeaveProblem(
     dataArray = [],
     id = "",
     item,
@@ -22,7 +22,7 @@ const useLeaveRequisitionMutation = () => {
   ) {
     let maxCount = 0;
     let newLeaveCount = 0;
-    const doc = dataArray.filter((doc) => {
+    const doc = dataArray.filter(async (doc) => {
       return doc._id === id;
     });
     console.log(`🚀 ~ file: mutaion.jsx:26 ~ doc:`, doc.length);
@@ -31,10 +31,10 @@ const useLeaveRequisitionMutation = () => {
       console.log(`🚀 ~ file: mutaion.jsx:25 ~ maxCount:`, maxCount);
     }
     console.log(`🚀 ~ file: mutaion.jsx:18 ~ doc[0].count:`, doc[0].count);
-    const newArray = newLeaveArray.map(
+    const newArray = await newLeaveArray.map(
       (value) => value.leaveTypeDetailsId === id
     );
-    newArray.map((value) => {
+    newArray.forEach((value) => {
       newLeaveCount += calculateDays(value.start, value?.end);
       console.log(`🚀 ~ file: mutaion.jsx:32 ~ newLeaveCount:`, newLeaveCount);
       return null;
