@@ -8,6 +8,7 @@ import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import useEmpState from "../../hooks/Employee-OnBoarding/useEmpState";
 import { salaryComponentArray } from "../Modal/SalaryInputFields/SalaryInputFieldsModal";
+import PlaceAutoComplete from "./places-autocomplete";
 
 // import Autocomplete from "react-google-autocomplete";
 
@@ -235,6 +236,24 @@ const AuthInputFiled = ({
           </div>
         </div>
       </>
+    );
+  }
+  if (type === "location-picker") {
+    return (
+      <PlaceAutoComplete
+        {...{
+          className,
+          error,
+          label,
+          control,
+          name,
+          readOnly,
+          Icon,
+          placeholder,
+          options,
+          errors,
+        }}
+      />
     );
   }
   if (type === "not-select") {

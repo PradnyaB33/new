@@ -52,7 +52,27 @@ const useLoanQuery = (organisationId) => {
     }
   );
 
-  return { getEmployeeLoanType, getTotalSalaryEmployee };
+  // get the employee whose raised a request for loan applicaiton
+  const { data: getEmployeeRequestLoanApltn } = useQuery(
+    ["empLoanApplyRequest"],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/pendingLoans`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
+
+  return {
+    getEmployeeLoanType,
+    getTotalSalaryEmployee,
+    getEmployeeRequestLoanApltn,
+  };
 };
 
 export default useLoanQuery;

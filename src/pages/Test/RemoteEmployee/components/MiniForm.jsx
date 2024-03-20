@@ -1,26 +1,40 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { EmailOutlined } from "@mui/icons-material";
+import { EmailOutlined, FactoryOutlined } from "@mui/icons-material";
 import { Button } from "@mui/material";
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
-const MiniForm = ({ setArray, setOpenModal }) => {
-  const { isLoaded } = useJsApiLoader({
+const MiniForm = ({ setArray, setOpenModal, center, setCenter }) => {
+  const options = {
     id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-  });
+  };
+
+  const { isLoaded } = useJsApiLoader(options);
 
   const formSchema = z.object({
-    location: z.string(),
+    location: z.object({
+      address: z.string,
+      position: z.object({
+        lat: z.number(),
+        lng: z.number(),
+      }),
+    }),
     start: z.string(),
     end: z.string(),
   });
 
-  const { control, formState, handleSubmit, reset } = useForm({
+  const { control, formState, handleSubmit, reset, watch } = useForm({
     defaultValues: {
-      location: undefined,
+      location: {
+        address: "",
+        position: {
+          lat: center?.lat,
+          lng: center?.lng,
+        },
+      },
       start: undefined,
       end: undefined,
     },
@@ -43,15 +57,20 @@ const MiniForm = ({ setArray, setOpenModal }) => {
       </div>
       <div className="flex w-full justify-between mt-4">
         <AuthInputFiled
-          className="w-[20vw]"
           name="location"
-          icon={EmailOutlined}
+          icon={FactoryOutlined}
           control={control}
-          type="text"
-          placeholder="Email"
+          type="location-picker"
+          placeholder="eg. Pune, Maharashtra, India"
           label="Location *"
           errors={errors}
-          wrapperMessage={"Note this email is used for login credentails"}
+          error={errors.location}
+          options={[
+            { value: "Technology", label: "Technology" },
+            { value: "Finance", label: "Finance" },
+            { value: "Healthcare", label: "Healthcare" },
+            { value: "Education", label: "Education" },
+          ]}
         />
         <AuthInputFiled
           className="w-[20vw]"
@@ -64,6 +83,7 @@ const MiniForm = ({ setArray, setOpenModal }) => {
           errors={errors}
           wrapperMessage={"Note this email is used for login credentails"}
         />
+
         <AuthInputFiled
           className="w-[20vw]"
           name="end"
@@ -77,19 +97,26 @@ const MiniForm = ({ setArray, setOpenModal }) => {
         />
       </div>
       <div>
-        {isLoaded && (
+        {isLoaded && center && (
           <GoogleMap
             key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
             mapContainerStyle={{
-              width: "100%",
-              height: "50vh",
+              width: "80%",
+              height: "91.8vh",
             }}
-            center={{
-              lat: 18.6229332,
-              lng: 73.7360171,
-            }}
+            center={center}
             zoom={18}
-          ></GoogleMap>
+          >
+            <>
+              <Marker
+                position={{
+                  lat: watch("location.position.lat"),
+                  lng: watch("location.position.lng"),
+                }}
+                label={"Current Position"}
+              />
+            </>
+          </GoogleMap>
         )}
       </div>
 
