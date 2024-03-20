@@ -15,7 +15,8 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
+import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
@@ -34,6 +35,7 @@ const Designation = () => {
   const [editMode, setEditMode] = useState(false);
   const [designationName, setDesignationName] = useState("");
   const [counter, setCounter] = useState(1);
+  const queryClient = useQueryClient();
   const [designationId, setDesignationId] = useState("");
   const [enterDesignationId, setEnterDesignationId] = useState(false);
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
@@ -119,7 +121,7 @@ const Designation = () => {
             msg: "Designation added successfully!",
           });
           console.log("Designation added successfully:", response.data);
-          fetchDesignations();
+          queryClient.invalidateQueries("designations");
           handleClose(); // Close the dialog after adding
         })
         .catch((error) => {
@@ -152,7 +154,7 @@ const Designation = () => {
           type: "success",
           msg: "Designation updated successfully.",
         });
-        fetchDesignations();
+        queryClient.invalidateQueries("designations");
         handleClick();
         setClick(false);
       })
@@ -220,7 +222,7 @@ const Designation = () => {
             type: "success",
             msg: "Designation deleted successfully.",
           });
-          fetchDesignations();
+          queryClient.invalidateQueries("designations");
         })
         .catch((error) => {
           console.error("Error deleting designation:", error);
@@ -242,23 +244,16 @@ const Designation = () => {
     setDesignationToDelete(null);
   };
 
-  const fetchDesignations = () => {
-    axios
-      .get(
+  const { data: data2 } = useQuery("designations", async () => {
+    try {
+      const resp = await axios.get(
         `${process.env.REACT_APP_API}/route/designation/create/${organisationId}`
-      )
-      .then((response) => {
-        setDesignation(response.data.designations);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  };
-
-  useEffect(() => {
-    fetchDesignations();
-    // eslint-disable-next-line
-  }, []);
+      );
+      return resp.data.designations;
+    } catch (error) {
+      console.error("Error fetching data :", error.message);
+    }
+  });
 
   const getPrefixFromName = (name, length) => {
     return name.substring(0, length);
@@ -296,7 +291,7 @@ const Designation = () => {
                 Add Designation
               </Button>
             </div>
-            {designation.length > 0 ? (
+            {data2?.length > 0 ? (
               <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
                 <table className="min-w-full bg-white text-left !text-sm font-light">
                   <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
@@ -313,7 +308,7 @@ const Designation = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {designation.map((data, id) => (
+                    {data2?.map((data, id) => (
                       <tr className="!font-medium border-b" key={id}>
                         <td className="!text-left pl-9">{id + 1}</td>
                         <td className=" py-3">{data?.designationName}</td>
@@ -491,39 +486,6 @@ const Designation = () => {
                 </Button>
               </DialogActions>
             </Dialog>
-            {/* <Dialog
-              open={showConfirmationDialog}
-              onClose={handleCloseConfirmationDialog}
-              maxWidth="sm"
-              fullWidth
-            >
-              <DialogTitle>Confirmation</DialogTitle>
-              <DialogContent>
-                <Typography>
-                  Are you sure you want to delete this designation?
-                </Typography>
-              </DialogContent>
-              <DialogActions>
-                <div className="flex w-[95%] flex-col gap-3 m-auto mb-2">
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    color="error"
-                    onClick={handleConfirmDelete}
-                  >
-                    Delete
-                  </Button>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    color="primary"
-                    onClick={handleCloseConfirmationDialog}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </DialogActions>
-            </Dialog> */}
             <Dialog
               open={showUpdateConfirmationDialog}
               onClose={() => setShowUpdateConfirmationDialog(false)}

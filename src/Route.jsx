@@ -79,6 +79,8 @@ import DeclarationPage from "./pages/Income/components/accountantDeclarations/De
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
+import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
+import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
 import RemoteSetup from "./pages/SetupPage/Remote/RemoteSetup";
 import Auto from "./pages/Test/Auto";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
@@ -775,6 +777,8 @@ const App = () => {
           }
         />
         <Route path="*" element={<NotFound />} />
+        <Route path="/pendingLoan" element={<LoanMgtNotification />} />
+        <Route path="/loan-approval/:loanId" element={<LoanMgtApproval />} />
       </Routes>
     </AuthProvider>
   );
