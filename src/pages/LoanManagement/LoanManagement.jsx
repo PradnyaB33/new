@@ -10,7 +10,7 @@ import CreateLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/Create
 import UserProfile from "../../hooks/UserData/useUser";
 import LoanManagementPieChart from "./LoanManagementPieChart";
 import LoanManagementSkeleton from "./LoanManagementSkeleton";
-
+import { Cancel, CheckCircle, Error, Pending } from "@mui/icons-material";
 const LoanManagement = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -34,6 +34,8 @@ const LoanManagement = () => {
       return response.data.data;
     }
   );
+
+  console.log(getEmployeeLoanData);
 
   // Function to calculate loan amount paid and pending
   const calculateLoanStatus = (loan) => {
@@ -201,19 +203,46 @@ const LoanManagement = () => {
                             <td className="py-3 pl-6">
                               {loanMgtData.loanType?.loanName}
                             </td>
+                            <td className="text-left leading-7 text-[16px] w-[200px] ">
+                              {loanMgtData.status === "Pending" ? (
+                                <div className="flex items-center gap-2">
+                                  <Pending className="text-yellow-400" />
+                                  <span className="text-yellow-400">
+                                    Pending
+                                  </span>
+                                </div>
+                              ) : loanMgtData.status === "Approved" ? (
+                                <div className="flex items-center gap-2">
+                                  <CheckCircle className="text-green-400" />
+                                  <span className="text-green-400">
+                                    Approved
+                                  </span>
+                                </div>
+                              ) : loanMgtData.status === "Rejected" ? (
+                                <div className="flex items-center gap-2">
+                                  <Cancel className="text-red-400" />
+                                  <span className="text-red-400">Rejected</span>
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-2">
+                                  <Error className="text-gray-400" />
+                                  <span className="text-gray-400">
+                                    {loanMgtData.status}
+                                  </span>
+                                </div>
+                              )}
+                            </td>
+
                             <td className="py-3 pl-6">
-                              {/* Display Loan Status Here */}
+                              {loanMgtData?.loanAmount}
                             </td>
                             <td className="py-3 pl-6">
-                              {loanMgtData.loanAmount}
-                            </td>
-                            <td className="py-3 pl-6">
-                              {loanMgtData.totalDeductionWithSi}
+                              {loanMgtData?.totalDeductionWithSi}
                             </td>
                             <td className="py-3 pl-6">{loanAmountPaid}</td>
                             <td className="py-3 pl-6">{loanAmountPending}</td>
                             <td className="py-3 pl-6">
-                              {loanMgtData.rateOfIntereset}
+                              {loanMgtData?.rateOfIntereset}
                             </td>
                           </tr>
                         );

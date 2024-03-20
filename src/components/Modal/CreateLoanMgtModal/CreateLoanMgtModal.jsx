@@ -23,6 +23,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import { TestContext } from "../../../State/Function/Main";
 import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
+
 const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
@@ -68,8 +69,12 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["loanDatas"] });
-        handleAlert(true, "success", "Loan data added successfully");
-        window.location.reload();
+        handleAlert(
+          true,
+          "success",
+          "Your loan application has been submitted successfully. It is now awaiting approval from HR"
+        );
+        //window.location.reload();
         handleClose();
       },
       onError: () => {
