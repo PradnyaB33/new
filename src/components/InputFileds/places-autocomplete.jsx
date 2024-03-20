@@ -51,13 +51,13 @@ const PlaceAutoComplete = ({
     } else {
       setScriptLoaded(true);
     }
-
     // Cleanup function
     return () => {
       if (script) {
         document.body.removeChild(script);
       }
     };
+    //  eslint-disable-next-line
   }, []);
   if (!scriptLoaded) {
     return "Loading Script"; // or return a loading spinner

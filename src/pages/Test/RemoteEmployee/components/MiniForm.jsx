@@ -25,15 +25,6 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter }) => {
       }),
     }),
     start: z.string(),
-    //   .refine((value) => {
-    //   console.log(`🚀 ~ file: MiniForm.jsx:27 ~ value:`, value);
-    //   const currentDate = moment();
-    //   const timeString = value.toLowerCase().replace(/\s/g, "");
-    //   const [hours, minutes] = timeString.split(":").map(Number);
-    //   currentDate.set("hour", hours);
-    //   currentDate.set("minute", minutes);
-    //   return currentDate;
-    // }),
   });
 
   const { control, formState, handleSubmit, watch, reset } = useForm({
@@ -77,6 +68,7 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter }) => {
       lng: watch("location.position.lng"),
     };
     map && map.setCenter(position);
+    // eslint-disable-next-line
   }, [watch("location.address"), watch("location.address")]);
 
   return (
