@@ -82,6 +82,8 @@ import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPriv
 import RemoteSetup from "./pages/SetupPage/Remote/RemoteSetup";
 import CustomCalander from "./pages/custom/Calendar";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
+import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
+import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 
 const App = () => {
   return (
@@ -773,6 +775,8 @@ const App = () => {
           }
         />
         <Route path="*" element={<NotFound />} />
+        <Route path="/pendingLoan" element={<LoanMgtNotification />} />
+        <Route path="/loan-approval/:loanId" element={<LoanMgtApproval />} />
       </Routes>
     </AuthProvider>
   );
