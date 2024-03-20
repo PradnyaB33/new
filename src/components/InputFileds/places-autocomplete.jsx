@@ -51,7 +51,6 @@ const PlaceAutoComplete = ({
     } else {
       setScriptLoaded(true);
     }
-
     // Cleanup function
     return () => {
       if (script) {
