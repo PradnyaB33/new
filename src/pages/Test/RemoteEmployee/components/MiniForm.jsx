@@ -1,13 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { EmailOutlined, FactoryOutlined } from "@mui/icons-material";
+import { FactoryOutlined } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button } from "@mui/material";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
-import React from "react";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
 const MiniForm = ({ setArray, setOpenModal, center, setCenter }) => {
+  const [map, setMap] = useState(null);
   const options = {
     id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -16,18 +18,26 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter }) => {
   const { isLoaded } = useJsApiLoader(options);
 
   const formSchema = z.object({
-    location: z.object({
-      address: z.string,
+    location: z.any({
+      address: z.string(),
       position: z.object({
         lat: z.number(),
         lng: z.number(),
       }),
     }),
     start: z.string(),
-    end: z.string(),
+    //   .refine((value) => {
+    //   console.log(`🚀 ~ file: MiniForm.jsx:27 ~ value:`, value);
+    //   const currentDate = moment();
+    //   const timeString = value.toLowerCase().replace(/\s/g, "");
+    //   const [hours, minutes] = timeString.split(":").map(Number);
+    //   currentDate.set("hour", hours);
+    //   currentDate.set("minute", minutes);
+    //   return currentDate;
+    // }),
   });
 
-  const { control, formState, handleSubmit, reset, watch } = useForm({
+  const { control, formState, handleSubmit, watch, reset } = useForm({
     defaultValues: {
       location: {
         address: "",
@@ -37,19 +47,38 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter }) => {
         },
       },
       start: undefined,
-      end: undefined,
     },
     resolver: zodResolver(formSchema),
   });
 
   const { errors } = formState;
+  console.log(`🚀 ~ file: MiniForm.jsx:54 ~ errors:`, errors);
 
   const onSubmit = (data) => {
-    console.log(data);
+    console.log(`🚀 ~ file: MiniForm.jsx:56 ~ data:`, data.start);
+    const currentDate = moment();
+    const timeString = data.start.toLowerCase().replace(/\s/g, "");
+    const [hours, minutes] = timeString.split(":").map(Number);
+    currentDate.set("hour", hours);
+    currentDate.set("minute", minutes);
+    console.log(
+      `🚀 ~ file: MiniForm.jsx:68 ~ currentDate:`,
+      currentDate.toString()
+    );
+    data.start = currentDate;
+    console.log(`🚀 ~ file: MiniForm.jsx:56 ~ data:`, data);
     setArray((prev) => [...prev, data]);
     reset();
     setOpenModal(false);
   };
+
+  useEffect(() => {
+    let position = {
+      lat: watch("location.position.lat"),
+      lng: watch("location.position.lng"),
+    };
+    map && map.setCenter(position);
+  }, [watch("location.address"), watch("location.address")]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="relative">
@@ -64,43 +93,25 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter }) => {
           Apply For Miss Punch
         </h1>
       </div>
-      <div className="flex w-full justify-between mt-4">
+      <div className="flex w-full justify-between mt-4 items-center flex-wrap gap-4">
         <AuthInputFiled
+          className="w-full"
           name="location"
           icon={FactoryOutlined}
-          className="w-[11rem] sm:w-[20rem]"
           control={control}
           type="location-picker"
           label="Location *"
           errors={errors}
           error={errors.location}
-          options={[
-            { value: "Technology", label: "Technology" },
-            { value: "Finance", label: "Finance" },
-            { value: "Healthcare", label: "Healthcare" },
-            { value: "Education", label: "Education" },
-          ]}
+          center={center}
         />
         <AuthInputFiled
-          className="w-[20vw]"
+          className="w-full"
           name="start"
-          icon={EmailOutlined}
           control={control}
           type="time"
           placeholder="Choose starting time"
           label="Start *"
-          errors={errors}
-          wrapperMessage={"Note this email is used for login credentails"}
-        />
-
-        <AuthInputFiled
-          className="w-[20vw]"
-          name="end"
-          icon={EmailOutlined}
-          control={control}
-          type="time"
-          placeholder="Choose ending time"
-          label="End *"
           errors={errors}
           wrapperMessage={"Note this email is used for login credentails"}
         />
@@ -111,20 +122,27 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter }) => {
             key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
             mapContainerStyle={{
               width: "100%",
-              height: "55vh",
+              height: "300px",
             }}
-            center={center}
+            center={{
+              lat: watch("location.position.lat"),
+              lng: watch("location.position.lng"),
+            }}
+            onLoad={(map) => {
+              setMap(map);
+            }}
             zoom={18}
           >
-            <>
+            {center && (
               <Marker
+                icon={"http://maps.google.com/mapfiles/ms/icons/blue-dot.png"}
                 position={{
                   lat: watch("location.position.lat"),
                   lng: watch("location.position.lng"),
                 }}
                 label={"Current Position"}
               />
-            </>
+            )}
           </GoogleMap>
         )}
       </div>
