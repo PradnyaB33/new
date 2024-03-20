@@ -1,17 +1,18 @@
-import { PersonOutline } from "@mui/icons-material";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { AccountCircle, PersonOutline } from "@mui/icons-material";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Divider } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import axios from "axios";
 import Cookies from "js-cookie";
 import React, { useContext, useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
-import UserProfile from "../../hooks/UserData/useUser";
-import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
+import useGetUser from "../../hooks/Token/useUser";
+import UserProfile from "../../hooks/UserData/useUser";
 
 export default function ProfileIcon() {
   const navigate = useNavigate();
@@ -21,10 +22,24 @@ export default function ProfileIcon() {
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
   const open = Boolean(anchorEl);
-  const [availableUserProfileData, setAvailableProfileData] = useState()
+  const [availableUserProfileData, setAvailableProfileData] = useState();
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const userId = user?._id;
+  const { authToken } = useGetUser();
+
+  const { data } = useQuery("emp-profile", async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/employee/populate/get`,
+      {
+        headers: { Authorization: authToken },
+      }
+    );
+
+    return response.data.emp;
+  });
+
+  console.log(data);
 
   useEffect(() => {
     const fetchAvailableUserProfileData = async () => {
@@ -43,8 +58,7 @@ export default function ProfileIcon() {
       }
     };
     fetchAvailableUserProfileData();
-  }, [token, userId, ]);
-
+  }, [token, userId]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -78,9 +92,15 @@ export default function ProfileIcon() {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        <Avatar className="!bg-[#1976d2]">
-          <AccountCircleIcon className="!text-white" />
-        </Avatar>
+        {data?.user_logo_url ? (
+          <Avatar>
+            <img src={data?.user_logo_url} alt="" />
+          </Avatar>
+        ) : (
+          <Avatar className="!bg-[#1976d2]">
+            <AccountCircle className="!text-white" />
+          </Avatar>
+        )}
       </IconButton>
       <Menu
         id="basic-menu"
@@ -100,7 +120,7 @@ export default function ProfileIcon() {
               <div className="w-max flex gap-3 pt-4 pb-6  items-center  h-max rounded-full ">
                 <Avatar
                   variant="circular"
-                  src={ "" || availableUserProfileData?.user_logo_url}
+                  src={"" || availableUserProfileData?.user_logo_url}
                   alt="none"
                   sx={{ width: 35, height: 35 }}
                   className="!rounded-[50%]
