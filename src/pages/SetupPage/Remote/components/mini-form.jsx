@@ -16,11 +16,11 @@ const organizationSchema = z.object({
 const MiniForm = ({ data, mutate }) => {
   const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
-      allowance: data?.remotePunchingObject?.allowance || undefined,
+      allowance: data?.remotePunchingObject?.allowance || false,
       allowanceQuantity: data?.remotePunchingObject?.allowanceQuantity
         ? `${data?.remotePunchingObject?.allowanceQuantity}`
         : "0",
-      dualWorkflow: data?.remotePunchingObject?.dualWorkflow || undefined,
+      dualWorkflow: data?.remotePunchingObject?.dualWorkflow || false,
     },
     resolver: zodResolver(organizationSchema),
   });
