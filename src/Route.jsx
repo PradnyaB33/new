@@ -80,8 +80,9 @@ import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
 import RemoteSetup from "./pages/SetupPage/Remote/RemoteSetup";
-import CustomCalander from "./pages/custom/Calendar";
+import Auto from "./pages/Test/Auto";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
+import CustomCalander from "./pages/custom/Calendar";
 
 const App = () => {
   return (
@@ -707,6 +708,7 @@ const App = () => {
           element={<DeclarationPage />}
         />
         <Route path="/application" element={<Application />} />
+        <Route path="/fd" element={<Auto />} />
         <Route
           path="/leave"
           element={
