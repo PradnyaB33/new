@@ -8,7 +8,6 @@ const useSetupRemotePunching = (organisationId) => {
   const authToken = useAuthToken();
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
-  console.log(`🚀 ~ file: remote-punching.jsx:11 ~ handleAlert:`, handleAlert);
 
   const { data, isLoading } = useQuery(
     `remote-fetch-${organisationId}`,
@@ -22,12 +21,15 @@ const useSetupRemotePunching = (organisationId) => {
         );
         return response.data;
       } catch (err) {
-        console.log(err.message);
+        console.error(err.message);
       }
     },
     {
       onSuccess: (data) => {
         console.log(`🚀 ~ file: remote-punching.jsx:29 ~ data:`, data);
+      },
+      onError: (error) => {
+        console.error(`🚀 ~ file: remote-punching.jsx:29 ~ error:`, error);
       },
     }
   );
@@ -42,9 +44,16 @@ const useSetupRemotePunching = (organisationId) => {
   };
   const { mutate } = useMutation(updateRemotePunching, {
     onSuccess: async (data) => {
-      console.log(`🚀 ~ file: remote-punching.jsx:56 ~ data:`, data);
       await queryClient.invalidateQueries(`remote-fetch-${organisationId}`);
       handleAlert(true, "success", "Changes Updated Successfully");
+    },
+    onError: (error) => {
+      console.error(`🚀 ~ file: remote-punching.jsx:29 ~ error:`, error);
+      handleAlert(
+        true,
+        "error",
+        error?.response?.data?.message || "Something went wrong"
+      );
     },
   });
   return { data, isLoading, mutate };
