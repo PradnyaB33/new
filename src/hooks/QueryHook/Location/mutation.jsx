@@ -96,7 +96,7 @@ const useLocationMutation = () => {
   });
   const fetchUrl = async () => {
     const data = await axios.get(
-      `${process.env.REACT_APP_API}/route/s3createFile/remote-punching`,
+      `${process.env.REACT_APP_API}/route/punch-main/create-image-url`,
       {
         headers: {
           "Content-Type": "application/json",
