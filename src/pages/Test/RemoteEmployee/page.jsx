@@ -1,49 +1,18 @@
 import CheckIcon from "@mui/icons-material/Check";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Dialog, DialogActions, DialogContent } from "@mui/material";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { useJsApiLoader } from "@react-google-maps/api";
 import React, { useState } from "react";
+import MappedForm from "./components/MappedForm";
 import MiniForm from "./components/MiniForm";
+import RightSide from "./components/rightSide";
 
 const RemoteEmployee = () => {
   const [openModal, setOpenModal] = useState(false);
   const [array, setArray] = useState([]);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedIndex, setSelectedIndex] = useState(null);
   const { isLoaded } = useJsApiLoader({
     id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   });
-  console.log(selectedIndex);
-
-  const handleMenuItemClick = (index, event) => {
-    setAnchorEl(null);
-    setSelectedIndex(index);
-    switch (event.currentTarget.id) {
-      case "edit":
-        setOpenModal(true);
-        break;
-      case "delete":
-        const newArray = [...array];
-        newArray.splice(index, 1);
-        setArray(newArray);
-        break;
-      default:
-        break;
-    }
-  };
-
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  console.log(array);
 
   return (
     <div className="w-full flex justify-between relative">
@@ -57,39 +26,7 @@ const RemoteEmployee = () => {
           </div>
 
           {array.map((item, index) => (
-            <div className="w-full h-auto bg-[#e2f1ff] mb-2 relative">
-              <div className="flex w-full items-center h-full p-5">
-                <div className="pl-5 flex flex-col ">
-                  <h1>Start Time : {item.start}</h1>
-                  <h1>End Time : {item.end}</h1>
-                  <h1>Address : {item.location}</h1>
-                </div>
-                <div className="absolute right-5">
-                  <MoreVertIcon onClick={(event) => handleMenuClick(event)} />
-                  <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    f
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                  >
-                    <MenuItem
-                      id="edit"
-                      onClick={(event) => handleMenuItemClick(index, event)}
-                    >
-                      Edit
-                    </MenuItem>
-                    <MenuItem
-                      id="delete"
-                      onClick={(event) => handleMenuItemClick(index, event)}
-                    >
-                      Delete
-                    </MenuItem>
-                  </Menu>
-                </div>
-              </div>
-            </div>
+            <MappedForm {...{ item, index, setArray, setOpenModal }} />
           ))}
 
           <div className="absolute bottom-3 w-[21vw] flex flex-col items-end gap-10">
@@ -121,20 +58,7 @@ const RemoteEmployee = () => {
           </DialogContent>
         </DialogActions>
       </Dialog>
-      {isLoaded && (
-        <GoogleMap
-          key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
-          mapContainerStyle={{
-            width: "80%",
-            height: "91.8vh",
-          }}
-          center={{
-            lat: 18.6229332,
-            lng: 73.7360171,
-          }}
-          zoom={18}
-        ></GoogleMap>
-      )}
+      {isLoaded && <RightSide />}
     </div>
   );
 };
