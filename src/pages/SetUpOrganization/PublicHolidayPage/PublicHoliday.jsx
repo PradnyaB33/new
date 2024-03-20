@@ -23,7 +23,8 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
 import { format } from "date-fns";
 import dayjs from "dayjs";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../Setup";
@@ -33,7 +34,6 @@ const PublicHoliday = () => {
   const { setAppAlert } = useContext(UseContext);
   const [openModal, setOpenModal] = useState(false);
   const [actionModal, setActionModal] = useState(false);
-  const [holidays, setHolidays] = useState([]);
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [region, setRegion] = useState("");
@@ -43,7 +43,7 @@ const PublicHoliday = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [formSubmitted, setFormSubmitted] = useState(false);
-  // todo - data to post
+  const queryClient = useQueryClient();
 
   const [inputdata, setInputData] = useState({
     name: "",
@@ -71,12 +71,12 @@ const PublicHoliday = () => {
     })();
   }, [authToken, id]);
 
-  const fetchHolidays = useCallback(async () => {
+  const { data } = useQuery("holidays", async () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/holiday/get/${id}`
       );
-      setHolidays(response.data.holidays);
+      return response.data.holidays;
     } catch (error) {
       console.error("Error fetching holidays:", error);
       setAppAlert({
@@ -85,16 +85,7 @@ const PublicHoliday = () => {
         msg: "An Error occurred while fetching holidays",
       });
     }
-  }, [id, setHolidays, setAppAlert]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await fetchHolidays();
-    };
-
-    fetchData();
-  }, [fetchHolidays]);
-
+  });
   const handleData = (e) => {
     const { name, value } = e.target;
 
@@ -140,7 +131,7 @@ const PublicHoliday = () => {
         type: "success",
         msg: "Holiday created successfully.",
       });
-      fetchHolidays();
+      queryClient.invalidateQueries("holidays");
     } catch (error) {
       console.error("Error:", error);
       setAppAlert({
@@ -199,7 +190,7 @@ const PublicHoliday = () => {
             type: "success",
             msg: "Holiday  updated successfully.",
           });
-          fetchHolidays();
+          queryClient.invalidateQueries("holidays");
         })
         .catch((error) => {
           console.error("Error updating holiday:", error);
@@ -216,7 +207,7 @@ const PublicHoliday = () => {
           type: "success",
           msg: "Holiday deleted successfully.",
         });
-        fetchHolidays(); // Refresh holidays after delete
+        queryClient.invalidateQueries("holidays");
       } catch (error) {
         console.error("Error deleting holiday:", error);
         setAppAlert({
@@ -262,7 +253,7 @@ const PublicHoliday = () => {
               Add Holiday
             </Button>
           </div>
-          {holidays.length > 0 ? (
+          {data?.length > 0 ? (
             <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
               <table className="min-w-full bg-white text-left !text-sm font-light">
                 <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
@@ -285,7 +276,7 @@ const PublicHoliday = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {holidays?.map((data, id) => (
+                  {data?.map((data, id) => (
                     <tr className="!font-medium border-b" key={id}>
                       <td className="!text-left pl-9">{id + 1}</td>
                       <td className="py-3 text-left">{data.name}</td>
