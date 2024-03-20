@@ -119,7 +119,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible: ["Super-Admin"].includes(role) ? true : false,
             link: `/add-delegate`,
             icon: <SupervisorAccount className="text-[#67748E]" />,
-            text: "Add delegate super admin",
+            text: "Add Delegate Super Admin",
           },
           {
             key: "shiftManagement",

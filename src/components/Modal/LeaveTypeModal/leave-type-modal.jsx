@@ -1,20 +1,27 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Add, ToggleOn, WorkOffOutlined } from "@mui/icons-material";
 import {
   Box,
   Button,
-  Checkbox,
   FormControl,
-  FormControlLabel,
   FormLabel,
   Modal,
   Stack,
-  TextField,
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useQueryClient } from "react-query";
+import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import AuthInputFiled from "../../InputFileds/AuthInputFiled";
+const leaveTypeSchema = z.object({
+  leaveName: z.string(),
+  count: z.string({ required_error: "Count is required" }),
+  color: z.string(),
+  isActive: z.boolean(),
+});
 
 const LeaveTypeModal = ({ handleClose, open, id, leaveType }) => {
   const { handleAlert } = useContext(TestContext);
@@ -26,11 +33,13 @@ const LeaveTypeModal = ({ handleClose, open, id, leaveType }) => {
       leaveName: leaveType?.leaveName || "",
       color: leaveType?.color || "",
       isActive: leaveType?.isActive || false,
-      count: leaveType?.count || 0,
+      count: `${leaveType?.count}` || "0",
     },
+    resolver: zodResolver(leaveTypeSchema),
   });
 
   const { handleSubmit, control, formState } = form;
+  const { errors } = formState;
   const isFormClean = Object.keys(formState.dirtyFields).length === 0;
   const onSubmit = async (data) => {
     console.log(`🚀 ~ data:`, data);
@@ -89,22 +98,26 @@ const LeaveTypeModal = ({ handleClose, open, id, leaveType }) => {
         <h1 className="text-xl font-semibold font-sans">Edit Leave Type</h1>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Stack spacing={2} width={400}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Leave Type Name</FormLabel>
-              <Controller
-                name="leaveName"
-                control={control}
-                render={({ field }) => <TextField {...field} />}
-              />
-            </FormControl>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">count</FormLabel>
-              <Controller
-                name="count"
-                control={control}
-                render={({ field }) => <TextField type="number" {...field} />}
-              />
-            </FormControl>
+            <AuthInputFiled
+              name="leaveName"
+              icon={WorkOffOutlined}
+              control={control}
+              type="text"
+              placeholder="eg. Sick leave"
+              label="Leave Type Name *"
+              errors={errors}
+              error={errors.leaveName}
+            />
+            <AuthInputFiled
+              name="count"
+              icon={Add}
+              control={control}
+              type="number"
+              placeholder="eg. 4"
+              label="Enter Count *"
+              errors={errors}
+              error={errors.count}
+            />
             <FormControl component="fieldset">
               <FormLabel component="legend">Color</FormLabel>
               <Controller
@@ -136,24 +149,16 @@ const LeaveTypeModal = ({ handleClose, open, id, leaveType }) => {
                 )}
               />
             </FormControl>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Is Active</FormLabel>
-              <Controller
-                name="isActive"
-                control={control}
-                render={({ field }) => (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={field.value}
-                        onChange={field.onChange}
-                      />
-                    }
-                    label="is Active"
-                  />
-                )}
-              />
-            </FormControl>
+            <AuthInputFiled
+              name="isActive"
+              icon={ToggleOn}
+              control={control}
+              type="checkbox"
+              placeholder="eg. 4"
+              label="Is Active *"
+              errors={errors}
+              error={errors.count}
+            />
             <div className="flex gap-4 mt-4  justify-end mr-4">
               <Button onClick={handleClose} color="error" variant="outlined">
                 Cancel

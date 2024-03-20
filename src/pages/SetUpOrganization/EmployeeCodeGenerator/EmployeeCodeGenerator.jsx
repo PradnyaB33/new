@@ -27,25 +27,19 @@ const EmployeeCodeGenerator = () => {
   const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
   const { organisationId } = useParams();
-  // state for delete the employee code
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
-  // Modal states and function for edit
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [empCodeId, setEmpCodeId] = useState(null);
-  // Modal states and function for create
   const [createModalOpen, setCreateModalOpen] = useState(false);
 
-  // for create the emp sal cal day
-  // for open the modal
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
   };
-  // for close the modal
+
   const handleCreateModalClose = () => {
     setCreateModalOpen(false);
   };
 
-  // for update the emp sal cal day
   const handleEditModalOpen = (empCode) => {
     setEditModalOpen(true);
     setEmpCodeId(empCode);
@@ -70,7 +64,7 @@ const EmployeeCodeGenerator = () => {
         config
       );
 
-      return response.data.getEmployeeCode; // Return employeeCodes directly
+      return response.data.getEmployeeCode;
     } catch (error) {
       // Handle errors if necessary
       console.error("Error fetching employee codes:", error);
@@ -79,7 +73,7 @@ const EmployeeCodeGenerator = () => {
   };
 
   const { data: employeeCodes, isLoading } = useQuery({
-    queryKey: ["employee-code"],
+    queryKey: ["empCode"],
     queryFn: getEmployeeCodeData,
   });
 
@@ -94,17 +88,11 @@ const EmployeeCodeGenerator = () => {
 
   const handleDelete = (id) => {
     deleteMutation.mutate(id);
-    // Manually update the query data to reflect the deletion
-    queryClient.setQueryData(["employee-code"], (prevData) => {
-      // Filter out the deleted employee code
+    queryClient.setQueryData(["empCode"], (prevData) => {
       const updatedData = prevData.filter((empCode) => empCode._id !== id);
       return updatedData;
     });
     setDeleteConfirmation(null);
-    // Clear the alert message after 3000 milliseconds (3 seconds)
-    setTimeout(() => {
-      handleAlert(false, "success", "");
-    }, 3000);
   };
   const deleteMutation = useMutation(
     (id) =>
@@ -119,7 +107,7 @@ const EmployeeCodeGenerator = () => {
     {
       onSuccess: () => {
         // Invalidate and refetch the data after successful deletion
-        queryClient.invalidateQueries("employeecode");
+        queryClient.invalidateQueries("empCode");
         handleAlert(true, "success", "Employee code deleted succesfully.");
       },
     }

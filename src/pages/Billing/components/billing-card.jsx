@@ -82,6 +82,7 @@ const BillingCard = ({ doc }) => {
     setAnchorEl(null);
   };
   const { data } = useSubscriptionGet({ organisationId: doc._id });
+  console.log(`🚀 ~ file: billing-card.jsx:85 ~ data:`, data);
   const { pauseSubscriptionMutation, resumeSubscriptionMutation } =
     useSubscriptionMutation();
 
@@ -297,17 +298,19 @@ const BillingCard = ({ doc }) => {
           </div>
         ) : null}
       </div>
-      {/* {data?.organisation?.packages && data?.organisation && ( */}
-      <PackageForm
-        open={confirmOpen}
-        handleClose={() => {
-          setConfirmOpen(false);
-          handleClose();
-        }}
-        packages={data?.organisation?.packages}
-        organisation={data?.organisation}
-      />
-      {/* )} */}
+      {data?.organisation?.subscriptionDetails?.quantity &&
+        data?.organisation?.subscriptionDetails?.plan_id && (
+          <PackageForm
+            open={confirmOpen}
+            handleClose={() => {
+              setConfirmOpen(false);
+              handleClose();
+            }}
+            packages={data?.organisation?.packages}
+            organisation={data?.organisation}
+            plan={data?.plan}
+          />
+        )}
     </div>
   );
 };

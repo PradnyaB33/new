@@ -8,11 +8,8 @@ import { Link } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 
 const Home = () => {
-  // const redirect = useNavigate();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-  console.log(`🚀 ~ file: Home.jsx:15 ~ authToken:`, authToken);
-  // const { handleAlert } = useContext(TestContext);
 
   const getOrgList = async () => {
     const response = await axios.get(

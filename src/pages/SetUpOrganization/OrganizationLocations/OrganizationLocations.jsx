@@ -374,9 +374,7 @@ const OrganizationLocations = () => {
                   {locationList?.map((location, index) => (
                     <tr
                       key={index}
-                      className={`${
-                        index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                      } border-b dark:border-neutral-500 !font-medium`}
+                      className={` bg-white border-b dark:border-neutral-500 !font-medium`}
                     >
                       <td className="py-2 px-3">{index + 1}</td>
                       <td className="py-2 px-3">{location.continent}</td>

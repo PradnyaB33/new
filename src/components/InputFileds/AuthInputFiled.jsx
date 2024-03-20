@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import useEmpState from "../../hooks/Employee-OnBoarding/useEmpState";
+import { salaryComponentArray } from "../Modal/SalaryInputFields/SalaryInputFieldsModal";
 
 // import Autocomplete from "react-google-autocomplete";
 
@@ -82,8 +83,8 @@ const AuthInputFiled = ({
                     components={{
                       IndicatorSeparator: () => null,
                     }}
-                    value={field?.value}
                     options={options}
+                    value={field?.value}
                     onChange={(value) => {
                       updateField(name, value);
                       field.onChange(value);
@@ -309,11 +310,12 @@ const AuthInputFiled = ({
                 <div
                   className={`${
                     readOnly && "bg-[ghostwhite]"
-                  } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+                  } flex rounded-md px-2 border-gray-200 border-[.5px] !bg-white items-center`}
                 >
                   <Icon className="text-gray-700" />
                   <CreatableSelect
                     aria-errormessage="error"
+                    options={salaryComponentArray}
                     placeholder={placeholder}
                     isMulti
                     styles={{
@@ -321,6 +323,11 @@ const AuthInputFiled = ({
                         ...styles,
                         borderWidth: "0px",
                         boxShadow: "none",
+                        background: "white",
+                      }),
+                      menuList: (base) => ({
+                        ...base,
+                        backgroundColor: "white !important",
                       }),
                     }}
                     className={`${
@@ -329,13 +336,9 @@ const AuthInputFiled = ({
                     components={{
                       IndicatorSeparator: () => null,
                     }}
-                    options={options}
+                    value={field?.value}
                     onChange={(value) => {
-                      field.onChange(
-                        value.map((item) => {
-                          return item.value;
-                        })
-                      );
+                      field.onChange(value);
                     }}
                   />
                 </div>

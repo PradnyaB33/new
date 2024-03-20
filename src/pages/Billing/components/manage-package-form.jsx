@@ -18,16 +18,10 @@ const style = {
   height: 450,
   overflow: "auto",
 };
-const PackageForm = ({ handleClose, open, packages, organisation }) => {
-  console.log(
-    `🚀 ~ file: manage-package-form.jsx:22 ~ organisation:`,
-    organisation
-  );
+const PackageForm = ({ handleClose, open, packages, organisation, plan }) => {
+  console.log(`🚀 ~ file: manage-package-form.jsx:22 ~ packages:`, packages);
   const [mainPackages, setmainPackages] = useState(packages);
-  console.log(
-    `🚀 ~ file: manage-package-form.jsx:23 ~ mainPackages:`,
-    mainPackages
-  );
+
   const { updateSubscriptionMutation } = useSubscriptionMutation();
 
   const [close, setClose] = useState(false);
@@ -43,14 +37,14 @@ const PackageForm = ({ handleClose, open, packages, organisation }) => {
   });
   console.log(
     `🚀 ~ file: manage-package-form.jsx:54 ~ organisation?.subscriptionDetails?.quantity:`,
-    organisation?.subscriptionDetails?.quantity
+    organisation
   );
 
   const { control, formState, handleSubmit, getValues } = useForm({
     defaultValues: {
       planDetails: {
         value: organisation?.subscriptionDetails?.plan_id,
-        label: "Aegis Basic Plan",
+        label: plan?.item?.name,
         isDisabled: false,
       },
       count: `${organisation?.subscriptionDetails?.quantity}`,
