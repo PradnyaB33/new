@@ -29,7 +29,6 @@ const EmailSetting = () => {
   const [handleDeleteOpen, setHandleDeleteOpen] = useState(false);
   const [handleUpdateOpen, setHandleUpdateOpen] = useState(false);
   const [editEmailId, setEditEmailId] = useState(""); // Add state for the email to edit
-  const [editEmail, setEditEmail] = useState(""); // Add state for the edited email
   const queryClient = useQueryClient();
 
   const { data } = useQuery("emails", async () => {
@@ -44,9 +43,25 @@ const EmailSetting = () => {
     email: z.string().email(),
   });
 
+  const handleEdit = async (id) => {
+    setEditEmailId(id);
+
+    setHandleUpdateOpen(true);
+
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/email/getone/${id}`
+      );
+      reset({ email: response?.data.email.email || "" });
+    } catch (error) {
+      console.log(error);
+      console.log("An Error occurred while fetching email details");
+    }
+  };
+
   const { control, formState, handleSubmit, reset } = useForm({
     defaultValues: {
-      email: editEmail || "",
+      email: "",
     },
     resolver: zodResolver(formSchema),
   });
@@ -82,6 +97,7 @@ const EmailSetting = () => {
     setHandleOpen(false);
     setHandleUpdateOpen(false);
     setHandleDeleteOpen(false);
+    reset({ email: "" });
   };
 
   const handleDelete = async (id) => {
@@ -111,28 +127,13 @@ const EmailSetting = () => {
     }
   };
 
-  const handleEdit = async (id) => {
-    setEditEmailId(id);
-
-    setHandleUpdateOpen(true);
-
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/email/getone/${id}`
-      );
-      setEditEmail(response.data.email.email); // Ensure response.data.email.email contains the correct email
-      queryClient.invalidateQueries("emails");
-    } catch (error) {
-      console.log(error);
-      console.log("An Error occurred while fetching email details");
-    }
-  };
   const handleUpdate = async (data) => {
     try {
       await axios.patch(
         `${process.env.REACT_APP_API}/route/email/edit/${editEmailId}`,
         { email: data.email }
       );
+      queryClient.invalidateQueries("emails");
       console.log("Updated successfully");
       setAppAlert({
         alert: true,
@@ -275,7 +276,7 @@ const EmailSetting = () => {
                 Edit Email
               </h1>
               <DialogContent>
-                <div className="flex flex-col gap-5 my-5">
+                <div className="flex flex-col my-2">
                   <AuthInputFiled
                     className="w-full"
                     name="email"
@@ -283,14 +284,13 @@ const EmailSetting = () => {
                     control={control}
                     type="email"
                     placeholder="Email"
-                    value={editEmail}
                     label="Email *"
                     errors={errors}
                     wrapperMessage={
                       "Note this email is used for login credentails"
                     }
                   />
-                  <div className="flex gap-5 mt-2 justify-end">
+                  <div className="flex gap-5 justify-end">
                     <Button
                       color="error"
                       variant="outlined"

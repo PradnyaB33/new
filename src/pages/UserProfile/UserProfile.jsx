@@ -8,7 +8,8 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
+import { useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
@@ -28,40 +29,35 @@ const EmployeeProfile = () => {
   const [statusMessage, setStatusMessage] = useState("");
   const [file, setFile] = useState();
   const fileInputRef = useRef();
-  const [availableUserProfileData, setAvailableProfileData] = useState({});
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const fetchAvailableUserProfileData = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API}/route/employee/get/profile/${userId}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
-        setAvailableProfileData(response.data.employee);
-        setChatId(response.data.employee.chat_id);
-        setAdditionalPhoneNumber(
-          response.data.employee.additional_phone_number
-        );
-        setStatusMessage(response.data.employee.status_message);
-        setFetched(true);
-      } catch (error) {
-        handleAlert(true, "error", "Failed to fetch User Profile Data");
-        console.error("Error fetching user profile data:", error);
-      }
-    };
-    fetchAvailableUserProfileData();
-  }, [handleAlert, token, userId]);
+  const { data } = useQuery("profile", async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/get/profile/${userId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setChatId(response.data.employee.chat_id);
+      setAdditionalPhoneNumber(response.data.employee.additional_phone_number);
+      setStatusMessage(response.data.employee.status_message);
+      setFetched(true);
+      return response.data.employee;
+    } catch (error) {
+      handleAlert(true, "error", "Failed to fetch User Profile Data");
+      console.error("Error fetching user profile data:", error);
+    }
+  });
 
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type.startsWith("image/")) {
       setFile(selectedFile);
       const reader = new FileReader();
-      reader.onloadend = () => { 
+      reader.onloadend = () => {
         setUrl(reader.result);
       };
       reader.readAsDataURL(selectedFile);
@@ -96,7 +92,8 @@ const EmployeeProfile = () => {
 
       if (response.status === 200) {
         handleAlert(true, "success", "Additional details added successfully!");
-        window.location.reload();
+        queryClient.invalidateQueries("emp-profile");
+        queryClient.invalidateQueries("profile");
       } else {
         console.error("Failed to update additional details");
       }
@@ -140,9 +137,9 @@ const EmployeeProfile = () => {
                 onChange={handleImageChange}
               />
               <div className="w-full h-full flex flex-col justify-center items-center">
-                {url || availableUserProfileData?.user_logo_url ? (
+                {url || data?.user_logo_url ? (
                   <img
-                    src={url || availableUserProfileData?.user_logo_url}
+                    src={url || data?.user_logo_url}
                     alt="Selected"
                     style={{
                       width: "150px",
@@ -157,7 +154,7 @@ const EmployeeProfile = () => {
                   onClick={() => fileInputRef.current.click()}
                   className="flex justify-center h-full bg-[#1976d2] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
                 >
-                  {availableUserProfileData.user_logo_url
+                  {data?.user_logo_url
                     ? "Update Profile Picture"
                     : "Select Profile Picture"}
                 </button>
@@ -185,7 +182,7 @@ const EmployeeProfile = () => {
                   className="text-lg"
                   style={{ color: "#000", textAlign: "center" }}
                 >
-                  {!availableUserProfileData.status_message && !fetched ? (
+                  {!data?.status_message && !fetched ? (
                     <div className="w-full">
                       <Skeleton
                         variant="text"
@@ -198,7 +195,7 @@ const EmployeeProfile = () => {
                     <>
                       Status:{" "}
                       <span className="font-semibold">
-                        {availableUserProfileData?.status_message || "NA"}
+                        {data?.status_message || "NA"}
                       </span>
                     </>
                   )}
@@ -207,7 +204,7 @@ const EmployeeProfile = () => {
                   className="text-lg"
                   style={{ color: "#000", textAlign: "center" }}
                 >
-                  {!availableUserProfileData.chat_id && !fetched ? (
+                  {!data?.chat_id && !fetched ? (
                     <div className="w-full">
                       <Skeleton
                         variant="text"
@@ -220,7 +217,7 @@ const EmployeeProfile = () => {
                     <>
                       Chat Id:{" "}
                       <span className="font-semibold">
-                        {availableUserProfileData?.chat_id || "NA"}
+                        {data?.chat_id || "NA"}
                       </span>
                     </>
                   )}

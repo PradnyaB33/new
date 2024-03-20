@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FactoryOutlined } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
 import { Button } from "@mui/material";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import moment from "moment";
@@ -72,9 +73,17 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter }) => {
   }, [watch("location.address"), watch("location.address")]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className="relative">
+      <div
+        onClick={() => setOpenModal(false)}
+        className="absolute top-0 right-0 w-[30px] h-[30px] flex justify-center items-center bg-red-600 text-white rounded-full"
+      >
+        <CloseIcon />
+      </div>
       <div>
-        <h1 className="text-center text-[2vw]">Apply For Miss Punch</h1>
+        <h1 className="text-center sm:text-[2vw] text-[6vw]">
+          Apply For Miss Punch
+        </h1>
       </div>
       <div className="flex w-full justify-between mt-4 items-center flex-wrap gap-4">
         <AuthInputFiled
@@ -83,7 +92,6 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter }) => {
           icon={FactoryOutlined}
           control={control}
           type="location-picker"
-          placeholder="eg. Pune, Maharashtra, India"
           label="Location *"
           errors={errors}
           error={errors.location}
@@ -95,7 +103,7 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter }) => {
           control={control}
           type="time"
           placeholder="Choose starting time"
-          label="Start Time *"
+          label="Start *"
           errors={errors}
           wrapperMessage={"Note this email is used for login credentails"}
         />

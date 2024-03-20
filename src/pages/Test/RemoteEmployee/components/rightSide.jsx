@@ -8,7 +8,7 @@ const RightSide = ({ center }) => {
       <GoogleMap
         key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
         mapContainerStyle={{
-          width: "80%",
+          width: "60%",
           height: "91.8vh",
         }}
         center={center}

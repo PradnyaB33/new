@@ -1,5 +1,7 @@
 import CheckIcon from "@mui/icons-material/Check";
 import { Dialog, DialogActions, DialogContent } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { useJsApiLoader } from "@react-google-maps/api";
 import React, { useEffect, useState } from "react";
 import MappedForm from "./components/MappedForm";
@@ -8,6 +10,8 @@ import RightSide from "./components/rightSide";
 
 const RemoteEmployee = () => {
   const [openModal, setOpenModal] = useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
       console.log(position?.coords);
@@ -27,7 +31,7 @@ const RemoteEmployee = () => {
 
   return (
     <div className="w-full flex justify-between relative">
-      <div className=" z-50 p-6 flex flex-col mt-7 w-[25vw] bg-white gap-4 ">
+      <div className=" z-50 p-6 flex flex-col mt-7 w-[50vw] sm:w-[25vw] sm:text-base text-sm bg-white gap-4 ">
         <div className="w-full bg-white">
           <h1 className="text-slate-400 mb-1">Select Date For Application</h1>
           <div>
@@ -47,7 +51,7 @@ const RemoteEmployee = () => {
             >
               +
             </button>
-            <button className="bg-[#2463ea] text-white pr-4 pl-4 pt-2 pb-2 text-sm">
+            <button className="bg-[#2463ea] text-white pr-2 pl-2 pt-1 pb-1 sm:pr-4 sm:pl-4 sm:pt-2 sm:text-sm sm:pb-2 text-xs flex">
               <span className="mr-3">
                 <CheckIcon />
               </span>{" "}
@@ -62,7 +66,10 @@ const RemoteEmployee = () => {
         open={openModal}
         onClose={() => setOpenModal(false)}
         fullWidth
-        maxWidth="lg"
+        maxWidth="xl"
+        maxHeight="sm"
+        className="!p-0"
+        fullScreen={fullScreen}
       >
         <DialogActions>
           <DialogContent>
