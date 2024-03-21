@@ -401,17 +401,8 @@ const SignIn = () => {
                   error={errors.isChecked}
                 />
               </div>
-              {/* <div className="w-max  space-y-1">
-                <Link
-                  href="/terms-and-conditions"
-                  className="font-semibold text-blue-500 hover:underline text-md  "
-                >
-                  Terms and Conditions
-                </Link>
-                <div className="h-4 !mb-1"> </div>
-              </div> */}
             </div>
-            {/* <TermsCondition /> */}
+
             {/* Signup Button */}
             <div className="flex gap-5 mt-2">
               <button

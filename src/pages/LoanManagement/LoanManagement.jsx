@@ -37,6 +37,11 @@ const LoanManagement = () => {
 
   console.log(getEmployeeLoanData);
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toDateString();
+  };
+
   // Function to calculate loan amount paid and pending
   const calculateLoanStatus = (loan) => {
     const currentDate = new Date();
@@ -153,7 +158,7 @@ const LoanManagement = () => {
           ) : getEmployeeLoanData?.length > 0 ? (
             <>
               <div className=" flex w-full ">
-                <div className="overflow-auto p-0 border border-gray-200 w-70%">
+                <div className="overflow-auto p-0 border border-gray-200 w-80%">
                   <table className="min-w-full bg-white text-left text-sm font-light">
                     <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                       <tr className="font-semibold">
@@ -178,6 +183,12 @@ const LoanManagement = () => {
                         </th>
                         <th scope="col" className="px-6 py-3">
                           Loan Amount Pending
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          ROI (%)
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          ROI (%)
                         </th>
                         <th scope="col" className="px-6 py-3">
                           ROI (%)
@@ -244,6 +255,13 @@ const LoanManagement = () => {
                             <td className="py-3 pl-6">
                               {loanMgtData?.rateOfIntereset}
                             </td>
+                            <td className="py-3 pl-6">
+                              {formatDate(loanMgtData?.loanDisbursementDate) ||
+                                ""}
+                            </td>
+                            <td className="py-3 pl-6">
+                              {formatDate(loanMgtData?.loanCompletedDate) || ""}
+                            </td>
                           </tr>
                         );
                       })}
@@ -251,7 +269,7 @@ const LoanManagement = () => {
                   </table>
                 </div>
                 {/* pie chart for loan management */}
-                <div className="w-[30%]">
+                <div className="w-[20%]">
                   <LoanManagementPieChart
                     totalPaidAmount={totalPaidAmount}
                     totalPendingAmount={totalPendingAmount}

@@ -131,7 +131,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
                 control={control}
                 type="text"
                 placeholder="employee code"
-                label="employee code *"
+                label="Employee Code *"
                 errors={errors}
                 error={errors.code}
               />
