@@ -12,11 +12,13 @@ const MappedForm = ({ item, index, setArray, setOpenModal }) => {
           <div className="flex flex-col">
             <h1>
               <span className="text-sm">Start Time</span> :{" "}
-              <span className="text-slate-600">{item.start}</span>
+              <span className="text-slate-600">
+                {item?.start?.format("HH:mm:ss")}
+              </span>
             </h1>
             <h1>
               <span className="text-sm">Address</span> :{" "}
-              <span className="text-slate-600">{item.location}</span>
+              <span className="text-slate-600">{item?.location?.address}</span>
             </h1>
           </div>
           <div className="">

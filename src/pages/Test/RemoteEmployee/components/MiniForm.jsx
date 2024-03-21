@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
-const MiniForm = ({ setArray, setOpenModal, center, setCenter }) => {
+const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
   const [map, setMap] = useState(null);
   const options = {
     id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -46,16 +46,7 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter }) => {
   console.log(`🚀 ~ file: MiniForm.jsx:54 ~ errors:`, errors);
 
   const onSubmit = (data) => {
-    console.log(`🚀 ~ file: MiniForm.jsx:56 ~ data:`, data.start);
-    const currentDate = moment();
-    const timeString = data.start.toLowerCase().replace(/\s/g, "");
-    const [hours, minutes] = timeString.split(":").map(Number);
-    currentDate.set("hour", hours);
-    currentDate.set("minute", minutes);
-    console.log(
-      `🚀 ~ file: MiniForm.jsx:68 ~ currentDate:`,
-      currentDate.toString()
-    );
+    const currentDate = moment(today);
     data.start = currentDate;
     console.log(`🚀 ~ file: MiniForm.jsx:56 ~ data:`, data);
     setArray((prev) => [...prev, data]);

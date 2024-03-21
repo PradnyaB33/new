@@ -1,13 +1,19 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { TodayOutlined } from "@mui/icons-material";
 import CheckIcon from "@mui/icons-material/Check";
-import { Dialog, DialogActions, DialogContent } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useJsApiLoader } from "@react-google-maps/api";
 import axios from "axios";
+import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
+import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import MappedForm from "./components/MappedForm";
 import MiniForm from "./components/MiniForm";
 import RightSide from "./components/rightSide";
@@ -21,14 +27,37 @@ const RemoteEmployee = () => {
   const authToken = cookies["aegis"];
 
   const applyMutation = useMutation(
-    (id) =>
-      axios.delete(`${process.env.REACT_APP_API}/route`, {
-        headers: {
-          Authorization: authToken,
-        },
-      }),
+    async (body) => {
+      console.info(`🚀 ~ file: page.jsx:34 ~ body:`, body);
+
+      const result = await axios.post(
+        `${process.env.REACT_APP_API}/route/punch/miss-punch`,
+        body,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      return result.data;
+    },
+    // axios.delete(`${process.env.REACT_APP_API}/route`, {
+    //   headers: {
+    //     Authorization: authToken,
+    //   },
+    // }),
     {
-      onSuccess: () => {
+      onSuccess: (data) => {
+        console.info(`🚀 ~ file: page.jsx:40 ~ data:`, data);
+        handleAlert(
+          true,
+          "success",
+          "Missed Punch Request Is Raised Successfully."
+        );
+      },
+      onError: (data) => {
+        console.info(`🚀 ~ file: page.jsx:40 ~ data:`, data);
         handleAlert(
           true,
           "success",
@@ -37,29 +66,51 @@ const RemoteEmployee = () => {
       },
     }
   );
-
+  const formSchema = z.object({
+    today: z.string(),
+  });
+  const { formState, control, watch, handleSubmit } = useForm({
+    resolver: zodResolver(formSchema),
+  });
+  const { errors, isDirty } = formState;
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
-      console.log(position?.coords);
       setcenter({
         lat: position?.coords?.latitude,
         lng: position?.coords?.longitude,
       });
     });
   }, []);
+  const onSubmit = (optData) => {
+    console.log(`🚀 ~ file: page.jsx:89 ~ optData:`, optData);
+    const body = {
+      today: moment(optData?.today),
+      arrayOfLocations: array,
+    };
+    console.log(`🚀 ~ file: page.jsx:90 ~ body:`, body);
+    applyMutation.mutate(body);
+  };
   const [center, setcenter] = useState({ lat: 19.076, lng: 72.8777 });
   const [array, setArray] = useState([]);
-  console.log(`🚀 ~ file: page.jsx:23 ~ array:`, array);
   const { isLoaded } = useJsApiLoader({
     id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   });
 
   return (
-    <div className="w-full flex justify-between relative">
-      <div className=" z-50 p-6 flex flex-col mt-7 w-[50vw] sm:w-[25vw] sm:text-base text-sm bg-white gap-4 ">
-        <div className="w-full bg-white">
-          <h1 className="text-slate-400 mb-1">Select Date For Application</h1>
+    <div className="w-screen flex relative">
+      <div className=" z-50 p-6 flex flex-col mt-7 w-[400px] sm:text-base text-sm bg-white gap-4 ">
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full bg-white">
+          <AuthInputFiled
+            name="today"
+            icon={TodayOutlined}
+            control={control}
+            type="date"
+            placeholder="Foundation Date"
+            label="Select Date For Application *"
+            errors={errors}
+            error={errors.today}
+          />
           <div>
             <p className=" z-[99999999]  mt-4 font-semibold  mb-3">
               Total Approximate Distance : Kilometers
@@ -72,19 +123,24 @@ const RemoteEmployee = () => {
 
           <div className="absolute bottom-3 w-[21vw] flex flex-col items-end gap-10">
             <button
+              type="button"
               onClick={() => setOpenModal(true)}
               className="bg-[#2463ea] w-[3vw] h-[3vw] text-white text-xl rounded-full"
             >
               +
             </button>
-            <button className="bg-[#2463ea] text-white pr-2 pl-2 pt-1 pb-1 sm:pr-4 sm:pl-4 sm:pt-2 sm:text-sm sm:pb-2 text-xs flex">
+            <Button
+              type="submit"
+              disabled={isDirty && array.length > 0 ? false : true}
+              variant="contained"
+            >
               <span className="mr-3">
                 <CheckIcon />
               </span>{" "}
               Apply for miss punch
-            </button>
+            </Button>
           </div>
-        </div>
+        </form>
       </div>
 
       <Dialog
@@ -100,7 +156,14 @@ const RemoteEmployee = () => {
         <DialogActions>
           <DialogContent>
             <MiniForm
-              {...{ setArray, setOpenModal, array, center, setcenter }}
+              {...{
+                setArray,
+                setOpenModal,
+                array,
+                center,
+                setcenter,
+                today: watch("today"),
+              }}
             />
           </DialogContent>
         </DialogActions>

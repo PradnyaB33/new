@@ -34,8 +34,6 @@ export default function ProfileIcon() {
     return response.data.emp;
   });
 
-  console.log(data);
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -45,8 +43,6 @@ export default function ProfileIcon() {
   };
 
   const handleSignOut = () => {
-    // setAnchorEl(null);
-    // console.log(cookies.aeigs);
     navigate("/sign-in");
     window.location.reload();
     Cookies.remove("aegis");
