@@ -4,6 +4,7 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Avatar,
   Button,
+  Chip,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -23,6 +24,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import useSubscription from "../../../hooks/Subscription/subscription";
 import EditOrganisation from "./edit-organization";
 const Organisation = ({ item }) => {
+  console.log(`🚀 ~ file: Organisation.jsx:27 ~ item:`, item);
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [editConfirmation, setEditConfirmation] = useState(null);
@@ -150,11 +152,16 @@ const Organisation = ({ item }) => {
           )}
         </tag>
         <div className="border-b-2 flex items-center justify-between border-[#0000002d] px-6 py-3 text-black">
-          <Avatar
-            src={`${item?.logo_url}?v=${Date.now()})`}
-            variant="rounded"
-            className=" md:h-[35px] md:w-[35px] h-[10px] w-[10px]"
-          />
+          <div className="flex gap-4 items-center">
+            <Avatar
+              src={`${item?.logo_url}?v=${Date.now()})`}
+              variant="rounded"
+              className=" md:h-[35px] md:w-[35px] h-[10px] w-[10px]"
+            />
+            <h5 className="mb-2 text-xl font-semibold leading-tight text-black">
+              {item.orgName}
+            </h5>
+          </div>
           <div>
             <MoreVert
               onClick={(e) => handleClick(e, item)}
@@ -183,10 +190,12 @@ const Organisation = ({ item }) => {
           </div>
         </div>
         <div className="p-6 pt-6 pb-4">
-          <h5 className="mb-2 text-xl font-semibold leading-tight text-black">
-            {item.orgName}
-          </h5>
-          <p className="text-md ">{item.description}</p>
+          {/* <p className="text-md truncate">{item.description}</p> */}
+          <Chip
+            label={item?.industry_type}
+            color="primary"
+            variant="contained"
+          />
         </div>
         <div className="p-6 py-4  flex gap-4">
           <button
