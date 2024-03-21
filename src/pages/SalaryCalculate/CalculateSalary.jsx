@@ -264,6 +264,7 @@ function CalculateSalary() {
   let deduction = availableEmployee?.deduction || "";
   let employee_pf = availableEmployee?.employee_pf || "";
   let esic = availableEmployee?.esic || "";
+
   // Convert each individual deduction to have two decimal places
   deduction = parseFloat(deduction).toFixed(2);
   employee_pf = parseFloat(employee_pf).toFixed(2);
