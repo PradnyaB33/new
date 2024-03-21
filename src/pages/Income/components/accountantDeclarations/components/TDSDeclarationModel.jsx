@@ -9,11 +9,16 @@ import { z } from "zod";
 import { TestContext } from "../../../../../State/Function/Main";
 import AuthInputFiled from "../../../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
-import UserProfile from "../../../../../hooks/UserData/useUser";
-const TDSDeclarationModel = ({ open, handleClose, investment, isReject }) => {
+const TDSDeclarationModel = ({
+  open,
+  handleClose,
+  investment,
+  isReject,
+  empId,
+}) => {
   const authToken = useAuthToken();
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
+  // const { getCurrentUser } = UserProfile();
+  // const user = getCurrentUser();
   const { handleAlert } = useContext(TestContext);
   const style = {
     position: "absolute",
@@ -46,17 +51,21 @@ const TDSDeclarationModel = ({ open, handleClose, investment, isReject }) => {
     resolver: zodResolver(zodSchema),
   });
 
-  useEffect(() => {
-    setValue("declaration", investment?.declaration?.toString());
+  // test
+  useEffect(
+    () => {
+      setValue("declaration", investment?.declaration?.toString());
+    },
     // eslint-disable-next-line
-  }, [investment]);
+    [investment]
+  );
 
   const queryClient = useQueryClient();
 
   const onSubmit = async (data) => {
-    console.log("submitted");
+    console.log(investment, "submitted");
     const requestData = {
-      empId: user._id,
+      empId,
       requestData: {
         name: investment.name,
         sectionname: investment.sectionname,

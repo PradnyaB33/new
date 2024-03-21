@@ -121,7 +121,7 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
                 icon={Title}
                 control={control}
                 type="text"
-                placeholder="loanName"
+                placeholder="Loan Name"
                 label="Loan Name *"
                 errors={errors}
                 error={errors.loanName}
@@ -133,7 +133,7 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
                 icon={AttachMoney}
                 control={control}
                 type="number"
-                placeholder="loanValue"
+                placeholder="Loan Value"
                 label="Loan Value *"
                 errors={errors}
                 error={errors.loanValue}
@@ -145,7 +145,7 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
                 icon={AttachMoney}
                 control={control}
                 type="number"
-                placeholder="rateOfInterest"
+                placeholder="Rate Of Interest"
                 label="Rate Of Interest "
                 errors={errors}
                 error={errors.rateOfInterest}
