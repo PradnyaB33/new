@@ -215,16 +215,7 @@ function CalculateSalary() {
       return response.data.data;
     }
   );
-
-  console.log("info", empLoanAplicationInfo);
-  // Assuming empLoanAplicationInfo is an array containing loan application objects
-  let loanDeduction =
-    Array.isArray(empLoanAplicationInfo) &&
-    empLoanAplicationInfo.length > 0 &&
-    empLoanAplicationInfo?.map((application) => application?.totalDeduction);
-
-  console.log("Loan Deductions:", loanDeduction);
-
+  console.log(empLoanAplicationInfo);
   // calculate the no of days employee present in selected Month
   const calculateDaysEmployeePresent = () => {
     const daysPresent =
@@ -287,16 +278,37 @@ function CalculateSalary() {
 
   let totalGrossSalary = totalSalary.toFixed(2);
 
-  // calculate the total deduction
-  let deduction = availableEmployee?.deduction || 0;
-  let employee_pf = availableEmployee?.employee_pf || 0;
-  let esic = availableEmployee?.esic || 0;
+  // Calculate the total deduction
+  let deduction = parseFloat(availableEmployee?.deduction ?? 0);
+  let employee_pf = parseFloat(availableEmployee?.employee_pf ?? 0);
+  let esic = parseFloat(availableEmployee?.esic ?? 0);
+  let loanDeduction = 0; // Initialize loan deduction
+
+  // Filter loan applications based on loan disbursement and completion dates
+  if (Array.isArray(empLoanAplicationInfo)) {
+    const currentDate = new Date();
+    const loanDeductionApplications = empLoanAplicationInfo.filter(
+      (application) => {
+        const loanDisbursementDate = new Date(application.loanDisbursementDate);
+        const loanCompletionDate = new Date(application.loanCompletedDate);
+        return (
+          loanDisbursementDate <= currentDate &&
+          currentDate <= loanCompletionDate
+        );
+      }
+    );
+
+    // Calculate total loan deduction from filtered loan applications
+    loanDeduction = loanDeductionApplications.reduce((total, application) => {
+      return total + parseFloat(application.totalDeduction || 0);
+    }, 0);
+  }
 
   // Convert each individual deduction to have two decimal places
-  deduction = parseFloat(deduction).toFixed(2);
-  employee_pf = parseFloat(employee_pf).toFixed(2);
-  esic = parseFloat(esic).toFixed(2);
-  loanDeduction = parseFloat(loanDeduction).toFixed(2);
+  deduction = deduction.toFixed(2);
+  employee_pf = employee_pf.toFixed(2);
+  esic = esic.toFixed(2);
+  loanDeduction = loanDeduction.toFixed(2);
 
   // Calculate total deduction by adding all deductions
   let totalDeductions =
@@ -305,6 +317,8 @@ function CalculateSalary() {
     parseFloat(esic) +
     parseFloat(loanDeduction);
   let totalDeduction = totalDeductions.toFixed(2);
+
+  console.log("Total Deduction:", totalDeduction);
 
   // calculate the totalNetSalary
   let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
