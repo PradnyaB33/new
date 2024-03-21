@@ -2,6 +2,7 @@ import { Calculate, Check, DoneAll, Settings, West } from "@mui/icons-material";
 import { Avatar, IconButton } from "@mui/material";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import UserProfile from "../../hooks/UserData/useUser";
 import RegimeModel from "./components/accountantDeclarations/components/RegimeModel";
 
 const IncomeTax = () => {
@@ -9,6 +10,10 @@ const IncomeTax = () => {
   const handleOpen = () => {
     setOpen(true);
   };
+
+  const { useGetCurrentRole } = UserProfile();
+
+  const role = useGetCurrentRole();
 
   const navigate = useNavigate();
 
@@ -64,27 +69,29 @@ const IncomeTax = () => {
             </article>
           </div>
 
-          <div className="bg-white border-[.5px] border-gray-200 p-4">
-            <div className="mb-4   w-full space-y-3">
-              <h1 className="text-[1.2em] text-gray-500">
-                Accountant Workflow
-              </h1>
-            </div>
+          {role === "Accountant" && (
+            <div className="bg-white border-[.5px] border-gray-200 p-4">
+              <div className="mb-4   w-full space-y-3">
+                <h1 className="text-[1.2em] text-gray-500">
+                  Accountant Workflow
+                </h1>
+              </div>
 
-            <article className="flex  gap-4 items-center">
-              <Link
-                to={"/income-tax/accountant-declarations"}
-                className="hover:scale-[1.02] transition-all"
-              >
-                <div className="flex-col w-[225px] bg-white border-[.5px] border-gray-200 gap-3 flex items-center px-4 py-6 rounded-sm shadow-sm">
-                  <Avatar className="!bg-yellow-500">
-                    <DoneAll />
-                  </Avatar>
-                  <h1 className="text-lg">Employee Declarations</h1>
-                </div>
-              </Link>
-            </article>
-          </div>
+              <article className="flex  gap-4 items-center">
+                <Link
+                  to={"/income-tax/accountant-declarations"}
+                  className="hover:scale-[1.02] transition-all"
+                >
+                  <div className="flex-col w-[225px] bg-white border-[.5px] border-gray-200 gap-3 flex items-center px-4 py-6 rounded-sm shadow-sm">
+                    <Avatar className="!bg-yellow-500">
+                      <DoneAll />
+                    </Avatar>
+                    <h1 className="text-lg">Employee Declarations</h1>
+                  </div>
+                </Link>
+              </article>
+            </div>
+          )}
         </div>
         <RegimeModel handleClose={handleClose} open={open} />
       </section>

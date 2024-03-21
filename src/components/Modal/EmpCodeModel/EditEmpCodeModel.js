@@ -1,14 +1,14 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AssignmentInd } from "@mui/icons-material";
 import { Box, Button, Modal } from "@mui/material";
 import axios from "axios";
-import AuthInputFiled from "../../InputFileds/AuthInputFiled";
 import React, { useContext, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import EmployeeCodeIcon from "@material-ui/icons/AssignmentInd";
+import AuthInputFiled from "../../InputFileds/AuthInputFiled";
 const style = {
   position: "absolute",
   top: "50%",
@@ -127,7 +127,7 @@ const EditEmpCodeModel = ({ handleClose, open, organisationId, empCodeId }) => {
             <div className="space-y-2 ">
               <AuthInputFiled
                 name="code"
-                icon={EmployeeCodeIcon}
+                icon={AssignmentInd}
                 control={control}
                 type="text"
                 placeholder="employee code"

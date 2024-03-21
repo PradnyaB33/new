@@ -55,7 +55,7 @@ const TDSTable1 = () => {
     {
       name: "Gross Salary",
       amount: 0,
-      proof: "",
+      proof: "Auto",
       status: "Auto",
     },
     {
@@ -141,9 +141,6 @@ const TDSTable1 = () => {
     // },
   ]);
 
-  let deduction = 0;
-  console.log(`🚀 ~ file: TDSTable1.jsx:144 ~ deduction:`, deduction);
-
   const {
     // isFetched: salaryFetch,
     isFetching: salaryFetching,
@@ -167,11 +164,7 @@ const TDSTable1 = () => {
     onSuccess: (res) => {
       console.log(res);
 
-      // let data = res.reduce((total, item) => {
-      //   return total + parseFloat(item.totalGrossSalary);
-      // }, 0);
-
-      setGrossTotal(0);
+      setGrossTotal(res?.TotalInvestInvestment);
     },
   });
 
@@ -239,6 +232,7 @@ const TDSTable1 = () => {
         //     proof: "",
         //   };
         // }
+
         if (item.name === "Gross Salary") {
           return {
             ...item,
@@ -414,7 +408,7 @@ const TDSTable1 = () => {
   };
 
   return (
-    <div className="">
+    <div>
       {salaryFetching ? (
         <div className="flex items-center justify-center w-full">
           <CircularProgress />
@@ -534,7 +528,7 @@ const TDSTable1 = () => {
                     </td>
                   )}
                   <td className="text-left leading-7 text-[16px] w-[200px]  border">
-                    {item.name === "Income taxable under the head Salaries" ? (
+                    {item.name === "Gross Salary" ? (
                       ""
                     ) : editStatus[itemIndex] && editStatus[itemIndex] ? (
                       <div className="px-2">
