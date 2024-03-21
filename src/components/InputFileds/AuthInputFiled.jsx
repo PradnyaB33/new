@@ -668,6 +668,8 @@ const AuthInputFiled = ({
                 type={
                   type === "password" ? (visible ? "text" : "password") : type
                 }
+                min={min}
+                max={max}
                 maxLength={maxLimit && maxLimit}
                 readOnly={readOnly}
                 value={field.value}
