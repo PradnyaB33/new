@@ -8,6 +8,7 @@ import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import axios from "axios";
 import dayjs from "dayjs";
+import { useQuery } from "react-query";
 function CalculateSalary() {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -200,6 +201,30 @@ function CalculateSalary() {
 
   // pull the total deduction of loan of employee if he/she apply the loan
 
+  const { data: empLoanAplicationInfo } = useQuery(
+    ["empLoanAplication", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/${userId}/get-ongoing-loan-data`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
+
+  console.log("info", empLoanAplicationInfo);
+  // Assuming empLoanAplicationInfo is an array containing loan application objects
+  let loanDeduction =
+    Array.isArray(empLoanAplicationInfo) &&
+    empLoanAplicationInfo.length > 0 &&
+    empLoanAplicationInfo?.map((application) => application?.totalDeduction);
+
+  console.log("Loan Deductions:", loanDeduction);
+
   // calculate the no of days employee present in selected Month
   const calculateDaysEmployeePresent = () => {
     const daysPresent =
@@ -263,18 +288,22 @@ function CalculateSalary() {
   let totalGrossSalary = totalSalary.toFixed(2);
 
   // calculate the total deduction
-  let deduction = availableEmployee?.deduction || "";
-  let employee_pf = availableEmployee?.employee_pf || "";
-  let esic = availableEmployee?.esic || "";
+  let deduction = availableEmployee?.deduction || 0;
+  let employee_pf = availableEmployee?.employee_pf || 0;
+  let esic = availableEmployee?.esic || 0;
 
   // Convert each individual deduction to have two decimal places
   deduction = parseFloat(deduction).toFixed(2);
   employee_pf = parseFloat(employee_pf).toFixed(2);
   esic = parseFloat(esic).toFixed(2);
+  loanDeduction = parseFloat(loanDeduction).toFixed(2);
 
   // Calculate total deduction by adding all deductions
   let totalDeductions =
-    parseFloat(deduction) + parseFloat(employee_pf) + parseFloat(esic);
+    parseFloat(deduction) +
+    parseFloat(employee_pf) +
+    parseFloat(esic) +
+    parseFloat(loanDeduction);
   let totalDeduction = totalDeductions.toFixed(2);
 
   // calculate the totalNetSalary
@@ -554,8 +583,8 @@ function CalculateSalary() {
             <tr>
               <td class="px-4 py-2 border">Food Allowance:</td>
               <td class="px-4 py-2 border">{foodAllowance}</td>
-              <td class="px-4 py-2 border"></td>
-              <td class="px-4 py-2 border"></td>
+              <td class="py-2 border">Loan Deduction :</td>
+              <td class="py-2 border">{loanDeduction}</td>
             </tr>
             <tr>
               <td class="px-4 py-2 border">Sales Allowance:</td>
