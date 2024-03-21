@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
-import { useParams } from "react-router-dom";
-import UserProfile from "../../hooks/UserData/useUser";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
@@ -14,17 +13,15 @@ const LoanMgtApproval = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { loanId } = useParams();
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
-  const organisationId = user.organizationId;
   const { handleAlert } = useContext(TestContext);
+  const navigate = useNavigate();
 
   //for get loan data
   const { data: getEmployeeLoanInfo } = useQuery(
-    ["empLoanInfo", organisationId],
+    ["empLoanInfo", loanId],
     async () => {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/loans/${loanId}`,
+        `${process.env.REACT_APP_API}/route/organization/loans/${loanId}`,
         {
           headers: {
             Authorization: authToken,
@@ -34,6 +31,7 @@ const LoanMgtApproval = () => {
       return response.data.data;
     }
   );
+
   console.log(getEmployeeLoanInfo);
 
   const formatDate = (dateString) => {
@@ -44,9 +42,9 @@ const LoanMgtApproval = () => {
   const handleApproval = async (status) => {
     try {
       const response = await axios.put(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/accept/reject/loans/${loanId}`,
+        `${process.env.REACT_APP_API}/route/organization/accept/reject/loans/${loanId}`,
         {
-          action: status === "accept" ? "accept" : "reject",
+          action: status === "ongoing" ? "ongoing" : "reject",
         },
         {
           headers: {
@@ -55,13 +53,27 @@ const LoanMgtApproval = () => {
         }
       );
       console.log(response);
-      handleAlert(true, "success", "Approved the Request");
+
+      // Display appropriate alert message based on action
+      if (status === "ongoing") {
+        handleAlert(
+          true,
+          "success",
+          `Approved the request for loan application of ${getEmployeeLoanInfo?.userId?.first_name}`
+        );
+      } else {
+        handleAlert(
+          true,
+          "error",
+          `Rejected the request for loan application of ${getEmployeeLoanInfo?.userId?.first_name}`
+        );
+      }
+      navigate("/pendingLoan");
     } catch (error) {
       console.error("Error adding salary data:", error);
       handleAlert(true, "error", "Something went wrong");
     }
   };
-
   return (
     <>
       <div className="mx-auto mt-20">
@@ -172,7 +184,7 @@ const LoanMgtApproval = () => {
               {/* Accept button */}
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={() => handleApproval("accept")}
+                onClick={() => handleApproval("ongoing")}
               >
                 Accept
               </button>

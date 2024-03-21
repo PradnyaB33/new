@@ -1,16 +1,14 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AttachMoney, Title } from "@mui/icons-material";
 import { Box, Button, Modal } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import LoanNameIcon from "@material-ui/icons/Title";
-import LoanValueIcon from "@material-ui/icons/AttachMoney";
-import RateOfInterestIcon from "@material-ui/icons/AttachMoney";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 
 const style = {
   position: "absolute",
@@ -120,10 +118,10 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
             <div className="space-y-2 ">
               <AuthInputFiled
                 name="loanName"
-                icon={LoanNameIcon}
+                icon={Title}
                 control={control}
                 type="text"
-                placeholder="loanName"
+                placeholder="Loan Name"
                 label="Loan Name *"
                 errors={errors}
                 error={errors.loanName}
@@ -132,10 +130,10 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
             <div className="space-y-2 ">
               <AuthInputFiled
                 name="loanValue"
-                icon={LoanValueIcon}
+                icon={AttachMoney}
                 control={control}
                 type="number"
-                placeholder="loanValue"
+                placeholder="Loan Value"
                 label="Loan Value *"
                 errors={errors}
                 error={errors.loanValue}
@@ -144,10 +142,10 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
             <div className="space-y-2 ">
               <AuthInputFiled
                 name="rateOfInterest"
-                icon={RateOfInterestIcon}
+                icon={AttachMoney}
                 control={control}
                 type="number"
-                placeholder="rateOfInterest"
+                placeholder="Rate Of Interest"
                 label="Rate Of Interest "
                 errors={errors}
                 error={errors.rateOfInterest}

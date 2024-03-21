@@ -15,35 +15,37 @@ const useLeaveRequisitionMutation = () => {
     return daysDifference;
   }
   async function checkLeaveProblem(
-    dataArray = [],
-    id = "",
+    dataArray,
+    id,
     item,
-    newLeaveArray = []
+    newLeaveArray,
+    itemDays
   ) {
     let maxCount = 0;
-    let newLeaveCount = 0;
-    const doc = dataArray.filter(async (doc) => {
-      return doc._id === id;
+    let totalCountOfLeave = itemDays;
+    newLeaveArray.forEach((item) => {
+      if (item.leaveTypeDetailsId === id) {
+        totalCountOfLeave += calculateDays(item?.start, item?.end);
+      }
     });
-    console.log(`🚀 ~ file: mutaion.jsx:26 ~ doc:`, doc.length);
-    if (doc.length > 0) {
-      maxCount = doc[0].count;
-      console.log(`🚀 ~ file: mutaion.jsx:25 ~ maxCount:`, maxCount);
-    }
-    console.log(`🚀 ~ file: mutaion.jsx:18 ~ doc[0].count:`, doc[0].count);
-    const newArray = await newLeaveArray.map(
-      (value) => value.leaveTypeDetailsId === id
-    );
-    newArray.forEach((value) => {
-      newLeaveCount += calculateDays(value.start, value?.end);
-      console.log(`🚀 ~ file: mutaion.jsx:32 ~ newLeaveCount:`, newLeaveCount);
-      return null;
+
+    dataArray.forEach((item) => {
+      if (item._id === id) {
+        maxCount = item?.count;
+      }
     });
-    if (maxCount >= newLeaveCount + item?.count) {
-      handleAlert(true, "error ", "You don't have balance for it so check ");
-      return true;
+    if (maxCount <= totalCountOfLeave) {
+      if (maxCount === -1) {
+        return true;
+      }
+      handleAlert(
+        true,
+        "error",
+        `You don't have specific balance for the leaves`
+      );
+      return false;
     }
-    return false;
+    return true;
   }
   return { calculateDays, checkLeaveProblem };
 };
