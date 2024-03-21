@@ -1,16 +1,14 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AttachMoney, Title } from "@mui/icons-material";
 import { Box, Button, Modal } from "@mui/material";
+import axios from "axios";
 import React, { useContext, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
+import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import axios from "axios";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import LoanNameIcon from "@material-ui/icons/Title";
-import LoanValueIcon from "@material-ui/icons/AttachMoney";
-import RateOfInterestIcon from "@material-ui/icons/AttachMoney";
 const style = {
   position: "absolute",
   top: "50%",
@@ -105,7 +103,7 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
               <div className="space-y-2 ">
                 <AuthInputFiled
                   name="loanName"
-                  icon={LoanNameIcon}
+                  icon={Title}
                   control={control}
                   type="text"
                   placeholder="loanName"
@@ -117,7 +115,7 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
               <div className="space-y-2 ">
                 <AuthInputFiled
                   name="loanValue"
-                  icon={LoanValueIcon}
+                  icon={AttachMoney}
                   control={control}
                   type="number"
                   placeholder="loanValue"
@@ -130,7 +128,7 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
               <div className="space-y-2 ">
                 <AuthInputFiled
                   name="rateOfInterest"
-                  icon={RateOfInterestIcon}
+                  icon={AttachMoney}
                   control={control}
                   type="number"
                   placeholder="rateOfInterest"
