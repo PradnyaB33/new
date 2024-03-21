@@ -20,6 +20,10 @@ const Mapped = ({
   setNewAppliedLeaveEvents,
   setCalendarOpen,
 }) => {
+  console.log(
+    `🚀 ~ file: mapped-form.jsx:23 ~ subtractedLeaves:`,
+    subtractedLeaves
+  );
   const { data } = useLeaveRequesation();
   const { calculateDays, checkLeaveProblem } = useLeaveRequisitionMutation();
 
@@ -33,22 +37,13 @@ const Mapped = ({
     },
   };
 
-  const handleChange = (event) => {
-    console.log(
-      `🚀 ~ file: mapped-form.jsx:36 ~ event.target.value:`,
-      event.target.value
-    );
-    console.log(`🚀 ~ file: mapped-form.jsx:44 ~ item:`, item);
-    console.log(`🚀 ~ file: mapped-form.jsx:44 ~ item:`, data?.leaveTypes);
-    console.log(
-      `🚀 ~ file: mapped-form.jsx:44 ~ item:`,
-      calculateDays(item?.start, item?.end)
-    );
-    let result = checkLeaveProblem(
-      data?.leaveTypes,
+  const handleChange = async (event) => {
+    let result = await checkLeaveProblem(
+      subtractedLeaves,
       event.target.value,
       item,
-      newAppliedLeaveEvents
+      newAppliedLeaveEvents,
+      calculateDays(item?.start, item?.end)
     );
     if (result === true) {
       setLeavesTypes(event.target.value);

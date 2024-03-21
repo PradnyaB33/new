@@ -190,7 +190,6 @@ const Organisation = ({ item }) => {
           </div>
         </div>
         <div className="p-6 pt-6 pb-4">
-          {/* <p className="text-md truncate">{item.description}</p> */}
           <Chip
             label={item?.industry_type}
             color="primary"
