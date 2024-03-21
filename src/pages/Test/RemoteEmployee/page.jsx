@@ -95,9 +95,10 @@ const RemoteEmployee = () => {
     id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   });
+  let tag = watch("today");
   useEffect(() => {
     setArray([]);
-  }, [watch("today"), setArray]);
+  }, [tag]);
 
   return (
     <div className="w-screen flex relative">
