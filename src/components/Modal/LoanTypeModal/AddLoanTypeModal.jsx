@@ -44,8 +44,6 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
     resolver: zodResolver(EmpLoanMgtSchema),
   });
 
-  console.log(errors);
-
   const AddLoanType = useMutation(
     (data) =>
       axios.post(
