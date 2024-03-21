@@ -28,7 +28,9 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
   const param = useParams();
   const leaveTypeSchema = z.object({
     leaveName: z.string(),
-    count: z.string({ required_error: "Count is required" }),
+    count: z
+      .string()
+      .refine((doc) => Number(doc) > 0, { message: "Count is greater than 0" }),
     color: z.string(),
     isActive: z.boolean(),
   });

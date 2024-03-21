@@ -25,6 +25,13 @@ const RemoteEmployee = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
+  const formSchema = z.object({
+    today: z.string(),
+  });
+  const { formState, control, watch, handleSubmit, reset } = useForm({
+    resolver: zodResolver(formSchema),
+  });
+  const { errors, isDirty } = formState;
 
   const applyMutation = useMutation(
     async (body) => {
@@ -50,29 +57,21 @@ const RemoteEmployee = () => {
     {
       onSuccess: (data) => {
         console.info(`🚀 ~ file: page.jsx:40 ~ data:`, data);
+        setArray([]);
         handleAlert(
           true,
           "success",
           "Missed Punch Request Is Raised Successfully."
         );
+        reset();
       },
       onError: (data) => {
         console.info(`🚀 ~ file: page.jsx:40 ~ data:`, data);
-        handleAlert(
-          true,
-          "success",
-          "Missed Punch Request Is Raised Successfully."
-        );
+        handleAlert(true, "error", "We have problem at our side.");
       },
     }
   );
-  const formSchema = z.object({
-    today: z.string(),
-  });
-  const { formState, control, watch, handleSubmit } = useForm({
-    resolver: zodResolver(formSchema),
-  });
-  const { errors, isDirty } = formState;
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
       setcenter({
@@ -96,6 +95,9 @@ const RemoteEmployee = () => {
     id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   });
+  useEffect(() => {
+    setArray([]);
+  }, [watch("today"), setArray]);
 
   return (
     <div className="w-screen flex relative">

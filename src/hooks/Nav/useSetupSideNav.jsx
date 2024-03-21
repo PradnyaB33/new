@@ -161,7 +161,6 @@ const useSetupSideNav = (organisationId) => {
         `/organisation/${organisationId}/setup/loan-management`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
-
     {
       label: "Remote Punching",
       icon: SellOutlined,

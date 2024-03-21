@@ -46,7 +46,9 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
   console.log(`🚀 ~ file: MiniForm.jsx:54 ~ errors:`, errors);
 
   const onSubmit = (data) => {
-    const currentDate = moment(today);
+    console.log(`🚀 ~ file: MiniForm.jsx:49 ~ data:`, data);
+    console.log(`🚀 ~ file: MiniForm.jsx:50 ~ today:`, today);
+    const currentDate = moment(`${today} ${data?.start}`, "YYYY-MM-DD HH:mm");
     data.start = currentDate;
     console.log(`🚀 ~ file: MiniForm.jsx:56 ~ data:`, data);
     setArray((prev) => [...prev, data]);
