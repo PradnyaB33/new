@@ -332,6 +332,7 @@ const DeclarationPage = () => {
       </section>
       <TDSDeclarationModel
         open={open}
+        empId={id}
         handleClose={handleClose}
         isReject={isReject}
         investment={investment}

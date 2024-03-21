@@ -91,12 +91,6 @@ const TDSTable3 = () => {
       proof: "",
       status: "Not Submitted",
     },
-    {
-      name: "Income taxable under the head Other Sources",
-      amount: 0,
-      proof: "",
-      status: "",
-    },
   ]);
 
   const {

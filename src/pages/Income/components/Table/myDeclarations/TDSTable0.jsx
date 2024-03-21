@@ -4,29 +4,29 @@ import { default as React, useState } from "react";
 import { useQuery } from "react-query";
 import useTDS from "../../../../../hooks/IncomeTax/useTDS";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
-import UserProfile from "../../../../../hooks/UserData/useUser";
 const TDSTable0 = () => {
   const authToken = useAuthToken();
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
+  // const { getCurrentUser } = UserProfile();
+  // const user = getCurrentUser();
   const {
     setGrossTotal,
-    grossTotal,
-    setSalaryTax,
-    setSalaryDeclaration,
-    setSelfPropertyDeclaration,
-    setPropertyTax,
-    setSectionTax,
-    setTaxableIncome,
-    setOtherIncomeTax,
-    taxableIncome,
-    setTax,
-    tax,
+    // grossTotal,
+    // setSalaryTax,
+    // setSalaryDeclaration,
+    // setSelfPropertyDeclaration,
+    // setPropertyTax,
+    // setSectionTax,
+    // setTaxableIncome,
+    // setOtherIncomeTax,
+    // taxableIncome,
+    // setTax,
+    // tax,
   } = useTDS();
   const {
+    data: salaryAmount,
     isFetched: salaryFetch,
     isFetching: salaryFetching,
-    isLoading,
+    isLoading: salaryLoading,
   } = useQuery({
     queryKey: ["financialYearGross"],
     queryFn: async () => {
@@ -45,206 +45,45 @@ const TDSTable0 = () => {
       }
     },
     onSuccess: (res) => {
-      if (Array.isArray(res)) {
-        let data = res?.reduce((total, item) => {
-          return total + parseFloat(item?.totalGrossSalary);
-        }, 0);
-
-        setGrossTotal(data);
-      }
+      setGrossTotal(res.TotalInvestInvestment);
     },
   });
 
-  const [tableData, setTableData] = useState([
-    {
-      name: "Income From Salary",
-      amount: 0,
-      headTotalTax: 0,
-    },
-    {
-      name: "Income From House Property",
-      amount: 0,
-      headTotalTax: 0,
-    },
-    {
-      name: "Income from other sources",
-      amount: 0,
-      headTotalTax: 0,
-    },
-    {
-      name: "Deduction under chapter VI A",
-      amount: 0,
-      headTotalTax: 0,
-    },
-  ]);
-
-  useQuery({
-    queryKey: ["getTDS"],
+  const { data } = useQuery({
+    queryKey: ["Tax"],
     queryFn: async () => {
-      try {
-        const empId = user._id;
-        const { data } = await axios.get(
-          `${process.env.REACT_APP_API}/route/tds/getTDSDetails/${empId}/2023-2024`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        );
-
-        return data.tds;
-      } catch (error) {
-        console.log(error);
-      }
+      const salaryData = await axios.get(
+        `${process.env.REACT_APP_API}/route/tds/getMyDeclaration/2023-2024/${salaryAmount?.TotalInvestInvestment}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return salaryData.data;
     },
-
-    onSuccess: (tds) => {
-      const tdsSalary = tds?.incomeFromSalarySource?.investmentType?.reduce(
-        (accumulator, investmentType) => {
-          return accumulator + Number(investmentType?.declaration);
-        },
-        0
-      );
-      const salaryDeduction = grossTotal - tdsSalary;
-      setSalaryTax(salaryDeduction);
-
-      const isSelfProperty = tds?.incomeFromHouseProperty?.section.find(
-        (section) =>
-          section?.sectionName === "(A) Self Occupied Property (Loss)"
-      );
-
-      let SelfProperty = 0;
-
-      if (isSelfProperty) {
-        let data = isSelfProperty?.investmentType?.reduce(
-          (accumulator, investmentType) => {
-            return accumulator + investmentType?.declaration;
-          },
-          0
-        );
-
-        if (data > 200000) {
-          data = 200000;
-        }
-        setSelfPropertyDeclaration(data);
-        SelfProperty = data;
-      }
-
-      const section2 = tds?.incomeFromHouseProperty?.section?.find(
-        (section) =>
-          section?.sectionName ===
-          "(B) Let out property (Enter name of Property)"
-      );
-      const section3 = tds?.incomeFromHouseProperty?.section?.find(
-        (section) =>
-          section?.sectionName ===
-          "(C) Let out property (Enter name of Property)"
-      );
-
-      let property1 = getPropertyValues(section2);
-      let property2 = getPropertyValues(section3);
-
-      setSalaryDeclaration(tdsSalary);
-
-      const totalHeads =
-        SelfProperty -
-        property1.ActualDeductedValue -
-        property2.ActualDeductedValue;
-      setPropertyTax(totalHeads);
-
-      const otherDeduction = getTotalIncome(tds?.incomeFromOtherSources);
-      setOtherIncomeTax(otherDeduction);
-
-      const section80C = tds?.sectionDeduction?.section.find(
-        (section) => section?.sectionName === "Section80"
-      );
-
-      const section50 = tds?.sectionDeduction?.section.find(
-        (section) => section?.sectionName === "Section 80CCD NPS"
-      );
-
-      const others = tds?.sectionDeduction?.section.find(
-        (section) => section?.sectionName === "Section80 50000"
-      );
-
-      let Section80c = 0;
-      let Section50 = 0;
-      let Others = 0;
-
-      if (section80C) {
-        let data = section80C?.investmentType?.reduce(
-          (accumulator, investmentType) => {
-            return accumulator + investmentType?.declaration;
-          },
-          0
-        );
-
-        if (data > 150000) {
-          data = 150000;
-        }
-        Section80c = data;
-      }
-
-      if (section50) {
-        let data = section50?.investmentType?.reduce(
-          (accumulator, investmentType) => {
-            return accumulator + investmentType?.declaration;
-          },
-          0
-        );
-
-        if (!isNaN(data)) {
-          Section50 = data;
-        }
-      }
-
-      if (others) {
-        let data = others?.investmentType?.reduce(
-          (accumulator, investmentType) => {
-            return accumulator + investmentType?.declaration;
-          },
-          0
-        );
-
-        if (!isNaN(data)) {
-          Others = data;
-        }
-      }
-
-      const SectionDeclarations = Section80c + Section50 + Others;
-      setSectionTax(SectionDeclarations);
-
-      const totalTaxableIncome =
-        salaryDeduction - (totalHeads + otherDeduction) - SectionDeclarations;
-
-      const taxAmount = getTaxbleAmount(totalTaxableIncome);
-      setTax(taxAmount);
-      setTaxableIncome(totalTaxableIncome);
-
+    onSuccess: (res) => {
       let updatedTableData = tableData.map((item) => {
         if (item.name === "Income From Salary") {
           return {
             ...item,
-            amount: tdsSalary,
-            headTotalTax: salaryDeduction,
+            amount:
+              salaryAmount?.TotalInvestInvestment + res?.salaryDeclaration,
           };
         } else if (item.name === "Income From House Property") {
           return {
             ...item,
-            amount: 0,
-            headTotalTax: totalHeads,
+            amount: res?.houseDeclaration,
           };
         } else if (item.name === "Income from other sources") {
           return {
             ...item,
-            amount: 0,
-            headTotalTax: otherDeduction,
+            amount: res?.otherDeclaration,
           };
         } else if (item.name === "Deduction under chapter VI A") {
           return {
             ...item,
-            amount: 0,
-            headTotalTax: SectionDeclarations,
+            amount: res?.sectionDeclaration,
           };
         } else {
           return item;
@@ -252,79 +91,277 @@ const TDSTable0 = () => {
       });
       setTableData(updatedTableData);
     },
+    enabled: !isNaN(salaryAmount?.TotalInvestInvestment),
   });
 
-  function getPropertyValues(sec) {
-    const netValue =
-      sec?.investmentType[0]?.declaration - sec?.investmentType[1]?.declaration;
+  const [tableData, setTableData] = useState([
+    {
+      name: "Income From Salary",
+      amount: 0,
+    },
+    {
+      name: "Income From House Property",
+      amount: 0,
+    },
+    {
+      name: "Income from other sources",
+      amount: 0,
+    },
+    {
+      name: "Deduction under chapter VI A",
+      amount: 0,
+    },
+  ]);
 
-    const deductedAmount = (netValue * 30) / 100;
+  // useQuery({
+  //   queryKey: ["getTDS"],
+  //   queryFn: async () => {
+  //     try {
+  //       const empId = user._id;
+  //       const { data } = await axios.get(
+  //         `${process.env.REACT_APP_API}/route/tds/getTDSDetails/${empId}/2023-2024`,
+  //         {
+  //           headers: {
+  //             Authorization: authToken,
+  //           },
+  //         }
+  //       );
 
-    const ActualDeductedValue = sec?.investmentType[2]?.declaration
-      ? netValue - deductedAmount - sec?.investmentType[2]?.declaration
-      : netValue - deductedAmount;
+  //       return data.tds;
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   },
 
-    return {
-      ActualDeductedValue,
-      deductedAmount,
-      netValue,
-    };
-  }
+  //   onSuccess: (tds) => {
+  //     const tdsSalary = tds?.incomeFromSalarySource?.investmentType?.reduce(
+  //       (accumulator, investmentType) => {
+  //         return accumulator + Number(investmentType?.declaration);
+  //       },
+  //       0
+  //     );
+  //     const salaryDeduction = grossTotal - tdsSalary;
+  //     setSalaryTax(salaryDeduction);
 
-  function getTotalIncome(incomeFromOther) {
-    let data = 0;
-    let deduction = 0;
+  //     const isSelfProperty = tds?.incomeFromHouseProperty?.section.find(
+  //       (section) =>
+  //         section?.sectionName === "(A) Self Occupied Property (Loss)"
+  //     );
 
-    incomeFromOther?.investmentType?.forEach((investmentType) => {
-      if (
-        investmentType?.name !== "Income taxable under the head Other Sources"
-      ) {
-        if (investmentType) {
-          if (
-            investmentType?.name ===
-            "Less : Deduction on Family Pension Income Sec. 57(IIA)"
-          ) {
-            deduction = investmentType?.declaration;
-          } else {
-            data += investmentType?.declaration;
-          }
-        }
-      }
-    });
+  //     let SelfProperty = 0;
 
-    return data - deduction;
-  }
+  //     if (isSelfProperty) {
+  //       let data = isSelfProperty?.investmentType?.reduce(
+  //         (accumulator, investmentType) => {
+  //           return accumulator + investmentType?.declaration;
+  //         },
+  //         0
+  //       );
 
-  const getTaxbleAmount = (amount) => {
-    let taxableAmount = 0;
-    if (amount < 250000) {
-      taxableAmount = 0;
-    } else if (amount >= 250000 && amount <= 500000) {
-      taxableAmount = (amount - 250000) * 0.05;
-    } else if (amount >= 500001 && amount <= 1000000) {
-      taxableAmount = (amount - 500000 + 12500) * 0.2;
-    } else if (amount > 1000000) {
-      taxableAmount = (amount - 1000000 + 112500) * 0.3;
-    }
+  //       if (data > 200000) {
+  //         data = 200000;
+  //       }
+  //       setSelfPropertyDeclaration(data);
+  //       SelfProperty = data;
+  //     }
 
-    return taxableAmount.toFixed(2);
-  };
+  //     const section2 = tds?.incomeFromHouseProperty?.section?.find(
+  //       (section) =>
+  //         section?.sectionName ===
+  //         "(B) Let out property (Enter name of Property)"
+  //     );
+  //     const section3 = tds?.incomeFromHouseProperty?.section?.find(
+  //       (section) =>
+  //         section?.sectionName ===
+  //         "(C) Let out property (Enter name of Property)"
+  //     );
+
+  //     let property1 = getPropertyValues(section2);
+  //     let property2 = getPropertyValues(section3);
+
+  //     setSalaryDeclaration(tdsSalary);
+
+  //     const totalHeads =
+  //       SelfProperty -
+  //       property1.ActualDeductedValue -
+  //       property2.ActualDeductedValue;
+  //     setPropertyTax(totalHeads);
+
+  //     const otherDeduction = getTotalIncome(tds?.incomeFromOtherSources);
+  //     setOtherIncomeTax(otherDeduction);
+
+  //     const section80C = tds?.sectionDeduction?.section.find(
+  //       (section) => section?.sectionName === "Section80"
+  //     );
+
+  //     const section50 = tds?.sectionDeduction?.section.find(
+  //       (section) => section?.sectionName === "Section 80CCD NPS"
+  //     );
+
+  //     const others = tds?.sectionDeduction?.section.find(
+  //       (section) => section?.sectionName === "Section80 50000"
+  //     );
+
+  //     let Section80c = 0;
+  //     let Section50 = 0;
+  //     let Others = 0;
+
+  //     if (section80C) {
+  //       let data = section80C?.investmentType?.reduce(
+  //         (accumulator, investmentType) => {
+  //           return accumulator + investmentType?.declaration;
+  //         },
+  //         0
+  //       );
+
+  //       if (data > 150000) {
+  //         data = 150000;
+  //       }
+  //       Section80c = data;
+  //     }
+
+  //     if (section50) {
+  //       let data = section50?.investmentType?.reduce(
+  //         (accumulator, investmentType) => {
+  //           return accumulator + investmentType?.declaration;
+  //         },
+  //         0
+  //       );
+
+  //       if (!isNaN(data)) {
+  //         Section50 = data;
+  //       }
+  //     }
+
+  //     if (others) {
+  //       let data = others?.investmentType?.reduce(
+  //         (accumulator, investmentType) => {
+  //           return accumulator + investmentType?.declaration;
+  //         },
+  //         0
+  //       );
+
+  //       if (!isNaN(data)) {
+  //         Others = data;
+  //       }
+  //     }
+
+  //     const SectionDeclarations = Section80c + Section50 + Others;
+  //     setSectionTax(SectionDeclarations);
+
+  //     const totalTaxableIncome =
+  //       salaryDeduction - (totalHeads + otherDeduction) - SectionDeclarations;
+
+  //     const taxAmount = getTaxbleAmount(totalTaxableIncome);
+  //     setTax(taxAmount);
+  //     setTaxableIncome(totalTaxableIncome);
+
+  //     let updatedTableData = tableData.map((item) => {
+  //       if (item.name === "Income From Salary") {
+  //         return {
+  //           ...item,
+  //           amount: tdsSalary,
+  //           headTotalTax: salaryDeduction,
+  //         };
+  //       } else if (item.name === "Income From House Property") {
+  //         return {
+  //           ...item,
+  //           amount: 0,
+  //           headTotalTax: totalHeads,
+  //         };
+  //       } else if (item.name === "Income from other sources") {
+  //         return {
+  //           ...item,
+  //           amount: 0,
+  //           headTotalTax: otherDeduction,
+  //         };
+  //       } else if (item.name === "Deduction under chapter VI A") {
+  //         return {
+  //           ...item,
+  //           amount: 0,
+  //           headTotalTax: SectionDeclarations,
+  //         };
+  //       } else {
+  //         return item;
+  //       }
+  //     });
+  //     setTableData(updatedTableData);
+  //   },
+  // });
+
+  // function getPropertyValues(sec) {
+  //   const netValue =
+  //     sec?.investmentType[0]?.declaration - sec?.investmentType[1]?.declaration;
+
+  //   const deductedAmount = (netValue * 30) / 100;
+
+  //   const ActualDeductedValue = sec?.investmentType[2]?.declaration
+  //     ? netValue - deductedAmount - sec?.investmentType[2]?.declaration
+  //     : netValue - deductedAmount;
+
+  //   return {
+  //     ActualDeductedValue,
+  //     deductedAmount,
+  //     netValue,
+  //   };
+  // }
+
+  // function getTotalIncome(incomeFromOther) {
+  //   let data = 0;
+  //   let deduction = 0;
+
+  //   incomeFromOther?.investmentType?.forEach((investmentType) => {
+  //     if (
+  //       investmentType?.name !== "Income taxable under the head Other Sources"
+  //     ) {
+  //       if (investmentType) {
+  //         if (
+  //           investmentType?.name ===
+  //           "Less : Deduction on Family Pension Income Sec. 57(IIA)"
+  //         ) {
+  //           deduction = investmentType?.declaration;
+  //         } else {
+  //           data += investmentType?.declaration;
+  //         }
+  //       }
+  //     }
+  //   });
+
+  //   return data - deduction;
+  // }
+
+  // const getTaxbleAmount = (amount) => {
+  //   let taxableAmount = 0;
+  //   if (amount < 250000) {
+  //     taxableAmount = 0;
+  //   } else if (amount >= 250000 && amount <= 500000) {
+  //     taxableAmount = (amount - 250000) * 0.05;
+  //   } else if (amount >= 500001 && amount <= 1000000) {
+  //     taxableAmount = (amount - 500000 + 12500) * 0.2;
+  //   } else if (amount > 1000000) {
+  //     taxableAmount = (amount - 1000000 + 112500) * 0.3;
+  //   }
+
+  //   return taxableAmount.toFixed(2);
+  // };
 
   return (
     <>
-      {isLoading || salaryFetching || !salaryFetch ? (
+      {salaryLoading || salaryFetching || !salaryFetch ? (
         <CircularProgress />
       ) : (
         <>
           <div className="grid bg-white border-[.5px] border-gray-200 grid-cols-6 gap-4 p-4">
             <div>
               <h1 className="text-gray-600">Total Taxable Income</h1>
-              <p className="text-xl">INR {taxableIncome.toFixed(2)}</p>
+              <p className="text-xl">INR {data?.salary?.toFixed(2) ?? 0}</p>
             </div>
 
             <div>
               <h1 className="text-gray-600">Total Tax</h1>
-              <p className="text-xl">INR {tax}</p>
+              <p className="text-xl">
+                INR {data?.getTotalTaxableIncome?.tax?.toFixed(2) ?? 0}
+              </p>
             </div>
           </div>
 
@@ -341,9 +378,6 @@ const TDSTable0 = () => {
 
                   <th scope="col" className="py-3 px-2 border">
                     Declaration
-                  </th>
-                  <th scope="col" className="py-3 px-2 border">
-                    Taxble Amount
                   </th>
                 </tr>
               </thead>
@@ -369,15 +403,6 @@ const TDSTable0 = () => {
                         px-2 leading-7 text-[16px]`}
                       >
                         INR {parseFloat(item.amount).toFixed(2)}
-                      </p>
-                    </td>
-                    <td className=" text-left !p-0 w-[200px] border ">
-                      <p
-                        className={`
-                     
-                        px-2 leading-7 text-[16px]`}
-                      >
-                        INR {parseFloat(item.headTotalTax).toFixed(2)}
                       </p>
                     </td>
                   </tr>
