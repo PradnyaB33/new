@@ -198,6 +198,8 @@ function CalculateSalary() {
     }
   }, [employeeSummary, selectedMonth, selectedYear]);
 
+  // pull the total deduction of loan of employee if he/she apply the loan
+
   // calculate the no of days employee present in selected Month
   const calculateDaysEmployeePresent = () => {
     const daysPresent =
