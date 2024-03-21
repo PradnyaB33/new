@@ -171,7 +171,7 @@ const LoanManagement = () => {
                           Loan Amount Applied
                         </th>
                         <th scope="col" className="px-6 py-3">
-                          Loan Amount
+                          Total Loan Amount
                         </th>
                         <th scope="col" className="px-6 py-3">
                           Loan Amount Paid
@@ -211,11 +211,11 @@ const LoanManagement = () => {
                                     Pending
                                   </span>
                                 </div>
-                              ) : loanMgtData.status === "Approved" ? (
+                              ) : loanMgtData.status === "Ongoing" ? (
                                 <div className="flex items-center gap-2">
                                   <CheckCircle className="text-green-400" />
                                   <span className="text-green-400">
-                                    Approved
+                                    Ongoing
                                   </span>
                                 </div>
                               ) : loanMgtData.status === "Rejected" ? (
