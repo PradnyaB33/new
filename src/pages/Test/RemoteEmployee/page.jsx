@@ -97,7 +97,7 @@ const RemoteEmployee = () => {
   });
   useEffect(() => {
     setArray([]);
-  }, [watch("today")]);
+  }, [watch("today"), setArray]);
 
   return (
     <div className="w-screen flex relative">
