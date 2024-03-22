@@ -188,10 +188,10 @@ const LoanManagement = () => {
                           ROI (%)
                         </th>
                         <th scope="col" className="px-6 py-3">
-                          ROI (%)
+                          Loan Starting Date
                         </th>
                         <th scope="col" className="px-6 py-3">
-                          ROI (%)
+                          Loan Completion Date
                         </th>
                       </tr>
                     </thead>
