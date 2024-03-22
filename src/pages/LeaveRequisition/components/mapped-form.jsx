@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import { differenceInDays, format, parseISO } from "date-fns";
 import React, { useState } from "react";
-import useLeaveRequesation from "../../../hooks/QueryHook/Leave-Requsation/hook";
 import useLeaveRequisitionMutation from "../../../hooks/QueryHook/Leave-Requsation/mutaion";
 
 const Mapped = ({
@@ -20,7 +19,7 @@ const Mapped = ({
   setNewAppliedLeaveEvents,
   setCalendarOpen,
 }) => {
-  const { data } = useLeaveRequesation();
+  // const { data } = useLeaveRequesation();
   const { calculateDays, checkLeaveProblem } = useLeaveRequisitionMutation();
 
   const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
@@ -33,22 +32,13 @@ const Mapped = ({
     },
   };
 
-  const handleChange = (event) => {
-    console.log(
-      `🚀 ~ file: mapped-form.jsx:36 ~ event.target.value:`,
-      event.target.value
-    );
-    console.log(`🚀 ~ file: mapped-form.jsx:44 ~ item:`, item);
-    console.log(`🚀 ~ file: mapped-form.jsx:44 ~ item:`, data?.leaveTypes);
-    console.log(
-      `🚀 ~ file: mapped-form.jsx:44 ~ item:`,
-      calculateDays(item?.start, item?.end)
-    );
-    let result = checkLeaveProblem(
-      data?.leaveTypes,
+  const handleChange = async (event) => {
+    let result = await checkLeaveProblem(
+      subtractedLeaves,
       event.target.value,
       item,
-      newAppliedLeaveEvents
+      newAppliedLeaveEvents,
+      calculateDays(item?.start, item?.end)
     );
     if (result === true) {
       setLeavesTypes(event.target.value);

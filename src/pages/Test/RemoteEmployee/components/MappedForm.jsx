@@ -3,10 +3,27 @@ import { Menu, MenuItem } from "@mui/material";
 import React, { useState } from "react";
 
 const MappedForm = ({ item, index, setArray, setOpenModal }) => {
-  const [anchorEl, setAnchorEl] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDelete = () => {
+    setArray((prev) => {
+      const newArray = [...prev];
+      newArray.splice(index, 1);
+      return newArray;
+    });
+    handleClose();
+  };
+
   return (
     <>
-      {" "}
       <div className="w-full h-auto bg-[#e2f1ff] mb-2 relative rounded-md">
         <div className=" flex justify-between w-full h-full p-3 items-center">
           <div className="flex flex-col">
@@ -22,26 +39,18 @@ const MappedForm = ({ item, index, setArray, setOpenModal }) => {
             </h1>
           </div>
           <div className="">
-            <MoreVert onClick={() => setAnchorEl(true)} />
+            <MoreVert onClick={handleClick} />
             <Menu
               id="simple-menu"
               anchorEl={anchorEl}
               keepMounted
-              open={anchorEl}
-              onClose={() => setAnchorEl(false)}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
             >
               <MenuItem id="edit" onClick={() => setOpenModal(true)}>
                 Edit
               </MenuItem>
-              <MenuItem
-                id="delete"
-                onClick={(event) => {
-                  setArray((prev) => {
-                    let array = prev.splice(index, 1);
-                    return array;
-                  });
-                }}
-              >
+              <MenuItem id="delete" onClick={handleDelete}>
                 Delete
               </MenuItem>
             </Menu>
