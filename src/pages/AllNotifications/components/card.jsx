@@ -12,7 +12,7 @@ const Card = ({ card }) => {
       {card.map((item, index) => (
         <div
           key={index}
-          className="bg-white flex justify-between items-center shadow-md sm:w-[20vw] sm:h-[10vh] p-2 m-6 rounded-lg"
+          className="bg-white flex justify-between items-center shadow-lg sm:w-[300px] sm:pl-3 sm:pr-3 sm:h-[100px] h-[80px] w-[100%] p-2 sm:m-6 gap-0 rounded-lg"
         >
           <div>
             <h1>{item.name}</h1>
