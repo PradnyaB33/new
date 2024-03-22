@@ -265,11 +265,12 @@ const LoanManagement = () => {
                             <td className="py-3 pl-6">{loanAmountPaid}</td>
                             <td className="py-3 pl-6">{loanAmountPending}</td>
                             <td className="py-3 pl-6">
-                              {loanMgtData?.rateOfIntereset}
-                            </td>
-                            <td className="py-3 pl-6">
                               {loanMgtData?.totalDeduction}
                             </td>
+                            <td className="py-3 pl-6">
+                              {loanMgtData?.rateOfIntereset}
+                            </td>
+
                             <td className="py-3 pl-6">
                               {formatDate(loanMgtData?.loanDisbursementDate) ||
                                 ""}
