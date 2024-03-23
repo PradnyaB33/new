@@ -22,7 +22,7 @@ function CalculateSalary() {
   const [employeeSummary, setEmployeeSummary] = useState([]);
   const [paidLeaveDays, setPaidLeaveDays] = useState(0);
   const [unPaidLeaveDays, setUnPaidLeaveDays] = useState(0);
-
+  const [empSalarySelectDay, setEmpSalSelectDay] = useState("");
   // get the data which is use selected by calender
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -143,6 +143,88 @@ function CalculateSalary() {
 
   // Call the function to count weekend days in the selected month
   const weekendCount = countWeekendDaysInMonth();
+
+  // get employee salary calculation day based on organization id
+  const fetchEmpSalCalculationDay = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee-salary-cal-day/get/${organisationId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setEmpSalSelectDay(response.data.empSalaryCalDayData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchEmpSalCalculationDay();
+    // eslint-disable-next-line
+  }, []);
+
+  //   get the employee salary calculation date in organization
+  let empSalCalDay = empSalarySelectDay[0]?.selectedDay || "";
+  const getActualDate = (keyword) => {
+    const today = new Date();
+    let targetDate;
+
+    // Increase the month by 1 to get the next month
+    const nextMonth = (today.getMonth() + 1) % 12;
+    const year = today.getFullYear() + Math.floor((today.getMonth() + 1) / 12);
+
+    switch (keyword) {
+      case "first_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 1);
+        break;
+      case "second_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 2);
+        break;
+      case "third_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 3);
+        break;
+      case "fourth_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 4);
+        break;
+      case "fifth_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 5);
+        break;
+      case "sixth_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 6);
+        break;
+      case "seventh_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 7);
+        break;
+      case "eighth_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 8);
+        break;
+      case "ninth_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 9);
+        break;
+      case "tenth_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 10);
+        break;
+      case "last_day_of_current_month":
+        targetDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        break;
+
+      default:
+        targetDate = null;
+        break;
+    }
+
+    return targetDate
+      ? `${targetDate.getDate()}/${
+          targetDate.getMonth() + 1
+        }/${targetDate.getFullYear()}`
+      : "Invalid keyword";
+  };
+
+  //   Example usage:
+  let emp_sal_cal_date = getActualDate(empSalCalDay);
+  console.log(emp_sal_cal_date);
 
   // pull the data such as paidLeaveDays , unpaidLeave days
   const fetchDataAndFilter = async () => {
