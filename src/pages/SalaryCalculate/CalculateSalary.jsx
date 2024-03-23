@@ -282,7 +282,7 @@ function CalculateSalary() {
   let deduction = parseFloat(availableEmployee?.deduction ?? 0);
   let employee_pf = parseFloat(availableEmployee?.employee_pf ?? 0);
   let esic = parseFloat(availableEmployee?.esic ?? 0);
-  let loanDeduction = 0; // Initialize loan deduction
+  let loanDeduction = 0;
 
   // Filter loan applications based on loan disbursement and completion dates
   if (Array.isArray(empLoanAplicationInfo)) {
