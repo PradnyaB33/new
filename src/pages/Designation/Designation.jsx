@@ -43,7 +43,6 @@ const Designation = () => {
   const [trackedId, setTrackedId] = useState("");
   const [showUpdateConfirmationDialog, setShowUpdateConfirmationDialog] =
     useState(false);
-  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const handleClick = (id) => {
     setClick(!click);
@@ -100,7 +99,6 @@ const Designation = () => {
   const handleAddDesignation = () => {
     setPrefixRequired(false);
     setClick(true);
-    setFormSubmitted(true);
     if (!designationName) return;
 
     if (editMode) {
@@ -359,11 +357,6 @@ const Designation = () => {
                   value={designationName}
                   onChange={(e) => setDesignationName(e.target.value)}
                 />
-                {!designationName && formSubmitted && (
-                  <Typography variant="body2" color="error" className="px-4">
-                    Required.
-                  </Typography>
-                )}
                 {designationIdRequired && (
                   <>
                     {prefixRequired && (

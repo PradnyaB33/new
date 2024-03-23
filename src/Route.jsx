@@ -79,6 +79,7 @@ import DeclarationPage from "./pages/Income/components/accountantDeclarations/De
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
+import ParentNotification from "./pages/AllNotifications/page";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
 import RemoteSetup from "./pages/SetupPage/Remote/RemoteSetup";
@@ -155,6 +156,7 @@ const App = () => {
         />
         {/* <Route path="/choose-role" element={<RolePage />} /> */}
         <Route path="/sign-up" element={<Signup />} />
+        <Route path="/allnotifications" element={<ParentNotification />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route
           path="/waiting"
