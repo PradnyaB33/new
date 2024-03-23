@@ -85,6 +85,7 @@ import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
 import RemoteSetup from "./pages/SetupPage/Remote/RemoteSetup";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import CustomCalander from "./pages/custom/Calendar";
+import LeaveNotification from "./pages/leave-notification/page";
 
 const App = () => {
   return (
@@ -157,6 +158,7 @@ const App = () => {
         {/* <Route path="/choose-role" element={<RolePage />} /> */}
         <Route path="/sign-up" element={<Signup />} />
         <Route path="/allnotifications" element={<ParentNotification />} />
+        <Route path="/leave-notification" element={<LeaveNotification />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route
           path="/waiting"

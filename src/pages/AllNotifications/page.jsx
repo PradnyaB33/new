@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useContext } from "react";
 import { useQuery } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
+import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import UserProfile from "../../hooks/UserData/useUser";
 import Card from "./components/card";
 
@@ -19,20 +20,7 @@ const ParentNotification = () => {
     }
   });
 
-  const { data } = useQuery("employee-leave", async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/leave/get`,
-        {
-          headers: { Authorization: authToken },
-        }
-      );
-      return response.data.leaveRequests;
-    } catch (err) {
-      console.log(`🚀 ~ file: notification.jsx:37 ~ err:`, err);
-      throw err;
-    }
-  });
+  const { data } = useLeaveNotificationHook();
 
   const { data: data2 } = useQuery("shift-request", async () => {
     try {
@@ -79,21 +67,25 @@ const ParentNotification = () => {
       name: "Leave Notification",
       count: data?.length,
       color: "#FF7373",
+      url: "/leave-notification",
     },
     {
       name: "Shift Notification",
       count: data2?.length,
       color: "#3668ff",
+      url: "/shift-notification",
     },
     {
       name: "Remote Punching Notification",
       count: data3?.length,
       color: "#51FD96",
+      url: "/remote-notification",
     },
     {
       name: "Department Notification",
       count: 2,
       color: "#51E8FD",
+      url: "/department-notification",
     },
   ];
   return (
