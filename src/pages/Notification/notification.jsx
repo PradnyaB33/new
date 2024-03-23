@@ -10,6 +10,7 @@ import PunchingRejectModal from "../../components/Modal/RemotePunchingModal/Punc
 import ShiftRejectModel from "../../components/Modal/ShiftRequestModal/ShiftRejectModel";
 // import Error from "./Error";
 // import Loader from "./Loader";
+import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import UserProfile from "../../hooks/UserData/useUser";
 
 const Notification = () => {
@@ -26,25 +27,7 @@ const Notification = () => {
     }
   });
 
-  const { data } = useQuery("employee-leave", async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/leave/get`,
-        {
-          headers: { Authorization: authToken },
-        }
-      );
-      return response.data;
-    } catch (err) {
-      console.log(`🚀 ~ file: notification.jsx:37 ~ err:`, err);
-      // handleAlert(
-      //   true,
-      //   "error",
-      //   err.response.data.message || "Server is under Maintainance"
-      // );
-      throw err;
-    }
-  });
+  const { data } = useLeaveNotificationHook();
 
   const { data: data2 } = useQuery("shift-request", async () => {
     try {
@@ -86,8 +69,6 @@ const Notification = () => {
       throw err;
     }
   });
-
-  console.log(data3);
 
   return (
     <>
