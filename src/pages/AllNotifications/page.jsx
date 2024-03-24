@@ -5,7 +5,7 @@ import useShiftNotification from "../../hooks/QueryHook/notification/shift-notif
 import Card from "./components/card";
 
 const ParentNotification = () => {
-  const { data } = useLeaveNotificationHook();
+  const { data, isLoading } = useLeaveNotificationHook();
   const { data: data2 } = useShiftNotification();
   const { data: data3 } = usePunchNotification();
 
@@ -39,7 +39,7 @@ const ParentNotification = () => {
   return (
     <div className="pt-5">
       <div className="w-full h-full gap-2 flex p-4 md:flex-wrap md:flex-row flex-col justify-center">
-        <Card card={dummyData} />
+        <Card card={dummyData} loading={isLoading} />
       </div>
     </div>
   );
