@@ -34,13 +34,13 @@ const packageSchema = z.object({
 });
 const MiniForm = ({ data }) => {
   const { addDelegateMutation } = useDelegateSuperAdmin();
-  const [visible, setVisible] = useState("password");
+  const [visible, setVisible] = useState(false);
 
-  const { control, formState, handleSubmit, getValues } = useForm({
+  const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       first_name: data?.delegateSuperAdmin?.first_name,
       last_name: data?.delegateSuperAdmin?.last_name,
-      middle_name: data?.delegateSuperAdmin?.middle_name,
+      middle_name: data?.delegateSuperAdmin?.middle_name || "",
       joining_date: moment(data?.delegateSuperAdmin?.joining_date).format(
         "yyyy-MM-DD"
       ),
@@ -60,11 +60,9 @@ const MiniForm = ({ data }) => {
 
   const { errors, isDirty } = formState;
   const onSubmit = async (data) => {
-    console.log("data", data);
-    await addDelegateMutation.mutate(data);
+    addDelegateMutation.mutate(data);
   };
 
-  console.log(`🚀 ~ file: form.jsx:61 ~ getValues:`, getValues());
   return (
     <>
       <h1 className="text-xl pl-2 font-semibold font-sans">
@@ -174,7 +172,7 @@ const MiniForm = ({ data }) => {
             name={"password"}
             icon={Password}
             control={control}
-            type={visible}
+            type={"password"}
             placeholder={"**********"}
             label={`Enter your password *`}
             errors={errors}

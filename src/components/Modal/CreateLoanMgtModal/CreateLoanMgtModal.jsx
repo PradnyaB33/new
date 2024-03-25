@@ -180,19 +180,22 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
             </div>
 
             <div className="space-y-2 ">
-              <FormLabel className="text-md">Rate of interest</FormLabel>
               <FormControl
                 size="small"
                 sx={{ width: "100%" }}
                 variant="outlined"
               >
-                <InputLabel>Rate of interest</InputLabel>
+                <InputLabel sx={{ minWidth: "120px" }}>
+                  Rate of interest
+                </InputLabel>
                 <OutlinedInput
                   value={rateOfIntereset}
                   label="Rate of interest"
+                  sx={{ minWidth: "120px" }}
                 />
               </FormControl>
             </div>
+
             <div className="space-y-2">
               <FormLabel className="text-md">Loan amount Rs</FormLabel>
               <FormControl
@@ -254,20 +257,23 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                 />
               </FormControl>
             </div>
-            <div className="space-y-2 ">
-              <FormLabel className="text-md">Loan completion date</FormLabel>
+            <div className="space-y-2">
               <FormControl
                 size="small"
                 sx={{ width: "100%" }}
                 variant="outlined"
               >
-                <InputLabel>Loan completion date</InputLabel>
+                <InputLabel sx={{ minWidth: "150px" }}>
+                  Loan completion date
+                </InputLabel>
                 <OutlinedInput
                   value={loanCompletedDate}
-                  label=" Loan completion date"
+                  label="Loan completion date"
+                  sx={{ minWidth: "150px" }}
                 />
               </FormControl>
             </div>
+
             <div className=" flex  gap-2 w-full">
               <div className="space-y-2  w-[50%]">
                 <FormLabel className="text-md">

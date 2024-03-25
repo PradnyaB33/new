@@ -29,7 +29,6 @@ import Home from "./pages/Home/Home";
 import IncomeTax from "./pages/Income/IncomeTax";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import LoanManagement from "./pages/LoanManagement/LoanManagement";
-import Notification from "./pages/Notification/notification";
 import OrgList from "./pages/OrgList/OrgList";
 import PaymentFailed from "./pages/Payment/page";
 import RemoteManager from "./pages/Remote-Punch-Info/RemoteManager";
@@ -86,6 +85,8 @@ import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
 import RemoteSetup from "./pages/SetupPage/Remote/RemoteSetup";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import CustomCalander from "./pages/custom/Calendar";
+import LeaveNotification from "./pages/leave-notification/page";
+import PunchNotification from "./pages/punch-notification/page";
 
 const App = () => {
   return (
@@ -157,7 +158,10 @@ const App = () => {
         />
         {/* <Route path="/choose-role" element={<RolePage />} /> */}
         <Route path="/sign-up" element={<Signup />} />
-        <Route path="/allnotifications" element={<ParentNotification />} />
+        {/* <Route path="/notification" element={<ParentNotification />} /> */}
+        <Route path="/leave-notification" element={<LeaveNotification />} />
+        <Route path="/punch-notification" element={<PunchNotification />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route
           path="/waiting"
@@ -679,7 +683,7 @@ const App = () => {
                 "Employee",
               ]}
             >
-              <Notification />
+              <ParentNotification />
             </RequireAuth>
           }
         />
