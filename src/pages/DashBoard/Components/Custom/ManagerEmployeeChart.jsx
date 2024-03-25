@@ -124,18 +124,19 @@ const ManagerEmployeeChart = ({
       };
     });
 
-    data?.forEach((monthData) => {
-      const monthIndex = monthData.month - 1;
-      organizedData[monthIndex] = {
-        month: monthData.month,
-        year: monthData.year,
-        availableDays: monthData.availableDays,
-        unpaidleaveDays: monthData.unpaidleaveDays,
-        paidleaveDays: monthData.paidleaveDays,
-      };
-    });
+    Array.isArray(data) &&
+      data?.forEach((monthData) => {
+        const monthIndex = monthData.month - 1;
+        organizedData[monthIndex] = {
+          month: monthData.month,
+          year: monthData.year,
+          availableDays: monthData.availableDays,
+          unpaidleaveDays: monthData.unpaidleaveDays,
+          paidleaveDays: monthData.paidleaveDays,
+        };
+      });
 
-    return organizedData;
+    return organizedData ?? [];
   };
 
   const EmployeeleaveData = organizeDataByMonth(LeaveYearData);

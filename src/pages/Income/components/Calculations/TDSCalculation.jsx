@@ -6,11 +6,8 @@ import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { Link } from "react-router-dom";
-import Tab0 from "./Tab0";
-import Tab1 from "./Tab1";
-import Tab2 from "./Tab2";
-import Tab3 from "./Tab3";
-import Tab4 from "./Tab4/Tab4";
+import Tab0 from "./components/Tab0";
+import Tab1 from "./components/Tab1";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -45,7 +42,7 @@ function a11yProps(index) {
   };
 }
 
-export default function TDSTab1() {
+const TDSCalculation = () => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -53,13 +50,14 @@ export default function TDSTab1() {
   };
 
   return (
-    <>
-      <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
+    <div>
+      <header className="text-xl w-full pt-6 border bg-white shadow-md   p-4">
         <Link to={"/income-tax"}>
           <West className="mx-4 !text-xl" />
         </Link>
-        TDS Declarations
+        TDS Calculation
       </header>
+
       <Box
         sx={{
           width: "100%",
@@ -73,7 +71,6 @@ export default function TDSTab1() {
         >
           <Tabs
             value={value}
-            variant="scrollable"
             inkBarStyle={{ background: "blue" }}
             onChange={handleChange}
             sx={{
@@ -88,27 +85,8 @@ export default function TDSTab1() {
             aria-label="basic tabs example"
             className="bg-white  space-x-4 !p-0 border-[.5px] border-gray-200"
           >
-            <Tab className="!px-4" label="My Declarations" {...a11yProps(0)} />
-            <Tab
-              className="!px-4"
-              label="Income From Salary"
-              {...a11yProps(1)}
-            />
-            <Tab
-              className="!px-4"
-              label="Income From House Property"
-              {...a11yProps(1)}
-            />
-            <Tab
-              className="!px-4"
-              label="Income from other sources"
-              {...a11yProps(1)}
-            />
-            <Tab
-              className="!px-4"
-              label="Deduction under chapter VI A"
-              {...a11yProps(1)}
-            />
+            <Tab className="!px-4" label="Old Regime" {...a11yProps(0)} />
+            <Tab className="!px-4" label="New Regime" {...a11yProps(1)} />
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
@@ -117,16 +95,9 @@ export default function TDSTab1() {
         <CustomTabPanel value={value} index={1}>
           <Tab1 />
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={2}>
-          <Tab2 />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={3}>
-          <Tab3 />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={4}>
-          <Tab4 />
-        </CustomTabPanel>
       </Box>
-    </>
+    </div>
   );
-}
+};
+
+export default TDSCalculation;

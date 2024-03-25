@@ -285,7 +285,7 @@ const SignIn = () => {
                 readOnly={readOnly}
                 control={control}
                 label={"Phone Number *"}
-                type={"number"}
+                type={"contact"}
                 errors={errors}
                 error={errors.phone}
                 placeholder={"1234567890"}

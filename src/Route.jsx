@@ -80,6 +80,7 @@ import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
 import ParentNotification from "./pages/AllNotifications/page";
+import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
 import RemoteSetup from "./pages/SetupPage/Remote/RemoteSetup";
@@ -702,6 +703,7 @@ const App = () => {
         />
         <Route path="/income-tax" element={<IncomeTax />} />
         <Route path="/income-tax/declarations" element={<TDSTab1 />} />
+        <Route path="/income-tax/calculation" element={<TDSCalculation />} />
         <Route
           path="/income-tax/accountant-declarations"
           element={<DeclarationPage />}
