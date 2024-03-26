@@ -22,6 +22,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
+
   // define the state for storing the employee data
   const [formData, setFormData] = useState({
     first_name: "",
@@ -39,6 +40,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     dept_cost_center_no: "",
     shift_allocation: "",
   });
+
   // define the state for store additional info data of employee
   const [additionalInfo, setAdditionalInfo] = useState({
     "Emergency Contact": "",
@@ -49,19 +51,14 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     "Marital Status": "",
     Education: "",
   });
-  // define the state for stored salary tempalte of employee
+
+  // state for dynamically fetch
   const [profile, setProfile] = useState([]);
-  // define the state for stored worklocation
   const [selectedWorkLocation, setSelectedWorkLocation] = useState(null);
-  // define the state for stored deptname
   const [deptname, setDepartment] = useState(null);
-  // define the state for stored designation
   const [designation, setDesignation] = useState(null);
-  // define the state for stored salary tempalte of employee
   const [salaryTemplate, setSalaryTemplate] = useState(null);
-  // define the state for stored employement type of employee
   const [employementType, setEmployementType] = useState(null);
-  // pull the employee data
   const [employeeData, setEmployeeData] = useState(null);
 
   useEffect(() => {
@@ -507,7 +504,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="first_name"
                 name="first_name"
                 value={formData.first_name}
                 onChange={handleInputChange}
@@ -522,7 +519,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="last_name"
                 name="last_name"
                 value={formData.last_name}
                 onChange={handleInputChange}
@@ -536,7 +533,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="email"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
@@ -550,7 +547,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="phone_number"
                 name="phone_number"
                 value={formData.phone_number}
                 onChange={handleInputChange}
@@ -564,7 +561,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="bank_account_no"
                 name="bank_account_no"
                 value={formData.bank_account_no}
                 onChange={handleInputChange}
@@ -578,7 +575,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="companyemail"
                 name="companyemail"
                 value={formData.companyemail}
                 onChange={handleInputChange}
@@ -593,7 +590,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="address"
                 name="address"
                 value={formData.address}
                 onChange={handleInputChange}
@@ -607,7 +604,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="citizenship"
                 name="citizenship"
                 value={formData.citizenship}
                 onChange={handleInputChange}
@@ -621,7 +618,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="adhar_card_number"
                 name="adhar_card_number"
                 value={formData.adhar_card_number}
                 onChange={handleInputChange}
@@ -630,12 +627,10 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           </div>
           <div className="space-y-2 ">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">
-                Pan Card Number
-              </InputLabel>
+              <InputLabel htmlFor="outlined-adornment-password">PAN</InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="pan"
                 name="pan_card_number"
                 value={formData.pan_card_number}
                 onChange={handleInputChange}
@@ -649,7 +644,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="date_of_birth"
                 name="date_of_birth"
                 value={formData.date_of_birth}
                 onChange={handleInputChange}
@@ -660,11 +655,11 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           <div className="space-y-2 ">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
-                Joining Date
+                Date of Joining
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="joining_date"
                 name="joining_date"
                 value={formData.joining_date}
                 onChange={handleInputChange}
@@ -696,11 +691,11 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           <div className="space-y-2">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
-                Emergency contact
+                Emergency Contact
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Emergency contact"
+                label="Emergency Contact"
                 name="Emergency contact"
                 value={additionalInfo["Emergency contact"]}
                 onChange={(e) =>
@@ -715,11 +710,11 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           <div className="space-y-2">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
-                Marital status
+                Marital Status
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Marital status"
+                label="Marital  Status"
                 name="Marital status"
                 value={additionalInfo["Marital status"]}
                 onChange={(e) =>
@@ -774,11 +769,11 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           <div className="space-y-2">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
-                Primary nationality
+                Primary Nationality
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Primary nationality"
+                label="Primary Nationality"
                 name="Primary nationality"
                 value={additionalInfo["Primary nationality"]}
                 onChange={(e) =>
@@ -818,7 +813,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               htmlFor="workLocation"
               style={{ display: "block", color: "#000000" }}
             >
-              Profile:
+              Role:
             </label>
             <select
               multiple // Enable multiple selections
@@ -943,7 +938,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               htmlFor="workLocation"
               style={{ display: "block", color: "#000000" }}
             >
-              Employement Type:
+              Employment Type :
             </label>
             <select
               value={employementType || ""}
@@ -991,7 +986,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               htmlFor="workLocation"
               style={{ display: "block", color: "#000000" }}
             >
-              Shift Allocaiton:
+              Shift Allocation:
             </label>
             <select
               value={formData.shift_allocation}
