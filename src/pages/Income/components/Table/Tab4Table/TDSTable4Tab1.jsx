@@ -1,8 +1,10 @@
 import {
+  Cancel,
   CheckCircle,
   DeleteOutlined,
   EditOutlined,
   Error,
+  Pending,
 } from "@mui/icons-material";
 import {
   Button,
@@ -24,6 +26,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+import useTDS from "../../../../../hooks/IncomeTax/useTDS";
 
 const TDSTable4Tab1 = () => {
   const rowsPerPage = 10; // Define the number of rows per page
@@ -32,6 +35,7 @@ const TDSTable4Tab1 = () => {
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
   const user = getCurrentUser();
+  const { setDeclared } = useTDS();
 
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [id, setId] = useState(null);
@@ -165,6 +169,36 @@ const TDSTable4Tab1 = () => {
     },
     onSuccess: (res) => {
       // Extracting relevant data from the backend response
+
+      const declaredAmount = res.reduce((i, a) => {
+        return (i += a.declaration);
+      }, 0);
+
+      const amountPending = res.reduce((i, a) => {
+        if (a.status === "Pending") {
+          return (i += a.declaration);
+        }
+        return i;
+      }, 0);
+
+      const amountReject = res.reduce((i, a) => {
+        if (a.status === "Reject") {
+          return (i += a.declaration);
+        }
+        return i;
+      }, 0);
+
+      const amountAccepted = res.reduce((i, a) => {
+        return (i += a.amountAccepted);
+      }, 0);
+
+      let data = {
+        declared: declaredAmount,
+        pending: amountPending,
+        accepted: amountAccepted,
+        rejected: amountReject,
+      };
+      setDeclared(data);
 
       // Updating the tableData state based on the backend response
       const updatedTableData = tableData.map((section) => {
@@ -418,19 +452,31 @@ const TDSTable4Tab1 = () => {
                             <p className="px-2">No proof found</p>
                           )}
                         </td>
-                        <td className=" text-left leading-7 text-[16px] border px-2 w-[200px]">
-                          {ele.status === "Pending" ? (
+                        <td className=" text-left  leading-7 text-[16px] w-[200px]  border px-2">
+                          {ele.name ===
+                          "Income taxable under the head Salaries" ? (
+                            ""
+                          ) : ele.status === "Pending" ? (
                             <div className="flex items-center  gap-2">
-                              <Error className="text-yellow-400 " />
+                              <Pending className="text-yellow-400 " />
                               {ele.status}
                             </div>
-                          ) : ele.status === "Auto" ? (
+                          ) : ele.status === "Auto" ||
+                            ele.status === "Approved" ? (
                             <div className="flex items-center  gap-2">
                               <CheckCircle className="text-green-400 " />
                               {ele.status}
                             </div>
+                          ) : ele.status === "Reject" ? (
+                            <div className="flex items-center  gap-2">
+                              <Cancel className="text-red-400 " />
+                              {ele.status}
+                            </div>
                           ) : (
-                            <p>{ele.status}</p>
+                            <div className="flex items-center  gap-2">
+                              <Error className="text-gray-400 " />
+                              <p>{ele.status}</p>
+                            </div>
                           )}
                         </td>
                         <td className="whitespace-nowrap leading-7 text-[16px] px-2   w-[220px]">

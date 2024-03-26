@@ -307,70 +307,10 @@ const TDSTable2 = () => {
               <div className="w-full overflow-x-auto">
                 <div className="inline-block min-w-full  ">
                   <div className="overflow-x-auto">
-                    <div className=" p-4">
+                    <div className="p-4">
                       <h1 className="text-xl"> {Object.keys(item)[0]}</h1>
                     </div>
-                    {itemIndex === 1 && (
-                      <div className="grid bg-white border-[.5px] border-gray-200 grid-cols-6 gap-4 p-4">
-                        <div>
-                          <h1 className="text-gray-600">Net Annual Value :</h1>
-                          <p className="text-xl">
-                            {/* INR {item?.secondData2?.netValue1?.toFixed(2)} */}
-                          </p>
-                        </div>
-                        <div>
-                          <h1 className="text-gray-600">
-                            Less : Standard Deduction :{" "}
-                          </h1>
-                          <p className="text-xl">
-                            INR{" "}
-                            {item?.secondData2?.standard1 !== undefined
-                              ? item?.secondData2?.standard1?.toFixed(2)
-                              : 0}
-                          </p>
-                        </div>
-                        <div className="w-max">
-                          <h1 className="text-gray-600">
-                            Net Income / (Loss) from this House
-                          </h1>
-                          <p className="text-xl">
-                            INR{" "}
-                            {item?.secondData2?.netHouseTotal1 !== undefined
-                              ? item?.secondData2?.netHouseTotal1?.toFixed(2)
-                              : 0}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                    {itemIndex === 2 && (
-                      <div className="grid bg-white border-[.5px] border-gray-200 grid-cols-6 gap-4 p-4">
-                        <div>
-                          <h1 className="text-gray-600">Net Annual Value :</h1>
-                          <p className="text-xl">
-                            {/* INR {item?.secondData3?.netValue1?.toFixed(2)} */}
-                          </p>
-                        </div>
-                        <div>
-                          <h1 className="text-gray-600">
-                            Less : Standard Deduction :{" "}
-                          </h1>
-                          <p className="text-xl">
-                            {/* INR {item?.secondData3?.standard1?.toFixed(2)} */}
-                          </p>
-                        </div>
-                        <div className="w-max">
-                          <h1 className="text-gray-600">
-                            Net Income / (Loss) from this House
-                          </h1>
-                          <p className="text-xl">
-                            INR{" "}
-                            {item?.secondData3?.netHouseTotal1 !== undefined
-                              ? item?.secondData3?.netHouseTotal1?.toFixed(2)
-                              : 0}
-                          </p>
-                        </div>
-                      </div>
-                    )}
+
                     <table className="table-auto border border-collapse min-w-full bg-white  text-left   !text-sm font-light">
                       <thead className="border-b bg-gray-100 font-bold">
                         <tr className="!font-semibold ">
@@ -429,9 +369,9 @@ const TDSTable2 = () => {
                             {Object.keys(item)[0] ===
                               "(A) Self Occupied Property (Loss)" && (
                               <>
-                                <td className="leading-7 text-[16px] h-14 text-left px-2  w-[220px] border ">
+                                <td className="leading-7 text-[16px] h-14 text-left px-2 w-[220px] border ">
                                   {editStatus[itemIndex] === id ? (
-                                    <div className="flex gap-2 px-2 !py-0 h-full ">
+                                    <div className="flex gap-2 !py-0 h-full ">
                                       <h1 className="text-lg h-full !py-0 text-center w-[30%] bg-gray-200 border justify-center   flex items-center ">
                                         INR
                                       </h1>

@@ -20,6 +20,7 @@ import React, { useContext, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
 import useOther from "../../../../hooks/IncomeTax/useOther";
+import useTDS from "../../../../hooks/IncomeTax/useTDS";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
 
@@ -29,6 +30,7 @@ const TDSTable3 = () => {
   const user = getCurrentUser();
   const queryClient = useQueryClient();
   const { setTotalHeads } = useOther();
+  const { setDeclared } = useTDS();
   console.log(`🚀 ~ file: TDSTable3.jsx:30 ~ setTotalHeads:`, setTotalHeads);
 
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
@@ -140,6 +142,35 @@ const TDSTable3 = () => {
         }
       });
 
+      const declaredAmount = res.reduce((i, a) => {
+        return (i += a.declaration);
+      }, 0);
+
+      const amountPending = res.reduce((i, a) => {
+        if (a.status === "Pending") {
+          return (i += a.declaration);
+        }
+        return i;
+      }, 0);
+
+      const amountReject = res.reduce((i, a) => {
+        if (a.status === "Reject") {
+          return (i += a.declaration);
+        }
+        return i;
+      }, 0);
+
+      const amountAccepted = res.reduce((i, a) => {
+        return (i += a.amountAccepted);
+      }, 0);
+
+      let data = {
+        declared: declaredAmount,
+        pending: amountPending,
+        accepted: amountAccepted,
+        rejected: amountReject,
+      };
+      setDeclared(data);
       // setTotalHeads(res.totalAddition.toFixed(2));
       setTableData(updatedTableData);
     },

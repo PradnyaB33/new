@@ -187,8 +187,6 @@ const TDSTable1 = () => {
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["finacialYearData"] });
-      // deduction = grossTotal - res.totalDeductions;
-      console.log(res);
 
       const declaredAmount = res.reduce((i, a) => {
         return (i += a.declaration);
@@ -468,15 +466,15 @@ const TDSTable1 = () => {
                     </p>
                   </td>
 
-                  <td className=" text-left !p-0 w-[200px] border ">
+                  <td className="leading-7 text-[16px] h-14 text-left  !p-0 w-[220px] border ">
                     {editStatus[itemIndex] && editStatus[itemIndex] ? (
-                      <div className="flex gap-2 h-14">
-                        <h1 className="leading-7 text-[16px] bg-gray-300 border h-auto px-4  flex items-center ">
+                      <div className="flex gap-2 w-full !py-0 h-full ">
+                        <h1 className="text-lg h-full !py-0 text-center w-[30%] bg-gray-200 border justify-center   flex items-center ">
                           INR
                         </h1>
                         <input
                           type="number"
-                          className="border-none w-[90px] h-auto outline-none  "
+                          className="border-none w-[70%]   outline-none"
                           value={parseFloat(item.amount)}
                           onChange={(e) => handleAmountChange(e, itemIndex)}
                         />
@@ -532,7 +530,7 @@ const TDSTable1 = () => {
                       ""
                     ) : editStatus[itemIndex] && editStatus[itemIndex] ? (
                       <div className="px-2">
-                        <label className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+                        <label className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 text-sm rounded cursor-pointer">
                           Upload File
                           <input
                             type="file"

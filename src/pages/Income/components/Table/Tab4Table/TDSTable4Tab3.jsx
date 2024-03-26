@@ -1,8 +1,10 @@
 import {
+  Cancel,
   CheckCircle,
   DeleteOutlined,
   EditOutlined,
   Error,
+  Pending,
 } from "@mui/icons-material";
 import {
   Button,
@@ -387,19 +389,31 @@ const TDSTable4Tab3 = () => {
                             <p className="px-2">No proof found</p>
                           )}
                         </td>
-                        <td className=" text-left leading-7 text-[16px] border px-2 w-[200px]">
-                          {ele.status === "Pending" ? (
+                        <td className=" text-left  leading-7 text-[16px] w-[200px]  border px-2">
+                          {ele.name ===
+                          "Income taxable under the head Salaries" ? (
+                            ""
+                          ) : ele.status === "Pending" ? (
                             <div className="flex items-center  gap-2">
-                              <Error className="text-yellow-400 " />
+                              <Pending className="text-yellow-400 " />
                               {ele.status}
                             </div>
-                          ) : ele.status === "Auto" ? (
+                          ) : ele.status === "Auto" ||
+                            ele.status === "Approved" ? (
                             <div className="flex items-center  gap-2">
                               <CheckCircle className="text-green-400 " />
                               {ele.status}
                             </div>
+                          ) : ele.status === "Reject" ? (
+                            <div className="flex items-center  gap-2">
+                              <Cancel className="text-red-400 " />
+                              {ele.status}
+                            </div>
                           ) : (
-                            <p>{ele.status}</p>
+                            <div className="flex items-center  gap-2">
+                              <Error className="text-gray-400 " />
+                              <p>{ele.status}</p>
+                            </div>
                           )}
                         </td>
                         <td className="whitespace-nowrap leading-7 text-[16px] px-2   w-[220px]">
