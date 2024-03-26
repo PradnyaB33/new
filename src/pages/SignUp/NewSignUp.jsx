@@ -278,7 +278,7 @@ const SignIn = () => {
               error={errors.last_name}
             />
             {/* Phone Number */}
-            <div className="grid grid-cols-2 items-center gap-2">
+            <div className="grid grid-cols-2 w-full items-center gap-2">
               <AuthInputFiled
                 name="phone"
                 icon={Phone}
@@ -291,36 +291,39 @@ const SignIn = () => {
                 placeholder={"1234567890"}
               />
 
-              {isVerified ? (
-                <>
-                  <SvgIcon color="success">
-                    <CheckCircle />
-                  </SvgIcon>
-                  Verified
-                </>
-              ) : (
-                <div>
-                  <button
-                    type="button"
-                    disabled={
-                      number?.length !== 10 || isTimeVisible ? true : false
-                    }
-                    onClick={SendOtp}
-                    className={`w-max flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500  ${
-                      (number?.length !== 10 || isTimeVisible) &&
-                      "bg-gray-400 text-gray-900"
-                    }`}
-                  >
-                    Get OTP
-                  </button>
-                </div>
-              )}
-              {isTimeVisible && (
-                <p>
-                  Resend OTP {Math.floor(time / 60)}:
-                  {(time % 60).toString().padStart(2, "0")}
-                </p>
-              )}
+              <>
+                {isVerified ? (
+                  <>
+                    <SvgIcon color="success">
+                      <CheckCircle />
+                    </SvgIcon>
+                    Verified
+                  </>
+                ) : (
+                  <div>
+                    <button
+                      type="button"
+                      disabled={
+                        number?.length !== 10 || isTimeVisible ? true : false
+                      }
+                      onClick={SendOtp}
+                      className={`w-max flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500  ${
+                        (number?.length !== 10 || isTimeVisible) &&
+                        "bg-gray-400 text-gray-900"
+                      }`}
+                    >
+                      Get OTP
+                    </button>
+                  </div>
+                )}
+
+                {isTimeVisible && (
+                  <p>
+                    Resend OTP {Math.floor(time / 60)}:
+                    {(time % 60).toString().padStart(2, "0")}
+                  </p>
+                )}
+              </>
             </div>
             {display && (
               <div className="flex items-center gap-2">

@@ -664,7 +664,7 @@ const AuthInputFiled = ({
                 } flex  rounded-md items-center   bg-white  `}
               >
                 <PhoneInput
-                  country={"us"}
+                  country={"in"}
                   value={field.value}
                   onChange={field.onChange}
                   containerStyle={{
@@ -685,18 +685,6 @@ const AuthInputFiled = ({
                     className: `md:py-[6px]`,
                   }}
                 />
-                {type === "password" && (
-                  <button
-                    type="button"
-                    onClick={() => setVisible(visible === true ? false : true)}
-                  >
-                    {visible ? (
-                      <VisibilityOff className="text-gray-700" />
-                    ) : (
-                      <Visibility className="text-gray-700" />
-                    )}
-                  </button>
-                )}
               </div>
             );
           }}
