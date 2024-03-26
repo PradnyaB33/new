@@ -360,7 +360,7 @@ function CalculateSalary() {
 
   let totalGrossSalary = totalSalary.toFixed(2);
 
-  // Calculate the total deduction
+  // Calculate the total
   let deduction = parseFloat(availableEmployee?.deduction ?? 0);
   let employee_pf = parseFloat(availableEmployee?.employee_pf ?? 0);
   let esic = parseFloat(availableEmployee?.esic ?? 0);
