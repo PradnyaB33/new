@@ -86,7 +86,7 @@ import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import CustomCalander from "./pages/custom/Calendar";
 import LeaveNotification from "./pages/leave-notification/page";
 import PunchNotification from "./pages/punch-notification/page";
-
+import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 const App = () => {
   return (
     <AuthProvider>
@@ -342,6 +342,16 @@ const App = () => {
             >
               {/* <EmployeeAdd /> */}
               <EmployeeTest />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/emo-info-punch-status"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <EmpInfoPunchStatus />
             </RequireAuth>
           }
         />
