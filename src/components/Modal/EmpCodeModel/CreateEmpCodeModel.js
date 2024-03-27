@@ -101,7 +101,7 @@ const CreateEmpCodeModel = ({ handleClose, open, organisationId }) => {
                 control={control}
                 type="text"
                 placeholder="code"
-                label=" employee code *"
+                label=" Employee Code *"
                 errors={errors}
                 error={errors.code}
               />

@@ -1,4 +1,10 @@
-import { DeleteOutlined, EditOutlined, Error, Info } from "@mui/icons-material";
+import {
+  Article,
+  DeleteOutlined,
+  EditOutlined,
+  Error,
+  Info,
+} from "@mui/icons-material";
 import { Button, CircularProgress, IconButton, Tooltip } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
@@ -114,7 +120,7 @@ const TDSTable2 = () => {
     },
   ]);
 
-  const { isFetching, isFetched, fetchStatus } = useQuery({
+  useQuery({
     queryKey: ["incomeHouse"],
     queryFn: async () => {
       try {
@@ -174,10 +180,6 @@ const TDSTable2 = () => {
       return tableData;
     },
   });
-  console.log(
-    `🚀 ~ file: TDSTable2.jsx:225 ~ { isFetching, isFetched, fetchStatus }:`,
-    { isFetching, isFetched, fetchStatus }
-  );
 
   const { handleAlert } = useContext(TestContext);
   const [editStatus, setEditStatus] = useState({});
@@ -216,17 +218,26 @@ const TDSTable2 = () => {
 
   const handleDelete = async (index, id) => {
     const newData = [...tableData];
+    const value = newData[index][Object.keys(newData[index])[0]][id];
     const requestData = {
       empId: user._id,
       financialYear: "2023-2024",
-      sectionName: Object.keys(newData[index])[0],
-      investmentTypeName:
-        newData[index][Object.keys(newData[index])[0]][id].name,
+      requestData: {
+        sectionname: "House",
+        subsectionname: Object.keys(newData[index])[0],
+        name: value.name,
+        property1: value.property1,
+        property2: value.property2,
+        status: "Not Submitted",
+        proof: "",
+        declaration: 0,
+        amountAccepted: 0,
+      },
     };
 
     try {
-      await axios.post(
-        `${process.env.REACT_APP_API}/route/tds/deleteHouseProperty`,
+      await axios.patch(
+        `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
         requestData,
         {
           headers: {
@@ -242,10 +253,47 @@ const TDSTable2 = () => {
     }
   };
 
+  const handleDownload = (pdf) => {
+    // You can use any method to trigger the download, such as creating an invisible link and clicking it
+    const link = document.createElement("a");
+    link.href = pdf;
+    link.download = "File1.pdf";
+    link.click();
+  };
+  const uploadProof = async (tdsfile) => {
+    const data = await axios.get(
+      `${process.env.REACT_APP_API}/route/s3createFile/TDS`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+      }
+    );
+
+    await axios.put(data?.data?.url, tdsfile, {
+      headers: {
+        "Content-Type": tdsfile.type,
+      },
+    });
+
+    return data?.data?.url?.split("?")[0];
+  };
+
+  console.log(`🚀 ~ handleDownload:`, handleDownload);
+
   const handleSaveClick = async (index, id) => {
     const newData = [...tableData];
     const value = newData[index][Object.keys(newData[index])[0]][id];
-    const requestData = {
+    const tdsfile = newData[index].proof;
+
+    let uploadproof = "";
+
+    if (tdsfile) {
+      uploadproof = await uploadProof(tdsfile);
+    }
+
+    let requestData = {
       empId: user._id,
       financialYear: "2023-2024",
       requestData: {
@@ -267,6 +315,33 @@ const TDSTable2 = () => {
         proof: "",
       },
     };
+
+    if (uploadProof) {
+      requestData = {
+        empId: user._id,
+        financialYear: "2023-2024",
+        requestData: {
+          sectionname: "House",
+          subsectionname: Object.keys(newData[index])[0],
+          name: value.name,
+          property1: value.property1,
+          property2: value.property2,
+          status: "Pending",
+          declaration:
+            Object.keys(newData[index])[0] !==
+            "(A) Self Occupied Property (Loss)"
+              ? value.declaration > value?.maxAmount
+                ? value?.maxAmount
+                : value.declaration
+              : Number(value.property1) + Number(value.property2) >
+                value?.maxAmount
+              ? value?.maxAmount
+              : Number(value.property1) + Number(value.property2),
+          proof: uploadproof,
+        },
+      };
+    }
+
     try {
       await axios.post(
         `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
@@ -447,10 +522,20 @@ const TDSTable2 = () => {
                                     />
                                   </label>
                                 </div>
-                              ) : ele.proof ? (
-                                ele.proof
+                              ) : item.proof ? (
+                                typeof item.proof === "string" && (
+                                  <div
+                                    // onClick={() => handlePDF(item.proof)}
+                                    className="px-2 flex gap-2 items-center h-max w-max  cursor-pointer"
+                                  >
+                                    <Article className="text-blue-500" />
+                                    <h1>View Proof</h1>
+                                  </div>
+                                )
                               ) : (
-                                "No proof found"
+                                <p className="px-2  md:w-full w-max">
+                                  No proof found
+                                </p>
                               )}
                             </td>
                             <td className="text-left w-[200px] border px-2">

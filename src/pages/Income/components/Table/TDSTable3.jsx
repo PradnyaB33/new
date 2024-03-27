@@ -1,4 +1,5 @@
 import {
+  Article,
   Cancel,
   CheckCircle,
   DeleteOutlined,
@@ -48,48 +49,56 @@ const TDSTable3 = () => {
     {
       name: "Bank interest (SB account)",
       amount: 0,
+      amountAccepted: 0,
       proof: "",
       status: "Not Submitted",
     },
     {
       name: "Bank Interest (Term Deposit)",
       amount: 0,
+      amountAccepted: 0,
       proof: "",
       status: "Not Submitted",
     },
     {
       name: "NSC Interest for the year",
       amount: 0,
+      amountAccepted: 0,
       proof: "",
       status: "Not Submitted",
     },
     {
       name: "Post office deposit",
       amount: 0,
+      amountAccepted: 0,
       proof: "",
       status: "Not Submitted",
     },
     {
       name: "Dividend",
       amount: 0,
+      amountAccepted: 0,
       proof: "",
       status: "Not Submitted",
     },
     {
       name: "Family Pension",
       amount: 0,
+      amountAccepted: 0,
       proof: "",
       status: "Not Submitted",
     },
     {
       name: "Less : Deduction on Family Pension Income Sec. 57(IIA)",
       amount: 0,
-      proof: "-",
+      amountAccepted: 0,
+      proof: "",
       status: "Auto",
     },
     {
       name: "Less : Gifts up to Rs. 50,000/- Dec. 56(2)",
       amount: 0,
+      amountAccepted: 0,
       proof: "",
       status: "Not Submitted",
     },
@@ -122,20 +131,13 @@ const TDSTable3 = () => {
           (investment) => investment.name === item.name
         );
 
-        // if (item.name === "Income taxable under the head Other Sources") {
-        //   return {
-        //     ...item,
-        //     amount: res.totalAddition,
-        //     status: "",
-        //     proof: "",
-        //   };
-        // }
         if (matchingItem) {
           return {
             ...item,
             amount: matchingItem.declaration,
             status: matchingItem.status,
             proof: matchingItem.proof,
+            amountAccepted: matchingItem.amountAccepted,
           };
         } else {
           return item;
@@ -197,21 +199,79 @@ const TDSTable3 = () => {
     setTableData(newData);
   };
 
+  const [pdf, setPdf] = useState(null);
+  console.log(`🚀 ~ pdf:`, pdf);
+  const handlePDF = (id) => {
+    setPdf(id);
+  };
+  const handleDownload = (pdf) => {
+    // You can use any method to trigger the download, such as creating an invisible link and clicking it
+    const link = document.createElement("a");
+    link.href = pdf;
+    link.download = "File1.pdf";
+    link.click();
+  };
+
+  console.log(`🚀 ~ handleDownload:`, handleDownload);
+
+  const uploadProof = async (tdsfile) => {
+    const data = await axios.get(
+      `${process.env.REACT_APP_API}/route/s3createFile/TDS`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+      }
+    );
+
+    console.log(data.data);
+
+    await axios.put(data?.data?.url, tdsfile, {
+      headers: {
+        "Content-Type": tdsfile.type,
+      },
+    });
+
+    return data?.data?.url?.split("?")[0];
+  };
   const handleSaveClick = async (index) => {
     const newData = [...tableData];
     const value = newData[index];
-    const requestData = {
-      empId: user._id,
-      financialYear: "2023-2024",
-      requestData: {
-        name: value.name,
-        sectionname: "Otherincome",
-        status: "Pending",
-        declaration: value.amount,
-        proof: "",
-      },
-    };
+    const tdsfile = newData[index].proof;
+
     try {
+      let uploadproof = "";
+
+      if (tdsfile) {
+        uploadproof = await uploadProof(tdsfile);
+      }
+
+      let requestData = {
+        empId: user._id,
+        financialYear: "2023-2024",
+        requestData: {
+          name: value.name,
+          sectionname: "Salary",
+          status: "Pending",
+          declaration: value.amount,
+        },
+      };
+
+      if (uploadProof) {
+        requestData = {
+          empId: user._id,
+          financialYear: "2023-2024",
+          requestData: {
+            name: value.name,
+            sectionname: "Salary",
+            status: "Pending",
+            declaration: value.amount,
+            proof: uploadproof,
+          },
+        };
+      }
+
       if (value.name === "Family Pension") {
         const data = {
           empId: user._id,
@@ -328,6 +388,9 @@ const TDSTable3 = () => {
                 <th scope="col" className="py-3 px-2 border">
                   Declaration
                 </th>
+                <th scope="col" className="py-3 px-2 border">
+                  Amount Accepted
+                </th>
                 <th scope="col" className=" py-3 px-2 border">
                   Proof submitted
                 </th>
@@ -393,12 +456,21 @@ const TDSTable3 = () => {
                       </p>
                     )}
                   </td>
+                  <td className=" text-left !p-0 w-[200px] border ">
+                    <p
+                      className={`
+                       
+                        px-2 leading-7 text-[16px]`}
+                    >
+                      INR {item.amountAccepted}
+                    </p>
+                  </td>
+
                   <td className="text-left leading-7 text-[16px] w-[200px]  border">
-                    {item.name ===
-                    "Income taxable under the head Other Sources" ? (
+                    {item.name === "Gross Salary" ? (
                       ""
                     ) : editStatus[itemIndex] && editStatus[itemIndex] ? (
-                      <div className="px-2">
+                      <div className="px-2  md:w-full w-max">
                         <label className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
                           Upload File
                           <input
@@ -409,9 +481,17 @@ const TDSTable3 = () => {
                         </label>
                       </div>
                     ) : item.proof ? (
-                      item.proof
+                      typeof item.proof === "string" && (
+                        <div
+                          onClick={() => handlePDF(item.proof)}
+                          className="px-2 flex gap-2 items-center h-max w-max  cursor-pointer"
+                        >
+                          <Article className="text-blue-500" />
+                          <h1>View Proof</h1>
+                        </div>
+                      )
                     ) : (
-                      <p className="px-2">No proof found</p>
+                      <p className="px-2  md:w-full w-max">No proof found</p>
                     )}
                   </td>
 

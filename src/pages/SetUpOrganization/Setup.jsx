@@ -1,20 +1,21 @@
 import { West } from "@mui/icons-material";
 import SettingsOutlined from "@mui/icons-material/SettingsOutlined";
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import BackComponent from "../../components/BackComponent/BackComponent";
 import useSetupSideNav from "../../hooks/Nav/useSetupSideNav";
 
 const Setup = ({ children }) => {
   const { organisationId } = useParams("");
   const { linkData } = useSetupSideNav(organisationId);
+  const navigate = useNavigate();
 
   return (
     <>
       <section className="bg-gray-50 min-h-screen w-full">
         <header className="md:block hidden text-xl w-full pt-6 bg-white shadow-md p-4">
           <BackComponent />
-          <Link to={"/organizationList"}>
+          <Link onClick={() => navigate(-1)}>
             <West className="mx-4 !text-xl" />
           </Link>
           Organisation Setup

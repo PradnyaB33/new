@@ -8,6 +8,7 @@ import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import axios from "axios";
 import dayjs from "dayjs";
+import { useQuery } from "react-query";
 function CalculateSalary() {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -21,7 +22,7 @@ function CalculateSalary() {
   const [employeeSummary, setEmployeeSummary] = useState([]);
   const [paidLeaveDays, setPaidLeaveDays] = useState(0);
   const [unPaidLeaveDays, setUnPaidLeaveDays] = useState(0);
-
+  const [empSalarySelectDay, setEmpSalSelectDay] = useState("");
   // get the data which is use selected by calender
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -143,6 +144,88 @@ function CalculateSalary() {
   // Call the function to count weekend days in the selected month
   const weekendCount = countWeekendDaysInMonth();
 
+  // get employee salary calculation day based on organization id
+  const fetchEmpSalCalculationDay = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee-salary-cal-day/get/${organisationId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setEmpSalSelectDay(response.data.empSalaryCalDayData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchEmpSalCalculationDay();
+    // eslint-disable-next-line
+  }, []);
+
+  //   get the employee salary calculation date in organization
+  let empSalCalDay = empSalarySelectDay[0]?.selectedDay || "";
+  const getActualDate = (keyword) => {
+    const today = new Date();
+    let targetDate;
+
+    // Increase the month by 1 to get the next month
+    const nextMonth = (today.getMonth() + 1) % 12;
+    const year = today.getFullYear() + Math.floor((today.getMonth() + 1) / 12);
+
+    switch (keyword) {
+      case "first_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 1);
+        break;
+      case "second_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 2);
+        break;
+      case "third_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 3);
+        break;
+      case "fourth_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 4);
+        break;
+      case "fifth_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 5);
+        break;
+      case "sixth_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 6);
+        break;
+      case "seventh_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 7);
+        break;
+      case "eighth_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 8);
+        break;
+      case "ninth_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 9);
+        break;
+      case "tenth_day_of_next_month":
+        targetDate = new Date(year, nextMonth, 10);
+        break;
+      case "last_day_of_current_month":
+        targetDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        break;
+
+      default:
+        targetDate = null;
+        break;
+    }
+
+    return targetDate
+      ? `${targetDate.getDate()}/${
+          targetDate.getMonth() + 1
+        }/${targetDate.getFullYear()}`
+      : "Invalid keyword";
+  };
+
+  //   Example usage:
+  let emp_sal_cal_date = getActualDate(empSalCalDay);
+  console.log(emp_sal_cal_date);
+
   // pull the data such as paidLeaveDays , unpaidLeave days
   const fetchDataAndFilter = async () => {
     try {
@@ -200,6 +283,21 @@ function CalculateSalary() {
 
   // pull the total deduction of loan of employee if he/she apply the loan
 
+  const { data: empLoanAplicationInfo } = useQuery(
+    ["empLoanAplication", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/${userId}/get-ongoing-loan-data`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
+  console.log(empLoanAplicationInfo);
   // calculate the no of days employee present in selected Month
   const calculateDaysEmployeePresent = () => {
     const daysPresent =
@@ -262,20 +360,47 @@ function CalculateSalary() {
 
   let totalGrossSalary = totalSalary.toFixed(2);
 
-  // calculate the total deduction
-  let deduction = availableEmployee?.deduction || "";
-  let employee_pf = availableEmployee?.employee_pf || "";
-  let esic = availableEmployee?.esic || "";
+  // Calculate the total deduction
+  let deduction = parseFloat(availableEmployee?.deduction ?? 0);
+  let employee_pf = parseFloat(availableEmployee?.employee_pf ?? 0);
+  let esic = parseFloat(availableEmployee?.esic ?? 0);
+  let loanDeduction = 0;
+
+  // Filter loan applications based on loan disbursement and completion dates
+  if (Array.isArray(empLoanAplicationInfo)) {
+    const currentDate = new Date();
+    const loanDeductionApplications = empLoanAplicationInfo.filter(
+      (application) => {
+        const loanDisbursementDate = new Date(application.loanDisbursementDate);
+        const loanCompletionDate = new Date(application.loanCompletedDate);
+        return (
+          loanDisbursementDate <= currentDate &&
+          currentDate <= loanCompletionDate
+        );
+      }
+    );
+
+    // Calculate total loan deduction from filtered loan applications
+    loanDeduction = loanDeductionApplications.reduce((total, application) => {
+      return total + parseFloat(application.totalDeduction || 0);
+    }, 0);
+  }
 
   // Convert each individual deduction to have two decimal places
-  deduction = parseFloat(deduction).toFixed(2);
-  employee_pf = parseFloat(employee_pf).toFixed(2);
-  esic = parseFloat(esic).toFixed(2);
+  deduction = deduction.toFixed(2);
+  employee_pf = employee_pf.toFixed(2);
+  esic = esic.toFixed(2);
+  loanDeduction = loanDeduction.toFixed(2);
 
   // Calculate total deduction by adding all deductions
   let totalDeductions =
-    parseFloat(deduction) + parseFloat(employee_pf) + parseFloat(esic);
+    parseFloat(deduction) +
+    parseFloat(employee_pf) +
+    parseFloat(esic) +
+    parseFloat(loanDeduction);
   let totalDeduction = totalDeductions.toFixed(2);
+
+  console.log("Total Deduction:", totalDeduction);
 
   // calculate the totalNetSalary
   let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
@@ -554,8 +679,8 @@ function CalculateSalary() {
             <tr>
               <td class="px-4 py-2 border">Food Allowance:</td>
               <td class="px-4 py-2 border">{foodAllowance}</td>
-              <td class="px-4 py-2 border"></td>
-              <td class="px-4 py-2 border"></td>
+              <td class="py-2 border">Loan Deduction :</td>
+              <td class="py-2 border">{loanDeduction}</td>
             </tr>
             <tr>
               <td class="px-4 py-2 border">Sales Allowance:</td>

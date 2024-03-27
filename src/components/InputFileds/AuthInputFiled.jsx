@@ -3,13 +3,15 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { default as React } from "react";
 import Autocomplete, { usePlacesWidget } from "react-google-autocomplete";
 import { Controller } from "react-hook-form";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import { Link } from "react-router-dom";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
+import Datepicker from "react-tailwindcss-datepicker";
 import useEmpState from "../../hooks/Employee-OnBoarding/useEmpState";
 import { salaryComponentArray } from "../Modal/SalaryInputFields/SalaryInputFieldsModal";
 import PlaceAutoComplete from "./places-autocomplete";
-
 // import Autocomplete from "react-google-autocomplete";
 
 const AuthInputFiled = ({
@@ -25,6 +27,7 @@ const AuthInputFiled = ({
   placeholder,
   options,
   disabled,
+  daysOfWeek,
   value,
   wrapperMessage,
   min,
@@ -33,6 +36,10 @@ const AuthInputFiled = ({
   visible,
   setVisible,
   center,
+  selectedDays,
+  setSelectedDays,
+  handleDaySelection,
+  isSelected,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -44,6 +51,54 @@ const AuthInputFiled = ({
     apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     onPlaceSelected: (place) => console.log(place),
   });
+
+  if (type === "calender") {
+    return (
+      <>
+        <div className={`space-y-1 w-full ${className}`}>
+          <label
+            htmlFor={name}
+            className={`${
+              error && "text-red-500"
+            } font-semibold text-gray-500 text-md`}
+          >
+            {label}
+          </label>
+
+          <Controller
+            control={control}
+            name={name}
+            id={name}
+            render={({ field }) => (
+              <div
+                className={` flex rounded-md px-2 py-2 border-gray-200 border-[.5px] bg-white items-center`}
+              >
+                {Icon && <Icon className="text-gray-700 mr-2 text-sm" />}
+                <Datepicker
+                  inputClassName={"border-none w-full outline-none"}
+                  useRange={false}
+                  asSingle={true}
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                  value={field.value}
+                />
+              </div>
+            )}
+          />
+          <div className="h-4 !mb-1">
+            <ErrorMessage
+              errors={errors}
+              name={name}
+              render={({ message }) => (
+                <p className="text-sm text-red-500">{message}</p>
+              )}
+            />
+          </div>
+        </div>
+      </>
+    );
+  }
 
   if (type === "select") {
     return (
@@ -615,6 +670,75 @@ const AuthInputFiled = ({
                     )}
                   </button>
                 )}
+              </div>
+            );
+          }}
+        />
+        <div className="h-4 w-max !z-50   !mb-1">
+          <ErrorMessage
+            errors={errors}
+            name={name}
+            render={({ message }) => (
+              <p className="text-sm mb-4 relative !bg-white  text-red-500">
+                {message}
+              </p>
+            )}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (type === "contact") {
+    return (
+      <div className={`space-y-1 min-w-11 ${className}`}>
+        <label
+          htmlFor={name}
+          className={`${
+            error && "text-red-500"
+          } font-semibold text-gray-500 text-md`}
+        >
+          {label}
+        </label>
+        <Controller
+          control={control}
+          name={name}
+          id={name}
+          render={({ field }) => {
+            return (
+              <div
+                onFocus={() => {
+                  handleFocus(name);
+                }}
+                onBlur={() => setFocusedInput(null)}
+                className={`${readOnly && "bg-[ghostwhite]"} ${
+                  focusedInput === name
+                    ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
+                    : "outline-none border-gray-200  border-[.5px]"
+                } flex  rounded-md items-center   bg-white  `}
+              >
+                <PhoneInput
+                  country={"in"}
+                  value={field.value}
+                  onChange={field.onChange}
+                  containerStyle={{
+                    height: "100%",
+                    width: "100%",
+                    padding: "10px 0",
+                    margin: "0px",
+                  }}
+                  inputStyle={{
+                    padding: "0 50px",
+                    outline: "none",
+                    border: "none",
+                  }}
+                  inputProps={{
+                    name: field.name,
+                    id: field.id,
+                    placeholder: placeholder,
+                    className: `md:py-[6px]`,
+                  }}
+                />
               </div>
             );
           }}

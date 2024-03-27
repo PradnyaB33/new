@@ -20,14 +20,14 @@ const LoanManagementPieChart = ({ totalPaidAmount, totalPendingAmount }) => {
     plugins: {
       legend: {
         display: true,
-        position: "right",
+        position: "top",
       },
     },
   };
 
   return (
-    <div className="px-20 py-16">
-      <Pie data={data} options={options} className="w-96" />
+    <div>
+      <Pie data={data} options={options} className=" w-full max-w-96" />
     </div>
   );
 };

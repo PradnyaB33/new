@@ -1,10 +1,10 @@
+import Alert from "@mui/material/Alert";
+import axios from "axios";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import React, { useContext, useEffect, useState } from "react";
 import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
-import axios from "axios";
-import Alert from "@mui/material/Alert";
 const ViewPayslip = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];

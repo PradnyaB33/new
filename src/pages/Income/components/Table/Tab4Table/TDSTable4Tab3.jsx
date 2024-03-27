@@ -41,6 +41,7 @@ const TDSTable4Tab3 = () => {
           section: "80D",
           name: "Mediclaim Insurance (Self & dependent)",
           declaration: 0,
+          amountAccepted: 0,
           maxAmount: 25000,
           proof: "",
           status: "Not Submitted",
@@ -49,6 +50,7 @@ const TDSTable4Tab3 = () => {
           section: "80D",
           name: "Mediclaim Insurance (Parents)",
           declaration: 0,
+          amountAccepted: 0,
           maxAmount: 50000,
           proof: "",
           status: "Not Submitted",
@@ -58,6 +60,7 @@ const TDSTable4Tab3 = () => {
           maxAmount: 10000,
           name: "Interest on education loan",
           declaration: 0,
+          amountAccepted: 0,
           proof: "",
 
           status: "Not Submitted",
@@ -67,6 +70,7 @@ const TDSTable4Tab3 = () => {
           name: "Interest on Home Loan as per conditions mentioned",
           maxAmount: 1000,
           declaration: 0,
+          amountAccepted: 0,
           proof: "",
           status: "Not Submitted",
         },
@@ -74,6 +78,7 @@ const TDSTable4Tab3 = () => {
           section: "80DD",
           name: "Medical Treatment of handicapped Dependent",
           declaration: 0,
+          amountAccepted: 0,
           proof: "",
           status: "Not Submitted",
         },
@@ -81,6 +86,7 @@ const TDSTable4Tab3 = () => {
           section: "80DDB",
           name: "Expenditure on Selected Medical Treatment",
           declaration: 0,
+          amountAccepted: 0,
           maxAmount: 40000,
           proof: "",
           status: "Not Submitted",
@@ -89,6 +95,7 @@ const TDSTable4Tab3 = () => {
           section: "80G, 80GGA, 80GGC",
           name: "80G, 80GGA, 80GGC Donation to approved funds",
           declaration: 0,
+          amountAccepted: 0,
           proof: "",
           status: "Not Submitted",
         },
@@ -96,6 +103,7 @@ const TDSTable4Tab3 = () => {
           section: "80GG",
           name: "For Rent to an Individual, not receiving HRA (File Form 10BA)",
           declaration: 0,
+          amountAccepted: 0,
           maxAmount: 16200,
           proof: "",
           status: "Not Submitted",
@@ -104,6 +112,7 @@ const TDSTable4Tab3 = () => {
           section: "80TTA",
           name: "SB interest received by Normal Citizen",
           declaration: 0,
+          amountAccepted: 0,
           proof: "",
           status: "Not Submitted",
         },
@@ -111,6 +120,7 @@ const TDSTable4Tab3 = () => {
           section: "80TTB",
           name: "Interest on SB Act. & deposits received by Sr. & very Sr. Citizen",
           declaration: 0,
+          amountAccepted: 0,
           proof: "",
           status: "Not Submitted",
         },
@@ -118,6 +128,7 @@ const TDSTable4Tab3 = () => {
           section: "80U",
           name: "Physically Disable Assesse",
           declaration: 0,
+          amountAccepted: 0,
           proof: "",
           status: "Not Submitted",
         },
@@ -326,6 +337,9 @@ const TDSTable4Tab3 = () => {
                       Declaration
                     </th>
                     <th scope="col" className="px-2 py-3 border">
+                      Amount Accepted
+                    </th>
+                    <th scope="col" className="px-2 py-3 border">
                       Proof submitted
                     </th>
                     <th scope="col" className="px-2 py-3 border">
@@ -367,6 +381,9 @@ const TDSTable4Tab3 = () => {
                           ) : (
                             <h1 className="px-2">INR {ele.declaration}</h1>
                           )}
+                        </td>
+                        <td className="leading-7 text-[16px] h-14 text-left  !p-0 w-[220px] border ">
+                          <h1 className="px-2">INR {ele.amountAccepted}</h1>
                         </td>
                         <td className="text-left h-14 leading-7 text-[16px] w-[200px]  border">
                           {editStatus[itemIndex] === id &&

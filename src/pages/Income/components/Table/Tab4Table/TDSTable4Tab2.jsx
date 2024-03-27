@@ -88,6 +88,7 @@ const TDSTable4Tab2 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
       ],
     },
@@ -247,6 +248,9 @@ const TDSTable4Tab2 = () => {
                       Declaration
                     </th>
                     <th scope="col" className="px-2 py-3 border">
+                      Amount Accepted
+                    </th>
+                    <th scope="col" className="px-2 py-3 border">
                       Proof submitted
                     </th>
                     <th scope="col" className="px-2 py-3 border">
@@ -288,6 +292,9 @@ const TDSTable4Tab2 = () => {
                           ) : (
                             <h1 className="px-2">INR {ele.declaration}</h1>
                           )}
+                        </td>
+                        <td className="leading-7 text-[16px] h-14 text-left  !p-0 w-[220px] border ">
+                          <h1 className="px-2">INR {ele.amountAccepted}</h1>
                         </td>
                         <td className="text-left h-14 leading-7 text-[16px] w-[200px]  border">
                           {editStatus[itemIndex] === id &&

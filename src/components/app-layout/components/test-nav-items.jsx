@@ -369,7 +369,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible: ["Employee"].includes(role),
             link: "/remotePunching",
             icon: <PanToolAlt className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Apply Miss Punch",
+            text: "Apply Miss For Punch",
           },
         ],
       },

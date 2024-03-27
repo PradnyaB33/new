@@ -40,7 +40,7 @@ const IncomeTax = () => {
               </h1>
               <button
                 onClick={handleOpen}
-                className="!p-0 h-max !m-0 flex gap-2 text-blue-500"
+                className="hidden !p-0 h-max !m-0  gap-2 text-blue-500"
               >
                 <Settings />
                 Change Regime settings
@@ -48,12 +48,17 @@ const IncomeTax = () => {
             </div>
 
             <article className="flex gap-4 items-center">
-              <div className="flex-col w-[225px]  border-[.5px] border-gray-200 gap-3 flex items-center px-4 py-6 rounded-md shadow-sm">
-                <Avatar className="!bg-green-500">
-                  <Calculate />
-                </Avatar>
-                <h1 className="text-lg">TDS Calculation</h1>
-              </div>
+              <Link
+                to={"/income-tax/calculation"}
+                className="hover:scale-[1.02] transition-all"
+              >
+                <div className="flex-col w-[225px]  border-[.5px] border-gray-200 gap-3 flex items-center px-4 py-6 rounded-md shadow-sm">
+                  <Avatar className="!bg-green-500">
+                    <Calculate />
+                  </Avatar>
+                  <h1 className="text-lg">TDS Calculation</h1>
+                </div>
+              </Link>
 
               <Link
                 to={"/income-tax/declarations"}

@@ -28,17 +28,6 @@ const LeaveRejectmodal = ({ items }) => {
   const handleClose = () => {
     setOpen(false);
   };
-  // const { mutate: rejectRequestMutation } = useMutation(
-  //   ({ id }) => {
-
-  //   },
-  //   {
-  //     onSuccess: () => {
-  //       // No need to reload the whole window, just invalidate the relevant query
-  //       queryClient.invalidateQueries("employee-leave");
-  //     },
-  //   }
-  // );
 
   const rejectRequestMutation = useMutation(
     async () => {

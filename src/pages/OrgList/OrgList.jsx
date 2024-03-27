@@ -67,7 +67,7 @@ const OrgList = () => {
               <p>NO data</p>
             ) : (
               data?.organizations?.map((item, index) => (
-                <div className="h-max py-4" key={index}>
+                <div className="h-max max-w-96 py-4" key={index}>
                   <Organisation item={item} id={index} />
                 </div>
               ))

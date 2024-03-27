@@ -5,7 +5,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import axios from "axios";
 import dayjs from "dayjs";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
@@ -16,30 +16,37 @@ import AuthInputFiled from "../../InputFileds/AuthInputFiled";
 const ShiftModal = ({ handleClose, open, id, shiftId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
+  const [selectedDays, setSelectedDays] = useState([]);
   const authToken = cookies["aegis"];
   const [error, setError] = useState("");
+  console.log(`🚀 ~ error:`, error);
+
   const ShiftSchema = z.object({
-    startDateTime: z.string(),
-    endDateTime: z.string(),
-    shiftName: z.string(),
+    startDateTime: z.string().min(1, "Start time is required"),
+    endDateTime: z.string().min(1, "End time is required"),
+    shiftName: z.string().min(1, "Shift name is required"),
     workingFrom: z.object({
       label: z.string(),
       value: z.string(),
     }),
   });
 
-  console.log(error);
-
   const {
     handleSubmit,
     control,
     setValue,
+    setError: setFieldError,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(ShiftSchema),
+    defaultValues: {
+      startDateTime: dayjs(new Date()).format("HH:mm"),
+      endDateTime: dayjs(new Date()).add(9, "hour").format("HH:mm"),
+      shiftName: undefined,
+    },
   });
 
-  const { data, isLoading } = useQuery(
+  const { isLoading, isFetching } = useQuery(
     ["shift", shiftId],
     async () => {
       if (open && shiftId !== null) {
@@ -54,43 +61,17 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
         return response.data;
       }
     },
+
     {
-      enabled: open && shiftId !== null,
+      onSuccess: (data) => {
+        console.log(data);
+        setValue("shiftName", data?.shift?.shiftName);
+
+        setSelectedDays(data?.shift?.selectedDays);
+      },
+      enabled: open && shiftId !== null && shiftId !== undefined,
     }
   );
-
-  const changeTimeFormatForEdit = (timeString, setState) => {
-    const [hours, minutes] = timeString?.split(":");
-
-    // Get the current date
-    const currentDate = dayjs();
-    // Set the hours and minutes to create a new date
-    const newDate = currentDate
-      .set("hour", parseInt(hours))
-      .set("minute", parseInt(minutes));
-    // Set other state values accordingly
-    setState(newDate);
-  };
-
-  useEffect(() => {
-    if (data && data.shifts) {
-      const shiftData = data.shifts;
-      console.log(shiftData);
-      setWorkingFrom(shiftData.workingFrom || "");
-      setShiftName(shiftData.shiftName || "");
-      setSelectedDays(shiftData.selectedDays || "");
-
-      changeTimeFormatForEdit(shiftData?.startTime, setStartDateTime);
-      changeTimeFormatForEdit(shiftData?.endTime, setEndDateTime);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (!open) {
-      setWorkingFrom("");
-      setShiftName("");
-    }
-  }, [open]);
 
   const daysOfWeek = [
     { label: "Mon", value: "Monday" },
@@ -101,24 +82,8 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
     { label: "Sat", value: "Saturday" },
     { label: "Sun", value: "Sunday" },
   ];
-  const [startDateTime, setStartDateTime] = useState(dayjs(new Date()));
-  const [endDateTime, setEndDateTime] = useState(() =>
-    startDateTime.add(9, "hour")
-  );
-  const [validationError, setValidationError] = useState(false);
-  const [workingFrom, setWorkingFrom] = useState(
-    data ? data?.shifts?.workingFrom : ""
-  );
-  const [shiftName, setShiftName] = useState("");
-  const [selectedDays, setSelectedDays] = useState([]);
 
   const queryClient = useQueryClient();
-
-  const handleStartDateTimeChange = (newDateTime) => {
-    setStartDateTime(newDateTime);
-    setEndDateTime(newDateTime.add(9, "hour"));
-    setValidationError(false);
-  };
 
   const AddShift = useMutation(
     (data) =>
@@ -130,7 +95,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
         handleAlert(true, "success", "Shift generated succesfully");
       },
       onError: () => {
-        setError("An error occurred while creating a new shift");
+        console.log("An error occurred while creating a new shift");
       },
     }
   );
@@ -158,33 +123,16 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
     }
   );
 
-  const handleError = (error) => {
-    setError(error);
-    return false;
-  };
-
   const onSubmit = async (data) => {
-    // if (workingFrom === "") return handleError("Shift type field is mandatory");
-    // else if (shiftName === "")
-    //   return handleError("Shift name field is mandatory");
-    // else if (startDateTime === null)
-    //   return handleError("Start time is mandatory");
-    // else if (endDateTime === null)
-    //   return handleError("end time field is mandatory");
-    // else if (selectedDays.length <= 0)
-    //   return handleError("Please select Week Days");
-
-    if (selectedDays.length <= 0) {
-      setError("Please select the week days to create a shift");
-      return false;
-    }
-
     try {
+      if (selectedDays.length <= 0) {
+        return false;
+      }
       const requestData = {
-        startTime: dayjs(data.startDateTime).format("HH:mm"),
-        endTime: dayjs(data.endDateTime).format("HH:mm"),
+        startTime: dayjs(`1970-01-01T${data.startDateTime}:00`).format("HH:mm"),
+        endTime: dayjs(`1970-01-01T${data.endDateTime}:00`).format("HH:mm"),
         selectedDays,
-        workingFrom: data.workingFrom,
+        workingFrom: data.workingFrom.value,
         shiftName: data.shiftName,
         organizationId: id,
       };
@@ -195,24 +143,14 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
         // Use the AddShift function from React Query
         await AddShift.mutateAsync(requestData);
       }
-      // Reset form state
-      setError("");
-      // setStartDateTime("");
-      // setEndDateTime("");
-      setWorkingFrom("");
-      setShiftName("");
     } catch (error) {
       console.error(error);
       setError("An error occurred while creating a new shift");
     }
   };
 
-  const isSelected = (day) => {
-    return selectedDays.includes(day);
-  };
-
-  const handleChange = (event) => {
-    setWorkingFrom(event.target.value);
+  let isSelected = (day) => {
+    return selectedDays?.includes(day);
   };
 
   const style = {
@@ -224,29 +162,16 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
     p: 4,
   };
 
-  const handleEndDateTimeChange = (newDateTime) => {
-    // Check if the time difference is at least 9 hours
-    const timeDifferenceInMilliseconds = newDateTime.diff(startDateTime);
-    const timeDifferenceInHours = Math.abs(
-      timeDifferenceInMilliseconds / (1000 * 60 * 60)
-    );
-    // Check if AM/PM changes
-    const amPmChange = startDateTime.format("A") !== newDateTime.format("A");
-
-    // Calculate the adjusted difference in 12-hour format
-    const adjustedDifferenceInHours = amPmChange
-      ? timeDifferenceInHours
-      : timeDifferenceInHours % 12 || 12;
-
-    if (adjustedDifferenceInHours >= 9) {
-      setEndDateTime(newDateTime);
-      // Reset validation error
-      setValidationError(false);
-    } else {
-      // Set validation error
-      setValidationError(true);
-    }
-  };
+  // useEffect(() => {
+  //   if (selectedDays?.length < 1) {
+  //     setFieldError("selectedDays", {
+  //       message: "Please select at least one day",
+  //     });
+  //   }
+  //   if (selectedDays?.length > 1) {
+  //     setFieldError("selectedDays", null);
+  //   }
+  // }, [setError]);
 
   const handleDaySelection = (event, newSelectedDays) => {
     setSelectedDays(newSelectedDays);
@@ -269,91 +194,86 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
           </h1>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="px-5 space-y-4 mt-4">
-          {/* <div className="space-y-2 ">
-            <label className="text-md" htmlFor="demo-simple-select-label">
-              {shiftId && isLoading ? "loading" : "Select shift type"}
-            </label>
-            <FormControl size="small" fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Select shift Type
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={workingFrom}
-                onChange={handleChange}
-                label="Select Leave Type"
-              >
-                <MenuItem value={"remote"}>Remote</MenuItem>
-                <MenuItem value={"office"}>Office</MenuItem>
-              </Select>
-            </FormControl>
-          </div> */}
-
-          <AuthInputFiled
-            name="workingFrom"
-            control={control}
-            type="select"
-            icon={Work}
-            placeholder="test temp"
-            label="Enter Template Name *"
-            readOnly={false}
-            maxLimit={15}
-            options={[
-              {
-                label: "Remote",
-                value: "Remote",
-              },
-              {
-                label: "Office",
-                value: "Office",
-              },
-            ]}
-            errors={errors}
-            error={errors.workingFrom}
-          />
-          <AuthInputFiled
-            name="shiftName"
-            icon={Abc}
-            control={control}
-            type="text"
-            placeholder="Shift"
-            label="Enter shift name *"
-            readOnly={false}
-            maxLimit={15}
-            errors={errors}
-            error={errors.shiftName}
-          />
-
-          <div className="grid gap-2 grid-cols-2">
+        {isLoading || isFetching ? (
+          <CircularProgress />
+        ) : (
+          <form
+            onSubmit={handleSubmit((data) => {
+              if (selectedDays?.length <= 0) {
+                setFieldError("selectedDays", {
+                  message: "Please select at least one day",
+                });
+              }
+              if (selectedDays?.length > 1) {
+                setFieldError("selectedDays", null);
+              }
+              onSubmit(data);
+            })}
+            className="px-5 space-y-4 mt-4"
+          >
             <AuthInputFiled
-              name="startDateTime"
-              icon={AccessTime}
+              name="workingFrom"
               control={control}
-              type="time"
-              placeholder="Start Time"
-              label="Enter Start Time *"
+              type="select"
+              icon={Work}
+              placeholder="test temp"
+              label="Enter Template Name *"
+              readOnly={false}
+              maxLimit={15}
+              options={[
+                {
+                  label: "Remote",
+                  value: "remote",
+                },
+                {
+                  label: "Office",
+                  value: "office",
+                },
+              ]}
+              errors={errors}
+              error={errors.workingFrom}
+            />
+            <AuthInputFiled
+              name="shiftName"
+              icon={Abc}
+              control={control}
+              type="text"
+              placeholder="Shift"
+              label="Enter shift name *"
               readOnly={false}
               maxLimit={15}
               errors={errors}
-              error={errors.startDateTime}
+              error={errors.shiftName}
             />
-            <AuthInputFiled
-              name="endDateTime"
-              icon={AccessTime}
-              control={control}
-              type="time"
-              placeholder="End Time"
-              label="Enter End Time *"
-              readOnly={false}
-              maxLimit={15}
-              errors={errors}
-              error={errors.endDateTime}
-            />
-          </div>
 
-          {/* <div className="space-y-2 ">
+            <div className="grid gap-2 grid-cols-2">
+              <AuthInputFiled
+                name="startDateTime"
+                icon={AccessTime}
+                control={control}
+                type="time"
+                placeholder="Start Time"
+                label="Enter Start Time *"
+                readOnly={false}
+                maxLimit={15}
+                errors={errors}
+                error={errors.startDateTime}
+              />
+              <AuthInputFiled
+                name="endDateTime"
+                icon={AccessTime}
+                control={control}
+                type="time"
+                placeholder="End Time"
+                label="Enter End Time *"
+                readOnly={false}
+                maxLimit={15}
+                errors={errors}
+                error={errors.endDateTime}
+              />
+            </div>
+
+            {/* <div className="space-y-2 ">
             <label className="text-md" htmlFor="demo-simple-select-label">
               Enter shift name
             </label>
@@ -370,7 +290,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
             </FormControl>
           </div> */}
 
-          {/* <div className="flex justify-between">
+            {/* <div className="flex justify-between">
             <div className="space-y-2 w-[45%] ">
               <label className="text-md" htmlFor="demo-simple-select-label">
                 Start time
@@ -419,74 +339,90 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
             </div>
           </div> */}
 
-          <div
-            className="w-full"
-            style={{ width: "100%", justifyContent: "center", gap: "2px" }}
-          >
-            <label
-              className="font-semibold text-gray-500 text-md"
-              htmlFor="demo-simple-select-label"
+            <div
+              className="w-full"
+              style={{ width: "100%", justifyContent: "center", gap: "2px" }}
             >
-              Select Week Days
-            </label>
-            <ToggleButtonGroup
-              value={selectedDays}
-              onChange={handleDaySelection}
-              aria-label="selectedDays"
-              className="mt-2 w-max !space-x-5 "
-              style={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              {daysOfWeek.map((day) => (
-                <ToggleButton
-                  key={day.label}
-                  value={day.value}
-                  className="!rounded-full !border-[2px] !border-gray-200 !text-xs font-semibold"
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    padding: "2px",
-                    backgroundColor: isSelected(day.value)
-                      ? "#1976d2"
-                      : "transparent",
-                    color: isSelected(day.value) ? "white" : "black",
-                  }}
-                >
-                  {day.label}
-                </ToggleButton>
-              ))}
-            </ToggleButtonGroup>
-            <div className="h-4 !my-1">
-              {error && <p className="text-red-500">*{error}</p>}
+              <label
+                className={`${
+                  errors.selectedDays && "text-red-500"
+                } font-semibold text-gray-500 text-md`}
+                htmlFor="demo-simple-select-label"
+              >
+                Select Week Days
+              </label>
+              <ToggleButtonGroup
+                value={selectedDays}
+                onChange={handleDaySelection}
+                aria-label="selectedDays"
+                className="mt-2 w-max !space-x-5 "
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {daysOfWeek.map((day) => (
+                  <ToggleButton
+                    key={day.label}
+                    value={day.value}
+                    className="!rounded-full !border-[2px] !border-gray-200 !text-xs font-semibold"
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      padding: "2px",
+                      backgroundColor: isSelected(day.value)
+                        ? "#1976d2"
+                        : "transparent",
+                      color: isSelected(day.value) ? "white" : "black",
+                    }}
+                  >
+                    {day.label}
+                  </ToggleButton>
+                ))}
+              </ToggleButtonGroup>
+              <div className="h-4 w-max !z-50   !mt-1">
+                {errors.selectedDays && (
+                  <p className="text-sm mb-4 relative !bg-white  text-red-500">
+                    {errors.selectedDays.message}
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
-          <div className="flex gap-4  mt-4  justify-end">
-            <Button onClick={handleClose} color="error" variant="outlined">
-              Cancel
-            </Button>
-            {shiftId ? (
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                disabled={EditShift.isLoading}
-              >
-                {EditShift.isLoading ? <CircularProgress size={20} /> : "Apply"}
+
+            <div className="flex gap-4  mt-4  justify-end">
+              <Button onClick={handleClose} color="error" variant="outlined">
+                Cancel
               </Button>
-            ) : (
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                disabled={AddShift.isLoading}
-              >
-                {AddShift.isLoading ? <CircularProgress size={20} /> : "submit"}
-              </Button>
-            )}
-          </div>
-        </form>
+              {shiftId ? (
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  disabled={EditShift.isLoading}
+                >
+                  {EditShift.isLoading ? (
+                    <CircularProgress size={20} />
+                  ) : (
+                    "Apply"
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  disabled={AddShift.isLoading}
+                >
+                  {AddShift.isLoading ? (
+                    <CircularProgress size={20} />
+                  ) : (
+                    "submit"
+                  )}
+                </Button>
+              )}
+            </div>
+          </form>
+        )}
       </Box>
     </Modal>
   );

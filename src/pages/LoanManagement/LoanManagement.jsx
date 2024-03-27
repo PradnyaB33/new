@@ -8,9 +8,9 @@ import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import CreateLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/CreateLoanMgtModal";
 import UserProfile from "../../hooks/UserData/useUser";
-import LoanManagementPieChart from "./LoanManagementPieChart";
 import LoanManagementSkeleton from "./LoanManagementSkeleton";
 import { Cancel, CheckCircle, Error, Pending } from "@mui/icons-material";
+import LoanMgtPieChartModal from "../../components/Modal/LoanMgtPieChartModal/LoanMgtPieChartModal";
 const LoanManagement = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -36,6 +36,11 @@ const LoanManagement = () => {
   );
 
   console.log(getEmployeeLoanData);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toDateString();
+  };
 
   // Function to calculate loan amount paid and pending
   const calculateLoanStatus = (loan) => {
@@ -96,7 +101,15 @@ const LoanManagement = () => {
       setSelectedLoans([...selectedLoans, loan]);
     }
   };
-  console.log(selectedLoans);
+  // for open the loan pie chart modal
+  const [loanPieChartModalOpen, setLoanPieChartModalOpen] = useState(false);
+  const handleLoanPieChartModalOpen = () => {
+    setLoanPieChartModalOpen(true);
+  };
+  const handleLoanPieChartModalClose = () => {
+    setLoanPieChartModalOpen(false);
+    setSelectedLoans([]);
+  };
 
   // Calculate total loan amount paid and pending based on selected loans
   let totalPaidAmount = 0;
@@ -153,15 +166,15 @@ const LoanManagement = () => {
           ) : getEmployeeLoanData?.length > 0 ? (
             <>
               <div className=" flex w-full ">
-                <div className="overflow-auto p-0 border border-gray-200 w-70%">
+                <div className="overflow-auto p-0 border border-gray-200">
                   <table className="min-w-full bg-white text-left text-sm font-light">
                     <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                       <tr className="font-semibold">
-                        <th scope="col" className="px-6 py-3"></th>
-                        <th scope="col" className="text-left pl-8 py-3">
+                        <th scope="col" className=" px-3 py-3"></th>
+                        <th scope="col" className="text-left pl-6 py-3">
                           SR NO
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-8 py-3">
                           Loan Type
                         </th>
                         <th scope="col" className="px-6 py-3">
@@ -180,7 +193,16 @@ const LoanManagement = () => {
                           Loan Amount Pending
                         </th>
                         <th scope="col" className="px-6 py-3">
+                          Total Deduction Montly
+                        </th>
+                        <th scope="col" className="px-6 py-3">
                           ROI (%)
+                        </th>
+                        <th scope="col" className="px-8 py-3">
+                          Disbursement Date
+                        </th>
+                        <th scope="col" className="px-8 py-3">
+                          Completion Date
                         </th>
                       </tr>
                     </thead>
@@ -190,16 +212,17 @@ const LoanManagement = () => {
                           calculateLoanStatus(loanMgtData);
                         return (
                           <tr className="font-medium border-b" key={id}>
-                            <td className="py-3 pl-6">
+                            <td className="py-3 pl-3">
                               <input
                                 type="checkbox"
                                 checked={selectedLoans.includes(loanMgtData)}
-                                onChange={() =>
-                                  handleCheckboxChange(loanMgtData)
-                                }
+                                onChange={() => {
+                                  handleCheckboxChange(loanMgtData);
+                                  handleLoanPieChartModalOpen();
+                                }}
                               />
                             </td>
-                            <td className="text-left pl-8 py-3">{id + 1}</td>
+                            <td className="text-left pl-6 py-3">{id + 1}</td>
                             <td className="py-3 pl-6">
                               {loanMgtData.loanType?.loanName}
                             </td>
@@ -242,20 +265,24 @@ const LoanManagement = () => {
                             <td className="py-3 pl-6">{loanAmountPaid}</td>
                             <td className="py-3 pl-6">{loanAmountPending}</td>
                             <td className="py-3 pl-6">
+                              {loanMgtData?.totalDeduction}
+                            </td>
+                            <td className="py-3 pl-6">
                               {loanMgtData?.rateOfIntereset}
+                            </td>
+
+                            <td className="py-3 pl-6">
+                              {formatDate(loanMgtData?.loanDisbursementDate) ||
+                                ""}
+                            </td>
+                            <td className="py-3 pl-6">
+                              {formatDate(loanMgtData?.loanCompletedDate) || ""}
                             </td>
                           </tr>
                         );
                       })}
                     </tbody>
                   </table>
-                </div>
-                {/* pie chart for loan management */}
-                <div className="w-[30%]">
-                  <LoanManagementPieChart
-                    totalPaidAmount={totalPaidAmount}
-                    totalPendingAmount={totalPendingAmount}
-                  />
                 </div>
               </div>
             </>
@@ -276,6 +303,13 @@ const LoanManagement = () => {
         handleClose={handleCreateModalClose}
         open={createModalOpen}
         organisationId={organisationId}
+      />
+
+      <LoanMgtPieChartModal
+        totalPaidAmount={totalPaidAmount}
+        totalPendingAmount={totalPendingAmount}
+        open={loanPieChartModalOpen}
+        handleClose={handleLoanPieChartModalClose}
       />
     </>
   );

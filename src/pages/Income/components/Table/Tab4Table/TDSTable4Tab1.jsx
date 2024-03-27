@@ -57,6 +57,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 C",
@@ -71,6 +72,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 C",
@@ -78,6 +80,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 C",
@@ -85,6 +88,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 C",
@@ -92,6 +96,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 C",
@@ -99,6 +104,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 C",
@@ -106,6 +112,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 C",
@@ -113,6 +120,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 C",
@@ -120,6 +128,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 CCC",
@@ -127,6 +136,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 CCD",
@@ -134,6 +144,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 CCH",
@@ -141,6 +152,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
       ],
     },
@@ -307,6 +319,7 @@ const TDSTable4Tab1 = () => {
         name: value.name,
         sectionname: "SectionDeduction",
         status: "Not Submitted",
+        amountAccepted: 0,
         declaration: 0,
         proof: "",
       },
@@ -388,6 +401,9 @@ const TDSTable4Tab1 = () => {
                     <th scope="col" className="py-3 px-2 border">
                       Declaration
                     </th>
+                    <th scope="col" className="py-3 px-2 border">
+                      Amount Accepted
+                    </th>
                     <th scope="col" className="px-2 py-3 border">
                       Proof submitted
                     </th>
@@ -430,6 +446,9 @@ const TDSTable4Tab1 = () => {
                           ) : (
                             <h1 className="px-2">INR {ele.declaration}</h1>
                           )}
+                        </td>
+                        <td className="leading-7 text-[16px] h-14 text-left  !p-0 w-[220px] border ">
+                          <h1 className="px-2">INR {ele.amountAccepted}</h1>
                         </td>
                         <td className="text-left h-14 leading-7 text-[16px] w-[200px]  border">
                           {editStatus[itemIndex] === id &&
