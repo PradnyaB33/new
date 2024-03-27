@@ -157,8 +157,16 @@ const ViewPayslip = () => {
   const publicHoliday = previousMonthSalary?.publicHolidaysCount;
 
   // download the pdf
-  const exportPDF = () => {
+  const exportPDF = async () => {
     const input = document.getElementById("App");
+    // Wait for the logo image to load
+    await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = resolve;
+      img.onerror = reject;
+      img.src = organisationInfo?.logo_url;
+    });
+
     html2canvas(input, {
       logging: true,
       letterRendering: 1,
@@ -172,6 +180,7 @@ const ViewPayslip = () => {
       pdf.save("payslip.pdf");
     });
   };
+  console.log(organisationInfo?.logo_url);
   return (
     <>
       <div style={{ marginTop: "5%" }}>
