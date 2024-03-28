@@ -24,6 +24,7 @@ import useOther from "../../../../hooks/IncomeTax/useOther";
 import useTDS from "../../../../hooks/IncomeTax/useTDS";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
+import ProofModel from "../ProofModel";
 
 const TDSTable3 = () => {
   const authToken = useAuthToken();
@@ -200,7 +201,9 @@ const TDSTable3 = () => {
   };
 
   const [pdf, setPdf] = useState(null);
-  console.log(`🚀 ~ pdf:`, pdf);
+  const handleClosePDF = () => {
+    setPdf(null);
+  };
   const handlePDF = (id) => {
     setPdf(id);
   };
@@ -252,7 +255,7 @@ const TDSTable3 = () => {
         financialYear: "2023-2024",
         requestData: {
           name: value.name,
-          sectionname: "Salary",
+          sectionname: "Otherincome",
           status: "Pending",
           declaration: value.amount,
         },
@@ -264,7 +267,7 @@ const TDSTable3 = () => {
           financialYear: "2023-2024",
           requestData: {
             name: value.name,
-            sectionname: "Salary",
+            sectionname: "Otherincome",
             status: "Pending",
             declaration: value.amount,
             proof: uploadproof,
@@ -571,6 +574,8 @@ const TDSTable3 = () => {
           </table>
         </div>
       )}
+
+      <ProofModel pdf={pdf} handleClosePDF={handleClosePDF} />
 
       <Dialog
         open={deleteConfirmation !== null}

@@ -1,12 +1,47 @@
 import { CheckCircle, Close, Person } from "@mui/icons-material";
 import { Dialog, DialogContent, Divider, IconButton } from "@mui/material";
+import axios from "axios";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
+import useAuthToken from "../../../../../hooks/Token/useAuth";
 
 const RegimeModel = ({ open, handleClose }) => {
   const [selected, setSelected] = useState(null);
+  const { handleSubmit, setValue } = useForm();
+  const authToken = useAuthToken();
 
   const handleRadioChange = (index, item) => {
     setSelected(index);
+    setValue("regime", item);
+  };
+
+  const changeRegimeMutation = useMutation(
+    (data) => {
+      axios.put(
+        `${process.env.REACT_APP_API}/route/tds/changeRegime/2023-2024`,
+        data,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: () => {
+        handleClose();
+      },
+      onError: (error) => {
+        console.log(error);
+        handleClose();
+      },
+    }
+  );
+
+  const onSubmit = (data) => {
+    console.log(data);
+    changeRegimeMutation.mutate(data);
   };
 
   return (
@@ -45,7 +80,10 @@ const RegimeModel = ({ open, handleClose }) => {
               By choosing a profile, you'll be able to access different profiles
             </p> */}
 
-            <form className="flex-col gap-4 mt-6 flex items-center">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex-col gap-4 mt-6 flex items-center"
+            >
               {["New Regime", "Old Regime"].map((item, index) => (
                 <label
                   key={index}
@@ -68,14 +106,16 @@ const RegimeModel = ({ open, handleClose }) => {
                   </span>
                 </label>
               ))}
+              <div className="w-full">
+                <button
+                  type="submit"
+                  //   onClick={handleSubmit}
+                  className="bg-blue-500 my-4 text-white p-2 rounded-md"
+                >
+                  Submit
+                </button>
+              </div>
             </form>
-            <button
-              type="button"
-              //   onClick={handleSubmit}
-              className="bg-blue-500 my-4 text-white p-2 rounded-md"
-            >
-              Submit
-            </button>
           </div>
         </DialogContent>
       </Dialog>
