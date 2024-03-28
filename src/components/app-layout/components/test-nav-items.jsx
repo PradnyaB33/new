@@ -206,7 +206,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "loanmanagement",
             isVisible: true,
-            link: `/organisation/${orgId}/loan-management`,
+            link: `/organisation/${orgId}/add-loan`,
             icon: (
               <MonetizationOnOutlined className=" !text-[1.2em] text-[#67748E]" />
             ),
