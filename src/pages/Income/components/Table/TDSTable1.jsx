@@ -62,7 +62,6 @@ const TDSTable1 = () => {
       name: "Exemption on gratuity",
       amount: 0,
       proof: "",
-
       amountAccepted: 0,
       status: "Not Submitted",
     },
