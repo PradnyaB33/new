@@ -45,7 +45,7 @@ const TDSTable0 = () => {
       }
     },
     onSuccess: (res) => {
-      setGrossTotal(res.TotalInvestInvestment);
+      setGrossTotal(res?.TotalInvestInvestment);
     },
   });
 

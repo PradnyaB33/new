@@ -188,25 +188,25 @@ const TDSTable1 = () => {
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["finacialYearData"] });
 
-      const declaredAmount = res.reduce((i, a) => {
+      const declaredAmount = res?.reduce((i, a) => {
         return (i += a.declaration);
       }, 0);
 
-      const amountPending = res.reduce((i, a) => {
+      const amountPending = res?.reduce((i, a) => {
         if (a.status === "Pending") {
           return (i += a.declaration);
         }
         return i;
       }, 0);
 
-      const amountReject = res.reduce((i, a) => {
+      const amountReject = res?.reduce((i, a) => {
         if (a.status === "Reject") {
           return (i += a.declaration);
         }
         return i;
       }, 0);
 
-      const amountAccepted = res.reduce((i, a) => {
+      const amountAccepted = res?.reduce((i, a) => {
         return (i += a.amountAccepted);
       }, 0);
 
@@ -304,7 +304,6 @@ const TDSTable1 = () => {
     const newData = [...tableData];
     const value = newData[index];
     let tdsfile = newData[index].proof;
-    console.log(`🚀 ~ tdsfile:`, tdsfile);
 
     try {
       let uploadproof = "";

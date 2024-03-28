@@ -126,7 +126,7 @@ const Tab1 = () => {
       <div className="flex items-center justify-between ">
         <div className="w-full p-4  ">
           <h1 className="text-2xl "> New Regime Calculation</h1>
-          <p>This calculation is done by using the goverment norms </p>
+          <p>This calculation is done by using the government norms </p>
         </div>
       </div>
 

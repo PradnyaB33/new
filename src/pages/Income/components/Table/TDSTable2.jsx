@@ -12,12 +12,21 @@ import { useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
+import ProofModel from "../ProofModel";
 
 const TDSTable2 = () => {
   const authToken = useAuthToken();
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const queryClient = useQueryClient();
+  const [pdf, setPdf] = useState(null);
+  const handlePDF = (id) => {
+    setPdf(id);
+  };
+
+  const handleClosePDF = () => {
+    setPdf(null);
+  };
   // const { setTotalHeads } = useIncomeHouse();
 
   const [tableData, setTableData] = useState([
@@ -285,7 +294,7 @@ const TDSTable2 = () => {
   const handleSaveClick = async (index, id) => {
     const newData = [...tableData];
     const value = newData[index][Object.keys(newData[index])[0]][id];
-    const tdsfile = newData[index].proof;
+    const tdsfile = value.proof;
 
     let uploadproof = "";
 
@@ -517,15 +526,15 @@ const TDSTable2 = () => {
                                       type="file"
                                       className="hidden"
                                       onChange={(e) =>
-                                        handleProofChange(e, itemIndex)
+                                        handleProofChange(e, itemIndex, id)
                                       }
                                     />
                                   </label>
                                 </div>
-                              ) : item.proof ? (
-                                typeof item.proof === "string" && (
+                              ) : ele.proof ? (
+                                typeof ele.proof === "string" && (
                                   <div
-                                    // onClick={() => handlePDF(item.proof)}
+                                    onClick={() => handlePDF(ele.proof)}
                                     className="px-2 flex gap-2 items-center h-max w-max  cursor-pointer"
                                   >
                                     <Article className="text-blue-500" />
@@ -602,6 +611,8 @@ const TDSTable2 = () => {
           ))}
         </div>
       )}
+
+      <ProofModel pdf={pdf} handleClosePDF={handleClosePDF} />
     </div>
   );
 };

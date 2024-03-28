@@ -247,7 +247,7 @@ const SignIn = () => {
                 icon={PermContactCalendar}
                 control={control}
                 type="text"
-                placeholder="jhon"
+                placeholder="john"
                 label="First Name *"
                 maxLimit={15}
                 errors={errors}

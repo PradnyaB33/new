@@ -216,8 +216,8 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
               control={control}
               type="select"
               icon={Work}
-              placeholder="test temp"
-              label="Enter Template Name *"
+              placeholder="Shift Type"
+              label="Enter Shift Type *"
               readOnly={false}
               maxLimit={15}
               options={[

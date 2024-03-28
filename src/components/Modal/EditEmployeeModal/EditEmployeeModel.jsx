@@ -656,7 +656,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               <InputLabel htmlFor="outlined-adornment-password">PAN</InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="pan"
+                label="PAN"
                 name="pan_card_number"
                 value={formData.pan_card_number}
                 onChange={handleInputChange}

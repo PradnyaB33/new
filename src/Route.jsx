@@ -75,10 +75,12 @@ import TDSTab1 from "./pages/Income/components/TDSTab1";
 import DeclarationPage from "./pages/Income/components/accountantDeclarations/DeclarationPage";
 //import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
+import OrgChart from "./Test/OrgChart";
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
 import ParentNotification from "./pages/AllNotifications/page";
+import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
@@ -88,7 +90,6 @@ import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import CustomCalander from "./pages/custom/Calendar";
 import LeaveNotification from "./pages/leave-notification/page";
 import PunchNotification from "./pages/punch-notification/page";
-import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 const App = () => {
   return (
     <AuthProvider>
@@ -627,6 +628,7 @@ const App = () => {
             </RequireAuth>
           }
         />
+        <Route path="/testorg1/:organizationId" element={<OrgChart />} />
         <Route
           path="/organisation/:organisationId/setup/remote-punching"
           element={
