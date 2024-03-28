@@ -1,12 +1,67 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, TextField, Typography, Button } from "@mui/material";
+import * as XLSX from "xlsx";
 
 const EmpInfoPunchStatus = () => {
+  const [tableData, setTableData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchName, setSearchName] = useState("");
+  const [searchId, setSearchId] = useState("");
+  const [searchDepartment, setSearchDepartment] = useState("");
+  const itemsPerPage = 10;
+
   const handleFileUpload = (e) => {
-    const fileInput = document.getElementById("file-upload");
-    const file = fileInput.files[0];
-    console.log(file);
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      const data = event.target.result;
+      const workbook = XLSX.read(data, { type: "binary" });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const parsedData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      setTableData(parsedData.slice(2));
+    };
+
+    reader.readAsBinaryString(file);
   };
+
+  const handleSearchName = (e) => {
+    setSearchName(e.target.value);
+  };
+
+  const handleSearchId = (e) => {
+    setSearchId(e.target.value);
+  };
+
+  const handleSearchDepartment = (e) => {
+    setSearchDepartment(e.target.value);
+  };
+
+  const filteredData = tableData.filter((row) => {
+    return (
+      row[1].toLowerCase().includes(searchName.toLowerCase()) &&
+      row[0].toLowerCase().includes(searchId.toLowerCase()) &&
+      row[2].toLowerCase().includes(searchDepartment.toLowerCase())
+    );
+  });
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const nextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const prePage = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
@@ -24,7 +79,7 @@ const EmpInfoPunchStatus = () => {
                 style={{ display: "none" }}
                 id="file-upload"
                 type="file"
-                accept=".xls,.xlsx,.csv"
+                accept=".xls,.xlsx"
                 onChange={handleFileUpload}
               />
               <Button variant="contained" component="span">
@@ -40,22 +95,28 @@ const EmpInfoPunchStatus = () => {
                 variant="outlined"
                 size="small"
                 sx={{ width: 300 }}
+                value={searchName}
+                onChange={handleSearchName}
               />
             </div>
             <div className="flex items-center gap-3 mb-3 md:mb-0">
               <TextField
-                placeholder="Search Email...."
+                placeholder="Search Employee ID...."
                 variant="outlined"
                 size="small"
                 sx={{ width: 300 }}
+                value={searchId}
+                onChange={handleSearchId}
               />
             </div>
             <div className="flex items-center gap-3">
               <TextField
-                placeholder="Search Employee Id ...."
+                placeholder="Search Department...."
                 variant="outlined"
                 size="small"
                 sx={{ width: 300 }}
+                value={searchDepartment}
+                onChange={handleSearchDepartment}
               />
             </div>
           </div>
@@ -90,9 +151,110 @@ const EmpInfoPunchStatus = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody></tbody>
+              <tbody>
+                {currentItems.map((row, index) => (
+                  <tr key={index}>
+                    <td className="!text-left pl-8 py-3">{index + 1}</td>
+                    <td className="py-3 pl-8">{row[0]}</td>
+                    <td className="py-3 pl-8">{row[1]}</td>
+                    <td className="py-3 pl-8">{row[2]}</td>
+                    <td className="py-3 pl-8">{row[3]}</td>
+                    <td className="py-3 pl-8">{row[4]}</td>
+                    <td className="py-3 pl-8">{row[5]}</td>
+                    <td className="py-3 pl-8">{row[6]}</td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
           </div>
+
+          <nav
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "30px",
+              marginBottom: "20px",
+            }}
+          >
+            <ul
+              style={{ display: "inline-block", marginRight: "5px" }}
+              className="pagination"
+            >
+              <li
+                style={{ display: "inline-block", marginRight: "5px" }}
+                className="page-item"
+              >
+                <button
+                  style={{
+                    color: "#007bff",
+                    padding: "8px 12px",
+                    border: "1px solid #007bff",
+                    textDecoration: "none",
+                    borderRadius: "4px",
+                    transition: "all 0.3s ease",
+                    cursor: "pointer",
+                  }}
+                  className="page-link"
+                  onClick={prePage}
+                  disabled={currentPage === 1}
+                >
+                  Prev
+                </button>
+              </li>
+              {/* Map through page numbers and generate pagination */}
+              {Array.from(
+                { length: Math.ceil(filteredData.length / itemsPerPage) },
+                (_, i) => i + 1
+              ).map((n, i) => (
+                <li
+                  key={i}
+                  className={`page-item ${currentPage === n ? "active" : ""}`}
+                  style={{
+                    display: "inline-block",
+                    marginRight: "5px",
+                  }}
+                >
+                  <button
+                    style={{
+                      color: currentPage === n ? "#fff" : "#007bff",
+                      backgroundColor:
+                        currentPage === n ? "#007bff" : "transparent",
+                      padding: "8px 12px",
+                      border: "1px solid #007bff",
+                      textDecoration: "none",
+                      borderRadius: "4px",
+                      transition: "all 0.3s ease",
+                    }}
+                    className="page-link"
+                    onClick={() => paginate(n)}
+                  >
+                    {n}
+                  </button>
+                </li>
+              ))}
+              <li style={{ display: "inline-block" }} className="page-item">
+                <button
+                  style={{
+                    color: "#007bff",
+                    padding: "8px 12px",
+                    border: "1px solid #007bff",
+                    textDecoration: "none",
+                    borderRadius: "4px",
+                    transition: "all 0.3s ease",
+                    cursor: "pointer",
+                  }}
+                  className="page-link"
+                  onClick={nextPage}
+                  disabled={
+                    currentPage ===
+                    Math.ceil(filteredData.length / itemsPerPage)
+                  }
+                >
+                  Next
+                </button>
+              </li>
+            </ul>
+          </nav>
         </article>
       </Container>
     </>
