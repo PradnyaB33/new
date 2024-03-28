@@ -23,6 +23,7 @@ import { TestContext } from "../../../../State/Function/Main";
 import useTDS from "../../../../hooks/IncomeTax/useTDS";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
+import ProofModel from "../ProofModel";
 
 const TDSTable1 = () => {
   const authToken = useAuthToken();
@@ -278,13 +279,6 @@ const TDSTable1 = () => {
     setTableData(newData);
   };
 
-  const handleDownload = (pdf) => {
-    // You can use any method to trigger the download, such as creating an invisible link and clicking it
-    const link = document.createElement("a");
-    link.href = pdf;
-    link.download = "File1.pdf";
-    link.click();
-  };
   const uploadProof = async (tdsfile) => {
     const data = await axios.get(
       `${process.env.REACT_APP_API}/route/s3createFile/TDS`,
@@ -657,25 +651,7 @@ const TDSTable1 = () => {
         </div>
       )}
 
-      <Dialog open={pdf !== null} onClose={handleClosePDF}>
-        <DialogTitle>Document</DialogTitle>
-        <DialogContent>
-          <div className="scrollt ">
-            <object
-              type="application/pdf"
-              data={`${pdf}`}
-              alt="none"
-              aria-label="pdfSalary"
-              className="min-h-[60vh] !w-[400px] "
-            />
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={() => handleDownload(pdf)}>
-            Download
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ProofModel pdf={pdf} handleClosePDF={handleClosePDF} />
 
       <Dialog
         open={deleteConfirmation !== null}

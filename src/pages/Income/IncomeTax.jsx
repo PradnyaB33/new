@@ -40,7 +40,7 @@ const IncomeTax = () => {
               </h1>
               <button
                 onClick={handleOpen}
-                className="hidden !p-0 h-max !m-0  gap-2 text-blue-500"
+                className="flex !p-0 h-max !m-0  gap-2 text-blue-500"
               >
                 <Settings />
                 Change Regime settings
