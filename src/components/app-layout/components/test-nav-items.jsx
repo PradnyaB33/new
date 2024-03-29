@@ -164,7 +164,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "payslip",
             isVisible: true,
-            link: `/organisation/${orgId}/view-payslip`,
+            link: `/view-payslip`,
             icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Pay Slip",
           },
