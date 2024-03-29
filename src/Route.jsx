@@ -404,7 +404,7 @@ const App = () => {
           }
         />
         <Route
-          path="/organisation/:organisationId/add-loan"
+          path="/add-loan"
           element={
             <RequireAuth
               permission={[
