@@ -51,7 +51,6 @@ import {
   default as DepartmentDeletion,
 } from "./pages/SetupPage/DepartmentDeletion";
 import EmailSetting from "./pages/SetupPage/EmailSetting";
-import AddRoles from "./pages/SetupPage/Roles/AddRoles";
 import ShiftManagement from "./pages/SetupPage/ShiftManagement/shiftAllowance";
 import Shifts from "./pages/SetupPage/Shifts";
 import WeekendHoliday from "./pages/SetupPage/WeekendHoliday";
@@ -85,7 +84,9 @@ import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculatio
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
-import RemoteSetup from "./pages/SetupPage/Remote/RemoteSetup";
+import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
+import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
+import Training from "./pages/SetUpOrganization/Traning/Training";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import CustomCalander from "./pages/custom/Calendar";
 import LeaveNotification from "./pages/leave-notification/page";
@@ -634,6 +635,14 @@ const App = () => {
           element={
             <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
               <RemoteSetup />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/setup/training"
+          element={
+            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+              <Training />
             </RequireAuth>
           }
         />

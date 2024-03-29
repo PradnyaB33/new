@@ -5,7 +5,7 @@ import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-n
 const LeaveNotification = () => {
   const { data } = useLeaveNotificationHook();
   return (
-    <div>
+    <div className="">
       {data?.leaveRequests?.map((items, idx) => (
         <LeaveRejectmodal key={idx} items={items} />
       ))}

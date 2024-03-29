@@ -41,7 +41,6 @@ const Mapped = ({
       newAppliedLeaveEvents,
       calculateDays(item?.start, item?.end)
     );
-    console.log(`🚀 ~ file: mapped-form.jsx:51 ~ result:`, result);
     if (result === true) {
       setLeavesTypes(event.target.value);
       newAppliedLeaveEvents[index].leaveTypeDetailsId = event.target.value;

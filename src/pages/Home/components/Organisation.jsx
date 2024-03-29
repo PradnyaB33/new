@@ -151,18 +151,18 @@ const Organisation = ({ item }) => {
             getMessage()
           )}
         </tag>
-        <div className="border-b-2 flex items-center justify-between border-[#0000002d] px-6 py-3 text-black">
-          <div className="flex gap-4 items-center">
+        <div className="border-b-2 grid grid-cols-6 items-center justify-between border-[#0000002d] px-6 py-3 text-black">
+          <div className="flex col-span-5 gap-4 items-center">
             <Avatar
               src={`${item?.logo_url}?v=${Date.now()})`}
               variant="rounded"
               className=" md:h-[35px] md:w-[35px] h-[10px] w-[10px]"
             />
-            <h5 className="mb-2 text-xl font-semibold leading-tight text-black">
+            <h5 className="mb-2 text-xl font-semibold leading-tight text-black truncate">
               {item.orgName}
             </h5>
           </div>
-          <div>
+          <div className="col-span-1 flex flex-row-reverse">
             <MoreVert
               onClick={(e) => handleClick(e, item)}
               className="cursor-pointer"
@@ -225,7 +225,6 @@ const Organisation = ({ item }) => {
               new Date()) /
               (1000 * 60 * 60 * 24) <=
             0 ? (
-              // Continue subscription if trial days are 0
               <Link
                 target="blank"
                 to={`${subscriptionDetails?.subscription?.short_url}`}
