@@ -40,6 +40,7 @@ const AuthInputFiled = ({
   setSelectedDays,
   handleDaySelection,
   isSelected,
+  handleOnChange,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -719,8 +720,9 @@ const AuthInputFiled = ({
               >
                 <PhoneInput
                   country={"in"}
-                  value={field.value}
-                  onChange={field.onChange}
+                  onChange={(value, data, event, formattedValue) => {
+                    field.onChange(value.slice(data.dialCode.length));
+                  }}
                   containerStyle={{
                     height: "100%",
                     width: "100%",

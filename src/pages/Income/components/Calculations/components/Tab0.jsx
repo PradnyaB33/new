@@ -169,26 +169,29 @@ const Tab0 = () => {
               <h1 className="text-lg">Income under the head Salaries</h1>
               <p className="text-lg">
                 INR{" "}
-                {salaryAmount?.TotalInvestInvestment + data?.salaryDeclaration}
+                {isNaN(salaryAmount?.TotalInvestInvestment)
+                  ? 0
+                  : salaryAmount?.TotalInvestInvestment +
+                      data?.salaryDeclaration ?? 0}
               </p>
             </div>
             <div className="p-2 flex justify-between">
               <h1 className="text-lg">Income under the head House Property</h1>
               <p className="text-lg">
-                INR {data?.houseDeclaration?.toFixed(2)}
+                INR {data?.houseDeclaration?.toFixed(2) ?? 0}
               </p>
             </div>
             <div className="p-2 flex justify-between">
               <h1 className="text-lg">Income under the head Other Sources</h1>
               <p className="text-lg">
-                INR {data?.otherDeclaration?.toFixed(2)}
+                INR {data?.otherDeclaration?.toFixed(2) ?? 0}
               </p>
             </div>
             <div className="p-2 flex justify-between">
               <h1 className="text-lg">Deductions</h1>
               <p className="text-lg">
                 {" "}
-                INR {data?.sectionDeclaration?.toFixed(2)}
+                INR {data?.sectionDeclaration?.toFixed(2) ?? 0}
               </p>
             </div>
             <div className="p-2 flex justify-between bg-gray-400">
@@ -206,7 +209,7 @@ const Tab0 = () => {
 
             <div className="p-2 flex justify-between bg-blue-400">
               <h1 className="text-lg">Tax Amount Under Old Regime</h1>
-              <p className="text-lg">INR {tax.toFixed(2)}</p>
+              <p className="text-lg">INR {tax.toFixed(2) ?? 0}</p>
             </div>
           </div>
         </div>
