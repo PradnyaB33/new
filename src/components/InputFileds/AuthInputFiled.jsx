@@ -760,6 +760,67 @@ const AuthInputFiled = ({
       </div>
     );
   }
+  if (type === "rounded-text-field") {
+    return (
+      <div className={`space-y-1 min-w-11 ${className}`}>
+        <label
+          htmlFor={name}
+          className={`${
+            error && "text-red-500"
+          } font-semibold text-gray-500 text-md`}
+        >
+          {label}
+        </label>
+        <Controller
+          control={control}
+          name={name}
+          id={name}
+          render={({ field }) => {
+            return (
+              <div
+                onFocus={() => {
+                  handleFocus(name);
+                }}
+                onBlur={() => setFocusedInput(null)}
+                className={`${readOnly && "bg-[ghostwhite]"} ${
+                  focusedInput === name
+                    ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
+                    : "outline-none border-gray-200 border-[.5px]"
+                } flex items-center px-2 bg-white py-1 md:py-[6px] rounded-full`}
+              >
+                {Icon && (
+                  <Icon className="text-gray-700 md:text-lg !text-[1em]" />
+                )}
+                <input
+                  type={type}
+                  maxLength={maxLimit && maxLimit}
+                  readOnly={readOnly}
+                  value={field.value}
+                  placeholder={placeholder}
+                  className={`${
+                    readOnly && "bg-[ghostwhite]"
+                  } border-none bg-white w-full outline-none px-2  `}
+                  {...field}
+                  formNoValidate
+                />
+              </div>
+            );
+          }}
+        />
+        <div className="h-4 w-max !z-50   !mb-1">
+          <ErrorMessage
+            errors={errors}
+            name={name}
+            render={({ message }) => (
+              <p className="text-sm mb-4 relative !bg-white  text-red-500">
+                {message}
+              </p>
+            )}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`space-y-1 min-w-11 ${className}`}>

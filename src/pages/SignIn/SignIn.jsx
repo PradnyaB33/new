@@ -53,8 +53,9 @@ const SignIn = () => {
     {
       onSuccess: (response) => {
         // Cookies.set("role", response?.data?.roleToken);
+
         Cookies.set("role", response.data.roleToken, {
-          expires: 1 / (24 * 60),
+          expires: 4 / 24,
         });
         console.log("Token Accepted");
         window.location.reload();
