@@ -84,9 +84,9 @@ import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculatio
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
+import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
 import Training from "./pages/SetUpOrganization/Traning/Training";
-import RemoteSetup from "./pages/SetupPage/Remote/RemoteSetup";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import CustomCalander from "./pages/custom/Calendar";
 import LeaveNotification from "./pages/leave-notification/page";
