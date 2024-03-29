@@ -52,7 +52,10 @@ const SignIn = () => {
     },
     {
       onSuccess: (response) => {
-        Cookies.set("role", response?.data?.roleToken);
+        // Cookies.set("role", response?.data?.roleToken);
+        Cookies.set("role", response.data.roleToken, {
+          expires: 1 / (24 * 60),
+        });
         console.log("Token Accepted");
         window.location.reload();
       },
@@ -71,7 +74,8 @@ const SignIn = () => {
 
     {
       onSuccess: async (response) => {
-        Cookies.set("aegis", response.data.token);
+        // Cookies.set("aegis", response.data.token);
+        Cookies.set("aegis", response.data.token, { expires: 1 / (24 * 60) });
         handleAlert(
           true,
           "success",
