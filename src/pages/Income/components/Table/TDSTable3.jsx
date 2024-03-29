@@ -127,55 +127,57 @@ const TDSTable3 = () => {
       }
     },
     onSuccess: (res) => {
-      const updatedTableData = tableData.map((item) => {
-        const matchingItem = res.find(
-          (investment) => investment.name === item.name
-        );
+      if (Array.isArray(res)) {
+        const updatedTableData = tableData.map((item) => {
+          const matchingItem = res.find(
+            (investment) => investment.name === item.name
+          );
 
-        if (matchingItem) {
-          return {
-            ...item,
-            amount: matchingItem.declaration,
-            status: matchingItem.status,
-            proof: matchingItem.proof,
-            amountAccepted: matchingItem.amountAccepted,
-          };
-        } else {
-          return item;
-        }
-      });
+          if (matchingItem) {
+            return {
+              ...item,
+              amount: matchingItem.declaration,
+              status: matchingItem.status,
+              proof: matchingItem.proof,
+              amountAccepted: matchingItem.amountAccepted,
+            };
+          } else {
+            return item;
+          }
+        });
 
-      const declaredAmount = res.reduce((i, a) => {
-        return (i += a.declaration);
-      }, 0);
-
-      const amountPending = res.reduce((i, a) => {
-        if (a.status === "Pending") {
+        const declaredAmount = res.reduce((i, a) => {
           return (i += a.declaration);
-        }
-        return i;
-      }, 0);
+        }, 0);
 
-      const amountReject = res.reduce((i, a) => {
-        if (a.status === "Reject") {
-          return (i += a.declaration);
-        }
-        return i;
-      }, 0);
+        const amountPending = res.reduce((i, a) => {
+          if (a.status === "Pending") {
+            return (i += a.declaration);
+          }
+          return i;
+        }, 0);
 
-      const amountAccepted = res.reduce((i, a) => {
-        return (i += a.amountAccepted);
-      }, 0);
+        const amountReject = res.reduce((i, a) => {
+          if (a.status === "Reject") {
+            return (i += a.declaration);
+          }
+          return i;
+        }, 0);
 
-      let data = {
-        declared: declaredAmount,
-        pending: amountPending,
-        accepted: amountAccepted,
-        rejected: amountReject,
-      };
-      setDeclared(data);
-      // setTotalHeads(res.totalAddition.toFixed(2));
-      setTableData(updatedTableData);
+        const amountAccepted = res.reduce((i, a) => {
+          return (i += a.amountAccepted);
+        }, 0);
+
+        let data = {
+          declared: declaredAmount,
+          pending: amountPending,
+          accepted: amountAccepted,
+          rejected: amountReject,
+        };
+        setDeclared(data);
+        // setTotalHeads(res.totalAddition.toFixed(2));
+        setTableData(updatedTableData);
+      }
     },
   });
 

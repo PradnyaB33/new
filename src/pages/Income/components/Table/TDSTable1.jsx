@@ -122,14 +122,14 @@ const TDSTable1 = () => {
 
       amountAccepted: 0,
     },
-    {
-      name: "Less : Professional Tax",
-      amount: 0,
-      proof: "",
-      status: "Not Submitted",
+    // {
+    //   name: "Less : Professional Tax",
+    //   amount: 0,
+    //   proof: "",
+    //   status: "Not Submitted",
 
-      amountAccepted: 0,
-    },
+    //   amountAccepted: 0,
+    // },
     // {
     //   name: "Income taxable under the head Salaries",
     //   amount: 0,
@@ -186,74 +186,76 @@ const TDSTable1 = () => {
       }
     },
     onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: ["finacialYearData"] });
+      if (Array.isArray(res)) {
+        queryClient.invalidateQueries({ queryKey: ["finacialYearData"] });
 
-      const declaredAmount = res?.reduce((i, a) => {
-        return (i += a.declaration);
-      }, 0);
-
-      const amountPending = res?.reduce((i, a) => {
-        if (a.status === "Pending") {
+        const declaredAmount = res?.reduce((i, a) => {
           return (i += a.declaration);
-        }
-        return i;
-      }, 0);
+        }, 0);
 
-      const amountReject = res?.reduce((i, a) => {
-        if (a.status === "Reject") {
-          return (i += a.declaration);
-        }
-        return i;
-      }, 0);
+        const amountPending = res?.reduce((i, a) => {
+          if (a.status === "Pending") {
+            return (i += a.declaration);
+          }
+          return i;
+        }, 0);
 
-      const amountAccepted = res?.reduce((i, a) => {
-        return (i += a.amountAccepted);
-      }, 0);
+        const amountReject = res?.reduce((i, a) => {
+          if (a.status === "Reject") {
+            return (i += a.declaration);
+          }
+          return i;
+        }, 0);
 
-      let data = {
-        declared: declaredAmount,
-        pending: amountPending,
-        accepted: amountAccepted,
-        rejected: amountReject,
-      };
-      setDeclared(data);
-      const updatedTableData = tableData?.map((item) => {
-        const matchingItem = res?.find(
-          (investment) => investment.name === item.name
-        );
+        const amountAccepted = res?.reduce((i, a) => {
+          return (i += a.amountAccepted);
+        }, 0);
 
-        // if (item.name === "Income taxable under the head Salaries") {
-        //   return {
-        //     ...item,
-        //     amount: deduction,
-        //     status: "",
-        //     proof: "",
-        //   };
-        // }
+        let data = {
+          declared: declaredAmount,
+          pending: amountPending,
+          accepted: amountAccepted,
+          rejected: amountReject,
+        };
+        setDeclared(data);
+        const updatedTableData = tableData?.map((item) => {
+          const matchingItem = res?.find(
+            (investment) => investment.name === item.name
+          );
 
-        if (item.name === "Gross Salary") {
-          return {
-            ...item,
-            amount: isNaN(Number(grossTotal)) ? 0 : Number(grossTotal),
-            status: "Auto",
-            proof: "",
-          };
-        }
-        if (matchingItem) {
-          return {
-            ...item,
-            amount: matchingItem.declaration,
-            amountAccepted: matchingItem.amountAccepted,
-            status: matchingItem.status,
-            proof: matchingItem.proof,
-          };
-        } else {
-          return item;
-        }
-      });
+          // if (item.name === "Income taxable under the head Salaries") {
+          //   return {
+          //     ...item,
+          //     amount: deduction,
+          //     status: "",
+          //     proof: "",
+          //   };
+          // }
 
-      // setTotalHeads(res.totalAddition);
-      setTableData(updatedTableData);
+          if (item.name === "Gross Salary") {
+            return {
+              ...item,
+              amount: isNaN(Number(grossTotal)) ? 0 : Number(grossTotal),
+              status: "Auto",
+              proof: "",
+            };
+          }
+          if (matchingItem) {
+            return {
+              ...item,
+              amount: matchingItem.declaration,
+              amountAccepted: matchingItem.amountAccepted,
+              status: matchingItem.status,
+              proof: matchingItem.proof,
+            };
+          } else {
+            return item;
+          }
+        });
+
+        // setTotalHeads(res.totalAddition);
+        setTableData(updatedTableData);
+      }
     },
   });
 
@@ -484,15 +486,15 @@ const TDSTable1 = () => {
                     </p>
                   </td>
 
-                  <td className=" text-left !p-0 !w-[250px] border ">
+                  <td className=" text-left !p-0 w-[200px] border ">
                     {editStatus[itemIndex] && editStatus[itemIndex] ? (
-                      <div className="flex gap-2 w-full !py-0 h-full ">
-                        <h1 className="text-lg h-full !py-0 text-center w-[30%] bg-gray-200 border justify-center   flex items-center ">
+                      <div className="flex gap-2 h-14">
+                        <h1 className="leading-7 text-[16px] bg-gray-300 border h-auto px-4  flex items-center ">
                           INR
                         </h1>
                         <input
                           type="number"
-                          className="border-none w-[70%]   outline-none"
+                          className="border-none w-[90px] h-auto outline-none  "
                           value={parseFloat(item.amount)}
                           onChange={(e) => handleAmountChange(e, itemIndex)}
                         />

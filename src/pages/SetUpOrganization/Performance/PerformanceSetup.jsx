@@ -1,14 +1,21 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AccessTime, BarChart, ListAlt, TrendingUp } from "@mui/icons-material";
 import { Button, CircularProgress } from "@mui/material";
-import React from "react";
+import axios from "axios";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
+import { useParams } from "react-router-dom";
 import { z } from "zod";
+import { TestContext } from "../../../State/Function/Main";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
+import useAuthToken from "../../../hooks/Token/useAuth";
 import Setup from "../Setup";
 
 const PerformanceSetup = () => {
+  const { organisationId } = useParams();
+  const authToken = useAuthToken();
+  const { handleAlert } = useContext(TestContext);
   const PerformanceSchema = z.object({
     startdate: z.object({
       startDate: z.string(),
@@ -38,6 +45,19 @@ const PerformanceSetup = () => {
     watch,
   } = useForm({
     resolver: zodResolver(PerformanceSchema),
+    defaultValues: {
+      stages: undefined,
+      goals: undefined,
+      isDownCast: false,
+      isFeedback: false,
+      isNonMeasurableAllowed: false,
+      isManagerApproval: false,
+      isMidGoal: false,
+      isSendFormInMid: false,
+      deleteFormEmployeeOnBoarding: false,
+      isKRA: false,
+      isSelfGoal: false,
+    },
   });
 
   let stagesOptions = [
@@ -107,7 +127,29 @@ const PerformanceSetup = () => {
 
   console.log(watch("startdate"));
 
-  const performanceSetup = useMutation((data) => {});
+  const performanceSetup = useMutation(
+    async (data) => {
+      const performanceSetting = {
+        ...data,
+        startdate: data.startdate.startDate,
+        enddate: data.enddate.endDate,
+      };
+      await axios.post(
+        `${process.env.REACT_APP_API}/route/performance/createSetup/${organisationId}`,
+        { performanceSetting },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: () => {
+        handleAlert(true, "success", "Performance setup created successfully");
+      },
+    }
+  );
 
   const onSubmit = async (data) => {
     performanceSetup.mutate(data);
@@ -166,30 +208,28 @@ const PerformanceSetup = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <AuthInputFiled
-                    name="stages"
-                    icon={ListAlt}
-                    control={control}
-                    options={stagesOptions}
-                    type="mutltiselect"
-                    placeholder="Stages"
-                    label="Select Stage *"
-                    errors={errors}
-                    error={errors.stages}
-                  />
-                  <AuthInputFiled
-                    name="goals"
-                    icon={TrendingUp}
-                    control={control}
-                    type="mutltiselect"
-                    options={goalsOptions}
-                    placeholder="Goals"
-                    label="Select Goal Type *"
-                    errors={errors}
-                    error={errors.goals}
-                  />
-                </div>
+                <AuthInputFiled
+                  name="stages"
+                  icon={ListAlt}
+                  control={control}
+                  options={stagesOptions}
+                  type="mutltiselect"
+                  placeholder="Stages"
+                  label="Select Stage *"
+                  errors={errors}
+                  error={errors.stages}
+                />
+                <AuthInputFiled
+                  name="goals"
+                  icon={TrendingUp}
+                  control={control}
+                  type="mutltiselect"
+                  options={goalsOptions}
+                  placeholder="Goals"
+                  label="Select Goal Type *"
+                  errors={errors}
+                  error={errors.goals}
+                />
 
                 <div className="grid grid-cols-2 gap-4">
                   <AuthInputFiled

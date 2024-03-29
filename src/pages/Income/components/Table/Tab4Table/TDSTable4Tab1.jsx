@@ -59,13 +59,13 @@ const TDSTable4Tab1 = () => {
           status: "Not Submitted",
           amountAccepted: 0,
         },
-        {
-          section: "80 C",
-          name: "Provident Fund",
-          declaration: 0,
-          proof: "",
-          status: "Auto",
-        },
+        // {
+        //   section: "80 C",
+        //   name: "Provident Fund",
+        //   declaration: 0,
+        //   proof: "",
+        //   status: "Auto",
+        // },
         {
           section: "80 C",
           name: "Public Provident Fund",
@@ -182,64 +182,74 @@ const TDSTable4Tab1 = () => {
     onSuccess: (res) => {
       // Extracting relevant data from the backend response
 
-      const declaredAmount = res.reduce((i, a) => {
-        return (i += a.declaration);
-      }, 0);
+      if (Array.isArray(res)) {
+        const declaredAmount = Array.isArray(res)
+          ? res?.reduce((i, a) => {
+              return (i += a.declaration);
+            }, 0)
+          : 0;
 
-      const amountPending = res.reduce((i, a) => {
-        if (a.status === "Pending") {
-          return (i += a.declaration);
-        }
-        return i;
-      }, 0);
+        const amountPending = Array.isArray(res)
+          ? res?.reduce((i, a) => {
+              if (a.status === "Pending") {
+                return (i += a.declaration);
+              }
+              return i;
+            }, 0)
+          : 0;
 
-      const amountReject = res.reduce((i, a) => {
-        if (a.status === "Reject") {
-          return (i += a.declaration);
-        }
-        return i;
-      }, 0);
+        const amountReject = Array.isArray(res)
+          ? res?.reduce((i, a) => {
+              if (a.status === "Reject") {
+                return (i += a.declaration);
+              }
+              return i;
+            }, 0)
+          : 0;
 
-      const amountAccepted = res.reduce((i, a) => {
-        return (i += a.amountAccepted);
-      }, 0);
+        const amountAccepted = Array.isArray(res)
+          ? res?.reduce((i, a) => {
+              return (i += a.amountAccepted);
+            }, 0)
+          : 0;
 
-      let data = {
-        declared: declaredAmount,
-        pending: amountPending,
-        accepted: amountAccepted,
-        rejected: amountReject,
-      };
-      setDeclared(data);
+        let data = {
+          declared: declaredAmount,
+          pending: amountPending,
+          accepted: amountAccepted,
+          rejected: amountReject,
+        };
+        setDeclared(data);
 
-      // Updating the tableData state based on the backend response
-      const updatedTableData = tableData.map((section) => {
-        const sectionName = Object.keys(section)[0];
-        const matchingSection = res?.filter(
-          (item) => item.subsectionname === sectionName
-        );
+        // Updating the tableData state based on the backend response
+        const updatedTableData = tableData.map((section) => {
+          const sectionName = Object.keys(section)[0];
+          const matchingSection = res?.filter(
+            (item) => item.subsectionname === sectionName
+          );
 
-        if (matchingSection) {
-          section[sectionName].forEach((item) => {
-            const matchingItem = matchingSection.find(
-              (originalItem) => originalItem.name === item.name
-            );
+          if (matchingSection) {
+            section[sectionName].forEach((item) => {
+              const matchingItem = matchingSection.find(
+                (originalItem) => originalItem.name === item.name
+              );
 
-            if (matchingItem) {
-              Object.assign(item, matchingItem);
-            }
-          });
-        }
+              if (matchingItem) {
+                Object.assign(item, matchingItem);
+              }
+            });
+          }
 
-        return section;
-      });
+          return section;
+        });
 
-      const tableDataWithMaximumAllowable = updatedTableData.map((data) => ({
-        ...data,
-      }));
+        const tableDataWithMaximumAllowable = updatedTableData.map((data) => ({
+          ...data,
+        }));
 
-      // Update state with tableData including maximumAllowable
-      setTableData(tableDataWithMaximumAllowable);
+        // Update state with tableData including maximumAllowable
+        setTableData(tableDataWithMaximumAllowable);
+      }
     },
   });
 

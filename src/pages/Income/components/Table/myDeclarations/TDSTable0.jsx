@@ -64,25 +64,27 @@ const TDSTable0 = () => {
     },
     onSuccess: (res) => {
       let updatedTableData = tableData.map((item) => {
-        if (item.name === "Income From Salary") {
+        if (item.name === "Income from salary") {
           return {
             ...item,
-            amount: salaryAmount?.TotalInvestInvestment + res?.Salary,
+            amount: !isNaN(salaryAmount?.TotalInvestInvestment + res?.Salary)
+              ? salaryAmount?.TotalInvestInvestment + res?.Salary
+              : 0,
           };
-        } else if (item.name === "Income From House Property") {
+        } else if (item.name === "Income from house property") {
           return {
             ...item,
-            amount: res?.House,
+            amount: !isNaN(res?.House) ? res?.House : 0,
           };
         } else if (item.name === "Income from other sources") {
           return {
             ...item,
-            amount: res?.Other,
+            amount: !isNaN(res?.Other) ? res?.Other : 0,
           };
         } else if (item.name === "Deduction under chapter VI A") {
           return {
             ...item,
-            amount: res?.Section,
+            amount: !isNaN(res?.Section) ? res?.Section : 0,
           };
         } else {
           return item;
@@ -95,11 +97,11 @@ const TDSTable0 = () => {
 
   const [tableData, setTableData] = useState([
     {
-      name: "Income From Salary",
+      name: "Income from salary",
       amount: 0,
     },
     {
-      name: "Income From House Property",
+      name: "Income from house property",
       amount: 0,
     },
     {
@@ -350,7 +352,7 @@ const TDSTable0 = () => {
         <CircularProgress />
       ) : (
         <>
-          <div className="grid bg-white border-[.5px] border-gray-200 grid-cols-6 gap-4 p-4">
+          <div className="flex items-center flex-wrap bg-white border-[.5px] border-gray-200 gap-10 p-4">
             <div>
               <h1 className="text-gray-600">Amount Declared</h1>
               <p className="text-xl">INR {data?.DeclaredAmount ?? 0}</p>
@@ -374,14 +376,23 @@ const TDSTable0 = () => {
             <table className="table-auto border border-collapse min-w-full bg-white  text-left  !text-sm font-light">
               <thead className="border-b bg-gray-100 font-bold">
                 <tr className="!font-semibold ">
-                  <th scope="col" className="!text-left pl-8 w-max py-3 border">
+                  <th
+                    scope="col"
+                    className="!text-left leading-7 text-[16px] pl-8 w-max py-3 border"
+                  >
                     Sr. No
                   </th>
-                  <th scope="col" className="py-3 px-2 border">
+                  <th
+                    scope="col"
+                    className="py-3 leading-7 text-[16px] px-2 border"
+                  >
                     Deduction Name
                   </th>
 
-                  <th scope="col" className="py-3 px-2 border">
+                  <th
+                    scope="col"
+                    className="py-3 leading-7 text-[16px] px-2 border"
+                  >
                     Declaration
                   </th>
                 </tr>
