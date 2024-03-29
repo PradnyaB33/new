@@ -438,7 +438,7 @@ const App = () => {
         />
 
         <Route
-          path="/organisation/:organisationId/view-payslip"
+          path="/view-payslip"
           element={
             <RequireAuth
               permission={[
