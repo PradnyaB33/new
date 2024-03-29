@@ -79,6 +79,7 @@ const AuthInputFiled = ({
                   inputClassName={"border-none w-full outline-none"}
                   useRange={false}
                   asSingle={true}
+                  readOnly={true}
                   onChange={(value) => {
                     field.onChange(value);
                   }}

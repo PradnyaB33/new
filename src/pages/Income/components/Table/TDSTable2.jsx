@@ -1,15 +1,18 @@
 import {
   Article,
+  Cancel,
+  CheckCircle,
   DeleteOutlined,
   EditOutlined,
   Error,
-  Info,
+  Pending,
 } from "@mui/icons-material";
-import { Button, CircularProgress, IconButton, Tooltip } from "@mui/material";
+import { Button, CircularProgress, IconButton } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
+import useTDS from "../../../../hooks/IncomeTax/useTDS";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
 import ProofModel from "../ProofModel";
@@ -19,6 +22,7 @@ const TDSTable2 = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const queryClient = useQueryClient();
+  const { setDeclared } = useTDS();
   const [pdf, setPdf] = useState(null);
   const handlePDF = (id) => {
     setPdf(id);
@@ -129,7 +133,7 @@ const TDSTable2 = () => {
     },
   ]);
 
-  useQuery({
+  const { isFetching } = useQuery({
     queryKey: ["incomeHouse"],
     queryFn: async () => {
       try {
@@ -147,46 +151,78 @@ const TDSTable2 = () => {
       }
     },
     onSuccess: (res) => {
-      // Extracting relevant data from the backend response
-      const updatedTableData = tableData.map((section) => {
-        console.log(res);
-        const sectionName = Object.keys(section)[0];
-        const matchingSection = res?.filter(
-          (item) => item.subsectionname === sectionName
-        );
+      if (Array.isArray(res)) {
+        // Extracting relevant data from the backend response
+        const updatedTableData = tableData.map((section) => {
+          console.log(res);
+          const sectionName = Object.keys(section)[0];
+          const matchingSection = res?.filter(
+            (item) => item.subsectionname === sectionName
+          );
 
-        if (matchingSection) {
-          section[sectionName].forEach((item) => {
-            const matchingItem = matchingSection.find(
-              (originalItem) => originalItem.name === item.name
-            );
+          if (matchingSection) {
+            section[sectionName].forEach((item) => {
+              const matchingItem = matchingSection.find(
+                (originalItem) => originalItem.name === item.name
+              );
 
-            if (matchingItem) {
-              Object.assign(item, matchingItem);
-            }
-          });
-        }
+              if (matchingItem) {
+                Object.assign(item, matchingItem);
+              }
+            });
+          }
 
-        return section;
-      });
+          return section;
+        });
 
-      const tableDataWithMaximumAllowable = updatedTableData?.map((data) => ({
-        ...data,
-        maximumAllowable: res?.firstSectionDeclarationSum,
-        secondData2: {
-          netValue1: res?.secondData2?.netValue,
-          standard1: res?.secondData2?.deductedAmount,
-          netHouseTotal1: res?.secondData2?.ActualDeductedValue,
-        },
-        secondData3: {
-          netValue1: res?.secondData3?.netValue,
-          standard1: res?.secondData3?.deductedAmount,
-          netHouseTotal1: res?.secondData3?.ActualDeductedValue,
-        },
-      }));
+        const tableDataWithMaximumAllowable = updatedTableData?.map((data) => ({
+          ...data,
+          maximumAllowable: res?.firstSectionDeclarationSum,
+          secondData2: {
+            netValue1: res?.secondData2?.netValue,
+            standard1: res?.secondData2?.deductedAmount,
+            netHouseTotal1: res?.secondData2?.ActualDeductedValue,
+          },
+          secondData3: {
+            netValue1: res?.secondData3?.netValue,
+            standard1: res?.secondData3?.deductedAmount,
+            netHouseTotal1: res?.secondData3?.ActualDeductedValue,
+          },
+        }));
 
-      setTableData(tableDataWithMaximumAllowable);
-      return tableData;
+        const declaredAmount = res.reduce((i, a) => {
+          return (i += a.declaration);
+        }, 0);
+
+        const amountPending = res.reduce((i, a) => {
+          if (a.status === "Pending") {
+            return (i += a.declaration);
+          }
+          return i;
+        }, 0);
+
+        const amountReject = res.reduce((i, a) => {
+          if (a.status === "Reject") {
+            return (i += a.declaration);
+          }
+          return i;
+        }, 0);
+
+        const amountAccepted = res.reduce((i, a) => {
+          return (i += a.amountAccepted);
+        }, 0);
+
+        let data = {
+          declared: declaredAmount,
+          pending: amountPending,
+          accepted: amountAccepted,
+          rejected: amountReject,
+        };
+        setDeclared(data);
+
+        setTableData(tableDataWithMaximumAllowable);
+        return tableData;
+      }
     },
   });
 
@@ -380,7 +416,7 @@ const TDSTable2 = () => {
 
   return (
     <div>
-      {false ? (
+      {isFetching ? (
         <div className="flex items-center justify-center w-full">
           <CircularProgress />
         </div>
@@ -439,56 +475,53 @@ const TDSTable2 = () => {
                               {id + 1}
                             </td>
                             <td className="leading-7 text-[16px] truncate text-left w-[500px] border px-2">
-                              <div className=" flex px-2 items-center gap-2">
-                                {ele.name}
-
-                                <Tooltip
-                                  title="this is a helper text"
-                                  className="  h-max hover:cursor-pointer rounded-full"
-                                >
-                                  <Info className=" !text-blue-500" />
-                                </Tooltip>
-                              </div>
+                              {ele.name}
                             </td>
                             {Object.keys(item)[0] ===
                               "(A) Self Occupied Property (Loss)" && (
                               <>
-                                <td className="leading-7 text-[16px] h-14 text-left px-2 w-[220px] border ">
+                                <td className=" text-left !p-0 w-[200px] border ">
                                   {editStatus[itemIndex] === id ? (
-                                    <div className="flex gap-2 !py-0 h-full ">
-                                      <h1 className="text-lg h-full !py-0 text-center w-[30%] bg-gray-200 border justify-center   flex items-center ">
+                                    <div className="flex gap-2 h-14">
+                                      <h1 className="leading-7 text-[16px] bg-gray-300 border h-auto px-4  flex items-center ">
                                         INR
                                       </h1>
                                       <input
                                         type="number"
-                                        className="border-none w-[70%]   outline-none"
+                                        className="border-none w-[90px] h-auto outline-none  "
                                         value={ele.property1}
+                                        min={0}
                                         onChange={(e) =>
                                           handleProperty1(e, itemIndex, id)
                                         }
                                       />
                                     </div>
                                   ) : (
-                                    ele.property1 && "INR " + ele?.property1
+                                    <p className={`px-2 leading-7 text-[16px]`}>
+                                      {ele.property1 && "INR " + ele?.property1}
+                                    </p>
                                   )}
                                 </td>
-                                <td className="leading-7 text-[16px] h-14 text-left  px-2  w-[220px] border ">
+                                <td className=" text-left !p-0 w-[200px] border ">
                                   {editStatus[itemIndex] === id ? (
-                                    <div className="border-gray-200 w-max  flex border-[.5px]">
-                                      <h1 className=" bg-gray-300 py-2  h-full px-2">
+                                    <div className="flex gap-2 h-14">
+                                      <h1 className="leading-7 text-[16px] bg-gray-300 border h-auto px-4  flex items-center ">
                                         INR
                                       </h1>
                                       <input
                                         type="number"
-                                        className="border-none py-2  outline-none px-2 "
+                                        className="border-none w-[90px] h-auto outline-none  "
                                         value={ele.property2}
+                                        min={0}
                                         onChange={(e) =>
                                           handleProperty2(e, itemIndex, id)
                                         }
                                       />
                                     </div>
                                   ) : (
-                                    ele.property2 && "INR " + ele.property2
+                                    <p className={`px-2 leading-7 text-[16px]`}>
+                                      {ele.property2 && "INR " + ele.property2}
+                                    </p>
                                   )}
                                 </td>
                               </>
@@ -497,13 +530,13 @@ const TDSTable2 = () => {
                               {Object.keys(item)[0] !==
                                 "(A) Self Occupied Property (Loss)" &&
                               editStatus[itemIndex] === id ? (
-                                <div className="border-gray-200 w-max  flex border-[.5px]">
-                                  <h1 className=" bg-gray-300 py-2  h-full px-2">
+                                <div className="flex gap-2 h-14">
+                                  <h1 className="leading-7 text-[16px] bg-gray-300 border h-auto px-4  flex items-center ">
                                     INR
                                   </h1>
                                   <input
                                     type="number"
-                                    className="border-none py-2  outline-none px-2 "
+                                    className="border-none w-[90px] h-auto outline-none  "
                                     value={ele.declaration}
                                     onChange={(e) =>
                                       handleAmountChange(e, itemIndex, id)
@@ -547,14 +580,28 @@ const TDSTable2 = () => {
                                 </p>
                               )}
                             </td>
-                            <td className="text-left w-[200px] border px-2">
+                            <td className="text-left w-[200px] leading-7 text-[16px] border px-2">
                               {ele.status === "Pending" ? (
                                 <div className="flex items-center  gap-2">
-                                  <Error className="text-yellow-400 " />
+                                  <Pending className="text-yellow-400 " />
+                                  {ele.status}
+                                </div>
+                              ) : ele.status === "Auto" ||
+                                ele.status === "Approved" ? (
+                                <div className="flex items-center  gap-2">
+                                  <CheckCircle className="text-green-400 " />
+                                  {ele.status}
+                                </div>
+                              ) : ele.status === "Reject" ? (
+                                <div className="flex items-center  gap-2">
+                                  <Cancel className="text-red-400 " />
                                   {ele.status}
                                 </div>
                               ) : (
-                                <h1 className=" ">{ele.status}</h1>
+                                <div className="flex items-center  gap-2">
+                                  <Error className="text-gray-400 " />
+                                  <p>{ele.status}</p>
+                                </div>
                               )}
                             </td>
                             <td className="whitespace-nowrap leading-7 text-[16px] px-2   w-[220px]">

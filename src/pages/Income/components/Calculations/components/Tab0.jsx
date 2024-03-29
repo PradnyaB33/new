@@ -140,7 +140,7 @@ const Tab0 = () => {
         tax = taxAmount + cess;
       }
 
-      setTaxAmount(taxAmount);
+      setTaxAmount(taxAmount > 0 ? taxAmount : 0);
       setCess(cess);
       setTax(tax);
       console.log(taxAmount);
@@ -196,7 +196,9 @@ const Tab0 = () => {
             </div>
             <div className="p-2 flex justify-between bg-gray-400">
               <h1 className="text-lg">Taxable income</h1>
-              <p className="text-lg">INR {data?.salary?.toFixed(2) ?? 0}</p>
+              <p className="text-lg">
+                INR {data?.salary < 0 ? 0 : data?.salary?.toFixed(2) ?? 0}
+              </p>
             </div>
             <div className="p-2 flex justify-between">
               <h1 className="text-lg">Taxable Amount</h1>

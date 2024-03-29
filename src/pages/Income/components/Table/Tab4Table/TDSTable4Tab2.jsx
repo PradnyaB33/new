@@ -118,34 +118,36 @@ const TDSTable4Tab2 = () => {
     onSuccess: (res) => {
       // Extracting relevant data from the backend response
 
-      // Updating the tableData state based on the backend response
-      const updatedTableData = tableData.map((section) => {
-        const sectionName = Object.keys(section)[0];
-        const matchingSection = res?.filter(
-          (item) => item.subsectionname === sectionName
-        );
+      if (Array.isArray(res)) {
+        // Updating the tableData state based on the backend response
+        const updatedTableData = tableData.map((section) => {
+          const sectionName = Object.keys(section)[0];
+          const matchingSection = res?.filter(
+            (item) => item.subsectionname === sectionName
+          );
 
-        if (matchingSection) {
-          section[sectionName].forEach((item) => {
-            const matchingItem = matchingSection.find(
-              (originalItem) => originalItem.name === item.name
-            );
+          if (matchingSection) {
+            section[sectionName].forEach((item) => {
+              const matchingItem = matchingSection.find(
+                (originalItem) => originalItem.name === item.name
+              );
 
-            if (matchingItem) {
-              Object.assign(item, matchingItem);
-            }
-          });
-        }
+              if (matchingItem) {
+                Object.assign(item, matchingItem);
+              }
+            });
+          }
 
-        return section;
-      });
+          return section;
+        });
 
-      const tableDataWithMaximumAllowable = updatedTableData.map((data) => ({
-        ...data,
-      }));
+        const tableDataWithMaximumAllowable = updatedTableData.map((data) => ({
+          ...data,
+        }));
 
-      // Update state with tableData including maximumAllowable
-      setTableData(tableDataWithMaximumAllowable);
+        // Update state with tableData including maximumAllowable
+        setTableData(tableDataWithMaximumAllowable);
+      }
     },
   });
 
