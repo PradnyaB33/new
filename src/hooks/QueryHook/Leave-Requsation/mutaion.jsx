@@ -21,6 +21,7 @@ const useLeaveRequisitionMutation = () => {
     newLeaveArray,
     itemDays
   ) {
+    console.log(`🚀 ~ file: mutaion.jsx:24 ~ dataArray:`, dataArray);
     let maxCount = 0;
     let totalCountOfLeave = itemDays;
     newLeaveArray.forEach((item) => {
@@ -28,16 +29,22 @@ const useLeaveRequisitionMutation = () => {
         totalCountOfLeave += calculateDays(item?.start, item?.end);
       }
     });
+    console.log(
+      `🚀 ~ file: mutaion.jsx:29 ~ totalCountOfLeave:`,
+      totalCountOfLeave
+    );
 
     dataArray.forEach((item) => {
       if (item._id === id) {
         maxCount = item?.count;
       }
     });
-    if (maxCount <= totalCountOfLeave) {
-      if (maxCount === -1) {
+    console.log(`🚀 ~ file: mutaion.jsx:43 ~ maxCount:`, maxCount);
+    if (maxCount < totalCountOfLeave) {
+      if (maxCount === 0) {
         return true;
       }
+      console.log("i am here");
       handleAlert(
         true,
         "error",

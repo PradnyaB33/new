@@ -36,8 +36,8 @@ const useEmpOption = (organisationId) => {
 
   const Manageroptions = ManagerList?.manager?.map((item) => {
     return {
-      value: item?.managerId?._id,
-      label: `${item?.managerId?.first_name} ${item?.managerId?.last_name}`,
+      value: item?._id,
+      label: `${item?.first_name} ${item?.last_name}`,
     };
   });
 

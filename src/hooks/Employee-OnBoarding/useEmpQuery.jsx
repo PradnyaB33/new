@@ -35,7 +35,12 @@ const useEmpQuery = ({ organisationId }) => {
       queryKey: ["managersList"],
       queryFn: () =>
         getEmployeeDataApi(
-          `${process.env.REACT_APP_API}/route/employee/get-manager/${organisationId}`
+          `${process.env.REACT_APP_API}/route/employee/getAllManager/${organisationId}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
         ),
     });
 

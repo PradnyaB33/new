@@ -9,6 +9,7 @@ import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
+import PercentIcon from "@mui/icons-material/Percent";
 const style = {
   position: "absolute",
   top: "50%",
@@ -43,8 +44,6 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
     },
     resolver: zodResolver(EmpLoanMgtSchema),
   });
-
-  console.log(errors);
 
   const AddLoanType = useMutation(
     (data) =>
@@ -128,7 +127,7 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
               <div className="space-y-2 ">
                 <AuthInputFiled
                   name="rateOfInterest"
-                  icon={AttachMoney}
+                  icon={PercentIcon}
                   control={control}
                   type="number"
                   placeholder="Rate Of Interest"

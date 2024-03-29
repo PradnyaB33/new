@@ -63,7 +63,6 @@ const TDSDeclarationModel = ({
   const queryClient = useQueryClient();
 
   const onSubmit = async (data) => {
-    console.log(investment, "submitted");
     const requestData = {
       empId,
       requestData: {
@@ -76,8 +75,8 @@ const TDSDeclarationModel = ({
     };
     try {
       await axios.post(
-        `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
-        requestData,
+        `${process.env.REACT_APP_API}/route/tds/changeApprovals/2023-2024`,
+        { empId, ...requestData },
         {
           headers: {
             Authorization: authToken,

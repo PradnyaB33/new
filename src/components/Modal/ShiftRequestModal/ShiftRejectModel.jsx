@@ -19,7 +19,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 // import Loader from "../../../pages/Notification/Loader";
 import UserProfile from "../../../hooks/UserData/useUser";
 
-const LeaveRejectmodal = ({ items, key }) => {
+const ShiftRejectModel = ({ items, key }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
@@ -361,4 +361,4 @@ const LeaveRejectmodal = ({ items, key }) => {
   );
 };
 
-export default LeaveRejectmodal;
+export default ShiftRejectModel;

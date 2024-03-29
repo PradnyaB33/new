@@ -22,6 +22,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
+
   // define the state for storing the employee data
   const [formData, setFormData] = useState({
     first_name: "",
@@ -36,9 +37,8 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     bank_account_no: "",
     adhar_card_number: "",
     pan_card_number: "",
-    dept_cost_center_no: "",
-    shift_allocation: "",
   });
+
   // define the state for store additional info data of employee
   const [additionalInfo, setAdditionalInfo] = useState({
     "Emergency Contact": "",
@@ -49,20 +49,18 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     "Marital Status": "",
     Education: "",
   });
-  // define the state for stored salary tempalte of employee
+
+  // state for dynamically fetch
   const [profile, setProfile] = useState([]);
-  // define the state for stored worklocation
   const [selectedWorkLocation, setSelectedWorkLocation] = useState(null);
-  // define the state for stored deptname
   const [deptname, setDepartment] = useState(null);
-  // define the state for stored designation
   const [designation, setDesignation] = useState(null);
-  // define the state for stored salary tempalte of employee
   const [salaryTemplate, setSalaryTemplate] = useState(null);
-  // define the state for stored employement type of employee
   const [employementType, setEmployementType] = useState(null);
-  // pull the employee data
   const [employeeData, setEmployeeData] = useState(null);
+  const [mgrempid, setMgrempid] = useState(null);
+  const [dept_cost_center_no, setDeptCostCenterId] = useState(null);
+  const [shift_allocation, setShiftAllocation] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,6 +85,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     return () => {};
   }, [open, employeeId, authToken]);
   console.log(employeeData);
+
   // pull the worklocation of organization
   const [availabelLocation, setAvailableLocation] = useState([]);
   const fetchAvailableLocation = async () => {
@@ -200,6 +199,29 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     // eslint-disable-next-line
   }, []);
 
+  // pull the manager data
+  const [managerData, setManagerData] = useState([]);
+  const fetchManagerData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/get-manager/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setManagerData(response.data.manager);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchManagerData();
+    // eslint-disable-next-line
+  }, []);
+  console.log(managerData);
+
   // pull the profile
   const [availableProfiles, setAvailableProfiles] = useState([]);
   const fetchAvailableProfiles = async () => {
@@ -276,6 +298,9 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     // eslint-disable-next-line
   }, []);
 
+  console.log("dept cost center id", availaleCostCenterId);
+  console.log("shift allocation", availaleShiftAllocation);
+
   // function for changing the data by user
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -342,8 +367,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
         bank_account_no: employeeData?.bank_account_no || "",
         adhar_card_number: employeeData?.adhar_card_number || "",
         pan_card_number: employeeData?.pan_card_number || "",
-        dept_cost_center_no: employeeData?.dept_cost_center_no || "",
-        shift_allocation: employeeData?.shift_allocation || "",
       });
 
       setAdditionalInfo({
@@ -413,6 +436,9 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
       }
       const employeeProfileData = employeeData?.profile || [];
       setProfile(employeeProfileData);
+      setMgrempid(employeeData?.mgrempid || "");
+      setDeptCostCenterId(employeeData?.dept_cost_center_no || "");
+      setShiftAllocation(employeeData?.shift_allocation || "");
     }
   }, [
     employeeData,
@@ -457,9 +483,12 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           worklocation: [selectedWorkLocation],
           deptname,
           designation,
+          mgrempid: mgrempid,
           salarystructure: salaryTemplate,
           employmentType: employementType,
           profile,
+          shift_allocation,
+          dept_cost_center_no,
         };
         await EditEmployeeData.mutateAsync(updatedData);
       }
@@ -507,7 +536,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="first_name"
                 name="first_name"
                 value={formData.first_name}
                 onChange={handleInputChange}
@@ -522,7 +551,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="last_name"
                 name="last_name"
                 value={formData.last_name}
                 onChange={handleInputChange}
@@ -536,7 +565,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="email"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
@@ -550,7 +579,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="phone_number"
                 name="phone_number"
                 value={formData.phone_number}
                 onChange={handleInputChange}
@@ -564,7 +593,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="bank_account_no"
                 name="bank_account_no"
                 value={formData.bank_account_no}
                 onChange={handleInputChange}
@@ -578,7 +607,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="companyemail"
                 name="companyemail"
                 value={formData.companyemail}
                 onChange={handleInputChange}
@@ -593,7 +622,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="address"
                 name="address"
                 value={formData.address}
                 onChange={handleInputChange}
@@ -607,7 +636,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="citizenship"
                 name="citizenship"
                 value={formData.citizenship}
                 onChange={handleInputChange}
@@ -621,7 +650,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="adhar_card_number"
                 name="adhar_card_number"
                 value={formData.adhar_card_number}
                 onChange={handleInputChange}
@@ -630,12 +659,10 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           </div>
           <div className="space-y-2 ">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">
-                Pan Card Number
-              </InputLabel>
+              <InputLabel htmlFor="outlined-adornment-password">PAN</InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="PAN"
                 name="pan_card_number"
                 value={formData.pan_card_number}
                 onChange={handleInputChange}
@@ -649,7 +676,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="date_of_birth"
                 name="date_of_birth"
                 value={formData.date_of_birth}
                 onChange={handleInputChange}
@@ -660,11 +687,11 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           <div className="space-y-2 ">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
-                Joining Date
+                Date of Joining
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Add Employee Data"
+                label="joining_date"
                 name="joining_date"
                 value={formData.joining_date}
                 onChange={handleInputChange}
@@ -696,11 +723,11 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           <div className="space-y-2">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
-                Emergency contact
+                Emergency Contact
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Emergency contact"
+                label="Emergency Contact"
                 name="Emergency contact"
                 value={additionalInfo["Emergency contact"]}
                 onChange={(e) =>
@@ -715,11 +742,11 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           <div className="space-y-2">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
-                Marital status
+                Marital Status
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Marital status"
+                label="Marital  Status"
                 name="Marital status"
                 value={additionalInfo["Marital status"]}
                 onChange={(e) =>
@@ -774,11 +801,11 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           <div className="space-y-2">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
-                Primary nationality
+                Primary Nationality
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Primary nationality"
+                label="Primary Nationality"
                 name="Primary nationality"
                 value={additionalInfo["Primary nationality"]}
                 onChange={(e) =>
@@ -818,7 +845,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               htmlFor="workLocation"
               style={{ display: "block", color: "#000000" }}
             >
-              Profile:
+              Role:
             </label>
             <select
               multiple // Enable multiple selections
@@ -830,6 +857,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
+              <option value="">Select Role</option>
               {availableProfiles.map((empProfile) => (
                 <option key={empProfile.roleName} value={empProfile.roleName}>
                   {empProfile.roleName}
@@ -857,6 +885,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
+              <option value="">Select Work Location</option>
               {Array.isArray(availabelLocation) &&
                 availabelLocation?.map((location) => (
                   <option key={location._id} value={location._id}>
@@ -882,6 +911,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
+              <option value="">Select Department</option>
               {Array.isArray(availabelDepartment) &&
                 availabelDepartment?.map((department) => (
                   <option key={department._id} value={department._id}>
@@ -906,6 +936,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
+              <option value="">Select Designation</option>
               {Array.isArray(availabelDesignation) &&
                 availabelDesignation?.map((designation) => (
                   <option key={designation._id} value={designation._id}>
@@ -930,6 +961,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
+              <option value="">Select Salary Template</option>
               {Array.isArray(availabelSalaryTemplate) &&
                 availabelSalaryTemplate?.map((salarytemplate) => (
                   <option key={salarytemplate._id} value={salarytemplate._id}>
@@ -943,7 +975,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               htmlFor="workLocation"
               style={{ display: "block", color: "#000000" }}
             >
-              Employement Type:
+              Employment Type :
             </label>
             <select
               value={employementType || ""}
@@ -954,6 +986,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
+              <option value="">Select Employment Type</option>
               {Array.isArray(availabelEmpTypes) &&
                 availabelEmpTypes?.map((empType) => (
                   <option key={empType?._id} value={empType?._id}>
@@ -970,14 +1003,15 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               Department Cost Center No:
             </label>
             <select
-              value={formData.dept_cost_center_no}
-              onChange={handleInputChange}
+              value={dept_cost_center_no}
+              onChange={(e) => setDeptCostCenterId(e.target.value)}
               style={{
                 width: "750px",
                 padding: "8px",
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
+              <option value="">Select Department Cost Center No</option>
               {Array.isArray(availaleCostCenterId) &&
                 availaleCostCenterId?.map((costno) => (
                   <option key={costno?._id} value={costno?.dept_cost_center_id}>
@@ -991,17 +1025,18 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               htmlFor="workLocation"
               style={{ display: "block", color: "#000000" }}
             >
-              Shift Allocaiton:
+              Shift Allocation:
             </label>
             <select
-              value={formData.shift_allocation}
-              onChange={handleInputChange}
+              value={shift_allocation}
+              onChange={(e) => setShiftAllocation(e.target.value)}
               style={{
                 width: "750px",
                 padding: "8px",
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
+              <option value="">Select Shift Allocation</option>
               {Array.isArray(availaleShiftAllocation) &&
                 availaleShiftAllocation?.map((shift) => (
                   <option key={shift?._id} value={shift?.shiftName}>
@@ -1010,7 +1045,31 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 ))}
             </select>
           </div>
-
+          <div className="space-y-2">
+            <label
+              htmlFor="workLocation"
+              style={{ display: "block", color: "#000000" }}
+            >
+              Manager :
+            </label>
+            <select
+              value={mgrempid || ""}
+              onChange={(e) => setMgrempid(e.target.value)}
+              style={{
+                width: "750px",
+                padding: "8px",
+                borderColor: "rgba(0, 0, 0, 0.3)",
+              }}
+            >
+              <option value="">Select Manager</option>
+              {Array.isArray(managerData) &&
+                managerData?.map((manager) => (
+                  <option key={manager._id} value={manager.managerId._id}>
+                    {`${manager?.managerId?.first_name} ${manager?.managerId?.last_name}`}
+                  </option>
+                ))}
+            </select>
+          </div>
           <DialogActions>
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel

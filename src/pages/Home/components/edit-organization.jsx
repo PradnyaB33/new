@@ -123,8 +123,8 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
             icon={Link}
             control={control}
             type="text"
-            placeholder="Web Url "
-            label="Web Url  *"
+            placeholder="Web URL "
+            label="Web URL  *"
             errors={errors}
             error={errors.web_url}
           />
@@ -133,8 +133,8 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
             icon={FaLinkedin}
             control={control}
             type="text"
-            placeholder="LinkedIn Url "
-            label="LinkedIn Url  *"
+            placeholder="LinkedIn URL "
+            label="LinkedIn URL  *"
             errors={errors}
             error={errors.organization_linkedin_url}
           />

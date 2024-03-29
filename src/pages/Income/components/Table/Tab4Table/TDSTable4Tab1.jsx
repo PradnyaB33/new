@@ -1,8 +1,10 @@
 import {
+  Cancel,
   CheckCircle,
   DeleteOutlined,
   EditOutlined,
   Error,
+  Pending,
 } from "@mui/icons-material";
 import {
   Button,
@@ -24,6 +26,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+import useTDS from "../../../../../hooks/IncomeTax/useTDS";
 
 const TDSTable4Tab1 = () => {
   const rowsPerPage = 10; // Define the number of rows per page
@@ -32,6 +35,7 @@ const TDSTable4Tab1 = () => {
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
   const user = getCurrentUser();
+  const { setDeclared } = useTDS();
 
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [id, setId] = useState(null);
@@ -53,20 +57,22 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
-        {
-          section: "80 C",
-          name: "Provident Fund",
-          declaration: 0,
-          proof: "",
-          status: "Auto",
-        },
+        // {
+        //   section: "80 C",
+        //   name: "Provident Fund",
+        //   declaration: 0,
+        //   proof: "",
+        //   status: "Auto",
+        // },
         {
           section: "80 C",
           name: "Public Provident Fund",
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 C",
@@ -74,6 +80,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 C",
@@ -81,6 +88,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 C",
@@ -88,6 +96,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 C",
@@ -95,6 +104,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 C",
@@ -102,6 +112,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 C",
@@ -109,6 +120,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 C",
@@ -116,6 +128,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 CCC",
@@ -123,6 +136,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 CCD",
@@ -130,6 +144,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
         {
           section: "80 CCH",
@@ -137,6 +152,7 @@ const TDSTable4Tab1 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
       ],
     },
@@ -166,34 +182,74 @@ const TDSTable4Tab1 = () => {
     onSuccess: (res) => {
       // Extracting relevant data from the backend response
 
-      // Updating the tableData state based on the backend response
-      const updatedTableData = tableData.map((section) => {
-        const sectionName = Object.keys(section)[0];
-        const matchingSection = res?.filter(
-          (item) => item.subsectionname === sectionName
-        );
+      if (Array.isArray(res)) {
+        const declaredAmount = Array.isArray(res)
+          ? res?.reduce((i, a) => {
+              return (i += a.declaration);
+            }, 0)
+          : 0;
 
-        if (matchingSection) {
-          section[sectionName].forEach((item) => {
-            const matchingItem = matchingSection.find(
-              (originalItem) => originalItem.name === item.name
-            );
+        const amountPending = Array.isArray(res)
+          ? res?.reduce((i, a) => {
+              if (a.status === "Pending") {
+                return (i += a.declaration);
+              }
+              return i;
+            }, 0)
+          : 0;
 
-            if (matchingItem) {
-              Object.assign(item, matchingItem);
-            }
-          });
-        }
+        const amountReject = Array.isArray(res)
+          ? res?.reduce((i, a) => {
+              if (a.status === "Reject") {
+                return (i += a.declaration);
+              }
+              return i;
+            }, 0)
+          : 0;
 
-        return section;
-      });
+        const amountAccepted = Array.isArray(res)
+          ? res?.reduce((i, a) => {
+              return (i += a.amountAccepted);
+            }, 0)
+          : 0;
 
-      const tableDataWithMaximumAllowable = updatedTableData.map((data) => ({
-        ...data,
-      }));
+        let data = {
+          declared: declaredAmount,
+          pending: amountPending,
+          accepted: amountAccepted,
+          rejected: amountReject,
+        };
+        setDeclared(data);
 
-      // Update state with tableData including maximumAllowable
-      setTableData(tableDataWithMaximumAllowable);
+        // Updating the tableData state based on the backend response
+        const updatedTableData = tableData.map((section) => {
+          const sectionName = Object.keys(section)[0];
+          const matchingSection = res?.filter(
+            (item) => item.subsectionname === sectionName
+          );
+
+          if (matchingSection) {
+            section[sectionName].forEach((item) => {
+              const matchingItem = matchingSection.find(
+                (originalItem) => originalItem.name === item.name
+              );
+
+              if (matchingItem) {
+                Object.assign(item, matchingItem);
+              }
+            });
+          }
+
+          return section;
+        });
+
+        const tableDataWithMaximumAllowable = updatedTableData.map((data) => ({
+          ...data,
+        }));
+
+        // Update state with tableData including maximumAllowable
+        setTableData(tableDataWithMaximumAllowable);
+      }
     },
   });
 
@@ -273,6 +329,7 @@ const TDSTable4Tab1 = () => {
         name: value.name,
         sectionname: "SectionDeduction",
         status: "Not Submitted",
+        amountAccepted: 0,
         declaration: 0,
         proof: "",
       },
@@ -354,6 +411,9 @@ const TDSTable4Tab1 = () => {
                     <th scope="col" className="py-3 px-2 border">
                       Declaration
                     </th>
+                    <th scope="col" className="py-3 px-2 border">
+                      Amount Accepted
+                    </th>
                     <th scope="col" className="px-2 py-3 border">
                       Proof submitted
                     </th>
@@ -397,6 +457,9 @@ const TDSTable4Tab1 = () => {
                             <h1 className="px-2">INR {ele.declaration}</h1>
                           )}
                         </td>
+                        <td className="leading-7 text-[16px] h-14 text-left  !p-0 w-[220px] border ">
+                          <h1 className="px-2">INR {ele.amountAccepted}</h1>
+                        </td>
                         <td className="text-left h-14 leading-7 text-[16px] w-[200px]  border">
                           {editStatus[itemIndex] === id &&
                           editStatus[itemIndex] === id ? (
@@ -418,19 +481,31 @@ const TDSTable4Tab1 = () => {
                             <p className="px-2">No proof found</p>
                           )}
                         </td>
-                        <td className=" text-left leading-7 text-[16px] border px-2 w-[200px]">
-                          {ele.status === "Pending" ? (
+                        <td className=" text-left  leading-7 text-[16px] w-[200px]  border px-2">
+                          {ele.name ===
+                          "Income taxable under the head Salaries" ? (
+                            ""
+                          ) : ele.status === "Pending" ? (
                             <div className="flex items-center  gap-2">
-                              <Error className="text-yellow-400 " />
+                              <Pending className="text-yellow-400 " />
                               {ele.status}
                             </div>
-                          ) : ele.status === "Auto" ? (
+                          ) : ele.status === "Auto" ||
+                            ele.status === "Approved" ? (
                             <div className="flex items-center  gap-2">
                               <CheckCircle className="text-green-400 " />
                               {ele.status}
                             </div>
+                          ) : ele.status === "Reject" ? (
+                            <div className="flex items-center  gap-2">
+                              <Cancel className="text-red-400 " />
+                              {ele.status}
+                            </div>
                           ) : (
-                            <p>{ele.status}</p>
+                            <div className="flex items-center  gap-2">
+                              <Error className="text-gray-400 " />
+                              <p>{ele.status}</p>
+                            </div>
                           )}
                         </td>
                         <td className="whitespace-nowrap leading-7 text-[16px] px-2   w-[220px]">

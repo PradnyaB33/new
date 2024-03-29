@@ -73,6 +73,7 @@ export default function TDSTab1() {
         >
           <Tabs
             value={value}
+            variant="scrollable"
             inkBarStyle={{ background: "blue" }}
             onChange={handleChange}
             sx={{

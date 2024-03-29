@@ -18,12 +18,10 @@ function CalculateSalary() {
   const [numDaysInMonth, setNumDaysInMonth] = useState(0);
   const [availableEmployee, setAvailableEmployee] = useState();
   const [publicHolidays, setPublicHoliDays] = useState([]);
-  const [weekend, setWeekend] = useState([]);
   const [employeeSummary, setEmployeeSummary] = useState([]);
   const [paidLeaveDays, setPaidLeaveDays] = useState(0);
   const [unPaidLeaveDays, setUnPaidLeaveDays] = useState(0);
 
-  // get the data which is use selected by calender
   const handleDateChange = (date) => {
     setSelectedDate(date);
     const daysInMonth = date.daysInMonth();
@@ -32,10 +30,8 @@ function CalculateSalary() {
     setUnPaidLeaveDays(0);
   };
 
-  // formate the data in this format eg(Dec-23)
   const formattedDate = dayjs(selectedDate).format("MMM-YY");
 
-  // pull employee data based on emp id
   const fetchAvailableEmployee = async () => {
     try {
       const response = await axios.get(
@@ -58,7 +54,6 @@ function CalculateSalary() {
     // eslint-disable-next-line
   }, []);
 
-  // pull holiday's count based on organization id
   const fetchHoliday = async () => {
     try {
       const response = await axios.get(
@@ -95,56 +90,133 @@ function CalculateSalary() {
 
     return holidaysInCurrentMonth.length;
   };
-
   let publicHolidaysCount = countPublicHolidaysInCurrentMonth();
 
   // pull weekend based on organization id
-  const fetchWeekend = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/weekend/get/${organisationId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      setWeekend(response.data.days);
-    } catch (error) {
-      console.error(error);
-      handleAlert(true, "error", "Failed to fetch Weekend");
-    }
-  };
+  // const fetchWeekend = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${process.env.REACT_APP_API}/route/weekend/get/${organisationId}`,
+  //       {
+  //         headers: {
+  //           Authorization: token,
+  //         },
+  //       }
+  //     );
+  //     setWeekend(response.data.days);
+  //   } catch (error) {
+  //     console.error(error);
+  //     handleAlert(true, "error", "Failed to fetch Weekend");
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchWeekend();
-    // eslint-disable-next-line
-  }, []);
+  // useEffect(() => {
+  //   fetchWeekend();
+  //   // eslint-disable-next-line
+  // }, []);
 
-  const getWeekendbyOrganization = weekend
-    .map((item) => item.days.map((dayItem) => dayItem.day))
-    .flat();
+  // const getWeekendbyOrganization = weekend
+  //   .map((item) => item.days.map((dayItem) => dayItem.day))
+  //   .flat();
 
-  // get the weekend count in that organization
-  const countWeekendDaysInMonth = () => {
-    const selectedMonth = dayjs(selectedDate);
-    const daysInMonth = selectedMonth.daysInMonth();
-    let weekendCount = 0;
-    for (let i = 1; i <= daysInMonth; i++) {
-      const currentDate = selectedMonth.date(i);
-      const dayOfWeek = currentDate.format("ddd");
-      if (getWeekendbyOrganization.includes(dayOfWeek)) {
-        // If the day falls on a weekend day defined by the organization
-        weekendCount++;
-      }
-    }
-    return weekendCount;
-  };
+  // // get the weekend count in that organization
+  // const countWeekendDaysInMonth = () => {
+  //   const selectedMonth = dayjs(selectedDate);
+  //   const daysInMonth = selectedMonth.daysInMonth();
+  //   let weekendCount = 0;
+  //   for (let i = 1; i <= daysInMonth; i++) {
+  //     const currentDate = selectedMonth.date(i);
+  //     const dayOfWeek = currentDate.format("ddd");
+  //     if (getWeekendbyOrganization.includes(dayOfWeek)) {
+  //       // If the day falls on a weekend day defined by the organization
+  //       weekendCount++;
+  //     }
+  //   }
+  //   return weekendCount;
+  // };
 
-  // Call the function to count weekend days in the selected month
-  const weekendCount = countWeekendDaysInMonth();
+  // // Call the function to count weekend days in the selected month
+  // const weekendCount = countWeekendDaysInMonth();
 
-  // pull the data such as paidLeaveDays , unpaidLeave days
+  // get employee salary calculation day based on organization id
+  // const fetchEmpSalCalculationDay = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${process.env.REACT_APP_API}/route/employee-salary-cal-day/get/${organisationId}`,
+  //       {
+  //         headers: {
+  //           Authorization: token,
+  //         },
+  //       }
+  //     );
+  //     setEmpSalSelectDay(response.data.empSalaryCalDayData);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchEmpSalCalculationDay();
+  //   // eslint-disable-next-line
+  // }, []);
+
+  // // let empSalCalDay = empSalarySelectDay[0]?.selectedDay || "";
+  // const getActualDate = (keyword) => {
+  //   const today = new Date();
+  //   let targetDate;
+
+  //   // Increase the month by 1 to get the next month
+  //   const nextMonth = (today.getMonth() + 1) % 12;
+  //   const year = today.getFullYear() + Math.floor((today.getMonth() + 1) / 12);
+
+  //   switch (keyword) {
+  //     case "first_day_of_next_month":
+  //       targetDate = new Date(year, nextMonth, 1);
+  //       break;
+  //     case "second_day_of_next_month":
+  //       targetDate = new Date(year, nextMonth, 2);
+  //       break;
+  //     case "third_day_of_next_month":
+  //       targetDate = new Date(year, nextMonth, 3);
+  //       break;
+  //     case "fourth_day_of_next_month":
+  //       targetDate = new Date(year, nextMonth, 4);
+  //       break;
+  //     case "fifth_day_of_next_month":
+  //       targetDate = new Date(year, nextMonth, 5);
+  //       break;
+  //     case "sixth_day_of_next_month":
+  //       targetDate = new Date(year, nextMonth, 6);
+  //       break;
+  //     case "seventh_day_of_next_month":
+  //       targetDate = new Date(year, nextMonth, 7);
+  //       break;
+  //     case "eighth_day_of_next_month":
+  //       targetDate = new Date(year, nextMonth, 8);
+  //       break;
+  //     case "ninth_day_of_next_month":
+  //       targetDate = new Date(year, nextMonth, 9);
+  //       break;
+  //     case "tenth_day_of_next_month":
+  //       targetDate = new Date(year, nextMonth, 10);
+  //       break;
+  //     case "last_day_of_current_month":
+  //       targetDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  //       break;
+
+  //     default:
+  //       targetDate = null;
+  //       break;
+  //   }
+
+  //   return targetDate
+  //     ? `${targetDate.getDate()}/${
+  //         targetDate.getMonth() + 1
+  //       }/${targetDate.getFullYear()}`
+  //     : "Invalid keyword";
+  // };
+
+  // let emp_sal_cal_date = getActualDate(empSalCalDay);
+
   const fetchDataAndFilter = async () => {
     try {
       const response = await axios.get(
@@ -167,19 +239,14 @@ function CalculateSalary() {
     // eslint-disable-next-line
   }, []);
 
-  // Extract month and year from selectedDate
   const selectedMonth = selectedDate.format("M");
   const selectedYear = selectedDate.format("YYYY");
 
   const filterDataByMonthYear = (data, selectedMonth, selectedYear) => {
-    const numericMonth = parseInt(selectedMonth, 10); // Convert selectedMonth to a number
-    const numericYear = parseInt(selectedYear, 10); // Convert selectedYear to a number
-
+    const numericMonth = parseInt(selectedMonth, 10);
+    const numericYear = parseInt(selectedYear, 10);
     return data.filter((item) => {
-      // Convert item.month to a number if it's a string in your data
       const itemMonth = parseInt(item.month, 10);
-
-      // Check equality after converting types
       return (
         itemMonth === numericMonth && parseInt(item.year, 10) === numericYear
       );
@@ -200,7 +267,6 @@ function CalculateSalary() {
   }, [employeeSummary, selectedMonth, selectedYear]);
 
   // pull the total deduction of loan of employee if he/she apply the loan
-
   const { data: empLoanAplicationInfo } = useQuery(
     ["empLoanAplication", organisationId],
     async () => {
@@ -215,19 +281,13 @@ function CalculateSalary() {
       return response.data.data;
     }
   );
-  console.log(empLoanAplicationInfo);
-  // calculate the no of days employee present in selected Month
-  const calculateDaysEmployeePresent = () => {
-    const daysPresent =
-      numDaysInMonth -
-      (paidLeaveDays + unPaidLeaveDays + weekendCount + publicHolidaysCount);
 
+  const calculateDaysEmployeePresent = () => {
+    const daysPresent = numDaysInMonth - unPaidLeaveDays;
     return daysPresent;
   };
-
   let noOfDaysEmployeePresent = calculateDaysEmployeePresent();
 
-  // calculate the basic , hra , da monthly
   const calculateSalaryComponent = (componentValue) => {
     const daysInMonth = numDaysInMonth;
     if (!isNaN(parseFloat(componentValue)) && daysInMonth > 0) {
@@ -278,11 +338,11 @@ function CalculateSalary() {
 
   let totalGrossSalary = totalSalary.toFixed(2);
 
-  // Calculate the total deduction
+  // Calculate the total
   let deduction = parseFloat(availableEmployee?.deduction ?? 0);
   let employee_pf = parseFloat(availableEmployee?.employee_pf ?? 0);
   let esic = parseFloat(availableEmployee?.esic ?? 0);
-  let loanDeduction = 0; // Initialize loan deduction
+  let loanDeduction = 0;
 
   // Filter loan applications based on loan disbursement and completion dates
   if (Array.isArray(empLoanAplicationInfo)) {
@@ -318,9 +378,6 @@ function CalculateSalary() {
     parseFloat(loanDeduction);
   let totalDeduction = totalDeductions.toFixed(2);
 
-  console.log("Total Deduction:", totalDeduction);
-
-  // calculate the totalNetSalary
   let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
 
   const saveSalaryDetail = async () => {
@@ -393,6 +450,7 @@ function CalculateSalary() {
         paidLeaveDays,
         unPaidLeaveDays,
         noOfDaysEmployeePresent,
+        loanDeduction,
         month: selectedDate.format("M"),
         year: selectedDate.format("YYYY"),
         organizationId: organisationId,

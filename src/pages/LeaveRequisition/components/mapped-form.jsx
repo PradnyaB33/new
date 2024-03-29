@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { differenceInDays, format, parseISO } from "date-fns";
 import React, { useState } from "react";
+import useLeaveRequesationHook from "../../../hooks/QueryHook/Leave-Requsation/hook";
 import useLeaveRequisitionMutation from "../../../hooks/QueryHook/Leave-Requsation/mutaion";
 
 const Mapped = ({
@@ -19,7 +20,7 @@ const Mapped = ({
   setNewAppliedLeaveEvents,
   setCalendarOpen,
 }) => {
-  // const { data } = useLeaveRequesation();
+  const { data } = useLeaveRequesationHook();
   const { calculateDays, checkLeaveProblem } = useLeaveRequisitionMutation();
 
   const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
@@ -34,7 +35,7 @@ const Mapped = ({
 
   const handleChange = async (event) => {
     let result = await checkLeaveProblem(
-      subtractedLeaves,
+      data?.leaveTypes,
       event.target.value,
       item,
       newAppliedLeaveEvents,
@@ -86,11 +87,15 @@ const Mapped = ({
 
         <div className="inline-grid m-auto items-center gap-2 group-hover:text-gray-500 text-gray-300 font-bold">
           <p className="text-md truncate ">
-            {`Selected dates from ${format(
-              new Date(item.start),
-              "do 'of' MMMM"
-            )} to  ${format(new Date(item.end), "do ' of' MMMM")}`}
-            {``}
+            {differenceInDays(parseISO(item.end), parseISO(item.start)) !== 1
+              ? `Selected dates from ${format(
+                  new Date(item.start),
+                  "do 'of' MMMM"
+                )} to  ${format(new Date(item.end), "do ' of' MMMM")}`
+              : `Your selected date is ${format(
+                  new Date(item.start),
+                  "do 'of' MMMM"
+                )}`}
           </p>
         </div>
       </div>
