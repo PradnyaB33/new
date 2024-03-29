@@ -1,8 +1,10 @@
 import {
+  Cancel,
   CheckCircle,
   DeleteOutlined,
   EditOutlined,
   Error,
+  Pending,
 } from "@mui/icons-material";
 import {
   Button,
@@ -39,6 +41,7 @@ const TDSTable4Tab3 = () => {
           section: "80D",
           name: "Mediclaim Insurance (Self & dependent)",
           declaration: 0,
+          amountAccepted: 0,
           maxAmount: 25000,
           proof: "",
           status: "Not Submitted",
@@ -47,6 +50,7 @@ const TDSTable4Tab3 = () => {
           section: "80D",
           name: "Mediclaim Insurance (Parents)",
           declaration: 0,
+          amountAccepted: 0,
           maxAmount: 50000,
           proof: "",
           status: "Not Submitted",
@@ -56,6 +60,7 @@ const TDSTable4Tab3 = () => {
           maxAmount: 10000,
           name: "Interest on education loan",
           declaration: 0,
+          amountAccepted: 0,
           proof: "",
 
           status: "Not Submitted",
@@ -65,6 +70,7 @@ const TDSTable4Tab3 = () => {
           name: "Interest on Home Loan as per conditions mentioned",
           maxAmount: 1000,
           declaration: 0,
+          amountAccepted: 0,
           proof: "",
           status: "Not Submitted",
         },
@@ -72,6 +78,7 @@ const TDSTable4Tab3 = () => {
           section: "80DD",
           name: "Medical Treatment of handicapped Dependent",
           declaration: 0,
+          amountAccepted: 0,
           proof: "",
           status: "Not Submitted",
         },
@@ -79,6 +86,7 @@ const TDSTable4Tab3 = () => {
           section: "80DDB",
           name: "Expenditure on Selected Medical Treatment",
           declaration: 0,
+          amountAccepted: 0,
           maxAmount: 40000,
           proof: "",
           status: "Not Submitted",
@@ -87,6 +95,7 @@ const TDSTable4Tab3 = () => {
           section: "80G, 80GGA, 80GGC",
           name: "80G, 80GGA, 80GGC Donation to approved funds",
           declaration: 0,
+          amountAccepted: 0,
           proof: "",
           status: "Not Submitted",
         },
@@ -94,6 +103,7 @@ const TDSTable4Tab3 = () => {
           section: "80GG",
           name: "For Rent to an Individual, not receiving HRA (File Form 10BA)",
           declaration: 0,
+          amountAccepted: 0,
           maxAmount: 16200,
           proof: "",
           status: "Not Submitted",
@@ -102,6 +112,7 @@ const TDSTable4Tab3 = () => {
           section: "80TTA",
           name: "SB interest received by Normal Citizen",
           declaration: 0,
+          amountAccepted: 0,
           proof: "",
           status: "Not Submitted",
         },
@@ -109,6 +120,7 @@ const TDSTable4Tab3 = () => {
           section: "80TTB",
           name: "Interest on SB Act. & deposits received by Sr. & very Sr. Citizen",
           declaration: 0,
+          amountAccepted: 0,
           proof: "",
           status: "Not Submitted",
         },
@@ -116,6 +128,7 @@ const TDSTable4Tab3 = () => {
           section: "80U",
           name: "Physically Disable Assesse",
           declaration: 0,
+          amountAccepted: 0,
           proof: "",
           status: "Not Submitted",
         },
@@ -324,6 +337,9 @@ const TDSTable4Tab3 = () => {
                       Declaration
                     </th>
                     <th scope="col" className="px-2 py-3 border">
+                      Amount Accepted
+                    </th>
+                    <th scope="col" className="px-2 py-3 border">
                       Proof submitted
                     </th>
                     <th scope="col" className="px-2 py-3 border">
@@ -366,6 +382,9 @@ const TDSTable4Tab3 = () => {
                             <h1 className="px-2">INR {ele.declaration}</h1>
                           )}
                         </td>
+                        <td className="leading-7 text-[16px] h-14 text-left  !p-0 w-[220px] border ">
+                          <h1 className="px-2">INR {ele.amountAccepted}</h1>
+                        </td>
                         <td className="text-left h-14 leading-7 text-[16px] w-[200px]  border">
                           {editStatus[itemIndex] === id &&
                           editStatus[itemIndex] === id ? (
@@ -387,19 +406,31 @@ const TDSTable4Tab3 = () => {
                             <p className="px-2">No proof found</p>
                           )}
                         </td>
-                        <td className=" text-left leading-7 text-[16px] border px-2 w-[200px]">
-                          {ele.status === "Pending" ? (
+                        <td className=" text-left  leading-7 text-[16px] w-[200px]  border px-2">
+                          {ele.name ===
+                          "Income taxable under the head Salaries" ? (
+                            ""
+                          ) : ele.status === "Pending" ? (
                             <div className="flex items-center  gap-2">
-                              <Error className="text-yellow-400 " />
+                              <Pending className="text-yellow-400 " />
                               {ele.status}
                             </div>
-                          ) : ele.status === "Auto" ? (
+                          ) : ele.status === "Auto" ||
+                            ele.status === "Approved" ? (
                             <div className="flex items-center  gap-2">
                               <CheckCircle className="text-green-400 " />
                               {ele.status}
                             </div>
+                          ) : ele.status === "Reject" ? (
+                            <div className="flex items-center  gap-2">
+                              <Cancel className="text-red-400 " />
+                              {ele.status}
+                            </div>
                           ) : (
-                            <p>{ele.status}</p>
+                            <div className="flex items-center  gap-2">
+                              <Error className="text-gray-400 " />
+                              <p>{ele.status}</p>
+                            </div>
                           )}
                         </td>
                         <td className="whitespace-nowrap leading-7 text-[16px] px-2   w-[220px]">

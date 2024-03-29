@@ -45,7 +45,7 @@ const TDSTable0 = () => {
       }
     },
     onSuccess: (res) => {
-      setGrossTotal(res.TotalInvestInvestment);
+      setGrossTotal(res?.TotalInvestInvestment);
     },
   });
 
@@ -53,7 +53,7 @@ const TDSTable0 = () => {
     queryKey: ["Tax"],
     queryFn: async () => {
       const salaryData = await axios.get(
-        `${process.env.REACT_APP_API}/route/tds/getMyDeclaration/2023-2024/${salaryAmount?.TotalInvestInvestment}`,
+        `${process.env.REACT_APP_API}/route/tds/getTotalDeclarations/2023-2024`,
         {
           headers: {
             Authorization: authToken,
@@ -67,23 +67,22 @@ const TDSTable0 = () => {
         if (item.name === "Income From Salary") {
           return {
             ...item,
-            amount:
-              salaryAmount?.TotalInvestInvestment + res?.salaryDeclaration,
+            amount: salaryAmount?.TotalInvestInvestment + res?.Salary,
           };
         } else if (item.name === "Income From House Property") {
           return {
             ...item,
-            amount: res?.houseDeclaration,
+            amount: res?.House,
           };
         } else if (item.name === "Income from other sources") {
           return {
             ...item,
-            amount: res?.otherDeclaration,
+            amount: res?.Other,
           };
         } else if (item.name === "Deduction under chapter VI A") {
           return {
             ...item,
-            amount: res?.sectionDeclaration,
+            amount: res?.Section,
           };
         } else {
           return item;
@@ -353,15 +352,21 @@ const TDSTable0 = () => {
         <>
           <div className="grid bg-white border-[.5px] border-gray-200 grid-cols-6 gap-4 p-4">
             <div>
-              <h1 className="text-gray-600">Total Taxable Income</h1>
-              <p className="text-xl">INR {data?.salary?.toFixed(2) ?? 0}</p>
+              <h1 className="text-gray-600">Amount Declared</h1>
+              <p className="text-xl">INR {data?.DeclaredAmount ?? 0}</p>
             </div>
 
             <div>
-              <h1 className="text-gray-600">Total Tax</h1>
-              <p className="text-xl">
-                INR {data?.getTotalTaxableIncome?.tax?.toFixed(2) ?? 0}
-              </p>
+              <h1 className="text-gray-600">Pending Approval Amount</h1>
+              <p className="text-xl">INR {data?.amountPending ?? 0}</p>
+            </div>
+            <div>
+              <h1 className="text-gray-600">Amount Accepted</h1>
+              <p className="text-xl">INR {data?.amountAccepted ?? 0}</p>
+            </div>
+            <div>
+              <h1 className="text-gray-600">Amount Rejected</h1>
+              <p className="text-xl">INR {data?.amountRejected ?? 0}</p>
             </div>
           </div>
 

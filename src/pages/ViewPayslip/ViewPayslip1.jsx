@@ -160,13 +160,13 @@ const ViewPayslip1 = () => {
   const paidLeave = previousMonthSalary?.paidLeaveDays;
   const publicHoliday = previousMonthSalary?.publicHolidaysCount;
   const img = organisationInfo?.logo_url;
-  console.log(img);
+  console.log(img, "imahes");
   // generating and downlaoding the pdg
   const downloadPDF = () => {
     const input = pdfRef.current;
     html2canvas(input, {
       scale: 2,
-      useCORS: true,
+      useCORS: false,
       logging: true,
       letterRendering: 1,
     }).then((canvas) => {

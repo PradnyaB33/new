@@ -23,6 +23,7 @@ import { TestContext } from "../../../../State/Function/Main";
 import useTDS from "../../../../hooks/IncomeTax/useTDS";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
+import ProofModel from "../ProofModel";
 
 const TDSTable1 = () => {
   const authToken = useAuthToken();
@@ -62,7 +63,6 @@ const TDSTable1 = () => {
       name: "Exemption on gratuity",
       amount: 0,
       proof: "",
-
       amountAccepted: 0,
       status: "Not Submitted",
     },
@@ -187,28 +187,26 @@ const TDSTable1 = () => {
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["finacialYearData"] });
-      // deduction = grossTotal - res.totalDeductions;
-      console.log(res);
 
-      const declaredAmount = res.reduce((i, a) => {
+      const declaredAmount = res?.reduce((i, a) => {
         return (i += a.declaration);
       }, 0);
 
-      const amountPending = res.reduce((i, a) => {
+      const amountPending = res?.reduce((i, a) => {
         if (a.status === "Pending") {
           return (i += a.declaration);
         }
         return i;
       }, 0);
 
-      const amountReject = res.reduce((i, a) => {
+      const amountReject = res?.reduce((i, a) => {
         if (a.status === "Reject") {
           return (i += a.declaration);
         }
         return i;
       }, 0);
 
-      const amountAccepted = res.reduce((i, a) => {
+      const amountAccepted = res?.reduce((i, a) => {
         return (i += a.amountAccepted);
       }, 0);
 
@@ -236,7 +234,7 @@ const TDSTable1 = () => {
         if (item.name === "Gross Salary") {
           return {
             ...item,
-            amount: grossTotal,
+            amount: isNaN(Number(grossTotal)) ? 0 : Number(grossTotal),
             status: "Auto",
             proof: "",
           };
@@ -280,13 +278,6 @@ const TDSTable1 = () => {
     setTableData(newData);
   };
 
-  const handleDownload = (pdf) => {
-    // You can use any method to trigger the download, such as creating an invisible link and clicking it
-    const link = document.createElement("a");
-    link.href = pdf;
-    link.download = "File1.pdf";
-    link.click();
-  };
   const uploadProof = async (tdsfile) => {
     const data = await axios.get(
       `${process.env.REACT_APP_API}/route/s3createFile/TDS`,
@@ -297,6 +288,8 @@ const TDSTable1 = () => {
         },
       }
     );
+
+    console.log(data.data);
 
     await axios.put(data?.data?.url, tdsfile, {
       headers: {
@@ -310,14 +303,16 @@ const TDSTable1 = () => {
   const handleSaveClick = async (index) => {
     const newData = [...tableData];
     const value = newData[index];
-    const tdsfile = newData[index].proof;
+    let tdsfile = newData[index].proof;
 
     try {
       let uploadproof = "";
 
       if (tdsfile) {
+        console.log("runs");
         uploadproof = await uploadProof(tdsfile);
       }
+      console.log(`🚀 ~ uploadproof:`, uploadproof);
 
       let requestData = {
         empId: user._id,
@@ -414,30 +409,51 @@ const TDSTable1 = () => {
           <CircularProgress />
         </div>
       ) : (
-        <div className="bg-white ">
-          <table className="table-auto border border-collapse min-w-full bg-white  text-left  !text-sm font-light">
+        <div className="bg-white w-full overflow-x-auto">
+          <table className=" table-auto border border-collapse min-w-full bg-white  text-left  !text-sm font-light">
             <thead className="border-b bg-gray-100 font-bold">
               <tr className="!font-semibold ">
-                <th scope="col" className="!text-left pl-8 w-max py-3 border">
+                <th
+                  scope="col"
+                  className="!text-left px-2 w-max py-3 leading-7 text-[16px] border"
+                >
                   Sr. No
                 </th>
-                <th scope="col" className="py-3 px-2 border">
+                <th
+                  scope="col"
+                  className="py-3 leading-7 text-[16px] px-2 border"
+                >
                   Deduction Name
                 </th>
 
-                <th scope="col" className="py-3 px-2 border">
+                <th
+                  scope="col"
+                  className="py-3 leading-7 text-[16px] px-2 border"
+                >
                   Declaration
                 </th>
-                <th scope="col" className="py-3 px-2 border">
+                <th
+                  scope="col"
+                  className="py-3 leading-7 text-[16px] px-2 border"
+                >
                   Approved Amount
                 </th>
-                <th scope="col" className=" py-3 px-2 border">
+                <th
+                  scope="col"
+                  className=" py-3 leading-7 text-[16px] px-2 border"
+                >
                   Proof submitted
                 </th>
-                <th scope="col" className=" py-3 px-2 border">
+                <th
+                  scope="col"
+                  className=" py-3 leading-7 text-[16px] px-2 border"
+                >
                   Status
                 </th>
-                <th scope="col" className=" py-3 px-2 border">
+                <th
+                  scope="col"
+                  className=" py-3 leading-7 text-[16px] px-2 border"
+                >
                   Actions
                 </th>
               </tr>
@@ -445,12 +461,12 @@ const TDSTable1 = () => {
             <tbody>
               {tableData.map((item, itemIndex) => (
                 <tr
-                  className={`!font-medium h-14 border-b 
+                  className={`!font-medium w-[70px] h-14 border-b 
                 
                 `}
                   key={itemIndex}
                 >
-                  <td className="!text-left pl-8 leading-7 text-[16px] w-[100px] border ">
+                  <td className="!text-left  px-2 leading-7 text-[16px] w-[70px] border ">
                     {item.name === "Income taxable under the head Salaries"
                       ? ""
                       : itemIndex + 1}
@@ -468,15 +484,15 @@ const TDSTable1 = () => {
                     </p>
                   </td>
 
-                  <td className=" text-left !p-0 w-[200px] border ">
+                  <td className=" text-left !p-0 !w-[250px] border ">
                     {editStatus[itemIndex] && editStatus[itemIndex] ? (
-                      <div className="flex gap-2 h-14">
-                        <h1 className="leading-7 text-[16px] bg-gray-300 border h-auto px-4  flex items-center ">
+                      <div className="flex gap-2 w-full !py-0 h-full ">
+                        <h1 className="text-lg h-full !py-0 text-center w-[30%] bg-gray-200 border justify-center   flex items-center ">
                           INR
                         </h1>
                         <input
                           type="number"
-                          className="border-none w-[90px] h-auto outline-none  "
+                          className="border-none w-[70%]   outline-none"
                           value={parseFloat(item.amount)}
                           onChange={(e) => handleAmountChange(e, itemIndex)}
                         />
@@ -487,9 +503,9 @@ const TDSTable1 = () => {
                         ${
                           item.name ===
                             "Income taxable under the head Salaries" &&
-                          "!font-bold text-lg "
+                          "!font-bold text-lg w-full"
                         } 
-                        px-2 leading-7 text-[16px]`}
+                        px-2 md:w-full w-max leading-7 text-[16px]`}
                       >
                         INR {parseFloat(item.amount).toFixed(2)}
                       </p>
@@ -521,7 +537,7 @@ const TDSTable1 = () => {
                             "Income taxable under the head Salaries" &&
                           "!font-bold text-lg "
                         } 
-                        px-2 leading-7 text-[16px]`}
+                        px-2 leading-7 text-[16px]  md:w-full w-max`}
                       >
                         Auto Accepted
                       </p>
@@ -531,7 +547,7 @@ const TDSTable1 = () => {
                     {item.name === "Gross Salary" ? (
                       ""
                     ) : editStatus[itemIndex] && editStatus[itemIndex] ? (
-                      <div className="px-2">
+                      <div className="px-2  md:w-full w-max">
                         <label className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
                           Upload File
                           <input
@@ -552,7 +568,7 @@ const TDSTable1 = () => {
                         </div>
                       )
                     ) : (
-                      <p className="px-2">No proof found</p>
+                      <p className="px-2  md:w-full w-max">No proof found</p>
                     )}
                   </td>
 
@@ -560,22 +576,22 @@ const TDSTable1 = () => {
                     {item.name === "Income taxable under the head Salaries" ? (
                       ""
                     ) : item.status === "Pending" ? (
-                      <div className="flex items-center  gap-2">
+                      <div className="flex items-center  md:w-full w-max  gap-2">
                         <Pending className="text-yellow-400 " />
                         {item.status}
                       </div>
                     ) : item.status === "Auto" || item.status === "Approved" ? (
-                      <div className="flex items-center  gap-2">
+                      <div className="flex items-center  md:w-full w-max  gap-2">
                         <CheckCircle className="text-green-400 " />
                         {item.status}
                       </div>
                     ) : item.status === "Reject" ? (
-                      <div className="flex items-center  gap-2">
+                      <div className="flex items-center  md:w-full w-max  gap-2">
                         <Cancel className="text-red-400 " />
                         {item.status}
                       </div>
                     ) : (
-                      <div className="flex items-center  gap-2">
+                      <div className="flex items-center  md:w-full w-max gap-2">
                         <Error className="text-gray-400 " />
                         <p>{item.status}</p>
                       </div>
@@ -633,25 +649,7 @@ const TDSTable1 = () => {
         </div>
       )}
 
-      <Dialog open={pdf !== null} onClose={handleClosePDF}>
-        <DialogTitle>Document</DialogTitle>
-        <DialogContent>
-          <div className="scrollt ">
-            <object
-              type="application/pdf"
-              data={`${pdf}`}
-              alt="none"
-              aria-label="pdfSalary"
-              className="min-h-[60vh] !w-[400px] "
-            />
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={() => handleDownload(pdf)}>
-            Download
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ProofModel pdf={pdf} handleClosePDF={handleClosePDF} />
 
       <Dialog
         open={deleteConfirmation !== null}

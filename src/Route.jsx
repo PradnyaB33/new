@@ -74,20 +74,23 @@ import TDSTab1 from "./pages/Income/components/TDSTab1";
 import DeclarationPage from "./pages/Income/components/accountantDeclarations/DeclarationPage";
 //import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
+import OrgChart from "./Test/OrgChart";
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
 import ParentNotification from "./pages/AllNotifications/page";
+import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
+import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
-import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
+import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
 import Training from "./pages/SetUpOrganization/Traning/Training";
+import RemoteSetup from "./pages/SetupPage/Remote/RemoteSetup";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import CustomCalander from "./pages/custom/Calendar";
 import LeaveNotification from "./pages/leave-notification/page";
 import PunchNotification from "./pages/punch-notification/page";
-
 const App = () => {
   return (
     <AuthProvider>
@@ -347,6 +350,16 @@ const App = () => {
           }
         />
         <Route
+          path="/organisation/:organisationId/emo-info-punch-status"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <EmpInfoPunchStatus />
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/organisation/:organisationId/employee-offboarding"
           element={
             <RequireAuth
@@ -392,7 +405,7 @@ const App = () => {
           }
         />
         <Route
-          path="/organisation/:organisationId/loan-management"
+          path="/organisation/:organisationId/add-loan"
           element={
             <RequireAuth
               permission={[
@@ -616,6 +629,7 @@ const App = () => {
             </RequireAuth>
           }
         />
+        <Route path="/testorg1/:organizationId" element={<OrgChart />} />
         <Route
           path="/organisation/:organisationId/setup/remote-punching"
           element={
@@ -674,6 +688,14 @@ const App = () => {
           }
         />
         <Route
+          path="/organisation/:organisationId/setup/performance-management"
+          element={
+            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+              <PerformanceSetup />
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/notification"
           element={
             <RequireAuth
@@ -715,6 +737,7 @@ const App = () => {
         />
         <Route path="/income-tax" element={<IncomeTax />} />
         <Route path="/income-tax/declarations" element={<TDSTab1 />} />
+        <Route path="/income-tax/calculation" element={<TDSCalculation />} />
         <Route
           path="/income-tax/accountant-declarations"
           element={<DeclarationPage />}

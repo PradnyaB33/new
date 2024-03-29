@@ -60,7 +60,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   const [salaryTemplate, setSalaryTemplate] = useState(null);
   const [employementType, setEmployementType] = useState(null);
   const [employeeData, setEmployeeData] = useState(null);
-
+  const [mgrempid, setMgrempid] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -196,6 +196,29 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     fetchAvailabeEmpTypes();
     // eslint-disable-next-line
   }, []);
+
+  // pull the manager data
+  const [managerData, setManagerData] = useState([]);
+  const fetchManagerData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/get-manager/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setManagerData(response.data.manager);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchManagerData();
+    // eslint-disable-next-line
+  }, []);
+  console.log(managerData);
 
   // pull the profile
   const [availableProfiles, setAvailableProfiles] = useState([]);
@@ -410,6 +433,8 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
       }
       const employeeProfileData = employeeData?.profile || [];
       setProfile(employeeProfileData);
+
+      setMgrempid(employeeData?.mgrempid || "");
     }
   }, [
     employeeData,
@@ -454,6 +479,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           worklocation: [selectedWorkLocation],
           deptname,
           designation,
+          mgrempid: mgrempid,
           salarystructure: salaryTemplate,
           employmentType: employementType,
           profile,
@@ -630,7 +656,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               <InputLabel htmlFor="outlined-adornment-password">PAN</InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="pan"
+                label="PAN"
                 name="pan_card_number"
                 value={formData.pan_card_number}
                 onChange={handleInputChange}
@@ -1005,7 +1031,30 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 ))}
             </select>
           </div>
-
+          <div className="space-y-2">
+            <label
+              htmlFor="workLocation"
+              style={{ display: "block", color: "#000000" }}
+            >
+              Manager :
+            </label>
+            <select
+              value={mgrempid || ""}
+              onChange={(e) => setMgrempid(e.target.value)}
+              style={{
+                width: "750px",
+                padding: "8px",
+                borderColor: "rgba(0, 0, 0, 0.3)",
+              }}
+            >
+              {Array.isArray(managerData) &&
+                managerData?.map((manager) => (
+                  <option key={manager._id} value={manager.managerId._id}>
+                    {`${manager?.managerId?.first_name} ${manager?.managerId?.last_name}`}
+                  </option>
+                ))}
+            </select>
+          </div>
           <DialogActions>
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel

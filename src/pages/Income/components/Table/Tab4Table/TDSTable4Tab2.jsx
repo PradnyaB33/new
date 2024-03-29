@@ -1,4 +1,11 @@
-import { DeleteOutlined, EditOutlined } from "@mui/icons-material";
+import {
+  Cancel,
+  CheckCircle,
+  DeleteOutlined,
+  EditOutlined,
+  Error,
+  Pending,
+} from "@mui/icons-material";
 import {
   Button,
   CircularProgress,
@@ -81,6 +88,7 @@ const TDSTable4Tab2 = () => {
           declaration: 0,
           proof: "",
           status: "Not Submitted",
+          amountAccepted: 0,
         },
       ],
     },
@@ -240,6 +248,9 @@ const TDSTable4Tab2 = () => {
                       Declaration
                     </th>
                     <th scope="col" className="px-2 py-3 border">
+                      Amount Accepted
+                    </th>
+                    <th scope="col" className="px-2 py-3 border">
                       Proof submitted
                     </th>
                     <th scope="col" className="px-2 py-3 border">
@@ -282,6 +293,9 @@ const TDSTable4Tab2 = () => {
                             <h1 className="px-2">INR {ele.declaration}</h1>
                           )}
                         </td>
+                        <td className="leading-7 text-[16px] h-14 text-left  !p-0 w-[220px] border ">
+                          <h1 className="px-2">INR {ele.amountAccepted}</h1>
+                        </td>
                         <td className="text-left h-14 leading-7 text-[16px] w-[200px]  border">
                           {editStatus[itemIndex] === id &&
                           editStatus[itemIndex] === id ? (
@@ -303,8 +317,32 @@ const TDSTable4Tab2 = () => {
                             <p className="px-2">No proof found</p>
                           )}
                         </td>
-                        <td className=" text-left leading-7 text-[16px] border px-2 w-[200px]">
-                          {ele.status}
+                        <td className=" text-left  leading-7 text-[16px] w-[200px]  border px-2">
+                          {ele.name ===
+                          "Income taxable under the head Salaries" ? (
+                            ""
+                          ) : ele.status === "Pending" ? (
+                            <div className="flex items-center  gap-2">
+                              <Pending className="text-yellow-400 " />
+                              {ele.status}
+                            </div>
+                          ) : ele.status === "Auto" ||
+                            ele.status === "Approved" ? (
+                            <div className="flex items-center  gap-2">
+                              <CheckCircle className="text-green-400 " />
+                              {ele.status}
+                            </div>
+                          ) : ele.status === "Reject" ? (
+                            <div className="flex items-center  gap-2">
+                              <Cancel className="text-red-400 " />
+                              {ele.status}
+                            </div>
+                          ) : (
+                            <div className="flex items-center  gap-2">
+                              <Error className="text-gray-400 " />
+                              <p>{ele.status}</p>
+                            </div>
+                          )}
                         </td>
                         <td className="whitespace-nowrap leading-7 text-[16px] px-2   w-[220px]">
                           {editStatus[itemIndex] === id ? (
