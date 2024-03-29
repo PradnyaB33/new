@@ -37,8 +37,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     bank_account_no: "",
     adhar_card_number: "",
     pan_card_number: "",
-    dept_cost_center_no: "",
-    shift_allocation: "",
   });
 
   // define the state for store additional info data of employee
@@ -61,6 +59,9 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   const [employementType, setEmployementType] = useState(null);
   const [employeeData, setEmployeeData] = useState(null);
   const [mgrempid, setMgrempid] = useState(null);
+  const [dept_cost_center_no, setDeptCostCenterId] = useState(null);
+  const [shift_allocation, setShiftAllocation] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -84,6 +85,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     return () => {};
   }, [open, employeeId, authToken]);
   console.log(employeeData);
+
   // pull the worklocation of organization
   const [availabelLocation, setAvailableLocation] = useState([]);
   const fetchAvailableLocation = async () => {
@@ -296,6 +298,9 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     // eslint-disable-next-line
   }, []);
 
+  console.log("dept cost center id", availaleCostCenterId);
+  console.log("shift allocation", availaleShiftAllocation);
+
   // function for changing the data by user
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -362,8 +367,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
         bank_account_no: employeeData?.bank_account_no || "",
         adhar_card_number: employeeData?.adhar_card_number || "",
         pan_card_number: employeeData?.pan_card_number || "",
-        dept_cost_center_no: employeeData?.dept_cost_center_no || "",
-        shift_allocation: employeeData?.shift_allocation || "",
       });
 
       setAdditionalInfo({
@@ -433,8 +436,9 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
       }
       const employeeProfileData = employeeData?.profile || [];
       setProfile(employeeProfileData);
-
       setMgrempid(employeeData?.mgrempid || "");
+      setDeptCostCenterId(employeeData?.dept_cost_center_no || "");
+      setShiftAllocation(employeeData?.shift_allocation || "");
     }
   }, [
     employeeData,
@@ -483,6 +487,8 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           salarystructure: salaryTemplate,
           employmentType: employementType,
           profile,
+          shift_allocation,
+          dept_cost_center_no,
         };
         await EditEmployeeData.mutateAsync(updatedData);
       }
@@ -851,6 +857,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
+              <option value="">Select Role</option>
               {availableProfiles.map((empProfile) => (
                 <option key={empProfile.roleName} value={empProfile.roleName}>
                   {empProfile.roleName}
@@ -878,6 +885,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
+              <option value="">Select Work Location</option>
               {Array.isArray(availabelLocation) &&
                 availabelLocation?.map((location) => (
                   <option key={location._id} value={location._id}>
@@ -903,6 +911,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
+              <option value="">Select Department</option>
               {Array.isArray(availabelDepartment) &&
                 availabelDepartment?.map((department) => (
                   <option key={department._id} value={department._id}>
@@ -927,6 +936,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
+              <option value="">Select Designation</option>
               {Array.isArray(availabelDesignation) &&
                 availabelDesignation?.map((designation) => (
                   <option key={designation._id} value={designation._id}>
@@ -951,6 +961,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
+              <option value="">Select Salary Template</option>
               {Array.isArray(availabelSalaryTemplate) &&
                 availabelSalaryTemplate?.map((salarytemplate) => (
                   <option key={salarytemplate._id} value={salarytemplate._id}>
@@ -975,6 +986,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
+              <option value="">Select Employment Type</option>
               {Array.isArray(availabelEmpTypes) &&
                 availabelEmpTypes?.map((empType) => (
                   <option key={empType?._id} value={empType?._id}>
@@ -991,14 +1003,15 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               Department Cost Center No:
             </label>
             <select
-              value={formData.dept_cost_center_no}
-              onChange={handleInputChange}
+              value={dept_cost_center_no}
+              onChange={(e) => setDeptCostCenterId(e.target.value)}
               style={{
                 width: "750px",
                 padding: "8px",
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
+              <option value="">Select Department Cost Center No</option>
               {Array.isArray(availaleCostCenterId) &&
                 availaleCostCenterId?.map((costno) => (
                   <option key={costno?._id} value={costno?.dept_cost_center_id}>
@@ -1015,14 +1028,15 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               Shift Allocation:
             </label>
             <select
-              value={formData.shift_allocation}
-              onChange={handleInputChange}
+              value={shift_allocation}
+              onChange={(e) => setShiftAllocation(e.target.value)}
               style={{
                 width: "750px",
                 padding: "8px",
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
+              <option value="">Select Shift Allocation</option>
               {Array.isArray(availaleShiftAllocation) &&
                 availaleShiftAllocation?.map((shift) => (
                   <option key={shift?._id} value={shift?.shiftName}>
@@ -1047,6 +1061,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 borderColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
+              <option value="">Select Manager</option>
               {Array.isArray(managerData) &&
                 managerData?.map((manager) => (
                   <option key={manager._id} value={manager.managerId._id}>

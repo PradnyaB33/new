@@ -1,14 +1,24 @@
 import React, { useState } from "react";
-import { Container, TextField, Typography, Button } from "@mui/material";
 import * as XLSX from "xlsx";
-
+import {
+  Button,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Typography,
+} from "@mui/material";
 const EmpInfoPunchStatus = () => {
   const [tableData, setTableData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchName, setSearchName] = useState("");
   const [searchId, setSearchId] = useState("");
   const [searchDepartment, setSearchDepartment] = useState("");
+  const [selectedEmployees, setSelectedEmployees] = useState([]);
   const itemsPerPage = 10;
+  const [openSyncDialog, setOpenSyncDialog] = useState(false);
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -20,7 +30,9 @@ const EmpInfoPunchStatus = () => {
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
       const parsedData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-      setTableData(parsedData.slice(2));
+      setTableData(
+        parsedData.slice(2).map((row) => ({ ...row, selected: false }))
+      );
     };
 
     reader.readAsBinaryString(file);
@@ -28,16 +40,20 @@ const EmpInfoPunchStatus = () => {
 
   const handleSearchName = (e) => {
     setSearchName(e.target.value);
+    setCurrentPage(1);
   };
 
   const handleSearchId = (e) => {
     setSearchId(e.target.value);
+    setCurrentPage(1);
   };
 
   const handleSearchDepartment = (e) => {
     setSearchDepartment(e.target.value);
+    setCurrentPage(1);
   };
 
+  // Filter data based on search criteria
   const filteredData = tableData.filter((row) => {
     return (
       row[1].toLowerCase().includes(searchName.toLowerCase()) &&
@@ -45,6 +61,11 @@ const EmpInfoPunchStatus = () => {
       row[2].toLowerCase().includes(searchDepartment.toLowerCase())
     );
   });
+
+  // Calculate indexes of the items to display based on current page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -58,9 +79,29 @@ const EmpInfoPunchStatus = () => {
     setCurrentPage((prevPage) => prevPage - 1);
   };
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  const handleEmployeeSelect = (index) => {
+    const updatedEmployees = [...selectedEmployees];
+    updatedEmployees[index] = {
+      ...currentItems[index],
+      selected: !currentItems[index].selected,
+    };
+    setSelectedEmployees(updatedEmployees.filter((employee) => employee));
+  };
+
+  const handleSyncClick = () => {
+    setOpenSyncDialog(true);
+  };
+
+  const handleSyncConfirmation = () => {
+    console.log("System emp data:", selectedEmployees);
+    setOpenSyncDialog(false);
+    setSelectedEmployees([]);
+  };
+
+  const handleCancelSync = () => {
+    setOpenSyncDialog(false);
+    setSelectedEmployees([]);
+  };
 
   return (
     <>
@@ -73,7 +114,7 @@ const EmpInfoPunchStatus = () => {
             Track the attendance of employees here by using the sync button.
           </p>
 
-          <div className="flex items-center justify-center mt-4">
+          <div className="flex items-center justify-center mt-4 gap-5">
             <label htmlFor="file-upload">
               <input
                 style={{ display: "none" }}
@@ -86,6 +127,13 @@ const EmpInfoPunchStatus = () => {
                 Upload File
               </Button>
             </label>
+            <Button
+              variant="contained"
+              component="span"
+              onClick={handleSyncClick}
+            >
+              Sync
+            </Button>
           </div>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
@@ -126,6 +174,9 @@ const EmpInfoPunchStatus = () => {
               <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                 <tr className="!font-semibold">
                   <th scope="col" className="!text-left pl-8 py-3">
+                    Select
+                  </th>
+                  <th scope="col" className="!text-left pl-8 py-3">
                     Sr. No
                   </th>
                   <th scope="col" className="!text-left pl-8 py-3">
@@ -154,7 +205,18 @@ const EmpInfoPunchStatus = () => {
               <tbody>
                 {currentItems.map((row, index) => (
                   <tr key={index}>
-                    <td className="!text-left pl-8 py-3">{index + 1}</td>
+                    <td className="!text-left pl-8 py-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedEmployees.some(
+                          (emp) => emp[0] === row[0]
+                        )}
+                        onChange={() => handleEmployeeSelect(index)}
+                      />
+                    </td>
+                    <td className="!text-left pl-8 py-3">
+                      {(currentPage - 1) * itemsPerPage + index + 1}
+                    </td>
                     <td className="py-3 pl-8">{row[0]}</td>
                     <td className="py-3 pl-8">{row[1]}</td>
                     <td className="py-3 pl-8">{row[2]}</td>
@@ -257,6 +319,33 @@ const EmpInfoPunchStatus = () => {
           </nav>
         </article>
       </Container>
+
+      {/* Sync Confirmation Dialog */}
+      <Dialog open={openSyncDialog} onClose={handleCancelSync}>
+        <DialogTitle>Confirmation</DialogTitle>
+        <DialogContent>
+          <p>
+            Do you want to sync the selected employees with attendance
+            management?
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleSyncConfirmation}
+            variant="contained"
+            color="primary"
+          >
+            Yes
+          </Button>
+          <Button
+            onClick={handleCancelSync}
+            variant="outlined"
+            color="secondary"
+          >
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

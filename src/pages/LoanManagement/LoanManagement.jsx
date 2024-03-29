@@ -4,7 +4,6 @@ import { Button } from "@mui/material";
 import axios from "axios";
 import { default as React, useContext, useState } from "react";
 import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import CreateLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/CreateLoanMgtModal";
 import UserProfile from "../../hooks/UserData/useUser";
@@ -14,10 +13,12 @@ import LoanMgtPieChartModal from "../../components/Modal/LoanMgtPieChartModal/Lo
 const LoanManagement = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-  const { organisationId } = useParams();
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
+  console.log("user", user);
   const userId = user._id;
+  const organisationId = user.organizationId;
+  console.log(organisationId);
 
   //for get loan data
   const { data: getEmployeeLoanData, isLoading } = useQuery(
