@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import * as XLSX from "xlsx";
 import {
   Button,
@@ -10,7 +10,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { UseContext } from "../../State/UseState/UseContext";
 const EmpInfoPunchStatus = () => {
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
   const [tableData, setTableData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchName, setSearchName] = useState("");
@@ -19,6 +24,7 @@ const EmpInfoPunchStatus = () => {
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const itemsPerPage = 10;
   const [openSyncDialog, setOpenSyncDialog] = useState(false);
+  const { organisationId } = useParams();
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -91,6 +97,27 @@ const EmpInfoPunchStatus = () => {
   const handleSyncClick = () => {
     setOpenSyncDialog(true);
   };
+
+  // pull the employee data
+  const [employee, setEmployee] = useState([]);
+  const fetchEmployee = async (page) => {
+    try {
+      const apiUrl = `${process.env.REACT_APP_API}/route/employee/get/${organisationId}`;
+      const response = await axios.get(apiUrl, {
+        headers: {
+          Authorization: authToken,
+        },
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployee();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSyncConfirmation = () => {
     console.log("System emp data:", selectedEmployees);
