@@ -2,9 +2,10 @@ import React, { useState, useContext } from "react";
 import * as XLSX from "xlsx";
 import { Button, Container, TextField, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { UseContext } from "../../State/UseState/UseContext";
+import AttendanceBioModal from "../../components/Modal/AttedanceBioModal/AttendanceBioModal";
+
 const EmpInfoPunchStatus = () => {
-  const { cookies } = useContext(UseContext);
+  const { organisationId } = useParams();
   const [tableData, setTableData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchName, setSearchName] = useState("");
@@ -81,6 +82,17 @@ const EmpInfoPunchStatus = () => {
     setSelectedEmployees(updatedEmployees.filter((employee) => employee));
   };
 
+  console.log("selected employee", selectedEmployees);
+
+  // for open the modal for display employee
+  const [empModalOpen, setEmpModalOpen] = useState(false);
+  const handleEmpModalOpen = () => {
+    setEmpModalOpen(true);
+  };
+  const handleEmpModalClose = () => {
+    setEmpModalOpen(false);
+  };
+
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
@@ -105,7 +117,11 @@ const EmpInfoPunchStatus = () => {
                 Upload File
               </Button>
             </label>
-            <Button variant="contained" component="span">
+            <Button
+              variant="contained"
+              component="span"
+              onClick={handleEmpModalOpen}
+            >
               Sync
             </Button>
           </div>
@@ -293,6 +309,11 @@ const EmpInfoPunchStatus = () => {
           </nav>
         </article>
       </Container>
+      <AttendanceBioModal
+        handleClose={handleEmpModalClose}
+        open={empModalOpen}
+        organisationId={organisationId}
+      />
     </>
   );
 };
