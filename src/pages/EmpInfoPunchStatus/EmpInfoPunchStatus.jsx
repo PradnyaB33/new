@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import * as XLSX from "xlsx";
 import { Button, Container, TextField, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
@@ -313,6 +313,7 @@ const EmpInfoPunchStatus = () => {
         handleClose={handleEmpModalClose}
         open={empModalOpen}
         organisationId={organisationId}
+        selectedEmployees={selectedEmployees}
       />
     </>
   );
