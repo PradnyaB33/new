@@ -16,6 +16,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 const EmpInfoPunchStatus = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
+  const { organisationId } = useParams();
   const [tableData, setTableData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchName, setSearchName] = useState("");
@@ -24,7 +25,6 @@ const EmpInfoPunchStatus = () => {
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const itemsPerPage = 10;
   const [openSyncDialog, setOpenSyncDialog] = useState(false);
-  const { organisationId } = useParams();
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -100,7 +100,7 @@ const EmpInfoPunchStatus = () => {
 
   // pull the employee data
   const [employee, setEmployee] = useState([]);
-  const fetchEmployee = async (page) => {
+  const fetchEmployee = async () => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get/${organisationId}`;
       const response = await axios.get(apiUrl, {
@@ -109,6 +109,7 @@ const EmpInfoPunchStatus = () => {
         },
       });
       console.log(response);
+      setEmployee(response.data.employees);
     } catch (error) {
       console.log(error);
     }
@@ -121,6 +122,7 @@ const EmpInfoPunchStatus = () => {
 
   const handleSyncConfirmation = () => {
     console.log("System emp data:", selectedEmployees);
+    console.log("aeis emp data", employee);
     setOpenSyncDialog(false);
     setSelectedEmployees([]);
   };
