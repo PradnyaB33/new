@@ -1,22 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import * as XLSX from "xlsx";
-import {
-  Button,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  Typography,
-} from "@mui/material";
-import axios from "axios";
+import { Button, Container, TextField, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 const EmpInfoPunchStatus = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aegis"];
-  const { organisationId } = useParams();
   const [tableData, setTableData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchName, setSearchName] = useState("");
@@ -24,7 +12,6 @@ const EmpInfoPunchStatus = () => {
   const [searchDepartment, setSearchDepartment] = useState("");
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const itemsPerPage = 10;
-  const [openSyncDialog, setOpenSyncDialog] = useState(false);
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -94,44 +81,6 @@ const EmpInfoPunchStatus = () => {
     setSelectedEmployees(updatedEmployees.filter((employee) => employee));
   };
 
-  const handleSyncClick = () => {
-    setOpenSyncDialog(true);
-  };
-
-  // pull the employee data
-  const [employee, setEmployee] = useState([]);
-  const fetchEmployee = async () => {
-    try {
-      const apiUrl = `${process.env.REACT_APP_API}/route/employee/get/${organisationId}`;
-      const response = await axios.get(apiUrl, {
-        headers: {
-          Authorization: authToken,
-        },
-      });
-      console.log(response);
-      setEmployee(response.data.employees);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchEmployee();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleSyncConfirmation = () => {
-    console.log("System emp data:", selectedEmployees);
-    console.log("aeis emp data", employee);
-    setOpenSyncDialog(false);
-    setSelectedEmployees([]);
-  };
-
-  const handleCancelSync = () => {
-    setOpenSyncDialog(false);
-    setSelectedEmployees([]);
-  };
-
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
@@ -156,11 +105,7 @@ const EmpInfoPunchStatus = () => {
                 Upload File
               </Button>
             </label>
-            <Button
-              variant="contained"
-              component="span"
-              onClick={handleSyncClick}
-            >
+            <Button variant="contained" component="span">
               Sync
             </Button>
           </div>
@@ -348,33 +293,6 @@ const EmpInfoPunchStatus = () => {
           </nav>
         </article>
       </Container>
-
-      {/* Sync Confirmation Dialog */}
-      <Dialog open={openSyncDialog} onClose={handleCancelSync}>
-        <DialogTitle>Confirmation</DialogTitle>
-        <DialogContent>
-          <p>
-            Do you want to sync the selected employees with attendance
-            management?
-          </p>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleSyncConfirmation}
-            variant="contained"
-            color="primary"
-          >
-            Yes
-          </Button>
-          <Button
-            onClick={handleCancelSync}
-            variant="outlined"
-            color="secondary"
-          >
-            No
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 };
