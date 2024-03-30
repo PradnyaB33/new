@@ -102,7 +102,7 @@ const RemoteEmployee = () => {
 
   return (
     <div className="w-screen flex relative">
-      <div className=" z-50 p-6 flex flex-col mt-7 w-[400px] sm:text-base text-sm bg-white gap-4 ">
+      <div className="z-50 p-6 flex flex-col mt-7 w-[400px] sm:text-base text-sm bg-white gap-4">
         <form onSubmit={handleSubmit(onSubmit)} className="w-full bg-white">
           <AuthInputFiled
             name="today"
@@ -124,7 +124,7 @@ const RemoteEmployee = () => {
             <MappedForm {...{ item, index, setArray, setOpenModal }} />
           ))}
 
-          <div className="absolute bottom-3 w-[21vw] flex flex-col items-end gap-10">
+          <div className="absolute bottom-3 w-[400px] flex flex-col items-end gap-10">
             <button
               type="button"
               onClick={() => setOpenModal(true)}

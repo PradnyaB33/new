@@ -1,16 +1,11 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
-import {
-  Button,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Container, TextField, Typography } from "@mui/material";
+import { useParams } from "react-router-dom";
+import AttendanceBioModal from "../../components/Modal/AttedanceBioModal/AttendanceBioModal";
+
 const EmpInfoPunchStatus = () => {
+  const { organisationId } = useParams();
   const [tableData, setTableData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchName, setSearchName] = useState("");
@@ -18,7 +13,6 @@ const EmpInfoPunchStatus = () => {
   const [searchDepartment, setSearchDepartment] = useState("");
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const itemsPerPage = 10;
-  const [openSyncDialog, setOpenSyncDialog] = useState(false);
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -88,19 +82,15 @@ const EmpInfoPunchStatus = () => {
     setSelectedEmployees(updatedEmployees.filter((employee) => employee));
   };
 
-  const handleSyncClick = () => {
-    setOpenSyncDialog(true);
-  };
+  console.log("selected employee", selectedEmployees);
 
-  const handleSyncConfirmation = () => {
-    console.log("System emp data:", selectedEmployees);
-    setOpenSyncDialog(false);
-    setSelectedEmployees([]);
+  // for open the modal for display employee
+  const [empModalOpen, setEmpModalOpen] = useState(false);
+  const handleEmpModalOpen = () => {
+    setEmpModalOpen(true);
   };
-
-  const handleCancelSync = () => {
-    setOpenSyncDialog(false);
-    setSelectedEmployees([]);
+  const handleEmpModalClose = () => {
+    setEmpModalOpen(false);
   };
 
   return (
@@ -130,7 +120,7 @@ const EmpInfoPunchStatus = () => {
             <Button
               variant="contained"
               component="span"
-              onClick={handleSyncClick}
+              onClick={handleEmpModalOpen}
             >
               Sync
             </Button>
@@ -319,33 +309,12 @@ const EmpInfoPunchStatus = () => {
           </nav>
         </article>
       </Container>
-
-      {/* Sync Confirmation Dialog */}
-      <Dialog open={openSyncDialog} onClose={handleCancelSync}>
-        <DialogTitle>Confirmation</DialogTitle>
-        <DialogContent>
-          <p>
-            Do you want to sync the selected employees with attendance
-            management?
-          </p>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleSyncConfirmation}
-            variant="contained"
-            color="primary"
-          >
-            Yes
-          </Button>
-          <Button
-            onClick={handleCancelSync}
-            variant="outlined"
-            color="secondary"
-          >
-            No
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <AttendanceBioModal
+        handleClose={handleEmpModalClose}
+        open={empModalOpen}
+        organisationId={organisationId}
+        selectedEmployees={selectedEmployees}
+      />
     </>
   );
 };
