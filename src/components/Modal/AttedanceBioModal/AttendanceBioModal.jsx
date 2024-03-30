@@ -1,48 +1,39 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
+  Container,
+  TextField,
+  Typography,
   Button,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  Select,
-  FormLabel,
   Dialog,
   DialogActions,
   DialogContent,
-  MenuItem,
 } from "@mui/material";
-import React, { useContext, useState, useEffect } from "react";
-import { UseContext } from "../../../State/UseState/UseContext";
-import axios from "axios";
-import { Container, IconButton, TextField, Typography } from "@mui/material";
 
 const AttendanceBioModal = ({
   handleClose,
   open,
   organisationId,
-  selectedEmployees,
+  handleSync,
 }) => {
-  const { cookies } = useContext(UseContext);
-  const authToken = cookies["aegis"];
-  const [nameSearch, setNameSearch] = useState("");
-  const [locationSearch, setLocationSearch] = useState("");
-  const [deptSearch, setDeptSearch] = useState("");
+  const [emailSearch, setEmailSearch] = useState("");
   const [availableEmployee, setAvailableEmployee] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
+  const [checkedEmployees, setCheckedEmployees] = useState([]);
+
+  useEffect(() => {
+    fetchAvailableEmployee(currentPage);
+  }, [currentPage]);
 
   const fetchAvailableEmployee = async (page) => {
     try {
-      const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
-      const response = await axios.get(apiUrl, {
-        headers: {
-          Authorization: authToken,
-        },
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`
+      );
       setAvailableEmployee(response.data.employees);
-      setCurrentPage(page);
       setTotalPages(response.data.totalPages || 1);
-      // Generate an array of page numbers
       const numbersArray = Array.from(
         { length: response.data.totalPages || 1 },
         (_, index) => index + 1
@@ -53,11 +44,14 @@ const AttendanceBioModal = ({
     }
   };
 
-  useEffect(() => {
-    fetchAvailableEmployee(currentPage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
-  console.log(availableEmployee);
+  const handleEmployeeSelect = (employeeId) => {
+    const isChecked = checkedEmployees.includes(employeeId);
+    if (isChecked) {
+      setCheckedEmployees(checkedEmployees.filter((id) => id !== employeeId));
+    } else {
+      setCheckedEmployees([...checkedEmployees, employeeId]);
+    }
+  };
 
   const prePage = () => {
     if (currentPage !== 1) {
@@ -74,14 +68,15 @@ const AttendanceBioModal = ({
   const changePage = (id) => {
     fetchAvailableEmployee(id);
   };
+
   return (
     <Dialog
       PaperProps={{
         sx: {
           width: "100%",
-          maxWidth: "800px!important",
+          maxWidth: "1000px!important",
           height: "100%",
-          maxHeight: "85vh!important",
+          maxHeight: "80vh!important",
         },
       }}
       open={open}
@@ -90,43 +85,18 @@ const AttendanceBioModal = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <div className="flex w-full justify-between py-4 items-center  px-4">
-        <h1 className="text-xl pl-2 font-semibold font-sans">Employee</h1>
-      </div>
-
-      <DialogContent className="border-none  !pt-0 !px-0  shadow-md outline-none rounded-md">
-        <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
+      <DialogContent className="border-none !pt-0 !px-0 shadow-md outline-none rounded-md">
+        <Container maxWidth="xl" className="bg-gray-50">
           <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
-            <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
+            <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
               Employee
             </Typography>
-            <p className="text-xs text-gray-600 pl-10 text-center">
-              Edit employee data here by using edit button.
-            </p>
 
             <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
               <div className="flex items-center gap-3 mb-3 md:mb-0">
                 <TextField
-                  onChange={(e) => setNameSearch(e.target.value)}
-                  placeholder="Search Employee Name...."
-                  variant="outlined"
-                  size="small"
-                  sx={{ width: 300 }}
-                />
-              </div>
-              <div className="flex items-center gap-3 mb-3 md:mb-0">
-                <TextField
-                  onChange={(e) => setDeptSearch(e.target.value)}
-                  placeholder="Search Department Name...."
-                  variant="outlined"
-                  size="small"
-                  sx={{ width: 300 }}
-                />
-              </div>
-              <div className="flex items-center gap-3">
-                <TextField
-                  onChange={(e) => setLocationSearch(e.target.value)}
-                  placeholder="Search Location ...."
+                  onChange={(e) => setEmailSearch(e.target.value)}
+                  placeholder="Search Email...."
                   variant="outlined"
                   size="small"
                   sx={{ width: 300 }}
@@ -135,9 +105,12 @@ const AttendanceBioModal = ({
             </div>
 
             <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-              <table className="min-w-full bg-white  text-left !text-sm font-light">
-                <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
+              <table className="min-w-full bg-white text-left !text-sm font-light">
+                <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                   <tr className="!font-semibold">
+                    <th scope="col" className="!text-left pl-8 py-3">
+                      Select
+                    </th>
                     <th scope="col" className="!text-left pl-8 py-3">
                       Sr. No
                     </th>
@@ -156,45 +129,27 @@ const AttendanceBioModal = ({
                     <th scope="col" className="!text-left pl-8 py-3">
                       Department
                     </th>
-                    <th scope="col" className="!text-left pl-8 py-3">
-                      Phone Number
-                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {availableEmployee
                     .filter((item) => {
                       return (
-                        (!nameSearch.toLowerCase() ||
-                          (item.first_name !== null &&
-                            item.first_name !== undefined &&
-                            item.first_name
-                              .toLowerCase()
-                              .includes(nameSearch))) &&
-                        (!deptSearch ||
-                          (item.deptname !== null &&
-                            item.deptname !== undefined &&
-                            item.deptname.some(
-                              (dept) =>
-                                dept.departmentName !== null &&
-                                dept.departmentName
-                                  .toLowerCase()
-                                  .includes(deptSearch.toLowerCase())
-                            ))) &&
-                        (!locationSearch.toLowerCase() ||
-                          item.worklocation.some(
-                            (location) =>
-                              location &&
-                              location.city !== null &&
-                              location.city !== undefined &&
-                              location.city
-                                .toLowerCase()
-                                .includes(locationSearch)
-                          ))
+                        !emailSearch.toLowerCase() ||
+                        (item.email !== null &&
+                          item.email !== undefined &&
+                          item.email.toLowerCase().includes(emailSearch))
                       );
                     })
                     .map((item, id) => (
                       <tr className="!font-medium border-b" key={id}>
+                        <td className="!text-left pl-8 py-3">
+                          <input
+                            type="checkbox"
+                            onChange={() => handleEmployeeSelect(item.id)}
+                            checked={checkedEmployees.includes(item.id)}
+                          />
+                        </td>
                         <td className="!text-left pl-8 py-3">{id + 1}</td>
                         <td className="py-3 pl-8">{item?.first_name}</td>
                         <td className="py-3 pl-8">{item?.last_name}</td>
@@ -209,7 +164,6 @@ const AttendanceBioModal = ({
                             <span key={index}>{dept?.departmentName}</span>
                           ))}
                         </td>
-                        <td className="py-3 pl-8 ">{item?.phone_number}</td>
                       </tr>
                     ))}
                 </tbody>
@@ -257,8 +211,7 @@ const AttendanceBioModal = ({
                         marginRight: "5px",
                       }}
                     >
-                      <a
-                        href={`#${n}`}
+                      <button
                         style={{
                           color: currentPage === n ? "#fff" : "#007bff",
                           backgroundColor:
@@ -268,12 +221,13 @@ const AttendanceBioModal = ({
                           textDecoration: "none",
                           borderRadius: "4px",
                           transition: "all 0.3s ease",
+                          cursor: "pointer",
                         }}
                         className="page-link"
                         onClick={() => changePage(n)}
                       >
                         {n}
-                      </a>
+                      </button>
                     </li>
                   ))}
                   <li style={{ display: "inline-block" }} className="page-item">
@@ -296,17 +250,20 @@ const AttendanceBioModal = ({
                 </ul>
               </nav>
             </div>
+            <DialogActions sx={{ justifyContent: "center" }}>
+              <Button color="error" variant="outlined" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleSync(checkedEmployees)}
+              >
+                Sync
+              </Button>
+            </DialogActions>
           </article>
         </Container>
-        <DialogActions sx={{ justifyContent: "end" }}>
-          <Button color="error" variant="outlined" onClick={handleClose}>
-            Cancel
-          </Button>
-
-          <Button variant="contained" color="primary">
-            Submit
-          </Button>
-        </DialogActions>
       </DialogContent>
     </Dialog>
   );
