@@ -95,6 +95,8 @@ const AppDatePicker = ({
   const handleSelectSlot = ({ start, end }) => {
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
+    const difference = selectedEndDate.diff(selectedStartDate, "days");
+
     const currentDate = moment(selectedStartDate);
 
     const includedDays = data2.days?.days?.map((day) => day.day);
@@ -124,7 +126,7 @@ const AppDatePicker = ({
           selectedEndDate.isAfter(moment(event.end).startOf("day")))
     );
 
-    if (isOverlap) {
+    if (isOverlap && difference > 0) {
       return handleAlert(
         true,
         "warning",

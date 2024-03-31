@@ -21,10 +21,8 @@ const PlaceAutoComplete = ({
 }) => {
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const [address, setAddress] = useState("");
-  console.log(`🚀 ~ file: places-autocomplete.jsx:24 ~ address:`, address);
   const handleSelect = async (option, onChange) => {
     if (option === null) {
-      console.log(`🚀 ~ file: places-autocomplete.jsx:30 ~ center:`, center);
       onChange({
         address: "",
         position: center,
@@ -98,7 +96,7 @@ const PlaceAutoComplete = ({
                     <Select
                       isLoading={loading}
                       placeholder={placeholder}
-                      defaultValue={{ label: "Select...", value: undefined }}
+                      // defaultValue={{ label: "Select...", value: "" }}
                       styles={{
                         control: (styles) => ({
                           ...styles,

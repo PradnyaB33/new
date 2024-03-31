@@ -52,7 +52,7 @@ const Step1 = ({ nextStep }) => {
     }),
     trainingLink: z.string().url(),
   });
-  const { control, formState, handleSubmit, watch } = useForm({
+  const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       trainingImage,
       trainingName,
@@ -67,11 +67,6 @@ const Step1 = ({ nextStep }) => {
     resolver: zodResolver(trainingForm),
   });
   const { errors } = formState;
-  console.table(
-    `🚀 ~ file: mini-form.jsx:63 ~ watch("location"):`,
-    watch("trainingLocation")
-  );
-  console.log(`🚀 ~ file: page.jsx:63 ~ errors:`, errors);
   const onSubmit = (data) => {
     console.log(data);
     setStep1(data);
