@@ -19,6 +19,10 @@ const AttendanceBioModal = ({
   const [emailSearch, setEmailSearch] = useState("");
   const [availableEmployee, setAvailableEmployee] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  console.log(
+    `🚀 ~ file: AttendanceBioModal.jsx:22 ~ setCurrentPage:`,
+    setCurrentPage
+  );
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const [checkedEmployees, setCheckedEmployees] = useState([]);

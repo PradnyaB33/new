@@ -43,7 +43,7 @@ const Step1 = ({ nextStep }) => {
     trainingStartDate: z.string(),
     trainingEndDate: z.string(),
     trainingDuration: z.string(),
-    trainingLocation: z.object({
+    trainingLocation: z.any({
       address: z.string(),
       position: z.object({
         lat: z.number(),
@@ -52,7 +52,7 @@ const Step1 = ({ nextStep }) => {
     }),
     trainingLink: z.string().url(),
   });
-  const { control, formState, handleSubmit } = useForm({
+  const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
       trainingImage,
       trainingName,
@@ -67,6 +67,10 @@ const Step1 = ({ nextStep }) => {
     resolver: zodResolver(trainingForm),
   });
   const { errors } = formState;
+  console.table(
+    `🚀 ~ file: mini-form.jsx:63 ~ watch("location"):`,
+    watch("trainingLocation")
+  );
   console.log(`🚀 ~ file: page.jsx:63 ~ errors:`, errors);
   const onSubmit = (data) => {
     console.log(data);
