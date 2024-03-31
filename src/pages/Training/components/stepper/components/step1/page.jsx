@@ -46,7 +46,7 @@ const Step1 = ({ nextStep }) => {
     trainingStartDate: z.string(),
     trainingDuration: z.string(),
     trainingLocation: z.any({
-      description: z.string(),
+      address: z.string(),
       position: z.object({
         lat: z.number(),
         lng: z.number(),
@@ -55,7 +55,7 @@ const Step1 = ({ nextStep }) => {
     }),
     trainingLink: z.string().url(),
   });
-  const { control, formState, handleSubmit } = useForm({
+  const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
       trainingImage,
       trainingName,
@@ -203,6 +203,7 @@ const Step1 = ({ nextStep }) => {
             errors={errors}
             error={errors.trainingLocation}
             center={center}
+            value={watch("trainingLocation")}
           />
         </div>
         <Button
