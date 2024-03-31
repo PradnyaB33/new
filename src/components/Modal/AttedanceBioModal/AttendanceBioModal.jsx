@@ -29,6 +29,7 @@ const AttendanceBioModal = ({
 
   useEffect(() => {
     fetchAvailableEmployee(currentPage);
+    // eslint-disable-next-line
   }, [currentPage]);
 
   const fetchAvailableEmployee = async (page) => {

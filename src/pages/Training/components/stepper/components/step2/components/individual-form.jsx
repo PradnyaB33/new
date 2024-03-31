@@ -1,13 +1,13 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectAllOutlined } from "@mui/icons-material";
-import React from "react";
+import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import { z } from "zod";
 
 const Individual = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   console.log(
     `🚀 ~ file: individual-form.jsx:11 ~ open, setOpen:`,
     open,
@@ -16,7 +16,7 @@ const Individual = () => {
   const individualSchema = z.object({
     _id: z.string(),
   });
-  const { control, formState, handleSubmit, watch } = useForm({
+  const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       _id: undefined,
     },
@@ -79,7 +79,7 @@ const Individual = () => {
           <div className="h-4 !mb-1">
             <ErrorMessage
               errors={errors}
-              name={name}
+              name={"_id"}
               render={({ message }) => (
                 <p className="text-sm text-red-500">{message}</p>
               )}

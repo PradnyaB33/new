@@ -86,13 +86,9 @@ const PlaceAutoComplete = ({
               >
                 {Icon && <Icon className="text-gray-700" />}
                 <PlacesAutocomplete
-                  value={field.value?.address}
+                  value={field?.value?.address}
                   onChange={(value) => {
-                    console.log(
-                      `🚀 ~ file: places-autocomplete.jsx:93 ~ value:`,
-                      value
-                    );
-                    field.onChange({
+                    field?.onChange({
                       ...field?.value,
                       address: value,
                     });
@@ -117,23 +113,14 @@ const PlaceAutoComplete = ({
                         options={suggestions}
                         getOptionLabel={(option) => option?.description}
                         getOptionValue={(option) => option?.placeId}
-                        onInputChange={(value, { action }) => {
-                          console.log(
-                            `🚀 ~ file: places-autocomplete.jsx:118 ~ action:`,
-                            action
-                          );
-                          if (
-                            action !== "input-blur" &&
-                            action !== "menu-close"
-                          ) {
-                            getInputProps().onChange({
-                              target: { value: value },
-                            });
-                          }
+                        onInputChange={(value) => {
+                          getInputProps().onChange({
+                            target: { value: value },
+                          });
                         }}
                         filterOption={false}
                         onChange={(value) => {
-                          handleSelect(value, field.onChange);
+                          handleSelect(value, field?.onChange);
                         }}
                         isClearable={true}
                         isSearchable={true}
