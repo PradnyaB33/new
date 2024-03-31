@@ -14,22 +14,25 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../../../components/InputFileds/AuthInputFiled";
+import useGetUser from "../../../../../../hooks/Token/useUser";
 import ImageInput from "../../../../../AddOrganisation/components/image-input";
 import useTrainingStore from "../zustand-store";
 
 const Step1 = ({ nextStep }) => {
+  const { decodedToken } = useGetUser();
+
   const {
     trainingName,
     trainingType,
     trainingDescription,
     trainingStartDate,
-    trainingEndDate,
     trainingDuration,
     trainingLink,
     trainingImage,
     trainingLocation,
     setStep1,
   } = useTrainingStore();
+
   const trainingForm = z.object({
     trainingImage: z.any().refine(
       (file) => {
@@ -41,25 +44,24 @@ const Step1 = ({ nextStep }) => {
     trainingType: z.enum(["Individual", "Organizational", "Departmental"]),
     trainingDescription: z.string(),
     trainingStartDate: z.string(),
-    trainingEndDate: z.string(),
     trainingDuration: z.string(),
     trainingLocation: z.any({
-      address: z.string(),
+      description: z.string(),
       position: z.object({
         lat: z.number(),
         lng: z.number(),
       }),
+      placeId: z.string(),
     }),
     trainingLink: z.string().url(),
   });
-  const { control, formState, handleSubmit, watch } = useForm({
+  const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       trainingImage,
       trainingName,
       trainingType,
       trainingDescription,
       trainingStartDate,
-      trainingEndDate,
       trainingDuration,
       trainingLocation,
       trainingLink,
@@ -67,13 +69,8 @@ const Step1 = ({ nextStep }) => {
     resolver: zodResolver(trainingForm),
   });
   const { errors } = formState;
-  console.table(
-    `🚀 ~ file: mini-form.jsx:63 ~ watch("location"):`,
-    watch("trainingLocation")
-  );
-  console.log(`🚀 ~ file: page.jsx:63 ~ errors:`, errors);
   const onSubmit = (data) => {
-    console.log(data);
+    console.log(`🚀 ~ file: page.jsx:73 ~ data:`, data);
     setStep1(data);
     nextStep();
   };
@@ -142,18 +139,7 @@ const Step1 = ({ nextStep }) => {
             errors={errors}
             min={new Date().toISOString().split("T")[0]}
           />
-          <AuthInputFiled
-            name="trainingEndDate"
-            icon={CalendarToday}
-            label={"Training End Date *"}
-            type="date"
-            placeholder="Training End Date"
-            className="items-center"
-            control={control}
-            error={errors.trainingEndDate}
-            errors={errors}
-            min={new Date().toISOString().split("T")[0]}
-          />
+
           <AuthInputFiled
             name="trainingDuration"
             icon={TimerOutlined}
@@ -187,9 +173,23 @@ const Step1 = ({ nextStep }) => {
             error={errors.trainingType}
             errors={errors}
             options={[
-              { value: "Individual", label: "Individual" },
-              { value: "Organizational", label: "Organizational" },
-              { value: "Departmental", label: "Departmental" },
+              { value: "Individual", label: "Individual", isDisabled: false },
+              {
+                value: "Organizational",
+                label: "Organizational",
+                isDisabled:
+                  decodedToken?.user?.profile?.includes("Super-Admin") ||
+                  decodedToken?.user?.profile?.includes("Delegate-Super-Admin")
+                    ? false
+                    : true,
+              },
+              {
+                value: "Departmental",
+                label: "Departmental",
+                isDisabled: decodedToken?.user?.profile?.includes("HR")
+                  ? false
+                  : true,
+              },
             ]}
           />
           <AuthInputFiled

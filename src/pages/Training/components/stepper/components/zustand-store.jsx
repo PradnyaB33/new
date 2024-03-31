@@ -1,20 +1,21 @@
+import { format } from "date-fns";
 import { create } from "zustand";
 
 const useTrainingStore = create((set) => ({
   trainingName: undefined,
   trainingType: undefined,
   trainingDescription: undefined,
-  trainingStartDate: undefined,
-  trainingEndDate: undefined,
+  trainingStartDate: format(new Date(), "yyyy-MM-dd"),
   trainingDuration: undefined,
   trainingLink: undefined,
   trainingImage: undefined,
   trainingLocation: {
-    address: undefined,
+    description: undefined,
     position: {
       lat: 0,
       lng: 0,
     },
+    placeId: undefined,
   },
 
   setStep1: (data) => {

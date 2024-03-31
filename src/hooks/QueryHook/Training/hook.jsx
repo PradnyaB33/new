@@ -4,7 +4,6 @@ import useGetUser from "../../Token/useUser";
 import useDebounce from "./hook/useDebounce";
 
 const useTrainingHook = (name) => {
-  console.log(`🚀 ~ file: hook.jsx:7 ~ name:`, name);
   const { decodedToken, authToken } = useGetUser();
   const debouncedSearchTerm = useDebounce(name, 500);
 

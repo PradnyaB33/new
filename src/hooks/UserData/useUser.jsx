@@ -27,7 +27,6 @@ const UserProfile = () => {
           const decodedToken = await jwtDecode(roletoken);
 
           if (decodedToken) {
-            console.log(decodedToken.role);
             return decodedToken?.role;
           } else {
             return null;
