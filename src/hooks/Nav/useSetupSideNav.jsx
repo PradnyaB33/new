@@ -179,6 +179,15 @@ const useSetupSideNav = (organisationId) => {
         location.pathname === `/organisation/${organisationId}/setup/training`,
       isVisible: data?.plan?.item?.name === "Aegis Intermediate Plan",
     },
+    {
+      label: "Performance Management",
+      icon: SellOutlined,
+      href: `/organisation/${organisationId}/setup/performance-management`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/performance-management`,
+      isVisible: data?.plan?.item?.name === "Aegis Intermediate Plan",
+    },
   ];
 
   return { linkData };
