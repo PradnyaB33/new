@@ -1,28 +1,13 @@
-import {
-  Article,
-  Cancel,
-  CheckCircle,
-  DeleteOutlined,
-  EditOutlined,
-  Error,
-  Pending,
-} from "@mui/icons-material";
-import {
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-} from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
+import useIncomeAPI from "../../../../hooks/IncomeTax/useIncomeAPI";
 import useTDS from "../../../../hooks/IncomeTax/useTDS";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
+import DeclarationTable from "../DeclarationTable";
+import DeleteModel from "../DeleteModel";
 import ProofModel from "../ProofModel";
 
 const TDSTable1 = () => {
@@ -30,28 +15,9 @@ const TDSTable1 = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const queryClient = useQueryClient();
-  // const { setTotalHeads } = useOther();
-  const { setGrossTotal, grossTotal, setDeclared } = useTDS();
-
-  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
-  const [pdf, setPdf] = useState(null);
-
-  const handleDeleteConfirmation = (id) => {
-    setDeleteConfirmation(id);
-  };
-
-  const handleCloseConfirmation = () => {
-    setDeleteConfirmation(null);
-  };
-  const handlePDF = (id) => {
-    setPdf(id);
-  };
-
-  const handleClosePDF = () => {
-    setPdf(null);
-  };
-
   const { handleAlert } = useContext(TestContext);
+  const [declarationData, setDeclarationData] = useState({});
+
   const [tableData, setTableData] = useState([
     {
       name: "Gross Salary",
@@ -140,6 +106,38 @@ const TDSTable1 = () => {
     // amountAccepted: 0,
     // },
   ]);
+  const [editStatus, setEditStatus] = useState({});
+  const handleCloseConfirmation = () => {
+    setDeleteConfirmation(null);
+  };
+
+  // const { setTotalHeads } = useOther();
+  const { setGrossTotal, grossTotal, setDeclared } = useTDS();
+  const { handleSaveClick, handleDelete } = useIncomeAPI(
+    tableData,
+    user,
+    authToken,
+    handleAlert,
+    queryClient,
+    setEditStatus,
+    handleCloseConfirmation,
+    declarationData
+  );
+
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  const [pdf, setPdf] = useState(null);
+
+  const handleDeleteConfirmation = (id) => {
+    setDeleteConfirmation(id);
+  };
+
+  const handlePDF = (id) => {
+    setPdf(id);
+  };
+
+  const handleClosePDF = () => {
+    setPdf(null);
+  };
 
   const {
     // isFetched: salaryFetch,
@@ -259,8 +257,6 @@ const TDSTable1 = () => {
     },
   });
 
-  const [editStatus, setEditStatus] = useState({});
-
   const handleEditClick = (itemIndex) => {
     setEditStatus((prevEditStatus) => ({
       ...prevEditStatus,
@@ -270,14 +266,29 @@ const TDSTable1 = () => {
 
   const handleAmountChange = (e, itemIndex) => {
     const newData = [...tableData];
-    newData[itemIndex].amount = e.target.value;
-    setTableData(newData);
+    // console.log({ amount: e.target.value, ...newData[itemIndex] });
+    // newData[itemIndex].proof = file;
+    setDeclarationData((prev) => ({
+      amount: e.target.value,
+      ...prev,
+    }));
   };
+  console.log(`🚀 ~ setDeclarationData:`, declarationData);
 
   const handleProofChange = (e, itemIndex) => {
+    const file = e.target.files[0];
+
+    if (file.type !== "application/pdf") {
+      handleAlert(true, "error", "Uploaded file is not a PDF");
+      return;
+    }
     const newData = [...tableData];
-    newData[itemIndex].proof = e.target.files[0];
-    setTableData(newData);
+    // newData[itemIndex].proof = file;
+    setDeclarationData(() => ({
+      proof: file,
+      ...newData[itemIndex],
+    }));
+    // setTableData(newData);
   };
 
   const uploadProof = async (tdsfile) => {
@@ -291,8 +302,6 @@ const TDSTable1 = () => {
       }
     );
 
-    console.log(data.data);
-
     await axios.put(data?.data?.url, tdsfile, {
       headers: {
         "Content-Type": tdsfile.type,
@@ -302,103 +311,98 @@ const TDSTable1 = () => {
     return data?.data?.url?.split("?")[0];
   };
 
-  const handleSaveClick = async (index) => {
-    const newData = [...tableData];
-    const value = newData[index];
-    let tdsfile = newData[index].proof;
+  // const handleSaveClick = async (index) => {
+  //   const newData = [...tableData];
+  //   const value = newData[index];
+  //   let tdsfile = declarationData.proof;
 
-    try {
-      let uploadproof = "";
+  //   try {
+  //     let uploadproof = "";
 
-      if (tdsfile) {
-        console.log("runs");
-        uploadproof = await uploadProof(tdsfile);
-      }
-      console.log(`🚀 ~ uploadproof:`, uploadproof);
+  //     if (tdsfile) {
+  //       uploadproof = await uploadProof(tdsfile);
+  //     }
+  //     console.log(`🚀 ~ uploadproof:`, uploadproof);
 
-      let requestData = {
-        empId: user._id,
-        financialYear: "2023-2024",
-        requestData: {
-          name: value.name,
-          sectionname: "Salary",
-          status: "Pending",
-          declaration: value.amount,
-        },
-      };
+  //     let requestData = {
+  //       empId: user._id,
+  //       financialYear: "2023-2024",
+  //       requestData: {
+  //         name: value.name,
+  //         sectionname: "Salary",
+  //         status: "Pending",
+  //         declaration: value.amount,
+  //       },
+  //     };
 
-      if (uploadProof) {
-        requestData = {
-          empId: user._id,
-          financialYear: "2023-2024",
-          requestData: {
-            name: value.name,
-            sectionname: "Salary",
-            status: "Pending",
-            declaration: value.amount,
-            proof: uploadproof,
-          },
-        };
-      }
-      await axios.post(
-        `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
-        requestData,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
+  //     if (uploadProof) {
+  //       requestData = {
+  //         empId: user._id,
+  //         financialYear: "2023-2024",
+  //         requestData: {
+  //           name: declarationData.name,
+  //           sectionname: "Salary",
+  //           status: "Pending",
+  //           declaration: declarationData.amount,
+  //           proof: uploadproof,
+  //         },
+  //       };
+  //     }
+  //     await axios.post(
+  //       `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
+  //       requestData,
+  //       {
+  //         headers: {
+  //           Authorization: authToken,
+  //         },
+  //       }
+  //     );
 
-      handleAlert(true, "success", `Data uploaded successfully`);
-      queryClient.invalidateQueries({ queryKey: ["Salary"] });
-    } catch (error) {
-      console.log(error);
-    }
+  //     handleAlert(true, "success", `Data uploaded successfully`);
+  //     queryClient.invalidateQueries({ queryKey: ["Salary"] });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
 
-    setEditStatus({ ...editStatus, [index]: null });
-  };
+  //   setEditStatus({ ...editStatus, [index]: null });
+  // };
 
-  const handleDelete = async (index) => {
-    console.log(index);
-    const newData = [...tableData];
-    const value = newData[index];
-    const requestData = {
-      empId: user._id,
-      financialYear: "2023-2024",
-      requestData: {
-        name: value.name,
-        sectionname: "Salary",
-        status: "Not Submitted",
-        declaration: 0,
-        proof: "",
-      },
-    };
+  // const handleDelete = async (index) => {
+  //   const newData = [...tableData];
+  //   const value = newData[index];
+  //   const requestData = {
+  //     empId: user._id,
+  //     financialYear: "2023-2024",
+  //     requestData: {
+  //       name: value.name,
+  //       sectionname: "Salary",
+  //       status: "Not Submitted",
+  //       declaration: 0,
+  //       proof: "",
+  //     },
+  //   };
 
-    try {
-      await axios.post(
-        `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
-        requestData,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
+  //   try {
+  //     await axios.post(
+  //       `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
+  //       requestData,
+  //       {
+  //         headers: {
+  //           Authorization: authToken,
+  //         },
+  //       }
+  //     );
 
-      handleAlert(true, "success", `Data deleted successfully`);
-      queryClient.invalidateQueries({ queryKey: ["Salary"] });
-    } catch (error) {
-      console.log(error);
-    }
+  //     handleAlert(true, "success", `Data deleted successfully`);
+  //     queryClient.invalidateQueries({ queryKey: ["Salary"] });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
 
-    handleCloseConfirmation();
-  };
+  //   handleCloseConfirmation();
+  // };
 
   const handleClose = (index) => {
-    const newData = [...tableData];
-    newData[index].amount = 0;
-    setTableData(newData);
     setEditStatus({
       [index]: null,
     });
@@ -406,283 +410,28 @@ const TDSTable1 = () => {
 
   return (
     <div>
-      {salaryFetching ? (
-        <div className="flex items-center justify-center w-full">
-          <CircularProgress />
-        </div>
-      ) : (
-        <div className="bg-white w-full overflow-x-auto">
-          <table className=" table-auto border border-collapse min-w-full bg-white  text-left  !text-sm font-light">
-            <thead className="border-b bg-gray-100 font-bold">
-              <tr className="!font-semibold ">
-                <th
-                  scope="col"
-                  className="!text-left px-2 w-max py-3 leading-7 text-[16px] border"
-                >
-                  Sr. No
-                </th>
-                <th
-                  scope="col"
-                  className="py-3 leading-7 text-[16px] px-2 border"
-                >
-                  Deduction Name
-                </th>
-
-                <th
-                  scope="col"
-                  className="py-3 leading-7 text-[16px] px-2 border"
-                >
-                  Declaration
-                </th>
-                <th
-                  scope="col"
-                  className="py-3 leading-7 text-[16px] px-2 border"
-                >
-                  Approved Amount
-                </th>
-                <th
-                  scope="col"
-                  className=" py-3 leading-7 text-[16px] px-2 border"
-                >
-                  Proof submitted
-                </th>
-                <th
-                  scope="col"
-                  className=" py-3 leading-7 text-[16px] px-2 border"
-                >
-                  Status
-                </th>
-                <th
-                  scope="col"
-                  className=" py-3 leading-7 text-[16px] px-2 border"
-                >
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {tableData.map((item, itemIndex) => (
-                <tr
-                  className={`!font-medium w-[70px] h-14 border-b 
-                
-                `}
-                  key={itemIndex}
-                >
-                  <td className="!text-left  px-2 leading-7 text-[16px] w-[70px] border ">
-                    {item.name === "Income taxable under the head Salaries"
-                      ? ""
-                      : itemIndex + 1}
-                  </td>
-                  <td className="leading-7 text-[16px] truncate text-left w-[500px] border px-2">
-                    <p
-                      className={`
-                  ${
-                    item.name === "Income taxable under the head Salaries" &&
-                    "!font-bold text-lg"
-                  } 
-                 `}
-                    >
-                      {item.name}
-                    </p>
-                  </td>
-
-                  <td className=" text-left !p-0 w-[200px] border ">
-                    {editStatus[itemIndex] && editStatus[itemIndex] ? (
-                      <div className="flex gap-2 h-14">
-                        <h1 className="leading-7 text-[16px] bg-gray-300 border h-auto px-4  flex items-center ">
-                          INR
-                        </h1>
-                        <input
-                          type="number"
-                          className="border-none w-[90px] h-auto outline-none  "
-                          value={parseFloat(item.amount)}
-                          onChange={(e) => handleAmountChange(e, itemIndex)}
-                        />
-                      </div>
-                    ) : (
-                      <p
-                        className={`
-                        ${
-                          item.name ===
-                            "Income taxable under the head Salaries" &&
-                          "!font-bold text-lg w-full"
-                        } 
-                        px-2 md:w-full w-max leading-7 text-[16px]`}
-                      >
-                        INR {parseFloat(item.amount).toFixed(2)}
-                      </p>
-                    )}
-                  </td>
-                  {item.name !== "Gross Salary" ? (
-                    <td className=" text-left !p-0 w-[200px] border ">
-                      <p
-                        className={`
-                        ${
-                          item.name ===
-                            "Income taxable under the head Salaries" &&
-                          "!font-bold text-lg "
-                        } 
-                        px-2 leading-7 text-[16px]`}
-                      >
-                        INR{" "}
-                        {item.amountAccepted
-                          ? parseFloat(item.amountAccepted).toFixed(2)
-                          : 0}
-                      </p>
-                    </td>
-                  ) : (
-                    <td className=" text-left !p-0 w-[200px] ">
-                      <p
-                        className={`
-                        ${
-                          item.name ===
-                            "Income taxable under the head Salaries" &&
-                          "!font-bold text-lg "
-                        } 
-                        px-2 leading-7 text-[16px]  md:w-full w-max`}
-                      >
-                        Auto Accepted
-                      </p>
-                    </td>
-                  )}
-                  <td className="text-left leading-7 text-[16px] w-[200px]  border">
-                    {item.name === "Gross Salary" ? (
-                      ""
-                    ) : editStatus[itemIndex] && editStatus[itemIndex] ? (
-                      <div className="px-2  md:w-full w-max">
-                        <label className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
-                          Upload File
-                          <input
-                            type="file"
-                            className="hidden"
-                            onChange={(e) => handleProofChange(e, itemIndex)}
-                          />
-                        </label>
-                      </div>
-                    ) : item.proof ? (
-                      typeof item.proof === "string" && (
-                        <div
-                          onClick={() => handlePDF(item.proof)}
-                          className="px-2 flex gap-2 items-center h-max w-max  cursor-pointer"
-                        >
-                          <Article className="text-blue-500" />
-                          <h1>View Proof</h1>
-                        </div>
-                      )
-                    ) : (
-                      <p className="px-2  md:w-full w-max">No proof found</p>
-                    )}
-                  </td>
-
-                  <td className=" text-left  leading-7 text-[16px] w-[200px]  border px-2">
-                    {item.name === "Income taxable under the head Salaries" ? (
-                      ""
-                    ) : item.status === "Pending" ? (
-                      <div className="flex items-center  md:w-full w-max  gap-2">
-                        <Pending className="text-yellow-400 " />
-                        {item.status}
-                      </div>
-                    ) : item.status === "Auto" || item.status === "Approved" ? (
-                      <div className="flex items-center  md:w-full w-max  gap-2">
-                        <CheckCircle className="text-green-400 " />
-                        {item.status}
-                      </div>
-                    ) : item.status === "Reject" ? (
-                      <div className="flex items-center  md:w-full w-max  gap-2">
-                        <Cancel className="text-red-400 " />
-                        {item.status}
-                      </div>
-                    ) : (
-                      <div className="flex items-center  md:w-full w-max gap-2">
-                        <Error className="text-gray-400 " />
-                        <p>{item.status}</p>
-                      </div>
-                    )}
-                  </td>
-                  <td className="whitespace-nowrap px-2  w-[220px]">
-                    {item.name ===
-                      "Less : Deduction on Family Pension Income Sec. 57(IIA)" ||
-                    item.name === "Income taxable under the head Salaries" ||
-                    item.status === "Auto" ||
-                    item.status === "Approved" ? (
-                      ""
-                    ) : editStatus[itemIndex] && editStatus[itemIndex] ? (
-                      <div className="space-x-2">
-                        <Button
-                          color="primary"
-                          aria-label="save"
-                          size="small"
-                          onClick={() => handleSaveClick(itemIndex)}
-                        >
-                          Save
-                        </Button>
-                        <Button
-                          color="error"
-                          aria-label="save"
-                          size="small"
-                          onClick={() => handleClose(itemIndex)}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    ) : (
-                      <>
-                        <IconButton
-                          color="primary"
-                          aria-label="edit"
-                          onClick={() => handleEditClick(itemIndex)}
-                        >
-                          <EditOutlined />
-                        </IconButton>
-                        <IconButton
-                          color="error"
-                          aria-label="delete"
-                          onClick={() => handleDeleteConfirmation(itemIndex)}
-                        >
-                          <DeleteOutlined />
-                        </IconButton>
-                      </>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <DeclarationTable
+        tableData={tableData}
+        // isLoading={salaryFetching}
+        handleAmountChange={handleAmountChange}
+        handleSaveClick={handleSaveClick}
+        handleClose={handleClose}
+        handleEditClick={handleEditClick}
+        handleDeleteConfirmation={handleDeleteConfirmation}
+        handleProofChange={handleProofChange}
+        handlePDF={handlePDF}
+        editStatus={editStatus}
+        declarationData={declarationData}
+        setDeclarationData={setDeclarationData}
+        salaryFetching={salaryFetching}
+      />
 
       <ProofModel pdf={pdf} handleClosePDF={handleClosePDF} />
-
-      <Dialog
-        open={deleteConfirmation !== null}
-        onClose={handleCloseConfirmation}
-      >
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <p>
-            Please confirm your decision to delete this salary template, as this
-            action cannot be undone.
-          </p>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleCloseConfirmation}
-            variant="outlined"
-            color="primary"
-            size="small"
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => handleDelete(deleteConfirmation)}
-            color="error"
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <DeleteModel
+        deleteConfirmation={deleteConfirmation}
+        handleCloseConfirmation={handleCloseConfirmation}
+        handleDelete={handleDelete}
+      />
     </div>
   );
 };
