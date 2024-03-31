@@ -24,7 +24,6 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import useSubscription from "../../../hooks/Subscription/subscription";
 import EditOrganisation from "./edit-organization";
 const Organisation = ({ item }) => {
-  console.log(`🚀 ~ file: Organisation.jsx:27 ~ item:`, item);
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [editConfirmation, setEditConfirmation] = useState(null);
@@ -142,11 +141,7 @@ const Organisation = ({ item }) => {
       >
         <tag className="tag">
           {subscriptionLoading || subscriptionFetching ? (
-            <CircularProgress
-              className=" !text-white mx-12"
-              CircularProgress
-              size={20}
-            />
+            <CircularProgress className=" !text-white mx-12" size={20} />
           ) : (
             getMessage()
           )}
@@ -210,11 +205,7 @@ const Organisation = ({ item }) => {
             className=" flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
           >
             {subscriptionLoading || subscriptionFetching ? (
-              <CircularProgress
-                className=" !text-white"
-                CircularProgress
-                size={20}
-              />
+              <CircularProgress className=" !text-white" size={20} />
             ) : (
               "Setup"
             )}
@@ -231,7 +222,7 @@ const Organisation = ({ item }) => {
               >
                 <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
                   {subscriptionLoading || subscriptionFetching ? (
-                    <CircularProgress CircularProgress size={20} />
+                    <CircularProgress size={20} />
                   ) : (
                     "Continue subscription"
                   )}
@@ -242,7 +233,7 @@ const Organisation = ({ item }) => {
               <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
                 <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
                   {subscriptionLoading || subscriptionFetching ? (
-                    <CircularProgress CircularProgress size={20} />
+                    <CircularProgress size={20} />
                   ) : (
                     "Go to Dashboard"
                   )}
@@ -305,7 +296,7 @@ const Organisation = ({ item }) => {
       </Dialog>
 
       <Dialog
-        open={editConfirmation}
+        open={editConfirmation !== null}
         onClose={handleCloseConfirmation}
         fullWidth
       >
