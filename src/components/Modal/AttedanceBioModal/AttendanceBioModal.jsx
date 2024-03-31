@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
-  Container,
-  TextField,
-  Typography,
   Button,
+  Container,
   Dialog,
   DialogActions,
   DialogContent,
+  TextField,
+  Typography,
 } from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const AttendanceBioModal = ({
   handleClose,
@@ -19,6 +19,10 @@ const AttendanceBioModal = ({
   const [emailSearch, setEmailSearch] = useState("");
   const [availableEmployee, setAvailableEmployee] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  console.log(
+    `🚀 ~ file: AttendanceBioModal.jsx:22 ~ setCurrentPage:`,
+    setCurrentPage
+  );
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const [checkedEmployees, setCheckedEmployees] = useState([]);

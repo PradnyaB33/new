@@ -21,7 +21,9 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useGetUser from "../../../hooks/Token/useUser";
 import ImageInput from "./image-input";
 const organizationSchema = z.object({
-  orgName: z.string(),
+  orgName: z
+    .string()
+    .max(32, { message: "Name must be at least 32 characters" }),
   foundation_date: z.string(),
   web_url: z.string(),
   industry_type: z.enum(["Technology", "Finance", "Healthcare", "Education"]),
