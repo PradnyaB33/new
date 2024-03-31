@@ -11,7 +11,7 @@ const useTrainingHook = (name) => {
   const getTrainingDetailsWithNameLimit10WithCreatorId = async () => {
     console.log("I am searching for training with name: ", name);
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/getTrainingWithNameLimit10/${decodedToken?.user?._id}?name=${name}`,
+      `${process.env.REACT_APP_API}/route/training/getTrainingDetailsWithNameLimit10WithCreatorId/${decodedToken?.user?._id}?name=${name}`,
       {
         headers: {
           Authorization: authToken,

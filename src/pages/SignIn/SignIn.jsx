@@ -75,8 +75,7 @@ const SignIn = () => {
 
     {
       onSuccess: async (response) => {
-        // Cookies.set("aegis", response.data.token);
-        Cookies.set("aegis", response.data.token, { expires: 1 / (24 * 60) });
+        Cookies.set("aegis", response.data.token, { expires: 4 / 24 });
         handleAlert(
           true,
           "success",
