@@ -27,20 +27,12 @@ const AuthInputFiled = ({
   placeholder,
   options,
   disabled,
-  daysOfWeek,
-  value,
-  wrapperMessage,
   min,
   max,
   className,
   visible,
   setVisible,
   center,
-  selectedDays,
-  setSelectedDays,
-  handleDaySelection,
-  isSelected,
-  handleOnChange,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
