@@ -26,7 +26,6 @@ const ImageInput = ({ field, caching = false }) => {
     displayImage(field.value);
   }
 
-  console.log(`🚀 ~ file: image-input.jsx:38 ~ selectedImage:`, selectedImage);
   return (
     <div
       className={`flex px-2 border-gray-200 border-[.5px] bg-[#f8f8ff59] py-[6px] items-center h-48 w-48 rounded-full justify-center hover:bg-[ghostwhite] cursor-pointer transition-all !bg-cover`}
