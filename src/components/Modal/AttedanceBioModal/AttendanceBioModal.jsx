@@ -1,19 +1,15 @@
 import {
   Button,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  Select,
-  FormLabel,
+  Container,
   Dialog,
   DialogActions,
   DialogContent,
-  MenuItem,
+  TextField,
+  Typography,
 } from "@mui/material";
-import React, { useContext, useState, useEffect } from "react";
-import { UseContext } from "../../../State/UseState/UseContext";
 import axios from "axios";
-import { Container, IconButton, TextField, Typography } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
+import { UseContext } from "../../../State/UseState/UseContext";
 
 const AttendanceBioModal = ({
   handleClose,
