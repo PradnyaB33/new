@@ -26,6 +26,7 @@ const AppDatePicker = ({
   const localizer = momentLocalizer(moment);
   const { handleAlert } = useContext(TestContext);
   const [newData, setNewData] = useState([]);
+  const [newLeave, setNewLeave] = useState([]);
   const queryClient = useQueryClient();
   const { cookies } = useContext(UseContext);
   const { setAppAlert } = useContext(UseContext);
@@ -51,6 +52,21 @@ const AppDatePicker = ({
         }
       );
       setNewData(resp.data.requests);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  const getLatestLeave = async () => {
+    try {
+      const resp = await axios.get(
+        `${process.env.REACT_APP_API}/route/leave/allLeaves`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setNewLeave(resp.data);
     } catch (error) {
       console.error(error.message);
     }
@@ -83,7 +99,6 @@ const AppDatePicker = ({
   const dayPropGetter = (date) => {
     const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "short" });
 
-    // Check if the current day is in the data? array
     const isDisabled = data2?.days?.days?.some((day) => {
       return day.day === dayOfWeek;
     });
@@ -101,6 +116,7 @@ const AppDatePicker = ({
 
   const handleSelectSlot = ({ start, end }) => {
     getLatestShifts();
+    getLatestLeave();
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
     const currentDate = moment(selectedStartDate);
@@ -121,6 +137,7 @@ const AppDatePicker = ({
     }
     if (newData && Array.isArray(newData)) {
       const isOverlapWithData = newData.some((event) => {
+        console.log(newData);
         const eventStartDate = moment(event.start);
         const eventEndDate = moment(event.end);
 
@@ -133,6 +150,25 @@ const AppDatePicker = ({
             moment(end).isSameOrAfter(eventEndDate))
         );
       });
+      if (newLeave && Array.isArray(newLeave)) {
+        console.log(newLeave);
+        const isOverlapWithDataLeave = newLeave.some((event) => {
+          const eventStartDate = moment(event.start);
+          const eventEndDate = moment(event.end);
+
+          return (
+            (moment(start).isSameOrAfter(eventStartDate) &&
+              moment(start).isBefore(eventEndDate)) ||
+            (moment(end).isAfter(eventStartDate) &&
+              moment(end).isSameOrBefore(eventEndDate)) ||
+            (moment(start).isSameOrBefore(eventStartDate) &&
+              moment(end).isSameOrAfter(eventEndDate))
+          );
+        });
+        if (isOverlapWithDataLeave) {
+          return handleAlert(true, "error", "Leave is requested in this slot");
+        }
+      }
 
       if (isOverlapWithData) {
         return handleAlert(
@@ -157,7 +193,7 @@ const AppDatePicker = ({
       return handleAlert(
         true,
         "warning",
-        "You have already selected this leave"
+        "You have already selected this shift"
       );
     } else {
       const newLeave = {

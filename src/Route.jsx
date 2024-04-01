@@ -79,6 +79,7 @@ import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
 import ParentNotification from "./pages/AllNotifications/page";
+import DocManage from "./pages/DocumentManagement/DocManage";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
 import RemoteSetup from "./pages/SetupPage/Remote/RemoteSetup";
@@ -86,6 +87,7 @@ import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import CustomCalander from "./pages/custom/Calendar";
 import LeaveNotification from "./pages/leave-notification/page";
 import PunchNotification from "./pages/punch-notification/page";
+import ShiftNotification from "./pages/shift-notification/page";
 
 const App = () => {
   return (
@@ -146,6 +148,7 @@ const App = () => {
         <Route path="/custom/calendar" element={<CustomCalander />} />
         <Route path="/remote/info/:Id" element={<RemoteManager />} />
         <Route path="/remote/notification" element={<RemoteNotification />} />
+        <Route path="/emp/docs" element={<DocManage />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route
           path="/billing"
@@ -160,6 +163,7 @@ const App = () => {
         {/* <Route path="/notification" element={<ParentNotification />} /> */}
         <Route path="/leave-notification" element={<LeaveNotification />} />
         <Route path="/punch-notification" element={<PunchNotification />} />
+        <Route path="/shift-notification" element={<ShiftNotification />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route
