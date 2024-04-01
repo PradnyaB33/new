@@ -46,7 +46,7 @@ const Step1 = ({ nextStep }) => {
     trainingStartDate: z.string(),
     trainingDuration: z.string(),
     trainingLocation: z.any({
-      description: z.string(),
+      address: z.string(),
       position: z.object({
         lat: z.number(),
         lng: z.number(),

@@ -8,6 +8,7 @@ const ParentNotification = () => {
   const { data, isLoading } = useLeaveNotificationHook();
   const { data: data2 } = useShiftNotification();
   const { data: data3 } = usePunchNotification();
+  console.log(`🚀 ~ file: page.jsx:11 ~ data:`, data);
 
   const dummyData = [
     {
