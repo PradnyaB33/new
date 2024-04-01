@@ -16,7 +16,6 @@ const TDSTable1 = () => {
   const user = getCurrentUser();
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
-  const [declarationData, setDeclarationData] = useState({});
 
   const [tableData, setTableData] = useState([
     {
@@ -111,18 +110,17 @@ const TDSTable1 = () => {
     setDeleteConfirmation(null);
   };
 
-  // const { setTotalHeads } = useOther();
   const { setGrossTotal, grossTotal, setDeclared } = useTDS();
-  const { handleSaveClick, handleDelete } = useIncomeAPI(
-    tableData,
-    user,
-    authToken,
-    handleAlert,
-    queryClient,
-    setEditStatus,
-    handleCloseConfirmation,
-    declarationData
-  );
+  const { handleSaveClick, handleDelete, setDeclarationData, declarationData } =
+    useIncomeAPI(
+      tableData,
+      user,
+      authToken,
+      handleAlert,
+      queryClient,
+      setEditStatus,
+      handleCloseConfirmation
+    );
 
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [pdf, setPdf] = useState(null);
@@ -221,15 +219,6 @@ const TDSTable1 = () => {
             (investment) => investment.name === item.name
           );
 
-          // if (item.name === "Income taxable under the head Salaries") {
-          //   return {
-          //     ...item,
-          //     amount: deduction,
-          //     status: "",
-          //     proof: "",
-          //   };
-          // }
-
           if (item.name === "Gross Salary") {
             return {
               ...item,
@@ -266,14 +255,12 @@ const TDSTable1 = () => {
 
   const handleAmountChange = (e, itemIndex) => {
     const newData = [...tableData];
-    // console.log({ amount: e.target.value, ...newData[itemIndex] });
-    // newData[itemIndex].proof = file;
-    setDeclarationData((prev) => ({
+
+    setDeclarationData({
+      ...newData[itemIndex],
       amount: e.target.value,
-      ...prev,
-    }));
+    });
   };
-  console.log(`🚀 ~ setDeclarationData:`, declarationData);
 
   const handleProofChange = (e, itemIndex) => {
     const file = e.target.files[0];
@@ -283,124 +270,11 @@ const TDSTable1 = () => {
       return;
     }
     const newData = [...tableData];
-    // newData[itemIndex].proof = file;
-    setDeclarationData(() => ({
-      proof: file,
+    setDeclarationData({
       ...newData[itemIndex],
-    }));
-    // setTableData(newData);
-  };
-
-  const uploadProof = async (tdsfile) => {
-    const data = await axios.get(
-      `${process.env.REACT_APP_API}/route/s3createFile/TDS`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: authToken,
-        },
-      }
-    );
-
-    await axios.put(data?.data?.url, tdsfile, {
-      headers: {
-        "Content-Type": tdsfile.type,
-      },
+      proof: file,
     });
-
-    return data?.data?.url?.split("?")[0];
   };
-
-  // const handleSaveClick = async (index) => {
-  //   const newData = [...tableData];
-  //   const value = newData[index];
-  //   let tdsfile = declarationData.proof;
-
-  //   try {
-  //     let uploadproof = "";
-
-  //     if (tdsfile) {
-  //       uploadproof = await uploadProof(tdsfile);
-  //     }
-  //     console.log(`🚀 ~ uploadproof:`, uploadproof);
-
-  //     let requestData = {
-  //       empId: user._id,
-  //       financialYear: "2023-2024",
-  //       requestData: {
-  //         name: value.name,
-  //         sectionname: "Salary",
-  //         status: "Pending",
-  //         declaration: value.amount,
-  //       },
-  //     };
-
-  //     if (uploadProof) {
-  //       requestData = {
-  //         empId: user._id,
-  //         financialYear: "2023-2024",
-  //         requestData: {
-  //           name: declarationData.name,
-  //           sectionname: "Salary",
-  //           status: "Pending",
-  //           declaration: declarationData.amount,
-  //           proof: uploadproof,
-  //         },
-  //       };
-  //     }
-  //     await axios.post(
-  //       `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
-  //       requestData,
-  //       {
-  //         headers: {
-  //           Authorization: authToken,
-  //         },
-  //       }
-  //     );
-
-  //     handleAlert(true, "success", `Data uploaded successfully`);
-  //     queryClient.invalidateQueries({ queryKey: ["Salary"] });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-
-  //   setEditStatus({ ...editStatus, [index]: null });
-  // };
-
-  // const handleDelete = async (index) => {
-  //   const newData = [...tableData];
-  //   const value = newData[index];
-  //   const requestData = {
-  //     empId: user._id,
-  //     financialYear: "2023-2024",
-  //     requestData: {
-  //       name: value.name,
-  //       sectionname: "Salary",
-  //       status: "Not Submitted",
-  //       declaration: 0,
-  //       proof: "",
-  //     },
-  //   };
-
-  //   try {
-  //     await axios.post(
-  //       `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
-  //       requestData,
-  //       {
-  //         headers: {
-  //           Authorization: authToken,
-  //         },
-  //       }
-  //     );
-
-  //     handleAlert(true, "success", `Data deleted successfully`);
-  //     queryClient.invalidateQueries({ queryKey: ["Salary"] });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-
-  //   handleCloseConfirmation();
-  // };
 
   const handleClose = (index) => {
     setEditStatus({
@@ -414,18 +288,17 @@ const TDSTable1 = () => {
         tableData={tableData}
         // isLoading={salaryFetching}
         handleAmountChange={handleAmountChange}
+        handleProofChange={handleProofChange}
         handleSaveClick={handleSaveClick}
         handleClose={handleClose}
         handleEditClick={handleEditClick}
         handleDeleteConfirmation={handleDeleteConfirmation}
-        handleProofChange={handleProofChange}
         handlePDF={handlePDF}
         editStatus={editStatus}
         declarationData={declarationData}
         setDeclarationData={setDeclarationData}
         salaryFetching={salaryFetching}
       />
-
       <ProofModel pdf={pdf} handleClosePDF={handleClosePDF} />
       <DeleteModel
         deleteConfirmation={deleteConfirmation}

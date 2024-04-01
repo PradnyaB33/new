@@ -12,46 +12,18 @@ import React from "react";
 
 const DeclarationTable = ({
   tableData,
-  //   handleAmountChange,
+  handleAmountChange,
   handleSaveClick,
   handleClose,
   handleEditClick,
   handleDeleteConfirmation,
-  //   handleProofChange,
+  handleProofChange,
   handlePDF,
   editStatus,
   declarationData,
   isLoading,
   salaryFetching,
-  setDeclarationData,
 }) => {
-  const handleAmountChange = (e, itemIndex) => {
-    const newData = [...tableData];
-    // console.log({ amount: e.target.value, ...newData[itemIndex] });
-    // newData[itemIndex].proof = file;
-    setDeclarationData((prev) => ({
-      amount: e.target.value,
-      ...prev,
-    }));
-  };
-  console.log(`🚀 ~ setDeclarationData:`, declarationData);
-
-  const handleProofChange = (e, itemIndex) => {
-    const file = e.target.files[0];
-
-    if (file.type !== "application/pdf") {
-      //   handleAlert(true, "error", "Uploaded file is not a PDF");
-      return;
-    }
-    const newData = [...tableData];
-    // newData[itemIndex].proof = file;
-    setDeclarationData(() => ({
-      proof: file,
-      ...newData[itemIndex],
-    }));
-    // setTableData(newData);
-  };
-
   return (
     <div>
       {salaryFetching ? (

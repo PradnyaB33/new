@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useState } from "react";
 
 const useIncomeAPI = (
   tableData,
@@ -9,9 +10,9 @@ const useIncomeAPI = (
   setEditStatus,
   handleCloseConfirmation,
   editStatus,
-  declarationData,
   sectionname
 ) => {
+  const [declarationData, setDeclarationData] = useState({});
   const uploadProof = async (tdsfile) => {
     const data = await axios.get(
       `${process.env.REACT_APP_API}/route/s3createFile/TDS`,
@@ -33,56 +34,55 @@ const useIncomeAPI = (
   };
 
   const handleSaveClick = async (index) => {
-    const newData = [...tableData];
     let tdsfile = declarationData?.proof;
     console.log(`🚀 ~ declarationData:`, declarationData);
 
-    // try {
-    //   let uploadproof = "";
+    try {
+      let uploadproof = "";
 
-    //   if (tdsfile) {
-    //     uploadproof = await uploadProof(tdsfile);
-    //   }
+      if (tdsfile) {
+        uploadproof = await uploadProof(tdsfile);
+      }
 
-    //   let requestData = {
-    //     empId: user._id,
-    //     financialYear: "2023-2024",
-    //     requestData: {
-    //       name: declarationData.name,
-    //       sectionname: sectionname,
-    //       status: "Pending",
-    //       declaration: declarationData.amount,
-    //     },
-    //   };
+      let requestData = {
+        empId: user._id,
+        financialYear: "2023-2024",
+        requestData: {
+          name: declarationData.name,
+          sectionname: sectionname,
+          status: "Pending",
+          declaration: declarationData.amount,
+        },
+      };
 
-    //   if (uploadProof) {
-    //     requestData = {
-    //       empId: user._id,
-    //       financialYear: "2023-2024",
-    //       requestData: {
-    //         name: declarationData.name,
-    //         sectionname: "Salary",
-    //         status: "Pending",
-    //         declaration: declarationData.amount,
-    //         proof: uploadproof,
-    //       },
-    //     };
-    //   }
-    //   await axios.post(
-    //     `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
-    //     requestData,
-    //     {
-    //       headers: {
-    //         Authorization: authToken,
-    //       },
-    //     }
-    //   );
+      if (uploadProof) {
+        requestData = {
+          empId: user._id,
+          financialYear: "2023-2024",
+          requestData: {
+            name: declarationData.name,
+            sectionname: "Salary",
+            status: "Pending",
+            declaration: declarationData.amount,
+            proof: uploadproof,
+          },
+        };
+      }
+      await axios.post(
+        `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
+        requestData,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
 
-    //   handleAlert(true, "success", `Data uploaded successfully`);
-    //   queryClient.invalidateQueries({ queryKey: ["Salary"] });
-    // } catch (error) {
-    //   console.log(error);
-    // }
+      handleAlert(true, "success", `Data uploaded successfully`);
+      queryClient.invalidateQueries({ queryKey: ["Salary"] });
+    } catch (error) {
+      console.log(error);
+    }
 
     setEditStatus({ ...editStatus, [index]: null });
   };
@@ -122,7 +122,7 @@ const useIncomeAPI = (
     handleCloseConfirmation();
   };
 
-  return { handleSaveClick, handleDelete };
+  return { handleSaveClick, handleDelete, setDeclarationData, declarationData };
 };
 
 export default useIncomeAPI;
