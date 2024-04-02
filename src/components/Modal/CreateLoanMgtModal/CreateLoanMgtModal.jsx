@@ -225,12 +225,11 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                     const amount = e.target.value;
                     if (amount >= 0 || amount === "") {
                       if (amount <= maxLoanValue) {
-                        // Clear error if amount is valid
                         setError("");
                         setLoanAmount(amount);
                       } else {
                         setError(
-                          "Loan amount cannot exceed the maximum allowed value."
+                          "You cannot take the loan amount greater than maximum loan value."
                         );
                       }
                     }
