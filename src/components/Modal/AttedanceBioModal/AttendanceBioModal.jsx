@@ -22,19 +22,11 @@ const AttendanceBioModal = ({
   const [emailSearch, setEmailSearch] = useState("");
   const [availableEmployee, setAvailableEmployee] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  console.log(
-    `🚀 ~ file: AttendanceBioModal.jsx:22 ~ setCurrentPage:`,
-    setCurrentPage
-  );
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const [checkedEmployees, setCheckedEmployees] = useState([]);
 
-  useEffect(() => {
-    fetchAvailableEmployee(currentPage);
-    // eslint-disable-next-line
-  }, [currentPage]);
-
+  // pull employee
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
@@ -88,7 +80,17 @@ const AttendanceBioModal = ({
   };
   console.log(checkedEmployees);
   console.log(selectedEmployees);
-  const handleSync = () => {};
+
+  const handleSync = () => {
+    const syncedData = selectedEmployees.map((employee) => ({
+      empId: employee[0],
+      date: employee[3],
+      punchingTime: employee[4],
+      punchingStatus: employee[5],
+    }));
+    console.log("syncedData", syncedData);
+  };
+
   return (
     <Dialog
       PaperProps={{
