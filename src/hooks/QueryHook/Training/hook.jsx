@@ -4,14 +4,13 @@ import useGetUser from "../../Token/useUser";
 import useDebounce from "./hook/useDebounce";
 
 const useTrainingHook = (name) => {
-  console.log(`🚀 ~ file: hook.jsx:7 ~ name:`, name);
   const { decodedToken, authToken } = useGetUser();
   const debouncedSearchTerm = useDebounce(name, 500);
 
   const getTrainingDetailsWithNameLimit10WithCreatorId = async () => {
     console.log("I am searching for training with name: ", name);
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/getTrainingWithNameLimit10/${decodedToken?.user?._id}?name=${name}`,
+      `${process.env.REACT_APP_API}/route/training/getTrainingDetailsWithNameLimit10WithCreatorId/${decodedToken?.user?._id}?name=${name}`,
       {
         headers: {
           Authorization: authToken,

@@ -1,8 +1,22 @@
+<<<<<<< HEAD
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import React, { useContext, useState, useEffect } from "react";
 import { UseContext } from "../../../State/UseState/UseContext";
 import axios from "axios";
 import { Container, TextField, Typography } from "@mui/material";
+=======
+import {
+  Button,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  TextField,
+  Typography,
+} from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+>>>>>>> 35b594e112c31e78c7a387f4b1ef54620a9fdf3e
 
 const AttendanceBioModal = ({
   handleClose,
@@ -15,8 +29,21 @@ const AttendanceBioModal = ({
   const [emailSearch, setEmailSearch] = useState("");
   const [availableEmployee, setAvailableEmployee] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  console.log(
+    `🚀 ~ file: AttendanceBioModal.jsx:22 ~ setCurrentPage:`,
+    setCurrentPage
+  );
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
+<<<<<<< HEAD
+=======
+  const [checkedEmployees, setCheckedEmployees] = useState([]);
+
+  useEffect(() => {
+    fetchAvailableEmployee(currentPage);
+    // eslint-disable-next-line
+  }, [currentPage]);
+>>>>>>> 35b594e112c31e78c7a387f4b1ef54620a9fdf3e
 
   const fetchAvailableEmployee = async (page) => {
     try {

@@ -24,7 +24,13 @@ const MiniForm = () => {
     console.log(data);
     mutate(data.name);
   };
+
   const { data, isLoading, error } = useTrainingHook(watch("name"));
+  console.log(`🚀 ~ file: mini-form.jsx:29 ~ { data, isLoading, error }:`, {
+    data,
+    isLoading,
+    error,
+  });
 
   return (
     <div>
