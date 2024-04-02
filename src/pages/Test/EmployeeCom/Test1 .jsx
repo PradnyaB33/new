@@ -134,7 +134,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             icon={Person}
             control={control}
             type="text"
-            placeholder="Jhon"
+            placeholder="john"
             label="Employee First Name *"
             errors={errors}
             error={errors.first_name}

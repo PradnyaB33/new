@@ -1,6 +1,7 @@
 import {
   AddLocationAltOutlined,
   ManageAccountsOutlined,
+  SchoolOutlined,
   SellOutlined,
 } from "@mui/icons-material";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
@@ -168,6 +169,23 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/remote-punching`,
+      isVisible: data?.plan?.item?.name === "Aegis Intermediate Plan",
+    },
+    {
+      label: "Training",
+      icon: SchoolOutlined,
+      href: `/organisation/${organisationId}/setup/training`,
+      active:
+        location.pathname === `/organisation/${organisationId}/setup/training`,
+      isVisible: data?.plan?.item?.name === "Aegis Intermediate Plan",
+    },
+    {
+      label: "Performance Management",
+      icon: SellOutlined,
+      href: `/organisation/${organisationId}/setup/performance-management`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/performance-management`,
       isVisible: data?.plan?.item?.name === "Aegis Intermediate Plan",
     },
   ];

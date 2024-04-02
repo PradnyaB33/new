@@ -1,3 +1,4 @@
+import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import { Checkbox, FormControlLabel, Skeleton, Switch } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -5,8 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import Setup from "../../SetUpOrganization/Setup";
-import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
+import Setup from "../Setup";
 const AddRoles = () => {
   const { organisationId } = useParams("");
   const { cookies } = useContext(UseContext);

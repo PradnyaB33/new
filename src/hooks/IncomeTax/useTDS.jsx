@@ -31,7 +31,6 @@ const useTDS = create((set) => ({
     set({ salaryTax });
   },
   setDeclared: (data) => {
-    console.log(data);
     set({
       declared: data.declared,
       pending: data.pending,

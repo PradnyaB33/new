@@ -204,6 +204,7 @@ const DeclarationPage = () => {
                     </p>
                   </div>
                 </div>
+
                 <div className=" px-4 ">
                   <table className=" table-auto border  border-collapse min-w-full bg-white  text-left  !text-sm font-light">
                     <thead className="border-b bg-gray-100  font-bold">

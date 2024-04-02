@@ -1,4 +1,4 @@
-import { AccountCircle, PersonOutline } from "@mui/icons-material";
+import { PersonOutline } from "@mui/icons-material";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Divider } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
@@ -64,15 +64,7 @@ export default function ProfileIcon() {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        {data?.user_logo_url ? (
-          <Avatar>
-            <img src={data?.user_logo_url} alt="" />
-          </Avatar>
-        ) : (
-          <Avatar className="!bg-[#1976d2]">
-            <AccountCircle className="!text-white" />
-          </Avatar>
-        )}
+        <Avatar src={data?.user_logo_url} />
       </IconButton>
       <Menu
         id="basic-menu"

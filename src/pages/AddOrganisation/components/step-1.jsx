@@ -21,13 +21,21 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useGetUser from "../../../hooks/Token/useUser";
 import ImageInput from "./image-input";
 const organizationSchema = z.object({
-  orgName: z.string(),
+  orgName: z
+    .string()
+    .max(32, { message: "Name must be at least 32 characters" }),
   foundation_date: z.string(),
   web_url: z.string(),
   industry_type: z.enum(["Technology", "Finance", "Healthcare", "Education"]),
   email: z.string().email(),
   organization_linkedin_url: z.string(),
-  location: z.string(),
+  location: z.any({
+    address: z.string(),
+    position: z.object({
+      lat: z.number(),
+      lng: z.number(),
+    }),
+  }),
   contact_number: z
     .string()
     .max(10, { message: "contact number must be 10 digits" })
@@ -60,7 +68,7 @@ const Step1 = ({ nextStep }) => {
     isTrial,
   } = useOrg();
 
-  const { control, formState, handleSubmit } = useForm({
+  const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
       orgName: orgName,
       foundation_date: foundation_date,
@@ -136,8 +144,8 @@ const Step1 = ({ nextStep }) => {
             icon={Link}
             control={control}
             type="text"
-            placeholder="Web Url "
-            label="Web Url  *"
+            placeholder="Web URL "
+            label="Web URL  *"
             errors={errors}
             error={errors.web_url}
           />
@@ -146,8 +154,8 @@ const Step1 = ({ nextStep }) => {
             icon={FaLinkedin}
             control={control}
             type="text"
-            placeholder="LinkedIn Url "
-            label="LinkedIn Url  *"
+            placeholder="LinkedIn URL "
+            label="LinkedIn URL  *"
             errors={errors}
             error={errors.organization_linkedin_url}
           />
@@ -198,14 +206,16 @@ const Step1 = ({ nextStep }) => {
             error={errors.description}
           />
           <AuthInputFiled
+            className="w-full"
             name="location"
             icon={LocationOn}
             control={control}
-            type="not-select"
-            placeholder="Location Address "
-            label="Location Address  *"
+            placeholder="eg. Kathmandu, Nepal"
+            type="location-picker"
+            label="Location *"
             errors={errors}
             error={errors.location}
+            value={watch("location")}
           />
           <div className=" mt-7">
             <AuthInputFiled

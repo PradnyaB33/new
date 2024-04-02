@@ -1,16 +1,16 @@
-import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormControl, InputLabel, TextField } from "@mui/material";
-import { useForm, Controller } from "react-hook-form";
-import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
-import { z } from "zod";
-import useHook from "./Component/useHook";
-import Select from "@mui/material/Select";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Radio from "@mui/material/Radio";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import RadioGroup from "@mui/material/RadioGroup";
-import FormLabel from "@mui/material/FormLabel";
+import Select from "@mui/material/Select";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
+import useHook from "./Component/useHook";
 
 const AddEmployee = () => {
   const passwordRegex =
@@ -135,7 +135,7 @@ const AddEmployee = () => {
                 name="first_name"
                 control={control}
                 type="text"
-                placeholder="jhon"
+                placeholder="john"
                 label="First Name *"
                 errors={errors}
                 error={errors.first_name}

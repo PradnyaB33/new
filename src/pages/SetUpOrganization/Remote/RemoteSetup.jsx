@@ -2,7 +2,7 @@ import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import { Skeleton } from "@mui/material";
 import React from "react";
 import { useParams } from "react-router";
-import Setup from "../../SetUpOrganization/Setup";
+import Setup from "../Setup";
 
 import useSetupRemotePunching from "../../../hooks/QueryHook/Setup/remote-punching";
 import MiniForm from "./components/mini-form";
