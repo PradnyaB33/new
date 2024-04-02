@@ -446,12 +446,12 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     availabelDepartment,
     availabelDesignation,
   ]);
-
+  console.log("mgrempid", mgrempid);
   // update the data of employee
   const EditEmployeeData = useMutation(
     (data) =>
       axios.put(
-        `${process.env.REACT_APP_API}/route/employee/update/${employeeId}`,
+        `${process.env.REACT_APP_API}/route/employee/update/${organisationId}/${employeeId}`,
         data,
         {
           headers: {
