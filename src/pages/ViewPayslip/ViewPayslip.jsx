@@ -127,7 +127,10 @@ const ViewPayslip = () => {
                       </p>
                       <p className="text-lg flex items-center">
                         <span className=" mr-1">Location :</span>
-                        <span> {organisationInfo?.location || ""}</span>
+                        <span>
+                          {" "}
+                          {organisationInfo?.location?.address || ""}
+                        </span>
                       </p>
                       <p className="text-lg flex items-center">
                         <span className="mr-1">Contact No :</span>
