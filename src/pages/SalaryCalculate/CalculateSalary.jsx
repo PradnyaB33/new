@@ -54,6 +54,8 @@ function CalculateSalary() {
     // eslint-disable-next-line
   }, []);
 
+  console.log(availableEmployee);
+
   const fetchHoliday = async () => {
     try {
       const response = await axios.get(
@@ -91,131 +93,6 @@ function CalculateSalary() {
     return holidaysInCurrentMonth.length;
   };
   let publicHolidaysCount = countPublicHolidaysInCurrentMonth();
-
-  // pull weekend based on organization id
-  // const fetchWeekend = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       `${process.env.REACT_APP_API}/route/weekend/get/${organisationId}`,
-  //       {
-  //         headers: {
-  //           Authorization: token,
-  //         },
-  //       }
-  //     );
-  //     setWeekend(response.data.days);
-  //   } catch (error) {
-  //     console.error(error);
-  //     handleAlert(true, "error", "Failed to fetch Weekend");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchWeekend();
-  //   // eslint-disable-next-line
-  // }, []);
-
-  // const getWeekendbyOrganization = weekend
-  //   .map((item) => item.days.map((dayItem) => dayItem.day))
-  //   .flat();
-
-  // // get the weekend count in that organization
-  // const countWeekendDaysInMonth = () => {
-  //   const selectedMonth = dayjs(selectedDate);
-  //   const daysInMonth = selectedMonth.daysInMonth();
-  //   let weekendCount = 0;
-  //   for (let i = 1; i <= daysInMonth; i++) {
-  //     const currentDate = selectedMonth.date(i);
-  //     const dayOfWeek = currentDate.format("ddd");
-  //     if (getWeekendbyOrganization.includes(dayOfWeek)) {
-  //       // If the day falls on a weekend day defined by the organization
-  //       weekendCount++;
-  //     }
-  //   }
-  //   return weekendCount;
-  // };
-
-  // // Call the function to count weekend days in the selected month
-  // const weekendCount = countWeekendDaysInMonth();
-
-  // get employee salary calculation day based on organization id
-  // const fetchEmpSalCalculationDay = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       `${process.env.REACT_APP_API}/route/employee-salary-cal-day/get/${organisationId}`,
-  //       {
-  //         headers: {
-  //           Authorization: token,
-  //         },
-  //       }
-  //     );
-  //     setEmpSalSelectDay(response.data.empSalaryCalDayData);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   fetchEmpSalCalculationDay();
-  //   // eslint-disable-next-line
-  // }, []);
-
-  // // let empSalCalDay = empSalarySelectDay[0]?.selectedDay || "";
-  // const getActualDate = (keyword) => {
-  //   const today = new Date();
-  //   let targetDate;
-
-  //   // Increase the month by 1 to get the next month
-  //   const nextMonth = (today.getMonth() + 1) % 12;
-  //   const year = today.getFullYear() + Math.floor((today.getMonth() + 1) / 12);
-
-  //   switch (keyword) {
-  //     case "first_day_of_next_month":
-  //       targetDate = new Date(year, nextMonth, 1);
-  //       break;
-  //     case "second_day_of_next_month":
-  //       targetDate = new Date(year, nextMonth, 2);
-  //       break;
-  //     case "third_day_of_next_month":
-  //       targetDate = new Date(year, nextMonth, 3);
-  //       break;
-  //     case "fourth_day_of_next_month":
-  //       targetDate = new Date(year, nextMonth, 4);
-  //       break;
-  //     case "fifth_day_of_next_month":
-  //       targetDate = new Date(year, nextMonth, 5);
-  //       break;
-  //     case "sixth_day_of_next_month":
-  //       targetDate = new Date(year, nextMonth, 6);
-  //       break;
-  //     case "seventh_day_of_next_month":
-  //       targetDate = new Date(year, nextMonth, 7);
-  //       break;
-  //     case "eighth_day_of_next_month":
-  //       targetDate = new Date(year, nextMonth, 8);
-  //       break;
-  //     case "ninth_day_of_next_month":
-  //       targetDate = new Date(year, nextMonth, 9);
-  //       break;
-  //     case "tenth_day_of_next_month":
-  //       targetDate = new Date(year, nextMonth, 10);
-  //       break;
-  //     case "last_day_of_current_month":
-  //       targetDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-  //       break;
-
-  //     default:
-  //       targetDate = null;
-  //       break;
-  //   }
-
-  //   return targetDate
-  //     ? `${targetDate.getDate()}/${
-  //         targetDate.getMonth() + 1
-  //       }/${targetDate.getFullYear()}`
-  //     : "Invalid keyword";
-  // };
-
-  // let emp_sal_cal_date = getActualDate(empSalCalDay);
 
   const fetchDataAndFilter = async () => {
     try {
@@ -524,7 +401,10 @@ function CalculateSalary() {
           </p>
           <p className="text-lg flex items-center">
             <span className=" mr-1">Location :</span>
-            <span>{availableEmployee?.organizationId?.location || ""}</span>
+            <span>
+              {" "}
+              {availableEmployee?.organizationId?.location?.address || ""}
+            </span>
           </p>
           <p className="text-lg flex items-center">
             <span className="mr-1">Contact No :</span>
@@ -560,9 +440,9 @@ function CalculateSalary() {
               <td class="px-4 py-2 border">Date Of Joining:</td>
               <td class="px-4 py-2 border">
                 {availableEmployee?.joining_date
-                  ? new Date(availableEmployee.joining_date).toLocaleDateString(
-                      "en-GB"
-                    )
+                  ? new Date(
+                      availableEmployee?.joining_date
+                    ).toLocaleDateString("en-GB")
                   : ""}
               </td>
             </tr>
