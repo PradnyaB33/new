@@ -29,6 +29,7 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
   const EmpLoanMgtSchema = z.object({
     loanName: z.string(),
     loanValue: z.string(),
+    maxLoanValue: z.string(),
     rateOfInterest: z.string(),
   });
 
@@ -40,6 +41,7 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
     defaultValues: {
       loanName: undefined,
       loanValue: undefined,
+      maxLoanValue: undefined,
       rateOfInterest: undefined,
     },
     resolver: zodResolver(EmpLoanMgtSchema),
@@ -117,10 +119,23 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
                   icon={AttachMoney}
                   control={control}
                   type="number"
-                  placeholder="Loan Value"
-                  label="Loan Value *"
+                  placeholder="Minimum Loan Value"
+                  label="Minimum Loan Value *"
                   errors={errors}
                   error={errors.loanValue}
+                />
+              </div>
+
+              <div className="space-y-2 ">
+                <AuthInputFiled
+                  name="maxLoanValue"
+                  icon={AttachMoney}
+                  control={control}
+                  type="number"
+                  placeholder="Maximum Loan Value"
+                  label="Maximum Loan Value *"
+                  errors={errors}
+                  error={errors.maxLoanValue}
                 />
               </div>
 

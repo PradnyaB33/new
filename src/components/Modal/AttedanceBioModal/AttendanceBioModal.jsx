@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import React, { useContext, useState, useEffect } from "react";
 import { UseContext } from "../../../State/UseState/UseContext";
-import axios from "axios";
-import { Container, TextField, Typography } from "@mui/material";
-=======
 import {
   Button,
   Container,
@@ -15,8 +10,6 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
->>>>>>> 35b594e112c31e78c7a387f4b1ef54620a9fdf3e
 
 const AttendanceBioModal = ({
   handleClose,
@@ -35,15 +28,12 @@ const AttendanceBioModal = ({
   );
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
-<<<<<<< HEAD
-=======
   const [checkedEmployees, setCheckedEmployees] = useState([]);
 
   useEffect(() => {
     fetchAvailableEmployee(currentPage);
     // eslint-disable-next-line
   }, [currentPage]);
->>>>>>> 35b594e112c31e78c7a387f4b1ef54620a9fdf3e
 
   const fetchAvailableEmployee = async (page) => {
     try {
@@ -88,7 +78,6 @@ const AttendanceBioModal = ({
     fetchAvailableEmployee(id);
   };
 
-  const [checkedEmployees, setCheckedEmployees] = useState([]);
   const handleCheckEmp = (employeeId) => {
     const isChecked = checkedEmployees.includes(employeeId);
     if (isChecked) {
