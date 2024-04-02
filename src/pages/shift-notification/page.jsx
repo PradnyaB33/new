@@ -2,8 +2,9 @@ import React from "react";
 import ShiftRejectModel from "../../components/Modal/ShiftRequestModal/ShiftRejectModel";
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
 
-const PunchNotification = () => {
+const ShiftNotification = () => {
   const { data } = useShiftNotification();
+  console.log(data);
   return (
     <div>
       {data?.map((items, idx) => {
@@ -13,4 +14,4 @@ const PunchNotification = () => {
   );
 };
 
-export default PunchNotification;
+export default ShiftNotification;
