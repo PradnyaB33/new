@@ -74,12 +74,10 @@ const EmpInfoPunchStatus = () => {
   };
 
   const handleEmployeeSelect = (index) => {
-    const updatedEmployees = [...selectedEmployees];
-    updatedEmployees[index] = {
-      ...currentItems[index],
-      selected: !currentItems[index].selected,
-    };
-    setSelectedEmployees(updatedEmployees.filter((employee) => employee));
+    const selectedEmployee = tableData.find(
+      (employee) => employee[0] === currentItems[index][0]
+    );
+    setSelectedEmployees((prevSelected) => [...prevSelected, selectedEmployee]);
   };
 
   console.log("selected employee", selectedEmployees);

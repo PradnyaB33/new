@@ -29,7 +29,13 @@ const organizationSchema = z.object({
   industry_type: z.enum(["Technology", "Finance", "Healthcare", "Education"]),
   email: z.string().email(),
   organization_linkedin_url: z.string(),
-  location: z.string(),
+  location: z.any({
+    address: z.string(),
+    position: z.object({
+      lat: z.number(),
+      lng: z.number(),
+    }),
+  }),
   contact_number: z
     .string()
     .max(10, { message: "contact number must be 10 digits" })
@@ -62,7 +68,7 @@ const Step1 = ({ nextStep }) => {
     isTrial,
   } = useOrg();
 
-  const { control, formState, handleSubmit } = useForm({
+  const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
       orgName: orgName,
       foundation_date: foundation_date,
@@ -200,14 +206,16 @@ const Step1 = ({ nextStep }) => {
             error={errors.description}
           />
           <AuthInputFiled
+            className="w-full"
             name="location"
             icon={LocationOn}
             control={control}
-            type="not-select"
-            placeholder="Location Address "
-            label="Location Address  *"
+            placeholder="eg. Kathmandu, Nepal"
+            type="location-picker"
+            label="Location *"
             errors={errors}
             error={errors.location}
+            value={watch("location")}
           />
           <div className=" mt-7">
             <AuthInputFiled

@@ -387,6 +387,19 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
+      Records: {
+        open: false,
+        isVisible: ["Employee", "Manager"].includes(role),
+        icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
+        routes: [
+          {
+            key: "empDocs",
+            link: "/emp/docs",
+            icon: <PanToolAlt className=" !text-[1.2em] text-[#67748E]" />,
+            text: "My Record",
+          },
+        ],
+      },
     }),
     // eslint-disable-next-line
     [isVisible, orgId]

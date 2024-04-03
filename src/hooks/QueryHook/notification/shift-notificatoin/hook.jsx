@@ -35,7 +35,7 @@ const useShiftNotification = () => {
   };
 
   const { data, isLoading, isFetching } = useQuery(
-    "punch-request",
+    "shift-request",
     getShiftNotification
   );
   return {

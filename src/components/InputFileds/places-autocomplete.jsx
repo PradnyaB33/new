@@ -18,8 +18,10 @@ const PlaceAutoComplete = ({
   placeholder,
   errors,
   apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+  value,
 }) => {
   const data = useGetCurrentLocation();
+  const [state, setState] = useState(value?.address || "");
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const handleSelect = async (option, onChange) => {
     console.log(`🚀 ~ file: places-autocomplete.jsx:25 ~ option:`, option);
@@ -86,12 +88,9 @@ const PlaceAutoComplete = ({
               >
                 {Icon && <Icon className="text-gray-700" />}
                 <PlacesAutocomplete
-                  value={field?.value?.address}
+                  value={state}
                   onChange={(value) => {
-                    field?.onChange({
-                      ...field?.value,
-                      address: value,
-                    });
+                    setState(value);
                   }}
                 >
                   {({ getInputProps, suggestions, loading }) => {

@@ -10,7 +10,7 @@ import {
   DialogContent,
   MenuItem,
 } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import useLaonState from "../../../hooks/LoanManagemet/useLaonState";
 import useLoanQuery from "../../../hooks/LoanManagemet/useLoanQuery";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -30,6 +30,8 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
   const authToken = cookies["aegis"];
   const [error, setError] = useState("");
   const [errors, setErrors] = useState("");
+  const [loanValue, setLoanValue] = useState(0);
+  const [maxLoanValue, setMaxLoanValue] = useState(0);
   const {
     loanType,
     rateOfIntereset,
@@ -52,6 +54,20 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     totalAmountWithSimpleInterest,
     handleNoOfEmiChange,
   } = useCalculation();
+
+  useEffect(() => {
+    if (loanType) {
+      const selectedLoanType = getEmployeeLoanType.find(
+        (item) => item._id === loanType
+      );
+      if (selectedLoanType) {
+        setLoanValue(selectedLoanType.loanValue);
+        setMaxLoanValue(selectedLoanType.maxLoanValue);
+      }
+    }
+  }, [loanType, getEmployeeLoanType]);
+  console.log(" minimum loan value ", loanValue);
+  console.log(" Max loan value ", maxLoanValue);
 
   const queryClient = useQueryClient();
   const AddLoanData = useMutation(
@@ -147,7 +163,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     >
       <div className="flex w-full justify-between py-4 items-center  px-4">
         <h1 className="text-xl pl-2 font-semibold font-sans">
-          Apply for loans
+          Apply For Loans
         </h1>
       </div>
 
@@ -176,22 +192,21 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   )}
                 </Select>
               </FormControl>
-              {error && <p className="text-red-500">*{error}</p>}
             </div>
 
-            <div className="space-y-2 ">
+            <div className="space-y-2">
               <FormControl
                 size="small"
                 sx={{ width: "100%" }}
                 variant="outlined"
               >
-                <InputLabel sx={{ minWidth: "120px" }}>
+                <InputLabel sx={{ minWidth: "150px", marginBottom: "8px" }}>
                   Rate of interest
                 </InputLabel>
                 <OutlinedInput
                   value={rateOfIntereset}
                   label="Rate of interest"
-                  sx={{ minWidth: "120px" }}
+                  sx={{ minWidth: "150px", width: "100%" }}
                 />
               </FormControl>
             </div>
@@ -209,7 +224,14 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   onChange={(e) => {
                     const amount = e.target.value;
                     if (amount >= 0 || amount === "") {
-                      setLoanAmount(amount);
+                      if (amount <= maxLoanValue) {
+                        setError("");
+                        setLoanAmount(amount);
+                      } else {
+                        setError(
+                          "You cannot take the loan amount greater than maximum loan value."
+                        );
+                      }
                     }
                   }}
                   id="outlined-adornment-password"
@@ -218,6 +240,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   inputProps={{ min: "0" }}
                 />
               </FormControl>
+              {error && <p className="text-red-500">*{error}</p>}
             </div>
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
