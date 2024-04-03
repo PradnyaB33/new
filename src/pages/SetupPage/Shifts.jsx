@@ -32,7 +32,6 @@ const Shifts = () => {
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
 
-  const [error, setError] = useState("");
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
 
   const [open, setOpen] = React.useState(false);
