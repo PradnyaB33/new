@@ -124,7 +124,7 @@ const DeclarationPage = () => {
                 <input
                   type={"test"}
                   onChange={(e) => setSearchEmp(e.target.value)}
-                  placeholder={"Search Employee by name"}
+                  placeholder={"Search Employee"}
                   className={`border-none bg-white w-full outline-none px-2  `}
                 />
               </div>
@@ -319,7 +319,7 @@ const DeclarationPage = () => {
           ) : (
             <div className="flex px-4 w-full items-center my-4">
               <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
-                <Info /> Select Employee First to view his declarations
+                <Info /> Select employee to see their declarations
               </h1>
 
               {/* <img

@@ -1,13 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Abc, Description, Money } from "@mui/icons-material";
-import {
-  Badge,
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-} from "@mui/material";
+import { Badge, Box, Button, CircularProgress, Modal } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -27,6 +20,15 @@ export let salaryComponentArray = [
   { label: "Food allowance", value: "Food allowance" },
   { label: "Sales allowance", value: "Sales allowance" },
 ];
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "background.paper",
+  p: 4,
+};
 
 const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   const { handleAlert } = useContext(TestContext);
@@ -207,28 +209,22 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   );
 
   return (
-    <Dialog
-      PaperProps={{
-        sx: {
-          width: "100%",
-          maxWidth: "800px!important",
-          height: "100%",
-          maxHeight: "85vh!important",
-        },
-      }}
+    <Modal
       open={open}
       onClose={handleClose}
-      className="w-full"
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <div className="flex w-full justify-between py-4 items-center  px-4">
-        <h1 className="text-xl pl-2 font-semibold font-sans">
-          {salaryId ? "Edit Salary Template" : "Create Salary Template"}
-        </h1>
-      </div>
+      <Box
+        sx={style}
+        className="border-none !z-10 !pt-0 !px-0 !w-[90%] lg:!w-[50%] md:!w-[60%] shadow-md outline-none rounded-md"
+      >
+        <div className="flex w-full justify-between py-4 items-center  px-4">
+          <h1 className="text-xl pl-2 font-semibold font-sans">
+            {salaryId ? "Edit Salary Template" : "Create Salary Template"}
+          </h1>
+        </div>
 
-      <DialogContent className="border-none  !pt-0 !px-0  shadow-md outline-none rounded-md">
         {isFetching ? (
           <CircularProgress />
         ) : (
@@ -241,7 +237,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
               icon={Abc}
               control={control}
               type="text"
-              placeholder="test temp"
+              placeholder="Template Name"
               label="Enter Template Name *"
               readOnly={false}
               maxLimit={15}
@@ -253,7 +249,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
               icon={Description}
               control={control}
               type="textarea"
-              placeholder="test temp"
+              placeholder="Description"
               label="Enter Description"
               readOnly={false}
               maxLimit={15}
@@ -271,7 +267,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
               })}
               control={control}
               type="select"
-              placeholder="test temp"
+              placeholder="Employment Type"
               label="Select Employment Type "
               readOnly={false}
               maxLimit={15}
@@ -291,7 +287,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
               error={errors.salaryStructure}
             />
 
-            <DialogActions sx={{ justifyContent: "end" }}>
+            <div className="flex justify-end gap-2">
               <Button onClick={handleClose} color="error" variant="outlined">
                 Cancel
               </Button>
@@ -323,11 +319,11 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
                   )}
                 </Button>
               )}
-            </DialogActions>
+            </div>
           </form>
         )}
-      </DialogContent>
-    </Dialog>
+      </Box>
+    </Modal>
   );
 };
 

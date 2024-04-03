@@ -30,33 +30,33 @@ const IncomeTax = () => {
           Income Tax
         </header>
 
-        <div className="px-8 pt-6 space-y-4">
+        <div className="md:px-8 px-4 pt-6 space-y-4">
           <h1 className="pb-2 text-2xl ">Welcome to Income Tax Declaration</h1>
 
           <div className="bg-white border-[.5px] border-gray-200 p-4">
-            <div className="mb-4 flex justify-between items-center pr-2   w-full space-y-3">
+            <div className="mb-4 md:flex-row flex-col flex justify-between items-start md:items-center pr-2   w-full space-y-3">
               <h1 className="text-[1.2em]  text-gray-500">
-                TDS Declarations and others
+                TDS Declarations and Others
               </h1>
               <button
                 onClick={handleOpen}
                 className="flex !p-0 h-max !m-0  gap-2 text-blue-500"
               >
                 <Settings />
-                Change Regime settings
+                Change regime settings
               </button>
             </div>
 
-            <article className="flex gap-4 items-center">
+            <article className="flex flex-wrap gap-4 items-center">
               <Link
                 to={"/income-tax/calculation"}
                 className="hover:scale-[1.02] transition-all"
               >
-                <div className="flex-col w-[225px]  border-[.5px] border-gray-200 gap-3 flex items-center px-4 py-6 rounded-md shadow-sm">
+                <div className="flex-col w-[225px]  border-[.5px] border-gray-200 gap-3 flex items-center md:px-4 px-2 md:py-6 py-4 rounded-md shadow-sm">
                   <Avatar className="!bg-green-500">
                     <Calculate />
                   </Avatar>
-                  <h1 className="text-lg">TDS Calculation</h1>
+                  <h1 className="text-lg">TDS calculation</h1>
                 </div>
               </Link>
 
@@ -64,7 +64,7 @@ const IncomeTax = () => {
                 to={"/income-tax/declarations"}
                 className="hover:scale-[1.02] transition-all"
               >
-                <div className="flex-col w-[225px]  border-[.5px] border-gray-200 gap-3 flex items-center px-4 py-6 rounded-sm shadow-sm">
+                <div className="flex-col w-[225px]  border-[.5px] border-gray-200 gap-3 flex items-center md:px-4 px-2 md:py-6 py-4  rounded-sm shadow-sm">
                   <Avatar className="!bg-blue-500">
                     <Check />
                   </Avatar>
@@ -77,9 +77,7 @@ const IncomeTax = () => {
           {role === "Accountant" && (
             <div className="bg-white border-[.5px] border-gray-200 p-4">
               <div className="mb-4   w-full space-y-3">
-                <h1 className="text-[1.2em] text-gray-500">
-                  Accountant Workflow
-                </h1>
+                <h1 className="text-[1.2em] text-gray-500">TDS Requests</h1>
               </div>
 
               <article className="flex  gap-4 items-center">

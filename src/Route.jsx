@@ -92,6 +92,7 @@ import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import EmployeeTraining from "./pages/Training/page";
 import CustomCalander from "./pages/custom/Calendar";
 import LeaveNotification from "./pages/leave-notification/page";
+import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
 
@@ -119,10 +120,14 @@ const App = () => {
             </RequireAuth>
           }
         />
-        {/* <Route
-          path="/organisation/:organisationId/employeeTest"
-          element={<EmployeeTest />}
-        /> */}
+        <Route
+          path="/performance"
+          element={
+            <RequireAuth permission={["Super-Admin", "Employee"]}>
+              <Performance />
+            </RequireAuth>
+          }
+        />
         <Route
           path="/add-delegate/"
           element={

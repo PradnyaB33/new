@@ -447,10 +447,10 @@ const TDSTable2 = () => {
                             "(A) Self Occupied Property (Loss)" && (
                             <>
                               <th scope="col" className="px-2 py-3 border">
-                                property 1
+                                Property 1
                               </th>
                               <th scope="col" className="px-2 border *:py-3">
-                                property 2
+                                Property 2
                               </th>
                             </>
                           )}
