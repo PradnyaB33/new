@@ -33,7 +33,6 @@ const Shifts = () => {
   const { handleAlert } = useContext(TestContext);
 
   const [error, setError] = useState("");
-  console.log(error);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
 
   const [open, setOpen] = React.useState(false);
@@ -42,13 +41,6 @@ const Shifts = () => {
   const handleOpen = () => {
     setOpen(true);
     setShiftId(null);
-  };
-
-  const handleClose = () => {
-    setError("");
-    setOpen(false);
-    setShiftId(null);
-    setEditModalOpen(false);
   };
 
   const handleDeleteConfirmation = (id) => {
@@ -277,13 +269,21 @@ const Shifts = () => {
         </Setup>
       </section>
 
-      <ShiftModal id={organisationId} open={open} handleClose={handleClose} />
+      <ShiftModal
+        id={organisationId}
+        setShiftId={setShiftId}
+        setOpen={setOpen}
+        setEditModalOpen={setEditModalOpen}
+        open={open}
+      />
 
       <ShiftModal
-        handleClose={handleClose}
         id={organisationId}
         open={editModalOpen}
         shiftId={ShiftId}
+        setShiftId={setShiftId}
+        setOpen={setOpen}
+        setEditModalOpen={setEditModalOpen}
       />
 
       <Dialog

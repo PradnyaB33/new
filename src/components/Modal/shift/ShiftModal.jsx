@@ -5,7 +5,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import axios from "axios";
 import dayjs from "dayjs";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
@@ -13,28 +13,52 @@ import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
 
-const ShiftModal = ({ handleClose, open, id, shiftId }) => {
+const ShiftModal = ({
+  open,
+  id,
+  shiftId,
+  setShiftId,
+  setOpen,
+  setEditModalOpen,
+}) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const [selectedDays, setSelectedDays] = useState([]);
   const authToken = cookies["aegis"];
-  const [error, setError] = useState("");
-  console.log(`🚀 ~ error:`, error);
 
-  const ShiftSchema = z.object({
-    startDateTime: z.string().min(1, "Start time is required"),
-    endDateTime: z.string().min(1, "End time is required"),
-    shiftName: z.string().min(1, "Shift name is required"),
-    workingFrom: z.object({
-      label: z.string(),
-      value: z.string(),
-    }),
-  });
+  const ShiftSchema = z
+    .object({
+      startDateTime: z.string().min(1, "Start time is required"),
+      endDateTime: z.string().min(1, "End time is required"),
+      shiftName: z.string().min(1, "Shift name is required"),
+      workingFrom: z.object(
+        {
+          label: z.string(),
+          value: z.string(),
+        },
+        "Shift type is required"
+      ),
+    })
+    .refine(
+      (data) => {
+        const startDate = new Date(`1970-01-01T${data.startDateTime}:00Z`);
+        const endDate = new Date(`1970-01-01T${data.endDateTime}:00Z`);
+
+        const diffInHours = Math.abs(endDate - startDate) / 1000 / 60 / 60;
+        return diffInHours >= 9;
+      },
+      {
+        message:
+          "The difference between start time and end time must be at least 9 hours",
+        path: ["endDateTime"], // specify the field that this error is associated with
+      }
+    );
 
   const {
     handleSubmit,
     control,
     setValue,
+    reset,
     setError: setFieldError,
     formState: { errors },
   } = useForm({
@@ -45,6 +69,25 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
       shiftName: undefined,
     },
   });
+
+  const handleClose = () => {
+    setOpen(false);
+    setShiftId(null);
+    setEditModalOpen(false);
+    reset({
+      workingFrom: "", // Set fieldName1 to empty
+      startDateTime: "", // Set fieldName2 to empty
+      endDateTime: "", // Set fieldName2 to empty
+      // Add more fields as necessary
+    });
+  };
+
+  useEffect(() => {
+    if (!id) {
+      setFieldError("selectedDays", null);
+    }
+    //eslint-disable-next-line
+  }, [id]);
 
   const { isLoading, isFetching } = useQuery(
     ["shift", shiftId],
@@ -65,9 +108,15 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
     {
       onSuccess: (data) => {
         console.log(data);
-        setValue("shiftName", data?.shift?.shiftName);
+        setValue("shiftName", data?.shifts?.shiftName);
+        setValue("startTime", data?.shifts?.startTime);
+        setValue("endTime", data?.shifts?.endTime);
+        setValue("workingFrom", {
+          label: data?.shifts?.workingFrom,
+          value: data?.shifts?.workingFrom,
+        });
 
-        setSelectedDays(data?.shift?.selectedDays);
+        setSelectedDays(data?.shifts?.selectedDays);
       },
       enabled: open && shiftId !== null && shiftId !== undefined,
     }
@@ -118,7 +167,11 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
         handleAlert(true, "success", "Shift updated succesfully");
       },
       onError: () => {
-        setError("An error occurred while creating a new shift");
+        handleAlert(
+          true,
+          "error",
+          "An error occurred while creating a new shift"
+        );
       },
     }
   );
@@ -145,7 +198,11 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
       }
     } catch (error) {
       console.error(error);
-      setError("An error occurred while creating a new shift");
+      handleAlert(
+        true,
+        "error",
+        "An error occurred while creating a new shift"
+      );
     }
   };
 
@@ -239,7 +296,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
               control={control}
               type="text"
               placeholder="Shift"
-              label="Enter shift name *"
+              label="Enter Shift Name *"
               readOnly={false}
               maxLimit={15}
               errors={errors}

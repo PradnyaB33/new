@@ -8,7 +8,8 @@ import {
   Pending,
 } from "@mui/icons-material";
 import { Button, CircularProgress, IconButton } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
+import { TestContext } from "../../../State/Function/Main";
 
 const DeclarationTable = ({
   tableData,
@@ -24,6 +25,8 @@ const DeclarationTable = ({
   isLoading,
   salaryFetching,
 }) => {
+  console.log(`🚀 ~ editStatus:`, editStatus);
+  const { handleAlert } = useContext(TestContext);
   return (
     <div>
       {salaryFetching ? (
@@ -45,7 +48,7 @@ const DeclarationTable = ({
                   scope="col"
                   className="py-3 leading-7 text-[16px] px-2 border"
                 >
-                  Deduction Name
+                  Declaration Name
                 </th>
 
                 <th
@@ -64,7 +67,7 @@ const DeclarationTable = ({
                   scope="col"
                   className=" py-3 leading-7 text-[16px] px-2 border"
                 >
-                  Proof submitted
+                  Proofs
                 </th>
                 <th
                   scope="col"
@@ -169,16 +172,34 @@ const DeclarationTable = ({
                     {item.name === "Gross Salary" ? (
                       ""
                     ) : editStatus[itemIndex] && editStatus[itemIndex] ? (
-                      <div className="px-2  md:w-full w-max">
-                        <label className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
-                          Upload File
-                          <input
-                            type="file"
-                            className="hidden"
-                            onChange={(e) => handleProofChange(e, itemIndex)}
-                          />
-                        </label>
-                      </div>
+                      <>
+                        {declarationData?.proof ? (
+                          <div
+                            onClick={() =>
+                              handlePDF(
+                                URL.createObjectURL(declarationData?.proof)
+                              )
+                            }
+                            className="px-2 flex gap-2 items-center h-max w-max"
+                          >
+                            <Article className="text-blue-500" />
+                            <h1>{declarationData?.proof?.name}</h1>
+                          </div>
+                        ) : (
+                          <div className="px-2  md:w-full w-max">
+                            <label className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+                              Upload File
+                              <input
+                                type="file"
+                                className="hidden"
+                                onChange={(e) =>
+                                  handleProofChange(e, itemIndex, handleAlert)
+                                }
+                              />
+                            </label>
+                          </div>
+                        )}
+                      </>
                     ) : item.proof ? (
                       typeof item.proof === "string" ? (
                         <div
@@ -189,19 +210,17 @@ const DeclarationTable = ({
                           <h1>View Proof </h1>
                         </div>
                       ) : (
-                        declarationData.proof && (
-                          <div
-                            onClick={() =>
-                              handlePDF(
-                                URL.createObjectURL(declarationData.proof)
-                              )
-                            }
-                            className="px-2 flex gap-2 items-center h-max w-max"
-                          >
-                            <Article className="text-blue-500" />
-                            <h1>{item.proof.name}</h1>
-                          </div>
-                        )
+                        <div
+                          onClick={() =>
+                            handlePDF(
+                              URL.createObjectURL(declarationData.proof)
+                            )
+                          }
+                          className="px-2 flex gap-2 items-center h-max w-max"
+                        >
+                          <Article className="text-blue-500" />
+                          <h1>{item.proof.name}</h1>
+                        </div>
                       )
                     ) : (
                       <p className="px-2  md:w-full w-max">No proof found</p>

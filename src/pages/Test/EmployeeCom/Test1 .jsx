@@ -163,29 +163,27 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           />
         </div>
 
-        <div className="grid grid-cols-1  md:!grid-cols-2 w-full gap-3">
-          <AuthInputFiled
-            name="email"
-            icon={Email}
-            control={control}
-            type="text"
-            placeholder="Employee Email"
-            label="Employee  Email *"
-            errors={errors}
-            error={errors.email}
-          />
+        <AuthInputFiled
+          name="email"
+          icon={Email}
+          control={control}
+          type="text"
+          placeholder="Employee Email"
+          label="Employee  Email *"
+          errors={errors}
+          error={errors.email}
+        />
 
-          <AuthInputFiled
-            name="phone_number"
-            icon={ContactEmergency}
-            control={control}
-            type="number"
-            placeholder="1234567890"
-            label="Contact *"
-            errors={errors}
-            error={errors.phone_number}
-          />
-        </div>
+        <AuthInputFiled
+          name="phone_number"
+          icon={ContactEmergency}
+          control={control}
+          type="contact"
+          placeholder="1234567890"
+          label="Contact *"
+          errors={errors}
+          error={errors.phone_number}
+        />
 
         <AuthInputFiled
           name="address"
@@ -271,7 +269,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             control={control}
             type="text"
             placeholder="Employee PAN No"
-            label="Employee Pan No *"
+            label="Employee PAN No *"
             errors={errors}
             error={errors.pan_card_number}
           />

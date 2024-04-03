@@ -1,8 +1,9 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
 import useIncomeAPI from "../../../../hooks/IncomeTax/useIncomeAPI";
+import useIncomeTax from "../../../../hooks/IncomeTax/useIncomeTax";
 import useTDS from "../../../../hooks/IncomeTax/useTDS";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
@@ -17,7 +18,7 @@ const TDSTable1 = () => {
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
 
-  const [tableData, setTableData] = useState([
+  let data = [
     {
       name: "Gross Salary",
       amount: 0,
@@ -104,43 +105,45 @@ const TDSTable1 = () => {
     //
     // amountAccepted: 0,
     // },
-  ]);
-  const [editStatus, setEditStatus] = useState({});
-  const handleCloseConfirmation = () => {
-    setDeleteConfirmation(null);
-  };
+  ];
 
   const { setGrossTotal, grossTotal, setDeclared } = useTDS();
-  const { handleSaveClick, handleDelete, setDeclarationData, declarationData } =
-    useIncomeAPI(
-      tableData,
-      user,
-      authToken,
-      handleAlert,
-      queryClient,
-      setEditStatus,
-      handleCloseConfirmation
-    );
-
-  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
-  const [pdf, setPdf] = useState(null);
-
-  const handleDeleteConfirmation = (id) => {
-    setDeleteConfirmation(id);
-  };
-
-  const handlePDF = (id) => {
-    setPdf(id);
-  };
-
-  const handleClosePDF = () => {
-    setPdf(null);
-  };
-
   const {
-    // isFetched: salaryFetch,
-    isFetching: salaryFetching,
-  } = useQuery({
+    editStatus = {},
+    handleEditClick,
+    declarationData,
+    handleAmountChange,
+    handleProofChange,
+    handleClose,
+    setTableData,
+    tableData,
+    deleteConfirmation,
+    handleDeleteConfirmation,
+    pdf,
+    handlePDF,
+    handleCloseConfirmation,
+    handleClosePDF,
+  } = useIncomeTax();
+  const {
+    handleSaveClick,
+    handleDelete,
+    setDeclarationData,
+    // declarationData
+  } = useIncomeAPI(
+    data,
+    user,
+    authToken,
+    handleAlert,
+    queryClient,
+    handleCloseConfirmation
+  );
+
+  useEffect(() => {
+    setTableData(data);
+    // eslint-disable-next-line
+  }, []);
+
+  const { isFetching: salaryFetching } = useQuery({
     queryKey: ["finacialYearData"],
     queryFn: async () => {
       try {
@@ -240,47 +243,10 @@ const TDSTable1 = () => {
           }
         });
 
-        // setTotalHeads(res.totalAddition);
         setTableData(updatedTableData);
       }
     },
   });
-
-  const handleEditClick = (itemIndex) => {
-    setEditStatus((prevEditStatus) => ({
-      ...prevEditStatus,
-      [itemIndex]: !prevEditStatus[itemIndex],
-    }));
-  };
-
-  const handleAmountChange = (e, itemIndex) => {
-    const newData = [...tableData];
-
-    setDeclarationData({
-      ...newData[itemIndex],
-      amount: e.target.value,
-    });
-  };
-
-  const handleProofChange = (e, itemIndex) => {
-    const file = e.target.files[0];
-
-    if (file.type !== "application/pdf") {
-      handleAlert(true, "error", "Uploaded file is not a PDF");
-      return;
-    }
-    const newData = [...tableData];
-    setDeclarationData({
-      ...newData[itemIndex],
-      proof: file,
-    });
-  };
-
-  const handleClose = (index) => {
-    setEditStatus({
-      [index]: null,
-    });
-  };
 
   return (
     <div>

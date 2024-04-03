@@ -166,23 +166,25 @@ const Tab0 = () => {
         <div className="px-4 items-center   flex  w-full">
           <div className="p-4 w-full border">
             <div className="p-2 flex justify-between">
-              <h1 className="text-lg">Income under the head Salaries</h1>
+              <h1 className="text-lg">Income under the head salaries</h1>
               <p className="text-lg">
                 INR{" "}
-                {isNaN(salaryAmount?.TotalInvestInvestment)
+                {isNaN(
+                  salaryAmount?.TotalInvestInvestment + data?.salaryDeclaration
+                )
                   ? 0
                   : salaryAmount?.TotalInvestInvestment +
                       data?.salaryDeclaration ?? 0}
               </p>
             </div>
             <div className="p-2 flex justify-between">
-              <h1 className="text-lg">Income under the head House Property</h1>
+              <h1 className="text-lg">Income under the head house property</h1>
               <p className="text-lg">
                 INR {data?.houseDeclaration?.toFixed(2) ?? 0}
               </p>
             </div>
             <div className="p-2 flex justify-between">
-              <h1 className="text-lg">Income under the head Other Sources</h1>
+              <h1 className="text-lg">Income under the head other sources</h1>
               <p className="text-lg">
                 INR {data?.otherDeclaration?.toFixed(2) ?? 0}
               </p>
@@ -194,24 +196,27 @@ const Tab0 = () => {
                 INR {data?.sectionDeclaration?.toFixed(2) ?? 0}
               </p>
             </div>
-            <div className="p-2 flex justify-between bg-gray-400">
-              <h1 className="text-lg">Taxable income</h1>
-              <p className="text-lg">
+            <div className="p-3 rounded-md flex justify-between bg-blue-200">
+              <h1 className="text-xl">Taxable income</h1>
+              <p className="text-xl">
                 INR {data?.salary < 0 ? 0 : data?.salary?.toFixed(2) ?? 0}
               </p>
             </div>
             <div className="p-2 flex justify-between">
-              <h1 className="text-lg">Taxable Amount</h1>
+              <h1 className="text-lg">Taxable amount</h1>
               <p className="text-lg">INR {taxAmount?.toFixed(2) ?? 0}</p>
             </div>
+
             <div className="p-2 flex justify-between">
               <h1 className="text-lg">Cess</h1>
               <p className="text-lg">INR {cess?.toFixed(2) ?? 0}</p>
             </div>
 
-            <div className="p-2 flex justify-between bg-blue-400">
-              <h1 className="text-lg">Tax Amount Under Old Regime</h1>
-              <p className="text-lg">INR {tax.toFixed(2) ?? 0}</p>
+            <div className="p-3 flex justify-between rounded-md bg-blue-200">
+              <h1 className="text-xl font-medium">
+                Tax amount under old regime
+              </h1>
+              <p className="text-xl">INR {tax.toFixed(2) ?? 0}</p>
             </div>
           </div>
         </div>

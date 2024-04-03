@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import useIncomeTax from "./useIncomeTax";
 
 const useIncomeAPI = (
   tableData,
@@ -7,12 +7,17 @@ const useIncomeAPI = (
   authToken,
   handleAlert,
   queryClient,
-  setEditStatus,
-  handleCloseConfirmation,
-  editStatus,
-  sectionname
+  sectionname,
+  queryKey,
+  subsectionname
 ) => {
-  const [declarationData, setDeclarationData] = useState({});
+  const {
+    editStatus,
+    setEditStatus,
+    declarationData,
+    handleCloseConfirmation,
+  } = useIncomeTax();
+  // const [declarationData, setDeclarationData] = useState({});
   const uploadProof = async (tdsfile) => {
     const data = await axios.get(
       `${process.env.REACT_APP_API}/route/s3createFile/TDS`,
@@ -44,6 +49,11 @@ const useIncomeAPI = (
         uploadproof = await uploadProof(tdsfile);
       }
 
+      if (declarationData.amount <= 0) {
+        handleAlert(true, "error", "Amount cannot be 0");
+        return false;
+      }
+
       let requestData = {
         empId: user._id,
         financialYear: "2023-2024",
@@ -61,12 +71,16 @@ const useIncomeAPI = (
           financialYear: "2023-2024",
           requestData: {
             name: declarationData.name,
-            sectionname: "Salary",
+            sectionname: sectionname,
             status: "Pending",
             declaration: declarationData.amount,
             proof: uploadproof,
           },
         };
+      }
+
+      if (subsectionname) {
+        requestData.requestData.subsectionname = subsectionname;
       }
       await axios.post(
         `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
@@ -79,7 +93,7 @@ const useIncomeAPI = (
       );
 
       handleAlert(true, "success", `Data uploaded successfully`);
-      queryClient.invalidateQueries({ queryKey: ["Salary"] });
+      queryClient.invalidateQueries({ queryKey: [`${queryKey}`] });
     } catch (error) {
       console.log(error);
     }
@@ -95,7 +109,8 @@ const useIncomeAPI = (
       financialYear: "2023-2024",
       requestData: {
         name: value.name,
-        sectionname: "Salary",
+        sectionname,
+        subsectionname,
         status: "Not Submitted",
         declaration: 0,
         proof: "",
@@ -114,7 +129,8 @@ const useIncomeAPI = (
       );
 
       handleAlert(true, "success", `Data deleted successfully`);
-      queryClient.invalidateQueries({ queryKey: ["Salary"] });
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
+      console.log(`🚀 ~ queryKey:`, `${queryKey}`);
     } catch (error) {
       console.log(error);
     }
@@ -122,7 +138,7 @@ const useIncomeAPI = (
     handleCloseConfirmation();
   };
 
-  return { handleSaveClick, handleDelete, setDeclarationData, declarationData };
+  return { handleSaveClick, handleDelete, declarationData };
 };
 
 export default useIncomeAPI;

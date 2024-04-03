@@ -36,14 +36,14 @@ const IncomeTax = () => {
           <div className="bg-white border-[.5px] border-gray-200 p-4">
             <div className="mb-4 flex justify-between items-center pr-2   w-full space-y-3">
               <h1 className="text-[1.2em]  text-gray-500">
-                TDS Declarations and others
+                TDS Declarations and Others
               </h1>
               <button
                 onClick={handleOpen}
                 className="flex !p-0 h-max !m-0  gap-2 text-blue-500"
               >
                 <Settings />
-                Change Regime settings
+                Change regime settings
               </button>
             </div>
 
@@ -56,7 +56,7 @@ const IncomeTax = () => {
                   <Avatar className="!bg-green-500">
                     <Calculate />
                   </Avatar>
-                  <h1 className="text-lg">TDS Calculation</h1>
+                  <h1 className="text-lg">TDS calculation</h1>
                 </div>
               </Link>
 
@@ -77,9 +77,7 @@ const IncomeTax = () => {
           {role === "Accountant" && (
             <div className="bg-white border-[.5px] border-gray-200 p-4">
               <div className="mb-4   w-full space-y-3">
-                <h1 className="text-[1.2em] text-gray-500">
-                  Accountant Workflow
-                </h1>
+                <h1 className="text-[1.2em] text-gray-500">TDS Requests</h1>
               </div>
 
               <article className="flex  gap-4 items-center">
