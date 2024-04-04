@@ -25,8 +25,10 @@ import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import ArticleIcon from "@mui/icons-material/Article";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import FolderIcon from "@mui/icons-material/Folder";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import { jwtDecode } from "jwt-decode";
@@ -375,14 +377,29 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
       Records: {
         open: false,
-        isVisible: ["Employee", "Manager"].includes(role),
+        isVisible: true,
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
             key: "empDocs",
+            isVisible: true,
             link: "/emp/docs",
-            icon: <PanToolAlt className=" !text-[1.2em] text-[#67748E]" />,
-            text: "My Record",
+            icon: <ArticleIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "My Records",
+          },
+          {
+            key: "orgDocs",
+            isVisible: ["Employee"].includes(role),
+            link: "/org/docs",
+            icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Organization Records",
+          },
+          {
+            key: "orgDocs",
+            isVisible: ["HR", "Super-Admin"].includes(role),
+            link: "/org/docs/auth",
+            icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Organization Records",
           },
         ],
       },
