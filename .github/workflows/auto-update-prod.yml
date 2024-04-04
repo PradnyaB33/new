@@ -1,8 +1,8 @@
 name:  🚀 QA to PROD Branch
 
 on:
-  schedule:
-    - cron: '00 13 */2 * *'  # This will trigger the workflow every day at 7:00 pm IST (1:30 pm UTC)
+  # schedule:
+    # - cron: '00 13 */2 * *'  # This will trigger the workflow every day at 7:00 pm IST (1:30 pm UTC)
 
   workflow_dispatch:
 
