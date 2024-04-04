@@ -124,6 +124,10 @@ const TDSTable1 = () => {
     handleCloseConfirmation,
     handleClosePDF,
   } = useIncomeTax();
+
+  const queryKey = "Salary";
+  const sectionname = "Salary";
+
   const {
     handleSaveClick,
     handleDelete,
@@ -135,7 +139,8 @@ const TDSTable1 = () => {
     authToken,
     handleAlert,
     queryClient,
-    handleCloseConfirmation
+    sectionname,
+    queryKey
   );
 
   useEffect(() => {
