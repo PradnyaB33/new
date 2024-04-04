@@ -337,7 +337,7 @@ const Form16Hr = () => {
                     }}
                   >
                     <a
-                      href={`//${n}`}
+                      href={`#${n}`}
                       style={{
                         color: currentPage === n ? "#fff" : "#007bff",
                         backgroundColor:
