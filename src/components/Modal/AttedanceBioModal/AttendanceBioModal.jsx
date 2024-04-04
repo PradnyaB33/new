@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
+import { TestContext } from "../../../State/Function/Main";
 
 const AttendanceBioModal = ({
   handleClose,
@@ -19,22 +20,15 @@ const AttendanceBioModal = ({
 }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
+  const { handleAlert } = useContext(TestContext);
   const [emailSearch, setEmailSearch] = useState("");
   const [availableEmployee, setAvailableEmployee] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  console.log(
-    `🚀 ~ file: AttendanceBioModal.jsx:22 ~ setCurrentPage:`,
-    setCurrentPage
-  );
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const [checkedEmployees, setCheckedEmployees] = useState([]);
 
-  useEffect(() => {
-    fetchAvailableEmployee(currentPage);
-    // eslint-disable-next-line
-  }, [currentPage]);
-
+  // pull employee
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
@@ -86,9 +80,50 @@ const AttendanceBioModal = ({
       setCheckedEmployees([...checkedEmployees, employeeId]);
     }
   };
-  console.log(checkedEmployees);
-  console.log(selectedEmployees);
-  const handleSync = () => {};
+  console.log("employee from aegis", checkedEmployees);
+  console.log("employee from biomatric", selectedEmployees);
+
+  const handleSync = async () => {
+    try {
+      const syncedData = checkedEmployees.map((employee) => {
+        const selectedEmployee = selectedEmployees.find(
+          (emp) => emp[0] === employee.empId
+        );
+
+        if (selectedEmployee) {
+          return {
+            date: selectedEmployee[3],
+            punchingTime: selectedEmployee[4],
+            punchingStatus: selectedEmployee[5],
+          };
+        } else {
+          return employee;
+        }
+      });
+
+      const EmployeeId =
+        checkedEmployees.length > 0 ? checkedEmployees[0]._id : null;
+      console.log("employee id", EmployeeId);
+      // Make a POST request to the backend API
+      axios.post(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/add-attendance-data`,
+        {
+          EmployeeId: EmployeeId,
+          punchingRecords: syncedData,
+        },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      handleAlert(true, "success", "Synced data successfully..");
+    } catch (error) {
+      console.error("Failed to sync attendance data:", error);
+    }
+  };
+
   return (
     <Dialog
       PaperProps={{

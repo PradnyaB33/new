@@ -138,19 +138,19 @@ const Tab1 = () => {
         <div className="px-4 items-center   flex  w-full">
           <div className="p-4 w-full border">
             <div className="p-2 flex justify-between">
-              <h1 className="text-lg">Income under the head Salaries</h1>
+              <h1 className="text-lg">Income under the head salaries</h1>
               <p className="text-lg">
                 INR {salaryAmount?.TotalInvestInvestment?.toFixed(2) ?? 0}
               </p>
             </div>
             <div className="p-2 flex justify-between">
-              <h1 className="text-lg">Income under the head House Property</h1>
+              <h1 className="text-lg">Income under the head house property</h1>
               <p className="text-lg">
                 INR {data?.houseDeclaration?.toFixed(2) ?? 0}
               </p>
             </div>
             <div className="p-2 flex justify-between">
-              <h1 className="text-lg">Income under the head Other Sources</h1>
+              <h1 className="text-lg">Income under the head other sources</h1>
               <p className="text-lg">
                 INR {data?.otherDeclaration?.toFixed(2) ?? 0}
               </p>
@@ -167,11 +167,11 @@ const Tab1 = () => {
               <p className="text-lg">INR {data?.salary?.toFixed(2) ?? 0}</p>
             </div>
             <div className="p-2 flex justify-between">
-              <h1 className="text-lg">Tax at Normal Rates</h1>
+              <h1 className="text-lg">Tax at normal rates</h1>
               <p className="text-lg">INR {taxAmount?.toFixed(2) ?? 0}</p>
             </div>
             <div className="p-2 flex justify-between">
-              <h1 className="text-lg">Less: Tax Rebate u/s 87A</h1>
+              <h1 className="text-lg">Less: Tax rebate u/s 87A</h1>
               <p className="text-lg">
                 INR{" "}
                 {parseFloat(taxAmount.toFixed(2) - rebate?.toFixed(2)).toFixed(
@@ -180,7 +180,7 @@ const Tab1 = () => {
               </p>
             </div>
             <div className="p-2 flex justify-between">
-              <h1 className="text-lg">Net Tax after Rebate</h1>
+              <h1 className="text-lg">Net tax after rebate</h1>
               <p className="text-lg">INR {rebate?.toFixed(2) ?? 0}</p>
             </div>
             <div className="p-2 flex justify-between">
@@ -189,7 +189,7 @@ const Tab1 = () => {
             </div>
 
             <div className="p-2 flex justify-between bg-blue-400">
-              <h1 className="text-lg">Tax Amount Under New Regime</h1>
+              <h1 className="text-lg">Tax amount under new regime</h1>
               <p className="text-lg">INR {tax.toFixed(2) ?? 0}</p>
             </div>
           </div>

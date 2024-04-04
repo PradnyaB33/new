@@ -83,6 +83,7 @@ import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
+import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttendacneBiomatric";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
@@ -94,6 +95,7 @@ import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import EmployeeTraining from "./pages/Training/page";
 import CustomCalander from "./pages/custom/Calendar";
 import LeaveNotification from "./pages/leave-notification/page";
+import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
 
@@ -121,10 +123,14 @@ const App = () => {
             </RequireAuth>
           }
         />
-        {/* <Route
-          path="/organisation/:organisationId/employeeTest"
-          element={<EmployeeTest />}
-        /> */}
+        <Route
+          path="/performance"
+          element={
+            <RequireAuth permission={["Super-Admin", "Employee"]}>
+              <Performance />
+            </RequireAuth>
+          }
+        />
         <Route
           path="/add-delegate/"
           element={
@@ -366,6 +372,16 @@ const App = () => {
               permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
             >
               <EmpInfoPunchStatus />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/view-attendance-biomatric"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <ViewAttendacneBiomatric />
             </RequireAuth>
           }
         />

@@ -25,8 +25,14 @@ const PerformanceSetup = () => {
       startDate: z.string(),
       endDate: z.string(),
     }),
-    stages: z.array(z.string()),
-    goals: z.array(z.string()),
+    stages: z.object({
+      label: z.string(),
+      value: z.string(),
+    }),
+    goals: z.object({
+      label: z.string(),
+      value: z.string(),
+    }),
     isDownCast: z.boolean().optional(),
     isFeedback: z.boolean().optional(),
     isNonMeasurableAllowed: z.boolean().optional(),
@@ -133,6 +139,8 @@ const PerformanceSetup = () => {
         ...data,
         startdate: data.startdate.startDate,
         enddate: data.enddate.endDate,
+        goals: data.goals.value,
+        stages: data.stages.value,
       };
       await axios.post(
         `${process.env.REACT_APP_API}/route/performance/createSetup/${organisationId}`,
@@ -213,7 +221,7 @@ const PerformanceSetup = () => {
                   icon={ListAlt}
                   control={control}
                   options={stagesOptions}
-                  type="mutltiselect"
+                  type="select"
                   placeholder="Stages"
                   label="Select Stage *"
                   errors={errors}
@@ -223,7 +231,7 @@ const PerformanceSetup = () => {
                   name="goals"
                   icon={TrendingUp}
                   control={control}
-                  type="mutltiselect"
+                  type="select"
                   options={goalsOptions}
                   placeholder="Goals"
                   label="Select Goal Type *"

@@ -151,6 +151,20 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
+      Performance: {
+        open: false,
+        isVisible: true,
+        icon: <Payment className=" !text-[1.2em] text-[#67748E]" />,
+        routes: [
+          {
+            key: "performance",
+            isVisible: true,
+            link: "/performance",
+            icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Performance",
+          },
+        ],
+      },
       Payroll: {
         open: false,
         isVisible: true,
