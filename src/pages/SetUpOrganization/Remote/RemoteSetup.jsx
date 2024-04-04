@@ -24,6 +24,9 @@ const RemoteSetup = () => {
                 </div>
                 <div>
                   <h1 className="!text-lg">Remote Punching</h1>
+                  <p className="text-xs text-gray-500">
+                    Configure remote punching settings
+                  </p>
                 </div>
               </div>
             </div>

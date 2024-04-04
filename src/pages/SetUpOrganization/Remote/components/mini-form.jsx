@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Business } from "@mui/icons-material";
+import { Business, Money } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
@@ -54,15 +54,18 @@ const MiniForm = ({ data, mutate }) => {
           label="Enable extra allowance "
           errors={errors}
           error={errors.allowance}
+          descriptionText={
+            "Enabling allowance will allow the employee to get extra amount."
+          }
         />
         {watch("allowance") && (
           <AuthInputFiled
             name="allowanceQuantity"
-            icon={Business}
+            icon={Money}
             control={control}
             type="number"
-            placeholder="Allowance Quantity"
-            label="Allowance Quantity *"
+            placeholder="Allowance"
+            label="Allowance *"
             errors={errors}
             error={errors.allowanceQuantity}
           />
