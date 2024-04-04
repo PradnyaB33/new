@@ -10,7 +10,8 @@ import MiniForm from "./components/mini-form";
 const Training = () => {
   const { organisationId } = useParams();
 
-  const { data, isLoading, mutate } = useSetupTraining(organisationId);
+  const { data, isLoading, mutate, isFetching } =
+    useSetupTraining(organisationId);
 
   return (
     <>
@@ -27,13 +28,19 @@ const Training = () => {
                 </div>
               </div>
             </div>
-            {isLoading ? (
+            {isLoading || isFetching ? (
               <div className="p-5 flex flex-col gap-5">
                 <Skeleton variant="rectangular" height={32} />
                 <Skeleton variant="rectangular" height={32} />
               </div>
             ) : (
-              data?.data && <MiniForm data={data?.data} mutate={mutate} />
+              data?.data && (
+                <MiniForm
+                  data={data?.data}
+                  mutate={mutate}
+                  organisationId={organisationId}
+                />
+              )
             )}
           </article>
         </Setup>
