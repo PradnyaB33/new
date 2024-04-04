@@ -1,15 +1,22 @@
-import { Add, Info } from "@mui/icons-material";
-import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
+import React, { useContext, useState, useEffect } from "react";
 import { Button } from "@mui/material";
 import axios from "axios";
-import { default as React, useContext, useState } from "react";
+import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
+import {
+  Add,
+  Cancel,
+  CheckCircle,
+  Error,
+  Pending,
+  Info,
+} from "@mui/icons-material";
 import { useQuery } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
 import CreateLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/CreateLoanMgtModal";
 import UserProfile from "../../hooks/UserData/useUser";
 import LoanManagementSkeleton from "./LoanManagementSkeleton";
-import { Cancel, CheckCircle, Error, Pending } from "@mui/icons-material";
-import LoanMgtPieChartModal from "../../components/Modal/LoanMgtPieChartModal/LoanMgtPieChartModal";
+import LoanManagementPieChart from "./LoanManagementPieChart";
+
 const LoanManagement = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -92,38 +99,40 @@ const LoanManagement = () => {
 
   // State to manage selected loans
   const [selectedLoans, setSelectedLoans] = useState([]);
+  const [showPieChart, setShowPieChart] = useState(false);
+  const [totalPaidAmount, setTotalPaidAmount] = useState(0);
+  const [totalPendingAmount, setTotalPendingAmount] = useState(0);
+
+  // Function to update total paid and pending amounts
+  useEffect(() => {
+    let paidAmount = 0;
+    let pendingAmount = 0;
+
+    selectedLoans.forEach((selectedLoan) => {
+      const { loanAmountPaid, loanAmountPending } =
+        calculateLoanStatus(selectedLoan);
+      paidAmount += loanAmountPaid;
+      pendingAmount += loanAmountPending;
+      console.log(paidAmount);
+      console.log(pendingAmount);
+    });
+
+    setTotalPaidAmount(paidAmount);
+    setTotalPendingAmount(pendingAmount);
+  }, [selectedLoans]);
 
   const handleCheckboxChange = (loan) => {
     if (selectedLoans.includes(loan)) {
       setSelectedLoans(
         selectedLoans.filter((selectedLoan) => selectedLoan !== loan)
       );
+      setShowPieChart(false); // Hide pie chart when unchecking
     } else {
       setSelectedLoans([...selectedLoans, loan]);
+      setShowPieChart(true); // Show pie chart when checking
     }
   };
-  // for open the loan pie chart modal
-  const [loanPieChartModalOpen, setLoanPieChartModalOpen] = useState(false);
-  const handleLoanPieChartModalOpen = () => {
-    setLoanPieChartModalOpen(true);
-  };
-  const handleLoanPieChartModalClose = () => {
-    setLoanPieChartModalOpen(false);
-    setSelectedLoans([]);
-  };
 
-  // Calculate total loan amount paid and pending based on selected loans
-  let totalPaidAmount = 0;
-  let totalPendingAmount = 0;
-
-  selectedLoans.forEach((selectedLoan) => {
-    const { loanAmountPaid, loanAmountPending } =
-      calculateLoanStatus(selectedLoan);
-    totalPaidAmount += loanAmountPaid;
-    totalPendingAmount += loanAmountPending;
-    console.log(totalPaidAmount);
-    console.log(totalPendingAmount);
-  });
   // for create the loan data
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const handleCreateModalOpen = () => {
@@ -219,7 +228,6 @@ const LoanManagement = () => {
                                 checked={selectedLoans.includes(loanMgtData)}
                                 onChange={() => {
                                   handleCheckboxChange(loanMgtData);
-                                  handleLoanPieChartModalOpen();
                                 }}
                               />
                             </td>
@@ -287,6 +295,7 @@ const LoanManagement = () => {
                 </div>
               </div>
             </>
+            
           ) : (
             <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
               <article className="flex items-center mb-1 text-red-500 gap-2">
@@ -297,20 +306,22 @@ const LoanManagement = () => {
             </section>
           )}
         </article>
+          {/* Show LoanManagementPieChart if showPieChart is true */}
+          {showPieChart && (
+            <LoanManagementPieChart
+              totalPaidAmount={totalPaidAmount}
+              totalPendingAmount={totalPendingAmount}
+            />
+          )}
       </section>
+         
+     
 
       {/* for create */}
       <CreateLoanMgtModal
         handleClose={handleCreateModalClose}
         open={createModalOpen}
         organisationId={organisationId}
-      />
-
-      <LoanMgtPieChartModal
-        totalPaidAmount={totalPaidAmount}
-        totalPendingAmount={totalPendingAmount}
-        open={loanPieChartModalOpen}
-        handleClose={handleLoanPieChartModalClose}
       />
     </>
   );

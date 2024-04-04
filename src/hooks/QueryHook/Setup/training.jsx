@@ -9,7 +9,7 @@ const useSetupTraining = (organisationId) => {
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
 
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, isFetching } = useQuery(
     `training-fetch-${organisationId}`,
     async () => {
       try {
@@ -34,6 +34,7 @@ const useSetupTraining = (organisationId) => {
     }
   );
   const updateRemotePunching = async (data) => {
+    console.log(`🚀 ~ file: training.jsx:37 ~ data:`, data);
     await axios.put(
       `${process.env.REACT_APP_API}/route/setup/training/${organisationId}`,
       data,
@@ -56,7 +57,7 @@ const useSetupTraining = (organisationId) => {
       );
     },
   });
-  return { data, isLoading, mutate };
+  return { data, isLoading, mutate, isFetching };
 };
 
 export default useSetupTraining;

@@ -13,11 +13,12 @@ export const getSignedUrl = async () => {
     return error.response ? error.response.data : { error: "Unknown error" };
   }
 };
-export const getSignedUrlForDocs = async (token) => {
+export const getSignedUrlForDocs = async (token, data) => {
   try {
     console.log("Requesting signed URL...");
-    const resp = await axios.get(
+    const resp = await axios.post(
       `${process.env.REACT_APP_API}/route/employee/uploaddocs`,
+      data,
       {
         headers: {
           Authorization: token,

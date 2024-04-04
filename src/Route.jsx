@@ -80,7 +80,10 @@ import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
 import ParentNotification from "./pages/AllNotifications/page";
 import DocManage from "./pages/DocumentManagement/DocManage";
+import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
+import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
+import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttendacneBiomatric";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
@@ -160,6 +163,8 @@ const App = () => {
         <Route path="/remote/info/:Id" element={<RemoteManager />} />
         <Route path="/remote/notification" element={<RemoteNotification />} />
         <Route path="/emp/docs" element={<DocManage />} />
+        <Route path="/org/docs" element={<OrgDocManage />} />
+        <Route path="/org/docs/auth" element={<DocManageAuth />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route
           path="/billing"
@@ -367,6 +372,16 @@ const App = () => {
               permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
             >
               <EmpInfoPunchStatus />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/view-attendance-biomatric"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <ViewAttendacneBiomatric />
             </RequireAuth>
           }
         />

@@ -36,6 +36,7 @@ const AuthInputFiled = ({
   visible,
   setVisible,
   center,
+  descriptionText,
   value,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
@@ -481,6 +482,7 @@ const AuthInputFiled = ({
           )}
         />
         <div className="h-4 !mb-1">
+          <p className="text-xs">{descriptionText}</p>
           <ErrorMessage
             errors={errors}
             name={name}
