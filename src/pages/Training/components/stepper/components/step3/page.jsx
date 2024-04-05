@@ -20,6 +20,7 @@ const Step3 = () => {
     trainingDownCasted,
     trainingDuration,
   } = useTrainingStore();
+  console.log(trainingDuration);
   const sanitizedDescription = DOMPurify.sanitize(trainingDescription);
   const url = URL.createObjectURL(trainingImage);
   return (
