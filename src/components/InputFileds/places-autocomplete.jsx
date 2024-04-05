@@ -24,7 +24,6 @@ const PlaceAutoComplete = ({
   const [state, setState] = useState(value?.address || "");
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const handleSelect = async (option, onChange) => {
-    console.log(`🚀 ~ file: places-autocomplete.jsx:25 ~ option:`, option);
     if (!option) {
       return onChange({
         address: "",
@@ -61,7 +60,7 @@ const PlaceAutoComplete = ({
     // eslint-disable-next-line
   }, []);
   if (!scriptLoaded) {
-    return "Loading Script"; // or return a loading spinner
+    return "Loading Script";
   }
 
   return (

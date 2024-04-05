@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Import Link for navigation
+import { Link } from "react-router-dom";
 import useLoanQuery from "../../hooks/LoanManagemet/useLoanQuery";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -14,7 +14,7 @@ const LoanMgtNotification = () => {
   console.log("data", getEmployeeRequestLoanApltn);
 
   return (
-    <div className=" mt-4">
+    <div className="mt-4">
       <List
         sx={{
           width: "100%",
@@ -28,11 +28,11 @@ const LoanMgtNotification = () => {
             <ListItem alignItems="flex-start">
               <ListItemAvatar>
                 <Link to={`/loan-approval/${loan._id}`}>
-                  <Avatar alt={loan.userId.first_name} src="" />
+                  <Avatar alt={loan?.userId?.first_name} src={loan?.userId?.user_logo_url} />
                 </Link>
               </ListItemAvatar>
               <ListItemText
-                primary={`${loan.userId.first_name} ${loan.userId.last_name}`}
+                primary={`${loan?.userId?.first_name} ${loan?.userId?.last_name}`}
                 secondary={
                   <React.Fragment>
                     <Typography
@@ -43,7 +43,7 @@ const LoanMgtNotification = () => {
                     >
                       Loan
                     </Typography>
-                    {` — ${loan.userId.first_name} ${loan.userId.last_name} raised a request for loan application.`}
+                    {` — ${loan?.userId?.first_name} ${loan?.userId?.last_name} raised a request for loan application.`}
                   </React.Fragment>
                 }
               />

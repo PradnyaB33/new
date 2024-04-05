@@ -55,7 +55,7 @@ const Step1 = ({ nextStep }) => {
     }),
     trainingLink: z.string().url(),
   });
-  const { control, formState, handleSubmit } = useForm({
+  const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
       trainingImage,
       trainingName,
@@ -165,9 +165,9 @@ const Step1 = ({ nextStep }) => {
           <AuthInputFiled
             name="trainingType"
             icon={CategoryOutlined}
-            label={"Training Assigned to *"}
+            label={"Training Type *"}
             type="naresh-select"
-            placeholder="Training assigned to"
+            placeholder="Training Type"
             className="w-fit items-center"
             control={control}
             error={errors.trainingType}
@@ -203,6 +203,7 @@ const Step1 = ({ nextStep }) => {
             errors={errors}
             error={errors.trainingLocation}
             center={center}
+            value={watch("trainingLocation")}
           />
         </div>
         <Button

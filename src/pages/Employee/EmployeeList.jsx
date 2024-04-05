@@ -85,7 +85,7 @@ const EmployeeList = () => {
             Employee
           </Typography>
           <p className="text-xs text-gray-600 pl-10 text-center">
-            Edit employee data here by using edit button.
+            Edit employee data here by using edit button.      
           </p>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">

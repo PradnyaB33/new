@@ -92,6 +92,18 @@ const LoanMgtApproval = () => {
           </Box>
           <Divider />
           <Box sx={{ p: 2 }}>
+          <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography gutterBottom variant="h6" component="div">
+                Loan Type
+              </Typography>
+              <Typography gutterBottom component="div">
+                {getEmployeeLoanInfo?.loanType?.loanName || ""}
+              </Typography>
+            </Stack>
             <Stack
               direction="row"
               justifyContent="space-between"
@@ -110,7 +122,7 @@ const LoanMgtApproval = () => {
               alignItems="center"
             >
               <Typography gutterBottom variant="h6" component="div">
-                Rate Of Interest
+                Rate Of Interest (%)
               </Typography>
               <Typography gutterBottom component="div">
                 {getEmployeeLoanInfo?.rateOfIntereset || ""}
@@ -158,25 +170,14 @@ const LoanMgtApproval = () => {
               alignItems="center"
             >
               <Typography gutterBottom variant="h6" component="div">
-                totalDeduction
+              Total Deduction
               </Typography>
               <Typography gutterBottom component="div">
                 {getEmployeeLoanInfo?.totalDeduction || ""}
               </Typography>
             </Stack>
 
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typography gutterBottom variant="h6" component="div">
-                Loan Type
-              </Typography>
-              <Typography gutterBottom component="div">
-                {getEmployeeLoanInfo?.loanType?.loanName || ""}
-              </Typography>
-            </Stack>
+          
           </Box>
           <Divider />
           <Box sx={{ p: 2 }}>
