@@ -2,14 +2,12 @@ import { Close } from "@mui/icons-material";
 import { Box, IconButton, Modal } from "@mui/material";
 import axios from "axios";
 import DOMPurify from "dompurify";
-import React, { useContext } from "react";
+import React from "react";
 import { useQuery } from "react-query";
 import Select from "react-select";
-import { TestContext } from "../../../State/Function/Main";
 import useAuthToken from "../../../hooks/Token/useAuth";
 
 const PreviewGoalModal = ({ open, handleClose, id }) => {
-  const { handleAlert } = useContext(TestContext);
   const authToken = useAuthToken();
 
   const options = [

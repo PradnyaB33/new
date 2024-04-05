@@ -9,8 +9,8 @@ const useTrainingStore = create((set) => ({
   trainingName: undefined,
   trainingType: undefined,
   trainingDescription: undefined,
-  trainingStartDate: format(new Date(), "yyyy-MM-dd"),
-  trainingEndDate: format(new Date(), "yyyy-MM-dd"),
+  trainingStartDate: undefined,
+  trainingEndDate: undefined,
   trainingLink: undefined,
   trainingImage: undefined,
   trainingLocation: {
@@ -23,20 +23,25 @@ const useTrainingStore = create((set) => ({
   },
   trainingPoints: "0",
   trainingDownCasted: false,
+  trainingDuration: undefined,
 
   setStep1: (data) => {
     set({
       trainingName: data.trainingName,
-      trainingType: data.trainingType,
       trainingDescription: data.trainingDescription,
+      trainingImage: data.trainingImage,
+    });
+  },
+  setStep2: (data) => {
+    set({
       trainingStartDate: data.trainingStartDate,
       trainingEndDate: data.trainingEndDate,
-      trainingEndDate: data.trainingEndDate,
-      trainingLink: data.trainingLink,
-      trainingImage: data.trainingImage,
       trainingLocation: data.trainingLocation,
+      trainingLink: data.trainingLink,
       trainingPoints: data.trainingPoints,
       trainingDownCasted: data.trainingDownCasted,
+      trainingType: data.trainingType,
+      trainingDuration: data.trainingDuration,
     });
   },
 }));

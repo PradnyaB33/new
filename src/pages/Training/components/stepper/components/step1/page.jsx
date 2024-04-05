@@ -6,13 +6,10 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../../../components/InputFileds/AuthInputFiled";
-import useGetUser from "../../../../../../hooks/Token/useUser";
 import ImageInput from "../../../../../AddOrganisation/components/image-input";
 import useTrainingStore from "../zustand-store";
 
 const Step1 = ({ nextStep }) => {
-  const { decodedToken } = useGetUser();
-
   const {
     trainingName,
     trainingType,
@@ -71,7 +68,14 @@ const Step1 = ({ nextStep }) => {
             control={control}
             name={"trainingImage"}
             render={({ field }) => {
-              return <ImageInput field={field} />;
+              return (
+                <ImageInput
+                  className={
+                    "!rounded-lg !w-full !object-cover !h-44 !bg-cover !bg-center"
+                  }
+                  field={field}
+                />
+              );
             }}
           />
           <div className="h-4 !mb-1">

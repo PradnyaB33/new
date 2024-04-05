@@ -8,6 +8,7 @@ import {
   Fingerprint,
   Groups,
   ListAlt,
+  ModelTrainingOutlined,
   MonetizationOn,
   MonetizationOnOutlined,
   NotificationsActive,
@@ -410,10 +411,35 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "orgDocs",
-            isVisible: ["HR", "Super-Admin", "Manager"].includes(role),
+            isVisible: ["HR", "Super-Admin"].includes(role),
             link: "/org/docs/auth",
             icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Organization Records",
+          },
+        ],
+      },
+      Training: {
+        open: false,
+        isVisible: true,
+        icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
+        routes: [
+          {
+            key: "myTraining",
+            isVisible: ["Employee", "Manager", "Accountant"].includes(role),
+            link: "/my-training",
+            icon: <ArticleIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "My Trainings",
+          },
+          {
+            key: "manageTraining",
+            isVisible:
+              ["HR", "Super-Admin"].includes(role) &&
+              window.location.pathname?.includes("organisation"),
+            link: `/organisation/${orgId}/manage-training`,
+            icon: (
+              <ModelTrainingOutlined className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Manage Trainings",
           },
         ],
       },

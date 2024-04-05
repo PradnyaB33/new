@@ -193,6 +193,11 @@ const Organisation = ({ item }) => {
         </div>
         <div className="p-6 py-4  flex gap-4">
           <button
+            disabled={
+              subscriptionLoading ||
+              subscriptionFetching ||
+              getMessage() === "Sorry but payment not received"
+            }
             onClick={() => {
               let link;
               if (window.innerWidth <= 768) {

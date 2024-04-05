@@ -2,12 +2,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CalendarMonthOutlined,
   CalendarTodayOutlined,
+  CalendarViewDayOutlined,
   CategoryOutlined,
   LocationOnOutlined,
   MeetingRoomOutlined,
   PowerInputOutlined,
   TrendingDownOutlined,
 } from "@mui/icons-material";
+import { Button } from "@mui/material";
+import { format } from "date-fns";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../../../components/InputFileds/AuthInputFiled";
@@ -24,21 +27,22 @@ let center = {
   lng: 0,
 };
 
-const Step2 = () => {
+const Step2 = ({ nextStep }) => {
   const {
     trainingType,
     trainingStartDate,
-    trainingLink,
     trainingLocation,
+    trainingLink,
     trainingEndDate,
     trainingPoints,
+    trainingDuration,
     trainingDownCasted,
+    setStep2,
   } = useTrainingStore();
-  console.log(`🚀 ~ file: page.jsx:37 ~ trainingEndDate:`, trainingEndDate);
 
   const trainingDetailSchema = z.object({
-    trainingStartDate: z.string(),
-    trainingEndDate: z.string(),
+    trainingStartDate: z.string().optional(),
+    trainingEndDate: z.string().optional(),
     trainingLocation: z.any({
       address: z.string(),
       position: z.object({
@@ -56,29 +60,35 @@ const Step2 = () => {
         value: z.string(),
       })
     ),
+    trainingDuration: z.string(),
   });
   const { control, formState, handleSubmit, watch, getValues } = useForm({
     defaultValues: {
       trainingType,
-      trainingStartDate,
+      trainingStartDate: trainingStartDate ?? format(new Date(), "yyyy-MM-dd"),
       trainingLocation,
       trainingLink,
-      trainingEndDate,
+      trainingEndDate: trainingEndDate ?? format(new Date(), "yyyy-MM-dd"),
       trainingPoints,
       trainingDownCasted,
+      trainingDuration,
     },
     resolver: zodResolver(trainingDetailSchema),
   });
   const { errors } = formState;
+  console.log(`🚀 ~ file: page.jsx:79 ~ errors:`, errors);
   const onSubmit = (data) => {
     console.log(data);
+    setStep2(data);
+    nextStep();
   };
+  console.log(`🚀 ~ file: page.jsx:81 ~ getValues:`, getValues());
 
   return (
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex gap-8 items-start w-full"
+        className="flex flex-col gap-8 items-center w-full"
       >
         <div className="w-full grid grid-cols-2 gap-4">
           <AuthInputFiled
@@ -91,7 +101,7 @@ const Step2 = () => {
             control={control}
             error={errors.trainingStartDate}
             errors={errors}
-            // min={new Date().toISOString().split("T")[0]}
+            min={new Date().toISOString().split("T")[0]}
           />
           <AuthInputFiled
             name="trainingEndDate"
@@ -103,7 +113,20 @@ const Step2 = () => {
             control={control}
             error={errors.trainingEndDate}
             errors={errors}
-            // min={watch("trainingStartDate").toISOString().split("T")[0]}
+            min={
+              new Date(watch("trainingStartDate")).toISOString().split("T")[0]
+            }
+          />
+          <AuthInputFiled
+            name="trainingDuration"
+            icon={CalendarViewDayOutlined}
+            label={"Training Duration"}
+            type="text"
+            placeholder="Training Duration"
+            className="items-center"
+            control={control}
+            error={errors.trainingDuration}
+            errors={errors}
           />
           <AuthInputFiled
             name="trainingPoints"
@@ -169,6 +192,14 @@ const Step2 = () => {
             }
           />
         </div>
+        <Button
+          type="submit"
+          size="large"
+          className="!h-[40px] !w-[40px]"
+          variant="contained"
+        >
+          Next
+        </Button>
       </form>
     </>
   );

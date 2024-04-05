@@ -156,9 +156,6 @@ const AuthInputFiled = ({
                     className={`${
                       readOnly && "bg-[ghostwhite]"
                     } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
-                    // components={{
-                    //   IndicatorSeparator: () => null,
-                    // }}
                     options={options}
                     value={field?.value}
                     onChange={(value) => {

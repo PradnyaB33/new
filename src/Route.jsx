@@ -774,7 +774,7 @@ const App = () => {
         />
         <Route path="/application" element={<Application />} />
         <Route
-          path="/hr-training"
+          path="/organisation/:organisationId/manage-training"
           element={
             <RequireAuth permission={["HR", "Super-Admin"]}>
               <HrTrainings />
