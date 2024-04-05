@@ -7,7 +7,7 @@ import useDebounce from "./hook/useDebounce";
 
 const useTrainingHook = () => {
   const { trainingName, setTrainingData } = useSearchTrainingZustandStore();
-  const { decodedToken, authToken } = useGetUser();
+  const { authToken } = useGetUser();
   const debouncedSearchTerm = useDebounce(trainingName, 500);
   const { organisationId } = useParams();
 
