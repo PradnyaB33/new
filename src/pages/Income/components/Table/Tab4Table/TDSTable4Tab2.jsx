@@ -205,7 +205,7 @@ const TDSTable4Tab2 = () => {
       );
 
       handleAlert(true, "success", `Data uploaded successfully`);
-      queryClient.invalidateQueries({ queryKey: ["incomeHouse"] });
+      queryClient.invalidateQueries({ queryKey: ["sectionDeduction2"] });
     } catch (error) {
       console.log(error);
     }
@@ -308,7 +308,7 @@ const TDSTable4Tab2 = () => {
                                   type="file"
                                   className="hidden"
                                   onChange={(e) =>
-                                    handleProofChange(e, itemIndex)
+                                    handleProofChange(e, itemIndex, id)
                                   }
                                 />
                               </label>

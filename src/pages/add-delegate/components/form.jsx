@@ -92,7 +92,7 @@ const MiniForm = ({ data }) => {
             control={control}
             type="text"
             placeholder={"eg. Hanmant"}
-            label={`Middle name *`}
+            label={`Middle Name `}
             errors={errors}
             error={errors?.middle_name}
           />
@@ -103,7 +103,7 @@ const MiniForm = ({ data }) => {
             control={control}
             type="text"
             placeholder={"eg. Barge"}
-            label={`Last name *`}
+            label={`Last Name *`}
             errors={errors}
             error={errors?.last_name}
           />
@@ -114,7 +114,7 @@ const MiniForm = ({ data }) => {
             control={control}
             type="date"
             placeholder={"date_of_birth here"}
-            label={`Date of birth *`}
+            label={`Date Of Birth *`}
             errors={errors}
             error={errors?.date_of_birth}
           />
@@ -125,7 +125,7 @@ const MiniForm = ({ data }) => {
             control={control}
             type="date"
             placeholder={"eg. Barge"}
-            label={`Joining Date *`}
+            label={`Date Of Joining *`}
             errors={errors}
             error={errors?.joining_date}
           />
@@ -136,7 +136,7 @@ const MiniForm = ({ data }) => {
             control={control}
             type="email"
             placeholder={"eg. sahilbarge@gmail.com"}
-            label={`Enter your email *`}
+            label={`Email *`}
             errors={errors}
             error={errors?.email}
           />
@@ -147,7 +147,7 @@ const MiniForm = ({ data }) => {
             control={control}
             type="number"
             placeholder={"eg. 33333-44444"}
-            label={`Enter your phone number*`}
+            label={`Phone Number *`}
             errors={errors}
             error={errors?.phone_number}
           />
@@ -158,7 +158,7 @@ const MiniForm = ({ data }) => {
             control={control}
             type="naresh-select"
             placeholder={"eg. Male"}
-            label={`Select gender *`}
+            label={`Gender *`}
             errors={errors}
             error={errors?.gender}
             options={[
@@ -174,7 +174,7 @@ const MiniForm = ({ data }) => {
             control={control}
             type={"password"}
             placeholder={"**********"}
-            label={`Enter your password *`}
+            label={`Password *`}
             errors={errors}
             error={errors?.password}
             visible={visible}

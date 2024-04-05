@@ -11,7 +11,13 @@ const useOrg = create((set) => {
     industry_type: undefined,
     email: undefined,
     organization_linkedin_url: undefined,
-    location: undefined,
+    location: {
+      address: undefined,
+      position: {
+        lat: undefined,
+        lng: undefined,
+      },
+    },
     contact_number: undefined,
     description: undefined,
     creator: undefined, // Using the obtained decoded token

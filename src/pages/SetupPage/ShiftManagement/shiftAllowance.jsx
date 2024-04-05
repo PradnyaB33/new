@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 import "tailwindcss/tailwind.css";
 import AppDatePicker from "../../../components/date-picker/date-picker2";
 import useShiftData from "../../../hooks/ShiftData/useShiftData";
+import ShiftsTable from "./components/ShiftsTable";
 import Mapped from "./components/mapped-form";
-import ShiftsTable from './components/ShiftsTable'
 
 const ShiftAllowance = () => {
   const {
@@ -45,8 +45,8 @@ const ShiftAllowance = () => {
         </header>
 
         <div className="flex flex-col-reverse md:flex-row w-full justify-start p-6 gap-4">
-        <div className="flex flex-col gap-4">
-          <ShiftsTable />
+          <div className="flex flex-col gap-4">
+            <ShiftsTable />
           </div>
           <article className="md:w-[100%] space-y-2">
             {/* Calendar display */}

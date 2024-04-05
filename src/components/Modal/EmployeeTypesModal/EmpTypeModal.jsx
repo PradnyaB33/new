@@ -195,7 +195,7 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
                 icon={Person}
                 control={control}
                 type="text"
-                placeholder="EmpType"
+                placeholder="Employment Types"
                 label="Enter Employment Type *"
                 maxLimit={15}
                 errors={errors}

@@ -4,6 +4,7 @@ import usePunchNotification from "../../hooks/QueryHook/notification/punch-notif
 
 const PunchNotification = () => {
   const { data } = usePunchNotification();
+  console.log(`🚀 ~ file: page.jsx:7 ~ data:`, data);
   return (
     <div>
       {data?.map((items, idx) => (

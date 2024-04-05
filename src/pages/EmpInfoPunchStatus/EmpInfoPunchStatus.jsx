@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import * as XLSX from "xlsx";
 import { Button, Container, TextField, Typography } from "@mui/material";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import * as XLSX from "xlsx";
 import AttendanceBioModal from "../../components/Modal/AttedanceBioModal/AttendanceBioModal";
 
 const EmpInfoPunchStatus = () => {
@@ -74,12 +74,10 @@ const EmpInfoPunchStatus = () => {
   };
 
   const handleEmployeeSelect = (index) => {
-    const updatedEmployees = [...selectedEmployees];
-    updatedEmployees[index] = {
-      ...currentItems[index],
-      selected: !currentItems[index].selected,
-    };
-    setSelectedEmployees(updatedEmployees.filter((employee) => employee));
+    const selectedEmployee = tableData.find(
+      (employee) => employee[0] === currentItems[index][0]
+    );
+    setSelectedEmployees((prevSelected) => [...prevSelected, selectedEmployee]);
   };
 
   console.log("selected employee", selectedEmployees);

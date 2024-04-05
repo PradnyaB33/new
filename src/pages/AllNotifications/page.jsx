@@ -12,19 +12,19 @@ const ParentNotification = () => {
   const dummyData = [
     {
       name: "Leave Notification",
-      count: data?.length,
+      count: data?.leaveRequests?.length ?? 0,
       color: "#FF7373",
       url: "/leave-notification",
     },
     {
       name: "Shift Notification",
-      count: data2?.length,
+      count: data2?.length ?? 0,
       color: "#3668ff",
       url: "/shift-notification",
     },
     {
       name: "Remote Punching Notification",
-      count: data3?.length,
+      count: data3?.length ?? 0,
       color: "#51FD96",
       url: "/punch-notification",
     },

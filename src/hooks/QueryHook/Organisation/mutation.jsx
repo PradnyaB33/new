@@ -31,7 +31,7 @@ const useOrganisationMutation = () => {
       "organization_linkedin_url",
       data.organization_linkedin_url
     );
-    formData.append("location", data.location);
+    formData.append("location", JSON.stringify(data.location));
     formData.append("contact_number", data.contact_number);
     formData.append("description", data.description);
 

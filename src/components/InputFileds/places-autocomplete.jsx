@@ -20,8 +20,8 @@ const PlaceAutoComplete = ({
   apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   value,
 }) => {
-  const [state, setState] = useState(value?.address);
   const data = useGetCurrentLocation();
+  const [state, setState] = useState(value?.address || "");
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const handleSelect = async (option, onChange) => {
     if (!option) {
@@ -79,53 +79,55 @@ const PlaceAutoComplete = ({
         id={name}
         render={({ field }) => {
           return (
-            <div
-              className={`${
-                readOnly && "bg-[ghostwhite]"
-              } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
-            >
-              {Icon && <Icon className="text-gray-700" />}
-              <PlacesAutocomplete
-                value={state}
-                onChange={(value) => {
-                  setState(value);
-                }}
+            <>
+              <div
+                className={`${
+                  readOnly && "bg-[ghostwhite]"
+                } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
               >
-                {({ getInputProps, suggestions, loading }) => {
-                  return (
-                    <Select
-                      isLoading={loading}
-                      placeholder={placeholder}
-                      styles={{
-                        control: (styles) => ({
-                          ...styles,
-                          borderWidth: "0px",
-                          boxShadow: "none",
-                        }),
-                      }}
-                      className={`${
-                        readOnly && "bg-[ghostwhite]"
-                      } bg-white min-w-44 w-full !outline-none px-2 !shadow-none !border-none !border-0`}
-                      inputValue={getInputProps().value}
-                      options={suggestions}
-                      getOptionLabel={(option) => option?.description}
-                      getOptionValue={(option) => option?.placeId}
-                      onInputChange={(value) => {
-                        getInputProps().onChange({
-                          target: { value: value },
-                        });
-                      }}
-                      filterOption={false}
-                      onChange={(value) => {
-                        handleSelect(value, field?.onChange);
-                      }}
-                      isClearable={true}
-                      isSearchable={true}
-                    />
-                  );
-                }}
-              </PlacesAutocomplete>
-            </div>
+                {Icon && <Icon className="text-gray-700" />}
+                <PlacesAutocomplete
+                  value={state}
+                  onChange={(value) => {
+                    setState(value);
+                  }}
+                >
+                  {({ getInputProps, suggestions, loading }) => {
+                    return (
+                      <Select
+                        isLoading={loading}
+                        placeholder={placeholder}
+                        styles={{
+                          control: (styles) => ({
+                            ...styles,
+                            borderWidth: "0px",
+                            boxShadow: "none",
+                          }),
+                        }}
+                        className={`${
+                          readOnly && "bg-[ghostwhite]"
+                        } bg-white min-w-44 w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                        inputValue={getInputProps().value}
+                        options={suggestions}
+                        getOptionLabel={(option) => option?.description}
+                        getOptionValue={(option) => option?.placeId}
+                        onInputChange={(value) => {
+                          getInputProps().onChange({
+                            target: { value: value },
+                          });
+                        }}
+                        filterOption={false}
+                        onChange={(value) => {
+                          handleSelect(value, field?.onChange);
+                        }}
+                        isClearable={true}
+                        isSearchable={true}
+                      />
+                    );
+                  }}
+                </PlacesAutocomplete>
+              </div>
+            </>
           );
         }}
       />

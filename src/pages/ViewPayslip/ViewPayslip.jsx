@@ -127,7 +127,10 @@ const ViewPayslip = () => {
                       </p>
                       <p className="text-lg flex items-center">
                         <span className=" mr-1">Location :</span>
-                        <span> {organisationInfo?.location || ""}</span>
+                        <span>
+                          {" "}
+                          {organisationInfo?.location?.address || ""}
+                        </span>
                       </p>
                       <p className="text-lg flex items-center">
                         <span className="mr-1">Contact No :</span>
@@ -404,7 +407,7 @@ const ViewPayslip = () => {
               <div>
                 <img
                   src="/payslip.svg"
-                  style={{ height: "600px", marginLeft: "50%" }}
+                  style={{ height: "600px", marginLeft: "20%" }}
                   alt="none"
                 />
               </div>
@@ -414,7 +417,7 @@ const ViewPayslip = () => {
                   sx={{
                     width: "100%",
                     maxWidth: "650px",
-                    marginLeft: "60%",
+                    marginLeft: "25%",
                     display: "flex",
                     justifyContent: "center",
                   }}

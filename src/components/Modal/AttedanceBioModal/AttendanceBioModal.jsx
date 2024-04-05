@@ -1,3 +1,5 @@
+import React, { useContext, useState, useEffect } from "react";
+import { UseContext } from "../../../State/UseState/UseContext";
 import {
   Button,
   Container,
@@ -8,37 +10,37 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { TestContext } from "../../../State/Function/Main";
 
 const AttendanceBioModal = ({
   handleClose,
   open,
   organisationId,
-  handleSync,
+  selectedEmployees,
 }) => {
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
+  const { handleAlert } = useContext(TestContext);
   const [emailSearch, setEmailSearch] = useState("");
   const [availableEmployee, setAvailableEmployee] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  console.log(
-    `🚀 ~ file: AttendanceBioModal.jsx:22 ~ setCurrentPage:`,
-    setCurrentPage
-  );
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const [checkedEmployees, setCheckedEmployees] = useState([]);
 
-  useEffect(() => {
-    fetchAvailableEmployee(currentPage);
-    // eslint-disable-next-line
-  }, [currentPage]);
-
+  // pull employee
   const fetchAvailableEmployee = async (page) => {
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`
-      );
+      const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
+      const response = await axios.get(apiUrl, {
+        headers: {
+          Authorization: authToken,
+        },
+      });
       setAvailableEmployee(response.data.employees);
+      setCurrentPage(page);
       setTotalPages(response.data.totalPages || 1);
+      // Generate an array of page numbers
       const numbersArray = Array.from(
         { length: response.data.totalPages || 1 },
         (_, index) => index + 1
@@ -49,14 +51,10 @@ const AttendanceBioModal = ({
     }
   };
 
-  const handleEmployeeSelect = (employeeId) => {
-    const isChecked = checkedEmployees.includes(employeeId);
-    if (isChecked) {
-      setCheckedEmployees(checkedEmployees.filter((id) => id !== employeeId));
-    } else {
-      setCheckedEmployees([...checkedEmployees, employeeId]);
-    }
-  };
+  useEffect(() => {
+    fetchAvailableEmployee(currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
 
   const prePage = () => {
     if (currentPage !== 1) {
@@ -72,6 +70,58 @@ const AttendanceBioModal = ({
 
   const changePage = (id) => {
     fetchAvailableEmployee(id);
+  };
+
+  const handleCheckEmp = (employeeId) => {
+    const isChecked = checkedEmployees.includes(employeeId);
+    if (isChecked) {
+      setCheckedEmployees(checkedEmployees.filter((id) => id !== employeeId));
+    } else {
+      setCheckedEmployees([...checkedEmployees, employeeId]);
+    }
+  };
+  console.log("employee from aegis", checkedEmployees);
+  console.log("employee from biomatric", selectedEmployees);
+
+  const handleSync = async () => {
+    try {
+      const syncedData = checkedEmployees.map((employee) => {
+        const selectedEmployee = selectedEmployees.find(
+          (emp) => emp[0] === employee.empId
+        );
+
+        if (selectedEmployee) {
+          return {
+            date: selectedEmployee[3],
+            punchingTime: selectedEmployee[4],
+            punchingStatus: selectedEmployee[5],
+          };
+        } else {
+          return employee;
+        }
+      });
+
+      const EmployeeId =
+        checkedEmployees.length > 0 ? checkedEmployees[0]._id : null;
+      console.log("employee id", EmployeeId);
+      // Make a POST request to the backend API
+      axios.post(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/add-attendance-data`,
+        {
+          EmployeeId: EmployeeId,
+          punchingRecords: syncedData,
+        },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      handleAlert(true, "success", "Synced data successfully..");
+    } catch (error) {
+      console.error("Failed to sync attendance data:", error);
+    }
   };
 
   return (
@@ -90,10 +140,10 @@ const AttendanceBioModal = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <DialogContent className="border-none !pt-0 !px-0 shadow-md outline-none rounded-md">
-        <Container maxWidth="xl" className="bg-gray-50">
+      <DialogContent className="border-none  !pt-0 !px-0  shadow-md outline-none rounded-md">
+        <Container maxWidth="xl" className="bg-gray-50 ">
           <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
-            <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
+            <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
               Employee
             </Typography>
 
@@ -110,8 +160,8 @@ const AttendanceBioModal = ({
             </div>
 
             <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-              <table className="min-w-full bg-white text-left !text-sm font-light">
-                <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+              <table className="min-w-full bg-white  text-left !text-sm font-light">
+                <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                   <tr className="!font-semibold">
                     <th scope="col" className="!text-left pl-8 py-3">
                       Select
@@ -151,8 +201,7 @@ const AttendanceBioModal = ({
                         <td className="!text-left pl-8 py-3">
                           <input
                             type="checkbox"
-                            onChange={() => handleEmployeeSelect(item.id)}
-                            checked={checkedEmployees.includes(item.id)}
+                            onChange={() => handleCheckEmp(item)}
                           />
                         </td>
                         <td className="!text-left pl-8 py-3">{id + 1}</td>
@@ -216,7 +265,8 @@ const AttendanceBioModal = ({
                         marginRight: "5px",
                       }}
                     >
-                      <button
+                      <a
+                        href={`#${n}`}
                         style={{
                           color: currentPage === n ? "#fff" : "#007bff",
                           backgroundColor:
@@ -226,13 +276,12 @@ const AttendanceBioModal = ({
                           textDecoration: "none",
                           borderRadius: "4px",
                           transition: "all 0.3s ease",
-                          cursor: "pointer",
                         }}
                         className="page-link"
                         onClick={() => changePage(n)}
                       >
                         {n}
-                      </button>
+                      </a>
                     </li>
                   ))}
                   <li style={{ display: "inline-block" }} className="page-item">
@@ -256,15 +305,11 @@ const AttendanceBioModal = ({
               </nav>
             </div>
             <DialogActions sx={{ justifyContent: "center" }}>
+              <Button variant="contained" color="primary" onClick={handleSync}>
+                Sync
+              </Button>
               <Button color="error" variant="outlined" onClick={handleClose}>
                 Cancel
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleSync(checkedEmployees)}
-              >
-                Sync
               </Button>
             </DialogActions>
           </article>

@@ -25,7 +25,13 @@ const organizationSchema = z.object({
   industry_type: z.enum(["Technology", "Finance", "Healthcare", "Education"]),
   email: z.string().email(),
   organization_linkedin_url: z.string(),
-  location: z.string(),
+  location: z.any({
+    address: z.string(),
+    position: z.object({
+      lat: z.number(),
+      lng: z.number(),
+    }),
+  }),
   contact_number: z
     .string()
     .max(10, { message: "contact number must be 10 digits" })
@@ -43,7 +49,7 @@ const organizationSchema = z.object({
 });
 const EditOrganisation = ({ item, handleCloseConfirmation }) => {
   const { updateOrganizationMutation } = useOrganisationMutation();
-  const { control, formState, handleSubmit } = useForm({
+  const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
       orgName: item?.orgName,
       foundation_date: item?.foundation_date,
@@ -185,14 +191,16 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
             error={errors.description}
           />
           <AuthInputFiled
+            className="w-full"
             name="location"
             icon={LocationOn}
             control={control}
-            type="not-select"
-            placeholder="Location Address "
-            label="Location Address  *"
+            placeholder="eg. Kathmandu, Nepal"
+            type="location-picker"
+            label="Location *"
             errors={errors}
             error={errors.location}
+            value={watch("location")}
           />
         </div>
         <Button type="submit" variant="contained" className="!w-max !mx-auto">
