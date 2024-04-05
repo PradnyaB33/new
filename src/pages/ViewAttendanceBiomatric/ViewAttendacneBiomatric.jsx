@@ -86,7 +86,7 @@ const ViewAttendacneBiomatric = () => {
                         {empAttendanceData?.EmployeeId?.first_name || ""}
                       </td>
                       <td className="!text-left pl-4 py-3">
-                      <IconButton aria-label="view" size="small" onClick={() => handleModalOpen(empAttendanceData?._id)}>
+                      <IconButton aria-label="view" size="small" onClick={() => handleModalOpen(empAttendanceData?._id || "")}>
                         <TableViewIcon sx={{ color: 'green' }} />
                         </IconButton>
 

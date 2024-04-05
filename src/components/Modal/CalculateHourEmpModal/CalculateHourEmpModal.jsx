@@ -22,6 +22,7 @@ const CalculateHourEmpModal = ({
   const authToken = cookies["aegis"];
   const [totalHours, setTotalHours] = useState("");
   const [attendanceData, setAttendanceData] = useState();
+  console.log(attendanceId);
 
 const fetchAttendanceData = async () => {
   try {
