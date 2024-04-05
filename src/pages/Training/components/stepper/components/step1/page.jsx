@@ -165,9 +165,9 @@ const Step1 = ({ nextStep }) => {
           <AuthInputFiled
             name="trainingType"
             icon={CategoryOutlined}
-            label={"Training Assigned to *"}
+            label={"Training Type *"}
             type="naresh-select"
-            placeholder="Training assigned to"
+            placeholder="Training Type"
             className="w-fit items-center"
             control={control}
             error={errors.trainingType}

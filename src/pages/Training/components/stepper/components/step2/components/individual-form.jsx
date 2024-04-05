@@ -1,6 +1,7 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectAllOutlined } from "@mui/icons-material";
+import { Modal } from "@mui/material";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
@@ -8,11 +9,11 @@ import { z } from "zod";
 
 const Individual = () => {
   const [open, setOpen] = useState(false);
-  console.log(
-    `🚀 ~ file: individual-form.jsx:11 ~ open, setOpen:`,
-    open,
-    setOpen
-  );
+  // console.log(
+  //   `🚀 ~ file: individual-form.jsx:11 ~ open, setOpen:`,
+  //   open,
+  //   setOpen
+  // );
   const individualSchema = z.object({
     _id: z.string(),
   });
@@ -86,31 +87,31 @@ const Individual = () => {
             />
           </div>
         </div>
-      </form>
-      {/* <Modal
-        open={open}
-        onClose={setOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div className="bg-white p-4 w-[400px] h-[400px]">
-          <div className="flex justify-between items-center">
-            <h2
-              id="modal-modal-title"
-              className="text-lg font-semibold text-gray-700"
-            >
-              Modal title
-            </h2>
-            <button onClick={setOpen(false)} className="text-red-500">
-              Close
-            </button>
+        <Modal
+          open={open}
+          onClose={() => setOpen(false)}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <div className="bg-white p-4 w-[400px] h-[400px]">
+            <div className="flex justify-between items-center">
+              <h2
+                id="modal-modal-title"
+                className="text-lg font-semibold text-gray-700"
+              >
+                Modal title
+              </h2>
+              <button onClick={() => setOpen(false)} className="text-red-500">
+                Close
+              </button>
+            </div>
+            <p id="modal-modal-description" className="text-sm text-gray-500">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+              Adipisci, consequuntur.
+            </p>
           </div>
-          <p id="modal-modal-description" className="text-sm text-gray-500">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci,
-            consequuntur.
-          </p>
-        </div>
-      </Modal> */}
+        </Modal>
+      </form>
     </>
   );
 };
