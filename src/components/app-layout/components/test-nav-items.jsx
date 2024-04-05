@@ -410,7 +410,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "orgDocs",
-            isVisible: ["HR", "Super-Admin"].includes(role),
+            isVisible: ["HR", "Super-Admin", "Manager"].includes(role),
             link: "/org/docs/auth",
             icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Organization Records",
