@@ -14,6 +14,7 @@ const EmpInfoPunchStatus = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 10;
+  console.log(setTotalPages);
   
 
   const handleFileUpload = (e) => {

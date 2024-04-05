@@ -41,6 +41,7 @@ const ViewAttendacneBiomatric = () => {
   };
   const handleModalClose = () => {
     setModalOpen(false);
+    setAttendanceId(null)
    
   };
 
