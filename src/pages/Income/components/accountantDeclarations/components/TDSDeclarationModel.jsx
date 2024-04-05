@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Category, Close, Money, Paid } from "@mui/icons-material";
+import { Category, Close, Paid } from "@mui/icons-material";
 import { Box, Button, IconButton, Modal } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect } from "react";
@@ -122,15 +122,6 @@ const TDSDeclarationModel = ({
               <label className={`font-semibold text-gray-500 text-md`}>
                 Declaration name
               </label>
-
-              <div
-                className={` hover:cursor-not-allowed border-gray-200 border-[.5px]  flex  rounded-md items-center px-2   bg-gray-100 py-1 md:py-[6px]`}
-              >
-                <Money />
-                <h1 className={` border-none  w-full outline-none px-2  `}>
-                  {investment?.name}
-                </h1>
-              </div>
             </div>
             {!isReject && (
               <AuthInputFiled

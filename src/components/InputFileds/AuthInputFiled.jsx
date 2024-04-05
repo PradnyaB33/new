@@ -1,17 +1,21 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Avatar } from "@mui/material";
 import { default as React } from "react";
 import Autocomplete, { usePlacesWidget } from "react-google-autocomplete";
 import { Controller } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { Link } from "react-router-dom";
-import Select from "react-select";
+import Select, { components } from "react-select";
 import CreatableSelect from "react-select/creatable";
 import Datepicker from "react-tailwindcss-datepicker";
 import useEmpState from "../../hooks/Employee-OnBoarding/useEmpState";
 import { salaryComponentArray } from "../Modal/SalaryInputFields/SalaryInputFieldsModal";
 import PlaceAutoComplete from "./places-autocomplete";
+
 // import Autocomplete from "react-google-autocomplete";
 
 const AuthInputFiled = ({
@@ -35,6 +39,7 @@ const AuthInputFiled = ({
   center,
   descriptionText,
   value,
+  autocompleteOption,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -42,6 +47,20 @@ const AuthInputFiled = ({
   const handleFocus = (fieldName) => {
     setFocusedInput(fieldName);
   };
+
+  const CustomOption = ({ data, ...props }) => (
+    <components.Option {...props}>
+      <div className="flex gap-2">
+        <Avatar
+          sx={{ width: 30, height: 30 }}
+          src={data.image}
+          alt={data.label}
+        />
+        {data.label}
+      </div>
+    </components.Option>
+  );
+
   const { ref } = usePlacesWidget({
     apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     onPlaceSelected: (place) => console.log(place),
@@ -80,6 +99,72 @@ const AuthInputFiled = ({
                   value={field.value}
                 />
               </div>
+            )}
+          />
+          <div className="h-4 !mb-1">
+            <ErrorMessage
+              errors={errors}
+              name={name}
+              render={({ message }) => (
+                <p className="text-sm text-red-500">{message}</p>
+              )}
+            />
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (type === "empselect") {
+    return (
+      <>
+        <div className={`space-y-1 w-full ${className}`}>
+          <label
+            htmlFor={name}
+            className={`${
+              error && "text-red-500"
+            } font-semibold text-gray-500 text-md`}
+          >
+            {label}
+          </label>
+          <Controller
+            control={control}
+            name={name}
+            id={name}
+            render={({ field }) => (
+              <>
+                <div
+                  className={`${
+                    readOnly && "bg-[ghostwhite]"
+                  } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+                >
+                  <Icon className="text-gray-700 text-sm" />
+                  <Select
+                    aria-errormessage=""
+                    placeholder={placeholder}
+                    isMulti
+                    components={{
+                      Option: CustomOption,
+                    }}
+                    styles={{
+                      control: (styles) => ({
+                        ...styles,
+                        borderWidth: "0px",
+                        boxShadow: "none",
+                      }),
+                    }}
+                    className={`${
+                      readOnly && "bg-[ghostwhite]"
+                    } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                    options={options}
+                    value={field?.value}
+                    onChange={(value) => {
+                      updateField(name, value);
+                      field.onChange(value);
+                    }}
+                  />
+                </div>
+              </>
             )}
           />
           <div className="h-4 !mb-1">
@@ -160,6 +245,7 @@ const AuthInputFiled = ({
       </>
     );
   }
+
   if (type === "naresh-select") {
     return (
       <>
@@ -388,7 +474,7 @@ const AuthInputFiled = ({
                   <Icon className="text-gray-700" />
                   <CreatableSelect
                     aria-errormessage="error"
-                    options={salaryComponentArray}
+                    options={autocompleteOption ?? salaryComponentArray}
                     placeholder={placeholder}
                     isMulti
                     styles={{
@@ -479,7 +565,7 @@ const AuthInputFiled = ({
           )}
         />
         <div className="h-4 !mb-1">
-          <p className="text-xs">{descriptionText}</p>
+          <p className="text-xs pl-2">{descriptionText}</p>
           <ErrorMessage
             errors={errors}
             name={name}
@@ -598,6 +684,59 @@ const AuthInputFiled = ({
           )}
         />
         <div className="h-4 w-[200px]  !z-50   !mb-1">
+          <ErrorMessage
+            errors={errors}
+            name={name}
+            render={({ message }) => (
+              <p className="text-sm mb-4 relative !bg-white  text-red-500">
+                {message}
+              </p>
+            )}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (type === "texteditor") {
+    return (
+      <div className={`space-y-1 mb-4 h-60 ${className}`}>
+        <label
+          htmlFor={name}
+          className={`${
+            error && "text-red-500"
+          } font-semibold  text-gray-500 text-md`}
+        >
+          {label}
+        </label>
+        <Controller
+          control={control}
+          name={name}
+          id={name}
+          render={({ field }) => (
+            <>
+              {/* <div
+                onFocus={() => {
+                  handleFocus(name);
+                }}
+                onBlur={() => setFocusedInput(null)}
+                className={`${readOnly && "bg-[ghostwhite]"} ${
+                  focusedInput === name
+                    ? "border-blue-500 border-[2px]"
+                    : "border-gray-200 border-[.5px]"
+                } flex rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
+              > */}
+              <ReactQuill
+                theme="snow"
+                value={field.value}
+                className="h-36 "
+                onChange={field.onChange}
+              />
+              {/* </div> */}
+            </>
+          )}
+        />
+        <div className="h-4 w-[200px]  !mt-14 !z-50   !mb-1">
           <ErrorMessage
             errors={errors}
             name={name}

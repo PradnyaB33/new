@@ -18,11 +18,8 @@ const TestAccordian = ({
         <h1 className=" py-1 font-semibold text-[#67748E]">{role}</h1>
       </div>
 
-      {routes.map((route) => (
-        <div
-          className={`${route.isVisible ? "block" : "hidden"}`}
-          key={route.key}
-        >
+      {routes.map((route, i) => (
+        <div className={`${route.isVisible ? "block" : "hidden"}`} key={i}>
           <Link
             onClick={() => toggleDrawer()}
             to={route.link}
