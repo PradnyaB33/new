@@ -8,12 +8,17 @@ import {
   TrendingUp,
 } from "@mui/icons-material";
 import { Box, Button, IconButton, Modal } from "@mui/material";
-import React from "react";
+import axios from "axios";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
+import { TestContext } from "../../../State/Function/Main";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
+import useAuthToken from "../../../hooks/Token/useAuth";
 
 const GoalsModel = ({ handleClose, open, options }) => {
+  const { handleAlert } = useContext(TestContext);
   const style = {
     position: "absolute",
     top: "50%",
@@ -25,7 +30,24 @@ const GoalsModel = ({ handleClose, open, options }) => {
     p: 4,
   };
 
-  const zodSchema = z.object({});
+  const authToken = useAuthToken();
+  const zodSchema = z.object({
+    goal: z.string(),
+    description: z.string(),
+    measurement: z.string().optional(),
+    assignee: z.array(z.object({ value: z.string(), label: z.string() })),
+    startDate: z.object({
+      startDate: z.string(),
+      endDate: z.string(),
+    }),
+    endDate: z.object({
+      startDate: z.string(),
+      endDate: z.string(),
+    }),
+    goaltype: z.object({ value: z.string(), label: z.string() }),
+    goalStatus: z.string(),
+    attachment: z.string().optional(),
+  });
 
   const {
     handleSubmit,
@@ -39,13 +61,61 @@ const GoalsModel = ({ handleClose, open, options }) => {
     resolver: zodResolver(zodSchema),
   });
 
-  const onSubmit = async (data) => {
-    try {
-      console.log(data);
-    } catch (error) {
-      console.log(error);
+  const queryClient = useQueryClient();
+  const performanceSetup = useMutation(
+    async (data) => {
+      await axios.post(
+        `${process.env.REACT_APP_API}/route/performance/createGoal`,
+        { goals: data },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: () => {
+        handleAlert(true, "success", "Performance setup created successfully");
+        queryClient.invalidateQueries("orggoals");
+        handleClose();
+      },
     }
+  );
+
+  const onSubmit = async (data) => {
+    const goals = {
+      goal: data.goal,
+      description: data.description,
+      measurement: data.measurement,
+      assignee: data.assignee.map((emp) => emp.value),
+      startDate: data.startDate.startDate,
+      endDate: data.endDate.startDate,
+      goaltype: data.goaltype.value,
+      goalStatus: data.goalStatus,
+      attachment: data.attachment,
+    };
+
+    performanceSetup.mutate(goals);
   };
+
+  const { data: employeeData } = useQuery("employee", async () => {
+    const { data } = await axios.get(
+      `${process.env.REACT_APP_API}/route/employee/getEmployeeUnderManager`,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+    return data.reportees;
+  });
+
+  const empoptions = employeeData?.map((emp) => ({
+    value: emp._id,
+    label: `${emp.first_name} ${emp.last_name}`,
+    image: emp.user_logo_url,
+  }));
 
   return (
     <>
@@ -73,14 +143,14 @@ const GoalsModel = ({ handleClose, open, options }) => {
             className="px-6 max-h-[80vh] overflow-auto "
           >
             <AuthInputFiled
-              name="Goal"
+              name="goal"
               icon={TrendingUp}
               control={control}
               type="text"
               placeholder="goal"
-              label="Enter Goal Name"
+              label="Enter goal name"
               errors={errors}
-              error={errors.declaration}
+              error={errors.goal}
             />
             <AuthInputFiled
               name="description"
@@ -88,9 +158,9 @@ const GoalsModel = ({ handleClose, open, options }) => {
               control={control}
               type="texteditor"
               placeholder="100"
-              label="Enter goal name"
+              label="Enter description"
               errors={errors}
-              error={errors.declaration}
+              error={errors.description}
             />
             <AuthInputFiled
               name="measurement"
@@ -100,28 +170,28 @@ const GoalsModel = ({ handleClose, open, options }) => {
               placeholder="100"
               label="Enter measurements name"
               errors={errors}
-              error={errors.declaration}
+              error={errors.measurement}
             />
             <AuthInputFiled
               name="assignee"
               icon={PersonOutline}
               control={control}
-              type="select"
-              options={options}
+              type="empselect"
+              options={empoptions}
               placeholder="Assignee name"
               label="Select assignee name"
               errors={errors}
-              error={errors.declaration}
+              error={errors.assignee}
             />
             <AuthInputFiled
-              name="Goal"
+              name="attachment"
               icon={AttachFile}
               control={control}
               type="file"
               placeholder="100"
-              label="Add Attachments"
+              label="Add attachments"
               errors={errors}
-              error={errors.declaration}
+              error={errors.attachment}
             />
 
             <div className="grid grid-cols-2 gap-2">
@@ -134,7 +204,7 @@ const GoalsModel = ({ handleClose, open, options }) => {
                 placeholder="Assignee name"
                 label="Enter start date"
                 errors={errors}
-                error={errors.declaration}
+                error={errors.startDate}
               />
               <AuthInputFiled
                 name="endDate"
@@ -144,12 +214,12 @@ const GoalsModel = ({ handleClose, open, options }) => {
                 placeholder="100"
                 label="Enter end date"
                 errors={errors}
-                error={errors.declaration}
+                error={errors.endDate}
               />
             </div>
 
             <AuthInputFiled
-              name="assignee"
+              name="goaltype"
               icon={PersonOutline}
               control={control}
               type="select"
@@ -157,18 +227,18 @@ const GoalsModel = ({ handleClose, open, options }) => {
               placeholder="goal type"
               label="Select goal type"
               errors={errors}
-              error={errors.declaration}
+              error={errors.goaltype}
             />
             <AuthInputFiled
-              name="assignee"
+              name="goalStatus"
               icon={PersonOutline}
               control={control}
               type="text"
               options={options}
-              placeholder="goal type"
+              placeholder="status"
               label="Select status"
               errors={errors}
-              error={errors.declaration}
+              error={errors.goalStatus}
             />
 
             <div className="flex gap-4  mt-4 mr-4 justify-end">

@@ -28,6 +28,7 @@
     "date-fns": "^2.30.0",
     "date-holidays": "^3.23.1",
     "dayjs": "^1.11.10",
+    "dompurify": "^3.0.11",
     "excel-template": "^0.0.7",
     "file-saver": "^2.0.5",
     "firebase": "^10.5.2",

@@ -1,19 +1,66 @@
 import { DeleteOutlined, EditOutlined, Search } from "@mui/icons-material";
-import { Avatar, IconButton } from "@mui/material";
+import {
+  Avatar,
+  AvatarGroup,
+  CircularProgress,
+  IconButton,
+  Pagination,
+  Stack,
+  Tooltip,
+} from "@mui/material";
+import axios from "axios";
+import { format } from "date-fns";
 import React, { useState } from "react";
+import { useQuery } from "react-query";
 import Select from "react-select";
+import useAuthToken from "../../../hooks/Token/useAuth";
 import GoalsModel from "./GoalsModel";
+import PreviewGoalModal from "./PreviewGoalModal";
 
 const GoalsTable = () => {
   const [focusedInput, setFocusedInput] = useState(null);
   const [open, setOpen] = useState(false);
+  const [previewModal, setPreviewModal] = useState(false);
+  const [previewId, setPreviewId] = useState(null);
   const handleClose = () => {
     setOpen(false);
+    setPreviewModal(false);
+    setPreviewId(null);
   };
 
+  const handleOpen = (id) => {
+    setPreviewModal(true);
+    console.log("hii");
+    setPreviewId(id);
+  };
+
+  console.log(previewModal);
+  const rowsPerPage = 10; // Define the number of rows per page
+  const [page, setPage] = useState(1);
+
+  const authToken = useAuthToken();
+
+  const { data: orgGoals, isFetching } = useQuery("orggoals", async () => {
+    const { data } = await axios.get(
+      `${process.env.REACT_APP_API}/route/performance/getOrganizationGoals`,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+    return data;
+  });
+
+  const allSection80s = orgGoals?.flatMap((data) => data);
+
+  // Now, calculate the total number of rows using reduce
+  const totalRowCount = allSection80s?.reduce((total, section) => total + 1, 0);
   const handleFocus = (fieldName) => {
     setFocusedInput(fieldName);
   };
+
+  const pages = Math.ceil(totalRowCount / rowsPerPage);
 
   const options = [
     {
@@ -87,75 +134,133 @@ const GoalsTable = () => {
           </button>
         </div>
         <div className="bg-white w-full overflow-x-auto">
-          <table className=" table-auto border border-collapse min-w-full bg-white  text-left  !text-sm font-light">
-            <thead className="border-b bg-gray-100 font-bold">
-              <tr className="!font-semibold ">
-                <th
-                  scope="col"
-                  className="!text-left px-2 w-max py-3 text-sm border"
-                >
-                  Sr. No
-                </th>
-                <th scope="col" className="py-3 text-sm px-2 border">
-                  Goal Name
-                </th>
-
-                <th scope="col" className="py-3 text-sm px-2 border">
-                  Time
-                </th>
-                <th scope="col" className="py-3 text-sm px-2 border">
-                  Assignee
-                </th>
-                <th scope="col" className=" py-3 text-sm px-2 border">
-                  status
-                </th>
-
-                <th scope="col" className=" py-3 text-sm px-2 border">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className={`!font-medium w-[70px]  border-b `}>
-                <td className="!text-left  px-2 text-sm w-[70px] border ">1</td>
-                <td className="text-sm truncate text-left w-[250px] border px-2">
-                  <p>test</p>
-                </td>
-
-                <td className=" text-left !p-0 w-[300px] border ">
-                  <p
-                    className={`
-                        px-2 md:w-full w-max text-sm`}
+          {isFetching ? (
+            <CircularProgress />
+          ) : (
+            <table className=" table-auto border border-collapse min-w-full bg-white  text-left  !text-sm font-light">
+              <thead className="border-b bg-gray-100 font-bold">
+                <tr className="!font-semibold ">
+                  <th
+                    scope="col"
+                    className="!text-left px-2 w-max py-3 text-sm border"
                   >
-                    test one
-                  </p>
-                </td>
+                    Sr. No
+                  </th>
+                  <th scope="col" className="py-3 text-sm px-2 border">
+                    Goal Name
+                  </th>
 
-                <td className=" text-left !p-0 w-[250px] ">
-                  <div className="flex gap-2 p-2 items-center">
-                    <Avatar sx={{ width: 34, height: 34 }} />
-                    Test user
-                  </div>
-                </td>
-                <td className="text-left text-sm w-[200px]  border">
-                  <p className="px-2  md:w-full w-max">test status</p>
-                </td>
+                  <th scope="col" className="py-3 text-sm px-2 border">
+                    Time
+                  </th>
+                  <th scope="col" className="py-3 text-sm px-2 border">
+                    Assignee
+                  </th>
+                  <th scope="col" className=" py-3 text-sm px-2 border">
+                    status
+                  </th>
 
-                <td className="whitespace-nowrap px-2  w-[220px]">
-                  <IconButton color="primary" aria-label="edit">
-                    <EditOutlined />
-                  </IconButton>
-                  <IconButton color="error" aria-label="delete">
-                    <DeleteOutlined />
-                  </IconButton>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                  <th scope="col" className=" py-3 text-sm px-2 border">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {orgGoals?.map((goal, id) => (
+                  <tr
+                    key={id}
+                    className={` hover:bg-gray-50 !font-medium w-[70px]  border-b `}
+                  >
+                    <td
+                      onClick={() => handleOpen(goal._id)}
+                      className="!text-left  cursor-pointer   px-2 text-sm w-[70px] border "
+                    >
+                      {id + 1}
+                    </td>
+                    <td
+                      onClick={() => handleOpen(goal._id)}
+                      className="text-sm cursor-pointer truncate text-left w-[350px] border px-2"
+                    >
+                      <p>{goal.goal}</p>
+                    </td>
+
+                    <td
+                      onClick={() => handleOpen(goal._id)}
+                      className=" cursor-pointer text-left !p-0 w-[300px] border "
+                    >
+                      <p
+                        className={`
+                        px-2 md:w-full w-max text-sm`}
+                      >
+                        {format(new Date(goal.startDate), "PP")} -{" "}
+                        {format(new Date(goal.endDate), "PP")}
+                      </p>
+                    </td>
+
+                    <td
+                      onClick={() => handleOpen(goal._id)}
+                      className="flex cursor-pointer w-[250px] items-start !text-left px-2 py-2"
+                    >
+                      <AvatarGroup max={6}>
+                        {goal?.assignee.map((assignee, id) => (
+                          <Tooltip
+                            title={`${assignee.first_name} ${assignee.last_name}`}
+                          >
+                            <Avatar
+                              src={assignee?.user_logo_url}
+                              sx={{ width: 34, height: 34 }}
+                            />
+                          </Tooltip>
+                        ))}
+                      </AvatarGroup>
+                    </td>
+
+                    <td
+                      onClick={() => handleOpen(goal._id)}
+                      className="cursor-pointer text-left text-sm w-[200px]  border"
+                    >
+                      <p className="px-2  md:w-full w-max">{goal.status}</p>
+                    </td>
+
+                    <td className="whitespace-nowrap px-2  w-[220px]">
+                      <IconButton color="primary" aria-label="edit">
+                        <EditOutlined />
+                      </IconButton>
+                      <IconButton color="error" aria-label="delete">
+                        <DeleteOutlined />
+                      </IconButton>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          <Stack
+            direction={"row"}
+            className="border-[.5px] border-gray-200 border-t-0 px-4 py-2 h-full  items-center w-full justify-between "
+          >
+            <div>
+              <h1>
+                Showing {page} to 1 of {totalRowCount} entries
+              </h1>
+            </div>
+            <Pagination
+              count={pages}
+              page={page}
+              color="primary"
+              shape="rounded"
+              onChange={(event, value) => setPage(value)}
+            />
+          </Stack>
         </div>
       </div>
 
       <GoalsModel open={open} options={options} handleClose={handleClose} />
+      <PreviewGoalModal
+        open={previewModal}
+        id={previewId}
+        handleClose={handleClose}
+      />
     </section>
   );
 };
