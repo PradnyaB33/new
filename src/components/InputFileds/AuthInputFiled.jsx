@@ -5,6 +5,8 @@ import Autocomplete, { usePlacesWidget } from "react-google-autocomplete";
 import { Controller } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { Link } from "react-router-dom";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
@@ -12,6 +14,7 @@ import Datepicker from "react-tailwindcss-datepicker";
 import useEmpState from "../../hooks/Employee-OnBoarding/useEmpState";
 import { salaryComponentArray } from "../Modal/SalaryInputFields/SalaryInputFieldsModal";
 import PlaceAutoComplete from "./places-autocomplete";
+
 // import Autocomplete from "react-google-autocomplete";
 
 const AuthInputFiled = ({
@@ -595,6 +598,59 @@ const AuthInputFiled = ({
                   formNoValidate
                 />
               </div>
+            </>
+          )}
+        />
+        <div className="h-4 w-[200px]  !z-50   !mb-1">
+          <ErrorMessage
+            errors={errors}
+            name={name}
+            render={({ message }) => (
+              <p className="text-sm mb-4 relative !bg-white  text-red-500">
+                {message}
+              </p>
+            )}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (type === "texteditor") {
+    return (
+      <div className={`space-y-1 h-60 ${className}`}>
+        <label
+          htmlFor={name}
+          className={`${
+            error && "text-red-500"
+          } font-semibold  text-gray-500 text-md`}
+        >
+          {label}
+        </label>
+        <Controller
+          control={control}
+          name={name}
+          id={name}
+          render={({ field }) => (
+            <>
+              {/* <div
+                onFocus={() => {
+                  handleFocus(name);
+                }}
+                onBlur={() => setFocusedInput(null)}
+                className={`${readOnly && "bg-[ghostwhite]"} ${
+                  focusedInput === name
+                    ? "border-blue-500 border-[2px]"
+                    : "border-gray-200 border-[.5px]"
+                } flex rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
+              > */}
+              <ReactQuill
+                theme="snow"
+                value={field.value}
+                className="h-36"
+                onChange={field.onChange}
+              />
+              {/* </div> */}
             </>
           )}
         />
