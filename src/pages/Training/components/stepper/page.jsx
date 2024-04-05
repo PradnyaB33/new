@@ -49,7 +49,7 @@ const Stepper = ({ setOpen, open }) => {
       onClose={() => setOpen(false)}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
-      keepMounted
+      // keepMounted={false}
     >
       <Box className="border-none shadow-md outline-none rounded-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[40%] md:w-[70%] z-10 p-4 bg-white">
         <StepFormWrapper

@@ -172,7 +172,7 @@ const DocManage = () => {
 
       if (canSubmit) {
         await axios.post(
-          "http://localhost:4000/route/emp/adddocuments",
+          `${process.env.REACT_APP_API}/route/emp/adddocuments`,
           formData,
           {
             headers: { Authorization: token },
