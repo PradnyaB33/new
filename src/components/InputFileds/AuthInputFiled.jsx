@@ -480,7 +480,7 @@ const AuthInputFiled = ({
           )}
         />
         <div className="h-4 !mb-1">
-          <p className="text-xs">{descriptionText}</p>
+          <p className="text-xs pl-2">{descriptionText}</p>
           <ErrorMessage
             errors={errors}
             name={name}

@@ -2,12 +2,14 @@ import { ErrorMessage } from "@hookform/error-message";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   BookOutlined,
-  CalendarMonth,
-  CalendarToday,
+  CalendarMonthOutlined,
+  CalendarTodayOutlined,
   CategoryOutlined,
   DescriptionOutlined,
-  LocationOn,
+  LocationOnOutlined,
   MeetingRoomOutlined,
+  PowerInputOutlined,
+  TrendingDownOutlined,
 } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import React from "react";
@@ -31,6 +33,8 @@ const Step1 = ({ nextStep }) => {
     trainingLocation,
     trainingEndDate,
     setStep1,
+    trainingPoints,
+    trainingDownCasted,
   } = useTrainingStore();
   const skills = [
     { value: "communication", label: "Communication" },
@@ -66,6 +70,8 @@ const Step1 = ({ nextStep }) => {
       placeId: z.string(),
     }),
     trainingLink: z.string().url(),
+    trainingDownCasted: z.boolean(),
+    trainingPoints: z.string().optional(),
   });
   const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
@@ -77,6 +83,8 @@ const Step1 = ({ nextStep }) => {
       trainingLocation,
       trainingLink,
       trainingEndDate,
+      trainingPoints,
+      trainingDownCasted,
     },
     resolver: zodResolver(trainingForm),
   });
@@ -141,7 +149,7 @@ const Step1 = ({ nextStep }) => {
           />
           <AuthInputFiled
             name="trainingStartDate"
-            icon={CalendarToday}
+            icon={CalendarTodayOutlined}
             label={"Training Start Date *"}
             type="date"
             placeholder="Training Start Date"
@@ -153,7 +161,7 @@ const Step1 = ({ nextStep }) => {
           />
           <AuthInputFiled
             name="trainingEndDate"
-            icon={CalendarMonth}
+            icon={CalendarMonthOutlined}
             label={"Training End Date *"}
             type="date"
             placeholder="Training End Date"
@@ -164,6 +172,17 @@ const Step1 = ({ nextStep }) => {
             min={
               new Date(watch("trainingStartDate")).toISOString().split("T")[0]
             }
+          />
+          <AuthInputFiled
+            name="trainingPoints"
+            icon={PowerInputOutlined}
+            label={"Training Points"}
+            type="number"
+            placeholder="Training Points"
+            className="items-center"
+            control={control}
+            error={errors.trainingPoints}
+            errors={errors}
           />
           <AuthInputFiled
             name="trainingLink"
@@ -193,7 +212,7 @@ const Step1 = ({ nextStep }) => {
           <AuthInputFiled
             className="w-full"
             name="trainingLocation"
-            icon={LocationOn}
+            icon={LocationOnOutlined}
             control={control}
             placeholder="eg. Kathmandu, Nepal"
             type="location-picker"
@@ -202,6 +221,20 @@ const Step1 = ({ nextStep }) => {
             error={errors.trainingLocation}
             center={center}
             value={watch("trainingLocation")}
+          />
+          <AuthInputFiled
+            className={"w-full flex items-start justify-center flex-col"}
+            name={"trainingDownCasted"}
+            control={control}
+            type="checkbox"
+            placeholder="Downcasted"
+            label="Downcasted"
+            errors={errors}
+            error={errors.trainingDownCasted}
+            icon={TrendingDownOutlined}
+            descriptionText={
+              "Down-Casted Training will be automatically assigned to organization employees."
+            }
           />
         </div>
         <Button

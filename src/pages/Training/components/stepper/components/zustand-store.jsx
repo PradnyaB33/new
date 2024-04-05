@@ -17,6 +17,8 @@ const useTrainingStore = create((set) => ({
     },
     placeId: undefined,
   },
+  trainingPoints: "0",
+  trainingDownCasted: false,
 
   setStep1: (data) => {
     set({
@@ -29,6 +31,8 @@ const useTrainingStore = create((set) => ({
       trainingLink: data.trainingLink,
       trainingImage: data.trainingImage,
       trainingLocation: data.trainingLocation,
+      trainingPoints: data.trainingPoints,
+      trainingDownCasted: data.trainingDownCasted,
     });
   },
 }));
