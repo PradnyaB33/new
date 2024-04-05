@@ -84,7 +84,7 @@ const TDSTable4Tab2 = () => {
       "Section 80CCD NPS": [
         {
           section: "80 CCD ",
-          name: "Less: Additional Deduction under Sec 80CCD NPS (Max. ₹ 50,000/-)",
+          name: "Less: Additional deduction under sec 80CCD NPS (Max. ₹ 50,000/-)",
           declaration: 0,
           proof: "",
           status: "Not Submitted",

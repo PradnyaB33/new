@@ -36,7 +36,7 @@ const TDSTable4Tab1 = () => {
     // },
     {
       section: "80 C",
-      name: "Public Provident Fund",
+      name: "Public provident fund",
       amount: 0,
       proof: "",
       status: "Not Submitted",
@@ -44,7 +44,7 @@ const TDSTable4Tab1 = () => {
     },
     {
       section: "80 C",
-      name: "NSC investment + Accrued interest",
+      name: "NSC investment ",
       amount: 0,
       proof: "",
       status: "Not Submitted",
@@ -60,7 +60,7 @@ const TDSTable4Tab1 = () => {
     },
     {
       section: "80 C",
-      name: "Sukanya Samriddhi Account",
+      name: "Sukanya samriddhi account",
       amount: 0,
       proof: "",
       status: "Not Submitted",
@@ -76,7 +76,7 @@ const TDSTable4Tab1 = () => {
     },
     {
       section: "80 C",
-      name: "Tax Saving Fixed deposit in Bank (5 years)",
+      name: "Tax saving fixed deposit in bank (5 years)",
       amount: 0,
       proof: "",
       status: "Not Submitted",
@@ -84,7 +84,7 @@ const TDSTable4Tab1 = () => {
     },
     {
       section: "80 C",
-      name: "Tax Saving Bonds",
+      name: "Tax saving bonds",
       amount: 0,
       proof: "",
       status: "Not Submitted",
@@ -92,7 +92,7 @@ const TDSTable4Tab1 = () => {
     },
     {
       section: "80 C",
-      name: "E.L.S.S (Tax Saving Mutual Fund)",
+      name: "E.L.S.S (Tax saving mutual fund)",
       amount: 0,
       proof: "",
       status: "Not Submitted",
@@ -100,7 +100,7 @@ const TDSTable4Tab1 = () => {
     },
     {
       section: "80 CCC",
-      name: "Pension Plan from Insurance Companies/Mutual Funds (u/s 80CCC)",
+      name: "Pension plan from insurance companies/mutual funds (u/s 80CCC)",
       amount: 0,
       proof: "",
       status: "Not Submitted",
@@ -108,7 +108,7 @@ const TDSTable4Tab1 = () => {
     },
     {
       section: "80 CCD",
-      name: "Contribution to NPS notified by the Central Government",
+      name: "Contribution to NPS notified by the central government",
       amount: 0,
       proof: "",
       status: "Not Submitted",
@@ -116,7 +116,7 @@ const TDSTable4Tab1 = () => {
     },
     {
       section: "80 CCH",
-      name: "All contributions to Agniveer Corpus Fund",
+      name: "All contributions to agniveer corpus fund",
       amount: 0,
       proof: "",
       status: "Not Submitted",
