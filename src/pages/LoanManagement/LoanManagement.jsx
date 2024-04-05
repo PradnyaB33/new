@@ -16,6 +16,7 @@ import CreateLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/Create
 import UserProfile from "../../hooks/UserData/useUser";
 import LoanManagementSkeleton from "./LoanManagementSkeleton";
 import LoanManagementPieChart from "./LoanManagementPieChart";
+//import AddLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/AddLoanMgtModal";
 
 const LoanManagement = () => {
   const { cookies } = useContext(UseContext);
@@ -158,9 +159,10 @@ const LoanManagement = () => {
             </div>
           </div>
           <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
-            <div className="flex  gap-3 ">
-              <h1 className="!text-lg">Your Current Active Loans</h1>
-            </div>
+          <div className="flex gap-3">
+           <h1 className="text-xl">Your current active loans</h1>
+          </div>
+
             <Button
               className="!font-semibold !bg-sky-500 flex items-center gap-2"
               variant="contained"

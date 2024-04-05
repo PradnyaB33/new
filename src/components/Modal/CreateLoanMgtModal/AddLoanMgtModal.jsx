@@ -5,9 +5,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
+import { Business,  } from "@mui/icons-material";
 const AddLoanMgtModal = ({ handleClose, open, organisationId }) => {
-  const { getEmployeeLoanType, getTotalSalaryEmployee } =
-    useLoanQuery(organisationId);
+  
   const {
     loanType,
     rateOfIntereset,
@@ -26,7 +26,7 @@ const AddLoanMgtModal = ({ handleClose, open, organisationId }) => {
     loanCompletedDate: z.string(),
   });
 
-  const { control, formState, handleSubmit, getValues } = useForm({
+  const { control, formState, } = useForm({
     defaultValues: {
       loanType: loanType,
       rateOfIntereset: rateOfIntereset,
@@ -37,6 +37,7 @@ const AddLoanMgtModal = ({ handleClose, open, organisationId }) => {
     },
     resolver: zodResolver(LoanManagemetSchema),
   });
+  const { errors } = formState;
   return (
     <>
       <Dialog
