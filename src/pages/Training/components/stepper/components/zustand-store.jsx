@@ -6,7 +6,7 @@ const useTrainingStore = create((set) => ({
   trainingType: undefined,
   trainingDescription: undefined,
   trainingStartDate: format(new Date(), "yyyy-MM-dd"),
-  trainingDuration: undefined,
+  trainingEndDate: format(new Date(), "yyyy-MM-dd"),
   trainingLink: undefined,
   trainingImage: undefined,
   trainingLocation: {
@@ -25,7 +25,7 @@ const useTrainingStore = create((set) => ({
       trainingDescription: data.trainingDescription,
       trainingStartDate: data.trainingStartDate,
       trainingEndDate: data.trainingEndDate,
-      trainingDuration: data.trainingDuration,
+      trainingEndDate: data.trainingEndDate,
       trainingLink: data.trainingLink,
       trainingImage: data.trainingImage,
       trainingLocation: data.trainingLocation,

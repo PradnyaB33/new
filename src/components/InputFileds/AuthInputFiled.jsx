@@ -35,6 +35,7 @@ const AuthInputFiled = ({
   center,
   descriptionText,
   value,
+  autocompleteOption,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -388,7 +389,7 @@ const AuthInputFiled = ({
                   <Icon className="text-gray-700" />
                   <CreatableSelect
                     aria-errormessage="error"
-                    options={salaryComponentArray}
+                    options={autocompleteOption ?? salaryComponentArray}
                     placeholder={placeholder}
                     isMulti
                     styles={{

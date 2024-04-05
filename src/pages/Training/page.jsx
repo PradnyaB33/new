@@ -2,7 +2,7 @@ import React from "react";
 import Header from "./components/header";
 import MiniForm from "./components/mini-form";
 
-const EmployeeTraining = () => {
+const HrTrainings = () => {
   return (
     <div className="pt-16 flex flex-col w-full px-8 gap-8">
       <Header />
@@ -14,4 +14,4 @@ const EmployeeTraining = () => {
   );
 };
 
-export default EmployeeTraining;
+export default HrTrainings;

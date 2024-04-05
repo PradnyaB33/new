@@ -2,12 +2,12 @@ import { ErrorMessage } from "@hookform/error-message";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   BookOutlined,
+  CalendarMonth,
   CalendarToday,
   CategoryOutlined,
   DescriptionOutlined,
   LocationOn,
   MeetingRoomOutlined,
-  TimerOutlined,
 } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import React from "react";
@@ -26,12 +26,19 @@ const Step1 = ({ nextStep }) => {
     trainingType,
     trainingDescription,
     trainingStartDate,
-    trainingDuration,
     trainingLink,
     trainingImage,
     trainingLocation,
+    trainingEndDate,
     setStep1,
   } = useTrainingStore();
+  const skills = [
+    { value: "communication", label: "Communication" },
+    { value: "leadership", label: "Leadership" },
+    { value: "problemSolving", label: "Problem Solving" },
+    { value: "timeManagement", label: "Time Management" },
+    { value: "teamwork", label: "Teamwork" },
+  ];
 
   const trainingForm = z.object({
     trainingImage: z.any().refine(
@@ -41,10 +48,15 @@ const Step1 = ({ nextStep }) => {
       { message: "Image size maximum 50kb" }
     ),
     trainingName: z.string(),
-    trainingType: z.enum(["Individual", "Organizational", "Departmental"]),
+    trainingType: z.array(
+      z.object({
+        label: z.string(),
+        value: z.string(),
+      })
+    ),
     trainingDescription: z.string(),
     trainingStartDate: z.string(),
-    trainingDuration: z.string(),
+    trainingEndDate: z.string(),
     trainingLocation: z.any({
       address: z.string(),
       position: z.object({
@@ -55,16 +67,16 @@ const Step1 = ({ nextStep }) => {
     }),
     trainingLink: z.string().url(),
   });
-  const { control, formState, handleSubmit } = useForm({
+  const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
       trainingImage,
       trainingName,
       trainingType,
       trainingDescription,
       trainingStartDate,
-      trainingDuration,
       trainingLocation,
       trainingLink,
+      trainingEndDate,
     },
     resolver: zodResolver(trainingForm),
   });
@@ -139,17 +151,19 @@ const Step1 = ({ nextStep }) => {
             errors={errors}
             min={new Date().toISOString().split("T")[0]}
           />
-
           <AuthInputFiled
-            name="trainingDuration"
-            icon={TimerOutlined}
-            label={"Training Duration *"}
-            type="number"
-            placeholder="eg. 7 days"
+            name="trainingEndDate"
+            icon={CalendarMonth}
+            label={"Training End Date *"}
+            type="date"
+            placeholder="Training End Date"
             className="items-center"
             control={control}
-            error={errors.trainingDuration}
+            error={errors.trainingEndDate}
             errors={errors}
+            min={
+              new Date(watch("trainingStartDate")).toISOString().split("T")[0]
+            }
           />
           <AuthInputFiled
             name="trainingLink"
@@ -165,32 +179,16 @@ const Step1 = ({ nextStep }) => {
           <AuthInputFiled
             name="trainingType"
             icon={CategoryOutlined}
-            label={"Training Assigned to *"}
-            type="naresh-select"
-            placeholder="Training assigned to"
-            className="w-fit items-center"
             control={control}
-            error={errors.trainingType}
+            type="autocomplete"
+            placeholder="Training Type"
+            label="Training Type *"
+            readOnly={false}
+            maxLimit={15}
             errors={errors}
-            options={[
-              { value: "Individual", label: "Individual", isDisabled: false },
-              {
-                value: "Organizational",
-                label: "Organizational",
-                isDisabled:
-                  decodedToken?.user?.profile?.includes("Super-Admin") ||
-                  decodedToken?.user?.profile?.includes("Delegate-Super-Admin")
-                    ? false
-                    : true,
-              },
-              {
-                value: "Departmental",
-                label: "Departmental",
-                isDisabled: decodedToken?.user?.profile?.includes("HR")
-                  ? false
-                  : true,
-              },
-            ]}
+            autocompleteOption={skills}
+            error={errors.trainingType}
+            isMulti={false}
           />
           <AuthInputFiled
             className="w-full"
