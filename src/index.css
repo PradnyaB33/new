@@ -5,6 +5,12 @@
 .preview h1 {
   @apply text-2xl font-bold;
 }
+.preview h2 {
+  @apply text-xl font-semibold;
+}
+.preview h3 {
+  @apply text-lg;
+}
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

@@ -137,121 +137,125 @@ const GoalsTable = () => {
           {isFetching ? (
             <CircularProgress />
           ) : (
-            <table className=" table-auto border border-collapse min-w-full bg-white  text-left  !text-sm font-light">
-              <thead className="border-b bg-gray-100 font-bold">
-                <tr className="!font-semibold ">
-                  <th
-                    scope="col"
-                    className="!text-left px-2 w-max py-3 text-sm border"
-                  >
-                    Sr. No
-                  </th>
-                  <th scope="col" className="py-3 text-sm px-2 border">
-                    Goal Name
-                  </th>
-
-                  <th scope="col" className="py-3 text-sm px-2 border">
-                    Time
-                  </th>
-                  <th scope="col" className="py-3 text-sm px-2 border">
-                    Assignee
-                  </th>
-                  <th scope="col" className=" py-3 text-sm px-2 border">
-                    status
-                  </th>
-
-                  <th scope="col" className=" py-3 text-sm px-2 border">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {orgGoals?.map((goal, id) => (
-                  <tr
-                    key={id}
-                    className={` hover:bg-gray-50 !font-medium w-[70px]  border-b `}
-                  >
-                    <td
-                      onClick={() => handleOpen(goal._id)}
-                      className="!text-left  cursor-pointer   px-2 text-sm w-[70px] border "
+            <>
+              <table className=" table-auto border border-collapse min-w-full bg-white  text-left  !text-sm font-light">
+                <thead className="border-b bg-gray-100 font-bold">
+                  <tr className="!font-semibold ">
+                    <th
+                      scope="col"
+                      className="!text-left px-2 w-max py-3 text-sm border"
                     >
-                      {id + 1}
-                    </td>
-                    <td
-                      onClick={() => handleOpen(goal._id)}
-                      className="text-sm cursor-pointer truncate text-left w-[350px] border px-2"
-                    >
-                      <p>{goal.goal}</p>
-                    </td>
+                      Sr. No
+                    </th>
+                    <th scope="col" className="py-3 text-sm px-2 border">
+                      Goal Name
+                    </th>
 
-                    <td
-                      onClick={() => handleOpen(goal._id)}
-                      className=" cursor-pointer text-left !p-0 w-[300px] border "
-                    >
-                      <p
-                        className={`
-                        px-2 md:w-full w-max text-sm`}
-                      >
-                        {format(new Date(goal.startDate), "PP")} -{" "}
-                        {format(new Date(goal.endDate), "PP")}
-                      </p>
-                    </td>
+                    <th scope="col" className="py-3 text-sm px-2 border">
+                      Time
+                    </th>
+                    <th scope="col" className="py-3 text-sm px-2 border">
+                      Assignee
+                    </th>
+                    <th scope="col" className=" py-3 text-sm px-2 border">
+                      status
+                    </th>
 
-                    <td
-                      onClick={() => handleOpen(goal._id)}
-                      className="flex cursor-pointer w-[250px] items-start !text-left px-2 py-2"
-                    >
-                      <AvatarGroup max={6}>
-                        {goal?.assignee.map((assignee, id) => (
-                          <Tooltip
-                            title={`${assignee.first_name} ${assignee.last_name}`}
-                          >
-                            <Avatar
-                              src={assignee?.user_logo_url}
-                              sx={{ width: 34, height: 34 }}
-                            />
-                          </Tooltip>
-                        ))}
-                      </AvatarGroup>
-                    </td>
-
-                    <td
-                      onClick={() => handleOpen(goal._id)}
-                      className="cursor-pointer text-left text-sm w-[200px]  border"
-                    >
-                      <p className="px-2  md:w-full w-max">{goal.status}</p>
-                    </td>
-
-                    <td className="whitespace-nowrap px-2  w-[220px]">
-                      <IconButton color="primary" aria-label="edit">
-                        <EditOutlined />
-                      </IconButton>
-                      <IconButton color="error" aria-label="delete">
-                        <DeleteOutlined />
-                      </IconButton>
-                    </td>
+                    <th scope="col" className=" py-3 text-sm px-2 border">
+                      Actions
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {orgGoals?.map((goal, id) => (
+                    <tr
+                      key={id}
+                      className={` hover:bg-gray-50 !font-medium w-[70px]  border-b `}
+                    >
+                      <td
+                        onClick={() => handleOpen(goal._id)}
+                        className="!text-left  cursor-pointer   px-2 text-sm w-[70px] border "
+                      >
+                        {id + 1}
+                      </td>
+                      <td
+                        onClick={() => handleOpen(goal._id)}
+                        className="text-sm cursor-pointer truncate text-left w-[350px] border px-2"
+                      >
+                        <p>{goal.goal}</p>
+                      </td>
+
+                      <td
+                        onClick={() => handleOpen(goal._id)}
+                        className=" cursor-pointer text-left !p-0 w-[300px] border "
+                      >
+                        <p
+                          className={`
+                        px-2 md:w-full w-max text-sm`}
+                        >
+                          {format(new Date(goal.startDate), "PP")} -{" "}
+                          {format(new Date(goal.endDate), "PP")}
+                        </p>
+                      </td>
+
+                      <td
+                        onClick={() => handleOpen(goal._id)}
+                        className="flex cursor-pointer w-[250px] items-start !text-left px-2 py-2"
+                      >
+                        <AvatarGroup max={6}>
+                          {goal?.assignee.map((assignee, id) => (
+                            <Tooltip
+                              title={`${assignee.first_name} ${assignee.last_name}`}
+                            >
+                              <Avatar
+                                src={assignee?.user_logo_url}
+                                sx={{ width: 34, height: 34 }}
+                              />
+                            </Tooltip>
+                          ))}
+                        </AvatarGroup>
+                      </td>
+
+                      <td
+                        onClick={() => handleOpen(goal._id)}
+                        className="cursor-pointer text-left text-sm w-[200px]  border"
+                      >
+                        <p className="px-2  md:w-full w-max">
+                          {goal.goalStatus}
+                        </p>
+                      </td>
+
+                      <td className="whitespace-nowrap px-2  w-[220px]">
+                        <IconButton color="primary" aria-label="edit">
+                          <EditOutlined />
+                        </IconButton>
+                        <IconButton color="error" aria-label="delete">
+                          <DeleteOutlined />
+                        </IconButton>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <Stack
+                direction={"row"}
+                className="border-[.5px] border-gray-200 border-t-0 px-4 py-2 h-full  items-center w-full justify-between "
+              >
+                <div>
+                  <h1>
+                    Showing {page} to 1 of {totalRowCount} entries
+                  </h1>
+                </div>
+                <Pagination
+                  count={pages}
+                  page={page}
+                  color="primary"
+                  shape="rounded"
+                  onChange={(event, value) => setPage(value)}
+                />
+              </Stack>
+            </>
           )}
-          <Stack
-            direction={"row"}
-            className="border-[.5px] border-gray-200 border-t-0 px-4 py-2 h-full  items-center w-full justify-between "
-          >
-            <div>
-              <h1>
-                Showing {page} to 1 of {totalRowCount} entries
-              </h1>
-            </div>
-            <Pagination
-              count={pages}
-              page={page}
-              color="primary"
-              shape="rounded"
-              onChange={(event, value) => setPage(value)}
-            />
-          </Stack>
         </div>
       </div>
 

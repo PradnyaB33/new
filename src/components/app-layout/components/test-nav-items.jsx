@@ -280,6 +280,39 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
+      Punching : {
+        open: false,
+        icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
+        isVisible:
+          window.location.pathname?.includes("organisation") &&
+          [
+            "Super-Admin",
+            "Delegate-Super Admin",
+            "HR",
+          ]?.includes(role),
+        routes: [
+          {
+            key: "punchingMachine",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/emo-info-punch-status`,
+            icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Punching Machine Attendance",
+          },
+
+          {
+            key: "viewAttendance",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/view-attendance-biomatric`,
+            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            text: "View Punching Attendance",
+          },
+        
+        ],
+      },
       Department: {
         open: false,
         isVisible:
