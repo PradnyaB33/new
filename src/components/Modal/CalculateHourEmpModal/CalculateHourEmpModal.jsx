@@ -35,7 +35,7 @@ const fetchAttendanceData = async () => {
       }
     );
     console.log(response);
-    setAttendanceData(response.data.data); 
+    setAttendanceData(response.data); 
   } catch (error) {
     console.error(error);
   }
