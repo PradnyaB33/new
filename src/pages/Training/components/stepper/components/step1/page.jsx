@@ -52,7 +52,6 @@ const Step1 = ({ nextStep }) => {
   });
   const { errors } = formState;
   const onSubmit = (data) => {
-    console.log(`🚀 ~ file: page.jsx:73 ~ data:`, data);
     setStep1(data);
     nextStep();
   };

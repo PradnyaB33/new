@@ -62,7 +62,7 @@ const Step2 = ({ nextStep }) => {
     ),
     trainingDuration: z.string(),
   });
-  const { control, formState, handleSubmit, watch, getValues } = useForm({
+  const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
       trainingType,
       trainingStartDate: trainingStartDate ?? format(new Date(), "yyyy-MM-dd"),
@@ -76,13 +76,10 @@ const Step2 = ({ nextStep }) => {
     resolver: zodResolver(trainingDetailSchema),
   });
   const { errors } = formState;
-  console.log(`🚀 ~ file: page.jsx:79 ~ errors:`, errors);
   const onSubmit = (data) => {
-    console.log(data);
     setStep2(data);
     nextStep();
   };
-  console.log(`🚀 ~ file: page.jsx:81 ~ getValues:`, getValues());
 
   return (
     <>

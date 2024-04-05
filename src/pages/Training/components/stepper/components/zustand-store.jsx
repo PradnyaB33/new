@@ -24,6 +24,7 @@ const useTrainingStore = create((set) => ({
   trainingPoints: "0",
   trainingDownCasted: false,
   trainingDuration: undefined,
+  open: false,
 
   setStep1: (data) => {
     set({
@@ -42,6 +43,11 @@ const useTrainingStore = create((set) => ({
       trainingDownCasted: data.trainingDownCasted,
       trainingType: data.trainingType,
       trainingDuration: data.trainingDuration,
+    });
+  },
+  setOpen: (data) => {
+    set({
+      open: data,
     });
   },
 }));

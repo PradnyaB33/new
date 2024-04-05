@@ -2,11 +2,13 @@ import { Button, Chip } from "@mui/material";
 import DOMPurify from "dompurify";
 import React from "react";
 import { Link } from "react-router-dom";
+import Loader from "../../../../../../components/app-loader/page";
 import useTrainingCreationMutation from "../mutation";
 import useTrainingStore from "../zustand-store";
 
 const Step3 = () => {
-  const { mutate } = useTrainingCreationMutation();
+  const { mutate, isLoading, isCreateTrainingLoading } =
+    useTrainingCreationMutation();
   const {
     trainingName,
     trainingType,
@@ -22,6 +24,9 @@ const Step3 = () => {
   } = useTrainingStore();
   const sanitizedDescription = DOMPurify.sanitize(trainingDescription);
   const url = URL.createObjectURL(trainingImage);
+  if (isLoading || isCreateTrainingLoading) {
+    return <Loader />;
+  }
   return (
     <div className="flex items-center gap-8 flex-col">
       <img
@@ -114,6 +119,7 @@ const Step3 = () => {
             trainingEndDate,
             trainingPoints,
             trainingDownCasted,
+            trainingDuration,
           });
         }}
       >
