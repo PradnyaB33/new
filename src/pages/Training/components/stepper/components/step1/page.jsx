@@ -201,6 +201,7 @@ const Step1 = ({ nextStep }) => {
             errors={errors}
             error={errors.trainingLocation}
             center={center}
+            value={watch("trainingLocation")}
           />
         </div>
         <Button

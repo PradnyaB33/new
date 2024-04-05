@@ -121,6 +121,24 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Get the current date
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = currentDate.getMonth() + 1;
+
+      // Convert the selected loan disbursement date to a Date object
+      const selectedDisbursementDate = new Date(loanDisbursementDate);
+
+      // Check if the selected year and month are in the future
+      if (
+        selectedDisbursementDate.getFullYear() < currentYear ||
+        (selectedDisbursementDate.getFullYear() === currentYear &&
+          selectedDisbursementDate.getMonth() + 1 < currentMonth)
+      ) {
+        setError("You can only apply for loans for future dates and years.");
+        return;
+      }
+
       const data = {
         loanType: loanType,
         rateOfIntereset: rateOfIntereset,
@@ -255,10 +273,13 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   onChange={(newDate) => {
                     const formattedDate = dayjs(newDate).format("YYYY-MM-DD");
                     setDisbursementDate(formattedDate);
+                    setError(""); 
                   }}
                   slotProps={{
                     textField: { size: "small", fullWidth: true },
                   }}
+                 
+                  disablePast
                 />
               </DemoContainer>
             </LocalizationProvider>

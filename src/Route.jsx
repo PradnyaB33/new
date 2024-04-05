@@ -773,7 +773,14 @@ const App = () => {
           element={<DeclarationPage />}
         />
         <Route path="/application" element={<Application />} />
-        <Route path="/training" element={<HrTrainings />} />
+        <Route
+          path="/hr-training"
+          element={
+            <RequireAuth permission={["HR", "Super-Admin"]}>
+              <HrTrainings />
+            </RequireAuth>
+          }
+        />
         <Route
           path="/leave"
           element={

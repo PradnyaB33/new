@@ -10,7 +10,7 @@ const useTrainingStore = create((set) => ({
   trainingLink: undefined,
   trainingImage: undefined,
   trainingLocation: {
-    description: undefined,
+    address: undefined,
     position: {
       lat: 0,
       lng: 0,
