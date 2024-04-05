@@ -7,12 +7,15 @@ import AttendanceBioModal from "../../components/Modal/AttedanceBioModal/Attenda
 const EmpInfoPunchStatus = () => {
   const { organisationId } = useParams();
   const [tableData, setTableData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
   const [searchName, setSearchName] = useState("");
   const [searchId, setSearchId] = useState("");
   const [searchDepartment, setSearchDepartment] = useState("");
   const [selectedEmployees, setSelectedEmployees] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 10;
+  console.log(setTotalPages);
+  
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -56,6 +59,7 @@ const EmpInfoPunchStatus = () => {
     );
   });
 
+  
   // Calculate indexes of the items to display based on current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -74,12 +78,29 @@ const EmpInfoPunchStatus = () => {
   };
 
   const handleEmployeeSelect = (index) => {
-    const selectedEmployee = tableData.find(
-      (employee) => employee[0] === currentItems[index][0]
+    const selectedEmployeeId = currentItems[index][0];
+    const selectedEmployeeRecords = tableData.filter(
+      (employee) => employee[0] === selectedEmployeeId
     );
-    setSelectedEmployees((prevSelected) => [...prevSelected, selectedEmployee]);
+    
+    const allSelected = selectedEmployeeRecords.every((record) =>
+      selectedEmployees.some((emp) => emp[0] === record[0])
+    );
+  
+    if (allSelected) {
+      const deselectedEmployees = selectedEmployees.filter(
+        (emp) => emp[0] !== selectedEmployeeId
+      );
+      setSelectedEmployees(deselectedEmployees);
+    } else {
+      setSelectedEmployees((prevSelected) => [
+        ...prevSelected,
+        ...selectedEmployeeRecords,
+      ]);
+    }
   };
-
+  
+ 
   console.log("selected employee", selectedEmployees);
 
   // for open the modal for display employee
@@ -218,93 +239,46 @@ const EmpInfoPunchStatus = () => {
             </table>
           </div>
 
-          <nav
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: "30px",
-              marginBottom: "20px",
-            }}
-          >
-            <ul
-              style={{ display: "inline-block", marginRight: "5px" }}
-              className="pagination"
-            >
-              <li
-                style={{ display: "inline-block", marginRight: "5px" }}
-                className="page-item"
-              >
-                <button
-                  style={{
-                    color: "#007bff",
-                    padding: "8px 12px",
-                    border: "1px solid #007bff",
-                    textDecoration: "none",
-                    borderRadius: "4px",
-                    transition: "all 0.3s ease",
-                    cursor: "pointer",
-                  }}
-                  className="page-link"
-                  onClick={prePage}
-                  disabled={currentPage === 1}
-                >
-                  Prev
-                </button>
-              </li>
-              {/* Map through page numbers and generate pagination */}
-              {Array.from(
-                { length: Math.ceil(filteredData.length / itemsPerPage) },
-                (_, i) => i + 1
-              ).map((n, i) => (
-                <li
-                  key={i}
-                  className={`page-item ${currentPage === n ? "active" : ""}`}
-                  style={{
-                    display: "inline-block",
-                    marginRight: "5px",
-                  }}
-                >
-                  <button
-                    style={{
-                      color: currentPage === n ? "#fff" : "#007bff",
-                      backgroundColor:
-                        currentPage === n ? "#007bff" : "transparent",
-                      padding: "8px 12px",
-                      border: "1px solid #007bff",
-                      textDecoration: "none",
-                      borderRadius: "4px",
-                      transition: "all 0.3s ease",
-                    }}
-                    className="page-link"
-                    onClick={() => paginate(n)}
-                  >
-                    {n}
-                  </button>
-                </li>
-              ))}
-              <li style={{ display: "inline-block" }} className="page-item">
-                <button
-                  style={{
-                    color: "#007bff",
-                    padding: "8px 12px",
-                    border: "1px solid #007bff",
-                    textDecoration: "none",
-                    borderRadius: "4px",
-                    transition: "all 0.3s ease",
-                    cursor: "pointer",
-                  }}
-                  className="page-link"
-                  onClick={nextPage}
-                  disabled={
-                    currentPage ===
-                    Math.ceil(filteredData.length / itemsPerPage)
-                  }
-                >
-                  Next
-                </button>
-              </li>
-            </ul>
-          </nav>
+            {/* Pagination */}
+         
+            <nav className="pagination" style={{ textAlign: "center" }}>
+  <Button
+    onClick={prePage}
+    disabled={currentPage === 1}
+    variant="outlined"
+    style={{ marginRight: "10px" }}
+  >
+    Prev
+  </Button>
+  {currentPage === 1 && (
+    <Button
+      onClick={() => paginate(2)}
+      variant="outlined"
+      style={{ marginRight: "10px" }}
+    >
+      Next
+    </Button>
+  )}
+  {currentPage === 2 && (
+    <Button
+      onClick={() => paginate(1)}
+      variant="outlined"
+      style={{ marginRight: "10px" }}
+    >
+      1
+    </Button>
+  )}
+  <Button
+    onClick={nextPage}
+    disabled={currentPage === totalPages}
+    variant="outlined"
+  >
+    Next
+  </Button>
+</nav>
+       
+
+         
         </article>
       </Container>
       <AttendanceBioModal
