@@ -11,20 +11,41 @@ const IncomeTax = () => {
     setOpen(true);
   };
 
-  const { useGetCurrentRole } = UserProfile();
-
+  const { useGetCurrentRole, getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
   const role = useGetCurrentRole();
 
-  const navigate = useNavigate();
+  const redirect = useNavigate();
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const goBack = () => {
+    if (role === "Super-Admin" || role === "Delegate-Super-Admin")
+      return redirect("/");
+    else if (role === "HR")
+      return redirect(
+        `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
+      );
+    else if (role === "Delegate-Department-Head" || role === "Department-Head")
+      return redirect(
+        `/organisation/${user?.organizationId}/dashboard/DH-dashboard`
+      );
+    else if (role === "Accountant")
+      return redirect(
+        `/organisation/${user?._id}/dashboard/employee-dashboard`
+      );
+    else if (role === "Manager")
+      return redirect(`/organisation/${user?._id}/dashboard/manager-dashboard`);
+    else if (role === "Employee")
+      return redirect(`/organisation/dashboard/employee-dashboard`);
   };
   return (
     <>
       <section className=" min-h-[90vh]  h-auto  bg-gray-50 ">
         <header className="text-xl w-full pt-6 flex items-start gap-2 bg-white shadow-md   p-4">
-          <IconButton onClick={() => navigate(-1)}>
+          <IconButton onClick={goBack}>
             <West className=" !text-xl" />
           </IconButton>
           Income Tax

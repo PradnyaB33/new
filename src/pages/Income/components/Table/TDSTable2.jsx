@@ -37,7 +37,7 @@ const TDSTable2 = () => {
     {
       "(A) Self Occupied Property (Loss)": [
         {
-          name: "Interest on loan / Borrowing taken for Repairs, renewal, or reconstruction",
+          name: "Interest on loan / borrowing taken for repairs, renewal, or reconstruction",
           property1: 0,
           property2: 0,
           declaration: 0,
@@ -84,13 +84,13 @@ const TDSTable2 = () => {
           status: "Not Submitted",
         },
         {
-          name: "Less : Municipal Taxes paid in the year",
+          name: "Less : Municipal taxes paid in the year",
           declaration: 0,
           proof: "",
           status: "Not Submitted",
         },
         {
-          name: "Less : Interest on Housing Loan",
+          name: "Less : Interest on housing loan",
           declaration: 0,
           proof: "",
           status: "Not Submitted",
@@ -112,14 +112,14 @@ const TDSTable2 = () => {
           status: "Not Submitted",
         },
         {
-          name: "Less : Municipal Taxes paid in the year",
+          name: "Less : Municipal taxes paid in the year",
           declaration: 0,
           proof: "",
           status: "Not Submitted",
         },
 
         {
-          name: "Less : Interest on Housing Loan",
+          name: "Less : Interest on housing loan",
           declaration: 0,
           proof: "",
           status: "Not Submitted",

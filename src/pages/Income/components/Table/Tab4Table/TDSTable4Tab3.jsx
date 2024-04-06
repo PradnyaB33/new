@@ -39,7 +39,7 @@ const TDSTable4Tab3 = () => {
       "Section80 50000": [
         {
           section: "80D",
-          name: "Mediclaim Insurance (Self & dependent)",
+          name: "Mediclaim insurance (self & dependent)",
           declaration: 0,
           amountAccepted: 0,
           maxAmount: 25000,
@@ -48,7 +48,7 @@ const TDSTable4Tab3 = () => {
         },
         {
           section: "80D",
-          name: "Mediclaim Insurance (Parents)",
+          name: "Mediclaim insurance (Parents)",
           declaration: 0,
           amountAccepted: 0,
           maxAmount: 50000,
@@ -67,7 +67,7 @@ const TDSTable4Tab3 = () => {
         },
         {
           section: "80EE",
-          name: "Interest on Home Loan as per conditions mentioned",
+          name: "Interest on home loan as per conditions mentioned",
           maxAmount: 1000,
           declaration: 0,
           amountAccepted: 0,
@@ -76,7 +76,7 @@ const TDSTable4Tab3 = () => {
         },
         {
           section: "80DD",
-          name: "Medical Treatment of handicapped Dependent",
+          name: "Medical treatment of handicapped dependent",
           declaration: 0,
           amountAccepted: 0,
           proof: "",
@@ -84,7 +84,7 @@ const TDSTable4Tab3 = () => {
         },
         {
           section: "80DDB",
-          name: "Expenditure on Selected Medical Treatment",
+          name: "Expenditure on selected medical treatment",
           declaration: 0,
           amountAccepted: 0,
           maxAmount: 40000,
@@ -93,7 +93,7 @@ const TDSTable4Tab3 = () => {
         },
         {
           section: "80G, 80GGA, 80GGC",
-          name: "80G, 80GGA, 80GGC Donation to approved funds",
+          name: "80G, 80GGA, 80GGC donation to approved funds",
           declaration: 0,
           amountAccepted: 0,
           proof: "",
@@ -101,7 +101,7 @@ const TDSTable4Tab3 = () => {
         },
         {
           section: "80GG",
-          name: "For Rent to an Individual, not receiving HRA (File Form 10BA)",
+          name: "For rent to an individual, not receiving HRA (File Form 10BA)",
           declaration: 0,
           amountAccepted: 0,
           maxAmount: 16200,
@@ -110,7 +110,7 @@ const TDSTable4Tab3 = () => {
         },
         {
           section: "80TTA",
-          name: "SB interest received by Normal Citizen",
+          name: "SB interest received by normal citizen",
           declaration: 0,
           amountAccepted: 0,
           proof: "",
@@ -126,7 +126,7 @@ const TDSTable4Tab3 = () => {
         },
         {
           section: "80U",
-          name: "Physically Disable Assesse",
+          name: "Physically disable assesse",
           declaration: 0,
           amountAccepted: 0,
           proof: "",
