@@ -39,6 +39,7 @@ const AuthInputFiled = ({
   center,
   descriptionText,
   value,
+  autocompleteOption,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -155,9 +156,6 @@ const AuthInputFiled = ({
                     className={`${
                       readOnly && "bg-[ghostwhite]"
                     } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
-                    // components={{
-                    //   IndicatorSeparator: () => null,
-                    // }}
                     options={options}
                     value={field?.value}
                     onChange={(value) => {
@@ -476,7 +474,7 @@ const AuthInputFiled = ({
                   <Icon className="text-gray-700" />
                   <CreatableSelect
                     aria-errormessage="error"
-                    options={salaryComponentArray}
+                    options={autocompleteOption ?? salaryComponentArray}
                     placeholder={placeholder}
                     isMulti
                     styles={{
@@ -567,7 +565,7 @@ const AuthInputFiled = ({
           )}
         />
         <div className="h-4 !mb-1">
-          <p className="text-xs">{descriptionText}</p>
+          <p className="text-xs pl-2">{descriptionText}</p>
           <ErrorMessage
             errors={errors}
             name={name}
