@@ -18,6 +18,7 @@ const TrainingTable = () => {
             logo={doc?.trainingLogo}
             name={doc?.trainingName}
             duration={doc?.trainingDuration}
+            doc={doc}
           />
         ))}
       </tbody>

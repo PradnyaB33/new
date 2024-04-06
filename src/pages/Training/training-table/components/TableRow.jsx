@@ -1,9 +1,14 @@
 import { MoreVert } from "@mui/icons-material";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import React from "react";
+import useTrainingStore from "../../components/stepper/components/zustand-store";
 
-const TableRow = ({ logo, name, duration }) => {
-  const [open, setOpen] = React.useState(false);
+const TableRow = ({ logo, name, duration, doc }) => {
+  console.log(`🚀 ~ file: TableRow.jsx:7 ~ doc:`, doc);
+  const [newOpen, setNewOpen] = React.useState(false);
+  const state = useTrainingStore();
+  console.log(`🚀 ~ file: TableRow.jsx:10 ~ state:`, state);
+  const { setOpen, setTrainingData } = state;
   const [anchorEl, setAnchorEl] = React.useState(null);
   return (
     <tr
@@ -25,7 +30,7 @@ const TableRow = ({ logo, name, duration }) => {
       <td className="whitespace-nowrap px-6 py-2 text-center">
         <IconButton
           onClick={(e) => {
-            setOpen(true);
+            setNewOpen(true);
             setAnchorEl(e?.currentTarget);
           }}
           aria-label="edit"
@@ -33,14 +38,22 @@ const TableRow = ({ logo, name, duration }) => {
           <MoreVert />
         </IconButton>
         <Menu
-          open={open}
+          open={newOpen}
           anchorEl={anchorEl}
-          onClose={() => setOpen(false)}
-          onClick={() => setOpen(false)}
+          onClose={() => setNewOpen(false)}
+          onClick={() => setNewOpen(false)}
         >
-          <MenuItem onClick={() => setOpen(false)}>Update</MenuItem>
-          <MenuItem onClick={() => setOpen(false)}>Delete</MenuItem>
-          <MenuItem onClick={() => setOpen(false)}>Check Status</MenuItem>
+          <MenuItem
+            onClick={() => {
+              setNewOpen(false);
+              setOpen(true);
+              setTrainingData(doc);
+            }}
+          >
+            Update
+          </MenuItem>
+          <MenuItem onClick={() => setNewOpen(false)}>Delete</MenuItem>
+          <MenuItem onClick={() => setNewOpen(false)}>Check Status</MenuItem>
         </Menu>
       </td>
     </tr>
