@@ -29,20 +29,17 @@ const ViewAttendacneBiomatric = () => {
       return response.data.data;
     }
   );
-  console.log("empAttendanceData", empAttendanceData);
-
-
+  
   // for open the modal for display employee and calculate hour
   const [modalOpen, setModalOpen] = useState(false);
-  const [attendanceId , setAttendanceId] = useState(null);
-  const handleModalOpen = (id) => {
-    setAttendanceId(id);
-    setModalOpen(true);
+  const [empPunchingData, setEmpPunchingData] = useState();
+  const handleModalOpen = (data) => {
+     setEmpPunchingData(data)
+     setModalOpen(true);
+   
   };
   const handleModalClose = () => {
     setModalOpen(false);
-    setAttendanceId(null)
-   
   };
 
   return (
@@ -86,7 +83,7 @@ const ViewAttendacneBiomatric = () => {
                         {empAttendanceData?.EmployeeId?.first_name || ""}
                       </td>
                       <td className="!text-left pl-4 py-3">
-                      <IconButton aria-label="view" size="small" onClick={() => handleModalOpen(empAttendanceData?._id || "")}>
+                      <IconButton aria-label="view" size="small" onClick={() => handleModalOpen(empAttendanceData)}>
                         <TableViewIcon sx={{ color: 'green' }} />
                         </IconButton>
 
@@ -113,7 +110,7 @@ const ViewAttendacneBiomatric = () => {
         handleClose={handleModalClose}
         open={modalOpen}
         organisationId={organisationId}
-        attendanceId = {attendanceId}
+        empPunchingData = {empPunchingData}
       />
     </>
   );
