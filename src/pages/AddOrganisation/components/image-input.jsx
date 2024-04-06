@@ -1,7 +1,7 @@
 import { CameraAltOutlined } from "@mui/icons-material";
 import React, { useRef, useState } from "react";
 
-const ImageInput = ({ field, caching = false }) => {
+const ImageInput = ({ field, caching = false, className }) => {
   const displayImage = async (file) => {
     const reader = new FileReader();
 
@@ -28,7 +28,7 @@ const ImageInput = ({ field, caching = false }) => {
 
   return (
     <div
-      className={`flex px-2 border-gray-200 border-[.5px] bg-[#f8f8ff59] py-[6px] items-center h-48 w-48 rounded-full justify-center !hover:bg-[ghostwhite] cursor-pointer transition-all !bg-cover`}
+      className={`flex px-2 border-gray-200 border-[.5px] bg-[#f8f8ff59] py-[6px] items-center h-48 w-48 rounded-full justify-center !hover:bg-[ghostwhite] cursor-pointer transition-all !bg-cover ${className}`}
       style={{
         background: `linear-gradient(45deg, #f8f8ff59, #f8f8ff59), url(${
           typeof selectedImage !== "object"

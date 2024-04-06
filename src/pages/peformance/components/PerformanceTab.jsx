@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { Link } from "react-router-dom";
+import GoalSettingTab from "../Tabs/GoalSettingTab";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -100,7 +101,7 @@ export default function PerformanceTab() {
             />
             <Tab
               className="!px-4"
-              label="My Declarations"
+              label="Goal Setting"
               {...a11yProps(1)}
               sx={{
                 fontSize: "0.8rem", // Decrease the font size
@@ -119,7 +120,7 @@ export default function PerformanceTab() {
           DashBoard
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          Goal Setting
+          <GoalSettingTab />
         </CustomTabPanel>
       </Box>
     </>

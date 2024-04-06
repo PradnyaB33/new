@@ -2,9 +2,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AccessTime, BarChart, ListAlt, TrendingUp } from "@mui/icons-material";
 import { Button, CircularProgress } from "@mui/material";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
@@ -44,11 +44,28 @@ const PerformanceSetup = () => {
     isSelfGoal: z.boolean().optional(),
   });
 
+  const { data: performance, isFetching } = useQuery(
+    "performancePeriod",
+    async () => {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/route/performance/getSetup`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      return data;
+    }
+  );
+
   const {
     formState: { errors },
     control,
     handleSubmit,
     watch,
+    setValue,
   } = useForm({
     resolver: zodResolver(PerformanceSchema),
     defaultValues: {
@@ -65,6 +82,32 @@ const PerformanceSetup = () => {
       isSelfGoal: false,
     },
   });
+
+  useEffect(() => {
+    if (!isFetching && performance) {
+      setValue(
+        "deleteFormEmployeeOnBoarding",
+        performance.deleteFormEmployeeOnBoarding
+      );
+      setValue("enddate", {
+        startDate: performance.enddate,
+        endDate: performance.enddate,
+      });
+      setValue("goals", performance.goals);
+      setValue("isDownCast", performance.isDownCast);
+      setValue("isFeedback", performance.isFeedback);
+      setValue("isKRA", performance.isKRA);
+      setValue("isManagerApproval", performance.isManagerApproval);
+      setValue("isMidGoal", performance.isMidGoal);
+      setValue("isNonMeasurableAllowed", performance.isNonMeasurableAllowed);
+      setValue("isSelfGoal", performance.isSelfGoal);
+      setValue("isSendFormInMid", performance.isSendFormInMid);
+      setValue("organizationId", performance.organizationId);
+      setValue("stages", performance.stages);
+      setValue("startdate", performance.startdate);
+    }
+    // eslint-disable-next-line
+  }, []);
 
   let stagesOptions = [
     {

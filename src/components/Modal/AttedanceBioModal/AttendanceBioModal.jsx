@@ -85,45 +85,49 @@ const AttendanceBioModal = ({
 
   const handleSync = async () => {
     try {
-      const syncedData = checkedEmployees.map((employee) => {
-        const selectedEmployee = selectedEmployees.find(
+      const syncedData = checkedEmployees.flatMap((employee) => {
+        const matchingEmployees = selectedEmployees.filter(
           (emp) => emp[0] === employee.empId
         );
-
-        if (selectedEmployee) {
-          return {
-            date: selectedEmployee[3],
-            punchingTime: selectedEmployee[4],
-            punchingStatus: selectedEmployee[5],
-          };
-        } else {
-          return employee;
-        }
+  
+        return matchingEmployees.map((selectedEmployee) => ({
+          date: selectedEmployee[3],
+          punchingTime: selectedEmployee[4],
+          punchingStatus: selectedEmployee[5],
+        }));
       });
-
-      const EmployeeId =
-        checkedEmployees.length > 0 ? checkedEmployees[0]._id : null;
-      console.log("employee id", EmployeeId);
-      // Make a POST request to the backend API
-      axios.post(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/add-attendance-data`,
-        {
-          EmployeeId: EmployeeId,
-          punchingRecords: syncedData,
-        },
-        {
-          headers: {
-            Authorization: authToken,
+  
+      console.log("selected sync data", selectedEmployees);
+      console.log("sync data", syncedData);
+  
+      // Extract EmployeeIds from checkedEmployees
+      const EmployeeIds = checkedEmployees.map((employee) => employee._id).filter(Boolean);
+      console.log("emp id", EmployeeIds);
+  
+      // Make a POST request to the backend API for each EmployeeId
+      EmployeeIds.forEach((EmployeeId) => {
+        axios.post(
+          `${process.env.REACT_APP_API}/route/organization/${organisationId}/add-attendance-data`,
+          {
+            EmployeeId: EmployeeId,
+            punchingRecords: syncedData,
           },
-        }
-      );
-
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+      });
+  
       handleAlert(true, "success", "Synced data successfully..");
     } catch (error) {
       console.error("Failed to sync attendance data:", error);
     }
   };
+  
 
+ 
   return (
     <Dialog
       PaperProps={{
@@ -142,7 +146,7 @@ const AttendanceBioModal = ({
     >
       <DialogContent className="border-none  !pt-0 !px-0  shadow-md outline-none rounded-md">
         <Container maxWidth="xl" className="bg-gray-50 ">
-          <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
+         
             <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
               Employee
             </Typography>
@@ -312,7 +316,6 @@ const AttendanceBioModal = ({
                 Cancel
               </Button>
             </DialogActions>
-          </article>
         </Container>
       </DialogContent>
     </Dialog>

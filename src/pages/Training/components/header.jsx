@@ -1,10 +1,11 @@
 import { Add } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import React from "react";
+import useTrainingStore from "./stepper/components/zustand-store";
 import Stepper from "./stepper/page";
 
 const Header = () => {
-  const [open, setOpen] = React.useState(false);
+  const { open, setOpen } = useTrainingStore();
   return (
     <div className="flex justify-between">
       <div className="flex flex-col">

@@ -20,7 +20,7 @@ const TDSTable1 = () => {
 
   let data = [
     {
-      name: "Gross Salary",
+      name: "Gross salary",
       amount: 0,
       proof: "Auto",
       status: "Auto",
@@ -33,7 +33,7 @@ const TDSTable1 = () => {
       status: "Not Submitted",
     },
     {
-      name: "Exemption on Leave encashment",
+      name: "Exemption on leave encashment",
 
       amountAccepted: 0,
       amount: 0,
@@ -49,7 +49,7 @@ const TDSTable1 = () => {
       amountAccepted: 0,
     },
     {
-      name: "Daily Allowance",
+      name: "Daily allowance",
       amount: 0,
       proof: "",
       status: "Not Submitted",
@@ -57,7 +57,7 @@ const TDSTable1 = () => {
       amountAccepted: 0,
     },
     {
-      name: "Conveyance Allowance",
+      name: "Conveyance allowance",
       amount: 0,
       proof: "",
       status: "Not Submitted",
@@ -65,7 +65,7 @@ const TDSTable1 = () => {
       amountAccepted: 0,
     },
     {
-      name: "Transport Allowance for a specially-abled person",
+      name: "Transport allowance for a specially-abled person",
       amount: 0,
       proof: "",
       status: "Not Submitted",
@@ -81,7 +81,7 @@ const TDSTable1 = () => {
       amountAccepted: 0,
     },
     {
-      name: "Taxable Salary",
+      name: "Taxable salary",
       amount: 0,
       proof: "",
       status: "Not Submitted",
@@ -124,6 +124,10 @@ const TDSTable1 = () => {
     handleCloseConfirmation,
     handleClosePDF,
   } = useIncomeTax();
+
+  const queryKey = "Salary";
+  const sectionname = "Salary";
+
   const {
     handleSaveClick,
     handleDelete,
@@ -135,7 +139,8 @@ const TDSTable1 = () => {
     authToken,
     handleAlert,
     queryClient,
-    handleCloseConfirmation
+    sectionname,
+    queryKey
   );
 
   useEffect(() => {

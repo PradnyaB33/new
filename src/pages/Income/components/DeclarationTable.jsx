@@ -25,7 +25,6 @@ const DeclarationTable = ({
   isLoading,
   salaryFetching,
 }) => {
-  console.log(`🚀 ~ editStatus:`, editStatus);
   const { handleAlert } = useContext(TestContext);
   return (
     <div>
@@ -168,7 +167,7 @@ const DeclarationTable = ({
                       </p>
                     </td>
                   )}
-                  <td className="text-left leading-7 text-[16px] w-[200px]  border">
+                  <td className="text-left leading-7 text-[16px] !w-[200px]  border">
                     {item.name === "Gross Salary" ? (
                       ""
                     ) : editStatus[itemIndex] && editStatus[itemIndex] ? (
@@ -182,8 +181,10 @@ const DeclarationTable = ({
                             }
                             className="px-2 flex gap-2 items-center h-max w-max"
                           >
-                            <Article className="text-blue-500" />
-                            <h1>{declarationData?.proof?.name}</h1>
+                            <Article className="text-blue-500 " />
+                            <h1 className="truncate w-[150px]">
+                              {declarationData?.proof?.name}
+                            </h1>
                           </div>
                         ) : (
                           <div className="px-2  md:w-full w-max">

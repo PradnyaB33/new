@@ -1,9 +1,10 @@
 import CheckIcon from "@mui/icons-material/Check";
-import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {
   Button,
   CircularProgress,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -15,7 +16,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 import { getSignedUrlForDocs, uploadFile } from "../../services/docManageS3";
 import DocPreviewModal from "./components/Modal";
 
-const MAX_TOTAL_FILE_SIZE = 500 * 1024;
+const MAX_TOTAL_FILE_SIZE = 5120 * 1024;
 
 const DocManage = () => {
   const { cookies } = useContext(UseContext);
@@ -36,7 +37,7 @@ const DocManage = () => {
       uploadedFile: null,
       fileName: "no file selected",
       customDocumentName: "",
-      loading: false, // Add loading state for each document field
+      loading: false,
     },
   ]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -72,16 +73,37 @@ const DocManage = () => {
   };
 
   const handleFileUpload = (index, event) => {
+    const allowedFileTypes = ["application/pdf", "image/jpeg", "image/png"];
     const files = event.target.files;
     const file = files[0];
-
-    if (file.size > MAX_TOTAL_FILE_SIZE) {
+    if (!allowedFileTypes.includes(file.type)) {
       setAppAlert({
         alert: true,
         type: "error",
-        msg: `File "${file.name}" exceeds the size limit of 500 KB`,
+        msg: "Only PDFs and images are allowed for upload.",
       });
       event.target.value = null;
+      return;
+    }
+
+    const tempDocumentFields = [...documentFields];
+    tempDocumentFields[index].uploadedFile = file;
+    const tempTotalFileSize = tempDocumentFields.reduce(
+      (totalSize, field) =>
+        totalSize + (field.uploadedFile ? field.uploadedFile.size : 0),
+      0
+    );
+
+    if (tempTotalFileSize > MAX_TOTAL_FILE_SIZE) {
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: `File "${file.name}" exceeds the size limit of 5 MB`,
+      });
+      event.target.value = null;
+      tempDocumentFields[index].uploadedFile = null;
+      tempDocumentFields[index].fileName = "No file selected";
+      setDocumentFields(tempDocumentFields);
       return;
     }
 
@@ -172,7 +194,7 @@ const DocManage = () => {
 
       if (canSubmit) {
         await axios.post(
-          "http://localhost:4000/route/emp/adddocuments",
+          `${process.env.REACT_APP_API}/route/emp/adddocuments`,
           formData,
           {
             headers: { Authorization: token },
@@ -299,6 +321,7 @@ const DocManage = () => {
                       id={`file-upload-${index}`}
                       type="file"
                       style={{ display: "none" }}
+                      disabled={!field.selectedValue && !field.isCustom}
                       onChange={(e) => handleFileUpload(index, e)}
                     />
                     <div className="w-8 h-8 flex justify-center items-center rounded-full mr-2">
@@ -331,7 +354,7 @@ const DocManage = () => {
                     <span className="w-28 text-xs">{field.fileName}</span>
                     <Button
                       size="small"
-                      color="secondary"
+                      color="info"
                       disabled={!field.uploadedFile}
                       variant="contained"
                       onClick={() => openModal(index)}
@@ -341,15 +364,18 @@ const DocManage = () => {
                   </>
                   {documentFields.length > 1 && (
                     <div
-                      className="h-6 w-6 flex justify-center items-center rounded-full ml-2 bg-[#FF3737] cursor-pointer"
+                      className="h-6 w-6 flex justify-center items-center rounded-full ml-2 cursor-pointer"
                       onClick={() => handleDiscardRow(index)}
                     >
-                      <DeleteIcon
+                      <IconButton color="error" aria-label="delete">
+                        <DeleteOutlineIcon />
+                      </IconButton>
+                      {/* <DeleteIcon
                         style={{
                           color: "#FFF",
                         }}
                         fontSize="small"
-                      />
+                      /> */}
                     </div>
                   )}
                 </div>
@@ -359,14 +385,14 @@ const DocManage = () => {
               <Button
                 size="small"
                 variant="contained"
-                color="warning"
+                color="error"
                 onClick={handleAddMore}
               >
                 Add More
               </Button>
               <Button
                 size="small"
-                color="success"
+                color="primary"
                 variant="contained"
                 onClick={handleSubmit}
               >
