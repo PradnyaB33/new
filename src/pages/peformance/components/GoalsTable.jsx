@@ -14,6 +14,7 @@ import React, { useState } from "react";
 import { useQuery } from "react-query";
 import Select from "react-select";
 import useAuthToken from "../../../hooks/Token/useAuth";
+import DeleteGoal from "./DeleteGoal";
 import GoalsModel from "./GoalsModel";
 import PreviewGoalModal from "./PreviewGoalModal";
 
@@ -23,11 +24,14 @@ const GoalsTable = () => {
   const [openEdit, setEditOpen] = useState(false);
   const [previewModal, setPreviewModal] = useState(false);
   const [previewId, setPreviewId] = useState(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+
   const handleClose = () => {
     setOpen(false);
     setPreviewModal(false);
     setEditOpen(false);
     setPreviewId(null);
+    setDeleteConfirmation(null);
   };
 
   const handleOpen = (id) => {
@@ -36,7 +40,18 @@ const GoalsTable = () => {
     setPreviewId(id);
   };
 
-  console.log(previewModal);
+  const { data: performance } = useQuery("performancePeriod", async () => {
+    const { data } = await axios.get(
+      `${process.env.REACT_APP_API}/route/performance/getSetup`,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+
+    return data;
+  });
   const rowsPerPage = 10; // Define the number of rows per page
   const [page, setPage] = useState(1);
 
@@ -64,12 +79,10 @@ const GoalsTable = () => {
 
   const pages = Math.ceil(totalRowCount / rowsPerPage);
 
-  const options = [
-    {
-      label: "test",
-      value: "test",
-    },
-  ];
+  const options = performance?.goals?.map((item) => ({
+    label: item,
+    value: item,
+  }));
   return (
     <section className="p-4 ">
       <div className="p-4  bg-white rounded-md border">
@@ -145,25 +158,25 @@ const GoalsTable = () => {
                   <tr className="!font-semibold ">
                     <th
                       scope="col"
-                      className="!text-left px-2 w-max py-3 text-sm border"
+                      className="!text-left px-2 w-max py-3 text-sm "
                     >
                       Sr. No
                     </th>
-                    <th scope="col" className="py-3 text-sm px-2 border">
+                    <th scope="col" className="py-3 text-sm px-2 ">
                       Goal Name
                     </th>
 
-                    <th scope="col" className="py-3 text-sm px-2 border">
+                    <th scope="col" className="py-3 text-sm px-2 ">
                       Time
                     </th>
-                    <th scope="col" className="py-3 text-sm px-2 border">
+                    <th scope="col" className="py-3 text-sm px-2 ">
                       Assignee
                     </th>
-                    <th scope="col" className=" py-3 text-sm px-2 border">
+                    <th scope="col" className=" py-3 text-sm px-2 ">
                       status
                     </th>
 
-                    <th scope="col" className=" py-3 text-sm px-2 border">
+                    <th scope="col" className=" py-3 text-sm px-2 ">
                       Actions
                     </th>
                   </tr>
@@ -176,20 +189,20 @@ const GoalsTable = () => {
                     >
                       <td
                         onClick={() => handleOpen(goal._id)}
-                        className="!text-left  cursor-pointer   px-2 text-sm w-[70px] border "
+                        className="!text-left  cursor-pointer   px-2 text-sm w-[70px]  "
                       >
                         {id + 1}
                       </td>
                       <td
                         onClick={() => handleOpen(goal._id)}
-                        className="text-sm cursor-pointer truncate text-left w-[350px] border px-2"
+                        className="text-sm cursor-pointer truncate text-left w-[350px]  px-2"
                       >
                         <p>{goal.goal}</p>
                       </td>
 
                       <td
                         onClick={() => handleOpen(goal._id)}
-                        className=" cursor-pointer text-left !p-0 w-[300px] border "
+                        className=" cursor-pointer text-left !p-0 w-[300px]  "
                       >
                         <p
                           className={`
@@ -220,7 +233,7 @@ const GoalsTable = () => {
 
                       <td
                         onClick={() => handleOpen(goal._id)}
-                        className="cursor-pointer text-left text-sm w-[200px]  border"
+                        className="cursor-pointer text-left text-sm w-[200px]  "
                       >
                         <p className="px-2  md:w-full w-max">
                           {goal.goalStatus}
@@ -238,7 +251,13 @@ const GoalsTable = () => {
                         >
                           <EditOutlined />
                         </IconButton>
-                        <IconButton color="error" aria-label="delete">
+                        <IconButton
+                          onClick={() => {
+                            setDeleteConfirmation(goal._id);
+                          }}
+                          color="error"
+                          aria-label="delete"
+                        >
                           <DeleteOutlined />
                         </IconButton>
                       </td>
@@ -248,7 +267,7 @@ const GoalsTable = () => {
               </table>
               <Stack
                 direction={"row"}
-                className="border-[.5px] border-gray-200 border-t-0 px-4 py-2 h-full  items-center w-full justify-between "
+                className="-[.5px] border-gray-200 border-t-0 px-4 py-2 h-full  items-center w-full justify-between "
               >
                 <div>
                   <h1>
@@ -267,6 +286,11 @@ const GoalsTable = () => {
           )}
         </div>
       </div>
+
+      <DeleteGoal
+        deleteConfirmation={deleteConfirmation}
+        handleClose={handleClose}
+      />
 
       <GoalsModel open={open} options={options} handleClose={handleClose} />
       <GoalsModel

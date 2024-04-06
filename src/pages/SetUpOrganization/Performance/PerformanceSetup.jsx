@@ -29,10 +29,7 @@ const PerformanceSetup = () => {
       label: z.string(),
       value: z.string(),
     }),
-    goals: z.object({
-      label: z.string(),
-      value: z.string(),
-    }),
+    goalType: z.array(z.string()),
     isDownCast: z.boolean().optional(),
     isFeedback: z.boolean().optional(),
     isNonMeasurableAllowed: z.boolean().optional(),
@@ -70,7 +67,7 @@ const PerformanceSetup = () => {
     resolver: zodResolver(PerformanceSchema),
     defaultValues: {
       stages: undefined,
-      goals: undefined,
+      goals: [],
       isDownCast: false,
       isFeedback: false,
       isNonMeasurableAllowed: false,
@@ -82,6 +79,7 @@ const PerformanceSetup = () => {
       isSelfGoal: false,
     },
   });
+
 
   useEffect(() => {
     if (!isFetching && performance) {
@@ -178,11 +176,12 @@ const PerformanceSetup = () => {
 
   const performanceSetup = useMutation(
     async (data) => {
+      console.log(data.goalType);
       const performanceSetting = {
         ...data,
         startdate: data.startdate.startDate,
         enddate: data.enddate.endDate,
-        goals: data.goals.value,
+        goals: data.goalType.map((item) => item),
         stages: data.stages.value,
       };
       await axios.post(
@@ -271,15 +270,15 @@ const PerformanceSetup = () => {
                   error={errors.stages}
                 />
                 <AuthInputFiled
-                  name="goals"
+                  name="goalType"
                   icon={TrendingUp}
                   control={control}
-                  type="select"
+                  type="mutltiselect"
                   options={goalsOptions}
                   placeholder="Goals"
                   label="Select Goal Type *"
                   errors={errors}
-                  error={errors.goals}
+                  error={errors.goalType}
                 />
 
                 <div className="grid grid-cols-2 gap-4">

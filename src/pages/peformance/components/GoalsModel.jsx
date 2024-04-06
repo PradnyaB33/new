@@ -63,9 +63,10 @@ const GoalsModel = ({ handleClose, open, options, id }) => {
   });
 
   const queryClient = useQueryClient();
+
   const performanceSetup = useMutation(
     async (data) => {
-      await axios.post(
+      await axios.put(
         `${process.env.REACT_APP_API}/route/performance/createGoal`,
         { goals: data },
         {
@@ -78,6 +79,27 @@ const GoalsModel = ({ handleClose, open, options, id }) => {
     {
       onSuccess: () => {
         handleAlert(true, "success", "Performance setup created successfully");
+        queryClient.invalidateQueries("orggoals");
+        handleClose();
+      },
+    }
+  );
+
+  const performanceEditSetup = useMutation(
+    async (data) => {
+      await axios.put(
+        `${process.env.REACT_APP_API}/route/performance/updateGoal/${id}`,
+        { data },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: () => {
+        handleAlert(true, "success", "Goals updated  successfully");
         queryClient.invalidateQueries("orggoals");
         handleClose();
       },
@@ -125,7 +147,7 @@ const GoalsModel = ({ handleClose, open, options, id }) => {
       // Set other fields...
     }
     // eslint-disable-next-line
-  }, [isFetching, getGoal]);
+  }, [isFetching]);
 
   const onSubmit = async (data) => {
     const goals = {
@@ -139,8 +161,13 @@ const GoalsModel = ({ handleClose, open, options, id }) => {
       goalStatus: data.goalStatus,
       attachment: data.attachment,
     };
+    console.log(`🚀 ~ goals:`, goals);
 
-    performanceSetup.mutate(goals);
+    if (id) {
+      performanceEditSetup.mutate(goals);
+    } else {
+      performanceSetup.mutate(goals);
+    }
   };
 
   const { data: employeeData } = useQuery("employee", async () => {
@@ -227,16 +254,18 @@ const GoalsModel = ({ handleClose, open, options, id }) => {
               errors={errors}
               error={errors.assignee}
             />
-            <AuthInputFiled
-              name="attachment"
-              icon={AttachFile}
-              control={control}
-              type="file"
-              placeholder="100"
-              label="Add attachments"
-              errors={errors}
-              error={errors.attachment}
-            />
+            {id && (
+              <AuthInputFiled
+                name="attachment"
+                icon={AttachFile}
+                control={control}
+                type="file"
+                placeholder="100"
+                label="Add attachments"
+                errors={errors}
+                error={errors.attachment}
+              />
+            )}
 
             <div className="grid grid-cols-2 gap-2">
               <AuthInputFiled
@@ -295,7 +324,7 @@ const GoalsModel = ({ handleClose, open, options, id }) => {
                 Cancel
               </Button>
               <Button type="submit" variant="contained" color="primary">
-                Create Goal
+                {id ? "Update Goal" : "Create Goal"}
               </Button>
             </div>
           </form>
