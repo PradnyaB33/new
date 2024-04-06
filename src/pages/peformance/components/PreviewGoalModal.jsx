@@ -1,28 +1,23 @@
 import { Close } from "@mui/icons-material";
 import {
   Avatar,
+  AvatarGroup,
   Box,
   CircularProgress,
   IconButton,
   Modal,
+  Tooltip,
 } from "@mui/material";
 import axios from "axios";
 import { format } from "date-fns";
 import DOMPurify from "dompurify";
 import React from "react";
 import { useQuery } from "react-query";
-import Select from "react-select";
 import useAuthToken from "../../../hooks/Token/useAuth";
 
 const PreviewGoalModal = ({ open, handleClose, id }) => {
   // const { handleAlert } = useContext(TestContext);
   const authToken = useAuthToken();
-
-  const options = [
-    { value: "option1", label: "Option 1" },
-    { value: "option2", label: "Option 2" },
-    // Other options...
-  ];
 
   const style = {
     position: "absolute",
@@ -198,40 +193,8 @@ const PreviewGoalModal = ({ open, handleClose, id }) => {
 
               <div className="space-y-4 pb-4 px-4">
                 <div className="flex gap-2 items-center">
-                  <div
-                    className={`bg-green-500 flex rounded-md px-2 border-gray-200 border-[.5px]  items-center`}
-                  >
-                    <Select
-                      aria-errormessage=""
-                      placeholder={getGoal?.document?.goalStatus ?? "Status"}
-                      styles={{
-                        control: (styles) => ({
-                          ...styles,
-                          borderWidth: "0px",
-                          boxShadow: "none",
-                          backgroundColor: "rgb(34 197 94)",
-                          color: "white",
-                        }),
-                        placeholder: (styles) => ({
-                          ...styles,
-                          color: "white", // replace with your color
-                        }),
-                        singleValue: (styles) => ({
-                          ...styles,
-                          color: "white",
-                        }),
-                      }}
-                      className={` !bg-green-500  w-full !outline-none px-2 !shadow-none !border-none !border-0`}
-                      components={{
-                        IndicatorSeparator: () => null,
-                      }}
-                      options={options}
-                      value={getGoal?.document?.goalStatus}
-                      // onChange={(value) => {
-                      //   updateField(name, value);
-                      //   field.onChange(value);
-                      // }}
-                    />
+                  <div className=" py-2 px-4 bg-green-500 text-white border-gray-200 border rounded-md">
+                    {getGoal?.document?.goalStatus}
                   </div>
 
                   <div className=" p-2 bg-gray-50 border-gray-200 border rounded-md">
@@ -267,9 +230,20 @@ const PreviewGoalModal = ({ open, handleClose, id }) => {
                   <p className="px-2">Attachments</p>
                   <p className="px-2">No data</p>
                 </div>
-                <div className="hover:bg-gray-100 rounded-md ">
+                <div className="flex flex-col items-start hover:bg-gray-100 rounded-md ">
                   <p className="px-2">Assigned to</p>
-                  <p className="px-2">No data</p>
+                  <AvatarGroup max={6} className="py-2">
+                    {getGoal?.document?.assignee.map((person) => (
+                      <Tooltip
+                        title={`${person.first_name} ${person.last_name}`}
+                      >
+                        <Avatar
+                          src={person.logo_url}
+                          sx={{ width: 35, height: 35 }}
+                        />
+                      </Tooltip>
+                    ))}
+                  </AvatarGroup>
                 </div>
                 <div className="hover:bg-gray-100 rounded-md ">
                   <p className="px-2">Reporter to</p>

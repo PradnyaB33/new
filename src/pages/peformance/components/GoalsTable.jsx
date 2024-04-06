@@ -20,11 +20,13 @@ import PreviewGoalModal from "./PreviewGoalModal";
 const GoalsTable = () => {
   const [focusedInput, setFocusedInput] = useState(null);
   const [open, setOpen] = useState(false);
+  const [openEdit, setEditOpen] = useState(false);
   const [previewModal, setPreviewModal] = useState(false);
   const [previewId, setPreviewId] = useState(null);
   const handleClose = () => {
     setOpen(false);
     setPreviewModal(false);
+    setEditOpen(false);
     setPreviewId(null);
   };
 
@@ -226,7 +228,14 @@ const GoalsTable = () => {
                       </td>
 
                       <td className="whitespace-nowrap px-2  w-[220px]">
-                        <IconButton color="primary" aria-label="edit">
+                        <IconButton
+                          onClick={() => {
+                            setEditOpen(true);
+                            setPreviewId(goal._id);
+                          }}
+                          color="primary"
+                          aria-label="edit"
+                        >
                           <EditOutlined />
                         </IconButton>
                         <IconButton color="error" aria-label="delete">
@@ -260,6 +269,12 @@ const GoalsTable = () => {
       </div>
 
       <GoalsModel open={open} options={options} handleClose={handleClose} />
+      <GoalsModel
+        id={previewId}
+        open={openEdit}
+        options={options}
+        handleClose={handleClose}
+      />
       <PreviewGoalModal
         open={previewModal}
         id={previewId}

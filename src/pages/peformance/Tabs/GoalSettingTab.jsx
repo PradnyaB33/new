@@ -19,7 +19,6 @@ const GoalSettingTab = () => {
 
     return data;
   });
-  console.log(`🚀 ~ performance:`, performance);
   return (
     <div>
       <div className="flex items-center justify-between ">

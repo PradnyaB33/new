@@ -168,7 +168,7 @@ const DeclarationTable = ({
                     </td>
                   )}
                   <td className="text-left leading-7 text-[16px] !w-[200px]  border">
-                    {item.name === "Gross Salary" ? (
+                    {item.name === "Gross salary" ? (
                       ""
                     ) : editStatus[itemIndex] && editStatus[itemIndex] ? (
                       <>

@@ -9,7 +9,7 @@ import {
 } from "@mui/icons-material";
 import { Box, Button, IconButton, Modal } from "@mui/material";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
@@ -17,7 +17,7 @@ import { TestContext } from "../../../State/Function/Main";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
 
-const GoalsModel = ({ handleClose, open, options }) => {
+const GoalsModel = ({ handleClose, open, options, id }) => {
   const { handleAlert } = useContext(TestContext);
   const style = {
     position: "absolute",
@@ -52,6 +52,7 @@ const GoalsModel = ({ handleClose, open, options }) => {
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -82,6 +83,49 @@ const GoalsModel = ({ handleClose, open, options }) => {
       },
     }
   );
+
+  const { data: getGoal, isFetching } = useQuery({
+    queryKey: "getGoal",
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/route/performance/getGoalDetails/${id}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return data;
+    },
+    enabled: !!id,
+  });
+
+  useEffect(() => {
+    if (!isFetching && getGoal) {
+      setValue("goal", getGoal?.document?.goal);
+      setValue("description", getGoal?.document?.description);
+      setValue("measurement", getGoal?.document?.measurement);
+      setValue(
+        "assignee",
+        getGoal?.document?.assignee.map((emp) => ({
+          value: emp._id,
+          label: `${emp.first_name} ${emp.last_name}`,
+          image: emp.user_logo_url,
+        })) || []
+      );
+      setValue("startDate", {
+        startDate: getGoal?.document?.startDate,
+        endDate: getGoal?.document?.startDate,
+      });
+      setValue("goalStatus", getGoal?.document?.goalStatus);
+      setValue("endDate", {
+        startDate: getGoal?.document?.endDate,
+        endDate: getGoal?.document?.endDate,
+      });
+      // Set other fields...
+    }
+    // eslint-disable-next-line
+  }, [isFetching, getGoal]);
 
   const onSubmit = async (data) => {
     const goals = {
@@ -131,7 +175,7 @@ const GoalsModel = ({ handleClose, open, options }) => {
         >
           <div className="flex justify-between py-4 items-center  px-4">
             <h1 id="modal-modal-title" className="text-xl pl-2">
-              Goal Settings
+              {id ? "Update goal setting" : "Add goal setting"}
             </h1>
             <IconButton onClick={handleClose}>
               <Close className="!text-[16px]" />

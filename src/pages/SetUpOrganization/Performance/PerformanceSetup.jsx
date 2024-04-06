@@ -231,7 +231,7 @@ const PerformanceSetup = () => {
                 <div>
                   <h1 className="!text-lg">Performance</h1>
                   <p className="text-xs text-gray-600">
-                    Create the salary template here.
+                    Setup performance settings for your organization
                   </p>
                 </div>
               </div>
