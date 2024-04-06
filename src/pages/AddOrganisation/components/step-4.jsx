@@ -107,7 +107,6 @@ const Step4 = () => {
         },
       };
       const razor = new window.Razorpay(options);
-      console.log(`🚀 ~ file: step-4.jsx:111 ~ razor:`, razor);
       razor.open();
     },
     onError: async (data) => {
