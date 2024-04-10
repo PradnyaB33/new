@@ -98,9 +98,9 @@ const ViewAttendacneBiomatric = () => {
             <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
               <article className="flex items-center mb-1 text-red-500 gap-2">
                 <Info className="!text-2xl" />
-                <h1 className="text-lg font-semibold">Add Loan Type</h1>
+                <h1 className="text-lg font-semibold">No Sync Data Found</h1>
               </article>
-              <p>No loan type found. Please add the loan type.</p>
+              <p>Please sync the data of employee.</p>
             </section>
           )}
         </article>

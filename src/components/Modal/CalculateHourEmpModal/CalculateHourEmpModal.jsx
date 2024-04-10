@@ -137,6 +137,8 @@ const CalculateHourEmpModal = ({
       const responseData = await response.json();
       console.log(responseData);
       handleAlert(true, "success", "Hours calculated successfully..");
+      handleClose();
+      setSelectedDate(null);
     } catch (error) {
       console.error("Error calculating hours:", error);
       handleAlert(false, "error", "Failed to calculate hours. Please try again.");
