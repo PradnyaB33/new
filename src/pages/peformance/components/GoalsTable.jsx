@@ -14,33 +14,50 @@ import React, { useState } from "react";
 import { useQuery } from "react-query";
 import Select from "react-select";
 import useAuthToken from "../../../hooks/Token/useAuth";
+import UserProfile from "../../../hooks/UserData/useUser";
 import GoalsModel from "./GoalsModel";
 import PreviewGoalModal from "./PreviewGoalModal";
 
-const GoalsTable = () => {
+const GoalsTable = ({ performance }) => {
   const [focusedInput, setFocusedInput] = useState(null);
+
+  console.log(performance, "performance data");
+
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
   const [open, setOpen] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
   const [previewModal, setPreviewModal] = useState(false);
   const [previewId, setPreviewId] = useState(null);
   const handleClose = () => {
     setOpen(false);
     setPreviewModal(false);
     setPreviewId(null);
+    setOpenEdit(false);
   };
 
   const handleOpen = (id) => {
     setPreviewModal(true);
-    console.log("hii");
     setPreviewId(id);
   };
 
-  console.log(previewModal);
   const rowsPerPage = 10; // Define the number of rows per page
   const [page, setPage] = useState(1);
 
   const authToken = useAuthToken();
 
   const { data: orgGoals, isFetching } = useQuery("orggoals", async () => {
+    if (role === "Employee") {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/route/performance/getEmployeeGoals`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return data;
+    }
     const { data } = await axios.get(
       `${process.env.REACT_APP_API}/route/performance/getOrganizationGoals`,
       {
@@ -125,13 +142,15 @@ const GoalsTable = () => {
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-          >
-            Add Goal
-          </button>
+          {performance?.stages === "Goal setting" && (
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+            >
+              Add Goal
+            </button>
+          )}
         </div>
         <div className="bg-white w-full overflow-x-auto">
           {isFetching ? (
@@ -143,25 +162,25 @@ const GoalsTable = () => {
                   <tr className="!font-semibold ">
                     <th
                       scope="col"
-                      className="!text-left px-2 w-max py-3 text-sm border"
+                      className="!text-left px-2 w-max py-3 text-sm "
                     >
                       Sr. No
                     </th>
-                    <th scope="col" className="py-3 text-sm px-2 border">
+                    <th scope="col" className="py-3 text-sm px-2 ">
                       Goal Name
                     </th>
 
-                    <th scope="col" className="py-3 text-sm px-2 border">
+                    <th scope="col" className="py-3 text-sm px-2 ">
                       Time
                     </th>
-                    <th scope="col" className="py-3 text-sm px-2 border">
+                    <th scope="col" className="py-3 text-sm px-2 ">
                       Assignee
                     </th>
-                    <th scope="col" className=" py-3 text-sm px-2 border">
+                    <th scope="col" className=" py-3 text-sm px-2 ">
                       status
                     </th>
 
-                    <th scope="col" className=" py-3 text-sm px-2 border">
+                    <th scope="col" className=" py-3 text-sm px-2 ">
                       Actions
                     </th>
                   </tr>
@@ -174,20 +193,20 @@ const GoalsTable = () => {
                     >
                       <td
                         onClick={() => handleOpen(goal._id)}
-                        className="!text-left  cursor-pointer   px-2 text-sm w-[70px] border "
+                        className="!text-left  cursor-pointer   px-2 text-sm w-[70px]  "
                       >
                         {id + 1}
                       </td>
                       <td
                         onClick={() => handleOpen(goal._id)}
-                        className="text-sm cursor-pointer truncate text-left w-[350px] border px-2"
+                        className="text-sm cursor-pointer truncate text-left w-[350px]  px-2"
                       >
                         <p>{goal.goal}</p>
                       </td>
 
                       <td
                         onClick={() => handleOpen(goal._id)}
-                        className=" cursor-pointer text-left !p-0 w-[300px] border "
+                        className=" cursor-pointer text-left !p-0 w-[300px]  "
                       >
                         <p
                           className={`
@@ -218,7 +237,7 @@ const GoalsTable = () => {
 
                       <td
                         onClick={() => handleOpen(goal._id)}
-                        className="cursor-pointer text-left text-sm w-[200px]  border"
+                        className="cursor-pointer text-left text-sm w-[200px]  "
                       >
                         <p className="px-2  md:w-full w-max">
                           {goal.goalStatus}
@@ -226,7 +245,14 @@ const GoalsTable = () => {
                       </td>
 
                       <td className="whitespace-nowrap px-2  w-[220px]">
-                        <IconButton color="primary" aria-label="edit">
+                        <IconButton
+                          onClick={() => {
+                            setOpenEdit(true);
+                            setPreviewId(goal._id);
+                          }}
+                          color="primary"
+                          aria-label="edit"
+                        >
                           <EditOutlined />
                         </IconButton>
                         <IconButton color="error" aria-label="delete">
@@ -260,6 +286,12 @@ const GoalsTable = () => {
       </div>
 
       <GoalsModel open={open} options={options} handleClose={handleClose} />
+      <GoalsModel
+        open={openEdit}
+        id={previewId}
+        options={options}
+        handleClose={handleClose}
+      />
       <PreviewGoalModal
         open={previewModal}
         id={previewId}

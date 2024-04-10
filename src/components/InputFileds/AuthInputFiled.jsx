@@ -91,6 +91,7 @@ const AuthInputFiled = ({
                   inputClassName={"border-none w-full outline-none"}
                   useRange={false}
                   asSingle={true}
+                  popoverDirection="down"
                   readOnly={true}
                   onChange={(value) => {
                     field.onChange(value);

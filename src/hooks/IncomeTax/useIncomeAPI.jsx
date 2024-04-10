@@ -83,7 +83,7 @@ const useIncomeAPI = (
         requestData.requestData.subsectionname = subsectionname;
       }
       await axios.post(
-        `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
+        `${process.env.REACT_APP_API}/route/tds/createInvestment`,
         requestData,
         {
           headers: {
@@ -119,7 +119,7 @@ const useIncomeAPI = (
 
     try {
       await axios.post(
-        `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
+        `${process.env.REACT_APP_API}/route/tds/createInvestment`,
         requestData,
         {
           headers: {

@@ -83,7 +83,6 @@ import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
-import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttendacneBiomatric";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
@@ -93,6 +92,7 @@ import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
 import Training from "./pages/SetUpOrganization/Traning/Training";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import EmployeeTraining from "./pages/Training/page";
+import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttendacneBiomatric";
 import CustomCalander from "./pages/custom/Calendar";
 import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
@@ -126,7 +126,9 @@ const App = () => {
         <Route
           path="/performance"
           element={
-            <RequireAuth permission={["Super-Admin", "Employee"]}>
+            <RequireAuth
+              permission={["Super-Admin", "Employee", "Manager", "HR"]}
+            >
               <Performance />
             </RequireAuth>
           }

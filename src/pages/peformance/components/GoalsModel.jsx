@@ -16,8 +16,9 @@ import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
+import UserProfile from "../../../hooks/UserData/useUser";
 
-const GoalsModel = ({ handleClose, open, options }) => {
+const GoalsModel = ({ handleClose, open, options, id }) => {
   const { handleAlert } = useContext(TestContext);
   const style = {
     position: "absolute",
@@ -30,12 +31,19 @@ const GoalsModel = ({ handleClose, open, options }) => {
     p: 4,
   };
 
+  const { useGetCurrentRole, getCurrentUser } = UserProfile();
+  const role = useGetCurrentRole();
+  const user = getCurrentUser();
+
   const authToken = useAuthToken();
   const zodSchema = z.object({
     goal: z.string(),
     description: z.string(),
     measurement: z.string().optional(),
-    assignee: z.array(z.object({ value: z.string(), label: z.string() })),
+    comments: z.string().optional(),
+    assignee: z
+      .array(z.object({ value: z.string(), label: z.string() }))
+      .optional(),
     startDate: z.object({
       startDate: z.string(),
       endDate: z.string(),
@@ -64,9 +72,13 @@ const GoalsModel = ({ handleClose, open, options }) => {
   const queryClient = useQueryClient();
   const performanceSetup = useMutation(
     async (data) => {
+      let currentData = data;
+      if (role === "Employee") {
+        currentData.assignee = [user._id];
+      }
       await axios.post(
         `${process.env.REACT_APP_API}/route/performance/createGoal`,
-        { goals: data },
+        { goals: currentData },
         {
           headers: {
             Authorization: authToken,
@@ -88,7 +100,7 @@ const GoalsModel = ({ handleClose, open, options }) => {
       goal: data.goal,
       description: data.description,
       measurement: data.measurement,
-      assignee: data.assignee.map((emp) => emp.value),
+      assignee: data?.assignee?.map((emp) => emp.value) ?? [],
       startDate: data.startDate.startDate,
       endDate: data.endDate.startDate,
       goaltype: data.goaltype.value,
@@ -108,7 +120,7 @@ const GoalsModel = ({ handleClose, open, options }) => {
         },
       }
     );
-    return data.reportees;
+    return data;
   });
 
   const empoptions = employeeData?.map((emp) => ({
@@ -131,7 +143,7 @@ const GoalsModel = ({ handleClose, open, options }) => {
         >
           <div className="flex justify-between py-4 items-center  px-4">
             <h1 id="modal-modal-title" className="text-xl pl-2">
-              Goal Settings
+              {!id ? "Create goal setting" : "Update goal setting"}
             </h1>
             <IconButton onClick={handleClose}>
               <Close className="!text-[16px]" />
@@ -162,6 +174,7 @@ const GoalsModel = ({ handleClose, open, options }) => {
               errors={errors}
               error={errors.description}
             />
+
             <AuthInputFiled
               name="measurement"
               icon={Paid}
@@ -173,26 +186,40 @@ const GoalsModel = ({ handleClose, open, options }) => {
               error={errors.measurement}
             />
             <AuthInputFiled
-              name="assignee"
-              icon={PersonOutline}
+              name="comments"
+              icon={Paid}
               control={control}
-              type="empselect"
-              options={empoptions}
-              placeholder="Assignee name"
-              label="Select assignee name"
-              errors={errors}
-              error={errors.assignee}
-            />
-            <AuthInputFiled
-              name="attachment"
-              icon={AttachFile}
-              control={control}
-              type="file"
+              type="texteditor"
               placeholder="100"
-              label="Add attachments"
+              label="Enter measurements name"
               errors={errors}
-              error={errors.attachment}
+              error={errors.comments}
             />
+            {role !== "Employee" && (
+              <AuthInputFiled
+                name="assignee"
+                icon={PersonOutline}
+                control={control}
+                type="empselect"
+                options={empoptions}
+                placeholder="Assignee name"
+                label="Select assignee name"
+                errors={errors}
+                error={errors.assignee}
+              />
+            )}
+            {id && (
+              <AuthInputFiled
+                name="attachment"
+                icon={AttachFile}
+                control={control}
+                type="file"
+                placeholder="100"
+                label="Add attachments"
+                errors={errors}
+                error={errors.attachment}
+              />
+            )}
 
             <div className="grid grid-cols-2 gap-2">
               <AuthInputFiled

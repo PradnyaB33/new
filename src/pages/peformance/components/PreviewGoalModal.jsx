@@ -11,7 +11,6 @@ import { format } from "date-fns";
 import DOMPurify from "dompurify";
 import React from "react";
 import { useQuery } from "react-query";
-import Select from "react-select";
 import useAuthToken from "../../../hooks/Token/useAuth";
 
 const PreviewGoalModal = ({ open, handleClose, id }) => {
@@ -51,12 +50,8 @@ const PreviewGoalModal = ({ open, handleClose, id }) => {
     enabled: !!id,
   });
 
-  const sanitizedDescription = DOMPurify.sanitize(
-    getGoal?.document?.description
-  );
-  const sanitizedMeasurment = DOMPurify.sanitize(
-    getGoal?.document?.measurement
-  );
+  const sanitizedDescription = DOMPurify.sanitize(getGoal?.description);
+  const sanitizedMeasurment = DOMPurify.sanitize(getGoal?.measurement);
 
   //   const zodSchema = z.object({
   //     goal: z.string(),
@@ -189,7 +184,7 @@ const PreviewGoalModal = ({ open, handleClose, id }) => {
             <>
               <div className="flex justify-between py-4 items-center  px-4">
                 <h1 id="modal-modal-title" className="text-2xl pl-2">
-                  {getGoal?.document?.goal}
+                  {getGoal?.goal}
                 </h1>
                 <IconButton onClick={handleClose}>
                   <Close className="!text-[16px]" />
@@ -199,50 +194,20 @@ const PreviewGoalModal = ({ open, handleClose, id }) => {
               <div className="space-y-4 pb-4 px-4">
                 <div className="flex gap-2 items-center">
                   <div
-                    className={`bg-green-500 flex rounded-md px-2 border-gray-200 border-[.5px]  items-center`}
+                    className={`bg-green-500 flex rounded-md p-2 text-white  border-gray-200 border-[.5px]  items-center`}
                   >
-                    <Select
-                      aria-errormessage=""
-                      placeholder={getGoal?.document?.goalStatus ?? "Status"}
-                      styles={{
-                        control: (styles) => ({
-                          ...styles,
-                          borderWidth: "0px",
-                          boxShadow: "none",
-                          backgroundColor: "rgb(34 197 94)",
-                          color: "white",
-                        }),
-                        placeholder: (styles) => ({
-                          ...styles,
-                          color: "white", // replace with your color
-                        }),
-                        singleValue: (styles) => ({
-                          ...styles,
-                          color: "white",
-                        }),
-                      }}
-                      className={` !bg-green-500  w-full !outline-none px-2 !shadow-none !border-none !border-0`}
-                      components={{
-                        IndicatorSeparator: () => null,
-                      }}
-                      options={options}
-                      value={getGoal?.document?.goalStatus}
-                      // onChange={(value) => {
-                      //   updateField(name, value);
-                      //   field.onChange(value);
-                      // }}
-                    />
+                    Pending
                   </div>
 
                   <div className=" p-2 bg-gray-50 border-gray-200 border rounded-md">
                     Start Date: -{" "}
-                    {getGoal?.document?.startDate &&
-                      format(new Date(getGoal?.document?.startDate), "PP")}
+                    {getGoal?.startDate &&
+                      format(new Date(getGoal?.startDate), "PP")}
                   </div>
                   <div className=" p-2 bg-gray-50 border-gray-200 border rounded-md">
                     End Date : -{" "}
-                    {getGoal?.document?.endDate &&
-                      format(new Date(getGoal?.document?.endDate), "PP")}
+                    {getGoal?.endDate &&
+                      format(new Date(getGoal?.endDate), "PP")}
                   </div>
                 </div>
                 <div className="hover:bg-gray-100 rounded-md ">
