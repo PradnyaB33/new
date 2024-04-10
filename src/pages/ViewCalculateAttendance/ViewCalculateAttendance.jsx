@@ -1,13 +1,11 @@
-import { Container, Typography  , IconButton} from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useQuery } from "react-query";
 import EmployeeTypeSkeleton from "../SetUpOrganization/components/EmployeeTypeSkeleton";
 import { Info } from "@mui/icons-material";
-
-
 
 const ViewCalculateAttendance = () => {
   const { cookies } = useContext(UseContext);
@@ -26,12 +24,12 @@ const ViewCalculateAttendance = () => {
           },
         }
       );
-      return response;
+      return response.data.data;
     }
   );
    
   console.log(calculateAttendanceData);
-  let empAttendanceData ;
+ 
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
@@ -42,7 +40,7 @@ const ViewCalculateAttendance = () => {
 
           {isLoading ? (
             <EmployeeTypeSkeleton />
-          ) : empAttendanceData?.length > 0 ? (
+          ) : calculateAttendanceData?.length > 0 ? (
             <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
               <table className="min-w-full bg-white  text-left !text-sm font-light">
                 <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
@@ -57,13 +55,40 @@ const ViewCalculateAttendance = () => {
                       Employee Name
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      Action
+                      Date
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Punch In
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Punch Out
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Total Hours
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Status
                     </th>
                     
                   </tr>
                 </thead>
                 <tbody>
-                  
+                  {calculateAttendanceData?.map((employee, index) => (
+                    <React.Fragment key={employee._id}>
+                      {employee.punchingData.map((punchingData, id) => (
+                        <tr className="!font-medium border-b" key={id}>
+                          <td className="!text-left pl-8 py-3 ">{index * employee.punchingData.length + id + 1}</td>
+                          <td className="!text-left  pl-4 py-3 ">{employee.EmployeeId.empId || ""}</td>
+                          <td className="!text-left  pl-4 py-3 ">{employee.EmployeeId.first_name || ""}</td>
+                          <td className="!text-left pl-4 py-3">{new Date(punchingData.recordDate).toLocaleDateString()}</td>
+                          <td className="!text-left pl-4 py-3">{punchingData.punchInTime}</td>
+                          <td className="!text-left pl-4 py-3">{punchingData.punchOutTime}</td>
+                          <td className="!text-left pl-4 py-3">{punchingData.totalHours}</td>
+                          <td className="!text-left pl-4 py-3">{punchingData.status}</td>
+                        </tr>
+                      ))}
+                    </React.Fragment>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -71,15 +96,13 @@ const ViewCalculateAttendance = () => {
             <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
               <article className="flex items-center mb-1 text-red-500 gap-2">
                 <Info className="!text-2xl" />
-                <h1 className="text-lg font-semibold">Add Loan Type</h1>
+                <h1 className="text-lg font-semibold"> Sync The Data Of Employee</h1>
               </article>
-              <p>No loan type found. Please add the loan type.</p>
+              <p>No data found. Please sync the data.</p>
             </section>
           )}
         </article>
       </Container>
-
-    
     </>
   );
 };

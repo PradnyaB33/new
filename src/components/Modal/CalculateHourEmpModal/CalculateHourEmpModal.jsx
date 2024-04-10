@@ -63,12 +63,14 @@ const CalculateHourEmpModal = ({
     }
   
     const date = getFormattedDate(selectedDate);
+    console.log("date" , date);
     const punchingRecords = empPunchingData?.punchingRecords || [];
     let punchInTime = null;
     let punchOutTime = null;
   
-    punchingRecords.forEach((record) => {
+     punchingRecords.forEach((record) => {
       const recordDate = getFormattedDate(record.date);
+      console.log("record date" , recordDate);
       if (recordDate === date) {
         if (record.punchingStatus === "Check In") {
           punchInTime = new Date(`1970-01-01T${record.punchingTime}`);
@@ -77,6 +79,9 @@ const CalculateHourEmpModal = ({
         }
       }
     });
+    
+    console.log("punch in time" , punchInTime);
+    console.log("punch out time" , punchOutTime);
   
     const timeDiff = punchOutTime - punchInTime;
     const totalHours = timeDiff / (1000 * 60 * 60);
@@ -105,16 +110,12 @@ const CalculateHourEmpModal = ({
   
     const postData = {
       EmployeeId: empPunchingData?.EmployeeId._id,
-      organizationId: empPunchingData?.organizationId,
-      punchingData: [
-        {
-          recordDate: date,
-          punchInTime: punchInTime,
-          punchOutTime: punchOutTime,
-          totalHours: totalHour,
-          status: remarks,
-        },
-      ],
+      organizationId: organisationId,
+      recordDate: date,
+      punchInTime: punchInTime,
+      punchOutTime: punchOutTime,
+      totalHours: totalHour,
+      status: remarks,
     };
 
     console.log(postData);
