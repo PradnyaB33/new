@@ -310,6 +310,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
             text: "View Punching Attendance",
           },
+          {
+            key: "viewCalculate",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/view-calculate-data`,
+            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            text: "View Calculate Attendance",
+          },
         
         ],
       },

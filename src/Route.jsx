@@ -98,6 +98,7 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import ViewCalculateAttendance from "./pages/ViewCalculateAttendance/ViewCalculateAttendance";
 
 const App = () => {
   return (
@@ -372,6 +373,16 @@ const App = () => {
               permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
             >
               <EmpInfoPunchStatus />
+            </RequireAuth>
+          }
+        />
+         <Route
+          path="/organisation/:organisationId/view-calculate-data"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <ViewCalculateAttendance />
             </RequireAuth>
           }
         />
