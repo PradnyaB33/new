@@ -7,6 +7,7 @@ const useGetDepartments = () => {
   const { authToken } = useGetUser();
 
   const { organisationId } = useParams();
+
   const getDepartments = async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/get-departments/${organisationId}`,
