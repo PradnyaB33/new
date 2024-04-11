@@ -2,12 +2,14 @@ import axios from "axios";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
+import useSearchTrainingZustandStore from "../../zustand-store";
 import useTrainingStore from "./zustand-store";
 
 const useTrainingCreationMutation = () => {
   const authToken = useAuthToken();
-  const { setOpen, debouncedSearchTerm } = useTrainingStore();
-  const { invalidateQueries } = useQueryClient();
+  const { setOpen } = useTrainingStore();
+  const { trainingName, page } = useSearchTrainingZustandStore();
+  const queryClient = useQueryClient();
 
   const { organisationId } = useParams();
   const getTrainingImageUrl = async (fullObject) => {
@@ -44,9 +46,10 @@ const useTrainingCreationMutation = () => {
     useMutation(createTrainingObject, {
       onSuccess: async () => {
         setOpen(false);
-        await invalidateQueries(
-          `getTrainingDetailsWithNameLimit10WithCreatorId ${debouncedSearchTerm}`
-        );
+        await queryClient?.invalidateQueries({
+          queryKey: [`getTrainingDetailsWithNameLimit10WithCreatorId`],
+          exact: false,
+        });
       },
       onError: (error) => {
         console.error("onError", error);
@@ -97,9 +100,10 @@ const useTrainingCreationMutation = () => {
           }
         );
         setOpen(false);
-        await invalidateQueries(
-          `getTrainingDetailsWithNameLimit10WithCreatorId ${debouncedSearchTerm}`
-        );
+        await queryClient?.invalidateQueries({
+          queryKey: ["getTrainingDetailsWithNameLimit10WithCreatorId"],
+          exact: false,
+        });
       },
       onError: (error) => {
         console.error("onError", error);
