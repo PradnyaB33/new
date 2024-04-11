@@ -27,6 +27,9 @@ const Step1 = ({ nextStep }) => {
   const trainingForm = z.object({
     trainingImage: z.any().refine(
       (file) => {
+        if (typeof file === "string") {
+          return true;
+        }
         return !!file && file.size >= 5 * 1024 && file.size <= 50 * 1024;
       },
       { message: "Image size maximum 50kb" }

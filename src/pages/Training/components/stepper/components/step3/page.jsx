@@ -7,7 +7,7 @@ import useTrainingCreationMutation from "../mutation";
 import useTrainingStore from "../zustand-store";
 
 const Step3 = () => {
-  const { mutate, isLoading, isCreateTrainingLoading } =
+  const { mutate, isLoading, isCreateTrainingLoading, updateTraining } =
     useTrainingCreationMutation();
   const {
     trainingName,
@@ -21,17 +21,23 @@ const Step3 = () => {
     trainingPoints,
     trainingDownCasted,
     trainingDuration,
+    trainingId,
   } = useTrainingStore();
-  console.log(trainingDuration);
   const sanitizedDescription = DOMPurify.sanitize(trainingDescription);
-  const url = URL.createObjectURL(trainingImage);
+  const getImageUrl = () => {
+    if (typeof trainingImage === "string") {
+      return trainingImage;
+    } else {
+      return URL.createObjectURL(trainingImage);
+    }
+  };
   if (isLoading || isCreateTrainingLoading) {
     return <Loader />;
   }
   return (
     <div className="flex items-center gap-8 flex-col">
       <img
-        src={url}
+        src={getImageUrl()}
         className="rounded-lg w-full object-cover h-44"
         alt="Not-found"
       />
@@ -109,19 +115,36 @@ const Step3 = () => {
       <Button
         variant="contained"
         onClick={() => {
-          mutate({
-            trainingName,
-            trainingType,
-            trainingDescription,
-            trainingStartDate,
-            trainingLink,
-            trainingImage,
-            trainingLocation,
-            trainingEndDate,
-            trainingPoints,
-            trainingDownCasted,
-            trainingDuration,
-          });
+          if (trainingId !== undefined) {
+            updateTraining({
+              trainingId,
+              trainingName,
+              trainingType,
+              trainingDescription,
+              trainingStartDate,
+              trainingLink,
+              trainingImage,
+              trainingLocation,
+              trainingEndDate,
+              trainingPoints,
+              trainingDownCasted,
+              trainingDuration,
+            });
+          } else {
+            mutate({
+              trainingName,
+              trainingType,
+              trainingDescription,
+              trainingStartDate,
+              trainingLink,
+              trainingImage,
+              trainingLocation,
+              trainingEndDate,
+              trainingPoints,
+              trainingDownCasted,
+              trainingDuration,
+            });
+          }
         }}
       >
         Submit
