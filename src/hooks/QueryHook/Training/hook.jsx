@@ -28,7 +28,6 @@ const useTrainingHook = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: [
       `getTrainingDetailsWithNameLimit10WithCreatorId ${debouncedSearchTerm} ${page}`,
-      ,
     ],
     queryFn: getTrainingDetailsWithNameLimit10WithCreatorId,
     onSuccess: (data) => {

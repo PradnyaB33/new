@@ -15,15 +15,20 @@ const useSearchTrainingZustandStore = create((set) => ({
       trainingName: data,
     });
   },
-  setPage: (data) => {
-    set({
-      page: data,
-    });
-  },
   setTotalResult: (data) => {
     set({
       totalResult: data,
     });
+  },
+  incrementPage: () => {
+    set((state) => ({
+      page: state.page + 1,
+    }));
+  },
+  decrementPage: () => {
+    set((state) => ({
+      page: state.page - 1,
+    }));
   },
 }));
 
