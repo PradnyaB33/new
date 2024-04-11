@@ -35,7 +35,7 @@ const Stepper = ({ setOpen, open }) => {
       icon: Book,
     },
     {
-      label: "Training Attendees",
+      label: "Info",
       icon: FitnessCenter,
     },
     {
