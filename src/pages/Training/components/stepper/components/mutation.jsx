@@ -2,13 +2,11 @@ import axios from "axios";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
-import useSearchTrainingZustandStore from "../../zustand-store";
 import useTrainingStore from "./zustand-store";
 
 const useTrainingCreationMutation = () => {
   const authToken = useAuthToken();
   const { setOpen } = useTrainingStore();
-  const { trainingName, page } = useSearchTrainingZustandStore();
   const queryClient = useQueryClient();
 
   const { organisationId } = useParams();
