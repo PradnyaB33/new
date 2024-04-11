@@ -9,6 +9,8 @@ import useTrainingStore from "../zustand-store";
 const Step3 = () => {
   const { mutate, isLoading, isCreateTrainingLoading, updateTraining } =
     useTrainingCreationMutation();
+  const info = useTrainingStore();
+  console.log(`🚀 ~ file: page.jsx:13 ~ info:`, info);
   const {
     trainingName,
     trainingType,
@@ -22,7 +24,9 @@ const Step3 = () => {
     trainingDownCasted,
     trainingDuration,
     trainingId,
-  } = useTrainingStore();
+    trainingDepartment,
+    isDepartmentalTraining,
+  } = info;
   const sanitizedDescription = DOMPurify.sanitize(trainingDescription);
   const getImageUrl = () => {
     if (typeof trainingImage === "string") {
@@ -129,6 +133,8 @@ const Step3 = () => {
               trainingPoints,
               trainingDownCasted,
               trainingDuration,
+              trainingDepartment,
+              isDepartmentalTraining,
             });
           } else {
             mutate({
@@ -143,6 +149,8 @@ const Step3 = () => {
               trainingPoints,
               trainingDownCasted,
               trainingDuration,
+              trainingDepartment,
+              isDepartmentalTraining,
             });
           }
         }}

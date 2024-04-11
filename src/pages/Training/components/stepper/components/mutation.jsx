@@ -6,8 +6,8 @@ import useTrainingStore from "./zustand-store";
 
 const useTrainingCreationMutation = () => {
   const authToken = useAuthToken();
-  const { setOpen, debouncedSearchTerm } = useTrainingStore();
-  const { invalidateQueries } = useQueryClient();
+  const { setOpen } = useTrainingStore();
+  const queryClient = useQueryClient();
 
   const { organisationId } = useParams();
   const getTrainingImageUrl = async (fullObject) => {
@@ -44,9 +44,10 @@ const useTrainingCreationMutation = () => {
     useMutation(createTrainingObject, {
       onSuccess: async () => {
         setOpen(false);
-        await invalidateQueries(
-          `getTrainingDetailsWithNameLimit10WithCreatorId ${debouncedSearchTerm}`
-        );
+        await queryClient?.invalidateQueries({
+          queryKey: [`getTrainingDetailsWithNameLimit10WithCreatorId`],
+          exact: false,
+        });
       },
       onError: (error) => {
         console.error("onError", error);
@@ -97,9 +98,10 @@ const useTrainingCreationMutation = () => {
           }
         );
         setOpen(false);
-        await invalidateQueries(
-          `getTrainingDetailsWithNameLimit10WithCreatorId ${debouncedSearchTerm}`
-        );
+        await queryClient?.invalidateQueries({
+          queryKey: ["getTrainingDetailsWithNameLimit10WithCreatorId"],
+          exact: false,
+        });
       },
       onError: (error) => {
         console.error("onError", error);

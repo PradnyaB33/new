@@ -2,6 +2,8 @@ import { format } from "date-fns";
 import { create } from "zustand";
 
 const useTrainingStore = create((set) => ({
+  isDepartmentalTraining: false,
+  trainingDepartment: [],
   trainingId: undefined,
   trainingName: undefined,
   trainingType: undefined,
@@ -40,6 +42,8 @@ const useTrainingStore = create((set) => ({
       trainingDownCasted: data.trainingDownCasted,
       trainingType: data.trainingType,
       trainingDuration: data.trainingDuration,
+      trainingDepartment: data.trainingDepartment,
+      isDepartmentalTraining: data.isDepartmentalTraining,
     });
   },
   setOpen: (data) => {
