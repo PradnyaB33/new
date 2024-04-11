@@ -192,8 +192,8 @@ const CalculateHourEmpModal = ({
                {/* Input field for selecting date */}
                <TextField
                 label="Select Date for calculate total hours"
-                value={selectedDate ? new Date(selectedDate).toLocaleDateString() : ''} // Display selected date in the TextField
-                onClick={handlePopoverOpen} // Open the Popover when TextField is clicked
+                value={selectedDate ? new Date(selectedDate).toLocaleDateString() : ''} 
+                onClick={handlePopoverOpen} 
                 fullWidth
                 variant="outlined"
               />
