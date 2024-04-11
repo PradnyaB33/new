@@ -1,10 +1,6 @@
 import { format } from "date-fns";
 import { create } from "zustand";
 
-console.log(
-  `🚀 ~ file: zustand-store.jsx:39 ~ format(new Date(), "yyyy-MM-dd"):`,
-  format(new Date(), "yyyy-MM-dd")
-);
 const useTrainingStore = create((set) => ({
   trainingId: undefined,
   trainingName: undefined,

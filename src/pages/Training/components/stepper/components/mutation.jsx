@@ -1,12 +1,13 @@
 import axios from "axios";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
 import useTrainingStore from "./zustand-store";
 
 const useTrainingCreationMutation = () => {
   const authToken = useAuthToken();
-  const { setOpen } = useTrainingStore();
+  const { setOpen, debouncedSearchTerm } = useTrainingStore();
+  const { invalidateQueries } = useQueryClient();
 
   const { organisationId } = useParams();
   const getTrainingImageUrl = async (fullObject) => {
@@ -41,8 +42,11 @@ const useTrainingCreationMutation = () => {
   };
   const { mutate: createTraining, isLoading: isCreateTrainingLoading } =
     useMutation(createTrainingObject, {
-      onSuccess: async (data) => {
+      onSuccess: async () => {
         setOpen(false);
+        await invalidateQueries(
+          `getTrainingDetailsWithNameLimit10WithCreatorId ${debouncedSearchTerm}`
+        );
       },
       onError: (error) => {
         console.error("onError", error);
@@ -93,6 +97,9 @@ const useTrainingCreationMutation = () => {
           }
         );
         setOpen(false);
+        await invalidateQueries(
+          `getTrainingDetailsWithNameLimit10WithCreatorId ${debouncedSearchTerm}`
+        );
       },
       onError: (error) => {
         console.error("onError", error);

@@ -4,10 +4,8 @@ import React from "react";
 import useTrainingStore from "../../components/stepper/components/zustand-store";
 
 const TableRow = ({ logo, name, duration, doc }) => {
-  console.log(`🚀 ~ file: TableRow.jsx:7 ~ doc:`, doc);
   const [newOpen, setNewOpen] = React.useState(false);
   const state = useTrainingStore();
-  console.log(`🚀 ~ file: TableRow.jsx:10 ~ state:`, state);
   const { setOpen, setTrainingData } = state;
   const [anchorEl, setAnchorEl] = React.useState(null);
   return (
