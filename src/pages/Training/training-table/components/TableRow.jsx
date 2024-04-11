@@ -1,31 +1,43 @@
 import { MoreVert } from "@mui/icons-material";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem, Rating } from "@mui/material";
+import DOMPurify from "dompurify";
 import React from "react";
 import useTrainingStore from "../../components/stepper/components/zustand-store";
+import TrainingTableLoading from "./loading-skeleton";
+import useTrainingDetailsMutation from "./mutation";
 
 const TableRow = ({ logo, name, duration, doc }) => {
   const [newOpen, setNewOpen] = React.useState(false);
   const state = useTrainingStore();
   const { setOpen, setTrainingData } = state;
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const { mutate, isLoading } = useTrainingDetailsMutation();
+  if (isLoading) {
+    return <TrainingTableLoading />;
+  }
+  const sanitizedDescription = DOMPurify.sanitize(doc?.trainingDescription);
+
   return (
-    <tr
+    <div
       className={`bg-white
-       border-b dark:border-neutral-500`}
+       border-b dark:border-neutral-500 flex w-full justify-between`}
     >
-      <td className="whitespace-nowrap px-6 py-2 grid place-items-center font-medium m-auto">
+      <div className="flex py-8 gap-8">
         <img
           src={logo.length > 0 ? logo : "https://via.placeholder.com/150"}
           alt="Training Logo"
-          className="w-10 h-10 rounded-full"
+          className="w-48 h-36 object-cover rounded-md shadow-lg border border-gray-200"
         />
-      </td>
-      <td className="whitespace-nowrap px-6 py-2 text-center">{name}</td>
-      <td className="whitespace-nowrap px-6 py-2 text-center">
-        {duration ?? "2 h"}
-      </td>
-
-      <td className="whitespace-nowrap px-6 py-2 text-center">
+        <div className="text-left">
+          <div className="font-bold text-xl">{name}</div>
+          <p dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
+          3.5
+          <Rating size="small" name="read-only" value={3.5} readOnly />
+          {doc?.trainingLocation.map}
+          <div className="">Duration &nbsp;{duration ?? "2 h"}</div>
+        </div>
+      </div>
+      <div className="  text-center">
         <IconButton
           onClick={(e) => {
             setNewOpen(true);
@@ -50,11 +62,18 @@ const TableRow = ({ logo, name, duration, doc }) => {
           >
             Update
           </MenuItem>
-          <MenuItem onClick={() => setNewOpen(false)}>Delete</MenuItem>
+          <MenuItem
+            onClick={() => {
+              mutate(doc._id);
+              setNewOpen(false);
+            }}
+          >
+            Delete
+          </MenuItem>
           <MenuItem onClick={() => setNewOpen(false)}>Check Status</MenuItem>
         </Menu>
-      </td>
-    </tr>
+      </div>
+    </div>
   );
 };
 
