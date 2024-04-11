@@ -16,14 +16,14 @@ import Select from "react-select";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 import GoalsModel from "./GoalsModel";
+import MonitoringModel from "./MonitoringModel";
 import PreviewGoalModal from "./PreviewGoalModal";
+import RatingModel from "./RatingModel";
 
 const GoalsTable = ({ performance }) => {
   const [focusedInput, setFocusedInput] = useState(null);
-
-  console.log(performance, "performance data");
-
-  const { useGetCurrentRole } = UserProfile();
+  const { useGetCurrentRole, getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
   const role = useGetCurrentRole();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -49,7 +49,7 @@ const GoalsTable = ({ performance }) => {
   const { data: orgGoals, isFetching } = useQuery("orggoals", async () => {
     if (role === "Employee") {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getEmployeeGoals`,
+        `${process.env.REACT_APP_API}/route/employee/getEmployeeGoals/${user._id}`,
         {
           headers: {
             Authorization: authToken,
@@ -85,10 +85,13 @@ const GoalsTable = ({ performance }) => {
       value: "test",
     },
   ];
+
   return (
     <section className="p-4 ">
       <div className="p-4  bg-white rounded-md border">
-        <h1 className="text-xl py-2">Manager Goals</h1>
+        <h1 className="text-xl py-2">
+          {role === "Employee" ? "My Goals" : "Manager Goals"}
+        </h1>
         <div className="my-2 flex justify-between">
           <div className="flex gap-4">
             <div className={`space-y-1  min-w-[60vw] `}>
@@ -173,9 +176,11 @@ const GoalsTable = ({ performance }) => {
                     <th scope="col" className="py-3 text-sm px-2 ">
                       Time
                     </th>
-                    <th scope="col" className="py-3 text-sm px-2 ">
-                      Assignee
-                    </th>
+                    {role !== "Employee" && (
+                      <th scope="col" className="py-3 text-sm px-2 ">
+                        Assignee
+                      </th>
+                    )}
                     <th scope="col" className=" py-3 text-sm px-2 ">
                       status
                     </th>
@@ -193,13 +198,13 @@ const GoalsTable = ({ performance }) => {
                     >
                       <td
                         onClick={() => handleOpen(goal._id)}
-                        className="!text-left  cursor-pointer   px-2 text-sm w-[70px]  "
+                        className="!text-left  cursor-pointer py-4    px-2 text-sm w-[70px]  "
                       >
                         {id + 1}
                       </td>
                       <td
                         onClick={() => handleOpen(goal._id)}
-                        className="text-sm cursor-pointer truncate text-left w-[350px]  px-2"
+                        className="text-sm cursor-pointer truncate text-left w-[550px]  px-2"
                       >
                         <p>{goal.goal}</p>
                       </td>
@@ -217,48 +222,56 @@ const GoalsTable = ({ performance }) => {
                         </p>
                       </td>
 
-                      <td
-                        onClick={() => handleOpen(goal._id)}
-                        className="flex cursor-pointer w-[250px] items-start !text-left px-2 py-2"
-                      >
-                        <AvatarGroup max={6}>
-                          {goal?.assignee.map((assignee, id) => (
-                            <Tooltip
-                              title={`${assignee.first_name} ${assignee.last_name}`}
-                            >
-                              <Avatar
-                                src={assignee?.user_logo_url}
-                                sx={{ width: 34, height: 34 }}
-                              />
-                            </Tooltip>
-                          ))}
-                        </AvatarGroup>
-                      </td>
+                      {role !== "Employee" && (
+                        <td
+                          onClick={() => handleOpen(goal._id)}
+                          className="flex cursor-pointer w-[250px] items-start !text-left px-2 py-2"
+                        >
+                          <AvatarGroup max={6}>
+                            {goal?.assignee.map((assignee, id) => (
+                              <Tooltip
+                                title={`${assignee.first_name} ${assignee.last_name}`}
+                              >
+                                <Avatar
+                                  src={assignee?.user_logo_url}
+                                  sx={{ width: 34, height: 34 }}
+                                />
+                              </Tooltip>
+                            ))}
+                          </AvatarGroup>
+                        </td>
+                      )}
 
                       <td
                         onClick={() => handleOpen(goal._id)}
                         className="cursor-pointer text-left text-sm w-[200px]  "
                       >
                         <p className="px-2  md:w-full w-max">
-                          {goal.goalStatus}
+                          {goal?.singleGoal?.status}
                         </p>
                       </td>
 
-                      <td className="whitespace-nowrap px-2  w-[220px]">
-                        <IconButton
-                          onClick={() => {
-                            setOpenEdit(true);
-                            setPreviewId(goal._id);
-                          }}
-                          color="primary"
-                          aria-label="edit"
-                        >
-                          <EditOutlined />
-                        </IconButton>
-                        <IconButton color="error" aria-label="delete">
-                          <DeleteOutlined />
-                        </IconButton>
-                      </td>
+                      {((performance?.stages === "Goal setting" &&
+                        goal?.singleGoal?.status !== "Goal Submitted") ||
+                        performance?.stages ===
+                          "Employee acceptance/acknowledgement stage" ||
+                        role !== "Employee") && (
+                        <td className="whitespace-nowrap px-2  w-[220px]">
+                          <IconButton
+                            onClick={() => {
+                              setOpenEdit(true);
+                              setPreviewId(goal._id);
+                            }}
+                            color="primary"
+                            aria-label="edit"
+                          >
+                            <EditOutlined />
+                          </IconButton>
+                          <IconButton color="error" aria-label="delete">
+                            <DeleteOutlined />
+                          </IconButton>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
@@ -285,15 +298,41 @@ const GoalsTable = ({ performance }) => {
         </div>
       </div>
 
-      <GoalsModel open={open} options={options} handleClose={handleClose} />
       <GoalsModel
-        open={openEdit}
-        id={previewId}
+        performance={performance}
+        open={open}
         options={options}
         handleClose={handleClose}
       />
+      {performance?.stages === "Monitoring stage/Feedback collection stage" ? (
+        <MonitoringModel
+          open={openEdit}
+          id={previewId}
+          options={options}
+          performance={performance}
+          handleClose={handleClose}
+        />
+      ) : performance?.stages ===
+        "KRA stage/Ratings Feedback/Manager review stage" ? (
+        <RatingModel
+          open={openEdit}
+          id={previewId}
+          options={options}
+          performance={performance}
+          handleClose={handleClose}
+        />
+      ) : (
+        <GoalsModel
+          open={openEdit}
+          id={previewId}
+          options={options}
+          performance={performance}
+          handleClose={handleClose}
+        />
+      )}
       <PreviewGoalModal
         open={previewModal}
+        performance={performance}
         id={previewId}
         handleClose={handleClose}
       />

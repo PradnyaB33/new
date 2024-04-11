@@ -58,6 +58,41 @@ const GoalSettingTab = () => {
             setMessage("The process to set up goal has now started.");
           }
         }
+
+        if (
+          data?.stages === "KRA stage/Ratings Feedback/Manager review stage"
+        ) {
+          if (endDate.diff(currentDate, "days") <= 2) {
+            setMessage(
+              "The submission period for KRA stage/Ratings Feedback/Manager review is soon closing."
+            );
+          }
+          if (endDate.diff(currentDate, "days") === 0) {
+            setMessage(
+              "Time for KRA stage/Ratings Feedback/Manager review has been ended."
+            );
+          } else {
+            setMessage(
+              "The process to KRA stage/Ratings Feedback/Manager review has now started."
+            );
+          }
+        }
+        if (data?.stages === "Employee acceptance/acknowledgement stage") {
+          if (endDate.diff(currentDate, "days") <= 2) {
+            setMessage(
+              "The submission period for employee acceptance/acknowledgement is soon closing."
+            );
+          }
+          if (endDate.diff(currentDate, "days") === 0) {
+            setMessage(
+              "Time for employee acceptance/acknowledgement has been ended."
+            );
+          } else {
+            setMessage(
+              "The process to accept/acknowledge goal has now started."
+            );
+          }
+        }
       },
     }
   );
@@ -98,7 +133,7 @@ const GoalSettingTab = () => {
 
       <div className="p-4 w-full h-max">
         <div className="bg-blue-100 p-2 overflow-hidden rounded-md">
-          <h1 className="text-lg scrolling-text text-rose-600   gap-2 flex items-center">
+          <h1 className="text-lg scrolling-text text-red-600   gap-2 flex items-center">
             <InfoOutlined /> Important Notice :- {message}
           </h1>
         </div>

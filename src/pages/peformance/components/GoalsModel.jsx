@@ -9,7 +9,7 @@ import {
 } from "@mui/icons-material";
 import { Box, Button, IconButton, Modal } from "@mui/material";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
@@ -18,7 +18,7 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 
-const GoalsModel = ({ handleClose, open, options, id }) => {
+const GoalsModel = ({ handleClose, open, options, id, performance }) => {
   const { handleAlert } = useContext(TestContext);
   const style = {
     position: "absolute",
@@ -30,6 +30,22 @@ const GoalsModel = ({ handleClose, open, options, id }) => {
     maxHeigh: "80vh",
     p: 4,
   };
+
+  const { data: goalData } = useQuery({
+    queryKey: "getSingleGoal",
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/getSingleEmployeeGoals/${id}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return data;
+    },
+    enabled: !!id,
+  });
 
   const { useGetCurrentRole, getCurrentUser } = UserProfile();
   const role = useGetCurrentRole();
@@ -53,13 +69,13 @@ const GoalsModel = ({ handleClose, open, options, id }) => {
       endDate: z.string(),
     }),
     goaltype: z.object({ value: z.string(), label: z.string() }),
-    goalStatus: z.string(),
     attachment: z.string().optional(),
   });
 
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -68,6 +84,28 @@ const GoalsModel = ({ handleClose, open, options, id }) => {
     },
     resolver: zodResolver(zodSchema),
   });
+
+  useEffect(() => {
+    setValue("goal", goalData?.goal);
+    setValue("description", goalData?.description);
+    setValue("measurement", goalData?.measurement);
+    setValue("comments", goalData?.comments);
+    setValue(
+      "assignee",
+      goalData?.assignee.map((item) => ({
+        value: item._id,
+        label: `${item.first_name} ${item.last_name}`,
+      }))
+    );
+    setValue("startDate", {
+      startDate: goalData?.startDate,
+      endDate: goalData?.endDate,
+    });
+    setValue("endDate", {
+      startDate: goalData?.startDate,
+      endDate: goalData?.endDate,
+    });
+  }, [goalData]);
 
   const queryClient = useQueryClient();
   const performanceSetup = useMutation(
@@ -104,7 +142,6 @@ const GoalsModel = ({ handleClose, open, options, id }) => {
       startDate: data.startDate.startDate,
       endDate: data.endDate.startDate,
       goaltype: data.goaltype.value,
-      goalStatus: data.goalStatus,
       attachment: data.attachment,
     };
 
@@ -128,6 +165,22 @@ const GoalsModel = ({ handleClose, open, options, id }) => {
     label: `${emp.first_name} ${emp.last_name}`,
     image: emp.user_logo_url,
   }));
+
+  const SubmitGoal = async () => {
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API}/route/performance/submitGoals`,
+        { goalId: id },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <>
@@ -164,8 +217,10 @@ const GoalsModel = ({ handleClose, open, options, id }) => {
               errors={errors}
               error={errors.goal}
             />
+
             <AuthInputFiled
               name="description"
+              readOnly={performance?.stages !== "Goal setting"}
               icon={Paid}
               control={control}
               type="texteditor"
@@ -185,16 +240,20 @@ const GoalsModel = ({ handleClose, open, options, id }) => {
               errors={errors}
               error={errors.measurement}
             />
-            <AuthInputFiled
-              name="comments"
-              icon={Paid}
-              control={control}
-              type="texteditor"
-              placeholder="100"
-              label="Enter measurements name"
-              errors={errors}
-              error={errors.comments}
-            />
+            {(performance?.stages ===
+              "Monitoring stage/Feedback collection stage" ||
+              role !== "Employee") && (
+              <AuthInputFiled
+                name="comments"
+                icon={Paid}
+                control={control}
+                type="texteditor"
+                placeholder="100"
+                label="Comments box"
+                errors={errors}
+                error={errors.comments}
+              />
+            )}
             {role !== "Employee" && (
               <AuthInputFiled
                 name="assignee"
@@ -256,17 +315,6 @@ const GoalsModel = ({ handleClose, open, options, id }) => {
               errors={errors}
               error={errors.goaltype}
             />
-            <AuthInputFiled
-              name="goalStatus"
-              icon={PersonOutline}
-              control={control}
-              type="text"
-              options={options}
-              placeholder="status"
-              label="Select status"
-              errors={errors}
-              error={errors.goalStatus}
-            />
 
             <div className="flex gap-4  mt-4 mr-4 justify-end">
               <Button
@@ -279,6 +327,9 @@ const GoalsModel = ({ handleClose, open, options, id }) => {
               </Button>
               <Button type="submit" variant="contained" color="primary">
                 Create Goal
+              </Button>
+              <Button onClick={SubmitGoal} variant="contained" color="success">
+                Save Goal
               </Button>
             </div>
           </form>
