@@ -3,7 +3,7 @@ name: 🚀 prod-ready-runner-main
 on:
   push:
     branches:
-      - prod-branch
+      - prod-ready-branch
   workflow_dispatch:
   workflow_run:
     workflows: ["🚀 prod-ready to PROD Branch"]
