@@ -1,4 +1,4 @@
-name: 🚀 prod-runner-main
+name: 🚀 prod-ready-runner-main
 
 on:
   push:
