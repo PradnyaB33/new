@@ -88,33 +88,14 @@ const AttendanceBioModal = ({
 
   const handleSync = async () => {
     try {
-      const syncedData = checkedEmployees.flatMap((employee) => {
-        const matchingEmployees = selectedEmployees.filter(
-          (emp) => emp[0] === employee.empId
-        ); 
-
-        console.log("matching employee" , matchingEmployees);
-        if (matchingEmployees.length === 0) {
-          return []; 
-        }
+    
+      const syncedData = selectedEmployees.map((employee) => ({
+        date: employee[3],
+        punchingTime: employee[4],
+        punchingStatus: employee[5],
+      }));
   
-  
-        return matchingEmployees.map((selectedEmployee) => ({
-          date: selectedEmployee[3],
-          punchingTime: selectedEmployee[4],
-          punchingStatus: selectedEmployee[5],
-        }));
-      });
-  
-      console.log("selected sync data", selectedEmployees);
-      console.log("sync data", syncedData);
-
-
-      if (syncedData.length === 0) {
-        handleAlert(true, "error", "No matching employees found.");
-        return;
-      }
-  
+     
       // Extract EmployeeIds from checkedEmployees
       const EmployeeIds = checkedEmployees.map((employee) => employee._id).filter(Boolean);
       console.log("emp id", EmployeeIds);
@@ -138,7 +119,7 @@ const AttendanceBioModal = ({
       handleAlert(true, "success", "Synced data successfully..");
       handleClose();
       navigate(`/organisation/${organisationId}/view-attendance-biomatric`)
-      
+      window.location.reload();
     } catch (error) {
       console.error("Failed to sync attendance data:", error);
     }
