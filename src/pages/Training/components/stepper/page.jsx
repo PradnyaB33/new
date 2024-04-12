@@ -1,6 +1,6 @@
 import { Book, CheckCircleOutline, FitnessCenter } from "@mui/icons-material";
 import { Box, Modal } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import StepFormWrapper from "../../../../components/step-form/wrapper";
 import useSetupTraining from "../../../../hooks/QueryHook/Setup/training";
@@ -20,6 +20,7 @@ const Stepper = ({ setOpen, open }) => {
     isLastStep,
     totalSteps,
     goToStep,
+    setStep,
   } = useMultiStepForm(3);
   const { data } = useGetDepartments();
   const { data: trainingData } = useSetupTraining(organisationId);
@@ -58,6 +59,10 @@ const Stepper = ({ setOpen, open }) => {
       icon: CheckCircleOutline,
     },
   ];
+  useEffect(() => {
+    setStep(1);
+    // eslint-disable-next-line
+  }, []);
   return (
     <Modal
       open={open}

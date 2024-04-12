@@ -2,13 +2,16 @@ import { Box, Modal } from "@mui/material";
 import React from "react";
 import EmployeeTable from "./components/table";
 import Modal1 from "./miniform/page1/page";
+import useGetUpcomingTrainings from "./miniform/page1/use-query";
 import Modal2 from "./miniform/page2/page";
 import Modal3 from "./miniform/page3/page";
 import useTrainingFormEmployee from "./my-training-use-query";
 
 const MyTraining = () => {
   const { data, setPage, isLoading, page } = useTrainingFormEmployee();
-  console.log(`🚀 ~ file: page.jsx:11 ~ data:`, data);
+  const { data: upcomingTraining } = useGetUpcomingTrainings();
+  const { data: ongoingTraining } = useGetUpcomingTrainings();
+  console.log(`🚀 ~ file: page.jsx:11 ~ ongoingTraining:`, ongoingTraining);
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const [open3, setOpen3] = React.useState(false);
@@ -31,7 +34,7 @@ const MyTraining = () => {
             clearTimeout(firstTimeOut);
           }}
         >
-          Upcoming Trainings : {data?.data?.length}
+          Upcoming Trainings : {upcomingTraining?.data?.length}
         </h4>
         <h4
           className="font-medium text-lg hover:underline cursor-wait w-max"
@@ -45,7 +48,7 @@ const MyTraining = () => {
             clearTimeout(secondTimeOut);
           }}
         >
-          Ongoing Trainings {data?.data?.length}
+          Ongoing Trainings {ongoingTraining?.data?.length}
         </h4>
         <h4
           className="font-medium text-lg hover:underline cursor-wait w-max"

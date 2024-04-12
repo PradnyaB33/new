@@ -15,13 +15,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../../../components/InputFileds/AuthInputFiled";
 import useTrainingStore from "../zustand-store";
-const skills = [
-  { value: "communication", label: "Communication" },
-  { value: "leadership", label: "Leadership" },
-  { value: "problemSolving", label: "Problem Solving" },
-  { value: "timeManagement", label: "Time Management" },
-  { value: "teamwork", label: "Teamwork" },
-];
+
 let center = {
   lat: 0,
   lng: 0,

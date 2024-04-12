@@ -17,7 +17,6 @@ const Header = () => {
       <Button
         onClick={async () => {
           await reset();
-          setOpen(true);
         }}
         size="large"
         className="h-fit "

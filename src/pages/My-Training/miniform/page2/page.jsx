@@ -4,8 +4,7 @@ import CardLoader from "../../components/card-loader";
 import useGetUpcomingTrainings from "./use-query-page2";
 
 const Modal2 = () => {
-  const { data, isLoading, error } = useGetUpcomingTrainings();
-  console.log(`🚀 ~ file: page.jsx:8 ~ data:`, data);
+  const { data, isLoading } = useGetUpcomingTrainings();
   if (isLoading)
     return (
       <div className="flex flex-col gap-4 ">

@@ -90,7 +90,7 @@ const useTrainingStore = create((set) => ({
       trainingPoints: "0",
       trainingDownCasted: false,
       trainingDuration: undefined,
-      open: false,
+      open: true,
     });
   },
 }));
