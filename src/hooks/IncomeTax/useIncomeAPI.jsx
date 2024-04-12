@@ -40,7 +40,6 @@ const useIncomeAPI = (
 
   const handleSaveClick = async (index) => {
     let tdsfile = declarationData?.proof;
-    console.log(`🚀 ~ declarationData:`, declarationData);
 
     try {
       let uploadproof = "";
@@ -49,8 +48,9 @@ const useIncomeAPI = (
         uploadproof = await uploadProof(tdsfile);
       }
 
-      if (declarationData.amount <= 0) {
-        handleAlert(true, "error", "Amount cannot be 0");
+      if (declarationData?.amount <= 0) {
+        handleAlert(true, "error", "Amount cannot be zero");
+        console.log("errpr");
         return false;
       }
 

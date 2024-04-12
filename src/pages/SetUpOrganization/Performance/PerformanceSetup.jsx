@@ -56,27 +56,24 @@ const PerformanceSetup = () => {
     isSelfGoal: z.boolean().optional(),
   });
 
-  const { data: performance, isFetching } = useQuery(
-    "performancePeriod",
-    async () => {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getSetup`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
+  const { data: performance } = useQuery("performancePeriod", async () => {
+    const { data } = await axios.get(
+      `${process.env.REACT_APP_API}/route/performance/getSetup/${organisationId}`,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
 
-      return data;
-    }
-  );
+    return data;
+  });
 
+  console.log(performance);
   const {
     formState: { errors },
     control,
     handleSubmit,
-    watch,
     setValue,
   } = useForm({
     resolver: zodResolver(PerformanceSchema),
@@ -96,7 +93,7 @@ const PerformanceSetup = () => {
   });
 
   useEffect(() => {
-    if (!isFetching && performance) {
+    if (performance) {
       setValue(
         "deleteFormEmployeeOnBoarding",
         performance.deleteFormEmployeeOnBoarding
@@ -104,6 +101,10 @@ const PerformanceSetup = () => {
       setValue("enddate", {
         startDate: performance.enddate,
         endDate: performance.enddate,
+      });
+      setValue("startdate", {
+        startDate: performance.startdate,
+        endDate: performance.startdate,
       });
       setValue("goals", performance.goals);
       setValue("isDownCast", performance.isDownCast);
@@ -115,8 +116,18 @@ const PerformanceSetup = () => {
       setValue("isSelfGoal", performance.isSelfGoal);
       setValue("isSendFormInMid", performance.isSendFormInMid);
       setValue("organizationId", performance.organizationId);
-      setValue("stages", performance.stages);
+      setValue("stages", {
+        label: performance.stages,
+        value: performance.stages,
+      });
       setValue("startdate", performance.startdate);
+      setValue(
+        "ratings",
+        performance.ratings.map((rating) => ({
+          label: rating,
+          value: rating,
+        }))
+      );
     }
     // eslint-disable-next-line
   }, []);

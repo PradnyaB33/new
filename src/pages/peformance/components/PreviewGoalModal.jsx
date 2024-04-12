@@ -9,11 +9,9 @@ import {
 import axios from "axios";
 import { format } from "date-fns";
 import DOMPurify from "dompurify";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import Select from "react-select";
 import { TestContext } from "../../../State/Function/Main";
-import { CustomOption } from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 
@@ -48,30 +46,18 @@ const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
     enabled: !!id,
   });
 
-  const [selectedEmployee, setselectedEmployee] = useState(null);
-
   const sanitizedDescription = DOMPurify.sanitize(getGoal?.description);
-  const sanitizedMeasurment = DOMPurify.sanitize(getGoal?.measurement);
+  // const sanitizedMeasurment = DOMPurify.sanitize(getGoal?.measurement);
   const { useGetCurrentRole, getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
   const queryClient = useQueryClient();
 
   let { data: getSingleGoal } = useQuery({
-    queryKey: "getSingleGoal",
+    queryKey: ["getSingleGoal", id],
     queryFn: async () => {
-      if (!selectedEmployee) {
-        return undefined;
-      }
-
-      let empId;
-      if (role === "Employee") {
-        empId = user._id;
-      } else {
-        empId = selectedEmployee.value;
-      }
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id}/${empId}`,
+        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id}/${user._id}`,
         {
           headers: {
             Authorization: authToken,
@@ -80,9 +66,11 @@ const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
       );
       return data;
     },
-    enabled: role === "Employee",
+    enabled: !!id,
   });
+
   const sanitizedReview = DOMPurify.sanitize(getSingleGoal?.review);
+  const sanitizedComments = DOMPurify.sanitize(getSingleGoal?.comments);
 
   const SubmitGoal = async () => {
     try {
@@ -102,20 +90,6 @@ const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
       console.log(e);
     }
   };
-
-  const options = useMemo(() => {
-    return getGoal?.assignee?.map((ele) => ({
-      label: `${ele.first_name} ${ele.last_name} `,
-      value: ele._id,
-      image: ele.user_logo_url,
-    }));
-  }, [getGoal]);
-
-  useEffect(() => {
-    if (!id) {
-      setselectedEmployee(null);
-    }
-  }, [id]);
 
   return (
     <>
@@ -152,11 +126,6 @@ const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
                         ? getSingleGoal?.status
                         : "Pending"}
                     </div>
-                    {getSingleGoal?.rating && (
-                      <div className=" p-2 bg-gray-50 border-gray-200 border rounded-md">
-                        Rating: - {getSingleGoal?.rating}
-                      </div>
-                    )}
 
                     <div className=" p-2 bg-gray-50 border-gray-200 border rounded-md">
                       Start Date: -{" "}
@@ -168,38 +137,9 @@ const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
                       {getGoal?.endDate &&
                         format(new Date(getGoal?.endDate), "PP")}
                     </div>
-
-                    {role === "Manager" && (
-                      <div className={`space-y-1 `}>
-                        <div
-                          className={`flex rounded-md w-[250px] border-gray-400  border-[.5px]   items-center`}
-                        >
-                          <Select
-                            placeholder="select assignee"
-                            components={{
-                              Option: CustomOption,
-                            }}
-                            styles={{
-                              control: (styles) => ({
-                                ...styles,
-                                borderWidth: "0px",
-
-                                boxShadow: "none",
-                              }),
-                            }}
-                            className={` bg-white w-full !outline-none  !shadow-none !border-none !border-0`}
-                            options={options}
-                            value={selectedEmployee}
-                            onChange={(value) => {
-                              setselectedEmployee(value);
-                            }}
-                          />
-                        </div>
-                      </div>
-                    )}
                   </div>
 
-                  {role === "Employee" && (
+                  {role === "Employee" && !getSingleGoal?.status && (
                     <div className="w-max">
                       <button
                         onClick={SubmitGoal}
@@ -217,17 +157,30 @@ const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
                     dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
                   ></p>
                 </div>
+
                 <div className="hover:bg-gray-100 rounded-md ">
                   <p className="px-2">Measurments</p>
                   <p
                     className="preview px-2 "
+                    dangerouslySetInnerHTML={{ __html: "No data" }}
+                  ></p>
+                </div>
+                <div className="hover:bg-gray-100 rounded-md ">
+                  <p className="px-2">comments</p>
+                  <p
+                    className="preview px-2 "
                     dangerouslySetInnerHTML={{
-                      __html: sanitizedMeasurment
-                        ? sanitizedMeasurment
-                        : "No data",
+                      __html: sanitizedComments ? sanitizedComments : "No data",
                     }}
                   ></p>
                 </div>
+
+                {getSingleGoal?.rating && (
+                  <div className="hover:bg-gray-100 rounded-md ">
+                    <p className="px-2">Ratings</p>
+                    <p className="preview px-2 ">{getSingleGoal?.rating}</p>
+                  </div>
+                )}
                 {getSingleGoal?.review && (
                   <div className="hover:bg-gray-100 rounded-md ">
                     <p className="px-2">Review</p>

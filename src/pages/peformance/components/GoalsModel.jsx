@@ -105,6 +105,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
       startDate: goalData?.startDate,
       endDate: goalData?.endDate,
     });
+    //eslint-disable-next-line
   }, [goalData]);
 
   const queryClient = useQueryClient();
@@ -166,21 +167,21 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
     image: emp.user_logo_url,
   }));
 
-  const SubmitGoal = async () => {
-    try {
-      await axios.post(
-        `${process.env.REACT_APP_API}/route/performance/submitGoals`,
-        { goalId: id },
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  // const SubmitGoal = async () => {
+  //   try {
+  //     await axios.post(
+  //       `${process.env.REACT_APP_API}/route/performance/submitGoals`,
+  //       { goalId: id },
+  //       {
+  //         headers: {
+  //           Authorization: authToken,
+  //         },
+  //       }
+  //     );
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
   return (
     <>
@@ -327,9 +328,6 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
               </Button>
               <Button type="submit" variant="contained" color="primary">
                 Create Goal
-              </Button>
-              <Button onClick={SubmitGoal} variant="contained" color="success">
-                Save Goal
               </Button>
             </div>
           </form>

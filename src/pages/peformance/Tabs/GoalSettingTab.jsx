@@ -5,16 +5,19 @@ import moment from "moment";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import useAuthToken from "../../../hooks/Token/useAuth";
+import UserProfile from "../../../hooks/UserData/useUser";
 import GoalsTable from "../components/GoalsTable";
 
 const GoalSettingTab = () => {
   const authToken = useAuthToken();
   const [message, setMessage] = useState("Welcome to Goal Settings");
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
   const { data: performance } = useQuery(
     "performancePeriod",
     async () => {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getSetup`,
+        `${process.env.REACT_APP_API}/route/performance/getSetup/${user.organizationId}`,
         {
           headers: {
             Authorization: authToken,
@@ -106,7 +109,7 @@ const GoalSettingTab = () => {
         </div>
       </div>
 
-      <div className="flex py-0 px-4  gap-8">
+      <div className="flex  px-4  gap-8">
         <div className="min-w-[250px] border rounded-md">
           <div className=" px-4 py-3 bg-white  rounded-lg leading-none flex items-top justify-start space-x-6">
             <div className="space-y-1">

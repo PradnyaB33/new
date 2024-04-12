@@ -15,7 +15,6 @@ import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
-import UserProfile from "../../../hooks/UserData/useUser";
 
 const RatingModel = ({ handleClose, open, options, id, performance }) => {
   const { handleAlert } = useContext(TestContext);
@@ -30,9 +29,9 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
     p: 4,
   };
 
-  const { useGetCurrentRole, getCurrentUser } = UserProfile();
-  const role = useGetCurrentRole();
-  const user = getCurrentUser();
+  // const { useGetCurrentRole, getCurrentUser } = UserProfile();
+  // const role = useGetCurrentRole();
+  // const user = getCurrentUser();
 
   const authToken = useAuthToken();
   const zodSchema = z.object({
@@ -108,7 +107,7 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
     performanceSetup.mutate(goals);
   };
 
-  const { data: employeeData } = useQuery("employee", async () => {
+  useQuery("employee", async () => {
     const { data } = await axios.get(
       `${process.env.REACT_APP_API}/route/employee/getEmployeeUnderManager`,
       {
