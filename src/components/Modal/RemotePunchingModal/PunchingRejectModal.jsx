@@ -31,6 +31,7 @@ const calculateDistance = (coords) => {
 
 const PunchingRejectModal = ({ items, length }) => {
   const navigate = useNavigate();
+  console.log("yash items", items.punchData.length);
 
   const { notifyAccountantMutation, RejectManagerMutation } =
     useNotificationRemotePunching();
@@ -43,20 +44,51 @@ const PunchingRejectModal = ({ items, length }) => {
     navigate(`/remote/info/${id}`);
   };
   return (
-    <div className="w-full">
-      <div className="w-full h-auto bg-white flex p-4 pl-8 pr-8 justify-between items-center shadow-md">
+    <div className="w-full pt-3">
+      <div className="w-full h-auto bg-white flex p-4 pl-8 pr-8 gap-2 justify-between items-center shadow-md">
         <div className="flex items-center">
           <div className="mr-9">
-            <div className="h-[100px] w-[100px] rounded-full">
-              <img
-                style={{ objectFit: "cover" }}
-                src={items.punchData[0].image}
-                alt=""
-                srcset=""
-              />
+            <div>
+              {items.punchData[0].image === "" ? (
+                <h1 className="font-semibold text-center">
+                  Missed Punch Request
+                </h1>
+              ) : (
+                <h1 className="font-semibold text-center">
+                  Remote Punch Request
+                </h1>
+              )}
+            </div>
+            <div className="h-[100px] w-[200px] rounded-full">
+              {items.punchData[0].image === "" ? (
+                <img
+                  className="w-[200px] h-[100px] rounded-2xl"
+                  style={{ objectFit: "cover" }}
+                  src={items.employeeId.user_logo_url}
+                  alt=""
+                  srcset=""
+                />
+              ) : (
+                <img
+                  className="w-[200px] h-[100px] rounded-2xl"
+                  style={{ objectFit: "cover" }}
+                  src={items.punchData[0].image}
+                  alt=""
+                  srcset=""
+                />
+              )}
             </div>
           </div>
           <div>
+            <h1 className="font-semibold">
+              {items.employeeId.first_name} {items.employeeId.last_name}
+            </h1>
+            <h1>
+              Date:{" "}
+              {items?.createdAt && (
+                <>{new Date(items?.createdAt).toLocaleDateString()} </>
+              )}
+            </h1>
             <h1>
               Start Time : {new Date(items?.createdAt).toLocaleTimeString()}
             </h1>
@@ -67,7 +99,12 @@ const PunchingRejectModal = ({ items, length }) => {
                 : "N/A"}
             </h1>
             <h1>Total Distance Traveled: {distanceTraveled} Km </h1>
-            <h1>Punching restarted: {length} times</h1>
+
+            {items.punchData[0].image === "" ? (
+              ""
+            ) : (
+              <h1>Punching restarted: {items.punchData.length} times</h1>
+            )}
           </div>
         </div>
         <div>
