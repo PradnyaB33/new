@@ -2,9 +2,12 @@ import axios from "axios";
 import React from "react";
 import { useQuery } from "react-query";
 import useGetUser from "../../hooks/Token/useUser";
+import useMyTrainingStore from "./components/my-training-zustand";
 
 const useTrainingFormEmployee = () => {
   const [page, setPage] = React.useState(1);
+  const { trainingName, trainingDepartment, trainingType } =
+    useMyTrainingStore();
   const { decodedToken, authToken } = useGetUser();
   console.log(
     `🚀 ~ file: my-training-use-query.jsx:9 ~ decodedToken:`,
@@ -13,7 +16,7 @@ const useTrainingFormEmployee = () => {
 
   const getEmployee = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/training/get-recent-training/${decodedToken?.user?.organizationId}?page=${page}`,
+      `${process.env.REACT_APP_API}/route/training/get-recent-training/${decodedToken?.user?.organizationId}?page=${page}?trainingName=${trainingName}?trainingDepartment=${trainingDepartment}?trainingType=${trainingType}`,
       {
         headers: {
           Authorization: authToken,
@@ -24,7 +27,13 @@ const useTrainingFormEmployee = () => {
     return response.data;
   };
   const { data, isLoading, error } = useQuery({
-    queryKey: [`get-employee-data`, page],
+    queryKey: [
+      `get-employee-data`,
+      page,
+      trainingName,
+      trainingDepartment,
+      trainingType,
+    ],
     queryFn: getEmployee,
     onSuccess: (data) => {
       console.log("onSuccess", data);

@@ -98,7 +98,7 @@ const Step3 = () => {
               Training Type:
             </div>
             <div className="gap-4 flex">
-              {trainingType.map((doc, i) => {
+              {trainingType?.map((doc, i) => {
                 return (
                   <Chip
                     key={i}

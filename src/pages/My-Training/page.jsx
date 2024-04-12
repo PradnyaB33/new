@@ -11,7 +11,6 @@ const MyTraining = () => {
   const { data, setPage, isLoading, page } = useTrainingFormEmployee();
   const { data: upcomingTraining } = useGetUpcomingTrainings();
   const { data: ongoingTraining } = useGetUpcomingTrainings();
-  console.log(`🚀 ~ file: page.jsx:11 ~ ongoingTraining:`, ongoingTraining);
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const [open3, setOpen3] = React.useState(false);

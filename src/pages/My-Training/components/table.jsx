@@ -1,27 +1,66 @@
 import { Button } from "@mui/material";
 import React from "react";
+import Select from "react-select";
+import useSetupTraining from "../../../hooks/QueryHook/Setup/training";
+import useGetDepartments from "../../Training/components/stepper/components/step2/step2-hook";
 import TrainingCard from "./card";
 import CardLoader from "./card-loader";
+import useMyTrainingStore from "./my-training-zustand";
 
 const EmployeeTable = ({ data, setPage, isLoading, totalResult, page }) => {
+  const {
+    trainingName,
+    setTrainingName,
+    setTrainingDepartment,
+    setTrainingType,
+  } = useMyTrainingStore();
+  const { data: department } = useGetDepartments();
+  const { data: trainingTypeData } = useSetupTraining();
   return (
     <div className="pt-16 flex flex-col w-full gap-4">
-      <div className="flex gap-4 w-full justify-between">
-        <div className={`flex rounded-md px-2 bg-white py-[6px] gap-2`}>
-          <input
-            placeholder={"Search on keyword"}
-            className={`border-ghostwhite bg-white outline-none px-2`}
-          />
-        </div>
+      <div className="flex gap-8 w-full justify-between">
         <input
-          type="text"
-          placeholder="Search on training type"
-          className="p-2"
+          value={trainingName}
+          placeholder={"Search on keyword"}
+          className={`border-gray-300 bg-white outline-none px-2 border rounded-md w-[-webkit-fill-available]`}
+          onChange={(e) => setTrainingName(e.target.value)}
         />
-        <input
-          type="text"
-          placeholder="Search on departmental training"
-          className="p-2"
+        <Select
+          placeholder={"Department"}
+          styles={{
+            control: (styles) => ({
+              ...styles,
+              boxShadow: "none",
+            }),
+          }}
+          isClearable={true}
+          className={` bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+          components={{
+            IndicatorSeparator: () => null,
+          }}
+          options={
+            department?.data?.map((item) => ({
+              value: item._id,
+              label: item.departmentName,
+            })) ?? []
+          }
+          onChange={(e) => setTrainingDepartment(e)}
+        />
+        <Select
+          placeholder={"Training Type"}
+          styles={{
+            control: (styles) => ({
+              ...styles,
+              boxShadow: "none",
+            }),
+          }}
+          className={` bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+          components={{
+            IndicatorSeparator: () => null,
+          }}
+          isClearable={true}
+          options={trainingTypeData?.data?.trainingType}
+          onChange={(e) => setTrainingType(e)}
         />
       </div>
       {isLoading && [1, 2, 3].map((item) => <CardLoader key={item} />)}
