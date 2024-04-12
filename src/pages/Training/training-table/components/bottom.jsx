@@ -13,7 +13,7 @@ const Bottom = () => {
         onClick={() => {
           incrementPage();
         }}
-        disabled={totalResult < page * 10}
+        disabled={totalResult < page * 2}
       >
         Next
       </Button>
