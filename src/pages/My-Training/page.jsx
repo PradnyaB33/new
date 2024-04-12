@@ -10,7 +10,7 @@ const MyTraining = () => {
       <div>
         <h4>Assigned Trainings : {data?.data?.length}</h4>
         <h4>Ongoing Trainings</h4>
-        <h4>Upcoming Trainings</h4>
+        <h4>Assigned Trainings : {data?.totalResults}</h4>
       </div>
       <EmployeeTable
         data={data?.data}
