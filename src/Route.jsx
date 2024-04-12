@@ -778,7 +778,7 @@ const App = () => {
         <Route
           path="/organisation/:organisationId/manage-training"
           element={
-            <RequireAuth permission={["HR", "Super-Admin"]}>
+            <RequireAuth permission={["HR", "Super-Admin", "Department-Head"]}>
               <HrTrainings />
             </RequireAuth>
           }

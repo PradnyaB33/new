@@ -6,10 +6,14 @@ import useGetUser from "../../hooks/Token/useUser";
 const useTrainingFormEmployee = () => {
   const [page, setPage] = React.useState(1);
   const { decodedToken, authToken } = useGetUser();
+  console.log(
+    `🚀 ~ file: my-training-use-query.jsx:9 ~ decodedToken:`,
+    decodedToken
+  );
 
   const getEmployee = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/training/get-training/${decodedToken?.user?._id}?page=${page}`,
+      `${process.env.REACT_APP_API}/route/training/get-recent-training/${decodedToken?.user?.organizationId}?page=${page}`,
       {
         headers: {
           Authorization: authToken,

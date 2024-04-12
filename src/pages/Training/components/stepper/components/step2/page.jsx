@@ -27,7 +27,7 @@ let center = {
   lng: 0,
 };
 
-const Step2 = ({ nextStep, departments }) => {
+const Step2 = ({ nextStep, departments, orgTrainingType }) => {
   const departmentOptions = departments?.map((department) => ({
     label: department.departmentName,
     value: department._id,
@@ -106,7 +106,6 @@ const Step2 = ({ nextStep, departments }) => {
     resolver: zodResolver(trainingDetailSchema),
   });
   const { errors } = formState;
-  console.log(`🚀 ~ file: page.jsx:103 ~ errors:`, errors);
   const onSubmit = (data) => {
     setStep2(data);
     nextStep();
@@ -188,7 +187,7 @@ const Step2 = ({ nextStep, departments }) => {
             readOnly={false}
             maxLimit={15}
             errors={errors}
-            autocompleteOption={skills}
+            autocompleteOption={orgTrainingType}
             error={errors.trainingType}
             isMulti={false}
           />

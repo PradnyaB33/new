@@ -1,10 +1,12 @@
-import { Button, Rating } from "@mui/material";
+import { Box, Modal, Rating } from "@mui/material";
 import DOMPurify from "dompurify";
 import React from "react";
 import { Link } from "react-router-dom";
+import MiniForm from "./mini-form";
 
 const TrainingCard = ({ doc }) => {
   const sanitizedDescription = DOMPurify.sanitize(doc?.trainingDescription);
+  const [open, setOpen] = React.useState(false);
 
   return (
     <div
@@ -14,7 +16,7 @@ const TrainingCard = ({ doc }) => {
       <div className="flex gap-8">
         <img
           src={
-            doc?.trainingLogo.length > 0
+            doc?.trainingLogo?.length > 0
               ? doc?.trainingLogo
               : "https://via.placeholder.com/150"
           }
@@ -26,7 +28,6 @@ const TrainingCard = ({ doc }) => {
           <p dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
           3.5
           <Rating size="small" name="read-only" value={3.5} readOnly />
-          {doc?.trainingLocation.map}
           <div className="">
             Duration &nbsp;{doc?.trainingDuration ?? "2 h"}
           </div>
@@ -38,14 +39,44 @@ const TrainingCard = ({ doc }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              {doc?.trainingLocation.address}
+              {doc?.trainingLocation?.address}
+            </Link>
+          </div>
+          <div>
+            Live Link&nbsp;:&nbsp;
+            <Link
+              className="text-blue-500 underline"
+              to={doc?.trainingLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {doc?.trainingLink}
             </Link>
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-4">
-        <Button variant="contained">Join</Button>
-      </div>
+      {/* <div className="flex flex-col gap-4">
+        {!doc?.status && <Button variant="contained">Join Training</Button>}
+        {doc?.status === "pending" && (
+          <Button variant="contained">Cancelled Training</Button>
+        )}
+        {doc?.status === "pending" && (
+          <Button variant="contained" onClick={() => setOpen(true)}>
+            Mark as completed
+          </Button>
+        )}
+      </div> */}
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        keepMounted={false}
+      >
+        <Box className="border-none shadow-md outline-none rounded-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[40%] md:w-[70%] z-10 p-4 bg-white">
+          <MiniForm />
+        </Box>
+      </Modal>
     </div>
   );
 };

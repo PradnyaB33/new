@@ -67,6 +67,32 @@ const useTrainingStore = create((set) => ({
       trainingId: data._id,
     });
   },
+  reset: async () => {
+    set({
+      isDepartmentalTraining: false,
+      trainingDepartment: [],
+      trainingId: undefined,
+      trainingName: undefined,
+      trainingType: undefined,
+      trainingDescription: undefined,
+      trainingStartDate: undefined,
+      trainingEndDate: undefined,
+      trainingLink: undefined,
+      trainingImage: undefined,
+      trainingLocation: {
+        address: undefined,
+        position: {
+          lat: 0,
+          lng: 0,
+        },
+        placeId: undefined,
+      },
+      trainingPoints: "0",
+      trainingDownCasted: false,
+      trainingDuration: undefined,
+      open: false,
+    });
+  },
 }));
 
 export default useTrainingStore;

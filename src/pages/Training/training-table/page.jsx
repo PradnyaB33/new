@@ -10,11 +10,11 @@ const TrainingTable = ({ mainData }) => {
 
   return (
     <>
-      <div className="w-full bg-white text-left text-sm font-light">
+      <div className="w-full bg-white text-left text-sm font-light flex flex-col gap-4">
         <h1 className="text-sm font-bold underline text-right">
           Total trainings created {data?.totalResults}
         </h1>
-        <div>
+        <div className="flex flex-col gap-4">
           {isLoading && <TrainingTableLoading />}
           {(mainData ?? data)?.data?.map((doc) => (
             <TableRow
