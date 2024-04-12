@@ -84,6 +84,7 @@ import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
+import LetterSetup from "./pages/LetterTypes/LetterSetup";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
@@ -160,6 +161,10 @@ const App = () => {
           element={<EmployeeConfirmation />}
         />
         <Route path="/custom/calendar" element={<CustomCalander />} />
+        <Route
+          path="/organisation/:organisationId/setup/letter-types"
+          element={<LetterSetup />}
+        />
         <Route path="/remote/info/:Id" element={<RemoteManager />} />
         <Route path="/remote/notification" element={<RemoteNotification />} />
         <Route path="/emp/docs" element={<DocManage />} />

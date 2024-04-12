@@ -1,124 +1,216 @@
 import {
   Button,
+  Checkbox,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import React, { useContext, useEffect, useState } from "react";
+import { UseContext } from "../../../State/UseState/UseContext";
 import useGetUser from "../../../hooks/Token/useUser";
-
-const columns = [
-  { field: "id", headerName: "ID", width: 70 },
-  { field: "firstName", headerName: "First name", width: 130 },
-  { field: "lastName", headerName: "Last name", width: 130 },
-  {
-    field: "fullName",
-    headerName: "Full name",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    width: 160,
-    valueGetter: (value, row) => `${row.firstName || ""} ${row.lastName || ""}`,
-  },
-];
 
 const DataTable = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredRows, setFilteredRows] = useState([]);
   const [selectedOrganizationId, setSelectedOrganizationId] = useState("");
-  const { authToken } = useGetUser();
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState("");
+  const [data1, setData1] = useState([]);
+  const [employeeData, setEmployeeData] = useState([]);
+  const [initialEmployeeData, setInitialEmployeeData] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [documents, setDocuments] = useState([]);
+  const [selectedDocumentId, setSelectedDocumentId] = useState("");
+  const [selectedEmployeeIds, setSelectedEmployeeIds] = useState([]);
+  const { setAppAlert } = useContext(UseContext);
+  const [selectAll, setSelectAll] = useState(false);
+  const authToken = useGetUser().authToken;
 
-  const { data: data1 } = useQuery(`getAllOrg`, async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/organization/getall`,
-      {
-        headers: { Authorization: authToken },
-      }
-    );
+  const handleSelectAllClick = (event) => {
+    const checked = event.target.checked;
+    setSelectAll(checked);
 
-    return response.data.orgData;
-  });
+    if (checked) {
+      const allEmployeeIds = employeeData.map((employee) => employee._id);
+      setSelectedEmployeeIds(allEmployeeIds);
+    } else {
+      setSelectedEmployeeIds([]);
+    }
+  };
 
-  const { data: employeeData, refetch: refetchEmployees } = useQuery(
-    `getEmp`,
-    async () => {
-      if (selectedOrganizationId) {
+  useEffect(() => {
+    console.log(selectedEmployeeIds);
+  }, [selectedEmployeeIds]);
+
+  const handleEmployeeSelection = (event, id) => {
+    const selectedIndex = selectedEmployeeIds.indexOf(id);
+    let newSelected = [...selectedEmployeeIds];
+
+    if (selectedIndex === -1) {
+      newSelected.push(id);
+    } else {
+      newSelected.splice(selectedIndex, 1);
+    }
+
+    setSelectedEmployeeIds(newSelected);
+    setSelectAll(newSelected.length === employeeData.length);
+    console.log("Selected Employee IDs:", newSelected);
+  };
+
+  const isSelected = (id) => selectedEmployeeIds.indexOf(id) !== -1;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API}/route/employee/get/${selectedOrganizationId}`,
+          `${process.env.REACT_APP_API}/route/organization/getall`,
           {
             headers: { Authorization: authToken },
           }
         );
-        return response.data.employees;
+        setData1(response.data.orgData);
+      } catch (error) {
+        console.error("Error fetching organizations: ", error);
       }
-      return [];
-    }
-  );
+    };
 
-  console.log(employeeData);
+    fetchData();
+  }, [authToken]);
+
+  const fetchEmployees = async (orgId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/get/${orgId}`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+      setEmployeeData(response.data.employees);
+      setInitialEmployeeData(response.data.employees); // Store initial employees
+    } catch (error) {
+      console.error("Error fetching employees: ", error);
+    }
+  };
+
+  const fetchDepartments = async (orgId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/department/getall/${orgId}`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+      setDepartments(response.data.getOrgs);
+    } catch (error) {
+      console.error("Error fetching departments: ", error);
+    }
+  };
 
   useEffect(() => {
-    setFilteredRows(employeeData);
-  }, [employeeData]);
+    if (selectedOrganizationId) {
+      fetchEmployees(selectedOrganizationId);
+      fetchDepartments(selectedOrganizationId);
+    }
+
+    //enlint-disable-next-line
+  }, [selectedOrganizationId, authToken]);
+
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/org/getdocs`,
+          {
+            headers: { Authorization: authToken },
+          }
+        );
+        setDocuments(response.data.doc);
+      } catch (error) {
+        console.error("Error fetching documents: ", error);
+      }
+    };
+
+    fetchDocuments();
+  }, [authToken]);
 
   const handleSearchChange = (event) => {
-    const query = event.target.value;
+    const query = event.target.value.toLowerCase();
     setSearchQuery(query);
-    filterRows(query);
+    // Filter employees based on search query
+    const filteredEmployees = initialEmployeeData.filter((employee) => {
+      return (
+        employee.first_name.toLowerCase().includes(query) ||
+        employee.last_name.toLowerCase().includes(query)
+      );
+    });
+    setEmployeeData(filteredEmployees);
   };
 
   const handleOrganizationChange = (event) => {
     const orgId = event.target.value;
     setSelectedOrganizationId(orgId);
-    console.log(selectedOrganizationId);
-    refetchEmployees();
+    fetchDepartments(orgId);
+    setSelectedDepartmentId("");
   };
 
-  const filterRows = (query) => {
-    const filteredData = employeeData.filter(
-      (item) =>
-        item.first_name.toLowerCase().includes(query.toLowerCase()) ||
-        item.last_name.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredRows(filteredData);
+  const handleDepartmentChange = (event) => {
+    const deptId = event.target.value;
+    setSelectedDepartmentId(deptId);
+    // Filter employees based on selected department
+    const filteredEmployees = initialEmployeeData.filter((employee) => {
+      return employee.deptname[0] === deptId;
+    });
+    setEmployeeData(filteredEmployees);
   };
 
-  const rows = filteredRows.map((item, idx) => ({
-    id: idx + 1,
-    lastName: item.last_name,
-    firstName: item.first_name,
-    fullName: `${item.first_name || ""} ${item.last_name || ""}`,
-  }));
+  const handleDocumentChange = (event) => {
+    const docId = event.target.value;
+    setSelectedDocumentId(docId);
+    console.log("Selected Document ID:", docId);
+  };
 
-  const NoRowsOverlay = () => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-          width: "100%",
-        }}
-      >
-        <div>No employees in this organization</div>
-      </div>
-    );
+  const handleSendButtonClick = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/route/org/updatearr/${selectedDocumentId}`,
+        {
+          employeeIds: selectedEmployeeIds,
+        },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setAppAlert({
+        alert: true,
+        type: "success",
+        msg: "Document is sent successfully",
+      });
+    } catch (error) {
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: "Document failed to send",
+      });
+    }
   };
 
   return (
     <div>
-      <div className="flex" style={{ marginBottom: "1rem" }}>
-        {data1 ? (
+      <div className="flex gap-4">
+        {data1.length > 0 && (
           <FormControl size="small" style={{ width: 200 }}>
-            <InputLabel id="holiday-type-label">Select Organization</InputLabel>
+            <InputLabel id="organization-label">Select Organization</InputLabel>
             <Select
-              label="select organization"
-              className="mb-[8px]"
+              label="Select organization"
               name="type"
               onChange={handleOrganizationChange}
             >
@@ -129,7 +221,27 @@ const DataTable = () => {
               ))}
             </Select>
           </FormControl>
-        ) : null}
+        )}
+        <FormControl size="small" style={{ width: 200 }}>
+          <InputLabel id="department-label">Select Department</InputLabel>
+          <Select
+            label="Select department"
+            name="type"
+            onChange={handleDepartmentChange}
+            value={selectedDepartmentId}
+          >
+            {departments.length === 0 ? (
+              <MenuItem value="">No Departments Found</MenuItem>
+            ) : (
+              departments.map((dept) => (
+                <MenuItem key={dept._id} value={dept._id}>
+                  {dept.departmentName}
+                </MenuItem>
+              ))
+            )}
+          </Select>
+        </FormControl>
+
         <TextField
           label="Search Employee"
           variant="outlined"
@@ -137,22 +249,72 @@ const DataTable = () => {
           value={searchQuery}
           onChange={handleSearchChange}
         />
+
+        {/* Select field for documents */}
+        <FormControl size="small" style={{ width: 200 }}>
+          <InputLabel id="document-label">Select Document</InputLabel>
+          <Select
+            label="Select document"
+            name="document"
+            onChange={handleDocumentChange}
+            value={selectedDocumentId}
+          >
+            {documents.map((doc) => (
+              <MenuItem key={doc._id} value={doc._id}>
+                {doc.title}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </div>
-      <div
-        style={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}
-      ></div>
-      <div style={{ height: 400, width: "100%" }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          pageSize={5}
-          checkboxSelection
-          components={{
-            NoRowsOverlay: NoRowsOverlay,
-          }}
-        />
+      <div style={{ width: "100%" }}>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    checked={selectAll}
+                    onChange={handleSelectAllClick}
+                  />
+                </TableCell>
+                <TableCell>ID</TableCell>
+                <TableCell>First Name</TableCell>
+                <TableCell>Last Name</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {employeeData.map((employee) => {
+                const isItemSelected = isSelected(employee._id);
+                return (
+                  <TableRow
+                    key={employee._id}
+                    hover
+                    onClick={(event) =>
+                      handleEmployeeSelection(event, employee._id)
+                    }
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    selected={isItemSelected}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox checked={isItemSelected} />
+                    </TableCell>
+                    <TableCell>{employee.id}</TableCell>
+                    <TableCell>{employee.first_name}</TableCell>
+                    <TableCell>{employee.last_name}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
         <div className="mt-5">
-          <Button size="small" variant="contained">
+          <Button
+            size="small"
+            onClick={handleSendButtonClick}
+            variant="contained"
+          >
             Send
           </Button>
         </div>

@@ -42,11 +42,19 @@ const PunchingRejectModal = ({ items, length }) => {
     const id = items._id;
     navigate(`/remote/info/${id}`);
   };
+  console.log("yash items", items);
   return (
     <div className="w-full">
-      <div className="w-full h-auto bg-white flex p-4 pl-8 pr-8 justify-between items-center shadow-md">
+      <div className="w-full h-auto bg-white flex p-4 pl-8 pr-8 justify-between items-center shadow-md mt-3">
         <div className="flex items-center">
           <div className="mr-9">
+            <h1>
+              {items.punchData.image === "" ? (
+                <h1 className="font-semibold">Missed Punch Request</h1>
+              ) : (
+                <h1 className="font-semibold">Punch Request</h1>
+              )}
+            </h1>
             <div className="h-[100px] w-[100px] rounded-full">
               <img
                 style={{ objectFit: "cover" }}
