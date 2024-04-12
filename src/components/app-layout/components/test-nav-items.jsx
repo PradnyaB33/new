@@ -229,6 +229,13 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Loan Management",
           },
+          {
+            key: "missjustify",
+            isVisible: true,
+            link: `/missed-justify`,
+            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Missed Justify",
+          },
         ],
       },
       Employee: {
@@ -318,6 +325,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             link: `organisation/${orgId}/view-calculate-data`,
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
             text: "View Calculate Attendance",
+          },
+          {
+            key: "misspunchInOutRecord",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/missed-punch-in-out`,
+            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Missed Punch Record",
           },
         
         ],
@@ -411,7 +427,8 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
-      RemotePunch: {
+     
+         RemotePunch: {
         open: false,
         isVisible: ["Employee", "Manager"].includes(role),
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,

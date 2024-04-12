@@ -100,6 +100,8 @@ import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
 import ViewCalculateAttendance from "./pages/ViewCalculateAttendance/ViewCalculateAttendance";
+import MissPunchInOut from "./pages/MissPunchInOut/MissPunchInOut";
+import MissPunchJustify from "./pages/MissPunchNotified/MissPunchJustify";
 
 const App = () => {
   return (
@@ -395,6 +397,38 @@ const App = () => {
               permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
             >
               <ViewAttendacneBiomatric />
+            </RequireAuth>
+          }
+        />
+          <Route
+          path="/organisation/:organisationId/missed-punch-in-out"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <MissPunchInOut />
+            </RequireAuth>
+          }
+        />
+          <Route
+          path="/missed-justify"
+          element={
+            <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+              "Employee",
+            ]}
+            >
+              <MissPunchJustify />
             </RequireAuth>
           }
         />
