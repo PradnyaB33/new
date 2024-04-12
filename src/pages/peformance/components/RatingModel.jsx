@@ -186,17 +186,6 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
               />
 
               <AuthInputFiled
-                name="review"
-                icon={Paid}
-                control={control}
-                type="texteditor"
-                placeholder="100"
-                label="Enter review name"
-                errors={errors}
-                error={errors.review}
-              />
-
-              <AuthInputFiled
                 name="rating"
                 icon={StarOutlined}
                 control={control}
@@ -206,6 +195,17 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
                 label="Add rating"
                 errors={errors}
                 error={errors.rating}
+              />
+
+              <AuthInputFiled
+                name="review"
+                icon={Paid}
+                control={control}
+                type="texteditor"
+                placeholder="100"
+                label="Enter review"
+                errors={errors}
+                error={errors.review}
               />
 
               <div className="flex gap-4  mt-4 mr-4 justify-end">

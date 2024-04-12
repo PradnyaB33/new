@@ -92,7 +92,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
     setValue("comments", goalData?.comments);
     setValue(
       "assignee",
-      goalData?.assignee.map((item) => ({
+      goalData?.assignee?.map((item) => ({
         value: item._id,
         label: `${item.first_name} ${item.last_name}`,
       }))

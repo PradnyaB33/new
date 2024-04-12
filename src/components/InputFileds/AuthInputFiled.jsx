@@ -17,6 +17,19 @@ import PlaceAutoComplete from "./places-autocomplete";
 
 // import Autocomplete from "react-google-autocomplete";
 
+export const CustomOption = ({ data, ...props }) => (
+  <components.Option {...props}>
+    <div className="flex gap-2">
+      <Avatar
+        sx={{ width: 30, height: 30 }}
+        src={data.image}
+        alt={data.label}
+      />
+      {data.label}
+    </div>
+  </components.Option>
+);
+
 const AuthInputFiled = ({
   label,
   name,
@@ -47,19 +60,6 @@ const AuthInputFiled = ({
   const handleFocus = (fieldName) => {
     setFocusedInput(fieldName);
   };
-
-  const CustomOption = ({ data, ...props }) => (
-    <components.Option {...props}>
-      <div className="flex gap-2">
-        <Avatar
-          sx={{ width: 30, height: 30 }}
-          src={data.image}
-          alt={data.label}
-        />
-        {data.label}
-      </div>
-    </components.Option>
-  );
 
   const { ref } = usePlacesWidget({
     apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,

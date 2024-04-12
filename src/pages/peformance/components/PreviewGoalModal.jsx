@@ -9,15 +9,16 @@ import {
 import axios from "axios";
 import { format } from "date-fns";
 import DOMPurify from "dompurify";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
+import Select from "react-select";
 import { TestContext } from "../../../State/Function/Main";
+import { CustomOption } from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 
 const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
   const { handleAlert } = useContext(TestContext);
-
   const authToken = useAuthToken();
 
   const style = {
@@ -47,17 +48,30 @@ const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
     enabled: !!id,
   });
 
+  const [selectedEmployee, setselectedEmployee] = useState(null);
+
   const sanitizedDescription = DOMPurify.sanitize(getGoal?.description);
   const sanitizedMeasurment = DOMPurify.sanitize(getGoal?.measurement);
-  const { useGetCurrentRole } = UserProfile();
+  const { useGetCurrentRole, getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
   const role = useGetCurrentRole();
   const queryClient = useQueryClient();
 
-  const { data: getSingleGoal } = useQuery({
+  let { data: getSingleGoal } = useQuery({
     queryKey: "getSingleGoal",
     queryFn: async () => {
+      if (!selectedEmployee) {
+        return undefined;
+      }
+
+      let empId;
+      if (role === "Employee") {
+        empId = user._id;
+      } else {
+        empId = selectedEmployee.value;
+      }
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id}`,
+        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id}/${empId}`,
         {
           headers: {
             Authorization: authToken,
@@ -66,7 +80,7 @@ const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
       );
       return data;
     },
-    enabled: role === "Employee" && !!id,
+    enabled: role === "Employee",
   });
   const sanitizedReview = DOMPurify.sanitize(getSingleGoal?.review);
 
@@ -88,6 +102,20 @@ const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
       console.log(e);
     }
   };
+
+  const options = useMemo(() => {
+    return getGoal?.assignee?.map((ele) => ({
+      label: `${ele.first_name} ${ele.last_name} `,
+      value: ele._id,
+      image: ele.user_logo_url,
+    }));
+  }, [getGoal]);
+
+  useEffect(() => {
+    if (!id) {
+      setselectedEmployee(null);
+    }
+  }, [id]);
 
   return (
     <>
@@ -116,7 +144,7 @@ const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
 
               <div className="space-y-4 pb-4 px-4">
                 <div className="flex justify-between">
-                  <div className="flex gap-2 items-center">
+                  <div className="flex w-full gap-2 items-center">
                     <div
                       className={`bg-green-500 flex rounded-md p-2 text-white  border-gray-200 border-[.5px]  items-center`}
                     >
@@ -140,15 +168,46 @@ const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
                       {getGoal?.endDate &&
                         format(new Date(getGoal?.endDate), "PP")}
                     </div>
+
+                    {role === "Manager" && (
+                      <div className={`space-y-1 `}>
+                        <div
+                          className={`flex rounded-md w-[250px] border-gray-400  border-[.5px]   items-center`}
+                        >
+                          <Select
+                            placeholder="select assignee"
+                            components={{
+                              Option: CustomOption,
+                            }}
+                            styles={{
+                              control: (styles) => ({
+                                ...styles,
+                                borderWidth: "0px",
+
+                                boxShadow: "none",
+                              }),
+                            }}
+                            className={` bg-white w-full !outline-none  !shadow-none !border-none !border-0`}
+                            options={options}
+                            value={selectedEmployee}
+                            onChange={(value) => {
+                              setselectedEmployee(value);
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {role === "Employee" && (
-                    <button
-                      onClick={SubmitGoal}
-                      className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-6 py-2 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-                    >
-                      Submit Goal
-                    </button>
+                    <div className="w-max">
+                      <button
+                        onClick={SubmitGoal}
+                        className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-6 py-2 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                      >
+                        Submit Goal
+                      </button>
+                    </div>
                   )}
                 </div>
                 <div className="hover:bg-gray-100 rounded-md ">
