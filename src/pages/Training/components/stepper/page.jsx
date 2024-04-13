@@ -24,7 +24,10 @@ const Stepper = ({ setOpen, open }) => {
   } = useMultiStepForm(3);
   const { data } = useGetDepartments();
   const { data: trainingData } = useSetupTraining(organisationId);
-  console.log(`🚀 ~ file: page.jsx:25 ~ trainingData:`, trainingData);
+  useEffect(() => {
+    setStep(1);
+    // eslint-disable-next-line
+  }, [open]);
   const useSwitch = (step) => {
     switch (step) {
       case 1:
@@ -59,10 +62,7 @@ const Stepper = ({ setOpen, open }) => {
       icon: CheckCircleOutline,
     },
   ];
-  useEffect(() => {
-    setStep(1);
-    // eslint-disable-next-line
-  }, []);
+
   return (
     <Modal
       open={open}
