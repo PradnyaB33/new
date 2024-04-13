@@ -32,7 +32,10 @@ const Step3 = () => {
     if (typeof trainingImage === "string") {
       return trainingImage;
     } else {
-      return URL.createObjectURL(trainingImage);
+      if (trainingImage === undefined) {
+        return "";
+      }
+      return URL?.createObjectURL(trainingImage);
     }
   };
   if (isLoading || isCreateTrainingLoading) {
@@ -95,7 +98,7 @@ const Step3 = () => {
               Training Type:
             </div>
             <div className="gap-4 flex">
-              {trainingType.map((doc, i) => {
+              {trainingType?.map((doc, i) => {
                 return (
                   <Chip
                     key={i}

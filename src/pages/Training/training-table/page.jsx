@@ -6,12 +6,15 @@ import TrainingTableLoading from "./components/loading-skeleton";
 
 const TrainingTable = ({ mainData }) => {
   const { data, isLoading } = useTrainingHook();
+  console.log(`🚀 ~ file: page.jsx:9 ~ data:`, data);
 
   return (
     <>
-      <div className="w-full bg-white text-left text-sm font-light">
-        {/* <TableHeader /> */}
-        <div>
+      <div className="w-full bg-white text-left text-sm font-light flex flex-col gap-4">
+        <h1 className="text-sm font-bold underline text-right">
+          Total trainings created {data?.totalResults}
+        </h1>
+        <div className="flex flex-col gap-4">
           {isLoading && <TrainingTableLoading />}
           {(mainData ?? data)?.data?.map((doc) => (
             <TableRow

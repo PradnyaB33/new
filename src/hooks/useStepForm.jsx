@@ -27,6 +27,7 @@ const useMultiStepForm = (totalSteps) => {
     isLastStep,
     totalSteps,
     goToStep, // Add the goToStep function
+    setStep,
   };
 };
 

@@ -20,7 +20,7 @@ const TableRow = ({ logo, name, duration, doc }) => {
   return (
     <div
       className={`bg-white
-       border-b dark:border-neutral-500 flex w-full justify-between`}
+       border rounded-lg flex w-full justify-between`}
     >
       <div className="flex py-8 gap-8">
         <img

@@ -3,6 +3,7 @@ import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  AssignmentTurnedIn,
   AssignmentTurnedInOutlined,
   LoyaltyOutlined,
   PeopleOutlined,
@@ -21,6 +22,12 @@ const organizationSchema = z.object({
   collectPoints: z.boolean(),
   canHRDefinePoints: z.boolean(),
   usePointsForExternal: z.boolean(),
+  trainingType: z.array(
+    z.object({
+      value: z.string(),
+      label: z.string(),
+    })
+  ),
 });
 
 const MiniForm = ({ data, mutate, organisationId }) => {
@@ -39,6 +46,7 @@ const MiniForm = ({ data, mutate, organisationId }) => {
       usePointsForExternal: data?.usePointsForExternal
         ? data?.usePointsForExternal
         : false,
+      trainingType: data?.trainingType ? data?.trainingType : [],
     },
     resolver: zodResolver(organizationSchema),
   });
@@ -112,6 +120,19 @@ const MiniForm = ({ data, mutate, organisationId }) => {
             />
           </>
         )}
+        <AuthInputFiled
+          name="trainingType"
+          icon={AssignmentTurnedIn}
+          control={control}
+          type="autocomplete"
+          placeholder="Add Salary Type"
+          label="Add Salary Type"
+          readOnly={false}
+          maxLimit={15}
+          errors={errors}
+          error={errors.trainingType}
+          autocompleteOption={data?.trainingType ? data?.trainingType : []}
+        />
       </div>
       <div className="w-full flex justify-center mb-4 mt-2">
         <Button disabled={!isDirty} variant="contained" type="submit">
