@@ -16,17 +16,13 @@ import {  useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Person, } from "@mui/icons-material";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
-import UserProfile from "../../../hooks/UserData/useUser";
 import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 
-const MissPunchJustifyModal = ({ handleClose, open,unavailableRecords }) => { 
+const MissPunchJustifyModal = ({ handleClose, open,unavailableRecords  , organisationId}) => { 
     const { handleAlert } = useContext(TestContext);
     const { cookies } = useContext(UseContext);
     const authToken = cookies["aegis"];
-    const { getCurrentUser } = UserProfile();
-    const user = getCurrentUser();
-    const organisationId = user.organizationId;
     console.log(organisationId);
     console.log(unavailableRecords);
      

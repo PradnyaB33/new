@@ -100,8 +100,10 @@ import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
 import ViewCalculateAttendance from "./pages/ViewCalculateAttendance/ViewCalculateAttendance";
-import MissPunchInOut from "./pages/MissPunchInOut/MissPunchInOut";
-import MissPunchJustify from "./pages/MissPunchNotified/MissPunchJustify";
+import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
+import MissPunchInOut from "./pages/MissPunch/MissPunchInOut";
+import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
+
 
 const App = () => {
   return (
@@ -185,6 +187,7 @@ const App = () => {
         <Route path="/leave-notification" element={<LeaveNotification />} />
         <Route path="/punch-notification" element={<PunchNotification />} />
         <Route path="/shift-notification" element={<ShiftNotification />} />
+        <Route path="/missedPunch-notification" element={<MissedPunchNotification />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route
