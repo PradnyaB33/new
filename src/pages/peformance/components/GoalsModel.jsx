@@ -68,7 +68,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
       startDate: z.string(),
       endDate: z.string(),
     }),
-    goaltype: z.object({ value: z.string(), label: z.string() }),
+    // goaltype: z.object({ value: z.string(), label: z.string() }),
     attachment: z.string().optional(),
   });
 
@@ -142,7 +142,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
       assignee: data?.assignee?.map((emp) => emp.value) ?? [],
       startDate: data.startDate.startDate,
       endDate: data.endDate.startDate,
-      goaltype: data.goaltype.value,
+      // goaltype: data.goaltype.value,
       attachment: data.attachment,
     };
 
@@ -305,7 +305,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
               />
             </div>
 
-            <AuthInputFiled
+            {/* <AuthInputFiled
               name="goaltype"
               icon={PersonOutline}
               control={control}
@@ -315,7 +315,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
               label="Select goal type"
               errors={errors}
               error={errors.goaltype}
-            />
+            /> */}
 
             <div className="flex gap-4  mt-4 mr-4 justify-end">
               <Button
