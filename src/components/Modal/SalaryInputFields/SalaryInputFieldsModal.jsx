@@ -299,6 +299,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
               icon={Money}
               control={control}
               type="autocomplete"
+              optionlist={salaryComponentArray}
               placeholder="Salary Component"
               label="Enter Salary Component *"
               readOnly={false}

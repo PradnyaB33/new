@@ -268,7 +268,7 @@ const DeclarationTable = ({
                           size="small"
                           onClick={() => handleSaveClick(itemIndex)}
                         >
-                          Save
+                          Submit
                         </Button>
                         <Button
                           color="error"

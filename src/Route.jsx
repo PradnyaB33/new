@@ -126,7 +126,9 @@ const App = () => {
         <Route
           path="/performance"
           element={
-            <RequireAuth permission={["Super-Admin", "Employee"]}>
+            <RequireAuth
+              permission={["Super-Admin", "Employee", "Manager", "HR"]}
+            >
               <Performance />
             </RequireAuth>
           }

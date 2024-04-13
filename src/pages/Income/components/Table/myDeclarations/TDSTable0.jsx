@@ -120,7 +120,7 @@ const TDSTable0 = () => {
   //     try {
   //       const empId = user._id;
   //       const { data } = await axios.get(
-  //         `${process.env.REACT_APP_API}/route/tds/getTDSDetails/${empId}/2023-2024`,
+  //         `${process.env.REACT_APP_API}/route/tds/getTDSDetails/${empId}`,
   //         {
   //           headers: {
   //             Authorization: authToken,
