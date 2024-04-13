@@ -21,9 +21,6 @@ const useGetUpcomingTrainings = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: [`get-upcoming-training`, page],
     queryFn: getUpcomingTrainings,
-    onSuccess: (data) => {
-      console.log("onSuccess", data);
-    },
   });
 
   return { data, isLoading, error, setPage, page };

@@ -5,6 +5,7 @@ import useGetUpcomingTrainings from "./use-query";
 
 const Modal1 = () => {
   const { data, isLoading } = useGetUpcomingTrainings();
+  console.log(`🚀 ~ file: page.jsx:8 ~ data:`, data);
   if (isLoading)
     return (
       <div className="flex flex-col gap-4 ">
