@@ -131,7 +131,7 @@ const MiniForm = ({ data, mutate, organisationId }) => {
           maxLimit={15}
           errors={errors}
           error={errors.trainingType}
-          autocompleteOption={data?.trainingType ? data?.trainingType : []}
+          optionlist={data?.trainingType ? data?.trainingType : []}
         />
       </div>
       <div className="w-full flex justify-center mb-4 mt-2">
