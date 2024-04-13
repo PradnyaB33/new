@@ -21,6 +21,7 @@ const MyTraining = () => {
   return (
     <div className="pt-14 p-8">
       <div className="flex flex-col w-min gap-8">
+        <h1 className="font-bold text-2xl">My Training</h1>
         <h4
           className="font-medium text-lg hover:underline cursor-wait w-max"
           onMouseEnter={() => {
