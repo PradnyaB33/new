@@ -9,7 +9,7 @@ const useGetOverdueTrainings = () => {
 
   const getUpcomingTrainings = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/training/get-overdue-trainings/${decodedToken?.user?._id}?page=${page}`,
+      `${process.env.REACT_APP_API}/route/training/get-overdue-trainings/${decodedToken?.user?._id}`,
       {
         headers: {
           Authorization: authToken,
@@ -19,11 +19,12 @@ const useGetOverdueTrainings = () => {
     return response.data;
   };
   const { data, isLoading, error } = useQuery({
-    queryKey: [`get-ongoing-training`, page],
+    queryKey: [`get-ongoing-training`],
     queryFn: getUpcomingTrainings,
     onSuccess: (data) => {
       console.log("onSuccess", data);
     },
+    refetchOnMount: false,
   });
 
   return { data, isLoading, error, setPage, page };

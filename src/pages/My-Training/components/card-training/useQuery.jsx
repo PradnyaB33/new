@@ -25,6 +25,7 @@ const useCardQuery = ({ trainingId }) => {
     onSuccess: (data) => {
       //   console.log("onSuccess", data);
     },
+    refetchOnMount: false,
   });
   const createTrainingEmployee = async (data) => {
     const response = await axios.put(
@@ -43,6 +44,7 @@ const useCardQuery = ({ trainingId }) => {
     {
       onSuccess: async () => {
         console.log("onSuccess");
+        setOpen(false);
         await queryClient.invalidateQueries({
           queryKey: [`get-employee-training-info-${trainingId}`],
         });
