@@ -85,8 +85,6 @@ import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
-import MissPunchInOut from "./pages/MissPunchInOut/MissPunchInOut";
-import MissPunchJustify from "./pages/MissPunchNotified/MissPunchJustify";
 import MyTraining from "./pages/My-Training/page";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
@@ -100,6 +98,10 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
+import MissPunchInOut from "./pages/MissPunch/MissPunchInOut";
+import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
+
 const App = () => {
   return (
     <AuthProvider>

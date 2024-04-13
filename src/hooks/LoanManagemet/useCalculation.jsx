@@ -36,7 +36,7 @@ const useCalculation = () => {
    isNaN(loanAmount) || isNaN(noOfEmi)
      ? 0
      : parseInt(loanAmount) / parseInt(noOfEmi);
- const principalPerMonth = principalMonthly.toFixed(2);
+   const principalPerMonth = principalMonthly.toFixed(2);
  console.log("iprincipal montlhy" , principalMonthly);
 
   const value = parseInt(loanAmount) * roi 
@@ -62,11 +62,11 @@ const useCalculation = () => {
  
 
   // Calculate total sdeduction
-  const totalDeductionMonthly = parseFloat(interestPerMonth) + principalMonthly;
+  const totalDeductionMonthly = parseFloat(value2) + principalMonthly;
   const totalDeductionPerMonth = totalDeductionMonthly.toFixed(2);
 
   // calculate total amount with simple interest
-  const totalAmountWithSimpleInterest = parseInt(loanAmount) + simpleInterest;
+  const totalAmountWithSimpleInterest = parseInt(loanAmount) + value3;
   console.log(totalAmountWithSimpleInterest);
 
   return {
@@ -75,6 +75,7 @@ const useCalculation = () => {
     totalDeductionPerMonth,
     totalAmountWithSimpleInterest,
     handleNoOfEmiChange,
+    value2
   };
 };
 
