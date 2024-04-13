@@ -64,33 +64,3 @@ const MiniForm = ({ mutate }) => {
 };
 
 export default MiniForm;
-{
-  /* <div className="space-y-1 w-full items-center flex flex-col ">
-  <Controller
-    control={control}
-    name={"proofOfSubmissionUrl"}
-    render={({ field }) => {
-      return (
-        <PdfInput
-          className={
-            "!rounded-lg !w-full !object-cover !h-44 !bg-cover !bg-center"
-          }
-          field={field}
-        />
-      );
-    }}
-  />
-  <div className="h-4 !mb-1">
-    <ErrorMessage
-      errors={errors}
-      name={"proofOfSubmissionUrl"}
-      render={({ message }) => {
-        return <p className="text-sm text-red-500">{message}</p>;
-      }}
-    />
-  </div>
-  <Button type="submit" variant="contained" color="primary">
-    Submit
-  </Button>
-</div>; */
-}
