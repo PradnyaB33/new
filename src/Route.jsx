@@ -62,6 +62,7 @@ import RemoteNotification from "./pages/Test/RemoteNotification";
 import TestMap from "./pages/Test/testMap";
 import TestYash from "./pages/Test/testYash";
 import DepartmentTest from "./pages/Test2/DepartmentTest";
+import HrTrainings from "./pages/Training/page";
 import EmployeeProfile from "./pages/UserProfile/UserProfile";
 import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
