@@ -110,6 +110,7 @@ const EmpInfoPunchStatus = () => {
   };
   const handleEmpModalClose = () => {
     setEmpModalOpen(false);
+    setSelectedEmployees([]);
   };
 
   return (

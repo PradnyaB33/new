@@ -5,6 +5,7 @@ import StepFormWrapper from "../../../../components/step-form/wrapper";
 import useMultiStepForm from "../../../../hooks/useStepForm";
 import Step1 from "./components/step1/page";
 import Step2 from "./components/step2/page";
+import useGetDepartments from "./components/step2/step2-hook";
 import Step3 from "./components/step3/page";
 
 const Stepper = ({ setOpen, open }) => {
@@ -17,12 +18,13 @@ const Stepper = ({ setOpen, open }) => {
     totalSteps,
     goToStep,
   } = useMultiStepForm(3);
+  const { data } = useGetDepartments();
   const useSwitch = (step) => {
     switch (step) {
       case 1:
         return <Step1 {...{ nextStep }} />;
       case 2:
-        return <Step2 {...{ nextStep }} />;
+        return <Step2 {...{ nextStep, departments: data?.data }} />;
       case 3:
         return <Step3 {...{ nextStep }} />;
       default:
@@ -35,7 +37,7 @@ const Stepper = ({ setOpen, open }) => {
       icon: Book,
     },
     {
-      label: "Training Attendees",
+      label: "Info",
       icon: FitnessCenter,
     },
     {

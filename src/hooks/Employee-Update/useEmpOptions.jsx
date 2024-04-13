@@ -1,22 +1,21 @@
-import useEmpQuery from "./useEmpQuery";
+import useEmployeeQuery from "./useEmployeeQuery";
 
-const useEmpOption = (organisationId) => {
-  const {
-    DepartmentListCall,
-    DesignationCall,
-    SalaryTempCall,
-    EmpTypesCall,
-    // InputFieldCall,
-    ManagerListCall,
-    ShiftCall,
-    CostNumberCall,
-    EmpRoleListCall,
-    // AdditionalListCall,
-    LocationListCall,
-    EmpCodeCall,
-  } = useEmpQuery(organisationId);
+const useEmployeeOptions = (organisationId) => {
+    const {
+        DepartmentListCall,
+        DesignationCall,
+        SalaryTempCall,
+        EmpTypesCall,
+        ManagerListCall,
+        ShiftCall,
+        CostNumberCall,
+        EmpRoleListCall,
+        LocationListCall,
+        EmpCodeCall,
+      } = useEmployeeQuery(organisationId);
+    
 
-  console.log("id" , organisationId);
+ 
 
   const DepartmentList = DepartmentListCall();
   const ManagerList = ManagerListCall();
@@ -134,4 +133,4 @@ const useEmpOption = (organisationId) => {
   };
 };
 
-export default useEmpOption;
+export default useEmployeeOptions;

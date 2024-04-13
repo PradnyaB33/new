@@ -86,6 +86,7 @@ import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
+import MyTraining from "./pages/My-Training/page";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
@@ -98,6 +99,9 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import ViewCalculateAttendance from "./pages/ViewCalculateAttendance/ViewCalculateAttendance";
+import MissPunchInOut from "./pages/MissPunchInOut/MissPunchInOut";
+import MissPunchJustify from "./pages/MissPunchNotified/MissPunchJustify";
 
 const App = () => {
   return (
@@ -145,6 +149,7 @@ const App = () => {
         <Route path="/paymentfailed" element={<PaymentFailed />} />
 
         <Route path="/loading" element={<Loader />} />
+        <Route path="/my-training" element={<MyTraining />} />
         <Route path="/testOrg" element={<NewOranisationForm />} />
         <Route path="/remotePunching" element={<RemoteEmployee />} />
         {/* Login Routes */}
@@ -377,6 +382,16 @@ const App = () => {
             </RequireAuth>
           }
         />
+         <Route
+          path="/organisation/:organisationId/view-calculate-data"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <ViewCalculateAttendance />
+            </RequireAuth>
+          }
+        />
         <Route
           path="/organisation/:organisationId/view-attendance-biomatric"
           element={
@@ -384,6 +399,38 @@ const App = () => {
               permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
             >
               <ViewAttendacneBiomatric />
+            </RequireAuth>
+          }
+        />
+          <Route
+          path="/organisation/:organisationId/missed-punch-in-out"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <MissPunchInOut />
+            </RequireAuth>
+          }
+        />
+          <Route
+          path="/missed-justify"
+          element={
+            <RequireAuth
+            permission={[
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+              "Employee",
+            ]}
+            >
+              <MissPunchJustify />
             </RequireAuth>
           }
         />

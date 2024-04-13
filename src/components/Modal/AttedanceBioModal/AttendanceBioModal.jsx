@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { TestContext } from "../../../State/Function/Main";
+import { useNavigate } from "react-router-dom";
 
 const AttendanceBioModal = ({
   handleClose,
@@ -27,6 +28,8 @@ const AttendanceBioModal = ({
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const [checkedEmployees, setCheckedEmployees] = useState([]);
+  const navigate = useNavigate();
+
 
   // pull employee
   const fetchAvailableEmployee = async (page) => {
@@ -85,21 +88,14 @@ const AttendanceBioModal = ({
 
   const handleSync = async () => {
     try {
-      const syncedData = checkedEmployees.flatMap((employee) => {
-        const matchingEmployees = selectedEmployees.filter(
-          (emp) => emp[0] === employee.empId
-        );
+    
+      const syncedData = selectedEmployees.map((employee) => ({
+        date: employee[3],
+        punchingTime: employee[4],
+        punchingStatus: employee[5],
+      }));
   
-        return matchingEmployees.map((selectedEmployee) => ({
-          date: selectedEmployee[3],
-          punchingTime: selectedEmployee[4],
-          punchingStatus: selectedEmployee[5],
-        }));
-      });
-  
-      console.log("selected sync data", selectedEmployees);
-      console.log("sync data", syncedData);
-  
+     
       // Extract EmployeeIds from checkedEmployees
       const EmployeeIds = checkedEmployees.map((employee) => employee._id).filter(Boolean);
       console.log("emp id", EmployeeIds);
@@ -121,6 +117,9 @@ const AttendanceBioModal = ({
       });
   
       handleAlert(true, "success", "Synced data successfully..");
+      handleClose();
+      navigate(`/organisation/${organisationId}/view-attendance-biomatric`)
+      window.location.reload();
     } catch (error) {
       console.error("Failed to sync attendance data:", error);
     }
