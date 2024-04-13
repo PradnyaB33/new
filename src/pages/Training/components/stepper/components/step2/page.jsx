@@ -181,7 +181,7 @@ const Step2 = ({ nextStep, departments, orgTrainingType }) => {
             readOnly={false}
             maxLimit={15}
             errors={errors}
-            autocompleteOption={orgTrainingType}
+            optionlist={orgTrainingType}
             error={errors.trainingType}
             isMulti={false}
           />
@@ -237,7 +237,7 @@ const Step2 = ({ nextStep, departments, orgTrainingType }) => {
               readOnly={false}
               maxLimit={15}
               errors={errors}
-              autocompleteOption={departmentOptions}
+              optionlist={departmentOptions}
               error={errors.trainingDepartment}
               isMulti={true}
             />
