@@ -8,7 +8,7 @@ const Modal3 = () => {
   if (isLoading)
     return (
       <div className="flex flex-col gap-4 ">
-        <h2 className="text-2xl font-bold">Ongoing Trainings</h2>
+        <h2 className="text-2xl font-bold">Overdue Trainings</h2>
         {[1, 2, 3].map((item) => (
           <CardLoader key={item} />
         ))}
@@ -16,7 +16,7 @@ const Modal3 = () => {
     );
   return (
     <div className="flex flex-col gap-4 ">
-      <h2 className="text-2xl font-bold">Ongoing Trainings</h2>
+      <h2 className="text-2xl font-bold">Overdue Trainings</h2>
       {data?.data?.map((item) => (
         <TrainingCard key={item.id} doc={item?.trainingId} />
       ))}

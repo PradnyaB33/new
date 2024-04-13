@@ -9,10 +9,6 @@ const useTrainingFormEmployee = () => {
   const { trainingName, trainingDepartment, trainingType } =
     useMyTrainingStore();
   const { decodedToken, authToken } = useGetUser();
-  console.log(
-    `🚀 ~ file: my-training-use-query.jsx:9 ~ decodedToken:`,
-    decodedToken
-  );
 
   const getEmployee = async () => {
     const response = await axios.get(

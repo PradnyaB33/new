@@ -1,12 +1,15 @@
-import { Box, Modal, Rating } from "@mui/material";
+import { Box, Button, Modal, Rating } from "@mui/material";
 import DOMPurify from "dompurify";
 import React from "react";
 import { Link } from "react-router-dom";
+import useCardQuery from "./card-training/useQuery";
 import MiniForm from "./mini-form";
 
 const TrainingCard = ({ doc }) => {
   const sanitizedDescription = DOMPurify.sanitize(doc?.trainingDescription);
-  const [open, setOpen] = React.useState(false);
+  const { data, mutate, open, setOpen } = useCardQuery({
+    trainingId: doc?._id,
+  });
 
   return (
     <div
@@ -55,17 +58,13 @@ const TrainingCard = ({ doc }) => {
           </div>
         </div>
       </div>
-      {/* <div className="flex flex-col gap-4">
-        {!doc?.status && <Button variant="contained">Join Training</Button>}
-        {doc?.status === "pending" && (
-          <Button variant="contained">Cancelled Training</Button>
-        )}
-        {doc?.status === "pending" && (
+      <div className="flex flex-col gap-4">
+        {data === (null || "") && (
           <Button variant="contained" onClick={() => setOpen(true)}>
-            Mark as completed
+            Self Assign
           </Button>
         )}
-      </div> */}
+      </div>
       <Modal
         open={open}
         onClose={() => setOpen(false)}
@@ -74,7 +73,7 @@ const TrainingCard = ({ doc }) => {
         keepMounted={false}
       >
         <Box className="border-none shadow-md outline-none rounded-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[40%] md:w-[70%] z-10 p-4 bg-white">
-          <MiniForm />
+          <MiniForm {...{ mutate }} />
         </Box>
       </Modal>
     </div>
