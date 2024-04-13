@@ -1,10 +1,11 @@
 import React from "react";
 import TrainingCard from "../../components/card";
 import CardLoader from "../../components/card-loader";
-import useGetUpcomingTrainings from "./use-query-page2";
+import useGetOngoingTrainings from "./use-query-page2";
 
 const Modal2 = () => {
-  const { data, isLoading } = useGetUpcomingTrainings();
+  const { data, isLoading } = useGetOngoingTrainings();
+  console.log(`🚀 ~ file: page.jsx:8 ~ data:`, data);
   if (isLoading)
     return (
       <div className="flex flex-col gap-4 ">

@@ -9,7 +9,7 @@ const useGetOverdueTrainings = () => {
 
   const getUpcomingTrainings = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/training/get-ongoing-trainings/${decodedToken?.user?._id}?page=${page}`,
+      `${process.env.REACT_APP_API}/route/training/get-overdue-trainings/${decodedToken?.user?._id}?page=${page}`,
       {
         headers: {
           Authorization: authToken,

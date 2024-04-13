@@ -53,7 +53,6 @@ const AuthInputFiled = ({
   center,
   descriptionText,
   value,
-  autocompleteOption,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();

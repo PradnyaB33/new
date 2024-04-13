@@ -5,12 +5,15 @@ import Modal1 from "./miniform/page1/page";
 import useGetUpcomingTrainings from "./miniform/page1/use-query";
 import Modal2 from "./miniform/page2/page";
 import Modal3 from "./miniform/page3/page";
+import useGetOverdueTrainings from "./miniform/page3/use-query-page3";
 import useTrainingFormEmployee from "./my-training-use-query";
+import useGetOngoingTrainings from "./miniform/page2/use-query-page2";
 
 const MyTraining = () => {
   const { data, setPage, isLoading, page } = useTrainingFormEmployee();
   const { data: upcomingTraining } = useGetUpcomingTrainings();
-  const { data: ongoingTraining } = useGetUpcomingTrainings();
+  const { data: ongoingTraining } = useGetOngoingTrainings();
+  const { data: overdueTraining } = useGetOverdueTrainings();
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const [open3, setOpen3] = React.useState(false);
@@ -62,7 +65,7 @@ const MyTraining = () => {
             clearTimeout(thirdTimeOut);
           }}
         >
-          Overdue training : {data?.totalResults - data?.data?.length}
+          Overdue training : {overdueTraining?.data?.length}
         </h4>
       </div>
       <EmployeeTable
