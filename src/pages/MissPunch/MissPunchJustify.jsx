@@ -12,6 +12,7 @@ const MissPunchJustify = () => {
   const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
+  console.log(user);
   const organisationId = user.organizationId;
   console.log(organisationId);
   
