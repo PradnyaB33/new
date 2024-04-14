@@ -9,7 +9,7 @@ const TrainingCard2 = ({ doc }) => {
   const sanitizedDescription = DOMPurify.sanitize(
     doc?.trainingId?.trainingDescription
   );
-  const { data, getProofMutate, open, setOpen } = useCardQuery({
+  const { getProofMutate, open, setOpen } = useCardQuery({
     trainingId: doc?.trainingId?._id,
   });
 

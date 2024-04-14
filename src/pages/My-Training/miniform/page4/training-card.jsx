@@ -2,15 +2,11 @@ import { Rating } from "@mui/material";
 import DOMPurify from "dompurify";
 import React from "react";
 import { Link } from "react-router-dom";
-import useCardQuery from "../../components/card-training/useQuery";
 
 const TrainingCard3 = ({ doc }) => {
   const sanitizedDescription = DOMPurify.sanitize(
     doc?.trainingId?.trainingDescription
   );
-  const { open, setOpen } = useCardQuery({
-    trainingId: doc?.trainingId?._id,
-  });
 
   return (
     <div

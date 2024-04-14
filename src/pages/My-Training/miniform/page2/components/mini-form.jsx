@@ -21,7 +21,7 @@ const MiniForm = ({ mutate, doc }) => {
     employeeTrainingId: z.string(),
   });
 
-  const { control, formState, handleSubmit, watch, getValues } = useForm({
+  const { control, formState, handleSubmit, getValues } = useForm({
     defaultValues: {
       proofOfSubmissionUrl: undefined,
       rating: undefined,
