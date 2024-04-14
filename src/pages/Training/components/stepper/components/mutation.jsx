@@ -29,6 +29,7 @@ const useTrainingCreationMutation = () => {
     return fullObject;
   };
   const createTrainingObject = async (data) => {
+    console.log(`🚀 ~ file: mutation.jsx:32 ~ data:`, data);
     await axios.post(
       `${process.env.REACT_APP_API}/route/training/${organisationId}/create`,
       data,

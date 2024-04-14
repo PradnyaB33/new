@@ -1,4 +1,5 @@
 import {
+  CheckCircleOutlineOutlined,
   EventNote,
   PlayCircleOutlineOutlined,
   Warning,
@@ -12,6 +13,7 @@ import Modal2 from "./miniform/page2/page";
 import useGetOngoingTrainings from "./miniform/page2/use-query-page2";
 import Modal3 from "./miniform/page3/page";
 import useGetOverdueTrainings from "./miniform/page3/use-query-page3";
+import Modal4 from "./miniform/page4/page";
 import TextFiledColumn from "./miniform/text-filed";
 import useTrainingFormEmployee from "./my-training-use-query";
 
@@ -23,6 +25,7 @@ const MyTraining = () => {
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const [open3, setOpen3] = React.useState(false);
+  const [open4, setOpen4] = React.useState(false);
 
   return (
     <div className="pt-14 p-8">
@@ -49,6 +52,13 @@ const MyTraining = () => {
             text={"Overdue training"}
             className={"!bg-red-500 !hover:bg-red-600"}
             Icon={Warning}
+          />
+          <TextFiledColumn
+            setOpen={setOpen4}
+            length={1}
+            text={"Completed training"}
+            className={"!bg-gray-500 !hover:bg-red-600"}
+            Icon={CheckCircleOutlineOutlined}
           />
         </div>
       </div>
@@ -87,6 +97,16 @@ const MyTraining = () => {
       >
         <Box className="border-none shadow-md outline-none rounded-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[40%] md:w-[70%] z-10 p-4 bg-white">
           <Modal3 />
+        </Box>
+      </Modal>
+      <Modal
+        open={open4}
+        onClose={() => setOpen4(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box className="border-none shadow-md outline-none rounded-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[40%] md:w-[70%] z-10 p-4 bg-white">
+          <Modal4 />
         </Box>
       </Modal>
     </div>

@@ -8,6 +8,10 @@ const useGetOverdueTrainings = () => {
   const [page, setPage] = React.useState(1);
 
   const getUpcomingTrainings = async () => {
+    console.log(
+      `🚀 ~ file: use-query-page3.jsx:22 ~ decodedToken:`,
+      decodedToken
+    );
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/training/get-overdue-trainings/${decodedToken?.user?._id}`,
       {
@@ -19,7 +23,7 @@ const useGetOverdueTrainings = () => {
     return response.data;
   };
   const { data, isLoading, error } = useQuery({
-    queryKey: [`get-ongoing-training`],
+    queryKey: [`get-overdue-training`],
     queryFn: getUpcomingTrainings,
     onSuccess: (data) => {
       console.log("onSuccess", data);

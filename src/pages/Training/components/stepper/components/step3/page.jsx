@@ -26,6 +26,7 @@ const Step3 = () => {
     trainingId,
     trainingDepartment,
     isDepartmentalTraining,
+    proofSubmissionRequired,
   } = info;
   const sanitizedDescription = DOMPurify.sanitize(trainingDescription);
   const getImageUrl = () => {
@@ -138,6 +139,7 @@ const Step3 = () => {
               trainingDuration,
               trainingDepartment,
               isDepartmentalTraining,
+              proofSubmissionRequired,
             });
           } else {
             mutate({
@@ -154,6 +156,7 @@ const Step3 = () => {
               trainingDuration,
               trainingDepartment,
               isDepartmentalTraining,
+              proofSubmissionRequired,
             });
           }
         }}
