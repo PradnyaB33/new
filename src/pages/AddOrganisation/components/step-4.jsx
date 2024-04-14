@@ -66,6 +66,7 @@ const Step4 = () => {
     formData.append("creator", data.creator);
     formData.append("packageInfo", data?.packageInfo?.packageId);
     formData.append("count", data.count);
+    formData.append("cycleCount", data.cycleCount);
 
     const response = await axios.post(
       `${process.env.REACT_APP_API}/route/organization`,
@@ -120,6 +121,10 @@ const Step4 = () => {
   const { mutate: mutate2, isLoading: isLoading2 } = useMutation({
     mutationFn: handleDismiss,
   });
+  console.log(
+    `🚀 ~ file: step-4.jsx:124 ~ data?.packageInfo:`,
+    data?.packageInfo
+  );
   if (data?.packageInfo === undefined) {
     return "Please Select Plan And Package";
   }
@@ -135,7 +140,13 @@ const Step4 = () => {
       <div className="p-4 gap-4 flex flex-col items-center">
         <div className=" ">
           <h2 className="text-2xl font-bold ">Your Package Pricing</h2>
-          <p className=" text-gray-500">You have selected Basic Package </p>
+          <p className=" text-gray-500">
+            You have selected {data?.packageInfo?.packageName} Total price will
+            be{" "}
+            {getPrice(data?.packageInfo?.packageName) *
+              data?.count *
+              data?.cycleCount}{" "}
+          </p>
         </div>
         <div className="flex flex-col gap-2 !row-span-4">
           <PricingCard
