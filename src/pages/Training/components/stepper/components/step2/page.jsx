@@ -15,19 +15,17 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../../../components/InputFileds/AuthInputFiled";
 import useTrainingStore from "../zustand-store";
-const skills = [
-  { value: "communication", label: "Communication" },
-  { value: "leadership", label: "Leadership" },
-  { value: "problemSolving", label: "Problem Solving" },
-  { value: "timeManagement", label: "Time Management" },
-  { value: "teamwork", label: "Teamwork" },
-];
+
 let center = {
   lat: 0,
   lng: 0,
 };
 
-const Step2 = ({ nextStep }) => {
+const Step2 = ({ nextStep, departments, orgTrainingType }) => {
+  const departmentOptions = departments?.map((department) => ({
+    label: department.departmentName,
+    value: department._id,
+  }));
   const {
     trainingType,
     trainingStartDate,
@@ -38,6 +36,8 @@ const Step2 = ({ nextStep }) => {
     trainingDuration,
     trainingDownCasted,
     setStep2,
+    isDepartmentalTraining,
+    trainingDepartment,
   } = useTrainingStore();
 
   const trainingDetailSchema = z.object({
@@ -53,16 +53,38 @@ const Step2 = ({ nextStep }) => {
     }),
     trainingLink: z.string().url(),
     trainingDownCasted: z.boolean(),
-    trainingPoints: z.string().optional(),
-    trainingType: z.array(
-      z.object({
-        label: z.string(),
-        value: z.string(),
-      })
-    ),
+    trainingPoints: z
+      .string()
+      .optional()
+      .refine(
+        (data) => {
+          if (Number(data) < 0) {
+            return false;
+          }
+          return true;
+        },
+        { message: "Training must be greater than 0" }
+      ),
+    trainingType: z
+      .array(
+        z.object({
+          label: z.string(),
+          value: z.string(),
+        })
+      )
+      .optional(),
     trainingDuration: z.string(),
+    isDepartmentalTraining: z.boolean(),
+    trainingDepartment: z
+      .array(
+        z.object({
+          label: z.string(),
+          value: z.string(),
+        })
+      )
+      .optional(),
   });
-  const { control, formState, handleSubmit, watch, getValues } = useForm({
+  const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
       trainingType,
       trainingStartDate: trainingStartDate ?? format(new Date(), "yyyy-MM-dd"),
@@ -72,17 +94,16 @@ const Step2 = ({ nextStep }) => {
       trainingPoints,
       trainingDownCasted,
       trainingDuration,
+      isDepartmentalTraining,
+      trainingDepartment,
     },
     resolver: zodResolver(trainingDetailSchema),
   });
   const { errors } = formState;
-  console.log(`🚀 ~ file: page.jsx:79 ~ errors:`, errors);
   const onSubmit = (data) => {
-    console.log(data);
     setStep2(data);
     nextStep();
   };
-  console.log(`🚀 ~ file: page.jsx:81 ~ getValues:`, getValues());
 
   return (
     <>
@@ -160,7 +181,7 @@ const Step2 = ({ nextStep }) => {
             readOnly={false}
             maxLimit={15}
             errors={errors}
-            autocompleteOption={skills}
+            optionlist={orgTrainingType}
             error={errors.trainingType}
             isMulti={false}
           />
@@ -191,6 +212,36 @@ const Step2 = ({ nextStep }) => {
               "Down-Casted Training will be automatically assigned to organization employees."
             }
           />
+          <AuthInputFiled
+            className={"w-full flex items-start justify-center flex-col"}
+            name={"isDepartmentalTraining"}
+            control={control}
+            type="checkbox"
+            placeholder="Departmental Training"
+            label="Departmental Training"
+            errors={errors}
+            error={errors.isDepartmentalTraining}
+            icon={TrendingDownOutlined}
+            descriptionText={
+              "Departmental Training will be automatically assigned to department employees."
+            }
+          />
+          {watch("isDepartmentalTraining") && (
+            <AuthInputFiled
+              name="trainingDepartment"
+              icon={CategoryOutlined}
+              control={control}
+              type="autocomplete"
+              placeholder="Department"
+              label="Department *"
+              readOnly={false}
+              maxLimit={15}
+              errors={errors}
+              optionlist={departmentOptions}
+              error={errors.trainingDepartment}
+              isMulti={true}
+            />
+          )}
         </div>
         <Button
           type="submit"

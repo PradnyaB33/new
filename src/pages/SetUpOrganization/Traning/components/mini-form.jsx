@@ -3,6 +3,7 @@ import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  AssignmentTurnedIn,
   AssignmentTurnedInOutlined,
   LoyaltyOutlined,
   PeopleOutlined,
@@ -21,6 +22,12 @@ const organizationSchema = z.object({
   collectPoints: z.boolean(),
   canHRDefinePoints: z.boolean(),
   usePointsForExternal: z.boolean(),
+  trainingType: z.array(
+    z.object({
+      value: z.string(),
+      label: z.string(),
+    })
+  ),
 });
 
 const MiniForm = ({ data, mutate, organisationId }) => {
@@ -39,6 +46,7 @@ const MiniForm = ({ data, mutate, organisationId }) => {
       usePointsForExternal: data?.usePointsForExternal
         ? data?.usePointsForExternal
         : false,
+      trainingType: data?.trainingType ? data?.trainingType : [],
     },
     resolver: zodResolver(organizationSchema),
   });
@@ -59,8 +67,7 @@ const MiniForm = ({ data, mutate, organisationId }) => {
           icon={AssignmentTurnedInOutlined}
           control={control}
           type="checkbox"
-          placeholder="Can Manager Assign Training"
-          label=" Can Manager Assign Training"
+          label="Manager can assign trainings to their reportees"
           errors={errors}
           error={errors.canManagerAssign}
         />
@@ -69,8 +76,7 @@ const MiniForm = ({ data, mutate, organisationId }) => {
           icon={SupervisorAccountOutlined}
           control={control}
           type="checkbox"
-          placeholder="Can Department Head Assign Training"
-          label="Can Department Head Assign Training"
+          label="Department Head can assign trainings to their employees"
           errors={errors}
           error={errors.canDeptHeadAssign}
         />
@@ -79,8 +85,7 @@ const MiniForm = ({ data, mutate, organisationId }) => {
           icon={PeopleOutlined}
           control={control}
           type="checkbox"
-          placeholder="Can HR Assign Training"
-          label="Can HR Assign Training"
+          label="HR can assign trainings to their employees."
           errors={errors}
           error={errors.canHRAssign}
         />
@@ -91,8 +96,7 @@ const MiniForm = ({ data, mutate, organisationId }) => {
               icon={LoyaltyOutlined}
               control={control}
               type="checkbox"
-              placeholder="Collect Points"
-              label="Collect Points"
+              label="Here you can allow employees to collect points for completed trainings"
               errors={errors}
               error={errors.collectPoints}
             />
@@ -101,8 +105,7 @@ const MiniForm = ({ data, mutate, organisationId }) => {
               icon={TuneOutlined}
               control={control}
               type="checkbox"
-              placeholder="Can HR Define Points"
-              label="Can HR Define Points"
+              label="HR can define points to specific trainings"
               errors={errors}
               error={errors.canHRDefinePoints}
             />
@@ -111,13 +114,25 @@ const MiniForm = ({ data, mutate, organisationId }) => {
               icon={ShareOutlined}
               control={control}
               type="checkbox"
-              placeholder="Use Points For External"
-              label="Use Points For External"
+              label="Here earned points can be used for external trainings"
               errors={errors}
               error={errors.usePointsForExternal}
             />
           </>
         )}
+        <AuthInputFiled
+          name="trainingType"
+          icon={AssignmentTurnedIn}
+          control={control}
+          type="autocomplete"
+          placeholder="Add Salary Type"
+          label="Add Salary Type"
+          readOnly={false}
+          maxLimit={15}
+          errors={errors}
+          error={errors.trainingType}
+          optionlist={data?.trainingType ? data?.trainingType : []}
+        />
       </div>
       <div className="w-full flex justify-center mb-4 mt-2">
         <Button disabled={!isDirty} variant="contained" type="submit">

@@ -2,12 +2,16 @@ import React from "react";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import usePunchNotification from "../../hooks/QueryHook/notification/punch-notification/hook";
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
+import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 import Card from "./components/card";
+
 
 const ParentNotification = () => {
   const { data, isLoading } = useLeaveNotificationHook();
   const { data: data2 } = useShiftNotification();
   const { data: data3 } = usePunchNotification();
+  const { missPunchData} = useMissedPunchNotificationCount();
+   console.log(missPunchData);
 
   const dummyData = [
     {
@@ -29,11 +33,13 @@ const ParentNotification = () => {
       url: "/punch-notification",
     },
     {
-      name: "Department Notification",
-      count: 2,
-      color: "#51E8FD",
-      url: "/department-notification",
+      name: "Missed Punch Notification",
+      count: missPunchData?.length ?? 0,
+      color: "#FF7373",
+      url: "/missedPunch-notification",
     },
+   
+   
   ];
 
   return (

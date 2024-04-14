@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 
 const useIncomeTax = create((set) => ({
   editStatus: {},
@@ -11,16 +11,20 @@ const useIncomeTax = create((set) => ({
   handlePDF: (id) => set({ pdf: id }),
   handleClosePDF: () => set({ pdf: null }),
   handleEditClick: (itemIndex) =>
-    set((state) => ({
-      editStatus: {
-        ...state.editStatus,
-        [itemIndex]: !state.editStatus[itemIndex],
-      },
-    })),
+    set((state) => {
+      const newData = [...state.tableData];
+      return {
+        editStatus: {
+          ...state.editStatus,
+          [itemIndex]: !state.editStatus[itemIndex],
+        },
+        declarationData: {
+          ...newData[itemIndex],
+        },
+      };
+    }),
   handleAmountChange: (e, itemIndex, handleAlert) =>
     set((state) => {
-      console.log(`🚀 ~ state:`, state);
-
       const newData = [...state.tableData];
       return {
         declarationData: {

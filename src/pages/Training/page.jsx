@@ -1,15 +1,14 @@
 import React from "react";
 import Header from "./components/header";
 import MiniForm from "./components/mini-form";
+import TrainingTable from "./training-table/page";
 
-const HrTrainings = () => {
+const HrTrainings = ({ data }) => {
   return (
-    <div className="pt-16 flex flex-col w-full px-8 gap-8">
+    <div className="pt-16 flex flex-col w-full px-8 gap-4">
       <Header />
-      <div>
-        <MiniForm />
-      </div>
-      <div>div1</div>
+      <MiniForm />
+      <TrainingTable mainData={data} />
     </div>
   );
 };

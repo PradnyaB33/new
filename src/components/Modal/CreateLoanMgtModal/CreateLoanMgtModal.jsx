@@ -53,6 +53,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     totalDeductionPerMonth,
     totalAmountWithSimpleInterest,
     handleNoOfEmiChange,
+    value2
   } = useCalculation();
 
   useEffect(() => {
@@ -350,7 +351,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                 >
                   <InputLabel>Interest amount monthly</InputLabel>
                   <OutlinedInput
-                    value={interestPerMonth}
+                    value={value2}
                     label="Interest amount monthly"
                   />
                 </FormControl>

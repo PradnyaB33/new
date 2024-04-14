@@ -16,6 +16,8 @@ const useEmpOption = (organisationId) => {
     EmpCodeCall,
   } = useEmpQuery(organisationId);
 
+  console.log("id" , organisationId);
+
   const DepartmentList = DepartmentListCall();
   const ManagerList = ManagerListCall();
   const empCode = EmpCodeCall();

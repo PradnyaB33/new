@@ -37,14 +37,18 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
 
   const descriptionElementRef = React.useRef(null);
 
-  useEffect(() => {
-    if (open) {
-      const { current: descriptionElement } = descriptionElementRef;
-      if (descriptionElement !== null) {
-        descriptionElement.focus();
+  useEffect(
+    () => {
+      if (open) {
+        const { current: descriptionElement } = descriptionElementRef;
+        if (descriptionElement !== null) {
+          descriptionElement.focus();
+        }
       }
-    }
-  }, [open]);
+    },
+    // eslint-disable-next-line
+    [open]
+  );
 
   // Get Query
   const { data: empTypeslist } = useQuery("empTypes", async () => {
@@ -78,6 +82,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
     handleSubmit,
     control,
     setValue,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(SalaryTemplateSchema),
@@ -130,6 +135,21 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
       },
       enabled: open && salaryId !== null && salaryId !== undefined,
     }
+  );
+
+  useEffect(
+    () => {
+      if (!open) {
+        reset({
+          name: "",
+          salaryStructure: "",
+          empTypes: "",
+          desc: "",
+        });
+      }
+    },
+    // eslint-disable-next-line
+    [open]
   );
 
   const onSubmit = async (data) => {
@@ -240,7 +260,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
               placeholder="Template Name"
               label="Enter Template Name *"
               readOnly={false}
-              maxLimit={15}
+              maxLimit={35}
               errors={errors}
               error={errors.name}
             />
@@ -279,6 +299,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
               icon={Money}
               control={control}
               type="autocomplete"
+              optionlist={salaryComponentArray}
               placeholder="Salary Component"
               label="Enter Salary Component *"
               readOnly={false}
