@@ -1,9 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
+import { Button } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import Setup from "../SetUpOrganization/Setup";
+
 const LetterSetup = () => {
   const letterTypes = [
     "Employment Offer Letter",
@@ -20,23 +23,60 @@ const LetterSetup = () => {
     "Employee Recognition Letter",
   ];
   const organizationSchema = z.object({
-    EmploymentOfferLetter: z.boolean(),
-    AppointmentLetter: z.boolean(),
-    PromotionLetter: z.boolean(),
-    TransferLetter: z.boolean(),
-    TerminationLetter: z.boolean(),
-    ResignationAcceptanceLetter: z.boolean(),
-    ConfirmationLetterLetter: z.boolean(),
-    PerformanceAppraisalLetter: z.boolean(),
-    WarningLetter: z.boolean(),
-    SalaryIncrementLetter: z.boolean(),
-    TrainingInvitationLetter: z.boolean(),
-    EmployeeRecognitionLetter: z.boolean(),
+    EmploymentOfferLetter: z.object({
+      workflow: z.boolean(),
+      downcast: z.boolean(),
+    }),
+    AppointmentLetter: z.object({
+      workflow: z.boolean(),
+      downcast: z.boolean(),
+    }),
+    PromotionLetter: z.object({
+      workflow: z.boolean(),
+      downcast: z.boolean(),
+    }),
+    TransferLetter: z.object({
+      workflow: z.boolean(),
+      downcast: z.boolean(),
+    }),
+    TerminationLetter: z.object({
+      workflow: z.boolean(),
+      downcast: z.boolean(),
+    }),
+    ResignationAcceptanceLetter: z.object({
+      workflow: z.boolean(),
+      downcast: z.boolean(),
+    }),
+    ConfirmationLetterLetter: z.object({
+      workflow: z.boolean(),
+      downcast: z.boolean(),
+    }),
+    PerformanceAppraisalLetter: z.object({
+      workflow: z.boolean(),
+      downcast: z.boolean(),
+    }),
+    WarningLetter: z.object({
+      workflow: z.boolean(),
+      downcast: z.boolean(),
+    }),
+    SalaryIncrementLetter: z.object({
+      workflow: z.boolean(),
+      downcast: z.boolean(),
+    }),
+    TrainingInvitationLetter: z.object({
+      workflow: z.boolean(),
+      downcast: z.boolean(),
+    }),
+    EmployeeRecognitionLetter: z.object({
+      workflow: z.boolean(),
+      downcast: z.boolean(),
+    }),
   });
   const { control, formState, handleSubmit } = useForm({
     defaultValues: {},
     resolver: zodResolver(organizationSchema),
   });
+  const { errors } = formState;
   return (
     <div>
       <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
@@ -59,164 +99,272 @@ const LetterSetup = () => {
             <div>
               <div>
                 <>
-                  <div className="flex items-center">
+                  <div className="flex gap-4">
                     {/* <h1>{item}</h1> */}
-                    {/* <AuthInputFiled
-                      name="EmploymentOfferLetter"
-                      icon={Business}
-                      control={control}
-                      type="checkbox"
-                      placeholder="Dual Workflow"
-                      label="Dual Workflow "
-                      errors={errors}
-                      error={errors.dualWorkflow}
-                      descriptionText={
-                        "Enabling workflow ensures account approval after manager's approval otherwise added directly as allowance."
-                      }
-                    />
-                    <AuthInputFiled
-                      name="AppointmentLetter"
-                      icon={Business}
-                      control={control}
-                      type="checkbox"
-                      placeholder="Dual Workflow"
-                      label="Dual Workflow "
-                      errors={errors}
-                      error={errors.dualWorkflow}
-                      descriptionText={
-                        "Enabling workflow ensures account approval after manager's approval otherwise added directly as allowance."
-                      }
-                    />
-                    <AuthInputFiled
-                      name="PromotionLetter"
-                      icon={Business}
-                      control={control}
-                      type="checkbox"
-                      placeholder="Dual Workflow"
-                      label="Dual Workflow "
-                      errors={errors}
-                      error={errors.dualWorkflow}
-                      descriptionText={
-                        "Enabling workflow ensures account approval after manager's approval otherwise added directly as allowance."
-                      }
-                    />
-                    <AuthInputFiled
-                      name="TransferLetter"
-                      icon={Business}
-                      control={control}
-                      type="checkbox"
-                      placeholder="Dual Workflow"
-                      label="Dual Workflow "
-                      errors={errors}
-                      error={errors.dualWorkflow}
-                      descriptionText={
-                        "Enabling workflow ensures account approval after manager's approval otherwise added directly as allowance."
-                      }
-                    />
-                    <AuthInputFiled
-                      name="TerminationLetter"
-                      icon={Business}
-                      control={control}
-                      type="checkbox"
-                      placeholder="Dual Workflow"
-                      label="Dual Workflow "
-                      errors={errors}
-                      error={errors.dualWorkflow}
-                      descriptionText={
-                        "Enabling workflow ensures account approval after manager's approval otherwise added directly as allowance."
-                      }
-                    />
-                    <AuthInputFiled
-                      name="ResignationAcceptanceLetter"
-                      icon={Business}
-                      control={control}
-                      type="checkbox"
-                      placeholder="Dual Workflow"
-                      label="Dual Workflow "
-                      errors={errors}
-                      error={errors.dualWorkflow}
-                      descriptionText={
-                        "Enabling workflow ensures account approval after manager's approval otherwise added directly as allowance."
-                      }
-                    />
-                    <AuthInputFiled
-                      name="ConfirmationLetter"
-                      icon={PriceChangeOutlined}
-                      control={control}
-                      type="checkbox"
-                      placeholder="Enable Extra Allowance"
-                      label="Enable Extra Allowance "
-                      errors={errors}
-                      error={errors.allowance}
-                      descriptionText={
-                        "Enabling allowance will allow the employee to get extra amount."
-                      }
-                    />
-                    <AuthInputFiled
-                      name="PerformanceAppraisalLetter"
-                      icon={PriceChangeOutlined}
-                      control={control}
-                      type="checkbox"
-                      placeholder="Enable Extra Allowance"
-                      label="Enable Extra Allowance "
-                      errors={errors}
-                      error={errors.allowance}
-                      descriptionText={
-                        "Enabling allowance will allow the employee to get extra amount."
-                      }
-                    />
-                    <AuthInputFiled
-                      name="WarningLetter"
-                      icon={PriceChangeOutlined}
-                      control={control}
-                      type="checkbox"
-                      placeholder="Enable Extra Allowance"
-                      label="Enable Extra Allowance "
-                      errors={errors}
-                      error={errors.allowance}
-                      descriptionText={
-                        "Enabling allowance will allow the employee to get extra amount."
-                      }
-                    />
-                    <AuthInputFiled
-                      name="SalaryIncrementLetter"
-                      icon={PriceChangeOutlined}
-                      control={control}
-                      type="checkbox"
-                      placeholder="Enable Extra Allowance"
-                      label="Enable Extra Allowance "
-                      errors={errors}
-                      error={errors.allowance}
-                      descriptionText={
-                        "Enabling allowance will allow the employee to get extra amount."
-                      }
-                    />
-                    <AuthInputFiled
-                      name="TrainingInvitationLetter"
-                      icon={PriceChangeOutlined}
-                      control={control}
-                      type="checkbox"
-                      placeholder="Enable Extra Allowance"
-                      label="Enable Extra Allowance "
-                      errors={errors}
-                      error={errors.allowance}
-                      descriptionText={
-                        "Enabling allowance will allow the employee to get extra amount."
-                      }
-                    />
-                    <AuthInputFiled
-                      name="EmployeeRecognitionLetter"
-                      icon={PriceChangeOutlined}
-                      control={control}
-                      type="checkbox"
-                      placeholder="Enable Extra Allowance"
-                      label="Enable Extra Allowance "
-                      errors={errors}
-                      error={errors.allowance}
-                      descriptionText={
-                        "Enabling allowance will allow the employee to get extra amount."
-                      }
-                    /> */}
+                    <div
+                      className="py-2 px-5"
+                      style={{ borderRight: "1px solid #e6e8eb" }}
+                    >
+                      <div className="flex gap-2">
+                        <h1 className="pt-2">Employment Offer Letter</h1>
+                        <AuthInputFiled
+                          name="EmploymentOfferLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                        <AuthInputFiled
+                          name="AppointmentLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <h1 className="pt-2">EmploymentOfferLetter</h1>
+                        <AuthInputFiled
+                          name="EmploymentOfferLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                        <AuthInputFiled
+                          name="AppointmentLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <h1 className="pt-2">EmploymentOfferLetter</h1>
+                        <AuthInputFiled
+                          name="EmploymentOfferLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                        <AuthInputFiled
+                          name="AppointmentLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <h1 className="pt-2">EmploymentOfferLetter</h1>
+                        <AuthInputFiled
+                          name="EmploymentOfferLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                        <AuthInputFiled
+                          name="AppointmentLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <h1 className="pt-2">EmploymentOfferLetter</h1>
+                        <AuthInputFiled
+                          name="EmploymentOfferLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                        <AuthInputFiled
+                          name="AppointmentLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <h1 className="pt-2">EmploymentOfferLetter</h1>
+                        <AuthInputFiled
+                          name="EmploymentOfferLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                        <AuthInputFiled
+                          name="AppointmentLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                      </div>
+                    </div>
+                    <div className="py-2 px-5">
+                      <div className="flex gap-2">
+                        <h1 className="pt-2">EmploymentOfferLetter</h1>
+                        <AuthInputFiled
+                          name="EmploymentOfferLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                        <AuthInputFiled
+                          name="AppointmentLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <h1 className="pt-2">EmploymentOfferLetter</h1>
+                        <AuthInputFiled
+                          name="EmploymentOfferLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                        <AuthInputFiled
+                          name="AppointmentLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <h1 className="pt-2">EmploymentOfferLetter</h1>
+                        <AuthInputFiled
+                          name="EmploymentOfferLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                        <AuthInputFiled
+                          name="AppointmentLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <h1 className="pt-2">EmploymentOfferLetter</h1>
+                        <AuthInputFiled
+                          name="EmploymentOfferLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                        <AuthInputFiled
+                          name="AppointmentLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <h1 className="pt-2">EmploymentOfferLetter</h1>
+                        <AuthInputFiled
+                          name="EmploymentOfferLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                        <AuthInputFiled
+                          name="AppointmentLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <h1 className="pt-2">EmploymentOfferLetter</h1>
+                        <AuthInputFiled
+                          name="EmploymentOfferLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                        <AuthInputFiled
+                          name="AppointmentLetter"
+                          control={control}
+                          type="checkbox"
+                          placeholder="Dual Workflow"
+                          label="Dual Workflow "
+                          errors={errors}
+                          error={errors.dualWorkflow}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <Button variant="contained" size="small">
+                      Submit
+                    </Button>
                   </div>
                 </>
               </div>
