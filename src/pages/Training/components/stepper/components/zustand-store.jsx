@@ -94,6 +94,7 @@ const useTrainingStore = create((set) => ({
       trainingDownCasted: false,
       trainingDuration: undefined,
       open: true,
+      proofSubmissionRequired: true,
     });
   },
 }));
