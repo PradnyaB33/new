@@ -65,6 +65,7 @@ const DocManageAuth = () => {
           },
         }
       );
+      console.log(resp);
       querClient.invalidateQueries("getOrgDocs");
       setAppAlert({
         alert: true,
@@ -150,6 +151,7 @@ const DocManageAuth = () => {
           },
         }
       );
+      console.log(resp);
       const doc = new jsPDF();
       doc.setFontSize(12);
       doc.text("Welcome to www.aegishrms.com", 10, 20);
@@ -176,12 +178,12 @@ const DocManageAuth = () => {
     }
   };
 
-  const formatDate = (dateString) => {
-    const rawDate = new Date(dateString);
-    return `${rawDate.getDate()}-${(rawDate.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${rawDate.getFullYear()}`;
-  };
+  // const formatDate = (dateString) => {
+  //   const rawDate = new Date(dateString);
+  //   return `${rawDate.getDate()}-${(rawDate.getMonth() + 1)
+  //     .toString()
+  //     .padStart(2, "0")}-${rawDate.getFullYear()}`;
+  // };
 
   return (
     <div className="w-full h-full flex justify-around p-6 gap-6">

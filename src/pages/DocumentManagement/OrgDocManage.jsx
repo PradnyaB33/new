@@ -23,11 +23,6 @@ const OrgDocManage = () => {
     console.log(open);
   }, [open]);
 
-  const handleClick = () => {
-    console.log("Back button clicked");
-    setOpen("");
-  };
-
   return (
     <div className="w-full h-full p-5">
       <div className="w-[50%] h-auto pb-4 mt-4 border-2 m-auto rounded-3xl relative">

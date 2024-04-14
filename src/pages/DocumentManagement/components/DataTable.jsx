@@ -119,7 +119,7 @@ const DataTable = () => {
       fetchDepartments(selectedOrganizationId);
     }
 
-    //enlint-disable-next-line
+    // eslint-disable-next-line
   }, [selectedOrganizationId, authToken]);
 
   useEffect(() => {
@@ -189,6 +189,7 @@ const DataTable = () => {
           },
         }
       );
+      console.log(response);
       setAppAlert({
         alert: true,
         type: "success",
