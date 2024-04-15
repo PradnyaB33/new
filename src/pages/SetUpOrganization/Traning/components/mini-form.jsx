@@ -125,8 +125,8 @@ const MiniForm = ({ data, mutate, organisationId }) => {
           icon={AssignmentTurnedIn}
           control={control}
           type="autocomplete"
-          placeholder="Add Salary Type"
-          label="Add Salary Type"
+          placeholder="Add Training Type"
+          label="Add Training Type"
           readOnly={false}
           maxLimit={15}
           errors={errors}
