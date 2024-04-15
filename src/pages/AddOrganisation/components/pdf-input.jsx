@@ -1,4 +1,5 @@
-import { DescriptionOutlined } from "@mui/icons-material";
+import { Upload } from "@mui/icons-material";
+import { Fab } from "@mui/material";
 import React, { useRef, useState } from "react";
 
 const PdfInput = ({ field, caching = false, className }) => {
@@ -13,8 +14,9 @@ const PdfInput = ({ field, caching = false, className }) => {
   const [selectedPdf, setSelectedPdf] = useState(field?.value);
   const hiddenInputRef = useRef(null);
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
+    console.log(`🚀 ~ file: pdf-input.jsx:18 ~ file:`, file);
     setSelectedPdf(file);
 
     displayPdf(file);
@@ -22,22 +24,26 @@ const PdfInput = ({ field, caching = false, className }) => {
 
   return (
     <object
-      className={`flex px-2 border-gray-200 border-[.5px] bg-[#f8f8ff59] py-[6px] items-center h-48 w-48 rounded-full justify-center !hover:bg-[ghostwhite] cursor-pointer transition-all !bg-cover ${className}`}
-      style={{
-        background: `linear-gradient(45deg, #f8f8ff59, #f8f8ff59), url(${
-          typeof selectedPdf !== "object"
-            ? selectedPdf?.includes("data:application/pdf")
-              ? `${selectedPdf}`
-              : `${selectedPdf}?v=${Date.now()}`
-            : selectedPdf
-        })`,
-      }}
-      data={selectedPdf}
+      className={`flex border-gray-200 border-[.5px] bg-[#f8f8ff59]  items-center h-48 rounded-lg w-full justify-center !hover:bg-[ghostwhite] cursor-pointer transition-all !bg-cover ${className} relative`}
+      data={selectedPdf ? URL.createObjectURL(selectedPdf) : ""}
       onClick={() => {
         hiddenInputRef.current.click();
       }}
     >
-      <DescriptionOutlined className="!text-gray-700 !text-4xl" />
+      {selectedPdf && (
+        <embed
+          src={URL.createObjectURL(selectedPdf)}
+          type="application/pdf"
+          className="w-full h-full rounded-lg overflow-hidden"
+        />
+      )}
+      <Fab
+        className="!absolute !top-1/2 !left-1/2 !right-1/2 !p-2"
+        variant="extended"
+      >
+        <Upload className="" />
+      </Fab>
+
       <input
         type="file"
         accept="application/pdf"
