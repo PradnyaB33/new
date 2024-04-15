@@ -169,7 +169,7 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/remote-punching`,
-      isVisible: data?.plan?.item?.name === "Aegis Intermediate Plan",
+      isVisible: data?.organisation?.packageInfo === "Aegis Intermediate Plan",
     },
     {
       label: "Training",
@@ -177,7 +177,7 @@ const useSetupSideNav = (organisationId) => {
       href: `/organisation/${organisationId}/setup/training`,
       active:
         location.pathname === `/organisation/${organisationId}/setup/training`,
-      isVisible: data?.plan?.item?.name === "Aegis Intermediate Plan",
+      isVisible: data?.organisation?.packageInfo === "Aegis Intermediate Plan",
     },
     {
       label: "Performance Management",
@@ -186,7 +186,7 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/performance-management`,
-      isVisible: data?.plan?.item?.name === "Aegis Intermediate Plan",
+      isVisible: data?.organisation?.packageInfo === "Aegis Intermediate Plan",
     },
   ];
 

@@ -82,6 +82,7 @@ const BillingCard = ({ doc }) => {
     setAnchorEl(null);
   };
   const { data } = useSubscriptionGet({ organisationId: doc._id });
+
   console.log(`🚀 ~ file: billing-card.jsx:85 ~ data:`, data);
   const { pauseSubscriptionMutation, resumeSubscriptionMutation } =
     useSubscriptionMutation();
@@ -89,43 +90,42 @@ const BillingCard = ({ doc }) => {
   const getMessage = () => {
     let message = "";
 
-    switch (data?.subscription?.status) {
-      case "authenticated":
+    switch (data?.organisation?.subscriptionDetails?.status) {
+      case "Active":
         if (
           Math.ceil(
-            new Date(data?.subscription?.charge_at * 1000) - new Date()
+            new Date(data?.organisation?.subscriptionDetails?.expirationDate) -
+              new Date()
           ) /
             (1000 * 60 * 60 * 24) >
           0
         ) {
           message = `${Math.ceil(
-            (new Date(data?.subscription?.charge_at * 1000) - new Date()) /
+            (new Date(data?.organisation?.subscriptionDetails?.expirationDate) -
+              new Date()) /
               (1000 * 60 * 60 * 24)
           )} Day Trial left`;
         } else {
           message = "Sorry but payment not received";
         }
         break;
-      case "active":
-        message = `Your next due is after ${Math.ceil(
-          (new Date(data?.subscription?.charge_at * 1000) - new Date()) /
-            (1000 * 60 * 60 * 24)
-        )} days`;
+      case "Expired":
+        message = "Your subscription has expired";
         break;
-      case "pending":
+      case "Pending":
         message =
-          "Your payment is pending. Please update your card details. or please complete payment";
+          "Your payment is pending. Please update your card details or complete the payment";
         break;
-      case "halted":
+      case "Halted":
         message =
           "Your subscription is halted. Please update your card details.";
         break;
-      case "cancelled":
+      case "Cancelled":
         message =
-          "Your subscription is cancelled. To restart, raise query about it";
+          "Your subscription is cancelled. To restart, raise a query about it";
         break;
-      case "paused":
-        message = "Your subscription is on paused";
+      case "Paused":
+        message = "Your subscription is paused";
         break;
       default:
         message = "Basic Plan";

@@ -25,7 +25,7 @@ const useOrg = create((set) => {
     isTrial: false,
     packageInfo: undefined,
     count: undefined,
-    cycleCount: 1,
+    cycleCount: "1",
 
     // Setter function for updating multiple properties at once
     setStep2Data: (packageInfo) => {

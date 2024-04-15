@@ -64,9 +64,13 @@ const Step4 = () => {
     formData.append("contact_number", data.contact_number);
     formData.append("description", data.description);
     formData.append("creator", data.creator);
-    formData.append("packageInfo", data?.packageInfo?.packageId);
+    formData.append("packageInfo", data?.packageInfo?.packageName);
     formData.append("count", data.count);
     formData.append("cycleCount", data.cycleCount);
+    formData.append(
+      "totalPrice",
+      getPrice(data?.packageInfo?.packageName) * data?.count * data?.cycleCount
+    );
 
     const response = await axios.post(
       `${process.env.REACT_APP_API}/route/organization`,
@@ -80,18 +84,20 @@ const Step4 = () => {
   const { mutate, isLoading } = useMutation({
     mutationFn: handleForm,
     onSuccess: async (data) => {
+      console.log(`🚀 ~ file: step-4.jsx:87 ~ data:`, data);
       const options = {
         key: data?.key,
+        amount: data?.order?.amount,
         currency: "INR",
         name: "Aegis Plan for software", //your business name
         description: "Get Access to all premium keys",
-        image: data.organisation.image,
-        subscription_id: data.subscription_id, //This
-        callback_url: `${process.env.REACT_APP_API}/route/organization/verify/${data.organisation._id}`,
+        image: data?.organization?.image,
+        order_id: data.order.id, //This
+        callback_url: `${process.env.REACT_APP_API}/route/organization/verify/${data?.organization?._id}`,
         prefill: {
-          name: `${decodedToken.user.first_name} ${decodedToken.user.last_name}`, //your customer's name
-          email: decodedToken.user.email,
-          contact: decodedToken.user.phone_number,
+          name: `${decodedToken?.user?.first_name} ${decodedToken?.user?.last_name}`, //your customer's name
+          email: decodedToken?.user?.email,
+          contact: decodedToken?.user?.phone_number,
         },
         notes: {
           address:
@@ -102,7 +108,7 @@ const Step4 = () => {
         },
         modal: {
           ondismiss: function () {
-            mutate2(data.organisation._id);
+            mutate2(data.organization._id);
             console.log("Checkout form closed by the user");
           },
         },
@@ -145,7 +151,8 @@ const Step4 = () => {
             be{" "}
             {getPrice(data?.packageInfo?.packageName) *
               data?.count *
-              data?.cycleCount}{" "}
+              data?.cycleCount}
+            {" Rs"}
           </p>
         </div>
         <div className="flex flex-col gap-2 !row-span-4">
