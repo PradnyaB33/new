@@ -19,7 +19,10 @@ const style = {
   overflow: "auto",
 };
 const PackageForm = ({ handleClose, open, packages, organisation, plan }) => {
-  console.log(`🚀 ~ file: manage-package-form.jsx:22 ~ packages:`, packages);
+  console.log(
+    `🚀 ~ file: manage-package-form.jsx:22 ~ organisation:`,
+    organisation
+  );
   const [mainPackages, setmainPackages] = useState(packages);
 
   const { updateSubscriptionMutation } = useSubscriptionMutation();
