@@ -31,7 +31,7 @@ const calculateDistance = (coords) => {
 
 const PunchingRejectModal = ({ items, length }) => {
   const navigate = useNavigate();
-  console.log("yash items", items.punchData.length);
+  console.log("yash items", items);
 
   const { notifyAccountantMutation, RejectManagerMutation } =
     useNotificationRemotePunching();
@@ -43,39 +43,36 @@ const PunchingRejectModal = ({ items, length }) => {
     const id = items._id;
     navigate(`/remote/info/${id}`);
   };
+  console.log("yash items", items);
   return (
-    <div className="w-full pt-3">
-      <div className="w-full h-auto bg-white flex p-4 pl-8 pr-8 gap-2 justify-between items-center shadow-md">
+    <div className="w-full">
+      <div className="w-full h-auto bg-white flex p-4 pl-8 pr-8 justify-between items-center shadow-md mt-3">
         <div className="flex items-center">
           <div className="mr-9">
-            <div>
+            <h1>
               {items.punchData[0].image === "" ? (
-                <h1 className="font-semibold text-center">
-                  Missed Punch Request
-                </h1>
+                <h1 className="font-semibold">Missed Punch Request</h1>
               ) : (
-                <h1 className="font-semibold text-center">
-                  Remote Punch Request
-                </h1>
+                <h1 className="font-semibold">Punch Request</h1>
               )}
-            </div>
-            <div className="h-[100px] w-[200px] rounded-full">
+            </h1>
+            <div className="h-[100px] w-[100px] rounded-full">
               {items.punchData[0].image === "" ? (
                 <img
-                  className="w-[200px] h-[100px] rounded-2xl"
                   style={{ objectFit: "cover" }}
                   src={items.employeeId.user_logo_url}
                   alt=""
                   srcset=""
                 />
               ) : (
-                <img
-                  className="w-[200px] h-[100px] rounded-2xl"
-                  style={{ objectFit: "cover" }}
-                  src={items.punchData[0].image}
-                  alt=""
-                  srcset=""
-                />
+                <div className="h-[100px] w-[100px] rounded-full">
+                  <img
+                    style={{ objectFit: "cover" }}
+                    src={items.punchData[0].image}
+                    alt=""
+                    srcset=""
+                  />
+                </div>
               )}
             </div>
           </div>
