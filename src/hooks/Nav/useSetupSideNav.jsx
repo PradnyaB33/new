@@ -170,7 +170,7 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/remote-punching`,
-      isVisible: data?.organisation?.packageInfo === "Basic Plan",
+      isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
     },
     {
       label: "Training",
@@ -178,7 +178,7 @@ const useSetupSideNav = (organisationId) => {
       href: `/organisation/${organisationId}/setup/training`,
       active:
         location.pathname === `/organisation/${organisationId}/setup/training`,
-      isVisible: data?.organisation?.packageInfo === "Basic Plan",
+      isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
     },
     {
       label: "Performance Management",
@@ -187,7 +187,7 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/performance-management`,
-      isVisible: data?.organisation?.packageInfo === "Basic Plan",
+      isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
     },
   ];
 
