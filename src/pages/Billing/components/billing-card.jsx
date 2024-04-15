@@ -3,12 +3,9 @@ import {
   Circle,
   ControlPoint,
   FilterNone,
-  GroupAdd,
   KeyboardArrowDown,
   KeyboardArrowUp,
   Loop,
-  Message,
-  Pause,
   People,
   PlayArrow,
   PriorityHigh,
@@ -23,7 +20,6 @@ import moment from "moment";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
-import useSubscriptionMutation from "../../../hooks/QueryHook/Subscription/mutation";
 import DescriptionBox from "./descripton-box";
 import PackageForm from "./manage-package-form";
 const StyledMenu = styled((props) => (
@@ -84,56 +80,6 @@ const BillingCard = ({ doc }) => {
   const { data } = useSubscriptionGet({ organisationId: doc._id });
 
   console.log(`🚀 ~ file: billing-card.jsx:85 ~ data:`, data);
-  const { pauseSubscriptionMutation, resumeSubscriptionMutation } =
-    useSubscriptionMutation();
-
-  const getMessage = () => {
-    let message = "";
-
-    switch (data?.organisation?.subscriptionDetails?.status) {
-      case "Active":
-        if (
-          Math.ceil(
-            new Date(data?.organisation?.subscriptionDetails?.expirationDate) -
-              new Date()
-          ) /
-            (1000 * 60 * 60 * 24) >
-          0
-        ) {
-          message = `${Math.ceil(
-            (new Date(data?.organisation?.subscriptionDetails?.expirationDate) -
-              new Date()) /
-              (1000 * 60 * 60 * 24)
-          )} Day Trial left`;
-        } else {
-          message = "Sorry but payment not received";
-        }
-        break;
-      case "Expired":
-        message = "Your subscription has expired";
-        break;
-      case "Pending":
-        message =
-          "Your payment is pending. Please update your card details or complete the payment";
-        break;
-      case "Halted":
-        message =
-          "Your subscription is halted. Please update your card details.";
-        break;
-      case "Cancelled":
-        message =
-          "Your subscription is cancelled. To restart, raise a query about it";
-        break;
-      case "Paused":
-        message = "Your subscription is paused";
-        break;
-      default:
-        message = "Basic Plan";
-        break;
-    }
-
-    return message;
-  };
 
   return (
     <div className="shadow-xl bg-Brand-Purple/brand-purple-1 rounded-md grid grid-cols-6">
@@ -168,34 +114,6 @@ const BillingCard = ({ doc }) => {
             open={open}
             onClose={handleClose}
           >
-            {data?.subscription?.status === "active" && (
-              <MenuItem
-                onClick={async () => {
-                  await pauseSubscriptionMutation.mutate(
-                    data?.subscription?.id
-                  );
-                  handleClose();
-                }}
-                disableRipple
-              >
-                <Pause />
-                Pause subscription
-              </MenuItem>
-            )}
-            {data?.subscription?.status === "paused" && (
-              <MenuItem
-                onClick={async () => {
-                  await resumeSubscriptionMutation.mutate(
-                    data?.subscription?.id
-                  );
-                  handleClose();
-                }}
-                disableRipple
-              >
-                <PlayArrow />
-                Resume subscription
-              </MenuItem>
-            )}
             <MenuItem
               onClick={() => {
                 setConfirmOpen(true);
@@ -210,21 +128,11 @@ const BillingCard = ({ doc }) => {
 
         <div className="bg-brand/wahsed-blue rounded-md border-brand/purple border-[0.5px] flex flex-wrap gap-2 p-2 items-center">
           <DescriptionBox
-            Icon={GroupAdd}
-            descriptionText={"Created by"}
-            mainText={`${doc?.creator?.first_name} ${doc?.creator?.last_name}`}
-          />
-          <DescriptionBox
             Icon={Subscriptions}
             descriptionText={"Subscription charge date"}
             mainText={moment
               .unix(data?.subscription?.charge_at)
               .format("MM/DD/YYYY")}
-          />
-          <DescriptionBox
-            Icon={Message}
-            descriptionText={"Message"}
-            mainText={getMessage()}
           />
           <DescriptionBox
             Icon={AttachMoney}

@@ -120,7 +120,7 @@ const TDSTable3 = () => {
     queryFn: async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API}/route/tds/getInvestment/2023-2024/Otherincome`,
+          `${process.env.REACT_APP_API}/route/tds/getInvestment/Otherincome`,
           {
             headers: {
               Authorization: authToken,

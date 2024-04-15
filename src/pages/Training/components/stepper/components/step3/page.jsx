@@ -7,8 +7,10 @@ import useTrainingCreationMutation from "../mutation";
 import useTrainingStore from "../zustand-store";
 
 const Step3 = () => {
-  const { mutate, isLoading, isCreateTrainingLoading } =
+  const { mutate, isLoading, isCreateTrainingLoading, updateTraining } =
     useTrainingCreationMutation();
+  const info = useTrainingStore();
+  console.log(`🚀 ~ file: page.jsx:13 ~ info:`, info);
   const {
     trainingName,
     trainingType,
@@ -21,17 +23,29 @@ const Step3 = () => {
     trainingPoints,
     trainingDownCasted,
     trainingDuration,
-  } = useTrainingStore();
-  console.log(`🚀 ~ file: page.jsx:23 ~ trainingDuration:`, trainingDuration);
+    trainingId,
+    trainingDepartment,
+    isDepartmentalTraining,
+    proofSubmissionRequired,
+  } = info;
   const sanitizedDescription = DOMPurify.sanitize(trainingDescription);
-  const url = URL.createObjectURL(trainingImage);
+  const getImageUrl = () => {
+    if (typeof trainingImage === "string") {
+      return trainingImage;
+    } else {
+      if (trainingImage === undefined) {
+        return "";
+      }
+      return URL?.createObjectURL(trainingImage);
+    }
+  };
   if (isLoading || isCreateTrainingLoading) {
     return <Loader />;
   }
   return (
     <div className="flex items-center gap-8 flex-col">
       <img
-        src={url}
+        src={getImageUrl()}
         className="rounded-lg w-full object-cover h-44"
         alt="Not-found"
       />
@@ -85,7 +99,7 @@ const Step3 = () => {
               Training Type:
             </div>
             <div className="gap-4 flex">
-              {trainingType.map((doc, i) => {
+              {trainingType?.map((doc, i) => {
                 return (
                   <Chip
                     key={i}
@@ -109,19 +123,42 @@ const Step3 = () => {
       <Button
         variant="contained"
         onClick={() => {
-          mutate({
-            trainingName,
-            trainingType,
-            trainingDescription,
-            trainingStartDate,
-            trainingLink,
-            trainingImage,
-            trainingLocation,
-            trainingEndDate,
-            trainingPoints,
-            trainingDownCasted,
-            trainingDuration,
-          });
+          if (trainingId !== undefined) {
+            updateTraining({
+              trainingId,
+              trainingName,
+              trainingType,
+              trainingDescription,
+              trainingStartDate,
+              trainingLink,
+              trainingImage,
+              trainingLocation,
+              trainingEndDate,
+              trainingPoints,
+              trainingDownCasted,
+              trainingDuration,
+              trainingDepartment,
+              isDepartmentalTraining,
+              proofSubmissionRequired,
+            });
+          } else {
+            mutate({
+              trainingName,
+              trainingType,
+              trainingDescription,
+              trainingStartDate,
+              trainingLink,
+              trainingImage,
+              trainingLocation,
+              trainingEndDate,
+              trainingPoints,
+              trainingDownCasted,
+              trainingDuration,
+              trainingDepartment,
+              isDepartmentalTraining,
+              proofSubmissionRequired,
+            });
+          }
         }}
       >
         Submit

@@ -6,18 +6,15 @@ import useGetUser from "../../Token/useUser";
 import useDebounce from "./hook/useDebounce";
 
 const useTrainingHook = () => {
-  const { trainingName, setTrainingData } = useSearchTrainingZustandStore();
+  const { trainingName, setTrainingData, page, setTotalResult } =
+    useSearchTrainingZustandStore();
   const { authToken } = useGetUser();
   const debouncedSearchTerm = useDebounce(trainingName, 500);
   const { organisationId } = useParams();
 
   const getTrainingDetailsWithNameLimit10WithCreatorId = async () => {
-    console.log(
-      "I am searching for training with trainingName: ",
-      trainingName
-    );
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/training/getTrainingDetailsWithNameLimit10WithCreatorId/${organisationId}?name=${trainingName}`,
+      `${process.env.REACT_APP_API}/route/training/getTrainingDetailsWithNameLimit10WithCreatorId/${organisationId}?name=${trainingName}&page=${page}`,
       {
         headers: {
           Authorization: authToken,
@@ -30,13 +27,15 @@ const useTrainingHook = () => {
 
   const { data, isLoading, error } = useQuery({
     queryKey: [
-      "getTrainingDetailsWithNameLimit10WithCreatorId",
+      `getTrainingDetailsWithNameLimit10WithCreatorId`,
       debouncedSearchTerm,
+      page,
     ],
     queryFn: getTrainingDetailsWithNameLimit10WithCreatorId,
     onSuccess: (data) => {
       console.log("onSuccess", data);
       setTrainingData(data.data);
+      setTotalResult(data.totalResults);
     },
   });
   return { data, isLoading, error };

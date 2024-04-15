@@ -62,6 +62,7 @@ import RemoteNotification from "./pages/Test/RemoteNotification";
 import TestMap from "./pages/Test/testMap";
 import TestYash from "./pages/Test/testYash";
 import DepartmentTest from "./pages/Test2/DepartmentTest";
+import HrTrainings from "./pages/Training/page";
 import EmployeeProfile from "./pages/UserProfile/UserProfile";
 import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
@@ -86,12 +87,12 @@ import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
+import MyTraining from "./pages/My-Training/page";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
 import Training from "./pages/SetUpOrganization/Traning/Training";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
-import HrTrainings from "./pages/Training/page";
 import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttendacneBiomatric";
 import CustomCalander from "./pages/custom/Calendar";
 import LeaveNotification from "./pages/leave-notification/page";
@@ -126,7 +127,9 @@ const App = () => {
         <Route
           path="/performance"
           element={
-            <RequireAuth permission={["Super-Admin", "Employee"]}>
+            <RequireAuth
+              permission={["Super-Admin", "Employee", "Manager", "HR"]}
+            >
               <Performance />
             </RequireAuth>
           }
@@ -143,6 +146,7 @@ const App = () => {
         <Route path="/paymentfailed" element={<PaymentFailed />} />
 
         <Route path="/loading" element={<Loader />} />
+        <Route path="/my-training" element={<MyTraining />} />
         <Route path="/testOrg" element={<NewOranisationForm />} />
         <Route path="/remotePunching" element={<RemoteEmployee />} />
         {/* Login Routes */}
@@ -776,7 +780,7 @@ const App = () => {
         <Route
           path="/organisation/:organisationId/manage-training"
           element={
-            <RequireAuth permission={["HR", "Super-Admin"]}>
+            <RequireAuth permission={["HR", "Super-Admin", "Department-Head"]}>
               <HrTrainings />
             </RequireAuth>
           }

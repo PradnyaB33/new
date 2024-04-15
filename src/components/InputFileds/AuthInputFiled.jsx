@@ -13,15 +13,29 @@ import Select, { components } from "react-select";
 import CreatableSelect from "react-select/creatable";
 import Datepicker from "react-tailwindcss-datepicker";
 import useEmpState from "../../hooks/Employee-OnBoarding/useEmpState";
-import { salaryComponentArray } from "../Modal/SalaryInputFields/SalaryInputFieldsModal";
 import PlaceAutoComplete from "./places-autocomplete";
 
 // import Autocomplete from "react-google-autocomplete";
 
+export const CustomOption = ({ data, ...props }) => (
+  <components.Option {...props}>
+    <div className="flex gap-2">
+      <Avatar
+        sx={{ width: 30, height: 30 }}
+        src={data.image}
+        alt={data.label}
+      />
+      {data.label}
+    </div>
+  </components.Option>
+);
+
 const AuthInputFiled = ({
   label,
   name,
+  isMulti,
   icon: Icon,
+  optionlist,
   type,
   errors,
   error,
@@ -39,7 +53,6 @@ const AuthInputFiled = ({
   center,
   descriptionText,
   value,
-  autocompleteOption,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -47,19 +60,6 @@ const AuthInputFiled = ({
   const handleFocus = (fieldName) => {
     setFocusedInput(fieldName);
   };
-
-  const CustomOption = ({ data, ...props }) => (
-    <components.Option {...props}>
-      <div className="flex gap-2">
-        <Avatar
-          sx={{ width: 30, height: 30 }}
-          src={data.image}
-          alt={data.label}
-        />
-        {data.label}
-      </div>
-    </components.Option>
-  );
 
   const { ref } = usePlacesWidget({
     apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -92,6 +92,7 @@ const AuthInputFiled = ({
                   inputClassName={"border-none w-full outline-none"}
                   useRange={false}
                   asSingle={true}
+                  popoverDirection="down"
                   readOnly={true}
                   onChange={(value) => {
                     field.onChange(value);
@@ -142,7 +143,7 @@ const AuthInputFiled = ({
                   <Select
                     aria-errormessage=""
                     placeholder={placeholder}
-                    isMulti
+                    isMulti={isMulti}
                     components={{
                       Option: CustomOption,
                     }}
@@ -474,7 +475,7 @@ const AuthInputFiled = ({
                   <Icon className="text-gray-700" />
                   <CreatableSelect
                     aria-errormessage="error"
-                    options={autocompleteOption ?? salaryComponentArray}
+                    options={optionlist}
                     placeholder={placeholder}
                     isMulti
                     styles={{
@@ -729,7 +730,8 @@ const AuthInputFiled = ({
               <ReactQuill
                 theme="snow"
                 value={field.value}
-                className="h-36 "
+                readOnly={readOnly}
+                className="h-36"
                 onChange={field.onChange}
               />
               {/* </div> */}
@@ -978,11 +980,13 @@ const AuthInputFiled = ({
                 handleFocus(name);
               }}
               onBlur={() => setFocusedInput(null)}
-              className={`${readOnly && "bg-[ghostwhite]"} ${
+              className={` ${
                 focusedInput === name
                   ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
                   : "outline-none border-gray-200 border-[.5px]"
-              } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
+              } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px] ${
+                readOnly && "!bg-gray-200"
+              }`}
             >
               {Icon && (
                 <Icon className="text-gray-700 md:text-lg !text-[1em]" />
@@ -997,9 +1001,9 @@ const AuthInputFiled = ({
                 readOnly={readOnly}
                 value={field.value}
                 placeholder={placeholder}
-                className={`${
-                  readOnly && "bg-[ghostwhite]"
-                } border-none bg-white w-full outline-none px-2  `}
+                className={` border-none bg-white w-full outline-none px-2  ${
+                  readOnly && "!bg-gray-200"
+                }`}
                 {...field}
                 formNoValidate
               />

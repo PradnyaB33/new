@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
 import useTrainingStore from "./zustand-store";
@@ -7,6 +7,7 @@ import useTrainingStore from "./zustand-store";
 const useTrainingCreationMutation = () => {
   const authToken = useAuthToken();
   const { setOpen } = useTrainingStore();
+  const queryClient = useQueryClient();
 
   const { organisationId } = useParams();
   const getTrainingImageUrl = async (fullObject) => {
@@ -28,6 +29,7 @@ const useTrainingCreationMutation = () => {
     return fullObject;
   };
   const createTrainingObject = async (data) => {
+    console.log(`🚀 ~ file: mutation.jsx:32 ~ data:`, data);
     await axios.post(
       `${process.env.REACT_APP_API}/route/training/${organisationId}/create`,
       data,
@@ -41,8 +43,12 @@ const useTrainingCreationMutation = () => {
   };
   const { mutate: createTraining, isLoading: isCreateTrainingLoading } =
     useMutation(createTrainingObject, {
-      onSuccess: async (data) => {
+      onSuccess: async () => {
         setOpen(false);
+        await queryClient?.invalidateQueries({
+          queryKey: [`getTrainingDetailsWithNameLimit10WithCreatorId`],
+          exact: false,
+        });
       },
       onError: (error) => {
         console.error("onError", error);
@@ -57,7 +63,59 @@ const useTrainingCreationMutation = () => {
       console.error("onError", error);
     },
   });
-  return { mutate, isCreateTrainingLoading, isLoading };
+  const updateTrainingData = async (data) => {
+    if (typeof data.trainingImage === "object" && data.trainingImage !== null) {
+      const result = await axios.get(
+        `${process.env.REACT_APP_API}/route/s3createFile/training-banner`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: authToken,
+          },
+        }
+      );
+      await axios.put(result?.data?.url, data?.trainingImage, {
+        headers: {
+          "Content-Type": data?.trainingImage?.type,
+        },
+      });
+      data.trainingImage = result?.data?.url?.split("?")[0];
+      return data;
+    } else {
+      return data;
+    }
+  };
+  const { mutate: updateTraining, isLoading: isUpdateTrainingLoading } =
+    useMutation(updateTrainingData, {
+      onSuccess: async (data) => {
+        await axios.put(
+          `${process.env.REACT_APP_API}/route/training/${data.trainingId}`,
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: authToken,
+            },
+          }
+        );
+        setOpen(false);
+        await queryClient?.invalidateQueries({
+          queryKey: ["getTrainingDetailsWithNameLimit10WithCreatorId"],
+          exact: false,
+        });
+      },
+      onError: (error) => {
+        console.error("onError", error);
+      },
+    });
+
+  return {
+    mutate,
+    isCreateTrainingLoading,
+    isLoading,
+    updateTraining,
+    isUpdateTrainingLoading,
+  };
 };
 
 export default useTrainingCreationMutation;
