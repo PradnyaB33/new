@@ -2,7 +2,6 @@ import {
   AttachMoney,
   Circle,
   ControlPoint,
-  FilterNone,
   KeyboardArrowDown,
   KeyboardArrowUp,
   Loop,
@@ -18,8 +17,6 @@ import {
 import { Button, Menu, MenuItem, alpha, styled } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import DescriptionBox from "./descripton-box";
 import PackageForm from "./manage-package-form";
 const StyledMenu = styled((props) => (
@@ -67,6 +64,7 @@ const StyledMenu = styled((props) => (
 }));
 
 const BillingCard = ({ doc }) => {
+  console.log(`🚀 ~ file: billing-card.jsx:70 ~ doc:`, doc);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -77,10 +75,14 @@ const BillingCard = ({ doc }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const { data } = useSubscriptionGet({ organisationId: doc._id });
-
-  console.log(`🚀 ~ file: billing-card.jsx:85 ~ data:`, data);
-
+  console.log(
+    `🚀 ~ file: billing-card.jsx:161 ~ moment(doc?.subscriptionDetails?.expirationDate):`,
+    moment(doc?.subscriptionDetails?.expirationDate).format("DD-MM-YYYY")
+  );
+  console.log(
+    `🚀 ~ file: billing-card.jsx:210 ~ moment().format("DD-MM-YYYY"):`,
+    moment().format("DD-MM-YYYY")
+  );
   return (
     <div className="shadow-xl bg-Brand-Purple/brand-purple-1 rounded-md grid grid-cols-6">
       <div className=" col-span-5 pl-4 pt-4 pb-4 gap-4 flex flex-col">
@@ -116,13 +118,13 @@ const BillingCard = ({ doc }) => {
           >
             <MenuItem
               onClick={() => {
-                setConfirmOpen(true);
+                setConfirmOpen(false);
+                handleClose();
               }}
-              disableRipple
-            >
-              <FilterNone />
-              Manage Subscription
-            </MenuItem>
+              packages={doc?.organisation?.packages}
+              organisation={doc?.organisation}
+              plan={doc?.plan}
+            />
           </StyledMenu>
         </div>
 
@@ -130,9 +132,9 @@ const BillingCard = ({ doc }) => {
           <DescriptionBox
             Icon={Subscriptions}
             descriptionText={"Subscription charge date"}
-            mainText={moment
-              .unix(data?.subscription?.charge_at)
-              .format("MM/DD/YYYY")}
+            mainText={moment(doc?.subscriptionDetails?.paymentDate).format(
+              "DD MMM YYYY"
+            )}
           />
           <DescriptionBox
             Icon={AttachMoney}
@@ -142,81 +144,68 @@ const BillingCard = ({ doc }) => {
           <DescriptionBox
             Icon={ShoppingBag}
             descriptionText={"Purchased Plan"}
-            mainText={data?.plan?.item?.name}
+            mainText={doc?.packageInfo}
           />
 
           <DescriptionBox
             Icon={People}
             descriptionText={"Allowed employee count"}
-            mainText={data?.subscription?.quantity}
+            mainText={doc?.memberCount}
           />
           <DescriptionBox
             Icon={Circle}
             descriptionText={"Subscription status"}
-            mainText={data?.subscription?.status}
+            mainText={doc?.subscriptionDetails?.status}
           />
+
           <DescriptionBox
             Icon={Loop}
             descriptionText={"Your next renewal is after"}
-            mainText={`${moment
-              .duration(
-                moment.unix(data?.subscription?.charge_at).diff(moment())
-              )
-              .days()} days`}
+            mainText={`${moment(doc?.subscriptionDetails?.expirationDate).diff(
+              moment(new Date()),
+              "days"
+            )} days`}
           />
-          {moment
-            .unix(data?.subscription?.charge_at)
-            .startOf("day")
-            .isSame(moment().startOf("day")) && (
-            <Link to={data?.subscription?.short_url} target="_blank">
-              <Button
-                variant="contained"
-                style={{ height: "-webkit-fill-available" }}
-              >
-                Start subscription
-              </Button>
-            </Link>
-          )}
         </div>
       </div>
       <div className=" col-span-1 flex justify-center items-center">
-        {data?.subscription?.status === "active" ? (
+        {doc?.subscriptionDetails?.status === "active" ? (
           <div className="bg-[#5FF062] flex justify-center items-start p-8 rounded-full animate-pulse">
             <Repeat className="text-white " fontSize="large" />
           </div>
-        ) : data?.subscription?.status === "authenticated" ? (
+        ) : doc?.subscriptionDetails?.status === "authenticated" ? (
           <div className="bg-[#ba67e1] flex justify-center items-start p-8 rounded-full animate-pulse">
             <Shield className="text-white " fontSize="large" />
           </div>
-        ) : data?.subscription?.status === "pending" ? (
+        ) : doc?.subscriptionDetails?.status === "pending" ? (
           <div className="bg-[#E8A454] flex justify-center items-start p-8 rounded-full animate-pulse">
             <PriorityHigh className="text-white " fontSize="large" />
           </div>
-        ) : data?.subscription?.status === "expired" ? (
+        ) : doc?.subscriptionDetails?.status === "expired" ? (
           <div className="bg-[#6578DB] flex justify-center items-start p-8 rounded-full animate-pulse">
             <ControlPoint className="text-white " fontSize="large" />
           </div>
-        ) : data?.subscription?.status === "paused" ? (
+        ) : doc?.subscriptionDetails?.status === "paused" ? (
           <div className="bg-[chocolate] flex justify-center items-start p-8 rounded-full animate-pulse">
             <PlayArrow className="text-white " fontSize="large" />
           </div>
-        ) : data?.subscription?.status === "halted" ? (
+        ) : doc?.subscriptionDetails?.status === "halted" ? (
           <div className="bg-[#F46B6B] flex justify-center items-start p-8 rounded-full animate-pulse">
             <QuestionMark className="text-white " fontSize="large" />
           </div>
         ) : null}
       </div>
-      {data?.organisation?.subscriptionDetails?.quantity &&
-        data?.organisation?.subscriptionDetails?.plan_id && (
+      {doc?.organisation?.subscriptionDetails?.quantity &&
+        doc?.organisation?.subscriptionDetails?.plan_id && (
           <PackageForm
             open={confirmOpen}
             handleClose={() => {
               setConfirmOpen(false);
               handleClose();
             }}
-            packages={data?.organisation?.packages}
-            organisation={data?.organisation}
-            plan={data?.plan}
+            packages={doc?.organisation?.packages}
+            organisation={doc?.organisation}
+            plan={doc?.plan}
           />
         )}
     </div>
