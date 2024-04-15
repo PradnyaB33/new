@@ -53,13 +53,17 @@ const ViewPayslip = () => {
 
   console.log(salaryInfo);
 
+  console.log("salaryinfo" , salaryInfo);
+
   // Find the salary info based on user-selected month and year
   const filteredSalaryInfo = salaryInfo.find((info) => {
     return (
       info.month === parseInt(monthFromSelectedDate) &&
       info.year === parseInt(yearFromSelectedDate)
     );
-  });
+  }); 
+
+  console.log("filtersalaryinfo" , filteredSalaryInfo);
 
   // download the pdf
   const exportPDF = async () => {
@@ -71,6 +75,7 @@ const ViewPayslip = () => {
       img.onerror = reject;
       img.src = organisationInfo?.logo_url;
     });
+    
 
     html2canvas(input, {
       logging: true,
@@ -293,11 +298,14 @@ const ViewPayslip = () => {
                           <td class="px-4 py-2 border">
                             {filteredSalaryInfo?.foodAllowance || ""}
                           </td>
-                          <td class="py-2 border">Loan Deduction :</td>
+                          {filteredSalaryInfo && filteredSalaryInfo.loanDeduction !== 0 && (
+                            <>
+                           <td class="py-2 border">Loan Deduction :</td>
                           <td class="py-2 border">
-                            {" "}
-                            {filteredSalaryInfo?.loanDeduction || "0"}
+                          {filteredSalaryInfo?.loanDeduction || "0"}
                           </td>
+                          </>
+                           )}
                         </tr>
                         <tr>
                           <td class="px-4 py-2 border">Sales Allowance:</td>

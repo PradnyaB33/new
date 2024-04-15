@@ -56,97 +56,6 @@ const CalculateHourEmpModal = ({
 
   const openPopover = Boolean(anchorEl);
 
-  
-  // const handleCalculateHours = async () => {
-  //   if (!selectedDate) {
-  //     alert("Please select a date.");
-  //     return;
-  //   }
-  
-  //   const date = getFormattedDate(selectedDate);
-  //   console.log("date", date);
-  //   const punchingRecords = empPunchingData?.punchingRecords || [];
-  //   let punchInTime = null;
-  //   let punchOutTime = null;
-  
-  //   punchingRecords.forEach((record) => {
-  //     const recordDate = getFormattedDate(record.date);
-  //     console.log("record date", recordDate);
-  //     if (recordDate === date) {
-  //       if (record.punchingStatus === "Check In") {
-  //         punchInTime = new Date(`1970-01-01T${record.punchingTime}`);
-  //       } else if (record.punchingStatus === "Check Out") {
-  //         punchOutTime = new Date(`1970-01-01T${record.punchingTime}`);
-  //       }
-  //     }
-  //   });
-  
-  //   console.log("punch in time", punchInTime);
-  //   console.log("punch out time", punchOutTime);
-  
-  //   const timeDiff = punchOutTime - punchInTime;
-  //   const totalHours = timeDiff / (1000 * 60 * 60);
-  //   const formattedTotalHours = Math.floor(totalHours);
-  //   const formattedMinutes = Math.round((totalHours - formattedTotalHours) * 60);
-  
-  //   let totalHour = `${formattedTotalHours} hr`;
-  //   if (formattedMinutes > 0) {
-  //     totalHour += ` ${formattedMinutes} min `;
-  //   }
-  
-  //   console.log(totalHour);
-  
-  //   let remarks = "";
-  //   const hoursAboveField = parseFloat(totalHours);
-  //   console.log("hoursAboveField", hoursAboveField);
-  //   if (hoursAboveField >= hour) {
-  //     remarks = "Available";
-  //   } else if (hoursAboveField > 0) {
-  //     remarks = "Partial";
-  //   } else {
-  //     remarks = "Unavailable";
-  //   }
-  
-  //   // Set remarks
-  //   setRemarks(remarks);
-  
-  //   const postData = {
-  //     EmployeeId: empPunchingData?.EmployeeId._id,
-  //     organizationId: organisationId,
-  //     recordDate: date,
-  //     punchInTime: punchInTime,
-  //     punchOutTime: punchOutTime,
-  //     totalHours: totalHour,
-  //     status: remarks,
-  //   };
-  
-  //   console.log(postData);
-  
-  //   try {
-  
-  //     const response = await fetch(`${process.env.REACT_APP_API}/route/organization/${organisationId}/punching-data`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: authToken,
-  //       },
-  //       body: JSON.stringify(postData),
-  //     });
-  
-  //     if (!response.ok) {
-  //       throw new Error("Failed to calculate hours.");
-  //     }
-  //     const responseData = await response.json();
-  //     console.log(responseData);
-  //     handleAlert(true, "success", "Hours calculated successfully..");
-  //     handleClose();
-  //     setSelectedDate(null);
-  //   } catch (error) {
-  //     console.error("Error calculating hours:", error);
-  //     handleAlert(false, "error", "Failed to calculate hours. Please try again.");
-  //   }
-  // }; 
-
   const handleCalculateHours = async () => {
     if (!selectedDate) {
       alert("Please select a date.");
@@ -213,6 +122,7 @@ const CalculateHourEmpModal = ({
       punchOutTime: punchOutTime,
       totalHours: totalHour,
       status: remarks,
+      justify : ""
     };
   
     console.log(postData);

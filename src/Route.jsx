@@ -83,10 +83,9 @@ import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
+import LetterSetup from "./pages/LetterTypes/LetterSetup";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
-import MissPunchInOut from "./pages/MissPunchInOut/MissPunchInOut";
-import MissPunchJustify from "./pages/MissPunchNotified/MissPunchJustify";
 import MyTraining from "./pages/My-Training/page";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
@@ -100,6 +99,10 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
+import MissPunchInOut from "./pages/MissPunch/MissPunchInOut";
+import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
+
 const App = () => {
   return (
     <AuthProvider>
@@ -164,6 +167,10 @@ const App = () => {
           element={<EmployeeConfirmation />}
         />
         <Route path="/custom/calendar" element={<CustomCalander />} />
+        <Route
+          path="/organisation/:organisationId/setup/letter-types"
+          element={<LetterSetup />}
+        />
         <Route path="/remote/info/:Id" element={<RemoteManager />} />
         <Route path="/remote/notification" element={<RemoteNotification />} />
         <Route path="/emp/docs" element={<DocManage />} />
@@ -184,6 +191,7 @@ const App = () => {
         <Route path="/leave-notification" element={<LeaveNotification />} />
         <Route path="/punch-notification" element={<PunchNotification />} />
         <Route path="/shift-notification" element={<ShiftNotification />} />
+        <Route path="/missedPunch-notification" element={<MissedPunchNotification />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route
