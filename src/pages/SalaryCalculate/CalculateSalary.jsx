@@ -350,11 +350,11 @@ function CalculateSalary() {
           "success",
           "Monthly Salary Detail added Successfully"
         );
-        // Reset form values here
+      
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        // If salary for the given month and year already exists
+      
         handleAlert(
           true,
           "error",
