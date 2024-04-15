@@ -26,6 +26,7 @@ const useSetupSideNav = (organisationId) => {
   const { data } = useSubscriptionGet({
     organisationId: organisationId,
   });
+  console.log(`🚀 ~ file: useSetupSideNav.jsx:103 ~ data:`, data);
 
   const linkData = [
     {
@@ -169,7 +170,7 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/remote-punching`,
-      isVisible: data?.organisation?.packageInfo === "Aegis Intermediate Plan",
+      isVisible: data?.organisation?.packageInfo === "Basic Plan",
     },
     {
       label: "Training",
@@ -177,7 +178,7 @@ const useSetupSideNav = (organisationId) => {
       href: `/organisation/${organisationId}/setup/training`,
       active:
         location.pathname === `/organisation/${organisationId}/setup/training`,
-      isVisible: data?.organisation?.packageInfo === "Aegis Intermediate Plan",
+      isVisible: data?.organisation?.packageInfo === "Basic Plan",
     },
     {
       label: "Performance Management",
@@ -186,7 +187,7 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/performance-management`,
-      isVisible: data?.organisation?.packageInfo === "Aegis Intermediate Plan",
+      isVisible: data?.organisation?.packageInfo === "Basic Plan",
     },
   ];
 
