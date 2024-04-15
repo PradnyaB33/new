@@ -31,7 +31,7 @@ const calculateDistance = (coords) => {
 
 const PunchingRejectModal = ({ items, length }) => {
   const navigate = useNavigate();
-  console.log("yash items", items.punchData.length);
+  console.log("yash items", items);
 
   const { notifyAccountantMutation, RejectManagerMutation } =
     useNotificationRemotePunching();
@@ -50,19 +50,30 @@ const PunchingRejectModal = ({ items, length }) => {
         <div className="flex items-center">
           <div className="mr-9">
             <h1>
-              {items.punchData.image === "" ? (
+              {items.punchData[0].image === "" ? (
                 <h1 className="font-semibold">Missed Punch Request</h1>
               ) : (
                 <h1 className="font-semibold">Punch Request</h1>
               )}
             </h1>
             <div className="h-[100px] w-[100px] rounded-full">
-              <img
-                style={{ objectFit: "cover" }}
-                src={items.punchData[0].image}
-                alt=""
-                srcset=""
-              />
+              {items.punchData[0].image === "" ? (
+                <img
+                  style={{ objectFit: "cover" }}
+                  src={items.employeeId.user_logo_url}
+                  alt=""
+                  srcset=""
+                />
+              ) : (
+                <div className="h-[100px] w-[100px] rounded-full">
+                  <img
+                    style={{ objectFit: "cover" }}
+                    src={items.punchData[0].image}
+                    alt=""
+                    srcset=""
+                  />
+                </div>
+              )}
             </div>
           </div>
           <div>
