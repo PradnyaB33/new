@@ -34,7 +34,11 @@ const Notification = () => {
           <LeaveRejectmodal key={idx} items={items} />
         ))}
         {data3?.map((items, idx) => (
-          <PunchingRejectModal items={items} length={data3?.length} key={idx} />
+          <PunchingRejectModal
+            items={items}
+            length={items.punchData?.length}
+            key={idx}
+          />
         ))}
       </div>
     </>

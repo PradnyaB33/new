@@ -31,6 +31,7 @@ const calculateDistance = (coords) => {
 
 const PunchingRejectModal = ({ items, length }) => {
   const navigate = useNavigate();
+  console.log("yash items", items.punchData.length);
 
   const { notifyAccountantMutation, RejectManagerMutation } =
     useNotificationRemotePunching();
@@ -65,6 +66,15 @@ const PunchingRejectModal = ({ items, length }) => {
             </div>
           </div>
           <div>
+            <h1 className="font-semibold">
+              {items.employeeId.first_name} {items.employeeId.last_name}
+            </h1>
+            <h1>
+              Date:{" "}
+              {items?.createdAt && (
+                <>{new Date(items?.createdAt).toLocaleDateString()} </>
+              )}
+            </h1>
             <h1>
               Start Time : {new Date(items?.createdAt).toLocaleTimeString()}
             </h1>
@@ -75,7 +85,12 @@ const PunchingRejectModal = ({ items, length }) => {
                 : "N/A"}
             </h1>
             <h1>Total Distance Traveled: {distanceTraveled} Km </h1>
-            <h1>Punching restarted: {length} times</h1>
+
+            {items.punchData[0].image === "" ? (
+              ""
+            ) : (
+              <h1>Punching restarted: {items.punchData.length} times</h1>
+            )}
           </div>
         </div>
         <div>
