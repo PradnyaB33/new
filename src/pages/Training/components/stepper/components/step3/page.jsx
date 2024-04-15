@@ -22,7 +22,7 @@ const Step3 = () => {
     trainingDownCasted,
     trainingDuration,
   } = useTrainingStore();
-  console.log(trainingDuration);
+  console.log(`🚀 ~ file: page.jsx:23 ~ trainingDuration:`, trainingDuration);
   const sanitizedDescription = DOMPurify.sanitize(trainingDescription);
   const url = URL.createObjectURL(trainingImage);
   if (isLoading || isCreateTrainingLoading) {
