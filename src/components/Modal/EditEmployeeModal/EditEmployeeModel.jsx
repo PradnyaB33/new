@@ -37,6 +37,8 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     bank_account_no: "",
     adhar_card_number: "",
     pan_card_number: "",
+    empId : "",
+    gender : "",
   });
 
   // define the state for store additional info data of employee
@@ -204,7 +206,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   const fetchManagerData = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-manager/${organisationId}`,
+        `${process.env.REACT_APP_API}/route/employee/getAllManager/${organisationId}`,
         {
           headers: {
             Authorization: authToken,
@@ -367,6 +369,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
         bank_account_no: employeeData?.bank_account_no || "",
         adhar_card_number: employeeData?.adhar_card_number || "",
         pan_card_number: employeeData?.pan_card_number || "",
+        empId: employeeData?.empId || "",
       });
 
       setAdditionalInfo({
@@ -557,6 +560,21 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 onChange={handleInputChange}
               />
             </FormControl>
+          </div> 
+
+          <div className="space-y-2 ">
+            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
+              <InputLabel htmlFor="outlined-adornment-password">
+                Employee Id
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                label="Employee Id"
+                name="empId"
+                value={formData.empId}
+                onChange={handleInputChange}
+              />
+            </FormControl>
           </div>
           <div className="space-y-2 ">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
@@ -593,7 +611,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="bank_account_no"
+                label="Bank Account Number"
                 name="bank_account_no"
                 value={formData.bank_account_no}
                 onChange={handleInputChange}
@@ -618,7 +636,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           <div className="space-y-2 ">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
-                Address
+              Current Address
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
@@ -1025,7 +1043,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               htmlFor="workLocation"
               style={{ display: "block", color: "#000000" }}
             >
-              Shift Allocation:
+              Shift :
             </label>
             <select
               value={shift_allocation}
@@ -1064,8 +1082,8 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               <option value="">Select Manager</option>
               {Array.isArray(managerData) &&
                 managerData?.map((manager) => (
-                  <option key={manager._id} value={manager.managerId._id}>
-                    {`${manager?.managerId?.first_name} ${manager?.managerId?.last_name}`}
+                  <option key={manager._id} value={manager._id}>
+                    {`${manager?.first_name} ${manager?.last_name}`}
                   </option>
                 ))}
             </select>
