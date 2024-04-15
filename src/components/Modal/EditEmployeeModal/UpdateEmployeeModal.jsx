@@ -39,6 +39,7 @@ import useEmployeeOptions from "../../../hooks/Employee-Update/useEmpOptions";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { UseContext } from "../../../State/UseState/UseContext";
+import useEmpQuery from "../../../hooks/Employee-OnBoarding/useEmpQuery";
 const UpdateEmployeeModal = ({ handleClose, open, employeeId, organisationId }) => { 
    
     const { cookies } = useContext(UseContext);
@@ -84,8 +85,11 @@ const UpdateEmployeeModal = ({ handleClose, open, employeeId, organisationId }) 
         Designationoption,
       } = useEmployeeOptions(organisationId); 
 
+      const { AdditionalListCall } = useEmpQuery(organisationId);
+      const { addtionalFields, } = AdditionalListCall();
+
+       console.log("additional field" , addtionalFields);
       
-     
       const isAtLeastNineteenYearsOld = (value) => {
         const currentDate = new Date();
         const dob = new Date(value);
@@ -192,7 +196,7 @@ const UpdateEmployeeModal = ({ handleClose, open, employeeId, organisationId }) 
         value: z.string(),
       }),
       companyemail: z.string().email(),
-      profile: z.string().array().optional(),
+      profile: z.array(z.string()).optional(),
       shift_allocation: z.object({
         label: z.string(),
         value: z.string(),
@@ -216,7 +220,7 @@ const UpdateEmployeeModal = ({ handleClose, open, employeeId, organisationId }) 
           confirmPassword: confirmPassword,
           password: password,
           designation: designation,
-          profile: profile,
+          profile: z.string().array().optional(),
           worklocation: worklocation,
           deptname: deptname,
           employmentType: employmentType,
@@ -253,7 +257,8 @@ const UpdateEmployeeModal = ({ handleClose, open, employeeId, organisationId }) 
             if (data) {
               setValue("first_name", data.employee.first_name);
               setValue("last_name", data.employee.last_name);
-              setValue("date_of_birth", data.employee.date_of_birth);
+              setValue("date_of_birth", new Date(data.employee.date_of_birth).toLocaleDateString());
+              setValue("joining_date", new Date(data.employee.joining_date).toLocaleDateString());
               setValue("email", data.employee.email);
               setValue("gender", data.employee.gender);
               setValue("phone_number", data.employee.phone_number);
@@ -261,24 +266,51 @@ const UpdateEmployeeModal = ({ handleClose, open, employeeId, organisationId }) 
               setValue("citizenship", data.employee.citizenship);
               setValue("adhar_card_number",data.employee.adhar_card_number);
               setValue("pan_card_number", data.employee.pan_card_number);
-              setValue("bank_account_no", data.employee.bank_account_no);    
+              setValue("bank_account_no", data.employee.bank_account_no); 
+              setValue("companyemail", data.employee.companyemail);   
+              setValue("empId", data.employee.empId);
               const designation = data.employee?.designation?.find(
                 (item) => item.value === data.employee?.designation?.item?._id
               );
               if (designation) {
                 setValue("designation", { label: designation.designationName , value: designation._id });
               }
-              setValue("profile", data.employee.profile);
-              setValue("worklocation", data.employee.worklocation);
-              setValue("deptname", data.employee.deptname);
-              setValue("employmentType", data.employee.employmentType);
-              setValue("empId", data.employee.empId);
-              setValue("mgrempid", data.employee.mgrempid);
-              setValue("joining_date", data.employee.joining_date);
-              setValue("salarystructure", data.employee.salarystructure);
-              setValue("dept_cost_center_no", data.employee.dept_cost_center_no);
-              setValue("companyemail", data.employee.companyemail);
-              setValue("shift_allocation", data.employee.shift_allocation);
+              const deptname = data.employee?.deptname?.find(
+                (item) => item.value === data.employee?.deptname?.item?._id
+              );
+              if (deptname) {
+                setValue("deptname", { label: deptname.departmentName , value: deptname._id });
+              }
+              const worklocation = data.employee?.worklocation?.find(
+                (item) => item.value === data.employee?.worklocation?.item?._id
+              );
+              if (worklocation) {
+                setValue("worklocation", { label: worklocation.city, value: worklocation._id });
+              }
+            
+              const employmentType = data.employee?.employmentType;
+              if (employmentType) {
+                setValue("employmentType", { label: employmentType.title, value: employmentType._id });
+              } 
+              
+              const salarystructure = data.employee?.salarystructure?.salaryStructure?.find(
+                (item) => item.value === data.employee?.salarystructure?.salaryStructure.item?._id
+              );
+              if (salarystructure) {
+                setValue("salarystructure", { label: salarystructure.salaryComponent , value: salarystructure._id });
+              }
+             
+              const employeeProfileData = data.employee?.profile || [];
+              const profiles = employeeProfileData.map((role) => role);
+              console.log("profile", profiles);
+              setValue("profile", profiles);
+
+          
+
+              
+              
+              
+             
             }
           },
           enabled: open && employeeId !== null && employeeId !== undefined, 
@@ -545,7 +577,7 @@ const UpdateEmployeeModal = ({ handleClose, open, employeeId, organisationId }) 
             name="joining_date"
             icon={TodayOutlined}
             control={control}
-            type="date"
+            type="text"
             placeholder="dd-mm-yyyy"
             label="Date of Joining *"
             errors={errors}
@@ -644,6 +676,26 @@ const UpdateEmployeeModal = ({ handleClose, open, employeeId, organisationId }) 
             errors={errors}
             error={errors.salarystructure}
           />
+        </div>  
+
+
+        <div className="space-y-2 ">
+         {addtionalFields?.inputField?.inputDetail?.map((input, id) => (
+            <>
+              {input.isActive && (
+                <AuthInputFiled
+                  name={input.label}
+                  placeholder={input.label}
+                  label={input.placeholder}
+                  icon={ContactMail}
+                  control={control}
+                  type={input.inputType}
+                  errors={errors}
+                  error={errors.label}
+                />
+              )}
+            </>
+          ))}
         </div> 
 
         <div className="space-y-2 ">
