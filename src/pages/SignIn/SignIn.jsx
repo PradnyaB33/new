@@ -58,7 +58,6 @@ const SignIn = () => {
         Cookies.set("role", response.data.roleToken, {
           expires: 4 / 24,
         });
-        console.log("Token Accepted");
         window.location.reload();
       },
     }
