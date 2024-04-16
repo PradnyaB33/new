@@ -2,6 +2,9 @@ import {
   AttachMoney,
   Circle,
   ControlPoint,
+  FilterNone,
+  KeyboardArrowDown,
+  KeyboardArrowUp,
   Loop,
   People,
   PriorityHigh,
@@ -9,7 +12,7 @@ import {
   ShoppingBag,
   Subscriptions,
 } from "@mui/icons-material";
-import { Menu, MenuItem, alpha, styled } from "@mui/material";
+import { Button, Menu, MenuItem, alpha, styled } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
 import DescriptionBox from "./descripton-box";
@@ -64,17 +67,12 @@ const BillingCard = ({ doc }) => {
   const open = Boolean(anchorEl);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
   const handleClose = () => {
     setAnchorEl(null);
   };
-  console.log(
-    `🚀 ~ file: billing-card.jsx:161 ~ moment(doc?.subscriptionDetails?.expirationDate):`,
-    moment(doc?.subscriptionDetails?.expirationDate).format("DD-MM-YYYY")
-  );
-  console.log(
-    `🚀 ~ file: billing-card.jsx:210 ~ moment().format("DD-MM-YYYY"):`,
-    moment().format("DD-MM-YYYY")
-  );
   return (
     <div className="shadow-xl bg-Brand-Purple/brand-purple-1 rounded-md grid grid-cols-6">
       <div className=" col-span-5 pl-4 pt-4 pb-4 gap-4 flex flex-col">
@@ -87,7 +85,7 @@ const BillingCard = ({ doc }) => {
             />
             <div className="text-2xl font-bold">{doc?.orgName}</div>
           </div>
-          {/* <Button
+          <Button
             id="demo-customized-button"
             aria-controls={open ? "demo-customized-menu" : undefined}
             aria-haspopup="true"
@@ -98,7 +96,7 @@ const BillingCard = ({ doc }) => {
             endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           >
             Options
-          </Button> */}
+          </Button>
           <StyledMenu
             id="demo-customized-menu"
             MenuListProps={{
@@ -110,13 +108,13 @@ const BillingCard = ({ doc }) => {
           >
             <MenuItem
               onClick={() => {
-                setConfirmOpen(false);
-                handleClose();
+                setConfirmOpen(true);
               }}
-              packages={doc?.organisation?.packages}
-              organisation={doc?.organisation}
-              plan={doc?.plan}
-            />
+              disableRipple
+            >
+              <FilterNone />
+              Manage Subscription
+            </MenuItem>
           </StyledMenu>
         </div>
 
@@ -175,19 +173,15 @@ const BillingCard = ({ doc }) => {
           </div>
         ) : null}
       </div>
-      {doc?.organisation?.subscriptionDetails?.quantity &&
-        doc?.organisation?.subscriptionDetails?.plan_id && (
-          <PackageForm
-            open={confirmOpen}
-            handleClose={() => {
-              setConfirmOpen(false);
-              handleClose();
-            }}
-            packages={doc?.organisation?.packages}
-            organisation={doc?.organisation}
-            plan={doc?.plan}
-          />
-        )}
+
+      <PackageForm
+        open={confirmOpen}
+        handleClose={() => {
+          setConfirmOpen(false);
+          handleClose();
+        }}
+        organisation={doc?.organisation}
+      />
     </div>
   );
 };
