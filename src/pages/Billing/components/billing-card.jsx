@@ -64,9 +64,6 @@ const BillingCard = ({ doc }) => {
   const open = Boolean(anchorEl);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
   const handleClose = () => {
     setAnchorEl(null);
   };
