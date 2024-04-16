@@ -336,7 +336,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/missed-punch-in-out`,
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Punch Miss",
+            text: "Punch Missed",
           },
         
         ],
