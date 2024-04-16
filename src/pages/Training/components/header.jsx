@@ -10,7 +10,7 @@ const Header = () => {
     <div className="flex justify-between">
       <div className="flex flex-col">
         <h1 className=" font-bold text-2xl">Training</h1>
-        <p className="text-xl text-Brand-neutrals/brand-neutrals-3">
+        <p className="text-sm text-Brand-neutrals/brand-neutrals-3">
           Click on add new button to create trainings
         </p>
       </div>

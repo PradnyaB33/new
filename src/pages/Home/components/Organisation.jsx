@@ -83,7 +83,7 @@ const Organisation = ({ item }) => {
       <div
         className={`border-b-[3px] border-${getRandomColor()} block min-w-[21rem] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-200 relative`}
       >
-        <tag className="tag">{item?.subscriptionDetails?.status}</tag>
+        <tag className="tag">{item?.packageInfo}</tag>
         <div className="border-b-2 grid grid-cols-6 items-center justify-between border-[#0000002d] px-6 py-3 text-black">
           <div className="flex col-span-5 gap-4 items-center">
             <Avatar
