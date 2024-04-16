@@ -35,10 +35,10 @@ const PerformanceSetup = () => {
       label: z.string(),
       value: z.string(),
     }),
-    goals: z.object({
-      label: z.string(),
-      value: z.string(),
-    }),
+    // goals: z.object({
+    //   label: z.string(),
+    //   value: z.string(),
+    // }),
     ratings: z.array(
       z.object({
         label: z.string(),
@@ -56,30 +56,33 @@ const PerformanceSetup = () => {
     isSelfGoal: z.boolean().optional(),
   });
 
-  const { data: performance } = useQuery("performancePeriod", async () => {
-    const { data } = await axios.get(
-      `${process.env.REACT_APP_API}/route/performance/getSetup/${organisationId}`,
-      {
-        headers: {
-          Authorization: authToken,
-        },
-      }
-    );
+  const { data: performance, isFetching } = useQuery(
+    "performancePeriod",
+    async () => {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/route/performance/getSetup/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
 
-    return data;
-  });
+      return data;
+    }
+  );
 
-  console.log(performance);
   const {
     formState: { errors },
     control,
     handleSubmit,
     setValue,
+    watch,
   } = useForm({
     resolver: zodResolver(PerformanceSchema),
     defaultValues: {
       stages: undefined,
-      goals: [],
+      // goals: undefined,
       isDownCast: false,
       isFeedback: false,
       isNonMeasurableAllowed: false,
@@ -106,7 +109,7 @@ const PerformanceSetup = () => {
         startDate: performance.startdate,
         endDate: performance.startdate,
       });
-      setValue("goals", performance.goals);
+      // setValue("goals", performance.goals);
       setValue("isDownCast", performance.isDownCast);
       setValue("isFeedback", performance.isFeedback);
       setValue("isKRA", performance.isKRA);
@@ -120,7 +123,7 @@ const PerformanceSetup = () => {
         label: performance.stages,
         value: performance.stages,
       });
-      setValue("startdate", performance.startdate);
+
       setValue(
         "ratings",
         performance.ratings.map((rating) => ({
@@ -130,7 +133,7 @@ const PerformanceSetup = () => {
       );
     }
     // eslint-disable-next-line
-  }, []);
+  }, [isFetching]);
 
   let stagesOptions = [
     {
@@ -200,7 +203,7 @@ const PerformanceSetup = () => {
         ...data,
         startdate: data.startdate.startDate,
         enddate: data.enddate.endDate,
-        goals: data.goalType.map((item) => item),
+        // goals: data.goals.value,
         stages: data.stages.value,
         ratings: data.ratings.map((rating) => rating.value),
       };
@@ -257,6 +260,7 @@ const PerformanceSetup = () => {
                   />
                   <AuthInputFiled
                     name="enddate"
+                    min={watch("startdate")?.startDate}
                     icon={AccessTime}
                     control={control}
                     type="calender"
@@ -277,8 +281,8 @@ const PerformanceSetup = () => {
                   errors={errors}
                   error={errors.stages}
                 />
-                <AuthInputFiled
-                  name="goalType"
+                {/* <AuthInputFiled
+                  name="goals"
                   icon={TrendingUp}
                   control={control}
                   type="mutltiselect"
@@ -287,7 +291,7 @@ const PerformanceSetup = () => {
                   label="Select Goal Type *"
                   errors={errors}
                   error={errors.goals}
-                />
+                /> */}
                 <AuthInputFiled
                   name="ratings"
                   icon={Star}

@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
-import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 import { Container, Typography } from "@mui/material";
 import { Info } from "@mui/icons-material";
 import axios from "axios";
 import UserProfile from "../../hooks/UserData/useUser";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissPunchNotification/MissedPunchNotification";
+
 
 const MissedPunchNotification = () => {
   const { missPunchData } = useMissedPunchNotificationCount();
@@ -87,11 +88,11 @@ const MissedPunchNotification = () => {
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen py-8 px-4">
         <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
-          Employee
+          Missed Punch 
         </Typography>
         {missPunchData?.map((record, index) => (
           <article key={index} className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center mb-4">
-            <Typography variant="h5" className="text-center pl-10 mb-6 mt-2">
+            <Typography variant="h5" className=" pl-10 mb-6 mt-2">
               {record.employeeId.first_name} {record.employeeId.last_name}
             </Typography>
             {missPunchData.length > 0 ? (

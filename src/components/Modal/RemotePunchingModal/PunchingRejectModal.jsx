@@ -31,6 +31,7 @@ const calculateDistance = (coords) => {
 
 const PunchingRejectModal = ({ items, length }) => {
   const navigate = useNavigate();
+  console.log("yash items", items);
 
   const { notifyAccountantMutation, RejectManagerMutation } =
     useNotificationRemotePunching();
@@ -49,22 +50,42 @@ const PunchingRejectModal = ({ items, length }) => {
         <div className="flex items-center">
           <div className="mr-9">
             <h1>
-              {items.punchData.image === "" ? (
+              {items.punchData[0].image === "" ? (
                 <h1 className="font-semibold">Missed Punch Request</h1>
               ) : (
                 <h1 className="font-semibold">Punch Request</h1>
               )}
             </h1>
             <div className="h-[100px] w-[100px] rounded-full">
-              <img
-                style={{ objectFit: "cover" }}
-                src={items.punchData[0].image}
-                alt=""
-                srcset=""
-              />
+              {items.punchData[0].image === "" ? (
+                <img
+                  style={{ objectFit: "cover" }}
+                  src={items.employeeId.user_logo_url}
+                  alt=""
+                  srcset=""
+                />
+              ) : (
+                <div className="h-[100px] w-[100px] rounded-full">
+                  <img
+                    style={{ objectFit: "cover" }}
+                    src={items.punchData[0].image}
+                    alt=""
+                    srcset=""
+                  />
+                </div>
+              )}
             </div>
           </div>
           <div>
+            <h1 className="font-semibold">
+              {items.employeeId.first_name} {items.employeeId.last_name}
+            </h1>
+            <h1>
+              Date:{" "}
+              {items?.createdAt && (
+                <>{new Date(items?.createdAt).toLocaleDateString()} </>
+              )}
+            </h1>
             <h1>
               Start Time : {new Date(items?.createdAt).toLocaleTimeString()}
             </h1>
@@ -75,7 +96,12 @@ const PunchingRejectModal = ({ items, length }) => {
                 : "N/A"}
             </h1>
             <h1>Total Distance Traveled: {distanceTraveled} Km </h1>
-            <h1>Punching restarted: {length} times</h1>
+
+            {items.punchData[0].image === "" ? (
+              ""
+            ) : (
+              <h1>Punching restarted: {items.punchData.length} times</h1>
+            )}
           </div>
         </div>
         <div>

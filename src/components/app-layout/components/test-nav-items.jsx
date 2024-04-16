@@ -32,6 +32,7 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 import FolderIcon from "@mui/icons-material/Folder";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -233,7 +234,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "missjustify",
             isVisible: true,
             link: `/missed-justify`,
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Missed Justify",
           },
         ],
@@ -287,16 +288,12 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
-      Punching : {
+      Punching: {
         open: false,
         icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
         isVisible:
           window.location.pathname?.includes("organisation") &&
-          [
-            "Super-Admin",
-            "Delegate-Super Admin",
-            "HR",
-          ]?.includes(role),
+          ["Super-Admin", "Delegate-Super Admin", "HR"]?.includes(role),
         routes: [
           {
             key: "punchingMachine",
@@ -305,7 +302,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/emo-info-punch-status`,
             icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Punching Machine Attendance",
+            text: "Punch Sync",
           },
 
           {
@@ -315,7 +312,25 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/view-attendance-biomatric`,
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "View Punching Attendance",
+            text: "Time Track",
+          },
+          {
+            key: "viewCalculate",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/view-calculate-data`,
+            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Calendar View",
+          },
+          {
+            key: "misspunchInOutRecord",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/missed-punch-in-out`,
+            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Punch Miss",
           },
           {
             key: "viewCalculate",
@@ -335,7 +350,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
             text: "Missed Punch Record",
           },
-        
         ],
       },
       Department: {
@@ -427,8 +441,8 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
-     
-         RemotePunch: {
+
+      RemotePunch: {
         open: false,
         isVisible: ["Employee", "Manager"].includes(role),
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
