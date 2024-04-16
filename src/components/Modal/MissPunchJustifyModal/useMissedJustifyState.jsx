@@ -13,8 +13,4 @@ const useMissedJustifyState = create((set) => {
   };
 });
 
-<<<<<<< HEAD
 export default useMissedJustifyState;
-=======
-export default useMissedJustifyState;
->>>>>>> 31c8cc2704c4650f3fc610d422bc97b625fc87c7
