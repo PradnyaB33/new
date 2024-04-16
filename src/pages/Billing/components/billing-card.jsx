@@ -2,19 +2,14 @@ import {
   AttachMoney,
   Circle,
   ControlPoint,
-  KeyboardArrowDown,
-  KeyboardArrowUp,
   Loop,
   People,
-  PlayArrow,
   PriorityHigh,
-  QuestionMark,
   Repeat,
-  Shield,
   ShoppingBag,
   Subscriptions,
 } from "@mui/icons-material";
-import { Button, Menu, MenuItem, alpha, styled } from "@mui/material";
+import { Menu, MenuItem, alpha, styled } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
 import DescriptionBox from "./descripton-box";
@@ -95,7 +90,7 @@ const BillingCard = ({ doc }) => {
             />
             <div className="text-2xl font-bold">{doc?.orgName}</div>
           </div>
-          <Button
+          {/* <Button
             id="demo-customized-button"
             aria-controls={open ? "demo-customized-menu" : undefined}
             aria-haspopup="true"
@@ -106,7 +101,7 @@ const BillingCard = ({ doc }) => {
             endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           >
             Options
-          </Button>
+          </Button> */}
           <StyledMenu
             id="demo-customized-menu"
             MenuListProps={{
@@ -169,29 +164,17 @@ const BillingCard = ({ doc }) => {
         </div>
       </div>
       <div className=" col-span-1 flex justify-center items-center">
-        {doc?.subscriptionDetails?.status === "active" ? (
+        {doc?.subscriptionDetails?.status === "Active" ? (
           <div className="bg-[#5FF062] flex justify-center items-start p-8 rounded-full animate-pulse">
             <Repeat className="text-white " fontSize="large" />
           </div>
-        ) : doc?.subscriptionDetails?.status === "authenticated" ? (
-          <div className="bg-[#ba67e1] flex justify-center items-start p-8 rounded-full animate-pulse">
-            <Shield className="text-white " fontSize="large" />
-          </div>
-        ) : doc?.subscriptionDetails?.status === "pending" ? (
+        ) : doc?.subscriptionDetails?.status === "Pending" ? (
           <div className="bg-[#E8A454] flex justify-center items-start p-8 rounded-full animate-pulse">
             <PriorityHigh className="text-white " fontSize="large" />
           </div>
-        ) : doc?.subscriptionDetails?.status === "expired" ? (
+        ) : doc?.subscriptionDetails?.status === "Expired" ? (
           <div className="bg-[#6578DB] flex justify-center items-start p-8 rounded-full animate-pulse">
             <ControlPoint className="text-white " fontSize="large" />
-          </div>
-        ) : doc?.subscriptionDetails?.status === "paused" ? (
-          <div className="bg-[chocolate] flex justify-center items-start p-8 rounded-full animate-pulse">
-            <PlayArrow className="text-white " fontSize="large" />
-          </div>
-        ) : doc?.subscriptionDetails?.status === "halted" ? (
-          <div className="bg-[#F46B6B] flex justify-center items-start p-8 rounded-full animate-pulse">
-            <QuestionMark className="text-white " fontSize="large" />
           </div>
         ) : null}
       </div>
