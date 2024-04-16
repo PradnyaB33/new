@@ -111,7 +111,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
   const queryClient = useQueryClient();
   const performanceSetup = useMutation(
     async (data) => {
-      let currentData = data;
+      let currentData = { ...data, creatorRole: role };
       if (role === "Employee") {
         currentData.assignee = [user._id];
       }
@@ -241,24 +241,25 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
               errors={errors}
               error={errors.measurement}
             />
-            {(performance?.stages ===
-              "Monitoring stage/Feedback collection stage" ||
-              role !== "Employee") && (
-              <AuthInputFiled
-                name="comments"
-                icon={Paid}
-                control={control}
-                type="texteditor"
-                placeholder="100"
-                label="Comments box"
-                errors={errors}
-                error={errors.comments}
-              />
-            )}
+            {performance?.stages ===
+              "Monitoring stage/Feedback collection stage" &&
+              role !== "Employee" && (
+                <AuthInputFiled
+                  name="comments"
+                  icon={Paid}
+                  control={control}
+                  type="texteditor"
+                  placeholder="100"
+                  label="Comments box"
+                  errors={errors}
+                  error={errors.comments}
+                />
+              )}
             {role !== "Employee" && (
               <AuthInputFiled
                 name="assignee"
                 icon={PersonOutline}
+                isMulti={true}
                 control={control}
                 type="empselect"
                 options={empoptions}

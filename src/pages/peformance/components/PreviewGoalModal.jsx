@@ -54,7 +54,7 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
   const role = useGetCurrentRole();
   const queryClient = useQueryClient();
 
-  let { data: getSingleGoal } = useQuery({
+  let { data: getSingleGoal, isFetching: goalFetching } = useQuery({
     queryKey: ["getSingleGoal", id],
     queryFn: async () => {
       const { data } = await axios.get(
@@ -75,9 +75,10 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
 
   const SubmitGoal = async () => {
     try {
-      await axios.post(
-        `${process.env.REACT_APP_API}/route/performance/submitGoals`,
-        { goalId: id },
+      const assignee = { label: user.name, value: user._id };
+      await axios.patch(
+        `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${id}`,
+        { data: { status: "goal submitted", assignee } },
         {
           headers: {
             Authorization: authToken,
@@ -104,7 +105,7 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
           sx={style}
           className="border-none !z-10 !pt-0 !px-0 !w-[90%] lg:!w-[70%] md:!w-[70%] shadow-md outline-none rounded-md"
         >
-          {isFetching ? (
+          {isFetching || goalFetching ? (
             <CircularProgress />
           ) : (
             <>
@@ -141,7 +142,7 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
                   </div>
 
                   {role === "Employee" &&
-                    !getSingleGoal?.status &&
+                    getSingleGoal?.status === "pending" &&
                     performance?.stages === "Goal setting" && (
                       <div className="w-max">
                         <button
