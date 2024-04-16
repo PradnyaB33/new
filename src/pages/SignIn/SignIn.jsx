@@ -21,6 +21,7 @@ const SignIn = () => {
   const role = useGetCurrentRole();
 
   useEffect(() => {
+    if(user?._id){
     if (role === "Super-Admin" || role === "Delegate-Super-Admin")
       return redirect("/");
     else if (role === "HR")
@@ -38,7 +39,7 @@ const SignIn = () => {
     else if (role === "Manager")
       return redirect(`/organisation/${user?._id}/dashboard/manager-dashboard`);
     else if (role === "Employee")
-      return redirect(`/organisation/dashboard/employee-dashboard`);
+      return redirect(`/organisation/dashboard/employee-dashboard`)};
     // eslint-disable-next-line
   }, [role, window.location.pathname]);
 
