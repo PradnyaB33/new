@@ -204,7 +204,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   const fetchManagerData = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-manager/${organisationId}`,
+        `${process.env.REACT_APP_API}/route/employee/getAllManager/${organisationId}`,
         {
           headers: {
             Authorization: authToken,
@@ -1064,8 +1064,8 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               <option value="">Select Manager</option>
               {Array.isArray(managerData) &&
                 managerData?.map((manager) => (
-                  <option key={manager._id} value={manager.managerId._id}>
-                    {`${manager?.managerId?.first_name} ${manager?.managerId?.last_name}`}
+                  <option key={manager._id} value={manager._id}>
+                    {`${manager?.first_name} ${manager?.last_name}`}
                   </option>
                 ))}
             </select>
