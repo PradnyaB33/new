@@ -260,7 +260,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/employee-onboarding`,
             icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Onboarding",
+            text: "Employee Onboarding",
           },
 
           {
@@ -270,7 +270,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/employee-offboarding`,
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Offboarding",
+            text: "Employee Offboarding",
           },
           {
             key: "employeeList",
@@ -330,7 +330,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/missed-punch-in-out`,
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Punch Miss",
+            text: "Punch Missed",
           },
           {
             key: "viewCalculate",
@@ -396,7 +396,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: (
               <DeleteForeverOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
-            text: "Bulk Deletion",
+            text: "Delete Department",
           },
           {
             key: "departmentList",
@@ -411,7 +411,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: (
               <ListAltOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
-            text: "Manage Departments",
+            text: "Manage Department",
           },
         ],
       },
