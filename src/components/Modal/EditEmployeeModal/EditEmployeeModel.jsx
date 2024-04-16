@@ -370,7 +370,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
         bank_account_no: employeeData?.bank_account_no || "",
         adhar_card_number: employeeData?.adhar_card_number || "",
         pan_card_number: employeeData?.pan_card_number || "",
-        empId: employeeData?.empId || "",
+        empId : employeeData?.empId || "",
       });
 
       setAdditionalInfo({
