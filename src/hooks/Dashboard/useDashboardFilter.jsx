@@ -11,6 +11,7 @@ export default function useDashboardFilter(organisationId) {
   const [locations, setLocations] = useState("");
   const [data, setData] = useState([]);
   const [date, setDate] = useState(2024);
+  console.log(`🚀 ~ file: useDashboardFilter.jsx:14 ~ setDate:`, setDate);
   const [salaryData, setSalaryData] = useState([]);
 
   // Card Data

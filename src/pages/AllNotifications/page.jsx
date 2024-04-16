@@ -2,12 +2,21 @@ import React from "react";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import usePunchNotification from "../../hooks/QueryHook/notification/punch-notification/hook";
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
+import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 import Card from "./components/card";
+import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissPunchNotification/MissedPunchNotification";
+
 
 const ParentNotification = () => {
   const { data, isLoading } = useLeaveNotificationHook();
   const { data: data2 } = useShiftNotification();
   const { data: data3 } = usePunchNotification();
+<<<<<<< HEAD
+  const { missPunchData} = useMissedPunchNotificationCount();
+   console.log(missPunchData);
+=======
+  const {missPunchData} = useMissedPunchNotificationCount();
+>>>>>>> 31c8cc2704c4650f3fc610d422bc97b625fc87c7
 
   const dummyData = [
     {
@@ -29,11 +38,17 @@ const ParentNotification = () => {
       url: "/punch-notification",
     },
     {
-      name: "Department Notification",
-      count: 2,
+      name: "Missed Punch Notification",
+      count: missPunchData?.length ?? 0,
+<<<<<<< HEAD
+      color: "#FF7373",
+=======
       color: "#51E8FD",
-      url: "/department-notification",
+>>>>>>> 31c8cc2704c4650f3fc610d422bc97b625fc87c7
+      url: "/missedPunch-notification",
     },
+   
+   
   ];
 
   return (

@@ -4,13 +4,15 @@ import { useParams } from "react-router-dom";
 import useGetUser from "../../../../../../hooks/Token/useUser";
 
 const useGetDepartments = () => {
-  const { authToken } = useGetUser();
+  const { authToken, decodedToken } = useGetUser();
 
   const { organisationId } = useParams();
 
   const getDepartments = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/get-departments/${organisationId}`,
+      `${process.env.REACT_APP_API}/route/get-departments/${
+        organisationId ?? decodedToken?.user?.organizationId
+      }`,
       {
         headers: {
           Authorization: authToken,

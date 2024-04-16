@@ -16,17 +16,13 @@ import {  useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Person, } from "@mui/icons-material";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
-import UserProfile from "../../../hooks/UserData/useUser";
 import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 
-const MissPunchJustifyModal = ({ handleClose, open,unavailableRecords }) => { 
+const MissPunchJustifyModal = ({ handleClose, open,unavailableRecords  , organisationId}) => { 
     const { handleAlert } = useContext(TestContext);
     const { cookies } = useContext(UseContext);
     const authToken = cookies["aegis"];
-    const { getCurrentUser } = UserProfile();
-    const user = getCurrentUser();
-    const organisationId = user.organizationId;
     console.log(organisationId);
     console.log(unavailableRecords);
      
@@ -104,7 +100,7 @@ const MissPunchJustifyModal = ({ handleClose, open,unavailableRecords }) => {
           width: "100%",
           maxWidth: "800px!important",
           height: "100%",
-          maxHeight: "85vh!important",
+          maxHeight: "40vh!important",
         },
       }}
       open={open}
@@ -130,66 +126,7 @@ const MissPunchJustifyModal = ({ handleClose, open,unavailableRecords }) => {
         <form 
         onSubmit={handleSubmit(onSubmit)}
          className=" ml-2 mr-2 mt-2">
-          {/* <div className="space-y-2 ">
-           <AuthInputFiled
-            name="recordDate"
-            icon={Person}
-            control={control}
-            type="text"
-            placeholder="22/04/1971"
-            label="Date"
-            errors={errors}
-             error={errors.recordDate}
-            />
-           </div> 
-           <div className="space-y-2 ">
-           <AuthInputFiled
-            name="punchInTime"
-            icon={Person}
-            control={control}
-            type="text"
-            placeholder="0:0"
-            label="Punch In Time"
-            errors={errors}
-             error={errors.punchInTime}
-             />
-         </div>
-         <div className="space-y-2 ">
-           <AuthInputFiled
-            name="punchOutTime"
-            icon={Person}
-            control={control}
-            type="text"
-            placeholder="0:0"
-            label="Punch Out Time "
-            errors={errors}
-             error={errors.punchOutTime}
-            />
-         </div>
-         <div className="space-y-2 ">
-         <AuthInputFiled
-          name="status"
-          icon={Person}
-          control={control}
-          type="text"
-          placeholder="Unvailable"
-          label="Status *"
-          errors={errors}
-           error={errors.status}
-           />
-         </div>
-         <div className="space-y-2 ">
-         <AuthInputFiled
-          name="totalHours"
-          icon={Person}
-          control={control}
-          type="text"
-          placeholder="22/04/1971"
-          label="Total Hours"
-          errors={errors}
-           error={errors.totalHours}
-           />
-         </div> */}
+         
          <div className="space-y-2 ">
          <AuthInputFiled
           name="justify"

@@ -2,19 +2,21 @@ import axios from "axios";
 import { useContext } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
-import useAuthToken from "../../Token/useAuth";
+import useGetUser from "../../Token/useUser";
 
 const useSetupTraining = (organisationId) => {
-  const authToken = useAuthToken();
+  const { authToken, decodedToken } = useGetUser();
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
 
   const { data, isLoading, isFetching } = useQuery(
-    `training-fetch-${organisationId}`,
+    `training-fetch-${organisationId ?? decodedToken?.user?.organizationId}`,
     async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API}/route/setup/training/${organisationId}`,
+          `${process.env.REACT_APP_API}/route/setup/training/${
+            organisationId ?? decodedToken?.user?.organizationId
+          }`,
           {
             headers: { Authorization: authToken },
           }

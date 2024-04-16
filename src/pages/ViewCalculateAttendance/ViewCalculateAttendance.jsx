@@ -69,8 +69,11 @@ const ViewCalculateAttendance = () => {
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
-            Employee
+          Employee’s Calendar View
           </Typography>
+          <p className="text-xs text-gray-600 pl-10 text-center">
+            View  the attendance of employees here.
+          </p>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center gap-3 mb-3 md:mb-0">
@@ -116,10 +119,10 @@ const ViewCalculateAttendance = () => {
                 }).map((item, id) => (
                   <tr className="!font-medium border-b" key={id}>
                     <td className="!text-left pl-8 py-3">{id + 1}</td>
-                    <td className="py-3 pl-8">{item?.EmployeeId?.empId || ""}</td>
-                    <td className="py-3 pl-8">{item?.EmployeeId?.first_name || ""}</td>
-                    <td className="py-3 pl-8">{item?.EmployeeId?.email || ""}</td>
-                    <td className="!text-left pl-4 py-3">
+                    <td className="py-3 pl-6">{item?.EmployeeId?.empId || ""}</td>
+                    <td className="py-3 pl-6">{item?.EmployeeId?.first_name || ""}</td>
+                    <td className="py-3 pl-6">{item?.EmployeeId?.email || ""}</td>
+                    <td className="!text-left pl-6 py-3">
                       <IconButton aria-label="view" size="small" onClick={() => {
                           handleEmpModalOpen(item);
                            }}>

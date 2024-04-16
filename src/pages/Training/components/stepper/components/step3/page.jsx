@@ -26,13 +26,17 @@ const Step3 = () => {
     trainingId,
     trainingDepartment,
     isDepartmentalTraining,
+    proofSubmissionRequired,
   } = info;
   const sanitizedDescription = DOMPurify.sanitize(trainingDescription);
   const getImageUrl = () => {
     if (typeof trainingImage === "string") {
       return trainingImage;
     } else {
-      return URL.createObjectURL(trainingImage);
+      if (trainingImage === undefined) {
+        return "";
+      }
+      return URL?.createObjectURL(trainingImage);
     }
   };
   if (isLoading || isCreateTrainingLoading) {
@@ -95,7 +99,7 @@ const Step3 = () => {
               Training Type:
             </div>
             <div className="gap-4 flex">
-              {trainingType.map((doc, i) => {
+              {trainingType?.map((doc, i) => {
                 return (
                   <Chip
                     key={i}
@@ -135,6 +139,7 @@ const Step3 = () => {
               trainingDuration,
               trainingDepartment,
               isDepartmentalTraining,
+              proofSubmissionRequired,
             });
           } else {
             mutate({
@@ -151,6 +156,7 @@ const Step3 = () => {
               trainingDuration,
               trainingDepartment,
               isDepartmentalTraining,
+              proofSubmissionRequired,
             });
           }
         }}

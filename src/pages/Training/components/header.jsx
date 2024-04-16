@@ -5,7 +5,7 @@ import useTrainingStore from "./stepper/components/zustand-store";
 import Stepper from "./stepper/page";
 
 const Header = () => {
-  const { open, setOpen } = useTrainingStore();
+  const { open, setOpen, reset } = useTrainingStore();
   return (
     <div className="flex justify-between">
       <div className="flex flex-col">
@@ -15,8 +15,8 @@ const Header = () => {
         </p>
       </div>
       <Button
-        onClick={() => {
-          setOpen(true);
+        onClick={async () => {
+          await reset();
         }}
         size="large"
         className="h-fit "

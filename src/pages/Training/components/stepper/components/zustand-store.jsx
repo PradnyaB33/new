@@ -24,6 +24,7 @@ const useTrainingStore = create((set) => ({
   trainingDownCasted: false,
   trainingDuration: undefined,
   open: false,
+  proofSubmissionRequired: true,
 
   setStep1: (data) => {
     set({
@@ -44,6 +45,7 @@ const useTrainingStore = create((set) => ({
       trainingDuration: data.trainingDuration,
       trainingDepartment: data.trainingDepartment,
       isDepartmentalTraining: data.isDepartmentalTraining,
+      proofSubmissionRequired: data.proofSubmissionRequired,
     });
   },
   setOpen: (data) => {
@@ -65,6 +67,34 @@ const useTrainingStore = create((set) => ({
       trainingType: data.trainingType,
       trainingDuration: data.trainingDuration,
       trainingId: data._id,
+      proofSubmissionRequired: data.proofSubmissionRequired,
+    });
+  },
+  reset: async () => {
+    set({
+      isDepartmentalTraining: false,
+      trainingDepartment: [],
+      trainingId: undefined,
+      trainingName: undefined,
+      trainingType: undefined,
+      trainingDescription: undefined,
+      trainingStartDate: undefined,
+      trainingEndDate: undefined,
+      trainingLink: undefined,
+      trainingImage: undefined,
+      trainingLocation: {
+        address: undefined,
+        position: {
+          lat: 0,
+          lng: 0,
+        },
+        placeId: undefined,
+      },
+      trainingPoints: "0",
+      trainingDownCasted: false,
+      trainingDuration: undefined,
+      open: true,
+      proofSubmissionRequired: true,
     });
   },
 }));

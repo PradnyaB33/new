@@ -3,6 +3,7 @@ import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  AssignmentTurnedIn,
   AssignmentTurnedInOutlined,
   LoyaltyOutlined,
   PeopleOutlined,
@@ -21,6 +22,12 @@ const organizationSchema = z.object({
   collectPoints: z.boolean(),
   canHRDefinePoints: z.boolean(),
   usePointsForExternal: z.boolean(),
+  trainingType: z.array(
+    z.object({
+      value: z.string(),
+      label: z.string(),
+    })
+  ),
 });
 
 const MiniForm = ({ data, mutate, organisationId }) => {
@@ -39,6 +46,7 @@ const MiniForm = ({ data, mutate, organisationId }) => {
       usePointsForExternal: data?.usePointsForExternal
         ? data?.usePointsForExternal
         : false,
+      trainingType: data?.trainingType ? data?.trainingType : [],
     },
     resolver: zodResolver(organizationSchema),
   });
@@ -53,65 +61,90 @@ const MiniForm = ({ data, mutate, organisationId }) => {
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="w-full p-4 flex flex-wrap">
+      <div className="w-full p-4 flex flex-wrap gap-4">
         <AuthInputFiled
           name="canManagerAssign"
           icon={AssignmentTurnedInOutlined}
           control={control}
           type="checkbox"
-          label="Manager can assign trainings to their reportees"
+          label="Manager"
           errors={errors}
           error={errors.canManagerAssign}
+          descriptionText={"Manager can assign trainings to their reportees"}
         />
         <AuthInputFiled
           name={"canDeptHeadAssign"}
           icon={SupervisorAccountOutlined}
           control={control}
           type="checkbox"
-          label="Department Head can assign trainings to their employees"
+          label="Department-Head"
           errors={errors}
           error={errors.canDeptHeadAssign}
+          descriptionText={
+            "Department Head can assign trainings to their employees"
+          }
         />
         <AuthInputFiled
           name={"canHRAssign"}
           icon={PeopleOutlined}
           control={control}
           type="checkbox"
-          label="HR can assign trainings to their employees."
+          label="HR"
           errors={errors}
           error={errors.canHRAssign}
+          descriptionText={"HR can assign trainings to their employees."}
         />
-        {newMan?.plan?.item?.name === "Aegis Intermediate Plan" && (
+        {newMan?.organisation?.packageInfo === "Intermediate Plan" && (
           <>
             <AuthInputFiled
               name={"collectPoints"}
               icon={LoyaltyOutlined}
               control={control}
               type="checkbox"
-              label="Here you can allow employees to collect points for completed trainings"
+              label="Point"
               errors={errors}
               error={errors.collectPoints}
+              descriptionText={
+                "Here you can allow employees to collect points for completed trainings"
+              }
             />
             <AuthInputFiled
               name={"canHRDefinePoints"}
               icon={TuneOutlined}
               control={control}
               type="checkbox"
-              label="HR can define points to specific trainings"
+              label="Points by HR"
               errors={errors}
               error={errors.canHRDefinePoints}
+              descriptionText={"HR can define points to specific trainings"}
             />
             <AuthInputFiled
               name={"usePointsForExternal"}
               icon={ShareOutlined}
               control={control}
               type="checkbox"
-              label="Here earned points can be used for external trainings"
+              label="External"
               errors={errors}
               error={errors.usePointsForExternal}
+              descriptionText={
+                "Here earned points can be used for external trainings"
+              }
             />
           </>
         )}
+        <AuthInputFiled
+          name="trainingType"
+          icon={AssignmentTurnedIn}
+          control={control}
+          type="autocomplete"
+          placeholder="Add Training Type"
+          label="Add Training Type"
+          readOnly={false}
+          maxLimit={15}
+          errors={errors}
+          error={errors.trainingType}
+          optionlist={data?.trainingType ? data?.trainingType : []}
+        />
       </div>
       <div className="w-full flex justify-center mb-4 mt-2">
         <Button disabled={!isDirty} variant="contained" type="submit">

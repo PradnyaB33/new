@@ -27,7 +27,7 @@ const useTrainingDetailsMutation = () => {
     onSuccess: () => {
       console.log(`🚀 ~ file: mutation.jsx ~ line 10 ~ onSuccess: ~ onSuccess`);
 
-      handleAlert("Training Deleted Successfully", "success");
+      handleAlert(true, "success", "Training Deleted Successfully");
       queryClient.invalidateQueries(
         "getTrainingDetailsWithNameLimit10WithCreatorId"
       );
