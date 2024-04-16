@@ -189,7 +189,8 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/performance-management`,
-      isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
+      isVisible: true,
+      // isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
     },
     {
       label: "Letter Types Setup",

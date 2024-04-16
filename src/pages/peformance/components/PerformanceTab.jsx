@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import GoalSettingTab from "../Tabs/GoalSettingTab";
+import PerformanceDashboard from "../Tabs/PerformanceDashboard";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -117,7 +118,7 @@ export default function PerformanceTab() {
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-          DashBoard
+          <PerformanceDashboard />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           <GoalSettingTab />

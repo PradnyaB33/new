@@ -32,13 +32,13 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 import FolderIcon from "@mui/icons-material/Folder";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
-import ReceiptIcon from '@mui/icons-material/Receipt';
 
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
@@ -234,13 +234,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "missjustify",
             isVisible: true,
             link: `/missed-justify`,
-<<<<<<< HEAD
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-=======
-            icon: (
-              <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />
-            ),
->>>>>>> 31c8cc2704c4650f3fc610d422bc97b625fc87c7
+            icon: <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Missed Justify",
           },
         ],
@@ -294,16 +288,12 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
-      Punching : {
+      Punching: {
         open: false,
         icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
         isVisible:
           window.location.pathname?.includes("organisation") &&
-          [
-            "Super-Admin",
-            "Delegate-Super Admin",
-            "HR",
-          ]?.includes(role),
+          ["Super-Admin", "Delegate-Super Admin", "HR"]?.includes(role),
         routes: [
           {
             key: "punchingMachine",
@@ -360,7 +350,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
             text: "Missed Punch Record",
           },
-        
         ],
       },
       Department: {
@@ -452,8 +441,8 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
-     
-         RemotePunch: {
+
+      RemotePunch: {
         open: false,
         isVisible: ["Employee", "Manager"].includes(role),
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
