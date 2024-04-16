@@ -360,7 +360,7 @@ const DocManageAuth = () => {
 
   return (
     <div className="w-full h-full flex justify-around p-6 gap-6">
-      <Container className="w-[600px] h-[80vh] border-2 mt-5 pt-4">
+      <Container className="w-[600px] h-[80vh] border-2 mt-5 pt-4 overflow-y-auto">
         {option !== "" && (
           <div
             onClick={() => setOption("")}
