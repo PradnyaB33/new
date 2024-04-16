@@ -63,6 +63,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   const [mgrempid, setMgrempid] = useState(null);
   const [dept_cost_center_no, setDeptCostCenterId] = useState(null);
   const [shift_allocation, setShiftAllocation] = useState(null);
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -222,7 +223,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     fetchManagerData();
     // eslint-disable-next-line
   }, []);
-  console.log(managerData);
+  console.log("manager data" , managerData);
 
   // pull the profile
   const [availableProfiles, setAvailableProfiles] = useState([]);
