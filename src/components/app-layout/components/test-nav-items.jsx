@@ -38,6 +38,7 @@ import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
+import ReceiptIcon from '@mui/icons-material/Receipt';
 
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
@@ -229,6 +230,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Loan Management",
           },
+          {
+            key: "missjustify",
+            isVisible: true,
+            link: `/missed-justify`,
+            icon: (
+              <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Missed Justify",
+          },
         ],
       },
       Employee: {
@@ -298,7 +308,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/emo-info-punch-status`,
             icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Punching Machine Attendance",
+            text: "Punch Sync",
           },
 
           {
@@ -308,7 +318,25 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/view-attendance-biomatric`,
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "View Punching Attendance",
+            text: "Time Track",
+          },
+          {
+            key: "viewCalculate",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/view-calculate-data`,
+            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Calendar View",
+          },
+          {
+            key: "misspunchInOutRecord",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/missed-punch-in-out`,
+            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Punch Miss",
           },
         
         ],

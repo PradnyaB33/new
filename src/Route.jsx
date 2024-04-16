@@ -98,7 +98,10 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-
+import ViewCalculateAttendance from "./pages/ViewCalculateAttendance/ViewCalculateAttendance";
+import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
+import MissPunchInOut from "./pages/MissPunch/MissPunchInOut";
+import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
 const App = () => {
   return (
     <AuthProvider>
@@ -179,6 +182,7 @@ const App = () => {
         {/* <Route path="/notification" element={<ParentNotification />} /> */}
         <Route path="/leave-notification" element={<LeaveNotification />} />
         <Route path="/punch-notification" element={<PunchNotification />} />
+        <Route path="/missedPunch-notification" element={<MissedPunchNotification />} />
         <Route path="/shift-notification" element={<ShiftNotification />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -375,6 +379,16 @@ const App = () => {
             </RequireAuth>
           }
         />
+         <Route
+          path="/organisation/:organisationId/view-calculate-data"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <ViewCalculateAttendance />
+            </RequireAuth>
+          }
+        />
         <Route
           path="/organisation/:organisationId/view-attendance-biomatric"
           element={
@@ -382,6 +396,38 @@ const App = () => {
               permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
             >
               <ViewAttendacneBiomatric />
+            </RequireAuth>
+          }
+        />
+          <Route
+          path="/missed-justify"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <MissPunchJustify />
+            </RequireAuth>
+          }
+        />
+         <Route
+          path="/organisation/:organisationId/missed-punch-in-out"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <MissPunchInOut />
             </RequireAuth>
           }
         />

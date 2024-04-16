@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { TestContext } from "../../../State/Function/Main";
-
+import {  useNavigate} from "react-router-dom";
 const AttendanceBioModal = ({
   handleClose,
   open,
@@ -27,6 +27,7 @@ const AttendanceBioModal = ({
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const [checkedEmployees, setCheckedEmployees] = useState([]);
+  const navigate = useNavigate();
 
   // pull employee
   const fetchAvailableEmployee = async (page) => {
@@ -119,8 +120,9 @@ const AttendanceBioModal = ({
           }
         );
       });
-  
+     
       handleAlert(true, "success", "Synced data successfully..");
+      navigate(`/organisation/${organisationId}/view-attendance-biomatric`);
     } catch (error) {
       console.error("Failed to sync attendance data:", error);
     }
