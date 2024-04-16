@@ -348,7 +348,7 @@ const DeleteEmployee = () => {
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className="text-center mb-6 mt-2">
-            Employee
+          Employee Offboarding
           </Typography>
           <p className="text-xs text-gray-600 text-center">
             Delete employee data here by using delete button.
