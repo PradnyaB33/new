@@ -56,18 +56,21 @@ const PerformanceSetup = () => {
     isSelfGoal: z.boolean().optional(),
   });
 
-  const { data: performance } = useQuery("performancePeriod", async () => {
-    const { data } = await axios.get(
-      `${process.env.REACT_APP_API}/route/performance/getSetup/${organisationId}`,
-      {
-        headers: {
-          Authorization: authToken,
-        },
-      }
-    );
+  const { data: performance, isFetching } = useQuery(
+    "performancePeriod",
+    async () => {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/route/performance/getSetup/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
 
-    return data;
-  });
+      return data;
+    }
+  );
 
   const {
     formState: { errors },
@@ -130,7 +133,7 @@ const PerformanceSetup = () => {
       );
     }
     // eslint-disable-next-line
-  }, []);
+  }, [isFetching]);
 
   let stagesOptions = [
     {
