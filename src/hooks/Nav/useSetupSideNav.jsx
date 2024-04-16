@@ -186,7 +186,8 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/performance-management`,
-      isVisible: data?.plan?.item?.name === "Aegis Intermediate Plan",
+      isVisible: true,
+      // isVisible: data?.plan?.item?.name === "Aegis Intermediate Plan",
     },
   ];
 

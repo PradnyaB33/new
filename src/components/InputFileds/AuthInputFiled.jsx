@@ -98,6 +98,7 @@ const AuthInputFiled = ({
                   onChange={(value) => {
                     field.onChange(value);
                   }}
+                  minDate={min}
                   value={field.value}
                 />
               </div>
