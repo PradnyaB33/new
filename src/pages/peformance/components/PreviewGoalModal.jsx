@@ -15,7 +15,7 @@ import { TestContext } from "../../../State/Function/Main";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 
-const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
+const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
   const { handleAlert } = useContext(TestContext);
   const authToken = useAuthToken();
 
@@ -25,13 +25,14 @@ const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
     left: "50%",
     transform: "translate(-50%, -50%)",
     bgcolor: "background.paper",
-    overflow: "scroll",
-    maxHeigh: "80vh",
+    overflow: "auto",
+    height: "80vh",
+    maxHeight: "80vh",
     p: 4,
   };
 
   const { data: getGoal, isFetching } = useQuery({
-    queryKey: "getGoal",
+    queryKey: "getGoalForPreview",
     queryFn: async () => {
       const { data } = await axios.get(
         `${process.env.REACT_APP_API}/route/performance/getGoalDetails/${id}`,
@@ -53,11 +54,11 @@ const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
   const role = useGetCurrentRole();
   const queryClient = useQueryClient();
 
-  let { data: getSingleGoal } = useQuery({
+  let { data: getSingleGoal, isFetching: goalFetching } = useQuery({
     queryKey: ["getSingleGoal", id],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id}/${user._id}`,
+        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id}/${assignee}`,
         {
           headers: {
             Authorization: authToken,
@@ -74,9 +75,10 @@ const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
 
   const SubmitGoal = async () => {
     try {
-      await axios.post(
-        `${process.env.REACT_APP_API}/route/performance/submitGoals`,
-        { goalId: id },
+      const assignee = { label: user.name, value: user._id };
+      await axios.patch(
+        `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${id}`,
+        { data: { status: "goal submitted", assignee } },
         {
           headers: {
             Authorization: authToken,
@@ -103,7 +105,7 @@ const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
           sx={style}
           className="border-none !z-10 !pt-0 !px-0 !w-[90%] lg:!w-[70%] md:!w-[70%] shadow-md outline-none rounded-md"
         >
-          {isFetching ? (
+          {isFetching || goalFetching ? (
             <CircularProgress />
           ) : (
             <>
@@ -139,16 +141,18 @@ const PreviewGoalModal = ({ open, handleClose, id, performance }) => {
                     </div>
                   </div>
 
-                  {role === "Employee" && !getSingleGoal?.status && (
-                    <div className="w-max">
-                      <button
-                        onClick={SubmitGoal}
-                        className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-6 py-2 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-                      >
-                        Submit Goal
-                      </button>
-                    </div>
-                  )}
+                  {role === "Employee" &&
+                    getSingleGoal?.status === "pending" &&
+                    performance?.stages === "Goal setting" && (
+                      <div className="w-max">
+                        <button
+                          onClick={SubmitGoal}
+                          className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-6 py-2 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                        >
+                          Submit Goal
+                        </button>
+                      </div>
+                    )}
                 </div>
                 <div className="hover:bg-gray-100 rounded-md ">
                   <p className="px-2">Description</p>

@@ -68,7 +68,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
       startDate: z.string(),
       endDate: z.string(),
     }),
-    goaltype: z.object({ value: z.string(), label: z.string() }),
+    // goaltype: z.object({ value: z.string(), label: z.string() }),
     attachment: z.string().optional(),
   });
 
@@ -112,7 +112,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
 
   const performanceSetup = useMutation(
     async (data) => {
-      let currentData = data;
+      let currentData = { ...data, creatorRole: role };
       if (role === "Employee") {
         currentData.assignee = [user._id];
       }
@@ -207,7 +207,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
       assignee: data?.assignee?.map((emp) => emp.value) ?? [],
       startDate: data.startDate.startDate,
       endDate: data.endDate.startDate,
-      goaltype: data.goaltype.value,
+      // goaltype: data.goaltype.value,
       attachment: data.attachment,
     };
     console.log(`🚀 ~ goals:`, goals);
@@ -311,24 +311,25 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
               errors={errors}
               error={errors.measurement}
             />
-            {(performance?.stages ===
-              "Monitoring stage/Feedback collection stage" ||
-              role !== "Employee") && (
-              <AuthInputFiled
-                name="comments"
-                icon={Paid}
-                control={control}
-                type="texteditor"
-                placeholder="100"
-                label="Comments box"
-                errors={errors}
-                error={errors.comments}
-              />
-            )}
+            {performance?.stages ===
+              "Monitoring stage/Feedback collection stage" &&
+              role !== "Employee" && (
+                <AuthInputFiled
+                  name="comments"
+                  icon={Paid}
+                  control={control}
+                  type="texteditor"
+                  placeholder="100"
+                  label="Comments box"
+                  errors={errors}
+                  error={errors.comments}
+                />
+              )}
             {role !== "Employee" && (
               <AuthInputFiled
                 name="assignee"
                 icon={PersonOutline}
+                isMulti={true}
                 control={control}
                 type="empselect"
                 options={empoptions}
@@ -375,7 +376,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
               />
             </div>
 
-            <AuthInputFiled
+            {/* <AuthInputFiled
               name="goaltype"
               icon={PersonOutline}
               control={control}
@@ -385,7 +386,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
               label="Select goal type"
               errors={errors}
               error={errors.goaltype}
-            />
+            /> */}
 
             <div className="flex gap-4  mt-4 mr-4 justify-end">
               <Button

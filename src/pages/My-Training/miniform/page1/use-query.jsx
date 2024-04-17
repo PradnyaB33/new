@@ -9,7 +9,7 @@ const useGetUpcomingTrainings = () => {
 
   const getUpcomingTrainings = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/training/get-upcoming-trainings/${decodedToken?.user?._id}?page=${page}`,
+      `${process.env.REACT_APP_API}/route/training/get-upcoming-trainings/${decodedToken?.user?._id}`,
       {
         headers: {
           Authorization: authToken,
@@ -19,11 +19,9 @@ const useGetUpcomingTrainings = () => {
     return response.data;
   };
   const { data, isLoading, error } = useQuery({
-    queryKey: [`get-upcoming-training`, page],
+    queryKey: [`get-upcoming-training`],
     queryFn: getUpcomingTrainings,
-    onSuccess: (data) => {
-      console.log("onSuccess", data);
-    },
+    refetchOnMount: false,
   });
 
   return { data, isLoading, error, setPage, page };

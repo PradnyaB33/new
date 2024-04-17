@@ -5,7 +5,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 //import UpdateEmployeeModal from "../../components/Modal/EditEmployeeModal/UpdateEmployeeModal";
-import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
+ import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
 const EmployeeList = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -83,7 +83,7 @@ const EmployeeList = () => {
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
-            Employee
+          Employee List
           </Typography>
           <p className="text-xs text-gray-600 pl-10 text-center">
             Edit employee data here by using edit button.      

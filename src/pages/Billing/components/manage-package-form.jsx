@@ -18,9 +18,16 @@ const style = {
   height: 450,
   overflow: "auto",
 };
-const PackageForm = ({ handleClose, open, packages, organisation, plan }) => {
-  console.log(`🚀 ~ file: manage-package-form.jsx:22 ~ packages:`, packages);
-  const [mainPackages, setmainPackages] = useState(packages);
+const PackageForm = ({ handleClose, open, organisation, plan }) => {
+  console.log(
+    `🚀 ~ file: manage-package-form.jsx:22 ~ organisation:`,
+    organisation
+  );
+  const [mainPackages, setmainPackages] = useState({
+    value: "",
+    label: "",
+    isDisabled: false,
+  });
 
   const { updateSubscriptionMutation } = useSubscriptionMutation();
 
