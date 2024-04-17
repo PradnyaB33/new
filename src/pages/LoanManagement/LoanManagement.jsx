@@ -16,7 +16,7 @@ import UserProfile from "../../hooks/UserData/useUser";
 import LoanManagementSkeleton from "./LoanManagementSkeleton";
 import LoanManagementPieChart from "./LoanManagementPieChart";
 import AddLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/AddLoanMgtModal";
-//import AddLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/AddLoanMgtModal";
+
 
 const LoanManagement = () => {
   const { cookies } = useContext(UseContext);
