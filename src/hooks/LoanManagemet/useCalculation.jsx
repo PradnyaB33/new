@@ -56,11 +56,24 @@ const useCalculation = () => {
     : simpleInterest / parseInt(loanAmount);
   const interestPerMonth = interestMonthly.toFixed(2);
 
+<<<<<<< HEAD
   
 
   // Calculate total deduction
   const totalDeductionMonthly =
     parseFloat(value2) + parseFloat(principalMonthly);
+=======
+  // Calculate principal monthly
+  const principalMonthly =
+    isNaN(loanAmount) || isNaN(loanAmount)
+      ? 0
+      : parseInt(loanAmount) / parseInt(loanAmount);
+  const principalPerMonth = principalMonthly.toFixed(2);
+
+  // Calculate total deduction
+  const totalDeductionMonthly =
+    parseFloat(interestPerMonth) + parseFloat(principalMonthly);
+>>>>>>> c4fd1e3e770ac4b6345cca97ac4fb30de8694678
   const totalDeductionPerMonth = totalDeductionMonthly.toFixed(2);
 
   // calculate total amount with simple interest
