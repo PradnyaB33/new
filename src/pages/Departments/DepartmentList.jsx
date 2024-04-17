@@ -244,7 +244,7 @@ const DepartmentList = () => {
         <div className="w-[75vw] m-auto h-full">
           <div className="p-4 ">
             <Typography variant="h4" className="text-center mb-6">
-              Departments
+             Delete Department
             </Typography>
             <p className="text-xs text-gray-600  text-center">
               Manage your departments here.

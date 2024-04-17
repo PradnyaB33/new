@@ -7,7 +7,33 @@ const useLoanQuery = (organisationId) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
 
-  const { loanType, setRateOfInterest } = useLaonState();
+  const { loanType, setRateOfInterest } = useLaonState(); 
+
+  const getEmployeeLoanapi = async (api) => {
+    try {
+      const response = await axios.get(`${api}`, {
+        headers: {
+          Authorization: authToken,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };  
+
+  const LoanTypeListCall = () => {
+    const { data: LoanTypeList } = useQuery({
+      queryKey: ["loan-type-info"],
+      queryFn: () =>
+        getEmployeeLoanapi(
+          `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-loan-type`,
+        ),
+    });
+
+    return LoanTypeList;
+  };
+
 
   //for  Get Query to get loan type
   const { data: getEmployeeLoanType } = useQuery(
@@ -72,6 +98,7 @@ const useLoanQuery = (organisationId) => {
     getEmployeeLoanType,
     getTotalSalaryEmployee,
     getEmployeeRequestLoanApltn,
+    LoanTypeListCall
   };
 };
 

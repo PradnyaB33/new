@@ -83,7 +83,7 @@ const EmployeeList = () => {
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
-            Employee
+          Employee List
           </Typography>
           <p className="text-xs text-gray-600 pl-10 text-center">
             Edit employee data here by using edit button.      

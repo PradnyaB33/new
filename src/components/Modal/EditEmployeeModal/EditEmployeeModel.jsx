@@ -63,6 +63,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   const [mgrempid, setMgrempid] = useState(null);
   const [dept_cost_center_no, setDeptCostCenterId] = useState(null);
   const [shift_allocation, setShiftAllocation] = useState(null);
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -222,7 +223,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     fetchManagerData();
     // eslint-disable-next-line
   }, []);
-  console.log(managerData);
+  console.log("manager data" , managerData);
 
   // pull the profile
   const [availableProfiles, setAvailableProfiles] = useState([]);
@@ -369,7 +370,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
         bank_account_no: employeeData?.bank_account_no || "",
         adhar_card_number: employeeData?.adhar_card_number || "",
         pan_card_number: employeeData?.pan_card_number || "",
-        empId: employeeData?.empId || "",
+        empId : employeeData?.empId || "",
       });
 
       setAdditionalInfo({

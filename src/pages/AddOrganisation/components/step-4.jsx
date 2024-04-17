@@ -199,9 +199,9 @@ const returnArray = (plan = "Basic Plan") => {
 };
 const getPrice = (plan) => {
   if (plan === "Basic Plan") {
-    return 55;
+    return Math.round(0.611 * 90);
   } else if (plan === "Intermediate Plan") {
-    return 85;
+    return Math.round(0.944 * 90);
   } else {
     return 115;
   }
