@@ -211,7 +211,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           },
         }
       );
-      setManagerData(response.data.manager);
+      setManagerData(response.data.data);
     } catch (error) {
       console.error(error);
     }
@@ -220,7 +220,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     fetchManagerData();
     // eslint-disable-next-line
   }, []);
-  console.log(managerData);
+  console.log("manager data " , managerData);
 
   // pull the profile
   const [availableProfiles, setAvailableProfiles] = useState([]);
