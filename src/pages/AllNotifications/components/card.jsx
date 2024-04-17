@@ -6,7 +6,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Card = ({ card, loading }) => {
-  const icons = [NotificationIcon, ShiftIcon, RemoteIcon, DepartmentIcon];
+  const icons = [
+    NotificationIcon,
+    ShiftIcon,
+    RemoteIcon,
+    DepartmentIcon,
+    DepartmentIcon,
+  ];
 
   const Skeleton = () => {
     return (

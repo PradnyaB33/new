@@ -86,6 +86,9 @@ import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculatio
 import LetterSetup from "./pages/LetterTypes/LetterSetup";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
+import MissPunchInOut from "./pages/MissPunch/MissPunchInOut";
+import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
+import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
 import MyTraining from "./pages/My-Training/page";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
@@ -95,13 +98,11 @@ import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttendacneBiomatric";
 import ViewCalculateAttendance from "./pages/ViewCalculateAttendance/ViewCalculateAttendance";
 import CustomCalander from "./pages/custom/Calendar";
+import DocNotification from "./pages/doc-notification/DocNotification";
 import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
-import MissPunchInOut from "./pages/MissPunch/MissPunchInOut";
-import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
 
 const App = () => {
   return (
@@ -191,7 +192,11 @@ const App = () => {
         <Route path="/leave-notification" element={<LeaveNotification />} />
         <Route path="/punch-notification" element={<PunchNotification />} />
         <Route path="/shift-notification" element={<ShiftNotification />} />
-        <Route path="/missedPunch-notification" element={<MissedPunchNotification />} />
+        <Route
+          path="/missedPunch-notification"
+          element={<MissedPunchNotification />}
+        />
+        <Route path="/doc-notification" element={<DocNotification />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route

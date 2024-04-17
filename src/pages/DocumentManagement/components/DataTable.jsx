@@ -232,11 +232,19 @@ const DataTable = () => {
 
   const handleSendButtonClick = async () => {
     try {
+      const employeeIds = selectedEmployeeIds.map((id) => {
+        const managerId = managerIds[selectedEmployeeIds.indexOf(id)];
+        return {
+          empId: id,
+          mId: managerId ? managerId : null,
+          status: false,
+        };
+      });
+
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/org/updatearr/${selectedDocumentId}`,
         {
-          employeeIds: selectedEmployeeIds,
-          managerIds: managerIds,
+          employeeId: employeeIds,
         },
         {
           headers: {
