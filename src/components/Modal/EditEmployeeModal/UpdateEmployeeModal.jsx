@@ -765,8 +765,4 @@ const UpdateEmployeeModal = ({ handleClose, open, employeeId, organisationId }) 
   );
 };
 
-<<<<<<< HEAD
 export default UpdateEmployeeModal;
-=======
-export default UpdateEmployeeModal;
->>>>>>> b5b61a8e54c5694259addc611877b866eabe1686
