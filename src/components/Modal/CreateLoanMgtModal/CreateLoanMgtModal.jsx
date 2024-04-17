@@ -91,8 +91,8 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
           "success",
           "Your loan application has been submitted successfully. It is now awaiting approval from HR"
         );
-        //window.location.reload();
         handleClose();
+        window.location.reload();
       },
       onError: () => {
         setErrors("An Error occurred while creating a loan data.");
@@ -181,7 +181,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
       aria-describedby="modal-modal-description"
     >
       <div className="flex w-full justify-between py-4 items-center  px-4">
-        <h1 className="text-xl pl-2 font-semibold font-sans">
+        <h1 className="text-xl pl-6 font-semibold font-sans">
           Apply For Loans
         </h1>
       </div>
@@ -322,7 +322,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
             <div className=" flex  gap-2 w-full">
               <div className="space-y-2  w-[50%]">
                 <FormLabel className="text-md">
-                  Principal amount monthly deducted
+                  Principal amount monthly 
                 </FormLabel>
 
                 <FormControl
@@ -342,7 +342,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   className="text-md"
                   htmlFor="demo-simple-select-label"
                 >
-                  Interest amount monthly deducted
+                  Interest amount monthly 
                 </FormLabel>
                 <FormControl
                   size="small"
