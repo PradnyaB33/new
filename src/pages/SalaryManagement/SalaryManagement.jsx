@@ -6,11 +6,11 @@ import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import CreateSalaryModel from "../../components/Modal/CreateSalaryModel/CreateSalaryModel";
 import { MoreVert } from "@mui/icons-material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import {Menu,MenuItem,} from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import EditIcon from '@mui/icons-material/Edit';
+import UpdateSalaryModal from "../../components/Modal/CreateSalaryModel/UpdateSalaryModal";
 
 const SalaryManagement = () => {
   const { handleAlert } = useContext(TestContext);
@@ -270,18 +270,7 @@ const SalaryManagement = () => {
                               />
                             </MenuItem>
                           </Tooltip>
-                          <Tooltip title="Button for deleting salary">
-                            <MenuItem>
-                              <DeleteIcon
-                                color="primary"
-                                aria-label="edit"
-                                style={{
-                                  color: "#2196f3",
-                                  marginRight: "10px",
-                                }}
-                              />
-                            </MenuItem>
-                          </Tooltip>
+                        
                         </Menu>
                       </td>
                       <td>
@@ -389,6 +378,12 @@ const SalaryManagement = () => {
         id={organisationId}
         open={createModalOpen}
         handleClose={handleClose}
+        empId={employeeId}
+      />
+       <UpdateSalaryModal
+        id={organisationId}
+        open={updateModalOpen}
+        handleClose={handleUpdateModalClose}
         empId={employeeId}
       />
     </>
