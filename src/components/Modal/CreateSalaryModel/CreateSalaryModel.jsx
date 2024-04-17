@@ -58,12 +58,11 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
   const handleInputChange = (name, value) => {
     const enteredValue = parseFloat(value);
     if (!isNaN(enteredValue) && enteredValue > 10000000) {
-      // Set an error message when the entered value exceeds a crore
       setErrorMessage("Please enter a number less than 1 crore");
       return;
     }
 
-    // Clear the error message if the entered value is valid
+    
     setErrorMessage("");
     setInputValue({
       ...inputValue,
@@ -135,7 +134,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
         handleAlert(true, "error", "Invalid authorization");
       } else {
         handleAlert(true, "success", "Salary Detail added Successfully");
-        // Clear input values and deduction after successful submission
+      
         setInputValue({
           Basic: "",
           HRA: "",
@@ -149,7 +148,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
         setDeduction("");
         setEmployeePf("");
         setEsic("");
-        totalSalary = ""; //  totalSalary is a variable
+        totalSalary = ""; 
         handleClose();
       }
     } catch (error) {
@@ -222,14 +221,14 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                     <td colSpan={2}>No data available</td>
                   </tr>
                 ) : (
-                  <tr>
+                  <>
                     {salaryInput?.employee?.salarystructure?.salaryStructure.map(
                       (item, id) => (
-                        <tr key={id}>
-                          <td className="!text-left pl-8 pr-8 py-3">
+                        <tr key={id} className="space-y-4 w-full">
+                          <td className="!text-left w-full pl-8 pr-8 py-3">
                             {item.salaryComponent}
                           </td>
-                          <td className="py-3 pl-40 pr-8">
+                         
                             <input
                               type="number"
                               placeholder="Enter the input"
@@ -237,18 +236,12 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                                 padding: "10px",
                                 border: "1px solid #ccc",
                                 borderRadius: "4px",
-                                marginLeft: "200%",
+                             
                               }}
-                              value={inputValue[item.salaryComponent] || ""} // Set value from state
-                              // onChange={(e) => {
-                              //   handleInputChange(
-                              //     item.salaryComponent,
-                              //     e.target.value
-                              //   );
-                              // }}
+                              value={inputValue[item.salaryComponent] || ""}
+                             
                               onChange={(e) => {
                                 const inputValue = e.target.value;
-                                // Check if the input value is a valid number and greater than or equal to 0
                                 if (!isNaN(inputValue) && inputValue >= 0) {
                                   handleInputChange(
                                     item.salaryComponent,
@@ -257,13 +250,13 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                                 }
                               }}
                             />
-                          </td>
+                       
                         </tr>
                       )
                     )}
-                  </tr>
+                   </>
                 )}
-                <tr>
+                <tr className="!mt-4">
                   <td className="!text-left pl-8 pr-8 py-3">
                     Professinal Tax (Deduction)
                   </td>
@@ -274,11 +267,11 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                       padding: "10px",
                       border: "1px solid #ccc",
                       borderRadius: "4px",
+                      marginTop: "10px"
                     }}
                     value={deduction}
                     onChange={(e) => {
                       const inputValue = e.target.value;
-                      // Check if the input value is a valid number and greater than or equal to 0
                       if (!isNaN(inputValue) && inputValue >= 0) {
                         setDeduction(inputValue);
                       }
@@ -351,7 +344,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                   fontWeight: "bold",
                 }}
                 value={totalSalary}
-                readOnly // This prevents the input from being edited directly
+                readOnly 
               />
             </div>
           </div>
@@ -361,7 +354,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
               Cancel
             </Button>
             <Button onClick={handleApply} variant="contained" color="primary">
-              Apply
+              Submit
             </Button>
           </DialogActions>
         </div>
