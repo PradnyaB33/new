@@ -559,6 +559,7 @@ const AuthInputFiled = ({
                 {label}{" "}
                 {name === "isChecked" && (
                   <Link
+                    target="blank"
                     to="/terms-policy-cookies"
                     className="font-semibold text-blue-500 hover:underline text-md  "
                   >

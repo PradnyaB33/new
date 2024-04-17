@@ -115,6 +115,21 @@ export default function PerformanceTab() {
                 },
               }}
             />
+            <Tab
+              className="!px-4"
+              label="Review & Rating"
+              {...a11yProps(1)}
+              sx={{
+                fontSize: "0.8rem", // Decrease the font size
+                minWidth: "70px", // Decrease the width
+
+                padding: "0px", // Decrease the padding
+                "&.Mui-selected": {
+                  color: "#1976d2",
+                  backgroundColor: "#fff", // Change the background color when selected
+                },
+              }}
+            />
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
@@ -122,6 +137,9 @@ export default function PerformanceTab() {
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           <GoalSettingTab />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+          Rating Tab
         </CustomTabPanel>
       </Box>
     </>

@@ -100,8 +100,8 @@ const RatingModel = ({
     },
     enabled: !!id,
 
-    onSuccess: () => {
-      setValue("goal", getGoal?.goal);
+    onSuccess: (data) => {
+      setValue("goal", data?.goal);
     },
   });
 

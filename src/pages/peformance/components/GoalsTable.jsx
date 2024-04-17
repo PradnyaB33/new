@@ -1,4 +1,4 @@
-import { MoreHoriz, Search } from "@mui/icons-material";
+import { InfoOutlined, MoreHoriz, Search } from "@mui/icons-material";
 import {
   CircularProgress,
   Divider,
@@ -26,6 +26,7 @@ import RatingModel from "./RatingModel";
 
 const GoalsTable = ({ performance }) => {
   const [focusedInput, setFocusedInput] = useState(null);
+  const [currentStatus, setcurrentStatus] = useState(null);
   const { useGetCurrentRole, getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
@@ -38,12 +39,15 @@ const GoalsTable = ({ performance }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { handleAlert } = useContext(TestContext);
   const openMenuBox = Boolean(anchorEl);
+
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
   };
+
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+
   const handleClose = () => {
     setOpen(false);
     setPreviewModal(false);
@@ -68,7 +72,7 @@ const GoalsTable = ({ performance }) => {
     //eslint-disable-next-line
   }, [performance?.enddate]);
 
-  const { data: employeeData } = useQuery("employee", async () => {
+  const { data: employeeData } = useQuery(["employee"], async () => {
     const { data } = await axios.get(
       `${process.env.REACT_APP_API}/route/employee/getEmployeeUnderManager`,
       {
@@ -80,30 +84,24 @@ const GoalsTable = ({ performance }) => {
     return data;
   });
 
-  const { data: orgGoals, isFetching } = useQuery(
+  const { data: orgGoals = [], isFetching } = useQuery(
     ["orggoals", employeeGoals],
     async () => {
       if (role === "Employee" || employeeGoals) {
         const { data } = await axios.get(
-          `${process.env.REACT_APP_API}/route/employee/getEmployeeGoals/${employeeGoals}`,
+          `${process.env.REACT_APP_API}/route/performance/getOrganizationGoals`,
           {
             headers: {
               Authorization: authToken,
+            },
+            params: {
+              role,
+              empId: employeeGoals,
             },
           }
         );
         return data;
       }
-
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getManagers/${employeeGoals}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      return data;
     }
   );
 
@@ -129,10 +127,10 @@ const GoalsTable = ({ performance }) => {
     //eslint-disable-next-line
   }, []);
 
-  const acceptGoal = async () => {
+  const acceptGoal = async (status) => {
     try {
       const data = {
-        status: "Goal Completed",
+        status,
         assignee: { label: employeeGoals, value: employeeGoals },
       };
       await axios.patch(
@@ -151,7 +149,6 @@ const GoalsTable = ({ performance }) => {
     }
   };
 
-  console.log(employeeGoals);
   return (
     <section className="p-4 ">
       <div className="p-4  bg-white rounded-md border">
@@ -165,7 +162,7 @@ const GoalsTable = ({ performance }) => {
         </div>
         <div className="my-2 flex justify-between">
           <div className="flex gap-4">
-            <div className={`space-y-1  min-w-[60vw] `}>
+            {/* <div className={`space-y-1  min-w-[60vw] `}>
               <div
                 onFocus={() => {
                   handleFocus("search");
@@ -185,7 +182,7 @@ const GoalsTable = ({ performance }) => {
                   formNoValidate
                 />
               </div>
-            </div>
+            </div> */}
             {role !== "Employee" && (
               <div className={`space-y-1 w-full `}>
                 <div
@@ -203,7 +200,7 @@ const GoalsTable = ({ performance }) => {
                         boxShadow: "none",
                       }),
                     }}
-                    className={` bg-white w-[200px] !outline-none px-2 !shadow-none !border-none !border-0`}
+                    className={` bg-white w-[300px] !outline-none px-2 !shadow-none !border-none !border-0`}
                     components={{
                       Option: CustomOption,
                       IndicatorSeparator: () => null,
@@ -232,7 +229,9 @@ const GoalsTable = ({ performance }) => {
           {isFetching ? (
             <CircularProgress />
           ) : orgGoals?.length <= 0 ? (
-            <h1 className="text-center text-xl">No Goals Found</h1>
+            <h1 className="bg-blue-100 text-rose-600 space-x- p-2 2 px-4 rounded-sm text-lg">
+              <InfoOutlined /> No goals found
+            </h1>
           ) : (
             <div className="overflow-auto ">
               <table className="w-full table-auto  border border-collapse min-w-full bg-white  text-left  !text-sm font-light">
@@ -286,7 +285,7 @@ const GoalsTable = ({ performance }) => {
                         onClick={() => handleOpen(goal._id)}
                         className="text-sm cursor-pointer truncate text-left   px-2"
                       >
-                        <p className=" truncate">{goal.goal}</p>
+                        <p className=" truncate">{goal.goalId.goal}</p>
                       </td>
 
                       <td
@@ -297,8 +296,8 @@ const GoalsTable = ({ performance }) => {
                           className={`
                         px-2 md:w-full w-max text-sm`}
                         >
-                          {format(new Date(goal.startDate), "PP")} -{" "}
-                          {format(new Date(goal.endDate), "PP")}
+                          {format(new Date(goal.goalId.startDate), "PP")} -{" "}
+                          {format(new Date(goal.goalId.endDate), "PP")}
                         </p>
                       </td>
 
@@ -327,9 +326,7 @@ const GoalsTable = ({ performance }) => {
                         className="cursor-pointer text-left text-sm w-[200px]  "
                       >
                         <p className="px-2  md:w-full w-max">
-                          {goal?.singleGoal?.status
-                            ? goal?.singleGoal?.status
-                            : "Not Submitted"}
+                          {goal?.status ? goal?.status : "Not Submitted"}
                         </p>
                       </td>
 
@@ -348,6 +345,7 @@ const GoalsTable = ({ performance }) => {
                               aria-expanded={openMenu ? "true" : undefined}
                               onClick={(e) => {
                                 handleClick(e);
+                                setcurrentStatus(goal?.status);
                                 setopenMenu(goal._id);
                               }}
                             >
@@ -355,28 +353,6 @@ const GoalsTable = ({ performance }) => {
                             </IconButton>
                           </td>
                         )}
-
-                      {/* {((performance?.stages === "Goal setting" &&
-                        goal?.singleGoal?.status !== "Goal Submitted") ||
-                        performance?.stages ===
-                          "Employee acceptance/acknowledgement stage" ||
-                        role !== "Employee") && (
-                        <td className="whitespace-nowrap px-2  w-[220px]">
-                          <IconButton
-                            onClick={() => {
-                              setOpenEdit(true);
-                              setPreviewId(goal._id);
-                            }}
-                            color="primary"
-                            aria-label="edit"
-                          >
-                            <EditOutlined />
-                          </IconButton>
-                          <IconButton color="error" aria-label="delete">
-                            <DeleteOutlined />
-                          </IconButton>
-                        </td>
-                      )} */}
                     </tr>
                   ))}
                 </tbody>
@@ -424,6 +400,25 @@ const GoalsTable = ({ performance }) => {
           <h1 className="text-lg">Goal Setting</h1>
         </div>
         <Divider variant="fullWidth" orientation="horizontal" />
+        {role === "Manager" &&
+          performance?.stages === "Goal setting" &&
+          currentStatus !== "Goal Accepted" && (
+            <>
+              <MenuItem
+                className="!p-0"
+                onClick={() => acceptGoal("Goal Accepted")}
+              >
+                <div className="hover:!bg-green-500  flex  w-full h-full items-center hover:!text-white transition-all gap-4  py-2 px-4">
+                  Approve goal
+                </div>
+              </MenuItem>
+              <MenuItem className="!p-0" onClick={() => setPreviewId(openMenu)}>
+                <div className="hover:!bg-red-500 !text-red-500 flex  w-full h-full items-center hover:!text-white transition-all gap-4  py-2 px-4">
+                  Reject Goal
+                </div>
+              </MenuItem>
+            </>
+          )}
         {performance?.stages !==
           "Employee acceptance/acknowledgement stage" && (
           <MenuItem
@@ -439,17 +434,18 @@ const GoalsTable = ({ performance }) => {
               : performance?.stages ===
                 "Monitoring stage/Feedback collection stage"
               ? "Add monitoring form"
-              : "Edit goal"}
+              : ""}
           </MenuItem>
         )}
 
-        {performance?.stages === "Goal setting" && (
+        {/* {performance?.stages === "Goal setting" && (
           <MenuItem className="!p-0" onClick={() => handleMenuClose()}>
             <div className="hover:!bg-red-500 !text-red-500 flex  w-full h-full items-center hover:!text-white transition-all gap-4  py-2 px-4">
               Delete goal
             </div>
           </MenuItem>
-        )}
+        )} */}
+
         {performance?.stages ===
           "Employee acceptance/acknowledgement stage" && (
           <>
