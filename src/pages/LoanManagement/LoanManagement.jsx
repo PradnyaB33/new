@@ -12,11 +12,11 @@ import {
 } from "@mui/icons-material";
 import { useQuery } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
-//import CreateLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/CreateLoanMgtModal";
 import UserProfile from "../../hooks/UserData/useUser";
 import LoanManagementSkeleton from "./LoanManagementSkeleton";
 import LoanManagementPieChart from "./LoanManagementPieChart";
 import AddLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/AddLoanMgtModal";
+//import AddLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/AddLoanMgtModal";
 
 const LoanManagement = () => {
   const { cookies } = useContext(UseContext);

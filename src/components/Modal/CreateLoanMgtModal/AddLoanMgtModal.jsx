@@ -1,12 +1,14 @@
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import useLaonState from "../../../hooks/LoanManagemet/useLaonState";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
-import { Business,  } from "@mui/icons-material";
+import { Business, Person,  } from "@mui/icons-material";
 import useLoanOption from "../../../hooks/LoanManagemet/useLoanOption";
+import useCalculation from "../../../hooks/LoanManagemet/useCalculation";
+import useLoanQuery from "../../../hooks/LoanManagemet/useLoanQuery";
 
 const AddLoanMgtModal = ({ handleClose, open, organisationId }) => {
   
@@ -20,11 +22,22 @@ const AddLoanMgtModal = ({ handleClose, open, organisationId }) => {
   } = useLaonState(); 
 
   const { LoanTypeListOption} = useLoanOption(organisationId);
-  console.log("loan type list option" , LoanTypeListOption);
+  console.log("loan type list option" , LoanTypeListOption);   
 
+  const { getEmployeeLoanType, } = useLoanQuery(organisationId); 
 
+     console.log("getEmployeeLoanTYpe" , getEmployeeLoanType);
+
+  const {
+    interestPerMonth,
+    principalPerMonth,
+    totalDeductionPerMonth,
+    totalAmountWithSimpleInterest,
+   
+  } = useCalculation();
+
+   
   const LoanManagemetSchema = z.object({
-  
     loanType: z.object({
       label: z.string(),
       value: z.string(),
@@ -36,7 +49,7 @@ const AddLoanMgtModal = ({ handleClose, open, organisationId }) => {
     loanCompletedDate: z.string(),
   });
 
-  const { control, formState, } = useForm({
+  const { control, formState, setValue } = useForm({
     defaultValues: {
       loanType: loanType,
       rateOfIntereset: rateOfIntereset,
@@ -46,8 +59,19 @@ const AddLoanMgtModal = ({ handleClose, open, organisationId }) => {
       loanCompletedDate: loanCompletedDate,
     },
     resolver: zodResolver(LoanManagemetSchema),
-  });
-  const { errors } = formState;
+  }); 
+
+  useEffect(() => {
+    setValue('principalPerMonth', principalPerMonth.toString());
+    setValue('interestPerMonth', interestPerMonth.toString());
+    setValue('totalDeductionPerMonth', totalDeductionPerMonth.toString());
+    setValue('totalAmountWithSimpleInterest', totalAmountWithSimpleInterest.toString());
+  }, [principalPerMonth, interestPerMonth, totalDeductionPerMonth, totalAmountWithSimpleInterest, setValue]);
+
+
+  const { errors } = formState; 
+
+  
   return (
     <>
       <Dialog
@@ -112,7 +136,103 @@ const AddLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   errors={errors}
                   error={errors.loanAmount}
                 />
-              </div>
+              </div> 
+
+              <div className="space-y-2 ">
+               <AuthInputFiled
+                name="loanDisbursementDate"
+                 icon={Business}
+                control={control}
+                type="date"
+                placeholder="dd-mm-yyyy"
+                label="Loan Disbursment Date *"
+                errors={errors}
+                 error={errors.loanDisbursementDate}
+              />
+              </div>  
+
+              <div className="space-y-2 ">
+               <AuthInputFiled
+                name="loanCompletedDate"
+                 icon={Business}
+                control={control}
+                type="date"
+                placeholder="dd-mm-yyyy"
+                label="Loan Completion Date *"
+                errors={errors}
+                 error={errors.loanCompletedDate}
+              />
+              </div> 
+
+
+              <div className="space-y-2 ">
+                <AuthInputFiled
+                  name="noOfEmi"
+                  icon={Business}
+                  control={control}
+                  type="text"
+                  placeholder="No of EMIs"
+                  label="No of EMIs *"
+                  errors={errors}
+                  error={errors.noOfEmi}
+                />
+              </div>  
+
+              <div className="flex w-full gap-2">
+              <div className=" w-[50%] ">
+              <AuthInputFiled
+                name="principalPerMonth"
+                icon={Person}
+                control={control}
+                type="text"
+                placeholder="Principal amount monthly"
+                label="Principal amount monthly *"
+                errors={errors}
+                error={errors.principalPerMonth}
+               />
+           </div>
+           <div className=" w-[50%]">
+            <AuthInputFiled
+             name="interestPerMonth"
+             icon={Person}
+             control={control}
+             type="text"
+             placeholder="Interest amount monthly"
+             label="Interest amount monthly *"
+             errors={errors}
+             error={errors.interestPerMonth}
+            />
+             </div>
+            </div>  
+
+            
+            <div className="flex w-full gap-2">
+              <div className=" w-[50%] ">
+              <AuthInputFiled
+                name="totalDeductionPerMonth"
+                icon={Person}
+                control={control}
+                type="text"
+                placeholder=" Total amount monthly deducted"
+                label=" Total amount monthly deducted *"
+                errors={errors}
+                error={errors.totalDeductionPerMonth}
+               />
+           </div>
+           <div className=" w-[50%]">
+            <AuthInputFiled
+             name="totalAmountWithSimpleInterest"
+             icon={Person}
+             control={control}
+             type="text"
+             placeholder=" Total amount with simple interest"
+             label=" Total amount with simple interest *"
+             errors={errors}
+             error={errors.totalAmountWithSimpleInterest}
+            />
+             </div>
+            </div> 
+              
               
             </div>
             <DialogActions sx={{ justifyContent: "end" }}>
