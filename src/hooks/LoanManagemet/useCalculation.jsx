@@ -8,6 +8,7 @@ const useCalculation = () => {
     setNoOfEmi,
     setCompletedDate,
     loanDisbursementDate,
+    noOfEmi
   } = useLaonState();
 
   // calculate the loan completion date
