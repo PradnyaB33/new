@@ -25,7 +25,7 @@ import PreviewGoalModal from "./PreviewGoalModal";
 import RatingModel from "./RatingModel";
 
 const GoalsTable = ({ performance }) => {
-  const [focusedInput, setFocusedInput] = useState(null);
+  // const [focusedInput, setFocusedInput] = useState(null);
   const { useGetCurrentRole, getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
@@ -112,9 +112,9 @@ const GoalsTable = ({ performance }) => {
 
   // Now, calculate the total number of rows using reduce
   const totalRowCount = allSection80s?.reduce((total, section) => total + 1, 0);
-  const handleFocus = (fieldName) => {
-    setFocusedInput(fieldName);
-  };
+  // const handleFocus = (fieldName) => {
+  //   setFocusedInput(fieldName);
+  // };
 
   const pages = Math.ceil(totalRowCount / rowsPerPage);
 
