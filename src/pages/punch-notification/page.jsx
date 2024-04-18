@@ -7,9 +7,7 @@ const PunchNotification = () => {
   console.log(`🚀 ~ file: page.jsx:7 ~ data:`, data);
   return (
     <div>
-      {data?.map((items, idx) => (
-        <PunchAcceptModal items={items} length={data?.length} key={idx} />
-      ))}
+      <PunchAcceptModal />
     </div>
   );
 };

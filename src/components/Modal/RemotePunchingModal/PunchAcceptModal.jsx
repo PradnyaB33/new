@@ -1,96 +1,39 @@
-import {
-  Article,
-  Cancel,
-  CheckCircle,
-  Close,
-  Info,
-  RequestQuote,
-  Search,
-  West,
-} from "@mui/icons-material";
-import {
-  Avatar,
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Tooltip,
-} from "@mui/material";
+import { Info, RequestQuote, Search, West } from "@mui/icons-material";
+import { Avatar, CircularProgress } from "@mui/material";
 import axios from "axios";
-import React, { useState } from "react";
+import React from "react";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
+import usePunchNotification from "../../../hooks/QueryHook/notification/punch-notification/hook";
 import useAuthToken from "../../../hooks/Token/useAuth";
+import PunchMapModal from "./components/mapped-form";
 
-const PunchAcceptModal = ({ items, length, key }) => {
+const PunchAcceptModal = () => {
   const authToken = useAuthToken();
-  const { id } = useParams();
-  const [investment, setInvestment] = useState({});
-  const [isReject, setIsReject] = useState(false);
-  const [pdf, setPdf] = useState(null);
-  console.log("yash items", items);
+  const { employeeId } = useParams();
+  const { data } = usePunchNotification();
+  console.log("my data", data?.arrayOfEmployee);
 
-  const handlePDF = (id) => {
-    setPdf(id);
-  };
-
-  const handleClosePDF = () => {
-    setPdf(null);
-  };
-
-  const [searchEmp, setSearchEmp] = useState("");
-  const [open, setOpen] = useState(false);
-
-  const handleClose = () => {
-    setOpen(false);
-    setInvestment({});
-  };
-
-  const { data: empData, isLoading: empLoading } = useQuery({
-    queryKey: ["AccoutantEmp"],
+  const { data: EmpNotification, isLoading: empDataLoading } = useQuery({
+    queryKey: ["EmpDataPunch", employeeId],
     queryFn: async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API}/route/tds/getAllEmployeesUnderAccoutant`,
+          `${process.env.REACT_APP_API}/route/punch-notification/notification-user/${employeeId}`,
           {
             headers: {
               Authorization: authToken,
             },
           }
         );
-
+        console.log("this is my data bro", res.data);
         return res.data;
       } catch (error) {
         console.log(error);
       }
     },
+    enabled: employeeId !== undefined,
   });
-
-  const { data: empTDSData, isLoading: empDataLoading } = useQuery({
-    queryKey: ["EmpData", id],
-    queryFn: async () => {
-      try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_API}/route/tds/getTDSWorkflow/${id}/2023-2024`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        );
-
-        return res.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    enabled: id !== undefined,
-  });
-
-  const handleDownload = (pdf) => {};
 
   return (
     <div>
@@ -123,35 +66,38 @@ const PunchAcceptModal = ({ items, length, key }) => {
 
                 <input
                   type={"test"}
-                  onChange={(e) => setSearchEmp(e.target.value)}
                   placeholder={"Search Employee"}
                   className={`border-none bg-white w-full outline-none px-2  `}
                 />
               </div>
             </div>
           </div>
-          {Object.keys(items).length > 0 && (
-            <Link
-              to={`/income-tax/accountant-declarations/${items.employeeId._id}`}
-              className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${
-                items.employeeId._id === id &&
-                "bg-blue-500 text-white hover:!bg-blue-300"
-              }`}
-            >
-              <Avatar />
-              <div>
-                <h1 className="text-[1.2rem]">
-                  {items.employeeId.first_name} {items.employeeId.last_name}
-                </h1>
-                <h1
-                  className={`text-sm text-gray-500 ${
-                    items.employeeId._id === id && "text-white"
+          {data?.arrayOfEmployee?.map(
+            (employee, idx) =>
+              employee !== null && (
+                <Link
+                  to={`/punch-notification/${employee?._id}`}
+                  className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${
+                    employee?._id === employeeId &&
+                    "bg-blue-500 text-white hover:!bg-blue-300"
                   }`}
+                  key={idx}
                 >
-                  {items.employeeId.email}
-                </h1>
-              </div>
-            </Link>
+                  <Avatar />
+                  <div>
+                    <h1 className="text-[1.2rem]">
+                      {employee?.first_name} {employee?.last_name}
+                    </h1>
+                    <h1
+                      className={`text-sm text-gray-500 ${
+                        employee?._id === employeeId && "text-white"
+                      }`}
+                    >
+                      {employee?.email}
+                    </h1>
+                  </div>
+                </Link>
+              )
           )}
         </article>
 
@@ -160,11 +106,11 @@ const PunchAcceptModal = ({ items, length, key }) => {
             <div className="flex items-center justify-center my-2">
               <CircularProgress />
             </div>
-          ) : id ? (
-            empTDSData?.length <= 0 || empTDSData?.investment?.length <= 0 ? (
+          ) : employeeId ? (
+            EmpNotification?.length <= 0 ? (
               <div className="flex px-4 w-full items-center my-4">
                 <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
-                  <Info /> No declarations found
+                  <Info /> No Punch Request Found
                 </h1>
               </div>
             ) : (
@@ -174,122 +120,20 @@ const PunchAcceptModal = ({ items, length, key }) => {
                     <RequestQuote />
                   </Avatar>
                   <div>
-                    <h1 className=" text-xl">Employee Declarations</h1>
+                    <h1 className=" text-xl">Punch Requests</h1>
                     <p className="text-sm">
-                      Here accoutant can able to view employee declarations and
-                      approvals
+                      Here manager would be able to approve or reject the punch
+                      notifications
                     </p>
                   </div>
                 </div>
 
                 <div className=" px-4 ">
-                  <table className=" table-auto border  border-collapse min-w-full bg-white  text-left  !text-sm font-light">
-                    <thead className="border-b bg-gray-100  font-bold">
-                      <tr className="!font-semibold ">
-                        <th
-                          scope="col"
-                          className="!text-center px-2 leading-7 text-[16px] w-max py-3 border"
-                        >
-                          Sr. No
-                        </th>
-                        <th
-                          scope="col"
-                          className="py-3 leading-7 text-[16px] px-2 border"
-                        >
-                          Declaration Name
-                        </th>
-
-                        <th
-                          scope="col"
-                          className="py-3 leading-7 text-[16px] px-2 border"
-                        >
-                          Amount
-                        </th>
-                        <th
-                          scope="col"
-                          className="py-3 leading-7 text-[16px] px-2 border"
-                        >
-                          Proofs
-                        </th>
-                        <th
-                          scope="col"
-                          className="py-3 px-2 leading-7 text-[16px] border"
-                        >
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {empTDSData?.investment?.map((item, itemIndex) => (
-                        <tr
-                          className={`!font-medium h-14 border-b 
-                  
-                  `}
-                          key={itemIndex}
-                        >
-                          <td className="!text-center px-2 leading-7 text-[16px] w-[80px] border ">
-                            {itemIndex + 1}
-                          </td>
-                          <td className="leading-7 text-[16px] truncate text-left w-[500px] border px-2">
-                            <p>{item.name}</p>
-                          </td>
-
-                          <td className=" text-left !p-0 w-[200px] border ">
-                            <p
-                              className={`
-                       
-                          px-2 leading-7 text-[16px]`}
-                            >
-                              INR {parseFloat(item.declaration).toFixed(2)}
-                            </p>
-                          </td>
-                          <td className=" text-left !p-0 w-[200px] border ">
-                            <p
-                              className={`
-                       
-                          px-2 leading-7 text-[16px]`}
-                            >
-                              {item.proof ? (
-                                <div
-                                  onClick={() => handlePDF(item.proof)}
-                                  className="px-2 flex gap-2 items-center h-max w-max  cursor-pointer"
-                                >
-                                  <Article className="text-blue-500" />
-                                  <h1>View Proof</h1>
-                                </div>
-                              ) : (
-                                "No Proof Found"
-                              )}
-                            </p>
-                          </td>
-                          <td className=" text-left !px-2 w-[200px] border ">
-                            <Tooltip title="Accept declaration">
-                              <IconButton
-                                onClick={() => {
-                                  setInvestment(item);
-                                  setOpen(true);
-                                  setIsReject(false);
-                                }}
-                              >
-                                <CheckCircle color="success" />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Reject declaration">
-                              <IconButton
-                                onClick={() => {
-                                  setInvestment(item);
-                                  setOpen(true);
-                                  setIsReject(true);
-                                }}
-                              >
-                                <Cancel color="error" />
-                              </IconButton>
-                            </Tooltip>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  {EmpNotification?.punchNotification?.map(
+                    (items, itemIndex) => (
+                      <PunchMapModal items={items} />
+                    )
+                  )}
                 </div>
               </>
             )
@@ -298,41 +142,10 @@ const PunchAcceptModal = ({ items, length, key }) => {
               <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
                 <Info /> Select employee to see their requests
               </h1>
-
-              {/* <img
-                  src="https://aegis-dev.s3.ap-south-1.amazonaws.com/remote-punching/65d86569d845df6738f87646/5f0cbf6977b8cc2f3661247706171db7"
-                  alt="none"
-                  height={500}
-                /> */}
             </div>
           )}
         </article>
       </section>
-
-      <Dialog open={pdf !== null} onClose={handleClosePDF}>
-        <DialogTitle className="flex justify-between items-center">
-          <h1>Document</h1>
-          <IconButton onClick={handleClosePDF}>
-            <Close />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <div className="scrollt ">
-            <object
-              type="application/pdf"
-              data={`${pdf}`}
-              alt="none"
-              aria-label="pdfSalary"
-              className="min-h-[60vh] !w-[400px] "
-            />
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={() => handleDownload(pdf)}>
-            Download
-          </Button>
-        </DialogActions>
-      </Dialog>
     </div>
   );
 };
