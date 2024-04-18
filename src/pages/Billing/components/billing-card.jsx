@@ -181,7 +181,7 @@ const BillingCard = ({ doc }) => {
           <DescriptionBox
             Icon={Discount}
             descriptionText={"Organisation discount for next subscription"}
-            mainText={`${doc?.remainingBalance}`}
+            mainText={`${Math.round(doc?.remainingBalance)}`}
           />
         </div>
       </div>

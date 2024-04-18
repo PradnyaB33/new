@@ -81,13 +81,12 @@ const useManageSubscriptionMutation = () => {
       if (data?.status === "Pay") {
         const options = {
           key: data?.key,
-          amount: Math.round(data?.paymentToComplete * 100),
           currency: "INR",
           name: "Aegis Plan for software", //your business name
           description: "Get Access to all premium keys",
           image: data?.organization?.image,
           order_id: data.order.id,
-          callback_url: `${process.env.REACT_APP_API}/route/organization/package/verify/${data?.organization?._id}`,
+          callback_url: `${process.env.REACT_APP_API}/route/organization/package-info/verify/${data?.organization?._id}`,
           prefill: {
             name: `${decodedToken?.user?.first_name} ${decodedToken?.user?.last_name}`, //your customer's name
             email: decodedToken?.user?.email,
@@ -110,7 +109,7 @@ const useManageSubscriptionMutation = () => {
         };
 
         const razor = new window.Razorpay(options);
-        // razor.open();
+        razor.open();
       }
     },
     onError: (error) => {
