@@ -179,6 +179,10 @@ const App = () => {
         {/* <Route path="/notification" element={<ParentNotification />} /> */}
         <Route path="/leave-notification" element={<LeaveNotification />} />
         <Route path="/punch-notification" element={<PunchNotification />} />
+        <Route
+          path="/punch-notification/:employeeId"
+          element={<PunchNotification />}
+        />
         <Route path="/shift-notification" element={<ShiftNotification />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />

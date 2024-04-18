@@ -1,5 +1,5 @@
 import React from "react";
-import PunchingRejectModal from "../../components/Modal/RemotePunchingModal/PunchingRejectModal";
+import PunchAcceptModal from "../../components/Modal/RemotePunchingModal/PunchAcceptModal";
 import usePunchNotification from "../../hooks/QueryHook/notification/punch-notification/hook";
 
 const PunchNotification = () => {
@@ -8,7 +8,7 @@ const PunchNotification = () => {
   return (
     <div>
       {data?.map((items, idx) => (
-        <PunchingRejectModal items={items} length={data?.length} key={idx} />
+        <PunchAcceptModal items={items} length={data?.length} key={idx} />
       ))}
     </div>
   );
