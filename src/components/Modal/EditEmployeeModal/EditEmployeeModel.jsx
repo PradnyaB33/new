@@ -38,7 +38,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     adhar_card_number: "",
     pan_card_number: "",
     empId : "",
-    gender : "",
+   
   });
 
   // define the state for store additional info data of employee
@@ -637,7 +637,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           <div className="space-y-2 ">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
-              Current Address
+               Address
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
