@@ -83,13 +83,11 @@ const RatingModel = ({
     }
   );
 
-  console.log(id);
-
   const { data: getGoal, isFetching } = useQuery({
     queryKey: ["getGoalReview", id],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getGoalDetails/${id}`,
+        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id}/${assignee}`,
         {
           headers: {
             Authorization: authToken,
@@ -101,7 +99,7 @@ const RatingModel = ({
     enabled: !!id,
 
     onSuccess: (data) => {
-      setValue("goal", data?.goal);
+      setValue("goal", data?.goalId?.goal);
     },
   });
 

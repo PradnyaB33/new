@@ -18,7 +18,14 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 
-const GoalsModel = ({ handleClose, open, options, id, performance }) => {
+const GoalsModel = ({
+  handleClose,
+  open,
+  options,
+  id,
+  performance,
+  assignee,
+}) => {
   const { handleAlert } = useContext(TestContext);
   const style = {
     position: "absolute",
@@ -35,7 +42,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
     queryKey: "getSingleGoal",
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/getSingleEmployeeGoals/${id}`,
+        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id}/${assignee}`,
         {
           headers: {
             Authorization: authToken,
@@ -55,7 +62,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
   const zodSchema = z.object({
     goal: z.string(),
     description: z.string(),
-    measurement: z.string().optional(),
+    downcasted: z.boolean().optional(),
     comments: z.string().optional(),
     assignee: z
       .array(z.object({ value: z.string(), label: z.string() }))
@@ -68,7 +75,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
       startDate: z.string(),
       endDate: z.string(),
     }),
-    // goaltype: z.object({ value: z.string(), label: z.string() }),
+    goalType: z.object({ value: z.string(), label: z.string() }),
     attachment: z.string().optional(),
   });
 
@@ -76,6 +83,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
     handleSubmit,
     control,
     setValue,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -86,24 +94,24 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
   });
 
   useEffect(() => {
-    setValue("goal", goalData?.goal);
-    setValue("description", goalData?.description);
-    setValue("measurement", goalData?.measurement);
-    setValue("comments", goalData?.comments);
+    setValue("goal", goalData?.goalId?.goal);
+    setValue("description", goalData?.goalId?.description);
+    // setValue("measurement", goalData?.goalId?.measurement);
+    setValue("comments", goalData?.goalId?.comments);
     setValue(
       "assignee",
-      goalData?.assignee?.map((item) => ({
+      goalData?.goalId?.assignee?.map((item) => ({
         value: item._id,
         label: `${item.first_name} ${item.last_name}`,
       }))
     );
     setValue("startDate", {
-      startDate: goalData?.startDate,
-      endDate: goalData?.endDate,
+      startDate: goalData?.goalId?.startDate,
+      endDate: goalData?.goalId?.endDate,
     });
     setValue("endDate", {
-      startDate: goalData?.startDate,
-      endDate: goalData?.endDate,
+      startDate: goalData?.goalId?.startDate,
+      endDate: goalData?.goalId?.endDate,
     });
     //eslint-disable-next-line
   }, [goalData]);
@@ -138,11 +146,12 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
     const goals = {
       goal: data.goal,
       description: data.description,
-      measurement: data.measurement,
+      downcasted: data.downcasted,
+      // measurement: data.measurement,
       assignee: data?.assignee?.map((emp) => emp.value) ?? [],
       startDate: data.startDate.startDate,
       endDate: data.endDate.startDate,
-      // goaltype: data.goaltype.value,
+      goalType: data.goalType.value,
       attachment: data.attachment,
     };
 
@@ -161,27 +170,16 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
     return data;
   });
 
+  const goalTypeOption = performance?.goals.map((goal) => ({
+    label: goal,
+    value: goal,
+  }));
+
   const empoptions = employeeData?.map((emp) => ({
     value: emp._id,
     label: `${emp.first_name} ${emp.last_name}`,
     image: emp.user_logo_url,
   }));
-
-  // const SubmitGoal = async () => {
-  //   try {
-  //     await axios.post(
-  //       `${process.env.REACT_APP_API}/route/performance/submitGoals`,
-  //       { goalId: id },
-  //       {
-  //         headers: {
-  //           Authorization: authToken,
-  //         },
-  //       }
-  //     );
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
 
   return (
     <>
@@ -232,14 +230,15 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
             />
 
             <AuthInputFiled
-              name="measurement"
+              name="goalType"
               icon={Paid}
               control={control}
-              type="texteditor"
-              placeholder="100"
-              label="Enter measurements name"
+              type="select"
+              options={goalTypeOption}
+              placeholder="Goal Type"
+              label="Enter goal type"
               errors={errors}
-              error={errors.measurement}
+              error={errors.goalType}
             />
             {performance?.stages ===
               "Monitoring stage/Feedback collection stage" &&
@@ -255,7 +254,20 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
                   error={errors.comments}
                 />
               )}
+
             {role !== "Employee" && (
+              <AuthInputFiled
+                name="downcasted"
+                // icon={ToggleOn}
+                control={control}
+                type="checkbox"
+                placeholder="eg. 4"
+                label="Downcast goal *"
+                errors={errors}
+                error={errors.downcasted}
+              />
+            )}
+            {role !== "Employee" && !watch("downcasted") && (
               <AuthInputFiled
                 name="assignee"
                 icon={PersonOutline}

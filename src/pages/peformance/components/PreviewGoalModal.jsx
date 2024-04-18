@@ -54,8 +54,12 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
     enabled: !!id,
   });
 
-  const sanitizedReview = DOMPurify.sanitize(getSingleGoal?.goalId?.review);
-  const sanitizedComments = DOMPurify.sanitize(getSingleGoal?.goalId?.comments);
+  const sanitizedReview = DOMPurify.sanitize(getSingleGoal?.review);
+  const sanitizedComments = DOMPurify.sanitize(getSingleGoal?.comments);
+  const sanitizedmanagerMesurments = DOMPurify.sanitize(
+    getSingleGoal?.managerMeasurments
+  );
+  console.log(`🚀 ~ sanitizedmanagerMesurments:`, sanitizedmanagerMesurments);
   const sanitizedDescription = DOMPurify.sanitize(
     getSingleGoal?.goalId?.description
   );
@@ -66,8 +70,8 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
 
       let status =
         getSingleGoal?.goalId?.creatorId === user._id
-          ? "goal submitted"
-          : "goal approved";
+          ? "Goal Submitted"
+          : "Goal Accepted";
 
       await axios.patch(
         `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${id}`,
@@ -160,10 +164,14 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
 
                 <div className="hover:bg-gray-100 rounded-md ">
                   <p className="px-2">Measurments</p>
-                  <p
-                    className="preview px-2 "
-                    dangerouslySetInnerHTML={{ __html: "No data" }}
-                  ></p>
+                  {role !== "Employee" && (
+                    <p
+                      className="preview px-2 "
+                      dangerouslySetInnerHTML={{
+                        __html: sanitizedmanagerMesurments,
+                      }}
+                    ></p>
+                  )}
                 </div>
                 <div className="hover:bg-gray-100 rounded-md ">
                   <p className="px-2">comments</p>

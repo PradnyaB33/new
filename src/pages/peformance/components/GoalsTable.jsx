@@ -1,4 +1,12 @@
-import { InfoOutlined, MoreHoriz, Search } from "@mui/icons-material";
+import {
+  AssignmentTurnedInOutlined,
+  CancelOutlined,
+  CheckCircleOutlined,
+  InfoOutlined,
+  MoreHoriz,
+  Search,
+  StarOutlined,
+} from "@mui/icons-material";
 import {
   CircularProgress,
   Divider,
@@ -23,16 +31,47 @@ import GoalsModel from "./GoalsModel";
 import MonitoringModel from "./MonitoringModel";
 import PreviewGoalModal from "./PreviewGoalModal";
 import RatingModel from "./RatingModel";
+import RevaluateModel from "./RevaluateModel";
+
+const GoalStatus = ({ status }) => {
+  return (
+    <div
+      className={`px-3 py-1 flex items-center gap-1 ${
+        status === "Goal Completed" || status === "Goal Accepted"
+          ? "text-green-500"
+          : status === "Goal Rejected"
+          ? "text-red-500"
+          : status === "Rating Completed"
+          ? " text-yellow-500"
+          : ""
+      } rounded-sm  w-max`}
+    >
+      {status === "Goal Completed" ? (
+        <CheckCircleOutlined />
+      ) : status === "Goal Accepted" ? (
+        <AssignmentTurnedInOutlined />
+      ) : status === "Goal Rejected" ? (
+        <CancelOutlined />
+      ) : status === "Rating Completed" ? (
+        <StarOutlined />
+      ) : (
+        <InfoOutlined />
+      )}{" "}
+      {status}
+    </div>
+  );
+};
 
 const GoalsTable = ({ performance }) => {
   const [focusedInput, setFocusedInput] = useState(null);
-  const [currentStatus, setcurrentStatus] = useState(null);
+  const [currentGoal, setCurrentGoal] = useState(null);
   const { useGetCurrentRole, getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
   const [employeeGoals, setEmployeeGoals] = useState(user._id);
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openRevaluate, setOpenRevaluate] = useState(false);
   const [previewModal, setPreviewModal] = useState(false);
   const [previewId, setPreviewId] = useState(null);
   const [openMenu, setopenMenu] = useState(null);
@@ -52,6 +91,7 @@ const GoalsTable = ({ performance }) => {
     setOpen(false);
     setPreviewModal(false);
     setPreviewId(null);
+    setOpenRevaluate(false);
     setopenMenu(null);
     setOpenEdit(false);
   };
@@ -96,6 +136,7 @@ const GoalsTable = ({ performance }) => {
             },
             params: {
               role,
+
               empId: employeeGoals,
             },
           }
@@ -251,15 +292,6 @@ const GoalsTable = ({ performance }) => {
                       Time
                     </th>
 
-                    {/* <th
-                      scope="col"
-                      className={`${
-                        role === "Employee" && "hidden"
-                      } py-3 text-sm px-2 `}
-                    >
-                      Assignee
-                    </th> */}
-
                     <th scope="col" className=" py-3 text-sm px-2 ">
                       status
                     </th>
@@ -301,40 +333,19 @@ const GoalsTable = ({ performance }) => {
                         </p>
                       </td>
 
-                      {/* <td
-                        onClick={() => handleOpen(goal._id)}
-                        className={`${
-                          role === "Employee" && "hidden"
-                        } flex cursor-pointer !w-[400px]  items-start !text-left px-2 py-2`}
-                      >
-                        <AvatarGroup max={6}>
-                          {goal?.assignee.map((assignee, id) => (
-                            <Tooltip
-                              title={`${assignee.first_name} ${assignee.last_name}`}
-                            >
-                              <Avatar
-                                src={assignee?.user_logo_url}
-                                sx={{ width: 34, height: 34 }}
-                              />
-                            </Tooltip>
-                          ))}
-                        </AvatarGroup>
-                      </td> */}
-
                       <td
                         onClick={() => handleOpen(goal._id)}
                         className="cursor-pointer text-left text-sm w-[200px]  "
                       >
-                        <p className="px-2  md:w-full w-max">
-                          {goal?.status ? goal?.status : "Not Submitted"}
-                        </p>
+                        <GoalStatus status={goal?.status} />
                       </td>
 
                       {isTimeFinish &&
-                        goal?.singleGoal?.status !== "Goal Completed" &&
+                        goal?.status !== "Goal Completed" &&
                         (role !== "Employee" ||
                           performance?.stages === "Goal setting" ||
-                          performance?.stages === "performance?.stages") && (
+                          performance?.stages ===
+                            "Employee acceptance/acknowledgement stage") && (
                           <td className="cursor-pointer text-left text-sm  ">
                             <IconButton
                               id="basic-button"
@@ -345,7 +356,7 @@ const GoalsTable = ({ performance }) => {
                               aria-expanded={openMenu ? "true" : undefined}
                               onClick={(e) => {
                                 handleClick(e);
-                                setcurrentStatus(goal?.status);
+                                setCurrentGoal(goal);
                                 setopenMenu(goal._id);
                               }}
                             >
@@ -400,9 +411,26 @@ const GoalsTable = ({ performance }) => {
           <h1 className="text-lg">Goal Setting</h1>
         </div>
         <Divider variant="fullWidth" orientation="horizontal" />
+
+        {performance?.stages === "Goal setting" &&
+          role === "Employee" &&
+          currentGoal?.status === "Goal Rejected" && (
+            <MenuItem
+              className="!p-0"
+              onClick={() => {
+                setOpenEdit(true);
+                setPreviewId(openMenu);
+                handleMenuClose();
+              }}
+            >
+              <div className=" flex  w-full h-full items-center  transition-all gap-4  py-2 px-4">
+                Reapply goal
+              </div>
+            </MenuItem>
+          )}
         {role === "Manager" &&
           performance?.stages === "Goal setting" &&
-          currentStatus !== "Goal Accepted" && (
+          currentGoal?.status !== "Goal Accepted" && (
             <>
               <MenuItem
                 className="!p-0"
@@ -412,7 +440,10 @@ const GoalsTable = ({ performance }) => {
                   Approve goal
                 </div>
               </MenuItem>
-              <MenuItem className="!p-0" onClick={() => setPreviewId(openMenu)}>
+              <MenuItem
+                className="!p-0"
+                onClick={() => acceptGoal("Goal Rejected")}
+              >
                 <div className="hover:!bg-red-500 !text-red-500 flex  w-full h-full items-center hover:!text-white transition-all gap-4  py-2 px-4">
                   Reject Goal
                 </div>
@@ -434,31 +465,39 @@ const GoalsTable = ({ performance }) => {
               : performance?.stages ===
                 "Monitoring stage/Feedback collection stage"
               ? "Add monitoring form"
-              : ""}
+              : "Edit Goal"}
           </MenuItem>
         )}
 
-        {/* {performance?.stages === "Goal setting" && (
+        {performance?.stages === "Goal setting" && (
           <MenuItem className="!p-0" onClick={() => handleMenuClose()}>
             <div className="hover:!bg-red-500 !text-red-500 flex  w-full h-full items-center hover:!text-white transition-all gap-4  py-2 px-4">
               Delete goal
             </div>
           </MenuItem>
-        )} */}
-
-        {performance?.stages ===
-          "Employee acceptance/acknowledgement stage" && (
-          <>
-            <MenuItem onClick={handleMenuClose}>
-              Request for revaluation
-            </MenuItem>
-            <MenuItem onClick={acceptGoal} className="!p-0">
-              <div className="hover:!bg-green-500 !text-green-500 flex  w-full h-full items-center hover:!text-white transition-all gap-4  py-2 px-4">
-                Accept goal rating
-              </div>
-            </MenuItem>
-          </>
         )}
+
+        {performance?.stages === "Employee acceptance/acknowledgement stage" &&
+          role === "Employee" && (
+            <>
+              <MenuItem
+                onClick={() => {
+                  setOpenRevaluate(true);
+                  handleMenuClose();
+                }}
+              >
+                Request for revaluation
+              </MenuItem>
+              <MenuItem
+                onClick={() => acceptGoal("Goal Completed")}
+                className="!p-0"
+              >
+                <div className="hover:!bg-green-500 !text-green-500 flex  w-full h-full items-center hover:!text-white transition-all gap-4  py-2 px-4">
+                  Accept goal rating
+                </div>
+              </MenuItem>
+            </>
+          )}
       </Menu>
 
       {performance?.stages === "Monitoring stage/Feedback collection stage" ? (
@@ -484,6 +523,7 @@ const GoalsTable = ({ performance }) => {
         <GoalsModel
           open={openEdit}
           id={openMenu}
+          assignee={employeeGoals}
           options={options}
           performance={performance}
           handleClose={handleClose}
@@ -494,6 +534,14 @@ const GoalsTable = ({ performance }) => {
         performance={performance}
         assignee={employeeGoals}
         id={previewId}
+        handleClose={handleClose}
+      />
+      <RevaluateModel
+        open={openRevaluate}
+        id={openMenu}
+        assignee={employeeGoals}
+        options={options}
+        performance={performance}
         handleClose={handleClose}
       />
     </section>

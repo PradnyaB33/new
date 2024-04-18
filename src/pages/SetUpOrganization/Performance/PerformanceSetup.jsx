@@ -35,10 +35,7 @@ const PerformanceSetup = () => {
       label: z.string(),
       value: z.string(),
     }),
-    // goals: z.object({
-    //   label: z.string(),
-    //   value: z.string(),
-    // }),
+    goals: z.array(z.string()),
     ratings: z.array(
       z.object({
         label: z.string(),
@@ -82,7 +79,6 @@ const PerformanceSetup = () => {
     resolver: zodResolver(PerformanceSchema),
     defaultValues: {
       stages: undefined,
-      // goals: undefined,
       isDownCast: false,
       isFeedback: false,
       isNonMeasurableAllowed: false,
@@ -94,6 +90,8 @@ const PerformanceSetup = () => {
       isSelfGoal: false,
     },
   });
+
+  console.log(`🚀 ~ errors:`, errors);
 
   useEffect(() => {
     if (performance) {
@@ -109,7 +107,7 @@ const PerformanceSetup = () => {
         startDate: performance.startdate,
         endDate: performance.startdate,
       });
-      // setValue("goals", performance.goals);
+      setValue("goals", performance.goals);
       setValue("isDownCast", performance.isDownCast);
       setValue("isFeedback", performance.isFeedback);
       setValue("isKRA", performance.isKRA);
@@ -202,7 +200,7 @@ const PerformanceSetup = () => {
         ...data,
         startdate: data.startdate.startDate,
         enddate: data.enddate.endDate,
-        // goals: data.goals.value,
+        goals: data.goals.map((goalType) => goalType),
         stages: data.stages.value,
         ratings: data.ratings.map((rating) => rating.value),
       };
@@ -280,17 +278,17 @@ const PerformanceSetup = () => {
                   errors={errors}
                   error={errors.stages}
                 />
-                {/* <AuthInputFiled
+                <AuthInputFiled
                   name="goals"
                   icon={TrendingUp}
                   control={control}
-                  type="select"
+                  type="mutltiselect"
                   options={goalsOptions}
                   placeholder="Goals"
                   label="Select Goal Type *"
                   errors={errors}
                   error={errors.goals}
-                /> */}
+                />
                 <AuthInputFiled
                   name="ratings"
                   icon={Star}
