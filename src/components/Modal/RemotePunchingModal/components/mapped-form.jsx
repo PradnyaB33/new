@@ -55,30 +55,29 @@ const PunchMapModal = ({ items }) => {
                 <h1 className="font-semibold">Punch Request</h1>
               )}
             </h1>
-            <div className="h-[100px] w-[100px] rounded-full">
-              {items.punchData[0].image === "" ? (
-                <img
-                  style={{ objectFit: "cover" }}
-                  src={items.employeeId.user_logo_url}
-                  alt=""
-                  srcset=""
-                />
-              ) : (
-                <div className="h-[100px] w-[100px] rounded-full">
+            <div className="w-[150px]">
+              <div className="h-[100px] w-[100px] rounded-full">
+                {items.punchData[0].image === "" ? (
                   <img
                     style={{ objectFit: "cover" }}
-                    src={items.punchData[0].image}
+                    src={items.employeeId.user_logo_url}
                     alt=""
                     srcset=""
                   />
-                </div>
-              )}
+                ) : (
+                  <div className="h-[100px] w-[100px] rounded-full">
+                    <img
+                      style={{ objectFit: "cover" }}
+                      src={items.punchData[0].image}
+                      alt=""
+                      srcset=""
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-          <div>
-            <h1 className="font-semibold">
-              {items.employeeId.first_name} {items.employeeId.last_name}
-            </h1>
+          <div className="p-4">
             <h1>
               Date:{" "}
               {items?.createdAt && (
