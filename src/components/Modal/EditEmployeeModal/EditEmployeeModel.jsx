@@ -10,6 +10,9 @@ import {
   IconButton,
   InputLabel,
   OutlinedInput,
+  Radio,
+  RadioGroup,
+  FormControlLabel
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -38,8 +41,15 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     adhar_card_number: "",
     pan_card_number: "",
     empId : "",
-    gender : "",
-  });
+  
+  }); 
+
+  const [selectedGender, setSelectedGender] = useState("");
+
+  // Handle changes to the selected gender state when radio buttons are clicked
+  const handleGenderChange = (event) => {
+    setSelectedGender(event.target.value);
+  };
 
   // define the state for store additional info data of employee
   const [additionalInfo, setAdditionalInfo] = useState({
@@ -214,7 +224,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           },
         }
       );
-      setManagerData(response.data.manager);
+      setManagerData(response.data.data);
     } catch (error) {
       console.error(error);
     }
@@ -223,7 +233,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     fetchManagerData();
     // eslint-disable-next-line
   }, []);
-  console.log("manager data" , managerData);
+  console.log("manager data " , managerData);
 
   // pull the profile
   const [availableProfiles, setAvailableProfiles] = useState([]);
@@ -371,6 +381,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
         adhar_card_number: employeeData?.adhar_card_number || "",
         pan_card_number: employeeData?.pan_card_number || "",
         empId : employeeData?.empId || "",
+        gender : employeeData?.gender || "",
       });
 
       setAdditionalInfo({
@@ -441,6 +452,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
       const employeeProfileData = employeeData?.profile || [];
       setProfile(employeeProfileData);
       setMgrempid(employeeData?.mgrempid || "");
+      setSelectedGender(employeeData?.gender || "")
       setDeptCostCenterId(employeeData?.dept_cost_center_no || "");
       setShiftAllocation(employeeData?.shift_allocation || "");
     }
@@ -486,6 +498,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           additionalInfo,
           worklocation: [selectedWorkLocation],
           deptname,
+          gender: selectedGender,
           designation,
           mgrempid: mgrempid,
           salarystructure: salaryTemplate,
@@ -500,7 +513,9 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
       console.error(error);
       handleAlert("Failed to update employee. Please try again.");
     }
-  };
+  };  
+
+  
 
   return (
     <Dialog
@@ -637,7 +652,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           <div className="space-y-2 ">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
-              Current Address
+               Address
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
@@ -1088,6 +1103,19 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                   </option>
                 ))}
             </select>
+          </div>
+          <div className="space-y-2 ">
+          <RadioGroup
+          aria-label="gender"
+          name="gender"
+          value={selectedGender}
+          onChange={handleGenderChange}
+          row
+        >
+          <FormControlLabel value="male" control={<Radio />} label="Male" />
+          <FormControlLabel value="female" control={<Radio />} label="Female" />
+          <FormControlLabel value="other" control={<Radio />} label="Other" />
+        </RadioGroup>
           </div>
           <DialogActions>
             <Button onClick={handleClose} color="error" variant="outlined">

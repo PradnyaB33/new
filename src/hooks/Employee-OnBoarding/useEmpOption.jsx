@@ -16,7 +16,7 @@ const useEmpOption = (organisationId) => {
     EmpCodeCall,
   } = useEmpQuery(organisationId);
 
-  console.log("id" , organisationId);
+  console.log("id", organisationId);
 
   const DepartmentList = DepartmentListCall();
   const ManagerList = ManagerListCall();
@@ -36,13 +36,14 @@ const useEmpOption = (organisationId) => {
     };
   });
 
-  const Manageroptions = ManagerList?.manager?.map((item) => {
+  const Manageroptions = ManagerList?.data?.map((item) => {
     return {
       value: item?._id,
       label: `${item?.first_name} ${item?.last_name}`,
     };
   });
 
+  console.log(`🚀 ~ Manageroptions:`, Manageroptions);
   const EmpCodeoptions = empCode?.EmpCodeoptions?.map((item) => {
     return {
       value: item?._id,

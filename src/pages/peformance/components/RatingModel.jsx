@@ -83,9 +83,7 @@ const RatingModel = ({
     }
   );
 
-  console.log(id);
-
-  const { data: getGoal, isFetching } = useQuery({
+  const { isFetching } = useQuery({
     queryKey: ["getGoalReview", id],
     queryFn: async () => {
       const { data } = await axios.get(
@@ -98,13 +96,11 @@ const RatingModel = ({
       );
       return data;
     },
-    enabled: !!id,
-
-    onSuccess: () => {
-      setValue("goal", getGoal?.goal);
+    enabled: !!id || open,
+    onSuccess: (data) => {
+      setValue("goal", data?.goal);
     },
   });
-
   const onSubmit = async (data) => {
     const goals = {
       assignee: { label: assignee, value: assignee },

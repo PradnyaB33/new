@@ -40,6 +40,10 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useEmpQuery from "../../../hooks/Employee-OnBoarding/useEmpQuery";
+<<<<<<< HEAD
+=======
+import useEmpQuery from "../../../hooks/Employee-OnBoarding/useEmpQuery";
+>>>>>>> b5b61a8e54c5694259addc611877b866eabe1686
 const UpdateEmployeeModal = ({ handleClose, open, employeeId, organisationId }) => { 
    
     const { cookies } = useContext(UseContext);
