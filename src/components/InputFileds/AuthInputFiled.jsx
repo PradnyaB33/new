@@ -1024,17 +1024,18 @@ const AuthInputFiled = ({
           );
         }}
       />
-      <div className="h-4 w-max !z-50   !mb-1">
-        <ErrorMessage
-          errors={errors}
-          name={name}
-          render={({ message }) => (
-            <p className="text-sm mb-4 relative !bg-white  text-red-500">
-              {message}
-            </p>
-          )}
-        />
-      </div>
+      <p className="text-xs w-full h-full">{descriptionText}</p>
+      {/* <div className="w-full !z-50 h-full  !mb-1"> */}
+      <ErrorMessage
+        errors={errors}
+        name={name}
+        render={({ message }) => (
+          <p className="text-sm mb-4 w-full h-full !bg-white  text-red-500">
+            {message}
+          </p>
+        )}
+      />
+      {/* </div> */}
     </div>
   );
 };

@@ -18,10 +18,6 @@ const style = {
   overflow: "auto",
 };
 const PackageForm = ({ handleClose, open, organisation }) => {
-  console.log(
-    `🚀 ~ file: manage-package-form.jsx:22 ~ organisation:`,
-    organisation
-  );
   const { updateMemberCount } = useManageSubscriptionMutation();
 
   const packageSchema = z.object({
@@ -39,7 +35,10 @@ const PackageForm = ({ handleClose, open, organisation }) => {
 
   const { errors, isDirty } = formState;
   function onSubmit(data) {
-    updateMemberCount({ organizationId: organisation._id, ...data });
+    updateMemberCount(
+      { organizationId: organisation._id, ...data },
+      handleClose
+    );
   }
   return (
     <Modal

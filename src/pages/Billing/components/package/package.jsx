@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Numbers } from "@mui/icons-material";
 import { Box, Button, Modal } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
@@ -18,10 +18,6 @@ const style = {
   overflow: "auto",
 };
 const ManageSubscription = ({ handleClose, open, organisation }) => {
-  console.log(
-    `🚀 ~ file: manage-package-form.jsx:22 ~ organisation:`,
-    organisation
-  );
   const { updatePlan } = useManageSubscriptionMutation();
 
   const packageSchema = z.object({
@@ -31,7 +27,7 @@ const ManageSubscription = ({ handleClose, open, organisation }) => {
     }),
   });
 
-  const { control, formState, handleSubmit } = useForm({
+  const { control, formState, handleSubmit, reset } = useForm({
     defaultValues: {
       packageInfo: {
         value: organisation?.packageInfo || "",
@@ -40,11 +36,14 @@ const ManageSubscription = ({ handleClose, open, organisation }) => {
     },
     resolver: zodResolver(packageSchema),
   });
+  useEffect(() => {
+    reset();
+    console.log("use effect run");
+  }, [reset]);
 
   const { errors, isDirty } = formState;
   function onSubmit(data) {
-    console.log(`🚀 ~ file: manage-package-form.jsx:34 ~ data:`, data);
-    updatePlan({ organizationId: organisation._id, ...data });
+    updatePlan({ organizationId: organisation._id, ...data, handleClose });
   }
   return (
     <Modal
