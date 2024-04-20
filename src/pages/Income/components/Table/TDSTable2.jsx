@@ -240,20 +240,20 @@ const TDSTable2 = () => {
 
   const handleAmountChange = (e, itemIndex, id) => {
     const newData = [...tableData];
-    newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].declaration =
-      e.target.value;
+    // newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].declaration =
+    //   e.target.value;
     setDeclarationData((prev) => ({
       ...prev,
       declaration: e.target.value,
     }));
 
-    setTableData(newData);
+    // setTableData(newData);
   };
 
   const handleProofChange = (e, itemIndex, id) => {
     const newData = [...tableData];
-    newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].proof =
-      e.target.files[0];
+    // newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].proof =
+    //   e.target.files[0];
 
     if (e.target.files[0]?.type !== "application/pdf") {
       handleAlert(true, "error", "Only PDF format allowed");
@@ -268,21 +268,29 @@ const TDSTable2 = () => {
       ...prev,
       proof: e.target.files[0],
     }));
-    setTableData(newData);
+    // setTableData(newData);
   };
 
   const handleProperty1 = (e, itemIndex, id) => {
     const newData = [...tableData];
-    newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property1 =
-      e.target.value;
-    setTableData(newData);
+    // newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property1 =
+    //   e.target.value;
+    setDeclarationData((prev) => ({
+      ...prev,
+      property1: e.target.value,
+    }));
+    // setTableData(newData);
   };
 
   const handleProperty2 = (e, itemIndex, id) => {
     const newData = [...tableData];
-    newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property2 =
-      e.target.value;
-    setTableData(newData);
+    // newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property2 =
+    //   e.target.value;
+    setDeclarationData((prev) => ({
+      ...prev,
+      property2: e.target.value,
+    }));
+    // setTableData(newData);
   };
 
   const handleDelete = async (index, id) => {
@@ -349,11 +357,9 @@ const TDSTable2 = () => {
     return data?.data?.url?.split("?")[0];
   };
 
-  console.log(`🚀 ~ handleDownload:`, handleDownload);
-
   const handleSaveClick = async (index, id) => {
     const newData = [...tableData];
-    const value = newData[index][Object.keys(newData[index])[0]][id];
+    const value = declarationData;
     const tdsfile = value.proof;
 
     let uploadproof = "";
@@ -441,6 +447,8 @@ const TDSTable2 = () => {
 
   const handleClose = (index) => {
     setEditStatus({ [index]: null });
+    setDeclarationData(null);
+    console.log(declarationData);
   };
 
   return (
@@ -566,7 +574,7 @@ const TDSTable2 = () => {
                                   <input
                                     type="number"
                                     className="border-none w-[90px] h-auto outline-none  "
-                                    value={ele.declaration}
+                                    // defaultValue={ele.declaration}
                                     onChange={(e) =>
                                       handleAmountChange(e, itemIndex, id)
                                     }
@@ -581,7 +589,7 @@ const TDSTable2 = () => {
                             <td className="text-left h-14 px-2 leading-7 text-[16px] w-[200px]  border ">
                               {editStatus[itemIndex] === id ? (
                                 <>
-                                  {declarationData?.proof ? (
+                                  {declarationData.proof ? (
                                     <div
                                       onClick={() =>
                                         handlePDF(
