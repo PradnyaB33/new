@@ -27,14 +27,14 @@ const TDSTable3 = () => {
       status: "Not Submitted",
     },
     {
-      name: "Bank Interest (Term Deposit)",
+      name: "Bank interest (term deposit)",
       amount: 0,
       amountAccepted: 0,
       proof: "",
       status: "Not Submitted",
     },
     {
-      name: "NSC Interest for the year",
+      name: "NSC interest for the year",
       amount: 0,
       amountAccepted: 0,
       proof: "",
@@ -55,21 +55,21 @@ const TDSTable3 = () => {
       status: "Not Submitted",
     },
     {
-      name: "Family Pension",
+      name: "Family pension",
       amount: 0,
       amountAccepted: 0,
       proof: "",
       status: "Not Submitted",
     },
     {
-      name: "Less : Deduction on Family Pension Income Sec. 57(IIA)",
+      name: "Less : Deduction on family pension income sec. 57(IIA)",
       amount: 0,
       amountAccepted: 0,
       proof: "",
       status: "Auto",
     },
     {
-      name: "Less : Gifts up to Rs. 50,000/- Dec. 56(2)",
+      name: "Less : Gifts up to Rs. 50,000/- dec. 56(2)",
       amount: 0,
       amountAccepted: 0,
       proof: "",
@@ -120,7 +120,7 @@ const TDSTable3 = () => {
     queryFn: async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API}/route/tds/getInvestment/2023-2024/Otherincome`,
+          `${process.env.REACT_APP_API}/route/tds/getInvestment/Otherincome`,
           {
             headers: {
               Authorization: authToken,

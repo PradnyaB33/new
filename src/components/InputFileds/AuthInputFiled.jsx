@@ -13,15 +13,29 @@ import Select, { components } from "react-select";
 import CreatableSelect from "react-select/creatable";
 import Datepicker from "react-tailwindcss-datepicker";
 import useEmpState from "../../hooks/Employee-OnBoarding/useEmpState";
-import { salaryComponentArray } from "../Modal/SalaryInputFields/SalaryInputFieldsModal";
 import PlaceAutoComplete from "./places-autocomplete";
 
 // import Autocomplete from "react-google-autocomplete";
 
+export const CustomOption = ({ data, ...props }) => (
+  <components.Option {...props}>
+    <div className="flex gap-2">
+      <Avatar
+        sx={{ width: 30, height: 30 }}
+        src={data.image}
+        alt={data.label}
+      />
+      {data.label}
+    </div>
+  </components.Option>
+);
+
 const AuthInputFiled = ({
   label,
   name,
+  isMulti,
   icon: Icon,
+  optionlist,
   type,
   errors,
   error,
@@ -46,19 +60,6 @@ const AuthInputFiled = ({
   const handleFocus = (fieldName) => {
     setFocusedInput(fieldName);
   };
-
-  const CustomOption = ({ data, ...props }) => (
-    <components.Option {...props}>
-      <div className="flex gap-2">
-        <Avatar
-          sx={{ width: 30, height: 30 }}
-          src={data.image}
-          alt={data.label}
-        />
-        {data.label}
-      </div>
-    </components.Option>
-  );
 
   const { ref } = usePlacesWidget({
     apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -91,10 +92,12 @@ const AuthInputFiled = ({
                   inputClassName={"border-none w-full outline-none"}
                   useRange={false}
                   asSingle={true}
+                  popoverDirection="down"
                   readOnly={true}
                   onChange={(value) => {
                     field.onChange(value);
                   }}
+                  minDate={min}
                   value={field.value}
                 />
               </div>
@@ -141,7 +144,7 @@ const AuthInputFiled = ({
                   <Select
                     aria-errormessage=""
                     placeholder={placeholder}
-                    isMulti
+                    isMulti={isMulti}
                     components={{
                       Option: CustomOption,
                     }}
@@ -155,9 +158,6 @@ const AuthInputFiled = ({
                     className={`${
                       readOnly && "bg-[ghostwhite]"
                     } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
-                    // components={{
-                    //   IndicatorSeparator: () => null,
-                    // }}
                     options={options}
                     value={field?.value}
                     onChange={(value) => {
@@ -476,7 +476,7 @@ const AuthInputFiled = ({
                   <Icon className="text-gray-700" />
                   <CreatableSelect
                     aria-errormessage="error"
-                    options={salaryComponentArray}
+                    options={optionlist}
                     placeholder={placeholder}
                     isMulti
                     styles={{
@@ -567,7 +567,7 @@ const AuthInputFiled = ({
           )}
         />
         <div className="h-4 !mb-1">
-          <p className="text-xs">{descriptionText}</p>
+          <p className="text-xs pl-2">{descriptionText}</p>
           <ErrorMessage
             errors={errors}
             name={name}
@@ -731,7 +731,8 @@ const AuthInputFiled = ({
               <ReactQuill
                 theme="snow"
                 value={field.value}
-                className="h-36 "
+                readOnly={readOnly}
+                className="h-36"
                 onChange={field.onChange}
               />
               {/* </div> */}
@@ -980,11 +981,13 @@ const AuthInputFiled = ({
                 handleFocus(name);
               }}
               onBlur={() => setFocusedInput(null)}
-              className={`${readOnly && "bg-[ghostwhite]"} ${
+              className={` ${
                 focusedInput === name
                   ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
                   : "outline-none border-gray-200 border-[.5px]"
-              } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
+              } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px] ${
+                readOnly && "!bg-gray-200"
+              }`}
             >
               {Icon && (
                 <Icon className="text-gray-700 md:text-lg !text-[1em]" />
@@ -999,9 +1002,9 @@ const AuthInputFiled = ({
                 readOnly={readOnly}
                 value={field.value}
                 placeholder={placeholder}
-                className={`${
-                  readOnly && "bg-[ghostwhite]"
-                } border-none bg-white w-full outline-none px-2  `}
+                className={` border-none bg-white w-full outline-none px-2  ${
+                  readOnly && "!bg-gray-200"
+                }`}
                 {...field}
                 formNoValidate
               />

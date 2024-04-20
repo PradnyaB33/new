@@ -1,14 +1,15 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Button, Container, TextField, Typography } from "@mui/material";
 import axios from "axios";
-import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import React, { useState } from "react";
-import { useQuery } from "react-query";
-import ReactQuill from "react-quill"; // Import ReactQuill
-import "react-quill/dist/quill.snow.css"; // Import Quill styles
+import React, { useContext, useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "react-query";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import stripTags from "striptags";
+import { UseContext } from "../../State/UseState/UseContext";
 import useGetUser from "../../hooks/Token/useUser";
-import UserProfile from "../../hooks/UserData/useUser";
+import { getSignedUrlForOrgDocs, uploadFile } from "../../services/docManageS3";
 import DataTable from "./components/DataTable";
 import DocList from "./components/DocList";
 import Options from "./components/Options";
@@ -16,18 +17,10 @@ import Options from "./components/Options";
 const DocManageAuth = () => {
   const { authToken } = useGetUser();
   const [option, setOption] = useState("");
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
-  const { data } = useQuery(`getEmp`, async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/employee/get/${user.organizationId}`,
-      {
-        headers: { Authorization: authToken },
-      }
-    );
+  const querClient = useQueryClient();
+  const [docId, setDocId] = useState("");
+  const { setAppAlert } = useContext(UseContext);
 
-    return response.data.employees;
-  });
   const { data: data2 } = useQuery(`getOrgDocs`, async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/org/getdocs`,
@@ -47,31 +40,153 @@ const DocManageAuth = () => {
     applicableDate: "",
   });
 
-  const handleCreateDocument = () => {
-    console.log("New document:", newDocument);
+  const handleEditDocument = async (id) => {
+    try {
+      setDocId(id.toString());
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/org/getdoc/${id}`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+      setNewDocument(response.data.doc);
+    } catch (error) {
+      console.error("Error while fetching document for editing:", error);
+    }
+  };
 
-    generatePDF();
+  const handleDeleteDoc = async (id) => {
+    try {
+      const resp = await axios.delete(
+        `${process.env.REACT_APP_API}/route/org/deletedoc/${id}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      console.log(resp);
+      querClient.invalidateQueries("getOrgDocs");
+      setAppAlert({
+        alert: true,
+        type: "success",
+        msg: "Document Deleted Successfully",
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
+  useEffect(() => {
+    setDocId("");
     setNewDocument({
       title: "",
       details: "",
       applicableDate: "",
     });
+  }, [option]);
+
+  const handleCreateDocument = async () => {
+    try {
+      const doc = new jsPDF();
+      doc.setFontSize(12);
+      doc.text("Welcome to www.aegishrms.com", 10, 20);
+      doc.text("Title: " + newDocument.title, 10, 30);
+      doc.text("Applicable Date: " + newDocument.applicableDate, 10, 40);
+      const detailsText = stripTags(newDocument.details); // Remove HTML tags
+      const detailsLines = doc.splitTextToSize(detailsText, 180);
+      doc.text(detailsLines, 10, 50);
+      const pdfDataUri = doc.output("datauristring");
+
+      const signedUrlResponse = await getSignedUrlForOrgDocs(authToken, {
+        documentName: `${newDocument.title}`,
+      });
+
+      const blob = await fetch(pdfDataUri).then((res) => res.blob());
+      await uploadFile(signedUrlResponse.url, blob);
+
+      await axios.post(
+        `${process.env.REACT_APP_API}/route/org/adddocuments`,
+        {
+          title: newDocument.title,
+          details: newDocument.details,
+          applicableDate: newDocument.applicableDate,
+          url: signedUrlResponse.url.split("?")[0],
+        },
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+      querClient.invalidateQueries("getOrgDocs");
+      setAppAlert({
+        alert: true,
+        type: "success",
+        msg: "Document Created Successfully",
+      });
+      setNewDocument({
+        title: "",
+        details: "",
+        applicableDate: "",
+      });
+
+      console.log("Document uploaded and data saved successfully");
+    } catch (error) {
+      console.error("Error while uploading document and saving data:", error);
+    }
   };
 
-  const generatePDF = () => {
-    const doc = new jsPDF();
-    const content = document.getElementById("document-content");
+  const handleUpdateDocument = async () => {
+    try {
+      const resp = await axios.patch(
+        `${process.env.REACT_APP_API}/route/org/updatedocuments/${docId}`,
+        {
+          title: newDocument.title,
+          details: newDocument.details,
+          applicableDate: newDocument.applicableDate,
+          url: newDocument.url,
+        },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      console.log(resp);
+      const doc = new jsPDF();
+      doc.setFontSize(12);
+      doc.text("Welcome to www.aegishrms.com", 10, 20);
+      doc.text("Title: " + newDocument.title, 10, 30);
+      doc.text("Applicable Date: " + newDocument.applicableDate, 10, 40);
+      const detailsText = stripTags(newDocument.details); // Remove HTML tags
+      const detailsLines = doc.splitTextToSize(detailsText, 180);
+      doc.text(detailsLines, 10, 50);
+      const pdfDataUri = doc.output("datauristring");
+      const signedUrlResponse = await getSignedUrlForOrgDocs(authToken, {
+        documentName: `${newDocument.title}`,
+      });
 
-    html2canvas(content).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      doc.addImage(imgData, "PNG", 10, 10, 190, 200);
-      doc.save("document.pdf");
-    });
+      const blob = await fetch(pdfDataUri).then((res) => res.blob());
+      await uploadFile(signedUrlResponse.url, blob);
+      querClient.invalidateQueries("getOrgDocs");
+      setAppAlert({
+        alert: true,
+        type: "success",
+        msg: "Document Updated Successfully",
+      });
+    } catch (error) {
+      console.error("Error while updating document:", error);
+    }
   };
+
+  // const formatDate = (dateString) => {
+  //   const rawDate = new Date(dateString);
+  //   return `${rawDate.getDate()}-${(rawDate.getMonth() + 1)
+  //     .toString()
+  //     .padStart(2, "0")}-${rawDate.getFullYear()}`;
+  // };
 
   return (
-    <div className="w-full h-full flex justify-around p-8 gap-8">
+    <div className="w-full h-full flex justify-around p-6 gap-6">
       <Container className="w-[600px] h-[80vh] border-2 mt-5 pt-4">
         {option !== "" && (
           <div
@@ -82,8 +197,14 @@ const DocManageAuth = () => {
           </div>
         )}
 
-        {option === "emp" && <DataTable data={data} />}
-        {option === "doc" && <DocList data={data2} />}
+        {option === "emp" && <DataTable />}
+        {option === "doc" && (
+          <DocList
+            onEdit={handleEditDocument}
+            onDelete={handleDeleteDoc}
+            data={data2}
+          />
+        )}
         {option === "" && <Options setOption={setOption} />}
       </Container>
 
@@ -94,7 +215,7 @@ const DocManageAuth = () => {
             className="w-full justify-center flex mt-1 p-2"
           >
             <Typography className="!font-semibold !text-xl">
-              Create Record
+              {docId ? "Update Record" : "Create Record"}
             </Typography>
           </div>
           <div className="mt-4">
@@ -148,13 +269,24 @@ const DocManageAuth = () => {
           </div>
         </div>
         <div className="flex gap-2 mt-3">
-          <Button
-            variant="contained"
-            size="small"
-            onClick={handleCreateDocument}
-          >
-            Submit
-          </Button>
+          {!docId && (
+            <Button
+              variant="contained"
+              size="small"
+              onClick={handleCreateDocument}
+            >
+              Submit
+            </Button>
+          )}
+          {docId && (
+            <Button
+              variant="contained"
+              size="small"
+              onClick={handleUpdateDocument}
+            >
+              Update
+            </Button>
+          )}
         </div>
       </Container>
     </div>

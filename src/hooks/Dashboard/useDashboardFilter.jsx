@@ -10,6 +10,8 @@ export default function useDashboardFilter(organisationId) {
   const [manager, setManager] = useState("");
   const [locations, setLocations] = useState("");
   const [data, setData] = useState([]);
+  const [date, setDate] = useState(2024);
+  console.log(`🚀 ~ file: useDashboardFilter.jsx:14 ~ setDate:`, setDate);
   const [salaryData, setSalaryData] = useState([]);
 
   // Card Data
@@ -151,7 +153,7 @@ export default function useDashboardFilter(organisationId) {
     ["organization-attenedence", organisationId],
     () =>
       getAttendenceData(
-        `${process.env.REACT_APP_API}/route/leave/getOrganizationAttendece/${organisationId}`
+        `${process.env.REACT_APP_API}/route/leave/getOrganizationAttendece/${organisationId}/${date}`
       ),
     {
       onSuccess: (organizationAttendenceData) => {
@@ -297,6 +299,7 @@ export default function useDashboardFilter(organisationId) {
 
     // States
     data,
+    date,
     setData,
     locations,
     setLocations,

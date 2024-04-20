@@ -1,11 +1,14 @@
-import { Container, Typography } from "@mui/material";
+import { Container, Typography  , IconButton} from "@mui/material";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useQuery } from "react-query";
 import EmployeeTypeSkeleton from "../SetUpOrganization/components/EmployeeTypeSkeleton";
 import { Info } from "@mui/icons-material";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import CalculateHourEmpModal from "../../components/Modal/CalculateHourEmpModal/CalculateHourEmpModal";
+
 const ViewAttendacneBiomatric = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -26,15 +29,29 @@ const ViewAttendacneBiomatric = () => {
       return response.data.data;
     }
   );
-  console.log("empAttendanceData", empAttendanceData);
+  
+  // for open the modal for display employee and calculate hour
+  const [modalOpen, setModalOpen] = useState(false);
+  const [empPunchingData, setEmpPunchingData] = useState();
+  const handleModalOpen = (data) => {
+     setEmpPunchingData(data)
+     setModalOpen(true);
+   
+  };
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
 
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
-            Employee
+          Employee’s Time Track
           </Typography>
+          <p className="text-xs text-gray-600 pl-10 text-center">
+            Track the attendance of employees here.
+          </p>
 
           {isLoading ? (
             <EmployeeTypeSkeleton />
@@ -47,17 +64,15 @@ const ViewAttendacneBiomatric = () => {
                       Sr. No
                     </th>
                     <th scope="col" className="px-6 py-3">
+                      Employee Id
+                    </th>
+                    <th scope="col" className="px-6 py-3">
                       Employee Name
                     </th>
-                    <th scope="col" className="px-6 py-3 ">
-                      Date
+                    <th scope="col" className="px-6 py-3">
+                      Action
                     </th>
-                    <th scope="col" className="px-6 py-3 ">
-                      Punching Time
-                    </th>
-                    <th scope="col" className="px-6 py-3 ">
-                      Punching Status
-                    </th>
+                    
                   </tr>
                 </thead>
                 <tbody>
@@ -65,37 +80,18 @@ const ViewAttendacneBiomatric = () => {
                     <tr className="!font-medium border-b" key={id}>
                       <td className="!text-left pl-8 py-3 ">{id + 1}</td>
                       <td className="!text-left  pl-4 py-3 ">
+                        {empAttendanceData?.EmployeeId?.empId || ""}
+                      </td>
+                      <td className="!text-left  pl-4 py-3 ">
                         {empAttendanceData?.EmployeeId?.first_name || ""}
                       </td>
-                      <td className="!text-left pl-4 py-3 ">
-                        {empAttendanceData?.punchingRecords?.map(
-                          (punchingRecord, index) => (
-                            <span key={index}>
-                              {new Date(
-                                punchingRecord?.date
-                              ).toLocaleDateString()}
-                            </span>
-                          )
-                        )}
+                      <td className="!text-left pl-4 py-3">
+                      <IconButton aria-label="view" size="small" onClick={() => handleModalOpen(empAttendanceData)}>
+                        <CalendarMonthIcon sx={{ color: 'green' }} />
+                        </IconButton>
+
                       </td>
-                      <td className="!text-left pl-4 py-3 ">
-                        {empAttendanceData?.punchingRecords?.map(
-                          (punchingRecord, index) => (
-                            <span key={index}>
-                              {punchingRecord?.punchingTime}
-                            </span>
-                          )
-                        )}
-                      </td>
-                      <td className="!text-left pl-4 py-3 ">
-                        {empAttendanceData?.punchingRecords?.map(
-                          (punchingRecord, index) => (
-                            <span key={index}>
-                              {punchingRecord?.punchingStatus}
-                            </span>
-                          )
-                        )}
-                      </td>
+                     
                     </tr>
                   ))}
                 </tbody>
@@ -105,13 +101,20 @@ const ViewAttendacneBiomatric = () => {
             <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
               <article className="flex items-center mb-1 text-red-500 gap-2">
                 <Info className="!text-2xl" />
-                <h1 className="text-lg font-semibold">Add Loan Type</h1>
+                <h1 className="text-lg font-semibold">No Sync Data Found</h1>
               </article>
-              <p>No loan type found. Please add the loan type.</p>
+              <p>Please sync the data of employee.</p>
             </section>
           )}
         </article>
       </Container>
+
+      <CalculateHourEmpModal
+        handleClose={handleModalClose}
+        open={modalOpen}
+        organisationId={organisationId}
+        empPunchingData = {empPunchingData}
+      />
     </>
   );
 };

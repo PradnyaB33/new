@@ -27,6 +27,8 @@ import Employee from "./pages/Employee/Employee";
 import Form16 from "./pages/Form16/Form16";
 import Home from "./pages/Home/Home";
 import IncomeTax from "./pages/Income/IncomeTax";
+import TDSTab1 from "./pages/Income/components/TDSTab1";
+import DeclarationPage from "./pages/Income/components/accountantDeclarations/DeclarationPage";
 import LeaveRequisition from "./pages/LeaveRequisition/LeaveRequisition";
 import LoanManagement from "./pages/LoanManagement/LoanManagement";
 import OrgList from "./pages/OrgList/OrgList";
@@ -62,6 +64,7 @@ import RemoteNotification from "./pages/Test/RemoteNotification";
 import TestMap from "./pages/Test/testMap";
 import TestYash from "./pages/Test/testYash";
 import DepartmentTest from "./pages/Test2/DepartmentTest";
+import HrTrainings from "./pages/Training/page";
 import EmployeeProfile from "./pages/UserProfile/UserProfile";
 import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
@@ -69,10 +72,6 @@ import AddDelegate from "./pages/add-delegate/AddDelegate";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
-//import UnAuthorized from "./utils/Forbidden/UnAuthorized";
-import TDSTab1 from "./pages/Income/components/TDSTab1";
-import DeclarationPage from "./pages/Income/components/accountantDeclarations/DeclarationPage";
-//import UnAuthorized from "./utils/Forbidden/UnAuthorized";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 import OrgChart from "./Test/OrgChart";
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
@@ -83,22 +82,26 @@ import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
-import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttendacneBiomatric";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
+import LetterSetup from "./pages/LetterTypes/LetterSetup";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
+import MissPunchInOut from "./pages/MissPunch/MissPunchInOut";
+import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
+import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
+import MyTraining from "./pages/My-Training/page";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
 import Training from "./pages/SetUpOrganization/Traning/Training";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
-import EmployeeTraining from "./pages/Training/page";
+import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttendacneBiomatric";
+import ViewCalculateAttendance from "./pages/ViewCalculateAttendance/ViewCalculateAttendance";
 import CustomCalander from "./pages/custom/Calendar";
 import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-
 const App = () => {
   return (
     <AuthProvider>
@@ -126,7 +129,9 @@ const App = () => {
         <Route
           path="/performance"
           element={
-            <RequireAuth permission={["Super-Admin", "Employee"]}>
+            <RequireAuth
+              permission={["Super-Admin", "Employee", "Manager", "HR"]}
+            >
               <Performance />
             </RequireAuth>
           }
@@ -143,6 +148,7 @@ const App = () => {
         <Route path="/paymentfailed" element={<PaymentFailed />} />
 
         <Route path="/loading" element={<Loader />} />
+        <Route path="/my-training" element={<MyTraining />} />
         <Route path="/testOrg" element={<NewOranisationForm />} />
         <Route path="/remotePunching" element={<RemoteEmployee />} />
         {/* Login Routes */}
@@ -160,6 +166,10 @@ const App = () => {
           element={<EmployeeConfirmation />}
         />
         <Route path="/custom/calendar" element={<CustomCalander />} />
+        <Route
+          path="/organisation/:organisationId/setup/letter-types"
+          element={<LetterSetup />}
+        />
         <Route path="/remote/info/:Id" element={<RemoteManager />} />
         <Route path="/remote/notification" element={<RemoteNotification />} />
         <Route path="/emp/docs" element={<DocManage />} />
@@ -179,7 +189,15 @@ const App = () => {
         {/* <Route path="/notification" element={<ParentNotification />} /> */}
         <Route path="/leave-notification" element={<LeaveNotification />} />
         <Route path="/punch-notification" element={<PunchNotification />} />
+        <Route
+          path="/missedPunch-notification"
+          element={<MissedPunchNotification />}
+        />
         <Route path="/shift-notification" element={<ShiftNotification />} />
+        <Route
+          path="/missedPunch-notification"
+          element={<MissedPunchNotification />}
+        />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route
@@ -376,12 +394,96 @@ const App = () => {
           }
         />
         <Route
+          path="/organisation/:organisationId/view-calculate-data"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <ViewCalculateAttendance />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/view-calculate-data"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <ViewCalculateAttendance />
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/organisation/:organisationId/view-attendance-biomatric"
           element={
             <RequireAuth
               permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
             >
               <ViewAttendacneBiomatric />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/missed-justify"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <MissPunchJustify />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/missed-punch-in-out"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <MissPunchInOut />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/missed-punch-in-out"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <MissPunchInOut />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/missed-justify"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <MissPunchJustify />
             </RequireAuth>
           }
         />
@@ -773,7 +875,14 @@ const App = () => {
           element={<DeclarationPage />}
         />
         <Route path="/application" element={<Application />} />
-        <Route path="/training" element={<EmployeeTraining />} />
+        <Route
+          path="/organisation/:organisationId/manage-training"
+          element={
+            <RequireAuth permission={["HR", "Super-Admin", "Department-Head"]}>
+              <HrTrainings />
+            </RequireAuth>
+          }
+        />
         <Route
           path="/leave"
           element={

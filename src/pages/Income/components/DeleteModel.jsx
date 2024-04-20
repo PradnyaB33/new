@@ -20,10 +20,7 @@ const DeleteModel = ({
       >
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
-          <p>
-            Please confirm your decision to delete this salary template, as this
-            action cannot be undone.
-          </p>
+          <p>Please confirm your decision to delete this declaration?</p>
         </DialogContent>
         <DialogActions>
           <Button

@@ -1,4 +1,5 @@
 import React from "react";
+import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import usePunchNotification from "../../hooks/QueryHook/notification/punch-notification/hook";
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
@@ -8,6 +9,7 @@ const ParentNotification = () => {
   const { data, isLoading } = useLeaveNotificationHook();
   const { data: data2 } = useShiftNotification();
   const { data: data3 } = usePunchNotification();
+  const { missPunchData } = useMissedPunchNotificationCount();
 
   const dummyData = [
     {
@@ -29,10 +31,10 @@ const ParentNotification = () => {
       url: "/punch-notification",
     },
     {
-      name: "Department Notification",
-      count: 2,
+      name: "Missed Punch Notification",
+      count: missPunchData?.length ?? 0,
       color: "#51E8FD",
-      url: "/department-notification",
+      url: "/missedPunch-notification",
     },
   ];
 

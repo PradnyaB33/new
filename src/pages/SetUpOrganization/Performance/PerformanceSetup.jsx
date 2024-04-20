@@ -1,10 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AccessTime, BarChart, ListAlt, TrendingUp } from "@mui/icons-material";
+import {
+  AccessTime,
+  BarChart,
+  ListAlt,
+  Star,
+  TrendingUp,
+} from "@mui/icons-material";
 import { Button, CircularProgress } from "@mui/material";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
@@ -29,10 +35,16 @@ const PerformanceSetup = () => {
       label: z.string(),
       value: z.string(),
     }),
-    goals: z.object({
-      label: z.string(),
-      value: z.string(),
-    }),
+    // goals: z.object({
+    //   label: z.string(),
+    //   value: z.string(),
+    // }),
+    ratings: z.array(
+      z.object({
+        label: z.string(),
+        value: z.string(),
+      })
+    ),
     isDownCast: z.boolean().optional(),
     isFeedback: z.boolean().optional(),
     isNonMeasurableAllowed: z.boolean().optional(),
@@ -44,16 +56,33 @@ const PerformanceSetup = () => {
     isSelfGoal: z.boolean().optional(),
   });
 
+  const { data: performance, isFetching } = useQuery(
+    "performancePeriod",
+    async () => {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/route/performance/getSetup/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      return data;
+    }
+  );
+
   const {
     formState: { errors },
     control,
     handleSubmit,
+    setValue,
     watch,
   } = useForm({
     resolver: zodResolver(PerformanceSchema),
     defaultValues: {
       stages: undefined,
-      goals: undefined,
+      // goals: undefined,
       isDownCast: false,
       isFeedback: false,
       isNonMeasurableAllowed: false,
@@ -66,31 +95,67 @@ const PerformanceSetup = () => {
     },
   });
 
+  useEffect(() => {
+    if (performance) {
+      setValue(
+        "deleteFormEmployeeOnBoarding",
+        performance.deleteFormEmployeeOnBoarding
+      );
+      setValue("enddate", {
+        startDate: performance.enddate,
+        endDate: performance.enddate,
+      });
+      setValue("startdate", {
+        startDate: performance.startdate,
+        endDate: performance.startdate,
+      });
+      // setValue("goals", performance.goals);
+      setValue("isDownCast", performance.isDownCast);
+      setValue("isFeedback", performance.isFeedback);
+      setValue("isKRA", performance.isKRA);
+      setValue("isManagerApproval", performance.isManagerApproval);
+      setValue("isMidGoal", performance.isMidGoal);
+      setValue("isNonMeasurableAllowed", performance.isNonMeasurableAllowed);
+      setValue("isSelfGoal", performance.isSelfGoal);
+      setValue("isSendFormInMid", performance.isSendFormInMid);
+      setValue("organizationId", performance.organizationId);
+      setValue("stages", {
+        label: performance.stages,
+        value: performance.stages,
+      });
+
+      setValue(
+        "ratings",
+        performance.ratings.map((rating) => ({
+          label: rating,
+          value: rating,
+        }))
+      );
+    }
+    // eslint-disable-next-line
+  }, [isFetching]);
+
   let stagesOptions = [
-    {
-      value: "Send form to employee",
-      label: "Send form to employee",
-    },
     {
       value: "Goal setting",
       label: "Goal setting",
     },
     {
-      value: "Monitoring stage",
-      label: "Monitoring stage",
+      value: "Monitoring stage/Feedback collection stage",
+      label: "Monitoring stage/Feedback collection stage",
     },
     {
-      value: "KRA stage",
-      label: "KRA stage",
+      value: "KRA stage/Ratings Feedback/Manager review stage",
+      label: "KRA stage/Ratings Feedback/Manager review stage",
     },
-    {
-      value: "Feedback collection stage",
-      label: "Feedback collection stage",
-    },
-    {
-      value: "Ratings Feedback/Manager review stage",
-      label: "Ratings Feedback/Manager review stage",
-    },
+    // {
+    //   value: "Feedback collection stage",
+    //   label: "Feedback collection stage",
+    // },
+    // {
+    //   value: "Ratings Feedback/Manager review stage",
+    //   label: "Ratings Feedback/Manager review stage",
+    // },
     {
       value: "Employee acceptance/acknowledgement stage",
       label: "Employee acceptance/acknowledgement stage",
@@ -131,16 +196,16 @@ const PerformanceSetup = () => {
     },
   ];
 
-  console.log(watch("startdate"));
-
   const performanceSetup = useMutation(
     async (data) => {
+      console.log(data.goalType);
       const performanceSetting = {
         ...data,
         startdate: data.startdate.startDate,
         enddate: data.enddate.endDate,
-        goals: data.goals.value,
+        // goals: data.goals.value,
         stages: data.stages.value,
+        ratings: data.ratings.map((rating) => rating.value),
       };
       await axios.post(
         `${process.env.REACT_APP_API}/route/performance/createSetup/${organisationId}`,
@@ -162,24 +227,12 @@ const PerformanceSetup = () => {
   const onSubmit = async (data) => {
     performanceSetup.mutate(data);
   };
-  //  (data) =>
-  //    axios.post(`${process.env.REACT_APP_API}/route/shifts/create`, data),
-  //  {
-  //    onSuccess: () => {
-  //      queryClient.invalidateQueries({ queryKey: ["shifts"] });
-  //      handleClose();
-  //      handleAlert(true, "success", "Shift generated succesfully");
-  //    },
-  //    onError: () => {
-  //      setError("An error occurred while creating a new shift");
-  //    },
-  //  }
 
   return (
     <div>
       <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
         <Setup>
-          <article className="SetupSection bg-white w-[80%]  h-max shadow-md rounded-sm border  items-center">
+          <article className="SetupSection bg-white w-[80%]   shadow-md rounded-sm   items-center">
             <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
               <div className="flex gap-3 ">
                 <div className="mt-1">
@@ -188,12 +241,12 @@ const PerformanceSetup = () => {
                 <div>
                   <h1 className="!text-lg">Performance</h1>
                   <p className="text-xs text-gray-600">
-                    Create the salary template here.
+                    Setup performance settings for your organization
                   </p>
                 </div>
               </div>
             </div>
-            <div className="overflow-auto h-[80vh]  border-[.5px] p-4 border-gray-200">
+            <div className=" p-4 border-gray-200">
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
                 <div className="grid grid-cols-2 gap-4">
                   <AuthInputFiled
@@ -207,6 +260,7 @@ const PerformanceSetup = () => {
                   />
                   <AuthInputFiled
                     name="enddate"
+                    min={watch("startdate")?.startDate}
                     icon={AccessTime}
                     control={control}
                     type="calender"
@@ -227,16 +281,28 @@ const PerformanceSetup = () => {
                   errors={errors}
                   error={errors.stages}
                 />
-                <AuthInputFiled
+                {/* <AuthInputFiled
                   name="goals"
                   icon={TrendingUp}
                   control={control}
-                  type="select"
+                  type="mutltiselect"
                   options={goalsOptions}
                   placeholder="Goals"
                   label="Select Goal Type *"
                   errors={errors}
                   error={errors.goals}
+                /> */}
+                <AuthInputFiled
+                  name="ratings"
+                  icon={Star}
+                  control={control}
+                  type="autocomplete"
+                  optionlist={[]}
+                  options={goalsOptions}
+                  placeholder="Ex. 1"
+                  label="Enter Review Type *"
+                  errors={errors}
+                  error={errors.ratings}
                 />
 
                 <div className="grid grid-cols-2 gap-4">

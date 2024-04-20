@@ -37,7 +37,7 @@ const TDSTable2 = () => {
     {
       "(A) Self Occupied Property (Loss)": [
         {
-          name: "Interest on loan / Borrowing taken for Repairs, renewal, or reconstruction",
+          name: "Interest on loan / borrowing taken for repairs, renewal, or reconstruction",
           property1: 0,
           property2: 0,
           declaration: 0,
@@ -76,7 +76,7 @@ const TDSTable2 = () => {
       maximumAllowable: 0,
     },
     {
-      "(B) Let out property (Enter name of Property)": [
+      "(B) Let out property": [
         {
           name: "Rent of the property for the year",
           declaration: 0,
@@ -84,13 +84,13 @@ const TDSTable2 = () => {
           status: "Not Submitted",
         },
         {
-          name: "Less : Municipal Taxes paid in the year",
+          name: "Less : Municipal taxes paid in the year",
           declaration: 0,
           proof: "",
           status: "Not Submitted",
         },
         {
-          name: "Less : Interest on Housing Loan",
+          name: "Less : Interest on housing loan",
           declaration: 0,
           proof: "",
           status: "Not Submitted",
@@ -104,7 +104,7 @@ const TDSTable2 = () => {
       },
     },
     {
-      "(C) Let out property (Enter name of Property)": [
+      "(C) Let out property": [
         {
           name: "Rent of the property for the year",
           declaration: 0,
@@ -112,14 +112,14 @@ const TDSTable2 = () => {
           status: "Not Submitted",
         },
         {
-          name: "Less : Municipal Taxes paid in the year",
+          name: "Less : Municipal taxes paid in the year",
           declaration: 0,
           proof: "",
           status: "Not Submitted",
         },
 
         {
-          name: "Less : Interest on Housing Loan",
+          name: "Less : Interest on housing loan",
           declaration: 0,
           proof: "",
           status: "Not Submitted",
@@ -138,7 +138,7 @@ const TDSTable2 = () => {
     queryFn: async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API}/route/tds/getInvestment/2023-2024/House`,
+          `${process.env.REACT_APP_API}/route/tds/getInvestment/House`,
           {
             headers: {
               Authorization: authToken,
@@ -154,7 +154,6 @@ const TDSTable2 = () => {
       if (Array.isArray(res)) {
         // Extracting relevant data from the backend response
         const updatedTableData = tableData.map((section) => {
-          console.log(res);
           const sectionName = Object.keys(section)[0];
           const matchingSection = res?.filter(
             (item) => item.subsectionname === sectionName
@@ -237,6 +236,7 @@ const TDSTable2 = () => {
     const newData = [...tableData];
     newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].declaration =
       e.target.value;
+
     setTableData(newData);
   };
 
@@ -244,6 +244,15 @@ const TDSTable2 = () => {
     const newData = [...tableData];
     newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].proof =
       e.target.files[0];
+
+    if (e.target.files[0]?.type !== "application/pdf") {
+      handleAlert(true, "error", "Only PDF format allowed");
+      return {};
+    }
+    if (e.target.files[0]?.size > 500 * 1024) {
+      handleAlert(true, "error", "File size must be under 500kb");
+      return {};
+    }
     setTableData(newData);
   };
 
@@ -282,7 +291,7 @@ const TDSTable2 = () => {
 
     try {
       await axios.patch(
-        `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
+        `${process.env.REACT_APP_API}/route/tds/createInvestment`,
         requestData,
         {
           headers: {
@@ -338,6 +347,11 @@ const TDSTable2 = () => {
       uploadproof = await uploadProof(tdsfile);
     }
 
+    if (value.property1 <= 0 || value.property2 <= 0) {
+      handleAlert(true, "error", "Amount cannot be zero");
+      return {};
+    }
+
     let requestData = {
       empId: user._id,
       financialYear: "2023-2024",
@@ -389,7 +403,7 @@ const TDSTable2 = () => {
 
     try {
       await axios.post(
-        `${process.env.REACT_APP_API}/route/tds/createInvestment/2023-2024`,
+        `${process.env.REACT_APP_API}/route/tds/createInvestment`,
         requestData,
         {
           headers: {
@@ -614,7 +628,7 @@ const TDSTable2 = () => {
                                       handleSaveClick(itemIndex, id)
                                     }
                                   >
-                                    Save
+                                    Submit
                                   </Button>
                                   <Button
                                     color="error"

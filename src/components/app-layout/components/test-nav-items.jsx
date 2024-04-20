@@ -8,6 +8,7 @@ import {
   Fingerprint,
   Groups,
   ListAlt,
+  ModelTrainingOutlined,
   MonetizationOn,
   MonetizationOnOutlined,
   NotificationsActive,
@@ -31,6 +32,7 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 import FolderIcon from "@mui/icons-material/Folder";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -228,6 +230,13 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Loan Management",
           },
+          {
+            key: "missjustify",
+            isVisible: true,
+            link: `/missed-justify`,
+            icon: <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Missed Justify",
+          },
         ],
       },
       Employee: {
@@ -251,7 +260,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/employee-onboarding`,
             icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Onboarding",
+            text: "Employee Onboarding",
           },
 
           {
@@ -261,7 +270,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/employee-offboarding`,
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Offboarding",
+            text: "Employee Offboarding",
           },
           {
             key: "employeeList",
@@ -276,6 +285,70 @@ const TestNavItems = ({ toggleDrawer }) => {
             link: `organisation/${orgId}/employee-list`,
             icon: <Groups className=" !text-[1.2em] text-[#67748E]" />,
             text: "Employee List",
+          },
+        ],
+      },
+      Punching: {
+        open: false,
+        icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
+        isVisible:
+          window.location.pathname?.includes("organisation") &&
+          ["Super-Admin", "Delegate-Super Admin", "HR"]?.includes(role),
+        routes: [
+          {
+            key: "punchingMachine",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/emo-info-punch-status`,
+            icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Punch Sync",
+          },
+
+          {
+            key: "viewAttendance",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/view-attendance-biomatric`,
+            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Time Track",
+          },
+          {
+            key: "viewCalculate",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/view-calculate-data`,
+            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Calendar View",
+          },
+          {
+            key: "misspunchInOutRecord",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/missed-punch-in-out`,
+            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Punch Missed",
+          },
+          {
+            key: "viewCalculate",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/view-calculate-data`,
+            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            text: "View Calculate Attendance",
+          },
+          {
+            key: "misspunchInOutRecord",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/missed-punch-in-out`,
+            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Missed Punch Record",
           },
         ],
       },
@@ -323,7 +396,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: (
               <DeleteForeverOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
-            text: "Bulk Deletion",
+            text: "Delete Department",
           },
           {
             key: "departmentList",
@@ -338,7 +411,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: (
               <ListAltOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
-            text: "Manage Departments",
+            text: "Manage Department",
           },
         ],
       },
@@ -368,6 +441,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
+
       RemotePunch: {
         open: false,
         isVisible: ["Employee", "Manager"].includes(role),
@@ -410,10 +484,35 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "orgDocs",
-            isVisible: ["HR", "Super-Admin", "Manager"].includes(role),
+            isVisible: ["HR", "Super-Admin"].includes(role),
             link: "/org/docs/auth",
             icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Organization Records",
+          },
+        ],
+      },
+      Training: {
+        open: false,
+        isVisible: true,
+        icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
+        routes: [
+          {
+            key: "myTraining",
+            isVisible: ["Employee", "Manager", "Accountant"].includes(role),
+            link: "/my-training",
+            icon: <ArticleIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "My Trainings",
+          },
+          {
+            key: "manageTraining",
+            isVisible:
+              ["HR", "Super-Admin"].includes(role) &&
+              window.location.pathname?.includes("organisation"),
+            link: `/organisation/${orgId}/manage-training`,
+            icon: (
+              <ModelTrainingOutlined className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Manage Trainings",
           },
         ],
       },
