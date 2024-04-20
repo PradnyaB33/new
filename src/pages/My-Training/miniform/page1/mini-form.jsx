@@ -17,10 +17,7 @@ const MiniForm = ({ mutate, doc }) => {
       },
       { message: "Image size maximum 50kb" }
     ),
-    rating: z.object({
-      value: z.number(),
-      label: z.number(),
-    }),
+    rating: z.number(),
     feedback: z.string().min(10),
     employeeTrainingId: z.string(),
   });
