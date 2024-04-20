@@ -26,6 +26,7 @@ const DeclarationTable = ({
   salaryFetching,
 }) => {
   const { handleAlert } = useContext(TestContext);
+  console.log(`🚀 ~ declarationData:`, declarationData);
   return (
     <div>
       {salaryFetching ? (
