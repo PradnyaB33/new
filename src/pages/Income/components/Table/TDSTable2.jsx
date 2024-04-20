@@ -227,8 +227,14 @@ const TDSTable2 = () => {
 
   const { handleAlert } = useContext(TestContext);
   const [editStatus, setEditStatus] = useState({});
+  const [declarationData, setDeclarationData] = useState({});
+  console.log(`🚀 ~ declarationData:`, declarationData);
 
   const handleEditClick = (itemIndex, fieldIndex) => {
+    const newData = [...tableData];
+    setDeclarationData(
+      newData[itemIndex][Object.keys(newData[itemIndex])[0]][fieldIndex]
+    );
     setEditStatus({ ...editStatus, [itemIndex]: fieldIndex });
   };
 
@@ -236,6 +242,10 @@ const TDSTable2 = () => {
     const newData = [...tableData];
     newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].declaration =
       e.target.value;
+    setDeclarationData((prev) => ({
+      ...prev,
+      declaration: e.target.value,
+    }));
 
     setTableData(newData);
   };
@@ -253,6 +263,11 @@ const TDSTable2 = () => {
       handleAlert(true, "error", "File size must be under 500kb");
       return {};
     }
+
+    setDeclarationData((prev) => ({
+      ...prev,
+      proof: e.target.files[0],
+    }));
     setTableData(newData);
   };
 
@@ -445,7 +460,7 @@ const TDSTable2 = () => {
                       <h1 className="text-xl"> {Object.keys(item)[0]}</h1>
                     </div>
 
-                    <table className="table-auto border border-collapse min-w-full bg-white  text-left   !text-sm font-light">
+                    <table className="overflow-hidden table-auto border border-collapse min-w-full bg-white  text-left   !text-sm font-light">
                       <thead className="border-b bg-gray-100 font-bold">
                         <tr className="!font-semibold ">
                           <th
@@ -564,28 +579,61 @@ const TDSTable2 = () => {
                               )}
                             </td>
                             <td className="text-left h-14 px-2 leading-7 text-[16px] w-[200px]  border ">
-                              {editStatus[itemIndex] === id &&
-                              editStatus[itemIndex] === id ? (
-                                <div className="px-2">
-                                  <label className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 text-sm rounded cursor-pointer">
-                                    Upload File
-                                    <input
-                                      type="file"
-                                      className="hidden"
-                                      onChange={(e) =>
-                                        handleProofChange(e, itemIndex, id)
+                              {editStatus[itemIndex] === id ? (
+                                <>
+                                  {declarationData?.proof ? (
+                                    <div
+                                      onClick={() =>
+                                        handlePDF(
+                                          URL.createObjectURL(
+                                            declarationData?.proof
+                                          )
+                                        )
                                       }
-                                    />
-                                  </label>
-                                </div>
+                                      className="px-2 flex gap-2 items-center h-max w-max"
+                                    >
+                                      <Article className="text-blue-500 " />
+                                      <h1 className="truncate w-[150px]">
+                                        {declarationData?.proof?.name}
+                                      </h1>
+                                    </div>
+                                  ) : (
+                                    <div className="px-2 w-[150px]">
+                                      <label className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 text-sm rounded cursor-pointer">
+                                        Upload File
+                                        <input
+                                          type="file"
+                                          className="hidden"
+                                          onChange={(e) =>
+                                            handleProofChange(e, itemIndex, id)
+                                          }
+                                        />
+                                      </label>
+                                    </div>
+                                  )}
+                                </>
                               ) : ele.proof ? (
-                                typeof ele.proof === "string" && (
+                                typeof ele.proof === "string" ? (
                                   <div
                                     onClick={() => handlePDF(ele.proof)}
                                     className="px-2 flex gap-2 items-center h-max w-max  cursor-pointer"
                                   >
                                     <Article className="text-blue-500" />
                                     <h1>View Proof</h1>
+                                  </div>
+                                ) : (
+                                  <div
+                                    onClick={() =>
+                                      handlePDF(
+                                        URL.createObjectURL(
+                                          declarationData.proof
+                                        )
+                                      )
+                                    }
+                                    className="px-2 flex gap-2 items-center h-max w-max"
+                                  >
+                                    <Article className="text-blue-500" />
+                                    <h1>{item?.proof?.name}</h1>
                                   </div>
                                 )
                               ) : (

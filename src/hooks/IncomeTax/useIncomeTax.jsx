@@ -16,7 +16,6 @@ const useIncomeTax = create((set) => ({
       const newData = [...state.tableData];
       return {
         editStatus: {
-          ...state.editStatus,
           [itemIndex]: !state.editStatus[itemIndex],
         },
         declarationData: {

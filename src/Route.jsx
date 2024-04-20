@@ -285,7 +285,7 @@ const App = () => {
         <Route
           path="/organisation/:organisationId/dashboard/super-admin"
           element={
-            <RequireAuth permission={["Super-Admin"]}>
+            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
               <SuperAdmin />
             </RequireAuth>
           }

@@ -8,8 +8,9 @@ import {
   Pending,
 } from "@mui/icons-material";
 import { Button, CircularProgress, IconButton } from "@mui/material";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { TestContext } from "../../../State/Function/Main";
+import useIncomeTax from "../../../hooks/IncomeTax/useIncomeTax";
 
 const DeclarationTable = ({
   tableData,
@@ -26,7 +27,13 @@ const DeclarationTable = ({
   salaryFetching,
 }) => {
   const { handleAlert } = useContext(TestContext);
-  console.log(`🚀 ~ declarationData:`, declarationData);
+  const { setEditStatus } = useIncomeTax();
+
+  useEffect(() => {
+    setEditStatus({});
+    //eslint-disable-next-line
+  }, [window.location.pathname]);
+
   return (
     <div>
       {salaryFetching ? (
