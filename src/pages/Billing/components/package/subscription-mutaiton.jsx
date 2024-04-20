@@ -1,10 +1,13 @@
 import axios from "axios";
+import { useContext } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import { TestContext } from "../../../../State/Function/Main";
 import useGetUser from "../../../../hooks/Token/useUser";
 
 const useManageSubscriptionMutation = () => {
   const { authToken, decodedToken } = useGetUser();
   const queryClient = useQueryClient();
+  const { handleAlert } = useContext(TestContext);
   const updateMemberCountWithAxios = async (data, handleClose) => {
     console.log(`🚀 ~ file: subscription-mutaiton.jsx ~ data:`, data);
     const result = await axios.patch(
@@ -64,7 +67,15 @@ const useManageSubscriptionMutation = () => {
         data?.handleClose();
       },
       onError: (error) => {
-        console.log(`🚀 ~ file: subscription-mutaiton.jsx ~ error:`, error);
+        console.log(
+          `🚀 ~ file: subscription-mutaiton.jsx ~ error:`,
+          error?.response?.data?.message
+        );
+        console.log(
+          `🚀 ~ file: subscription-mutaiton.jsx:76 ~ handleAlert:`,
+          handleAlert
+        );
+        handleAlert(true, "error", error?.response?.data?.message);
       },
     }
   );
