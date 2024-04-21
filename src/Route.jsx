@@ -102,6 +102,8 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import MissedPunchNotified from "./pages/MissedPunchNotification/missedPunchNotified";
+
 const App = () => {
   return (
     <AuthProvider>
@@ -197,6 +199,10 @@ const App = () => {
         <Route
           path="/missedPunch-notification"
           element={<MissedPunchNotification />}
+        />
+          <Route
+          path="/missed-punch-notification/:employeeId"
+          element={<MissedPunchNotified />}
         />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />

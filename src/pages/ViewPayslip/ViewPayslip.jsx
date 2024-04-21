@@ -52,7 +52,7 @@ const ViewPayslip = () => {
   }, []);
 
   console.log(salaryInfo);
-
+  console.log("org img" , organisationInfo);
   console.log("salaryinfo" , salaryInfo);
 
   // Find the salary info based on user-selected month and year
@@ -91,6 +91,9 @@ const ViewPayslip = () => {
     });
   };
 
+  const logo = organisationInfo.logo_url;
+  console.log(logo);
+
   return (
     <>
       <div className="container mx-auto p-6">
@@ -119,7 +122,7 @@ const ViewPayslip = () => {
                 <div className="container mx-auto p-6">
                   <div className="flex items-center justify-between mb-6">
                     <img
-                      src={organisationInfo?.logo_url}
+                      src={organisationInfo.logo_url}
                       alt={organisationInfo?.logo_url}
                       className="w-20 h-20 rounded-full"
                     />

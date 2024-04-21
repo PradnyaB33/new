@@ -10,6 +10,7 @@ import {
   Popover,
   DialogActions,
   Button,
+  Tooltip
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -17,7 +18,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { UseContext } from "../../../State/UseState/UseContext";
 import { TestContext } from "../../../State/Function/Main";
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import useHourHook from "../../../hooks/useHoursHook/useHourHook";
 
 const CalculateHourEmpModal = ({
@@ -33,7 +34,11 @@ const CalculateHourEmpModal = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const [remarks, setRemarks] = useState("");
   const { handleAlert } = useContext(TestContext);
-  const {justify} = useHourHook()
+  const {justify} = useHourHook();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 10;
+  console.log(setTotalPages);
   console.log("punching record emp" , empPunchingData);
   
 
@@ -141,8 +146,7 @@ const CalculateHourEmpModal = ({
       }
       const responseData = await response.json();
       console.log(responseData);
-      handleAlert(true, "success", "Hours calculated successfully..");
-      handleClose();
+      handleAlert(true, "success", `Hours calculated successfully on ${date}.`);
       setSelectedDate(null);
     } catch (error) {
       console.error("Error calculating hours:", error);
@@ -151,8 +155,25 @@ const CalculateHourEmpModal = ({
   };
 
   console.log(remarks);
-  
 
+ 
+  // pagination
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const nextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const prePage = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
+
+  
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = empPunchingData?.punchingRecords.slice(indexOfFirstItem, indexOfLastItem);
  
   return (
     <Dialog
@@ -173,14 +194,14 @@ const CalculateHourEmpModal = ({
           <Grid container alignItems="center" justifyContent="space-between" className="mt-5 mb-5">
             <Grid item>
               <Typography variant="h6" className="mb-6 mt-4">
-              Calculate Working Hours
+              Calculating working hours :
               </Typography>
               <Typography variant="h7" className=" mb-6 mt-4">
-               Employee : Name {`${empPunchingData?.EmployeeId?.first_name}`} {`${empPunchingData?.EmployeeId?.last_name}`}
+               Employee Name:  {`${empPunchingData?.EmployeeId?.first_name}`} {`${empPunchingData?.EmployeeId?.last_name}`}
               </Typography>
               <p className="text-xs text-gray-600 ">
-               Calculate the hours of employee.
-          </p>
+              Calculate the working hours of employee.
+           </p>
             </Grid>
             <Grid item>
               <IconButton onClick={handleClose}>
@@ -190,31 +211,33 @@ const CalculateHourEmpModal = ({
           </Grid>
           <Grid container spacing={2} className="mb-5">
             <Grid item xs={6}>
-              {/* Input field for total hours */}
+            <Tooltip title={"Number of hours company follows"} arrow>
               <TextField
-                label="Number of hours company follows"
+                label="Organisation Working Hours"
                 value={hour}
                 onChange={(e) => setHour(e.target.value)}
                 fullWidth
                 variant="outlined"
               />
+              </Tooltip>
             </Grid>
             <Grid item xs={6}>
-      {/* Input field for selecting date */}
-      <TextField
-        label="Select date for calculate total hours"
-        value={selectedDate ? new Date(selectedDate).toLocaleDateString() : ''}
-        onClick={handlePopoverOpen}
-        fullWidth
-        variant="outlined"
-        InputProps={{
-          endAdornment: (
-            <IconButton onClick={handlePopoverOpen}>
-              <CalendarTodayIcon />
+            <Tooltip title={"Here you can select the date whatever want to calculate total hours"} arrow>
+            <TextField
+              label="Select day and calculate total hours"
+             value={selectedDate ? new Date(selectedDate).toLocaleDateString() : ''}
+              onClick={handlePopoverOpen}
+             fullWidth
+             variant="outlined"
+             InputProps={{
+             endAdornment: (
+             <IconButton onClick={handlePopoverOpen}>
+               <CalendarMonthIcon />
             </IconButton>
-          ),
-        }}
+           ),
+         }}
       />
+      </Tooltip>
       {/* Popover and calendar */}
       <Popover
         open={openPopover}
@@ -238,13 +261,13 @@ const CalculateHourEmpModal = ({
         </LocalizationProvider>
       </Popover>
     </Grid>
-          </Grid>
-       
-          <table className="min-w-full bg-white text-left text-sm font-light">
-            <thead className="border-b bg-gray-300 font-medium dark:border-neutral-500 w-full">
-              <tr className="font-semibold">
+    </Grid>   
+        <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
+            <table className="min-w-full bg-white text-left !text-sm font-light">
+              <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+                <tr className="!font-semibold">
                 <th scope="col" className="px-6 py-3">
-                  Sr no
+                  Sr No
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Date
@@ -255,29 +278,74 @@ const CalculateHourEmpModal = ({
                 <th scope="col" className="px-6 py-3">
                   Punching Status
                 </th>
-              </tr>
-            </thead>
-            <tbody>
-              {empPunchingData?.punchingRecords.map((record, index) => (
-                <tr key={index} className="font-medium border-b">
-                  <td className="px-6 py-3">{index+1}</td>
-                  <td className="px-6 py-3">{new Date(record?.date).toLocaleDateString()}</td>
-                  <td className="px-6 py-3">{record?.punchingTime || ""}</td>
-                  <td className="px-6 py-3">{record?.punchingStatus || ""}</td>
-                  <td className="px-6 py-3"></td>
                 </tr>
-              ))}
-            </tbody>
-          </table>   
-        </Container>
-           <DialogActions sx={{ justifyContent: "end" }}>
+              </thead>
+              <tbody>
+              {currentItems && currentItems.length > 0 && currentItems.map((record, index) => (
+              <tr key={index} className="font-medium border-b">
+               <td className="px-6 py-3">{index+1}</td>
+              <td className="px-6 py-3">{new Date(record?.date).toLocaleDateString() || ""}</td>
+              <td className="px-6 py-3">{record?.punchingTime || ""}</td>
+              <td className="px-6 py-3">{record?.punchingStatus || ""}</td>
+              <td className="px-6 py-3"></td>
+            </tr>
+             ))}
+
+              </tbody>
+            </table>
+          </div>
+
+        
+        </Container> 
+
+             {/* Pagination */}
+             <nav className="pagination" style={{ textAlign: "center" , marginTop : "20px" , marginBottom : "20px" }}>
+            <Button
+              onClick={prePage}
+              disabled={currentPage === 1}
+              variant="outlined"
+              style={{ marginRight: "10px" }}
+            >
+              Prev
+            </Button>
+            {currentPage === 1 && (
+              <Button
+                onClick={() => paginate(2)}
+                variant="outlined"
+                style={{ marginRight: "10px" }}
+              >
+                Next
+              </Button>
+            )}
+            {currentPage === 2 && (
+              <Button
+                onClick={() => paginate(1)}
+                variant="outlined"
+                style={{ marginRight: "10px" }}
+              >
+                1
+              </Button>
+            )}
+            <Button
+              onClick={nextPage}
+              disabled={currentPage === totalPages}
+              variant="outlined"
+            >
+              Next
+            </Button>
+          </nav>
+        
+           <DialogActions sx={{ justifyContent: "end"  , marginRight : "25px"}}>
+        
+              <Button variant="contained" color="primary" onClick={handleCalculateHours}>
+                Submit
+              </Button>
+             
               <Button onClick={handleClose} color="error" variant="outlined">
                 Cancel
               </Button>
-
-              <Button variant="contained" color="primary" onClick={handleCalculateHours}>
-                Calculate Hours
-              </Button>
+            
+            
             </DialogActions>
       </DialogContent>
     </Dialog>

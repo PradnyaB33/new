@@ -1,15 +1,17 @@
 import React from "react";
-import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import usePunchNotification from "../../hooks/QueryHook/notification/punch-notification/hook";
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
 import Card from "./components/card";
+import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 
 const ParentNotification = () => {
   const { data, isLoading } = useLeaveNotificationHook();
   const { data: data2 } = useShiftNotification();
   const { data: data3 } = usePunchNotification();
   const { missPunchData } = useMissedPunchNotificationCount();
+
+  console.log("missed punch data" , missPunchData);
 
   const dummyData = [
     {

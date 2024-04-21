@@ -57,8 +57,11 @@ const ViewAttendanceCallModal = ({
         <Container maxWidth="xl" className="bg-gray-50 ">
           <Grid container alignItems="center" justifyContent="space-between" className="mt-5 mb-5">
             <Grid item>
-              <Typography variant="h6" className="text-center  mb-6 mt-4">
-                Here View The Attendance of {employee?.EmployeeId?.first_name} {employee?.EmployeeId?.last_name}
+              <Typography variant="h6" className="  mb-6 mt-4 ">
+                Calendar View 
+              </Typography>
+              <Typography variant="h7" className="  mb-6 mt-4 ">
+               Employee Name : {employee?.EmployeeId?.first_name} {employee?.EmployeeId?.last_name}
               </Typography>
             </Grid>
             <Grid item>
@@ -69,14 +72,17 @@ const ViewAttendanceCallModal = ({
           </Grid>
 
           <div style={{ height: 500 }}>
+           
             <Calendar
-              localizer={localizer}
-              events={events}
-              startAccessor="start"
-              endAccessor="end"
-              style={{ margin: "50px auto", width: "80%" }}
-              onSelectEvent={handleEventClick} 
-            />
+            localizer={localizer}
+            events={events}
+           startAccessor="start"
+           endAccessor="end"
+           style={{ height: 500, margin: "50px auto", width: "100%" }}
+           views={['month']}
+          onSelectEvent={handleEventClick} 
+          />
+
           </div>
         </Container>
       </DialogContent>
