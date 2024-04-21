@@ -556,6 +556,7 @@ const AuthInputFiled = ({
                 {label}{" "}
                 {name === "isChecked" && (
                   <Link
+                    target="blank"
                     to="/terms-policy-cookies"
                     className="font-semibold text-blue-500 hover:underline text-md  "
                   >
@@ -831,7 +832,7 @@ const AuthInputFiled = ({
 
   if (type === "contact") {
     return (
-      <div className={`space-y-1 min-w-11 ${className}`}>
+      <div className={`space-y-1  ${className}`}>
         <label
           htmlFor={name}
           className={`${
@@ -864,12 +865,13 @@ const AuthInputFiled = ({
                   }}
                   containerStyle={{
                     height: "100%",
-                    width: "100%",
-                    padding: "10px 0",
+                    width: "auto",
+                    padding: "3px 0",
                     margin: "0px",
                   }}
                   inputStyle={{
-                    padding: "0 50px",
+                    paddingLeft: "50px",
+                    paddingRight: "0px !important",
                     outline: "none",
                     border: "none",
                   }}
