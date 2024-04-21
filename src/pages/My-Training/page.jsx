@@ -14,6 +14,7 @@ import useGetOngoingTrainings from "./miniform/page2/use-query-page2";
 import Modal3 from "./miniform/page3/page";
 import useGetOverdueTrainings from "./miniform/page3/use-query-page3";
 import Modal4 from "./miniform/page4/page";
+import useGetCompletedTraining from "./miniform/page4/use-query-page3";
 import TextFiledColumn from "./miniform/text-filed";
 import useTrainingFormEmployee from "./my-training-use-query";
 
@@ -22,6 +23,8 @@ const MyTraining = () => {
   const { data: upcomingTraining } = useGetUpcomingTrainings();
   const { data: ongoingTraining } = useGetOngoingTrainings();
   const { data: overdueTraining } = useGetOverdueTrainings();
+  const { data: completedTraining } = useGetCompletedTraining();
+
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const [open3, setOpen3] = React.useState(false);
@@ -55,7 +58,7 @@ const MyTraining = () => {
           />
           <TextFiledColumn
             setOpen={setOpen4}
-            length={1}
+            length={completedTraining?.data?.length}
             text={"Completed training"}
             className={"!bg-gray-500 !hover:bg-red-600"}
             Icon={CheckCircleOutlineOutlined}

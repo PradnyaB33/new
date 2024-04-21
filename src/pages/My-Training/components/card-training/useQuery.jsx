@@ -29,7 +29,7 @@ const useCardQuery = ({ trainingId }) => {
   });
   const createTrainingEmployee = async (data) => {
     const response = await axios.put(
-      `${process.env.REACT_APP_API}/route/training/create-training-employee/${trainingId}`,
+      `${process.env.REACT_APP_API}/route/training/complete-training-and-create-feedback/${trainingId}`,
       data,
       {
         headers: {
