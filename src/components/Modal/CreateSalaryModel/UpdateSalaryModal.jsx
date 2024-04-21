@@ -391,5 +391,4 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
     </Dialog>
   );
 };
-
 export default UpdateSalaryModal;
