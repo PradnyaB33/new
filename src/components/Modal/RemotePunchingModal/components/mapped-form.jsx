@@ -3,7 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import useNotificationRemotePunching from "../../../../hooks/QueryHook/Remote-Punch/components/mutation";
 
-const PunchMapModal = ({ items }) => {
+const PunchMapModal = ({ items, idx }) => {
   const navigate = useNavigate();
   console.log("yash items", items);
   const calculateDistance = (coords) => {
@@ -85,15 +85,23 @@ const PunchMapModal = ({ items }) => {
               )}
             </h1>
             <h1>
-              Start Time : {new Date(items?.createdAt).toLocaleTimeString()}
+              Start Time :{" "}
+              {new Date(
+                items?.punchData[0]?.data[0]?.time
+              ).toLocaleTimeString()}
             </h1>
             <h1>
               End Time:{" "}
               {items.punchData[items.punchData.length - 1].data
-                ? new Date(items?.updatedAt).toLocaleTimeString()
+                ? new Date(
+                    items?.punchData[items.punchData.length - 1].data[
+                      items.punchData[items.punchData.length - 1].data.length -
+                        1
+                    ].time
+                  ).toLocaleTimeString()
                 : "N/A"}
             </h1>
-            <h1>Total Distance Traveled: {distanceTraveled} Km </h1>
+            <h1>Total Distance Travelled: {distanceTraveled} Km </h1>
 
             {items.punchData[0].image === "" ? (
               ""
