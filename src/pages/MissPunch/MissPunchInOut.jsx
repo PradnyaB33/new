@@ -32,15 +32,18 @@ const MissPunchInOut = () => {
   return (
     <>
     
-    <Container maxWidth="xl" className="bg-gray-50 min-h-screen py-8 px-4">
-  <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
-    Employee
-  </Typography>
-  {unavailableRecord?.map((record, index) => (
-    <article key={index} className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center mb-4">
-      <Typography variant="h5" className="text-center pl-10 mb-6 mt-2">
-        {record.employeeId.first_name} {record.employeeId.last_name}
-      </Typography>
+    <Container maxWidth="xl" className="bg-gray-50 min-h-screen py-8 px-4 ">
+       <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
+        Employee Punch Missed
+       </Typography> 
+          <p className="text-xs text-gray-600 pl-10 text-center mb-2">
+            Unavailable records of employee
+          </p>
+       {unavailableRecord?.map((record, index) => (
+      <article key={index} className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center mb-4">
+       <Typography variant="h6" className=" pl-2 mb-10 mt-10">
+         {record.employeeId.first_name} {record.employeeId.last_name}
+       </Typography>
 
       {record.unavailableRecords?.length > 0 ? (
         <div className="overflow-auto !p-0 border-[.5px] border-gray-200">

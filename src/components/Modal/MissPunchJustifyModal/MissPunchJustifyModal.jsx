@@ -7,7 +7,7 @@ import {
   Divider,
   IconButton,
 } from "@mui/material";
-import React , {useContext, useEffect} from "react";
+import React , {useContext,} from "react";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useMissedJustifyState from "./useMissedJustifyState";
@@ -19,56 +19,35 @@ import AuthInputFiled from "../../InputFileds/AuthInputFiled";
 import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 
-const MissPunchJustifyModal = ({ handleClose, open,unavailableRecords  , organisationId}) => { 
+const MissPunchJustifyModal = ({ handleClose, open, unavailableRecordId  , organisationId}) => { 
     const { handleAlert } = useContext(TestContext);
     const { cookies } = useContext(UseContext);
     const authToken = cookies["aegis"];
-    console.log(organisationId);
-    console.log(unavailableRecords);
+    console.log("unavailable id " ,unavailableRecordId);
      
     const {
-        recordDate ,
         justify , 
       } = useMissedJustifyState(); 
 
-
       const MissPunchSchema = z.object({
         justify : z.string(),
-        recordDate : z.string(),
       });  
 
-
-      const { control, formState, handleSubmit , setValue } = useForm({
+      const { control, formState, handleSubmit ,  reset } = useForm({
         defaultValues: {
-            recordDate : recordDate,
             justify  :  justify
         },
         resolver: zodResolver(MissPunchSchema),
       }); 
 
-
       const { errors } = formState;
-
-      useEffect(() => {
-        if (unavailableRecords) {
-          const { recordDate, } = unavailableRecords;
-          setValue('recordDate', recordDate);
-          
-        }
-      }, [unavailableRecords, setValue]);
-
-    
-      const onSubmit = async (data) => {
-          console.log(data);
-          AddMissJustifyData.mutate(data);
-      };
 
       const queryClient = useQueryClient();
     
       const AddMissJustifyData = useMutation(
         (data) => {
           axios.put(
-            `${process.env.REACT_APP_API}/route/organization/${organisationId}/update-punching-data`,
+            `${process.env.REACT_APP_API}/route/organization/${organisationId}/update-punching-data/${unavailableRecordId}`,
             data,
             {
               headers: {
@@ -77,12 +56,12 @@ const MissPunchJustifyModal = ({ handleClose, open,unavailableRecords  , organis
             }
           );
         },
-    
         {
           onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["missedJustifyData"] });
             handleClose();
-            handleAlert(true, "success", "Salary Template generated succesfully.");
+            handleAlert(true, "success", "Request has been sent to manager.");
+          
           },
     
           onError: () => {
@@ -91,7 +70,12 @@ const MissPunchJustifyModal = ({ handleClose, open,unavailableRecords  , organis
         }
       );
     
-     
+      const onSubmit = async (data) => {
+        console.log(data);
+        AddMissJustifyData.mutate(data);
+        reset();
+    };
+
   
   return (
     <Dialog
@@ -100,7 +84,7 @@ const MissPunchJustifyModal = ({ handleClose, open,unavailableRecords  , organis
           width: "100%",
           maxWidth: "800px!important",
           height: "100%",
-          maxHeight: "40vh!important",
+          maxHeight: "35vh!important",
         },
       }}
       open={open}
@@ -110,7 +94,7 @@ const MissPunchJustifyModal = ({ handleClose, open,unavailableRecords  , organis
       aria-describedby="modal-modal-description"
     >
       <div className="flex w-full justify-between py-4 items-center  px-4">
-        <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
+        <h1 id="modal-modal-title" className="text-lg  font-semibold">
           Justify For Missed Data
         </h1>
         <IconButton onClick={handleClose}>
@@ -134,23 +118,23 @@ const MissPunchJustifyModal = ({ handleClose, open,unavailableRecords  , organis
           control={control}
           type="text"
           placeholder="Forgot..."
-          label="Justify"
-          errors={errors}
+           label="Enter your justification"
+           errors={errors}
            error={errors.justify}
            />
          </div>
 
        
           <DialogActions>
-            <Button onClick={handleClose} color="error" variant="outlined">
-              Cancel
-            </Button>
             <Button
             type="submit"
             variant="contained"
             color="primary"
             >
                 Submit
+            </Button>
+            <Button onClick={handleClose} color="error" variant="outlined">
+              Cancel
             </Button>
           </DialogActions>
           </form>

@@ -6,6 +6,7 @@ import {
   DialogContent,
   TextField,
   Typography,
+  Tooltip
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -116,6 +117,7 @@ const AttendanceBioModal = ({
 
       handleAlert(true, "success", "Synced data successfully..");
       navigate(`/organisation/${organisationId}/view-attendance-biomatric`);
+      window.location.reload();
     } catch (error) {
       console.error("Failed to sync attendance data:", error);
     }
@@ -128,7 +130,7 @@ const AttendanceBioModal = ({
           width: "100%",
           maxWidth: "1000px!important",
           height: "100%",
-          maxHeight: "80vh!important",
+          maxHeight: "90vh!important",
         },
       }}
       open={open}
@@ -139,12 +141,15 @@ const AttendanceBioModal = ({
     >
       <DialogContent className="border-none  !pt-0 !px-0  shadow-md outline-none rounded-md">
         <Container maxWidth="xl" className="bg-gray-50 ">
+        <Tooltip title={"Display employee from system"} arrow>
           <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
-            Employee
+             Employee’s List 
           </Typography>
+          </Tooltip>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center gap-3 mb-3 md:mb-0">
+            <Tooltip title={"Search employee by employee email"} arrow>
               <TextField
                 onChange={(e) => setEmailSearch(e.target.value)}
                 placeholder="Search Email...."
@@ -152,6 +157,7 @@ const AttendanceBioModal = ({
                 size="small"
                 sx={{ width: 300 }}
               />
+                </Tooltip>
             </div>
           </div>
 
@@ -183,39 +189,43 @@ const AttendanceBioModal = ({
                 </tr>
               </thead>
               <tbody>
-                {availableEmployee
-                  .filter((item) => {
-                    return (
-                      !emailSearch.toLowerCase() ||
-                      (item.email !== null &&
-                        item.email !== undefined &&
-                        item.email.toLowerCase().includes(emailSearch))
-                    );
-                  })
-                  .map((item, id) => (
-                    <tr className="!font-medium border-b" key={id}>
-                      <td className="!text-left pl-8 py-3">
-                        <input
-                          type="checkbox"
-                          onChange={() => handleCheckEmp(item)}
-                        />
-                      </td>
-                      <td className="!text-left pl-8 py-3">{id + 1}</td>
-                      <td className="py-3 pl-8">{item?.first_name}</td>
-                      <td className="py-3 pl-8">{item?.last_name}</td>
-                      <td className="py-3 pl-8">{item?.email}</td>
-                      <td className="py-3 pl-8">
-                        {item?.worklocation?.map((location, index) => (
-                          <span key={index}>{location?.city}</span>
-                        ))}
-                      </td>
-                      <td className="py-3 pl-8 ">
-                        {item?.deptname?.map((dept, index) => (
-                          <span key={index}>{dept?.departmentName}</span>
-                        ))}
-                      </td>
-                    </tr>
-                  ))}
+               
+                  {availableEmployee && availableEmployee.length > 0 && availableEmployee
+  .filter((item) => {
+    return (
+      !emailSearch.toLowerCase() ||
+      (item.email !== null &&
+        item.email !== undefined &&
+        item.email.toLowerCase().includes(emailSearch))
+    );
+  })
+  .map((item, id) => (
+    <tr className="!font-medium border-b" key={id}>
+      <td className="!text-left pl-8 py-3">
+        <Tooltip title={"Select the employee"} arrow>
+          <input
+            type="checkbox"
+            onChange={() => handleCheckEmp(item)}
+          />
+        </Tooltip>
+      </td>
+      <td className="!text-left pl-8 py-3">{id + 1}</td>
+      <td className="py-3 pl-8">{item?.first_name}</td>
+      <td className="py-3 pl-8">{item?.last_name}</td>
+      <td className="py-3 pl-8">{item?.email}</td>
+      <td className="py-3 pl-8">
+        {item?.worklocation?.map((location, index) => (
+          <span key={index}>{location?.city}</span>
+        ))}
+      </td>
+      <td className="py-3 pl-8 ">
+        {item?.deptname?.map((dept, index) => (
+          <span key={index}>{dept?.departmentName}</span>
+        ))}
+      </td>
+    </tr>
+  ))}
+
               </tbody>
             </table>
             <nav
@@ -299,12 +309,16 @@ const AttendanceBioModal = ({
             </nav>
           </div>
           <DialogActions sx={{ justifyContent: "center" }}>
+          <Tooltip title={"Sync employee here"} arrow>
             <Button variant="contained" color="primary" onClick={handleSync}>
               Sync
             </Button>
+            </Tooltip>
+            <Tooltip title={"Cancel the button"} arrow>
             <Button color="error" variant="outlined" onClick={handleClose}>
               Cancel
             </Button>
+            </Tooltip>
           </DialogActions>
         </Container>
       </DialogContent>

@@ -39,7 +39,10 @@ import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
-
+import PunchClockIcon from '@mui/icons-material/PunchClock';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import CallMissedIcon from '@mui/icons-material/CallMissed';
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
@@ -260,7 +263,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/employee-onboarding`,
             icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Employee Onboarding",
+            text: "Onboarding",
           },
 
           {
@@ -270,7 +273,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/employee-offboarding`,
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Employee Offboarding",
+            text: "Offboarding",
           },
           {
             key: "employeeList",
@@ -288,7 +291,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
-      Punching: {
+      "Machine Punching": {
         open: false,
         icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
         isVisible:
@@ -301,7 +304,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               role
             ),
             link: `organisation/${orgId}/emo-info-punch-status`,
-            icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <PunchClockIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Punch Sync",
           },
 
@@ -311,7 +314,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               role
             ),
             link: `organisation/${orgId}/view-attendance-biomatric`,
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <AccessTimeIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Time Track",
           },
           {
@@ -320,7 +323,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               role
             ),
             link: `organisation/${orgId}/view-calculate-data`,
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <CalendarMonthIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Calendar View",
           },
           {
@@ -329,27 +332,10 @@ const TestNavItems = ({ toggleDrawer }) => {
               role
             ),
             link: `organisation/${orgId}/missed-punch-in-out`,
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Punch Missed",
+            icon: <CallMissedIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Missed Punch ",
           },
-          {
-            key: "viewCalculate",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
-              role
-            ),
-            link: `organisation/${orgId}/view-calculate-data`,
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "View Calculate Attendance",
-          },
-          {
-            key: "misspunchInOutRecord",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
-              role
-            ),
-            link: `organisation/${orgId}/missed-punch-in-out`,
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Missed Punch Record",
-          },
+         
         ],
       },
       Department: {

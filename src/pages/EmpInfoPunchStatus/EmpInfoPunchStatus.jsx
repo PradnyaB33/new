@@ -1,4 +1,4 @@
-import { Button, Container, TextField, Typography } from "@mui/material";
+import { Button, Container, TextField, Typography ,Tooltip, } from "@mui/material";
 import React, { useState } from "react";
 import { useParams  ,} from "react-router-dom";
 import * as XLSX from "xlsx";
@@ -13,12 +13,14 @@ const EmpInfoPunchStatus = () => {
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [fileName, setFileName] = useState(""); 
   const itemsPerPage = 10;
   console.log(setTotalPages);
   
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
+    setFileName(file.name);
     const reader = new FileReader();
 
     reader.onload = (event) => {
@@ -30,11 +32,15 @@ const EmpInfoPunchStatus = () => {
       setTableData(
         parsedData.slice(2).map((row) => ({ ...row, selected: false }))
       );
-    };
+    }; 
+
+    
 
     reader.readAsBinaryString(file);
-  };
+  };  
 
+  
+  
   const handleSearchName = (e) => {
     setSearchName(e.target.value);
     setCurrentPage(1);
@@ -118,7 +124,7 @@ const EmpInfoPunchStatus = () => {
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
-            Punch Sync
+             Employee’s  Punch Sync
           </Typography>
           <p className="text-xs text-gray-600 pl-10 text-center">
             Track the attendance of employees here by using the sync button.
@@ -133,21 +139,27 @@ const EmpInfoPunchStatus = () => {
                 accept=".xls,.xlsx"
                 onChange={handleFileUpload}
               />
-              <Button variant="contained" component="span">
-                Upload File
-              </Button>
+               <Tooltip title={fileName} arrow>
+                <Button variant="contained" component="span">
+                  {fileName ? fileName.substring(0, 10) + "..." : "Upload File"}
+                </Button>
+              </Tooltip>
             </label>
-            <Button
+            <Tooltip title={"Sync the employee here"} arrow>
+             <Button
               variant="contained"
               component="span"
               onClick={handleEmpModalOpen}
             >
               Sync
             </Button>
+            </Tooltip>
+          
           </div>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center gap-3 mb-3 md:mb-0">
+              <Tooltip title={"Search employee by employee name"} arrow>
               <TextField
                 placeholder="Search Employee Name...."
                 variant="outlined"
@@ -156,8 +168,11 @@ const EmpInfoPunchStatus = () => {
                 value={searchName}
                 onChange={handleSearchName}
               />
+              </Tooltip>
+
             </div>
             <div className="flex items-center gap-3 mb-3 md:mb-0">
+            <Tooltip title={"Search employee by employee id"} arrow>
               <TextField
                 placeholder="Search Employee ID...."
                 variant="outlined"
@@ -166,8 +181,10 @@ const EmpInfoPunchStatus = () => {
                 value={searchId}
                 onChange={handleSearchId}
               />
+               </Tooltip>
             </div>
             <div className="flex items-center gap-3">
+            <Tooltip title={"Search employee by employee department"} arrow>
               <TextField
                 placeholder="Search Department...."
                 variant="outlined"
@@ -176,6 +193,7 @@ const EmpInfoPunchStatus = () => {
                 value={searchDepartment}
                 onChange={handleSearchDepartment}
               />
+                </Tooltip>
             </div>
           </div>
 
@@ -213,29 +231,33 @@ const EmpInfoPunchStatus = () => {
                 </tr>
               </thead>
               <tbody>
-                {currentItems.map((row, index) => (
-                  <tr key={index}>
-                    <td className="!text-left pl-8 py-3">
-                      <input
-                        type="checkbox"
-                        checked={selectedEmployees.some(
-                          (emp) => emp[0] === row[0]
-                        )}
-                        onChange={() => handleEmployeeSelect(index)}
-                      />
-                    </td>
-                    <td className="!text-left pl-8 py-3">
-                      {(currentPage - 1) * itemsPerPage + index + 1}
-                    </td>
-                    <td className="py-3 pl-8">{row[0]}</td>
-                    <td className="py-3 pl-8">{row[1]}</td>
-                    <td className="py-3 pl-8">{row[2]}</td>
-                    <td className="py-3 pl-8">{row[3]}</td>
-                    <td className="py-3 pl-8">{row[4]}</td>
-                    <td className="py-3 pl-8">{row[5]}</td>
-                    <td className="py-3 pl-8">{row[6]}</td>
-                  </tr>
-                ))}
+            
+                {currentItems && currentItems.length > 0 && currentItems.map((row, index) => (
+  <tr key={index}>
+    <td className="!text-left pl-8 py-3">
+      <Tooltip title={"Select the employee"} arrow>
+        <input
+          type="checkbox"
+          checked={selectedEmployees.some(
+            (emp) => emp[0] === row[0]
+          )}
+          onChange={() => handleEmployeeSelect(index)}
+        />
+      </Tooltip>
+    </td>
+    <td className="!text-left pl-8 py-3">
+      {(currentPage - 1) * itemsPerPage + index + 1}
+    </td>
+    <td className="py-3 pl-8">{row[0]}</td>
+    <td className="py-3 pl-8">{row[1]}</td>
+    <td className="py-3 pl-8">{row[2]}</td>
+    <td className="py-3 pl-8">{row[3]}</td>
+    <td className="py-3 pl-8">{row[4]}</td>
+    <td className="py-3 pl-8">{row[5]}</td>
+    <td className="py-3 pl-8">{row[6]}</td>
+  </tr>
+))}
+
               </tbody>
             </table>
           </div>

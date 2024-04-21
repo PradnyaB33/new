@@ -52,7 +52,7 @@ const ViewPayslip = () => {
   }, []);
 
   console.log(salaryInfo);
-
+  console.log("org img" , organisationInfo);
   console.log("salaryinfo" , salaryInfo);
 
   // Find the salary info based on user-selected month and year
@@ -83,6 +83,9 @@ const ViewPayslip = () => {
     };
     });
   };
+
+  const logo = organisationInfo.logo_url;
+  console.log(logo);
 
   return (
     <>

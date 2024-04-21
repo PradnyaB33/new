@@ -1,4 +1,4 @@
-import { Container, Typography  , IconButton} from "@mui/material";
+import { Container, Typography  , IconButton , Tooltip} from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -49,7 +49,7 @@ const ViewAttendacneBiomatric = () => {
           <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
           Employee’s Time Track
           </Typography>
-          <p className="text-xs text-gray-600 pl-10 text-center">
+          <p className="text-xs text-gray-600 pl-10   mb-6 text-center">
             Track the attendance of employees here.
           </p>
 
@@ -67,33 +67,40 @@ const ViewAttendacneBiomatric = () => {
                       Employee Id
                     </th>
                     <th scope="col" className="px-6 py-3">
+                      Employee Email
+                    </th>
+                    <th scope="col" className="px-6 py-3">
                       Employee Name
                     </th>
                     <th scope="col" className="px-6 py-3">
                       Action
                     </th>
-                    
                   </tr>
                 </thead>
                 <tbody>
-                  {empAttendanceData?.map((empAttendanceData, id) => (
-                    <tr className="!font-medium border-b" key={id}>
-                      <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                      <td className="!text-left  pl-4 py-3 ">
-                        {empAttendanceData?.EmployeeId?.empId || ""}
-                      </td>
-                      <td className="!text-left  pl-4 py-3 ">
-                        {empAttendanceData?.EmployeeId?.first_name || ""}
-                      </td>
-                      <td className="!text-left pl-4 py-3">
-                      <IconButton aria-label="view" size="small" onClick={() => handleModalOpen(empAttendanceData)}>
-                        <CalendarMonthIcon sx={{ color: 'green' }} />
-                        </IconButton>
+                
+                  {empAttendanceData  && empAttendanceData.length > 0  && empAttendanceData.map((empAttendanceItem, id) => (
+  <tr className="!font-medium border-b" key={id}>
+    <td className="!text-left pl-8 py-3 ">{id + 1}</td>
+    <td className="!text-left  pl-7 py-3 ">
+      {empAttendanceItem?.EmployeeId?.empId || ""}
+    </td>
+    <td className="!text-left  pl-7 py-3 ">
+      {empAttendanceItem?.EmployeeId?.first_name || ""}
+    </td>
+    <td className="!text-left  pl-7 py-3 ">
+      {empAttendanceItem?.EmployeeId?.email || ""}
+    </td>
+    <td className="!text-left pl-4 py-3">
+      <Tooltip title={"Calculate the hours of employee"} arrow>
+        <IconButton aria-label="view" size="small" onClick={() => handleModalOpen(empAttendanceItem)}>
+          <CalendarMonthIcon sx={{ color: 'green' }} />
+        </IconButton>
+      </Tooltip>
+    </td>
+  </tr>
+))}
 
-                      </td>
-                     
-                    </tr>
-                  ))}
                 </tbody>
               </table>
             </div>
