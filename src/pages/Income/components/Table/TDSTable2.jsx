@@ -239,7 +239,7 @@ const TDSTable2 = () => {
   };
 
   const handleAmountChange = (e, itemIndex, id) => {
-    const newData = [...tableData];
+    // const newData = [...tableData];
     // newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].declaration =
     //   e.target.value;
     setDeclarationData((prev) => ({
@@ -251,7 +251,7 @@ const TDSTable2 = () => {
   };
 
   const handleProofChange = (e, itemIndex, id) => {
-    const newData = [...tableData];
+    // const newData = [...tableData];
     // newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].proof =
     //   e.target.files[0];
 
@@ -272,7 +272,7 @@ const TDSTable2 = () => {
   };
 
   const handleProperty1 = (e, itemIndex, id) => {
-    const newData = [...tableData];
+    // const newData = [...tableData];
     // newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property1 =
     //   e.target.value;
     setDeclarationData((prev) => ({
@@ -283,7 +283,7 @@ const TDSTable2 = () => {
   };
 
   const handleProperty2 = (e, itemIndex, id) => {
-    const newData = [...tableData];
+    // const newData = [...tableData];
     // newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property2 =
     //   e.target.value;
     setDeclarationData((prev) => ({
@@ -330,13 +330,13 @@ const TDSTable2 = () => {
     }
   };
 
-  const handleDownload = (pdf) => {
-    // You can use any method to trigger the download, such as creating an invisible link and clicking it
-    const link = document.createElement("a");
-    link.href = pdf;
-    link.download = "File1.pdf";
-    link.click();
-  };
+  // const handleDownload = (pdf) => {
+  //   // You can use any method to trigger the download, such as creating an invisible link and clicking it
+  //   const link = document.createElement("a");
+  //   link.href = pdf;
+  //   link.download = "File1.pdf";
+  //   link.click();
+  // };
   const uploadProof = async (tdsfile) => {
     const data = await axios.get(
       `${process.env.REACT_APP_API}/route/s3createFile/TDS`,
@@ -526,7 +526,8 @@ const TDSTable2 = () => {
                                       <input
                                         type="number"
                                         className="border-none w-[90px] h-auto outline-none  "
-                                        value={ele.property1}
+                                        // value={ele.property1}
+                                        defaultValue={ele.property1}
                                         min={0}
                                         onChange={(e) =>
                                           handleProperty1(e, itemIndex, id)
@@ -548,7 +549,8 @@ const TDSTable2 = () => {
                                       <input
                                         type="number"
                                         className="border-none w-[90px] h-auto outline-none  "
-                                        value={ele.property2}
+                                        // value={ele.property2}
+                                        defaultValue={ele.property1}
                                         min={0}
                                         onChange={(e) =>
                                           handleProperty2(e, itemIndex, id)
@@ -574,7 +576,7 @@ const TDSTable2 = () => {
                                   <input
                                     type="number"
                                     className="border-none w-[90px] h-auto outline-none  "
-                                    // defaultValue={ele.declaration}
+                                    defaultValue={ele.declaration}
                                     onChange={(e) =>
                                       handleAmountChange(e, itemIndex, id)
                                     }

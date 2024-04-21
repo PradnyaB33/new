@@ -508,6 +508,7 @@ const App = () => {
                 "Manager",
                 "Department-Head",
                 "Accoutant",
+                "Employee",
               ]}
             >
               <Employee />

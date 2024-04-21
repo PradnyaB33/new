@@ -281,6 +281,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               "Manager",
               "Department-Head",
               "Department-Admin",
+              "Employee",
             ].includes(role),
             link: `organisation/${orgId}/employee-list`,
             icon: <Groups className=" !text-[1.2em] text-[#67748E]" />,

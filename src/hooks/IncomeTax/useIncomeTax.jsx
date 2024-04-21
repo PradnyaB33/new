@@ -1,11 +1,27 @@
 import { create } from "zustand";
 
+// Function to calculate the financial year
+const calculateFinancialYear = () => {
+  const currentDate = new Date();
+  let currentYear = currentDate.getFullYear();
+  let nextYear = currentYear + 1;
+
+  // If the current month is January (0) through March (2), subtract 1 from the current year and add 1 to the next year
+  if (currentDate.getMonth() < 3) {
+    currentYear -= 1;
+    nextYear -= 1;
+  }
+
+  return `${currentYear}-${nextYear}`;
+};
+
 const useIncomeTax = create((set) => ({
   editStatus: {},
   tableData: [],
   declarationData: {},
   deleteConfirmation: null,
   pdf: null,
+  financialYear: calculateFinancialYear(),
   setTableData: (newData) => set({ tableData: newData }),
   setEditStatus: (newStatus) => set({ editStatus: newStatus }),
   handleDeleteConfirmation: (id) => set({ deleteConfirmation: id }),
@@ -64,6 +80,7 @@ const useIncomeTax = create((set) => ({
       },
       declarationData: {},
     }),
+
   handleCloseConfirmation: () => set({ deleteConfirmation: null }),
 }));
 
