@@ -1,9 +1,10 @@
 import { Info, RequestQuote, Search, West } from "@mui/icons-material";
 import { Avatar, CircularProgress } from "@mui/material";
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
+import ShiftRejectModel from "../../components/Modal/ShiftRequestModal/ShiftRejectModel";
 import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
 // import PunchMapModal from "./components/mapped-form";
@@ -11,6 +12,7 @@ import UserProfile from "../../hooks/UserData/useUser";
 const ShiftAcceptModal = ({ data }) => {
   const authToken = useAuthToken();
   const { getCurrentUser } = UserProfile();
+  const [searchTerm, setSearchTerm] = useState("");
   let isAcc = false;
   const user = getCurrentUser();
   const profileArr = user.profile;
@@ -34,17 +36,17 @@ const ShiftAcceptModal = ({ data }) => {
       const response = await axios.get(url, {
         headers: { Authorization: authToken },
       });
+      console.log("finalData", response.data);
       return response.data;
     }
   });
-  console.log("my data", data2);
 
   const { data: EmpNotification, isLoading: empDataLoading } = useQuery({
-    queryKey: ["EmpDataPunch", employeeId],
+    queryKey: ["ShiftData", employeeId],
     queryFn: async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API}/route/punch-notification/notification-user/${employeeId}`,
+          `${process.env.REACT_APP_API}/route/shiftApply/getForEmp/${employeeId}`,
           {
             headers: {
               Authorization: authToken,
@@ -59,6 +61,32 @@ const ShiftAcceptModal = ({ data }) => {
     },
     enabled: employeeId !== undefined,
   });
+
+  const { data: EmpNotification2 } = useQuery({
+    queryKey: ["ShiftData2", employeeId],
+    queryFn: async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API}/route/shiftApply/getForEmp2/${employeeId}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        console.log("this is my data bro", res.data);
+        return res.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    enabled: employeeId !== undefined,
+  });
+  const filteredEmployees = data2?.arrayOfEmployee?.filter((employee) =>
+    `${employee?.first_name} ${employee?.last_name}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div>
@@ -92,12 +120,14 @@ const ShiftAcceptModal = ({ data }) => {
                 <input
                   type={"test"}
                   placeholder={"Search Employee"}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   className={`border-none bg-white w-full outline-none px-2  `}
                 />
               </div>
             </div>
           </div>
-          {data2?.arrayOfEmployee?.map(
+          {filteredEmployees?.map(
             (employee, idx) =>
               employee !== null && (
                 <Link
@@ -152,12 +182,22 @@ const ShiftAcceptModal = ({ data }) => {
                   </div>
                 </div>
 
-                <div className=" px-4 ">
-                  {/* {EmpNotification?.punchNotification?.map(
-                    (items, itemIndex) => (
-                      <PunchMapModal items={items} />
-                    )
-                  )} */}
+                <div className=" px-4 mt-4 flex flex-col gap-8">
+                  {!EmpNotification && !EmpNotification2 && (
+                    <div className="flex px-4 w-full items-center my-4">
+                      <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
+                        No Shift Request Found
+                      </h1>
+                    </div>
+                  )}
+                  {EmpNotification &&
+                    EmpNotification?.requests?.map((item, idx) => (
+                      <ShiftRejectModel items={item} />
+                    ))}
+                  {EmpNotification2 &&
+                    EmpNotification2?.requests?.map((item, idx) => (
+                      <ShiftRejectModel items={item} />
+                    ))}
                 </div>
               </>
             )
