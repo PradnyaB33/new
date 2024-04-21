@@ -56,21 +56,29 @@ const PunchMapModal = ({ items, idx }) => {
               )}
             </h1>
             <div className="w-[150px]">
-              <div className="h-[100px] w-[100px] rounded-full">
+              <div className="h-[100px] w-[100px]">
                 {items.punchData[0].image === "" ? (
                   <img
-                    style={{ objectFit: "cover" }}
+                    style={{
+                      objectFit: "cover",
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: "20%",
+                    }}
                     src={items.employeeId.user_logo_url}
                     alt=""
-                    srcset=""
                   />
                 ) : (
-                  <div className="h-[100px] w-[100px] rounded-full">
+                  <div className="h-[100px] w-[100px]">
                     <img
-                      style={{ objectFit: "cover" }}
+                      style={{
+                        objectFit: "cover",
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: "20%",
+                      }}
                       src={items.punchData[0].image}
                       alt=""
-                      srcset=""
                     />
                   </div>
                 )}
@@ -92,12 +100,12 @@ const PunchMapModal = ({ items, idx }) => {
             </h1>
             <h1>
               End Time:{" "}
-              {items.punchData[items.punchData.length - 1].data
+              {items.punchData[items.punchData.length - 1]?.data
                 ? new Date(
-                    items?.punchData[items.punchData.length - 1].data[
-                      items.punchData[items.punchData.length - 1].data.length -
+                    items?.punchData[items.punchData.length - 1]?.data[
+                      items.punchData[items.punchData.length - 1]?.data.length -
                         1
-                    ].time
+                    ]?.time
                   ).toLocaleTimeString()
                 : "N/A"}
             </h1>

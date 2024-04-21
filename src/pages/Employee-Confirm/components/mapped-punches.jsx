@@ -76,7 +76,7 @@ const MappedPunches = ({
                   End Time:{" "}
                   {doc.data && doc.data.length > 0 && doc?.createdAt
                     ? new Date(
-                        doc?.data[doc.data.length - 1].time
+                        doc?.data[doc.data.length - 1]?.time
                       ).toLocaleTimeString()
                     : "N/A"}
                 </h1>
