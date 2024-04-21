@@ -26,6 +26,7 @@ const useOrg = create((set) => {
     packageInfo: undefined,
     count: undefined,
     cycleCount: "1",
+    paymentType: undefined,
 
     // Setter function for updating multiple properties at once
     setStep2Data: (packageInfo) => {
@@ -40,6 +41,7 @@ const useOrg = create((set) => {
       set({
         count: data.count,
         cycleCount: data.cycleCount,
+        paymentType: data?.paymentType,
       });
     },
     setCreator: (creator) => set({ creator: creator.user._id }),

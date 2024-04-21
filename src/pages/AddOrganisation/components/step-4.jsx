@@ -71,6 +71,7 @@ const Step4 = () => {
       "totalPrice",
       getPrice(data?.packageInfo?.packageName) * data?.count * data?.cycleCount
     );
+    formData.append("paymentType", data?.paymentType);
 
     const response = await axios.post(
       `${process.env.REACT_APP_API}/route/organization`,
@@ -85,36 +86,40 @@ const Step4 = () => {
     mutationFn: handleForm,
     onSuccess: async (data) => {
       console.log(`🚀 ~ file: step-4.jsx:87 ~ data:`, data);
-      const options = {
-        key: data?.key,
-        amount: data?.order?.amount,
-        currency: "INR",
-        name: "Aegis Plan for software", //your business name
-        description: "Get Access to all premium keys",
-        image: data?.organization?.image,
-        order_id: data.order.id, //This
-        callback_url: `${process.env.REACT_APP_API}/route/organization/verify/${data?.organization?._id}`,
-        prefill: {
-          name: `${decodedToken?.user?.first_name} ${decodedToken?.user?.last_name}`, //your customer's name
-          email: decodedToken?.user?.email,
-          contact: decodedToken?.user?.phone_number,
-        },
-        notes: {
-          address:
-            "C503, The Onyx-Kalate Business Park, near Euro School, Shankar Kalat Nagar, Wakad, Pune, Pimpri-Chinchwad, Maharashtra 411057",
-        },
-        theme: {
-          color: "#1976d2",
-        },
-        modal: {
-          ondismiss: function () {
-            mutate2(data.organization._id);
-            console.log("Checkout form closed by the user");
+      if (data?.status === "phone_payment") {
+        window.location.href = data;
+      } else {
+        const options = {
+          key: data?.key,
+          amount: data?.order?.amount,
+          currency: "INR",
+          name: "Aegis Plan for software", //your business name
+          description: "Get Access to all premium keys",
+          image: data?.organization?.image,
+          order_id: data.order.id, //This
+          callback_url: `${process.env.REACT_APP_API}/route/organization/verify/${data?.organization?._id}`,
+          prefill: {
+            name: `${decodedToken?.user?.first_name} ${decodedToken?.user?.last_name}`, //your customer's name
+            email: decodedToken?.user?.email,
+            contact: decodedToken?.user?.phone_number,
           },
-        },
-      };
-      const razor = new window.Razorpay(options);
-      razor.open();
+          notes: {
+            address:
+              "C503, The Onyx-Kalate Business Park, near Euro School, Shankar Kalat Nagar, Wakad, Pune, Pimpri-Chinchwad, Maharashtra 411057",
+          },
+          theme: {
+            color: "#1976d2",
+          },
+          modal: {
+            ondismiss: function () {
+              mutate2(data.organization._id);
+              console.log("Checkout form closed by the user");
+            },
+          },
+        };
+        const razor = new window.Razorpay(options);
+        razor.open();
+      }
     },
     onError: async (data) => {
       console.error(`🚀 ~ file: mini-form.jsx:48 ~ data:`, data);
