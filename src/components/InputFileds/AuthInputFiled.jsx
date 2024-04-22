@@ -1026,7 +1026,9 @@ const AuthInputFiled = ({
           );
         }}
       />
-      <p className="text-xs w-full h-full">{descriptionText}</p>
+      {descriptionText && (
+        <p className="text-xs w-full h-full">{descriptionText}</p>
+      )}
       {/* <div className="w-full !z-50 h-full  !mb-1"> */}
       <ErrorMessage
         errors={errors}
