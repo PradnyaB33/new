@@ -139,7 +139,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       dept_cost_center_no: z.object({
         label: z.string(),
       }),
-      value: z.string(),
+
       companyemail: z.string().email(),
       profile: z.string().array().optional(),
       shift_allocation: z.object({
@@ -175,6 +175,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   console.log(shift_allocation);
 
   const { errors } = formState;
+  console.log(`🚀 ~ errors:`, errors);
   const onsubmit = (data) => {
     console.log(getValues());
     setStep2Data(data);
