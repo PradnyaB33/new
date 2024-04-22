@@ -511,6 +511,7 @@ const App = () => {
           path="/organisation/:organisationId/employee-list"
           element={
             <RequireAuth
+<<<<<<< HEAD
               permission={[
                 "Super-Admin",
                 "Delegate-Super-Admin",
@@ -520,6 +521,21 @@ const App = () => {
                 "Accoutant",
                 "Employee",
               ]}
+=======
+            permission={[
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+              "Employee",
+            ]}
+>>>>>>> aba070e60ca04b9078d9e27204b92a96b0a502c9
             >
               <Employee />
             </RequireAuth>

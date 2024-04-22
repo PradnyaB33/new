@@ -113,12 +113,15 @@ const ViewPayslip = () => {
             <>
               <div id="App">
               <div className="flex items-center justify-between mb-6">
-              <img
+                
+                <img
                 src={organisationInfo?.logo_url}
                 alt={organisationInfo?.logo_url}
                 className="w-20 h-20 rounded-full"
                 
               />
+              
+           
               <div className="ml-4">
                 <p className="text-lg font-semibold">
                   Organisation Name:
@@ -224,13 +227,13 @@ const ViewPayslip = () => {
                         <tr>
                           <td class="px-4 py-2 border">
                             {" "}
-                            No of Days in Month:
+                           Employee Id
                           </td>
                           <td class="px-4 py-2 border">
-                            {filteredSalaryInfo?.numDaysInMonth || ""}
+                          {employeeInfo?.empId || ""}
                           </td>
-                          <td class="px-4 py-2 border"></td>
-                          <td class="px-4 py-2 border"></td>
+                          <td class="px-4 py-2 border">  No of Days in Month:</td>
+                          <td class="px-4 py-2 border">  {filteredSalaryInfo?.numDaysInMonth || ""}</td>
                         </tr>
                       </tbody>
                     </table>

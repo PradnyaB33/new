@@ -1,12 +1,9 @@
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { Container, IconButton, TextField, Typography } from "@mui/material";
+import { Container , TextField, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
-//import UpdateEmployeeModal from "../../components/Modal/EditEmployeeModal/UpdateEmployeeModal";
- import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
-const EmployeeList = () => {
+const EmployeeListToEmployee = ({organisationId}) => {
+
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [nameSearch, setNameSearch] = useState("");
@@ -16,8 +13,6 @@ const EmployeeList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
-  const { organisationId } = useParams();
-
   console.log(availableEmployee, "avialabel days");
 
   const fetchAvailableEmployee = async (page) => {
@@ -63,20 +58,7 @@ const EmployeeList = () => {
   const changePage = (id) => {
     fetchAvailableEmployee(id);
   };
-  // Modal states and function
-
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [employeeId, setemployeeId] = useState(null);
-
-  const handleEditModalOpen = (employeeId) => {
-    setEditModalOpen(true);
-    setemployeeId(employeeId);
-  };
-
-  const handleClose = () => {
-    setemployeeId(null);
-    setEditModalOpen(false);
-  };
+ 
 
   return (
     <>
@@ -136,16 +118,13 @@ const EmployeeList = () => {
                     Email
                   </th>
                   <th scope="col" className="!text-left pl-8 py-3">
+                    Employee Id
+                  </th>
+                  <th scope="col" className="!text-left pl-8 py-3">
                     Location
                   </th>
                   <th scope="col" className="!text-left pl-8 py-3">
                     Department
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Phone Number
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Actions
                   </th>
                 </tr>
               </thead>
@@ -185,6 +164,7 @@ const EmployeeList = () => {
                       <td className="py-3 pl-8">{item?.first_name}</td>
                       <td className="py-3 pl-8">{item?.last_name}</td>
                       <td className="py-3 pl-8">{item?.email}</td>
+                      <td className="py-3 pl-8">{item?.empId}</td>
                       <td className="py-3 pl-8">
                         {item?.worklocation?.map((location, index) => (
                           <span key={index}>{location?.city}</span>
@@ -195,16 +175,8 @@ const EmployeeList = () => {
                           <span key={index}>{dept?.departmentName}</span>
                         ))}
                       </td>
-                      <td className="py-3 pl-8 ">{item?.phone_number}</td>
-                      <td className="whitespace-nowrap px-6 py-2">
-                        <IconButton
-                          color="primary"
-                          aria-label="edit"
-                          onClick={() => handleEditModalOpen(item._id)}
-                        >
-                          <EditOutlinedIcon />
-                        </IconButton>
-                      </td>
+                    
+                     
                     </tr>
                   ))}
               </tbody>
@@ -292,15 +264,9 @@ const EmployeeList = () => {
         </article>
       </Container>
 
-      {/* edit model */}
-      <EditModelOpen
-        handleClose={handleClose}
-        open={editModalOpen}
-        employeeId={employeeId}
-        organisationId={organisationId}
-      />
+    
     </>
   );
 };
 
-export default EmployeeList;
+export default EmployeeListToEmployee;

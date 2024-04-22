@@ -249,11 +249,24 @@ const TestNavItems = ({ toggleDrawer }) => {
           window.location.pathname?.includes("organisation") &&
           [
             "Super-Admin",
+<<<<<<< HEAD
             "Delegate-Super-Admin",
             "HR",
             "Manager",
             "Department-Head",
             "Department-Admin",
+=======
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+              "Employee",
+>>>>>>> aba070e60ca04b9078d9e27204b92a96b0a502c9
           ]?.includes(role),
         routes: [
           {
@@ -280,10 +293,21 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible: [
               "Super-Admin",
               "Delegate-Super-Admin",
+<<<<<<< HEAD
               "HR",
               "Manager",
               "Department-Head",
               "Department-Admin",
+=======
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+>>>>>>> aba070e60ca04b9078d9e27204b92a96b0a502c9
               "Employee",
             ].includes(role),
             link: `organisation/${orgId}/employee-list`,
