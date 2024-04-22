@@ -89,6 +89,7 @@ import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
 import MissPunchInOut from "./pages/MissPunch/MissPunchInOut";
 import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
 import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
+import MissedPunchNotified from "./pages/MissedPunchNotification/missedPunchNotified";
 import MyTraining from "./pages/My-Training/page";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
@@ -102,7 +103,6 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import MissedPunchNotified from "./pages/MissedPunchNotification/missedPunchNotified";
 
 const App = () => {
   return (
@@ -204,7 +204,7 @@ const App = () => {
           path="/missedPunch-notification"
           element={<MissedPunchNotification />}
         />
-          <Route
+        <Route
           path="/missed-punch-notification/:employeeId"
           element={<MissedPunchNotified />}
         />
@@ -511,31 +511,19 @@ const App = () => {
           path="/organisation/:organisationId/employee-list"
           element={
             <RequireAuth
-<<<<<<< HEAD
               permission={[
                 "Super-Admin",
                 "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
                 "HR",
                 "Manager",
-                "Department-Head",
-                "Accoutant",
                 "Employee",
               ]}
-=======
-            permission={[
-              "Super-Admin",
-              "Delegate-Super-Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "HR",
-              "Manager",
-              "Employee",
-            ]}
->>>>>>> aba070e60ca04b9078d9e27204b92a96b0a502c9
             >
               <Employee />
             </RequireAuth>
