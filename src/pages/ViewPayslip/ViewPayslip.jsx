@@ -39,6 +39,7 @@ const ViewPayslip = () => {
           },
         }
       );
+      console.log(response);
       setEmployeeInfo(response.data.employeeInfo);
       setOrganisationInfo(response.data.organizationInfo);
       setSalaryInfo(response.data.salaryDetails);
@@ -51,9 +52,9 @@ const ViewPayslip = () => {
     // eslint-disable-next-line
   }, []);
 
-  console.log(salaryInfo);
-
+  
   console.log("salaryinfo" , salaryInfo);
+  
 
   // Find the salary info based on user-selected month and year
   const filteredSalaryInfo = salaryInfo.find((info) => {
@@ -83,7 +84,8 @@ const ViewPayslip = () => {
     };
     });
   };
-
+  
+ 
   return (
     <>
       <div className="container mx-auto p-6">
@@ -261,7 +263,7 @@ const ViewPayslip = () => {
                           </td>
                           <td class="py-2 border">Professional Tax:</td>
                           <td class="py-2 border">
-                            {employeeInfo?.deduction || ""}
+                          {employeeInfo?.deduction || "0.00"}
                           </td>
                         </tr>
                         <tr>
@@ -271,7 +273,7 @@ const ViewPayslip = () => {
                           </td>
                           <td class="py-2 border">Employee PF:</td>
                           <td class="py-2 border">
-                            {employeeInfo?.employee_pf || ""}
+                          {employeeInfo?.employee_pf || "0.00"}
                           </td>
                         </tr>
                         <tr>
@@ -281,7 +283,7 @@ const ViewPayslip = () => {
                           </td>
                           <td class="py-2 border">ESIC :</td>
                           <td class="py-2 border">
-                            {employeeInfo?.esic || ""}
+                          {employeeInfo?.esic || "0.00"}
                           </td>
                         </tr>
                         <tr>
