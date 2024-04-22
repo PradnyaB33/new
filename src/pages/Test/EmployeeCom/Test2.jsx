@@ -109,8 +109,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         label: z.string(),
         value: z.string(),
       }),
-      empId: z.string(),
-
+      empId: z.string().min(3, { message: "EmpId is required" }),
       mgrempid: z
         .object({
           label: z.string(),
