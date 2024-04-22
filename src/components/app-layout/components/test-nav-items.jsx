@@ -22,16 +22,20 @@ import {
   TrendingUp,
   Work,
 } from "@mui/icons-material";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import ArticleIcon from "@mui/icons-material/Article";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import CallMissedIcon from "@mui/icons-material/CallMissed";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import FolderIcon from "@mui/icons-material/Folder";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
+import PunchClockIcon from "@mui/icons-material/PunchClock";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
@@ -39,10 +43,6 @@ import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
-import PunchClockIcon from '@mui/icons-material/PunchClock';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import CallMissedIcon from '@mui/icons-material/CallMissed';
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
@@ -254,6 +254,16 @@ const TestNavItems = ({ toggleDrawer }) => {
             "Manager",
             "Department-Head",
             "Department-Admin",
+            "Delegate-Super-Admin",
+            "Department-Head",
+            "Delegate-Department-Head",
+            "Department-Admin",
+            "Delegate-Department-Admin",
+            "Accountant",
+            "Delegate-Accountant",
+            "HR",
+            "Manager",
+            "Employee",
           ]?.includes(role),
         routes: [
           {
@@ -284,6 +294,14 @@ const TestNavItems = ({ toggleDrawer }) => {
               "Manager",
               "Department-Head",
               "Department-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
               "Employee",
             ].includes(role),
             link: `organisation/${orgId}/employee-list`,
@@ -324,7 +342,9 @@ const TestNavItems = ({ toggleDrawer }) => {
               role
             ),
             link: `organisation/${orgId}/view-calculate-data`,
-            icon: <CalendarMonthIcon className=" !text-[1.2em] text-[#67748E]" />,
+            icon: (
+              <CalendarMonthIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
             text: "Calendar View",
           },
           {
@@ -336,7 +356,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <CallMissedIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Missed Punch ",
           },
-         
         ],
       },
       Department: {

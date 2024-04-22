@@ -131,7 +131,7 @@ const PunchAcceptModal = () => {
                 <div className=" px-4 ">
                   {EmpNotification?.punchNotification?.map(
                     (items, itemIndex) => (
-                      <PunchMapModal items={items} />
+                      <PunchMapModal items={items} idx={itemIndex} />
                     )
                   )}
                 </div>
