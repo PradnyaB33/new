@@ -10,6 +10,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Calendar } from "react-big-calendar";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import useGetUser from "../../hooks/Token/useUser";
 
 const AppDatePicker = ({
   data,
@@ -29,7 +30,7 @@ const AppDatePicker = ({
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const [leaveText, setLeaveText] = useState("");
-  const authToken = cookies["aegis"];
+  const { authToken } = useGetUser();
   const { data: data2 } = useQuery("employee-disable-weekends", async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/weekend/get`,

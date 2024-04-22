@@ -72,13 +72,14 @@ const Step3 = ({ nextStep }) => {
           control={control}
           type="naresh-select"
           placeholder="Select your Merchant"
-          label="Merchant Type *"
+          label="Payment Gateway *"
           errors={errors}
           error={errors.paymentType}
           options={[
             { value: "Phone_Pay", label: "Phone_Pay" },
             { value: "RazorPay", label: "RazorPay" },
           ]}
+          descriptionText={"Additional 2% charges on every transaction"}
         />
         <Button type="submit" variant="contained" className="!w-max !mx-auto">
           Confirm & Pay

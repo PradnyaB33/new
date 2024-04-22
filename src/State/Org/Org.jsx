@@ -21,7 +21,6 @@ const useOrg = create((set) => {
     contact_number: undefined,
     description: undefined,
     creator: undefined, // Using the obtained decoded token
-    logo_url: undefined,
     isTrial: false,
     packageInfo: undefined,
     count: undefined,
