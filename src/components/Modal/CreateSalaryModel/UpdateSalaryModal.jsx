@@ -135,7 +135,9 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
   const queryClient = useQueryClient();
 
   const EditShift = useMutation(
+    
     (data) =>
+   
       axios.put(
         `${process.env.REACT_APP_API}/route/employee/salary/update/${empId}`,
         data,
@@ -146,10 +148,11 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
         }
       ),
     {
-      onSuccess: () => {
+      onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: ["editsalary"] });
         handleClose();
         handleAlert(true, "success", "Salary updated succesfully");
+        console.log("data" , data);
       },
       onError: () => {
         handleAlert(
@@ -171,7 +174,7 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
             esic,
             totalSalary,
           };
-
+       
         await EditShift.mutateAsync(data);
       
     } catch (error) {
