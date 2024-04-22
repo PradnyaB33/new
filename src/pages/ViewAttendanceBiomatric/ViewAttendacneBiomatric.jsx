@@ -67,10 +67,10 @@ const ViewAttendacneBiomatric = () => {
                       Employee Id
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      Employee Email
+                    Employee Name
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      Employee Name
+                      Employee Email
                     </th>
                     <th scope="col" className="px-6 py-3">
                       Action
