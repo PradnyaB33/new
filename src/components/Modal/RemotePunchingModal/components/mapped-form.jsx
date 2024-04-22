@@ -109,10 +109,16 @@ const PunchMapModal = ({ items, idx }) => {
                   ).toLocaleTimeString()
                 : "N/A"}
             </h1>
-            <h1>Total Distance Travelled: {distanceTraveled} Km </h1>
+
+            <h1>Total Estimated Distance : {distanceTraveled} Km </h1>
+            {items.punchData[0].distance !== 0 && (
+              <h1>
+                Total Distance Travelled : {items.punchData[0].distance} Km
+              </h1>
+            )}
 
             {items.punchData[0].image === "" ? (
-              ""
+              <h1>requested for : {items.punchData.length} times</h1>
             ) : (
               <h1>Punching restarted: {items.punchData.length} times</h1>
             )}

@@ -26,7 +26,7 @@ const MappedPunches = ({
   const { data } = useGetSinglePunch({ Id });
 
   return (
-    <div className={`w-full h-80 ${className} overflow-y-auto cursor-pointer`}>
+    <div className={`w-full h-80 ${className} cursor-pointer`}>
       {data?.punchData?.punchData?.map((doc, idx) => {
         let distance = 0;
         let totalDistance = 0;
