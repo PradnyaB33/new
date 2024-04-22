@@ -69,15 +69,6 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
     setOpenModal(false);
   };
 
-  // useEffect(() => {
-  //   let position = {
-  //     lat: watch("startLocation.position.lat"),
-  //     lng: watch("startLocation.position.lng"),
-  //   };
-  //   map && map.setCenter(position);
-  //   // eslint-disable-next-line
-  // }, [watch("startLocation.address"), watch("startLocation.address")]);
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="relative">
       <div
