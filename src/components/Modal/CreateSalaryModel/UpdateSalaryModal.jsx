@@ -9,11 +9,11 @@ import {
   IconButton,
 } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useState } from "react";
-import { useQuery } from "react-query";
+import React, { useContext, useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-const CreateSalaryModel = ({ handleClose, open, empId }) => {
+const UpdateSalaryModal = ({ handleClose, open, empId }) => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
@@ -21,6 +21,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
   const [deduction, setDeduction] = useState("");
   const [employee_pf, setEmployeePf] = useState("");
   const [esic, setEsic] = useState("");
+  console.log(setErrorMessage);
   const [inputValue, setInputValue] = useState({
     Basic: "",
     HRA: "",
@@ -37,7 +38,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
     isLoading,
     isError,
   } = useQuery(
-    ["empData", empId],
+    ["empDatas", empId],
     async () => {
       if (open && empId !== null) {
         const response = await axios.get(
@@ -54,23 +55,34 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
     {
       enabled: open && empId !== null && empId !== undefined,
     }
-  );
-  const handleInputChange = (name, value) => {
-    const enteredValue = parseFloat(value);
-    if (!isNaN(enteredValue) && enteredValue > 10000000) {
-      setErrorMessage("Please enter a number less than 1 crore");
-      return;
+  ); 
+
+  console.log("salaryInput" ,salaryInput);
+
+   // fetch the data in input field which is already stored
+   useEffect(() => {
+    if (salaryInput !== undefined && salaryInput !== null) {
+      // Accessing properties with optional chaining and providing default values with nullish coalescing
+      setDeduction(salaryInput?.employee?.deduction ?? "");
+      setEsic(salaryInput?.employee?.esic ?? "");
+      setEmployeePf(salaryInput?.employee?.employee_pf ?? "");
+  
+      // Accessing nested properties with optional chaining and providing default values with nullish coalescing
+      setInputValue({
+        Basic: salaryInput?.employee?.salaryComponent?.Basic ?? "",
+        HRA: salaryInput?.employee?.salaryComponent?.HRA ?? "",
+        DA: salaryInput?.employee?.salaryComponent?.DA ?? "",
+        "Food allowance": salaryInput?.employee?.salaryComponent["Food allowance"] ?? "",
+        "Variable allowance": salaryInput?.employee?.salaryComponent["Variable allowance"] ?? "",
+        "Special allowance": salaryInput?.employee?.salaryComponent["Special allowance"] ?? "",
+        "Travel allowance": salaryInput?.employee?.salaryComponent["Travel allowance"] ?? "",
+        "Sales allowance": salaryInput?.employee?.salaryComponent["Sales allowance"] ?? "",
+      });
     }
+  }, [salaryInput]);
+  
 
-    
-    setErrorMessage("");
-    setInputValue({
-      ...inputValue,
-      [name]: value,
-    });
-  };
-
-  // Function to calculate total salary
+    // Function to calculate total salary
   const calculateTotalSalary = () => {
     const {
       Basic,
@@ -110,52 +122,74 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
     return total.toFixed(2);
   };
   let totalSalary = calculateTotalSalary();
+ 
+  console.log(totalSalary);
+ 
 
-  const handleApply = async () => {
-    try {
-      const data = {
-        inputValue,
-        deduction,
-        employee_pf,
-        esic,
-        totalSalary,
-      };
+  const handleInputChange = (name, value) => {
+    setInputValue({
+      ...inputValue,
+      [name]: value,
+    });
+  }; 
 
-      const response = await axios.post(
-        `${process.env.REACT_APP_API}/route/employee/salary/add/${empId}`,
+
+  const queryClient = useQueryClient();
+
+  const EditShift = useMutation(
+    
+    (data) =>
+   
+      axios.put(
+        `${process.env.REACT_APP_API}/route/employee/salary/update/${empId}`,
         data,
         {
           headers: {
             Authorization: authToken,
           },
         }
-      );
-      if (response.data.success) {
-        handleAlert(true, "error", "Invalid authorization");
-      } else {
-        handleAlert(true, "success", "Salary Detail added Successfully");
-      
-        setInputValue({
-          Basic: "",
-          HRA: "",
-          DA: "",
-          "Food allowance": "",
-          "Varialble allowance": "",
-          "Special allowance": "",
-          "Travel allowance": "",
-          "Sales allowance": "",
-        });
-        setDeduction("");
-        setEmployeePf("");
-        setEsic("");
-        totalSalary = ""; 
+      ),
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({ queryKey: ["editsalary"] });
         handleClose();
-      }
+        handleAlert(true, "success", "Salary updated succesfully");
+        console.log("data" , data);
+      },
+      onError: () => {
+        handleAlert(
+          true,
+          "error",
+          "An error occurred while updating salary"
+        );
+      },
+    }
+  );
+
+  const EditSalaryData = async (data) => {
+    try {
+     
+        const data = {
+            inputValue,
+            deduction,
+            employee_pf,
+            esic,
+            totalSalary,
+          };
+       
+        await EditShift.mutateAsync(data);
+      
     } catch (error) {
-      console.error("Error adding salary data:", error);
-      handleAlert(true, "error", "Something went wrong");
+      console.error(error);
+      handleAlert(
+        true,
+        "error",
+        "An error occurred while updating salary"
+      );
     }
   };
+
+
 
   return (
     <Dialog
@@ -175,7 +209,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
     >
       <div className="flex w-full justify-between py-4 items-center  px-4">
         <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
-          Create Salary
+          Update Salary
         </h1>
         <IconButton onClick={handleClose}>
           <CloseIcon className="!text-[16px]" />
@@ -189,7 +223,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
 
         <div className="px-5 space-y-4 mt-4">
           <p className="text-md">
-            Create Salary For{" "}
+            Update Salary For{" "}
             <span className="text-lg  font-semibold">{`${salaryInput?.employee?.first_name} ${salaryInput?.employee?.last_name}`}</span>
           </p>
           <p className="text-md">Salary Component</p>
@@ -222,12 +256,12 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                   </tr>
                 ) : (
                   <>
-                           {salaryInput?.employee?.salarystructure?.salaryStructure &&
-  salaryInput?.employee?.salarystructure?.salaryStructure?.length > 0 &&
-  salaryInput?.employee?.salarystructure?.salaryStructure?.map(
-    (item, id) => (
-      <tr key={id} className="space-y-4 w-full">
-        <td className="!text-left w-full pl-8 pr-8 py-3">
+                          {salaryInput?.employee?.salarystructure?.salaryStructure &&
+                           salaryInput?.employee?.salarystructure?.salaryStructure?.length > 0 &&
+                        salaryInput?.employee?.salarystructure?.salaryStructure?.map(
+               (item, id) => (
+         <tr key={id} className="space-y-4 w-full">
+           <td className="!text-left w-full pl-8 pr-8 py-3">
           {item?.salaryComponent || ""}
         </td>
         <td>
@@ -243,7 +277,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
             onChange={(e) => {
               const inputValue = e.target.value;
               if (!isNaN(inputValue) && inputValue >= 0) {
-                handleInputChange(item.salaryComponent, inputValue);
+                handleInputChange(item?.salaryComponent, inputValue);
               }
             }}
           />
@@ -351,8 +385,8 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>
-            <Button onClick={handleApply} variant="contained" color="primary">
-              Submit
+            <Button onClick={EditSalaryData} variant="contained" color="primary">
+              Apply
             </Button>
           </DialogActions>
         </div>
@@ -360,5 +394,4 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
     </Dialog>
   );
 };
-
-export default CreateSalaryModel;
+export default UpdateSalaryModal;
