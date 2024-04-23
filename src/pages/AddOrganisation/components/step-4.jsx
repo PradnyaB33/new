@@ -72,6 +72,7 @@ const Step4 = () => {
         data?.cycleCount,
     };
 
+    console.log(`🚀 ~ file: step-4.jsx:67 ~ mainData:`, mainData);
     const response = await axios.post(
       `${process.env.REACT_APP_API}/route/organization`,
       mainData,
@@ -96,7 +97,7 @@ const Step4 = () => {
           description: "Get Access to all premium keys",
           image: data?.organization?.image,
           order_id: data.order.id, //This
-          callback_url: `${process.env.REACT_APP_API}/route/organization/verify/${data?.organization?._id}`,
+          callback_url: data?.callbackURI,
           prefill: {
             name: `${decodedToken?.user?.first_name} ${decodedToken?.user?.last_name}`, //your customer's name
             email: decodedToken?.user?.email,
