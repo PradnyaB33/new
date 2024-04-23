@@ -22,7 +22,7 @@ const useOrg = create((set) => {
     contact_number: process.env.REACT_APP_contact_number ?? undefined,
     description: process.env.REACT_APP_description ?? undefined,
     creator: process.env.REACT_APP_creator ?? undefined, // Using the obtained decoded token
-    isTrial: process.env.REACT_APP_isTrial ?? false,
+    isTrial: Boolean(process.env.REACT_APP_isTrial) ?? false,
     packageInfo: process.env.REACT_APP_packageInfo ?? undefined,
     count: process.env.REACT_APP_count ?? undefined,
     cycleCount: process.env.REACT_APP_cycleCount ?? "1",
