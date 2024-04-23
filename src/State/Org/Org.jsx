@@ -5,46 +5,28 @@ const useOrg = create((set) => {
 
   return {
     // Organization details
-    // orgName: undefined,
-    // foundation_date: undefined,
-    // web_url: undefined,
-    // industry_type: undefined,
-    // email: undefined,
-    // organization_linkedin_url: undefined,
-    // location: {
-    //   address: undefined,
-    //   position: {
-    //     lat: undefined,
-    //     lng: undefined,
-    //   },
-    // },
-    // contact_number: undefined,
-    // description: undefined,
-    // creator: undefined, // Using the obtained decoded token
-    // isTrial: false,
-    // packageInfo: undefined,
-    // count: undefined,
-    // cycleCount: "1",
-    // paymentType: undefined,
-    orgName: "org-one",
-    foundation_date: "2002-04-06",
-    web_url: "web.url.com",
-    industry_type: "Technology",
-    email: "org1232@email.com",
-    organization_linkedin_url: "linkdin.com",
+    orgName: process.env.REACT_APP_orgName ?? undefined,
+    foundation_date: process.env.REACT_APP_foundation_date ?? undefined,
+    web_url: process.env.REACT_APP_web_url ?? undefined,
+    industry_type: process.env.REACT_APP_industry_type ?? undefined,
+    email: process.env.REACT_APP_email ?? undefined,
+    organization_linkedin_url:
+      process.env.REACT_APP_organization_linkedin_url ?? undefined,
     location: {
-      address: "Kathmandu, Nepal",
-      position: { lat: 27.7172453, lng: 85.3239605 },
+      address: process.env.REACT_APP_location_address ?? undefined,
+      position: {
+        lat: process.env.REACT_APP_location_position_lat ?? undefined,
+        lng: process.env.REACT_APP_location_position_lng ?? undefined,
+      },
     },
-    contact_number: "9370928324",
-    description: "org description one",
-    creator: "65ebefb05352c801e7d62485",
-    isTrial: false,
-    packageInfo: "Intermediate Plan",
-    count: "4",
-    cycleCount: "1",
-    paymentType: "Phone_Pay",
-    totalPrice: 340,
+    contact_number: process.env.REACT_APP_contact_number ?? undefined,
+    description: process.env.REACT_APP_description ?? undefined,
+    creator: process.env.REACT_APP_creator ?? undefined, // Using the obtained decoded token
+    isTrial: Boolean(process.env.REACT_APP_isTrial) ?? false,
+    packageInfo: process.env.REACT_APP_packageInfo ?? undefined,
+    count: process.env.REACT_APP_count ?? undefined,
+    cycleCount: process.env.REACT_APP_cycleCount ?? "1",
+    paymentType: process.env.REACT_APP_paymentType ?? undefined,
 
     // Setter function for updating multiple properties at once
     setStep2Data: (packageInfo) => {
