@@ -11,6 +11,11 @@ const TrainingCard3 = ({ doc }) => {
     trainingId: doc?._id,
   });
 
+  console.log(`🚀 ~ file: training-card.jsx:15 ~ { open, setOpen, mutate }:`, {
+    open,
+    setOpen,
+    mutate,
+  });
   return (
     <div
       className={`bg-white
