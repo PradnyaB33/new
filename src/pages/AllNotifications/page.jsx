@@ -2,6 +2,7 @@ import React from "react";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import usePunchNotification from "../../hooks/QueryHook/notification/punch-notification/hook";
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
+import useLoanNotification from "../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
 import Card from "./components/card";
 import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 
@@ -10,6 +11,9 @@ const ParentNotification = () => {
   const { data: data2 } = useShiftNotification();
   const { data: data3 } = usePunchNotification();
   const { missPunchData } = useMissedPunchNotificationCount();
+  const { getEmployeeRequestLoanApplication } = useLoanNotification();
+
+  console.log("get pending loan" , getEmployeeRequestLoanApplication);
 
   console.log("missed punch data" , missPunchData);
 
@@ -37,6 +41,12 @@ const ParentNotification = () => {
       count: missPunchData?.length ?? 0,
       color: "#51E8FD",
       url: "/missedPunch-notification",
+    },
+    {
+      name: "Loan Notification",
+      count: getEmployeeRequestLoanApplication?.length ?? 0,
+      color: "#51E8FD",
+      url: "/loan-notification",
     },
   ];
 
