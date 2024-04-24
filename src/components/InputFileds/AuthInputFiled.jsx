@@ -53,7 +53,13 @@ const AuthInputFiled = ({
   center,
   descriptionText,
   value,
+  autoComplete,
 }) => {
+  console.log(
+    `🚀 ~ file: AuthInputFiled.jsx:58 ~ autoComplete:`,
+    type,
+    autoComplete
+  );
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
 
@@ -544,6 +550,7 @@ const AuthInputFiled = ({
                 className={`${
                   readOnly && "bg-[ghostwhite]"
                 } border-none bg-white outline-none px-2`}
+                autoComplete={autoComplete ?? "on"}
                 {...field}
                 disabled={disabled}
                 formNoValidate
@@ -796,6 +803,7 @@ const AuthInputFiled = ({
                   className={`${
                     readOnly && "bg-[ghostwhite]"
                   } border-none bg-white w-full outline-none px-2  `}
+                  autoComplete={autoComplete ?? "on"}
                   {...field}
                   formNoValidate
                 />
@@ -940,6 +948,7 @@ const AuthInputFiled = ({
                     readOnly && "bg-[ghostwhite]"
                   } border-none bg-white w-full outline-none px-2  `}
                   {...field}
+                  autoComplete={autoComplete ?? "on"}
                   formNoValidate
                 />
               </div>
@@ -1006,6 +1015,7 @@ const AuthInputFiled = ({
                 className={` border-none bg-white w-full outline-none px-2  ${
                   readOnly && "!bg-gray-200"
                 }`}
+                autoComplete={autoComplete ?? "on"}
                 {...field}
                 formNoValidate
               />
