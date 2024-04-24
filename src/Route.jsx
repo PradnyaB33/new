@@ -89,7 +89,6 @@ import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
 import MissPunchInOut from "./pages/MissPunch/MissPunchInOut";
 import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
 import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
-import MissedPunchNotified from "./pages/MissedPunchNotification/missedPunchNotified";
 import MyTraining from "./pages/My-Training/page";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
@@ -99,6 +98,7 @@ import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttendacneBiomatric";
 import ViewCalculateAttendance from "./pages/ViewCalculateAttendance/ViewCalculateAttendance";
 import CustomCalander from "./pages/custom/Calendar";
+import DocNotification from "./pages/doc-notification/DocNotification";
 import EmpNotification from "./pages/emp-notifications/EmpNotification";
 import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
@@ -206,10 +206,11 @@ const App = () => {
           path="/missedPunch-notification"
           element={<MissedPunchNotification />}
         />
-        <Route
+        <Route path="/doc-notification" element={<DocNotification />} />
+        {/* <Route
           path="/missed-punch-notification/:employeeId"
           element={<MissedPunchNotified />}
-        />
+        /> */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route
