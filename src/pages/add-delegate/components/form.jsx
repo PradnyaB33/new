@@ -28,7 +28,7 @@ const packageSchema = z.object({
   password: z.string(),
   date_of_birth: z.string(),
   gender: z.enum(["Male", "Female", "Other"]),
-  profile: z.enum(["Delegate-Super-Admin"]),
+  profile: z.enum(["Delegate-Super-Admin", "Employee"]),
   citizenship: z.string(),
   _id: z.string(),
 });
