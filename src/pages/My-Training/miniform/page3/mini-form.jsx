@@ -8,9 +8,7 @@ import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
 import PdfInput from "../../../AddOrganisation/components/pdf-input";
 
-const MiniForm = ({ mutate, doc }) => {
-  console.log(`🚀 ~ file: mini-form.jsx:12 ~ doc:`, doc);
-  console.log(`🚀 ~ file: mini-form.jsx:10 ~ doc:`, doc);
+const MiniForm = ({ mutate }) => {
   const formSchema = z.object({
     proofOfSubmissionUrl: z.any().refine(
       (file) => {
@@ -34,6 +32,7 @@ const MiniForm = ({ mutate, doc }) => {
   });
   const { errors } = formState;
   const onSubmit = (data) => {
+    console.log(`🚀 ~ file: mini-form.jsx:36 ~ data:`, data);
     console.log(data);
     mutate(data);
   };

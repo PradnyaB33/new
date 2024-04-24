@@ -15,13 +15,12 @@ const Step4 = () => {
   const data = useOrg();
   console.log(`🚀 ~ file: step-4.jsx:15 ~ data:`, data);
   const { authToken, decodedToken } = useGetUser();
+  const config = {
+    headers: {
+      Authorization: authToken,
+    },
+  };
   const handleDismiss = async (id) => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authToken,
-      },
-    };
     const response = await axios.delete(
       `${process.env.REACT_APP_API}/route/organization/delete/${id}`,
       config
@@ -30,13 +29,6 @@ const Step4 = () => {
     return response.data;
   };
   const handleForm = async () => {
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: authToken,
-      },
-    };
-
     console.log(`🚀 ~ file: step-4.jsx:45 ~ data:`, data);
     console.log(
       `🚀 ~ file: step-4.jsx:61 ~  !data.industry_type:`,
@@ -46,35 +38,44 @@ const Step4 = () => {
       return "Please Select Plan And Package";
     }
 
-    const formData = new FormData();
+    // const formData = new FormData();
 
-    // Append file to FormData
-    formData.append("logo_url", data.logo_url);
-    formData.append("orgName", data.orgName);
-    formData.append("foundation_date", data.foundation_date);
-    formData.append("web_url", data.web_url);
-    formData.append("industry_type", data.industry_type);
-    formData.append("email", data.email);
-    formData.append("isTrial", data.isTrial);
-    formData.append(
-      "organization_linkedin_url",
-      data.organization_linkedin_url
-    );
-    formData.append("location", JSON.stringify(data.location));
-    formData.append("contact_number", data.contact_number);
-    formData.append("description", data.description);
-    formData.append("creator", data.creator);
-    formData.append("packageInfo", data?.packageInfo?.packageName);
-    formData.append("count", data.count);
-    formData.append("cycleCount", data.cycleCount);
-    formData.append(
-      "totalPrice",
-      getPrice(data?.packageInfo?.packageName) * data?.count * data?.cycleCount
-    );
+    // // Append file to FormData
+    // formData.append("orgName", data.orgName);
+    // formData.append("foundation_date", data.foundation_date);
+    // formData.append("web_url", data.web_url);
+    // formData.append("industry_type", data.industry_type);
+    // formData.append("email", data.email);
+    // formData.append("isTrial", data.isTrial);
+    // formData.append(
+    //   "organization_linkedin_url",
+    //   data.organization_linkedin_url
+    // );
+    // formData.append("location", JSON.stringify(data.location));
+    // formData.append("contact_number", data.contact_number);
+    // formData.append("description", data.description);
+    // formData.append("creator", data.creator);
+    // formData.append("packageInfo", data?.packageInfo?.packageName);
+    // formData.append("count", data.count);
+    // formData.append("cycleCount", data.cycleCount);
+    // formData.append(
+    //   "totalPrice",
+    //   getPrice(data?.packageInfo?.packageName) * data?.count * data?.cycleCount
+    // );
+    // formData.append("paymentType", data?.paymentType);
+    const mainData = {
+      ...data,
+      packageInfo: data?.packageInfo?.packageName,
+      totalPrice:
+        getPrice(data?.packageInfo?.packageName) *
+        data?.count *
+        data?.cycleCount,
+    };
 
+    console.log(`🚀 ~ file: step-4.jsx:67 ~ mainData:`, mainData);
     const response = await axios.post(
       `${process.env.REACT_APP_API}/route/organization`,
-      formData,
+      mainData,
       config
     );
     console.log(`🚀 ~ file: step-4.jsx:96 ~ response:`, response);
@@ -85,36 +86,40 @@ const Step4 = () => {
     mutationFn: handleForm,
     onSuccess: async (data) => {
       console.log(`🚀 ~ file: step-4.jsx:87 ~ data:`, data);
-      const options = {
-        key: data?.key,
-        amount: data?.order?.amount,
-        currency: "INR",
-        name: "Aegis Plan for software", //your business name
-        description: "Get Access to all premium keys",
-        image: data?.organization?.image,
-        order_id: data.order.id, //This
-        callback_url: `${process.env.REACT_APP_API}/route/organization/verify/${data?.organization?._id}`,
-        prefill: {
-          name: `${decodedToken?.user?.first_name} ${decodedToken?.user?.last_name}`, //your customer's name
-          email: decodedToken?.user?.email,
-          contact: decodedToken?.user?.phone_number,
-        },
-        notes: {
-          address:
-            "C503, The Onyx-Kalate Business Park, near Euro School, Shankar Kalat Nagar, Wakad, Pune, Pimpri-Chinchwad, Maharashtra 411057",
-        },
-        theme: {
-          color: "#1976d2",
-        },
-        modal: {
-          ondismiss: function () {
-            mutate2(data.organization._id);
-            console.log("Checkout form closed by the user");
+      if (data?.paymentType === "Phone_Pay") {
+        window.location.href = data?.redirectUrl;
+      } else {
+        const options = {
+          key: data?.key,
+          amount: data?.order?.amount,
+          currency: "INR",
+          name: "Aegis Plan for software", //your business name
+          description: "Get Access to all premium keys",
+          image: data?.organization?.image,
+          order_id: data.order.id, //This
+          callback_url: data?.callbackURI,
+          prefill: {
+            name: `${decodedToken?.user?.first_name} ${decodedToken?.user?.last_name}`, //your customer's name
+            email: decodedToken?.user?.email,
+            contact: decodedToken?.user?.phone_number,
           },
-        },
-      };
-      const razor = new window.Razorpay(options);
-      razor.open();
+          notes: {
+            address:
+              "C503, The Onyx-Kalate Business Park, near Euro School, Shankar Kalat Nagar, Wakad, Pune, Pimpri-Chinchwad, Maharashtra 411057",
+          },
+          theme: {
+            color: "#1976d2",
+          },
+          modal: {
+            ondismiss: function () {
+              mutate2(data.organization._id);
+              console.log("Checkout form closed by the user");
+            },
+          },
+        };
+        const razor = new window.Razorpay(options);
+        razor.open();
+      }
     },
     onError: async (data) => {
       console.error(`🚀 ~ file: mini-form.jsx:48 ~ data:`, data);

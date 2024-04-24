@@ -1,6 +1,6 @@
 import { Button, Container, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams  ,} from "react-router-dom";
 import * as XLSX from "xlsx";
 import AttendanceBioModal from "../../components/Modal/AttedanceBioModal/AttendanceBioModal";
 
@@ -110,6 +110,7 @@ const EmpInfoPunchStatus = () => {
   };
   const handleEmpModalClose = () => {
     setEmpModalOpen(false);
+    setSelectedEmployees([]);
   };
 
   return (
@@ -117,7 +118,7 @@ const EmpInfoPunchStatus = () => {
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
-            Attendance Management
+            Punch Sync
           </Typography>
           <p className="text-xs text-gray-600 pl-10 text-center">
             Track the attendance of employees here by using the sync button.
@@ -241,7 +242,7 @@ const EmpInfoPunchStatus = () => {
 
             {/* Pagination */}
          
-            <nav className="pagination" style={{ textAlign: "center" }}>
+            <nav className="pagination" style={{ textAlign: "center" , marginTop : "20px" , marginBottom : "20px" }}>
   <Button
     onClick={prePage}
     disabled={currentPage === 1}

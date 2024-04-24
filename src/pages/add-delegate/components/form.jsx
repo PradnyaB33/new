@@ -72,6 +72,7 @@ const MiniForm = ({ data }) => {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-4 w-full"
         noValidate
+        autoComplete="off"
       >
         <div className="grid grid-cols-2 gap-4 w-max">
           <AuthInputFiled
@@ -84,6 +85,7 @@ const MiniForm = ({ data }) => {
             errors={errors}
             error={errors?.first_name}
             className={"!min-w-80 !max-w-64"}
+            autoComplete={"off"}
           />
           <AuthInputFiled
             className={"!min-w-80 !max-w-64"}
@@ -95,6 +97,7 @@ const MiniForm = ({ data }) => {
             label={`Middle Name `}
             errors={errors}
             error={errors?.middle_name}
+            autoComplete={"off"}
           />
           <AuthInputFiled
             className={"!min-w-80 !max-w-64"}
@@ -106,6 +109,7 @@ const MiniForm = ({ data }) => {
             label={`Last Name *`}
             errors={errors}
             error={errors?.last_name}
+            autoComplete={"off"}
           />
           <AuthInputFiled
             className={"!min-w-80 !max-w-64"}
@@ -138,6 +142,7 @@ const MiniForm = ({ data }) => {
             placeholder={"eg. sahilbarge@gmail.com"}
             label={`Email *`}
             errors={errors}
+            autoComplete={"off"}
             error={errors?.email}
           />
           <AuthInputFiled
@@ -150,6 +155,7 @@ const MiniForm = ({ data }) => {
             label={`Phone Number *`}
             errors={errors}
             error={errors?.phone_number}
+            autoComplete={"off"}
           />
           <AuthInputFiled
             className={"!min-w-80 !max-w-64"}
@@ -179,6 +185,7 @@ const MiniForm = ({ data }) => {
             error={errors?.password}
             visible={visible}
             setVisible={setVisible}
+            autoComplete={"off"}
           />
 
           <AuthInputFiled

@@ -99,8 +99,21 @@ const useCardQuery = ({ trainingId }) => {
       onSuccess: async () => {
         console.log("onSuccess");
         setOpen(false);
+
         await queryClient.invalidateQueries({
-          queryKey: [`get-employee-training-info-${trainingId}`],
+          queryKey: [`get-overdue-training`],
+        });
+        await queryClient.invalidateQueries({
+          queryKey: [`get-upcoming-training`],
+        });
+        await queryClient.invalidateQueries({
+          queryKey: [`get-completed-training`],
+        });
+        await queryClient.invalidateQueries({
+          queryKey: [`get-training-employee`],
+        });
+        await queryClient.invalidateQueries({
+          queryKey: [`get-training-employee-info`],
         });
       },
       onError: (error) => {

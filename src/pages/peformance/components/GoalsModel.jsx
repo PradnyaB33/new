@@ -9,7 +9,7 @@ import {
 } from "@mui/icons-material";
 import { Box, Button, IconButton, Modal } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect } from "react";
+import { default as React, useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
@@ -68,7 +68,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
       startDate: z.string(),
       endDate: z.string(),
     }),
-    goaltype: z.object({ value: z.string(), label: z.string() }),
+    // goaltype: z.object({ value: z.string(), label: z.string() }),
     attachment: z.string().optional(),
   });
 
@@ -109,9 +109,10 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
   }, [goalData]);
 
   const queryClient = useQueryClient();
+
   const performanceSetup = useMutation(
     async (data) => {
-      let currentData = data;
+      let currentData = { ...data, creatorRole: role };
       if (role === "Employee") {
         currentData.assignee = [user._id];
       }
@@ -134,6 +135,70 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
     }
   );
 
+  const performanceEditSetup = useMutation(
+    async (data) => {
+      await axios.put(
+        `${process.env.REACT_APP_API}/route/performance/updateGoal/${id}`,
+        { data },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: () => {
+        handleAlert(true, "success", "Goals updated  successfully");
+        queryClient.invalidateQueries("orggoals");
+        handleClose();
+      },
+    }
+  );
+
+  const { data: getGoal, isFetching } = useQuery({
+    queryKey: "getGoal",
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/route/performance/getGoalDetails/${id}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return data;
+    },
+    enabled: !!id,
+  });
+
+  useEffect(() => {
+    if (!isFetching && getGoal) {
+      setValue("goal", getGoal?.document?.goal);
+      setValue("description", getGoal?.document?.description);
+      setValue("measurement", getGoal?.document?.measurement);
+      setValue(
+        "assignee",
+        getGoal?.document?.assignee.map((emp) => ({
+          value: emp._id,
+          label: `${emp.first_name} ${emp.last_name}`,
+          image: emp.user_logo_url,
+        })) || []
+      );
+      setValue("startDate", {
+        startDate: getGoal?.document?.startDate,
+        endDate: getGoal?.document?.startDate,
+      });
+      setValue("goalStatus", getGoal?.document?.goalStatus);
+      setValue("endDate", {
+        startDate: getGoal?.document?.endDate,
+        endDate: getGoal?.document?.endDate,
+      });
+      // Set other fields...
+    }
+    // eslint-disable-next-line
+  }, [isFetching]);
+
   const onSubmit = async (data) => {
     const goals = {
       goal: data.goal,
@@ -142,11 +207,16 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
       assignee: data?.assignee?.map((emp) => emp.value) ?? [],
       startDate: data.startDate.startDate,
       endDate: data.endDate.startDate,
-      goaltype: data.goaltype.value,
+      // goaltype: data.goaltype.value,
       attachment: data.attachment,
     };
+    console.log(`🚀 ~ goals:`, goals);
 
-    performanceSetup.mutate(goals);
+    if (id) {
+      performanceEditSetup.mutate(goals);
+    } else {
+      performanceSetup.mutate(goals);
+    }
   };
 
   const { data: employeeData } = useQuery("employee", async () => {
@@ -241,24 +311,25 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
               errors={errors}
               error={errors.measurement}
             />
-            {(performance?.stages ===
-              "Monitoring stage/Feedback collection stage" ||
-              role !== "Employee") && (
-              <AuthInputFiled
-                name="comments"
-                icon={Paid}
-                control={control}
-                type="texteditor"
-                placeholder="100"
-                label="Comments box"
-                errors={errors}
-                error={errors.comments}
-              />
-            )}
+            {performance?.stages ===
+              "Monitoring stage/Feedback collection stage" &&
+              role !== "Employee" && (
+                <AuthInputFiled
+                  name="comments"
+                  icon={Paid}
+                  control={control}
+                  type="texteditor"
+                  placeholder="100"
+                  label="Comments box"
+                  errors={errors}
+                  error={errors.comments}
+                />
+              )}
             {role !== "Employee" && (
               <AuthInputFiled
                 name="assignee"
                 icon={PersonOutline}
+                isMulti={true}
                 control={control}
                 type="empselect"
                 options={empoptions}
@@ -305,7 +376,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
               />
             </div>
 
-            <AuthInputFiled
+            {/* <AuthInputFiled
               name="goaltype"
               icon={PersonOutline}
               control={control}
@@ -315,7 +386,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
               label="Select goal type"
               errors={errors}
               error={errors.goaltype}
-            />
+            /> */}
 
             <div className="flex gap-4  mt-4 mr-4 justify-end">
               <Button
@@ -327,7 +398,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
                 Cancel
               </Button>
               <Button type="submit" variant="contained" color="primary">
-                Create Goal
+                {id ? "Update Goal" : "Create Goal"}
               </Button>
             </div>
           </form>

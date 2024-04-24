@@ -20,7 +20,6 @@ const MiniForm = ({ mutate }) => {
   });
   const { errors } = formState;
   const onSubmit = (data) => {
-    console.log(data);
     mutate(data);
   };
 

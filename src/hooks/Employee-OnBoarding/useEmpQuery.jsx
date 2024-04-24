@@ -2,8 +2,10 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import useAuthToken from "../Token/useAuth";
 
-const useEmpQuery = ({ organisationId }) => {
+const useEmpQuery = ({  organisationId }) => {
   const authToken = useAuthToken();
+
+  console.log("ids" , organisationId);
 
   const getEmployeeDataApi = async (api) => {
     try {

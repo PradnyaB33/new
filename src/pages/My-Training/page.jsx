@@ -24,7 +24,6 @@ const MyTraining = () => {
   const { data: ongoingTraining } = useGetOngoingTrainings();
   const { data: overdueTraining } = useGetOverdueTrainings();
   const { data: completedTraining } = useGetCompletedTraining();
-
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const [open3, setOpen3] = React.useState(false);

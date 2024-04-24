@@ -6,7 +6,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 import { useQuery } from "react-query";
 import EmployeeTypeSkeleton from "../SetUpOrganization/components/EmployeeTypeSkeleton";
 import { Info } from "@mui/icons-material";
-import TableViewIcon from '@mui/icons-material/TableView';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import CalculateHourEmpModal from "../../components/Modal/CalculateHourEmpModal/CalculateHourEmpModal";
 
 const ViewAttendacneBiomatric = () => {
@@ -29,20 +29,17 @@ const ViewAttendacneBiomatric = () => {
       return response.data.data;
     }
   );
-  console.log("empAttendanceData", empAttendanceData);
-
-
+  
   // for open the modal for display employee and calculate hour
   const [modalOpen, setModalOpen] = useState(false);
-  const [attendanceId , setAttendanceId] = useState(null);
-  const handleModalOpen = (id) => {
-    setAttendanceId(id);
-    setModalOpen(true);
+  const [empPunchingData, setEmpPunchingData] = useState();
+  const handleModalOpen = (data) => {
+     setEmpPunchingData(data)
+     setModalOpen(true);
+   
   };
   const handleModalClose = () => {
     setModalOpen(false);
-    setAttendanceId(null)
-   
   };
 
   return (
@@ -50,8 +47,11 @@ const ViewAttendacneBiomatric = () => {
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
-            Employee
+          Employee’s Time Track
           </Typography>
+          <p className="text-xs text-gray-600 pl-10 text-center">
+            Track the attendance of employees here.
+          </p>
 
           {isLoading ? (
             <EmployeeTypeSkeleton />
@@ -86,8 +86,8 @@ const ViewAttendacneBiomatric = () => {
                         {empAttendanceData?.EmployeeId?.first_name || ""}
                       </td>
                       <td className="!text-left pl-4 py-3">
-                      <IconButton aria-label="view" size="small" onClick={() => handleModalOpen(empAttendanceData?._id || "")}>
-                        <TableViewIcon sx={{ color: 'green' }} />
+                      <IconButton aria-label="view" size="small" onClick={() => handleModalOpen(empAttendanceData)}>
+                        <CalendarMonthIcon sx={{ color: 'green' }} />
                         </IconButton>
 
                       </td>
@@ -101,9 +101,9 @@ const ViewAttendacneBiomatric = () => {
             <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
               <article className="flex items-center mb-1 text-red-500 gap-2">
                 <Info className="!text-2xl" />
-                <h1 className="text-lg font-semibold">Add Loan Type</h1>
+                <h1 className="text-lg font-semibold">No Sync Data Found</h1>
               </article>
-              <p>No loan type found. Please add the loan type.</p>
+              <p>Please sync the data of employee.</p>
             </section>
           )}
         </article>
@@ -113,7 +113,7 @@ const ViewAttendacneBiomatric = () => {
         handleClose={handleModalClose}
         open={modalOpen}
         organisationId={organisationId}
-        attendanceId = {attendanceId}
+        empPunchingData = {empPunchingData}
       />
     </>
   );

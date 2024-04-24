@@ -6,8 +6,9 @@ import useCardQuery from "../../components/card-training/useQuery";
 import MiniForm from "./mini-form";
 
 const TrainingCard3 = ({ doc }) => {
+  console.log(`🚀 ~ file: training-card.jsx:9 ~ doc:`, doc);
   const sanitizedDescription = DOMPurify.sanitize(doc?.trainingDescription);
-  const { open, setOpen, mutate, getProofMutate } = useCardQuery({
+  const { open, setOpen, getProofMutate } = useCardQuery({
     trainingId: doc?._id,
   });
 

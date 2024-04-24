@@ -53,43 +53,41 @@ const ViewPayslip = () => {
 
   console.log(salaryInfo);
 
+  console.log("salaryinfo" , salaryInfo);
+
   // Find the salary info based on user-selected month and year
   const filteredSalaryInfo = salaryInfo.find((info) => {
     return (
       info.month === parseInt(monthFromSelectedDate) &&
       info.year === parseInt(yearFromSelectedDate)
     );
-  });
+  }); 
+
+  console.log("filtersalaryinfo" , filteredSalaryInfo);
 
   // download the pdf
   const exportPDF = async () => {
     const input = document.getElementById("App");
-
-    await new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = resolve;
-      img.onerror = reject;
-      img.src = organisationInfo?.logo_url;
-    });
-
-    html2canvas(input, {
+     html2canvas(input, {
       logging: true,
       letterRendering: 1,
       useCORS: true,
-    }).then((canvas) => {
-      const imgWidth = 200;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      const imgData = canvas.toDataURL("img/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+    }).then(async(canvas) => {
+      let img = new Image();
+      console.log(img)
+      img.src = canvas.toDataURL('image/png');
+      img.onload = function () {
+      const pdf = new jsPDF("landscape", "mm", "a4");
+      pdf.addImage(img, 0, 0, pdf.internal.pageSize.width, pdf.internal.pageSize.height);
       pdf.save("payslip.pdf");
+    };
     });
   };
 
   return (
     <>
       <div className="container mx-auto p-6">
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center mb-6">
           <div className="text-center">
             <h3 className="text-lg font-bold text-gray-700">
               Please select the month for which you need the Payslip Statement
@@ -106,42 +104,37 @@ const ViewPayslip = () => {
         </div>
       </div>
 
-      <div>
-        <div>
+      
+        <div > 
           {employeeInfo && organisationInfo ? (
             <>
               <div id="App">
-                <div className="container mx-auto p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <img
-                      src={organisationInfo?.logo_url}
-                      alt={organisationInfo?.logo_url}
-                      className="w-20 h-20 rounded-full"
-                    />
-                    <div className="ml-4">
-                      <p className="text-lg font-semibold flex items-center">
-                        <span className=" mr-1">Organisation Name :</span>
-                        <span style={{ whiteSpace: "pre-wrap" }}>
-                          {organisationInfo?.orgName || ""}
-                        </span>
-                      </p>
-                      <p className="text-lg flex items-center">
-                        <span className=" mr-1">Location :</span>
-                        <span>
-                          {" "}
-                          {organisationInfo?.location?.address || ""}
-                        </span>
-                      </p>
-                      <p className="text-lg flex items-center">
-                        <span className="mr-1">Contact No :</span>
-                        <span>{organisationInfo?.contact_number || ""}</span>
-                      </p>
-                      <p className="text-lg flex items-center">
-                        <span className="mr-1">Email :</span>
-                        <span>{organisationInfo?.email || ""}</span>
-                      </p>
-                    </div>
-                  </div>
+              <div className="flex items-center justify-between mb-6">
+              <img
+                src={organisationInfo?.logo_url}
+                alt={organisationInfo?.logo_url}
+                className="w-20 h-20 rounded-full"
+                
+              />
+              <div className="ml-4">
+                <p className="text-lg font-semibold">
+                  Organisation Name:
+                  <span className="ml-1">{organisationInfo?.orgName || ""}</span>
+                </p>
+                <p className="text-lg">
+                  Location:
+                  <span className="ml-1">{organisationInfo?.location?.address || ""}</span>
+                </p>
+                <p className="text-lg">
+                  Contact No:
+                  <span className="ml-1">{organisationInfo?.contact_number || ""}</span>
+                </p>
+                <p className="text-lg">
+                  Email:
+                  <span className="ml-1">{organisationInfo?.email || ""}</span>
+                </p>
+              </div>
+            </div>
 
                   <hr className="mb-6" />
                   {/* 1st table */}
@@ -293,11 +286,14 @@ const ViewPayslip = () => {
                           <td class="px-4 py-2 border">
                             {filteredSalaryInfo?.foodAllowance || ""}
                           </td>
-                          <td class="py-2 border">Loan Deduction :</td>
+                          {filteredSalaryInfo && filteredSalaryInfo.loanDeduction !== 0 && (
+                            <>
+                           <td class="py-2 border">Loan Deduction :</td>
                           <td class="py-2 border">
-                            {" "}
-                            {filteredSalaryInfo?.loanDeduction || "0"}
+                          {filteredSalaryInfo?.loanDeduction || "0"}
                           </td>
+                          </>
+                           )}
                         </tr>
                         <tr>
                           <td class="px-4 py-2 border">Sales Allowance:</td>
@@ -378,7 +374,7 @@ const ViewPayslip = () => {
                     </table>
                   </div>
                 </div>
-              </div>
+             
               <div
                 style={{
                   display: "flex",
@@ -394,7 +390,7 @@ const ViewPayslip = () => {
                   }}
                 >
                   <button
-                    onClick={() => exportPDF()}
+                    onClick={()=> exportPDF()}
                     class="px-4 py-2 rounded bg-blue-500 text-white border-none text-base cursor-pointer"
                   >
                     Download PDF
@@ -429,9 +425,11 @@ const ViewPayslip = () => {
             </div>
           )}
         </div>
-      </div>
+    
     </>
   );
 };
 
 export default ViewPayslip;
+
+

@@ -1,11 +1,16 @@
 import { Container, TextField } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import CreateSalaryModel from "../../components/Modal/CreateSalaryModel/CreateSalaryModel";
+import { MoreVert } from "@mui/icons-material";
+import {Menu,MenuItem,} from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import EditIcon from '@mui/icons-material/Edit';
+import UpdateSalaryModal from "../../components/Modal/CreateSalaryModel/UpdateSalaryModal";
 
 const SalaryManagement = () => {
   const { handleAlert } = useContext(TestContext);
@@ -19,7 +24,7 @@ const SalaryManagement = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
-  const queryClient = useQueryClient();
+ 
 
   const navigate = useNavigate();
 
@@ -65,22 +70,44 @@ const SalaryManagement = () => {
 
   const changePage = (id) => {
     fetchAvailableEmployee(id);
-  };
+  };  
+
+   // for morevert icon
+   const [anchorEl, setAnchorEl] = useState(null);
+   const [employeeId, setEmployeeId] = useState(null);
+
+   const handleClick = (e, id) => {
+     setAnchorEl(e.currentTarget);
+     setEmployeeId(id);
+   };
+   const handleCloseIcon = () => {
+     setAnchorEl(null);
+   };
 
   // modal for create salary
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [employeeId, setEmployeeId] = useState(null);
-
-  const handleCreateModalOpen = (empId) => {
+  const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
-    setEmployeeId(empId);
-    queryClient.invalidateQueries(["salary", empId]);
   };
 
   const handleClose = () => {
-    setEmployeeId(null);
     setCreateModalOpen(false);
-  };
+    setAnchorEl(null);
+  };  
+
+
+   // modal for update salary
+   const [updateModalOpen, setUpdateModalOpen] = useState(false);
+   const handleUpdateModalOpen = () => {
+     setUpdateModalOpen(true);
+   }; 
+
+   const handleUpdateModalClose = () => {
+      setUpdateModalOpen(false);
+      setAnchorEl(null);
+   }; 
+
+
 
   return (
     <>
@@ -149,7 +176,7 @@ const SalaryManagement = () => {
                     Salary Template
                   </th>
                   <th scope="col" className="px-6 py-3 ">
-                    Create Salary
+                    Action
                   </th>
                   <th scope="col" className="px-6 py-3 ">
                     Calculate Salary
@@ -208,13 +235,43 @@ const SalaryManagement = () => {
                         {item?.salarystructure?.name}
                       </td>
                       <td>
-                        <button
-                          type="submit"
-                          onClick={() => handleCreateModalOpen(item._id)}
-                          className="flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                          <MoreVert
+                          onClick={(e) => handleClick(e, item._id)} 
+                          className="cursor-pointer"
+                        />
+                        <Menu
+                          elevation={2}
+                          anchorEl={anchorEl}
+                          key={id}
+                          open={Boolean(anchorEl)}
+                          onClose={handleCloseIcon}
                         >
-                          Create Salary
-                        </button>
+                          <Tooltip title="Button for creating salary">
+                            <MenuItem onClick={() => handleCreateModalOpen()}>
+                              <AddBoxIcon
+                                color="primary"
+                                aria-label="edit"
+                                style={{
+                                  color: "#f50057",
+                                  marginRight: "10px",
+                                }}
+                              />
+                            </MenuItem>
+                          </Tooltip>
+                          <Tooltip title="Button for editing salary">
+                            <MenuItem  onClick={() => handleUpdateModalOpen()}>
+                              <EditIcon
+                                color="primary"
+                                aria-label="edit"
+                                style={{
+                                  color: "#2196f3",
+                                  marginRight: "10px",
+                                }}
+                              />
+                            </MenuItem>
+                          </Tooltip>
+                        
+                        </Menu>
                       </td>
                       <td>
                         <button
@@ -321,6 +378,12 @@ const SalaryManagement = () => {
         id={organisationId}
         open={createModalOpen}
         handleClose={handleClose}
+        empId={employeeId}
+      />
+       <UpdateSalaryModal
+        id={organisationId}
+        open={updateModalOpen}
+        handleClose={handleUpdateModalClose}
         empId={employeeId}
       />
     </>

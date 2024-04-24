@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AttachFile, Close, Paid, PersonOutline } from "@mui/icons-material";
+import { AttachFile, Close, Paid } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -16,7 +16,14 @@ import { TestContext } from "../../../State/Function/Main";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
 
-const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
+const MonitoringModel = ({
+  handleClose,
+  open,
+  options,
+  id,
+  performance,
+  assignee,
+}) => {
   const { handleAlert } = useContext(TestContext);
   const style = {
     position: "absolute",
@@ -37,8 +44,8 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
   const zodSchema = z.object({
     goal: z.string(),
     measurement: z.string().optional(),
-    comments: z.string().optional(),
-    assignee: z.object({ value: z.string(), label: z.string() }).optional(),
+    comments: z.string(),
+    // assignee: z.object({ value: z.string(), label: z.string() }),
     attachment: z.string().optional(),
   });
 
@@ -77,8 +84,8 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
     }
   );
 
-  const { data: getGoal, isFetching } = useQuery({
-    queryKey: ["getGoal", id],
+  const { isFetching } = useQuery({
+    queryKey: ["getGoalMonitoring", id],
     queryFn: async () => {
       const { data } = await axios.get(
         `${process.env.REACT_APP_API}/route/performance/getGoalDetails/${id}`,
@@ -92,15 +99,15 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
     },
     enabled: !!id,
 
-    onSuccess: () => {
-      setValue("goal", getGoal?.goal);
+    onSuccess: (data) => {
+      setValue("goal", data?.goal);
     },
   });
 
   const onSubmit = async (data) => {
     const goals = {
       measurement: data.measurement,
-      assignee: data?.assignee,
+      assignee: { label: assignee, value: assignee },
       comments: data.comments,
       attachment: data.attachment,
       status: "Monitoring Completed",
@@ -121,11 +128,11 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
     return data;
   });
 
-  const empoptions = getGoal?.assignee?.map((emp) => ({
-    value: emp._id,
-    label: `${emp.first_name} ${emp.last_name}`,
-    image: emp.user_logo_url,
-  }));
+  // const empoptions = getGoal?.assignee?.map((emp) => ({
+  //   value: emp._id,
+  //   label: `${emp.first_name} ${emp.last_name}`,
+  //   image: emp.user_logo_url,
+  // }));
 
   return (
     <>
@@ -167,7 +174,7 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
                 error={errors.goal}
               />
 
-              <AuthInputFiled
+              {/* <AuthInputFiled
                 name="assignee"
                 icon={PersonOutline}
                 control={control}
@@ -178,7 +185,7 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
                 label="Select assignee name"
                 errors={errors}
                 error={errors.assignee}
-              />
+              /> */}
 
               <AuthInputFiled
                 name="measurement"
