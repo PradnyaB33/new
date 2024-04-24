@@ -5,10 +5,10 @@ import { Button } from "@mui/material";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
-import PdfInput from "../../../AddOrganisation/components/pdf-input";
+import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
+import PdfInput from "../../AddOrganisation/components/pdf-input";
 
-const MiniForm = ({ mutate, doc }) => {
+const CompleteTrainingMiniForm = ({ mutate, doc }) => {
   console.log(`🚀 ~ file: mini-form.jsx:10 ~ doc:`, doc);
   const formSchema = z.object({
     proofOfSubmissionUrl: z.any().refine(
@@ -106,4 +106,4 @@ const MiniForm = ({ mutate, doc }) => {
   );
 };
 
-export default MiniForm;
+export default CompleteTrainingMiniForm;
