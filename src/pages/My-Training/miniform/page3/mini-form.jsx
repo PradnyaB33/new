@@ -1,56 +1,99 @@
+import { ErrorMessage } from "@hookform/error-message";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DateRangeOutlined } from "@mui/icons-material";
+import { Feedback, StarBorder } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
+import PdfInput from "../../../AddOrganisation/components/pdf-input";
 
-const MiniForm = ({ mutate }) => {
+const MiniForm = ({ mutate, doc }) => {
+  console.log(`🚀 ~ file: mini-form.jsx:10 ~ doc:`, doc);
   const formSchema = z.object({
-    startDate: z.string(),
-    endDate: z.string(),
+    proofOfSubmissionUrl: z.any().refine(
+      (file) => {
+        return !!file && file.size >= 5 * 1024 && file.size <= 50 * 1024;
+      },
+      { message: "Image size maximum 50kb" }
+    ),
+    rating: z.number(),
+    feedback: z.string().min(10),
+    employeeTrainingId: z.string(),
   });
 
-  const { control, formState, handleSubmit, watch } = useForm({
+  const { control, formState, handleSubmit, getValues } = useForm({
     defaultValues: {
       proofOfSubmissionUrl: undefined,
+      rating: undefined,
+      feedback: undefined,
+      employeeTrainingId: doc._id,
     },
     resolver: zodResolver(formSchema),
   });
   const { errors } = formState;
   const onSubmit = (data) => {
+    console.log(`🚀 ~ file: mini-form.jsx:36 ~ data:`, data);
     console.log(data);
     mutate(data);
   };
 
+  console.log(`🚀 ~ file: mini-form.jsx:33 ~ getValues:`, getValues());
   return (
-    <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-      <h1 className="text-xl font-bold text-left w-full">Schedule Training</h1>
-      <div className="grid grid-cols-2 gap-8">
-        <AuthInputFiled
-          name="startDate"
-          label="Start Date"
-          icon={DateRangeOutlined}
-          control={control}
-          type="date"
-          placeholder="Start Date"
-          error={errors.startDate}
-          errors={errors}
-          min={new Date().toISOString().split("T")[0]}
-        />
-        <AuthInputFiled
-          name="endDate"
-          icon={DateRangeOutlined}
-          label="End Date"
-          control={control}
-          type="date"
-          placeholder="End Date"
-          error={errors.endDate}
-          errors={errors}
-          min={watch("startDate")}
-        />
+    <form
+      className="flex flex-col gap-4 items-center w-full"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <h1 className="text-xl font-bold text-left w-full">Complete Training</h1>
+      <div className="gap-8 w-full">
+        <div className="space-y-1 w-full items-center flex flex-col ">
+          <Controller
+            control={control}
+            name={"proofOfSubmissionUrl"}
+            render={({ field }) => {
+              return <PdfInput field={field} />;
+            }}
+          />
+          <div className="h-4 !mb-1">
+            <ErrorMessage
+              errors={errors}
+              name={"proofOfSubmissionUrl"}
+              render={({ message }) => (
+                <p className="text-sm text-red-500">{message}</p>
+              )}
+            />
+          </div>
+        </div>
       </div>
+      <AuthInputFiled
+        name="rating"
+        label="Rating"
+        control={control}
+        type="naresh-select"
+        icon={StarBorder}
+        placeholder="Rating"
+        error={errors.rating}
+        errors={errors}
+        options={[
+          { value: 1, label: 1 },
+          { value: 2, label: 2 },
+          { value: 3, label: 3 },
+          { value: 4, label: 4 },
+          { value: 5, label: 5 },
+        ]}
+      />
+      <AuthInputFiled
+        name="feedback"
+        label="Feedback"
+        icon={Feedback}
+        control={control}
+        type="text"
+        placeholder="Feedback"
+        error={errors.feedback}
+        errors={errors}
+        className={"w-full"}
+      />
+
       <Button
         type="submit"
         variant="contained"
