@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Person } from "@mui/icons-material";
 import { Box, Button, CircularProgress, Modal } from "@mui/material";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
@@ -45,6 +45,7 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
   const {
     handleSubmit,
     control,
+    reset,
     setValue,
     formState: { errors },
   } = useForm({
@@ -53,6 +54,18 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
       title: undefined,
     },
   });
+
+  useEffect(
+    () => {
+      if (!open) {
+        reset({
+          title: "",
+        });
+      }
+    },
+    // eslint-disable-next-line
+    [open]
+  );
 
   const queryClient = useQueryClient();
 
