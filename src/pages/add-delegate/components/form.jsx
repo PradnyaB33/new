@@ -59,6 +59,7 @@ const MiniForm = ({ data }) => {
   });
 
   const { errors, isDirty } = formState;
+  console.log(`🚀 ~ file: form.jsx:62 ~ errors:`, errors);
   const onSubmit = async (data) => {
     addDelegateMutation.mutate(data);
   };
