@@ -44,17 +44,18 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     setDisbursementDate,
   } = useLaonState();
 
-  const { getEmployeeLoanType, getTotalSalaryEmployee } =
-    useLoanQuery(organisationId);
-
   const {
-    interestPerMonth,
     principalPerMonth,
     totalDeductionPerMonth,
     totalAmountWithSimpleInterest,
     handleNoOfEmiChange,
-    value2
+    interestPerMonths,
   } = useCalculation();
+
+  const { getEmployeeLoanType, getTotalSalaryEmployee } =
+    useLoanQuery(organisationId);
+
+  console.log("get emp laon data", getEmployeeLoanType);
 
   useEffect(() => {
     if (loanType) {
@@ -67,8 +68,6 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
       }
     }
   }, [loanType, getEmployeeLoanType]);
-  console.log(" minimum loan value ", loanValue);
-  console.log(" Max loan value ", maxLoanValue);
 
   const queryClient = useQueryClient();
   const AddLoanData = useMutation(
@@ -102,12 +101,14 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
 
   const createLoanData = async (loanData) => {
     const totalSalary = getTotalSalaryEmployee;
+    const fiftyPercentOfSalary = totalSalary * 0.5;
+    console.log("fiftyPercentOfSalary", fiftyPercentOfSalary);
 
-    if (totalSalary < 0.5 * loanData.totalDeductionWithSi) {
+    if (loanData?.totalDeduction > fiftyPercentOfSalary) {
       handleAlert(
         true,
         "error",
-        "Total deduction should be at least 50% of your total monthly salary"
+        "Total deduction amount should be 50% of your total monthly salary"
       );
       return;
     }
@@ -119,18 +120,14 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
       setErrors("An Error occurred while creating a loan data.");
     }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Get the current date
       const currentDate = new Date();
       const currentYear = currentDate.getFullYear();
       const currentMonth = currentDate.getMonth() + 1;
-
-      // Convert the selected loan disbursement date to a Date object
       const selectedDisbursementDate = new Date(loanDisbursementDate);
-
-      // Check if the selected year and month are in the future
       if (
         selectedDisbursementDate.getFullYear() < currentYear ||
         (selectedDisbursementDate.getFullYear() === currentYear &&
@@ -148,7 +145,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
         loanCompletedDate: loanCompletedDate,
         noOfEmi: noOfEmi,
         loanPrincipalAmount: principalPerMonth,
-        loanInteresetAmount: interestPerMonth,
+        loanInteresetAmount: interestPerMonths,
         totalDeduction: totalDeductionPerMonth,
         totalDeductionWithSi: totalAmountWithSimpleInterest,
         totalSalary: getTotalSalaryEmployee,
@@ -164,6 +161,9 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     }
   };
   console.log(errors);
+  console.log(loanValue);
+  console.log(getTotalSalaryEmployee);
+
   return (
     <Dialog
       PaperProps={{
@@ -219,38 +219,27 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                 sx={{ width: "100%" }}
                 variant="outlined"
               >
-                <InputLabel sx={{ minWidth: "150px", marginBottom: "8px" }}>
-                  Rate of interest
-                </InputLabel>
-                <OutlinedInput
-                  value={rateOfIntereset}
-                  label="Rate of interest"
-                  sx={{ minWidth: "150px", width: "100%" }}
-                />
-              </FormControl>
-            </div>
-
-            <div className="space-y-2">
-              <FormLabel className="text-md">Loan amount Rs</FormLabel>
-              <FormControl
-                size="small"
-                sx={{ width: "100%" }}
-                variant="outlined"
-              >
                 <InputLabel>Loan amount Rs</InputLabel>
                 <OutlinedInput
                   value={loanAmount}
                   onChange={(e) => {
                     const amount = e.target.value;
-                    if (amount >= 0 || amount === "") {
-                      if (amount <= maxLoanValue) {
+                    if (
+                      amount === "" ||
+                      (amount >= 0 && amount <= maxLoanValue)
+                    ) {
+                      if (amount === "" || amount >= loanValue) {
                         setError("");
                         setLoanAmount(amount);
                       } else {
                         setError(
-                          "You cannot take the loan amount greater than maximum loan value."
+                          "You cannot take the loan amount less than the minimum loan value."
                         );
                       }
+                    } else {
+                      setError(
+                        "You cannot take the loan amount greater than maximum loan value."
+                      );
                     }
                   }}
                   id="outlined-adornment-password"
@@ -274,12 +263,11 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   onChange={(newDate) => {
                     const formattedDate = dayjs(newDate).format("YYYY-MM-DD");
                     setDisbursementDate(formattedDate);
-                    setError(""); 
+                    setError("");
                   }}
                   slotProps={{
                     textField: { size: "small", fullWidth: true },
                   }}
-                 
                   disablePast
                 />
               </DemoContainer>
@@ -302,106 +290,19 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                 />
               </FormControl>
             </div>
-            <div className="space-y-2">
-              <FormControl
-                size="small"
-                sx={{ width: "100%" }}
-                variant="outlined"
-              >
-                <InputLabel sx={{ minWidth: "150px" }}>
-                  Loan completion date
-                </InputLabel>
-                <OutlinedInput
-                  value={loanCompletedDate}
-                  label="Loan completion date"
-                  sx={{ minWidth: "150px" }}
-                />
-              </FormControl>
-            </div>
 
-            <div className=" flex  gap-2 w-full">
-              <div className="space-y-2  w-[50%]">
-                <FormLabel className="text-md">
-                  Principal amount monthly 
-                </FormLabel>
-
-                <FormControl
-                  size="small"
-                  sx={{ width: "100%" }}
-                  variant="outlined"
-                >
-                  <InputLabel>Principal amount monthly</InputLabel>
-                  <OutlinedInput
-                    value={principalPerMonth || ""}
-                    label="Principal amount monthly"
-                  />
-                </FormControl>
-              </div>
-              <div className="space-y-2 w-[50%]">
-                <FormLabel
-                  className="text-md"
-                  htmlFor="demo-simple-select-label"
-                >
-                  Interest amount monthly 
-                </FormLabel>
-                <FormControl
-                  size="small"
-                  sx={{ width: "100%" }}
-                  variant="outlined"
-                >
-                  <InputLabel>Interest amount monthly</InputLabel>
-                  <OutlinedInput
-                    value={value2}
-                    label="Interest amount monthly"
-                  />
-                </FormControl>
-              </div>
+            <div>Rate of Interest : {rateOfIntereset || ""}</div>
+            <div>Min loan value : {loanValue ?? "0"}</div>
+            <div>Max loan value : {maxLoanValue ?? "0"}</div>
+            <div>Loan completion date : {loanCompletedDate || ""}</div>
+            <div>Principal amount monthly : {principalPerMonth ?? "0.00"}</div>
+            <div>Interest amount monthly : {interestPerMonths ?? "0.00"}</div>
+            <div>
+              Total amount monthly deducted : {totalDeductionPerMonth ?? "0.00"}
             </div>
-            <div className=" flex  gap-2 w-full">
-              <div className="space-y-2  w-[50%]">
-                <FormLabel
-                  className="text-md"
-                  htmlFor="demo-simple-select-label"
-                >
-                  Total amount monthly deducted
-                </FormLabel>
-                <FormControl
-                  size="small"
-                  sx={{ width: "100%" }}
-                  variant="outlined"
-                >
-                  <InputLabel htmlFor="outlined-adornment-password">
-                    Total amount monthly
-                  </InputLabel>
-                  <OutlinedInput
-                    value={totalDeductionPerMonth}
-                    id="outlined-adornment-password"
-                    label="Total amount monthly"
-                  />
-                </FormControl>
-              </div>
-              <div className="space-y-2 w-[50%]">
-                <FormLabel
-                  className="text-md"
-                  htmlFor="demo-simple-select-label"
-                >
-                  Total amount with simple interest
-                </FormLabel>
-                <FormControl
-                  size="small"
-                  sx={{ width: "100%" }}
-                  variant="outlined"
-                >
-                  <InputLabel htmlFor="outlined-adornment-password">
-                    Total amount with simple interest
-                  </InputLabel>
-                  <OutlinedInput
-                    value={totalAmountWithSimpleInterest}
-                    id="outlined-adornment-password"
-                    label="Total amount with simple interest"
-                  />
-                </FormControl>
-              </div>
+            <div>
+              Total amount with simple interest :{" "}
+              {totalAmountWithSimpleInterest || "0.00"}
             </div>
           </div>
           <DialogActions sx={{ justifyContent: "end" }}>

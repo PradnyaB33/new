@@ -967,7 +967,7 @@ const App = () => {
           }
         />
         <Route path="*" element={<NotFound />} />
-        <Route path="/pendingLoan" element={<LoanMgtNotification />} />
+        <Route path="/loan-notification" element={<LoanMgtNotification />} />
         <Route path="/loan-approval/:loanId" element={<LoanMgtApproval />} />
       </Routes>
     </AuthProvider>

@@ -1,6 +1,6 @@
 import React from "react";
 import CardLoader from "../../components/card-loader";
-import TrainingCard3 from "./training-card";
+import MainTrainingCard from "../../components/training-card";
 import useGetOverdueTrainings from "./use-query-page3";
 
 const Modal3 = () => {
@@ -18,7 +18,7 @@ const Modal3 = () => {
     <div className="flex flex-col gap-4 ">
       <h2 className="text-2xl font-bold">Overdue Trainings</h2>
       {data?.data?.map((item) => (
-        <TrainingCard3 key={item.id} doc={item?.trainingId} />
+        <MainTrainingCard key={item.id} doc={item} />
       ))}
     </div>
   );

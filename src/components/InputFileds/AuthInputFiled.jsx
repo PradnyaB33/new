@@ -53,6 +53,7 @@ const AuthInputFiled = ({
   center,
   descriptionText,
   value,
+  autoComplete,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -544,6 +545,7 @@ const AuthInputFiled = ({
                 className={`${
                   readOnly && "bg-[ghostwhite]"
                 } border-none bg-white outline-none px-2`}
+                autoComplete={autoComplete ?? "on"}
                 {...field}
                 disabled={disabled}
                 formNoValidate
@@ -797,6 +799,7 @@ const AuthInputFiled = ({
                   className={`${
                     readOnly && "bg-[ghostwhite]"
                   } border-none bg-white w-full outline-none px-2  `}
+                  autoComplete={autoComplete ?? "on"}
                   {...field}
                   formNoValidate
                 />
@@ -942,6 +945,7 @@ const AuthInputFiled = ({
                     readOnly && "bg-[ghostwhite]"
                   } border-none bg-white w-full outline-none px-2  `}
                   {...field}
+                  autoComplete={autoComplete ?? "on"}
                   formNoValidate
                 />
               </div>
@@ -1008,6 +1012,7 @@ const AuthInputFiled = ({
                 className={` border-none bg-white w-full outline-none px-2  ${
                   readOnly && "!bg-gray-200"
                 }`}
+                autoComplete={autoComplete ?? "on"}
                 {...field}
                 formNoValidate
               />
@@ -1027,10 +1032,7 @@ const AuthInputFiled = ({
           );
         }}
       />
-      {descriptionText && (
-        <p className="text-xs w-full h-full">{descriptionText}</p>
-      )}
-      {/* <div className="w-full !z-50 h-full  !mb-1"> */}
+      <p className="text-xs w-full h-fit">{descriptionText}</p>
       <ErrorMessage
         errors={errors}
         name={name}
