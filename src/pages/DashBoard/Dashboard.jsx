@@ -45,7 +45,7 @@ const Dashboard = () => {
   return (
     <>
       <section className=" bg-gray-50  min-h-screen w-full ">
-        <header className="text-xl w-full px-2 md:px-8 pt-6 bg-white shadow-md   p-4">
+        <header className="text-xl w-full px-2 md:px-8 pt-6 bg-white shadow-sm   p-4">
           Employee Overview
         </header>
         <div className="py-3 px-2 md:px-8 w-full">

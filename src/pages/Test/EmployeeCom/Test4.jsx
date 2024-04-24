@@ -98,8 +98,9 @@ const Test4 = ({ prevStep }) => {
         navigate(`/organisation/${organisationId}/employee-list`);
       },
       onError: (error) => {
+        console.log("error.response", error.response);
         if (error.response.status === 400) {
-          toast.error("Email already  registerd");
+          toast.error(error.response?.data.message ?? "Something went wrong");
         }
       },
     }

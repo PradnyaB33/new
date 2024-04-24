@@ -214,7 +214,7 @@ const LineGraph = ({
   return (
     <>
       {isLoading ? (
-        <div className=" px-4 pb-4 flex flex-col shadow-md rounded-md bg-white  justify-center">
+        <div className=" px-4 pb-4 flex flex-col shadow-md rounded-sm bg-white  justify-center">
           <h1 className="text-lg my-4 font-bold text-[#67748E]">
             <Skeleton variant="text" width={150} height={20} />
           </h1>
@@ -225,7 +225,7 @@ const LineGraph = ({
       ) : (
         <div
           className="w-full 
-      px-4 pb-4  flex flex-col shadow-md rounded-md bg-white  justify-center"
+      px-4 pb-4  flex flex-col border rounded-sm bg-white  justify-center"
         >
           <div className="flex justify-between items-center">
             <h1 className="text-lg my-4 font-bold text-[#67748E]">
@@ -236,7 +236,7 @@ const LineGraph = ({
               <button
                 onClick={() => mutation.mutate()}
                 disabled={mutation.isLoading}
-                className={` flex group justify-center w-max gap-2 items-center rounded-md h-[30px] px-4 py-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500
+                className={` flex group justify-center w-max gap-2 items-center rounded-sm h-[30px] px-4 py-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500
                   ${
                     mutation.isLoading &&
                     "cursor-not-allowed bg-gray-400 text-gray-700"

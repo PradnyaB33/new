@@ -187,10 +187,10 @@ const HRgraph = () => {
 
   return (
     <>
-      <article className=" bg-white  rounded-md shadow-xl">
+      <article className=" bg-white  rounded-md ">
         <div
           className="w-full 
-      px-4 pb-4  flex flex-col shadow-md rounded-md bg-white  justify-center"
+      px-4 pb-4  flex flex-col border rounded-md bg-white  justify-center"
         >
           <div className="flex  my-4 justify-between items-center">
             <h1 className="text-lg  font-bold text-[#67748E]">
