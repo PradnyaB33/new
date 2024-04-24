@@ -1,8 +1,9 @@
 import axios from "axios";
-import React from "react";
+import React, { useContext } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
+import { TestContext } from "../../../State/Function/Main";
 import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
@@ -42,6 +43,7 @@ const Test4 = ({ prevStep }) => {
   } = useEmpState();
 
   const navigate = useNavigate("");
+  const { handleAlert } = useContext(TestContext);
 
   const authToken = useAuthToken();
 
@@ -97,9 +99,11 @@ const Test4 = ({ prevStep }) => {
         navigate(`/organisation/${organisationId}/employee-list`);
       },
       onError: (error) => {
-        if (error.response.status === 400) {
-          toast.error("Email already  registerd");
-        }
+        handleAlert(
+          "true",
+          "error",
+          error.response?.data.message ?? "Something went wrong"
+        );
       },
     }
   );
