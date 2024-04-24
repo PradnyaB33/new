@@ -28,7 +28,7 @@ const packageSchema = z.object({
   password: z.string(),
   date_of_birth: z.string(),
   gender: z.enum(["Male", "Female", "Other"]),
-  profile: z.enum(["Delegate-Super-Admin", "Employee"]),
+  profile: z.any(),
   citizenship: z.string(),
   _id: z.string(),
 });
@@ -61,6 +61,7 @@ const MiniForm = ({ data }) => {
   const { errors, isDirty } = formState;
   console.log(`🚀 ~ file: form.jsx:62 ~ errors:`, errors);
   const onSubmit = async (data) => {
+    console.log(`🚀 ~ file: form.jsx:64 ~ data:`, data);
     addDelegateMutation.mutate(data);
   };
 
