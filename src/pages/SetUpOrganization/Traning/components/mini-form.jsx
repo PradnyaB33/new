@@ -94,7 +94,7 @@ const MiniForm = ({ data, mutate, organisationId }) => {
           error={errors.canHRAssign}
           descriptionText={"HR can assign trainings to their employees."}
         />
-        {newMan?.organisation?.packageInfo === "Intermediate Plan" && (
+        {newMan?.organisation?.packageInfo === "Enterprize Plan" && (
           <>
             <AuthInputFiled
               name={"collectPoints"}
