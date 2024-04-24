@@ -1,7 +1,12 @@
 import { Skeleton } from "@mui/material";
-import React from "react";
+import { format } from "date-fns";
+import React, { useContext } from "react";
 import { Line } from "react-chartjs-2";
+import { useMutation } from "react-query";
 import Select from "react-select";
+import * as XLSX from "xlsx";
+import { TestContext } from "../../../../State/Function/Main";
+import UserProfile from "../../../../hooks/UserData/useUser";
 
 const LineGraph = ({
   salarydata,
@@ -9,6 +14,7 @@ const LineGraph = ({
   setSelectedYear,
   selectedyear,
 }) => {
+  const { handleAlert } = useContext(TestContext);
   const option = {
     elements: {
       line: {
@@ -54,6 +60,65 @@ const LineGraph = ({
       };
     },
   };
+
+  const user = UserProfile().getCurrentUser();
+
+  const generateReport = () => {
+    try {
+      const salaryDataWithoutId = salarydata?.map(({ _id, ...item }) => item);
+
+      // Employee information
+      const employeeInfo = [
+        ["", "Name", `${user?.first_name} ${user?.last_name}`],
+        ["", "Email", user?.email],
+        ["", "Birth date", format(new Date(user.birthdate), "PP")],
+        ["", "Year", selectedyear.value],
+        // Add more employee information here
+      ];
+
+      // Create a new workbook
+      const wb = XLSX.utils.book_new();
+
+      // Convert the data to a worksheet
+      const wsData = salaryDataWithoutId.map(Object.values);
+      wsData.unshift(Object.keys(salaryDataWithoutId[0]));
+
+      // Add padding (empty rows and columns)
+      const padding = [
+        ["", "", "", ""],
+        ["", "", "", ""],
+      ];
+      const finalData = padding.concat(employeeInfo, padding, wsData);
+
+      const ws = XLSX.utils.aoa_to_sheet(finalData);
+
+      // Add the worksheet to the workbook
+      XLSX.utils.book_append_sheet(wb, ws, "Salary Data");
+
+      // Write the workbook to a file
+      XLSX.writeFile(wb, "SalaryData.xlsx");
+    } catch (error) {
+      handleAlert(
+        true,
+        "error",
+        "There is a issue in server please try again later"
+      );
+    }
+  };
+
+  const mutation = useMutation(generateReport, {
+    onSuccess: () => {
+      handleAlert(true, "success", "Report Generated Successfully");
+    },
+    onError: (error) => {
+      // Handle error
+      handleAlert(
+        true,
+        "error",
+        "There is a issue in server please try again later"
+      );
+    },
+  });
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, index) => currentYear - index);
@@ -166,20 +231,35 @@ const LineGraph = ({
             <h1 className="text-lg my-4 font-bold text-[#67748E]">
               Salary Overview
             </h1>
-            {window.location.pathname.includes("/employee-dashboard") && (
-              <Select
-                placeholder={"Select year"}
-                onChange={(year) => {
-                  setSelectedYear(year);
-                }}
-                components={{
-                  IndicatorSeparator: () => null,
-                }}
-                styles={customStyles}
-                value={selectedyear} // Add this line
-                options={yearOptions}
-              />
-            )}
+
+            <div className="flex gap-2 items-center">
+              <button
+                onClick={() => mutation.mutate()}
+                disabled={mutation.isLoading}
+                className={` flex group justify-center w-max gap-2 items-center rounded-md h-[30px] px-4 py-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500
+                  ${
+                    mutation.isLoading &&
+                    "cursor-not-allowed bg-gray-400 text-gray-700"
+                  }
+                  `}
+              >
+                Generate Report
+              </button>
+              {window.location.pathname.includes("/employee-dashboard") && (
+                <Select
+                  placeholder={"Select year"}
+                  onChange={(year) => {
+                    setSelectedYear(year);
+                  }}
+                  components={{
+                    IndicatorSeparator: () => null,
+                  }}
+                  styles={customStyles}
+                  value={selectedyear} // Add this line
+                  options={yearOptions}
+                />
+              )}
+            </div>
           </div>
           <div className="h-[250px] md:h-[340px] w-full ">
             <Line data={data} options={option} />
