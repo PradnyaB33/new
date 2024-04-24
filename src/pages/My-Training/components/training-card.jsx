@@ -2,21 +2,20 @@ import { Box, Button, Modal, Rating } from "@mui/material";
 import DOMPurify from "dompurify";
 import React from "react";
 import { Link } from "react-router-dom";
-import useCardQuery from "../../components/card-training/useQuery";
-import MiniForm from "./mini-form";
 
-const TrainingCard3 = ({ doc }) => {
+import moment from "moment";
+import useCardQuery from "./card-training/useQuery";
+import CompleteTrainingMiniForm from "./mini-form2";
+
+const MainTrainingCard = ({ doc }) => {
   console.log(`🚀 ~ file: training-card.jsx:9 ~ doc:`, doc);
-  const sanitizedDescription = DOMPurify.sanitize(doc?.trainingDescription);
-  const { open, setOpen, mutate } = useCardQuery({
-    trainingId: doc?._id,
+  const sanitizedDescription = DOMPurify.sanitize(
+    doc?.trainingId?.trainingDescription
+  );
+  const { open, setOpen, getProofMutate } = useCardQuery({
+    trainingId: doc?.trainingId?._id,
   });
 
-  console.log(`🚀 ~ file: training-card.jsx:15 ~ { open, setOpen, mutate }:`, {
-    open,
-    setOpen,
-    mutate,
-  });
   return (
     <div
       className={`bg-white
@@ -25,41 +24,54 @@ const TrainingCard3 = ({ doc }) => {
       <div className="flex gap-8">
         <img
           src={
-            doc?.trainingLogo?.length > 0
-              ? doc?.trainingLogo
+            doc?.trainingId?.trainingLogo?.length > 0
+              ? doc?.trainingId?.trainingLogo
               : "https://via.placeholder.com/150"
           }
           alt="Training Logo"
           className="w-48 h-36 object-cover rounded-md shadow-1-strong border border-gray-200"
         />
         <div className="text-left">
-          <div className="font-bold text-xl">{doc?.trainingName}</div>
+          <div className="font-bold text-xl">
+            {doc?.trainingId?.trainingName}
+          </div>
           <p dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
           3.5
           <Rating size="small" name="read-only" value={3.5} readOnly />
-          <div className="">
-            Duration &nbsp;{doc?.trainingDuration ?? "2 h"}
+          <div className="flex gap-4">
+            <div>
+              <div>Duration &nbsp;</div>
+              {doc?.trainingId?.trainingDuration + " h" ?? "2 h"}
+            </div>
+            <div>
+              <div>Start Date&nbsp;:&nbsp; </div>
+              {moment(doc?.startDate).format("DD-MM-YYYY")}
+            </div>
+            <div>
+              <div>End Date&nbsp;:&nbsp;</div>{" "}
+              {moment(doc?.endDate).format("DD-MM-YYYY")}
+            </div>
           </div>
           <div>
-            Location&nbsp;:&nbsp;
+            <div>Location&nbsp;:&nbsp;</div>
             <Link
               className="text-blue-500 underline"
-              to={`https://www.google.com/maps/search/?api=1&query=${doc?.trainingLocation?.position?.lat},${doc?.trainingLocation?.position?.lng}`}
+              to={`https://www.google.com/maps/search/?api=1&query=${doc?.trainingId?.trainingLocation?.position?.lat},${doc?.trainingId?.trainingLocation?.position?.lng}`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              {doc?.trainingLocation?.address}
+              {doc?.trainingId?.trainingLocation?.address}
             </Link>
           </div>
           <div>
             Live Link&nbsp;:&nbsp;
             <Link
               className="text-blue-500 underline"
-              to={doc?.trainingLink}
+              to={doc?.trainingId?.trainingLink}
               target="_blank"
               rel="noopener noreferrer"
             >
-              {doc?.trainingLink}
+              {doc?.trainingId?.trainingLink}
             </Link>
           </div>
         </div>
@@ -77,11 +89,11 @@ const TrainingCard3 = ({ doc }) => {
         keepMounted={false}
       >
         <Box className="border-none shadow-md outline-none rounded-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[40%] md:w-[70%] z-10 p-4 bg-white">
-          <MiniForm {...{ mutate, doc }} />
+          <CompleteTrainingMiniForm {...{ mutate: getProofMutate, doc }} />
         </Box>
       </Modal>
     </div>
   );
 };
 
-export default TrainingCard3;
+export default MainTrainingCard;

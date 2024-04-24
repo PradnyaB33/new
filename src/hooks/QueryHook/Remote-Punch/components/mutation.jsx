@@ -29,6 +29,7 @@ const useNotificationRemotePunching = () => {
         queryKey: [`remote-punching-${decodedToken?.user?._id}`],
       });
       handleAlert(true, "success", `Request approved successfully`);
+      queryClient.invalidateQueries("punch-request");
     },
     onError: (data) => {
       console.error(data);
@@ -61,6 +62,7 @@ const useNotificationRemotePunching = () => {
         queryKey: [`punch-request`],
       });
       handleAlert(true, "success", `Request approved successfully`);
+      queryClient.invalidateQueries("punch-request");
     },
     onError: (data) => {
       console.error(data);
@@ -101,6 +103,7 @@ const useNotificationRemotePunching = () => {
         queryKey: [`punch-request`],
       });
       handleAlert(true, "success", `Request Rejected Successfully`);
+      queryClient.invalidateQueries("punch-request");
     },
     onError: (data) => {
       console.error(data);
@@ -135,6 +138,7 @@ const useNotificationRemotePunching = () => {
         queryKey: [`punch-request`],
       });
       handleAlert(true, "success", `Request Rejected Successfully`);
+      queryClient.invalidateQueries("punch-request");
     },
     onError: (data) => {
       console.error(data);

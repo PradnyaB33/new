@@ -185,7 +185,7 @@ const SalaryManagement = () => {
                 </tr>
               </thead>
               <tbody>
-                {availableEmployee
+                {availableEmployee.length > 0 &&  availableEmployee
                   .filter((item) => {
                     return (
                       (!nameSearch.toLowerCase() ||

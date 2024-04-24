@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
-import { useParams } from "react-router";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
@@ -8,7 +7,7 @@ import { Container, Typography } from "@mui/material";
 import { Info } from "@mui/icons-material";
 import { TestContext } from "../../State/Function/Main";
 
-const MissedPunchNotified = () => {
+const MissedPunchNotified = ({employeeId}) => {
     const { handleAlert } = useContext(TestContext);
     const { cookies } = useContext(UseContext);
     const authToken = cookies["aegis"];
@@ -16,7 +15,8 @@ const MissedPunchNotified = () => {
     const user = getCurrentUser();
     const role = useGetCurrentRole();
     const organisationId = user.organizationId;
-    const { employeeId } = useParams();
+    const queryClient = useQueryClient();
+   
 
      // get unavailable record based on employee id   
    const { data: unavailableRecord,  } = useQuery(
@@ -60,7 +60,7 @@ const MissedPunchNotified = () => {
   //  for hr
   const handleApprovalUnavailableRecord = async (recordId) => {
     try {
-        console.log("record id" , recordId);
+      console.log("record id" , recordId);
       const response = await axios.put(
         `${process.env.REACT_APP_API}/route/organization/${organisationId}/approved-unavailable-record/${recordId}`,
         {},
@@ -71,8 +71,9 @@ const MissedPunchNotified = () => {
         }
       );
       console.log(response);
-      window.location.reload()
+      await queryClient.refetchQueries(['unavailableRecords', organisationId]);
       handleAlert(true, "success", "Record approved successfully.");
+     
     } catch (error) {
       console.error("Error approving record:", error);
       handleAlert(true, "error", "Failed to approve record.");
@@ -93,8 +94,8 @@ const MissedPunchNotified = () => {
         }
       );
       console.log(response);
-      handleAlert(true, "success", "Record rejected successfully.");
-      window.location.reload();
+      await queryClient.refetchQueries(['unavailableRecords', organisationId]);
+      handleAlert(true, "success", "Record rejected successfully.");    
     } catch (error) {
       console.error("Error approving record:", error);
       handleAlert(true, "error", "Failed to approve record.");
@@ -113,8 +114,8 @@ const MissedPunchNotified = () => {
         }
       );
       console.log(response);
+      await queryClient.refetchQueries(['unavailableRecords', organisationId]);
       handleAlert(true, "success", "Approved leave successfully.");
-      window.location.reload();
     } catch (error) {
       console.error("Error approving record:", error);
       handleAlert(true, "error", "Failed to approve record.");

@@ -21,9 +21,7 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
   const [deduction, setDeduction] = useState("");
   const [employee_pf, setEmployeePf] = useState("");
   const [esic, setEsic] = useState("");
-
   console.log(setErrorMessage);
- 
   const [inputValue, setInputValue] = useState({
     Basic: "",
     HRA: "",
@@ -40,7 +38,7 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
     isLoading,
     isError,
   } = useQuery(
-    ["empData", empId],
+    ["empDatas", empId],
     async () => {
       if (open && empId !== null) {
         const response = await axios.get(
@@ -63,22 +61,26 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
 
    // fetch the data in input field which is already stored
    useEffect(() => {
-    if (salaryInput) {
-      setDeduction(salaryInput?.employee?.deduction || "");
-       setEsic(salaryInput?.employee?.esic  || "");
-       setEmployeePf(salaryInput?.employee?.employee_pf || "");
-       setInputValue({
-        "Basic" : salaryInput?.employee?.salaryComponent.Basic || "",
-        "HRA" : salaryInput?.employee?.salaryComponent.HRA || "",
-        "DA" : salaryInput?.employee?.salaryComponent.DA || ""       ,
-        "Food allowance" : salaryInput?.employee?.salaryComponent["Food allowance"] || "",
-        "Variable allowance" : salaryInput?.employee?.salaryComponent["Variable allowance"] || "",
-        "Special allowance" : salaryInput?.employee?.salaryComponent["Special allowance"] || "",
-        "Travel allowance" : salaryInput?.employee?.salaryComponent["Travel allowance"] || "",
-        "Sales allowance" : salaryInput?.employee?.salaryComponent["Sales allowance"] || "",
-       })
+    if (salaryInput !== undefined && salaryInput !== null) {
+      // Accessing properties with optional chaining and providing default values with nullish coalescing
+      setDeduction(salaryInput?.employee?.deduction ?? "");
+      setEsic(salaryInput?.employee?.esic ?? "");
+      setEmployeePf(salaryInput?.employee?.employee_pf ?? "");
+  
+      // Accessing nested properties with optional chaining and providing default values with nullish coalescing
+      setInputValue({
+        Basic: salaryInput?.employee?.salaryComponent?.Basic ?? "",
+        HRA: salaryInput?.employee?.salaryComponent?.HRA ?? "",
+        DA: salaryInput?.employee?.salaryComponent?.DA ?? "",
+        "Food allowance": salaryInput?.employee?.salaryComponent["Food allowance"] ?? "",
+        "Variable allowance": salaryInput?.employee?.salaryComponent["Variable allowance"] ?? "",
+        "Special allowance": salaryInput?.employee?.salaryComponent["Special allowance"] ?? "",
+        "Travel allowance": salaryInput?.employee?.salaryComponent["Travel allowance"] ?? "",
+        "Sales allowance": salaryInput?.employee?.salaryComponent["Sales allowance"] ?? "",
+      });
     }
-  }, [ salaryInput]);
+  }, [salaryInput]);
+  
 
     // Function to calculate total salary
   const calculateTotalSalary = () => {
@@ -254,38 +256,36 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
                   </tr>
                 ) : (
                   <>
-                    {salaryInput?.employee?.salarystructure?.salaryStructure.map(
-                      (item, id) => (
-                        <tr key={id} className="space-y-4 w-full">
-                          <td className="!text-left w-full pl-8 pr-8 py-3">
-                            {item.salaryComponent}
-                          </td>
-                         
-                            <input
-                              type="number"
-                              placeholder="Enter the input"
-                              style={{
-                                padding: "10px",
-                                border: "1px solid #ccc",
-                                borderRadius: "4px",
-                             
-                              }}
-                              value={inputValue[item.salaryComponent] || ""}
-                             
-                              onChange={(e) => {
-                                const inputValue = e.target.value;
-                                if (!isNaN(inputValue) && inputValue >= 0) {
-                                  handleInputChange(
-                                    item.salaryComponent,
-                                    inputValue
-                                  );
-                                }
-                              }}
-                            />
-                       
-                        </tr>
-                      )
-                    )}
+                          {salaryInput?.employee?.salarystructure?.salaryStructure &&
+                           salaryInput?.employee?.salarystructure?.salaryStructure?.length > 0 &&
+                        salaryInput?.employee?.salarystructure?.salaryStructure?.map(
+               (item, id) => (
+         <tr key={id} className="space-y-4 w-full">
+           <td className="!text-left w-full pl-8 pr-8 py-3">
+          {item?.salaryComponent || ""}
+        </td>
+        <td>
+          <input
+            type="number"
+            placeholder="Enter the input"
+            style={{
+              padding: "10px",
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+            }}
+            value={inputValue[item?.salaryComponent] || ""}
+            onChange={(e) => {
+              const inputValue = e.target.value;
+              if (!isNaN(inputValue) && inputValue >= 0) {
+                handleInputChange(item?.salaryComponent, inputValue);
+              }
+            }}
+          />
+        </td>
+      </tr>
+    )
+  )}
+
                    </>
                 )}
                 <tr className="!mt-4">

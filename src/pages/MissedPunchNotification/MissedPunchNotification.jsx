@@ -25,7 +25,12 @@ const MissedPunchNotification = () => {
   
   const handleEmployeeClick = (employee) => {
     setSelectedEmployee(employee); 
-  };
+  }; 
+
+  console.log("selected emplyee" , selectedEmployee);
+
+  const employeeId = selectedEmployee && selectedEmployee?.employeeId?._id;
+  console.log("employee id" , employeeId);
 
   return (
     <div className="w-full">
@@ -34,7 +39,7 @@ const MissedPunchNotification = () => {
         Employee Missed Punch Request
       </header>
       <section className="min-h-[90vh] flex">
-        <article className="w-[30%] overflow-auto max-h-[90vh] h-full bg-white border-gray-200">
+        <article className="w-[20%] overflow-auto max-h-[90vh] h-full bg-white border-gray-200">
           <div className="p-6 !py-2">
             <div className="space-y-2">
               <div className={`flex rounded-md items-center px-2 outline-none border-gray-200 border-[.5px] bg-white py-1 md:py-[6px]`}>
@@ -72,9 +77,9 @@ const MissedPunchNotification = () => {
             </div>
           )}
         </article>
-        <div className="w-[70%]">
+        <div className="w-[80%]">
           {selectedEmployee ? (
-            <MissedPunchNotified employee={selectedEmployee} />
+            <MissedPunchNotified employee={selectedEmployee} employeeId = {employeeId} />
           ) : (
             <div className="p-4 space-y-1 flex items-center gap-3">
             <Avatar className="text-white !bg-blue-500">

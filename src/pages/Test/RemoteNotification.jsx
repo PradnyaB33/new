@@ -1,9 +1,9 @@
-import React from "react";
-import { Button } from "@mui/material";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import WorkOffIcon from "@mui/icons-material/WorkOff";
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import WorkOffIcon from "@mui/icons-material/WorkOff";
+import { Button } from "@mui/material";
+import React from "react";
 const RemoteNotification = () => {
   return (
     <div className="w-full h-full flex p-10 justify-between">
@@ -44,7 +44,7 @@ const RemoteNotification = () => {
               <h1>Employee Requested For Remote Punching</h1>
               <h1>Start Location: Pune Station</h1>
               <h1>Total Distance Traveled: 2km</h1>
-              <h1>Punching restarted: 4 times</h1>
+              <h1>Punching Restarted: 4 times</h1>
             </div>
           </div>
           <div>

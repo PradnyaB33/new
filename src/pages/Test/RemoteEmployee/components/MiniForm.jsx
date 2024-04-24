@@ -26,6 +26,7 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
     }),
     start: z.string(),
     end: z.string(),
+    distance: z.string(),
   });
 
   const { control, formState, handleSubmit, reset } = useForm({
@@ -46,6 +47,7 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
       },
       start: undefined,
       end: undefined,
+      distance: undefined,
     },
     resolver: zodResolver(formSchema),
   });
@@ -57,6 +59,8 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
     const endDateTime = data.end
       ? moment(`${today} ${data?.end}`, "YYYY-MM-DD HH:mm")
       : null;
+
+    console.log("this is  my data for misspunch", data);
 
     const formattedData = {
       ...data,
@@ -125,8 +129,18 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
           errors={errors}
           wrapperMessage={"Note: End time for missed punch"}
         />
+        <AuthInputFiled
+          className="w-full"
+          name="distance"
+          control={control}
+          type="number"
+          placeholder="Enter the distance"
+          label="Total Distance in Km *"
+          errors={errors}
+          wrapperMessage={"Note: Total distance for missed punch"}
+        />
       </div>
-      <div className="w-full flex justify-center mt-4">
+      <div className="w-full flex justify-center mt-4 mb-2">
         <Button type="submit" variant="contained" fullWidth>
           Apply
         </Button>
