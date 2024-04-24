@@ -45,18 +45,22 @@ const PunchMapModal = ({ items, idx }) => {
   console.log("yash items", items);
   return (
     <div className="w-full">
-      <div className="w-full h-auto bg-white flex p-4 pl-8 pr-8 justify-between items-center shadow-md mt-3">
-        <div className="flex items-center">
-          <div className="mr-9">
+      <div className="w-full h-auto bg-white md:flex flex-none md:p-4 md:pl-8 md:pr-8 pl-4 p-2 justify-between items-center shadow-md mt-3">
+        <div className="md:flex flex-none items-center">
+          <div className="md:mr-9 mr-0">
             <h1>
               {items.punchData[0].image === "" ? (
-                <h1 className="font-semibold">Missed Punch Request</h1>
+                <h1 className="font-semibold text-xs md:text-base">
+                  Missed Punch Request
+                </h1>
               ) : (
-                <h1 className="font-semibold">Punch Request</h1>
+                <h1 className="font-semibold text-xs md:text-base">
+                  Punch Request
+                </h1>
               )}
             </h1>
-            <div className="w-[150px]">
-              <div className="h-[100px] w-[100px]">
+            <div className="md:w-[150px] w-[80px]">
+              <div className="md:h-[100px] w-[50px] h-[50px] md:w-[100px]">
                 {items.punchData[0].image === "" ? (
                   <img
                     style={{
@@ -69,7 +73,7 @@ const PunchMapModal = ({ items, idx }) => {
                     alt=""
                   />
                 ) : (
-                  <div className="h-[100px] w-[100px]">
+                  <div className="md:h-[100px] w-[50px] h-[50px] md:w-[100px]">
                     <img
                       style={{
                         objectFit: "cover",
@@ -85,7 +89,7 @@ const PunchMapModal = ({ items, idx }) => {
               </div>
             </div>
           </div>
-          <div className="p-4">
+          <div className="md:p-4 p-0 text-xs md:text-base">
             <h1>
               Date:{" "}
               {items?.createdAt && (
@@ -118,9 +122,9 @@ const PunchMapModal = ({ items, idx }) => {
             )}
 
             {items.punchData[0].image === "" ? (
-              <h1>requested for : {items.punchData.length} times</h1>
+              <h1>Requested For : {items.punchData.length} times</h1>
             ) : (
-              <h1>Punching restarted: {items.punchData.length} times</h1>
+              <h1>Punching Restarted: {items.punchData.length} times</h1>
             )}
           </div>
         </div>
@@ -130,15 +134,17 @@ const PunchMapModal = ({ items, idx }) => {
               variant="contained"
               size="small"
               onClick={handleViewRouteClick}
+              className="h-[20px] md:h-auto"
             >
               View Route
             </Button>
           </div>
-          <div className="flex gap-3 mt-3">
+          <div className="flex md:gap-3 gap-1 md:mt-3 mt-1 md:2">
             <Button
               onClick={() => notifyAccountantMutation.mutate(items._id)}
               variant="contained"
               size="small"
+              className="h-[20px] md:h-auto"
             >
               Accept
             </Button>
@@ -147,6 +153,7 @@ const PunchMapModal = ({ items, idx }) => {
               variant="contained"
               color="error"
               size="small"
+              className="h-[20px] md:h-auto"
             >
               Reject
             </Button>
