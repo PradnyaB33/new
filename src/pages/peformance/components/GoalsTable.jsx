@@ -136,7 +136,6 @@ const GoalsTable = ({ performance }) => {
             },
             params: {
               role,
-
               empId: employeeGoals,
             },
           }
