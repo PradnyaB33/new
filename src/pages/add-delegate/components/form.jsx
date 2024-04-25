@@ -51,7 +51,7 @@ const MiniForm = ({ data }) => {
         "yyyy-MM-DD"
       ),
       gender: data?.delegateSuperAdmin?.gender,
-      profile: "Delegate-Super-Admin",
+      profile: ["Delegate-Super-Admin", "Employee"],
       citizenship: data?.delegateSuperAdmin?.citizenship,
       _id: data?.delegateSuperAdmin?._id || "",
     },

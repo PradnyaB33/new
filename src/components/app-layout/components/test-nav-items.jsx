@@ -246,16 +246,16 @@ const TestNavItems = ({ toggleDrawer }) => {
           window.location.pathname?.includes("organisation") &&
           [
             "Super-Admin",
-              "Delegate-Super-Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "HR",
-              "Manager",
-              "Employee",
+            "Delegate-Super-Admin",
+            "Department-Head",
+            "Delegate-Department-Head",
+            "Department-Admin",
+            "Delegate-Department-Admin",
+            "Accountant",
+            "Delegate-Accountant",
+            "HR",
+            "Manager",
+            "Employee",
           ]?.includes(role),
         routes: [
           {
@@ -381,6 +381,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "addDepartment",
             isVisible: [
               "Super-Admin",
+              "Delegate-Super-Admin",
               "HR",
               "Department-Head",
               "Delegate-Department-Head",
@@ -397,6 +398,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "deptDeletion",
             isVisible: [
               "Super-Admin",
+              "Delegate-Super-Admin",
               "HR",
               "Department-Head",
               "Delegate-Department-Head",
@@ -412,6 +414,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "departmentList",
             isVisible: [
               "Super-Admin",
+              "Delegate-Super-Admin",
               "HR",
               "Department-Head",
               "Delegate-Department-Head",

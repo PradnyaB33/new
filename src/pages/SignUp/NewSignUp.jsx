@@ -1,13 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Badge,
-  CalendarMonthOutlined,
   CheckCircle,
   DriveFileRenameOutlineOutlined,
   Email,
   Fingerprint,
   Lock,
-  NoEncryption,
   PermContactCalendar,
   Phone,
 } from "@mui/icons-material";
@@ -278,18 +276,20 @@ const SignIn = () => {
               error={errors.last_name}
             />
             {/* Phone Number */}
-            <div className="grid grid-cols-2 w-full items-center gap-2">
-              <AuthInputFiled
-                name="phone"
-                icon={Phone}
-                readOnly={readOnly}
-                control={control}
-                label={"Phone Number *"}
-                type={"contact"}
-                errors={errors}
-                error={errors.phone}
-                placeholder={"1234567890"}
-              />
+            <div className="flex w-full items-center gap-2">
+              <div className="w-full">
+                <AuthInputFiled
+                  name="phone"
+                  icon={Phone}
+                  readOnly={readOnly}
+                  control={control}
+                  label={"Phone Number *"}
+                  type={"contact"}
+                  errors={errors}
+                  error={errors.phone}
+                  placeholder={"1234567890"}
+                />
+              </div>
 
               <>
                 {isVerified ? (
@@ -300,7 +300,7 @@ const SignIn = () => {
                     Verified
                   </>
                 ) : (
-                  <div>
+                  <div className="w-[20%]">
                     <button
                       type="button"
                       disabled={
@@ -326,7 +326,7 @@ const SignIn = () => {
               </>
             </div>
             {display && (
-              <div className="flex items-center gap-2">
+              <div className="w-max flex items-center gap-2">
                 <div className="space-y-1">
                   <label className={`font-semibold text-gray-500 text-md`}>
                     Verify OTP
@@ -380,7 +380,7 @@ const SignIn = () => {
 
               <AuthInputFiled
                 name="confirmPassword"
-                icon={NoEncryption}
+                icon={Lock}
                 visible={visibleCPassword}
                 setVisible={setVisibleCPassword}
                 control={control}
@@ -396,7 +396,6 @@ const SignIn = () => {
               <div className="w-max">
                 <AuthInputFiled
                   name="isChecked"
-                  icon={CalendarMonthOutlined}
                   control={control}
                   type="checkbox"
                   label={`I accept the`}
@@ -418,11 +417,17 @@ const SignIn = () => {
 
             <p className="flex gap-2 my-2">
               Already have an account?
-              <Link
+              {/* <Link
                 to={location.pathname === "/sign-up" ? "/sign-in" : "/sign-up"}
                 className="hover:underline"
               >
                 sign in
+              </Link> */}
+              <Link
+                to={location.pathname === "/sign-up" ? "/sign-in" : "/sign-up"}
+                className="font-medium text-blue-500 hover:underline transition-all "
+              >
+                Sign In for AEGIS
               </Link>
             </p>
           </form>
