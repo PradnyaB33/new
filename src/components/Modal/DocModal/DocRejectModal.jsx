@@ -20,6 +20,7 @@ const DocRejectModal = ({ items }) => {
   const authToken = cookies["aegis"];
   const [open, setOpen] = useState(false);
   const { getCurrentUser } = UserProfile();
+  const { setAppAlert } = useContext(UseContext);
   const user = getCurrentUser();
   const userId = user._id;
   const [message, setMessage] = useState("");
@@ -32,7 +33,7 @@ const DocRejectModal = ({ items }) => {
   const rejectRequestMutation = useMutation(
     async () => {
       await axios.post(
-        `${process.env.REACT_APP_API}/route/leave/reject/${items._id}`,
+        `${process.env.REACT_APP_API}/route/org/rejectNotification/${items._id}`,
         { message },
         {
           headers: {
@@ -43,7 +44,12 @@ const DocRejectModal = ({ items }) => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("employee-leave");
+        setAppAlert({
+          alert: true,
+          type: "success",
+          msg: "Request rejected successfully",
+        });
+        queryClient.invalidateQueries("doc-requests");
         handleClose();
       },
     }
@@ -52,7 +58,7 @@ const DocRejectModal = ({ items }) => {
   const { mutate: acceptLeaveMutation, isLoading: mutateLoading } = useMutation(
     ({ id }) =>
       axios.post(
-        `${process.env.REACT_APP_API}/route/leave/accept/${id}`,
+        `${process.env.REACT_APP_API}/route/org/acceptNotification/${id}`,
         { message: "Your Request is successfully approved" },
         {
           headers: {
@@ -62,7 +68,12 @@ const DocRejectModal = ({ items }) => {
       ),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("employee-leave");
+        setAppAlert({
+          alert: true,
+          type: "success",
+          msg: "Request accepted successfully",
+        });
+        queryClient.invalidateQueries("doc-requests");
       },
     }
   );
@@ -71,8 +82,7 @@ const DocRejectModal = ({ items }) => {
     return <Loader />;
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     rejectRequestMutation.mutate();
   };
 
@@ -95,10 +105,10 @@ const DocRejectModal = ({ items }) => {
           <Box className="flex md:flex-row items-center  justify-center flex-col gap-8  md:gap-16">
             <div className="space-y-4 w-full flex flex-col items-center md:items-start justify-center">
               <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                {filteredEmployeeIds[0]?.empId?.first_name}{" "}
-                {filteredEmployeeIds[0]?.empId?.last_name} has raised a Doc
-                request for sending to{" "}
+                {items?.creatorId?.first_name} {items?.creatorId?.last_name} has
+                raised a Doc request for sending to{" "}
                 {filteredEmployeeIds[0]?.empId.first_name}{" "}
+                {filteredEmployeeIds[0]?.empId.last_name}
               </h1>
               <Chip
                 label={items?.description}
@@ -125,7 +135,7 @@ const DocRejectModal = ({ items }) => {
                       Accept
                     </Button>
                     <Button
-                      onClick={() => setOpen(true)}
+                      onClick={handleSubmit}
                       variant="contained"
                       sx={{
                         fontSize: "12px",
