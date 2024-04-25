@@ -13,7 +13,6 @@ const DocList = ({ data, onEdit, onDelete }) => {
 
   return (
     <div className="w-full">
-      <div className="w-full"></div>
       <table className="min-w-full bg-white text-left !text-sm font-light">
         <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
           <tr className="!font-semibold">
@@ -21,7 +20,7 @@ const DocList = ({ data, onEdit, onDelete }) => {
               Sr. No
             </th>
             <th scope="col" className="py-3 w-1/3">
-              title
+              Title
             </th>
             <th scope="col" className="py-3 w-1/3 !text-right pr-8">
               Actions
