@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Close, Paid, PersonOutline, StarOutlined } from "@mui/icons-material";
+import { Close, Paid, StarOutlined } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -16,7 +16,14 @@ import { TestContext } from "../../../State/Function/Main";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
 
-const RatingModel = ({ handleClose, open, options, id, performance }) => {
+const RatingModel = ({
+  handleClose,
+  open,
+  options,
+  id,
+  performance,
+  assignee,
+}) => {
   const { handleAlert } = useContext(TestContext);
   const style = {
     position: "absolute",
@@ -38,7 +45,7 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
     goal: z.string(),
     review: z.string(),
     rating: z.object({ value: z.string(), label: z.string() }),
-    assignee: z.object({ value: z.string(), label: z.string() }),
+    // assignee: z.object({ value: z.string(), label: z.string() }),
   });
 
   const {
@@ -76,8 +83,8 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
     }
   );
 
-  const { data: getGoal, isFetching } = useQuery({
-    queryKey: ["getGoal", id],
+  const { isFetching } = useQuery({
+    queryKey: ["getGoalReview", id],
     queryFn: async () => {
       const { data } = await axios.get(
         `${process.env.REACT_APP_API}/route/performance/getGoalDetails/${id}`,
@@ -89,16 +96,14 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
       );
       return data;
     },
-    enabled: !!id,
-
-    onSuccess: () => {
-      setValue("goal", getGoal?.goal);
+    enabled: !!id || open,
+    onSuccess: (data) => {
+      setValue("goal", data?.goal);
     },
   });
-
   const onSubmit = async (data) => {
     const goals = {
-      assignee: data?.assignee,
+      assignee: { label: assignee, value: assignee },
       review: data.review,
       rating: data.rating.value,
       status: "Rating Completed",
@@ -119,13 +124,12 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
     return data;
   });
 
-  const empoptions = getGoal?.assignee?.map((emp) => ({
-    value: emp._id,
-    label: `${emp.first_name} ${emp.last_name}`,
-    image: emp.user_logo_url,
-  }));
+  // const empoptions = getGoal?.assignee?.map((emp) => ({
+  //   value: emp._id,
+  //   label: `${emp.first_name} ${emp.last_name}`,
+  //   image: emp.user_logo_url,
+  // }));
 
-  console.log(`🚀 ~ performance:`, performance);
   const ratingOptions = performance?.ratings?.map((rate) => ({
     value: rate,
     label: rate,
@@ -171,7 +175,7 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
                 error={errors.goal}
               />
 
-              <AuthInputFiled
+              {/* <AuthInputFiled
                 name="assignee"
                 icon={PersonOutline}
                 control={control}
@@ -182,7 +186,7 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
                 label="Select assignee name"
                 errors={errors}
                 error={errors.assignee}
-              />
+              /> */}
 
               <AuthInputFiled
                 name="rating"
@@ -190,7 +194,7 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
                 control={control}
                 type="select"
                 options={ratingOptions}
-                placeholder="100"
+                placeholder="rate"
                 label="Add rating"
                 errors={errors}
                 error={errors.rating}

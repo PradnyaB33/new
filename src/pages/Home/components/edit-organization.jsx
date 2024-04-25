@@ -204,7 +204,7 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
           />
         </div>
         <Button type="submit" variant="contained" className="!w-max !mx-auto">
-          Next
+          Submit
         </Button>
       </form>
     </div>

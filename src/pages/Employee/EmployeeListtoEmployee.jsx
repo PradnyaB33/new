@@ -1,51 +1,75 @@
-import { Container, TextField, Typography } from "@mui/material";
+import { Container , TextField, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-//import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
-import UserProfile from "../../hooks/UserData/useUser";
-const EmpUnderMgr = () => {
+const EmployeeListToEmployee = ({organisationId}) => {
+
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [nameSearch, setNameSearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const [deptSearch, setDeptSearch] = useState("");
   const [availableEmployee, setAvailableEmployee] = useState([]);
-  //const { organisationId } = useParams();
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
-  const managerId = user._id;
-  const organisationId = user.organizationId;
-  console.log(managerId);
-  console.log(organisationId);
-  const fetchAvailableEmployee = async () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [numbers, setNumbers] = useState([]);
+  console.log(availableEmployee, "avialabel days");
+
+  const fetchAvailableEmployee = async (page) => {
     try {
-      const apiUrl = `${process.env.REACT_APP_API}/route/get/employee/${managerId}/${organisationId}`;
+      const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
       const response = await axios.get(apiUrl, {
         headers: {
           Authorization: authToken,
         },
       });
-      setAvailableEmployee(response.data.reportees);
+      setAvailableEmployee(response.data.employees);
+      setCurrentPage(page);
+      setTotalPages(response.data.totalPages || 1);
+      // Generate an array of page numbers
+      const numbersArray = Array.from(
+        { length: response.data.totalPages || 1 },
+        (_, index) => index + 1
+      );
+      setNumbers(numbersArray);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    fetchAvailableEmployee();
+    fetchAvailableEmployee(currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+  }, [currentPage]);
   console.log(availableEmployee);
+
+  const prePage = () => {
+    if (currentPage !== 1) {
+      fetchAvailableEmployee(currentPage - 1);
+    }
+  };
+
+  const nextPage = () => {
+    if (currentPage !== totalPages) {
+      fetchAvailableEmployee(currentPage + 1);
+    }
+  };
+
+  const changePage = (id) => {
+    fetchAvailableEmployee(id);
+  };
+ 
 
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
-            Employee
+          Employee List
           </Typography>
+          <p className="text-xs text-gray-600 pl-10 text-center">
+            Edit employee data here by using edit button.      
+          </p>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center gap-3 mb-3 md:mb-0">
@@ -94,13 +118,13 @@ const EmpUnderMgr = () => {
                     Email
                   </th>
                   <th scope="col" className="!text-left pl-8 py-3">
+                    Employee Id
+                  </th>
+                  <th scope="col" className="!text-left pl-8 py-3">
                     Location
                   </th>
                   <th scope="col" className="!text-left pl-8 py-3">
                     Department
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Phone Number
                   </th>
                 </tr>
               </thead>
@@ -140,6 +164,7 @@ const EmpUnderMgr = () => {
                       <td className="py-3 pl-8">{item?.first_name}</td>
                       <td className="py-3 pl-8">{item?.last_name}</td>
                       <td className="py-3 pl-8">{item?.email}</td>
+                      <td className="py-3 pl-8">{item?.empId}</td>
                       <td className="py-3 pl-8">
                         {item?.worklocation?.map((location, index) => (
                           <span key={index}>{location?.city}</span>
@@ -150,16 +175,98 @@ const EmpUnderMgr = () => {
                           <span key={index}>{dept?.departmentName}</span>
                         ))}
                       </td>
-                      <td className="py-3 pl-8 ">{item?.phone_number}</td>
+                    
+                     
                     </tr>
                   ))}
               </tbody>
             </table>
+            <nav
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "30px",
+                marginBottom: "20px",
+              }}
+            >
+              <ul
+                style={{ display: "inline-block", marginRight: "5px" }}
+                className="pagination"
+              >
+                <li
+                  style={{ display: "inline-block", marginRight: "5px" }}
+                  className="page-item"
+                >
+                  <button
+                    style={{
+                      color: "#007bff",
+                      padding: "8px 12px",
+                      border: "1px solid #007bff",
+                      textDecoration: "none",
+                      borderRadius: "4px",
+                      transition: "all 0.3s ease",
+                      cursor: "pointer",
+                    }}
+                    className="page-link"
+                    onClick={prePage}
+                  >
+                    Prev
+                  </button>
+                </li>
+                {numbers.map((n, i) => (
+                  <li
+                    key={i}
+                    className={`page-item ${currentPage === n ? "active" : ""}`}
+                    style={{
+                      display: "inline-block",
+                      marginRight: "5px",
+                    }}
+                  >
+                    <a
+                      href={`#${n}`}
+                      style={{
+                        color: currentPage === n ? "#fff" : "#007bff",
+                        backgroundColor:
+                          currentPage === n ? "#007bff" : "transparent",
+                        padding: "8px 12px",
+                        border: "1px solid #007bff",
+                        textDecoration: "none",
+                        borderRadius: "4px",
+                        transition: "all 0.3s ease",
+                      }}
+                      className="page-link"
+                      onClick={() => changePage(n)}
+                    >
+                      {n}
+                    </a>
+                  </li>
+                ))}
+                <li style={{ display: "inline-block" }} className="page-item">
+                  <button
+                    style={{
+                      color: "#007bff",
+                      padding: "8px 12px",
+                      border: "1px solid #007bff",
+                      textDecoration: "none",
+                      borderRadius: "4px",
+                      transition: "all 0.3s ease",
+                      cursor: "pointer",
+                    }}
+                    className="page-link"
+                    onClick={nextPage}
+                  >
+                    Next
+                  </button>
+                </li>
+              </ul>
+            </nav>
           </div>
         </article>
       </Container>
+
+    
     </>
   );
 };
 
-export default EmpUnderMgr;
+export default EmployeeListToEmployee;

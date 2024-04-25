@@ -53,6 +53,7 @@ const AuthInputFiled = ({
   center,
   descriptionText,
   value,
+  autoComplete,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -97,6 +98,7 @@ const AuthInputFiled = ({
                   onChange={(value) => {
                     field.onChange(value);
                   }}
+                  minDate={min}
                   value={field.value}
                 />
               </div>
@@ -298,6 +300,7 @@ const AuthInputFiled = ({
             )}
           />
           <div className="h-4 !mb-1">
+            <p className="text-xs pl-2">{descriptionText}</p>
             <ErrorMessage
               errors={errors}
               name={name}
@@ -542,6 +545,7 @@ const AuthInputFiled = ({
                 className={`${
                   readOnly && "bg-[ghostwhite]"
                 } border-none bg-white outline-none px-2`}
+                autoComplete={autoComplete ?? "on"}
                 {...field}
                 disabled={disabled}
                 formNoValidate
@@ -555,6 +559,7 @@ const AuthInputFiled = ({
                 {label}{" "}
                 {name === "isChecked" && (
                   <Link
+                    target="blank"
                     to="/terms-policy-cookies"
                     className="font-semibold text-blue-500 hover:underline text-md  "
                   >
@@ -794,6 +799,7 @@ const AuthInputFiled = ({
                   className={`${
                     readOnly && "bg-[ghostwhite]"
                   } border-none bg-white w-full outline-none px-2  `}
+                  autoComplete={autoComplete ?? "on"}
                   {...field}
                   formNoValidate
                 />
@@ -830,7 +836,7 @@ const AuthInputFiled = ({
 
   if (type === "contact") {
     return (
-      <div className={`space-y-1 min-w-11 ${className}`}>
+      <div className={`space-y-1  ${className}`}>
         <label
           htmlFor={name}
           className={`${
@@ -863,12 +869,13 @@ const AuthInputFiled = ({
                   }}
                   containerStyle={{
                     height: "100%",
-                    width: "100%",
-                    padding: "10px 0",
+                    width: "auto",
+                    padding: "3px 0",
                     margin: "0px",
                   }}
                   inputStyle={{
-                    padding: "0 50px",
+                    paddingLeft: "50px",
+                    paddingRight: "0px !important",
                     outline: "none",
                     border: "none",
                   }}
@@ -938,6 +945,7 @@ const AuthInputFiled = ({
                     readOnly && "bg-[ghostwhite]"
                   } border-none bg-white w-full outline-none px-2  `}
                   {...field}
+                  autoComplete={autoComplete ?? "on"}
                   formNoValidate
                 />
               </div>
@@ -1004,6 +1012,7 @@ const AuthInputFiled = ({
                 className={` border-none bg-white w-full outline-none px-2  ${
                   readOnly && "!bg-gray-200"
                 }`}
+                autoComplete={autoComplete ?? "on"}
                 {...field}
                 formNoValidate
               />
@@ -1023,17 +1032,17 @@ const AuthInputFiled = ({
           );
         }}
       />
-      <div className="h-4 w-max !z-50   !mb-1">
-        <ErrorMessage
-          errors={errors}
-          name={name}
-          render={({ message }) => (
-            <p className="text-sm mb-4 relative !bg-white  text-red-500">
-              {message}
-            </p>
-          )}
-        />
-      </div>
+      <p className="text-xs w-full h-fit">{descriptionText}</p>
+      <ErrorMessage
+        errors={errors}
+        name={name}
+        render={({ message }) => (
+          <p className="text-sm mb-4 w-full h-full !bg-white  text-red-500">
+            {message}
+          </p>
+        )}
+      />
+      {/* </div> */}
     </div>
   );
 };

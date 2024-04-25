@@ -17,7 +17,7 @@ const EmployeeTable = ({ data, setPage, isLoading, totalResult, page }) => {
   const { data: department } = useGetDepartments();
   const { data: trainingTypeData } = useSetupTraining();
   return (
-    <div className="pt-16 flex flex-col w-full gap-4">
+    <div className="flex flex-col w-full gap-4">
       <div className="flex gap-8 w-full justify-between">
         <input
           value={trainingName}

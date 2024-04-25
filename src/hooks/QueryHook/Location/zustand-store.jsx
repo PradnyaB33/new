@@ -33,7 +33,7 @@ const useSelfieStore = create((set) => ({
     set((state) => ({
       temporaryArray: [
         ...state.temporaryArray,
-        { lat: latitude, lng: longitude },
+        { lat: latitude, lng: longitude, time: new Date() },
       ],
     }));
   },

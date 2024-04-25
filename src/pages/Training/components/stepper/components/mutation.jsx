@@ -1,13 +1,16 @@
 import axios from "axios";
+import { useContext } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
 import useTrainingStore from "./zustand-store";
+import { TestContext } from "../../../../../State/Function/Main";
 
 const useTrainingCreationMutation = () => {
   const authToken = useAuthToken();
   const { setOpen } = useTrainingStore();
   const queryClient = useQueryClient();
+  const { handleAlert } = useContext(TestContext);
 
   const { organisationId } = useParams();
   const getTrainingImageUrl = async (fullObject) => {
@@ -29,6 +32,7 @@ const useTrainingCreationMutation = () => {
     return fullObject;
   };
   const createTrainingObject = async (data) => {
+    console.log(`🚀 ~ file: mutation.jsx:32 ~ data:`, data);
     await axios.post(
       `${process.env.REACT_APP_API}/route/training/${organisationId}/create`,
       data,
@@ -98,6 +102,7 @@ const useTrainingCreationMutation = () => {
           }
         );
         setOpen(false);
+        handleAlert(true, "success", "Training Updated Successfully");
         await queryClient?.invalidateQueries({
           queryKey: ["getTrainingDetailsWithNameLimit10WithCreatorId"],
           exact: false,

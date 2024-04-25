@@ -4,6 +4,7 @@ import {
   CalendarTodayOutlined,
   CalendarViewDayOutlined,
   CategoryOutlined,
+  HowToRegOutlined,
   LocationOnOutlined,
   MeetingRoomOutlined,
   PowerInputOutlined,
@@ -38,6 +39,7 @@ const Step2 = ({ nextStep, departments, orgTrainingType }) => {
     setStep2,
     isDepartmentalTraining,
     trainingDepartment,
+    proofSubmissionRequired,
   } = useTrainingStore();
 
   const trainingDetailSchema = z.object({
@@ -83,6 +85,7 @@ const Step2 = ({ nextStep, departments, orgTrainingType }) => {
         })
       )
       .optional(),
+    proofSubmissionRequired: z.boolean(),
   });
   const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
@@ -96,6 +99,7 @@ const Step2 = ({ nextStep, departments, orgTrainingType }) => {
       trainingDuration,
       isDepartmentalTraining,
       trainingDepartment,
+      proofSubmissionRequired,
     },
     resolver: zodResolver(trainingDetailSchema),
   });
@@ -204,12 +208,26 @@ const Step2 = ({ nextStep, departments, orgTrainingType }) => {
             control={control}
             type="checkbox"
             placeholder="Downcasted"
-            label="Downcasted"
+            label="Down Cast"
             errors={errors}
             error={errors.trainingDownCasted}
             icon={TrendingDownOutlined}
             descriptionText={
               "Down-Casted Training will be automatically assigned to organization employees."
+            }
+          />
+          <AuthInputFiled
+            className={"w-full flex items-start justify-center flex-col"}
+            name={"proofSubmissionRequired"}
+            control={control}
+            type="checkbox"
+            placeholder="Proof Submission Required"
+            label="Proof Submission Required"
+            errors={errors}
+            error={errors.proofSubmissionRequired}
+            icon={HowToRegOutlined}
+            descriptionText={
+              "Proof of submission required will be automatically assigned to organization employees."
             }
           />
           <AuthInputFiled

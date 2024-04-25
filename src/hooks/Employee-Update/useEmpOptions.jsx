@@ -92,6 +92,8 @@ const useEmployeeOptions = (organisationId) => {
     };
   });
 
+   console.log("dept cost center no" , cosnotoptions);
+
   const locationoption = locationList?.locationsData?.map((item) => {
     return {
       value: item?._id,

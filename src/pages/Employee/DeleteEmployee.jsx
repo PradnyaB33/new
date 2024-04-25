@@ -348,7 +348,7 @@ const DeleteEmployee = () => {
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className="text-center mb-6 mt-2">
-            Employee
+          Employee Offboarding
           </Typography>
           <p className="text-xs text-gray-600 text-center">
             Delete employee data here by using delete button.
@@ -482,13 +482,13 @@ const DeleteEmployee = () => {
                     Email
                   </th>
                   <th scope="col" className="!text-left pl-8 py-3">
+                    Employee Id
+                  </th>
+                  <th scope="col" className="!text-left pl-8 py-3">
                     Location
                   </th>
                   <th scope="col" className="!text-left pl-8 py-3">
                     Department
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Phone Number
                   </th>
                   <th scope="col" className="px-6 py-3">
                     Actions
@@ -537,6 +537,7 @@ const DeleteEmployee = () => {
                       <td className="py-3 pl-8">{item?.first_name}</td>
                       <td className="py-3 pl-8">{item?.last_name}</td>
                       <td className="py-3 pl-8">{item?.email}</td>
+                      <td className="py-3 pl-8">{item?.empId}</td>
                       <td className="py-3 pl-8">
                         {item?.worklocation?.map((location, index) => (
                           <span key={index}>{location?.city}</span>
@@ -549,7 +550,6 @@ const DeleteEmployee = () => {
                           );
                         })}
                       </td>
-                      <td className="py-3 pl-8">{item?.phone_number}</td>
                       <td className="whitespace-nowrap px-6 py-2">
                         <IconButton
                           color="error"

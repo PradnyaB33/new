@@ -67,7 +67,7 @@ const RemoteEmployee = () => {
       },
       onError: (data) => {
         console.info(`🚀 ~ file: page.jsx:40 ~ data:`, data);
-        handleAlert(true, "error", "We have problem at our side.");
+        handleAlert(true, "error", data.response.data.message);
       },
     }
   );
@@ -124,11 +124,11 @@ const RemoteEmployee = () => {
             <MappedForm {...{ item, index, setArray, setOpenModal }} />
           ))}
 
-          <div className="absolute bottom-3 w-[400px] flex flex-col items-end gap-10">
+          <div className="md:absolute bottom-3 md:w-[400px] flex flex-col items-end gap-10">
             <button
               type="button"
               onClick={() => setOpenModal(true)}
-              className="bg-[#2463ea] w-[3vw] h-[3vw] text-white text-xl rounded-full"
+              className="bg-[#2463ea] md:w-[3vw] md:h-[3vw] w-[40px] h-[40px] text-white text-xl rounded-full"
             >
               +
             </button>
@@ -136,6 +136,7 @@ const RemoteEmployee = () => {
               type="submit"
               disabled={isDirty && array.length > 0 ? false : true}
               variant="contained"
+              className="text-sm"
             >
               <span className="mr-3">
                 <CheckIcon />

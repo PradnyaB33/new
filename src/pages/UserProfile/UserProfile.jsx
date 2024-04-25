@@ -6,6 +6,7 @@ import {
   Paper,
   Skeleton,
   TextField,
+  FormHelperText,
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useRef, useState } from "react";
@@ -28,6 +29,7 @@ const EmployeeProfile = () => {
   const [fetched, setFetched] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
   const [file, setFile] = useState();
+  const [phoneNumberError, setPhoneNumberError] = useState("");
   const fileInputRef = useRef();
   const queryClient = useQueryClient();
 
@@ -68,6 +70,11 @@ const EmployeeProfile = () => {
 
   const handleAddAdditionalDetails = async () => {
     try {
+      if (additionalPhoneNumber.length !== 10) {
+        setPhoneNumberError("Mobile number should be 10 digits");
+        return; // Return early if phone number length is not 10
+      }
+      setPhoneNumberError("");
       let imageUrl;
       if (file) {
         const signedUrlResponse = await getSignedUrl();
@@ -162,78 +169,81 @@ const EmployeeProfile = () => {
             </div>
           </div>
 
-          <div className="w-[50%]">
-            <div className="w-full h-full flex flex-col justify-center items-center">
-              <h1
-                style={{
-                  fontSize: "24px",
-                  fontWeight: "bold",
-                  color: "#333",
-                  textAlign: "center",
-                }}
-              >
-                {`${user?.first_name} ${user?.last_name}`}
-              </h1>
-              <h1 className="text-lg font-semibold text-center">
-                {user?.profile.join(", ")}
-              </h1>
-              <div className="w-full">
-                <h1
-                  className="text-lg"
-                  style={{ color: "#000", textAlign: "center" }}
-                >
-                  {!data?.status_message && !fetched ? (
-                    <div className="w-full">
-                      <Skeleton
-                        variant="text"
-                        width="200px"
-                        className="flex m-auto"
-                        sx={{ fontSize: "1rem" }}
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      Status:{" "}
-                      <span className="font-semibold">
-                        {data?.status_message || "NA"}
-                      </span>
-                    </>
-                  )}
-                </h1>
-                <h1
-                  className="text-lg"
-                  style={{ color: "#000", textAlign: "center" }}
-                >
-                  {!data?.chat_id && !fetched ? (
-                    <div className="w-full">
-                      <Skeleton
-                        variant="text"
-                        width="200px"
-                        className="flex m-auto"
-                        sx={{ fontSize: "1rem" }}
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      Chat Id:{" "}
-                      <span className="font-semibold">
-                        {data?.chat_id || "NA"}
-                      </span>
-                    </>
-                  )}
-                </h1>
-              </div>
-            </div>
+          <div className="w-[50%] ml-20">
+          <div className="w-full h-full flex flex-col items-start">
+    <h1
+      style={{
+        fontSize: "24px",
+        fontWeight: "bold",
+        color: "#333",
+        textAlign: "center", // Change textAlign to left
+      }}
+      className="text-left" // Add text-left class
+    >
+      {`${user?.first_name} ${user?.last_name}`}
+    </h1>
+    <h1 className="text-lg font-semibold text-left"> {/* Add text-left class */}
+      {user?.profile.join(", ")}
+    </h1>
+    <div className="w-full">
+      <h1
+        className="text-lg text-left" // Add text-left class
+        style={{ color: "#000" }} // Remove textAlign style
+      >
+        {!data?.status_message && !fetched ? (
+          <div className="w-full">
+            <Skeleton
+              variant="text"
+              width="200px"
+              className="flex m-auto"
+              sx={{ fontSize: "1rem" }}
+            />
           </div>
+        ) : (
+          <>
+            Status:{" "}
+            <span className="font-semibold">
+              {data?.status_message || "NA"}
+            </span>
+          </>
+        )}
+      </h1>
+      <h1
+        className="text-lg text-left" // Add text-left class
+        style={{ color: "#000" }} // Remove textAlign style
+      >
+        {!data?.chat_id && !fetched ? (
+          <div className="w-full">
+            <Skeleton
+              variant="text"
+              width="200px"
+              className="flex m-auto"
+              sx={{ fontSize: "1rem" }}
+            />
+          </div>
+        ) : (
+          <>
+            Chat Id:{" "}
+            <span className="font-semibold">
+              {data?.chat_id || "NA"}
+            </span>
+          </>
+        )}
+      </h1>
+    </div>
+  </div>
+          </div>
+
         </div>
 
         <div className="w-full py-6">
           <Divider variant="fullWidth" orientation="horizontal" />
         </div>
 
+       
         <div className="w-full px-4">
           <InputLabel htmlFor="additionalPhoneNumber">
-            Additional Phone Number
+            Phone Number
           </InputLabel>
           <FormControl sx={{ width: "100%" }}>
             <TextField
@@ -247,14 +257,22 @@ const EmployeeProfile = () => {
                 const enteredNumber = e.target.value;
                 if (/^\d{0,10}$/.test(enteredNumber)) {
                   setAdditionalPhoneNumber(enteredNumber);
+                  setPhoneNumberError(""); // Clear phone number error if input is valid
+                } else {
+                  setPhoneNumberError("Mobile number should be 10 digits");
                 }
               }}
+              error={!!phoneNumberError} // Set error prop based on whether there is an error message
             />
+            {/* Display error message if there is one */}
+            {!!phoneNumberError && (
+              <FormHelperText error>{phoneNumberError}</FormHelperText>
+            )}
           </FormControl>
         </div>
 
         <div className="w-full px-4">
-          <InputLabel htmlFor="chatId">Add Chat Id</InputLabel>
+          <InputLabel htmlFor="chatId"> Chat Id</InputLabel>
           <FormControl sx={{ width: "100%" }}>
             <TextField
               id="chatId"
@@ -269,7 +287,7 @@ const EmployeeProfile = () => {
         </div>
 
         <div className="w-full px-4">
-          <InputLabel htmlFor="statusMessage">Add Status Message</InputLabel>
+          <InputLabel htmlFor="statusMessage"> Status Message</InputLabel>
           <FormControl sx={{ width: "100%" }}>
             <TextField
               id="statusMessage"

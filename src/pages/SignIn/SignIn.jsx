@@ -21,24 +21,29 @@ const SignIn = () => {
   const role = useGetCurrentRole();
 
   useEffect(() => {
-    if (role === "Super-Admin" || role === "Delegate-Super-Admin")
-      return redirect("/");
-    else if (role === "HR")
-      return redirect(
-        `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
-      );
-    else if (role === "Delegate-Department-Head" || role === "Department-Head")
-      return redirect(
-        `/organisation/${user?.organizationId}/dashboard/DH-dashboard`
-      );
-    else if (role === "Accountant")
-      return redirect(
-        `/organisation/${user?._id}/dashboard/employee-dashboard`
-      );
-    else if (role === "Manager")
-      return redirect(`/organisation/${user?._id}/dashboard/manager-dashboard`);
-    else if (role === "Employee")
-      return redirect(`/organisation/dashboard/employee-dashboard`);
+    if (user?._id) {
+      if (role === "Super-Admin" || role === "Delegate-Super-Admin")
+        return redirect("/");
+      else if (role === "HR")
+        return redirect(
+          `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
+        );
+      else if (
+        role === "Delegate-Department-Head" ||
+        role === "Department-Head"
+      )
+        return redirect(
+          `/organisation/${user?.organizationId}/dashboard/DH-dashboard`
+        );
+      else if (role === "Accountant")
+        return redirect(`/organisation/dashboard/employee-dashboard`);
+      else if (role === "Manager")
+        return redirect(
+          `/organisation/${user?._id}/dashboard/manager-dashboard`
+        );
+      else if (role === "Employee")
+        return redirect(`/organisation/dashboard/employee-dashboard`);
+    }
     // eslint-disable-next-line
   }, [role, window.location.pathname]);
 
@@ -57,7 +62,6 @@ const SignIn = () => {
         Cookies.set("role", response.data.roleToken, {
           expires: 4 / 24,
         });
-        console.log("Token Accepted");
         window.location.reload();
       },
     }
@@ -338,7 +342,7 @@ const SignIn = () => {
                     ? "/sign-in"
                     : "/sign-up"
                 }
-                className="font-medium text-blue-500 hover:font-bold transition-all "
+                className="font-medium text-blue-500 hover:underline transition-all "
               >
                 Sign up for AEGIS
               </Link>
