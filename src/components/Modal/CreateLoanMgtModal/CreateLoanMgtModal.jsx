@@ -8,7 +8,8 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  MenuItem,
+  MenuItem, 
+   Typography
 } from "@mui/material";
 import React, { useContext, useState, useEffect } from "react";
 import useLaonState from "../../../hooks/LoanManagemet/useLaonState";
@@ -42,13 +43,15 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     setLoanType,
     setLoanAmount,
     setDisbursementDate,
+    setNoOfEmi,
+    setCompletedDate,
   } = useLaonState();
 
   const {
     principalPerMonth,
     totalDeductionPerMonth,
     totalAmountWithSimpleInterest,
-    handleNoOfEmiChange,
+    // handleNoOfEmiChange,
     interestPerMonths,
   } = useCalculation();
 
@@ -68,6 +71,31 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
       }
     }
   }, [loanType, getEmployeeLoanType]);
+
+  useEffect(() => {
+    if (loanDisbursementDate && noOfEmi) {
+      calculateCompletionDate(loanDisbursementDate, noOfEmi);
+    }
+    // eslint-disable-next-line
+  }, [loanDisbursementDate, noOfEmi]);
+
+  const handleNoOfEmiChange = (e) => {
+    const value = e.target.value;
+    setNoOfEmi(value);
+    if (loanDisbursementDate) {
+      calculateCompletionDate(loanDisbursementDate, value);
+    }
+  };
+
+  const calculateCompletionDate = (disbursementDate, emiCount) => {
+    const monthsToAdd = parseInt(emiCount);
+    if (!isNaN(monthsToAdd)) {
+      const completionDate = dayjs(disbursementDate)
+        .add(monthsToAdd, "month")
+        .format("MM-DD-YYYY");
+      setCompletedDate(completionDate);
+    }
+  };
 
   const queryClient = useQueryClient();
   const AddLoanData = useMutation(
@@ -305,6 +333,17 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
               {totalAmountWithSimpleInterest || "0.00"}
             </div>
           </div>
+
+          <DialogContent className="w-full">
+          <Typography variant="body2" >
+             Declaration by Employee :
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+             I declare that I have not availed any other loan during this year and also confirm that there are no dues standing to my credit towards loan drawan by me during last year .
+             I agree to pay loan amount as per above information
+            </Typography>
+          </DialogContent>
+
           <DialogActions sx={{ justifyContent: "end" }}>
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
