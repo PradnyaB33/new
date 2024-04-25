@@ -304,6 +304,7 @@ const DashBoardHR = () => {
           </div>
           <div className="w-[100%] md:w-[50%]">
             <AttendenceBar
+              orgId={user.organizationId}
               isLoading={oraganizationLoading}
               attendenceData={data}
             />

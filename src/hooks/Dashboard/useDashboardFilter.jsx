@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import useAuthToken from "../Token/useAuth";
+import useDashGlobal from "./useDashGlobal";
 
 export default function useDashboardFilter(organisationId) {
   const authToken = useAuthToken();
@@ -13,6 +14,7 @@ export default function useDashboardFilter(organisationId) {
   const [date, setDate] = useState(2024);
   console.log(`🚀 ~ file: useDashboardFilter.jsx:14 ~ setDate:`, setDate);
   const [salaryData, setSalaryData] = useState([]);
+  const { selectedYear } = useDashGlobal();
 
   // Card Data
   const { data: absentEmployee } = useQuery(
@@ -143,17 +145,17 @@ export default function useDashboardFilter(organisationId) {
       const currentYear = new Date().getFullYear();
       const filterData = data.filter((item) => item.year === currentYear);
 
-      return filterData;
+      return data;
     } catch (error) {
       console.log(error);
     }
   }
 
   const { isLoading: oraganizationLoading } = useQuery(
-    ["organization-attenedence", organisationId],
+    ["organization-attenedence", organisationId, selectedYear],
     () =>
       getAttendenceData(
-        `${process.env.REACT_APP_API}/route/leave/getOrganizationAttendece/${organisationId}/${date}`
+        `${process.env.REACT_APP_API}/route/leave/getOrganizationAttendece/${organisationId}/${selectedYear.value}`
       ),
     {
       onSuccess: (organizationAttendenceData) => {
@@ -209,8 +211,6 @@ export default function useDashboardFilter(organisationId) {
           Authorization: authToken,
         },
       });
-      // const currentYear = new Date().getFullYear();
-      // const filterData = data.filter((item) => item.year === currentYear);
 
       return data;
     } catch (error) {
