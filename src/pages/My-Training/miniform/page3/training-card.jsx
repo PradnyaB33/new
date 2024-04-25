@@ -8,15 +8,10 @@ import MiniForm from "./mini-form";
 const TrainingCard3 = ({ doc }) => {
   console.log(`🚀 ~ file: training-card.jsx:9 ~ doc:`, doc);
   const sanitizedDescription = DOMPurify.sanitize(doc?.trainingDescription);
-  const { open, setOpen, mutate } = useCardQuery({
+  const { open, setOpen, getProofMutate } = useCardQuery({
     trainingId: doc?._id,
   });
 
-  console.log(`🚀 ~ file: training-card.jsx:15 ~ { open, setOpen, mutate }:`, {
-    open,
-    setOpen,
-    mutate,
-  });
   return (
     <div
       className={`bg-white
@@ -77,7 +72,7 @@ const TrainingCard3 = ({ doc }) => {
         keepMounted={false}
       >
         <Box className="border-none shadow-md outline-none rounded-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[40%] md:w-[70%] z-10 p-4 bg-white">
-          <MiniForm {...{ mutate, doc }} />
+          <MiniForm {...{ mutate: getProofMutate, doc }} />
         </Box>
       </Modal>
     </div>
