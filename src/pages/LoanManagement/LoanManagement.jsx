@@ -151,7 +151,7 @@ const LoanManagement = () => {
   return (
     <>
       <section className="bg-gray-50 min-h-screen w-full">
-        <article className="SetupSection bg-white w-[100%] md:w-[100%]  h-max shadow-md rounded-sm border  items-center">
+        <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center flex flex-col">
           <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
             <div className="flex  gap-3 ">
               <div className="mt-1">
@@ -165,8 +165,8 @@ const LoanManagement = () => {
           </div>
           <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
             {getEmployeeLoanData?.length > 0 && (
-              <div className="flex gap-3">
-                <h1 className="text-xl">Your current active loans</h1>
+              <div className="flex gap-2 w-full">
+               <h1 className="text-lg">Your current active loans</h1>
               </div>
             )}
            
@@ -180,7 +180,6 @@ const LoanManagement = () => {
               Apply For Loan
             </Button>
            </div>
-          
           </div>
 
           {isLoading ? (
@@ -196,11 +195,12 @@ const LoanManagement = () => {
                         <th scope="col" className="text-left pl-6 py-3">
                           SR NO
                         </th>
-                        <th scope="col" className="px-8 py-3">
-                          Loan Type
-                        </th>
+                      
                         <th scope="col" className="px-6 py-3">
                           Loan Status
+                        </th>
+                        <th scope="col" className="px-8 py-3">
+                          Loan Type
                         </th>
                         <th scope="col" className="px-6 py-3">
                           Loan Amount Applied
@@ -244,9 +244,7 @@ const LoanManagement = () => {
                               />
                             </td>
                             <td className="text-left pl-6 py-3">{id + 1}</td>
-                            <td className="py-3 pl-6">
-                              {loanMgtData.loanType?.loanName}
-                            </td>
+                          
                             <td className="text-left leading-7 text-[16px] w-[200px] ">
                               {loanMgtData.status === "Pending" ? (
                                 <div className="flex items-center gap-2">
@@ -275,6 +273,9 @@ const LoanManagement = () => {
                                   </span>
                                 </div>
                               )}
+                            </td>
+                            <td className="py-3 pl-6">
+                              {loanMgtData.loanType?.loanName}
                             </td>
 
                             <td className="py-3 pl-6">
