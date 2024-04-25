@@ -80,7 +80,7 @@ const ViewCalculateAttendance = () => {
             <div className="flex items-center gap-3 mb-3 md:mb-0">
               <TextField
                 onChange={(e) => setEmailSearch(e.target.value)}
-                placeholder="Search Email...."
+                placeholder="Search Employee by Email...."
                 variant="outlined"
                 size="small"
                 sx={{ width: 300 }}

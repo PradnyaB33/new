@@ -316,7 +316,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/emo-info-punch-status`,
             icon: <PunchClockIcon className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Punch Sync",
+            text: "Punch Sync ",
           },
 
           {

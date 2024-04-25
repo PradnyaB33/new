@@ -15,7 +15,7 @@ const MissPunchInOut = () => {
     ["unavailableRecord", organisationId],
     async () => {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-unavaialble-record`,
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/missed-punch-record-to-hr`,
         {
           headers: {
             Authorization: authToken,
@@ -37,7 +37,7 @@ const MissPunchInOut = () => {
         Employee Missed Punch 
        </Typography> 
           <p className="text-xs text-gray-600 pl-10 text-center mb-2">
-            Unavailable records of employee
+            List of unavailable status of employee
           </p>
        {unavailableRecord?.map((record, index) => (
       <article key={index} className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center mb-4">
