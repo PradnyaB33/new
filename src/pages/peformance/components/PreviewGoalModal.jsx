@@ -42,7 +42,7 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
     refetchOnMount: false,
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id}/${assignee}`,
+        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id}`,
         {
           headers: {
             Authorization: authToken,
