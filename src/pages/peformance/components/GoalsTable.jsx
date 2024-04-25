@@ -1,4 +1,4 @@
-import { MoreHoriz, Search } from "@mui/icons-material";
+import { InfoOutlined, MoreHoriz, Search } from "@mui/icons-material";
 import {
   CircularProgress,
   Divider,
@@ -25,7 +25,7 @@ import PreviewGoalModal from "./PreviewGoalModal";
 import RatingModel from "./RatingModel";
 
 const GoalsTable = ({ performance }) => {
-  const [focusedInput, setFocusedInput] = useState(null);
+  // const [focusedInput, setFocusedInput] = useState(null);
   const { useGetCurrentRole, getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
@@ -112,9 +112,9 @@ const GoalsTable = ({ performance }) => {
 
   // Now, calculate the total number of rows using reduce
   const totalRowCount = allSection80s?.reduce((total, section) => total + 1, 0);
-  const handleFocus = (fieldName) => {
-    setFocusedInput(fieldName);
-  };
+  // const handleFocus = (fieldName) => {
+  //   setFocusedInput(fieldName);
+  // };
 
   const pages = Math.ceil(totalRowCount / rowsPerPage);
 
@@ -152,7 +152,6 @@ const GoalsTable = ({ performance }) => {
     }
   };
 
-  console.log(employeeGoals);
   return (
     <section className="p-4 ">
       <div className="p-4  bg-white rounded-md border">
@@ -166,7 +165,7 @@ const GoalsTable = ({ performance }) => {
         </div>
         <div className="my-2 flex justify-between">
           <div className="flex gap-4">
-            <div className={`space-y-1  min-w-[60vw] `}>
+            {/* <div className={`space-y-1  min-w-[60vw] `}>
               <div
                 onFocus={() => {
                   handleFocus("search");
@@ -186,9 +185,9 @@ const GoalsTable = ({ performance }) => {
                   formNoValidate
                 />
               </div>
-            </div>
+            </div> */}
             {role !== "Employee" && (
-              <div className={`space-y-1 w-full `}>
+              <div className={` w-full justify-center flex gap-4`}>
                 <div
                   className={`flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
                 >
@@ -204,7 +203,7 @@ const GoalsTable = ({ performance }) => {
                         boxShadow: "none",
                       }),
                     }}
-                    className={` bg-white w-[200px] !outline-none px-2 !shadow-none !border-none !border-0`}
+                    className={` bg-white w-[400px] !outline-none px-2 !shadow-none !border-none !border-0`}
                     components={{
                       Option: CustomOption,
                       IndicatorSeparator: () => null,
@@ -215,25 +214,29 @@ const GoalsTable = ({ performance }) => {
                     }}
                   />
                 </div>
+                {/* <Button variant="contained">Search Goals</Button> */}
               </div>
             )}
           </div>
 
-          {performance?.stages === "Goal setting" && (
-            <button
-              type="button"
-              onClick={() => setOpen(true)}
-              className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-            >
-              Add Goal
-            </button>
-          )}
+          {(role !== "Employee" || performance?.isSelfGoal) &&
+            performance?.stages === "Goal setting" && (
+              <button
+                type="button"
+                onClick={() => setOpen(true)}
+                className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+              >
+                Add Goal
+              </button>
+            )}
         </div>
         <div className="bg-white w-full overflow-x-auto">
           {isFetching ? (
             <CircularProgress />
           ) : orgGoals?.length <= 0 ? (
-            <h1 className="text-center text-xl">No Goals Found</h1>
+            <h1 className="p-3 space-x-2  bg-blue-100 rounded-md text-lg text-red-500 my-2">
+              <InfoOutlined /> Please select assignee first to view thier goals
+            </h1>
           ) : (
             <div className="overflow-auto ">
               <table className="w-full table-auto  border border-collapse min-w-full bg-white  text-left  !text-sm font-light">

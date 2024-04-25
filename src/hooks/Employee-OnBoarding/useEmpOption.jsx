@@ -43,6 +43,7 @@ const useEmpOption = (organisationId) => {
     };
   });
 
+  console.log(`🚀 ~ Manageroptions:`, Manageroptions);
   const EmpCodeoptions = empCode?.EmpCodeoptions?.map((item) => {
     return {
       value: item?._id,

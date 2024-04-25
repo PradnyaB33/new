@@ -53,6 +53,7 @@ const AuthInputFiled = ({
   center,
   descriptionText,
   value,
+  autoComplete,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -299,6 +300,7 @@ const AuthInputFiled = ({
             )}
           />
           <div className="h-4 !mb-1">
+            <p className="text-xs pl-2">{descriptionText}</p>
             <ErrorMessage
               errors={errors}
               name={name}
@@ -543,6 +545,7 @@ const AuthInputFiled = ({
                 className={`${
                   readOnly && "bg-[ghostwhite]"
                 } border-none bg-white outline-none px-2`}
+                autoComplete={autoComplete ?? "on"}
                 {...field}
                 disabled={disabled}
                 formNoValidate
@@ -796,6 +799,7 @@ const AuthInputFiled = ({
                   className={`${
                     readOnly && "bg-[ghostwhite]"
                   } border-none bg-white w-full outline-none px-2  `}
+                  autoComplete={autoComplete ?? "on"}
                   {...field}
                   formNoValidate
                 />
@@ -941,6 +945,7 @@ const AuthInputFiled = ({
                     readOnly && "bg-[ghostwhite]"
                   } border-none bg-white w-full outline-none px-2  `}
                   {...field}
+                  autoComplete={autoComplete ?? "on"}
                   formNoValidate
                 />
               </div>
@@ -1007,6 +1012,7 @@ const AuthInputFiled = ({
                 className={` border-none bg-white w-full outline-none px-2  ${
                   readOnly && "!bg-gray-200"
                 }`}
+                autoComplete={autoComplete ?? "on"}
                 {...field}
                 formNoValidate
               />
@@ -1026,17 +1032,17 @@ const AuthInputFiled = ({
           );
         }}
       />
-      <div className="h-4 w-max !z-50   !mb-1">
-        <ErrorMessage
-          errors={errors}
-          name={name}
-          render={({ message }) => (
-            <p className="text-sm mb-4 relative !bg-white  text-red-500">
-              {message}
-            </p>
-          )}
-        />
-      </div>
+      <p className="text-xs w-full h-fit">{descriptionText}</p>
+      <ErrorMessage
+        errors={errors}
+        name={name}
+        render={({ message }) => (
+          <p className="text-sm mb-4 w-full h-full !bg-white  text-red-500">
+            {message}
+          </p>
+        )}
+      />
+      {/* </div> */}
     </div>
   );
 };

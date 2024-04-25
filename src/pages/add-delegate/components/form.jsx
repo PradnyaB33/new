@@ -18,25 +18,72 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useDelegateSuperAdmin from "../../../hooks/QueryHook/Delegate-Super-Admin/mutation";
+
+let joinDate = moment().format("yyyy-MM-DD");
+
 const packageSchema = z.object({
-  first_name: z.string(),
-  last_name: z.string(),
+  first_name: z.string().refine(
+    (data) => {
+      const name = data.replace(/\s/g, "");
+      return name.length > 0;
+    },
+    {
+      message: "First Name is required",
+    }
+  ),
+  last_name: z.string().refine(
+    (data) => {
+      // remove space from string
+      const name = data.replace(/\s/g, "");
+      return name.length > 0;
+    },
+    {
+      message: "Last Name is required",
+    }
+  ),
   middle_name: z.string(),
   joining_date: z.string(),
   email: z.string().email(),
   phone_number: z.string().min(10).max(10),
   password: z.string(),
-  date_of_birth: z.string(),
-  gender: z.enum(["Male", "Female", "Other"]),
-  profile: z.enum(["Delegate-Super-Admin"]),
-  citizenship: z.string(),
+  date_of_birth: z.string().refine(
+    (date) => {
+      // date will be has difference of 18 years from date of joining
+      const dateOfBirth = moment(date);
+      const dateOfJoining = joinDate ? moment(joinDate) : moment();
+      const difference = dateOfJoining.diff(dateOfBirth, "years");
+      return difference >= 18;
+    },
+    {
+      message: "Age should be greater than 18 years",
+    }
+  ),
+  gender: z.enum(["Male", "Female", "Other"]).refine(
+    (data) => {
+      const name = data.replace(/\s/g, "");
+      return name.length > 0;
+    },
+    {
+      message: "Gender is required",
+    }
+  ),
+  profile: z.any(),
+  citizenship: z.string().refine(
+    (data) => {
+      const name = data.replace(/\s/g, "");
+      return name.length > 0;
+    },
+    {
+      message: "Citizen Ship Name is required",
+    }
+  ),
   _id: z.string(),
 });
 const MiniForm = ({ data }) => {
   const { addDelegateMutation } = useDelegateSuperAdmin();
   const [visible, setVisible] = useState(false);
 
-  const { control, formState, handleSubmit } = useForm({
+  const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
       first_name: data?.delegateSuperAdmin?.first_name,
       last_name: data?.delegateSuperAdmin?.last_name,
@@ -57,9 +104,11 @@ const MiniForm = ({ data }) => {
     },
     resolver: zodResolver(packageSchema),
   });
-
+  joinDate = watch("joining_date");
   const { errors, isDirty } = formState;
+  console.log(`🚀 ~ file: form.jsx:62 ~ errors:`, errors);
   const onSubmit = async (data) => {
+    console.log(`🚀 ~ file: form.jsx:64 ~ data:`, data);
     addDelegateMutation.mutate(data);
   };
 
@@ -72,6 +121,7 @@ const MiniForm = ({ data }) => {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-4 w-full"
         noValidate
+        autoComplete="off"
       >
         <div className="grid grid-cols-2 gap-4 w-max">
           <AuthInputFiled
@@ -84,6 +134,7 @@ const MiniForm = ({ data }) => {
             errors={errors}
             error={errors?.first_name}
             className={"!min-w-80 !max-w-64"}
+            autoComplete={"off"}
           />
           <AuthInputFiled
             className={"!min-w-80 !max-w-64"}
@@ -95,6 +146,7 @@ const MiniForm = ({ data }) => {
             label={`Middle Name `}
             errors={errors}
             error={errors?.middle_name}
+            autoComplete={"off"}
           />
           <AuthInputFiled
             className={"!min-w-80 !max-w-64"}
@@ -106,6 +158,7 @@ const MiniForm = ({ data }) => {
             label={`Last Name *`}
             errors={errors}
             error={errors?.last_name}
+            autoComplete={"off"}
           />
           <AuthInputFiled
             className={"!min-w-80 !max-w-64"}
@@ -138,6 +191,7 @@ const MiniForm = ({ data }) => {
             placeholder={"eg. sahilbarge@gmail.com"}
             label={`Email *`}
             errors={errors}
+            autoComplete={"off"}
             error={errors?.email}
           />
           <AuthInputFiled
@@ -150,6 +204,7 @@ const MiniForm = ({ data }) => {
             label={`Phone Number *`}
             errors={errors}
             error={errors?.phone_number}
+            autoComplete={"off"}
           />
           <AuthInputFiled
             className={"!min-w-80 !max-w-64"}
@@ -179,6 +234,7 @@ const MiniForm = ({ data }) => {
             error={errors?.password}
             visible={visible}
             setVisible={setVisible}
+            autoComplete={"off"}
           />
 
           <AuthInputFiled

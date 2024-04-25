@@ -1,4 +1,3 @@
-import { ErrorMessage } from "@hookform/error-message/dist";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Business,
@@ -13,13 +12,12 @@ import {
 } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import React from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FaLinkedin } from "react-icons/fa";
 import { z } from "zod";
 import useOrg from "../../../State/Org/Org";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useGetUser from "../../../hooks/Token/useUser";
-import ImageInput from "./image-input";
 const organizationSchema = z.object({
   orgName: z
     .string()
@@ -42,12 +40,7 @@ const organizationSchema = z.object({
     .min(10, { message: "contact number must be 10 digits" }),
   description: z.string(),
   creator: z.string(),
-  logo_url: z.any().refine(
-    (file) => {
-      return !!file && file.size >= 5 * 1024 && file.size <= 50 * 1024;
-    },
-    { message: "Image size maximum 50kb" }
-  ),
+
   isTrial: z.boolean(),
 });
 const Step1 = ({ nextStep }) => {
@@ -63,7 +56,6 @@ const Step1 = ({ nextStep }) => {
     location,
     contact_number,
     description,
-    logo_url,
     setStep1Data,
     isTrial,
   } = useOrg();
@@ -80,7 +72,6 @@ const Step1 = ({ nextStep }) => {
       contact_number: contact_number,
       description: description,
       creator: decodedToken?.user?._id,
-      logo_url: logo_url,
       isTrial: isTrial,
     },
     resolver: zodResolver(organizationSchema),
@@ -100,24 +91,6 @@ const Step1 = ({ nextStep }) => {
         className="item-center flex flex-col"
         noValidate
       >
-        <div className="space-y-1 w-full items-center flex flex-col ">
-          <Controller
-            control={control}
-            name={"logo_url"}
-            render={({ field }) => {
-              return <ImageInput field={field} />;
-            }}
-          />
-          <div className="h-4 !mb-1">
-            <ErrorMessage
-              errors={errors}
-              name={"logo_url"}
-              render={({ message }) => (
-                <p className="text-sm text-red-500">{message}</p>
-              )}
-            />
-          </div>
-        </div>
         <div className="grid md:grid-cols-2 md:gap-4 gap-0 px-4 grid-cols-1">
           <AuthInputFiled
             name="orgName"

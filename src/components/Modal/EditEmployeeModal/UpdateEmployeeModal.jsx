@@ -1,3 +1,23 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  AccountBalance,
+  AccountBox,
+  AddBusiness,
+  Badge,
+  ClosedCaption,
+  ContactEmergency,
+  ContactMail,
+  Email,
+  LocationCity,
+  LocationOn,
+  MonetizationOn,
+  Person,
+  PersonAddAlt,
+  PersonPin,
+  Today,
+  TodayOutlined,
+  Work,
+} from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Button,
@@ -5,41 +25,20 @@ import {
   DialogActions,
   DialogContent,
   Divider,
+  FormControlLabel,
   IconButton,
+  Radio, RadioGroup,
 } from "@mui/material";
-import React , {useContext,} from "react";
-import { z } from "zod";
-import useEmpState from "../../../hooks/Employee-Update/useEmpState";
-import AuthInputFiled from "../../InputFileds/AuthInputFiled";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
-import {
-    AccountBalance,
-    AccountBox,
-    ContactEmergency,
-    Email,
-    LocationOn,
-    Person,
-    TodayOutlined,
-  } from "@mui/icons-material";
-  import {
-    AddBusiness,
-    Badge,
-    ClosedCaption,
-    ContactMail,
-    LocationCity,
-    MonetizationOn,
-    PersonAddAlt,
-    PersonPin,
-    Today,
-    Work,
-  } from "@mui/icons-material";
-import useEmployeeOptions from "../../../hooks/Employee-Update/useEmpOptions";
-import { useQuery } from "react-query";
 import axios from "axios";
+import React, { useContext, } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useQuery } from "react-query";
+import { z } from "zod";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useEmpQuery from "../../../hooks/Employee-OnBoarding/useEmpQuery";
+import useEmployeeOptions from "../../../hooks/Employee-Update/useEmpOptions";
+import useEmpState from "../../../hooks/Employee-Update/useEmpState";
+import AuthInputFiled from "../../InputFileds/AuthInputFiled";
 <<<<<<< HEAD
 =======
 import useEmpQuery from "../../../hooks/Employee-OnBoarding/useEmpQuery";
@@ -765,12 +764,4 @@ const UpdateEmployeeModal = ({ handleClose, open, employeeId, organisationId }) 
   );
 };
 
-<<<<<<< HEAD
 export default UpdateEmployeeModal;
-=======
-<<<<<<< HEAD
-export default UpdateEmployeeModal;
-=======
-export default UpdateEmployeeModal;
->>>>>>> b5b61a8e54c5694259addc611877b866eabe1686
->>>>>>> d837fb9bbbcc77efcbf3a88e1a440abe65227513
