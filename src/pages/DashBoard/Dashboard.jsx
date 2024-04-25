@@ -31,7 +31,7 @@ const Dashboard = () => {
           },
         }
       );
-      return res.data.employeeSalaryViaYear;
+      return res.data;
     } catch (error) {
       console.log(error);
     }
@@ -53,9 +53,10 @@ const Dashboard = () => {
             <div className="space-y-3 md:space-y-0 md:my-4 mb-1 flex md:gap-2 gap-1 flex-col md:!w-[60%] w-[100%] md:pb-2">
               <HRgraph />
               <LineGraph
-                salarydata={EmployeSalaryData}
+                salarydata={EmployeSalaryData?.employeeSalaryViaYear}
                 selectedyear={selectedyear}
                 setSelectedYear={setSelectedYear}
+                employee={EmployeSalaryData?.employeeInfo}
               />
               {/* <SinglePayGraph /> */}
             </div>

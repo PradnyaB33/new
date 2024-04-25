@@ -1,5 +1,6 @@
 import axios from "axios";
 import { CategoryScale, Chart } from "chart.js";
+import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { useMutation, useQuery } from "react-query";
@@ -16,6 +17,7 @@ const HRgraph = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const [employeeData, setEmployeeData] = useState([]);
+  const [employee, setEmployee] = useState([]);
 
   const [selectedyear, setSelectedYear] = useState({
     value: new Date().getFullYear(),
@@ -67,6 +69,7 @@ const HRgraph = () => {
     );
 
     setEmployeeData(data?.getEmployeeLeaves?.summary?.map((item) => item));
+    setEmployee(data?.getEmployeeLeaves[0]?.employeeId);
     const currentYear = new Date().getFullYear();
     const filterData = data?.sortedData?.filter(
       (item) => item.year === currentYear
@@ -156,12 +159,44 @@ const HRgraph = () => {
 
   const generateReport = () => {
     try {
+      const withMonth = LeaveYearData?.map(({ _id, ...item }) => {
+        const date = moment({ year: item.year, month: item.month - 1 }); // Create a moment object for the current year and month
+        const daysInMonth = date.daysInMonth(); // Get the total number of days in the current month
+        return {
+          // ...item,
+          // month: monthNames[item.month - 1],
+          // daysInMonth,
+          Month: monthNames[item.month - 1],
+          Year: item.year,
+          "Days In Month": daysInMonth,
+          "Avaliable Days": item.availableDays,
+          "Paid Days": item.paidleaveDays,
+          "Unpaid Days": item.unpaidleaveDays,
+        };
+      });
+      // Employee information
+      const employeeInfo = [
+        ["", "Employee Id", `${employee?.empId}`],
+        ["", "Name", `${employee?.first_name} ${employee?.last_name}`],
+        ["", "Email", employee?.email],
+        ["", "Pan Card", employee?.pan_card_number],
+        ["", "Bank Account No", `${employee?.bank_account_no}`],
+        // Add more employee information here
+      ];
+
       const wb = XLSX.utils.book_new();
-      const wsData = LeaveYearData.map(Object.values);
-      wsData.unshift(Object.keys(LeaveYearData[0]));
-      const ws = XLSX.utils.aoa_to_sheet(wsData);
+      const wsData = withMonth.map(Object.values);
+      wsData.unshift(Object.keys(withMonth[0]));
+
+      // Add padding (empty rows and columns)
+      const padding = [
+        ["", "", "", ""],
+        ["", "", "", ""],
+      ];
+      const finalData = padding.concat(employeeInfo, padding, wsData);
+      const ws = XLSX.utils.aoa_to_sheet(finalData);
       XLSX.utils.book_append_sheet(wb, ws, "Salary Data");
-      XLSX.writeFile(wb, "SalaryData.xlsx");
+      XLSX.writeFile(wb, "AttendenceData.xlsx");
     } catch (error) {
       handleAlert(
         true,
@@ -173,7 +208,7 @@ const HRgraph = () => {
 
   const mutation = useMutation(generateReport, {
     onSuccess: () => {
-      handleAlert(true, "warning", "Report Generated Successfully");
+      handleAlert(true, "success", "Attendence Report Generated Successfully");
     },
     onError: (error) => {
       // Handle error

@@ -1,18 +1,17 @@
 import { Skeleton } from "@mui/material";
-import { format } from "date-fns";
 import React, { useContext } from "react";
 import { Line } from "react-chartjs-2";
 import { useMutation } from "react-query";
 import Select from "react-select";
 import * as XLSX from "xlsx";
 import { TestContext } from "../../../../State/Function/Main";
-import UserProfile from "../../../../hooks/UserData/useUser";
 
 const LineGraph = ({
   salarydata,
   isLoading = false,
   setSelectedYear,
   selectedyear,
+  employee = [],
 }) => {
   const { handleAlert } = useContext(TestContext);
   const option = {
@@ -61,18 +60,23 @@ const LineGraph = ({
     },
   };
 
-  const user = UserProfile().getCurrentUser();
+  // const user = UserProfile().getCurrentUser();
 
   const generateReport = () => {
     try {
-      const salaryDataWithoutId = salarydata?.map(({ _id, ...item }) => item);
+      const salaryDataWithoutId = salarydata?.map(({ _id, ...item }) => ({
+        ...item,
+        month: monthNames[item.month - 1],
+      }));
+      console.log(`🚀 ~ salaryDataWithoutId:`, salaryDataWithoutId);
 
       // Employee information
       const employeeInfo = [
-        ["", "Name", `${user?.first_name} ${user?.last_name}`],
-        ["", "Email", user?.email],
-        ["", "Birth date", format(new Date(user.birthdate), "PP")],
-        ["", "Year", selectedyear.value],
+        ["", "Employee Id", `${employee?.empId}`],
+        ["", "Name", `${employee?.first_name} ${employee?.last_name}`],
+        ["", "Email", employee?.email],
+        ["", "Pan Card", employee?.pan_card_number],
+        ["", "Bank Account No", `${employee?.bank_account_no}`],
         // Add more employee information here
       ];
 
