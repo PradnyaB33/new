@@ -19,17 +19,27 @@ import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useDelegateSuperAdmin from "../../../hooks/QueryHook/Delegate-Super-Admin/mutation";
 const packageSchema = z.object({
-  first_name: z.string(),
-  last_name: z.string(),
+  first_name: z.string().refine((data) => data.length > 0, {
+    message: "First Name is required",
+  }),
+  last_name: z.string().refine((data) => data.length > 0, {
+    message: "Last Name is required",
+  }),
   middle_name: z.string(),
   joining_date: z.string(),
   email: z.string().email(),
   phone_number: z.string().min(10).max(10),
   password: z.string(),
   date_of_birth: z.string(),
-  gender: z.enum(["Male", "Female", "Other"]),
+  gender: z
+    .enum(["Male", "Female", "Other"])
+    .refine((data) => data.length > 0, {
+      message: "Gender is required",
+    }),
   profile: z.any(),
-  citizenship: z.string(),
+  citizenship: z.string().refine((data) => data.length > 0, {
+    message: "Citizen Ship Name is required",
+  }),
   _id: z.string(),
 });
 const MiniForm = ({ data }) => {
