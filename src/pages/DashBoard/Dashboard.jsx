@@ -50,7 +50,7 @@ const Dashboard = () => {
         </header>
         <div className="py-3 px-2 md:px-8 w-full">
           <div className="flex md:flex-row flex-col w-full justify-between gap-2">
-            <div className="md:my-4 mb-1 flex md:gap-2 gap-1 flex-col md:!w-[60%] w-[100%] md:pb-2">
+            <div className="space-y-3 md:space-y-0 md:my-4 mb-1 flex md:gap-2 gap-1 flex-col md:!w-[60%] w-[100%] md:pb-2">
               <HRgraph />
               <LineGraph
                 salarydata={EmployeSalaryData}
@@ -60,7 +60,7 @@ const Dashboard = () => {
               {/* <SinglePayGraph /> */}
             </div>
 
-            <div className="md:w-[40%] md:my-4 my-1 md:px-2 space-y-1 md:space-y-4">
+            <div className="md:w-[40%] md:my-4 my-1 md:px-2 space-y-3 md:space-y-4">
               <EmployeeLeavePie />
               <PublicHolidayDisplayList />
               <LeaveDisplayList />

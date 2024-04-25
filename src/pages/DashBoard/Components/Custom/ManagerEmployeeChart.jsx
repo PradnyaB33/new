@@ -139,7 +139,9 @@ const ManagerEmployeeChart = ({
     return organizedData ?? [];
   };
 
-  const EmployeeleaveData = organizeDataByMonth(LeaveYearData);
+  const EmployeeleaveData = organizeDataByMonth(
+    LeaveYearData?.sortedData ?? []
+  );
   const MonthArray = allMonths.map((month) => month);
 
   const data = {

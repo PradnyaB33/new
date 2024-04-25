@@ -30,7 +30,7 @@ const EmployeeLeavePie = () => {
     },
   };
   return (
-    <article className="mb-2 w-full h-max bg-white rounded-md shadow-md">
+    <article className="mb-2 w-full h-max bg-white rounded-md border">
       {isLoading ? (
         <div className="p-4 !pb-2 space-y-2">
           <h1 className="text-lg  font-bold text-[#67748E]">

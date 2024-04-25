@@ -192,11 +192,11 @@ const HRgraph = () => {
           className="w-full 
       px-4 pb-4  flex flex-col border rounded-md bg-white  justify-center"
         >
-          <div className="flex  my-4 justify-between items-center">
+          <div className="flex  my-4 justify-between items-start md:items-center">
             <h1 className="text-lg  font-bold text-[#67748E]">
               Employee Attendance
             </h1>
-            <div className="flex gap-2 items-center">
+            <div className="flex md:flex-row flex-col-reverse gap-2 items-center">
               <button
                 onClick={() => mutation.mutate()}
                 disabled={mutation.isLoading}
