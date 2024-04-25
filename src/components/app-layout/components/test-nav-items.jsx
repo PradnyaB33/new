@@ -251,11 +251,6 @@ const TestNavItems = ({ toggleDrawer }) => {
           [
             "Super-Admin",
             "Delegate-Super-Admin",
-            "HR",
-            "Manager",
-            "Department-Head",
-            "Department-Admin",
-            "Delegate-Super-Admin",
             "Department-Head",
             "Delegate-Department-Head",
             "Department-Admin",
@@ -291,10 +286,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible: [
               "Super-Admin",
               "Delegate-Super-Admin",
-              "HR",
-              "Manager",
-              "Department-Head",
-              "Department-Admin",
               "Department-Head",
               "Delegate-Department-Head",
               "Department-Admin",
