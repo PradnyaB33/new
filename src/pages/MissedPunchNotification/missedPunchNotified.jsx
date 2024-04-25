@@ -51,6 +51,7 @@ const MissedPunchNotified = ({ employeeId }) => {
       console.log(response);
       await queryClient.refetchQueries(["unavailableRecords", organisationId]);
       handleAlert(true, "success", "Approval updated successfully.");
+     
     } catch (error) {
       console.error("Error updating approval:", error);
       handleAlert(true, "error", "Failed to update approval.");

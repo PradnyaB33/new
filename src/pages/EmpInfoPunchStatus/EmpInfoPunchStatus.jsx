@@ -5,13 +5,15 @@ import {
   Typography,
   Tooltip,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import AttendanceBioModal from "../../components/Modal/AttedanceBioModal/AttendanceBioModal";
+import { TestContext } from "../../State/Function/Main";
 
 const EmpInfoPunchStatus = () => {
   const { organisationId } = useParams();
+  const { handleAlert } = useContext(TestContext);
   const [tableData, setTableData] = useState([]);
   const [searchName, setSearchName] = useState("");
   const [searchId, setSearchId] = useState("");
@@ -111,8 +113,13 @@ const EmpInfoPunchStatus = () => {
   // for open the modal for display employee
   const [empModalOpen, setEmpModalOpen] = useState(false);
   const handleEmpModalOpen = () => {
-    setEmpModalOpen(true);
+    if (selectedEmployees.length === 0) {
+      handleAlert(false, "error", "Please check the employee before syncing.");
+    } else {
+      setEmpModalOpen(true);
+    }
   };
+
   const handleEmpModalClose = () => {
     setEmpModalOpen(false);
     setSelectedEmployees([]);
@@ -144,7 +151,7 @@ const EmpInfoPunchStatus = () => {
                 </Button>
               </Tooltip>
             </label>
-            <Tooltip title={"Sync the employee here"} arrow>
+            <Tooltip title={"Please check the employee before syncing."} arrow>
               <Button
                 variant="contained"
                 component="span"
