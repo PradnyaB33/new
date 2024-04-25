@@ -34,7 +34,7 @@ const useTrainingDetailsMutation = () => {
     },
     onError: (error) => {
       console.error("onError", error);
-      handleAlert("Training Deletion Failed", "error");
+      handleAlert(true, "error", error.response.data.message);
     },
   });
   return { mutate, isLoading };
