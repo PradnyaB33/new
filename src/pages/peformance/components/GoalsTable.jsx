@@ -146,7 +146,8 @@ const GoalsTable = ({ performance }) => {
     }
   );
 
-  const allSection80s = orgGoals?.flatMap((data) => data);
+  console.log(`🚀 ~ orgGoals:`, orgGoals);
+  const allSection80s = orgGoals?.goals?.flatMap((data) => data);
 
   // Now, calculate the total number of rows using reduce
   const totalRowCount = allSection80s?.reduce((total, section) => total + 1, 0);
@@ -302,7 +303,7 @@ const GoalsTable = ({ performance }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {orgGoals?.map((goal, id) => (
+                  {orgGoals?.goals?.map((goal, id) => (
                     <tr
                       key={id}
                       className={` hover:bg-gray-50 !font-medium  w-max border-b `}
