@@ -269,7 +269,11 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/employee-onboarding`,
             icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
+<<<<<<< HEAD
             text: "Onboarding",
+=======
+            text: " Onboarding",
+>>>>>>> b30517655f897b83749097eb54b7f05d61d0f834
           },
 
           {
@@ -279,7 +283,11 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/employee-offboarding`,
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+<<<<<<< HEAD
             text: "Offboarding",
+=======
+            text: " Offboarding",
+>>>>>>> b30517655f897b83749097eb54b7f05d61d0f834
           },
           {
             key: "employeeList",

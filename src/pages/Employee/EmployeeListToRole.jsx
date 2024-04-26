@@ -1,10 +1,17 @@
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { Container, IconButton, TextField, Typography , Tooltip } from "@mui/material";
+import {
+  Container,
+  IconButton,
+  TextField,
+  Typography,
+  Tooltip,
+} from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
- import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
+//import UpdateEmployeeModal from "../../components/Modal/EditEmployeeModal/UpdateEmployeeModal";
+import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
 const EmployeeListToRole = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -19,7 +26,6 @@ const EmployeeListToRole = () => {
 
   console.log(availableEmployee, "avialabel days");
 
-  
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
@@ -47,9 +53,7 @@ const EmployeeListToRole = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
-  
-
-  console.log(availableEmployee);
+  console.log("employee ", availableEmployee);
 
   const prePage = () => {
     if (currentPage !== 1) {
@@ -86,23 +90,27 @@ const EmployeeListToRole = () => {
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
-          Employee List
+            Employee List
           </Typography>
           <p className="text-xs text-gray-600 pl-10 text-center">
-            Edit employee data here by using edit button.      
+            Edit employee data here by using edit button.
           </p>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center gap-3 mb-3 md:mb-0">
-            <Tooltip title="No employees found" placement="top" open={availableEmployee.length < 1 && nameSearch !== ''}>
-            <TextField
-            onChange={(e) => setNameSearch(e.target.value)}
-            placeholder="Search Employee Name...."
-            variant="outlined"
-            size="small"
-            sx={{ width: 300 }}
-           />
-          </Tooltip>
+              <Tooltip
+                title="No employees found"
+                placement="top"
+                open={availableEmployee.length < 1 && nameSearch !== ""}
+              >
+                <TextField
+                  onChange={(e) => setNameSearch(e.target.value)}
+                  placeholder="Search Employee Name...."
+                  variant="outlined"
+                  size="small"
+                  sx={{ width: 300 }}
+                />
+              </Tooltip>
             </div>
             <div className="flex items-center gap-3 mb-3 md:mb-0">
               <TextField
@@ -149,80 +157,76 @@ const EmployeeListToRole = () => {
                   <th scope="col" className="!text-left pl-8 py-3">
                     Department
                   </th>
-                 
+
                   <th scope="col" className="px-6 py-3">
                     Actions
                   </th>
                 </tr>
               </thead>
               <tbody>
-  {availableEmployee.length > 0 ? (
-    availableEmployee
-      .filter((item) => {
-        return (
-          (!nameSearch.toLowerCase() ||
-            (item.first_name !== null &&
-              item.first_name !== undefined &&
-              item.first_name
-                .toLowerCase()
-                .includes(nameSearch))) &&
-          (!deptSearch ||
-            (item.deptname !== null &&
-              item.deptname !== undefined &&
-              item.deptname.some(
-                (dept) =>
-                  dept.departmentName !== null &&
-                  dept.departmentName
-                    .toLowerCase()
-                    .includes(deptSearch.toLowerCase())
-              ))) &&
-          (!locationSearch.toLowerCase() ||
-            item.worklocation.some(
-              (location) =>
-                location &&
-                location.city !== null &&
-                location.city !== undefined &&
-                location.city.toLowerCase().includes(locationSearch)
-            ))
-        );
-      })
-      .map((item, id) => (
-        <tr className="!font-medium border-b" key={id}>
-          <td className="!text-left pl-8 py-3">{id + 1}</td>
-          <td className="py-3 pl-8">{item?.first_name}</td>
-          <td className="py-3 pl-8">{item?.last_name}</td>
-          <td className="py-3 pl-8">{item?.email}</td>
-          <td className="py-3 pl-8">{item?.empId}</td>
-          <td className="py-3 pl-8">
-            {item?.worklocation?.map((location, index) => (
-              <span key={index}>{location?.city}</span>
-            ))}
-          </td>
-          <td className="py-3 pl-8 ">
-            {item?.deptname?.map((dept, index) => (
-              <span key={index}>{dept?.departmentName}</span>
-            ))}
-          </td>
-          <td className="whitespace-nowrap px-6 py-2">
-            <IconButton
-              color="primary"
-              aria-label="edit"
-              onClick={() => handleEditModalOpen(item._id)}
-            >
-              <EditOutlinedIcon />
-            </IconButton>
-          </td>
-        </tr>
-      ))
-  ) : (
-    <tr>
-      <td colSpan="8" className="text-center py-3">
-        No results found.
-      </td>
-    </tr>
-  )}
-</tbody>
-
+                {availableEmployee.length > 0 &&
+                  availableEmployee
+                    .filter((item) => {
+                      return (
+                        (!nameSearch.toLowerCase() ||
+                          (item.first_name !== null &&
+                            item.first_name !== undefined &&
+                            item.first_name
+                              .toLowerCase()
+                              .includes(nameSearch))) &&
+                        (!deptSearch ||
+                          (item.deptname !== null &&
+                            item.deptname !== undefined &&
+                            item.deptname.some(
+                              (dept) =>
+                                dept.departmentName !== null &&
+                                dept.departmentName
+                                  .toLowerCase()
+                                  .includes(deptSearch.toLowerCase())
+                            ))) &&
+                        (!locationSearch.toLowerCase() ||
+                          item.worklocation.some(
+                            (location) =>
+                              location &&
+                              location.city !== null &&
+                              location.city !== undefined &&
+                              location.city
+                                .toLowerCase()
+                                .includes(locationSearch)
+                          ))
+                      );
+                    })
+                    .map((item, id) => (
+                      <tr className="!font-medium border-b" key={id}>
+                        <td className="!text-left pl-8 py-3">{id + 1}</td>
+                        <td className="py-3 pl-8">{item?.first_name}</td>
+                        <td className="py-3 pl-8">{item?.last_name}</td>
+                        <td className="py-3 pl-8">{item?.email}</td>
+                        <td className="py-3 pl-8">{item?.empId}</td>
+                        <td className="py-3 pl-8">
+                          {item?.worklocation?.map((location, index) => (
+                            <span key={index}>{location?.city}</span>
+                          ))}
+                        </td>
+                        <td className="py-3 pl-8 ">
+                          {item?.deptname?.map((dept, index) => (
+                            <span key={index}>{dept?.departmentName}</span>
+                          ))}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-2">
+                          <IconButton
+                            color="primary"
+                            aria-label="edit"
+                            onClick={() => handleEditModalOpen(item._id)}
+                          >
+                            <EditOutlinedIcon />
+                          </IconButton>
+                        </td>
+                      </tr>
+                    ))
+              
+                }
+              </tbody>
             </table>
             <nav
               style={{
