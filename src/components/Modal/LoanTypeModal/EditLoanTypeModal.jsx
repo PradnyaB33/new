@@ -27,25 +27,40 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
   const authToken = cookies["aegis"];
   const [error, setError] = useState("");
   console.log(error);
+
   const EmpLoanMgtSchema = z.object({
     loanName: z.string(),
-    loanValue: z.string().refine((value) => parseFloat(value) >= 0, {
-      message: "Minimum loan value should not be negative",
+    loanValue: z.string().refine((value) => {
+      const floatValue = parseFloat(value);
+      return floatValue >= 0 && floatValue <= 1000000 && !Object.is(floatValue, -0); 
+    }, {
+      message: "Loan value should be between 0 and 1,000,000",
+    }).refine((value) => {
+      const floatValue = parseFloat(value);
+      return floatValue >= 0;
+    }, {
+      message: "Loan value should be a positive number",
     }),
-    maxLoanValue: z.string().refine((value) => parseFloat(value) >= 0, {
-      message: "Maximum loan value should not be negative",
+    maxLoanValue: z.string().refine((value) => {
+      const floatValue = parseFloat(value);
+      return floatValue >= 0 && floatValue <= 1000000 && !Object.is(floatValue, -0); 
+    }, {
+      message: "Maximum loan value should be between 0 and 1,000,000",
+    }).refine((value) => {
+      const floatValue = parseFloat(value);
+      return floatValue >= 0; 
+    }, {
+      message: "Maximum loan value should be a positive number",
     }),
-    rateOfInterest: z.string().refine(
-      (value) => {
-        const floatValue = parseFloat(value);
-        return floatValue > 0 && floatValue < 100;
-      },
-      {
-        message: "Rate of interest should be between 0 and 99%",
-      }
-    ),
+    rateOfInterest: z.string().refine((value) => {
+      const floatValue = parseFloat(value);
+      return floatValue > 0 && floatValue < 100;
+    }, {
+      message: "Rate of interest should be between 0 and 99%",
+    }),
   });
-
+  
+  
   const {
     control,
     formState: { errors },
