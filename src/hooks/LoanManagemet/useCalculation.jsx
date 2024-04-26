@@ -10,6 +10,7 @@ const useCalculation = () => {
     setCompletedDate,
     loanDisbursementDate,
   } = useLaonState();
+   console.log("no of emi");
 
   const handleNoOfEmiChange = (e) => {
     const value = e.target.value;
