@@ -60,16 +60,14 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
     getSingleGoal?.managerMeasurments
   );
   console.log(`🚀 ~ sanitizedmanagerMesurments:`, sanitizedmanagerMesurments);
-  const sanitizedDescription = DOMPurify.sanitize(
-    getSingleGoal?.goalId?.description
-  );
+  const sanitizedDescription = DOMPurify.sanitize(getSingleGoal?.description);
 
   const SubmitGoal = async () => {
     try {
       const assignee = { label: user.name, value: user._id };
 
       let status =
-        getSingleGoal?.goalId?.creatorId === user._id
+        getSingleGoal?.creatorId === user._id
           ? "Goal Submitted"
           : "Goal Accepted";
 
@@ -108,7 +106,7 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
             <>
               <div className="flex justify-between py-4 items-center  px-4">
                 <h1 id="modal-modal-title" className="text-2xl pl-2">
-                  {getSingleGoal?.goalId?.goal}
+                  {getSingleGoal?.goal}
                 </h1>
                 <IconButton onClick={handleClose}>
                   <Close className="!text-[16px]" />
@@ -128,16 +126,13 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
 
                     <div className=" p-2 bg-gray-50 border-gray-200 border rounded-md">
                       Start Date: -{" "}
-                      {getSingleGoal?.goalId?.startDate &&
-                        format(
-                          new Date(getSingleGoal?.goalId?.startDate),
-                          "PP"
-                        )}
+                      {getSingleGoal?.startDate &&
+                        format(new Date(getSingleGoal?.startDate), "PP")}
                     </div>
                     <div className=" p-2 bg-gray-50 border-gray-200 border rounded-md">
                       End Date : -{" "}
-                      {getSingleGoal?.goalId?.endDate &&
-                        format(new Date(getSingleGoal?.goalId?.endDate), "PP")}
+                      {getSingleGoal?.endDate &&
+                        format(new Date(getSingleGoal?.endDate), "PP")}
                     </div>
                   </div>
 

@@ -42,7 +42,7 @@ const GoalsModel = ({
     queryKey: "getSingleGoal",
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id}/${assignee}`,
+        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id._id}`,
         {
           headers: {
             Authorization: authToken,
@@ -94,38 +94,69 @@ const GoalsModel = ({
   });
 
   useEffect(() => {
-    setValue("goal", goalData?.goalId?.goal);
-    setValue("description", goalData?.goalId?.description);
-    // setValue("measurement", goalData?.goalId?.measurement);
-    setValue("comments", goalData?.goalId?.comments);
+    setValue("goal", goalData?.goal);
+    setValue("description", goalData?.description);
+    // setValue("measurement", goalData?.measurement);
+    setValue("comments", goalData?.comments);
     setValue(
       "assignee",
-      goalData?.goalId?.assignee?.map((item) => ({
+      goalData?.assignee?.map((item) => ({
         value: item._id,
         label: `${item.first_name} ${item.last_name}`,
       }))
     );
     setValue("startDate", {
-      startDate: goalData?.goalId?.startDate,
-      endDate: goalData?.goalId?.endDate,
+      startDate: goalData?.startDate,
+      endDate: goalData?.endDate,
     });
     setValue("endDate", {
-      startDate: goalData?.goalId?.startDate,
-      endDate: goalData?.goalId?.endDate,
+      startDate: goalData?.startDate,
+      endDate: goalData?.endDate,
     });
     //eslint-disable-next-line
   }, [goalData]);
 
   const queryClient = useQueryClient();
-  const performanceSetup = useMutation(
+  const addMutation = useMutation(
     async (data) => {
       let currentData = { ...data, creatorRole: role };
+      console.log(`🚀 ~ data:`, data);
       if (role === "Employee") {
         currentData.assignee = [user._id];
+      } else {
+        currentData.assignee = data?.assignee?.map((emp) => emp) ?? [];
+        console.log(data?.assignee?.map((emp) => emp));
       }
       await axios.post(
         `${process.env.REACT_APP_API}/route/performance/createGoal`,
         { goals: currentData },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: () => {
+        handleAlert(true, "success", "Performance setup created successfully");
+        queryClient.invalidateQueries("orggoals");
+        handleClose();
+      },
+    }
+  );
+
+  const updateMutation = useMutation(
+    async (data) => {
+      const goals = {
+        ...data,
+        assignee: { label: id?.empId._id, value: id?.empId._id },
+      };
+      await axios.patch(
+        `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${id._id}`,
+        {
+          data: goals,
+        },
         {
           headers: {
             Authorization: authToken,
@@ -155,7 +186,13 @@ const GoalsModel = ({
       attachment: data.attachment,
     };
 
-    performanceSetup.mutate(goals);
+    if (!id) {
+      console.log(`🚀 ~ id:`, id);
+      addMutation.mutate(goals);
+    } else {
+      console.log(`🚀 ~ id:`, id);
+      updateMutation.mutate(goals);
+    }
   };
 
   const { data: employeeData } = useQuery("employee", async () => {
@@ -267,7 +304,7 @@ const GoalsModel = ({
                 error={errors.downcasted}
               />
             )}
-            {role !== "Employee" && !watch("downcasted") && (
+            {role !== "Employee" && !watch("downcasted") && !id && (
               <AuthInputFiled
                 name="assignee"
                 icon={PersonOutline}
@@ -340,7 +377,7 @@ const GoalsModel = ({
                 Cancel
               </Button>
               <Button type="submit" variant="contained" color="primary">
-                Create Goal
+                {id ? "Update Goal" : "Create Goal"}
               </Button>
             </div>
           </form>

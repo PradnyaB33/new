@@ -22,7 +22,7 @@ import MenuItem from "@mui/material/MenuItem";
 import axios from "axios";
 import { format } from "date-fns";
 import moment from "moment";
-import React, { useContext, useMemo, useState } from "react";
+import React, { useCallback, useContext, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import Select from "react-select";
 import { TestContext } from "../../../State/Function/Main";
@@ -187,6 +187,16 @@ const GoalsTable = ({ performance }) => {
     }
   };
 
+  const isTrippleDotActive = useCallback((goal) => {
+    if (isTimeFinish) {
+      return false;
+    }
+
+    if (performance.stages === "Goal setting" && role === "Employee") {
+      return goal?.status === "Goal Rejected" ? true : false;
+    }
+  }, []);
+
   return (
     <section className="p-4 ">
       <div className="p-4  bg-white rounded-md border">
@@ -318,7 +328,14 @@ const GoalsTable = ({ performance }) => {
                         onClick={() => handleOpen(goal._id)}
                         className="text-sm cursor-pointer truncate text-left   px-2"
                       >
-                        <p className=" truncate">{goal.goalId.goal}</p>
+                        <p className="space-x-3 truncate">
+                          {/* {goal.downcasted && (
+                            <ToolTip title="Downcasted Goal">
+                              <ArrowDropDownCircle className="text-blue-500" />
+                            </ToolTip>
+                          )}{" "} */}
+                          {goal.goal}
+                        </p>
                       </td>
 
                       <td
@@ -340,8 +357,8 @@ const GoalsTable = ({ performance }) => {
                           className={`
                         px-2 md:w-full w-max text-sm`}
                         >
-                          {format(new Date(goal.goalId.startDate), "PP")} -{" "}
-                          {format(new Date(goal.goalId.endDate), "PP")}
+                          {format(new Date(goal.startDate), "PP")} -{" "}
+                          {format(new Date(goal.endDate), "PP")}
                         </p>
                       </td>
 
@@ -351,6 +368,22 @@ const GoalsTable = ({ performance }) => {
                       >
                         <GoalStatus status={goal?.status} />
                       </td>
+
+                      {/* {isTrippleDotActive(goal) ? "show" : "hide"} */}
+
+                      {/* {isTimeFinish
+                        ? performance?.stages === "Goal setting" &&
+                          (goal?.status !== "Goal Approved" ||
+                            goal?.status !== "Goal Rejected")
+                          ? true
+                          : false
+                          ? performance?.stages ===
+                              "Monitoring stage/Feedback collection stage" &&
+                            role === "Manager"
+                            ? true
+                            : false
+                          : "noo"
+                        : "time finished"} */}
 
                       {isTimeFinish &&
                         goal?.status !== "Goal Completed" &&
@@ -386,7 +419,8 @@ const GoalsTable = ({ performance }) => {
               >
                 <div>
                   <h1>
-                    Showing {page} to 1 of {orgGoals?.totalPages} entries
+                    Showing {page} to {orgGoals?.totalPages} of{" "}
+                    {orgGoals?.totalGoals}
                   </h1>
                 </div>
                 <Pagination
@@ -482,19 +516,21 @@ const GoalsTable = ({ performance }) => {
           </MenuItem>
         )} */}
 
-        {performance?.stages !==
-          "Employee acceptance/acknowledgement stage" && (
-          <>
-            <MenuItem
-              onClick={() => {
-                setOpenEdit(true);
-                setPreviewId(openMenu);
-                handleMenuClose();
-              }}
-            >
-              Add monitoring form
-            </MenuItem>
+        {performance?.stages ===
+          "Monitoring stage/Feedback collection stage" && (
+          <MenuItem
+            onClick={() => {
+              setOpenEdit(true);
+              setPreviewId(openMenu);
+              handleMenuClose();
+            }}
+          >
+            Add monitoring form
+          </MenuItem>
+        )}
 
+        {performance?.stages === "Goal setting" && (
+          <>
             <MenuItem
               onClick={() => {
                 setOpenEdit(true);
@@ -506,20 +542,21 @@ const GoalsTable = ({ performance }) => {
             </MenuItem>
           </>
         )}
-        {performance?.stages !== "Employee acceptance/acknowledgement stage" ||
-          (openMenu?.status === "Revaluation Requested" && (
-            <MenuItem
-              onClick={() => {
-                setOpenEdit(true);
-                setPreviewId(openMenu);
-                handleMenuClose();
-              }}
-            >
-              {openMenu?.status === "Revaluation Requested"
-                ? "Revaluate Employee"
-                : "Add review & rating"}
-            </MenuItem>
-          ))}
+        {(performance?.stages ===
+          "KRA stage/Ratings Feedback/Manager review stage" ||
+          openMenu?.status === "Revaluation Requested") && (
+          <MenuItem
+            onClick={() => {
+              setOpenEdit(true);
+              setPreviewId(openMenu);
+              handleMenuClose();
+            }}
+          >
+            {openMenu?.status === "Revaluation Requested"
+              ? "Revaluate Employee"
+              : "Add review & rating"}
+          </MenuItem>
+        )}
 
         {performance?.stages === "Goal setting" && (
           <MenuItem className="!p-0" onClick={() => handleMenuClose()}>
@@ -575,7 +612,7 @@ const GoalsTable = ({ performance }) => {
       ) : (
         <GoalsModel
           open={openEdit}
-          id={openMenu?._id}
+          id={openMenu}
           assignee={employeeGoals}
           options={options}
           performance={performance}

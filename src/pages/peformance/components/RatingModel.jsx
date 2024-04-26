@@ -94,7 +94,7 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
     enabled: !!id,
 
     onSuccess: (data) => {
-      setValue("goal", data?.goalId?.goal);
+      setValue("goal", data?.goal);
     },
   });
 
