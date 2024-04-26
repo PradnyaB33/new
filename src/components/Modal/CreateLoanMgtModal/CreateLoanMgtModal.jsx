@@ -51,7 +51,6 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     principalPerMonth,
     totalDeductionPerMonth,
     totalAmountWithSimpleInterest,
-    // handleNoOfEmiChange,
     interestPerMonths,
   } = useCalculation();
 
