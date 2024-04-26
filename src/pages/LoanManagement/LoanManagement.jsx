@@ -25,7 +25,7 @@ const LoanManagement = () => {
   console.log("user", user);
   const userId = user._id;
   const organisationId = user.organizationId;
-  console.log(organisationId);
+  
 
   //for get loan data
   const { data: getEmployeeLoanData, isLoading } = useQuery(
