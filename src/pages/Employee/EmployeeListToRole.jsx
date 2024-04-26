@@ -4,8 +4,8 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
-//import UpdateEmployeeModal from "../../components/Modal/EditEmployeeModal/UpdateEmployeeModal";
- import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
+import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
+
 const EmployeeListToRole = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -20,32 +20,7 @@ const EmployeeListToRole = () => {
 
   console.log(availableEmployee, "avialabel days");
 
-  // const fetchAvailableEmployee = async (page) => {
-  //   try {
-  //     const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
-  //     const response = await axios.get(apiUrl, {
-  //       headers: {
-  //         Authorization: authToken,
-  //       },
-  //     });
-  //     setAvailableEmployee(response.data.employees);
-  //     setCurrentPage(page);
-  //     setTotalPages(response.data.totalPages || 1);
-  //     // Generate an array of page numbers
-  //     const numbersArray = Array.from(
-  //       { length: response.data.totalPages || 1 },
-  //       (_, index) => index + 1
-  //     );
-  //     setNumbers(numbersArray);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchAvailableEmployee(currentPage);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [currentPage]);
+ 
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
