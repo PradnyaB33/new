@@ -16,14 +16,7 @@ import { TestContext } from "../../../State/Function/Main";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
 
-const RatingModel = ({
-  handleClose,
-  open,
-  options,
-  id,
-  performance,
-  assignee,
-}) => {
+const RatingModel = ({ handleClose, open, options, id, performance }) => {
   const { handleAlert } = useContext(TestContext);
   const style = {
     position: "absolute",
@@ -65,7 +58,7 @@ const RatingModel = ({
   const performanceSetup = useMutation(
     async (data) => {
       await axios.patch(
-        `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${id}`,
+        `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${id._id}`,
         { data },
         {
           headers: {
@@ -83,11 +76,13 @@ const RatingModel = ({
     }
   );
 
-  const { data: getGoal, isFetching } = useQuery({
+  console.log(id);
+
+  const { isFetching } = useQuery({
     queryKey: ["getGoalReview", id],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id}/${assignee}`,
+        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id._id}`,
         {
           headers: {
             Authorization: authToken,
@@ -105,7 +100,7 @@ const RatingModel = ({
 
   const onSubmit = async (data) => {
     const goals = {
-      assignee: { label: assignee, value: assignee },
+      assignee: { label: id.empId._id, value: id.empId._id },
       review: data.review,
       rating: data.rating.value,
       status: "Rating Completed",

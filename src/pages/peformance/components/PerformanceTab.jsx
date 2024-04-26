@@ -116,7 +116,7 @@ export default function PerformanceTab() {
                 },
               }}
             />
-            <Tab
+            {/* <Tab
               className="!px-4"
               label="Review & Rating"
               {...a11yProps(1)}
@@ -130,7 +130,7 @@ export default function PerformanceTab() {
                   backgroundColor: "#fff", // Change the background color when selected
                 },
               }}
-            />
+            /> */}
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>

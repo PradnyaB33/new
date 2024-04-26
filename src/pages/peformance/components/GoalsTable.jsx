@@ -8,12 +8,14 @@ import {
   StarOutlined,
 } from "@mui/icons-material";
 import {
+  Avatar,
   CircularProgress,
   Divider,
   IconButton,
   Menu,
   Pagination,
   Stack,
+  Tooltip,
 } from "@mui/material";
 
 import MenuItem from "@mui/material/MenuItem";
@@ -68,7 +70,7 @@ const GoalsTable = ({ performance }) => {
   const { useGetCurrentRole, getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
-  const [employeeGoals, setEmployeeGoals] = useState(user._id);
+  const [employeeGoals, setEmployeeGoals] = useState();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openRevaluate, setOpenRevaluate] = useState(false);
@@ -78,6 +80,7 @@ const GoalsTable = ({ performance }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { handleAlert } = useContext(TestContext);
   const openMenuBox = Boolean(anchorEl);
+  console.log(openMenu?.status);
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -101,9 +104,6 @@ const GoalsTable = ({ performance }) => {
     setPreviewId(id);
   };
 
-  const rowsPerPage = 10; // Define the number of rows per page
-  const [page, setPage] = useState(1);
-
   const authToken = useAuthToken();
   const isTimeFinish = useMemo(() => {
     const endDate = moment(performance?.enddate);
@@ -123,38 +123,35 @@ const GoalsTable = ({ performance }) => {
     );
     return data;
   });
+  const [page, setPage] = useState(1);
 
   const { data: orgGoals = [], isFetching } = useQuery(
-    ["orggoals", employeeGoals],
+    ["orggoals", employeeGoals, page],
     async () => {
-      if (role === "Employee" || employeeGoals) {
-        const { data } = await axios.get(
-          `${process.env.REACT_APP_API}/route/performance/getOrganizationGoals`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-            params: {
-              role,
-              empId: employeeGoals,
-            },
-          }
-        );
-        return data;
-      }
+      // if (role === "Employee" || employeeGoals) {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/route/performance/getOrganizationGoals`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+          params: {
+            role,
+            empId: employeeGoals,
+            page,
+          },
+        }
+      );
+      return data;
+      // }
     }
   );
 
-  console.log(`🚀 ~ orgGoals:`, orgGoals);
   const allSection80s = orgGoals?.goals?.flatMap((data) => data);
 
-  // Now, calculate the total number of rows using reduce
-  const totalRowCount = allSection80s?.reduce((total, section) => total + 1, 0);
   const handleFocus = (fieldName) => {
     setFocusedInput(fieldName);
   };
-
-  const pages = Math.ceil(totalRowCount / rowsPerPage);
 
   const options = useMemo(() => {
     if (employeeData) {
@@ -172,10 +169,10 @@ const GoalsTable = ({ performance }) => {
     try {
       const data = {
         status,
-        assignee: { label: employeeGoals, value: employeeGoals },
+        assignee: { label: openMenu.empId._id, value: openMenu.empId._id },
       };
       await axios.patch(
-        `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${openMenu}`,
+        `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${openMenu._id}`,
         { data },
         {
           headers: {
@@ -289,11 +286,15 @@ const GoalsTable = ({ performance }) => {
                     </th>
 
                     <th scope="col" className="py-3 text-sm px-2 ">
+                      Assignee
+                    </th>
+
+                    <th scope="col" className="py-3 text-sm px-2 ">
                       Time
                     </th>
 
                     <th scope="col" className=" py-3 text-sm px-2 ">
-                      status
+                      Status
                     </th>
 
                     <th scope="col" className=" py-3 text-sm px-2 ">
@@ -311,13 +312,24 @@ const GoalsTable = ({ performance }) => {
                         onClick={() => handleOpen(goal._id)}
                         className="!text-left  cursor-pointer py-4    px-2 text-sm w-[70px]  "
                       >
-                        {id + 1}
+                        {(page - 1) * 10 + id + 1}
                       </td>
                       <td
                         onClick={() => handleOpen(goal._id)}
                         className="text-sm cursor-pointer truncate text-left   px-2"
                       >
                         <p className=" truncate">{goal.goalId.goal}</p>
+                      </td>
+
+                      <td
+                        onClick={() => handleOpen(goal._id)}
+                        className="text-sm cursor-pointer  text-left   px-2"
+                      >
+                        <Tooltip
+                          title={`${goal.empId.first_name} ${goal.empId.last_name}`}
+                        >
+                          <Avatar src={goal.empId.user_logo_url} />
+                        </Tooltip>
                       </td>
 
                       <td
@@ -357,7 +369,7 @@ const GoalsTable = ({ performance }) => {
                               onClick={(e) => {
                                 handleClick(e);
                                 setCurrentGoal(goal);
-                                setopenMenu(goal._id);
+                                setopenMenu(goal);
                               }}
                             >
                               <MoreHoriz />
@@ -374,11 +386,11 @@ const GoalsTable = ({ performance }) => {
               >
                 <div>
                   <h1>
-                    Showing {page} to 1 of {totalRowCount} entries
+                    Showing {page} to 1 of {orgGoals?.totalPages} entries
                   </h1>
                 </div>
                 <Pagination
-                  count={pages}
+                  count={orgGoals?.totalPages}
                   page={page}
                   color="primary"
                   shape="rounded"
@@ -419,7 +431,7 @@ const GoalsTable = ({ performance }) => {
               className="!p-0"
               onClick={() => {
                 setOpenEdit(true);
-                setPreviewId(openMenu);
+                setPreviewId(openMenu._id);
                 handleMenuClose();
               }}
             >
@@ -430,11 +442,12 @@ const GoalsTable = ({ performance }) => {
           )}
         {role === "Manager" &&
           performance?.stages === "Goal setting" &&
-          currentGoal?.status !== "Goal Accepted" && (
+          currentGoal?.status !== "Goal Approved" &&
+          currentGoal?.status !== "Goal Rejected" && (
             <>
               <MenuItem
                 className="!p-0"
-                onClick={() => acceptGoal("Goal Accepted")}
+                onClick={() => acceptGoal("Goal Approved")}
               >
                 <div className="hover:!bg-green-500  flex  w-full h-full items-center hover:!text-white transition-all gap-4  py-2 px-4">
                   Approve goal
@@ -450,7 +463,7 @@ const GoalsTable = ({ performance }) => {
               </MenuItem>
             </>
           )}
-        {performance?.stages !==
+        {/* {performance?.stages !==
           "Employee acceptance/acknowledgement stage" && (
           <MenuItem
             onClick={() => {
@@ -467,7 +480,46 @@ const GoalsTable = ({ performance }) => {
               ? "Add monitoring form"
               : "Edit Goal"}
           </MenuItem>
+        )} */}
+
+        {performance?.stages !==
+          "Employee acceptance/acknowledgement stage" && (
+          <>
+            <MenuItem
+              onClick={() => {
+                setOpenEdit(true);
+                setPreviewId(openMenu);
+                handleMenuClose();
+              }}
+            >
+              Add monitoring form
+            </MenuItem>
+
+            <MenuItem
+              onClick={() => {
+                setOpenEdit(true);
+                setPreviewId(openMenu);
+                handleMenuClose();
+              }}
+            >
+              Update Goal
+            </MenuItem>
+          </>
         )}
+        {performance?.stages !== "Employee acceptance/acknowledgement stage" ||
+          (openMenu?.status === "Revaluation Requested" && (
+            <MenuItem
+              onClick={() => {
+                setOpenEdit(true);
+                setPreviewId(openMenu);
+                handleMenuClose();
+              }}
+            >
+              {openMenu?.status === "Revaluation Requested"
+                ? "Revaluate Employee"
+                : "Add review & rating"}
+            </MenuItem>
+          ))}
 
         {performance?.stages === "Goal setting" && (
           <MenuItem className="!p-0" onClick={() => handleMenuClose()}>
@@ -504,13 +556,14 @@ const GoalsTable = ({ performance }) => {
         <MonitoringModel
           open={openEdit}
           id={openMenu}
-          assignee={employeeGoals}
+          // assignee={openMenu}
           options={options}
           performance={performance}
           handleClose={handleClose}
         />
       ) : performance?.stages ===
-        "KRA stage/Ratings Feedback/Manager review stage" ? (
+          "KRA stage/Ratings Feedback/Manager review stage" ||
+        openMenu?.status === "Revaluation Requested" ? (
         <RatingModel
           open={openEdit}
           id={openMenu}
@@ -522,7 +575,7 @@ const GoalsTable = ({ performance }) => {
       ) : (
         <GoalsModel
           open={openEdit}
-          id={openMenu}
+          id={openMenu?._id}
           assignee={employeeGoals}
           options={options}
           performance={performance}

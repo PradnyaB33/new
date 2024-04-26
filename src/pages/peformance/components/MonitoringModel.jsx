@@ -16,14 +16,7 @@ import { TestContext } from "../../../State/Function/Main";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
 
-const MonitoringModel = ({
-  handleClose,
-  open,
-  options,
-  id,
-  performance,
-  assignee,
-}) => {
+const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
   const { handleAlert } = useContext(TestContext);
   const style = {
     position: "absolute",
@@ -62,7 +55,7 @@ const MonitoringModel = ({
   const performanceSetup = useMutation(
     async (data) => {
       await axios.patch(
-        `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${id}`,
+        `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${id._id}`,
         { data },
         {
           headers: {
@@ -84,7 +77,7 @@ const MonitoringModel = ({
     queryKey: ["getGoalMonitoring", id],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id}/${assignee}`,
+        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id._id}`,
         {
           headers: {
             Authorization: authToken,
@@ -103,7 +96,7 @@ const MonitoringModel = ({
   const onSubmit = async (data) => {
     const goals = {
       managerMeasurments: data.managerMeasurments,
-      assignee: { label: assignee, value: assignee },
+      assignee: { label: id.empId._id, value: id.empId._id },
       comments: data.comments,
       attachment: data.attachment,
       status: "Monitoring Completed",

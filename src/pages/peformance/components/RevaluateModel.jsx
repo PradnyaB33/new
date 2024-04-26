@@ -59,7 +59,7 @@ const RevaluateModel = ({
   const performanceSetup = useMutation(
     async (data) => {
       await axios.patch(
-        `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${id}`,
+        `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${id._id}`,
         { data },
         {
           headers: {
@@ -81,7 +81,7 @@ const RevaluateModel = ({
     queryKey: ["getGoalMonitoring", id],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id}/${assignee}`,
+        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id._id}`,
         {
           headers: {
             Authorization: authToken,
@@ -100,7 +100,7 @@ const RevaluateModel = ({
   const onSubmit = async (data) => {
     const goals = {
       measurement: data.measurement,
-      assignee: { label: assignee, value: assignee },
+      assignee: { label: id.empId._id, value: id.empId._id },
       message: data.message,
       status: "Revaluation Requested",
     };
