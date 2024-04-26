@@ -26,20 +26,29 @@ const DocManageAuth = () => {
   const querClient = useQueryClient();
   const [docId, setDocId] = useState("");
   const { setAppAlert } = useContext(UseContext);
-  const [type, setType] = useState();
+  const [type, setType] = useState("");
   const documentNames = [
-    "Employment Offer Letter",
-    "Appointment Letter",
-    "Promotion Letter",
-    "Transfer Letter",
-    "Termination Letter",
-    "Resignation Acceptance Letter",
-    "Confirmation Letter",
-    "Performance Appraisal Letter",
-    "Warning Letter",
-    "Salary Increment Letter",
-    "Training Invitation Letter",
-    "Employee Recognition Letter",
+    { name: "Employment Offer Letter", type: "Employment Offer Letter" },
+    { name: "Appointment Letter", type: "Appointment Letter" },
+    { name: "Promotion Letter", type: "Promotion Letter" },
+    { name: "Transfer Letter", type: "Transfer Letter" },
+    { name: "Termination Letter", type: "Termination Letter" },
+    {
+      name: "Resignation Acceptance Letter",
+      type: "Resignation Acceptance Letter",
+    },
+    { name: "Confirmation Letter", type: "Confirmation Letter" },
+    {
+      name: "Performance Appraisal Letter",
+      type: "Performance Appraisal Letter",
+    },
+    { name: "Warning Letter", type: "Warning Letter" },
+    { name: "Salary Increment Letter", type: "Salary Increment Letter" },
+    { name: "Training Invitation Letter", type: "Training Invitation Letter" },
+    {
+      name: "Employee Recognition Letter",
+      type: "Employee Recognition Letter",
+    },
   ];
 
   const { data: data2 } = useQuery(`getOrgDocs`, async () => {
@@ -79,7 +88,7 @@ const DocManageAuth = () => {
       setNewDocument({
         title,
         details,
-        applicableDate,
+        applicableDate: applicableDate.slice(0, 10), // Extracting date part only
         type, // Set the type here
         header,
         footer,
@@ -350,17 +359,9 @@ const DocManageAuth = () => {
       console.error("Error while updating document:", error);
     }
   };
-
-  // const formatDate = (dateString) => {
-  //   const rawDate = new Date(dateString);
-  //   return `${rawDate.getDate()}-${(rawDate.getMonth() + 1)
-  //     .toString()
-  //     .padStart(2, "0")}-${rawDate.getFullYear()}`;
-  // };
-
   return (
     <div className="w-full h-full flex justify-around p-6 gap-6">
-      <Container className="w-[600px] h-[80vh] border-2 mt-5 pt-4 overflow-y-auto">
+      <Container className="w-[600px] h-[80vh] border-2 mt-5 pt-4 overflow-y-auto relative">
         {option !== "" && (
           <div
             onClick={() => setOption("")}
@@ -411,9 +412,9 @@ const DocManageAuth = () => {
               margin="normal"
               size="small"
             >
-              {documentNames.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
+              {documentNames.map((doc) => (
+                <MenuItem key={doc.name} value={doc.type}>
+                  {doc.name}
                 </MenuItem>
               ))}
             </TextField>
@@ -423,7 +424,7 @@ const DocManageAuth = () => {
               </Typography>
               <ReactQuill
                 className="h-[80px] !mb-12"
-                theme="snow" // Specify Quill theme
+                theme="snow"
                 value={newDocument.header}
                 onChange={(value) =>
                   setNewDocument({ ...newDocument, header: value })
@@ -446,7 +447,7 @@ const DocManageAuth = () => {
               </Typography>
               <ReactQuill
                 className="h-[280px] mb-12"
-                theme="snow" // Specify Quill theme
+                theme="snow"
                 value={newDocument.details}
                 onChange={(value) =>
                   setNewDocument({ ...newDocument, details: value })
@@ -469,7 +470,7 @@ const DocManageAuth = () => {
               </Typography>
               <ReactQuill
                 className="h-[80px] !mb-10"
-                theme="snow" // Specify Quill theme
+                theme="snow"
                 value={newDocument.footer}
                 onChange={(value) =>
                   setNewDocument({ ...newDocument, footer: value })
