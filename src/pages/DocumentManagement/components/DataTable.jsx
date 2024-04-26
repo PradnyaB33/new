@@ -2,6 +2,7 @@ import {
   Button,
   Checkbox,
   FormControl,
+  FormControlLabel,
   InputLabel,
   MenuItem,
   Select,
@@ -24,12 +25,15 @@ const DataTable = () => {
   const [selectedDepartmentId, setSelectedDepartmentId] = useState("");
   const [data1, setData1] = useState([]);
   const [employeeData, setEmployeeData] = useState([]);
+  const [managerArray, setManagerArray] = useState([]);
   const [initialEmployeeData, setInitialEmployeeData] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [selectedDocumentId, setSelectedDocumentId] = useState("");
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState([]);
+  const [selectedMDocId, setSelectedMDocId] = useState("");
   const [managerIds, setManagerIds] = useState([]);
+  const [showManagerSelect, setShowManagerSelect] = useState(false); // State to track checkbox status
   const { setAppAlert } = useContext(UseContext);
   const [selectAll, setSelectAll] = useState(false);
   const authToken = useGetUser().authToken;
@@ -140,6 +144,21 @@ const DataTable = () => {
     fetchData();
   }, [authToken]);
 
+  useEffect(() => {
+    (async () => {
+      const resp = await axios.get(
+        `${process.env.REACT_APP_API}/route/org/getmanagers`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      console.log("manager", resp.data.managers);
+      setManagerArray(resp.data.managers);
+    })();
+  }, []);
+
   const fetchEmployees = async (orgId) => {
     try {
       const response = await axios.get(
@@ -229,6 +248,12 @@ const DataTable = () => {
     setSelectedDocumentId(docId);
     console.log("Selected Document ID:", docId);
   };
+  const handleDocumentChange2 = (event) => {
+    const mDocId = event.target.value;
+    setSelectedMDocId(mDocId);
+    console.log("Selected MDocument ID:", mDocId);
+    setEmployeeData(managerArray[mDocId].reporteeIds);
+  };
 
   const handleSendButtonClick = async () => {
     try {
@@ -237,7 +262,7 @@ const DataTable = () => {
         return {
           empId: id,
           mId: managerId ? managerId : null,
-          status: false,
+          status: managerId ? false : true,
         };
       });
 
@@ -262,14 +287,28 @@ const DataTable = () => {
       setAppAlert({
         alert: true,
         type: "error",
-        msg: "Document failed to send",
+        msg: "Please select the document first",
       });
     }
   };
 
   return (
-    <div>
+    <div style={{ position: "relative" }}>
       <div className="flex gap-4">
+        <FormControl size="small" style={{ width: 200 }}>
+          <FormControlLabel
+            className="!text-xs"
+            control={
+              <Checkbox
+                checked={showManagerSelect}
+                onChange={() => setShowManagerSelect(!showManagerSelect)}
+                color="primary"
+              />
+            }
+            label="Downcast"
+          />
+        </FormControl>
+
         {data1.length > 0 && (
           <FormControl size="small" style={{ width: 200 }}>
             <InputLabel id="organization-label">Select Organization</InputLabel>
@@ -330,57 +369,86 @@ const DataTable = () => {
             ))}
           </Select>
         </FormControl>
+
+        {showManagerSelect && (
+          <FormControl size="small" style={{ width: 200 }}>
+            <InputLabel id="document-label">Select Manager</InputLabel>
+            <Select
+              label="Select Manager"
+              name="document"
+              onChange={handleDocumentChange2}
+              value={selectedMDocId}
+            >
+              {managerArray?.map((doc, idx) => (
+                <MenuItem key={doc._id} value={idx}>
+                  {doc.managerId?.first_name &&
+                    doc.managerId?.last_name &&
+                    doc.managerId?.first_name + " " + doc.managerId?.last_name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
       </div>
-      <div style={{ width: "100%" }}>
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectAll}
-                    onChange={handleSelectAllClick}
-                  />
-                </TableCell>
-                <TableCell>ID</TableCell>
-                <TableCell>First Name</TableCell>
-                <TableCell>Last Name</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {employeeData.map((employee) => {
-                const isItemSelected = isSelected(employee._id);
-                return (
-                  <TableRow
-                    key={employee._id}
-                    hover
-                    onClick={(event) =>
-                      handleEmployeeSelection(event, employee._id)
-                    }
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    selected={isItemSelected}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox checked={isItemSelected} />
-                    </TableCell>
-                    <TableCell>{employee.id}</TableCell>
-                    <TableCell>{employee.first_name}</TableCell>
-                    <TableCell>{employee.last_name}</TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <div className="mt-5">
-          <Button
-            size="small"
-            onClick={handleSendButtonClick}
-            variant="contained"
-          >
-            Send
-          </Button>
+      <div style={{ width: "100%", overflowY: "auto", maxHeight: "450px" }}>
+        {employeeData.length === 0 ? (
+          <p className="text-center font-semibold">no employee available</p>
+        ) : (
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      checked={selectAll}
+                      onChange={handleSelectAllClick}
+                    />
+                  </TableCell>
+                  <TableCell>ID</TableCell>
+                  <TableCell>First Name</TableCell>
+                  <TableCell>Last Name</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {employeeData.map((employee) => {
+                  const isItemSelected = isSelected(employee._id);
+                  return (
+                    <TableRow
+                      key={employee._id}
+                      hover
+                      onClick={(event) =>
+                        handleEmployeeSelection(event, employee._id)
+                      }
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      selected={isItemSelected}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox checked={isItemSelected} />
+                      </TableCell>
+                      <TableCell>{employee.id}</TableCell>
+                      <TableCell>{employee.first_name}</TableCell>
+                      <TableCell>{employee.last_name}</TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+        <div style={{ position: "absolute", bottom: -30, width: "100%" }}>
+          {employeeData.length === 0 ? (
+            ""
+          ) : (
+            <Button
+              size="small"
+              onClick={handleSendButtonClick}
+              variant="contained"
+              style={{ float: "left" }}
+            >
+              Send
+            </Button>
+          )}
         </div>
       </div>
     </div>
