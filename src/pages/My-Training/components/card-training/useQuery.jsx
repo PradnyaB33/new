@@ -29,7 +29,7 @@ const useCardQuery = ({ trainingId }) => {
   });
   const createTrainingEmployee = async (data) => {
     const response = await axios.put(
-      `${process.env.REACT_APP_API}/route/training/create-training-employee/${trainingId}`,
+      `${process.env.REACT_APP_API}/route/training/complete-training-and-create-feedback/${trainingId}`,
       data,
       {
         headers: {
@@ -99,8 +99,21 @@ const useCardQuery = ({ trainingId }) => {
       onSuccess: async () => {
         console.log("onSuccess");
         setOpen(false);
+
         await queryClient.invalidateQueries({
-          queryKey: [`get-employee-training-info-${trainingId}`],
+          queryKey: [`get-overdue-training`],
+        });
+        await queryClient.invalidateQueries({
+          queryKey: [`get-upcoming-training`],
+        });
+        await queryClient.invalidateQueries({
+          queryKey: [`get-completed-training`],
+        });
+        await queryClient.invalidateQueries({
+          queryKey: [`get-training-employee`],
+        });
+        await queryClient.invalidateQueries({
+          queryKey: [`get-training-employee-info`],
         });
       },
       onError: (error) => {

@@ -224,7 +224,7 @@ const PrivacyPolicy = () => {
           Address- C503, The Onyx, Pink City
           Road,Wakad,Pune,Maharashtra,India-411057
         </p>
-        <p className="text-sm mb-2">Email: Support@aegishrms.com</p>
+        <p className="text-sm mb-2">Email: support@aegishrms.com</p>
       </div>
     </>
   );

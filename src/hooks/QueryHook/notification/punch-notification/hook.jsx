@@ -11,7 +11,7 @@ const usePunchNotification = () => {
         headers: { Authorization: authToken },
       }
     );
-    return response.data.punchNotification;
+    return response.data;
   };
 
   const { data, isLoading, isFetching } = useQuery(

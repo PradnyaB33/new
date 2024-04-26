@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 // import dayjs from "dayjs";
 import React from "react";
 import LeaveRejectmodal from "../../components/Modal/LeaveModal/LeaveRejectmodal";
-import PunchingRejectModal from "../../components/Modal/RemotePunchingModal/PunchingRejectModal";
+import PunchAcceptModal from "../../components/Modal/RemotePunchingModal/PunchAcceptModal";
 import ShiftRejectModel from "../../components/Modal/ShiftRequestModal/ShiftRejectModel";
 // import Error from "./Error";
 // import Loader from "./Loader";
@@ -34,7 +34,7 @@ const Notification = () => {
           <LeaveRejectmodal key={idx} items={items} />
         ))}
         {data3?.map((items, idx) => (
-          <PunchingRejectModal
+          <PunchAcceptModal
             items={items}
             length={items.punchData?.length}
             key={idx}

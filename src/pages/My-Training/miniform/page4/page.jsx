@@ -5,6 +5,7 @@ import useGetCompletedTraining from "./use-query-page3";
 
 const Modal4 = () => {
   const { data, isLoading } = useGetCompletedTraining();
+  console.log(`🚀 ~ file: page.jsx:8 ~ data:`, data);
   if (isLoading)
     return (
       <div className="flex flex-col gap-4 ">

@@ -37,7 +37,9 @@ const useSetupSideNav = (organisationId) => {
       href: `/organisation/${organisationId}/setup/add-roles`,
       active:
         location.pathname === `/organisation/${organisationId}/setup/add-roles`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
     {
       label: "Leaves",
@@ -46,7 +48,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/leave-types`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
 
     {
@@ -56,7 +60,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/set-shifts`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
     {
       label: "Location",
@@ -65,7 +71,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/add-organization-locations`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
     {
       label: "Public Holidays",
@@ -74,7 +82,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/set-public-holiday`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
 
     {
@@ -84,7 +94,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/input-field`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
     {
       label: "Employment",
@@ -93,7 +105,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/set-employement-types`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
     {
       label: "Salary Template",
@@ -145,7 +159,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/salary-computation-day`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
     {
       label: "Employee Code",
@@ -154,7 +170,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/employee-code`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
     {
       label: "Loan Management",
@@ -163,7 +181,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/loan-management`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
     {
       label: "Remote Punching",
@@ -199,7 +219,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/letter-types`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
   ];
 

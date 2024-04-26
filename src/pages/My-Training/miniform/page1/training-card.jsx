@@ -7,7 +7,7 @@ import MiniForm from "./mini-form";
 
 const TrainingCard1 = ({ doc }) => {
   const sanitizedDescription = DOMPurify.sanitize(doc?.trainingDescription);
-  const { data, mutate, open, setOpen } = useCardQuery({
+  const { data, getProofMutate, open, setOpen } = useCardQuery({
     trainingId: doc?._id,
   });
 
@@ -71,7 +71,7 @@ const TrainingCard1 = ({ doc }) => {
         keepMounted={false}
       >
         <Box className="border-none shadow-md outline-none rounded-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[40%] md:w-[70%] z-10 p-4 bg-white">
-          <MiniForm {...{ mutate, doc: data?.data }} />
+          <MiniForm {...{ mutate: getProofMutate, doc: data?.data }} />
         </Box>
       </Modal>
     </div>

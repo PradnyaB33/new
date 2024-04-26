@@ -22,16 +22,21 @@ import {
   TrendingUp,
   Work,
 } from "@mui/icons-material";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import ArticleIcon from "@mui/icons-material/Article";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import CallMissedIcon from "@mui/icons-material/CallMissed";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import FolderIcon from "@mui/icons-material/Folder";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
+import PunchClockIcon from "@mui/icons-material/PunchClock";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
@@ -39,7 +44,6 @@ import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
-
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
@@ -246,11 +250,16 @@ const TestNavItems = ({ toggleDrawer }) => {
           window.location.pathname?.includes("organisation") &&
           [
             "Super-Admin",
+            "Delegate-Super-Admin",
+            "Department-Head",
+            "Delegate-Department-Head",
+            "Department-Admin",
+            "Delegate-Department-Admin",
+            "Accountant",
+            "Delegate-Accountant",
             "HR",
             "Manager",
-            "Delegate-Super Admin",
-            "Department-Head",
-            "Department-Admin",
+            "Employee",
           ]?.includes(role),
         routes: [
           {
@@ -260,7 +269,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/employee-onboarding`,
             icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Employee Onboarding",
+            text: "Onboarding",
           },
 
           {
@@ -270,17 +279,22 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/employee-offboarding`,
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Employee Offboarding",
+            text: "Offboarding",
           },
           {
             key: "employeeList",
             isVisible: [
               "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
               "HR",
               "Manager",
-              "Department-Head",
-              "Delegate-Super Admin",
-              "Department-Admin",
+              "Employee",
             ].includes(role),
             link: `organisation/${orgId}/employee-list`,
             icon: <Groups className=" !text-[1.2em] text-[#67748E]" />,
@@ -288,7 +302,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
-      Punching: {
+      "Machine Punching": {
         open: false,
         icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
         isVisible:
@@ -301,8 +315,8 @@ const TestNavItems = ({ toggleDrawer }) => {
               role
             ),
             link: `organisation/${orgId}/emo-info-punch-status`,
-            icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Punch Sync",
+            icon: <PunchClockIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Punch Sync ",
           },
 
           {
@@ -311,7 +325,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               role
             ),
             link: `organisation/${orgId}/view-attendance-biomatric`,
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <AccessTimeIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Time Track",
           },
           {
@@ -320,7 +334,9 @@ const TestNavItems = ({ toggleDrawer }) => {
               role
             ),
             link: `organisation/${orgId}/view-calculate-data`,
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            icon: (
+              <CalendarMonthIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
             text: "Calendar View",
           },
           {
@@ -329,26 +345,8 @@ const TestNavItems = ({ toggleDrawer }) => {
               role
             ),
             link: `organisation/${orgId}/missed-punch-in-out`,
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Punch Missed",
-          },
-          {
-            key: "viewCalculate",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
-              role
-            ),
-            link: `organisation/${orgId}/view-calculate-data`,
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "View Calculate Attendance",
-          },
-          {
-            key: "misspunchInOutRecord",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
-              role
-            ),
-            link: `organisation/${orgId}/missed-punch-in-out`,
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Missed Punch Record",
+            icon: <CallMissedIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Missed Punch ",
           },
         ],
       },
@@ -371,6 +369,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "addDepartment",
             isVisible: [
               "Super-Admin",
+              "Delegate-Super-Admin",
               "HR",
               "Department-Head",
               "Delegate-Department-Head",
@@ -387,6 +386,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "deptDeletion",
             isVisible: [
               "Super-Admin",
+              "Delegate-Super-Admin",
               "HR",
               "Department-Head",
               "Delegate-Department-Head",
@@ -402,6 +402,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "departmentList",
             isVisible: [
               "Super-Admin",
+              "Delegate-Super-Admin",
               "HR",
               "Department-Head",
               "Delegate-Department-Head",
@@ -460,6 +461,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             link: "/remotePunching",
             icon: <PanToolAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Apply Miss For Punch",
+          },
+          {
+            key: "empStatus",
+            isVisible: ["Employee"].includes(role),
+            link: "/remote/emp-notification",
+            icon: (
+              <AssignmentTurnedInIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Punch Status",
           },
         ],
       },

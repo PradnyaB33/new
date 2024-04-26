@@ -13,6 +13,7 @@ const StopRemotePunch = ({ setStart }) => {
   const stopRemotePunching = () => {
     setStart(false);
     navigator.geolocation.clearWatch(id);
+    window.location.reload();
   };
 
   return (
