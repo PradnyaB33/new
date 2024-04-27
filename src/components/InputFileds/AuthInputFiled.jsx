@@ -55,11 +55,6 @@ const AuthInputFiled = ({
   value,
   autoComplete,
 }) => {
-  console.log(
-    `🚀 ~ file: AuthInputFiled.jsx:58 ~ autoComplete:`,
-    type,
-    autoComplete
-  );
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
 
@@ -1035,8 +1030,7 @@ const AuthInputFiled = ({
           );
         }}
       />
-      <p className="text-xs w-full h-full">{descriptionText}</p>
-      {/* <div className="w-full !z-50 h-full  !mb-1"> */}
+      <p className="text-xs w-full h-fit">{descriptionText}</p>
       <ErrorMessage
         errors={errors}
         name={name}

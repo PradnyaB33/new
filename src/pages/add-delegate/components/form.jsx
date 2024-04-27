@@ -18,25 +18,72 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useDelegateSuperAdmin from "../../../hooks/QueryHook/Delegate-Super-Admin/mutation";
+
+let joinDate = moment().format("yyyy-MM-DD");
+
 const packageSchema = z.object({
-  first_name: z.string(),
-  last_name: z.string(),
+  first_name: z.string().refine(
+    (data) => {
+      const name = data.replace(/\s/g, "");
+      return name.length > 0;
+    },
+    {
+      message: "First Name is required",
+    }
+  ),
+  last_name: z.string().refine(
+    (data) => {
+      // remove space from string
+      const name = data.replace(/\s/g, "");
+      return name.length > 0;
+    },
+    {
+      message: "Last Name is required",
+    }
+  ),
   middle_name: z.string(),
   joining_date: z.string(),
   email: z.string().email(),
   phone_number: z.string().min(10).max(10),
   password: z.string(),
-  date_of_birth: z.string(),
-  gender: z.enum(["Male", "Female", "Other"]),
-  profile: z.enum(["Delegate-Super-Admin"]),
-  citizenship: z.string(),
+  date_of_birth: z.string().refine(
+    (date) => {
+      // date will be has difference of 18 years from date of joining
+      const dateOfBirth = moment(date);
+      const dateOfJoining = joinDate ? moment(joinDate) : moment();
+      const difference = dateOfJoining.diff(dateOfBirth, "years");
+      return difference >= 18;
+    },
+    {
+      message: "Age should be greater than 18 years",
+    }
+  ),
+  gender: z.enum(["Male", "Female", "Other"]).refine(
+    (data) => {
+      const name = data.replace(/\s/g, "");
+      return name.length > 0;
+    },
+    {
+      message: "Gender is required",
+    }
+  ),
+  profile: z.any(),
+  citizenship: z.string().refine(
+    (data) => {
+      const name = data.replace(/\s/g, "");
+      return name.length > 0;
+    },
+    {
+      message: "Citizen Ship Name is required",
+    }
+  ),
   _id: z.string(),
 });
 const MiniForm = ({ data }) => {
   const { addDelegateMutation } = useDelegateSuperAdmin();
   const [visible, setVisible] = useState(false);
 
-  const { control, formState, handleSubmit } = useForm({
+  const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
       first_name: data?.delegateSuperAdmin?.first_name,
       last_name: data?.delegateSuperAdmin?.last_name,
@@ -51,15 +98,17 @@ const MiniForm = ({ data }) => {
         "yyyy-MM-DD"
       ),
       gender: data?.delegateSuperAdmin?.gender,
-      profile: "Delegate-Super-Admin",
+      profile: ["Delegate-Super-Admin", "Employee"],
       citizenship: data?.delegateSuperAdmin?.citizenship,
       _id: data?.delegateSuperAdmin?._id || "",
     },
     resolver: zodResolver(packageSchema),
   });
-
+  joinDate = watch("joining_date");
   const { errors, isDirty } = formState;
+  console.log(`🚀 ~ file: form.jsx:62 ~ errors:`, errors);
   const onSubmit = async (data) => {
+    console.log(`🚀 ~ file: form.jsx:64 ~ data:`, data);
     addDelegateMutation.mutate(data);
   };
 
