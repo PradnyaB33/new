@@ -2,22 +2,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FactoryOutlined } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button } from "@mui/material";
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
 
 const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
-  const [map, setMap] = useState(null);
-  const options = {
-    id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-  };
-
-  const { isLoaded } = useJsApiLoader(options);
-
   const formSchema = z.object({
     startLocation: z.any({
       address: z.string(),
@@ -35,9 +26,10 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
     }),
     start: z.string(),
     end: z.string(),
+    distance: z.string(),
   });
 
-  const { control, formState, handleSubmit, watch, reset } = useForm({
+  const { control, formState, handleSubmit, reset } = useForm({
     defaultValues: {
       startLocation: {
         address: "",
@@ -55,6 +47,7 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
       },
       start: undefined,
       end: undefined,
+      distance: undefined,
     },
     resolver: zodResolver(formSchema),
   });
@@ -67,6 +60,8 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
       ? moment(`${today} ${data?.end}`, "YYYY-MM-DD HH:mm")
       : null;
 
+    console.log("this is  my data for misspunch", data);
+
     const formattedData = {
       ...data,
       start: startDateTime,
@@ -77,15 +72,6 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
     reset();
     setOpenModal(false);
   };
-
-  useEffect(() => {
-    let position = {
-      lat: watch("startLocation.position.lat"),
-      lng: watch("startLocation.position.lng"),
-    };
-    map && map.setCenter(position);
-    // eslint-disable-next-line
-  }, [watch("startLocation.address"), watch("startLocation.address")]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="relative">
@@ -143,46 +129,16 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
           errors={errors}
           wrapperMessage={"Note: End time for missed punch"}
         />
-      </div>
-      <div>
-        {isLoaded && center && (
-          <GoogleMap
-            key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
-            mapContainerStyle={{
-              width: "100%",
-              height: "300px",
-            }}
-            center={{
-              lat: watch("startLocation.position.lat"),
-              lng: watch("startLocation.position.lng"),
-            }}
-            onLoad={(map) => {
-              setMap(map);
-            }}
-            zoom={18}
-          >
-            {center && (
-              <>
-                <Marker
-                  icon={"http://maps.google.com/mapfiles/ms/icons/blue-dot.png"}
-                  position={{
-                    lat: watch("startLocation.position.lat"),
-                    lng: watch("startLocation.position.lng"),
-                  }}
-                  label={"Start Position"}
-                />
-                <Marker
-                  icon={"http://maps.google.com/mapfiles/ms/icons/red-dot.png"}
-                  position={{
-                    lat: watch("endLocation.position.lat"),
-                    lng: watch("endLocation.position.lng"),
-                  }}
-                  label={"End Position"}
-                />
-              </>
-            )}
-          </GoogleMap>
-        )}
+        <AuthInputFiled
+          className="w-full"
+          name="distance"
+          control={control}
+          type="number"
+          placeholder="Enter the distance"
+          label="Total Distance *"
+          errors={errors}
+          wrapperMessage={"Note: Total distance for missed punch"}
+        />
       </div>
       <div className="w-full flex justify-center mt-4">
         <Button type="submit" variant="contained" fullWidth>

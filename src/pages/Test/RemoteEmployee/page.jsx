@@ -67,7 +67,7 @@ const RemoteEmployee = () => {
       },
       onError: (data) => {
         console.info(`🚀 ~ file: page.jsx:40 ~ data:`, data);
-        handleAlert(true, "error", "We have problem at our side.");
+        handleAlert(true, "error", data.response.data.message);
       },
     }
   );

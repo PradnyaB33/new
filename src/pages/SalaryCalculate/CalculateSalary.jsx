@@ -263,7 +263,7 @@ function CalculateSalary() {
 
   let totalGrossSalary = totalSalary.toFixed(2);
 
-  // Calculate the total
+  // Calculate the total deduction
   let deduction = parseFloat(availableEmployee?.deduction ?? 0);
   let employee_pf = parseFloat(availableEmployee?.employee_pf ?? 0);
   let esic = parseFloat(availableEmployee?.esic ?? 0);
@@ -290,21 +290,27 @@ function CalculateSalary() {
   }
 
   // Convert each individual deduction to have two decimal places
-  deduction = deduction.toFixed(2);
-  employee_pf = employee_pf.toFixed(2);
-  esic = esic.toFixed(2);
+  deduction = isNaN(deduction) ? 0 : deduction.toFixed(2);
+  employee_pf = isNaN(employee_pf) ? 0 : employee_pf.toFixed(2);
+  esic = isNaN(esic) ? 0 : esic.toFixed(2);
   loanDeduction = loanDeduction.toFixed(2);
 
   // Calculate total deduction by adding all deductions
-  let totalDeductions =
-    parseFloat(deduction) +
-    parseFloat(employee_pf) +
-    parseFloat(esic) +
-    parseFloat(loanDeduction);
-  let totalDeduction = totalDeductions.toFixed(2);
-  let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
+  // Calculate total deductions
+let totalDeductions =
+parseFloat(deduction) +
+parseFloat(employee_pf) +
+parseFloat(esic) +
+parseFloat(loanDeduction); // Assuming loanDeduction is defined elsewhere
+let totalDeduction = totalDeductions.toFixed(2);
 
+  console.log("total deduction" , totalDeduction);
+  console.log(" deduction" , deduction);
+  console.log("pf" , employee_pf);
+  console.log("esic" , esic);
 
+// Calculate total net salary
+let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
   // get the alreday salary data created
   const [salaryCalDay, setSalaryCalDay] = useState([]);
   const fetchSalaryCalDay = async () => {
@@ -545,6 +551,7 @@ function CalculateSalary() {
               </td>
               <td class="px-4 py-2 border">No Of Working Days Attended:</td>
               <td class="px-4 py-2 border">{noOfDaysEmployeePresent}</td>
+            
             </tr>
             <tr>
               <td class="px-4 py-2 border">PAN No:</td>
@@ -555,18 +562,19 @@ function CalculateSalary() {
               <td class="px-4 py-2 border">{paidLeaveDays}</td>
             </tr>
             <tr>
-              <td class="px-4 py-2 border">Bank Account No:</td>
-              <td class="px-4 py-2 border">
-                {availableEmployee?.bank_account_no || ""}
-              </td>
+            <td class="px-4 py-2 border">Employee Id:</td>
+              <td class="px-4 py-2 border">{availableEmployee?.empId}</td>
               <td class="px-4 py-2 border">Public Holidays:</td>
               <td class="px-4 py-2 border">{publicHolidaysCount}</td>
             </tr>
             <tr>
-              <td class="px-4 py-2 border"> No Of Days in Month:</td>
+            <td class="px-4 py-2 border">Bank Account No:</td>
+              <td class="px-4 py-2 border">
+                {availableEmployee?.bank_account_no || ""}
+              </td>
+           
+              <td class="px-4 py-2 border">No Of Days in Month:</td>
               <td class="px-4 py-2 border">{numDaysInMonth}</td>
-              <td class="px-4 py-2 border"></td>
-              <td class="px-4 py-2 border"></td>
             </tr>
           </tbody>
         </table>

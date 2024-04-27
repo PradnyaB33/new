@@ -27,11 +27,10 @@ import {
   Divider,
   FormControlLabel,
   IconButton,
-  Radio,
-  RadioGroup,
+  Radio, RadioGroup,
 } from "@mui/material";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useQuery } from "react-query";
 import { z } from "zod";
@@ -40,41 +39,42 @@ import useEmpQuery from "../../../hooks/Employee-OnBoarding/useEmpQuery";
 import useEmployeeOptions from "../../../hooks/Employee-Update/useEmpOptions";
 import useEmpState from "../../../hooks/Employee-Update/useEmpState";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
-const UpdateEmployeeModal = ({
-  handleClose,
-  open,
-  employeeId,
-  organisationId,
-}) => {
-  const { cookies } = useContext(UseContext);
-  const authToken = cookies["aegis"];
-  const {
-    first_name,
-    last_name,
-    email,
-    gender,
-    phone_number,
-    address,
-    citizenship,
-    adhar_card_number,
-    pan_card_number,
-    bank_account_no,
-    date_of_birth,
-    confirmPassword,
-    designation,
-    profile,
-    worklocation,
-    deptname,
-    employmentType,
-    empId,
-    mgrempid,
-    joining_date,
-    salarystructure,
-    dept_cost_center_no,
-    companyemail,
-    password,
-    shift_allocation,
-  } = useEmpState();
+<<<<<<< HEAD
+=======
+import useEmpQuery from "../../../hooks/Employee-OnBoarding/useEmpQuery";
+>>>>>>> b5b61a8e54c5694259addc611877b866eabe1686
+const UpdateEmployeeModal = ({ handleClose, open, employeeId, organisationId }) => { 
+   
+    const { cookies } = useContext(UseContext);
+    const authToken = cookies["aegis"];
+    const {
+        first_name,
+        last_name,
+        email,
+        gender,
+        phone_number,
+        address,
+        citizenship,
+        adhar_card_number,
+        pan_card_number,
+        bank_account_no,
+        date_of_birth,
+        confirmPassword,
+        designation,
+        profile,
+        worklocation,
+        deptname,
+        employmentType,
+        empId,
+        mgrempid,
+        joining_date,
+        salarystructure,
+        dept_cost_center_no,
+        companyemail,
+        password,
+        shift_allocation,
+      } = useEmpState(); 
+
 
   const {
     Departmentoptions,

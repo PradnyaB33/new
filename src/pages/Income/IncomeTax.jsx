@@ -33,9 +33,7 @@ const IncomeTax = () => {
         `/organisation/${user?.organizationId}/dashboard/DH-dashboard`
       );
     else if (role === "Accountant")
-      return redirect(
-        `/organisation/${user?._id}/dashboard/employee-dashboard`
-      );
+      return redirect(`/organisation/dashboard/employee-dashboard`);
     else if (role === "Manager")
       return redirect(`/organisation/${user?._id}/dashboard/manager-dashboard`);
     else if (role === "Employee")
