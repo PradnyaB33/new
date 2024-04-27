@@ -10,7 +10,7 @@ import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
 import MoneyIcon from "@mui/icons-material/Money";
-import PercentIcon from '@mui/icons-material/Percent';
+import PercentIcon from "@mui/icons-material/Percent";
 const style = {
   position: "absolute",
   top: "50%",
@@ -30,37 +30,65 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
 
   const EmpLoanMgtSchema = z.object({
     loanName: z.string(),
-    loanValue: z.string().refine((value) => {
-      const floatValue = parseFloat(value);
-      return floatValue >= 0 && floatValue <= 1000000 && !Object.is(floatValue, -0); 
-    }, {
-      message: "Loan value should be between 0 and 1,000,000",
-    }).refine((value) => {
-      const floatValue = parseFloat(value);
-      return floatValue >= 0;
-    }, {
-      message: "Loan value should be a positive number",
-    }),
-    maxLoanValue: z.string().refine((value) => {
-      const floatValue = parseFloat(value);
-      return floatValue >= 0 && floatValue <= 1000000 && !Object.is(floatValue, -0); 
-    }, {
-      message: "Maximum loan value should be between 0 and 1,000,000",
-    }).refine((value) => {
-      const floatValue = parseFloat(value);
-      return floatValue >= 0; 
-    }, {
-      message: "Maximum loan value should be a positive number",
-    }),
-    rateOfInterest: z.string().refine((value) => {
-      const floatValue = parseFloat(value);
-      return floatValue > 0 && floatValue < 100;
-    }, {
-      message: "Rate of interest should be between 0 and 99%",
-    }),
+    loanValue: z
+      .string()
+      .refine(
+        (value) => {
+          const floatValue = parseFloat(value);
+          return (
+            floatValue >= 0 &&
+            floatValue <= 1000000 &&
+            !Object.is(floatValue, -0)
+          );
+        },
+        {
+          message: "Loan value should be between 0 and 1,000,000",
+        }
+      )
+      .refine(
+        (value) => {
+          const floatValue = parseFloat(value);
+          return floatValue >= 0;
+        },
+        {
+          message: "Loan value should be a positive number",
+        }
+      ),
+    maxLoanValue: z
+      .string()
+      .refine(
+        (value) => {
+          const floatValue = parseFloat(value);
+          return (
+            floatValue >= 0 &&
+            floatValue <= 1000000 &&
+            !Object.is(floatValue, -0)
+          );
+        },
+        {
+          message: "Maximum loan value should be between 0 and 1,000,000",
+        }
+      )
+      .refine(
+        (value) => {
+          const floatValue = parseFloat(value);
+          return floatValue >= 0;
+        },
+        {
+          message: "Maximum loan value should be a positive number",
+        }
+      ),
+    rateOfInterest: z.string().refine(
+      (value) => {
+        const floatValue = parseFloat(value);
+        return floatValue > 0 && floatValue < 100;
+      },
+      {
+        message: "Rate of interest should be between 0 and 99%",
+      }
+    ),
   });
-  
-  
+
   const {
     control,
     formState: { errors },
