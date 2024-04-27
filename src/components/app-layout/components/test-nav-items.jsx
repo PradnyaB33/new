@@ -46,6 +46,7 @@ const TestNavItems = ({ toggleDrawer }) => {
   const token = cookies["aegis"];
   const location = useLocation();
   const [decodedToken, setDecodedToken] = useState("");
+  console.log(orgId);
 
   // Update organization ID when URL changes
   useEffect(() => {
