@@ -2,8 +2,6 @@ import { Container } from "@mui/material";
 import React from "react";
 import { useParams } from "react-router-dom";
 import UserProfile from "../../hooks/UserData/useUser";
-import EmployeeListToEmployee from "./EmployeeListtoEmployee";
-
 const Employee = () => {
   const { organisationId } = useParams();
   const { useGetCurrentRole, getCurrentUser } = UserProfile();

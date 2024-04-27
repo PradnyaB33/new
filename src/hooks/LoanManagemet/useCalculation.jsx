@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import useLaonState from "./useLaonState";
-
 const useCalculation = () => {
   const {
     rateOfIntereset,
@@ -21,7 +20,7 @@ const useCalculation = () => {
     const monthsToAdd = parseInt(emiCount);
     if (!isNaN(monthsToAdd)) {
       const completionDate = dayjs(disbursementDate)
-        .add(monthsToAdd , "month")
+        .add(monthsToAdd, "month")
         .format("MM-DD-YYYY");
       setCompletedDate(completionDate);
     }

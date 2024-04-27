@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AttachFile, Close, Paid } from "@mui/icons-material";
+import { Close, Paid } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -12,11 +12,11 @@ import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
-import { TestContext } from "../../../State/Function/Main";
-import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import useAuthToken from "../../../hooks/Token/useAuth";
+import { TestContext } from "../../../../../State/Function/Main";
+import AuthInputFiled from "../../../../../components/InputFileds/AuthInputFiled";
+import useAuthToken from "../../../../../hooks/Token/useAuth";
 
-const MonitoringModel = ({
+const RevaluateModel = ({
   handleClose,
   open,
   options,
@@ -36,17 +36,10 @@ const MonitoringModel = ({
     p: 4,
   };
 
-  // const { useGetCurrentRole, getCurrentUser } = UserProfile();
-  // const role = useGetCurrentRole();
-  // const user = getCurrentUser();
-
   const authToken = useAuthToken();
   const zodSchema = z.object({
     goal: z.string(),
-    measurement: z.string().optional(),
-    comments: z.string(),
-    // assignee: z.object({ value: z.string(), label: z.string() }),
-    attachment: z.string().optional(),
+    message: z.string(),
   });
 
   const {
@@ -66,7 +59,7 @@ const MonitoringModel = ({
   const performanceSetup = useMutation(
     async (data) => {
       await axios.patch(
-        `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${id}`,
+        `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${id._id}`,
         { data },
         {
           headers: {
@@ -88,7 +81,7 @@ const MonitoringModel = ({
     queryKey: ["getGoalMonitoring", id],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getGoalDetails/${id}`,
+        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id._id}`,
         {
           headers: {
             Authorization: authToken,
@@ -107,10 +100,9 @@ const MonitoringModel = ({
   const onSubmit = async (data) => {
     const goals = {
       measurement: data.measurement,
-      assignee: { label: assignee, value: assignee },
-      comments: data.comments,
-      attachment: data.attachment,
-      status: "Monitoring Completed",
+      assignee: { label: id.empId._id, value: id.empId._id },
+      message: data.message,
+      status: "Revaluation Requested",
     };
 
     performanceSetup.mutate(goals);
@@ -148,7 +140,7 @@ const MonitoringModel = ({
         >
           <div className="flex justify-between py-4 items-center  px-4">
             <h1 id="modal-modal-title" className="text-xl pl-2">
-              Montoring Form
+              Request For Revaluation
             </h1>
             <IconButton onClick={handleClose}>
               <Close className="!text-[16px]" />
@@ -174,50 +166,15 @@ const MonitoringModel = ({
                 error={errors.goal}
               />
 
-              {/* <AuthInputFiled
-                name="assignee"
-                icon={PersonOutline}
-                control={control}
-                type="empselect"
-                isMulti={false}
-                options={empoptions}
-                placeholder="Assignee name"
-                label="Select assignee name"
-                errors={errors}
-                error={errors.assignee}
-              /> */}
-
               <AuthInputFiled
-                name="measurement"
-                icon={Paid}
-                control={control}
-                type="texteditor"
-                placeholder="100"
-                label="Enter measurements name"
-                errors={errors}
-                error={errors.measurement}
-              />
-
-              <AuthInputFiled
-                name="comments"
+                name="message"
                 icon={Paid}
                 control={control}
                 type="texteditor"
                 placeholder="100"
                 label="Comments box"
                 errors={errors}
-                error={errors.comments}
-              />
-
-              <AuthInputFiled
-                name="attachment"
-                icon={AttachFile}
-                control={control}
-                type="file"
-                placeholder="100"
-                label="Add attachments"
-                errors={errors}
-                error={errors.attachment}
+                error={errors.message}
               />
 
               <div className="flex gap-4  mt-4 mr-4 justify-end">
@@ -241,4 +198,4 @@ const MonitoringModel = ({
   );
 };
 
-export default MonitoringModel;
+export default RevaluateModel;
