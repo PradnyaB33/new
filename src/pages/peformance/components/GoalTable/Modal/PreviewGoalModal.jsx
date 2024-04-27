@@ -11,9 +11,9 @@ import { format } from "date-fns";
 import DOMPurify from "dompurify";
 import React, { useContext } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { TestContext } from "../../../State/Function/Main";
-import useAuthToken from "../../../hooks/Token/useAuth";
-import UserProfile from "../../../hooks/UserData/useUser";
+import { TestContext } from "../../../../../State/Function/Main";
+import useAuthToken from "../../../../../hooks/Token/useAuth";
+import UserProfile from "../../../../../hooks/UserData/useUser";
 
 const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
   const { handleAlert } = useContext(TestContext);

@@ -13,10 +13,10 @@ import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
-import { TestContext } from "../../../State/Function/Main";
-import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import useAuthToken from "../../../hooks/Token/useAuth";
-import UserProfile from "../../../hooks/UserData/useUser";
+import { TestContext } from "../../../../State/Function/Main";
+import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
+import useAuthToken from "../../../../hooks/Token/useAuth";
+import UserProfile from "../../../../hooks/UserData/useUser";
 
 const GoalsModel = ({
   handleClose,

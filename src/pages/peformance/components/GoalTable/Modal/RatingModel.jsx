@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AttachFile, Close, Paid } from "@mui/icons-material";
+import { Close, Paid, StarOutlined } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -12,11 +12,11 @@ import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
-import { TestContext } from "../../../State/Function/Main";
-import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import useAuthToken from "../../../hooks/Token/useAuth";
+import { TestContext } from "../../../../../State/Function/Main";
+import AuthInputFiled from "../../../../../components/InputFileds/AuthInputFiled";
+import useAuthToken from "../../../../../hooks/Token/useAuth";
 
-const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
+const RatingModel = ({ handleClose, open, options, id, performance }) => {
   const { handleAlert } = useContext(TestContext);
   const style = {
     position: "absolute",
@@ -29,13 +29,16 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
     p: 4,
   };
 
+  // const { useGetCurrentRole, getCurrentUser } = UserProfile();
+  // const role = useGetCurrentRole();
+  // const user = getCurrentUser();
+
   const authToken = useAuthToken();
   const zodSchema = z.object({
     goal: z.string(),
-    managerMeasurments: z.string().optional(),
-    comments: z.string(),
+    review: z.string(),
+    rating: z.object({ value: z.string(), label: z.string() }),
     // assignee: z.object({ value: z.string(), label: z.string() }),
-    attachment: z.string().optional(),
   });
 
   const {
@@ -73,8 +76,10 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
     }
   );
 
-  const { data: getGoal, isFetching } = useQuery({
-    queryKey: ["getGoalMonitoring", id],
+  console.log(id);
+
+  const { isFetching } = useQuery({
+    queryKey: ["getGoalReview", id],
     queryFn: async () => {
       const { data } = await axios.get(
         `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id._id}`,
@@ -95,11 +100,10 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
 
   const onSubmit = async (data) => {
     const goals = {
-      managerMeasurments: data.managerMeasurments,
       assignee: { label: id.empId._id, value: id.empId._id },
-      comments: data.comments,
-      attachment: data.attachment,
-      status: "Monitoring Completed",
+      review: data.review,
+      rating: data.rating.value,
+      status: "Rating Completed",
     };
 
     performanceSetup.mutate(goals);
@@ -123,6 +127,11 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
   //   image: emp.user_logo_url,
   // }));
 
+  const ratingOptions = performance?.ratings?.map((rate) => ({
+    value: rate,
+    label: rate,
+  }));
+
   return (
     <>
       <Modal
@@ -137,7 +146,7 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
         >
           <div className="flex justify-between py-4 items-center  px-4">
             <h1 id="modal-modal-title" className="text-xl pl-2">
-              Montoring Form
+              Review & Rating Form
             </h1>
             <IconButton onClick={handleClose}>
               <Close className="!text-[16px]" />
@@ -177,36 +186,26 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
               /> */}
 
               <AuthInputFiled
-                name="managerMeasurments"
+                name="rating"
+                icon={StarOutlined}
+                control={control}
+                type="select"
+                options={ratingOptions}
+                placeholder="rate"
+                label="Add rating"
+                errors={errors}
+                error={errors.rating}
+              />
+
+              <AuthInputFiled
+                name="review"
                 icon={Paid}
                 control={control}
                 type="texteditor"
                 placeholder="100"
-                label="Enter measurements name"
+                label="Enter review"
                 errors={errors}
-                error={errors.managerMeasurments}
-              />
-
-              <AuthInputFiled
-                name="comments"
-                icon={Paid}
-                control={control}
-                type="texteditor"
-                placeholder="100"
-                label="Comments box"
-                errors={errors}
-                error={errors.comments}
-              />
-
-              <AuthInputFiled
-                name="attachment"
-                icon={AttachFile}
-                control={control}
-                type="file"
-                placeholder="100"
-                label="Add attachments"
-                errors={errors}
-                error={errors.attachment}
+                error={errors.review}
               />
 
               <div className="flex gap-4  mt-4 mr-4 justify-end">
@@ -230,4 +229,4 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
   );
 };
 
-export default MonitoringModel;
+export default RatingModel;

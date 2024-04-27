@@ -1,11 +1,14 @@
 import {
-  AssignmentTurnedInOutlined,
-  CancelOutlined,
-  CheckCircleOutlined,
+  AssignmentTurnedIn,
+  Cancel,
+  CheckCircle,
+  Info,
   InfoOutlined,
+  KeyboardDoubleArrowDown,
   MoreHoriz,
+  RateReview,
   Search,
-  StarOutlined,
+  Star,
 } from "@mui/icons-material";
 import {
   Avatar,
@@ -25,17 +28,18 @@ import moment from "moment";
 import React, { useCallback, useContext, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import Select from "react-select";
-import { TestContext } from "../../../State/Function/Main";
-import { CustomOption } from "../../../components/InputFileds/AuthInputFiled";
-import useAuthToken from "../../../hooks/Token/useAuth";
-import UserProfile from "../../../hooks/UserData/useUser";
+import { TestContext } from "../../../../State/Function/Main";
+import { CustomOption } from "../../../../components/InputFileds/AuthInputFiled";
+import useAuthToken from "../../../../hooks/Token/useAuth";
+import UserProfile from "../../../../hooks/UserData/useUser";
+import DeleteGoal from "./DeleteGoal";
 import GoalsModel from "./GoalsModel";
-import MonitoringModel from "./MonitoringModel";
-import PreviewGoalModal from "./PreviewGoalModal";
-import RatingModel from "./RatingModel";
-import RevaluateModel from "./RevaluateModel";
+import MonitoringModel from "./Modal/MonitoringModel";
+import PreviewGoalModal from "./Modal/PreviewGoalModal";
+import RatingModel from "./Modal/RatingModel";
+import RevaluateModel from "./Modal/RevaluateModel";
 
-const GoalStatus = ({ status }) => {
+const GoalStatus = ({ status, performance }) => {
   return (
     <div
       className={`px-3 py-1 flex items-center gap-1 ${
@@ -48,28 +52,82 @@ const GoalStatus = ({ status }) => {
           : ""
       } rounded-sm  w-max`}
     >
-      {status === "Goal Completed" ? (
-        <CheckCircleOutlined />
-      ) : status === "Goal Accepted" ? (
-        <AssignmentTurnedInOutlined />
+      {performance.stages === "Goal setting" &&
+        (status === "Goal Completed" ? (
+          <>
+            <CheckCircle />
+          </>
+        ) : status === "Goal Approved" ? (
+          <p className="text-green-500">
+            <AssignmentTurnedIn className="text-xs" /> Ready to go
+          </p>
+        ) : status === "Goal Rejected" ? (
+          <>
+            <Cancel /> {status}
+          </>
+        ) : (
+          <>hii</>
+        ))}
+
+      {performance?.stages === "Monitoring stage/Feedback collection stage" &&
+        (status === "Monitoring Completed" ? (
+          <p className="text-blue-500">
+            <RateReview /> Monitoring Completed
+          </p>
+        ) : (
+          <p className="text-gray-500">
+            <Info /> Monitoring Pending
+          </p>
+        ))}
+
+      {performance?.stages ===
+        "KRA stage/Ratings Feedback/Manager review stage" &&
+        (status === "Rating Completed" ? (
+          <p
+            // style={{ textShadow: "0 0 0  1px #333" }}
+            className="text-[#ffd700] "
+          >
+            <Star /> Rating Completed
+          </p>
+        ) : (
+          <p className="text-gray-500">
+            <Info /> Rating Pending
+          </p>
+        ))}
+
+      {/* {status === "Goal Completed" ? (
+        <>
+          <CheckCircle />
+        </>
+      ) : status === "Goal Approved" ? (
+        <p className="text-green-500">
+          <AssignmentTurnedIn className="text-xs" /> Ready to go
+        </p>
       ) : status === "Goal Rejected" ? (
-        <CancelOutlined />
+        <>
+          <Cancel /> {status}
+        </>
       ) : status === "Rating Completed" ? (
-        <StarOutlined />
+        <>
+          <StarOutlined /> {status}
+        </>
+      ) : status === "Monitoring Completed" ? (
+        <p className="text-blue-500">
+          <RateReview /> Monitoring Completed
+        </p>
       ) : (
-        <InfoOutlined />
-      )}{" "}
-      {status}
+        <>
+          <Info /> {status}
+        </>
+      )} */}
     </div>
   );
 };
 
 const GoalsTable = ({ performance }) => {
-  const [focusedInput, setFocusedInput] = useState(null);
-  const [currentGoal, setCurrentGoal] = useState(null);
-  const { useGetCurrentRole, getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
+  const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [employeeGoals, setEmployeeGoals] = useState();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -80,7 +138,6 @@ const GoalsTable = ({ performance }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { handleAlert } = useContext(TestContext);
   const openMenuBox = Boolean(anchorEl);
-  console.log(openMenu?.status);
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -97,6 +154,7 @@ const GoalsTable = ({ performance }) => {
     setOpenRevaluate(false);
     setopenMenu(null);
     setOpenEdit(false);
+    setDeleteConfirmation(null);
   };
 
   const handleOpen = (id) => {
@@ -146,12 +204,6 @@ const GoalsTable = ({ performance }) => {
       // }
     }
   );
-
-  const allSection80s = orgGoals?.goals?.flatMap((data) => data);
-
-  const handleFocus = (fieldName) => {
-    setFocusedInput(fieldName);
-  };
 
   const options = useMemo(() => {
     if (employeeData) {
@@ -274,7 +326,7 @@ const GoalsTable = ({ performance }) => {
           )}
         </div>
         <div className="bg-white w-full overflow-x-auto">
-          {isFetching ? (
+          {isFetching || performance === undefined ? (
             <CircularProgress />
           ) : orgGoals?.length <= 0 ? (
             <h1 className="bg-blue-100 text-rose-600 space-x- p-2 2 px-4 rounded-sm text-lg">
@@ -291,6 +343,7 @@ const GoalsTable = ({ performance }) => {
                     >
                       Sr. No
                     </th>
+                    <th scope="col" className="py-3 text-sm px-2 "></th>
                     <th scope="col" className="py-3 text-sm px-2 ">
                       Goal Name
                     </th>
@@ -324,18 +377,25 @@ const GoalsTable = ({ performance }) => {
                       >
                         {(page - 1) * 10 + id + 1}
                       </td>
+
+                      <td
+                        className="w-[30px] hover:bg-gray-50 !font-medium  border-b"
+                        onClick={() => handleOpen(goal._id)}
+                      >
+                        {goal.downcasted && (
+                          <Tooltip
+                            className="cursor-pointer"
+                            title="This goal is downcasted any changes will apply to all related downcasted goal"
+                          >
+                            <KeyboardDoubleArrowDown className="text-blue-500" />
+                          </Tooltip>
+                        )}{" "}
+                      </td>
                       <td
                         onClick={() => handleOpen(goal._id)}
                         className="text-sm cursor-pointer truncate text-left   px-2"
                       >
-                        <p className="space-x-3 truncate">
-                          {/* {goal.downcasted && (
-                            <ToolTip title="Downcasted Goal">
-                              <ArrowDropDownCircle className="text-blue-500" />
-                            </ToolTip>
-                          )}{" "} */}
-                          {goal.goal}
-                        </p>
+                        <p className="space-x-3 truncate">{goal.goal}</p>
                       </td>
 
                       <td
@@ -366,7 +426,10 @@ const GoalsTable = ({ performance }) => {
                         onClick={() => handleOpen(goal._id)}
                         className="cursor-pointer text-left text-sm w-[200px]  "
                       >
-                        <GoalStatus status={goal?.status} />
+                        <GoalStatus
+                          status={goal?.status}
+                          performance={performance}
+                        />
                       </td>
 
                       {/* {isTrippleDotActive(goal) ? "show" : "hide"} */}
@@ -401,7 +464,7 @@ const GoalsTable = ({ performance }) => {
                               aria-expanded={openMenu ? "true" : undefined}
                               onClick={(e) => {
                                 handleClick(e);
-                                setCurrentGoal(goal);
+                                // setCurrentGoal(goal);
                                 setopenMenu(goal);
                               }}
                             >
@@ -458,26 +521,10 @@ const GoalsTable = ({ performance }) => {
         </div>
         <Divider variant="fullWidth" orientation="horizontal" />
 
-        {performance?.stages === "Goal setting" &&
-          role === "Employee" &&
-          currentGoal?.status === "Goal Rejected" && (
-            <MenuItem
-              className="!p-0"
-              onClick={() => {
-                setOpenEdit(true);
-                setPreviewId(openMenu._id);
-                handleMenuClose();
-              }}
-            >
-              <div className=" flex  w-full h-full items-center  transition-all gap-4  py-2 px-4">
-                Reapply goal
-              </div>
-            </MenuItem>
-          )}
         {role === "Manager" &&
           performance?.stages === "Goal setting" &&
-          currentGoal?.status !== "Goal Approved" &&
-          currentGoal?.status !== "Goal Rejected" && (
+          openMenu?.status !== "Goal Approved" &&
+          openMenu?.status !== "Goal Rejected" && (
             <>
               <MenuItem
                 className="!p-0"
@@ -497,24 +544,6 @@ const GoalsTable = ({ performance }) => {
               </MenuItem>
             </>
           )}
-        {/* {performance?.stages !==
-          "Employee acceptance/acknowledgement stage" && (
-          <MenuItem
-            onClick={() => {
-              setOpenEdit(true);
-              setPreviewId(openMenu);
-              handleMenuClose();
-            }}
-          >
-            {performance?.stages ===
-            "KRA stage/Ratings Feedback/Manager review stage"
-              ? "Add review & rating"
-              : performance?.stages ===
-                "Monitoring stage/Feedback collection stage"
-              ? "Add monitoring form"
-              : "Edit Goal"}
-          </MenuItem>
-        )} */}
 
         {performance?.stages ===
           "Monitoring stage/Feedback collection stage" && (
@@ -538,7 +567,9 @@ const GoalsTable = ({ performance }) => {
                 handleMenuClose();
               }}
             >
-              Update Goal
+              {openMenu?.status === "Goal Rejected" && role === "Employee"
+                ? "Reapply for goal"
+                : "Update Goal"}
             </MenuItem>
           </>
         )}
@@ -559,7 +590,13 @@ const GoalsTable = ({ performance }) => {
         )}
 
         {performance?.stages === "Goal setting" && (
-          <MenuItem className="!p-0" onClick={() => handleMenuClose()}>
+          <MenuItem
+            className="!p-0"
+            onClick={() => {
+              setDeleteConfirmation(openMenu);
+              handleMenuClose();
+            }}
+          >
             <div className="hover:!bg-red-500 !text-red-500 flex  w-full h-full items-center hover:!text-white transition-all gap-4  py-2 px-4">
               Delete goal
             </div>
@@ -588,6 +625,11 @@ const GoalsTable = ({ performance }) => {
             </>
           )}
       </Menu>
+
+      <DeleteGoal
+        deleteConfirmation={deleteConfirmation}
+        handleClose={handleClose}
+      />
 
       {performance?.stages === "Monitoring stage/Feedback collection stage" ? (
         <MonitoringModel

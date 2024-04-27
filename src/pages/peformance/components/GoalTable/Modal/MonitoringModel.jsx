@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Close, Paid } from "@mui/icons-material";
+import { AttachFile, Close, Paid } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -12,18 +12,11 @@ import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
-import { TestContext } from "../../../State/Function/Main";
-import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import useAuthToken from "../../../hooks/Token/useAuth";
+import { TestContext } from "../../../../../State/Function/Main";
+import AuthInputFiled from "../../../../../components/InputFileds/AuthInputFiled";
+import useAuthToken from "../../../../../hooks/Token/useAuth";
 
-const RevaluateModel = ({
-  handleClose,
-  open,
-  options,
-  id,
-  performance,
-  assignee,
-}) => {
+const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
   const { handleAlert } = useContext(TestContext);
   const style = {
     position: "absolute",
@@ -39,7 +32,10 @@ const RevaluateModel = ({
   const authToken = useAuthToken();
   const zodSchema = z.object({
     goal: z.string(),
-    message: z.string(),
+    managerMeasurments: z.string().optional(),
+    comments: z.string(),
+    // assignee: z.object({ value: z.string(), label: z.string() }),
+    attachment: z.string().optional(),
   });
 
   const {
@@ -77,7 +73,7 @@ const RevaluateModel = ({
     }
   );
 
-  const { isFetching } = useQuery({
+  const { data: getGoal, isFetching } = useQuery({
     queryKey: ["getGoalMonitoring", id],
     queryFn: async () => {
       const { data } = await axios.get(
@@ -99,10 +95,11 @@ const RevaluateModel = ({
 
   const onSubmit = async (data) => {
     const goals = {
-      measurement: data.measurement,
+      managerMeasurments: data.managerMeasurments,
       assignee: { label: id.empId._id, value: id.empId._id },
-      message: data.message,
-      status: "Revaluation Requested",
+      comments: data.comments,
+      attachment: data.attachment,
+      status: "Monitoring Completed",
     };
 
     performanceSetup.mutate(goals);
@@ -140,7 +137,7 @@ const RevaluateModel = ({
         >
           <div className="flex justify-between py-4 items-center  px-4">
             <h1 id="modal-modal-title" className="text-xl pl-2">
-              Request For Revaluation
+              Montoring Form
             </h1>
             <IconButton onClick={handleClose}>
               <Close className="!text-[16px]" />
@@ -166,15 +163,50 @@ const RevaluateModel = ({
                 error={errors.goal}
               />
 
+              {/* <AuthInputFiled
+                name="assignee"
+                icon={PersonOutline}
+                control={control}
+                type="empselect"
+                isMulti={false}
+                options={empoptions}
+                placeholder="Assignee name"
+                label="Select assignee name"
+                errors={errors}
+                error={errors.assignee}
+              /> */}
+
               <AuthInputFiled
-                name="message"
+                name="managerMeasurments"
+                icon={Paid}
+                control={control}
+                type="texteditor"
+                placeholder="100"
+                label="Enter measurements name"
+                errors={errors}
+                error={errors.managerMeasurments}
+              />
+
+              <AuthInputFiled
+                name="comments"
                 icon={Paid}
                 control={control}
                 type="texteditor"
                 placeholder="100"
                 label="Comments box"
                 errors={errors}
-                error={errors.message}
+                error={errors.comments}
+              />
+
+              <AuthInputFiled
+                name="attachment"
+                icon={AttachFile}
+                control={control}
+                type="file"
+                placeholder="100"
+                label="Add attachments"
+                errors={errors}
+                error={errors.attachment}
               />
 
               <div className="flex gap-4  mt-4 mr-4 justify-end">
@@ -198,4 +230,4 @@ const RevaluateModel = ({
   );
 };
 
-export default RevaluateModel;
+export default MonitoringModel;

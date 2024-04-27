@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Close, Paid, StarOutlined } from "@mui/icons-material";
+import { Close, Paid } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -12,11 +12,18 @@ import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
-import { TestContext } from "../../../State/Function/Main";
-import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import useAuthToken from "../../../hooks/Token/useAuth";
+import { TestContext } from "../../../../../State/Function/Main";
+import AuthInputFiled from "../../../../../components/InputFileds/AuthInputFiled";
+import useAuthToken from "../../../../../hooks/Token/useAuth";
 
-const RatingModel = ({ handleClose, open, options, id, performance }) => {
+const RevaluateModel = ({
+  handleClose,
+  open,
+  options,
+  id,
+  performance,
+  assignee,
+}) => {
   const { handleAlert } = useContext(TestContext);
   const style = {
     position: "absolute",
@@ -29,16 +36,10 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
     p: 4,
   };
 
-  // const { useGetCurrentRole, getCurrentUser } = UserProfile();
-  // const role = useGetCurrentRole();
-  // const user = getCurrentUser();
-
   const authToken = useAuthToken();
   const zodSchema = z.object({
     goal: z.string(),
-    review: z.string(),
-    rating: z.object({ value: z.string(), label: z.string() }),
-    // assignee: z.object({ value: z.string(), label: z.string() }),
+    message: z.string(),
   });
 
   const {
@@ -76,10 +77,8 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
     }
   );
 
-  console.log(id);
-
   const { isFetching } = useQuery({
-    queryKey: ["getGoalReview", id],
+    queryKey: ["getGoalMonitoring", id],
     queryFn: async () => {
       const { data } = await axios.get(
         `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id._id}`,
@@ -100,10 +99,10 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
 
   const onSubmit = async (data) => {
     const goals = {
+      measurement: data.measurement,
       assignee: { label: id.empId._id, value: id.empId._id },
-      review: data.review,
-      rating: data.rating.value,
-      status: "Rating Completed",
+      message: data.message,
+      status: "Revaluation Requested",
     };
 
     performanceSetup.mutate(goals);
@@ -127,11 +126,6 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
   //   image: emp.user_logo_url,
   // }));
 
-  const ratingOptions = performance?.ratings?.map((rate) => ({
-    value: rate,
-    label: rate,
-  }));
-
   return (
     <>
       <Modal
@@ -146,7 +140,7 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
         >
           <div className="flex justify-between py-4 items-center  px-4">
             <h1 id="modal-modal-title" className="text-xl pl-2">
-              Review & Rating Form
+              Request For Revaluation
             </h1>
             <IconButton onClick={handleClose}>
               <Close className="!text-[16px]" />
@@ -172,40 +166,15 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
                 error={errors.goal}
               />
 
-              {/* <AuthInputFiled
-                name="assignee"
-                icon={PersonOutline}
-                control={control}
-                type="empselect"
-                isMulti={false}
-                options={empoptions}
-                placeholder="Assignee name"
-                label="Select assignee name"
-                errors={errors}
-                error={errors.assignee}
-              /> */}
-
               <AuthInputFiled
-                name="rating"
-                icon={StarOutlined}
-                control={control}
-                type="select"
-                options={ratingOptions}
-                placeholder="rate"
-                label="Add rating"
-                errors={errors}
-                error={errors.rating}
-              />
-
-              <AuthInputFiled
-                name="review"
+                name="message"
                 icon={Paid}
                 control={control}
                 type="texteditor"
                 placeholder="100"
-                label="Enter review"
+                label="Comments box"
                 errors={errors}
-                error={errors.review}
+                error={errors.message}
               />
 
               <div className="flex gap-4  mt-4 mr-4 justify-end">
@@ -229,4 +198,4 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
   );
 };
 
-export default RatingModel;
+export default RevaluateModel;

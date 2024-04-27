@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { useQuery } from "react-query";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
-import GoalsTable from "../components/GoalsTable";
+import GoalsTable from "../components/GoalTable/GoalsTable";
 
 const GoalSettingTab = () => {
   const authToken = useAuthToken();

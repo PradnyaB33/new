@@ -35,7 +35,12 @@ const PerformanceSetup = () => {
       label: z.string(),
       value: z.string(),
     }),
-    goals: z.array(z.string()),
+    goals: z.array(
+      z.object({
+        label: z.string(),
+        value: z.string(),
+      })
+    ),
     ratings: z.array(
       z.object({
         label: z.string(),
@@ -107,7 +112,13 @@ const PerformanceSetup = () => {
         startDate: performance.startdate,
         endDate: performance.startdate,
       });
-      setValue("goals", performance.goals);
+      setValue(
+        "goals",
+        performance.goals.map((goalType) => ({
+          label: goalType,
+          value: goalType,
+        }))
+      );
       setValue("isDownCast", performance.isDownCast);
       setValue("isFeedback", performance.isFeedback);
       setValue("isKRA", performance.isKRA);
@@ -200,7 +211,7 @@ const PerformanceSetup = () => {
         ...data,
         startdate: data.startdate.startDate,
         enddate: data.enddate.endDate,
-        goals: data.goals.map((goalType) => goalType),
+        goals: data.goals.map((goalType) => goalType.value),
         stages: data.stages.value,
         ratings: data.ratings.map((rating) => rating.value),
       };
@@ -282,8 +293,9 @@ const PerformanceSetup = () => {
                   name="goals"
                   icon={TrendingUp}
                   control={control}
-                  type="mutltiselect"
+                  type="autocomplete"
                   options={goalsOptions}
+                  optionlist={goalsOptions}
                   placeholder="Goals"
                   label="Select Goal Type *"
                   errors={errors}
