@@ -15,7 +15,8 @@ import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
 import LoanManagementSkeleton from "./LoanManagementSkeleton";
 import LoanManagementPieChart from "./LoanManagementPieChart";
-import CreateLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/CreateLoanMgtModal";
+import AddLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/AddLoanMgtModal";
+
 
 const LoanManagement = () => {
   const { cookies } = useContext(UseContext);
@@ -25,7 +26,7 @@ const LoanManagement = () => {
   console.log("user", user);
   const userId = user._id;
   const organisationId = user.organizationId;
-  
+  console.log(organisationId);
 
   //for get loan data
   const { data: getEmployeeLoanData, isLoading } = useQuery(
@@ -60,9 +61,6 @@ const LoanManagement = () => {
       ? new Date(loan.loanCompletedDate)
       : null;
 
-    console.log("loan starting data", loanStartingDate);
-    console.log("loan ending data", loanEndingDate);
-
     const loanAmount = loan?.totalDeductionWithSi;
     const totalDeductionPerMonth = loan?.totalDeduction;
 
@@ -88,14 +86,11 @@ const LoanManagement = () => {
     }
 
     let currentDateToCheck = new Date(loanStartingDate);
-    console.log("currentdate to check", currentDateToCheck);
     while (
       currentDateToCheck <= loanEndingDate &&
-      currentDateToCheck >= currentDate
+      currentDateToCheck <= currentDate
     ) {
-      // Increment loanAmountPaid by totalDeductionPerMonth
       loanAmountPaid += totalDeductionPerMonth;
-      // Decrement loanAmountPending by totalDeductionPerMonth
       loanAmountPending -= totalDeductionPerMonth;
       currentDateToCheck.setMonth(currentDateToCheck.getMonth() + 1);
     }
@@ -151,7 +146,7 @@ const LoanManagement = () => {
   return (
     <>
       <section className="bg-gray-50 min-h-screen w-full">
-        <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center flex flex-col">
+        <article className="SetupSection bg-white w-[100%] md:w-[100%]  h-max shadow-md rounded-sm border  items-center">
           <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
             <div className="flex  gap-3 ">
               <div className="mt-1">
@@ -164,22 +159,18 @@ const LoanManagement = () => {
             </div>
           </div>
           <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
-            {getEmployeeLoanData?.length > 0 && (
-              <div className="flex gap-2 w-full">
-               <h1 className="text-lg">Your current active loans</h1>
-              </div>
-            )}
-           
-           <div className="flex justify-end w-full">
-           <Button
-              className="!font-semibold !bg-sky-500 flex gap-2"
+          <div className="flex gap-3">
+           <h1 className="text-xl">Your current active loans</h1>
+          </div>
+
+            <Button
+              className="!font-semibold !bg-sky-500 flex items-center gap-2"
               variant="contained"
               onClick={handleCreateModalOpen}
             >
               <Add />
               Apply For Loan
             </Button>
-           </div>
           </div>
 
           {isLoading ? (
@@ -195,12 +186,11 @@ const LoanManagement = () => {
                         <th scope="col" className="text-left pl-6 py-3">
                           SR NO
                         </th>
-                      
-                        <th scope="col" className="px-6 py-3">
-                          Loan Status
-                        </th>
                         <th scope="col" className="px-8 py-3">
                           Loan Type
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Loan Status
                         </th>
                         <th scope="col" className="px-6 py-3">
                           Loan Amount Applied
@@ -209,7 +199,7 @@ const LoanManagement = () => {
                           Total Loan Amount
                         </th>
                         <th scope="col" className="px-6 py-3">
-                          Loan Amount Paid Monthly
+                          Loan Amount Paid
                         </th>
                         <th scope="col" className="px-6 py-3">
                           Loan Amount Pending
@@ -244,7 +234,9 @@ const LoanManagement = () => {
                               />
                             </td>
                             <td className="text-left pl-6 py-3">{id + 1}</td>
-                          
+                            <td className="py-3 pl-6">
+                              {loanMgtData.loanType?.loanName}
+                            </td>
                             <td className="text-left leading-7 text-[16px] w-[200px] ">
                               {loanMgtData.status === "Pending" ? (
                                 <div className="flex items-center gap-2">
@@ -273,9 +265,6 @@ const LoanManagement = () => {
                                   </span>
                                 </div>
                               )}
-                            </td>
-                            <td className="py-3 pl-6">
-                              {loanMgtData.loanType?.loanName}
                             </td>
 
                             <td className="py-3 pl-6">
@@ -308,6 +297,7 @@ const LoanManagement = () => {
                 </div>
               </div>
             </>
+            
           ) : (
             <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
               <article className="flex items-center mb-1 text-red-500 gap-2">
@@ -318,17 +308,19 @@ const LoanManagement = () => {
             </section>
           )}
         </article>
-        {/* Show LoanManagementPieChart if showPieChart is true */}
-        {showPieChart && (
-          <LoanManagementPieChart
-            totalPaidAmount={totalPaidAmount}
-            totalPendingAmount={totalPendingAmount}
-          />
-        )}
+          {/* Show LoanManagementPieChart if showPieChart is true */}
+          {showPieChart && (
+            <LoanManagementPieChart
+              totalPaidAmount={totalPaidAmount}
+              totalPendingAmount={totalPendingAmount}
+            />
+          )}
       </section>
+         
+     
 
       {/* for create */}
-      <CreateLoanMgtModal
+      <AddLoanMgtModal
         handleClose={handleCreateModalClose}
         open={createModalOpen}
         organisationId={organisationId}

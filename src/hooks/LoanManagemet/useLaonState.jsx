@@ -13,7 +13,7 @@ const useLaonState = create((set) => {
     loanInteresetAmount: undefined,
     totalDeduction: undefined,
     totalDeductionWithSi: undefined,
-    
+    calNoOfEmi : undefined , 
 
     setLoanType: (loanType) => set({ loanType }),
     setRateOfInterest: (rateOfIntereset) => set({ rateOfIntereset }),
@@ -26,7 +26,7 @@ const useLaonState = create((set) => {
     setInteresetAmount: (loanInteresetAmount) => set({ loanInteresetAmount }),
     setTotalDeduction: (totalDeduction) => set({ totalDeduction }),
     setTotalDeductionWithSi: (totalDeductionWithSi) => set({ totalDeductionWithSi }),
-   
+    setCalNoOfEmi: (calNoOfEmi) => set({calNoOfEmi }),
 
      
   };

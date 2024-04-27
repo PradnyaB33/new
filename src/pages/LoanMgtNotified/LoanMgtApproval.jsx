@@ -1,4 +1,6 @@
 import React, { useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "react-query";
 import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
 import Card from "@mui/material/Card";
@@ -7,16 +9,12 @@ import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { TestContext } from "../../State/Function/Main";
-import { useQuery, useQueryClient } from "react-query";
-
-const LoanMgtApproval = ({employee}) => {
+const LoanMgtApproval = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
+  const { loanId } = useParams();
   const { handleAlert } = useContext(TestContext);
-  const queryClient = useQueryClient();
-  console.log("employee" , employee);
-  let loanId = employee?._id;
-  console.log("loan id" , loanId);
+  const navigate = useNavigate();
 
   //for get loan data
   const { data: getEmployeeLoanInfo } = useQuery(
@@ -54,9 +52,8 @@ const LoanMgtApproval = ({employee}) => {
           },
         }
       );
-       console.log(response);
-        // Invalidate the query to force refetch
-      queryClient.invalidateQueries(["empLoanInfo", loanId]);
+      console.log(response);
+
       // Display appropriate alert message based on action
       if (status === "ongoing") {
         handleAlert(
@@ -71,7 +68,7 @@ const LoanMgtApproval = ({employee}) => {
           `Rejected the request for loan application of ${getEmployeeLoanInfo?.userId?.first_name}`
         );
       }
-      window.location.reload()
+      navigate("/pendingLoan");
     } catch (error) {
       console.error("Error adding salary data:", error);
       handleAlert(true, "error", "Something went wrong");
@@ -79,17 +76,17 @@ const LoanMgtApproval = ({employee}) => {
   };
   return (
     <>
-       <div>
+      <div className="mx-auto mt-20">
         <Card
           variant="outlined"
-          sx={{ width: "100%", maxWidth: "95%", marginTop : "50px"  }}
+          sx={{ width: "100%", maxWidth: "50%", marginLeft: "25%" }}
         >
           <Box sx={{ p: 2 }}>
-            <Typography gutterBottom variant="h4" component="div">
-            {getEmployeeLoanInfo?.userId?.first_name || ""}
+            <Typography gutterBottom variant="h5" component="div">
+              {getEmployeeLoanInfo?.userId?.first_name || ""}
             </Typography>
             <Typography color="text.secondary" variant="body2">
-            {getEmployeeLoanInfo?.userId?.first_name || ""} has raised a
+              {getEmployeeLoanInfo?.userId?.first_name || ""} has raised a
               request for loan application
             </Typography>
           </Box>
@@ -104,7 +101,7 @@ const LoanMgtApproval = ({employee}) => {
                 Loan Type
               </Typography>
               <Typography gutterBottom component="div">
-              {getEmployeeLoanInfo?.loanType?.loanName || ""}
+                {getEmployeeLoanInfo?.loanType?.loanName || ""}
               </Typography>
             </Stack>
             <Stack
@@ -116,7 +113,7 @@ const LoanMgtApproval = ({employee}) => {
                 Loan Amount
               </Typography>
               <Typography gutterBottom component="div">
-              {getEmployeeLoanInfo?.loanAmount || ""}
+                {getEmployeeLoanInfo?.loanAmount || ""}
               </Typography>
             </Stack>
             <Stack
@@ -128,7 +125,7 @@ const LoanMgtApproval = ({employee}) => {
                 Rate Of Interest (%)
               </Typography>
               <Typography gutterBottom component="div">
-              {getEmployeeLoanInfo?.rateOfIntereset || ""}
+                {getEmployeeLoanInfo?.rateOfIntereset || ""}
               </Typography>
             </Stack>
             <Stack
@@ -140,7 +137,7 @@ const LoanMgtApproval = ({employee}) => {
                 Loan Disbursement Date
               </Typography>
               <Typography gutterBottom component="div">
-              {formatDate(getEmployeeLoanInfo?.loanDisbursementDate) || ""}
+                {formatDate(getEmployeeLoanInfo?.loanDisbursementDate) || ""}
               </Typography>
             </Stack>
             <Stack
@@ -152,7 +149,7 @@ const LoanMgtApproval = ({employee}) => {
                 Loan Completed Date
               </Typography>
               <Typography gutterBottom component="div">
-              {formatDate(getEmployeeLoanInfo?.loanCompletedDate) || ""}
+                {formatDate(getEmployeeLoanInfo?.loanCompletedDate) || ""}
               </Typography>
             </Stack>
             <Stack
@@ -164,7 +161,7 @@ const LoanMgtApproval = ({employee}) => {
                 No Of EMI
               </Typography>
               <Typography gutterBottom component="div">
-              {getEmployeeLoanInfo?.noOfEmi || ""}
+                {getEmployeeLoanInfo?.noOfEmi || ""}
               </Typography>
             </Stack>
             <Stack
@@ -176,34 +173,24 @@ const LoanMgtApproval = ({employee}) => {
               Total Deduction
               </Typography>
               <Typography gutterBottom component="div">
-              {getEmployeeLoanInfo?.totalDeduction || ""}
+                {getEmployeeLoanInfo?.totalDeduction || ""}
               </Typography>
             </Stack>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typography gutterBottom variant="h6" component="div">
-              Total Deduction With Simple Interest
-              </Typography>
-              <Typography gutterBottom component="div">
-              {getEmployeeLoanInfo?.totalDeductionWithSi || ""}
-              </Typography>
-            </Stack>
+
+          
           </Box>
           <Divider />
           <Box sx={{ p: 2 }}>
             <div className="flex justify-center gap-10">
               {/* Accept button */}
-               <button
+              <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 onClick={() => handleApproval("ongoing")}
               >
                 Accept
               </button>
               {/* Reject button */}
-               <button
+              <button
                 className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                 onClick={() => handleApproval("reject")}
               >
@@ -212,7 +199,7 @@ const LoanMgtApproval = ({employee}) => {
             </div>
           </Box>
         </Card>
-      </div>  
+      </div>
     </>
   );
 };
