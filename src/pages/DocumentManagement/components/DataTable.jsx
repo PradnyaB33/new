@@ -29,57 +29,27 @@ const DataTable = () => {
   const [documents, setDocuments] = useState([]);
   const [selectedDocumentId, setSelectedDocumentId] = useState("");
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState([]);
-  const [managerIds, setManagerIds] = useState([]);
   const { setAppAlert } = useContext(UseContext);
   const [selectAll, setSelectAll] = useState(false);
   const authToken = useGetUser().authToken;
 
-  const handleSelectAllClick = async (event) => {
+  const handleSelectAllClick = (event) => {
     const checked = event.target.checked;
     setSelectAll(checked);
 
     if (checked) {
       const allEmployeeIds = employeeData.map((employee) => employee._id);
       setSelectedEmployeeIds(allEmployeeIds);
-
-      try {
-        const managerIdPromises = allEmployeeIds.map(async (empId) => {
-          try {
-            const managerResponse = await axios.get(
-              `${process.env.REACT_APP_API}/route/org/getManager/${empId}`,
-              {
-                headers: {
-                  Authorization: authToken,
-                },
-              }
-            );
-            return managerResponse.data.id;
-          } catch (error) {
-            console.error("Error fetching manager for employee", empId, error);
-            return null;
-          }
-        });
-
-        const managerIds = await Promise.all(managerIdPromises);
-        console.log("Manager IDs for selected employees:", managerIds);
-
-        setManagerIds(managerIds);
-      } catch (error) {
-        console.error("Error fetching manager IDs:", error);
-      }
     } else {
       setSelectedEmployeeIds([]);
-      setManagerIds([]);
     }
   };
 
   useEffect(() => {
     console.log(selectedEmployeeIds);
-    console.log(managerIds);
-    // eslint-disable-next-line
   }, [selectedEmployeeIds]);
 
-  const handleEmployeeSelection = async (event, id) => {
+  const handleEmployeeSelection = (event, id) => {
     const selectedIndex = selectedEmployeeIds.indexOf(id);
     let newSelected = [...selectedEmployeeIds];
 
@@ -92,32 +62,6 @@ const DataTable = () => {
     setSelectedEmployeeIds(newSelected);
     setSelectAll(newSelected.length === employeeData.length);
     console.log("Selected Employee IDs:", newSelected);
-
-    try {
-      const managerIdPromises = newSelected.map(async (empId) => {
-        try {
-          const managerResponse = await axios.get(
-            `${process.env.REACT_APP_API}/route/org/getManager/${empId}`,
-            {
-              headers: {
-                Authorization: authToken,
-              },
-            }
-          );
-          return managerResponse.data.id;
-        } catch (error) {
-          console.error("Error fetching manager for employee", empId, error);
-          return null;
-        }
-      });
-
-      const managerIds = await Promise.all(managerIdPromises);
-      console.log("Manager IDs for selected employees:", managerIds);
-
-      setManagerIds(managerIds);
-    } catch (error) {
-      console.error("Error fetching manager IDs:", error);
-    }
   };
 
   const isSelected = (id) => selectedEmployeeIds.indexOf(id) !== -1;
@@ -149,7 +93,7 @@ const DataTable = () => {
         }
       );
       setEmployeeData(response.data.employees);
-      setInitialEmployeeData(response.data.employees);
+      setInitialEmployeeData(response.data.employees); // Store initial employees
     } catch (error) {
       console.error("Error fetching employees: ", error);
     }
@@ -199,6 +143,7 @@ const DataTable = () => {
   const handleSearchChange = (event) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
+    // Filter employees based on search query
     const filteredEmployees = initialEmployeeData.filter((employee) => {
       return (
         employee.first_name.toLowerCase().includes(query) ||
@@ -218,6 +163,7 @@ const DataTable = () => {
   const handleDepartmentChange = (event) => {
     const deptId = event.target.value;
     setSelectedDepartmentId(deptId);
+    // Filter employees based on selected department
     const filteredEmployees = initialEmployeeData.filter((employee) => {
       return employee.deptname[0] === deptId;
     });
@@ -232,19 +178,10 @@ const DataTable = () => {
 
   const handleSendButtonClick = async () => {
     try {
-      const employeeIds = selectedEmployeeIds.map((id) => {
-        const managerId = managerIds[selectedEmployeeIds.indexOf(id)];
-        return {
-          empId: id,
-          mId: managerId ? managerId : null,
-          status: false,
-        };
-      });
-
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/org/updatearr/${selectedDocumentId}`,
         {
-          employeeId: employeeIds,
+          employeeIds: selectedEmployeeIds,
         },
         {
           headers: {

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Search, West, RequestQuote } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
-import useLoanNotification from "../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
 import LoanMgtApproval from "./LoanMgtApproval";
+import useLoanNotification from "../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
+
 
 const LoanMgtNotification = () => {
   const [searchQuery, setSearchQuery] = useState("");

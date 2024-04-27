@@ -4,11 +4,11 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import useGetUser from "../../hooks/Token/useUser";
-import DocPreviewModal from "./components/Modal";
+import ShowDoc from "./components/ShowDoc";
+
 const OrgDocManage = () => {
   const { authToken } = useGetUser();
   const [open, setOpen] = useState("");
-  const [selectedDoc, setSelectedDoc] = useState(null); // State to store the selected document
   const { data } = useQuery(`getdocsforemp`, async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/org/getdocsforemp`,
@@ -16,23 +16,20 @@ const OrgDocManage = () => {
         headers: { Authorization: authToken },
       }
     );
-    console.log("data", response.data.documents);
+    console.log(response.data.documents);
     return response.data.documents;
   });
   useEffect(() => {
     console.log(open);
   }, [open]);
 
-  // Function to handle the "SHOW doc" button click
-  const handleShowDoc = (doc) => {
-    setSelectedDoc(doc); // Set the selected document
-    setOpen("doc"); // Open the modal
-  };
-
   return (
     <div className="w-full h-full p-5">
       <div className="w-[50%] h-auto pb-4 mt-4 border-2 m-auto rounded-3xl relative">
         {/* Ensure the clickable area is large enough */}
+
+        {open === "" && <ShowDoc data={data} setOpen={setOpen} />}
+
         {open === "doc" && (
           <>
             <div
@@ -47,33 +44,20 @@ const OrgDocManage = () => {
             >
               Organization Documents
             </div>
-            {selectedDoc && (
-              <DocPreviewModal
-                fileData={selectedDoc}
-                openState={open === "doc"} // Pass the modal open state
-                setOpenState={setOpen} // Pass the function to set modal open state
-              />
-            )}
+            {data?.map((item, idx) => (
+              <div
+                key={idx}
+                className="w-[500px] h-[60px] px-4 m-auto shadow-md flex gap-4 items-center justify-between"
+              >
+                <div className="text-lg">{item.title}</div>
+                <Button variant="contained" size="small">
+                  SHOW doc
+                </Button>
+              </div>
+            ))}
           </>
         )}
       </div>
-      {/* Render the document buttons */}
-      {data?.map((item, idx) => (
-        <div
-          key={idx}
-          className="w-[500px] h-[60px] px-4 m-auto shadow-md flex gap-4 items-center justify-between"
-        >
-          <div className="text-lg">{item.title}</div>
-          {/* Pass the corresponding document to the handleShowDoc function */}
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => handleShowDoc(item)}
-          >
-            SHOW doc
-          </Button>
-        </div>
-      ))}
     </div>
   );
 };

@@ -1,9 +1,9 @@
 import { Stack } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 
 const ReviewTab = () => {
-  const rowsPerPage = 10; // Define the number of rows per page
-  const [page, setPage] = useState(1);
+  // const rowsPerPage = 10; // Define the number of rows per page
+  // const [page, setPage] = useState(1);
   return (
     <div className=" bg-white rounded-md ">
       <div className="flex items-center justify-between ">
@@ -43,9 +43,7 @@ const ReviewTab = () => {
               direction={"row"}
               className="border-[.5px] border-gray-200 border-t-0 px-4 py-2 h-full  items-center w-full justify-between "
             >
-              <div>
-                <h1>Showing {page} to 1 of 20 entries</h1>
-              </div>
+              <div>{/* <h1>Showing {page} to 1 of 20 entries</h1> */}</div>
               {/* <Pagination
               count={page}
               page={page}

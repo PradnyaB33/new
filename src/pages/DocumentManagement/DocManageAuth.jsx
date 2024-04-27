@@ -1,11 +1,5 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import {
-  Button,
-  Container,
-  MenuItem,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Container, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import jsPDF from "jspdf";
 import React, { useContext, useEffect, useState } from "react";
@@ -26,21 +20,6 @@ const DocManageAuth = () => {
   const querClient = useQueryClient();
   const [docId, setDocId] = useState("");
   const { setAppAlert } = useContext(UseContext);
-  const [type, setType] = useState();
-  const documentNames = [
-    "Employment Offer Letter",
-    "Appointment Letter",
-    "Promotion Letter",
-    "Transfer Letter",
-    "Termination Letter",
-    "Resignation Acceptance Letter",
-    "Confirmation Letter",
-    "Performance Appraisal Letter",
-    "Warning Letter",
-    "Salary Increment Letter",
-    "Training Invitation Letter",
-    "Employee Recognition Letter",
-  ];
 
   const { data: data2 } = useQuery(`getOrgDocs`, async () => {
     const response = await axios.get(
@@ -59,8 +38,6 @@ const DocManageAuth = () => {
     title: "",
     details: "",
     applicableDate: "",
-    header: "",
-    footer: "",
   });
 
   const handleEditDocument = async (id) => {
@@ -72,19 +49,7 @@ const DocManageAuth = () => {
           headers: { Authorization: authToken },
         }
       );
-
-      console.log("my resp", response.data.doc);
-      const { title, details, applicableDate, type, header, footer } =
-        response.data.doc;
-      setNewDocument({
-        title,
-        details,
-        applicableDate,
-        type, // Set the type here
-        header,
-        footer,
-      });
-      setType(type); // Also set the type state variable
+      setNewDocument(response.data.doc);
     } catch (error) {
       console.error("Error while fetching document for editing:", error);
     }
@@ -118,92 +83,25 @@ const DocManageAuth = () => {
       title: "",
       details: "",
       applicableDate: "",
-      header: "",
-      footer: "",
     });
   }, [option]);
 
   const handleCreateDocument = async () => {
     try {
       const doc = new jsPDF();
-      const marginX = 20;
-      const marginY = 10;
-
       doc.setFontSize(12);
-      doc.text("Welcome to www.aegishrms.com", marginX, 20 + marginY);
-
-      doc.text("Title: " + newDocument.title, marginX, 30 + marginY);
-
-      doc.text(
-        "Applicable Date: " + newDocument.applicableDate,
-        marginX,
-        40 + marginY
-      );
-
-      const headerText = stripTags(newDocument.header);
-      const headerLines = doc.splitTextToSize(headerText, 180);
-      doc.text(headerLines, marginX, 50 + marginY);
-
-      if (newDocument.header.includes("<img")) {
-        const imgHeader = new Image();
-        imgHeader.src = newDocument.header.match(/src\s*=\s*"(.+?)"/)[1];
-        await new Promise((resolve) => {
-          imgHeader.onload = () => {
-            const imgWidth = 20;
-            const imgHeight = 20;
-            const imgX = marginX + 150;
-            const imgY = 40 + marginY - imgHeight - 5;
-            doc.addImage(imgHeader, imgX, imgY, imgWidth, imgHeight);
-            resolve();
-          };
-        });
-      }
-
-      const detailsLines = doc.splitTextToSize(
-        stripTags(newDocument.details),
-        180
-      );
-      let detailsY = 70 + marginY;
-      detailsLines.forEach((line) => {
-        if (detailsY + 10 > doc.internal.pageSize.height - marginY) {
-          doc.addPage();
-          detailsY = 10 + marginY;
-        }
-        const splitLines = doc.splitTextToSize(line, 180);
-        splitLines.forEach((splitLine) => {
-          doc.text(splitLine, marginX, detailsY);
-          detailsY += 10;
-        });
-      });
-
-      // Footer from Quill editor
-      const footerText = stripTags(newDocument.footer);
-      const footerLines = doc.splitTextToSize(footerText, 180);
-      const footerHeight = footerLines.length * 10;
-      const footerY = doc.internal.pageSize.height - marginY - footerHeight;
-      doc.text(footerLines, marginX, footerY);
-
-      // Image as footer (if applicable)
-      if (newDocument.footer.includes("<img")) {
-        const imgFooter = new Image();
-        imgFooter.src = newDocument.footer.match(/src\s*=\s*"(.+?)"/)[1];
-        await new Promise((resolve) => {
-          imgFooter.onload = () => {
-            const imgWidth = 30;
-            const imgHeight = 30;
-            const imgX = marginX + 150;
-            const imgY = footerY + footerHeight + 5;
-            doc.addImage(imgFooter, imgX, imgY, imgWidth, imgHeight);
-            resolve();
-          };
-        });
-      }
-
+      doc.text("Welcome to www.aegishrms.com", 10, 20);
+      doc.text("Title: " + newDocument.title, 10, 30);
+      doc.text("Applicable Date: " + newDocument.applicableDate, 10, 40);
+      const detailsText = stripTags(newDocument.details); // Remove HTML tags
+      const detailsLines = doc.splitTextToSize(detailsText, 180);
+      doc.text(detailsLines, 10, 50);
       const pdfDataUri = doc.output("datauristring");
 
       const signedUrlResponse = await getSignedUrlForOrgDocs(authToken, {
         documentName: `${newDocument.title}`,
       });
+
       const blob = await fetch(pdfDataUri).then((res) => res.blob());
       await uploadFile(signedUrlResponse.url, blob);
 
@@ -213,16 +111,12 @@ const DocManageAuth = () => {
           title: newDocument.title,
           details: newDocument.details,
           applicableDate: newDocument.applicableDate,
-          header: newDocument.header,
-          footer: newDocument.footer,
           url: signedUrlResponse.url.split("?")[0],
-          type: type,
         },
         {
           headers: { Authorization: authToken },
         }
       );
-
       querClient.invalidateQueries("getOrgDocs");
       setAppAlert({
         alert: true,
@@ -233,8 +127,6 @@ const DocManageAuth = () => {
         title: "",
         details: "",
         applicableDate: "",
-        header: "",
-        footer: "",
       });
 
       console.log("Document uploaded and data saved successfully");
@@ -245,107 +137,42 @@ const DocManageAuth = () => {
 
   const handleUpdateDocument = async () => {
     try {
-      const doc = new jsPDF();
-      const marginX = 20;
-      const marginY = 10;
-
-      doc.setFontSize(12);
-      doc.text("Welcome to www.aegishrms.com", marginX, 20 + marginY);
-      doc.text("Title: " + newDocument.title, marginX, 30 + marginY);
-      doc.text(
-        "Applicable Date: " + newDocument.applicableDate,
-        marginX,
-        40 + marginY
-      );
-
-      const headerText = stripTags(newDocument.header);
-      const headerLines = doc.splitTextToSize(headerText, 180);
-      doc.text(headerLines, marginX, 50 + marginY);
-
-      if (newDocument.header.includes("<img")) {
-        const imgHeader = new Image();
-        imgHeader.src = newDocument.header.match(/src\s*=\s*"(.+?)"/)[1];
-        await new Promise((resolve) => {
-          imgHeader.onload = () => {
-            const imgWidth = 20;
-            const imgHeight = 20;
-            const imgX = marginX + 150;
-            const imgY = 40 + marginY - imgHeight - 5;
-            doc.addImage(imgHeader, imgX, imgY, imgWidth, imgHeight);
-            resolve();
-          };
-        });
-      }
-
-      const detailsLines = doc.splitTextToSize(
-        stripTags(newDocument.details),
-        180
-      );
-      let detailsY = 70 + marginY;
-      detailsLines.forEach((line) => {
-        if (detailsY + 10 > doc.internal.pageSize.height - marginY) {
-          doc.addPage();
-          detailsY = 10 + marginY;
-        }
-        const splitLines = doc.splitTextToSize(line, 180);
-        splitLines.forEach((splitLine) => {
-          doc.text(splitLine, marginX, detailsY);
-          detailsY += 10;
-        });
-      });
-
-      const footerText = stripTags(newDocument.footer);
-      const footerLines = doc.splitTextToSize(footerText, 180);
-      const footerHeight = footerLines.length * 10;
-      const footerY = doc.internal.pageSize.height - marginY - footerHeight;
-      doc.text(footerLines, marginX, footerY);
-
-      if (newDocument.footer.includes("<img")) {
-        const imgFooter = new Image();
-        imgFooter.src = newDocument.footer.match(/src\s*=\s*"(.+?)"/)[1];
-        await new Promise((resolve) => {
-          imgFooter.onload = () => {
-            const imgWidth = 30;
-            const imgHeight = 30;
-            const imgX = marginX + 150;
-            const imgY = footerY + footerHeight + 5;
-            doc.addImage(imgFooter, imgX, imgY, imgWidth, imgHeight);
-            resolve();
-          };
-        });
-      }
-
-      const pdfDataUri = doc.output("datauristring");
-
-      const signedUrlResponse = await getSignedUrlForOrgDocs(authToken, {
-        documentName: `${newDocument.title}`,
-      });
-      const blob = await fetch(pdfDataUri).then((res) => res.blob());
-      await uploadFile(signedUrlResponse.url, blob);
-
-      await axios.patch(
+      const resp = await axios.patch(
         `${process.env.REACT_APP_API}/route/org/updatedocuments/${docId}`,
         {
           title: newDocument.title,
           details: newDocument.details,
           applicableDate: newDocument.applicableDate,
-          header: newDocument.header,
-          footer: newDocument.footer,
-          url: signedUrlResponse.url.split("?")[0],
+          url: newDocument.url,
         },
         {
-          headers: { Authorization: authToken },
+          headers: {
+            Authorization: authToken,
+          },
         }
       );
+      console.log(resp);
+      const doc = new jsPDF();
+      doc.setFontSize(12);
+      doc.text("Welcome to www.aegishrms.com", 10, 20);
+      doc.text("Title: " + newDocument.title, 10, 30);
+      doc.text("Applicable Date: " + newDocument.applicableDate, 10, 40);
+      const detailsText = stripTags(newDocument.details); // Remove HTML tags
+      const detailsLines = doc.splitTextToSize(detailsText, 180);
+      doc.text(detailsLines, 10, 50);
+      const pdfDataUri = doc.output("datauristring");
+      const signedUrlResponse = await getSignedUrlForOrgDocs(authToken, {
+        documentName: `${newDocument.title}`,
+      });
 
+      const blob = await fetch(pdfDataUri).then((res) => res.blob());
+      await uploadFile(signedUrlResponse.url, blob);
       querClient.invalidateQueries("getOrgDocs");
       setAppAlert({
         alert: true,
         type: "success",
         msg: "Document Updated Successfully",
       });
-
-      console.log("Document uploaded and data saved successfully");
     } catch (error) {
       console.error("Error while updating document:", error);
     }
@@ -360,7 +187,7 @@ const DocManageAuth = () => {
 
   return (
     <div className="w-full h-full flex justify-around p-6 gap-6">
-      <Container className="w-[600px] h-[80vh] border-2 mt-5 pt-4 overflow-y-auto">
+      <Container className="w-[600px] h-[80vh] border-2 mt-5 pt-4">
         {option !== "" && (
           <div
             onClick={() => setOption("")}
@@ -381,7 +208,7 @@ const DocManageAuth = () => {
         {option === "" && <Options setOption={setOption} />}
       </Container>
 
-      <Container className="w-[600px] h-full border-2 mt-5">
+      <Container className="w-[600px] h-[80vh] border-2 mt-5">
         <div id="document-content">
           <div
             style={{ borderBottom: "2px solid gray" }}
@@ -402,77 +229,13 @@ const DocManageAuth = () => {
               fullWidth
               margin="normal"
             />
-            <TextField
-              select
-              label="Select Document"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-              fullWidth
-              margin="normal"
-              size="small"
-            >
-              {documentNames.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
-            </TextField>
             <div style={{ width: "100%", maxWidth: "668px" }}>
-              <Typography variant="h6" gutterBottom>
-                Header
-              </Typography>
               <ReactQuill
-                className="h-[80px] !mb-12"
-                theme="snow" // Specify Quill theme
-                value={newDocument.header}
-                onChange={(value) =>
-                  setNewDocument({ ...newDocument, header: value })
-                }
-                modules={{
-                  toolbar: [
-                    [{ font: [] }],
-                    [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                    ["bold", "italic", "underline", "strike"],
-                    [{ list: "ordered" }, { list: "bullet" }],
-                    ["link", "image"],
-                    [{ align: [] }],
-                    ["clean"],
-                  ],
-                }}
-                style={{ width: "100%" }}
-              />
-              <Typography variant="h6" gutterBottom>
-                Details
-              </Typography>
-              <ReactQuill
-                className="h-[280px] mb-12"
+                className="h-[280px] mb-9"
                 theme="snow" // Specify Quill theme
                 value={newDocument.details}
                 onChange={(value) =>
                   setNewDocument({ ...newDocument, details: value })
-                }
-                modules={{
-                  toolbar: [
-                    [{ font: [] }],
-                    [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                    ["bold", "italic", "underline", "strike"],
-                    [{ list: "ordered" }, { list: "bullet" }],
-                    ["link", "image"],
-                    [{ align: [] }],
-                    ["clean"],
-                  ],
-                }}
-                style={{ width: "100%" }}
-              />
-              <Typography variant="h6" className="mt-2" gutterBottom>
-                Footer
-              </Typography>
-              <ReactQuill
-                className="h-[80px] !mb-10"
-                theme="snow" // Specify Quill theme
-                value={newDocument.footer}
-                onChange={(value) =>
-                  setNewDocument({ ...newDocument, footer: value })
                 }
                 modules={{
                   toolbar: [
@@ -505,7 +268,7 @@ const DocManageAuth = () => {
             />
           </div>
         </div>
-        <div className="flex gap-2 mt-3 mb-3">
+        <div className="flex gap-2 mt-3">
           {!docId && (
             <Button
               variant="contained"

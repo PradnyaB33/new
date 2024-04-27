@@ -27,9 +27,9 @@ const AttendanceBioModal = ({
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const [checkedEmployees, setCheckedEmployees] = useState([]);
- 
-
-  // pull employee
+  const [emailNotFound, setEmailNotFound] = useState(false); 
+  console.log("email not found" , emailNotFound);
+   
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
@@ -41,7 +41,6 @@ const AttendanceBioModal = ({
       setAvailableEmployee(response.data.employees);
       setCurrentPage(page);
       setTotalPages(response.data.totalPages || 1);
-      // Generate an array of page numbers
       const numbersArray = Array.from(
         { length: response.data.totalPages || 1 },
         (_, index) => index + 1
@@ -52,27 +51,32 @@ const AttendanceBioModal = ({
     }
   };
 
+  
   useEffect(() => {
     fetchAvailableEmployee(currentPage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+       // eslint-disable-next-line
   }, [currentPage]);
 
+  // Function to handle previous page
   const prePage = () => {
     if (currentPage !== 1) {
       fetchAvailableEmployee(currentPage - 1);
     }
   };
 
+  // Function to handle next page
   const nextPage = () => {
     if (currentPage !== totalPages) {
       fetchAvailableEmployee(currentPage + 1);
     }
   };
 
+  // Function to change page
   const changePage = (id) => {
     fetchAvailableEmployee(id);
   };
 
+  // Function to handle checking/unchecking employee
   const handleCheckEmp = (employeeId) => {
     const isChecked = checkedEmployees.includes(employeeId);
     if (isChecked) {
@@ -81,24 +85,22 @@ const AttendanceBioModal = ({
       setCheckedEmployees([...checkedEmployees, employeeId]);
     }
   };
-  console.log("employee from aegis", checkedEmployees);
-  console.log("employee from biomatric", selectedEmployees);
 
+  //  for sync
   const handleSync = async () => {
+    if (checkedEmployees.length === 0 && emailSearch.trim() !== "") {
+      setEmailNotFound(true);
+      return;
+    }
     try {
       const syncedData = selectedEmployees.map((employee) => ({
         date: employee[3],
         punchingTime: employee[4],
         punchingStatus: employee[5],
       }));
-
-      // Extract EmployeeIds from checkedEmployees
       const EmployeeIds = checkedEmployees
         .map((employee) => employee._id)
         .filter(Boolean);
-      console.log("emp id", EmployeeIds);
-
-      // Make a POST request to the backend API for each EmployeeId
       EmployeeIds.forEach((EmployeeId) => {
         axios.post(
           `${process.env.REACT_APP_API}/route/organization/${organisationId}/add-attendance-data`,
@@ -143,7 +145,7 @@ const AttendanceBioModal = ({
             Employee’s List
           </Typography>
           <p className="text-xs text-gray-600 pl-10 text-center">
-           List of employee's from organsation .
+           List of employee's from organisation .
           </p>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
@@ -313,7 +315,7 @@ const AttendanceBioModal = ({
             </nav>
           </div>
           <DialogActions sx={{ justifyContent: "center" }}>
-            <Tooltip title={"Sync employee here"} arrow>
+            <Tooltip title={"Please select the employee to sync"} arrow>
               <Button variant="contained" color="primary" onClick={handleSync}>
                 Sync
               </Button>
