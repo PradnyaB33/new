@@ -86,7 +86,7 @@ const AttendanceBioModal = ({
     }
   };
 
-  
+  //  for sync
   const handleSync = async () => {
     if (checkedEmployees.length === 0 && emailSearch.trim() !== "") {
       setEmailNotFound(true);
