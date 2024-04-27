@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 const AttendanceBioModal = ({
@@ -115,7 +114,7 @@ const AttendanceBioModal = ({
       });
 
       handleAlert(true, "success", "Synced data successfully..");
-      navigate(`/organisation/${organisationId}/view-attendance-biomatric`);
+      
     } catch (error) {
       console.error("Failed to sync attendance data:", error);
     }
