@@ -1,8 +1,9 @@
-import { Container, TextField, Typography } from "@mui/material";
+import { Container , TextField, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { UseContext } from "../../State/UseState/UseContext";
-const EmployeeListToEmployee = ({ organisationId }) => {
+const EmployeeListToEmployee = ({organisationId}) => {
+
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [nameSearch, setNameSearch] = useState("");
@@ -57,16 +58,17 @@ const EmployeeListToEmployee = ({ organisationId }) => {
   const changePage = (id) => {
     fetchAvailableEmployee(id);
   };
+ 
 
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
-            Employee List
+          Employee List
           </Typography>
           <p className="text-xs text-gray-600 pl-10 text-center">
-            Edit employee data here by using edit button.
+            Edit employee data here by using edit button.      
           </p>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
@@ -173,6 +175,8 @@ const EmployeeListToEmployee = ({ organisationId }) => {
                           <span key={index}>{dept?.departmentName}</span>
                         ))}
                       </td>
+                    
+                     
                     </tr>
                   ))}
               </tbody>
@@ -259,6 +263,8 @@ const EmployeeListToEmployee = ({ organisationId }) => {
           </div>
         </article>
       </Container>
+
+    
     </>
   );
 };

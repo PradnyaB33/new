@@ -26,7 +26,7 @@ export default function SwipeableTemporaryDrawer() {
     <Box
       sx={{ width: 250, height: 100 }}
       role="presentation"
-      onClick={toggleDrawer}
+      // onClick={toggleDrawer}
       onKeyDown={toggleDrawer}
     >
       <TestNavItems toggleDrawer={toggleDrawer} />

@@ -92,7 +92,7 @@ const useIncomeAPI = (
 
     if (declarationData?.amount <= 0) {
       handleAlert(true, "error", "Amount cannot be zero");
-      setIsLoading(false);
+
       return false;
     }
 

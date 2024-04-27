@@ -1,9 +1,5 @@
-import axios from "axios";
 import React from "react";
-import { useQuery } from "react-query";
 import useGetSinglePunch from "../../../hooks/QueryHook/Remote-Punch/components/hook";
-import useGetUser from "../../../hooks/Token/useUser";
-import UserProfile from "../../../hooks/UserData/useUser";
 
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
@@ -28,31 +24,10 @@ const MappedPunches = ({
   punchObjectId,
 }) => {
   const { data } = useGetSinglePunch({ Id });
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
-  const { authToken } = useGetUser();
-  console.log("this is the user", user);
-  const { data: EmpData } = useQuery(`remote-punching-${Id}`, async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get/profile/${user._id}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      throw error;
-    }
-  });
 
   return (
     <div className={`w-full h-80 ${className} cursor-pointer`}>
       {data?.punchData?.punchData?.map((doc, idx) => {
-        console.log("this is doc", doc);
         let distance = 0;
         let totalDistance = 0;
         console.log(
@@ -76,38 +51,28 @@ const MappedPunches = ({
         return (
           <div
             key={idx}
-            className={`w-full rounded-lg h-auto bg-[#e2f1ff] md:flex flex-none flex-col mb-3 ${
+            className={`w-full rounded-lg h-auto bg-[#e2f1ff] flex flex-col mb-3 ${
               punchObjectId === doc._id ? "border border-primary" : ""
             }`}
             onClick={() => setPunchObjectId(doc._id)}
           >
-            <div className="md:flex flex-none w-full items-center h-full md:p-5 p-2">
-              <div className="md:mr-3 mr-0">
-                {doc?.image === "" ? (
-                  <img
-                    src={EmpData?.punchData.employeeId.user_logo_url}
-                    height={55}
-                    width={55}
-                    className="md:w-[55px] w-[40px] h-[40px] md:h-[55px] bg-black rounded-full object-cover"
-                    alt="op"
-                  ></img>
-                ) : (
-                  <img
-                    src={doc?.image}
-                    height={55}
-                    width={55}
-                    className="md:w-[55px] w-[40px] h-[40px] md:h-[55px] bg-black rounded-full object-cover"
-                    alt="op"
-                  ></img>
-                )}
+            <div className="flex w-full items-center h-full p-5">
+              <div className="mr-3">
+                <img
+                  src={doc?.image}
+                  height={55}
+                  width={55}
+                  className="w-[55px] h-[55px] bg-black rounded-full object-cover"
+                  alt="op"
+                ></img>
               </div>
-              <div className="md:pl-5 pl-2 flex flex-col ">
-                <h1 className="text-xs md:text-base">
+              <div className="pl-5 flex flex-col ">
+                <h1>
                   Start Time:{" "}
                   {new Date(doc?.data[0]?.time).toLocaleTimeString()}
                 </h1>
                 {console.log("this is the doc", doc)}
-                <h1 className="text-xs md:text-base">
+                <h1>
                   End Time:{" "}
                   {doc.data && doc.data.length > 0 && doc?.createdAt
                     ? new Date(
@@ -115,9 +80,7 @@ const MappedPunches = ({
                       ).toLocaleTimeString()
                     : "N/A"}
                 </h1>
-                <h1 className="text-xs md:text-base">
-                  Distance Travelled: {distance}
-                </h1>
+                <h1>Distance Travelled: {distance}</h1>
               </div>
             </div>
           </div>

@@ -29,7 +29,7 @@ const AttendanceBioModal = ({
   const [checkedEmployees, setCheckedEmployees] = useState([]);
   const [emailNotFound, setEmailNotFound] = useState(false); 
   console.log("email not found" , emailNotFound);
- 
+   
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
@@ -86,7 +86,7 @@ const AttendanceBioModal = ({
     }
   };
 
-  
+  //  for sync
   const handleSync = async () => {
     if (checkedEmployees.length === 0 && emailSearch.trim() !== "") {
       setEmailNotFound(true);

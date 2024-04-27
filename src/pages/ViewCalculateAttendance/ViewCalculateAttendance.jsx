@@ -17,6 +17,8 @@ const ViewCalculateAttendance = () => {
   const [numbers, setNumbers] = useState([]);
   console.log(setTotalPages);
   console.log(setNumbers);
+  
+   
   // For Get Query
   const { data: calculateAttendanceData,  } = useQuery(
     ["calculateAttendanceData", organisationId],

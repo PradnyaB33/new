@@ -26,20 +26,31 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
   const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
   const [error, setError] = useState(null); 
+  console.log(organisationId);
 
   const EmpLoanMgtSchema = z.object({
     loanName: z.string(),
     loanValue: z.string().refine((value) => {
       const floatValue = parseFloat(value);
-      return floatValue >= 0 && !Object.is(floatValue, -0); 
+      return floatValue >= 0 && floatValue <= 1000000 && !Object.is(floatValue, -0); 
     }, {
-      message: "Minimum loan value should not be negative",
+      message: "Loan value should be between 0 and 1,000,000",
+    }).refine((value) => {
+      const floatValue = parseFloat(value);
+      return floatValue >= 0;
+    }, {
+      message: "Loan value should be a positive number",
     }),
     maxLoanValue: z.string().refine((value) => {
       const floatValue = parseFloat(value);
-      return floatValue >= 0 && !Object.is(floatValue, -0); 
+      return floatValue >= 0 && floatValue <= 1000000 && !Object.is(floatValue, -0); 
     }, {
-      message: "Maximum loan value should not be negative",
+      message: "Maximum loan value should be between 0 and 1,000,000",
+    }).refine((value) => {
+      const floatValue = parseFloat(value);
+      return floatValue >= 0; 
+    }, {
+      message: "Maximum loan value should be a positive number",
     }),
     rateOfInterest: z.string().refine((value) => {
       const floatValue = parseFloat(value);
@@ -47,7 +58,9 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
     }, {
       message: "Rate of interest should be between 0 and 99%",
     }),
-  }); 
+  });
+  
+  
 
   const {
     control,
