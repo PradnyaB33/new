@@ -94,6 +94,7 @@ const AuthInputFiled = ({
                   asSingle={true}
                   popoverDirection="down"
                   readOnly={true}
+                  displayFormat={"MM/DD/YYYY"}
                   onChange={(value) => {
                     field.onChange(value);
                   }}

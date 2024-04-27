@@ -83,6 +83,7 @@ const GoalsModel = ({
     handleSubmit,
     control,
     setValue,
+    reset,
     watch,
     formState: { errors },
   } = useForm({
@@ -115,6 +116,19 @@ const GoalsModel = ({
     });
     //eslint-disable-next-line
   }, [goalData]);
+
+  useEffect(() => {
+    if (id) {
+      reset({
+        goal: undefined,
+        description: undefined,
+        downcasted: undefined,
+        comments: undefined,
+        assignee: undefined,
+      });
+    }
+    //eslint-disable-next-line
+  }, [id]);
 
   const queryClient = useQueryClient();
   const addMutation = useMutation(

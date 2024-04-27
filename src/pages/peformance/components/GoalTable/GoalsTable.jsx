@@ -1,5 +1,6 @@
 import {
   AssignmentTurnedIn,
+  Autorenew,
   Cancel,
   CheckCircle,
   Info,
@@ -25,7 +26,7 @@ import MenuItem from "@mui/material/MenuItem";
 import axios from "axios";
 import { format } from "date-fns";
 import moment from "moment";
-import React, { useCallback, useContext, useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import Select from "react-select";
 import { TestContext } from "../../../../State/Function/Main";
@@ -66,7 +67,9 @@ const GoalStatus = ({ status, performance }) => {
             <Cancel /> {status}
           </>
         ) : (
-          <>hii</>
+          <p className="text-gray-500">
+            <Info /> Pending
+          </p>
         ))}
 
       {performance?.stages === "Monitoring stage/Feedback collection stage" &&
@@ -77,6 +80,24 @@ const GoalStatus = ({ status, performance }) => {
         ) : (
           <p className="text-gray-500">
             <Info /> Monitoring Pending
+          </p>
+        ))}
+
+      {performance?.stages === "Employee acceptance/acknowledgement stage" &&
+        (status === "Revaluation Requested" ? (
+          <p
+            // style={{ textShadow: "0 0 0  1px #333" }}
+            className="text-[#3f51b5]"
+          >
+            <Autorenew /> Revaluation Requested
+          </p>
+        ) : status === "Goal Completed" ? (
+          <p className="text-green-500">
+            <CheckCircle /> Goal Completed
+          </p>
+        ) : (
+          <p className="text-gray-500">
+            <Info /> Goal Acceptance Pending
           </p>
         ))}
 
@@ -223,9 +244,14 @@ const GoalsTable = ({ performance }) => {
         status,
         assignee: { label: openMenu.empId._id, value: openMenu.empId._id },
       };
+
+      let isGoalSettingCompleted = false;
+      if (status === "Goal Approved") {
+        isGoalSettingCompleted = false;
+      }
       await axios.patch(
         `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${openMenu._id}`,
-        { data },
+        { isGoalSettingCompleted, ...data },
         {
           headers: {
             Authorization: authToken,
@@ -239,15 +265,15 @@ const GoalsTable = ({ performance }) => {
     }
   };
 
-  const isTrippleDotActive = useCallback((goal) => {
-    if (isTimeFinish) {
-      return false;
-    }
+  // const isTrippleDotActive = useCallback((goal) => {
+  //   if (isTimeFinish) {
+  //     return false;
+  //   }
 
-    if (performance.stages === "Goal setting" && role === "Employee") {
-      return goal?.status === "Goal Rejected" ? true : false;
-    }
-  }, []);
+  //   if (performance.stages === "Goal setting" && role === "Employee") {
+  //     return goal?.status === "Goal Rejected" ? true : false;
+  //   }
+  // }, []);
 
   return (
     <section className="p-4 ">

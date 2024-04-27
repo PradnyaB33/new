@@ -73,7 +73,7 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
     }
   );
 
-  const { data: getGoal, isFetching } = useQuery({
+  const { isFetching } = useQuery({
     queryKey: ["getGoalMonitoring", id],
     queryFn: async () => {
       const { data } = await axios.get(
