@@ -4,8 +4,9 @@ import React, { useContext , useState,} from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useQuery } from "react-query";
-import TableViewIcon from '@mui/icons-material/TableView';
 import ViewAttendanceCallModal from "../../components/Modal/ViewAttendanceCalModal/ViewAttendanceCalModal";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+
 const ViewCalculateAttendance = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -74,14 +75,14 @@ const ViewCalculateAttendance = () => {
           Employee’s Calendar View
           </Typography>
           <p className="text-xs text-gray-600 pl-10 text-center">
-            View  the attendance of employees here.
+           Calendar view of employee attendance
           </p>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center gap-3 mb-3 md:mb-0">
               <TextField
                 onChange={(e) => setEmailSearch(e.target.value)}
-                placeholder="Search Email...."
+                placeholder="Search Employee by Email...."
                 variant="outlined"
                 size="small"
                 sx={{ width: 300 }}
@@ -103,7 +104,7 @@ const ViewCalculateAttendance = () => {
                     Employee Name
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Email
+                  Employee Email
                   </th>  
                   <th scope="col" className="!text-left pl-8 py-3">
                     Action
@@ -128,7 +129,7 @@ const ViewCalculateAttendance = () => {
                       <IconButton aria-label="view" size="small" onClick={() => {
                           handleEmpModalOpen(item);
                            }}>
-                        <TableViewIcon sx={{ color: 'green' }} />
+                        <CalendarMonthIcon sx={{ color: 'green' }} />
                       </IconButton>
                     </td>
                   </tr>

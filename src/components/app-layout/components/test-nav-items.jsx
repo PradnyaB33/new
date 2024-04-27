@@ -39,7 +39,10 @@ import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
-
+import PunchClockIcon from '@mui/icons-material/PunchClock';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import CallMissedIcon from '@mui/icons-material/CallMissed';
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
@@ -247,16 +250,11 @@ const TestNavItems = ({ toggleDrawer }) => {
           window.location.pathname?.includes("organisation") &&
           [
             "Super-Admin",
-            "Delegate-Super-Admin",
-            "Department-Head",
-            "Delegate-Department-Head",
-            "Department-Admin",
-            "Delegate-Department-Admin",
-            "Accountant",
-            "Delegate-Accountant",
             "HR",
             "Manager",
-            "Employee",
+            "Delegate-Super Admin",
+            "Department-Head",
+            "Department-Admin",
           ]?.includes(role),
         routes: [
           {
@@ -266,7 +264,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             link: `organisation/${orgId}/employee-onboarding`,
             icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Employee Onboarding",
+            text: "Onboarding",
           },
 
           {
@@ -282,16 +280,11 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "employeeList",
             isVisible: [
               "Super-Admin",
-              "Delegate-Super-Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
               "HR",
               "Manager",
-              "Employee",
+              "Department-Head",
+              "Delegate-Super Admin",
+              "Department-Admin",
             ].includes(role),
             link: `organisation/${orgId}/employee-list`,
             icon: <Groups className=" !text-[1.2em] text-[#67748E]" />,
@@ -365,7 +358,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "addDepartment",
             isVisible: [
               "Super-Admin",
-              "Delegate-Super-Admin",
               "HR",
               "Department-Head",
               "Delegate-Department-Head",
@@ -382,7 +374,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "deptDeletion",
             isVisible: [
               "Super-Admin",
-              "Delegate-Super-Admin",
               "HR",
               "Department-Head",
               "Delegate-Department-Head",
@@ -398,7 +389,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "departmentList",
             isVisible: [
               "Super-Admin",
-              "Delegate-Super-Admin",
               "HR",
               "Department-Head",
               "Delegate-Department-Head",
