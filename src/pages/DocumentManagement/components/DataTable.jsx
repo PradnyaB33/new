@@ -154,9 +154,10 @@ const DataTable = () => {
           },
         }
       );
-      console.log("manager", resp.data.managers);
-      setManagerArray(resp.data.managers);
+      console.log("manager", resp.data.filteredManagers);
+      setManagerArray(resp.data.filteredManagers);
     })();
+    // eslint-disable-next-line
   }, []);
 
   const fetchEmployees = async (orgId) => {
