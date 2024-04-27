@@ -299,7 +299,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
-      Punching: {
+      "Machine Punching": {
         open: false,
         icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
         isVisible:
@@ -312,8 +312,8 @@ const TestNavItems = ({ toggleDrawer }) => {
               role
             ),
             link: `organisation/${orgId}/emo-info-punch-status`,
-            icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Punch Sync",
+            icon: <PunchClockIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Punch Sync ",
           },
 
           {
@@ -322,7 +322,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               role
             ),
             link: `organisation/${orgId}/view-attendance-biomatric`,
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <AccessTimeIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Time Track",
           },
           {
@@ -331,7 +331,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               role
             ),
             link: `organisation/${orgId}/view-calculate-data`,
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            icon: <CalendarMonthIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Calendar View",
           },
           {
@@ -340,27 +340,10 @@ const TestNavItems = ({ toggleDrawer }) => {
               role
             ),
             link: `organisation/${orgId}/missed-punch-in-out`,
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Punch Missed",
+            icon: <CallMissedIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Missed Punch ",
           },
-          {
-            key: "viewCalculate",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
-              role
-            ),
-            link: `organisation/${orgId}/view-calculate-data`,
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "View Calculate Attendance",
-          },
-          {
-            key: "misspunchInOutRecord",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
-              role
-            ),
-            link: `organisation/${orgId}/missed-punch-in-out`,
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Missed Punch Record",
-          },
+         
         ],
       },
       Department: {
