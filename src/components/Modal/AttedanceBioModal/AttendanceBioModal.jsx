@@ -80,10 +80,13 @@ const AttendanceBioModal = ({
       setCheckedEmployees([...checkedEmployees, employeeId]);
     }
   };
-  console.log("employee from aegis", checkedEmployees);
-  console.log("employee from biomatric", selectedEmployees);
 
+  //  for sync
   const handleSync = async () => {
+    if (checkedEmployees.length === 0 && emailSearch.trim() !== "") {
+      setEmailNotFound(true);
+      return;
+    }
     try {
       const syncedData = selectedEmployees.map((employee) => ({
         date: employee[3],
