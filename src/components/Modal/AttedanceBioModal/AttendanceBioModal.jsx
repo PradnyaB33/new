@@ -27,9 +27,9 @@ const AttendanceBioModal = ({
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const [checkedEmployees, setCheckedEmployees] = useState([]);
-  const navigate = useNavigate();
-
-  // pull employee
+  const [emailNotFound, setEmailNotFound] = useState(false); 
+  console.log("email not found" , emailNotFound);
+   
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;

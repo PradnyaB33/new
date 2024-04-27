@@ -13,6 +13,7 @@ const ViewAttendacneBiomatric = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { organisationId } = useParams();
+  
 
   //for  Get Query
   const { data: empAttendanceData, isLoading } = useQuery(

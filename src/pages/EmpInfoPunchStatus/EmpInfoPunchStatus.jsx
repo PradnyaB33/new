@@ -16,7 +16,6 @@ const EmpInfoPunchStatus = () => {
   const itemsPerPage = 10;
   console.log(setTotalPages);
   
-
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
