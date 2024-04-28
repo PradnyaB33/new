@@ -7,7 +7,13 @@ import {
   PersonOutline,
   TrendingUp,
 } from "@mui/icons-material";
-import { Box, Button, IconButton, Modal } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  IconButton,
+  Modal,
+} from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -62,6 +68,7 @@ const GoalsModel = ({
   const zodSchema = z.object({
     goal: z.string(),
     description: z.string(),
+    measurments: z.string(),
     downcasted: z.boolean().optional(),
     comments: z.string().optional(),
     assignee: z
@@ -191,6 +198,7 @@ const GoalsModel = ({
     const goals = {
       goal: data.goal,
       description: data.description,
+      measurments: data.measurments,
       downcasted: data.downcasted,
       // measurement: data.measurement,
       assignee: data?.assignee?.map((emp) => emp.value) ?? [],
@@ -281,6 +289,17 @@ const GoalsModel = ({
             />
 
             <AuthInputFiled
+              name="measurments"
+              icon={Paid}
+              control={control}
+              type="texteditor"
+              placeholder="100"
+              label="Enter measurements name"
+              errors={errors}
+              error={errors.measurments}
+            />
+
+            <AuthInputFiled
               name="goalType"
               icon={Paid}
               control={control}
@@ -291,6 +310,7 @@ const GoalsModel = ({
               errors={errors}
               error={errors.goalType}
             />
+
             {performance?.stages ===
               "Monitoring stage/Feedback collection stage" &&
               role !== "Employee" && (
@@ -391,7 +411,13 @@ const GoalsModel = ({
                 Cancel
               </Button>
               <Button type="submit" variant="contained" color="primary">
-                {id ? "Update Goal" : "Create Goal"}
+                {addMutation.isLoading || updateMutation.isLoading ? (
+                  <CircularProgress size={20} color="primary" />
+                ) : id ? (
+                  "Update Goal"
+                ) : (
+                  "Create Goal"
+                )}
               </Button>
             </div>
           </form>

@@ -242,16 +242,17 @@ const GoalsTable = ({ performance }) => {
     try {
       const data = {
         status,
+        isGoalSettingCompleted: false,
         assignee: { label: openMenu.empId._id, value: openMenu.empId._id },
       };
 
-      let isGoalSettingCompleted = false;
+      // let isGoalSettingCompleted = false;
       if (status === "Goal Approved") {
-        isGoalSettingCompleted = false;
+        data.isGoalSettingCompleted = true;
       }
       await axios.patch(
         `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${openMenu._id}`,
-        { isGoalSettingCompleted, ...data },
+        { data },
         {
           headers: {
             Authorization: authToken,
