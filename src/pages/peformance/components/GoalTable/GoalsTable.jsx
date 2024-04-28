@@ -13,7 +13,6 @@ import {
 } from "@mui/icons-material";
 import {
   Avatar,
-  CircularProgress,
   Divider,
   IconButton,
   Menu,
@@ -26,7 +25,7 @@ import MenuItem from "@mui/material/MenuItem";
 import axios from "axios";
 import { format } from "date-fns";
 import moment from "moment";
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import Select from "react-select";
 import { TestContext } from "../../../../State/Function/Main";
@@ -39,6 +38,7 @@ import MonitoringModel from "./Modal/MonitoringModel";
 import PreviewGoalModal from "./Modal/PreviewGoalModal";
 import RatingModel from "./Modal/RatingModel";
 import RevaluateModel from "./Modal/RevaluateModel";
+import TabelSkeleton from "./Skelton/TabelSkeleton";
 
 const GoalStatus = ({ status, performance }) => {
   return (
@@ -156,6 +156,7 @@ const GoalsTable = ({ performance }) => {
   const [previewModal, setPreviewModal] = useState(false);
   const [previewId, setPreviewId] = useState(null);
   const [openMenu, setopenMenu] = useState(null);
+  const [search, setSearch] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { handleAlert } = useContext(TestContext);
   const openMenuBox = Boolean(anchorEl);
@@ -222,8 +223,8 @@ const GoalsTable = ({ performance }) => {
         }
       );
       return data;
-      // }
-    }
+    },
+    { refetchOnMount: false }
   );
 
   const options = useMemo(() => {
@@ -265,6 +266,10 @@ const GoalsTable = ({ performance }) => {
     }
   };
 
+  useEffect(() => {
+    console.log(search);
+  }, [search]);
+
   // const isTrippleDotActive = useCallback((goal) => {
   //   if (isTimeFinish) {
   //     return false;
@@ -276,29 +281,27 @@ const GoalsTable = ({ performance }) => {
   // }, []);
 
   return (
-    <section className="p-4 ">
-      <div className="p-4  bg-white rounded-md border">
-        <div className=" py-2">
+    <section className="px-8 py-0 mb-10 ">
+      <div className=" bg-white rounded-md ">
+        {/* <div className=" py-2">
           <h1 className="text-black  text-2xl">
             {role === "Employee" ? "My Goals" : "Manager Goals"}
           </h1>
-          {role !== "Employee" && (
-            <p>Select Assignee to view the assignee goals</p>
-          )}
-        </div>
+        </div> */}
         <div className="my-2 flex justify-between">
           <div className="flex gap-4">
-            {/* <div className={`space-y-1  min-w-[60vw] `}>
+            <div className={`space-y-1  min-w-[60vw] `}>
               <div
-                onFocus={() => {
-                  handleFocus("search");
-                }}
-                onBlur={() => setFocusedInput(null)}
-                className={` ${
-                  focusedInput === "search"
-                    ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
-                    : "outline-none border-gray-200 border-[.5px]"
-                } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
+                // onFocus={() => {
+                //   handleFocus("search");
+                // }}
+                // onBlur={() => setFocusedInput(null)}
+                // className={` ${
+                //   focusedInput === "search"
+                //     ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
+                //     : "outline-none border-gray-200 border-[.5px]"
+                // } flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px]`}
+                className="flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px] outline-none border-gray-200 border-[.5px]"
               >
                 <Search className="text-gray-700 md:text-lg !text-[1em]" />
                 <input
@@ -308,7 +311,7 @@ const GoalsTable = ({ performance }) => {
                   formNoValidate
                 />
               </div>
-            </div> */}
+            </div>
             {role !== "Employee" && (
               <div className={`space-y-1 w-full `}>
                 <div
@@ -353,7 +356,8 @@ const GoalsTable = ({ performance }) => {
         </div>
         <div className="bg-white w-full overflow-x-auto">
           {isFetching || performance === undefined ? (
-            <CircularProgress />
+            // <CircularProgress />
+            <TabelSkeleton />
           ) : orgGoals?.length <= 0 ? (
             <h1 className="bg-blue-100 text-rose-600 space-x- p-2 2 px-4 rounded-sm text-lg">
               <InfoOutlined /> No goals found
@@ -428,11 +432,16 @@ const GoalsTable = ({ performance }) => {
                         onClick={() => handleOpen(goal._id)}
                         className="text-sm cursor-pointer  text-left   px-2"
                       >
-                        <Tooltip
-                          title={`${goal.empId.first_name} ${goal.empId.last_name}`}
-                        >
-                          <Avatar src={goal.empId.user_logo_url} />
-                        </Tooltip>
+                        <div className="flex items-center gap-4">
+                          <Tooltip
+                            title={`${goal.empId.first_name} ${goal.empId.last_name}`}
+                          >
+                            <Avatar src={goal.empId.user_logo_url} />
+                          </Tooltip>
+                          <p className="text-sm">
+                            {goal.empId.first_name} {goal.empId.last_name}
+                          </p>
+                        </div>
                       </td>
 
                       <td
@@ -509,7 +518,7 @@ const GoalsTable = ({ performance }) => {
                 <div>
                   <h1>
                     Showing {page} to {orgGoals?.totalPages} of{" "}
-                    {orgGoals?.totalGoals}
+                    {orgGoals?.totalGoals} entries
                   </h1>
                 </div>
                 <Pagination

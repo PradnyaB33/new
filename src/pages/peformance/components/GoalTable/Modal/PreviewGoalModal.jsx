@@ -149,27 +149,27 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
                       </div>
                     )}
                 </div>
-                <div className="hover:bg-gray-100 rounded-md ">
-                  <p className="px-2">Description</p>
+                <div className="hover:bg-gray-100 rounded-md px-2">
+                  <p className="font-semibold text-[#67748E]">Description</p>
                   <p
-                    className="preview px-2 "
+                    className="preview  "
                     dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
                   ></p>
                 </div>
 
-                <div className="hover:bg-gray-100 rounded-md ">
-                  <p className="px-2">Measurments</p>
+                <div className="hover:bg-gray-100 rounded-md  px-2 ">
+                  <p className="font-semibold text-[#67748E]">Measurments</p>
                   {role !== "Employee" && (
                     <p
-                      className="preview px-2 "
+                      className="preview"
                       dangerouslySetInnerHTML={{
                         __html: sanitizedmanagerMesurments,
                       }}
                     ></p>
                   )}
                 </div>
-                <div className="hover:bg-gray-100 rounded-md ">
-                  <p className="px-2">comments</p>
+                <div className="hover:bg-gray-100 rounded-md  px-2 ">
+                  <p className="font-semibold text-[#67748E]">comments</p>
                   <p
                     className="preview px-2 "
                     dangerouslySetInnerHTML={{
@@ -179,30 +179,30 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
                 </div>
 
                 {getSingleGoal?.rating && (
-                  <div className="hover:bg-gray-100 rounded-md ">
-                    <p className="px-2">Ratings</p>
-                    <p className="preview px-2 ">{getSingleGoal?.rating}</p>
+                  <div className="hover:bg-gray-100 rounded-md px-2">
+                    <p className="font-semibold text-[#67748E]">Ratings</p>
+                    <p className="preview ">{getSingleGoal?.rating}</p>
                   </div>
                 )}
                 {getSingleGoal?.review && (
-                  <div className="hover:bg-gray-100 rounded-md ">
-                    <p className="px-2">Review</p>
+                  <div className="hover:bg-gray-100 rounded-md px-2">
+                    <p className="font-semibold text-[#67748E]">Review</p>
                     <p
-                      className="preview px-2 "
+                      className="preview "
                       dangerouslySetInnerHTML={{
                         __html: sanitizedReview ? sanitizedReview : "No data",
                       }}
                     ></p>
                   </div>
                 )}
-                <div className="hover:bg-gray-100 rounded-md ">
-                  <p className="px-2">Attachments</p>
-                  <p className="px-2">No data</p>
+                <div className="hover:bg-gray-100 rounded-md px-2">
+                  <p className="font-semibold text-[#67748E]">Attachments</p>
+                  <p className="">No data</p>
                 </div>
                 {role === "Employee" && (
                   <div className="hover:bg-gray-100 rounded-md ">
                     <p className="px-2">Assigned to</p>
-                    <p className="px-2">No data</p>
+                    <p className="">No data</p>
                   </div>
                 )}
                 <div className="hover:bg-gray-100 rounded-md ">
