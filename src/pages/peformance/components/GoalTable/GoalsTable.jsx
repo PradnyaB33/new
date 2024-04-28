@@ -40,7 +40,6 @@ import RevaluateModel from "./Modal/RevaluateModel";
 import TabelSkeleton from "./Skelton/TabelSkeleton";
 
 const GoalStatus = ({ goal, status, performance, isTimeFinish }) => {
-  console.log(`🚀 ~ isTimeFinish:`, isTimeFinish);
   return (
     <div className={`px-3 py-1 flex items-center gap-1  rounded-sm  w-max`}>
       {performance.stages === "Goal setting" &&
@@ -243,7 +242,7 @@ const GoalsTable = ({ performance }) => {
     //eslint-disable-next-line
   }, [performance?.enddate]);
 
-  const { data: employeeData } = useQuery(["employee"], async () => {
+  const { data: employeeData } = useQuery(["employee", role], async () => {
     console.log("query called", role);
     const { data } = await axios.get(
       `${process.env.REACT_APP_API}/route/employee/getEmployeeUnderManager/${role}`,
@@ -255,6 +254,8 @@ const GoalsTable = ({ performance }) => {
     );
     return data;
   });
+  console.log(`🚀 ~ employeeData:`, employeeData);
+
   const [page, setPage] = useState(1);
 
   const { data: orgGoals = [], isFetching } = useQuery(
