@@ -1,3 +1,37 @@
+// import {
+//   Button,
+//   Container,
+//   Dialog,
+//   DialogActions,
+//   DialogContent,
+//   TextField,
+//   Typography,
+//   Tooltip,
+// } from "@mui/material";
+// import axios from "axios";
+// import React, { useContext, useEffect, useState } from "react";
+// import { TestContext } from "../../../State/Function/Main";
+// import { UseContext } from "../../../State/UseState/UseContext";
+// const AttendanceBioModal = ({
+//   handleClose,
+//   open,
+//   organisationId,
+//   selectedEmployees,
+// }) => {
+//   const { cookies } = useContext(UseContext);
+//   const authToken = cookies["aegis"];
+//   const { handleAlert } = useContext(TestContext);
+//   const [emailSearch, setEmailSearch] = useState("");
+//   const [availableEmployee, setAvailableEmployee] = useState([]);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [totalPages, setTotalPages] = useState(1);
+//   const [numbers, setNumbers] = useState([]);
+//   const [checkedEmployees, setCheckedEmployees] = useState([]);
+//   const [emailNotFound, setEmailNotFound] = useState(false);
+//   console.log("email not found", emailNotFound);
+
+//   const fetchAvailableEmployee = async (page) => {
+//     try {
 import {
   Button,
   Container,
@@ -12,6 +46,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+
 const AttendanceBioModal = ({
   handleClose,
   open,
@@ -27,9 +62,9 @@ const AttendanceBioModal = ({
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const [checkedEmployees, setCheckedEmployees] = useState([]);
-  const [emailNotFound, setEmailNotFound] = useState(false); 
-  console.log("email not found" , emailNotFound);
-   
+  const [emailNotFound, setEmailNotFound] = useState(false);
+  console.log(emailNotFound);
+
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
@@ -51,10 +86,9 @@ const AttendanceBioModal = ({
     }
   };
 
-  
   useEffect(() => {
     fetchAvailableEmployee(currentPage);
-       // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [currentPage]);
 
   // Function to handle previous page
@@ -86,12 +120,30 @@ const AttendanceBioModal = ({
     }
   };
 
-  //  for sync
+  // Validate email format
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  // Handle sync
   const handleSync = async () => {
     if (checkedEmployees.length === 0 && emailSearch.trim() !== "") {
       setEmailNotFound(true);
       return;
     }
+
+    // Verify email for each checked employee
+    const invalidEmails = checkedEmployees.filter((employee) => {
+      const email = employee?.email || "";
+      return !validateEmail(email);
+    });
+
+    if (invalidEmails.length > 0) {
+      handleAlert(true, "error", "Please enter valid email addresses.");
+      return;
+    }
+
     try {
       const syncedData = selectedEmployees.map((employee) => ({
         date: employee[3],
@@ -116,8 +168,9 @@ const AttendanceBioModal = ({
         );
       });
 
-      handleAlert(true, "success", "Synced data successfully..");
+      handleAlert(true, "success", "Synced data successfully.");
       handleClose();
+      setCheckedEmployees([]);
     } catch (error) {
       console.error("Failed to sync attendance data:", error);
     }
@@ -139,13 +192,13 @@ const AttendanceBioModal = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <DialogContent className="border-none  !pt-0 !px-0  shadow-md outline-none rounded-md">
-        <Container maxWidth="xl" className="bg-gray-50 ">
-          <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
+      <DialogContent className="border-none !pt-0 !px-0 shadow-md outline-none rounded-md">
+        <Container maxWidth="xl" className="bg-gray-50">
+          <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
             Employee’s List
           </Typography>
           <p className="text-xs text-gray-600 pl-10 text-center">
-           List of employee's from organisation .
+            List of employees from the organization.
           </p>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
@@ -163,8 +216,8 @@ const AttendanceBioModal = ({
           </div>
 
           <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-            <table className="min-w-full bg-white  text-left !text-sm font-light">
-              <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
+            <table className="min-w-full bg-white text-left !text-sm font-light">
+              <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                 <tr className="!font-semibold">
                   <th scope="col" className="!text-left pl-8 py-3">
                     Select
@@ -184,7 +237,7 @@ const AttendanceBioModal = ({
                   <th scope="col" className="!text-left pl-8 py-3">
                     Email
                   </th>
-                  
+
                   <th scope="col" className="!text-left pl-8 py-3">
                     Location
                   </th>
