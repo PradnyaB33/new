@@ -351,7 +351,7 @@ const PerformanceSetup = () => {
                   optionlist={[]}
                   options={goalsOptions}
                   placeholder="Ex. 1"
-                  label="Enter Review Type *"
+                  label="Enter Ratings Type *"
                   errors={errors}
                   error={errors.ratings}
                 />

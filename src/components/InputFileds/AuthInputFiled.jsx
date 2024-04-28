@@ -1,7 +1,7 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
-import { default as React } from "react";
+import { default as React, useMemo } from "react";
 import Autocomplete, { usePlacesWidget } from "react-google-autocomplete";
 import { Controller } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
@@ -65,6 +65,56 @@ const AuthInputFiled = ({
     apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     onPlaceSelected: (place) => console.log(place),
   });
+
+  // specify modules to be included
+  const modules = useMemo(
+    () => ({
+      toolbar: {
+        container: [
+          [{ font: [] }],
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+          ["bold", "italic", "underline", "strike"],
+          [{ color: [] }, { background: [] }],
+          [{ script: "sub" }, { script: "super" }],
+          ["blockquote", "code-block"],
+          [{ list: "ordered" }, { list: "bullet" }],
+
+          [{ indent: "-1" }, { indent: "+1" }, { align: [] }],
+          [{ direction: "rtl" }],
+          [{ size: ["small", false, "large", "huge"] }],
+          ["link", "image", "video"],
+          ["clean"],
+        ],
+
+        // handlers: {
+        //   image: handleClick,
+        // },
+        history: {
+          delay: 500,
+          maxStack: 100,
+          userOnly: true,
+        },
+      },
+    }),
+    []
+  );
+  // specify formats
+  const formats = [
+    "header",
+    "font",
+    "size",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "indent",
+    "link",
+    "image",
+    "color",
+  ];
 
   if (type === "calender") {
     return (
@@ -627,6 +677,11 @@ const AuthInputFiled = ({
                     readOnly && "bg-[ghostwhite]"
                   } border-none bg-white w-full outline-none px-2  `}
                   // {...field}
+                  // value={field?.value}
+                  onChange={(e) => {
+                    field.onChange(e.target.files[0]);
+                    console.log(e.target.files[0]);
+                  }}
                   formNoValidate
                 />
               </div>
@@ -707,7 +762,7 @@ const AuthInputFiled = ({
 
   if (type === "texteditor") {
     return (
-      <div className={`space-y-1 mb-4 h-60 ${className}`}>
+      <div className={`space-y-1 mb-4 h-70 ${className}`}>
         <label
           htmlFor={name}
           className={`${
@@ -737,14 +792,16 @@ const AuthInputFiled = ({
                 theme="snow"
                 value={field.value}
                 readOnly={readOnly}
-                className="h-36"
+                className="h-40"
                 onChange={field.onChange}
+                modules={modules}
+                // formats={formats}
               />
               {/* </div> */}
             </>
           )}
         />
-        <div className="h-4 w-[200px]  !mt-14 !z-50   !mb-1">
+        <div className="h-4 w-[200px]  !mt-20 !z-50   !mb-4">
           <ErrorMessage
             errors={errors}
             name={name}

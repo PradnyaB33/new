@@ -76,8 +76,6 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
     }
   );
 
-  console.log(id);
-
   const { isFetching } = useQuery({
     queryKey: ["getGoalReview", id],
     queryFn: async () => {
@@ -104,6 +102,7 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
       review: data.review,
       rating: data.rating.value,
       status: "Rating Completed",
+      isReviewCompleted: true,
     };
 
     performanceSetup.mutate(goals);

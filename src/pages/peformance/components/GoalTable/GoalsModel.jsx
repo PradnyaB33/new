@@ -125,7 +125,8 @@ const GoalsModel = ({
   }, [goalData]);
 
   useEffect(() => {
-    if (id) {
+    if (!open) {
+      console.log(`🚀 ~ id:`, id?._id);
       reset({
         goal: undefined,
         description: undefined,
@@ -135,7 +136,7 @@ const GoalsModel = ({
       });
     }
     //eslint-disable-next-line
-  }, [id]);
+  }, [open]);
 
   const queryClient = useQueryClient();
   const addMutation = useMutation(
@@ -271,7 +272,7 @@ const GoalsModel = ({
               control={control}
               type="text"
               placeholder="goal"
-              label="Enter goal name"
+              label="Enter goal name *"
               errors={errors}
               error={errors.goal}
             />
@@ -283,7 +284,7 @@ const GoalsModel = ({
               control={control}
               type="texteditor"
               placeholder="100"
-              label="Enter description"
+              label="Enter description *"
               errors={errors}
               error={errors.description}
             />
@@ -294,7 +295,7 @@ const GoalsModel = ({
               control={control}
               type="texteditor"
               placeholder="100"
-              label="Enter measurements name"
+              label="Enter measurements name *"
               errors={errors}
               error={errors.measurments}
             />
@@ -306,7 +307,7 @@ const GoalsModel = ({
               type="select"
               options={goalTypeOption}
               placeholder="Goal Type"
-              label="Enter goal type"
+              label="Enter goal type *"
               errors={errors}
               error={errors.goalType}
             />
@@ -333,7 +334,7 @@ const GoalsModel = ({
                 control={control}
                 type="checkbox"
                 placeholder="eg. 4"
-                label="Downcast goal *"
+                label="Downcast goal"
                 errors={errors}
                 error={errors.downcasted}
               />
@@ -347,7 +348,7 @@ const GoalsModel = ({
                 type="empselect"
                 options={empoptions}
                 placeholder="Assignee name"
-                label="Select assignee name"
+                label="Select assignee name "
                 errors={errors}
                 error={errors.assignee}
               />
@@ -373,7 +374,7 @@ const GoalsModel = ({
                 type="calender"
                 options={options}
                 placeholder="Assignee name"
-                label="Enter start date"
+                label="Enter start date *"
                 errors={errors}
                 error={errors.startDate}
               />
@@ -383,7 +384,7 @@ const GoalsModel = ({
                 control={control}
                 type="calender"
                 placeholder="100"
-                label="Enter end date"
+                label="Enter end date *"
                 errors={errors}
                 error={errors.endDate}
               />
@@ -410,6 +411,13 @@ const GoalsModel = ({
               >
                 Cancel
               </Button>
+              {/* <Button  variant="contained" color="success">
+                {addMutation.isLoading ? (
+                  <CircularProgress size={20} color="primary" />
+                ) : (
+                  "Save for later"
+                )}
+              </Button> */}
               <Button type="submit" variant="contained" color="primary">
                 {addMutation.isLoading || updateMutation.isLoading ? (
                   <CircularProgress size={20} color="primary" />

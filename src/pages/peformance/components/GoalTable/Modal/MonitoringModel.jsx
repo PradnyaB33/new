@@ -8,7 +8,7 @@ import {
   Modal,
 } from "@mui/material";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
@@ -32,16 +32,16 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
   const authToken = useAuthToken();
   const zodSchema = z.object({
     goal: z.string(),
-    managerMeasurments: z.string().optional(),
     comments: z.string(),
-    // assignee: z.object({ value: z.string(), label: z.string() }),
-    attachment: z.string().optional(),
+    attachment: z.any().optional(),
   });
 
   const {
     handleSubmit,
     control,
     setValue,
+    watch,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -50,6 +50,18 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
     },
     resolver: zodResolver(zodSchema),
   });
+
+  useEffect(() => {
+    if (!open) {
+      reset({
+        comments: undefined,
+        attachment: undefined,
+      });
+    }
+    //eslint-disable-next-line
+  }, [open]);
+
+  console.log(!!watch("attachment"));
 
   const queryClient = useQueryClient();
   const performanceSetup = useMutation(
@@ -94,12 +106,15 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
   });
 
   const onSubmit = async (data) => {
+    if (data.attachment) {
+      const file = data.attachment;
+    }
     const goals = {
-      managerMeasurments: data.managerMeasurments,
       assignee: { label: id.empId._id, value: id.empId._id },
       comments: data.comments,
-      attachment: data.attachment,
+      // attachment: data.attachment,
       status: "Monitoring Completed",
+      isMonitoringCompleted: true,
     };
 
     performanceSetup.mutate(goals);
@@ -162,7 +177,6 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
                 errors={errors}
                 error={errors.goal}
               />
-
               {/* <AuthInputFiled
                 name="assignee"
                 icon={PersonOutline}
@@ -175,18 +189,6 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
                 errors={errors}
                 error={errors.assignee}
               /> */}
-
-              <AuthInputFiled
-                name="managerMeasurments"
-                icon={Paid}
-                control={control}
-                type="texteditor"
-                placeholder="100"
-                label="Enter measurements name"
-                errors={errors}
-                error={errors.managerMeasurments}
-              />
-
               <AuthInputFiled
                 name="comments"
                 icon={Paid}
@@ -197,18 +199,23 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
                 errors={errors}
                 error={errors.comments}
               />
-
               <AuthInputFiled
                 name="attachment"
                 icon={AttachFile}
                 control={control}
-                type="file"
+                type="Typefile"
                 placeholder="100"
                 label="Add attachments"
                 errors={errors}
                 error={errors.attachment}
               />
-
+              {!!watch("attachment") && (
+                <img
+                  src={URL.createObjectURL(watch("attachment"))}
+                  alt="attachment"
+                  className="!w-20 !h-20 block relative"
+                />
+              )}
               <div className="flex gap-4  mt-4 mr-4 justify-end">
                 <Button
                   type="button"

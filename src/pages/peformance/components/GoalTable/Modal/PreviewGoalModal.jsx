@@ -11,6 +11,7 @@ import { format } from "date-fns";
 import DOMPurify from "dompurify";
 import React, { useContext } from "react";
 import { useQuery, useQueryClient } from "react-query";
+import "react-quill/dist/quill.snow.css";
 import { TestContext } from "../../../../../State/Function/Main";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../../hooks/UserData/useUser";
@@ -57,9 +58,8 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
   const sanitizedReview = DOMPurify.sanitize(getSingleGoal?.review);
   const sanitizedComments = DOMPurify.sanitize(getSingleGoal?.comments);
   const sanitizedmanagerMesurments = DOMPurify.sanitize(
-    getSingleGoal?.managerMeasurments
+    getSingleGoal?.measurments
   );
-  console.log(`🚀 ~ sanitizedmanagerMesurments:`, sanitizedmanagerMesurments);
   const sanitizedDescription = DOMPurify.sanitize(getSingleGoal?.description);
 
   const SubmitGoal = async () => {
@@ -159,19 +159,19 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
 
                 <div className="hover:bg-gray-100 rounded-md  px-2 ">
                   <p className="font-semibold text-[#67748E]">Measurments</p>
-                  {role !== "Employee" && (
-                    <p
-                      className="preview"
-                      dangerouslySetInnerHTML={{
-                        __html: sanitizedmanagerMesurments,
-                      }}
-                    ></p>
-                  )}
+                  <p
+                    className="preview"
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizedmanagerMesurments
+                        ? sanitizedmanagerMesurments
+                        : "No data",
+                    }}
+                  ></p>
                 </div>
                 <div className="hover:bg-gray-100 rounded-md  px-2 ">
                   <p className="font-semibold text-[#67748E]">comments</p>
                   <p
-                    className="preview px-2 "
+                    className="preview"
                     dangerouslySetInnerHTML={{
                       __html: sanitizedComments ? sanitizedComments : "No data",
                     }}

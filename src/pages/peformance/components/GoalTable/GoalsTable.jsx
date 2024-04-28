@@ -4,12 +4,12 @@ import {
   Cancel,
   CheckCircle,
   Info,
-  InfoOutlined,
   KeyboardDoubleArrowDown,
   MoreHoriz,
   RateReview,
   Search,
   Star,
+  WatchLater,
 } from "@mui/icons-material";
 import {
   Avatar,
@@ -20,12 +20,11 @@ import {
   Stack,
   Tooltip,
 } from "@mui/material";
-
 import MenuItem from "@mui/material/MenuItem";
 import axios from "axios";
 import { format } from "date-fns";
 import moment from "moment";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import Select from "react-select";
 import { TestContext } from "../../../../State/Function/Main";
@@ -40,21 +39,31 @@ import RatingModel from "./Modal/RatingModel";
 import RevaluateModel from "./Modal/RevaluateModel";
 import TabelSkeleton from "./Skelton/TabelSkeleton";
 
-const GoalStatus = ({ status, performance }) => {
+const GoalStatus = ({ goal, status, performance, isTimeFinish }) => {
+  console.log(`🚀 ~ isTimeFinish:`, isTimeFinish);
   return (
-    <div
-      className={`px-3 py-1 flex items-center gap-1 ${
-        status === "Goal Completed" || status === "Goal Accepted"
-          ? "text-green-500"
-          : status === "Goal Rejected"
-          ? "text-red-500"
-          : status === "Rating Completed"
-          ? " text-yellow-500"
-          : ""
-      } rounded-sm  w-max`}
-    >
+    <div className={`px-3 py-1 flex items-center gap-1  rounded-sm  w-max`}>
       {performance.stages === "Goal setting" &&
-        (status === "Goal Completed" ? (
+        (!isTimeFinish && status === "pending" ? (
+          <p className="text-orange-500">
+            <WatchLater /> Goal not submitted in time
+          </p>
+        ) : goal.isReviewCompleted ? (
+          <p
+            // style={{ textShadow: "0 0 0  1px #333" }}
+            className="text-[#ffd700] "
+          >
+            <Star /> Rating Completed
+          </p>
+        ) : goal.isMonitoringCompleted ? (
+          <p className="text-blue-500">
+            <RateReview /> Monitoring Completed
+          </p>
+        ) : status === "Monitoring Completed" ? (
+          <p className="text-blue-500">
+            <RateReview /> Monitoring Completed
+          </p>
+        ) : status === "Goal Completed" ? (
           <>
             <CheckCircle />
           </>
@@ -73,7 +82,21 @@ const GoalStatus = ({ status, performance }) => {
         ))}
 
       {performance?.stages === "Monitoring stage/Feedback collection stage" &&
-        (status === "Monitoring Completed" ? (
+        (goal.isReviewCompleted ? (
+          <p
+            // style={{ textShadow: "0 0 0  1px #333" }}
+            className="text-[#ffd700] "
+          >
+            <Star /> Rating Completed
+          </p>
+        ) : !isTimeFinish ? (
+          <p
+            // style={{ textShadow: "0 0 0  1px #333" }}
+            className="text-orange-500"
+          >
+            <WatchLater /> Monitoring Overdue
+          </p>
+        ) : status === "Monitoring Completed" ? (
           <p className="text-blue-500">
             <RateReview /> Monitoring Completed
           </p>
@@ -84,7 +107,28 @@ const GoalStatus = ({ status, performance }) => {
         ))}
 
       {performance?.stages === "Employee acceptance/acknowledgement stage" &&
-        (status === "Revaluation Requested" ? (
+        (!goal.isMonitoringCompleted ? (
+          <p
+            // style={{ textShadow: "0 0 0  1px #333" }}
+            className="text-orange-500"
+          >
+            <WatchLater /> Monitoring Overdue
+          </p>
+        ) : !goal.isReviewCompleted ? (
+          <p
+            // style={{ textShadow: "0 0 0  1px #333" }}
+            className="text-orange-500"
+          >
+            <WatchLater /> Rating & Review Overdue
+          </p>
+        ) : !isTimeFinish ? (
+          <p
+            // style={{ textShadow: "0 0 0  1px #333" }}
+            className="text-orange-500"
+          >
+            <WatchLater /> Goal Acceptance Overdue
+          </p>
+        ) : status === "Revaluation Requested" ? (
           <p
             // style={{ textShadow: "0 0 0  1px #333" }}
             className="text-[#3f51b5]"
@@ -103,7 +147,14 @@ const GoalStatus = ({ status, performance }) => {
 
       {performance?.stages ===
         "KRA stage/Ratings Feedback/Manager review stage" &&
-        (status === "Rating Completed" ? (
+        (!goal.isMonitoringCompleted || !isTimeFinish ? (
+          <p
+            // style={{ textShadow: "0 0 0  1px #333" }}
+            className="text-orange-500"
+          >
+            <WatchLater /> Monitoring Overdue
+          </p>
+        ) : status === "Rating Completed" ? (
           <p
             // style={{ textShadow: "0 0 0  1px #333" }}
             className="text-[#ffd700] "
@@ -193,8 +244,9 @@ const GoalsTable = ({ performance }) => {
   }, [performance?.enddate]);
 
   const { data: employeeData } = useQuery(["employee"], async () => {
+    console.log("query called", role);
     const { data } = await axios.get(
-      `${process.env.REACT_APP_API}/route/employee/getEmployeeUnderManager`,
+      `${process.env.REACT_APP_API}/route/employee/getEmployeeUnderManager/${role}`,
       {
         headers: {
           Authorization: authToken,
@@ -267,20 +319,6 @@ const GoalsTable = ({ performance }) => {
     }
   };
 
-  useEffect(() => {
-    console.log(search);
-  }, [search]);
-
-  // const isTrippleDotActive = useCallback((goal) => {
-  //   if (isTimeFinish) {
-  //     return false;
-  //   }
-
-  //   if (performance.stages === "Goal setting" && role === "Employee") {
-  //     return goal?.status === "Goal Rejected" ? true : false;
-  //   }
-  // }, []);
-
   return (
     <section className="px-8 py-0 mb-10 ">
       <div className=" bg-white rounded-md ">
@@ -345,24 +383,33 @@ const GoalsTable = ({ performance }) => {
             )}
           </div>
 
-          {performance?.stages === "Goal setting" && (
-            <button
-              type="button"
-              onClick={() => setOpen(true)}
-              className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-            >
-              Add Goal
-            </button>
-          )}
+          {performance?.stages === "Goal setting" &&
+            (isTimeFinish && role !== "Employee"
+              ? true
+              : role === "Employee" && performance.isSelfGoal
+              ? true
+              : false) && (
+              <button
+                type="button"
+                onClick={() => setOpen(true)}
+                className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+              >
+                Add Goal
+              </button>
+            )}
         </div>
         <div className="bg-white w-full overflow-x-auto">
           {isFetching || performance === undefined ? (
             // <CircularProgress />
             <TabelSkeleton />
-          ) : orgGoals?.length <= 0 ? (
-            <h1 className="bg-blue-100 text-rose-600 space-x- p-2 2 px-4 rounded-sm text-lg">
-              <InfoOutlined /> No goals found
-            </h1>
+          ) : orgGoals?.goals?.length <= 0 ? (
+            <section className="bg-gray-50 border py-6 px-8 rounded-md w-full">
+              <article className="flex items-center mb-1 text-red-500 gap-2">
+                <Info className="text-2xl" />
+                <h1 className="text-xl font-semibold">Goals Not Found</h1>
+              </article>
+              <p>Add goals to goal settings.</p>
+            </section>
           ) : (
             <div className="overflow-auto ">
               <table className="w-full table-auto  border border-collapse min-w-full bg-white  text-left  !text-sm font-light">
@@ -463,29 +510,15 @@ const GoalsTable = ({ performance }) => {
                         className="cursor-pointer text-left text-sm w-[200px]  "
                       >
                         <GoalStatus
+                          goal={goal}
+                          isTimeFinish={isTimeFinish}
                           status={goal?.status}
                           performance={performance}
                         />
                       </td>
-
-                      {/* {isTrippleDotActive(goal) ? "show" : "hide"} */}
-
-                      {/* {isTimeFinish
-                        ? performance?.stages === "Goal setting" &&
-                          (goal?.status !== "Goal Approved" ||
-                            goal?.status !== "Goal Rejected")
-                          ? true
-                          : false
-                          ? performance?.stages ===
-                              "Monitoring stage/Feedback collection stage" &&
-                            role === "Manager"
-                            ? true
-                            : false
-                          : "noo"
-                        : "time finished"} */}
-
                       {isTimeFinish &&
                         goal?.status !== "Goal Completed" &&
+                        !goal?.isMonitoringCompleted &&
                         (role !== "Employee" ||
                           performance?.stages === "Goal setting" ||
                           performance?.stages ===
@@ -559,8 +592,7 @@ const GoalsTable = ({ performance }) => {
 
         {role === "Manager" &&
           performance?.stages === "Goal setting" &&
-          openMenu?.status !== "Goal Approved" &&
-          openMenu?.status !== "Goal Rejected" && (
+          openMenu?.status === "pending" && (
             <>
               <MenuItem
                 className="!p-0"
@@ -596,22 +628,37 @@ const GoalsTable = ({ performance }) => {
 
         {performance?.stages === "Goal setting" && (
           <>
-            <MenuItem
-              onClick={() => {
-                setOpenEdit(true);
-                setPreviewId(openMenu);
-                handleMenuClose();
-              }}
-            >
-              {openMenu?.status === "Goal Rejected" && role === "Employee"
-                ? "Reapply for goal"
-                : "Update Goal"}
-            </MenuItem>
+            {openMenu?.status === "Goal Rejected" && role === "Employee" && (
+              <MenuItem
+                onClick={() => {
+                  setOpenEdit(true);
+                  setPreviewId(openMenu);
+                  handleMenuClose();
+                }}
+              >
+                {/* {openMenu?.status === "Goal Rejected"  && role === "Employee" */}
+                Reapply for goal
+                {/* : "Update Goal"} */}
+              </MenuItem>
+            )}
+            {!openMenu?.isMonitoringCompleted && (
+              <MenuItem
+                onClick={() => {
+                  setOpenEdit(true);
+                  setPreviewId(openMenu);
+                  handleMenuClose();
+                }}
+              >
+                Update Goal
+              </MenuItem>
+            )}
           </>
         )}
         {(performance?.stages ===
           "KRA stage/Ratings Feedback/Manager review stage" ||
-          openMenu?.status === "Revaluation Requested") && (
+          (openMenu?.status === "Revaluation Requested" &&
+            performance.stages ===
+              "Employee acceptance/acknowledgement stage")) && (
           <MenuItem
             onClick={() => {
               setOpenEdit(true);
@@ -619,7 +666,11 @@ const GoalsTable = ({ performance }) => {
               handleMenuClose();
             }}
           >
-            {openMenu?.status === "Revaluation Requested"
+            {openMenu?.status === "Revaluation Requested" &&
+            (performance.stages ===
+              "KRA stage/Ratings Feedback/Manager review stage" ||
+              performance.stages ===
+                "Employee acceptance/acknowledgement stage")
               ? "Revaluate Employee"
               : "Add review & rating"}
           </MenuItem>

@@ -129,8 +129,10 @@ const GoalSettingTab = () => {
         <div className="min-w-[250px] border rounded-md">
           <div className=" px-4 py-3 bg-white  rounded-lg leading-none flex items-top justify-start space-x-6">
             <div className="space-y-1">
-              <h1 className="text-xl ">Performance Period</h1>
-              <p className="text-sm text-slate-800 ">
+              <h1 className=" font-semibold text-[#67748E] ">
+                Performance Period
+              </h1>
+              <p className="text-lg  tracking-tight ">
                 {performance?.appraisalStartDate &&
                   format(new Date(performance?.appraisalStartDate), "PP")}{" "}
                 -{" "}
@@ -143,8 +145,10 @@ const GoalSettingTab = () => {
         <div className="min-w-[250px] border rounded-md">
           <div className=" px-4 py-3 bg-white  rounded-lg leading-none flex items-top justify-start space-x-6">
             <div className="space-y-1">
-              <h1 className="text-xl ">Current Cycle Period</h1>
-              <p className="text-sm text-slate-800 ">
+              <h1 className="font-semibold text-[#67748E] ">
+                Current Cycle Period
+              </h1>
+              <p className="text-lg  tracking-tight ">
                 {performance?.startdate &&
                   format(new Date(performance?.startdate), "PP")}{" "}
                 -{" "}
@@ -157,8 +161,10 @@ const GoalSettingTab = () => {
         <div className="min-w-[250px] border rounded-md">
           <div className=" px-4 py-3 bg-white  rounded-lg leading-none flex items-top justify-start space-x-6">
             <div className="space-y-1">
-              <h1 className="text-xl text-slate-800">Performance Stage</h1>
-              <p className="text-sm text-slate-800 ">{performance?.stages}</p>
+              <h1 className="font-semibold text-[#67748E] ">
+                Performance Stage
+              </h1>
+              <p className="text-lg  tracking-tight ">{performance?.stages}</p>
             </div>
           </div>
         </div>

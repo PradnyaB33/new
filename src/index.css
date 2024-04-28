@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "react-quill/dist/quill.snow.css";
 
 .scrolling-text {
   @apply overflow-hidden whitespace-nowrap relative;
@@ -24,6 +25,10 @@
 }
 .preview h3 {
   @apply text-lg;
+}
+
+.preview {
+  list-style: auto !important;
 }
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
