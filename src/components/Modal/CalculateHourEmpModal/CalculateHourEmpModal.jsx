@@ -64,7 +64,8 @@ const CalculateHourEmpModal = ({
   console.log(selectDate);
 
   const openPopover = Boolean(anchorEl);
-
+  
+  // calculate hours
   const handleCalculateHours = async () => {
     if (!selectedDate) {
       alert("Please select a date.");
@@ -76,7 +77,7 @@ const CalculateHourEmpModal = ({
     const punchingRecords = empPunchingData?.punchingRecords || [];
     let punchInTime = null;
     let punchOutTime = null;
-
+     
     punchingRecords.forEach((record) => {
       const recordDate = getFormattedDate(record.date);
       console.log("record date", recordDate);
