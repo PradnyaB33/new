@@ -20,6 +20,7 @@ import DescriptionBox from "./descripton-box";
 import PackageForm from "./package/memberCount";
 import ManageSubscription from "./package/package";
 import PrepaidCard from "./package/prePay";
+import UpgradePackage from "./package/upgrade";
 const StyledMenu = styled((props) => (
   <Menu
     style={{ background: "rgb(244 247 254 / var(--tw-bg-opacity))" }}
@@ -70,6 +71,7 @@ const BillingCard = ({ doc }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmOpen2, setConfirmOpen2] = useState(false);
   const [confirmOpen3, setConfirmOpen3] = useState(false);
+  const [confirmOpen4, setConfirmOpen4] = useState(false);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -136,6 +138,24 @@ const BillingCard = ({ doc }) => {
             >
               <FilterNone />
               Prepay
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setConfirmOpen3(true);
+              }}
+              disableRipple
+            >
+              <FilterNone />
+              Renew
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setConfirmOpen4(true);
+              }}
+              disableRipple
+            >
+              <FilterNone />
+              Upgrade
             </MenuItem>
           </StyledMenu>
         </div>
@@ -221,6 +241,14 @@ const BillingCard = ({ doc }) => {
         open={confirmOpen3}
         handleClose={() => {
           setConfirmOpen3(false);
+          handleClose();
+        }}
+        organisation={doc}
+      />
+      <UpgradePackage
+        open={confirmOpen4}
+        handleClose={() => {
+          setConfirmOpen4(false);
           handleClose();
         }}
         organisation={doc}
