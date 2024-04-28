@@ -25,7 +25,6 @@ const LoanManagement = () => {
   console.log("user", user);
   const userId = user._id;
   const organisationId = user.organizationId;
-  
 
   //for get loan data
   const { data: getEmployeeLoanData, isLoading } = useQuery(
@@ -51,10 +50,59 @@ const LoanManagement = () => {
   };
 
   // Function to calculate loan amount paid and pending
+  // const calculateLoanStatus = (loan) => {
+  //   const currentDate = new Date();
+  //   const loanStartingDate = loan?.loanDisbursementDate
+  //     ? new Date(loan?.loanDisbursementDate)
+  //     : null;
+  //   const loanEndingDate = loan?.loanCompletedDate
+  //     ? new Date(loan.loanCompletedDate)
+  //     : null;
+
+  //   console.log("loan starting data", loanStartingDate);
+  //   console.log("loan ending data", loanEndingDate);
+
+  //   const loanAmount = loan?.totalDeductionWithSi;
+  //   const totalDeductionPerMonth = loan?.totalDeduction;
+
+  //   let loanAmountPaid = 0;
+  //   let loanAmountPending = loanAmount;
+
+  //   if (currentDate > loanStartingDate) {
+  //     loanAmountPaid = 0;
+  //     loanAmountPending = loanAmount;
+  //   } else {
+  //     const elapsedMonths = Math.max(
+  //       0,
+  //       (currentDate.getFullYear() - loanStartingDate.getFullYear()) * 12 +
+  //         currentDate.getMonth() -
+  //         loanStartingDate.getMonth() +
+  //         1
+  //     );
+  //     loanAmountPaid = Math.min(
+  //       loanAmount,
+  //       totalDeductionPerMonth * elapsedMonths
+  //     );
+  //     loanAmountPending = loanAmount - loanAmountPaid;
+  //   }
+
+  //   let currentDateToCheck = new Date(loanStartingDate);
+  //   console.log("currentdate to check", currentDateToCheck);
+  //   while (
+  //     currentDateToCheck <= loanEndingDate &&
+  //     currentDateToCheck < currentDate
+  //   ) {
+  //     loanAmountPaid = totalDeductionPerMonth;
+  //     loanAmountPending = loanAmount - loanAmountPaid;
+  //     currentDateToCheck.setMonth(currentDateToCheck.getMonth() + 1);
+  //   }
+
+  //   return { loanAmountPaid, loanAmountPending };
+  // };
   const calculateLoanStatus = (loan) => {
     const currentDate = new Date();
     const loanStartingDate = loan?.loanDisbursementDate
-      ? new Date(loan?.loanDisbursementDate)
+      ? new Date(loan.loanDisbursementDate)
       : null;
     const loanEndingDate = loan?.loanCompletedDate
       ? new Date(loan.loanCompletedDate)
@@ -69,17 +117,16 @@ const LoanManagement = () => {
     let loanAmountPaid = 0;
     let loanAmountPending = loanAmount;
 
-    if (currentDate < loanStartingDate) {
-      loanAmountPaid = 0;
-      loanAmountPending = loanAmount;
-    } else {
-      const elapsedMonths = Math.max(
-        0,
+    if (!loanStartingDate || !loanEndingDate || !totalDeductionPerMonth) {
+      return { loanAmountPaid, loanAmountPending };
+    }
+
+    if (currentDate >= loanStartingDate && currentDate <= loanEndingDate) {
+      const elapsedMonths =
         (currentDate.getFullYear() - loanStartingDate.getFullYear()) * 12 +
-          currentDate.getMonth() -
-          loanStartingDate.getMonth() +
-          1
-      );
+        currentDate.getMonth() -
+        loanStartingDate.getMonth() +
+        1;
       loanAmountPaid = Math.min(
         loanAmount,
         totalDeductionPerMonth * elapsedMonths
@@ -91,12 +138,10 @@ const LoanManagement = () => {
     console.log("currentdate to check", currentDateToCheck);
     while (
       currentDateToCheck <= loanEndingDate &&
-      currentDateToCheck >= currentDate
+      currentDateToCheck <= currentDate
     ) {
-      // Increment loanAmountPaid by totalDeductionPerMonth
-      loanAmountPaid += totalDeductionPerMonth;
-      // Decrement loanAmountPending by totalDeductionPerMonth
-      loanAmountPending -= totalDeductionPerMonth;
+      loanAmountPaid = totalDeductionPerMonth;
+      loanAmountPending = loanAmount - loanAmountPaid;
       currentDateToCheck.setMonth(currentDateToCheck.getMonth() + 1);
     }
 
@@ -166,20 +211,20 @@ const LoanManagement = () => {
           <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
             {getEmployeeLoanData?.length > 0 && (
               <div className="flex gap-2 w-full">
-               <h1 className="text-lg">Your current active loans</h1>
+                <h1 className="text-lg">Your current active loans</h1>
               </div>
             )}
-           
-           <div className="flex justify-end w-full">
-           <Button
-              className="!font-semibold !bg-sky-500 flex gap-2"
-              variant="contained"
-              onClick={handleCreateModalOpen}
-            >
-              <Add />
-              Apply For Loan
-            </Button>
-           </div>
+
+            <div className="flex justify-end w-full">
+              <Button
+                className="!font-semibold !bg-sky-500 flex gap-2"
+                variant="contained"
+                onClick={handleCreateModalOpen}
+              >
+                <Add />
+                Apply For Loan
+              </Button>
+            </div>
           </div>
 
           {isLoading ? (
@@ -195,7 +240,7 @@ const LoanManagement = () => {
                         <th scope="col" className="text-left pl-6 py-3">
                           SR NO
                         </th>
-                      
+
                         <th scope="col" className="px-6 py-3">
                           Loan Status
                         </th>
@@ -244,7 +289,7 @@ const LoanManagement = () => {
                               />
                             </td>
                             <td className="text-left pl-6 py-3">{id + 1}</td>
-                          
+
                             <td className="text-left leading-7 text-[16px] w-[200px] ">
                               {loanMgtData.status === "Pending" ? (
                                 <div className="flex items-center gap-2">

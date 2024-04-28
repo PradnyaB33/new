@@ -189,7 +189,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
   };
   console.log(errors);
   console.log(loanValue);
-  console.log(getTotalSalaryEmployee);
+  console.log("total salary " ,getTotalSalaryEmployee);
 
   return (
     <Dialog
