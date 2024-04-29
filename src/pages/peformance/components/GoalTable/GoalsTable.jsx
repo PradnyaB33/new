@@ -3,9 +3,11 @@ import {
   Autorenew,
   Cancel,
   CheckCircle,
+  Checklist,
   Info,
   KeyboardDoubleArrowDown,
   MoreHoriz,
+  Person,
   RateReview,
   Search,
   Star,
@@ -185,10 +187,10 @@ const GoalsTable = ({ performance }) => {
   const [previewModal, setPreviewModal] = useState(false);
   const [previewId, setPreviewId] = useState(null);
   const [openMenu, setopenMenu] = useState(null);
-  const [search, setSearch] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { handleAlert } = useContext(TestContext);
   const openMenuBox = Boolean(anchorEl);
+  const [focusedInput, setFocusedInput] = useState(null);
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -233,12 +235,12 @@ const GoalsTable = ({ performance }) => {
     );
     return data;
   });
-  console.log(`🚀 ~ employeeData:`, employeeData);
 
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
 
   const { data: orgGoals = [], isFetching } = useQuery(
-    ["orggoals", employeeGoals, page],
+    ["orggoals", employeeGoals, page, search],
     async () => {
       // if (role === "Employee" || employeeGoals) {
       const { data } = await axios.get(
@@ -251,6 +253,7 @@ const GoalsTable = ({ performance }) => {
             role,
             empId: employeeGoals,
             page,
+            search,
           },
         }
       );
@@ -308,23 +311,24 @@ const GoalsTable = ({ performance }) => {
           </h1>
         </div> */}
         <div className="my-2 flex justify-between">
-          <div className="flex gap-4">
-            <div className={`space-y-1  min-w-[60vw] `}>
+          <div className="flex gap-4 ">
+            <div className={`space-y-1  min-w-[300px] md:min-w-[40vw] w-max `}>
               <div
-                // onFocus={() => {
-                //   handleFocus("search");
-                // }}
-                // onBlur={() => setFocusedInput(null)}
-                // className={` ${
-                //   focusedInput === "search"
-                //     ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
-                //     : "outline-none border-gray-200 border-[.5px]"
-                // } flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px]`}
-                className="flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px] outline-none border-gray-200 border-[.5px]"
+                onFocus={() => {
+                  setFocusedInput("search");
+                }}
+                onBlur={() => setFocusedInput(null)}
+                className={` ${
+                  focusedInput === "search"
+                    ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
+                    : "outline-none border-gray-200 border-[.5px]"
+                } flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px]`}
+                // className="flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px] outline-none border-gray-200 border-[.5px]"
               >
                 <Search className="text-gray-700 md:text-lg !text-[1em]" />
                 <input
                   type={"text"}
+                  onChange={(e) => setSearch(e.target.value)}
                   placeholder={"Search goals"}
                   className={`border-none bg-white w-full outline-none px-2  `}
                   formNoValidate
@@ -332,14 +336,14 @@ const GoalsTable = ({ performance }) => {
               </div>
             </div>
             {role !== "Employee" && (
-              <div className={`space-y-1 w-full `}>
+              <div className={`space-y-1 min-w-[250px]  md:min-w-[15vw] `}>
                 <div
                   className={`flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
                 >
-                  <Search className="text-gray-700 md:text-lg !text-[1em]" />
+                  <Checklist className="text-gray-700 md:text-lg !text-[1em]" />
                   <Select
                     aria-errormessage=""
-                    placeholder={"Assignee"}
+                    placeholder={"Goal Type"}
                     isClearable
                     styles={{
                       control: (styles) => ({
@@ -348,12 +352,15 @@ const GoalsTable = ({ performance }) => {
                         boxShadow: "none",
                       }),
                     }}
-                    className={` bg-white w-[300px] !outline-none px-2 !shadow-none !border-none !border-0`}
+                    className={` bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
                     components={{
-                      Option: CustomOption,
+                      // Option: CustomOption,
                       IndicatorSeparator: () => null,
                     }}
-                    options={options}
+                    options={performance?.goals?.map((goal) => ({
+                      label: goal,
+                      value: goal,
+                    }))}
                     onChange={(value) => {
                       setEmployeeGoals(value?.value);
                     }}
@@ -361,6 +368,35 @@ const GoalsTable = ({ performance }) => {
                 </div>
               </div>
             )}
+
+            <div className={`space-y-1 min-w-[15vw] `}>
+              <div
+                className={`flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+              >
+                <Person className="text-gray-700 md:text-lg !text-[1em]" />
+                <Select
+                  aria-errormessage=""
+                  placeholder={"Assignee"}
+                  isClearable
+                  styles={{
+                    control: (styles) => ({
+                      ...styles,
+                      borderWidth: "0px",
+                      boxShadow: "none",
+                    }),
+                  }}
+                  className={` bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                  components={{
+                    Option: CustomOption,
+                    IndicatorSeparator: () => null,
+                  }}
+                  options={options}
+                  onChange={(value) => {
+                    setEmployeeGoals(value?.value);
+                  }}
+                />
+              </div>
+            </div>
           </div>
 
           {performance?.stages === "Goal setting" &&
@@ -410,6 +446,9 @@ const GoalsTable = ({ performance }) => {
 
                     <th scope="col" className="py-3 text-sm px-2 ">
                       Assignee
+                    </th>
+                    <th scope="col" className="py-3 text-sm px-2 ">
+                      Goal Type
                     </th>
 
                     <th scope="col" className="py-3 text-sm px-2 ">
@@ -482,6 +521,18 @@ const GoalsTable = ({ performance }) => {
                           className={`
                         px-2 md:w-full w-max text-sm`}
                         >
+                          {goal?.goalType}
+                        </p>
+                      </td>
+
+                      <td
+                        onClick={() => handleOpen(goal._id)}
+                        className=" cursor-pointer text-left !p-0 !w-[250px]  "
+                      >
+                        <p
+                          className={`
+                        px-2 md:w-full w-max text-sm`}
+                        >
                           {format(new Date(goal.startDate), "PP")} -{" "}
                           {format(new Date(goal.endDate), "PP")}
                         </p>
@@ -498,31 +549,24 @@ const GoalsTable = ({ performance }) => {
                           performance={performance}
                         />
                       </td>
-                      {isTimeFinish &&
-                        goal?.status !== "Goal Completed" &&
+                      {isTimeFinish && goal?.status !== "Goal Completed" && (
                         // goal?.isMonitoringCompleted &&
-                        role !== "Employee" &&
-                        (performance?.stages === "Goal setting" ||
-                          performance?.stages ===
-                            "Employee acceptance/acknowledgement stage") && (
-                          <td className="cursor-pointer text-left text-sm  ">
-                            <IconButton
-                              id="basic-button"
-                              aria-controls={
-                                openMenu ? "basic-menu" : undefined
-                              }
-                              aria-haspopup="true"
-                              aria-expanded={openMenu ? "true" : undefined}
-                              onClick={(e) => {
-                                handleClick(e);
-                                // setCurrentGoal(goal);
-                                setopenMenu(goal);
-                              }}
-                            >
-                              <MoreHoriz />
-                            </IconButton>
-                          </td>
-                        )}
+                        <td className="cursor-pointer text-left text-sm  ">
+                          <IconButton
+                            id="basic-button"
+                            aria-controls={openMenu ? "basic-menu" : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={openMenu ? "true" : undefined}
+                            onClick={(e) => {
+                              handleClick(e);
+                              // setCurrentGoal(goal);
+                              setopenMenu(goal);
+                            }}
+                          >
+                            <MoreHoriz />
+                          </IconButton>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>

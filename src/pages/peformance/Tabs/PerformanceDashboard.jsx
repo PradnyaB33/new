@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import React from "react";
 import { useQuery } from "react-query";
 import usePerformanceApi from "../../../hooks/Performance/usePerformanceApi";
@@ -8,6 +9,7 @@ import PerformanceTable from "../components/Dashboard/PerformanceTable";
 
 const PerformanceDashboard = () => {
   const user = UserProfile().getCurrentUser();
+  const role = UserProfile().useGetCurrentRole();
   const authToken = useAuthToken();
   const { fetchPerformanceSetup, getPerformanceDashboardTable } =
     usePerformanceApi();
@@ -16,7 +18,7 @@ const PerformanceDashboard = () => {
   );
 
   const { data: tableData } = useQuery(["dashboardTable"], () =>
-    getPerformanceDashboardTable({ user, authToken })
+    getPerformanceDashboardTable({ role, authToken })
   );
 
   return (
@@ -31,11 +33,24 @@ const PerformanceDashboard = () => {
       <div className="flex flex-wrap gap-4">
         <Card title={"Total Goals"} data={"10 / 13 completed"} />
         <Card title={"In Due"} data={10} />
-        <Card title={"Current Stage"} data={"Stage 1"} />
-        <Card title={"Timeline"} data={"23"} />
+        <Card title={"Current Stage"} data={performance?.stages} />
+        <Card
+          title={"Timeline"}
+          data={`${
+            performance?.startdate &&
+            format(new Date(performance?.startdate), "PP")
+          } - 
+                ${
+                  performance?.enddate &&
+                  format(new Date(performance?.enddate), "PP")
+                }`}
+        />
       </div>
 
-      <PerformanceTable />
+      <PerformanceTable
+        tableData={tableData?.result}
+        performance={performance}
+      />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { Close } from "@mui/icons-material";
-import { Box, CircularProgress, IconButton, Modal } from "@mui/material";
+import { Box, IconButton, Modal } from "@mui/material";
 import axios from "axios";
 import { format } from "date-fns";
 import DOMPurify from "dompurify";
@@ -9,6 +9,7 @@ import "react-quill/dist/quill.snow.css";
 import { TestContext } from "../../../../../State/Function/Main";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../../hooks/UserData/useUser";
+import PreviewSkeleton from "../Skelton/PreviewSkeleton";
 
 const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
   const { handleAlert } = useContext(TestContext);
@@ -21,7 +22,6 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
     transform: "translate(-50%, -50%)",
     bgcolor: "background.paper",
     overflow: "auto",
-    height: "80vh",
     maxHeight: "80vh",
     p: 4,
   };
@@ -95,7 +95,7 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
           className="border-none !z-10 !pt-0 !px-0 !w-[90%] lg:!w-[70%] md:!w-[70%] shadow-md outline-none rounded-md"
         >
           {goalFetching ? (
-            <CircularProgress />
+            <PreviewSkeleton />
           ) : (
             <>
               <div className="flex justify-between py-4 items-center  px-4">
