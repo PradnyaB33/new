@@ -220,7 +220,7 @@ const GoalsModel = ({
 
   const { data: employeeData } = useQuery("employee", async () => {
     const { data } = await axios.get(
-      `${process.env.REACT_APP_API}/route/employee/getEmployeeUnderManager`,
+      `${process.env.REACT_APP_API}/route/employee/getEmployeeUnderManager/${role}`,
       {
         headers: {
           Authorization: authToken,

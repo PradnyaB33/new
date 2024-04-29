@@ -1,9 +1,9 @@
 import { InfoOutlined } from "@mui/icons-material";
-import axios from "axios";
 import { format } from "date-fns";
 import moment from "moment";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
+import usePerformanceApi from "../../../hooks/Performance/usePerformanceApi";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 import GoalsTable from "../components/GoalTable/GoalsTable";
@@ -13,21 +13,11 @@ const GoalSettingTab = () => {
   const [message, setMessage] = useState("Welcome to Goal Settings");
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
+
+  const { fetchPerformanceSetup } = usePerformanceApi();
   const { data: performance } = useQuery(
-    "performancePeriod",
-    async () => {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getSetup/${user.organizationId}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-
-      return data;
-    },
-
+    ["performancePeriod"],
+    () => fetchPerformanceSetup({ user, authToken }),
     {
       onSuccess: (data) => {
         const endDate = moment(data.enddate); // replace with your actual endDate field
@@ -115,6 +105,22 @@ const GoalSettingTab = () => {
       },
     }
   );
+  // const { data: performance } = useQuery(
+  //   "performancePeriod",
+  //   async () => {
+  //     const { data } = await axios.get(
+  //       `${process.env.REACT_APP_API}/route/performance/getSetup/${user.organizationId}`,
+  //       {
+  //         headers: {
+  //           Authorization: authToken,
+  //         },
+  //       }
+  //     );
+
+  //     return data;
+  //   },
+
+  // );
 
   return (
     <div>

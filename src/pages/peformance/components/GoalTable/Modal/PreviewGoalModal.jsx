@@ -1,11 +1,5 @@
 import { Close } from "@mui/icons-material";
-import {
-  Avatar,
-  Box,
-  CircularProgress,
-  IconButton,
-  Modal,
-} from "@mui/material";
+import { Box, CircularProgress, IconButton, Modal } from "@mui/material";
 import axios from "axios";
 import { format } from "date-fns";
 import DOMPurify from "dompurify";
@@ -116,13 +110,13 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
               <div className="space-y-4 pb-4 px-4">
                 <div className="flex justify-between">
                   <div className="flex w-full gap-2 items-center">
-                    <div
+                    {/* <div
                       className={`bg-green-500 flex rounded-md p-2 text-white  border-gray-200 border-[.5px]  items-center`}
                     >
                       {getSingleGoal?.status
                         ? getSingleGoal?.status
                         : "Pending"}
-                    </div>
+                    </div> */}
 
                     <div className=" p-2 bg-gray-50 border-gray-200 border rounded-md">
                       Start Date: -{" "}
@@ -205,12 +199,12 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
                     <p className="">No data</p>
                   </div>
                 )}
-                <div className="hover:bg-gray-100 rounded-md ">
+                {/* <div className="hover:bg-gray-100 rounded-md ">
                   <p className="px-2">Reporter to</p>
                   <p className="px-2 mt-2 flex items-center gap-2">
                     <Avatar sx={{ width: 35, height: 35 }} /> Test user
                   </p>
-                </div>
+                </div> */}
               </div>
             </>
           )}

@@ -64,11 +64,15 @@ const GoalStatus = ({ goal, status, performance, isTimeFinish }) => {
           </p>
         ) : status === "Goal Completed" ? (
           <>
-            <CheckCircle />
+            <CheckCircle /> Goal Completed
           </>
+        ) : status === "Goal Submitted" ? (
+          <p className="text-gray-500">
+            <Info className="text-xs" /> Waiting for Approval
+          </p>
         ) : status === "Goal Approved" ? (
           <p className="text-green-500">
-            <AssignmentTurnedIn className="text-xs" /> Ready to go
+            <AssignmentTurnedIn className="text-xs" /> Goal Approved
           </p>
         ) : status === "Goal Rejected" ? (
           <>
@@ -165,39 +169,14 @@ const GoalStatus = ({ goal, status, performance, isTimeFinish }) => {
             <Info /> Rating Pending
           </p>
         ))}
-
-      {/* {status === "Goal Completed" ? (
-        <>
-          <CheckCircle />
-        </>
-      ) : status === "Goal Approved" ? (
-        <p className="text-green-500">
-          <AssignmentTurnedIn className="text-xs" /> Ready to go
-        </p>
-      ) : status === "Goal Rejected" ? (
-        <>
-          <Cancel /> {status}
-        </>
-      ) : status === "Rating Completed" ? (
-        <>
-          <StarOutlined /> {status}
-        </>
-      ) : status === "Monitoring Completed" ? (
-        <p className="text-blue-500">
-          <RateReview /> Monitoring Completed
-        </p>
-      ) : (
-        <>
-          <Info /> {status}
-        </>
-      )} */}
     </div>
   );
 };
 
 const GoalsTable = ({ performance }) => {
-  const { useGetCurrentRole } = UserProfile();
+  const { useGetCurrentRole, getCurrentUser } = UserProfile();
   const role = useGetCurrentRole();
+  const user = getCurrentUser();
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [employeeGoals, setEmployeeGoals] = useState();
   const [open, setOpen] = useState(false);
@@ -405,11 +384,13 @@ const GoalsTable = ({ performance }) => {
             <TabelSkeleton />
           ) : orgGoals?.goals?.length <= 0 ? (
             <section className="bg-gray-50 border py-6 px-8 rounded-md w-full">
-              <article className="flex items-center mb-1 text-red-500 gap-2">
-                <Info className="text-2xl" />
-                <h1 className="text-xl font-semibold">Goals Not Found</h1>
+              <article className="flex  text-red-500 gap-2">
+                <Info className="!text-3xl mt-1" />
+                <div>
+                  <h1 className="text-xl font-semibold">Goals Not Found</h1>
+                  <p className="text-gray-900">Add goals to goal settings.</p>
+                </div>
               </article>
-              <p>Add goals to goal settings.</p>
             </section>
           ) : (
             <div className="overflow-auto ">
@@ -519,9 +500,9 @@ const GoalsTable = ({ performance }) => {
                       </td>
                       {isTimeFinish &&
                         goal?.status !== "Goal Completed" &&
-                        !goal?.isMonitoringCompleted &&
-                        (role !== "Employee" ||
-                          performance?.stages === "Goal setting" ||
+                        // goal?.isMonitoringCompleted &&
+                        role !== "Employee" &&
+                        (performance?.stages === "Goal setting" ||
                           performance?.stages ===
                             "Employee acceptance/acknowledgement stage") && (
                           <td className="cursor-pointer text-left text-sm  ">
@@ -591,9 +572,12 @@ const GoalsTable = ({ performance }) => {
         </div>
         <Divider variant="fullWidth" orientation="horizontal" />
 
-        {role === "Manager" &&
+        {role !== "Employee" &&
           performance?.stages === "Goal setting" &&
-          openMenu?.status === "pending" && (
+          openMenu?.status === "Goal Submitted" &&
+          (performance.isManagerApproval
+            ? openMenu?.creatorId === user._id
+            : role === "HR") && (
             <>
               <MenuItem
                 className="!p-0"
@@ -623,7 +607,7 @@ const GoalsTable = ({ performance }) => {
               handleMenuClose();
             }}
           >
-            Add monitoring form
+            Monitoring form
           </MenuItem>
         )}
 
@@ -642,17 +626,18 @@ const GoalsTable = ({ performance }) => {
                 {/* : "Update Goal"} */}
               </MenuItem>
             )}
-            {!openMenu?.isMonitoringCompleted && (
-              <MenuItem
-                onClick={() => {
-                  setOpenEdit(true);
-                  setPreviewId(openMenu);
-                  handleMenuClose();
-                }}
-              >
-                Update Goal
-              </MenuItem>
-            )}
+            {!openMenu?.isMonitoringCompleted &&
+              openMenu?.creatorId === user._id && (
+                <MenuItem
+                  onClick={() => {
+                    setOpenEdit(true);
+                    setPreviewId(openMenu);
+                    handleMenuClose();
+                  }}
+                >
+                  Update Goal
+                </MenuItem>
+              )}
           </>
         )}
         {(performance?.stages ===
@@ -677,19 +662,20 @@ const GoalsTable = ({ performance }) => {
           </MenuItem>
         )}
 
-        {performance?.stages === "Goal setting" && (
-          <MenuItem
-            className="!p-0"
-            onClick={() => {
-              setDeleteConfirmation(openMenu);
-              handleMenuClose();
-            }}
-          >
-            <div className="hover:!bg-red-500 !text-red-500 flex  w-full h-full items-center hover:!text-white transition-all gap-4  py-2 px-4">
-              Delete goal
-            </div>
-          </MenuItem>
-        )}
+        {performance?.stages === "Goal setting" &&
+          openMenu?.creatorId === user?._id && (
+            <MenuItem
+              className="!p-0"
+              onClick={() => {
+                setDeleteConfirmation(openMenu);
+                handleMenuClose();
+              }}
+            >
+              <div className="hover:!bg-red-500 !text-red-500 flex  w-full h-full items-center hover:!text-white transition-all gap-4  py-2 px-4">
+                Delete goal
+              </div>
+            </MenuItem>
+          )}
 
         {performance?.stages === "Employee acceptance/acknowledgement stage" &&
           role === "Employee" && (
