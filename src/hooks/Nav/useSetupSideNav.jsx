@@ -134,11 +134,11 @@ const useSetupSideNav = (organisationId) => {
     {
       label: "Email Setting",
       icon: EmailOutlinedIcon,
-      href: `/organisation/${organisationId}/setup/email`,
+      href: `/organisation/${organisationId}/setup/email-communicaiton`,
       active:
-        location.pathname === `/organisation/${organisationId}/setup/email`,
+        location.pathname === `/organisation/${organisationId}/setup/email-communicaiton`,
       isVisible: user?.profile?.some((role) =>
-        ["Super-Admin", "HR"].includes(role)
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
       ),
     },
     {

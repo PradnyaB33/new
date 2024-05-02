@@ -1,37 +1,39 @@
 import { Add, Info } from "@mui/icons-material";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Button,
+  IconButton,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
 } from "@mui/material";
-import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import AddLoanTypeModal from "../../../components/Modal/LoanTypeModal/AddLoanTypeModal";
-import EditLoanTypeModal from "../../../components/Modal/LoanTypeModal/EditLoanTypeModal";
 import Setup from "../Setup";
+import AddCommunicationModal from "../../../components/Modal/CommunicationModal/AddCommunicationModal";
+import EditCommunicationModal from "../../../components/Modal/CommunicationModal/EditCommunicationModal";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
-const EmpLoanMgt = () => {
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import axios from "axios";
+
+const EmpCommunication = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { organisationId } = useParams();
   const queryClient = useQueryClient();
+
   //for  Get Query
-  const { data: getEmployeeLoan, isLoading } = useQuery(
-    ["loanType", organisationId],
+  const { data: getCommunication, isLoading } = useQuery(
+    ["emailCommunication", organisationId],
     async () => {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-loan-type`,
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-communication`,
         {
           headers: {
             Authorization: authToken,
@@ -41,17 +43,32 @@ const EmpLoanMgt = () => {
       return response.data.data;
     }
   );
-  console.log(getEmployeeLoan);
+
+  console.log("get communication", getCommunication);
+
   // for add
-  const [addModalOpen, setAddModalOpen] = useState(false);
-
-  const handleAddModalOpen = () => {
-    setAddModalOpen(true);
+  const [openCommunciationModal, setOpenCommunicationModal] = useState(false);
+  const handleOpenCommunicationModal = () => {
+    setOpenCommunicationModal(true);
+  };
+  const handleCloseCommunicationModal = () => {
+    setOpenCommunicationModal(false);
   };
 
-  const handleAddModalClose = () => {
-    setAddModalOpen(false);
+  // for update
+  const [editCommunicationModal, setEditCommunicationModal] = useState(false);
+  const [editCommunicationId, setEditCommunicationId] = useState(null);
+
+  const handleOpenEditCommunicationModal = (communicationId) => {
+    setEditCommunicationModal(true);
+    queryClient.invalidateQueries(["communicationId", communicationId]);
+    setEditCommunicationId(communicationId);
   };
+
+  const handleCloseEditCommunicationModal = () => {
+    setEditCommunicationModal(false);
+  };
+
   // for delete
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
 
@@ -71,7 +88,7 @@ const EmpLoanMgt = () => {
   const deleteMutation = useMutation(
     (id) =>
       axios.delete(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/${id}/delete-loan-type`,
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/${id}/delete-communication`,
         {
           headers: {
             Authorization: authToken,
@@ -81,24 +98,12 @@ const EmpLoanMgt = () => {
     {
       onSuccess: () => {
         // Invalidate and refetch the data after successful deletion
-        queryClient.invalidateQueries("loanType");
-        handleAlert(true, "success", "Loan type deleted successfully");
+        queryClient.invalidateQueries("emailCommunication");
+        handleAlert(true, "success", "Email deleted successfully");
       },
     }
   );
 
-  // for update
-  const [editLoanModalOpen, setEditLoanModalOpen] = useState(false);
-  const [loanId, setLoanId] = useState(null);
-
-  const handleEditModalOpen = (loanId) => {
-    setEditLoanModalOpen(true);
-    queryClient.invalidateQueries(["loanType", loanId]);
-    setLoanId(loanId);
-  };
-  const handleEditModalClose = () => {
-    setEditLoanModalOpen(false);
-  };
   return (
     <>
       <section className="bg-gray-50 min-h-screen w-full">
@@ -107,27 +112,27 @@ const EmpLoanMgt = () => {
             <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
               <div className="flex gap-3 ">
                 <div className="mt-1">
-                  <CreditCardIcon />
+                  <EmailOutlinedIcon />
                 </div>
                 <div>
-                  <h1 className="!text-lg">Loan Management</h1>
+                  <h1 className="!text-lg">Email Setup</h1>
                   <p className="text-xs text-gray-600">
-                    Manage the loan of employee here.
+                    Manage the email setup here.
                   </p>
                 </div>
               </div>
               <Button
                 className="!font-semibold !bg-sky-500 flex items-center gap-2"
                 variant="contained"
-                onClick={handleAddModalOpen}
+                onClick={handleOpenCommunicationModal}
               >
                 <Add />
-                Add Loan Type
+                <h1 className="!text-lg">Email Setup</h1>
               </Button>
             </div>
             {isLoading ? (
               <EmployeeTypeSkeleton />
-            ) : getEmployeeLoan?.length > 0 ? (
+            ) : getCommunication?.length > 0 ? (
               <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
                 <table className="min-w-full bg-white  text-left !text-sm font-light">
                   <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
@@ -136,17 +141,10 @@ const EmpLoanMgt = () => {
                         Sr. No
                       </th>
                       <th scope="col" className="px-6 py-3">
-                        Loan Name
+                        Email
                       </th>
                       <th scope="col" className="px-6 py-3 ">
-                        Minimum Loan Value
-                      </th>
-                      <th scope="col" className="px-6 py-3 ">
-                        Maximum Loan value
-                      </th>
-
-                      <th scope="col" className="px-6 py-3 ">
-                        Rate of interest in %
+                        Communication
                       </th>
                       <th scope="col" className=" px-9 py-3 ">
                         Action
@@ -154,42 +152,37 @@ const EmpLoanMgt = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {getEmployeeLoan?.map((empLoan, id) => (
-                      <tr className="!font-medium border-b" key={id}>
-                        <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                        <td className="!text-left  pl-6 py-3 ">
-                          {empLoan?.loanName}
-                        </td>
-                        <td className="!text-left pl-6 py-3 ">
-                          {empLoan?.loanValue}
-                        </td>
-                        <td className="!text-left pl-6 py-3 ">
-                          {empLoan?.maxLoanValue}
-                        </td>
+                    {Array.isArray(getCommunication) &&
+                      getCommunication?.map((communciation, id) => (
+                        <tr className="!font-medium border-b" key={id}>
+                          <td className="!text-left pl-8 py-3 ">{id + 1}</td>
+                          <td className="!text-left  pl-6 py-3 ">
+                            {communciation?.email}
+                          </td>
+                          <td className="!text-left pl-6 py-3 ">
+                            {communciation?.communication}
+                          </td>
 
-                        <td className="!text-left  pl-8 py-3 ">
-                          {empLoan?.rateOfInterest}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-2">
-                          <IconButton
-                            color="primary"
-                            aria-label="edit"
-                            onClick={() => handleEditModalOpen(empLoan?._id)}
-                          >
-                            <EditOutlinedIcon />
-                          </IconButton>
-                          <IconButton
-                            color="error"
-                            aria-label="delete"
-                            onClick={() =>
-                              handleDeleteConfirmation(empLoan?._id)
-                            }
-                          >
-                            <DeleteOutlineIcon />
-                          </IconButton>
-                        </td>
-                      </tr>
-                    ))}
+                          <td className="whitespace-nowrap px-6 py-2">
+                            <IconButton
+                              color="primary"
+                              aria-label="edit"
+                              onClick={() => handleOpenEditCommunicationModal(communciation?._id)}
+                            >
+                              <EditOutlinedIcon />
+                            </IconButton>
+                            <IconButton
+                              color="error"
+                              aria-label="delete"
+                              onClick={() =>
+                                handleDeleteConfirmation(communciation?._id)
+                              }
+                            >
+                              <DeleteOutlineIcon />
+                            </IconButton>
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
@@ -197,29 +190,30 @@ const EmpLoanMgt = () => {
               <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
                 <article className="flex items-center mb-1 text-red-500 gap-2">
                   <Info className="!text-2xl" />
-                  <h1 className="text-lg font-semibold">Add Loan Type</h1>
+                  <h1 className="text-lg font-semibold">Setup the email</h1>
                 </article>
-                <p>No loan type found. Please add the loan type.</p>
+                <p>No email found for communication. Please setup the email.</p>
               </section>
             )}
           </article>
         </Setup>
 
         {/* for add */}
-        <AddLoanTypeModal
-          handleClose={handleAddModalClose}
-          open={addModalOpen}
+        <AddCommunicationModal
+          handleClose={handleCloseCommunicationModal}
+          open={openCommunciationModal}
           organisationId={organisationId}
         />
       </section>
 
       {/* for update */}
-      <EditLoanTypeModal
-        handleClose={handleEditModalClose}
+      <EditCommunicationModal
+        handleClose={handleCloseEditCommunicationModal}
         organisationId={organisationId}
-        open={editLoanModalOpen}
-        loanId={loanId}
+        open={editCommunicationModal}
+        editCommunicationId={editCommunicationId}
       />
+
       {/* for delete */}
       <Dialog
         open={deleteConfirmation !== null}
@@ -255,4 +249,4 @@ const EmpLoanMgt = () => {
   );
 };
 
-export default EmpLoanMgt;
+export default EmpCommunication;
