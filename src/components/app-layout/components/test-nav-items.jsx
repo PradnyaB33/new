@@ -235,13 +235,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Loan Management",
           },
-          {
-            key: "missjustify",
-            isVisible: true,
-            link: `/missed-justify`,
-            icon: <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Missed Justify",
-          },
         ],
       },
       Employee: {
@@ -298,7 +291,19 @@ const TestNavItems = ({ toggleDrawer }) => {
         icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
         isVisible:
           window.location.pathname?.includes("organisation") &&
-          ["Super-Admin", "Delegate-Super Admin", "HR"]?.includes(role),
+          [
+            "Super-Admin",
+            "Delegate-Super-Admin",
+            "Department-Head",
+            "Delegate-Department-Head",
+            "Department-Admin",
+            "Delegate-Department-Admin",
+            "Accountant",
+            "Delegate-Accountant",
+            "HR",
+            "Manager",
+            "Employee",
+          ]?.includes(role),
         routes: [
           {
             key: "punchingMachine",
@@ -338,6 +343,25 @@ const TestNavItems = ({ toggleDrawer }) => {
             link: `organisation/${orgId}/missed-punch-in-out`,
             icon: <CallMissedIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Missed Punch ",
+          },
+          {
+            key: "missjustify",
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+              "Employee",
+            ].includes(role),
+            link: `/missed-justify`,
+            icon: <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Missed Justify",
           },
         ],
       },

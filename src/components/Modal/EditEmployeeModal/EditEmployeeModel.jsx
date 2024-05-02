@@ -224,7 +224,8 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           },
         }
       );
-      setManagerData(response.data.data);
+      console.log("response" , response);
+      setManagerData(response.data.manager);
     } catch (error) {
       console.error(error);
     }
