@@ -119,22 +119,7 @@ const AppDatePicker = ({
     getLatestLeave();
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
-    const currentDate = moment(selectedStartDate);
 
-    const includedDays = data2.days?.days?.map((day) => day.day);
-
-    while (currentDate.isSameOrBefore(selectedEndDate)) {
-      const currentDay = currentDate.format("ddd");
-      if (includedDays.includes(currentDay)) {
-        return handleAlert(
-          true,
-          "warning",
-          `You cannot select ${currentDay} for leave`
-        );
-      }
-
-      currentDate.add(1, "day");
-    }
     if (newData && Array.isArray(newData)) {
       const isOverlapWithData = newData.some((event) => {
         console.log(newData);
