@@ -79,7 +79,7 @@ export default function PerformanceTab() {
               //     display: "none",
               //   },
               "& .MuiTab-root.Mui-selected": {
-                color: "#1976d2",
+                // color: "#1976d2",
                 // backgroundColor: "#1976d2",
               },
             }}
@@ -96,8 +96,9 @@ export default function PerformanceTab() {
 
                 padding: "5px", // Decrease the padding
                 "&.Mui-selected": {
-                  color: "#1976d2",
-                  backgroundColor: "#fff", // Change the background color when selected
+                  color: "#fff !important",
+                  height: "10px",
+                  backgroundColor: "#1976d2", // Change the background color when selected
                 },
               }}
             />

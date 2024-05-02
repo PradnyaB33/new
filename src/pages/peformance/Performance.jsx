@@ -1,10 +1,12 @@
 import React from "react";
-import PerformanceTab from "./components/PerformanceTab";
+import TestTab from "./components/TestTab";
 
 const Performance = () => {
   return (
     <div>
-      <PerformanceTab />
+      {/* <PerformanceTab /> */}
+
+      <TestTab />
     </div>
   );
 };

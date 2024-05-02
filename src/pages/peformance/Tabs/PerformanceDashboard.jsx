@@ -6,6 +6,7 @@ import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 import Card from "../components/Card";
 import PerformanceTable from "../components/Dashboard/PerformanceTable";
+import Message from "../components/Message";
 
 const PerformanceDashboard = () => {
   const user = UserProfile().getCurrentUser();
@@ -22,13 +23,26 @@ const PerformanceDashboard = () => {
   );
 
   return (
-    <div className="px-8 ">
-      <div className="flex items-center justify-between ">
+    <div
+    // className="px-8 "
+    >
+      {/* <div className="flex items-center justify-between ">
         <div className="w-full py-4  ">
           <h1 className="text-2xl ">Performance Dashboard</h1>
           <p>Manage and organize goals setting</p>
         </div>
+      </div> */}
+
+      <div class="flex items-center justify-between ">
+        <div class="space-y-1">
+          <h2 class="text-2xl tracking-tight">Dashboard</h2>
+          <p class="text-sm text-muted-foreground">
+            Top picks for you. Updated daily.
+          </p>
+        </div>
       </div>
+
+      <Message />
 
       <div className="flex flex-wrap gap-4">
         <Card title={"Total Goals"} data={"10 / 13 completed"} />
@@ -47,10 +61,7 @@ const PerformanceDashboard = () => {
         />
       </div>
 
-      <PerformanceTable
-        tableData={tableData?.result}
-        performance={performance}
-      />
+      <PerformanceTable tableData={tableData} performance={performance} />
     </div>
   );
 };

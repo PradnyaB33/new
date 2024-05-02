@@ -303,7 +303,7 @@ const GoalsTable = ({ performance }) => {
   };
 
   return (
-    <section className="px-8 py-0 mb-10 ">
+    <section className=" py-0 mb-10 ">
       <div className=" bg-white rounded-md ">
         {/* <div className=" py-2">
           <h1 className="text-black  text-2xl">

@@ -195,7 +195,7 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
                 control={control}
                 type="texteditor"
                 placeholder="100"
-                label="Comments box"
+                label="Add Montioring Points"
                 errors={errors}
                 error={errors.comments}
               />
