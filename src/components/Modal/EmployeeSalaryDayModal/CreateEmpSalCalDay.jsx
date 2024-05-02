@@ -53,7 +53,7 @@ const CreateEmpSalCalDayModel = ({ handleClose, open, id }) => {
       handleAlert(
         true,
         "error",
-        "An Error occurred while creating  salary computation day."
+        `This day is already exist.`
       );
     }
   };
