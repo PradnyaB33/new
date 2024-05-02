@@ -49,56 +49,7 @@ const LoanManagement = () => {
     return date.toDateString();
   };
 
-  // Function to calculate loan amount paid and pending
-  // const calculateLoanStatus = (loan) => {
-  //   const currentDate = new Date();
-  //   const loanStartingDate = loan?.loanDisbursementDate
-  //     ? new Date(loan?.loanDisbursementDate)
-  //     : null;
-  //   const loanEndingDate = loan?.loanCompletedDate
-  //     ? new Date(loan.loanCompletedDate)
-  //     : null;
-
-  //   console.log("loan starting data", loanStartingDate);
-  //   console.log("loan ending data", loanEndingDate);
-
-  //   const loanAmount = loan?.totalDeductionWithSi;
-  //   const totalDeductionPerMonth = loan?.totalDeduction;
-
-  //   let loanAmountPaid = 0;
-  //   let loanAmountPending = loanAmount;
-
-  //   if (currentDate > loanStartingDate) {
-  //     loanAmountPaid = 0;
-  //     loanAmountPending = loanAmount;
-  //   } else {
-  //     const elapsedMonths = Math.max(
-  //       0,
-  //       (currentDate.getFullYear() - loanStartingDate.getFullYear()) * 12 +
-  //         currentDate.getMonth() -
-  //         loanStartingDate.getMonth() +
-  //         1
-  //     );
-  //     loanAmountPaid = Math.min(
-  //       loanAmount,
-  //       totalDeductionPerMonth * elapsedMonths
-  //     );
-  //     loanAmountPending = loanAmount - loanAmountPaid;
-  //   }
-
-  //   let currentDateToCheck = new Date(loanStartingDate);
-  //   console.log("currentdate to check", currentDateToCheck);
-  //   while (
-  //     currentDateToCheck <= loanEndingDate &&
-  //     currentDateToCheck < currentDate
-  //   ) {
-  //     loanAmountPaid = totalDeductionPerMonth;
-  //     loanAmountPending = loanAmount - loanAmountPaid;
-  //     currentDateToCheck.setMonth(currentDateToCheck.getMonth() + 1);
-  //   }
-
-  //   return { loanAmountPaid, loanAmountPending };
-  // };
+ 
   const calculateLoanStatus = (loan) => {
     const currentDate = new Date();
     const loanStartingDate = loan?.loanDisbursementDate
