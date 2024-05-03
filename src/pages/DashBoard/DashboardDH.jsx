@@ -9,6 +9,7 @@ import axios from "axios";
 import { default as React } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom/dist";
+import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
 import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
 import LineGraph from "./Components/Bar/LineGraph";
@@ -25,7 +26,9 @@ const DashboardDH = () => {
   console.log(user.deptname);
 
   // custom hooks
-  // const { oraganizationLoading } = useDashboardFilter(user.organizationId);
+  const { oraganizationLoading, salaryGraphLoading } = useDashboardFilter(
+    user.organizationId
+  );
 
   const { data: deptAttendenceData } = useQuery({
     queryKey: ["deptAttendece"],
@@ -184,11 +187,14 @@ const DashboardDH = () => {
 
         <div className="w-full md:gap-4 md:space-y-0 space-y-3 mt-4 flex md:flex-row flex-col items-center">
           <div className="w-[100%] md:w-[50%]">
-            <LineGraph salarydata={deptSalaryData} isLoading={salaryLoading} />
+            <LineGraph
+              salarydata={deptSalaryData}
+              isLoading={salaryGraphLoading}
+            />
           </div>
           <div className="w-[100%] md:w-[50%]">
             <AttendenceBar
-              // isLoading={oraganizationLoading}
+              isLoading={oraganizationLoading}
               attendenceData={deptAttendenceData}
             />
           </div>
