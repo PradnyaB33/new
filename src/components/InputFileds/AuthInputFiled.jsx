@@ -1,7 +1,7 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
-import { default as React } from "react";
+import { default as React,  } from "react";
 import Autocomplete, { usePlacesWidget } from "react-google-autocomplete";
 import { Controller } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
@@ -54,6 +54,7 @@ const AuthInputFiled = ({
   descriptionText,
   value,
   autoComplete,
+  
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -65,8 +66,9 @@ const AuthInputFiled = ({
   const { ref } = usePlacesWidget({
     apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     onPlaceSelected: (place) => console.log(place),
-  });
+  }); 
 
+ 
   if (type === "calender") {
     return (
       <>
@@ -185,6 +187,7 @@ const AuthInputFiled = ({
     );
   }
 
+ 
   if (type === "select") {
     return (
       <>

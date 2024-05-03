@@ -80,7 +80,7 @@ const MissedPunchNotified = ({ employeeId }) => {
     }
   };
 
-  //  for hr hr
+  //  for hr
   const handleApprovalUnavailableRecord = async (recordId) => {
     try {
       console.log("record id", recordId);
