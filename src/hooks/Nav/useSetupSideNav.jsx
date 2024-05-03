@@ -132,7 +132,7 @@ const useSetupSideNav = (organisationId) => {
       ),
     },
     {
-      label: "Email Setting",
+      label: "Add Email",
       icon: EmailOutlinedIcon,
       href: `/organisation/${organisationId}/setup/email-communicaiton`,
       active:

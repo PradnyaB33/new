@@ -37,21 +37,21 @@ const EditCommunicationModal = ({
   const [error, setError] = useState("");
   console.log(error);
 
-  console.log("editcommunicationid", editCommunicationId);
-
   const EmpCommunicationSchema = z.object({
     email: z.string().email(),
-    communication: z.object({
-      label: z.string(),
-      value: z.string(),
-    }),
+    communication: z.array(
+      z.object({
+        label: z.string(),
+        value: z.string(),
+      })
+    ),
   });
 
   const {
     control,
     formState: { errors },
     handleSubmit,
-    setValue
+    setValue,
   } = useForm({
     defaultValues: {
       email: undefined,
@@ -80,13 +80,15 @@ const EditCommunicationModal = ({
   useEffect(() => {
     if (getCommunicationById) {
       setValue("email", getCommunicationById.email);
-      const selectedCommunicationOption = communicationOptions.find(
-        option => option.value === getCommunicationById.communication
+      const communicationValue = getCommunicationById.communication.map(
+        (item) => ({
+          label: item,
+          value: item,
+        })
       );
-      setValue("communication", selectedCommunicationOption);
+      setValue("communication", communicationValue);
     }
   }, [getCommunicationById, setValue]);
-
 
   const EditCommunication = useMutation(
     (data) =>
@@ -113,19 +115,16 @@ const EditCommunicationModal = ({
 
   const onSubmit = async (data) => {
     try {
-      const communicationValue = data.communication.value;
+      const communicationValue = data.communication.map((item) => item.label);
       const formData = { email: data.email, communication: communicationValue };
       console.log(formData);
       await EditCommunication.mutateAsync(formData);
-     
     } catch (error) {
       console.error(error);
       setError("An error occurred while updation email.");
     }
   };
-  
-  
- 
+
   return (
     <Modal
       open={open}
@@ -139,7 +138,7 @@ const EditCommunicationModal = ({
       >
         <div className="flex justify-between py-4 items-center  px-4">
           <h1 className="text-xl pl-2 font-semibold font-sans">
-            Edit Email Setup
+            Edit Email 
           </h1>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -160,14 +159,15 @@ const EditCommunicationModal = ({
               <AuthInputFiled
                 name="communication"
                 icon={GroupIcon}
-                options={communicationOptions}
                 control={control}
-                type="select"
-                placeholder="Add Communication"
-                label="Add Communication *"
+                type="autocomplete"
+                placeholder="Communication Type*"
+                label="Communication Type*"
                 readOnly={false}
+                maxLimit={15}
                 errors={errors}
                 error={errors.communication}
+                optionlist={communicationOptions ? communicationOptions : []}
               />
             </div>
 

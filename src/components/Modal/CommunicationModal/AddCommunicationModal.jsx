@@ -21,9 +21,12 @@ const style = {
 };
 
 const communicationOptions = [
-  { label: "HR Communication", value: "HR" },
-  { label: "Accounts Communication", value: "Accounts" },
-  { label: "CEO/Leadership Communication", value: "CEO" },
+  { label: "HR Communication", value: "HR Communication" },
+  { label: "Accounts Communication", value: "Accounts Communication" },
+  {
+    label: "CEO/Leadership Communication",
+    value: "CEO/Leadership Communication",
+  },
 ];
 
 const AddCommunicationModal = ({ handleClose, open, organisationId }) => {
@@ -35,16 +38,19 @@ const AddCommunicationModal = ({ handleClose, open, organisationId }) => {
 
   const EmpCommunicationSchema = z.object({
     email: z.string().email(),
-    communication: z.object({
-      label: z.string(),
-      value: z.string(),
-    }),
+    communication: z.array(
+      z.object({
+        label: z.string(),
+        value: z.string(),
+      })
+    ),
   });
 
   const {
     control,
     formState: { errors },
     handleSubmit,
+    reset,
   } = useForm({
     defaultValues: {
       email: undefined,
@@ -69,7 +75,8 @@ const AddCommunicationModal = ({ handleClose, open, organisationId }) => {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["emailCommunication"] });
         handleClose();
-        handleAlert(true, "success", "Setup the email successfully");
+        handleAlert(true, "success", "Email added successfully");
+        reset();
       },
       onError: () => {
         setError("An Error occurred while setup the email.");
@@ -79,12 +86,13 @@ const AddCommunicationModal = ({ handleClose, open, organisationId }) => {
 
   const onSubmit = async (data) => {
     try {
-      const communicationValue = data.communication.value;
+      const communicationValue = data.communication.map((item) => item.label);
       const formData = { email: data.email, communication: communicationValue };
       console.log(formData);
       await AddEmailCommunication.mutateAsync(formData);
     } catch (error) {
       console.error(error);
+      handleAlert(true, "error", "Failed to add the communication");
       setError("Failed to add the loan type");
     }
   };
@@ -103,7 +111,7 @@ const AddCommunicationModal = ({ handleClose, open, organisationId }) => {
         >
           <div className="flex justify-between py-4 items-center  px-4">
             <h1 className="text-xl pl-2 font-semibold font-sans">
-              Email Setup
+             Add Email
             </h1>
           </div>
 
@@ -125,14 +133,15 @@ const AddCommunicationModal = ({ handleClose, open, organisationId }) => {
                 <AuthInputFiled
                   name="communication"
                   icon={GroupIcon}
-                  options={communicationOptions}
                   control={control}
-                  type="select"
-                  placeholder="Add Communication"
-                  label="Add Communication *"
+                  type="autocomplete"
+                  placeholder="Communication Type*"
+                  label="Communication Type*"
                   readOnly={false}
+                  maxLimit={15}
                   errors={errors}
                   error={errors.communication}
+                  optionlist={communicationOptions ? communicationOptions : []}
                 />
               </div>
 

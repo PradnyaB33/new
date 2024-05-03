@@ -115,9 +115,9 @@ const EmpCommunication = () => {
                   <EmailOutlinedIcon />
                 </div>
                 <div>
-                  <h1 className="!text-lg">Email Setup</h1>
+                  <h1 className="!text-lg">Add Email</h1>
                   <p className="text-xs text-gray-600">
-                    Manage the email setup here.
+                   Add the required email for communication.
                   </p>
                 </div>
               </div>
@@ -127,7 +127,7 @@ const EmpCommunication = () => {
                 onClick={handleOpenCommunicationModal}
               >
                 <Add />
-                <h1 className="!text-lg">Email Setup</h1>
+                <h1 className="!text-lg">Add Email</h1>
               </Button>
             </div>
             {isLoading ? (
@@ -144,7 +144,7 @@ const EmpCommunication = () => {
                         Email
                       </th>
                       <th scope="col" className="px-6 py-3 ">
-                        Communication
+                        Communication Type
                       </th>
                       <th scope="col" className=" px-9 py-3 ">
                         Action
@@ -155,19 +155,23 @@ const EmpCommunication = () => {
                     {Array.isArray(getCommunication) &&
                       getCommunication?.map((communciation, id) => (
                         <tr className="!font-medium border-b" key={id}>
-                          <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                          <td className="!text-left  pl-6 py-3 ">
+                          <td className="!text-left pl-8 py-2 ">{id + 1}</td>
+                          <td className="!text-left  pl-6 py-2 ">
                             {communciation?.email}
                           </td>
-                          <td className="!text-left pl-6 py-3 ">
-                            {communciation?.communication}
+                          <td className="!text-left pl-6 py-3">
+                            {communciation?.communication.join(",  ")}
                           </td>
 
                           <td className="whitespace-nowrap px-6 py-2">
                             <IconButton
                               color="primary"
                               aria-label="edit"
-                              onClick={() => handleOpenEditCommunicationModal(communciation?._id)}
+                              onClick={() =>
+                                handleOpenEditCommunicationModal(
+                                  communciation?._id
+                                )
+                              }
                             >
                               <EditOutlinedIcon />
                             </IconButton>
@@ -190,9 +194,9 @@ const EmpCommunication = () => {
               <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
                 <article className="flex items-center mb-1 text-red-500 gap-2">
                   <Info className="!text-2xl" />
-                  <h1 className="text-lg font-semibold">Setup the email</h1>
+                  <h1 className="text-lg font-semibold">Add Email</h1>
                 </article>
-                <p>No email found for communication. Please setup the email.</p>
+                <p>No email found for communication. Please add the email.</p>
               </section>
             )}
           </article>
@@ -222,7 +226,7 @@ const EmpCommunication = () => {
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <p>
-            Please confirm your decision to delete this loan type, as this
+            Please confirm your decision to delete this email, as this
             action cannot be undone.
           </p>
         </DialogContent>
