@@ -128,23 +128,23 @@ const AttendanceBioModal = ({
 
   // Handle sync
   const handleSync = async () => {
-    if (checkedEmployees.length === 0 && emailSearch.trim() !== "") {
-      setEmailNotFound(true);
-      return;
-    }
-
-    // Verify email for each checked employee
-    const invalidEmails = checkedEmployees.filter((employee) => {
-      const email = employee?.email || "";
-      return !validateEmail(email);
-    });
-
-    if (invalidEmails.length > 0) {
-      handleAlert(true, "error", "Please enter valid email addresses.");
-      return;
-    }
-
     try {
+      if (checkedEmployees.length === 0 && emailSearch.trim() !== "") {
+        setEmailNotFound(true);
+        return;
+      }
+  
+      // Verify email for each checked employee
+      const invalidEmails = checkedEmployees.filter((employee) => {
+        const email = employee?.email || "";
+        return !validateEmail(email);
+      });
+  
+      if (invalidEmails.length > 0) {
+        handleAlert(true, "error", "Please enter valid email addresses.");
+        return;
+      }
+  
       const syncedData = selectedEmployees.map((employee) => ({
         date: employee[3],
         punchingTime: employee[4],
@@ -198,7 +198,7 @@ const AttendanceBioModal = ({
             Employee’s List
           </Typography>
           <p className="text-xs text-gray-600 pl-10 text-center">
-            List of employees from the organization.
+            List of employees from the organisation.
           </p>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
