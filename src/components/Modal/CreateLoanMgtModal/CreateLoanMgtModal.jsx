@@ -8,8 +8,8 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  MenuItem, 
-   Typography
+  MenuItem,
+  Typography,
 } from "@mui/material";
 import React, { useContext, useState, useEffect } from "react";
 import useLaonState from "../../../hooks/LoanManagemet/useLaonState";
@@ -31,6 +31,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
   const authToken = cookies["aegis"];
   const [error, setError] = useState("");
   const [errors, setErrors] = useState("");
+  const [loanAmountError, setLoanAmountError] = useState("");
   const [loanValue, setLoanValue] = useState(0);
   const [maxLoanValue, setMaxLoanValue] = useState(0);
   const {
@@ -189,7 +190,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
   };
   console.log(errors);
   console.log(loanValue);
-  console.log(getTotalSalaryEmployee);
+  console.log("total salary ", getTotalSalaryEmployee);
 
   return (
     <Dialog
@@ -238,6 +239,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   )}
                 </Select>
               </FormControl>
+              {error && <p className="text-red-500">*{error}</p>}
             </div>
 
             <div className="space-y-2">
@@ -251,20 +253,17 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   value={loanAmount}
                   onChange={(e) => {
                     const amount = e.target.value;
-                    if (
-                      amount === "" ||
-                      (amount >= 0 && amount <= maxLoanValue)
-                    ) {
-                      if (amount === "" || amount >= loanValue) {
-                        setError("");
-                        setLoanAmount(amount);
+                    setLoanAmount(amount); 
+                    if (amount <= maxLoanValue) {
+                      if (amount >= loanValue) {
+                        setLoanAmountError("");
                       } else {
-                        setError(
+                        setLoanAmountError(
                           "You cannot take the loan amount less than the minimum loan value."
                         );
                       }
                     } else {
-                      setError(
+                      setLoanAmountError(
                         "You cannot take the loan amount greater than maximum loan value."
                       );
                     }
@@ -275,7 +274,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   inputProps={{ min: "0" }}
                 />
               </FormControl>
-              {error && <p className="text-red-500">*{error}</p>}
+              {loanAmountError && <p className="text-red-500">*{loanAmountError}</p>}
             </div>
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -334,12 +333,12 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
           </div>
 
           <DialogContent className="w-full">
-          <Typography variant="body2" >
-             Declaration by Employee :
-            </Typography>
+            <Typography variant="body2">Declaration by Employee :</Typography>
             <Typography variant="body2" color="textSecondary">
-             I declare that I have not availed any other loan during this year and also confirm that there are no dues standing to my credit towards loan drawan by me during last year .
-             I agree to pay loan amount as per above information
+              I declare that I have not availed any other loan during this year
+              and also confirm that there are no dues standing to my credit
+              towards loan drawan by me during last year . I agree to pay loan
+              amount as per above information
             </Typography>
           </DialogContent>
 
