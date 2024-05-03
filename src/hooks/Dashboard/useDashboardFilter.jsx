@@ -218,7 +218,7 @@ export default function useDashboardFilter(organisationId) {
     }
   }
 
-  useQuery(
+  const { isLoading: salaryGraphLoading } = useQuery(
     ["Org-Salary-overview", organisationId, selectedSalaryYear],
     () =>
       getSalaryData(
@@ -291,7 +291,7 @@ export default function useDashboardFilter(organisationId) {
     managerOptions,
     Departmentoptions,
     oraganizationLoading,
-
+    salaryGraphLoading,
     getAttendenceData,
 
     // Style
