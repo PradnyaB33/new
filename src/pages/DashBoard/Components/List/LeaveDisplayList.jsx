@@ -1,4 +1,4 @@
-import { WarningOutlined } from "@mui/icons-material";
+import { Info } from "@mui/icons-material";
 import Divider from "@mui/material/Divider";
 import axios from "axios";
 import { format } from "date-fns";
@@ -49,10 +49,10 @@ const LeaveDisplayList = () => {
         <Divider variant="fullWidth" orientation="horizontal" />
 
         {previousLeaves?.length <= 0 ? (
-          <div className="p-5 ">
+          <div className="px-5 py-2 ">
             <div className="space-x-2 items-center text-red-600  flex">
-              <WarningOutlined className="text-xl text-red-600" />
-              <h1 className="text-xl">No leaves taken by you</h1>
+              <Info className="text-xl text-red-600" />
+              <h1 className="text-lg  font-bold">No leaves found </h1>
             </div>
           </div>
         ) : (
