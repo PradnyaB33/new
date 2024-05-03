@@ -50,7 +50,7 @@ const DashboardDH = () => {
     },
   });
 
-  const { data: deptSalaryData, isLoading: salaryLoading } = useQuery({
+  const { data: deptSalaryData } = useQuery({
     queryKey: ["deptSalary"],
     queryFn: async () => {
       try {
