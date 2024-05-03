@@ -79,18 +79,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
   }, [loanDisbursementDate, noOfEmi]);
 
  
-  // const handleNoOfEmiChange = (e) => {
-  //   const value = e.target.value;
-  //   if (!isNaN(value) && parseInt(value) >= 0) {
-  //     setNoOfEmi(value);
-  //     if (loanDisbursementDate) {
-  //       calculateCompletionDate(loanDisbursementDate, value);
-  //     }
-  //   } else {
-  //     setNoOfEmi("");
-  //     setNoOfEmiError("No of EMI should not be negative");
-  //   }
-  // };
+ 
   const handleNoOfEmiChange = (e) => {
     const value = e.target.value;
     if (!isNaN(value) && parseInt(value) >= 0) {
