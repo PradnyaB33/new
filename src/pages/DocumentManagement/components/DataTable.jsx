@@ -18,6 +18,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useGetUser from "../../../hooks/Token/useUser";
+import UserProfile from "../../../hooks/UserData/useUser";
 
 const DataTable = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -36,6 +37,9 @@ const DataTable = () => {
   const [showManagerSelect, setShowManagerSelect] = useState(false); // State to track checkbox status
   const { setAppAlert } = useContext(UseContext);
   const [selectAll, setSelectAll] = useState(false);
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
+
   const authToken = useGetUser().authToken;
 
   const handleSelectAllClick = async (event) => {
@@ -129,7 +133,17 @@ const DataTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
+        let response;
+        if (role === "HR") {
+          response = await axios.get(
+            `${process.env.REACT_APP_API}/route/organization/getOneOrgHr`,
+            {
+              headers: { Authorization: authToken },
+            }
+          );
+          setData1(response.data.orgData);
+        }
+        response = await axios.get(
           `${process.env.REACT_APP_API}/route/organization/getall`,
           {
             headers: { Authorization: authToken },
@@ -142,6 +156,7 @@ const DataTable = () => {
     };
 
     fetchData();
+    // eslint-disable-next-line
   }, [authToken]);
 
   useEffect(() => {

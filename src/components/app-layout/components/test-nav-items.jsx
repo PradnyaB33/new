@@ -287,16 +287,12 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
-      Punching : {
+      Punching: {
         open: false,
         icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
         isVisible:
           window.location.pathname?.includes("organisation") &&
-          [
-            "Super-Admin",
-            "Delegate-Super Admin",
-            "HR",
-          ]?.includes(role),
+          ["Super-Admin", "Delegate-Super Admin", "HR"]?.includes(role),
         routes: [
           {
             key: "punchingMachine",
@@ -335,7 +331,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
             text: "Missed Punch Record",
           },
-        
         ],
       },
       Department: {
@@ -427,8 +422,8 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
-     
-         RemotePunch: {
+
+      RemotePunch: {
         open: false,
         isVisible: ["Employee", "Manager"].includes(role),
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
@@ -466,14 +461,14 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible: ["Employee"].includes(role),
             link: "/org/docs",
             icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Organization Records",
+            text: "Organisation Records",
           },
           {
             key: "orgDocs",
             isVisible: ["HR", "Super-Admin"].includes(role),
             link: "/org/docs/auth",
             icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Organization Records",
+            text: "Organisation Records",
           },
         ],
       },
