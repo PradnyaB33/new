@@ -253,7 +253,7 @@ const TestNavItems = ({ toggleDrawer }) => {
         routes: [
           {
             key: "onboarding",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/employee-onboarding`,
@@ -263,7 +263,7 @@ const TestNavItems = ({ toggleDrawer }) => {
 
           {
             key: "offboarding",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/employee-offboarding`,
@@ -291,23 +291,11 @@ const TestNavItems = ({ toggleDrawer }) => {
         icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
         isVisible:
           window.location.pathname?.includes("organisation") &&
-          [
-            "Super-Admin",
-            "Delegate-Super-Admin",
-            "Department-Head",
-            "Delegate-Department-Head",
-            "Department-Admin",
-            "Delegate-Department-Admin",
-            "Accountant",
-            "Delegate-Accountant",
-            "HR",
-            "Manager",
-            "Employee",
-          ]?.includes(role),
+          ["Super-Admin", "Delegate-Super-Admin", "HR"]?.includes(role),
         routes: [
           {
             key: "punchingMachine",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/emo-info-punch-status`,
@@ -317,7 +305,7 @@ const TestNavItems = ({ toggleDrawer }) => {
 
           {
             key: "viewAttendance",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/view-attendance-biomatric`,
@@ -326,7 +314,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "viewCalculate",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/view-calculate-data`,
@@ -337,7 +325,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "misspunchInOutRecord",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/missed-punch-in-out`,
@@ -371,7 +359,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           window.location.pathname.includes("organisation") &&
           [
             "Super-Admin",
-            "Delegate-Super Admin",
+            "Delegate-Super-Admin",
             "HR",
             "Department-Head",
             "Delegate-Department-Head",
@@ -435,7 +423,7 @@ const TestNavItems = ({ toggleDrawer }) => {
         routes: [
           {
             key: "addOrganisation",
-            isVisible: ["Super-Admin", "Delegate-Super Admin"].includes(role),
+            isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role),
             link: "/add-organisation",
             icon: (
               <BusinessOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
@@ -445,7 +433,7 @@ const TestNavItems = ({ toggleDrawer }) => {
 
           {
             key: "organisationList",
-            isVisible: ["Super-Admin", "Delegate-Super Admin"].includes(role),
+            isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role),
             link: "/organizationList",
             icon: (
               <AccountTreeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
