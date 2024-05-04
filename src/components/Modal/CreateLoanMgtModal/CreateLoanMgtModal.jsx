@@ -186,7 +186,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
       if (missingFields.length > 0) {
         const errors = {};
         missingFields.forEach((field) => {
-          errors[field] = "All field is required";
+          errors[field] = "All fields are required";
         });
         setFormErrors(errors);
         return;
