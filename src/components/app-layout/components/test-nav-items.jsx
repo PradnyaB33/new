@@ -50,6 +50,7 @@ const TestNavItems = ({ toggleDrawer }) => {
   const token = cookies["aegis"];
   const location = useLocation();
   const [decodedToken, setDecodedToken] = useState("");
+  console.log(orgId);
 
   // Update organization ID when URL changes
   useEffect(() => {
@@ -234,13 +235,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Loan Management",
           },
-          {
-            key: "missjustify",
-            isVisible: true,
-            link: `/missed-justify`,
-            icon: <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Missed Justify",
-          },
         ],
       },
       Employee: {
@@ -347,6 +341,25 @@ const TestNavItems = ({ toggleDrawer }) => {
             link: `organisation/${orgId}/missed-punch-in-out`,
             icon: <CallMissedIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Missed Punch ",
+          },
+          {
+            key: "missjustify",
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+              "Employee",
+            ].includes(role),
+            link: `/missed-justify`,
+            icon: <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Missed Justify",
           },
         ],
       },
@@ -463,13 +476,13 @@ const TestNavItems = ({ toggleDrawer }) => {
             text: "Apply Miss For Punch",
           },
           {
-            key: "empStatus",
+            key: "empNotification",
             isVisible: ["Employee"].includes(role),
-            link: "/remote/emp-notification",
+            link: "/emp-notification",
             icon: (
               <AssignmentTurnedInIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
-            text: "Punch Status",
+            text: "Remote Punching Status",
           },
         ],
       },
