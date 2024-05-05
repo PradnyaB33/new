@@ -18,6 +18,7 @@ const style = {
   overflow: "auto",
 };
 const UpgradePackage = ({ handleClose, open, organisation }) => {
+  console.log(`🚀 ~ file: upgrade.jsx:21 ~ organisation:`, organisation);
   const { updateMemberCount } = useManageSubscriptionMutation();
 
   const packageSchema = z.object({
@@ -35,6 +36,10 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
   const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
       memberCount: `${organisation?.memberCount}` || "",
+      packageInfo: {
+        value: organisation?.packageInfo,
+        label: organisation?.packageInfo,
+      },
     },
     resolver: zodResolver(packageSchema),
   });
@@ -46,6 +51,7 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
       handleClose
     );
   }
+  const checkDisability = (packageInfo) => {};
   return (
     <Modal
       keepMounted={false}
@@ -109,14 +115,18 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
             name="promoCode"
             icon={Numbers}
             control={control}
-            type="text"
-            placeholder="Promo Code "
+            type="input-action"
+            placeholder="#summer2021"
             label="Promo Code"
             errors={errors}
             error={errors.promoCode}
             descriptionText={`Your total Price will be ${
               watch("memberCount") * 100
             }`}
+            onInputActionClick={(value) => {
+              console.log(`🚀 ~ file: upgrade.jsx:121 ~ value:`, value);
+              console.log("Apply Promo Code");
+            }}
           />
           <Button variant="contained" disabled={!isDirty} type="submit">
             Submit
