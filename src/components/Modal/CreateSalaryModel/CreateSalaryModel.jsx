@@ -222,38 +222,36 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                   </tr>
                 ) : (
                   <>
-                    {salaryInput?.employee?.salarystructure?.salaryStructure.map(
-                      (item, id) => (
-                        <tr key={id} className="space-y-4 w-full">
-                          <td className="!text-left w-full pl-8 pr-8 py-3">
-                            {item.salaryComponent}
-                          </td>
-                         
-                            <input
-                              type="number"
-                              placeholder="Enter the input"
-                              style={{
-                                padding: "10px",
-                                border: "1px solid #ccc",
-                                borderRadius: "4px",
-                             
-                              }}
-                              value={inputValue[item.salaryComponent] || ""}
-                             
-                              onChange={(e) => {
-                                const inputValue = e.target.value;
-                                if (!isNaN(inputValue) && inputValue >= 0) {
-                                  handleInputChange(
-                                    item.salaryComponent,
-                                    inputValue
-                                  );
-                                }
-                              }}
-                            />
-                       
-                        </tr>
-                      )
-                    )}
+                           {salaryInput?.employee?.salarystructure?.salaryStructure &&
+  salaryInput?.employee?.salarystructure?.salaryStructure?.length > 0 &&
+  salaryInput?.employee?.salarystructure?.salaryStructure?.map(
+    (item, id) => (
+      <tr key={id} className="space-y-4 w-full">
+        <td className="!text-left w-full pl-8 pr-8 py-3">
+          {item?.salaryComponent || ""}
+        </td>
+        <td>
+          <input
+            type="number"
+            placeholder="Enter the input"
+            style={{
+              padding: "10px",
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+            }}
+            value={inputValue[item?.salaryComponent] || ""}
+            onChange={(e) => {
+              const inputValue = e.target.value;
+              if (!isNaN(inputValue) && inputValue >= 0) {
+                handleInputChange(item.salaryComponent, inputValue);
+              }
+            }}
+          />
+        </td>
+      </tr>
+    )
+  )}
+
                    </>
                 )}
                 <tr className="!mt-4">
