@@ -67,14 +67,8 @@ const useManageSubscriptionMutation = () => {
         data?.handleClose();
       },
       onError: (error) => {
-        console.log(
-          `🚀 ~ file: subscription-mutaiton.jsx ~ error:`,
-          error?.response?.data?.message
-        );
-        console.log(
-          `🚀 ~ file: subscription-mutaiton.jsx:76 ~ handleAlert:`,
-          handleAlert
-        );
+        console.error(`🚀 ~ file: subscription-mutaiton.jsx ~ error:`, error);
+
         handleAlert(true, "error", error?.response?.data?.message);
       },
     }
@@ -199,7 +193,45 @@ const useManageSubscriptionMutation = () => {
     }
   );
 
-  return { updateMemberCount, updatePlan, createPrePaidPlan };
+  const verifyPromoCode = async ({ promoCode, setValue }) => {
+    console.log(
+      `🚀 ~ file: subscription-mutaiton.jsx:203 ~ promoCode:`,
+      promoCode
+    );
+    const result = await axios.get(
+      `${process.env.REACT_APP_API}/route/promo-code/promo-code-verify/${promoCode}`,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+    result.data.setValue = setValue;
+    return result.data;
+  };
+  const { mutate: verifyPromoCodeMutation } = useMutation(verifyPromoCode, {
+    onSuccess: (data) => {
+      console.log(`🚀 ~ file: subscription-mutaiton.jsx ~ data:`, data);
+      handleAlert(true, "success", data?.message);
+      data.setValue("discount", data?.promoCode?.discount);
+    },
+    onError: (error, { setValue }) => {
+      console.log(
+        `🚀 ~ file: subscription-mutaiton.jsx:219 ~ setValue:`,
+        setValue
+      );
+      console.error(`🚀 ~ file: subscription-mutaiton.jsx ~ error:`, error);
+      setValue("discount", 0);
+      handleAlert(true, "error", error?.response?.data?.message);
+    },
+  });
+
+  return {
+    updateMemberCount,
+    updatePlan,
+    createPrePaidPlan,
+    verifyPromoCodeMutation,
+  };
 };
 
 export default useManageSubscriptionMutation;

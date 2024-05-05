@@ -151,6 +151,7 @@ const BillingCard = ({ doc }) => {
             <MenuItem
               onClick={() => {
                 setConfirmOpen4(true);
+                handleClose();
               }}
               disableRipple
             >

@@ -1,6 +1,6 @@
 import { ErrorMessage } from "@hookform/error-message";
-import { Send, Visibility, VisibilityOff } from "@mui/icons-material";
-import { Avatar, IconButton } from "@mui/material";
+import { Close, Send, Visibility, VisibilityOff } from "@mui/icons-material";
+import { Avatar, Button } from "@mui/material";
 import { default as React } from "react";
 import Autocomplete, { usePlacesWidget } from "react-google-autocomplete";
 import { Controller } from "react-hook-form";
@@ -56,6 +56,7 @@ const AuthInputFiled = ({
   autoComplete,
   onInputActionClick,
   InputFiledActionIcon,
+  onInputActionClear,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -999,7 +1000,7 @@ const AuthInputFiled = ({
                 }`}
               >
                 {Icon && (
-                  <Icon className="text-gray-700 md:text-lg !text-[1em]" />
+                  <Icon className=" text-gray-700 md:text-lg !text-[1em]" />
                 )}
                 <input
                   type={
@@ -1011,26 +1012,38 @@ const AuthInputFiled = ({
                   readOnly={readOnly}
                   value={field.value}
                   placeholder={placeholder}
-                  className={` border-none bg-white w-full outline-none px-2  ${
+                  className={`!flex-3 border-none bg-white w-full outline-none px-2  ${
                     readOnly && "!bg-gray-200"
                   }`}
                   autoComplete={autoComplete ?? "on"}
                   {...field}
                   formNoValidate
                 />
-                {Icon && (
-                  <IconButton
-                    className="text-gray-700 md:text-lg !text-[1em]"
-                    type="button"
-                    onClick={onInputActionClick.bind(this, field.value)}
-                  >
-                    {InputFiledActionIcon ? (
-                      <InputFiledActionIcon className="text-gray-700 md:text-lg !text-[1em]" />
-                    ) : (
-                      <Send className="text-gray-700 md:text-lg !text-[1em]" />
-                    )}
-                  </IconButton>
-                )}
+                <div className="!w-fit !flex-1">
+                  {!readOnly ? (
+                    <Button
+                      variant="contained"
+                      type="button"
+                      onClick={onInputActionClick.bind(this, field.value)}
+                      className="!min-w-9 !text-white"
+                      disabled={
+                        field?.value?.trim().length !== 0 ? readOnly : true
+                      }
+                    >
+                      <Send className="md:text-lg !text-[1em]" />
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="error"
+                      type="button"
+                      onClick={onInputActionClear.bind(this, field.value)}
+                      className="!min-w-9 !text-white"
+                    >
+                      <Close className="md:text-lg !text-[1em]" />
+                    </Button>
+                  )}
+                </div>
               </div>
             );
           }}
