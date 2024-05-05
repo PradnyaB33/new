@@ -100,7 +100,7 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
             errors={errors}
             error={errors.paymentType}
             options={[
-              { value: "Phone_Pay", label: "Phone_Pay", isDisabled: true },
+              { value: "Phone_Pay", label: "Phone_Pay" },
               { value: "RazorPay", label: "RazorPay" },
             ]}
             descriptionText={"Additional 2% charges on razorpay transaction"}
