@@ -122,6 +122,7 @@ const AppDatePicker = ({
     getLatestLeave();
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
+    const difference = selectedEndDate.diff(selectedStartDate, "days");
 
     // if (newData && Array.isArray(newData)) {
     //   const isOverlapWithData = newData.some((event) => {
@@ -161,7 +162,7 @@ const AppDatePicker = ({
         (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
           selectedEndDate.isAfter(moment(event.end).startOf("day")))
     );
-    if (isOverlap) {
+    if (isOverlap && difference > 0) {
       return handleAlert(true, "error", "This slot is already occupied");
     } else {
       const newLeave = {

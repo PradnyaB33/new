@@ -51,9 +51,11 @@ const AppDatePicker = ({
     if (event.title === "Selected Leave") {
       setDelete(true);
       setUpdate(false);
+    } else if (event.color) {
+      setUpdate(true);
     } else {
       setDelete(false);
-      setUpdate(true);
+      setUpdate(false);
     }
   };
 
@@ -280,11 +282,35 @@ const AppDatePicker = ({
             onSelectSlot={handleSelectSlot}
             onSelectEvent={handleSelectEvent}
             datePropGetter={selectedLeave}
-            eventPropGetter={(event) => ({
-              style: {
-                backgroundColor: event.color,
-              },
-            })}
+            eventPropGetter={(event) => {
+              let backgroundColor = "blue";
+
+              if (event?.status) {
+                switch (event.status) {
+                  case "Pending":
+                    backgroundColor = "orange";
+                    break;
+                  case "Rejected":
+                    backgroundColor = "red";
+                    break;
+                  case "Approved":
+                    backgroundColor = "green";
+                    break;
+                  default:
+                    backgroundColor = "blue";
+                    break;
+                }
+              }
+              if (event.color) {
+                backgroundColor = event.color;
+              }
+
+              return {
+                style: {
+                  backgroundColor,
+                },
+              };
+            }}
             dayPropGetter={dayPropGetter}
           />
         </div>
