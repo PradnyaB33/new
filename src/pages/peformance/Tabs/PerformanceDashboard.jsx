@@ -18,7 +18,7 @@ const PerformanceDashboard = () => {
     fetchPerformanceSetup({ user, authToken })
   );
 
-  const { data: tableData } = useQuery(["dashboardTable"], () =>
+  const { data: tableData, isFetching } = useQuery(["dashboardTable"], () =>
     getPerformanceDashboardTable({ role, authToken })
   );
 
@@ -61,7 +61,11 @@ const PerformanceDashboard = () => {
         />
       </div>
 
-      <PerformanceTable tableData={tableData} performance={performance} />
+      <PerformanceTable
+        tableData={tableData}
+        isLoading={isFetching}
+        performance={performance}
+      />
     </div>
   );
 };

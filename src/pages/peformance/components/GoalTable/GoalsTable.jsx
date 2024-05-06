@@ -30,6 +30,7 @@ import React, { useContext, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import Select from "react-select";
 import { TestContext } from "../../../../State/Function/Main";
+import EmptyAlertBox from "../../../../components/EmptyAlertBox";
 import { CustomOption } from "../../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
@@ -419,15 +420,19 @@ const GoalsTable = ({ performance }) => {
             // <CircularProgress />
             <TabelSkeleton />
           ) : orgGoals?.goals?.length <= 0 ? (
-            <section className="bg-gray-50 border py-6 px-8 rounded-md w-full">
-              <article className="flex  text-red-500 gap-2">
-                <Info className="!text-3xl mt-1" />
-                <div>
-                  <h1 className="text-xl font-semibold">Goals Not Found</h1>
-                  <p className="text-gray-900">Add goals to goal settings.</p>
-                </div>
-              </article>
-            </section>
+            // <section className="bg-gray-50 border py-6 px-8 rounded-md w-full">
+            //   <article className="flex  text-red-500 gap-2">
+            //     <Info className="!text-3xl mt-1" />
+            //     <div>
+            //       <h1 className="text-xl font-semibold">Goals Not Found</h1>
+            //       <p className="text-gray-900">Add goals to goal settings.</p>
+            //     </div>
+            //   </article>
+            // </section>
+            <EmptyAlertBox
+              title={"Goals Not Found"}
+              desc={"Add goals to goal settings."}
+            />
           ) : (
             <div className="overflow-auto ">
               <table className="w-full table-auto  border border-collapse min-w-full bg-white  text-left  !text-sm font-light">
