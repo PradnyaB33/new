@@ -33,11 +33,11 @@ const LeaveRequisition = () => {
           <Link to={"/"}>
             <West className="mx-4 !text-xl" />
           </Link>
-          Leave Request
+          Attendance & Leave Management
           <div>
             <p className="text-xs text-gray-600 pl-12">
-              Submit your leave requests here for timely approval and efficient
-              management .
+              Track your attendance and submit your leave requests here for
+              timely approval and efficient management .
             </p>
           </div>
         </header>
@@ -87,7 +87,7 @@ const LeaveRequisition = () => {
                     </Button>
                   </Badge>
                   <p className="!text-gray-400 font-semibold mb-2 text-xl">
-                    Select Leave Date
+                    Select Date
                   </p>
                 </div>
               </div>
@@ -114,7 +114,7 @@ const LeaveRequisition = () => {
                   className="h-max !mt-4 space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg"
                 >
                   <h1 className="text-gray-400 font-semibold mb-4 text-md">
-                    Selected Leave's
+                    Selected Dates
                   </h1>
                   <div className="flex flex-col gap-4">
                     {newAppliedLeaveEvents?.map((item, index) => (
@@ -134,7 +134,7 @@ const LeaveRequisition = () => {
                         variant="contained"
                         className="font-bold m-auto w-fit"
                       >
-                        Apply for leave
+                        Apply
                       </Button>
                     </div>
                   </div>
@@ -151,9 +151,7 @@ const LeaveRequisition = () => {
                     className="text-center w-fit !m-auto !capitalize !underline "
                   >
                     {" "}
-                    {!isLoading
-                      ? "Apply For Leave"
-                      : "Wait Calendar is Loading"}
+                    {!isLoading ? "Apply" : "Wait Calendar is Loading"}
                   </Button>
                 </div>
               </>

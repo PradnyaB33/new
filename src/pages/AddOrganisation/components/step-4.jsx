@@ -1,6 +1,7 @@
 import { Button } from "@mui/material";
 import axios from "axios";
-import React, { useState } from "react";
+import moment from "moment";
+import React, { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import useOrg from "../../../State/Org/Org";
@@ -38,38 +39,11 @@ const Step4 = () => {
       return "Please Select Plan And Package";
     }
 
-    // const formData = new FormData();
-
-    // // Append file to FormData
-    // formData.append("orgName", data.orgName);
-    // formData.append("foundation_date", data.foundation_date);
-    // formData.append("web_url", data.web_url);
-    // formData.append("industry_type", data.industry_type);
-    // formData.append("email", data.email);
-    // formData.append("isTrial", data.isTrial);
-    // formData.append(
-    //   "organization_linkedin_url",
-    //   data.organization_linkedin_url
-    // );
-    // formData.append("location", JSON.stringify(data.location));
-    // formData.append("contact_number", data.contact_number);
-    // formData.append("description", data.description);
-    // formData.append("creator", data.creator);
-    // formData.append("packageInfo", data?.packageInfo?.packageName);
-    // formData.append("count", data.count);
-    // formData.append("cycleCount", data.cycleCount);
-    // formData.append(
-    //   "totalPrice",
-    //   getPrice(data?.packageInfo?.packageName) * data?.count * data?.cycleCount
-    // );
-    // formData.append("paymentType", data?.paymentType);
+    let totalPrice = getPriceMain * data?.count;
     const mainData = {
       ...data,
       packageInfo: data?.packageInfo?.packageName,
-      totalPrice:
-        getPrice(data?.packageInfo?.packageName) *
-        data?.count *
-        data?.cycleCount,
+      totalPrice: totalPrice + totalPrice * 0.02,
     };
 
     console.log(`🚀 ~ file: step-4.jsx:67 ~ mainData:`, mainData);
@@ -87,7 +61,7 @@ const Step4 = () => {
     onSuccess: async (data) => {
       console.log(`🚀 ~ file: step-4.jsx:87 ~ data:`, data);
       if (data?.paymentType === "Phone_Pay") {
-        window.location.href = data?.redirectUrl;
+        // window.location.href = data?.redirectUrl;
       } else {
         const options = {
           key: data?.key,
@@ -135,9 +109,23 @@ const Step4 = () => {
     `🚀 ~ file: step-4.jsx:124 ~ data?.packageInfo:`,
     data?.packageInfo
   );
+  const getPriceMain = useMemo(() => {
+    const expirationDate = moment().add(3 * data?.cycleCount, "months");
+    const dateDifference = expirationDate.diff(moment(), "days");
+    if (data?.packageInfo?.packageName === "Basic Plan") {
+      const perDayPrice = 55 / dateDifference;
+      return Math.round(perDayPrice * dateDifference);
+    } else if (data?.packageInfo?.packageName === "Intermediate Plan") {
+      const perDayPrice = 85 / dateDifference;
+      return Math.round(perDayPrice * dateDifference);
+    } else {
+      return 115;
+    }
+  }, [data?.cycleCount, data?.packageInfo?.packageName]);
   if (data?.packageInfo === undefined) {
     return "Please Select Plan And Package";
   }
+
   if (isLoading) {
     return <Loader />;
   }
@@ -152,10 +140,7 @@ const Step4 = () => {
           <h2 className="text-2xl font-bold ">Your Package Pricing</h2>
           <p className=" text-gray-500">
             You have selected {data?.packageInfo?.packageName} Total price will
-            be{" "}
-            {getPrice(data?.packageInfo?.packageName) *
-              data?.count *
-              data?.cycleCount}
+            be {getPriceMain * data?.count}
             {" Rs"}
           </p>
         </div>
@@ -165,7 +150,7 @@ const Step4 = () => {
             h1={data?.packageInfo?.packageName}
             packageId={process.env.REACT_APP_BASICPLAN || "plan_NgWEcv4vEvrZFc"}
             value={data?.packageId}
-            price={getPrice(data?.packageInfo?.packageName)}
+            price={getPriceMain}
             mapArray={returnArray(data?.packageInfo?.packageName)}
             button={false}
           />
@@ -200,14 +185,5 @@ const returnArray = (plan = "Basic Plan") => {
       .filter((doc, index) => doc.Enterprise === "✓")
       .reverse()
       .filter((doc, index) => index <= 5);
-  }
-};
-const getPrice = (plan) => {
-  if (plan === "Basic Plan") {
-    return Math.round(0.611 * 90);
-  } else if (plan === "Intermediate Plan") {
-    return Math.round(0.944 * 90);
-  } else {
-    return 115;
   }
 };

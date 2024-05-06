@@ -180,7 +180,7 @@ const NavItems = ({ toggleDrawer }) => {
                           }}
                           style={{ fontSize: "10px" }}
                           className="text-white text-sm"
-                          primary={" Attendance"}
+                          primary={" Attendance & Leave Management"}
                         />
                       </ListItemButton>
                     </Link>

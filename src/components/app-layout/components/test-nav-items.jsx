@@ -107,7 +107,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: (
               <AccessTimeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
-            text: "Attendance",
+            text: "Attendance & Leave Management",
           },
 
           {

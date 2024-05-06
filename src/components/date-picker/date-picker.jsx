@@ -75,27 +75,9 @@ const AppDatePicker = ({
     return {};
   };
 
-  // const checkOverlappingMistake = (
-  //   array1,
-  //   selectedStartDate,
-  //   selectedEndDate
-  // ) => {
-  //   array1.some(
-  //     (event) =>
-  //       (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
-  //         selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
-  //       (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
-  //         selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
-  //       (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
-  //         selectedEndDate.isAfter(moment(event.end).startOf("day")))
-  //   );
-  // };
-
   const handleSelectSlot = ({ start, end }) => {
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
-    const difference = selectedEndDate.diff(selectedStartDate, "days");
-
     const currentDate = moment(selectedStartDate);
 
     const includedDays = data2.days?.days?.map((day) => day.day);
@@ -115,17 +97,24 @@ const AppDatePicker = ({
     const isOverlap = [
       ...data?.currentYearLeaves,
       ...newAppliedLeaveEvents,
-    ].some(
-      (event) =>
-        (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
-          selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
-        (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
-          selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
-        (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
-          selectedEndDate.isAfter(moment(event.end).startOf("day")))
-    );
+    ].some((event) => {
+      console.log(
+        `🚀 ~ file: date-picker.jsx:114 ~  (selectedStartDate.isSameOrAfter(moment(event.start), "day") &&
+          selectedStartDate.isBefore(moment(event.end), "day")):`,
+        selectedEndDate.isAfter(moment(event.start), "day") &&
+          selectedEndDate.isSameOrBefore(moment(event.end), "day")
+      );
+      return (
+        (selectedStartDate.isSameOrAfter(moment(event.start), "day") &&
+          selectedStartDate.isBefore(moment(event.end), "day")) ||
+        (selectedStartDate.isBefore(moment(event.start), "day") &&
+          selectedEndDate.isAfter(moment(event.end), "day")) ||
+        (selectedStartDate.isSame(moment(event.start), "day") &&
+          selectedEndDate.isSame(moment(event.end), "day"))
+      );
+    });
 
-    if (isOverlap && difference > 0) {
+    if (isOverlap) {
       return handleAlert(
         true,
         "warning",
