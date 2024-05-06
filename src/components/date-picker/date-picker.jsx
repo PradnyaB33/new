@@ -14,7 +14,6 @@ import useGetUser from "../../hooks/Token/useUser";
 const AppDatePicker = ({
   data,
   handleUpdateFunction,
-  shiftData,
   selectEvent,
   setselectEvent,
   setCalendarOpen,
@@ -23,6 +22,7 @@ const AppDatePicker = ({
   setSelectedLeave,
   newAppliedLeaveEvents,
   isCalendarOpen,
+  shiftData,
 }) => {
   const localizer = momentLocalizer(moment);
   const [Delete, setDelete] = useState(false);
@@ -40,8 +40,6 @@ const AppDatePicker = ({
 
     return response.data;
   });
-
-  console.log("this is shiftData", shiftData);
   const handleSelectEvent = (event) => {
     setLeaveText(
       `The application for ${format(new Date(event.start), "dd-MM-yyyy")} is ${
@@ -78,9 +76,18 @@ const AppDatePicker = ({
     return {};
   };
 
+  // console.log(moment().isSameOrBefore(moment().add(1, "days"), "days"));
+
   const handleSelectSlot = ({ start, end }) => {
+    console.log(`🚀 ~ file: date-picker.jsx:95 ~ { start, end }:`, {
+      start,
+      end,
+    });
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
+    const difference = selectedEndDate.diff(selectedStartDate, "days");
+    console.log(`🚀 ~ file: date-picker.jsx:102 ~ difference:`, difference);
+
     const currentDate = moment(selectedStartDate);
 
     const includedDays = data2.days?.days?.map((day) => day.day);
@@ -101,18 +108,21 @@ const AppDatePicker = ({
       ...data?.currentYearLeaves,
       ...newAppliedLeaveEvents,
       ...shiftData?.requests,
-    ].some(
-      (event) =>
+    ].some((event) => {
+      // console.log(`🚀 ~ file: date-picker.jsx:123 ~ event:`, event);
+      selectedStartDate.isSame(moment(event.start));
+      return (
         (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
           selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
         (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
           selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
         (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
           selectedEndDate.isAfter(moment(event.end).startOf("day")))
-    );
+      );
+    });
+    console.log(`🚀 ~ file: date-picker.jsx:123 ~ isOverlap:`, isOverlap);
 
-    console.log(`🚀 ~ file: date-picker.jsx:115 ~ isOverlap:`, isOverlap);
-    if (isOverlap) {
+    if (isOverlap && difference > 0) {
       return handleAlert(
         true,
         "warning",
@@ -270,36 +280,11 @@ const AppDatePicker = ({
             onSelectSlot={handleSelectSlot}
             onSelectEvent={handleSelectEvent}
             datePropGetter={selectedLeave}
-            eventPropGetter={(event) => {
-              let backgroundColor = "blue";
-
-              if (event?.status) {
-                switch (event.status) {
-                  case "Pending":
-                    backgroundColor = "orange";
-                    break;
-                  case "Rejected":
-                    backgroundColor = "red";
-                    break;
-                  case "Approved":
-                    backgroundColor = "green";
-                    break;
-                  default:
-                    backgroundColor = "blue";
-                    break;
-                }
-              }
-
-              if (event.color) {
-                backgroundColor = event.color;
-              }
-
-              return {
-                style: {
-                  backgroundColor,
-                },
-              };
-            }}
+            eventPropGetter={(event) => ({
+              style: {
+                backgroundColor: event.color,
+              },
+            })}
             dayPropGetter={dayPropGetter}
           />
         </div>
