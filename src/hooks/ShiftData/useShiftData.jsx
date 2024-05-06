@@ -33,6 +33,19 @@ const useShiftData = () => {
       return response.data;
     }
   );
+
+  const { data: leaveData } = useQuery(
+    "employee-leave-table-without-default-leave",
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/leave/getEmployeeCurrentYearLeave`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+      return response.data;
+    }
+  );
   const createShifts = async () => {
     console.log("This is final selected leave", selectedLeave);
     try {
@@ -129,6 +142,7 @@ const useShiftData = () => {
   };
   return {
     data,
+    leaveData,
     isLoading,
     isError,
     error,

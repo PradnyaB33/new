@@ -195,6 +195,10 @@ const App = () => {
         />
         <Route path="/shift-notification" element={<ShiftNotification />} />
         <Route
+          path="/shift-notification/:employeeId"
+          element={<ShiftNotification />}
+        />
+        <Route
           path="/missedPunch-notification"
           element={<MissedPunchNotification />}
         />

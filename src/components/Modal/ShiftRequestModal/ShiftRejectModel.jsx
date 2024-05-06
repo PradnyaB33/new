@@ -73,6 +73,8 @@ const ShiftRejectModel = ({ items, key }) => {
           msg: "Request Rejected Successfully",
         });
         queryClient.invalidateQueries("shift-request");
+        queryClient.invalidateQueries("ShiftData");
+        queryClient.invalidateQueries("ShiftData2");
         handleClose();
       },
     }
@@ -91,6 +93,8 @@ const ShiftRejectModel = ({ items, key }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("shift-request");
+        queryClient.invalidateQueries("ShiftData");
+        queryClient.invalidateQueries("ShiftData2");
         queryClient.invalidateQueries("table");
         setAppAlert({
           alert: true,
@@ -114,6 +118,8 @@ const ShiftRejectModel = ({ items, key }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("shift-request");
+        queryClient.invalidateQueries("ShiftData");
+        queryClient.invalidateQueries("ShiftData2");
         setAppAlert({
           alert: true,
           type: "success",
@@ -142,6 +148,8 @@ const ShiftRejectModel = ({ items, key }) => {
           msg: "Request Rejected Successfully",
         });
         queryClient.invalidateQueries("shift-request");
+        queryClient.invalidateQueries("ShiftData");
+        queryClient.invalidateQueries("ShiftData2");
         handleClose();
       },
     }
@@ -195,8 +203,8 @@ const ShiftRejectModel = ({ items, key }) => {
                   " " +
                   emp[key]?.employeeId.last_name}{" "} */}
                 {items.employeeId.first_name + " " + items.employeeId.last_name}{" "}
-                has raised a shift request from {items.description}{" "}
-                {format(new Date(items.start), "PP")} to{" "}
+                has raised a shift request of {items.title} from{" "}
+                {items.description} {format(new Date(items.start), "PP")} to{" "}
                 {format(new Date(items.end), "PP")}
               </h1>
 
