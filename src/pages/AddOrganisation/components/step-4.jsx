@@ -109,9 +109,6 @@ const Step4 = () => {
     `🚀 ~ file: step-4.jsx:124 ~ data?.packageInfo:`,
     data?.packageInfo
   );
-  if (data?.packageInfo === undefined) {
-    return "Please Select Plan And Package";
-  }
   const getPriceMain = useMemo(() => {
     const expirationDate = moment().add(3 * data?.cycleCount, "months");
     const dateDifference = expirationDate.diff(moment(), "days");
@@ -124,7 +121,11 @@ const Step4 = () => {
     } else {
       return 115;
     }
-  }, [data?.cycleCount]);
+  }, [data?.cycleCount, data?.packageInfo?.packageName]);
+  if (data?.packageInfo === undefined) {
+    return "Please Select Plan And Package";
+  }
+
   if (isLoading) {
     return <Loader />;
   }

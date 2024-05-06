@@ -170,6 +170,13 @@ const BillingCard = ({ doc }) => {
             )}
           />
           <DescriptionBox
+            Icon={Subscriptions}
+            descriptionText={"Subscription end date"}
+            mainText={moment(doc?.subscriptionDetails?.expirationDate).format(
+              "DD MMM YYYY"
+            )}
+          />
+          <DescriptionBox
             Icon={AttachMoney}
             descriptionText={"Billing frequency"}
             mainText={"Quarterly"}

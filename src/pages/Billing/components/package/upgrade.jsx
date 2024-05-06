@@ -1,8 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FactoryOutlined, Numbers } from "@mui/icons-material";
 import { Box, Button, Modal } from "@mui/material";
-import moment from "moment";
-import React from "react";
+import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
@@ -18,14 +17,9 @@ const style = {
   overflow: "hidden",
 };
 const UpgradePackage = ({ handleClose, open, organisation }) => {
-  const today = moment();
-  const expirationDate = moment(
-    organisation?.subscriptionDetails?.expirationDate
-  );
-  const paymentDate = moment(organisation?.subscriptionDetails?.paymentDate);
-  const subscriptionDays = expirationDate.diff(paymentDate, "days");
-  const totalUsedDay = paymentDate.diff(today, "days");
-  const { verifyPromoCodeMutation } = useManageSubscriptionMutation();
+  const [amount, setAmount] = React.useState(0);
+  const { verifyPromoCodeMutation, handleUpgradeFunction } =
+    useManageSubscriptionMutation();
 
   const packageSchema = z.object({
     memberCount: z
@@ -37,6 +31,7 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
     packageInfo: z.object({
       value: z.string(),
       label: z.string(),
+      isDisabled: z.boolean().optional(),
     }),
     promoCode: z.string().optional(),
     paymentType: z.enum(["Phone_Pay", "RazorPay"]),
@@ -50,50 +45,53 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
         packageInfo: {
           value: organisation?.packageInfo,
           label: organisation?.packageInfo,
+          isDisabled: false,
         },
         paymentType: "RazorPay",
         discount: 0,
       },
       resolver: zodResolver(packageSchema),
     });
-  console.log(`🚀 ~ file: upgrade.jsx:64 ~ getValues:`, getValues());
 
   const { errors, dirtyFields } = formState;
-  const pack = watch("packageInfo").value;
-  const memberCountWatch = watch("memberCount");
-  const discountWatch = watch("discount");
-  const getTotalPrice = React.useMemo(() => {
-    const minusUnUsedDays = subscriptionDays - totalUsedDay;
-    const perDayPrice =
-      getPlanPrice(organisation?.packageInfo) / subscriptionDays;
-    let totalPrice =
-      memberCountWatch * getPrice(pack, expirationDate.diff(today, "days"));
 
-    return Math.round(
-      totalPrice -
-        perDayPrice * minusUnUsedDays +
-        totalPrice * 0.02 -
-        (totalPrice * discountWatch) / 100
-    );
+  const totalAmount = useMemo(async () => {
+    let tmAmount = await handleUpgradeFunction({
+      data: getValues(),
+      organisation,
+    });
+
+    tmAmount -= tmAmount * (watch("discount") / 100);
+    tmAmount = Math.round(tmAmount);
+    setAmount(() => tmAmount);
+    return tmAmount;
   }, [
-    memberCountWatch,
-    pack,
-    discountWatch,
-    expirationDate,
-    organisation?.packageInfo,
-    subscriptionDays,
-    today,
-    totalUsedDay,
+    watch("memberCount"),
+    watch("packageInfo.value"),
+    organisation,
+    getValues,
+    watch("discount"),
   ]);
 
-  function onSubmit(data) {
-    data.totalAmount = getTotalPrice;
+  async function onSubmit(data) {
+    data.totalAmount = amount;
     handleUpgradeFunction(data, organisation);
   }
-  console.log(
-    `🚀 ~ file: upgrade.jsx:209 ~ Object.keys(dirtyFields):`,
-    Object.keys(dirtyFields)
-  );
+
+  const checkDisability = () => {
+    if (Object.keys(dirtyFields).length <= 1) {
+      if (Object.keys(dirtyFields).includes("promoCode")) {
+        return true;
+      } else {
+        if (Object.keys(dirtyFields).length === 0) {
+          return true;
+        }
+        return false;
+      }
+    } else {
+      return false;
+    }
+  };
   return (
     <Modal
       keepMounted={false}
@@ -194,16 +192,10 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
             </Button>
             <Button
               variant="contained"
-              disabled={
-                Object.keys(dirtyFields)?.length > 1
-                  ? Object.keys(dirtyFields)?.length === 1
-                    ? Object.keys(dirtyFields).includes("promoCode")
-                    : false
-                  : true
-              }
+              disabled={checkDisability()}
               type="submit"
             >
-              Pay {getTotalPrice} Rs
+              Pay {amount} Rs
             </Button>
           </div>
         </form>
@@ -229,26 +221,5 @@ const getPlanPrice = (plan) => {
     return Math.round(0.944 * 90);
   } else {
     return Math.round(115 * 90);
-  }
-};
-
-const handleUpgradeFunction = (data, organisation) => {
-  console.log(`🚀 ~ file: upgrade.jsx:219 ~ organisation:`, organisation);
-  console.log(`🚀 ~ file: upgrade.jsx:219 ~ data:`, data);
-  if (
-    Number(data?.memberCount) !== organisation?.memberCount &&
-    data?.packageInfo?.value !== organisation?.packageInfo
-  ) {
-    console.log("Both are different");
-  } else if (
-    Number(data?.memberCount) !== organisation?.memberCount &&
-    data?.packageInfo?.value === organisation?.packageInfo
-  ) {
-    console.log("Member count is different");
-  } else if (
-    Number(data?.memberCount) === organisation?.memberCount &&
-    data?.packageInfo?.value !== organisation?.packageInfo
-  ) {
-    console.log("Package is different");
   }
 };

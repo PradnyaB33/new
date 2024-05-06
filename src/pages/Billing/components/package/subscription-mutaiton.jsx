@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment";
 import { useContext } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
@@ -209,6 +210,7 @@ const useManageSubscriptionMutation = () => {
     result.data.setValue = setValue;
     return result.data;
   };
+
   const { mutate: verifyPromoCodeMutation } = useMutation(verifyPromoCode, {
     onSuccess: (data) => {
       console.log(`🚀 ~ file: subscription-mutaiton.jsx ~ data:`, data);
@@ -226,11 +228,119 @@ const useManageSubscriptionMutation = () => {
     },
   });
 
+  const getPackagePerDayCost = (packageInfo, days) => {
+    switch (packageInfo) {
+      case "Basic Plan":
+        return 55 / days;
+      case "Intermediate Plan":
+        return 85 / days;
+      case "Enterprise Plan":
+        return 105 / days;
+      default:
+        return 0;
+    }
+  };
+
+  const handleUpgradeFunction = async ({ data, organisation }) => {
+    // console.log(
+    //   `🚀 ~ file: subscription-mutaiton.jsx:245 ~ { data, organisation }:`,
+    //   { data, organisation }
+    // );
+    let amount = 0;
+    if (
+      Number(data?.memberCount) !== Number(organisation?.memberCount) &&
+      data?.packageInfo?.value !== organisation?.packageInfo
+    ) {
+      console.log("Both are different");
+      amount = handleCountAndPackageFunction(data, organisation);
+    } else if (
+      Number(data?.memberCount) !== Number(organisation?.memberCount) &&
+      data?.packageInfo?.value === organisation?.packageInfo
+    ) {
+      console.log("Member count is different");
+
+      amount = handleMemberCountFunction(data, organisation);
+    } else if (
+      Number(data?.memberCount) === Number(organisation?.memberCount) &&
+      data?.packageInfo?.value !== organisation?.packageInfo
+    ) {
+      console.log("Package is different");
+      amount = handlePackageFunction(data, organisation);
+    }
+    return Math.round(Math.max(amount, 0));
+  };
+
+  const handleMemberCountFunction = (data, organisation) => {
+    // Multiply member Count * Days to expire * Per day cost
+    let oldPackage = organisation?.packageInfo;
+
+    let oldMemberCount = organisation?.memberCount;
+    let oldPaymentDate = moment(organisation?.subscriptionDetails?.paymentDate);
+    let newMemberCount = data?.memberCount;
+
+    let expirationDate = moment(
+      organisation?.subscriptionDetails?.expirationDate
+    );
+
+    let perDayCost = getPackagePerDayCost(
+      oldPackage,
+      expirationDate.diff(oldPaymentDate, "days")
+    );
+
+    let remainingDays = expirationDate.diff(moment(), "days");
+
+    let oldRemainingAmount = oldMemberCount * perDayCost * remainingDays;
+
+    let newRemainingAmount = newMemberCount * perDayCost * remainingDays;
+
+    let amount = newRemainingAmount - oldRemainingAmount;
+    return amount;
+  };
+
+  const handlePackageFunction = (data, organisation) => {
+    let oldPackage = organisation?.packageInfo;
+    let newPackage = data?.packageInfo?.value;
+    let totalDaysToExpire = moment(
+      organisation?.subscriptionDetails?.expirationDate
+    ).diff(moment(organisation?.subscriptionDetails?.paymentDate), "days");
+    let oldPerDayCost = getPackagePerDayCost(oldPackage, totalDaysToExpire);
+    let newPerDayCost = getPackagePerDayCost(newPackage, totalDaysToExpire);
+    let remainingDays = moment(
+      organisation?.subscriptionDetails?.expirationDate
+    ).diff(moment(), "days");
+    let oldRemainingAmount =
+      organisation?.memberCount * remainingDays * oldPerDayCost;
+    let newRemainingAmount =
+      organisation?.memberCount * remainingDays * newPerDayCost;
+    let amount = newRemainingAmount - oldRemainingAmount;
+    return amount;
+  };
+
+  const handleCountAndPackageFunction = (data, organisation) => {
+    let oldPackage = organisation?.packageInfo;
+
+    let oldMemberCount = organisation?.memberCount;
+    let newPackage = data?.packageInfo?.value;
+    let newMemberCount = data?.memberCount;
+    let totalDaysToExpire = moment(
+      organisation?.subscriptionDetails?.expirationDate
+    ).diff(moment(organisation?.subscriptionDetails?.paymentDate), "days");
+    let oldPerDayCost = getPackagePerDayCost(oldPackage, totalDaysToExpire);
+    let newPerDayCost = getPackagePerDayCost(newPackage, totalDaysToExpire);
+    let remainingDays = moment(
+      organisation?.subscriptionDetails?.expirationDate
+    ).diff(moment(), "days");
+    let oldRemainingAmount = oldMemberCount * remainingDays * oldPerDayCost;
+    let newRemainingAmount = newMemberCount * remainingDays * newPerDayCost;
+    let amount = newRemainingAmount - oldRemainingAmount;
+    return amount;
+  };
   return {
     updateMemberCount,
     updatePlan,
     createPrePaidPlan,
     verifyPromoCodeMutation,
+    handleUpgradeFunction,
   };
 };
 
