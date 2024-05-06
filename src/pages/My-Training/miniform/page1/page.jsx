@@ -1,6 +1,6 @@
 import React from "react";
 import CardLoader from "../../components/card-loader";
-import TrainingCard1 from "./training-card";
+import MainTrainingCard from "../../components/training-card";
 import useGetUpcomingTrainings from "./use-query";
 
 const Modal1 = () => {
@@ -19,7 +19,7 @@ const Modal1 = () => {
     <div className="flex flex-col gap-4 ">
       <h2 className="text-2xl font-bold">Upcoming Trainings</h2>
       {data?.data?.map((item) => (
-        <TrainingCard1 key={item.id} doc={item?.trainingId} />
+        <MainTrainingCard key={item.id} doc={item} />
       ))}
     </div>
   );

@@ -225,62 +225,65 @@ const Application = () => {
             </h1>
           </div>
         ) : (
-          employeeLeaveList.map((item) => (
-            <Grid
-              key={item._id}
-              container
-              alignItems={"center"}
-              spacing={2}
-              sx={{
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-                borderRadius: "5px",
-              }}
-            >
-              <Grid item xs={8} className="gap-4 py-4 h-max space-y-4">
-                <Box className="flex flex-col gap-2">
-                  <Typography variant="h6" fontWeight="light">
-                    {`${item.employeeId.first_name} ${item.employeeId.last_name} has raised a leave request for ${item.description}`}
-                  </Typography>
-
-                  {item.daysOfLeave.map((day, id) => (
-                    <Box key={id}>
-                      <Typography variant="body2" color="textSecondary">
-                        {`Leave from ${format(
-                          new Date(day.start),
-                          "PP"
-                        )} to ${format(new Date(day.end), "PP")}`}
-                      </Typography>
-                    </Box>
-                  ))}
-                  <Typography
-                    variant="body2"
-                    color="textPrimary"
-                    className=" italic"
-                  >
-                    {item.message}
-                  </Typography>
-                </Box>
-              </Grid>
+          employeeLeaveList.map((item) => {
+            console.log(`🚀 ~ file: Application.jsx:229 ~ item:`, item);
+            return (
               <Grid
-                display={"flex"}
-                justifyContent={"center"}
+                key={item._id}
+                container
+                alignItems={"center"}
                 spacing={2}
-                item
-                xs={4}
+                sx={{
+                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+                  borderRadius: "5px",
+                }}
               >
-                {item.status === "Rejected" ? (
-                  <Chip label={item.status} color="error" />
-                ) : item.status === "Approved" ? (
-                  <Chip label={item.status} color="success" />
-                ) : (
-                  <Chip
-                    label={"you request is in pending status"}
-                    color="primary"
-                  />
-                )}
+                <Grid item xs={8} className="gap-4 py-4 h-max space-y-4">
+                  <Box className="flex flex-col gap-2">
+                    <Typography variant="h6" fontWeight="light">
+                      {`${item.employeeId.first_name} ${item.employeeId.last_name} has raised a leave request for ${item.description}`}
+                    </Typography>
+
+                    {item.daysOfLeave.map((day, id) => (
+                      <Box key={id}>
+                        <Typography variant="body2" color="textSecondary">
+                          {`Leave from ${format(
+                            new Date(day.start),
+                            "PP"
+                          )} to ${format(new Date(day.end), "PP")}`}
+                        </Typography>
+                      </Box>
+                    ))}
+                    <Typography
+                      variant="body2"
+                      color="textPrimary"
+                      className=" italic"
+                    >
+                      {item.message}
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid
+                  display={"flex"}
+                  justifyContent={"center"}
+                  spacing={2}
+                  item
+                  xs={4}
+                >
+                  {item.status === "Rejected" ? (
+                    <Chip label={item.status} color="error" />
+                  ) : item.status === "Approved" ? (
+                    <Chip label={item.status} color="success" />
+                  ) : (
+                    <Chip
+                      label={"you request is in pending status"}
+                      color="primary"
+                    />
+                  )}
+                </Grid>
               </Grid>
-            </Grid>
-          ))
+            );
+          })
         )}
       </Box>
     </div>

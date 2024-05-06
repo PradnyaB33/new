@@ -26,7 +26,7 @@ const MappedPunches = ({
   const { data } = useGetSinglePunch({ Id });
 
   return (
-    <div className={`w-full h-80 ${className} overflow-y-auto cursor-pointer`}>
+    <div className={`w-full h-80 ${className} cursor-pointer`}>
       {data?.punchData?.punchData?.map((doc, idx) => {
         let distance = 0;
         let totalDistance = 0;
@@ -68,12 +68,16 @@ const MappedPunches = ({
               </div>
               <div className="pl-5 flex flex-col ">
                 <h1>
-                  Start Time: {new Date(doc?.createdAt).toLocaleTimeString()}
+                  Start Time:{" "}
+                  {new Date(doc?.data[0]?.time).toLocaleTimeString()}
                 </h1>
+                {console.log("this is the doc", doc)}
                 <h1>
                   End Time:{" "}
                   {doc.data && doc.data.length > 0 && doc?.createdAt
-                    ? new Date(doc?.createdAt).toLocaleTimeString()
+                    ? new Date(
+                        doc?.data[doc.data.length - 1]?.time
+                      ).toLocaleTimeString()
                     : "N/A"}
                 </h1>
                 <h1>Distance Travelled: {distance}</h1>

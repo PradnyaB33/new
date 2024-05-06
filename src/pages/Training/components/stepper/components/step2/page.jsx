@@ -208,7 +208,7 @@ const Step2 = ({ nextStep, departments, orgTrainingType }) => {
             control={control}
             type="checkbox"
             placeholder="Downcasted"
-            label="Downcasted"
+            label="Down Cast"
             errors={errors}
             error={errors.trainingDownCasted}
             icon={TrendingDownOutlined}

@@ -2,23 +2,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FactoryOutlined } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button } from "@mui/material";
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
+
 const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
-  const [map, setMap] = useState(null);
-  const options = {
-    id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-  };
-
-  const { isLoaded } = useJsApiLoader(options);
-
   const formSchema = z.object({
-    location: z.any({
+    startLocation: z.any({
+      address: z.string(),
+      position: z.object({
+        lat: z.number(),
+        lng: z.number(),
+      }),
+    }),
+    endLocation: z.any({
       address: z.string(),
       position: z.object({
         lat: z.number(),
@@ -26,11 +25,20 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
       }),
     }),
     start: z.string(),
+    end: z.string(),
+    distance: z.string(),
   });
 
-  const { control, formState, handleSubmit, watch, reset } = useForm({
+  const { control, formState, handleSubmit, reset } = useForm({
     defaultValues: {
-      location: {
+      startLocation: {
+        address: "",
+        position: {
+          lat: center?.lat,
+          lng: center?.lng,
+        },
+      },
+      endLocation: {
         address: "",
         position: {
           lat: center?.lat,
@@ -38,32 +46,32 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
         },
       },
       start: undefined,
+      end: undefined,
+      distance: undefined,
     },
     resolver: zodResolver(formSchema),
   });
 
   const { errors } = formState;
-  console.log(`🚀 ~ file: MiniForm.jsx:54 ~ errors:`, errors);
 
   const onSubmit = (data) => {
-    console.log(`🚀 ~ file: MiniForm.jsx:49 ~ data:`, data);
-    console.log(`🚀 ~ file: MiniForm.jsx:50 ~ today:`, today);
-    const currentDate = moment(`${today} ${data?.start}`, "YYYY-MM-DD HH:mm");
-    data.start = currentDate;
-    console.log(`🚀 ~ file: MiniForm.jsx:56 ~ data:`, data);
-    setArray((prev) => [...prev, data]);
+    const startDateTime = moment(`${today} ${data?.start}`, "YYYY-MM-DD HH:mm");
+    const endDateTime = data.end
+      ? moment(`${today} ${data?.end}`, "YYYY-MM-DD HH:mm")
+      : null;
+
+    console.log("this is  my data for misspunch", data);
+
+    const formattedData = {
+      ...data,
+      start: startDateTime,
+      end: endDateTime,
+    };
+
+    setArray((prev) => [...prev, formattedData]);
     reset();
     setOpenModal(false);
   };
-
-  useEffect(() => {
-    let position = {
-      lat: watch("location.position.lat"),
-      lng: watch("location.position.lng"),
-    };
-    map && map.setCenter(position);
-    // eslint-disable-next-line
-  }, [watch("location.address"), watch("location.address")]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="relative">
@@ -81,13 +89,24 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
       <div className="flex w-full justify-between mt-4 items-center flex-wrap gap-4">
         <AuthInputFiled
           className="w-full"
-          name="location"
+          name="startLocation"
           icon={FactoryOutlined}
           control={control}
           type="location-picker"
-          label="Location *"
+          label="Start Location *"
           errors={errors}
-          error={errors.location}
+          error={errors.startLocation}
+          center={center}
+        />
+        <AuthInputFiled
+          className="w-full"
+          name="endLocation"
+          icon={FactoryOutlined}
+          control={control}
+          type="location-picker"
+          label="End Location *"
+          errors={errors}
+          error={errors.endLocation}
           center={center}
         />
         <AuthInputFiled
@@ -95,43 +114,32 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
           name="start"
           control={control}
           type="time"
-          placeholder="Choose starting time"
-          label="Start *"
+          placeholder="Choose start time"
+          label="Start Time *"
           errors={errors}
-          wrapperMessage={"Note this email is used for login credentails"}
+          wrapperMessage={"Note: Start time for missed punch"}
+        />
+        <AuthInputFiled
+          className="w-full"
+          name="end"
+          control={control}
+          type="time"
+          placeholder="Choose end time"
+          label="End Time *"
+          errors={errors}
+          wrapperMessage={"Note: End time for missed punch"}
+        />
+        <AuthInputFiled
+          className="w-full"
+          name="distance"
+          control={control}
+          type="number"
+          placeholder="Enter the distance"
+          label="Total Distance *"
+          errors={errors}
+          wrapperMessage={"Note: Total distance for missed punch"}
         />
       </div>
-      <div>
-        {isLoaded && center && (
-          <GoogleMap
-            key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
-            mapContainerStyle={{
-              width: "100%",
-              height: "300px",
-            }}
-            center={{
-              lat: watch("location.position.lat"),
-              lng: watch("location.position.lng"),
-            }}
-            onLoad={(map) => {
-              setMap(map);
-            }}
-            zoom={18}
-          >
-            {center && (
-              <Marker
-                icon={"http://maps.google.com/mapfiles/ms/icons/blue-dot.png"}
-                position={{
-                  lat: watch("location.position.lat"),
-                  lng: watch("location.position.lng"),
-                }}
-                label={"Current Position"}
-              />
-            )}
-          </GoogleMap>
-        )}
-      </div>
-
       <div className="w-full flex justify-center mt-4">
         <Button type="submit" variant="contained" fullWidth>
           Apply

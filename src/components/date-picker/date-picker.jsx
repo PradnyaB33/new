@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import React, { useContext, useEffect, useState } from "react";
 import { Calendar } from "react-big-calendar";
 import { TestContext } from "../../State/Function/Main";
-import { UseContext } from "../../State/UseState/UseContext";
+import useGetUser from "../../hooks/Token/useUser";
 
 const AppDatePicker = ({
   data,
@@ -28,10 +28,8 @@ const AppDatePicker = ({
   const [Delete, setDelete] = useState(false);
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
-  const { cookies } = useContext(UseContext);
   const [leaveText, setLeaveText] = useState("");
-  const authToken = cookies["aegis"];
-
+  const { authToken } = useGetUser();
   const { data: data2 } = useQuery("employee-disable-weekends", async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/weekend/get`,
@@ -80,26 +78,11 @@ const AppDatePicker = ({
     return {};
   };
 
-  // const checkOverlappingMistake = (
-  //   array1,
-  //   selectedStartDate,
-  //   selectedEndDate
-  // ) => {
-  //   array1.some(
-  //     (event) =>
-  //       (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
-  //         selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
-  //       (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
-  //         selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
-  //       (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
-  //         selectedEndDate.isAfter(moment(event.end).startOf("day")))
-  //   );
-  // };
-
   const handleSelectSlot = ({ start, end }) => {
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
     const difference = selectedEndDate.diff(selectedStartDate, "days");
+    console.log(`🚀 ~ file: date-picker.jsx:102 ~ difference:`, difference);
 
     const currentDate = moment(selectedStartDate);
 
@@ -131,7 +114,7 @@ const AppDatePicker = ({
           selectedEndDate.isAfter(moment(event.end).startOf("day")))
     );
 
-    if (isOverlap && difference > 0) {
+    if (isOverlap) {
       return handleAlert(
         true,
         "warning",

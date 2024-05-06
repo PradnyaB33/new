@@ -8,6 +8,7 @@ import { useQueryClient } from "react-query";
 import { z } from "zod";
 import { TestContext } from "../../../../../State/Function/Main";
 import AuthInputFiled from "../../../../../components/InputFileds/AuthInputFiled";
+import useIncomeTax from "../../../../../hooks/IncomeTax/useIncomeTax";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
 const TDSDeclarationModel = ({
   open,
@@ -20,6 +21,7 @@ const TDSDeclarationModel = ({
   // const { getCurrentUser } = UserProfile();
   // const user = getCurrentUser();
   const { handleAlert } = useContext(TestContext);
+  const { financialYear } = useIncomeTax();
   const style = {
     position: "absolute",
     top: "50%",
@@ -60,6 +62,8 @@ const TDSDeclarationModel = ({
     [investment]
   );
 
+  console.log(investment);
+
   const queryClient = useQueryClient();
 
   const onSubmit = async (data) => {
@@ -75,7 +79,7 @@ const TDSDeclarationModel = ({
     };
     try {
       await axios.post(
-        `${process.env.REACT_APP_API}/route/tds/changeApprovals/2023-2024`,
+        `${process.env.REACT_APP_API}/route/tds/changeApprovals/${financialYear}`,
         { empId, ...requestData },
         {
           headers: {
@@ -122,6 +126,14 @@ const TDSDeclarationModel = ({
               <label className={`font-semibold text-gray-500 text-md`}>
                 Declaration name
               </label>
+
+              <div
+                className="bg-gray-200 flex rounded-md items-center px-2    py-1 md:py-[6px]
+              border-gray-200 border-[.5px]
+              "
+              >
+                {investment?.name}
+              </div>
             </div>
             {!isReject && (
               <AuthInputFiled

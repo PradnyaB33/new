@@ -190,8 +190,8 @@ const App = () => {
         <Route path="/leave-notification" element={<LeaveNotification />} />
         <Route path="/punch-notification" element={<PunchNotification />} />
         <Route
-          path="/missedPunch-notification"
-          element={<MissedPunchNotification />}
+          path="/punch-notification/:employeeId"
+          element={<PunchNotification />}
         />
         <Route path="/shift-notification" element={<ShiftNotification />} />
         <Route
@@ -289,7 +289,7 @@ const App = () => {
         <Route
           path="/organisation/:organisationId/dashboard/super-admin"
           element={
-            <RequireAuth permission={["Super-Admin"]}>
+            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
               <SuperAdmin />
             </RequireAuth>
           }
@@ -508,10 +508,15 @@ const App = () => {
               permission={[
                 "Super-Admin",
                 "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
                 "HR",
                 "Manager",
-                "Department-Head",
-                "Accoutant",
+                "Employee",
               ]}
             >
               <Employee />
