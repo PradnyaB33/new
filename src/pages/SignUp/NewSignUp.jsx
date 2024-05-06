@@ -115,10 +115,10 @@ const SignIn = () => {
   const number = watch("phone");
 
   const onSubmit = async (data) => {
-    if (!isVerified) {
-      handleAlert(true, "error", "Please verify mobile no first");
-      return false;
-    }
+    // if (!isVerified) {
+    //   handleAlert(true, "error", "Please verify mobile no first");
+    //   return false;
+    // }
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create`,

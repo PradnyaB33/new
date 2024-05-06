@@ -1,7 +1,6 @@
 import {
   Business,
   Category,
-  CircleNotifications,
   CurrencyRupee,
   Dashboard,
   Description,
@@ -10,7 +9,6 @@ import {
   ListAlt,
   MonetizationOn,
   MonetizationOnOutlined,
-  NotificationsActive,
   PanToolAlt,
   Payment,
   PeopleAlt,
@@ -88,8 +86,9 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
-      "Self Help": {
-        open: true,
+
+      "Leave Management": {
+        open: false,
         icon: <Category className=" !text-[1.2em] text-[#67748E]" />,
         isVisible: true,
         routes: [
@@ -102,134 +101,9 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Attendance",
           },
+        ],
+      },
 
-          {
-            key: "accountSettings",
-            isVisible: true,
-            link: `/employee-profile`,
-            icon: <Settings className="text-[#67748E]" />,
-            text: "Account Settings",
-          },
-          {
-            key: "billing",
-            isVisible: ["Super-Admin"].includes(role) ? true : false,
-            link: `/billing`,
-            icon: <CurrencyRupee className="text-[#67748E]" />,
-            text: "Billing",
-          },
-          {
-            key: "add-delegate-super-admin",
-            isVisible: ["Super-Admin"].includes(role) ? true : false,
-            link: `/add-delegate`,
-            icon: <SupervisorAccount className="text-[#67748E]" />,
-            text: "Add Delegate Super Admin",
-          },
-          {
-            key: "shiftManagement",
-            isVisible: ["Employee"].includes(role),
-            link: "/shift-management",
-            icon: (
-              <HomeRepairServiceOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-            ),
-            text: "Shift Management",
-          },
-        ],
-      },
-      Notification: {
-        open: false,
-        isVisible: true,
-        icon: <NotificationsActive className=" !text-[1.2em] text-[#67748E]" />,
-        routes: [
-          {
-            key: "listNotification",
-            isVisible: true,
-            link: "/notification",
-            icon: (
-              <CircleNotifications className=" !text-[1.2em] text-[#67748E]" />
-            ),
-            text: "Notifications",
-          },
-        ],
-      },
-      Performance: {
-        open: false,
-        isVisible: true,
-        icon: <Payment className=" !text-[1.2em] text-[#67748E]" />,
-        routes: [
-          {
-            key: "performance",
-            isVisible: true,
-            link: "/performance",
-            icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Performance",
-          },
-        ],
-      },
-      Payroll: {
-        open: false,
-        isVisible: true,
-        icon: <Payment className=" !text-[1.2em] text-[#67748E]" />,
-        routes: [
-          {
-            key: "allowance",
-            isVisible: true,
-            link: "/allowance",
-            icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Allowance",
-          },
-          {
-            key: "payslip",
-            isVisible: true,
-            link: `/view-payslip`,
-            icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Pay Slip",
-          },
-          {
-            key: "IncomeTax",
-            isVisible: true,
-            link: "/income-tax",
-            icon: <TrendingUp className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Income Tax",
-          },
-          {
-            key: "form-16",
-            isVisible: true,
-            link: `/organisation/${orgId}/form-16`,
-            icon: <Description className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Form-16",
-          },
-          {
-            key: "shiftAllowance",
-            isVisible:
-              isVisible &&
-              ["Super-Admin", "HR", "Manager", "Delegate-Super Admin"].includes(
-                role
-              ),
-            link: "/shift-management",
-            icon: <Work className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Shift Allowance",
-          },
-          {
-            key: "createsalary",
-            isVisible:
-              isVisible && ["Super-Admin", "HR", "Accountant"].includes(role),
-            link: `/organisation/${orgId}/salary-management`,
-            icon: (
-              <AccountBalanceWalletOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
-            ),
-            text: "Salary Management",
-          },
-          {
-            key: "loanmanagement",
-            isVisible: true,
-            link: `/add-loan`,
-            icon: (
-              <MonetizationOnOutlined className=" !text-[1.2em] text-[#67748E]" />
-            ),
-            text: "Loan Management",
-          },
-        ],
-      },
       Employee: {
         open: false,
         icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
@@ -279,16 +153,166 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
-      Punching : {
+
+      Payroll: {
+        open: false,
+        isVisible: true,
+        icon: <Payment className=" !text-[1.2em] text-[#67748E]" />,
+        routes: [
+          {
+            key: "allowance",
+            isVisible: true,
+            link: "/allowance",
+            icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Allowance",
+          },
+          {
+            key: "payslip",
+            isVisible: true,
+            link: `/view-payslip`,
+            icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Pay Slip",
+          },
+
+          {
+            key: "form-16",
+            isVisible: true,
+            link: `/organisation/${orgId}/form-16`,
+            icon: <Description className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Form-16",
+          },
+          {
+            key: "shiftAllowance",
+            isVisible:
+              isVisible &&
+              ["Super-Admin", "HR", "Manager", "Delegate-Super Admin"].includes(
+                role
+              ),
+            link: "/shift-management",
+            icon: <Work className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Shift Allowance",
+          },
+          {
+            key: "createsalary",
+            isVisible:
+              isVisible && ["Super-Admin", "HR", "Accountant"].includes(role),
+            link: `/organisation/${orgId}/salary-management`,
+            icon: (
+              <AccountBalanceWalletOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Salary Management",
+          },
+          {
+            key: "loanmanagement",
+            isVisible: true,
+            link: `/add-loan`,
+            icon: (
+              <MonetizationOnOutlined className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Loan Management",
+          },
+        ],
+      },
+
+      "Income Tax": {
+        open: false,
+        icon: <Category className=" !text-[1.2em] text-[#67748E]" />,
+        isVisible: true,
+        routes: [
+          {
+            key: "IncomeTax",
+            isVisible: true,
+            link: "/income-tax",
+            icon: <TrendingUp className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Income Tax",
+          },
+        ],
+      },
+      "Self Help": {
+        open: true,
+        icon: <Category className=" !text-[1.2em] text-[#67748E]" />,
+        isVisible: true,
+        routes: [
+          // {
+          //   key: "attendance",
+          //   isVisible: true,
+          //   link: "/leave",
+          //   icon: (
+          //     <AccessTimeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+          //   ),
+          //   text: "Attendance",
+          // },
+
+          {
+            key: "accountSettings",
+            isVisible: true,
+            link: `/employee-profile`,
+            icon: <Settings className="text-[#67748E]" />,
+            text: "Account Settings",
+          },
+          {
+            key: "billing",
+            isVisible: ["Super-Admin"].includes(role) ? true : false,
+            link: `/billing`,
+            icon: <CurrencyRupee className="text-[#67748E]" />,
+            text: "Billing",
+          },
+          {
+            key: "add-delegate-super-admin",
+            isVisible: ["Super-Admin"].includes(role) ? true : false,
+            link: `/add-delegate`,
+            icon: <SupervisorAccount className="text-[#67748E]" />,
+            text: "Add Delegate Super Admin",
+          },
+          {
+            key: "shiftManagement",
+            isVisible: ["Employee"].includes(role),
+            link: "/shift-management",
+            icon: (
+              <HomeRepairServiceOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Shift Management",
+          },
+        ],
+      },
+
+      // Notification: {
+      //   open: false,
+      //   isVisible: true,
+      //   icon: <NotificationsActive className=" !text-[1.2em] text-[#67748E]" />,
+      //   routes: [
+      //     {
+      //       key: "listNotification",
+      //       isVisible: true,
+      //       link: "/notification",
+      //       icon: (
+      //         <CircleNotifications className=" !text-[1.2em] text-[#67748E]" />
+      //       ),
+      //       text: "Notifications",
+      //     },
+      //   ],
+      // },
+      Performance: {
+        open: false,
+        isVisible: true,
+        icon: <Payment className=" !text-[1.2em] text-[#67748E]" />,
+        routes: [
+          {
+            key: "performance",
+            isVisible: true,
+            link: "/performance",
+            icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Performance",
+          },
+        ],
+      },
+
+      Punching: {
         open: false,
         icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
         isVisible:
           window.location.pathname?.includes("organisation") &&
-          [
-            "Super-Admin",
-            "Delegate-Super Admin",
-            "HR",
-          ]?.includes(role),
+          ["Super-Admin", "Delegate-Super Admin", "HR"]?.includes(role),
         routes: [
           {
             key: "punchingMachine",
@@ -309,7 +333,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
             text: "View Punching Attendance",
           },
-        
         ],
       },
       Department: {
