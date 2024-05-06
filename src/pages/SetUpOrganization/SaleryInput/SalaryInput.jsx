@@ -167,9 +167,10 @@ const SalaryInput = () => {
                       >
                         <td className="py-3 px-6">{id + 1}</td>
                         <td>{item.name}</td>
-                        <td className="px-6">
-                          {console.log(item?.desc?.length)}
-                          {!item?.desc ? "No description" : item.desc}
+                        <td className="px-6 truncate w-[200px]">
+                          <h1 className="truncate w-[200px]">
+                            {!item?.desc ? "No description" : item.desc}
+                          </h1>
                         </td>
                         <td className="px-6">{item?.empType?.title}</td>
                         <td className="px-6">
