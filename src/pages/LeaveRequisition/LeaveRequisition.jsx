@@ -114,7 +114,7 @@ const LeaveRequisition = () => {
                   className="h-max !mt-4 space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg"
                 >
                   <h1 className="text-gray-400 font-semibold mb-4 text-md">
-                    Selected Leave's
+                    Selected Dates
                   </h1>
                   <div className="flex flex-col gap-4">
                     {newAppliedLeaveEvents?.map((item, index) => (

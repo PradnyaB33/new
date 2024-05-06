@@ -75,26 +75,17 @@ const AppDatePicker = ({
     return {};
   };
 
-  // const checkOverlappingMistake = (
-  //   array1,
-  //   selectedStartDate,
-  //   selectedEndDate
-  // ) => {
-  //   array1.some(
-  //     (event) =>
-  //       (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
-  //         selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
-  //       (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
-  //         selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
-  //       (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
-  //         selectedEndDate.isAfter(moment(event.end).startOf("day")))
-  //   );
-  // };
+  // console.log(moment().isSameOrBefore(moment().add(1, "days"), "days"));
 
   const handleSelectSlot = ({ start, end }) => {
+    console.log(`🚀 ~ file: date-picker.jsx:95 ~ { start, end }:`, {
+      start,
+      end,
+    });
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
     const difference = selectedEndDate.diff(selectedStartDate, "days");
+    console.log(`🚀 ~ file: date-picker.jsx:102 ~ difference:`, difference);
 
     const currentDate = moment(selectedStartDate);
 
@@ -115,15 +106,19 @@ const AppDatePicker = ({
     const isOverlap = [
       ...data?.currentYearLeaves,
       ...newAppliedLeaveEvents,
-    ].some(
-      (event) =>
+    ].some((event) => {
+      // console.log(`🚀 ~ file: date-picker.jsx:123 ~ event:`, event);
+      selectedStartDate.isSame(moment(event.start));
+      return (
         (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
           selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
         (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
           selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
         (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
           selectedEndDate.isAfter(moment(event.end).startOf("day")))
-    );
+      );
+    });
+    console.log(`🚀 ~ file: date-picker.jsx:123 ~ isOverlap:`, isOverlap);
 
     if (isOverlap && difference > 0) {
       return handleAlert(

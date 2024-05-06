@@ -54,7 +54,6 @@ const Mapped = ({
     );
     setNewAppliedLeaveEvents(updatedAppliedLeaveEvents);
   };
-  console.log("item.end", item?.end);
   return (
     <div
       key={index}

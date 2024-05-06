@@ -19,7 +19,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Loader from "../../../pages/Notification/Loader";
 
-const LeaveRejectmodal = ({ items }) => {
+const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
   console.log(`🚀 ~ file: LeaveRejectmodal.jsx:23 ~ items:`, items);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -76,7 +76,13 @@ const LeaveRejectmodal = ({ items }) => {
   };
 
   return (
-    <>
+    <Box
+      className="py-2 space-y-5 h-max"
+      sx={{
+        flexGrow: 1,
+        p: 5,
+      }}
+    >
       <Grid
         container
         spacing={2}
@@ -129,6 +135,7 @@ const LeaveRejectmodal = ({ items }) => {
                 <Box sx={{ mt: 3, mb: 3 }}>
                   <Stack direction="row" spacing={3}>
                     <Button
+                      disabled={isLoading || isFetching}
                       variant="contained"
                       onClick={() => acceptLeaveMutation({ id: items._id })}
                       color="primary"
@@ -219,7 +226,7 @@ const LeaveRejectmodal = ({ items }) => {
                     handleClose
                   );
 
-                  await handleClose();
+                  handleClose();
                 }}
                 color="error"
                 variant="contained"
@@ -238,7 +245,7 @@ const LeaveRejectmodal = ({ items }) => {
           </form>
         </Box>
       </Modal>
-    </>
+    </Box>
   );
 };
 
