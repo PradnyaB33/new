@@ -55,23 +55,30 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
 
   const { errors, dirtyFields } = formState;
 
-  const totalAmount = useMemo(async () => {
-    let tmAmount = await handleUpgradeFunction({
-      data: getValues(),
-      organisation,
-    });
+ const memberCountWatch = watch("memberCount");
+ const packageInfoValueWatch = watch("packageInfo.value");
+ const discountWatch = watch("discount");
 
-    tmAmount -= tmAmount * (watch("discount") / 100);
-    tmAmount = Math.round(tmAmount);
-    setAmount(() => tmAmount);
-    return tmAmount;
-  }, [
-    watch("memberCount"),
-    watch("packageInfo.value"),
-    organisation,
-    getValues,
-    watch("discount"),
-  ]);
+ useMemo(async () => {
+   let tmAmount = await handleUpgradeFunction({
+     data: getValues(),
+     organisation,
+   });
+
+   tmAmount -= tmAmount * (discountWatch / 100);
+   tmAmount = Math.round(tmAmount);
+   setAmount(() => tmAmount);
+   return tmAmount;
+ }, [
+   memberCountWatch,
+   packageInfoValueWatch,
+   organisation,
+   getValues,
+   discountWatch,
+   watch,
+   setAmount,
+   handleUpgradeFunction,
+ ]);
 
   async function onSubmit(data) {
     data.totalAmount = amount;
@@ -205,21 +212,21 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
 };
 
 export default UpgradePackage;
-const getPrice = (plan, daysToEnd = 90) => {
-  if (plan === "Basic Plan") {
-    return Math.round(0.611 * daysToEnd);
-  } else if (plan === "Intermediate Plan") {
-    return Math.round(0.944 * daysToEnd);
-  } else {
-    return 115;
-  }
-};
-const getPlanPrice = (plan) => {
-  if (plan === "Basic Plan") {
-    return Math.round(0.611 * 90);
-  } else if (plan === "Intermediate Plan") {
-    return Math.round(0.944 * 90);
-  } else {
-    return Math.round(115 * 90);
-  }
-};
+// const getPrice = (plan, daysToEnd = 90) => {
+//   if (plan === "Basic Plan") {
+//     return Math.round(0.611 * daysToEnd);
+//   } else if (plan === "Intermediate Plan") {
+//     return Math.round(0.944 * daysToEnd);
+//   } else {
+//     return 115;
+//   }
+// };
+// const getPlanPrice = (plan) => {
+//   if (plan === "Basic Plan") {
+//     return Math.round(0.611 * 90);
+//   } else if (plan === "Intermediate Plan") {
+//     return Math.round(0.944 * 90);
+//   } else {
+//     return Math.round(115 * 90);
+//   }
+// };
