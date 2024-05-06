@@ -13,12 +13,14 @@ import {
 import axios from "axios";
 import { format } from "date-fns";
 import dayjs from "dayjs";
+import moment from "moment";
 import React, { useContext, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Loader from "../../../pages/Notification/Loader";
 
 const LeaveRejectmodal = ({ items }) => {
+  console.log(`🚀 ~ file: LeaveRejectmodal.jsx:23 ~ items:`, items);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [open, setOpen] = useState(false);
@@ -109,9 +111,9 @@ const LeaveRejectmodal = ({ items }) => {
             <div className="space-y-4 w-full flex flex-col items-center md:items-start justify-center">
               <h1 className="text-xl px-4 md:!px-0 font-semibold ">
                 {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
-                has raised a leave request on{" "}
+                has raised a {items?.leaveTypeDetailsId?.leaveName} request on{" "}
                 {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
-                {format(new Date(items.end), "dd-MM-yyyy")}
+                {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
               </h1>
 
               <Chip
