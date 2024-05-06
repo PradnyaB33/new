@@ -420,13 +420,13 @@ const DataTable = () => {
                       onChange={handleSelectAllClick}
                     />
                   </TableCell>
-                  <TableCell>ID</TableCell>
+                  <TableCell>Sr.No</TableCell>
                   <TableCell>First Name</TableCell>
                   <TableCell>Last Name</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {employeeData.map((employee) => {
+                {employeeData.map((employee, idx) => {
                   const isItemSelected = isSelected(employee._id);
                   return (
                     <TableRow
@@ -442,7 +442,7 @@ const DataTable = () => {
                       <TableCell padding="checkbox">
                         <Checkbox checked={isItemSelected} />
                       </TableCell>
-                      <TableCell>{employee.id}</TableCell>
+                      <TableCell>{idx + 1}</TableCell>
                       <TableCell>{employee.first_name}</TableCell>
                       <TableCell>{employee.last_name}</TableCell>
                     </TableRow>
