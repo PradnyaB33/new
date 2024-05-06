@@ -78,9 +78,6 @@ const AppDatePicker = ({
   const handleSelectSlot = ({ start, end }) => {
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
-    const difference = selectedEndDate.diff(selectedStartDate, "days");
-    console.log(`🚀 ~ file: date-picker.jsx:102 ~ difference:`, difference);
-
     const currentDate = moment(selectedStartDate);
 
     const includedDays = data2.days?.days?.map((day) => day.day);
