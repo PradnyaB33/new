@@ -677,6 +677,7 @@ const AuthInputFiled = ({
                 <textarea
                   type={type}
                   rows={3}
+                  maxLength={maxLimit && maxLimit}
                   readOnly={readOnly}
                   placeholder={placeholder}
                   className={`${
