@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FactoryOutlined, Numbers } from "@mui/icons-material";
 import { Box, Button, Modal } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
@@ -52,38 +52,30 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
       },
       resolver: zodResolver(packageSchema),
     });
-
+  console.log(getValues, setAmount);
   const { errors, dirtyFields } = formState;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let tmAmount = await handleUpgradeFunction({
-          data: getValues(),
-          organisation,
-        });
+  // const total = useMemo(async () => {
+  //   let tmAmount = await handleUpgradeFunction({
+  //     data: getValues(),
+  //     organisation,
+  //   });
 
-        tmAmount -= tmAmount * (watch("discount") / 100);
-        tmAmount = Math.round(tmAmount);
-        setAmount(tmAmount);
-      } catch (error) {
-        // Handle errors here
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    watch("memberCount"),
-    watch("packageInfo.value"),
-    organisation,
-    getValues(),
-    watch("discount"),
-    watch,
-    setAmount,
-    handleUpgradeFunction,
-  ]);
+  //   tmAmount -= tmAmount * (watch("discount") / 100);
+  //   tmAmount = Math.round(tmAmount);
+  //   setAmount(() => tmAmount);
+  //   return tmAmount;
+  //   // eslint-disable-next-line
+  // }, [
+  //   watch("memberCount"),
+  //   watch("packageInfo.value"),
+  //   organisation,
+  //   getValues,
+  //   watch("discount"),
+  //   watch,
+  //   setAmount,
+  //   handleUpgradeFunction,
+  // ]);
 
   async function onSubmit(data) {
     data.totalAmount = amount;
