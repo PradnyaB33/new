@@ -75,13 +75,7 @@ const AppDatePicker = ({
     return {};
   };
 
-  // console.log(moment().isSameOrBefore(moment().add(1, "days"), "days"));
-
   const handleSelectSlot = ({ start, end }) => {
-    console.log(`🚀 ~ file: date-picker.jsx:95 ~ { start, end }:`, {
-      start,
-      end,
-    });
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
     const difference = selectedEndDate.diff(selectedStartDate, "days");
@@ -107,20 +101,23 @@ const AppDatePicker = ({
       ...data?.currentYearLeaves,
       ...newAppliedLeaveEvents,
     ].some((event) => {
-      // console.log(`🚀 ~ file: date-picker.jsx:123 ~ event:`, event);
-      selectedStartDate.isSame(moment(event.start));
+      console.log(
+        `🚀 ~ file: date-picker.jsx:114 ~  (selectedStartDate.isSameOrAfter(moment(event.start), "day") &&
+          selectedStartDate.isBefore(moment(event.end), "day")):`,
+        selectedEndDate.isAfter(moment(event.start), "day") &&
+          selectedEndDate.isSameOrBefore(moment(event.end), "day")
+      );
       return (
-        (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
-          selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
-        (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
-          selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
-        (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
-          selectedEndDate.isAfter(moment(event.end).startOf("day")))
+        (selectedStartDate.isSameOrAfter(moment(event.start), "day") &&
+          selectedStartDate.isBefore(moment(event.end), "day")) ||
+        (selectedStartDate.isBefore(moment(event.start), "day") &&
+          selectedEndDate.isAfter(moment(event.end), "day")) ||
+        (selectedStartDate.isSame(moment(event.start), "day") &&
+          selectedEndDate.isSame(moment(event.end), "day"))
       );
     });
-    console.log(`🚀 ~ file: date-picker.jsx:123 ~ isOverlap:`, isOverlap);
 
-    if (isOverlap && difference > 0) {
+    if (isOverlap) {
       return handleAlert(
         true,
         "warning",
