@@ -111,6 +111,7 @@ const AppDatePicker = ({
           selectedEndDate.isAfter(moment(event.end).startOf("day")))
     );
 
+    console.log(`🚀 ~ file: date-picker.jsx:115 ~ isOverlap:`, isOverlap);
     if (isOverlap) {
       return handleAlert(
         true,

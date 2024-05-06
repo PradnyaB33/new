@@ -893,7 +893,7 @@ const App = () => {
           }
         />
         <Route
-          path="/leave"
+          path="/organisation/:organisationId/leave"
           element={
             <RequireAuth
               permission={[
@@ -906,6 +906,7 @@ const App = () => {
                 "Delegate-Department-Admin",
                 "HR",
                 "Accountant",
+                "Manager",
               ]}
             >
               <LeaveRequisition />
