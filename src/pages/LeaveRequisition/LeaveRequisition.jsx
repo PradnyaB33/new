@@ -12,6 +12,7 @@ import Mapped from "./components/mapped-form";
 const LeaveRequisition = () => {
   const {
     data,
+    shiftData,
     setCalendarOpen,
     isLoading,
     handleSubmit,
@@ -95,6 +96,7 @@ const LeaveRequisition = () => {
 
             <AppDatePicker
               data={data}
+              shiftData={shiftData}
               handleUpdateFunction={handleUpdateFunction}
               selectEvent={selectEvent}
               setselectEvent={setselectEvent}

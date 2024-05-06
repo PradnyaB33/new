@@ -12,6 +12,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 
 const AppDatePicker = ({
   data,
+  leaveData,
   handleUpdateFunction,
   selectEvent,
   setselectEvent,
@@ -24,6 +25,7 @@ const AppDatePicker = ({
   disabledShiftId,
 }) => {
   const localizer = momentLocalizer(moment);
+  console.log("this is the shift Data", data);
   const { handleAlert } = useContext(TestContext);
   const [newData, setNewData] = useState([]);
   const [newLeave, setNewLeave] = useState([]);
@@ -32,6 +34,7 @@ const AppDatePicker = ({
   const { setAppAlert } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const arr = data;
+  console.log("this is leave data", leaveData);
 
   useEffect(() => {
     const arrayOfData = arr && arr.requests ? arr.requests : [];
@@ -151,7 +154,7 @@ const AppDatePicker = ({
           );
         });
         if (isOverlapWithDataLeave) {
-          return handleAlert(true, "error", "Leave is requested in this slot");
+          return handleAlert(true, "error", "This slot is already occupied");
         }
       }
 
@@ -164,7 +167,10 @@ const AppDatePicker = ({
       }
     }
 
-    const isOverlap = [...newAppliedLeaveEvents].some(
+    const isOverlap = [
+      ...newAppliedLeaveEvents,
+      ...leaveData?.currentYearLeaves,
+    ].some(
       (event) =>
         (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
           selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
@@ -175,11 +181,7 @@ const AppDatePicker = ({
     );
 
     if (isOverlap) {
-      return handleAlert(
-        true,
-        "warning",
-        "You have already selected this shift"
-      );
+      return handleAlert(true, "error", "This slot is already occupied");
     } else {
       const newLeave = {
         title: selectEvent ? "Updated Shift" : "Selected Shift",
@@ -359,8 +361,12 @@ const AppDatePicker = ({
               toolbar: CustomToolbar,
             }}
             events={
-              data
-                ? [...newData, ...newAppliedLeaveEvents]
+              data && leaveData
+                ? [
+                    ...newData,
+                    ...leaveData?.currentYearLeaves,
+                    ...newAppliedLeaveEvents,
+                  ]
                 : [...newAppliedLeaveEvents]
             }
             startAccessor="start"
@@ -393,6 +399,9 @@ const AppDatePicker = ({
                     backgroundColor = "blue";
                     break;
                 }
+              }
+              if (event.color) {
+                backgroundColor = event.color;
               }
 
               return {

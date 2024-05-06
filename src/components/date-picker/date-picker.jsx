@@ -14,6 +14,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 const AppDatePicker = ({
   data,
   handleUpdateFunction,
+  shiftData,
   selectEvent,
   setselectEvent,
   setCalendarOpen,
@@ -30,6 +31,7 @@ const AppDatePicker = ({
   const { cookies } = useContext(UseContext);
   const [leaveText, setLeaveText] = useState("");
   const authToken = cookies["aegis"];
+
   const { data: data2 } = useQuery("employee-disable-weekends", async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/weekend/get`,
@@ -40,6 +42,8 @@ const AppDatePicker = ({
 
     return response.data;
   });
+
+  console.log("this is shiftData", shiftData);
   const handleSelectEvent = (event) => {
     setLeaveText(
       `The application for ${format(new Date(event.start), "dd-MM-yyyy")} is ${
@@ -116,6 +120,7 @@ const AppDatePicker = ({
     const isOverlap = [
       ...data?.currentYearLeaves,
       ...newAppliedLeaveEvents,
+      ...shiftData?.requests,
     ].some(
       (event) =>
         (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
@@ -266,7 +271,11 @@ const AppDatePicker = ({
             }}
             events={
               data
-                ? [...data?.currentYearLeaves, ...newAppliedLeaveEvents]
+                ? [
+                    ...data?.currentYearLeaves,
+                    ...shiftData.requests,
+                    ...newAppliedLeaveEvents,
+                  ]
                 : [...newAppliedLeaveEvents]
             }
             startAccessor="start"
@@ -280,11 +289,36 @@ const AppDatePicker = ({
             onSelectSlot={handleSelectSlot}
             onSelectEvent={handleSelectEvent}
             datePropGetter={selectedLeave}
-            eventPropGetter={(event) => ({
-              style: {
-                backgroundColor: event.color,
-              },
-            })}
+            eventPropGetter={(event) => {
+              let backgroundColor = "blue";
+
+              if (event?.status) {
+                switch (event.status) {
+                  case "Pending":
+                    backgroundColor = "orange";
+                    break;
+                  case "Rejected":
+                    backgroundColor = "red";
+                    break;
+                  case "Approved":
+                    backgroundColor = "green";
+                    break;
+                  default:
+                    backgroundColor = "blue";
+                    break;
+                }
+              }
+
+              if (event.color) {
+                backgroundColor = event.color;
+              }
+
+              return {
+                style: {
+                  backgroundColor,
+                },
+              };
+            }}
             dayPropGetter={dayPropGetter}
           />
         </div>
