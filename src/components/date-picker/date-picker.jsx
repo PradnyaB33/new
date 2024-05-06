@@ -256,7 +256,7 @@ const AppDatePicker = ({
               data
                 ? [
                     ...data?.currentYearLeaves,
-                    ...shiftData.requests,
+                    ...shiftData?.requests,
                     ...newAppliedLeaveEvents,
                   ]
                 : [...newAppliedLeaveEvents]

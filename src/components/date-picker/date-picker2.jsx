@@ -123,53 +123,35 @@ const AppDatePicker = ({
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
 
-    if (newData && Array.isArray(newData)) {
-      const isOverlapWithData = newData.some((event) => {
-        console.log(newData);
-        const eventStartDate = moment(event.start);
-        const eventEndDate = moment(event.end);
+    // if (newData && Array.isArray(newData)) {
+    //   const isOverlapWithData = newData.some((event) => {
+    //     console.log(newData);
+    //     const eventStartDate = moment(event.start);
+    //     const eventEndDate = moment(event.end);
 
-        return (
-          (moment(start).isSameOrAfter(eventStartDate) &&
-            moment(start).isBefore(eventEndDate)) ||
-          (moment(end).isAfter(eventStartDate) &&
-            moment(end).isSameOrBefore(eventEndDate)) ||
-          (moment(start).isSameOrBefore(eventStartDate) &&
-            moment(end).isSameOrAfter(eventEndDate))
-        );
-      });
-      if (newLeave && Array.isArray(newLeave)) {
-        console.log(newLeave);
-        const isOverlapWithDataLeave = newLeave.some((event) => {
-          const eventStartDate = moment(event.start);
-          const eventEndDate = moment(event.end);
+    //     return (
+    //       (moment(start).isSameOrAfter(eventStartDate) &&
+    //         moment(start).isBefore(eventEndDate)) ||
+    //       (moment(end).isAfter(eventStartDate) &&
+    //         moment(end).isSameOrBefore(eventEndDate)) ||
+    //       (moment(start).isSameOrBefore(eventStartDate) &&
+    //         moment(end).isSameOrAfter(eventEndDate))
+    //     );
+    //   });
 
-          return (
-            (moment(start).isSameOrAfter(eventStartDate) &&
-              moment(start).isBefore(eventEndDate)) ||
-            (moment(end).isAfter(eventStartDate) &&
-              moment(end).isSameOrBefore(eventEndDate)) ||
-            (moment(start).isSameOrBefore(eventStartDate) &&
-              moment(end).isSameOrAfter(eventEndDate))
-          );
-        });
-        if (isOverlapWithDataLeave) {
-          return handleAlert(true, "error", "This slot is already occupied");
-        }
-      }
-
-      if (isOverlapWithData) {
-        return handleAlert(
-          true,
-          "error",
-          "This slot overlaps with an existing event."
-        );
-      }
-    }
+    //   if (isOverlapWithData) {
+    //     return handleAlert(
+    //       true,
+    //       "error",
+    //       "This slot overlaps with an existing event."
+    //     );
+    //   }
+    // }
 
     const isOverlap = [
       ...newAppliedLeaveEvents,
       ...leaveData?.currentYearLeaves,
+      ...newData,
     ].some(
       (event) =>
         (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
@@ -179,7 +161,6 @@ const AppDatePicker = ({
         (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
           selectedEndDate.isAfter(moment(event.end).startOf("day")))
     );
-
     if (isOverlap) {
       return handleAlert(true, "error", "This slot is already occupied");
     } else {
