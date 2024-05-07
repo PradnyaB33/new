@@ -5,7 +5,6 @@ import { momentLocalizer } from "react-big-calendar";
 import { useQuery } from "react-query";
 
 import axios from "axios";
-import { format } from "date-fns";
 import React, { useContext, useEffect, useState } from "react";
 import { Calendar } from "react-big-calendar";
 import { TestContext } from "../../State/Function/Main";
@@ -28,7 +27,7 @@ const AppDatePicker = ({
   const [Delete, setDelete] = useState(false);
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
-  const [leaveText, setLeaveText] = useState("");
+  const [message, setMessage] = useState("");
   const { authToken } = useGetUser();
   const { data: data2 } = useQuery("employee-disable-weekends", async () => {
     const response = await axios.get(
@@ -41,11 +40,9 @@ const AppDatePicker = ({
     return response.data;
   });
   const handleSelectEvent = (event) => {
-    setLeaveText(
-      `The application for ${format(new Date(event.start), "dd-MM-yyyy")} is ${
-        event?.status
-      } state`
-    );
+    console.log(`🚀 ~ file: date-picker.jsx:44 ~ event:`, event);
+
+    setMessage(event?.message);
     setSelectedLeave(event);
     setCalendarOpen(true);
     if (event.title === "Selected Leave") {
@@ -203,7 +200,7 @@ const AppDatePicker = ({
         </div>
         <div className="flex w-full flex-row-reverse px-3 text-red-500 italic font-extrabold text-xs h-[20px]">
           {" "}
-          {selectEvent ? "Please select dates for you leaves" : leaveText}
+          {selectEvent ? "Please select dates for you leaves" : message}{" "}
         </div>
       </>
     );
@@ -216,7 +213,7 @@ const AppDatePicker = ({
         element.contains(event.target)
       )
     ) {
-      setLeaveText("");
+      setMessage("");
     } else {
     }
   };
