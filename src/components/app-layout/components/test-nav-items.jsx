@@ -88,7 +88,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                 : role === "HR"
                 ? `/organisation/${orgId}/dashboard/HR-dashboard`
                 : role === "Employee"
-                ? "/organisation/dashboard/employee-dashboard"
+                ? `/organisation/${orgId}/dashboard/employee-dashboard`
                 : "/organizationList",
             icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
             text: "Dashboard",
