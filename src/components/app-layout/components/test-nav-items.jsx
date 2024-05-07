@@ -103,11 +103,11 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "attendance",
             isVisible: true,
-            link: "/leave",
+            link: `/organisation/${orgId}/leave`,
             icon: (
               <AccessTimeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
-            text: "Attendance",
+            text: "Attendance & Leave Management",
           },
 
           {

@@ -3,15 +3,20 @@ import { IconButton, Menu, MenuItem, Rating } from "@mui/material";
 import DOMPurify from "dompurify";
 import React from "react";
 import useTrainingStore from "../../components/stepper/components/zustand-store";
+import AssignTraining from "./assign-training";
 import TrainingTableLoading from "./loading-skeleton";
 import useTrainingDetailsMutation from "./mutation";
+import useAssignTraining from "./useAssignTraining";
 
 const TableRow = ({ logo, name, duration, doc }) => {
   const [newOpen, setNewOpen] = React.useState(false);
   const state = useTrainingStore();
   const { setOpen, setTrainingData } = state;
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const { employees, employeeFetching } = useAssignTraining(doc?._id);
+
   const { mutate, isLoading } = useTrainingDetailsMutation();
+  const [assignTrainingOpen, setAssignTrainingOpen] = React.useState(false);
   if (isLoading) {
     return <TrainingTableLoading />;
   }
@@ -70,8 +75,24 @@ const TableRow = ({ logo, name, duration, doc }) => {
           >
             Delete
           </MenuItem>
+          <MenuItem
+            onClick={() => {
+              setAssignTrainingOpen(true);
+            }}
+            disabled={employeeFetching}
+          >
+            Assign Training
+          </MenuItem>
           <MenuItem onClick={() => setNewOpen(false)}>Check Status</MenuItem>
         </Menu>
+        {employees && (
+          <AssignTraining
+            open={assignTrainingOpen}
+            setOpen={setAssignTrainingOpen}
+            doc={doc}
+            employees={employees?.allEmployee}
+          />
+        )}
       </div>
     </div>
   );
