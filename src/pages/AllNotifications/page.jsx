@@ -10,7 +10,7 @@ const ParentNotification = () => {
   const { data: data2 } = useShiftNotification();
   const { data: data3 } = usePunchNotification();
   const { missPunchData } = useMissedPunchNotificationCount();
-
+  console.log("data 3", data3);
   const dummyData = [
     {
       name: "Leave Notification",
@@ -26,7 +26,7 @@ const ParentNotification = () => {
     },
     {
       name: "Remote Punching Notification",
-      count: data3?.length ?? 0,
+      count: data3?.punchNotification?.length ?? 0,
       color: "#51FD96",
       url: "/punch-notification",
     },
