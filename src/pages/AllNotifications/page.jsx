@@ -23,7 +23,6 @@ const ParentNotification = () => {
     role === "Accountant"
       ? `/notification/income-tax`
       : `/notification/income-tax-details`;
-  console.log(`🚀 ~ tdsRoute:`, tdsRoute);
   const dummyData = [
     {
       name: "Leave Notification",
