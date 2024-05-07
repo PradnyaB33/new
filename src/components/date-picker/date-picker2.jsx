@@ -28,7 +28,7 @@ const AppDatePicker = ({
   console.log("this is the shift Data", data);
   const { handleAlert } = useContext(TestContext);
   const [newData, setNewData] = useState([]);
-  const [newLeave, setNewLeave] = useState([]);
+  // const [newLeave, setNewLeave] = useState([]);
   const queryClient = useQueryClient();
   const { cookies } = useContext(UseContext);
   const { setAppAlert } = useContext(UseContext);
@@ -61,15 +61,12 @@ const AppDatePicker = ({
   };
   const getLatestLeave = async () => {
     try {
-      const resp = await axios.get(
-        `${process.env.REACT_APP_API}/route/leave/allLeaves`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      setNewLeave(resp.data);
+      await axios.get(`${process.env.REACT_APP_API}/route/leave/allLeaves`, {
+        headers: {
+          Authorization: authToken,
+        },
+      });
+      // setNewLeave(resp.data);
     } catch (error) {
       console.error(error.message);
     }
