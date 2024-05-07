@@ -102,15 +102,35 @@ const AppDatePicker = ({
       ...data?.currentYearLeaves,
       ...newAppliedLeaveEvents,
       ...shiftData?.requests,
-    ].some((event) => {
-      return (
-        selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
-        selectedEndDate.isSameOrBefore(
-          moment(event.end).startOf("day").subtract(1, "days")
-        )
+    ].some((range) => {
+      // Convert range start and end dates to Moment.js objects
+      const rangeStart = range.start;
+      const rangeEnd = moment(range.end).startOf("day").subtract(1, "days");
+
+      // Check if selected start date is between any existing range
+      const isStartBetween = selectedStartDate.isBetween(
+        rangeStart,
+        rangeEnd,
+        undefined,
+        "[)"
       );
+
+      // Check if selected end date is between any existing range
+      const isEndBetween = selectedEndDate.isBetween(
+        rangeStart,
+        rangeEnd,
+        undefined,
+        "(]"
+      );
+
+      // Check if selected start and end date overlaps with any existing range
+
+      const isOverlap =
+        selectedStartDate.isSameOrBefore(rangeEnd) &&
+        selectedEndDate.isSameOrAfter(rangeStart);
+      // Return true if any overlap is found
+      return isStartBetween || isEndBetween || isOverlap;
     });
-    console.log(`🚀 ~ file: date-picker.jsx:123 ~ isOverlap:`, isOverlap);
 
     if (isOverlap) {
       return handleAlert(
