@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, West  ,RequestQuote,} from "@mui/icons-material";
+import { Search, West, RequestQuote } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 import MissedPunchNotified from "./missedPunchNotified";
@@ -8,24 +8,33 @@ import UserProfile from "../../hooks/UserData/useUser";
 const MissedPunchNotification = () => {
   const { missPunchData } = useMissedPunchNotificationCount();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedEmployee, setSelectedEmployee] = useState(null); 
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
 
-  console.log("role" , role);
+  console.log("role", role);
 
-  
-  const filteredEmployees = missPunchData && Array.isArray(missPunchData) 
-    ? missPunchData.filter(employee =>
-        employee.employeeId?.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        employee.employeeId?.last_name.toLowerCase().includes(searchQuery.toLowerCase())
-      ) 
-    : [];
+  const filteredEmployees =
+    missPunchData && Array.isArray(missPunchData)
+      ? missPunchData.filter(
+          (employee) =>
+            employee.employeeId?.first_name
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase()) ||
+            employee.employeeId?.last_name
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
+        )
+      : [];
 
-  
   const handleEmployeeClick = (employee) => {
-    setSelectedEmployee(employee); 
+    setSelectedEmployee(employee);
   };
+
+  console.log("selected emplyee", selectedEmployee);
+
+  const employeeId = selectedEmployee && selectedEmployee?.employeeId?._id;
+  console.log("employee id", employeeId);
 
   return (
     <div className="w-full">
@@ -34,10 +43,12 @@ const MissedPunchNotification = () => {
         Employee Missed Punch Request
       </header>
       <section className="min-h-[90vh] flex">
-        <article className="w-[30%] overflow-auto max-h-[90vh] h-full bg-white border-gray-200">
+        <article className="w-[20%] overflow-auto max-h-[90vh] h-full bg-white border-gray-200">
           <div className="p-6 !py-2">
             <div className="space-y-2">
-              <div className={`flex rounded-md items-center px-2 outline-none border-gray-200 border-[.5px] bg-white py-1 md:py-[6px]`}>
+              <div
+                className={`flex rounded-md items-center px-2 outline-none border-gray-200 border-[.5px] bg-white py-1 md:py-[6px]`}
+              >
                 <Search className="text-gray-700 md:text-lg !text-[1em]" />
                 <input
                   type={"text"}
@@ -55,7 +66,7 @@ const MissedPunchNotification = () => {
                 <div
                   className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50`}
                   key={employee?.employeeId?._id}
-                  onClick={() => handleEmployeeClick(employee)} 
+                  onClick={() => handleEmployeeClick(employee)}
                 >
                   <Avatar src={employee?.avatarSrc} />
                   <div>
@@ -72,22 +83,25 @@ const MissedPunchNotification = () => {
             </div>
           )}
         </article>
-        <div className="w-[70%]">
+        <div className="w-[80%]">
           {selectedEmployee ? (
-            <MissedPunchNotified employee={selectedEmployee} />
+            <MissedPunchNotified
+              employee={selectedEmployee}
+              employeeId={employeeId}
+            />
           ) : (
             <div className="p-4 space-y-1 flex items-center gap-3">
-            <Avatar className="text-white !bg-blue-500">
-              <RequestQuote />
-            </Avatar>
-            <div>
-              <h1 className=" text-xl">Missed Punch Requests</h1>
-              <p className="text-sm">
-               {` Here ${role} would be able to approve or reject the  missed punch
+              <Avatar className="text-white !bg-blue-500">
+                <RequestQuote />
+              </Avatar>
+              <div>
+                <h1 className=" text-xl">Missed Punch Requests</h1>
+                <p className="text-sm">
+                  {` Here ${role} would be able to approve or reject the  missed punch
                 notifications`}
-              </p>
+                </p>
+              </div>
             </div>
-          </div>
           )}
         </div>
       </section>

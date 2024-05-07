@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import useAuthToken from "../Token/useAuth";
+import useDashGlobal from "./useDashGlobal";
 
 export default function useDashboardFilter(organisationId) {
   const authToken = useAuthToken();
@@ -13,6 +14,7 @@ export default function useDashboardFilter(organisationId) {
   const [date, setDate] = useState(2024);
   console.log(`🚀 ~ file: useDashboardFilter.jsx:14 ~ setDate:`, setDate);
   const [salaryData, setSalaryData] = useState([]);
+  const { selectedYear, selectedSalaryYear } = useDashGlobal();
 
   // Card Data
   const { data: absentEmployee } = useQuery(
@@ -140,20 +142,20 @@ export default function useDashboardFilter(organisationId) {
           Authorization: authToken,
         },
       });
-      const currentYear = new Date().getFullYear();
-      const filterData = data.filter((item) => item.year === currentYear);
+      // const currentYear = new Date().getFullYear();
+      // const filterData = data.filter((item) => item.year === currentYear);
 
-      return filterData;
+      return data;
     } catch (error) {
       console.log(error);
     }
   }
 
   const { isLoading: oraganizationLoading } = useQuery(
-    ["organization-attenedence", organisationId],
+    ["organization-attenedence", organisationId, selectedYear],
     () =>
       getAttendenceData(
-        `${process.env.REACT_APP_API}/route/leave/getOrganizationAttendece/${organisationId}/${date}`
+        `${process.env.REACT_APP_API}/route/leave/getOrganizationAttendece/${organisationId}/${selectedYear.value}`
       ),
     {
       onSuccess: (organizationAttendenceData) => {
@@ -168,7 +170,7 @@ export default function useDashboardFilter(organisationId) {
     ["department-attenedence", department],
     () =>
       getAttendenceData(
-        `${process.env.REACT_APP_API}/route/leave/getDepartmentAttendece/${department}`
+        `${process.env.REACT_APP_API}/route/leave/getDepartmentAttendece/${department}/${selectedYear.value}`
       ),
     {
       onSuccess: (attendenceData) => setData(attendenceData),
@@ -177,10 +179,10 @@ export default function useDashboardFilter(organisationId) {
   );
 
   useQuery(
-    ["manager-attenedence", manager],
+    ["manager-attenedence", manager, selectedYear],
     () =>
       getAttendenceData(
-        `${process.env.REACT_APP_API}/route/leave/getManagerEmployeeAttendence/${manager}`
+        `${process.env.REACT_APP_API}/route/leave/getManagerEmployeeAttendence/${manager}/${selectedYear.value}`
       ),
     {
       onSuccess: (attendenceData) => setData(attendenceData),
@@ -189,10 +191,10 @@ export default function useDashboardFilter(organisationId) {
   );
 
   useQuery(
-    ["location-attenedence", locations],
+    ["location-attenedence", locations, selectedYear],
     () =>
       getAttendenceData(
-        `${process.env.REACT_APP_API}/route/leave/getLocationAttendece/${locations}`
+        `${process.env.REACT_APP_API}/route/leave/getLocationAttendece/${locations}/`
       ),
     {
       onSuccess: (attendenceData) => setData(attendenceData),
@@ -209,8 +211,6 @@ export default function useDashboardFilter(organisationId) {
           Authorization: authToken,
         },
       });
-      // const currentYear = new Date().getFullYear();
-      // const filterData = data.filter((item) => item.year === currentYear);
 
       return data;
     } catch (error) {
@@ -218,11 +218,11 @@ export default function useDashboardFilter(organisationId) {
     }
   }
 
-  useQuery(
-    ["Org-Salary-overview", organisationId],
+  const { isLoading: salaryGraphLoading } = useQuery(
+    ["Org-Salary-overview", organisationId, selectedSalaryYear],
     () =>
       getSalaryData(
-        `${process.env.REACT_APP_API}/route/employeeSalary/organizationSalaryOverview/${organisationId}`
+        `${process.env.REACT_APP_API}/route/employeeSalary/organizationSalaryOverview/${organisationId}/${selectedSalaryYear.value}`
       ),
     {
       onSuccess: (organizationAttendenceData) => {
@@ -234,10 +234,10 @@ export default function useDashboardFilter(organisationId) {
   );
 
   useQuery(
-    ["department-salary", department],
+    ["department-salary", department, selectedSalaryYear],
     () =>
       getSalaryData(
-        `${process.env.REACT_APP_API}/route/employeeSalary/departmentSalaryOverview/${department}`
+        `${process.env.REACT_APP_API}/route/employeeSalary/departmentSalaryOverview/${department}/${selectedSalaryYear.value}`
       ),
     {
       onSuccess: (organizationAttendenceData) => {
@@ -248,10 +248,10 @@ export default function useDashboardFilter(organisationId) {
   );
 
   useQuery(
-    ["manager-salary", manager],
+    ["manager-salary", manager, selectedSalaryYear],
     () =>
       getSalaryData(
-        `${process.env.REACT_APP_API}/route/employeeSalary/managerSalaryOverview/${manager}`
+        `${process.env.REACT_APP_API}/route/employeeSalary/managerSalaryOverview/${manager}/${selectedSalaryYear.value}`
       ),
     {
       onSuccess: (organizationAttendenceData) => {
@@ -291,7 +291,7 @@ export default function useDashboardFilter(organisationId) {
     managerOptions,
     Departmentoptions,
     oraganizationLoading,
-
+    salaryGraphLoading,
     getAttendenceData,
 
     // Style

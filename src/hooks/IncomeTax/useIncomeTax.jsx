@@ -53,6 +53,7 @@ const useIncomeTax = create((set) => ({
         },
       };
     }),
+
   handleProofChange: (e, itemIndex, handleAlert) =>
     set((state) => {
       const file = e.target.files[0];

@@ -1,17 +1,23 @@
 import React from "react";
+import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
+import useDocNotification from "../../hooks/QueryHook/notification/document-notification/hook";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
+import useLoanNotification from "../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
 import usePunchNotification from "../../hooks/QueryHook/notification/punch-notification/hook";
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
 import Card from "./components/card";
-import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 
 const ParentNotification = () => {
   const { data, isLoading } = useLeaveNotificationHook();
   const { data: data2 } = useShiftNotification();
   const { data: data3 } = usePunchNotification();
+  const { data: data4 } = useDocNotification();
   const { missPunchData } = useMissedPunchNotificationCount();
+  const { getEmployeeRequestLoanApplication } = useLoanNotification();
 
-  console.log("missed punch data" , missPunchData);
+  console.log("get pending loan", getEmployeeRequestLoanApplication);
+  console.log(missPunchData);
+  console.log("mydata", data4);
 
   const dummyData = [
     {
@@ -19,6 +25,18 @@ const ParentNotification = () => {
       count: data?.leaveRequests?.length ?? 0,
       color: "#FF7373",
       url: "/leave-notification",
+    },
+    {
+      name: "Missed Punch Notification",
+      count: missPunchData?.length ?? 0,
+      color: "#51E8FD",
+      url: "/missedPunch-notification",
+    },
+    {
+      name: "Loan Notification",
+      count: getEmployeeRequestLoanApplication?.length ?? 0,
+      color: "#51E8FD",
+      url: "/loan-notification",
     },
     {
       name: "Shift Notification",
@@ -32,12 +50,14 @@ const ParentNotification = () => {
       color: "#51FD96",
       url: "/punch-notification",
     },
-    {
-      name: "Missed Punch Notification",
-      count: missPunchData?.length ?? 0,
-      color: "#51E8FD",
-      url: "/missedPunch-notification",
-    },
+  
+    // {
+    //   name: "Document Approval Notification",
+    //   count: data4?.data?.doc.length ?? 0,
+    //   color: "#FF7373",
+    //   url: "/doc-notification",
+    // },
+   
   ];
 
   return (

@@ -8,8 +8,8 @@ import {
 import axios from "axios";
 import React, { useContext } from "react";
 import { useQueryClient } from "react-query";
-import { TestContext } from "../../../State/Function/Main";
-import useAuthToken from "../../../hooks/Token/useAuth";
+import { TestContext } from "../../../../State/Function/Main";
+import useAuthToken from "../../../../hooks/Token/useAuth";
 const DeleteGoal = ({ deleteConfirmation, handleClose }) => {
   const authToken = useAuthToken();
   const queryClient = useQueryClient();
@@ -18,7 +18,7 @@ const DeleteGoal = ({ deleteConfirmation, handleClose }) => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(
-        `${process.env.REACT_APP_API}/route/performance/deleteGoal/${id}`,
+        `${process.env.REACT_APP_API}/route/performance/deleteSingleGoal/${id}`,
         {
           headers: {
             Authorization: authToken,
@@ -29,6 +29,7 @@ const DeleteGoal = ({ deleteConfirmation, handleClose }) => {
       handleAlert(true, "success", "Goal Deleted Successfully");
       handleClose();
     } catch (error) {
+      console.log(`🚀 ~ error:`, error);
       // handleAlert("Failed to delete goal", "error");
     }
   };
@@ -54,7 +55,7 @@ const DeleteGoal = ({ deleteConfirmation, handleClose }) => {
           <Button
             variant="contained"
             size="small"
-            onClick={() => handleDelete(deleteConfirmation)}
+            onClick={() => handleDelete(deleteConfirmation._id)}
             color="error"
           >
             Delete

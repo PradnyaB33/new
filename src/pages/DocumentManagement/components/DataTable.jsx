@@ -2,6 +2,7 @@ import {
   Button,
   Checkbox,
   FormControl,
+  FormControlLabel,
   InputLabel,
   MenuItem,
   Select,
@@ -24,32 +25,65 @@ const DataTable = () => {
   const [selectedDepartmentId, setSelectedDepartmentId] = useState("");
   const [data1, setData1] = useState([]);
   const [employeeData, setEmployeeData] = useState([]);
+  const [managerArray, setManagerArray] = useState([]);
   const [initialEmployeeData, setInitialEmployeeData] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [selectedDocumentId, setSelectedDocumentId] = useState("");
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState([]);
+  const [selectedMDocId, setSelectedMDocId] = useState("");
+  const [managerIds, setManagerIds] = useState([]);
+  const [showManagerSelect, setShowManagerSelect] = useState(false); // State to track checkbox status
   const { setAppAlert } = useContext(UseContext);
   const [selectAll, setSelectAll] = useState(false);
   const authToken = useGetUser().authToken;
 
-  const handleSelectAllClick = (event) => {
+  const handleSelectAllClick = async (event) => {
     const checked = event.target.checked;
     setSelectAll(checked);
 
     if (checked) {
       const allEmployeeIds = employeeData.map((employee) => employee._id);
       setSelectedEmployeeIds(allEmployeeIds);
+
+      try {
+        const managerIdPromises = allEmployeeIds.map(async (empId) => {
+          try {
+            const managerResponse = await axios.get(
+              `${process.env.REACT_APP_API}/route/org/getManager/${empId}`,
+              {
+                headers: {
+                  Authorization: authToken,
+                },
+              }
+            );
+            return managerResponse.data.id;
+          } catch (error) {
+            console.error("Error fetching manager for employee", empId, error);
+            return null;
+          }
+        });
+
+        const managerIds = await Promise.all(managerIdPromises);
+        console.log("Manager IDs for selected employees:", managerIds);
+
+        setManagerIds(managerIds);
+      } catch (error) {
+        console.error("Error fetching manager IDs:", error);
+      }
     } else {
       setSelectedEmployeeIds([]);
+      setManagerIds([]);
     }
   };
 
   useEffect(() => {
     console.log(selectedEmployeeIds);
+    console.log(managerIds);
+    // eslint-disable-next-line
   }, [selectedEmployeeIds]);
 
-  const handleEmployeeSelection = (event, id) => {
+  const handleEmployeeSelection = async (event, id) => {
     const selectedIndex = selectedEmployeeIds.indexOf(id);
     let newSelected = [...selectedEmployeeIds];
 
@@ -62,6 +96,32 @@ const DataTable = () => {
     setSelectedEmployeeIds(newSelected);
     setSelectAll(newSelected.length === employeeData.length);
     console.log("Selected Employee IDs:", newSelected);
+
+    try {
+      const managerIdPromises = newSelected.map(async (empId) => {
+        try {
+          const managerResponse = await axios.get(
+            `${process.env.REACT_APP_API}/route/org/getManager/${empId}`,
+            {
+              headers: {
+                Authorization: authToken,
+              },
+            }
+          );
+          return managerResponse.data.id;
+        } catch (error) {
+          console.error("Error fetching manager for employee", empId, error);
+          return null;
+        }
+      });
+
+      const managerIds = await Promise.all(managerIdPromises);
+      console.log("Manager IDs for selected employees:", managerIds);
+
+      setManagerIds(managerIds);
+    } catch (error) {
+      console.error("Error fetching manager IDs:", error);
+    }
   };
 
   const isSelected = (id) => selectedEmployeeIds.indexOf(id) !== -1;
@@ -84,6 +144,22 @@ const DataTable = () => {
     fetchData();
   }, [authToken]);
 
+  useEffect(() => {
+    (async () => {
+      const resp = await axios.get(
+        `${process.env.REACT_APP_API}/route/org/getmanagers`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      console.log("manager", resp.data.filteredManagers);
+      setManagerArray(resp.data.filteredManagers);
+    })();
+    // eslint-disable-next-line
+  }, []);
+
   const fetchEmployees = async (orgId) => {
     try {
       const response = await axios.get(
@@ -93,7 +169,7 @@ const DataTable = () => {
         }
       );
       setEmployeeData(response.data.employees);
-      setInitialEmployeeData(response.data.employees); // Store initial employees
+      setInitialEmployeeData(response.data.employees);
     } catch (error) {
       console.error("Error fetching employees: ", error);
     }
@@ -143,7 +219,6 @@ const DataTable = () => {
   const handleSearchChange = (event) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
-    // Filter employees based on search query
     const filteredEmployees = initialEmployeeData.filter((employee) => {
       return (
         employee.first_name.toLowerCase().includes(query) ||
@@ -163,7 +238,6 @@ const DataTable = () => {
   const handleDepartmentChange = (event) => {
     const deptId = event.target.value;
     setSelectedDepartmentId(deptId);
-    // Filter employees based on selected department
     const filteredEmployees = initialEmployeeData.filter((employee) => {
       return employee.deptname[0] === deptId;
     });
@@ -175,13 +249,28 @@ const DataTable = () => {
     setSelectedDocumentId(docId);
     console.log("Selected Document ID:", docId);
   };
+  const handleDocumentChange2 = (event) => {
+    const mDocId = event.target.value;
+    setSelectedMDocId(mDocId);
+    console.log("Selected MDocument ID:", mDocId);
+    setEmployeeData(managerArray[mDocId].reporteeIds);
+  };
 
   const handleSendButtonClick = async () => {
     try {
+      const employeeIds = selectedEmployeeIds.map((id) => {
+        const managerId = managerIds[selectedEmployeeIds.indexOf(id)];
+        return {
+          empId: id,
+          mId: managerId ? managerId : null,
+          status: managerId ? false : true,
+        };
+      });
+
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/org/updatearr/${selectedDocumentId}`,
         {
-          employeeIds: selectedEmployeeIds,
+          employeeId: employeeIds,
         },
         {
           headers: {
@@ -199,14 +288,28 @@ const DataTable = () => {
       setAppAlert({
         alert: true,
         type: "error",
-        msg: "Document failed to send",
+        msg: "Please select the document first",
       });
     }
   };
 
   return (
-    <div>
+    <div style={{ position: "relative" }}>
       <div className="flex gap-4">
+        <FormControl size="small" style={{ width: 200 }}>
+          <FormControlLabel
+            className="!text-xs"
+            control={
+              <Checkbox
+                checked={showManagerSelect}
+                onChange={() => setShowManagerSelect(!showManagerSelect)}
+                color="primary"
+              />
+            }
+            label="Downcast"
+          />
+        </FormControl>
+
         {data1.length > 0 && (
           <FormControl size="small" style={{ width: 200 }}>
             <InputLabel id="organization-label">Select Organization</InputLabel>
@@ -267,57 +370,86 @@ const DataTable = () => {
             ))}
           </Select>
         </FormControl>
+
+        {showManagerSelect && (
+          <FormControl size="small" style={{ width: 200 }}>
+            <InputLabel id="document-label">Select Manager</InputLabel>
+            <Select
+              label="Select Manager"
+              name="document"
+              onChange={handleDocumentChange2}
+              value={selectedMDocId}
+            >
+              {managerArray?.map((doc, idx) => (
+                <MenuItem key={doc._id} value={idx}>
+                  {doc.managerId?.first_name &&
+                    doc.managerId?.last_name &&
+                    doc.managerId?.first_name + " " + doc.managerId?.last_name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
       </div>
-      <div style={{ width: "100%" }}>
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectAll}
-                    onChange={handleSelectAllClick}
-                  />
-                </TableCell>
-                <TableCell>ID</TableCell>
-                <TableCell>First Name</TableCell>
-                <TableCell>Last Name</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {employeeData.map((employee) => {
-                const isItemSelected = isSelected(employee._id);
-                return (
-                  <TableRow
-                    key={employee._id}
-                    hover
-                    onClick={(event) =>
-                      handleEmployeeSelection(event, employee._id)
-                    }
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    selected={isItemSelected}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox checked={isItemSelected} />
-                    </TableCell>
-                    <TableCell>{employee.id}</TableCell>
-                    <TableCell>{employee.first_name}</TableCell>
-                    <TableCell>{employee.last_name}</TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <div className="mt-5">
-          <Button
-            size="small"
-            onClick={handleSendButtonClick}
-            variant="contained"
-          >
-            Send
-          </Button>
+      <div style={{ width: "100%", overflowY: "auto", maxHeight: "450px" }}>
+        {employeeData.length === 0 ? (
+          <p className="text-center font-semibold">no employee available</p>
+        ) : (
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      checked={selectAll}
+                      onChange={handleSelectAllClick}
+                    />
+                  </TableCell>
+                  <TableCell>ID</TableCell>
+                  <TableCell>First Name</TableCell>
+                  <TableCell>Last Name</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {employeeData.map((employee) => {
+                  const isItemSelected = isSelected(employee._id);
+                  return (
+                    <TableRow
+                      key={employee._id}
+                      hover
+                      onClick={(event) =>
+                        handleEmployeeSelection(event, employee._id)
+                      }
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      selected={isItemSelected}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox checked={isItemSelected} />
+                      </TableCell>
+                      <TableCell>{employee.id}</TableCell>
+                      <TableCell>{employee.first_name}</TableCell>
+                      <TableCell>{employee.last_name}</TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+        <div style={{ position: "absolute", bottom: -30, width: "100%" }}>
+          {employeeData.length === 0 ? (
+            ""
+          ) : (
+            <Button
+              size="small"
+              onClick={handleSendButtonClick}
+              variant="contained"
+              style={{ float: "left" }}
+            >
+              Send
+            </Button>
+          )}
         </div>
       </div>
     </div>

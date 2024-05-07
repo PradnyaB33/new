@@ -190,7 +190,7 @@ const ViewPayslip = () => {
                       <td class="px-4 py-2 border">Unpaid Leaves:</td>
                       <td class="px-4 py-2 border">
                         {" "}
-                        {filteredSalaryInfo?.noOfDaysEmployeePresent || ""}
+                        {filteredSalaryInfo?.unPaidLeaveDays ?? "0"}
                       </td>
                     </tr>
                     <tr>
@@ -217,7 +217,7 @@ const ViewPayslip = () => {
                       </td>
                       <td class="px-4 py-2 border">Paid Leaves:</td>
                       <td class="px-4 py-2 border">
-                        {filteredSalaryInfo?.paidLeaveDays || ""}
+                        {filteredSalaryInfo?.paidLeaveDays ?? "0"}
                       </td>
                     </tr>
                     <tr>
@@ -227,7 +227,7 @@ const ViewPayslip = () => {
                       </td>
                       <td class="px-4 py-2 border">Public Holidays:</td>
                       <td class="px-4 py-2 border">
-                        {filteredSalaryInfo?.publicHolidaysCount || ""}
+                        {filteredSalaryInfo?.publicHolidaysCount ?? "0"}
                       </td>
                     </tr>
                     <tr>
@@ -238,7 +238,7 @@ const ViewPayslip = () => {
                       <td class="px-4 py-2 border"> No of Days in Month:</td>
                       <td class="px-4 py-2 border">
                         {" "}
-                        {filteredSalaryInfo?.numDaysInMonth || ""}
+                        {filteredSalaryInfo?.numDaysInMonth ?? "0"}
                       </td>
                     </tr>
                   </tbody>
