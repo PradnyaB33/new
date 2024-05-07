@@ -332,7 +332,7 @@ const ShiftRejectModel = ({ items, key }) => {
               id="modal-modal-title"
               className="text-xl font-semibold leading-relaxed "
             >
-              Reject leave request
+              Reject shift request
             </h1>
           </header>
           <form onSubmit={handleSubmit}>
