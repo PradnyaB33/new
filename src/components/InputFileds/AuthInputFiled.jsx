@@ -1,6 +1,6 @@
 import { ErrorMessage } from "@hookform/error-message";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { Avatar } from "@mui/material";
+import { Close, Send, Visibility, VisibilityOff } from "@mui/icons-material";
+import { Avatar, Button } from "@mui/material";
 import { default as React } from "react";
 import Autocomplete, { usePlacesWidget } from "react-google-autocomplete";
 import { Controller } from "react-hook-form";
@@ -54,6 +54,9 @@ const AuthInputFiled = ({
   descriptionText,
   value,
   autoComplete,
+  onInputActionClick,
+  InputFiledActionIcon,
+  onInputActionClear,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -678,6 +681,7 @@ const AuthInputFiled = ({
                 <textarea
                   type={type}
                   rows={3}
+                  maxLength={maxLimit && maxLimit}
                   readOnly={readOnly}
                   placeholder={placeholder}
                   className={`${
@@ -967,7 +971,99 @@ const AuthInputFiled = ({
       </div>
     );
   }
-
+  if (type === "input-action") {
+    return (
+      <div className={`space-y-1 min-w-11 ${className}`}>
+        <label
+          htmlFor={name}
+          className={`${
+            error && "text-red-500"
+          } font-semibold text-gray-500 text-md`}
+        >
+          {label}
+        </label>
+        <Controller
+          control={control}
+          name={name}
+          id={name}
+          render={({ field }) => {
+            return (
+              <div
+                onFocus={() => {
+                  handleFocus(name);
+                }}
+                onBlur={() => setFocusedInput(null)}
+                className={` ${
+                  focusedInput === name
+                    ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
+                    : "outline-none border-gray-200 border-[.5px]"
+                } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px] ${
+                  readOnly && "!bg-gray-200"
+                }`}
+              >
+                {Icon && (
+                  <Icon className=" text-gray-700 md:text-lg !text-[1em]" />
+                )}
+                <input
+                  type={
+                    type === "password" ? (visible ? "text" : "password") : type
+                  }
+                  min={min}
+                  max={max}
+                  maxLength={maxLimit && maxLimit}
+                  readOnly={readOnly}
+                  value={field.value}
+                  placeholder={placeholder}
+                  className={`!flex-3 border-none bg-white w-full outline-none px-2  ${
+                    readOnly && "!bg-gray-200"
+                  }`}
+                  autoComplete={autoComplete ?? "on"}
+                  {...field}
+                  formNoValidate
+                />
+                <div className="!w-fit !flex-1">
+                  {!readOnly ? (
+                    <Button
+                      variant="contained"
+                      type="button"
+                      onClick={onInputActionClick.bind(this, field.value)}
+                      className="!min-w-9 !text-white"
+                      disabled={
+                        field?.value?.trim().length !== 0 ? readOnly : true
+                      }
+                    >
+                      <Send className="md:text-lg !text-[1em]" />
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="error"
+                      type="button"
+                      onClick={onInputActionClear.bind(this, field.value)}
+                      className="!min-w-9 !text-white"
+                    >
+                      <Close className="md:text-lg !text-[1em]" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            );
+          }}
+        />
+        <p className="text-xs w-full h-fit">{descriptionText}</p>
+        <ErrorMessage
+          errors={errors}
+          name={name}
+          render={({ message }) => (
+            <p className="text-sm mb-4 w-full h-full !bg-white  text-red-500">
+              {message}
+            </p>
+          )}
+        />
+        {/* </div> */}
+      </div>
+    );
+  }
   return (
     <div className={`space-y-1 min-w-11 ${className}`}>
       <label

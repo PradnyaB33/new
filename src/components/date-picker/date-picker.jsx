@@ -22,6 +22,7 @@ const AppDatePicker = ({
   setSelectedLeave,
   newAppliedLeaveEvents,
   isCalendarOpen,
+  shiftData,
 }) => {
   const localizer = momentLocalizer(moment);
   const [Delete, setDelete] = useState(false);
@@ -50,9 +51,11 @@ const AppDatePicker = ({
     if (event.title === "Selected Leave") {
       setDelete(true);
       setUpdate(false);
+    } else if (event.color) {
+      setUpdate(true);
     } else {
       setDelete(false);
-      setUpdate(true);
+      setUpdate(false);
     }
   };
 
@@ -75,26 +78,9 @@ const AppDatePicker = ({
     return {};
   };
 
-  // const checkOverlappingMistake = (
-  //   array1,
-  //   selectedStartDate,
-  //   selectedEndDate
-  // ) => {
-  //   array1.some(
-  //     (event) =>
-  //       (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
-  //         selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
-  //       (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
-  //         selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
-  //       (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
-  //         selectedEndDate.isAfter(moment(event.end).startOf("day")))
-  //   );
-  // };
-
   const handleSelectSlot = ({ start, end }) => {
     const selectedStartDate = moment(start).startOf("day");
-    const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
-    const difference = selectedEndDate.diff(selectedStartDate, "days");
+    const selectedEndDate = moment(end).startOf("day").subtract(1, "days");
 
     const currentDate = moment(selectedStartDate);
 
@@ -115,17 +101,38 @@ const AppDatePicker = ({
     const isOverlap = [
       ...data?.currentYearLeaves,
       ...newAppliedLeaveEvents,
-    ].some(
-      (event) =>
-        (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
-          selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
-        (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
-          selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
-        (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
-          selectedEndDate.isAfter(moment(event.end).startOf("day")))
-    );
+      ...shiftData?.requests,
+    ].some((range) => {
+      // Convert range start and end dates to Moment.js objects
+      const rangeStart = range.start;
+      const rangeEnd = moment(range.end).startOf("day").subtract(1, "days");
 
-    if (isOverlap && difference > 0) {
+      // Check if selected start date is between any existing range
+      const isStartBetween = selectedStartDate.isBetween(
+        rangeStart,
+        rangeEnd,
+        undefined,
+        "[)"
+      );
+
+      // Check if selected end date is between any existing range
+      const isEndBetween = selectedEndDate.isBetween(
+        rangeStart,
+        rangeEnd,
+        undefined,
+        "(]"
+      );
+
+      // Check if selected start and end date overlaps with any existing range
+
+      const isOverlap =
+        selectedStartDate.isSameOrBefore(rangeEnd) &&
+        selectedEndDate.isSameOrAfter(rangeStart);
+      // Return true if any overlap is found
+      return isStartBetween || isEndBetween || isOverlap;
+    });
+
+    if (isOverlap) {
       return handleAlert(
         true,
         "warning",
@@ -162,7 +169,6 @@ const AppDatePicker = ({
       <>
         <div className="flex-row-reverse flex gap-4 items-center">
           <Button
-            // variant="outlined"
             color="error"
             className="!h-full hover:!bg-[#da4f4f] hover:!text-white"
             size="small"
@@ -242,7 +248,7 @@ const AppDatePicker = ({
     <Popover
       PaperProps={{
         className:
-          "w-full xl:w-[400px] xl:h-[470px] !bottom-0 !p-0 flex flex-col justify-between",
+          "w-full xl:w-[400px] xl:h-[470px] !bottom-0 !p-0 flex flex-col justify-between !top-auto ",
       }}
       open={isCalendarOpen}
       onClose={() => setCalendarOpen(false)}
@@ -265,7 +271,11 @@ const AppDatePicker = ({
             }}
             events={
               data
-                ? [...data?.currentYearLeaves, ...newAppliedLeaveEvents]
+                ? [
+                    ...data?.currentYearLeaves,
+                    ...shiftData?.requests,
+                    ...newAppliedLeaveEvents,
+                  ]
                 : [...newAppliedLeaveEvents]
             }
             startAccessor="start"
@@ -279,11 +289,35 @@ const AppDatePicker = ({
             onSelectSlot={handleSelectSlot}
             onSelectEvent={handleSelectEvent}
             datePropGetter={selectedLeave}
-            eventPropGetter={(event) => ({
-              style: {
-                backgroundColor: event.color,
-              },
-            })}
+            eventPropGetter={(event) => {
+              let backgroundColor = "blue";
+
+              if (event?.status) {
+                switch (event.status) {
+                  case "Pending":
+                    backgroundColor = "orange";
+                    break;
+                  case "Rejected":
+                    backgroundColor = "red";
+                    break;
+                  case "Approved":
+                    backgroundColor = "green";
+                    break;
+                  default:
+                    backgroundColor = "blue";
+                    break;
+                }
+              }
+              if (event.color) {
+                backgroundColor = event.color;
+              }
+
+              return {
+                style: {
+                  backgroundColor,
+                },
+              };
+            }}
             dayPropGetter={dayPropGetter}
           />
         </div>

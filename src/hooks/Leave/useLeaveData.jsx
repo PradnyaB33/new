@@ -27,6 +27,20 @@ const useLeaveData = () => {
       return response.data;
     }
   );
+
+  const { data: shiftData } = useQuery("shifts-calender", async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/shiftApply/get`,
+      {
+        headers: { Authorization: authToken },
+      }
+    );
+    queryclient.invalidateQueries("employee-leave-table");
+    queryclient.invalidateQueries("employee-summary-table");
+    queryclient.invalidateQueries("employee-leave-table-without-default");
+    return response.data;
+  });
+
   const createLeaves = async () => {
     newAppliedLeaveEvents.forEach(async (value) => {
       try {
@@ -63,7 +77,7 @@ const useLeaveData = () => {
       await queryclient.invalidateQueries(
         "employee-leave-table-without-default"
       );
-      handleAlert(true, "success", "Applied for leave successfully");
+      // handleAlert(true, "success", "Applied for leave successfully");
       setNewAppliedLeaveEvents([]);
     },
     onError: (error) => {
@@ -99,6 +113,7 @@ const useLeaveData = () => {
   return {
     data,
     isLoading,
+    shiftData,
     isError,
     error,
     handleSubmit,

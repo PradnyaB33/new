@@ -8,7 +8,7 @@ import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
 import PdfInput from "../../../AddOrganisation/components/pdf-input";
 
-const MiniForm = ({ mutate }) => {
+const MiniForm = ({ mutate, doc }) => {
   const formSchema = z.object({
     proofOfSubmissionUrl: z.any().refine(
       (file) => {
