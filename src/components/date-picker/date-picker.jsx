@@ -78,17 +78,9 @@ const AppDatePicker = ({
     return {};
   };
 
-  // console.log(moment().isSameOrBefore(moment().add(1, "days"), "days"));
-
   const handleSelectSlot = ({ start, end }) => {
-    console.log(`🚀 ~ file: date-picker.jsx:95 ~ { start, end }:`, {
-      start,
-      end,
-    });
     const selectedStartDate = moment(start).startOf("day");
-    const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
-    const difference = selectedEndDate.diff(selectedStartDate, "days");
-    console.log(`🚀 ~ file: date-picker.jsx:102 ~ difference:`, difference);
+    const selectedEndDate = moment(end).startOf("day").subtract(1, "days");
 
     const currentDate = moment(selectedStartDate);
 
@@ -111,20 +103,16 @@ const AppDatePicker = ({
       ...newAppliedLeaveEvents,
       ...shiftData?.requests,
     ].some((event) => {
-      // console.log(`🚀 ~ file: date-picker.jsx:123 ~ event:`, event);
-      selectedStartDate.isSame(moment(event.start));
       return (
-        (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
-          selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
-        (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
-          selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
-        (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
-          selectedEndDate.isAfter(moment(event.end).startOf("day")))
+        selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
+        selectedEndDate.isSameOrBefore(
+          moment(event.end).startOf("day").subtract(1, "days")
+        )
       );
     });
     console.log(`🚀 ~ file: date-picker.jsx:123 ~ isOverlap:`, isOverlap);
 
-    if (isOverlap && difference > 0) {
+    if (isOverlap) {
       return handleAlert(
         true,
         "warning",
@@ -161,7 +149,6 @@ const AppDatePicker = ({
       <>
         <div className="flex-row-reverse flex gap-4 items-center">
           <Button
-            // variant="outlined"
             color="error"
             className="!h-full hover:!bg-[#da4f4f] hover:!text-white"
             size="small"
@@ -241,7 +228,7 @@ const AppDatePicker = ({
     <Popover
       PaperProps={{
         className:
-          "w-full xl:w-[400px] xl:h-[470px] !bottom-0 !p-0 flex flex-col justify-between",
+          "w-full xl:w-[400px] xl:h-[470px] !bottom-0 !p-0 flex flex-col justify-between !top-auto ",
       }}
       open={isCalendarOpen}
       onClose={() => setCalendarOpen(false)}
