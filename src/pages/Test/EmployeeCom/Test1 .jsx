@@ -93,7 +93,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
       }),
     bank_account_no: z
       .string()
-      .min(35, { message: "Only 35 numbers allowed" })
+      .max(35, { message: "Only 35 numbers allowed" })
       .regex(/^\d*$/, {
         message: "Bank number cannot be negative.",
       }),
