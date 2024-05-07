@@ -53,6 +53,7 @@ const useLeaveData = () => {
             },
           }
         );
+        handleAlert(true, "success", "Leaves created succcesfully");
       } catch (error) {
         console.error(`🚀 ~ error:`, error);
         handleAlert(
