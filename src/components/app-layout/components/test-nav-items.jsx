@@ -219,7 +219,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "createsalary",
             isVisible:
-              isVisible && ["Super-Admin", "HR", "Accountant"].includes(role),
+              isVisible && ["Super-Admin", "HR", "Accountant" , "Delegate-Super-Admin"].includes(role),
             link: `/organisation/${orgId}/salary-management`,
             icon: (
               <AccountBalanceWalletOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
