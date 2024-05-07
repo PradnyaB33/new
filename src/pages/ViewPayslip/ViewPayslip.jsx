@@ -1,11 +1,11 @@
-import React, { useContext, useState, useEffect } from "react";
-import dayjs from "dayjs";
 import Alert from "@mui/material/Alert";
 import axios from "axios";
-import { UseContext } from "../../State/UseState/UseContext";
-import UserProfile from "../../hooks/UserData/useUser";
+import dayjs from "dayjs";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import React, { useContext, useEffect, useState } from "react";
+import { UseContext } from "../../State/UseState/UseContext";
+import UserProfile from "../../hooks/UserData/useUser";
 const ViewPayslip = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -184,7 +184,8 @@ const ViewPayslip = () => {
                         employeeInfo?.designation !== null &&
                         employeeInfo?.designation !== undefined &&
                         employeeInfo.designation.length > 0
-                          ? employeeInfo.designation[0].designationName: ""}
+                          ? employeeInfo.designation[0].designationName
+                          : ""}
                       </td>
                       <td class="px-4 py-2 border">Unpaid Leaves:</td>
                       <td class="px-4 py-2 border">

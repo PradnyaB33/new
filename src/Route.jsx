@@ -105,6 +105,7 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import EmpCommunication from "./pages/SetUpOrganization/EmpCommunication/EmpCommunication";
 const App = () => {
   return (
     <AuthProvider>
@@ -245,7 +246,7 @@ const App = () => {
 
         {/* Dashboard Routes */}
         <Route
-          path="/organisation/dashboard/employee-dashboard"
+          path="/organisation/:id/dashboard/employee-dashboard"
           element={
             <RequireAuth
               permission={[
@@ -645,6 +646,14 @@ const App = () => {
             </RequireAuth>
           }
         />
+          <Route
+          path="/organisation/:organisationId/setup/email-communicaiton"
+          element={
+            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+              <EmpCommunication />
+            </RequireAuth>
+          }
+        />
         <Route
           path="/organisation/:organisationId/setup/set-shifts"
           element={
@@ -895,7 +904,7 @@ const App = () => {
           }
         />
         <Route
-          path="/leave"
+          path="/organisation/:organisationId/leave"
           element={
             <RequireAuth
               permission={[
@@ -908,6 +917,7 @@ const App = () => {
                 "Delegate-Department-Admin",
                 "HR",
                 "Accountant",
+                "Manager",
               ]}
             >
               <LeaveRequisition />

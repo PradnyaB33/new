@@ -32,6 +32,12 @@ const ParentNotification = () => {
       url: "/leave-notification",
     },
     {
+      name: "Missed Punch Notification",
+      count: missPunchData?.length ?? 0,
+      color: "#51E8FD",
+      url: "/missedPunch-notification",
+    },
+    {
       name: "Shift Notification",
       count: data2?.length ?? 0,
       color: "#3668ff",
@@ -43,12 +49,7 @@ const ParentNotification = () => {
       color: "#51FD96",
       url: "/punch-notification",
     },
-    {
-      name: "Missed Punch Notification",
-      count: missPunchData?.length ?? 0,
-      color: "#FF7373",
-      url: "/missedPunch-notification",
-    },
+
     {
       name: "Document Approval Notification",
       count: data4?.data?.doc.length ?? 0,

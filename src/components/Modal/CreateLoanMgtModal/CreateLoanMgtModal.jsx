@@ -29,11 +29,12 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
-  const [error, setError] = useState("");
+  const [noofemiError, setNoOfEmiError] = useState("");
   const [errors, setErrors] = useState("");
   const [loanAmountError, setLoanAmountError] = useState("");
   const [loanValue, setLoanValue] = useState(0);
   const [maxLoanValue, setMaxLoanValue] = useState(0);
+  const [formErrors, setFormErrors] = useState({});
   const {
     loanType,
     rateOfIntereset,
@@ -58,8 +59,6 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
   const { getEmployeeLoanType, getTotalSalaryEmployee } =
     useLoanQuery(organisationId);
 
-  console.log("get emp laon data", getEmployeeLoanType);
-
   useEffect(() => {
     if (loanType) {
       const selectedLoanType = getEmployeeLoanType.find(
@@ -81,9 +80,15 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
 
   const handleNoOfEmiChange = (e) => {
     const value = e.target.value;
-    setNoOfEmi(value);
-    if (loanDisbursementDate) {
-      calculateCompletionDate(loanDisbursementDate, value);
+    if (!isNaN(value) && parseInt(value) >= 0) {
+      setNoOfEmi(value);
+      setNoOfEmiError("");
+      if (loanDisbursementDate) {
+        calculateCompletionDate(loanDisbursementDate, value);
+      }
+    } else {
+      setNoOfEmi("");
+      setNoOfEmiError("No of EMI should not be negative");
     }
   };
 
@@ -152,19 +157,6 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const currentDate = new Date();
-      const currentYear = currentDate.getFullYear();
-      const currentMonth = currentDate.getMonth() + 1;
-      const selectedDisbursementDate = new Date(loanDisbursementDate);
-      if (
-        selectedDisbursementDate.getFullYear() < currentYear ||
-        (selectedDisbursementDate.getFullYear() === currentYear &&
-          selectedDisbursementDate.getMonth() + 1 < currentMonth)
-      ) {
-        setError("You can only apply for loans for future dates and years.");
-        return;
-      }
-
       const data = {
         loanType: loanType,
         rateOfIntereset: rateOfIntereset,
@@ -178,9 +170,22 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
         totalDeductionWithSi: totalAmountWithSimpleInterest,
         totalSalary: getTotalSalaryEmployee,
       };
-      if (!loanType) {
-        setError("Loan type field is Mandatory");
-        return false;
+
+      const requiredFields = [
+        "loanType",
+        "loanAmount",
+        "loanDisbursementDate",
+        "noOfEmi",
+      ];
+      const missingFields = requiredFields.filter((field) => !data[field]);
+
+      if (missingFields.length > 0) {
+        const errors = {};
+        missingFields.forEach((field) => {
+          errors[field] = "All fields are required";
+        });
+        setFormErrors(errors);
+        return;
       }
       await createLoanData(data);
     } catch (error) {
@@ -217,6 +222,11 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
       <DialogContent className="border-none  !pt-0 !px-0  shadow-md outline-none rounded-md">
         <div className="px-5 space-y-4 mt-4">
           <div className="px-5 space-y-4 mt-4">
+            <div>
+              {formErrors.noOfEmi && (
+                <p className="text-red-500">*{formErrors.noOfEmi}</p>
+              )}
+            </div>
             <div className="space-y-2 ">
               <FormLabel className="text-md mb-2">Select loan type</FormLabel>
               <FormControl size="small" fullWidth>
@@ -239,7 +249,6 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   )}
                 </Select>
               </FormControl>
-              {error && <p className="text-red-500">*{error}</p>}
             </div>
 
             <div className="space-y-2">
@@ -253,7 +262,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   value={loanAmount}
                   onChange={(e) => {
                     const amount = e.target.value;
-                    setLoanAmount(amount); 
+                    setLoanAmount(amount);
                     if (amount <= maxLoanValue) {
                       if (amount >= loanValue) {
                         setLoanAmountError("");
@@ -274,7 +283,10 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   inputProps={{ min: "0" }}
                 />
               </FormControl>
-              {loanAmountError && <p className="text-red-500">*{loanAmountError}</p>}
+
+              {loanAmountError && (
+                <p className="text-red-500">*{loanAmountError}</p>
+              )}
             </div>
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -289,7 +301,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   onChange={(newDate) => {
                     const formattedDate = dayjs(newDate).format("YYYY-MM-DD");
                     setDisbursementDate(formattedDate);
-                    setError("");
+                    // setError("");
                   }}
                   slotProps={{
                     textField: { size: "small", fullWidth: true },
@@ -315,6 +327,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   label="No of EMIs"
                 />
               </FormControl>
+              {noofemiError && <p className="text-red-500">*{noofemiError}</p>}
             </div>
 
             <div>Rate of Interest : {rateOfIntereset || ""}</div>
@@ -333,12 +346,12 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
           </div>
 
           <DialogContent className="w-full">
-            <Typography variant="body2">Declaration by Employee :</Typography>
+            <Typography variant="body2">Declaration :</Typography>
             <Typography variant="body2" color="textSecondary">
               I declare that I have not availed any other loan during this year
               and also confirm that there are no dues standing to my credit
-              towards loan drawan by me during last year . I agree to pay loan
-              amount as per above information
+              towards loan drawn by me during last year . I agree to pay loan
+              amount as per above information.
             </Typography>
           </DialogContent>
 

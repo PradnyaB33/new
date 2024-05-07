@@ -151,6 +151,7 @@ const BillingCard = ({ doc }) => {
             <MenuItem
               onClick={() => {
                 setConfirmOpen4(true);
+                handleClose();
               }}
               disableRipple
             >
@@ -165,6 +166,13 @@ const BillingCard = ({ doc }) => {
             Icon={Subscriptions}
             descriptionText={"Subscription charge date"}
             mainText={moment(doc?.subscriptionDetails?.paymentDate).format(
+              "DD MMM YYYY"
+            )}
+          />
+          <DescriptionBox
+            Icon={Subscriptions}
+            descriptionText={"Subscription end date"}
+            mainText={moment(doc?.subscriptionDetails?.expirationDate).format(
               "DD MMM YYYY"
             )}
           />

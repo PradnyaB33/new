@@ -1,14 +1,14 @@
+import Box from "@mui/material/Box";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import Box from "@mui/material/Box";
+import axios from "axios";
+import dayjs from "dayjs";
 import React, { useContext, useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import axios from "axios";
-import dayjs from "dayjs";
-import { useQuery } from "react-query";
 function CalculateSalary() {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -23,7 +23,7 @@ function CalculateSalary() {
   const [unPaidLeaveDays, setUnPaidLeaveDays] = useState(0);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
   console.log(isSubmitDisabled);
-  
+
   // get the alreday salary data created
   const [salaryInfo, setSalaryInfo] = useState([]);
   const fetchEmployeeData = async () => {
@@ -36,7 +36,7 @@ function CalculateSalary() {
           },
         }
       );
-     
+
       setSalaryInfo(response.data.salaryDetails);
     } catch (error) {
       console.error(error);
@@ -45,35 +45,36 @@ function CalculateSalary() {
   useEffect(() => {
     fetchEmployeeData();
     // eslint-disable-next-line
-  }, []);  
-  
-  console.log("salary info" , salaryInfo);
- 
+  }, []);
+
+  console.log("salary info", salaryInfo);
+
   // for date change function
   const handleDateChange = (date) => {
     setSelectedDate(date);
     const monthFromSelectedDate = date.format("M");
     const yearFromSelectedDate = date.format("YYYY");
-    console.log("month" , monthFromSelectedDate);
-    console.log("year" , yearFromSelectedDate);
+    console.log("month", monthFromSelectedDate);
+    console.log("year", yearFromSelectedDate);
     const salaryExists = salaryInfo.some(
       (salary) =>
-          String(salary.month) === monthFromSelectedDate && String(salary.year) === yearFromSelectedDate
-   );
-    console.log("salary eixst" , salaryExists);
+        String(salary.month) === monthFromSelectedDate &&
+        String(salary.year) === yearFromSelectedDate
+    );
+    console.log("salary eixst", salaryExists);
     setIsSubmitDisabled(salaryExists);
 
     const daysInMonth = date.daysInMonth();
     setNumDaysInMonth(daysInMonth);
     setPaidLeaveDays(0);
     setUnPaidLeaveDays(0);
-  }; 
+  };
 
-  console.log("salary info " , salaryInfo);
+  console.log("salary info ", salaryInfo);
   const formattedDate = dayjs(selectedDate).format("MMM-YY");
 
   //  to get the employee
-  const fetchAvailableEmployee = async () => { 
+  const fetchAvailableEmployee = async () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/employee/get/profile/${userId}`,
@@ -94,9 +95,8 @@ function CalculateSalary() {
     fetchAvailableEmployee();
     // eslint-disable-next-line
   }, []);
-   console.log(availableEmployee);
+  console.log(availableEmployee);
 
-   
   //  to get holiday
   const fetchHoliday = async () => {
     try {
@@ -119,7 +119,7 @@ function CalculateSalary() {
     fetchHoliday();
     // eslint-disable-next-line
   }, []);
-   
+
   const countPublicHolidaysInCurrentMonth = () => {
     const selectedMonth = selectedDate.format("M");
     const selectedYear = selectedDate.format("YYYY");
@@ -135,7 +135,6 @@ function CalculateSalary() {
     return holidaysInCurrentMonth.length;
   };
   let publicHolidaysCount = countPublicHolidaysInCurrentMonth();
-   
 
   // to get the leave like unpaid  , paid etc
   const fetchDataAndFilter = async () => {
@@ -151,7 +150,7 @@ function CalculateSalary() {
       setEmployeeSummary(response.data);
     } catch (error) {
       console.error(error);
-      handleAlert(true, "error", "Failed to fetch Employee Leave Summary");
+      handleAlert(true, "error", "Failed to fetch Employee Attendance Summary");
     }
   };
 
@@ -159,7 +158,7 @@ function CalculateSalary() {
     fetchDataAndFilter();
     // eslint-disable-next-line
   }, []);
-  
+
   const selectedMonth = selectedDate.format("M");
   const selectedYear = selectedDate.format("YYYY");
 
@@ -202,7 +201,7 @@ function CalculateSalary() {
       return response.data.data;
     }
   );
-  console.log(" emp loan" , empLoanAplicationInfo);
+  console.log(" emp loan", empLoanAplicationInfo);
 
   // calculate the no fo days employee present
   const calculateDaysEmployeePresent = () => {
@@ -210,7 +209,6 @@ function CalculateSalary() {
     return daysPresent;
   };
   let noOfDaysEmployeePresent = calculateDaysEmployeePresent();
-   
 
   // calculate the salary component
   const calculateSalaryComponent = (componentValue) => {
@@ -297,20 +295,20 @@ function CalculateSalary() {
 
   // Calculate total deduction by adding all deductions
   // Calculate total deductions
-let totalDeductions =
-parseFloat(deduction) +
-parseFloat(employee_pf) +
-parseFloat(esic) +
-parseFloat(loanDeduction); // Assuming loanDeduction is defined elsewhere
-let totalDeduction = totalDeductions.toFixed(2);
+  let totalDeductions =
+    parseFloat(deduction) +
+    parseFloat(employee_pf) +
+    parseFloat(esic) +
+    parseFloat(loanDeduction); // Assuming loanDeduction is defined elsewhere
+  let totalDeduction = totalDeductions.toFixed(2);
 
-  console.log("total deduction" , totalDeduction);
-  console.log(" deduction" , deduction);
-  console.log("pf" , employee_pf);
-  console.log("esic" , esic);
+  console.log("total deduction", totalDeduction);
+  console.log(" deduction", deduction);
+  console.log("pf", employee_pf);
+  console.log("esic", esic);
 
-// Calculate total net salary
-let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
+  // Calculate total net salary
+  let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
   // get the alreday salary data created
   const [salaryCalDay, setSalaryCalDay] = useState([]);
   const fetchSalaryCalDay = async () => {
@@ -332,16 +330,13 @@ let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
   useEffect(() => {
     fetchSalaryCalDay();
     // eslint-disable-next-line
-  }, []);  
-  console.log("salary cal day" , salaryCalDay);
-   
-
- 
+  }, []);
+  console.log("salary cal day", salaryCalDay);
 
   const saveSalaryDetail = async () => {
     try {
       // Check if the selected year is in the future
-      
+
       const currentYear = dayjs().format("YYYY");
       const currentMonth = dayjs().format("MM");
       const selectedYear = selectedDate.format("YYYY");
@@ -432,11 +427,10 @@ let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
           "success",
           "Monthly Salary Detail added Successfully"
         );
-       window.location.reload()
+        window.location.reload();
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
-      
         handleAlert(
           true,
           "error",
@@ -551,7 +545,6 @@ let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
               </td>
               <td class="px-4 py-2 border">No Of Working Days Attended:</td>
               <td class="px-4 py-2 border">{noOfDaysEmployeePresent}</td>
-            
             </tr>
             <tr>
               <td class="px-4 py-2 border">PAN No:</td>
@@ -562,17 +555,17 @@ let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
               <td class="px-4 py-2 border">{paidLeaveDays}</td>
             </tr>
             <tr>
-            <td class="px-4 py-2 border">Employee Id:</td>
+              <td class="px-4 py-2 border">Employee Id:</td>
               <td class="px-4 py-2 border">{availableEmployee?.empId}</td>
               <td class="px-4 py-2 border">Public Holidays:</td>
               <td class="px-4 py-2 border">{publicHolidaysCount}</td>
             </tr>
             <tr>
-            <td class="px-4 py-2 border">Bank Account No:</td>
+              <td class="px-4 py-2 border">Bank Account No:</td>
               <td class="px-4 py-2 border">
                 {availableEmployee?.bank_account_no || ""}
               </td>
-           
+
               <td class="px-4 py-2 border">No Of Days in Month:</td>
               <td class="px-4 py-2 border">{numDaysInMonth}</td>
             </tr>
@@ -695,15 +688,14 @@ let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
             margin: "20px",
           }}
         >
-        {isSubmitDisabled ? null : (
-        <button
-        onClick={saveSalaryDetail}
-        className="px-4 py-2 rounded bg-blue-500 text-white border-none text-base cursor-pointer"
-        >
-        Submit
-       </button>
-        )}
-
+          {isSubmitDisabled ? null : (
+            <button
+              onClick={saveSalaryDetail}
+              className="px-4 py-2 rounded bg-blue-500 text-white border-none text-base cursor-pointer"
+            >
+              Submit
+            </button>
+          )}
         </div>
       </div>
     </div>

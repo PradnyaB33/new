@@ -12,7 +12,7 @@ const MissedPunchNotification = () => {
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
 
-  console.log("role" , role);
+  console.log("role", role);
 
   const filteredEmployees =
     missPunchData && Array.isArray(missPunchData)
