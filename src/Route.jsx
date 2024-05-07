@@ -103,6 +103,8 @@ import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
 import EmpCommunication from "./pages/SetUpOrganization/EmpCommunication/EmpCommunication";
+import Communication from "./pages/Communication/Communication";
+
 const App = () => {
   return (
     <AuthProvider>
@@ -322,6 +324,27 @@ const App = () => {
               ]}
             >
               <DepartmentTest />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/create-communication"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+              ]}
+            >
+              <Communication />
             </RequireAuth>
           }
         />
@@ -641,7 +664,7 @@ const App = () => {
             </RequireAuth>
           }
         />
-          <Route
+        <Route
           path="/organisation/:organisationId/setup/email-communicaiton"
           element={
             <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>

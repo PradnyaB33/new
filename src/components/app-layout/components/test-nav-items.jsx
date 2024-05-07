@@ -39,7 +39,7 @@ import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
-
+import ChatIcon from "@mui/icons-material/Chat";
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
@@ -236,6 +236,45 @@ const TestNavItems = ({ toggleDrawer }) => {
             link: `/missed-justify`,
             icon: <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Missed Justify",
+          },
+        ],
+      },
+      Communication: {
+        open: false,
+        isVisible:
+          window.location.pathname.includes("organisation") &&
+          [
+            "Super-Admin",
+            "Delegate-Super-Admin",
+            "Department-Head",
+            "Delegate-Department-Head",
+            "Department-Admin",
+            "Delegate-Department-Admin",
+            "Accountant",
+            "Delegate-Accountant",
+            "HR",
+            "Manager",
+          ].includes(role),
+        // : false
+        icon: <Business className=" !text-[1.2em] text-[#67748E]" />,
+        routes: [
+          {
+            key: "createCommunication",
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+            ].includes(role),
+            link: `/organisation/${orgId}/create-communication`,
+            icon: <ChatIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Communication",
           },
         ],
       },
