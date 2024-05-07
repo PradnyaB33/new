@@ -107,8 +107,6 @@ const SalaryManagement = () => {
       setAnchorEl(null);
    }; 
 
-
-
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
@@ -167,6 +165,9 @@ const SalaryManagement = () => {
                     Email
                   </th>
                   <th scope="col" className="!text-left pl-8 py-3">
+                    Employee Id
+                  </th>
+                  <th scope="col" className="!text-left pl-8 py-3">
                     Location
                   </th>
                   <th scope="col" className="!text-left pl-8 py-3">
@@ -184,7 +185,7 @@ const SalaryManagement = () => {
                 </tr>
               </thead>
               <tbody>
-                {availableEmployee
+                {availableEmployee.length > 0 &&  availableEmployee
                   .filter((item) => {
                     return (
                       (!nameSearch.toLowerCase() ||
@@ -219,6 +220,7 @@ const SalaryManagement = () => {
                       <td className="py-3 pl-8">{item?.first_name}</td>
                       <td className="py-3 pl-8 ">{item?.last_name}</td>
                       <td className="py-3 pl-8">{item?.email}</td>
+                      <td className="py-3 pl-8">{item?.empId}</td>
                       <td className="py-3 pl-8">
                         {item?.worklocation?.map((location, index) => (
                           <span key={index}>{location?.city}</span>

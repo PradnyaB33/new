@@ -36,15 +36,15 @@ const SignIn = () => {
           `/organisation/${user?.organizationId}/dashboard/DH-dashboard`
         );
       else if (role === "Accountant")
-        return redirect(
-          `/organisation/${user?._id}/dashboard/employee-dashboard`
-        );
+        return redirect(`/organisation/dashboard/employee-dashboard`);
       else if (role === "Manager")
         return redirect(
           `/organisation/${user?._id}/dashboard/manager-dashboard`
         );
       else if (role === "Employee")
-        return redirect(`/organisation/dashboard/employee-dashboard`);
+        return redirect(
+          `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
+        );
     }
     // eslint-disable-next-line
   }, [role, window.location.pathname]);
@@ -138,13 +138,17 @@ const SignIn = () => {
             role: "Department-Admin",
             email: response.data.user?.email,
           });
-          return redirect(`/organisation/dashboard/employee-dashboard`);
+          return redirect(
+            `/organisation/${response?.data?.user?.organizationId}/dashboard/employee-dashboard`
+          );
         } else if (response.data.user?.profile.includes("Accountant")) {
           handleRole.mutate({
             role: "Accountant",
             email: response.data.user?.email,
           });
-          return redirect(`/organisation/dashboard/employee-dashboard`);
+          return redirect(
+            `/organisation/${response?.data?.user?.organizationId}/dashboard/employee-dashboard`
+          );
         } else if (
           response.data.user?.profile.includes("Delegate-Accountant")
         ) {

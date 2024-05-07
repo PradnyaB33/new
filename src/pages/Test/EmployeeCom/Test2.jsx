@@ -109,8 +109,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         label: z.string(),
         value: z.string(),
       }),
-      empId: z.string(),
-
+      empId: z.string().min(3, { message: "EmpId is required" }),
       mgrempid: z
         .object({
           label: z.string(),
@@ -139,7 +138,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       dept_cost_center_no: z.object({
         label: z.string(),
       }),
-      value: z.string(),
+
       companyemail: z.string().email(),
       profile: z.string().array().optional(),
       shift_allocation: z.object({
@@ -175,6 +174,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   console.log(shift_allocation);
 
   const { errors } = formState;
+  console.log(`🚀 ~ errors:`, errors);
   const onsubmit = (data) => {
     console.log(getValues());
     setStep2Data(data);

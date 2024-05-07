@@ -246,7 +246,7 @@ const App = () => {
 
         {/* Dashboard Routes */}
         <Route
-          path="/organisation/dashboard/employee-dashboard"
+          path="/organisation/:id/dashboard/employee-dashboard"
           element={
             <RequireAuth
               permission={[
@@ -510,10 +510,14 @@ const App = () => {
               permission={[
                 "Super-Admin",
                 "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
                 "HR",
                 "Manager",
-                "Department-Head",
-                "Accoutant",
                 "Employee",
               ]}
             >
