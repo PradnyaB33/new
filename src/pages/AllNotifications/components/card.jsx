@@ -1,3 +1,4 @@
+import { TrendingUp } from "@mui/icons-material";
 import ShiftIcon from "@mui/icons-material/AccessTime";
 import DepartmentIcon from "@mui/icons-material/AccountTree";
 import RemoteIcon from "@mui/icons-material/Computer";
@@ -12,6 +13,7 @@ const Card = ({ card, loading }) => {
     ShiftIcon,
     RemoteIcon,
     DepartmentIcon,
+    TrendingUp,
     FolderIcon,
   ];
 
