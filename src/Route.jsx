@@ -104,6 +104,7 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import EmpCommunication from "./pages/SetUpOrganization/EmpCommunication/EmpCommunication";
 const App = () => {
   return (
     <AuthProvider>
@@ -641,6 +642,14 @@ const App = () => {
           element={
             <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
               <EmpLoanMgt />
+            </RequireAuth>
+          }
+        />
+          <Route
+          path="/organisation/:organisationId/setup/email-communicaiton"
+          element={
+            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+              <EmpCommunication />
             </RequireAuth>
           }
         />

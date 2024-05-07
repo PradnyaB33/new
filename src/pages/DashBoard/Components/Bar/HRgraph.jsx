@@ -166,12 +166,16 @@ const HRgraph = () => {
             />
           </div>
 
-          <div className="md:w-[90%] w-[100%] h-[250px] md:h-[300px] px-0 md:px-4 flex items-center">
+          <div className="px-4 h-[250px] md:h-[300px]  flex items-center">
             <Bar
               data={data}
               options={{
-                maintainAspectRatio: false,
-                responsive: true,
+                elements: {
+                  line: {
+                    tension: 0.5,
+                  },
+                },
+
                 scales: {
                   x: {
                     grid: {
@@ -179,11 +183,20 @@ const HRgraph = () => {
                     },
                   },
                   y: {
+                    suggestedMax: 31,
+                    weight: 31,
+                    ticks: {
+                      beginAtZero: true,
+                      stepSize: 5,
+                      min: 0,
+                    },
                     grid: {
                       display: true,
                     },
                   },
                 },
+                maintainAspectRatio: false,
+                responsive: true,
               }}
             />
           </div>

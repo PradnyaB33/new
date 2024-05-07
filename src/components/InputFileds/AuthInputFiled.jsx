@@ -98,7 +98,6 @@ const AuthInputFiled = ({
                   asSingle={true}
                   popoverDirection="down"
                   readOnly={true}
-                  displayFormat={"MM/DD/YYYY"}
                   onChange={(value) => {
                     field.onChange(value);
                   }}
@@ -829,7 +828,7 @@ const AuthInputFiled = ({
             errors={errors}
             name={name}
             render={({ message }) => (
-              <p className="text-sm mb-4 relative !bg-white  text-red-500">
+              <p className="text-sm mb-4 absolute !bg-white  text-red-500">
                 {message}
               </p>
             )}
@@ -1102,7 +1101,12 @@ const AuthInputFiled = ({
                 }
                 min={min}
                 max={max}
-                maxLength={maxLimit && maxLimit}
+                onKeyDown={(evt) => {
+                  if (type === "number") {
+                    evt.key === "e" && evt.preventDefault();
+                  }
+                }}
+                maxLength={`${maxLimit}`}
                 readOnly={readOnly}
                 value={field.value}
                 placeholder={placeholder}
@@ -1130,15 +1134,18 @@ const AuthInputFiled = ({
         }}
       />
       <p className="text-xs w-full h-fit">{descriptionText}</p>
-      <ErrorMessage
-        errors={errors}
-        name={name}
-        render={({ message }) => (
-          <p className="text-sm mb-4 w-full h-full !bg-white  text-red-500">
-            {message}
-          </p>
-        )}
-      />
+      <div className="h-4 !mb-1">
+        <ErrorMessage
+          errors={errors}
+          name={name}
+          render={({ message }) => (
+            <p className="!absolute text-sm mb-4 h-max  !bg-white  text-red-500">
+              {message}
+            </p>
+          )}
+        />
+      </div>
+
       {/* </div> */}
     </div>
   );

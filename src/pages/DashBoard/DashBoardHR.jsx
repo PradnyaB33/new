@@ -47,6 +47,7 @@ const DashBoardHR = () => {
     Managers,
     managerLoading,
     oraganizationLoading,
+    salaryGraphLoading,
     locationOptions,
     managerOptions,
     Departmentoptions,
@@ -300,10 +301,11 @@ const DashBoardHR = () => {
 
         <div className="w-full md:gap-4 md:space-y-0 space-y-3 mt-4 flex md:flex-row flex-col items-center">
           <div className="w-[100%] md:w-[50%]">
-            <LineGraph salarydata={salaryData} />
+            <LineGraph salarydata={salaryData} isLoading={salaryGraphLoading} />
           </div>
           <div className="w-[100%] md:w-[50%]">
             <AttendenceBar
+              orgId={user.organizationId}
               isLoading={oraganizationLoading}
               attendenceData={data}
             />

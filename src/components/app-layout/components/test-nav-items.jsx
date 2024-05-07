@@ -88,7 +88,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                 : role === "HR"
                 ? `/organisation/${orgId}/dashboard/HR-dashboard`
                 : role === "Employee"
-                ? "/organisation/dashboard/employee-dashboard"
+                ? `/organisation/${orgId}/dashboard/employee-dashboard`
                 : "/organizationList",
             icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
             text: "Dashboard",
@@ -244,55 +244,6 @@ const TestNavItems = ({ toggleDrawer }) => {
           window.location.pathname?.includes("organisation") &&
           [
             "Super-Admin",
-            "HR",
-            "Manager",
-            "Delegate-Super Admin",
-            "Department-Head",
-            "Department-Admin",
-          ]?.includes(role),
-        routes: [
-          {
-            key: "onboarding",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
-              role
-            ),
-            link: `organisation/${orgId}/employee-onboarding`,
-            icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Onboarding",
-          },
-
-          {
-            key: "offboarding",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
-              role
-            ),
-            link: `organisation/${orgId}/employee-offboarding`,
-            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Offboarding",
-          },
-          {
-            key: "employeeList",
-            isVisible: [
-              "Super-Admin",
-              "HR",
-              "Manager",
-              "Department-Head",
-              "Delegate-Super Admin",
-              "Department-Admin",
-            ].includes(role),
-            link: `organisation/${orgId}/employee-list`,
-            icon: <Groups className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Employee List",
-          },
-        ],
-      },
-      "Machine Punching": {
-        open: false,
-        icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
-        isVisible:
-          window.location.pathname?.includes("organisation") &&
-          [
-            "Super-Admin",
             "Delegate-Super-Admin",
             "Department-Head",
             "Delegate-Department-Head",
@@ -306,8 +257,55 @@ const TestNavItems = ({ toggleDrawer }) => {
           ]?.includes(role),
         routes: [
           {
+            key: "onboarding",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/employee-onboarding`,
+            icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Onboarding",
+          },
+
+          {
+            key: "offboarding",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/employee-offboarding`,
+            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Offboarding",
+          },
+          {
+            key: "employeeList",
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+              "Employee",
+            ].includes(role),
+            link: `organisation/${orgId}/employee-list`,
+            icon: <Groups className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Employee List",
+          },
+        ],
+      },
+      "Machine Punching": {
+        open: false,
+        icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
+        isVisible:
+          window.location.pathname?.includes("organisation") &&
+          ["Super-Admin", "Delegate-Super-Admin", "HR"]?.includes(role),
+        routes: [
+          {
             key: "punchingMachine",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/emo-info-punch-status`,
@@ -317,7 +315,7 @@ const TestNavItems = ({ toggleDrawer }) => {
 
           {
             key: "viewAttendance",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/view-attendance-biomatric`,
@@ -326,7 +324,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "viewCalculate",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/view-calculate-data`,
@@ -337,7 +335,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "misspunchInOutRecord",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/missed-punch-in-out`,
@@ -371,7 +369,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           window.location.pathname.includes("organisation") &&
           [
             "Super-Admin",
-            "Delegate-Super Admin",
+            "Delegate-Super-Admin",
             "HR",
             "Department-Head",
             "Delegate-Department-Head",
@@ -384,6 +382,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "addDepartment",
             isVisible: [
               "Super-Admin",
+              "Delegate-Super-Admin",
               "HR",
               "Department-Head",
               "Delegate-Department-Head",
@@ -400,6 +399,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "deptDeletion",
             isVisible: [
               "Super-Admin",
+              "Delegate-Super-Admin",
               "HR",
               "Department-Head",
               "Delegate-Department-Head",
@@ -415,6 +415,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "departmentList",
             isVisible: [
               "Super-Admin",
+              "Delegate-Super-Admin",
               "HR",
               "Department-Head",
               "Delegate-Department-Head",
@@ -435,7 +436,7 @@ const TestNavItems = ({ toggleDrawer }) => {
         routes: [
           {
             key: "addOrganisation",
-            isVisible: ["Super-Admin", "Delegate-Super Admin"].includes(role),
+            isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role),
             link: "/add-organisation",
             icon: (
               <BusinessOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
@@ -445,7 +446,7 @@ const TestNavItems = ({ toggleDrawer }) => {
 
           {
             key: "organisationList",
-            isVisible: ["Super-Admin", "Delegate-Super Admin"].includes(role),
+            isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role),
             link: "/organizationList",
             icon: (
               <AccountTreeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
