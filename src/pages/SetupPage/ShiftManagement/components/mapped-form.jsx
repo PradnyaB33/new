@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { differenceInDays, format, parseISO } from "date-fns";
+import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
 import { UseContext } from "../../../../State/UseState/UseContext";
 import UserProfile from "../../../../hooks/UserData/useUser";
@@ -112,11 +113,17 @@ const Mapped = ({
 
         <div className="inline-grid m-auto items-center gap-2 group-hover:text-gray-500 text-gray-300 font-bold">
           <p className="text-md truncate ">
-            {`Selected dates from ${format(
-              new Date(item.start),
-              "do 'of' MMMM"
-            )} to  ${format(new Date(item.end), "do ' of' MMMM")}`}
-            {``}
+            {differenceInDays(parseISO(item.end), parseISO(item.start)) !== 1
+              ? `Selected dates from ${format(
+                  new Date(item.start),
+                  "do 'of' MMMM"
+                )} to  ${moment(item.end)
+                  .subtract(1, "days")
+                  .format("Do of MMMM")}`
+              : `Your selected date is ${format(
+                  new Date(item.start),
+                  "do 'of' MMMM"
+                )}`}
           </p>
         </div>
       </div>
