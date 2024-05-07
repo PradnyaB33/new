@@ -25,6 +25,7 @@ const ManagerEmployeeChart = ({
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
+  const [selectMonth, setSelectMonth] = useState(new Date().getMonth() + 1);
   const user = getCurrentUser();
   // const RemainingLeaves = useLeaveTable();
   const [userId, setuserId] = useState();
@@ -63,6 +64,56 @@ const ManagerEmployeeChart = ({
     };
   });
 
+  const monthOptions = [
+    {
+      value: 1,
+      label: "January",
+    },
+    {
+      value: 2,
+      label: "February",
+    },
+    {
+      value: 3,
+      label: "March",
+    },
+    {
+      value: 4,
+      label: "April",
+    },
+    {
+      value: 5,
+      label: "May",
+    },
+    {
+      value: 6,
+      label: "June",
+    },
+    {
+      value: 7,
+      label: "July",
+    },
+    {
+      value: 8,
+      label: "August",
+    },
+    {
+      value: 9,
+      label: "September",
+    },
+    {
+      value: 10,
+      label: "October",
+    },
+    {
+      value: 11,
+      label: "November",
+    },
+    {
+      value: 12,
+      label: "December",
+    },
+  ];
   const options = {
     scales: {
       x: {
@@ -81,10 +132,14 @@ const ManagerEmployeeChart = ({
 
   const getYearLeaves = async () => {
     const { data } = await axios.get(
-      `${process.env.REACT_APP_API}/route/leave/getYearLeaves/${userId}/${selectedyear.value}`,
+      `${process.env.REACT_APP_API}/route/leave/getAllLeaveForManager`,
       {
         headers: {
           Authorization: authToken,
+        },
+        params: {
+          month: selectMonth.value,
+          year: selectedyear.value,
         },
       }
     );
@@ -92,74 +147,78 @@ const ManagerEmployeeChart = ({
   };
 
   const { data: LeaveYearData, isLoading: leaveYearLoading } = useQuery(
-    ["leaveData", userId, selectedyear],
+    ["leaveData", userId, selectedyear, selectMonth],
     getYearLeaves
   );
 
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+  // const monthNames = [
+  //   "January",
+  //   "February",
+  //   "March",
+  //   "April",
+  //   "May",
+  //   "June",
+  //   "July",
+  //   "August",
+  //   "September",
+  //   "October",
+  //   "November",
+  //   "December",
+  // ];
 
-  const allMonths = monthNames;
+  // const allMonths = monthNames;
 
-  const organizeDataByMonth = (data) => {
-    const organizedData = Array.from({ length: 12 }, (_, index) => {
-      const month = index + 1;
-      return {
-        month,
-        year: null,
-        PresentPercent: 0,
-        absentPercent: 0,
-      };
-    });
+  // const organizeDataByMonth = (data) => {
+  //   const organizedData = Array.from({ length: 12 }, (_, index) => {
+  //     console.log(`🚀 ~ LeaveYearData:`, LeaveYearData);
+  //     const month = index + 1;
+  //     return {
+  //       month,
+  //       year: null,
+  //       PresentPercent: 0,
+  //       absentPercent: 0,
+  //     };
+  //   });
 
-    Array.isArray(data) &&
-      data?.forEach((monthData) => {
-        const monthIndex = monthData.month - 1;
-        organizedData[monthIndex] = {
-          month: monthData.month,
-          year: monthData.year,
-          availableDays: monthData.availableDays,
-          unpaidleaveDays: monthData.unpaidleaveDays,
-          paidleaveDays: monthData.paidleaveDays,
-        };
-      });
+  //   Array.isArray(data) &&
+  //     data?.forEach((monthData) => {
+  //       const monthIndex = monthData.month - 1;
+  //       organizedData[monthIndex] = {
+  //         month: monthData.month,
+  //         year: monthData.year,
+  //         availableDays: monthData.availableDays,
+  //         unpaidleaveDays: monthData.unpaidleaveDays,
+  //         paidleaveDays: monthData.paidleaveDays,
+  //       };
+  //     });
 
-    return organizedData ?? [];
-  };
+  //   return organizedData ?? [];
+  // };
 
-  const EmployeeleaveData = organizeDataByMonth(LeaveYearData);
-  const MonthArray = allMonths.map((month) => month);
+  // const EmployeeleaveData = organizeDataByMonth(LeaveYearData);
+  // const MonthArray = allMonths.map((month) => month);
 
   const data = {
-    labels: MonthArray,
+    labels: LeaveYearData?.map(
+      (monthData) =>
+        `${monthData?.employee?.employeeId?.first_name} ${monthData?.employee?.employeeId?.last_name}`
+    ),
     datasets: [
       {
         label: "Available Days",
-        data: EmployeeleaveData.map((monthData) => monthData.availableDays),
+        data: LeaveYearData?.map((monthData) => monthData.availableDays),
         backgroundColor: "#00b0ff",
         borderWidth: 1,
       },
       {
         label: "Unpaid Leave Days",
-        data: EmployeeleaveData.map((monthData) => monthData.unpaidleaveDays),
+        data: LeaveYearData?.map((monthData) => monthData.unpaidleaveDays),
         backgroundColor: "#f50057",
         borderWidth: 1,
       },
       {
         label: "Paid Leave Days",
-        data: EmployeeleaveData.map((monthData) => monthData.paidleaveDays),
+        data: LeaveYearData?.map((monthData) => monthData.paidleaveDays),
         backgroundColor: "#4caf50",
         borderWidth: 1,
       },
@@ -210,7 +269,7 @@ const ManagerEmployeeChart = ({
               )}
             />
 
-            <div className="w-[15%]">
+            <div className="w-[25%]">
               <Select
                 placeholder={"Select year"}
                 onChange={(year) => {
@@ -224,21 +283,26 @@ const ManagerEmployeeChart = ({
                 options={yearOptions}
               />
             </div>
+            <div className="w-[30%]">
+              <Select
+                placeholder={"Select Month"}
+                onChange={(month) => {
+                  setSelectMonth(month);
+                }}
+                components={{
+                  IndicatorSeparator: () => null,
+                }}
+                styles={customStyles}
+                value={selectMonth} // Add this line
+                options={monthOptions}
+              />
+            </div>
           </div>
         </div>
 
         <div className="flex flex-col gap-2">
           <Card elevation={0} className="w-full ">
-            {!userId || userId === "" ? (
-              <Card elevation={0} className="  mx-4 py-6 ">
-                <article className="flex items-center mb-1 text-blue-500 gap-2">
-                  <Info className="!text-2xl" />
-                  <h1 className="text-xl ">
-                    Select the employee to see the attendance overview
-                  </h1>
-                </article>
-              </Card>
-            ) : MonthArray.length <= 0 ? (
+            {LeaveYearData?.length <= 0 ? (
               <Card elevation={0} className="  mx-4 py-6 ">
                 <article className="flex items-center mb-1 text-red-500 gap-2">
                   <Info className="!text-2xl" />
@@ -265,15 +329,6 @@ const ManagerEmployeeChart = ({
                     />
                   )}
                 </div>
-
-                {/* <Card className="w-[45%]" elevation={0}>
-                  <div className="px-4 pt-4">
-                    <h1 className="text-xl">Total Leaves Left</h1>
-                  </div>
-                  <div className="p-2  flex items-center  ">
-                    <Pie data={dataPie} options={optionsPie} />
-                  </div>
-                </Card> */}
               </div>
             )}
           </Card>

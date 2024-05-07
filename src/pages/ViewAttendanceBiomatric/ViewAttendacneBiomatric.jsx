@@ -1,4 +1,4 @@
-import { Container, Typography  , IconButton} from "@mui/material";
+import { Container, Typography, IconButton, Tooltip } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -6,7 +6,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 import { useQuery } from "react-query";
 import EmployeeTypeSkeleton from "../SetUpOrganization/components/EmployeeTypeSkeleton";
 import { Info } from "@mui/icons-material";
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CalculateHourEmpModal from "../../components/Modal/CalculateHourEmpModal/CalculateHourEmpModal";
 
 const ViewAttendacneBiomatric = () => {
@@ -29,14 +29,13 @@ const ViewAttendacneBiomatric = () => {
       return response.data.data;
     }
   );
-  
+
   // for open the modal for display employee and calculate hour
   const [modalOpen, setModalOpen] = useState(false);
   const [empPunchingData, setEmpPunchingData] = useState();
   const handleModalOpen = (data) => {
-     setEmpPunchingData(data)
-     setModalOpen(true);
-   
+    setEmpPunchingData(data);
+    setModalOpen(true);
   };
   const handleModalClose = () => {
     setModalOpen(false);
@@ -47,9 +46,9 @@ const ViewAttendacneBiomatric = () => {
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
-          Employee’s Time Track
+            Employee’s Time Track
           </Typography>
-          <p className="text-xs text-gray-600 pl-10 text-center">
+          <p className="text-xs text-gray-600 pl-10   mb-6 text-center">
             Track the attendance of employees here.
           </p>
 
@@ -70,30 +69,44 @@ const ViewAttendacneBiomatric = () => {
                       Employee Name
                     </th>
                     <th scope="col" className="px-6 py-3">
+                      Employee Email
+                    </th>
+                    <th scope="col" className="px-6 py-3">
                       Action
                     </th>
-                    
                   </tr>
                 </thead>
                 <tbody>
-                  {empAttendanceData?.map((empAttendanceData, id) => (
-                    <tr className="!font-medium border-b" key={id}>
-                      <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                      <td className="!text-left  pl-4 py-3 ">
-                        {empAttendanceData?.EmployeeId?.empId || ""}
-                      </td>
-                      <td className="!text-left  pl-4 py-3 ">
-                        {empAttendanceData?.EmployeeId?.first_name || ""}
-                      </td>
-                      <td className="!text-left pl-4 py-3">
-                      <IconButton aria-label="view" size="small" onClick={() => handleModalOpen(empAttendanceData)}>
-                        <CalendarMonthIcon sx={{ color: 'green' }} />
-                        </IconButton>
-
-                      </td>
-                     
-                    </tr>
-                  ))}
+                  {empAttendanceData &&
+                    empAttendanceData.length > 0 &&
+                    empAttendanceData.map((empAttendanceItem, id) => (
+                      <tr className="!font-medium border-b" key={id}>
+                        <td className="!text-left pl-8 py-3 ">{id + 1}</td>
+                        <td className="!text-left  pl-7 py-3 ">
+                          {empAttendanceItem?.EmployeeId?.empId || ""}
+                        </td>
+                        <td className="!text-left  pl-7 py-3 ">
+                          {empAttendanceItem?.EmployeeId?.first_name || ""}
+                        </td>
+                        <td className="!text-left  pl-7 py-3 ">
+                          {empAttendanceItem?.EmployeeId?.email || ""}
+                        </td>
+                        <td className="!text-left pl-4 py-3">
+                          <Tooltip
+                            title={"Calculate the hours of employee"}
+                            arrow
+                          >
+                            <IconButton
+                              aria-label="view"
+                              size="small"
+                              onClick={() => handleModalOpen(empAttendanceItem)}
+                            >
+                              <CalendarMonthIcon sx={{ color: "green" }} />
+                            </IconButton>
+                          </Tooltip>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
@@ -113,7 +126,7 @@ const ViewAttendacneBiomatric = () => {
         handleClose={handleModalClose}
         open={modalOpen}
         organisationId={organisationId}
-        empPunchingData = {empPunchingData}
+        empPunchingData={empPunchingData}
       />
     </>
   );

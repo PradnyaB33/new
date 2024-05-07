@@ -1,15 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AttachMoney, Title } from "@mui/icons-material";
+import { Title } from "@mui/icons-material";
 import { Box, Button, Modal } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState , useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import PercentIcon from "@mui/icons-material/Percent";
+import MoneyIcon from '@mui/icons-material/Money';
+import PercentIcon from '@mui/icons-material/Percent';
 const style = {
   position: "absolute",
   top: "50%",
@@ -24,19 +25,48 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
-  const [error, setError] = useState();
+  const [error, setError] = useState(null); 
+  console.log(organisationId);
 
   const EmpLoanMgtSchema = z.object({
     loanName: z.string(),
-    loanValue: z.string(),
-    maxLoanValue: z.string(),
-    rateOfInterest: z.string(),
+    loanValue: z.string().refine((value) => {
+      const floatValue = parseFloat(value);
+      return floatValue >= 0 && floatValue <= 1000000 && !Object.is(floatValue, -0); 
+    }, {
+      message: "Loan value should be between 0 and 1,000,000",
+    }).refine((value) => {
+      const floatValue = parseFloat(value);
+      return floatValue >= 0;
+    }, {
+      message: "Loan value should be a positive number",
+    }),
+    maxLoanValue: z.string().refine((value) => {
+      const floatValue = parseFloat(value);
+      return floatValue >= 0 && floatValue <= 1000000 && !Object.is(floatValue, -0); 
+    }, {
+      message: "Maximum loan value should be between 0 and 1,000,000",
+    }).refine((value) => {
+      const floatValue = parseFloat(value);
+      return floatValue >= 0; 
+    }, {
+      message: "Maximum loan value should be a positive number",
+    }),
+    rateOfInterest: z.string().refine((value) => {
+      const floatValue = parseFloat(value);
+      return floatValue > 0 && floatValue < 100;
+    }, {
+      message: "Rate of interest should be between 0 and 99%",
+    }),
   });
+  
+  
 
   const {
     control,
     formState: { errors },
     handleSubmit,
+    reset
   } = useForm({
     defaultValues: {
       loanName: undefined,
@@ -46,6 +76,10 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
     },
     resolver: zodResolver(EmpLoanMgtSchema),
   });
+
+  useEffect(() => {
+    setError(null);
+  }, [control]);
 
   const AddLoanType = useMutation(
     (data) =>
@@ -63,7 +97,8 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["loanType"] });
         handleClose();
-        handleAlert(true, "success", "Loan Type added succssfully");
+        handleAlert(true, "success", "Loan Type added successfully");
+        reset();
       },
       onError: () => {
         setError("An Error occurred while creating a loan type.");
@@ -71,16 +106,34 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
     }
   );
 
+  
   const onSubmit = async (data) => {
     try {
       console.log(data);
+      // Check if loanValue is equal to maxLoanValue
+      if (parseFloat(data.loanValue) === parseFloat(data.maxLoanValue)) {
+        setError("Min loan value and max loan value should not be the same.");
+        return;
+      }
+      // Check if loanValue is greater than maxLoanValue
+      if (parseFloat(data.loanValue) >= parseFloat(data.maxLoanValue)) {
+        setError("Min loan value should be less than max loan value.");
+        return;
+      }
+      // Check if maxLoanValue is less than loanValue
+      if (parseFloat(data.maxLoanValue) <= parseFloat(data.loanValue)) {
+        setError("Max loan value should be greater than min loan value.");
+        return;
+      }
+      // If all conditions pass, proceed with mutation
       await AddLoanType.mutateAsync(data);
     } catch (error) {
       console.error(error);
-      setError("An error occurred while creating a laon type");
+      setError("An error occurred while creating a loan type");
     }
   };
-  console.log(error);
+  
+
   return (
     <>
       <Modal
@@ -101,6 +154,9 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="px-5 space-y-4 mt-4">
+              {error && (
+                <div className="text-red-500">{error}</div>
+              )}
               <div className="space-y-2 ">
                 <AuthInputFiled
                   name="loanName"
@@ -116,7 +172,7 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
               <div className="space-y-2 ">
                 <AuthInputFiled
                   name="loanValue"
-                  icon={AttachMoney}
+                  icon={MoneyIcon}
                   control={control}
                   type="number"
                   placeholder="Minimum Loan Value"
@@ -125,11 +181,10 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
                   error={errors.loanValue}
                 />
               </div>
-
               <div className="space-y-2 ">
                 <AuthInputFiled
                   name="maxLoanValue"
-                  icon={AttachMoney}
+                  icon={MoneyIcon}
                   control={control}
                   type="number"
                   placeholder="Maximum Loan Value"
@@ -138,7 +193,6 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
                   error={errors.maxLoanValue}
                 />
               </div>
-
               <div className="space-y-2 ">
                 <AuthInputFiled
                   name="rateOfInterest"
@@ -156,7 +210,6 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
                 <Button onClick={handleClose} color="error" variant="outlined">
                   Cancel
                 </Button>
-
                 <Button type="submit" variant="contained" color="primary">
                   Submit
                 </Button>

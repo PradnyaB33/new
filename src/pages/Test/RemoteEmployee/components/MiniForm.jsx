@@ -135,12 +135,12 @@ const MiniForm = ({ setArray, setOpenModal, center, setCenter, today }) => {
           control={control}
           type="number"
           placeholder="Enter the distance"
-          label="Total Distance *"
+          label="Total Distance in Km *"
           errors={errors}
           wrapperMessage={"Note: Total distance for missed punch"}
         />
       </div>
-      <div className="w-full flex justify-center mt-4">
+      <div className="w-full flex justify-center mt-4 mb-2">
         <Button type="submit" variant="contained" fullWidth>
           Apply
         </Button>

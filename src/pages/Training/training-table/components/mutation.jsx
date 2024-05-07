@@ -23,6 +23,8 @@ const useTrainingDetailsMutation = () => {
     );
     return response.data;
   };
+
+  // const {data,isLoading}=useQuery()
   const { mutate, isLoading } = useMutation(deleteTrainingFunction, {
     onSuccess: () => {
       console.log(`🚀 ~ file: mutation.jsx ~ line 10 ~ onSuccess: ~ onSuccess`);
