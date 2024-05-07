@@ -1,3 +1,4 @@
+import { TrendingUp } from "@mui/icons-material";
 import ShiftIcon from "@mui/icons-material/AccessTime";
 import DepartmentIcon from "@mui/icons-material/AccountTree";
 import RemoteIcon from "@mui/icons-material/Computer";
@@ -6,7 +7,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Card = ({ card, loading }) => {
-  const icons = [NotificationIcon, ShiftIcon, RemoteIcon, DepartmentIcon];
+  const icons = [
+    NotificationIcon,
+    ShiftIcon,
+    RemoteIcon,
+    DepartmentIcon,
+    TrendingUp,
+  ];
 
   const Skeleton = () => {
     return (
