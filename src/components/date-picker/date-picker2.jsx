@@ -119,7 +119,7 @@ const AppDatePicker = ({
     getLatestLeave();
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
-    const difference = selectedEndDate.diff(selectedStartDate, "days");
+    // const difference = selectedEndDate.diff(selectedStartDate, "days");
 
     // if (newData && Array.isArray(newData)) {
     //   const isOverlapWithData = newData.some((event) => {
@@ -147,20 +147,45 @@ const AppDatePicker = ({
     // }
 
     const isOverlap = [
-      ...newAppliedLeaveEvents,
       ...leaveData?.currentYearLeaves,
+      ...newAppliedLeaveEvents,
       ...newData,
-    ].some(
-      (event) =>
-        (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
-          selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
-        (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
-          selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
-        (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
-          selectedEndDate.isAfter(moment(event.end).startOf("day")))
-    );
-    if (isOverlap && difference > 0) {
-      return handleAlert(true, "error", "This slot is already occupied");
+    ].some((range) => {
+      // Convert range start and end dates to Moment.js objects
+      const rangeStart = range.start;
+      const rangeEnd = moment(range.end).startOf("day").subtract(1, "days");
+
+      // Check if selected start date is between any existing range
+      const isStartBetween = selectedStartDate.isBetween(
+        rangeStart,
+        rangeEnd,
+        undefined,
+        "[)"
+      );
+
+      // Check if selected end date is between any existing range
+      const isEndBetween = selectedEndDate.isBetween(
+        rangeStart,
+        rangeEnd,
+        undefined,
+        "(]"
+      );
+
+      // Check if selected start and end date overlaps with any existing range
+
+      const isOverlap =
+        selectedStartDate.isSameOrBefore(rangeEnd) &&
+        selectedEndDate.isSameOrAfter(rangeStart);
+      // Return true if any overlap is found
+      return isStartBetween || isEndBetween || isOverlap;
+    });
+
+    if (isOverlap) {
+      return handleAlert(
+        true,
+        "warning",
+        "You have already selected this leave"
+      );
     } else {
       const newLeave = {
         title: selectEvent ? "Updated Shift" : "Selected Shift",
