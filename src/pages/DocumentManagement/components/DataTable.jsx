@@ -39,7 +39,6 @@ const DataTable = () => {
   const [selectAll, setSelectAll] = useState(false);
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
-
   const authToken = useGetUser().authToken;
 
   const handleSelectAllClick = async (event) => {
@@ -158,6 +157,8 @@ const DataTable = () => {
     fetchData();
     // eslint-disable-next-line
   }, [authToken]);
+
+  console.log("this is the data1", data1);
 
   useEffect(() => {
     (async () => {
