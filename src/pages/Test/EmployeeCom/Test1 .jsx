@@ -91,9 +91,12 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
       .regex(/^[^*@]+$/, {
         message: "A PAN No cannot contain a special character, e.g., *,#.",
       }),
-    bank_account_no: z.string().regex(/^(?:0|[1-9]\d*)$/, {
-      message: "Bank number cannot be negative.",
-    }),
+    bank_account_no: z
+      .string()
+      .max(35, { message: "Only 35 numbers allowed" })
+      .regex(/^\d*$/, {
+        message: "Bank number cannot be negative.",
+      }),
   });
 
   const { control, formState, handleSubmit } = useForm({
