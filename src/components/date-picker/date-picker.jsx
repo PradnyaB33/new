@@ -22,6 +22,7 @@ const AppDatePicker = ({
   setSelectedLeave,
   newAppliedLeaveEvents,
   isCalendarOpen,
+  shiftData,
 }) => {
   const localizer = momentLocalizer(moment);
   const [Delete, setDelete] = useState(false);
@@ -50,9 +51,11 @@ const AppDatePicker = ({
     if (event.title === "Selected Leave") {
       setDelete(true);
       setUpdate(false);
+    } else if (event.color) {
+      setUpdate(true);
     } else {
       setDelete(false);
-      setUpdate(true);
+      setUpdate(false);
     }
   };
 
@@ -75,9 +78,18 @@ const AppDatePicker = ({
     return {};
   };
 
+  // console.log(moment().isSameOrBefore(moment().add(1, "days"), "days"));
+
   const handleSelectSlot = ({ start, end }) => {
+    console.log(`🚀 ~ file: date-picker.jsx:95 ~ { start, end }:`, {
+      start,
+      end,
+    });
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
+    const difference = selectedEndDate.diff(selectedStartDate, "days");
+    console.log(`🚀 ~ file: date-picker.jsx:102 ~ difference:`, difference);
+
     const currentDate = moment(selectedStartDate);
 
     const includedDays = data2.days?.days?.map((day) => day.day);
@@ -97,24 +109,22 @@ const AppDatePicker = ({
     const isOverlap = [
       ...data?.currentYearLeaves,
       ...newAppliedLeaveEvents,
+      ...shiftData?.requests,
     ].some((event) => {
-      console.log(
-        `🚀 ~ file: date-picker.jsx:114 ~  (selectedStartDate.isSameOrAfter(moment(event.start), "day") &&
-          selectedStartDate.isBefore(moment(event.end), "day")):`,
-        selectedEndDate.isAfter(moment(event.start), "day") &&
-          selectedEndDate.isSameOrBefore(moment(event.end), "day")
-      );
+      // console.log(`🚀 ~ file: date-picker.jsx:123 ~ event:`, event);
+      selectedStartDate.isSame(moment(event.start));
       return (
-        (selectedStartDate.isSameOrAfter(moment(event.start), "day") &&
-          selectedStartDate.isBefore(moment(event.end), "day")) ||
-        (selectedStartDate.isBefore(moment(event.start), "day") &&
-          selectedEndDate.isAfter(moment(event.end), "day")) ||
-        (selectedStartDate.isSame(moment(event.start), "day") &&
-          selectedEndDate.isSame(moment(event.end), "day"))
+        (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
+          selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
+        (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
+          selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
+        (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
+          selectedEndDate.isAfter(moment(event.end).startOf("day")))
       );
     });
+    console.log(`🚀 ~ file: date-picker.jsx:123 ~ isOverlap:`, isOverlap);
 
-    if (isOverlap) {
+    if (isOverlap && difference > 0) {
       return handleAlert(
         true,
         "warning",
@@ -254,7 +264,11 @@ const AppDatePicker = ({
             }}
             events={
               data
-                ? [...data?.currentYearLeaves, ...newAppliedLeaveEvents]
+                ? [
+                    ...data?.currentYearLeaves,
+                    ...shiftData?.requests,
+                    ...newAppliedLeaveEvents,
+                  ]
                 : [...newAppliedLeaveEvents]
             }
             startAccessor="start"
@@ -268,11 +282,35 @@ const AppDatePicker = ({
             onSelectSlot={handleSelectSlot}
             onSelectEvent={handleSelectEvent}
             datePropGetter={selectedLeave}
-            eventPropGetter={(event) => ({
-              style: {
-                backgroundColor: event.color,
-              },
-            })}
+            eventPropGetter={(event) => {
+              let backgroundColor = "blue";
+
+              if (event?.status) {
+                switch (event.status) {
+                  case "Pending":
+                    backgroundColor = "orange";
+                    break;
+                  case "Rejected":
+                    backgroundColor = "red";
+                    break;
+                  case "Approved":
+                    backgroundColor = "green";
+                    break;
+                  default:
+                    backgroundColor = "blue";
+                    break;
+                }
+              }
+              if (event.color) {
+                backgroundColor = event.color;
+              }
+
+              return {
+                style: {
+                  backgroundColor,
+                },
+              };
+            }}
             dayPropGetter={dayPropGetter}
           />
         </div>
