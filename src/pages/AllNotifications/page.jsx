@@ -27,12 +27,6 @@ const ParentNotification = () => {
       url: "/missedPunch-notification",
     },
     {
-      name: "Loan Notification",
-      count: getEmployeeRequestLoanApplication?.length ?? 0,
-      color: "#51E8FD",
-      url: "/loan-notification",
-    },
-    {
       name: "Shift Notification",
       count: data2?.length ?? 0,
       color: "#3668ff",
