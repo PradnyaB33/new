@@ -123,6 +123,22 @@ const EmpNotification = () => {
                             : {item?.punchData?.length}{" "}
                             {item?.punchData?.length === 1 ? "time" : "times"}
                           </h2>
+                          {item?.mReason && (
+                            <h2>
+                              <span className=" md:text-lg text-base font-semibold">
+                                {"Reason --> Manager"}
+                              </span>{" "}
+                              : {item?.mReason}
+                            </h2>
+                          )}
+                          {item?.aReason && (
+                            <h2>
+                              <span className=" md:text-lg text-base font-semibold">
+                                {"Reason --> Accoutant"}
+                              </span>{" "}
+                              : {item?.aReason}
+                            </h2>
+                          )}
                         </div>
 
                         <button

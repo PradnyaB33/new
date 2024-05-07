@@ -1,10 +1,19 @@
-import { Button } from "@mui/material";
-import React from "react";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useNotificationRemotePunching from "../../../../hooks/QueryHook/Remote-Punch/components/mutation";
 
 const PunchMapModal = ({ items, idx }) => {
   const navigate = useNavigate();
+  const [openModal, setOpenModal] = useState(false);
+  const [mReason, setMReason] = useState("");
   console.log("yash items", items);
   const calculateDistance = (coords) => {
     let totalDistance = 0;
@@ -30,6 +39,20 @@ const PunchMapModal = ({ items, idx }) => {
     }
 
     return totalDistance.toFixed(2); // rounding to 2 decimal places for simplicity
+  };
+
+  const handleRejectButtonClick = () => {
+    setOpenModal(true);
+  };
+
+  const handleRejectSubmit = (id) => {
+    RejectManagerMutation.mutate({ id, mReason });
+    setOpenModal(false);
+  };
+
+  const handleModalClose = () => {
+    setOpenModal(false);
+    setMReason(""); // Reset mReason state when modal is closed
   };
 
   const { notifyAccountantMutation, RejectManagerMutation } =
@@ -149,7 +172,7 @@ const PunchMapModal = ({ items, idx }) => {
               Accept
             </Button>
             <Button
-              onClick={() => RejectManagerMutation.mutate(items._id)}
+              onClick={handleRejectButtonClick}
               variant="contained"
               color="error"
               size="small"
@@ -157,6 +180,43 @@ const PunchMapModal = ({ items, idx }) => {
             >
               Reject
             </Button>
+
+            <Dialog open={openModal} fullWidth onClose={handleModalClose}>
+              <DialogTitle>Enter Rejection Reason</DialogTitle>
+              <DialogContent>
+                <TextField
+                  size="small"
+                  autoFocus
+                  className="!mt-2"
+                  id="mReason"
+                  label="Rejection Reason"
+                  type="text"
+                  fullWidth
+                  value={mReason}
+                  onChange={(e) => setMReason(e.target.value)}
+                />
+              </DialogContent>
+              <DialogActions>
+                <div className="mb-2 flex gap-4">
+                  <Button
+                    onClick={handleModalClose}
+                    color="error"
+                    variant="contained"
+                    size="small"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => handleRejectSubmit(items._id)}
+                    color="primary"
+                    variant="contained"
+                    size="small"
+                  >
+                    Submit
+                  </Button>
+                </div>
+              </DialogActions>
+            </Dialog>
           </div>
         </div>
       </div>
