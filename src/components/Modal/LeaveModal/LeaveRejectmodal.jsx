@@ -11,7 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "axios";
-import { format } from "date-fns";
+import { differenceInDays, format, parseISO } from "date-fns";
 import dayjs from "dayjs";
 import moment from "moment";
 import React, { useContext, useState } from "react";
@@ -115,12 +115,22 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
             </div>
 
             <div className="space-y-4 w-full flex flex-col items-center md:items-start justify-center">
-              <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
-                has raised a {items?.leaveTypeDetailsId?.leaveName} request on{" "}
-                {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
-                {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
-              </h1>
+              {differenceInDays(parseISO(items.end), parseISO(items.start)) !==
+              1 ? (
+                <h1 className="text-xl px-4 md:!px-0 font-semibold ">
+                  {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
+                  has raised a {items?.leaveTypeDetailsId?.leaveName} request on{" "}
+                  {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
+                  {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
+                </h1>
+              ) : (
+                <h1>
+                  {" "}
+                  {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
+                  has raised a {items?.leaveTypeDetailsId?.leaveName} request on{" "}
+                  {format(new Date(items.start), "dd-MM-yyyy")}
+                </h1>
+              )}
 
               <Chip
                 label={items?.description}

@@ -104,16 +104,14 @@ const Mapped = ({
       </div>
       <div className="flex lg:w-fit lg:justify-end justify-between w-full items-center gap-2">
         <FormControl sx={{ width: 180 }} size="small" fullWidth>
-          <InputLabel id="demo-simple-select-label">
-            Select Leave Type
-          </InputLabel>
+          <InputLabel id="demo-simple-select-label">Select Type</InputLabel>
           <Select
             defaultValue={leavesTypes}
             required
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={leavesTypes}
-            label="Select Leave Type"
+            label="Select Type"
             onChange={handleChange}
           >
             {subtractedLeaves?.map((item, index) => {

@@ -10,9 +10,9 @@ import {
 import axios from "axios";
 import { differenceInDays, format, parseISO } from "date-fns";
 import React, { useContext, useEffect, useState } from "react";
-import useShiftStore from "../store/useShiftStore";
-import UserProfile from "../../../../hooks/UserData/useUser";
 import { UseContext } from "../../../../State/UseState/UseContext";
+import UserProfile from "../../../../hooks/UserData/useUser";
+import useShiftStore from "../store/useShiftStore";
 
 const Mapped = ({
   item,
@@ -29,7 +29,7 @@ const Mapped = ({
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const id = user.organizationId;
-  console.log("userId", id)
+  console.log("userId", id);
   const badgeStyle = {
     "& .MuiBadge-badge": {
       color: "#d1d5db",
@@ -44,13 +44,14 @@ const Mapped = ({
     (async () => {
       try {
         const resp = await axios.get(
-          `${process.env.REACT_APP_API}/route/shifts/${id}`,{
-            headers:{
-              Authorization:authToken
-            }
+          `${process.env.REACT_APP_API}/route/shifts/${id}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
           }
         );
-        setSName(resp?.data.shifts)
+        setSName(resp?.data.shifts);
       } catch (error) {
         console.error(error);
       }
@@ -76,7 +77,6 @@ const Mapped = ({
   const handleChange2 = (name) => {
     setShiftName(name);
   };
-
 
   return (
     <div
@@ -131,7 +131,7 @@ const Mapped = ({
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={leavesTypes}
-            label="Select Leave Type"
+            label="Select Type"
             onChange={handleChange}
           >
             {sName?.map((item, index) => {
