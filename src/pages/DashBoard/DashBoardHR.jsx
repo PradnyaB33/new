@@ -82,7 +82,7 @@ const DashBoardHR = () => {
           : "HR Dashboard"}
       </header>
       <div className="md:px-8 px-2 w-full">
-        <div className="flex  mt-6 flex-wrap w-full flex-1 justify-start  gap-2 md:gap-5 ">
+        <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1  mt-6  w-full   gap-2 md:gap-5 ">
           <SuperAdminCard
             icon={Groups}
             color={"!bg-blue-500"}
