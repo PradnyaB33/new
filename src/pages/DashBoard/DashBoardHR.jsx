@@ -93,9 +93,13 @@ const DashBoardHR = () => {
 
           <SuperAdminCard
             color={"!bg-green-500"}
-            isLoading={false}
+            isLoading={employeeLoading}
             icon={EventAvailable}
-            data={employee?.totalEmployees - absentEmployee ?? 0}
+            data={
+              !isNaN(employee?.totalEmployees)
+                ? employee?.totalEmployees - absentEmployee
+                : 0
+            }
             title={"Present Today"}
           />
           <SuperAdminCard
