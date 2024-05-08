@@ -1,6 +1,7 @@
 import {
   Business,
   Category,
+  CircleNotifications,
   CurrencyRupee,
   Dashboard,
   Description,
@@ -10,6 +11,7 @@ import {
   ModelTrainingOutlined,
   MonetizationOn,
   MonetizationOnOutlined,
+  NotificationsActive,
   PanToolAlt,
   Payment,
   PeopleAlt,

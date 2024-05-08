@@ -647,18 +647,18 @@ const GoalsTable = ({ performance }) => {
             </>
           )}
 
-        {performance?.stages ===
-          "Monitoring stage/Feedback collection stage" && (
-          <MenuItem
-            onClick={() => {
-              setOpenEdit(true);
-              setPreviewId(openMenu);
-              handleMenuClose();
-            }}
-          >
-            Monitoring form
-          </MenuItem>
-        )}
+        {performance?.stages === "Monitoring stage/Feedback collection stage" &&
+          role === "Manager" && (
+            <MenuItem
+              onClick={() => {
+                setOpenEdit(true);
+                setPreviewId(openMenu);
+                handleMenuClose();
+              }}
+            >
+              Monitoring form
+            </MenuItem>
+          )}
 
         {performance?.stages === "Goal setting" && (
           <>
