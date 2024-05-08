@@ -82,6 +82,7 @@ import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
+import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LetterSetup from "./pages/LetterTypes/LetterSetup";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
@@ -884,19 +885,27 @@ const App = () => {
         <Route path="/income-tax" element={<IncomeTax />} />
         <Route path="/income-tax/declarations" element={<TDSTab1 />} />
         <Route path="/income-tax/calculation" element={<TDSCalculation />} />
+        <Route path="/notification/income-tax" element={<DeclarationPage />} />
         <Route
-          path="/income-tax/accountant-declarations"
-          element={<DeclarationPage />}
+          path="/notification/income-tax-details"
+          element={<IncomeTaxNotification />}
         />
         <Route
-          path="/income-tax/accountant-declarations/:id"
+          path="/notification/income-tax/:id"
           element={<DeclarationPage />}
         />
         <Route path="/application" element={<Application />} />
         <Route
           path="/organisation/:organisationId/manage-training"
           element={
-            <RequireAuth permission={["HR", "Super-Admin", "Department-Head"]}>
+            <RequireAuth
+              permission={[
+                "HR",
+                "Super-Admin",
+                "Department-Head",
+                "Delegate-Super-Admin",
+              ]}
+            >
               <HrTrainings />
             </RequireAuth>
           }

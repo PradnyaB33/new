@@ -117,7 +117,7 @@ const useSetupSideNav = (organisationId) => {
         location.pathname ===
         `/organisation/${organisationId}/setup/set-salary-input-selection`,
       isVisible: user?.profile?.some((role) =>
-        ["Super-Admin", "HR"].includes(role)
+        ["Super-Admin", "HR" , "Delegate-Super-Admin"].includes(role)
       ),
     },
     {

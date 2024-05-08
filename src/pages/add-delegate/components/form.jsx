@@ -80,7 +80,8 @@ const packageSchema = z.object({
   _id: z.string(),
 });
 const MiniForm = ({ data }) => {
-  const { addDelegateMutation } = useDelegateSuperAdmin();
+  const { addDelegateMutation, deleteDelegateMutation } =
+    useDelegateSuperAdmin();
   const [visible, setVisible] = useState(false);
 
   const { control, formState, handleSubmit, watch } = useForm({
@@ -249,10 +250,26 @@ const MiniForm = ({ data }) => {
             error={errors?.citizenship}
           />
         </div>
-
-        <Button variant="contained" disabled={!isDirty} type="submit">
-          Submit
-        </Button>
+        <div className="flex gap-6 w-full">
+          <Button
+            fullWidth
+            variant="contained"
+            onClick={async () =>
+              deleteDelegateMutation.mutate(data?.delegateSuperAdmin?._id)
+            }
+            type="button"
+          >
+            Delete Delegate Super Admin
+          </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            disabled={!isDirty}
+            type="submit"
+          >
+            Submit
+          </Button>
+        </div>
       </form>
     </>
   );

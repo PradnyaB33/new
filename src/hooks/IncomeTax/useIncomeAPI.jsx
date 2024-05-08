@@ -61,7 +61,7 @@ const useIncomeAPI = (
     {
       onSuccess: (data) => {
         console.log(`🚀 ~ data:`, data);
-        handleAlert(true, "success", `Data uploaded successfully`);
+        handleAlert(true, "success", `Declaration submitted successfully`);
         queryClient.invalidateQueries({ queryKey: [`${queryKey}`] });
       },
       onError: (error) => {
@@ -92,7 +92,7 @@ const useIncomeAPI = (
 
     if (declarationData?.amount <= 0) {
       handleAlert(true, "error", "Amount cannot be zero");
-
+      setIsLoading(false);
       return false;
     }
 
@@ -157,7 +157,7 @@ const useIncomeAPI = (
         }
       );
 
-      handleAlert(true, "success", `Data deleted successfully`);
+      handleAlert(true, "success", `Declaration deleted successfully`);
       queryClient.invalidateQueries({ queryKey: [queryKey] });
       console.log(`🚀 ~ queryKey:`, `${queryKey}`);
     } catch (error) {
