@@ -42,7 +42,9 @@ const RolePage = () => {
         roles === "Department-Admin" ||
         roles === "Department-Head"
       )
-        return redirect(`/organisation/dashboard/employee-dashboard`);
+        return redirect(
+          `/organisation/${user?.organisationId}/dashboard/employee-dashboard`
+        );
     }
     // eslint-disable-next-line
   }, []);
@@ -78,13 +80,17 @@ const RolePage = () => {
             `/organisation/${user.organizationId}/dashboard/manager-dashboard`
           );
         } else if (response?.data?.role === "Employee") {
-          redirect("/organisation/dashboard/employee-dashboard");
+          redirect(
+            `/organisation/${user.organizationId}/dashboard/employee-dashboard`
+          );
         } else if (response?.data?.role === "Department-Head") {
           redirect(
             `/organisation/${user.organizationId}/dashboard/DH-dashboard`
           );
         } else {
-          redirect("/organisation/dashboard/employee-dashboard");
+          redirect(
+            `/organisation/${user.organizationId}/dashboard/employee-dashboard`
+          );
         }
 
         window.location.reload();

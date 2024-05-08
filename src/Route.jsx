@@ -94,13 +94,13 @@ import ViewPayslip from "./pages/ViewPayslip/ViewPayslip";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import AddDelegate from "./pages/add-delegate/AddDelegate";
 import CustomCalander from "./pages/custom/Calendar";
+import DocNotification from "./pages/doc-notification/DocNotification";
+import EmpNotification from "./pages/emp-notifications/EmpNotification";
 import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import SingleDepartment from "./pages/single-department/single-department";
-import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
-import NotFound from "./utils/Forbidden/NotFound";
+
 const App = () => {
   return (
     <AuthProvider>
@@ -171,6 +171,7 @@ const App = () => {
         />
         <Route path="/remote/info/:Id" element={<RemoteManager />} />
         <Route path="/remote/notification" element={<RemoteNotification />} />
+        <Route path="/remote/emp-notification" element={<EmpNotification />} />
         <Route path="/emp/docs" element={<DocManage />} />
         <Route path="/org/docs" element={<OrgDocManage />} />
         <Route path="/org/docs/auth" element={<DocManageAuth />} />
@@ -201,6 +202,11 @@ const App = () => {
           path="/missedPunch-notification"
           element={<MissedPunchNotification />}
         />
+        <Route path="/doc-notification" element={<DocNotification />} />
+        {/* <Route
+          path="/missed-punch-notification/:employeeId"
+          element={<MissedPunchNotified />}
+        /> */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route
@@ -886,7 +892,14 @@ const App = () => {
         <Route
           path="/organisation/:organisationId/manage-training"
           element={
-            <RequireAuth permission={["HR", "Super-Admin", "Department-Head"]}>
+            <RequireAuth
+              permission={[
+                "HR",
+                "Super-Admin",
+                "Department-Head",
+                "Delegate-Super-Admin",
+              ]}
+            >
               <HrTrainings />
             </RequireAuth>
           }
@@ -958,7 +971,7 @@ const App = () => {
           }
         />
         <Route path="*" element={<NotFound />} />
-        <Route path="/pendingLoan" element={<LoanMgtNotification />} />
+        <Route path="/loan-notification" element={<LoanMgtNotification />} />
         <Route path="/loan-approval/:loanId" element={<LoanMgtApproval />} />
       </Routes>
     </AuthProvider>

@@ -1,8 +1,88 @@
 import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
-import React from "react";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
 
 const LetterSetup = () => {
+  const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const { organisationId } = useParams();
+  const { setAppAlert } = useContext(UseContext);
+
+  useEffect(() => {
+    fetchData();
+
+    // eslint-disable-next-line
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/letter/get/${organisationId}`
+      );
+      const fetchedData = response.data;
+
+      // Update formData state with fetched data
+      setFormData(fetchedData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      // If there's an error fetching data, set a default form data based on document names
+      const initialFormData = {};
+      const documentNames = [
+        "EmploymentOfferLetter",
+        "AppointmentLetter",
+        "PromotionLetter",
+        "TransferLetter",
+        "TerminationLetter",
+        "ResignationAcceptanceLetter",
+        "ConfirmationLetter",
+        "PerformanceAppraisalLetter",
+        "WarningLetter",
+        "SalaryIncrementLetter",
+        "TrainingInvitationLetter",
+        "EmployeeRecognitionLetter",
+      ];
+
+      documentNames.forEach((name) => {
+        initialFormData[name] = { workflow: false, downcast: false };
+      });
+      setFormData(initialFormData);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API}/route/letter/post/${organisationId}`,
+        formData
+      );
+      setAppAlert({
+        alert: true,
+        type: "success",
+        msg: "Changes Updated Successfully",
+      });
+    } catch (error) {
+      console.error("Error submitting data:", error);
+      // Handle error if needed
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (documentName, propertyName, checked) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [documentName]: {
+        ...prevData[documentName],
+        [propertyName]: checked,
+      },
+    }));
+  };
+
   return (
     <div>
       <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
@@ -15,12 +95,58 @@ const LetterSetup = () => {
                 </div>
                 <div>
                   <h1 className="!text-lg">Letter Setup</h1>
-                  <p className="text-xs text-gray-600">
-                    Setup related to letter types which employee's would be
-                    receiving.
-                  </p>
                 </div>
               </div>
+            </div>
+
+            {Object.entries(formData).map(([documentName, values]) => (
+              <div key={documentName} className="p-4">
+                <div className="flex justify-start items-center mb-2">
+                  <h2 className="text-lg font-bold w-[300px]">
+                    {documentName}
+                  </h2>
+                  <div className="flex items-center gap-2">
+                    <label
+                      className="text-[#6d7482] font-semibold"
+                      htmlFor={`${documentName}-managerWorkflow`}
+                    >
+                      Manager Workflow
+                    </label>
+                    <input
+                      type="checkbox"
+                      id={`${documentName}-managerWorkflow`}
+                      checked={values.workflow}
+                      onChange={(e) =>
+                        handleChange(documentName, "workflow", e.target.checked)
+                      }
+                    />
+                    <label
+                      className="text-[#6d7482] font-semibold"
+                      htmlFor={`${documentName}-downcast`}
+                    >
+                      Downcast
+                    </label>
+                    <input
+                      type="checkbox"
+                      id={`${documentName}-downcast`}
+                      checked={values.downcast}
+                      onChange={(e) =>
+                        handleChange(documentName, "downcast", e.target.checked)
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            <div className="p-4">
+              <button
+                onClick={handleSubmit}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                disabled={loading}
+              >
+                {loading ? "Submitting..." : "Submit"}
+              </button>
             </div>
           </article>
         </Setup>
