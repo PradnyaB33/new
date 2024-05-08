@@ -7,7 +7,6 @@ import NewCommunication from "../../components/Modal/CommunicationModal/NewCommu
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
 import axios from "axios";
-import EmployeeTypeSkeleton from "../SetUpOrganization/components/EmployeeTypeSkeleton";
 import DOMPurify from "dompurify";
 import { MoreVert } from "@mui/icons-material";
 import { Menu, MenuItem } from "@mui/material";
@@ -21,6 +20,8 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+import CommunicationScheleton from "../../components/Modal/CommunicationModal/CommunicationScheleton";
+
 const Communication = () => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
@@ -124,7 +125,7 @@ const Communication = () => {
           </div>
 
           {isLoading ? (
-            <EmployeeTypeSkeleton />
+            <CommunicationScheleton />
           ) : getEmailCommunication?.length > 0 ? (
             <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
               <table className="min-w-full bg-white  text-left !text-sm font-light">
@@ -170,22 +171,22 @@ const Communication = () => {
                         <td className="!text-left pl-6 py-3">
                           {communciation?.from}
                         </td>
-                        <td className="!text-left pl-6 py-3">
+                        <td className="!text-left pl-9 py-3">
                           {communciation?.to
                             ?.map((item) => item.label)
                             .join(", ")}
                         </td>
-                        <td className="!text-left pl-6 py-3">
+                        <td className="!text-left pl-9 py-3">
                           {communciation?.cc
                             ?.map((item) => item.label)
                             .join(", ")}
                         </td>
-                        <td className="!text-left pl-6 py-3">
+                        <td className="!text-left pl-9 py-3">
                           {communciation?.bcc
                             ?.map((item) => item.label)
                             .join(", ")}
                         </td>
-                        <td className="!text-left pl-6 py-3">
+                        <td className="!text-left pl-9 py-3">
                           {getEmailCommunication?.map((communciation, id) => (
                             <div
                               key={id}
@@ -197,7 +198,7 @@ const Communication = () => {
                             />
                           ))}
                         </td>
-                        <td>
+                        <td className="!text-left pl-9 py-3"> 
                           <MoreVert
                             onClick={(e) => handleClick(e, communciation._id)}
                             className="cursor-pointer"

@@ -151,7 +151,7 @@ const NewCommunication = ({ handleClose, open, organisationId }) => {
 
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["sendCommunication"] });
+        queryClient.invalidateQueries({ queryKey: ["getEmailCommunication"] });
         handleClose();
         handleAlert(true, "success", "Communication added successfully");
         reset();
@@ -197,7 +197,7 @@ const NewCommunication = ({ handleClose, open, organisationId }) => {
 
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["saveCommunication"] });
+        queryClient.invalidateQueries({ queryKey: ["getEmailCommunication"] });
         handleClose();
         handleAlert(true, "success", "Saved data successfully");
         reset();

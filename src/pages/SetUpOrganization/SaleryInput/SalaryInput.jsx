@@ -28,7 +28,7 @@ const SalaryInput = () => {
   const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
-
+  
   const [open, setOpen] = React.useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [salaryInputId, setempTypeId] = useState(null);
