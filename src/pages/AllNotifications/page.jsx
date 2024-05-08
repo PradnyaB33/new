@@ -44,12 +44,6 @@ const ParentNotification = () => {
       color: "#FF7373",
       url: "/doc-notification",
     },
-    {
-      name: "Loan Notification",
-      count: getEmployeeRequestLoanApplication?.length ?? 0,
-      color: "#51E8FD",
-      url: "/loan-notification",
-    },
   ];
 
   return (
