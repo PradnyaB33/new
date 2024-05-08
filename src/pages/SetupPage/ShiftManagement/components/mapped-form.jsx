@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { differenceInDays, format, parseISO } from "date-fns";
+import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
 import { UseContext } from "../../../../State/UseState/UseContext";
 import UserProfile from "../../../../hooks/UserData/useUser";
@@ -60,8 +61,22 @@ const Mapped = ({
   }, []);
 
   const handleChange = (event) => {
-    const selectedShiftId = event.target.value;
-    setLeavesTypes(selectedShiftId);
+    const selectedShiftName = event.target.value;
+    setLeavesTypes(selectedShiftName);
+
+    setNewAppliedLeaveEvents((prevEvents) => {
+      const updatedEvents = [...prevEvents];
+      if (index >= 0 && index < updatedEvents.length) {
+        updatedEvents[index] = {
+          ...updatedEvents[index],
+          name: selectedShiftName,
+        };
+      }
+      return updatedEvents;
+    });
+
+    // Update the shift name in the store
+    setShiftName(selectedShiftName);
   };
 
   console.log(newAppliedLeaveEvents);
@@ -112,11 +127,17 @@ const Mapped = ({
 
         <div className="inline-grid m-auto items-center gap-2 group-hover:text-gray-500 text-gray-300 font-bold">
           <p className="text-md truncate ">
-            {`Selected dates from ${format(
-              new Date(item.start),
-              "do 'of' MMMM"
-            )} to  ${format(new Date(item.end), "do ' of' MMMM")}`}
-            {``}
+            {differenceInDays(parseISO(item.end), parseISO(item.start)) !== 1
+              ? `Selected dates from ${format(
+                  new Date(item.start),
+                  "do 'of' MMMM"
+                )} to  ${moment(item.end)
+                  .subtract(1, "days")
+                  .format("Do of MMMM")}`
+              : `Your selected date is ${format(
+                  new Date(item.start),
+                  "do 'of' MMMM"
+                )}`}
           </p>
         </div>
       </div>
@@ -130,17 +151,18 @@ const Mapped = ({
             required
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={leavesTypes}
+            value={item.name}
             label="Select Type"
             onChange={handleChange}
           >
             {sName?.map((item, index) => {
+              console.log("items in side", item);
               return (
                 <MenuItem
                   selected={leavesTypes === item.leaveTypeDetailsId}
                   id={index}
                   key={index}
-                  value={item._id}
+                  value={item.shiftName}
                   onClick={() => handleChange2(item.shiftName)}
                 >
                   <div className="flex justify-between w-full">
