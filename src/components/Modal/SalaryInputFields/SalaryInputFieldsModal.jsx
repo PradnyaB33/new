@@ -37,14 +37,18 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
 
   const descriptionElementRef = React.useRef(null);
 
-  useEffect(() => {
-    if (open) {
-      const { current: descriptionElement } = descriptionElementRef;
-      if (descriptionElement !== null) {
-        descriptionElement.focus();
+  useEffect(
+    () => {
+      if (open) {
+        const { current: descriptionElement } = descriptionElementRef;
+        if (descriptionElement !== null) {
+          descriptionElement.focus();
+        }
       }
-    }
-  }, [open]);
+    },
+    // eslint-disable-next-line
+    [open]
+  );
 
   // Get Query
   const { data: empTypeslist } = useQuery("empTypes", async () => {
@@ -60,31 +64,34 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   });
 
   const SalaryTemplateSchema = z.object({
-    name: z.string(),
+    name: z.string().min(3, { message: "required" }),
     desc: z.string().optional(),
     empTypes: z.object({
       label: z.string(),
       value: z.string(),
     }),
-    salaryStructure: z.array(
-      z.object({
-        label: z.string(),
-        value: z.string(),
-      })
-    ),
+    salaryStructure: z
+      .array(
+        z.object({
+          label: z.string(),
+          value: z.string(),
+        })
+      )
+      .length(1, { message: "required" }),
   });
 
   const {
     handleSubmit,
     control,
     setValue,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(SalaryTemplateSchema),
     defaultValues: {
       name: undefined,
-      salaryStructure: undefined,
-      empTypes: undefined,
+      salaryStructure: [],
+      empTypes: {},
     },
   });
 
@@ -132,6 +139,21 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
     }
   );
 
+  useEffect(
+    () => {
+      if (!open) {
+        reset({
+          name: "",
+          salaryStructure: [],
+          empTypes: {},
+          desc: "",
+        });
+      }
+    },
+    // eslint-disable-next-line
+    [open]
+  );
+
   const onSubmit = async (data) => {
     if (salaryId) {
       EditSalaryTemplate.mutate(data);
@@ -143,7 +165,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   const queryClient = useQueryClient();
 
   const AddSalaryInputs = useMutation(
-    (data) => {
+    async (data) => {
       let newdata = {
         salaryStructure: data.salaryStructure.map((item) => {
           return { salaryComponent: item.value };
@@ -152,7 +174,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
         name: data.name,
         desc: data.desc,
       };
-      axios.post(
+      await axios.post(
         `${process.env.REACT_APP_API}/route/salary-template-org/${id}`,
         newdata,
         {
@@ -165,7 +187,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
 
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["salaryTemplates"] });
+        queryClient.invalidateQueries("salaryTemplates");
         handleClose();
         handleAlert(true, "success", "Salary Template generated succesfully.");
       },
@@ -177,7 +199,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   );
 
   const EditSalaryTemplate = useMutation(
-    (data) => {
+    async (data) => {
       let newdata = {
         salaryStructure: data.salaryStructure.map((item) => {
           return { salaryComponent: item.value };
@@ -186,7 +208,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
         name: data.name,
         desc: data.desc,
       };
-      axios.put(
+      await axios.put(
         `${process.env.REACT_APP_API}/route/salary-template/${salaryId}`,
         newdata,
         {
@@ -197,10 +219,10 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
       );
     },
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["salaryTemplates"] });
-        handleClose();
+      onSuccess: async () => {
         handleAlert(true, "success", "Salary Template updated succesfully.");
+        handleClose();
+        await queryClient.invalidateQueries("salaryTemplates");
       },
       onError: () => {
         handleAlert(true, "error", "Something went wrong");
@@ -240,7 +262,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
               placeholder="Template Name"
               label="Enter Template Name *"
               readOnly={false}
-              maxLimit={15}
+              maxLimit={35}
               errors={errors}
               error={errors.name}
             />
@@ -252,7 +274,8 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
               placeholder="Description"
               label="Enter Description"
               readOnly={false}
-              maxLimit={15}
+              max={250}
+              maxLimit={250}
               errors={errors}
               error={errors.desc}
             />

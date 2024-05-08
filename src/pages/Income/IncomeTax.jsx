@@ -34,12 +34,14 @@ const IncomeTax = () => {
       );
     else if (role === "Accountant")
       return redirect(
-        `/organisation/${user?._id}/dashboard/employee-dashboard`
+        `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
       );
     else if (role === "Manager")
       return redirect(`/organisation/${user?._id}/dashboard/manager-dashboard`);
     else if (role === "Employee")
-      return redirect(`/organisation/dashboard/employee-dashboard`);
+      return redirect(
+        `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
+      );
   };
   return (
     <>

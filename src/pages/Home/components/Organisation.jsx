@@ -5,7 +5,6 @@ import {
   Avatar,
   Button,
   Chip,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -21,9 +20,9 @@ import { useQueryClient } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import useSubscription from "../../../hooks/Subscription/subscription";
 import EditOrganisation from "./edit-organization";
 const Organisation = ({ item }) => {
+  console.log(`🚀 ~ file: Organisation.jsx:27 ~ item:`, item);
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [editConfirmation, setEditConfirmation] = useState(null);
@@ -32,9 +31,6 @@ const Organisation = ({ item }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const navigate = useNavigate();
-  const { subscriptionDetails, subscriptionLoading, subscriptionFetching } =
-    useSubscription(item?._id);
-
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
   };
@@ -82,70 +78,12 @@ const Organisation = ({ item }) => {
     return randomColor();
   };
 
-  const getMessage = () => {
-    let message = "";
-
-    switch (subscriptionDetails?.subscription?.status) {
-      case "authenticated":
-        if (
-          Math.ceil(
-            new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
-              new Date()
-          ) /
-            (1000 * 60 * 60 * 24) >
-          0
-        ) {
-          message = `${Math.ceil(
-            (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
-              new Date()) /
-              (1000 * 60 * 60 * 24)
-          )} Day Trial left`;
-        } else {
-          message = "Sorry but payment not received";
-        }
-        break;
-      case "active":
-        message = `Your next due is after ${Math.ceil(
-          (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
-            new Date()) /
-            (1000 * 60 * 60 * 24)
-        )} days`;
-        break;
-      case "pending":
-        message =
-          "Your payment is pending. Please update your card details. or please complete payment";
-        break;
-      case "halted":
-        message =
-          "Your subscription is halted. Please update your card details.";
-        break;
-      case "cancelled":
-        message =
-          "Your subscription is cancelled. To restart, raise query about it";
-        break;
-      case "paused":
-        message = "Your subscription is on paused";
-        break;
-      default:
-        message = "Basic Plan";
-        break;
-    }
-
-    return message;
-  };
-
   return (
     <>
       <div
         className={`border-b-[3px] border-${getRandomColor()} block min-w-[21rem] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-200 relative`}
       >
-        <tag className="tag">
-          {subscriptionLoading || subscriptionFetching ? (
-            <CircularProgress className=" !text-white mx-12" size={20} />
-          ) : (
-            getMessage()
-          )}
-        </tag>
+        <tag className="tag">{item?.packageInfo}</tag>
         <div className="border-b-2 grid grid-cols-6 items-center justify-between border-[#0000002d] px-6 py-3 text-black">
           <div className="flex col-span-5 gap-4 items-center">
             <Avatar
@@ -193,6 +131,10 @@ const Organisation = ({ item }) => {
         </div>
         <div className="p-6 py-4  flex gap-4">
           <button
+            disabled={
+              item?.subscriptionDetails?.status !== "Active" ||
+              item?.subscriptionDetails?.expirationDate < new Date()
+            }
             onClick={() => {
               let link;
               if (window.innerWidth <= 768) {
@@ -204,44 +146,11 @@ const Organisation = ({ item }) => {
             }}
             className=" flex disabled:bg-gray-300 group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
           >
-            {subscriptionLoading || subscriptionFetching ? (
-              <CircularProgress className=" !text-white" size={20} />
-            ) : (
-              "Setup"
-            )}
+            Setup
           </button>
 
-          {subscriptionDetails?.subscription?.status === "authenticated" ? (
-            (new Date(subscriptionDetails?.subscription?.charge_at * 1000) -
-              new Date()) /
-              (1000 * 60 * 60 * 24) <=
-            0 ? (
-              <Link
-                target="blank"
-                to={`${subscriptionDetails?.subscription?.short_url}`}
-              >
-                <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
-                  {subscriptionLoading || subscriptionFetching ? (
-                    <CircularProgress size={20} />
-                  ) : (
-                    "Continue subscription"
-                  )}
-                  <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
-                </button>
-              </Link>
-            ) : (
-              <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
-                <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
-                  {subscriptionLoading || subscriptionFetching ? (
-                    <CircularProgress size={20} />
-                  ) : (
-                    "Go to Dashboard"
-                  )}
-                  <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
-                </button>
-              </Link>
-            )
-          ) : subscriptionDetails?.subscription?.status === "active" ? (
+          {item?.subscriptionDetails?.status === "Active" ||
+          item?.subscriptionDetails?.expirationDate < new Date() ? (
             // Display "Go to Dashboard" button if the status is "active"
             <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
               <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
@@ -250,13 +159,9 @@ const Organisation = ({ item }) => {
               </button>
             </Link>
           ) : (
-            // Default to "Continue subscription" button
-            <Link
-              target="blank"
-              to={`${subscriptionDetails?.subscription?.short_url}`}
-            >
+            <Link to={`/billing`}>
               <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
-                Continue subscription
+                Go to Billing
                 <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
               </button>
             </Link>

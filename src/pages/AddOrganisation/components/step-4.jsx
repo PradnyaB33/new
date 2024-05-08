@@ -1,6 +1,7 @@
 import { Button } from "@mui/material";
 import axios from "axios";
-import React, { useState } from "react";
+import moment from "moment";
+import React, { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import useOrg from "../../../State/Org/Org";
@@ -15,13 +16,12 @@ const Step4 = () => {
   const data = useOrg();
   console.log(`🚀 ~ file: step-4.jsx:15 ~ data:`, data);
   const { authToken, decodedToken } = useGetUser();
+  const config = {
+    headers: {
+      Authorization: authToken,
+    },
+  };
   const handleDismiss = async (id) => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authToken,
-      },
-    };
     const response = await axios.delete(
       `${process.env.REACT_APP_API}/route/organization/delete/${id}`,
       config
@@ -30,13 +30,6 @@ const Step4 = () => {
     return response.data;
   };
   const handleForm = async () => {
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: authToken,
-      },
-    };
-
     console.log(`🚀 ~ file: step-4.jsx:45 ~ data:`, data);
     console.log(
       `🚀 ~ file: step-4.jsx:61 ~  !data.industry_type:`,
@@ -46,30 +39,17 @@ const Step4 = () => {
       return "Please Select Plan And Package";
     }
 
-    const formData = new FormData();
+    let totalPrice = getPriceMain * data?.count;
+    const mainData = {
+      ...data,
+      packageInfo: data?.packageInfo?.packageName,
+      totalPrice: totalPrice + totalPrice * 0.02,
+    };
 
-    // Append file to FormData
-    formData.append("logo_url", data.logo_url);
-    formData.append("orgName", data.orgName);
-    formData.append("foundation_date", data.foundation_date);
-    formData.append("web_url", data.web_url);
-    formData.append("industry_type", data.industry_type);
-    formData.append("email", data.email);
-    formData.append("isTrial", data.isTrial);
-    formData.append(
-      "organization_linkedin_url",
-      data.organization_linkedin_url
-    );
-    formData.append("location", JSON.stringify(data.location));
-    formData.append("contact_number", data.contact_number);
-    formData.append("description", data.description);
-    formData.append("creator", data.creator);
-    formData.append("packageInfo", data?.packageInfo?.packageId);
-    formData.append("count", data.count);
-
+    console.log(`🚀 ~ file: step-4.jsx:67 ~ mainData:`, mainData);
     const response = await axios.post(
       `${process.env.REACT_APP_API}/route/organization`,
-      formData,
+      mainData,
       config
     );
     console.log(`🚀 ~ file: step-4.jsx:96 ~ response:`, response);
@@ -79,36 +59,41 @@ const Step4 = () => {
   const { mutate, isLoading } = useMutation({
     mutationFn: handleForm,
     onSuccess: async (data) => {
-      const options = {
-        key: data?.key,
-        currency: "INR",
-        name: "Aegis Plan for software", //your business name
-        description: "Get Access to all premium keys",
-        image: data.organisation.image,
-        subscription_id: data.subscription_id, //This
-        callback_url: `${process.env.REACT_APP_API}/route/organization/verify/${data.organisation._id}`,
-        prefill: {
-          name: `${decodedToken.user.first_name} ${decodedToken.user.last_name}`, //your customer's name
-          email: decodedToken.user.email,
-          contact: decodedToken.user.phone_number,
-        },
-        notes: {
-          address:
-            "C503, The Onyx-Kalate Business Park, near Euro School, Shankar Kalat Nagar, Wakad, Pune, Pimpri-Chinchwad, Maharashtra 411057",
-        },
-        theme: {
-          color: "#1976d2",
-        },
-        modal: {
-          ondismiss: function () {
-            mutate2(data.organisation._id);
-            console.log("Checkout form closed by the user");
+      console.log(`🚀 ~ file: step-4.jsx:87 ~ data:`, data);
+      if (data?.paymentType === "Phone_Pay") {
+        // window.location.href = data?.redirectUrl;
+      } else {
+        const options = {
+          key: data?.key,
+          amount: data?.order?.amount,
+          currency: "INR",
+          name: "Aegis Plan for software", //your business name
+          description: "Get Access to all premium keys",
+          image: data?.organization?.image,
+          order_id: data.order.id, //This
+          callback_url: data?.callbackURI,
+          prefill: {
+            name: `${decodedToken?.user?.first_name} ${decodedToken?.user?.last_name}`, //your customer's name
+            email: decodedToken?.user?.email,
+            contact: decodedToken?.user?.phone_number,
           },
-        },
-      };
-      const razor = new window.Razorpay(options);
-      console.log(`🚀 ~ file: step-4.jsx:111 ~ razor:`, razor);
-      razor.open();
+          notes: {
+            address:
+              "C503, The Onyx-Kalate Business Park, near Euro School, Shankar Kalat Nagar, Wakad, Pune, Pimpri-Chinchwad, Maharashtra 411057",
+          },
+          theme: {
+            color: "#1976d2",
+          },
+          modal: {
+            ondismiss: function () {
+              mutate2(data.organization._id);
+              console.log("Checkout form closed by the user");
+            },
+          },
+        };
+        const razor = new window.Razorpay(options);
+        razor.open();
+      }
     },
     onError: async (data) => {
       console.error(`🚀 ~ file: mini-form.jsx:48 ~ data:`, data);
@@ -120,9 +105,27 @@ const Step4 = () => {
   const { mutate: mutate2, isLoading: isLoading2 } = useMutation({
     mutationFn: handleDismiss,
   });
+  console.log(
+    `🚀 ~ file: step-4.jsx:124 ~ data?.packageInfo:`,
+    data?.packageInfo
+  );
+  const getPriceMain = useMemo(() => {
+    const expirationDate = moment().add(3 * data?.cycleCount, "months");
+    const dateDifference = expirationDate.diff(moment(), "days");
+    if (data?.packageInfo?.packageName === "Basic Plan") {
+      const perDayPrice = 55 / dateDifference;
+      return Math.round(perDayPrice * dateDifference);
+    } else if (data?.packageInfo?.packageName === "Intermediate Plan") {
+      const perDayPrice = 85 / dateDifference;
+      return Math.round(perDayPrice * dateDifference);
+    } else {
+      return 115;
+    }
+  }, [data?.cycleCount, data?.packageInfo?.packageName]);
   if (data?.packageInfo === undefined) {
     return "Please Select Plan And Package";
   }
+
   if (isLoading) {
     return <Loader />;
   }
@@ -135,7 +138,11 @@ const Step4 = () => {
       <div className="p-4 gap-4 flex flex-col items-center">
         <div className=" ">
           <h2 className="text-2xl font-bold ">Your Package Pricing</h2>
-          <p className=" text-gray-500">You have selected Basic Package </p>
+          <p className=" text-gray-500">
+            You have selected {data?.packageInfo?.packageName} Total price will
+            be {getPriceMain * data?.count}
+            {" Rs"}
+          </p>
         </div>
         <div className="flex flex-col gap-2 !row-span-4">
           <PricingCard
@@ -143,7 +150,7 @@ const Step4 = () => {
             h1={data?.packageInfo?.packageName}
             packageId={process.env.REACT_APP_BASICPLAN || "plan_NgWEcv4vEvrZFc"}
             value={data?.packageId}
-            price={getPrice(data?.packageInfo?.packageName)}
+            price={getPriceMain}
             mapArray={returnArray(data?.packageInfo?.packageName)}
             button={false}
           />
@@ -178,14 +185,5 @@ const returnArray = (plan = "Basic Plan") => {
       .filter((doc, index) => doc.Enterprise === "✓")
       .reverse()
       .filter((doc, index) => index <= 5);
-  }
-};
-const getPrice = (plan) => {
-  if (plan === "Basic Plan") {
-    return 55;
-  } else if (plan === "Intermediate Plan") {
-    return 85;
-  } else {
-    return 115;
   }
 };

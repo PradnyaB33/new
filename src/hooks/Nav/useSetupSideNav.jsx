@@ -8,6 +8,7 @@ import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
+import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import HolidayVillageOutlinedIcon from "@mui/icons-material/HolidayVillageOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
@@ -18,6 +19,7 @@ import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
 import WorkOffOutlinedIcon from "@mui/icons-material/WorkOffOutlined";
 import { useLocation } from "react-router-dom";
 import useSubscriptionGet from "../QueryHook/Subscription/hook";
+
 import UserProfile from "../UserData/useUser";
 const useSetupSideNav = (organisationId) => {
   const location = useLocation();
@@ -26,6 +28,7 @@ const useSetupSideNav = (organisationId) => {
   const { data } = useSubscriptionGet({
     organisationId: organisationId,
   });
+  console.log(`🚀 ~ file: useSetupSideNav.jsx:103 ~ data:`, data);
 
   const linkData = [
     {
@@ -34,7 +37,9 @@ const useSetupSideNav = (organisationId) => {
       href: `/organisation/${organisationId}/setup/add-roles`,
       active:
         location.pathname === `/organisation/${organisationId}/setup/add-roles`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
     {
       label: "Leaves",
@@ -43,7 +48,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/leave-types`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
 
     {
@@ -53,7 +60,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/set-shifts`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
     {
       label: "Location",
@@ -62,7 +71,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/add-organization-locations`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
     {
       label: "Public Holidays",
@@ -71,7 +82,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/set-public-holiday`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
 
     {
@@ -81,7 +94,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/input-field`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
     {
       label: "Employment",
@@ -90,7 +105,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/set-employement-types`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
     {
       label: "Salary Template",
@@ -142,7 +159,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/salary-computation-day`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
     {
       label: "Employee Code",
@@ -151,7 +170,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/employee-code`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
     {
       label: "Loan Management",
@@ -160,7 +181,9 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/loan-management`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
     {
       label: "Remote Punching",
@@ -169,7 +192,7 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/remote-punching`,
-      isVisible: data?.plan?.item?.name === "Aegis Intermediate Plan",
+      isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
     },
     {
       label: "Training",
@@ -177,7 +200,7 @@ const useSetupSideNav = (organisationId) => {
       href: `/organisation/${organisationId}/setup/training`,
       active:
         location.pathname === `/organisation/${organisationId}/setup/training`,
-      isVisible: data?.plan?.item?.name === "Aegis Intermediate Plan",
+      isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
     },
     {
       label: "Performance Management",
@@ -187,7 +210,18 @@ const useSetupSideNav = (organisationId) => {
         location.pathname ===
         `/organisation/${organisationId}/setup/performance-management`,
       isVisible: true,
-      // isVisible: data?.plan?.item?.name === "Aegis Intermediate Plan",
+      // isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
+    },
+    {
+      label: "Letter Types Setup",
+      icon: FolderOutlinedIcon,
+      href: `/organisation/${organisationId}/setup/letter-types`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/letter-types`,
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
     },
   ];
 

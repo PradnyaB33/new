@@ -2,30 +2,25 @@ import {
   AttachMoney,
   Circle,
   ControlPoint,
+  Discount,
   FilterNone,
-  GroupAdd,
   KeyboardArrowDown,
   KeyboardArrowUp,
   Loop,
-  Message,
-  Pause,
   People,
-  PlayArrow,
   PriorityHigh,
-  QuestionMark,
   Repeat,
-  Shield,
   ShoppingBag,
   Subscriptions,
 } from "@mui/icons-material";
 import { Button, Menu, MenuItem, alpha, styled } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
-import useSubscriptionMutation from "../../../hooks/QueryHook/Subscription/mutation";
 import DescriptionBox from "./descripton-box";
-import PackageForm from "./manage-package-form";
+import PackageForm from "./package/memberCount";
+import ManageSubscription from "./package/package";
+import PrepaidCard from "./package/prePay";
+import UpgradePackage from "./package/upgrade";
 const StyledMenu = styled((props) => (
   <Menu
     style={{ background: "rgb(244 247 254 / var(--tw-bg-opacity))" }}
@@ -74,6 +69,9 @@ const BillingCard = ({ doc }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmOpen2, setConfirmOpen2] = useState(false);
+  const [confirmOpen3, setConfirmOpen3] = useState(false);
+  const [confirmOpen4, setConfirmOpen4] = useState(false);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -81,62 +79,8 @@ const BillingCard = ({ doc }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const { data } = useSubscriptionGet({ organisationId: doc._id });
-  console.log(`🚀 ~ file: billing-card.jsx:85 ~ data:`, data);
-  const { pauseSubscriptionMutation, resumeSubscriptionMutation } =
-    useSubscriptionMutation();
-
-  const getMessage = () => {
-    let message = "";
-
-    switch (data?.subscription?.status) {
-      case "authenticated":
-        if (
-          Math.ceil(
-            new Date(data?.subscription?.charge_at * 1000) - new Date()
-          ) /
-            (1000 * 60 * 60 * 24) >
-          0
-        ) {
-          message = `${Math.ceil(
-            (new Date(data?.subscription?.charge_at * 1000) - new Date()) /
-              (1000 * 60 * 60 * 24)
-          )} Day Trial left`;
-        } else {
-          message = "Sorry but payment not received";
-        }
-        break;
-      case "active":
-        message = `Your next due is after ${Math.ceil(
-          (new Date(data?.subscription?.charge_at * 1000) - new Date()) /
-            (1000 * 60 * 60 * 24)
-        )} days`;
-        break;
-      case "pending":
-        message =
-          "Your payment is pending. Please update your card details. or please complete payment";
-        break;
-      case "halted":
-        message =
-          "Your subscription is halted. Please update your card details.";
-        break;
-      case "cancelled":
-        message =
-          "Your subscription is cancelled. To restart, raise query about it";
-        break;
-      case "paused":
-        message = "Your subscription is on paused";
-        break;
-      default:
-        message = "Basic Plan";
-        break;
-    }
-
-    return message;
-  };
-
   return (
-    <div className="shadow-xl bg-Brand-Purple/brand-purple-1 rounded-md grid grid-cols-6">
+    <div className="shadow-twe-inner bg-Brand-Purple/brand-purple-1 rounded-md grid grid-cols-6">
       <div className=" col-span-5 pl-4 pt-4 pb-4 gap-4 flex flex-col">
         <div className="flex justify-between">
           <div className="flex gap-4 items-end">
@@ -168,34 +112,6 @@ const BillingCard = ({ doc }) => {
             open={open}
             onClose={handleClose}
           >
-            {data?.subscription?.status === "active" && (
-              <MenuItem
-                onClick={async () => {
-                  await pauseSubscriptionMutation.mutate(
-                    data?.subscription?.id
-                  );
-                  handleClose();
-                }}
-                disableRipple
-              >
-                <Pause />
-                Pause subscription
-              </MenuItem>
-            )}
-            {data?.subscription?.status === "paused" && (
-              <MenuItem
-                onClick={async () => {
-                  await resumeSubscriptionMutation.mutate(
-                    data?.subscription?.id
-                  );
-                  handleClose();
-                }}
-                disableRipple
-              >
-                <PlayArrow />
-                Resume subscription
-              </MenuItem>
-            )}
             <MenuItem
               onClick={() => {
                 setConfirmOpen(true);
@@ -203,28 +119,62 @@ const BillingCard = ({ doc }) => {
               disableRipple
             >
               <FilterNone />
-              Manage Subscription
+              Manage Member
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setConfirmOpen2(true);
+              }}
+              disableRipple
+            >
+              <FilterNone />
+              Change Package
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setConfirmOpen3(true);
+              }}
+              disableRipple
+            >
+              <FilterNone />
+              Prepay
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setConfirmOpen3(true);
+              }}
+              disableRipple
+            >
+              <FilterNone />
+              Renew
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setConfirmOpen4(true);
+                handleClose();
+              }}
+              disableRipple
+            >
+              <FilterNone />
+              Upgrade
             </MenuItem>
           </StyledMenu>
         </div>
 
-        <div className="bg-brand/wahsed-blue rounded-md border-brand/purple border-[0.5px] flex flex-wrap gap-2 p-2 items-center">
-          <DescriptionBox
-            Icon={GroupAdd}
-            descriptionText={"Created by"}
-            mainText={`${doc?.creator?.first_name} ${doc?.creator?.last_name}`}
-          />
+        <div className="bg-brand/wahsed-blue rounded-md flex flex-wrap gap-2 p-2 items-center">
           <DescriptionBox
             Icon={Subscriptions}
             descriptionText={"Subscription charge date"}
-            mainText={moment
-              .unix(data?.subscription?.charge_at)
-              .format("MM/DD/YYYY")}
+            mainText={moment(doc?.subscriptionDetails?.paymentDate).format(
+              "DD MMM YYYY"
+            )}
           />
           <DescriptionBox
-            Icon={Message}
-            descriptionText={"Message"}
-            mainText={getMessage()}
+            Icon={Subscriptions}
+            descriptionText={"Subscription end date"}
+            mainText={moment(doc?.subscriptionDetails?.expirationDate).format(
+              "DD MMM YYYY"
+            )}
           />
           <DescriptionBox
             Icon={AttachMoney}
@@ -234,83 +184,83 @@ const BillingCard = ({ doc }) => {
           <DescriptionBox
             Icon={ShoppingBag}
             descriptionText={"Purchased Plan"}
-            mainText={data?.plan?.item?.name}
+            mainText={doc?.packageInfo}
           />
 
           <DescriptionBox
             Icon={People}
             descriptionText={"Allowed employee count"}
-            mainText={data?.subscription?.quantity}
+            mainText={doc?.memberCount}
           />
           <DescriptionBox
             Icon={Circle}
             descriptionText={"Subscription status"}
-            mainText={data?.subscription?.status}
+            mainText={doc?.subscriptionDetails?.status}
           />
+
           <DescriptionBox
             Icon={Loop}
             descriptionText={"Your next renewal is after"}
-            mainText={`${moment
-              .duration(
-                moment.unix(data?.subscription?.charge_at).diff(moment())
-              )
-              .days()} days`}
+            mainText={`${moment(doc?.subscriptionDetails?.expirationDate).diff(
+              moment(new Date()),
+              "days"
+            )} days`}
           />
-          {moment
-            .unix(data?.subscription?.charge_at)
-            .startOf("day")
-            .isSame(moment().startOf("day")) && (
-            <Link to={data?.subscription?.short_url} target="_blank">
-              <Button
-                variant="contained"
-                style={{ height: "-webkit-fill-available" }}
-              >
-                Start subscription
-              </Button>
-            </Link>
-          )}
+          <DescriptionBox
+            Icon={Discount}
+            descriptionText={"Organisation discount for next subscription"}
+            mainText={`${Math.round(doc?.remainingBalance)}`}
+          />
         </div>
       </div>
       <div className=" col-span-1 flex justify-center items-center">
-        {data?.subscription?.status === "active" ? (
+        {doc?.subscriptionDetails?.status === "Active" ? (
           <div className="bg-[#5FF062] flex justify-center items-start p-8 rounded-full animate-pulse">
             <Repeat className="text-white " fontSize="large" />
           </div>
-        ) : data?.subscription?.status === "authenticated" ? (
-          <div className="bg-[#ba67e1] flex justify-center items-start p-8 rounded-full animate-pulse">
-            <Shield className="text-white " fontSize="large" />
-          </div>
-        ) : data?.subscription?.status === "pending" ? (
+        ) : doc?.subscriptionDetails?.status === "Pending" ? (
           <div className="bg-[#E8A454] flex justify-center items-start p-8 rounded-full animate-pulse">
             <PriorityHigh className="text-white " fontSize="large" />
           </div>
-        ) : data?.subscription?.status === "expired" ? (
+        ) : doc?.subscriptionDetails?.status === "Expired" ? (
           <div className="bg-[#6578DB] flex justify-center items-start p-8 rounded-full animate-pulse">
             <ControlPoint className="text-white " fontSize="large" />
           </div>
-        ) : data?.subscription?.status === "paused" ? (
-          <div className="bg-[chocolate] flex justify-center items-start p-8 rounded-full animate-pulse">
-            <PlayArrow className="text-white " fontSize="large" />
-          </div>
-        ) : data?.subscription?.status === "halted" ? (
-          <div className="bg-[#F46B6B] flex justify-center items-start p-8 rounded-full animate-pulse">
-            <QuestionMark className="text-white " fontSize="large" />
-          </div>
         ) : null}
       </div>
-      {data?.organisation?.subscriptionDetails?.quantity &&
-        data?.organisation?.subscriptionDetails?.plan_id && (
-          <PackageForm
-            open={confirmOpen}
-            handleClose={() => {
-              setConfirmOpen(false);
-              handleClose();
-            }}
-            packages={data?.organisation?.packages}
-            organisation={data?.organisation}
-            plan={data?.plan}
-          />
-        )}
+
+      <PackageForm
+        open={confirmOpen}
+        handleClose={() => {
+          setConfirmOpen(false);
+          handleClose();
+        }}
+        organisation={doc}
+      />
+      <ManageSubscription
+        open={confirmOpen2}
+        handleClose={() => {
+          setConfirmOpen2(false);
+          handleClose();
+        }}
+        organisation={doc}
+      />
+      <PrepaidCard
+        open={confirmOpen3}
+        handleClose={() => {
+          setConfirmOpen3(false);
+          handleClose();
+        }}
+        organisation={doc}
+      />
+      <UpgradePackage
+        open={confirmOpen4}
+        handleClose={() => {
+          setConfirmOpen4(false);
+          handleClose();
+        }}
+        organisation={doc}
+      />
     </div>
   );
 };

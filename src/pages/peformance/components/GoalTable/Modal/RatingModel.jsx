@@ -77,6 +77,7 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
   );
 
   const { isFetching } = useQuery({
+  const { isFetching } = useQuery({
     queryKey: ["getGoalReview", id],
     queryFn: async () => {
       const { data } = await axios.get(
@@ -95,7 +96,6 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
       setValue("goal", data?.goal);
     },
   });
-
   const onSubmit = async (data) => {
     const goals = {
       assignee: { label: id.empId._id, value: id.empId._id },

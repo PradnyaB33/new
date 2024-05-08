@@ -158,13 +158,13 @@ const EmpLoanMgt = () => {
                     {getEmployeeLoan?.map((empLoan, id) => (
                       <tr className="!font-medium border-b" key={id}>
                         <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                        <td className="!text-left  pl-4 py-3 ">
+                        <td className="!text-left  pl-6 py-3 ">
                           {empLoan?.loanName}
                         </td>
-                        <td className="!text-left pl-4 py-3 ">
+                        <td className="!text-left pl-6 py-3 ">
                           {empLoan?.loanValue}
                         </td>
-                        <td className="!text-left pl-4 py-3 ">
+                        <td className="!text-left pl-6 py-3 ">
                           {empLoan?.maxLoanValue}
                         </td>
 

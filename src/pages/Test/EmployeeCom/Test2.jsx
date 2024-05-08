@@ -14,6 +14,7 @@ import {
   TodayOutlined,
   Work,
 } from "@mui/icons-material";
+import moment from "moment";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
@@ -52,7 +53,29 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     setStep2Data,
     password,
     shift_allocation,
+    date_of_birth,
   } = useEmpState();
+
+  const isAtLeastNineteenYearsOld = (value) => {
+    const dob = new Date(value);
+    // let differenceInYears = currentDate.getFullYear() - dob.getFullYear();
+    // const monthDiff = currentDate.getMonth() - dob.getMonth();
+
+    // // If the birth month is after the current month, reduce the age by 1
+    // if (
+    //   monthDiff < 0 ||
+    //   (monthDiff === 0 && currentDate.getDate() < dob.getDate())
+    // ) {
+    //   differenceInYears--;
+    // }
+
+    const birth = moment(date_of_birth, "YYYY-MM-DD");
+    const currentValue = moment(dob, "YYYY-MM-DD");
+    const differenceInDOB = currentValue.diff(birth, "years");
+    console.log(`🚀 ~ differenceInDOB:`, differenceInDOB);
+
+    return differenceInDOB >= 19;
+  };
 
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -86,23 +109,36 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         label: z.string(),
         value: z.string(),
       }),
-      empId: z.string(),
-
+      empId: z.string().min(3, { message: "required" }),
       mgrempid: z
         .object({
           label: z.string(),
           value: z.string(),
         })
         .optional(),
-      joining_date: z.string(),
+      joining_date: z
+        .string()
+        .refine(isAtLeastNineteenYearsOld, {
+          message: "Employee must be at least 19 years old",
+        })
+        .refine(
+          (value) => {
+            const joiningDate = moment(value, "YYYY-MM-DD"); // replace 'YYYY-MM-DD' with your date format
+            const currentDate = moment();
+            return joiningDate.isSameOrBefore(currentDate);
+          },
+          {
+            message: "Joining date cannot be in the future",
+          }
+        ),
       salarystructure: z.object({
         label: z.string(),
         value: z.string(),
       }),
       dept_cost_center_no: z.object({
         label: z.string(),
-        value: z.string(),
       }),
+
       companyemail: z.string().email(),
       profile: z.string().array().optional(),
       shift_allocation: z.object({
@@ -138,6 +174,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   console.log(shift_allocation);
 
   const { errors } = formState;
+  console.log(`🚀 ~ errors:`, errors);
   const onsubmit = (data) => {
     console.log(getValues());
     setStep2Data(data);
@@ -152,7 +189,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         onSubmit={handleSubmit(onsubmit)}
         className="w-full flex space-y-2  flex-1 flex-col"
       >
-        <div className="md:flex block w-full ">
+        <div className="w-full ">
           <AuthInputFiled
             name="empId"
             icon={Work}
@@ -213,7 +250,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             label="Company Email *"
             errors={errors}
             error={errors.companyemail}
-            wrapperMessage={"Note this email is used for login credentails"}
+            // wrapperMessage={"Note this email is used for login credentails"}
           />
           <AuthInputFiled
             name="joining_date"
