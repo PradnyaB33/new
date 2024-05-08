@@ -8,7 +8,7 @@ export const DocPreviewModal = ({ fileData, setOpenState, openState }) => {
   };
 
   const isImage = (fileData) => {
-    return fileData.type.startsWith("image/");
+    return fileData && fileData.type && fileData.type.startsWith("image/");
   };
 
   return (

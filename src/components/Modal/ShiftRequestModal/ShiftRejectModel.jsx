@@ -11,12 +11,13 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "axios";
-import { format } from "date-fns";
+import { differenceInDays, format, parseISO } from "date-fns";
 import dayjs from "dayjs";
 import React, { useContext, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { UseContext } from "../../../State/UseState/UseContext";
 // import Loader from "../../../pages/Notification/Loader";
+import moment from "moment";
 import UserProfile from "../../../hooks/UserData/useUser";
 
 const ShiftRejectModel = ({ items, key }) => {
@@ -199,13 +200,24 @@ const ShiftRejectModel = ({ items, key }) => {
 
             <div className="space-y-4 w-full flex flex-col items-center md:items-start justify-center">
               <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                {/* {emp[key]?.employeeId.first_name +
-                  " " +
-                  emp[key]?.employeeId.last_name}{" "} */}
-                {items.employeeId.first_name + " " + items.employeeId.last_name}{" "}
-                has raised a shift request of {items.title} from{" "}
-                {items.description} {format(new Date(items.start), "PP")} to{" "}
-                {format(new Date(items.end), "PP")}
+                {differenceInDays(
+                  parseISO(items.end),
+                  parseISO(items.start)
+                ) !== 1 ? (
+                  <h1 className="text-xl px-4 md:!px-0 font-semibold ">
+                    {items?.employeeId?.first_name}{" "}
+                    {items?.employeeId?.last_name} has raised a {items?.title}{" "}
+                    request on {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
+                    {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
+                  </h1>
+                ) : (
+                  <h1>
+                    {" "}
+                    {items?.employeeId?.first_name}{" "}
+                    {items?.employeeId?.last_name} has raised a {items?.title}{" "}
+                    request on {format(new Date(items.start), "dd-MM-yyyy")}
+                  </h1>
+                )}
               </h1>
 
               <Chip
