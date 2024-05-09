@@ -2,13 +2,15 @@ import { Close } from "@mui/icons-material";
 import { Button, MenuItem, Popover, Select } from "@mui/material";
 import moment from "moment";
 import { momentLocalizer } from "react-big-calendar";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { Calendar } from "react-big-calendar";
+import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import useGetUser from "../../hooks/Token/useUser";
+import usePublicHoliday from "../../pages/SetUpOrganization/PublicHolidayPage/usePublicHoliday";
 
 const AppDatePicker = ({
   data,
@@ -24,11 +26,20 @@ const AppDatePicker = ({
   shiftData,
 }) => {
   const localizer = momentLocalizer(moment);
+  const queryClient = useQueryClient();
+  const { organisationId } = useParams();
   const [Delete, setDelete] = useState(false);
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
   const [message, setMessage] = useState("");
   const { authToken } = useGetUser();
+  const { data: publicHoliday, filteredHolidayWithStartAndEnd } =
+    usePublicHoliday(organisationId);
+  console.log(
+    `🚀 ~ file: date-picker.jsx:37 ~ publicHoliday, filteredHolidayWithStartAndEnd:`,
+    publicHoliday,
+    filteredHolidayWithStartAndEnd
+  );
   const { data: data2 } = useQuery("employee-disable-weekends", async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/weekend/get`,
@@ -40,8 +51,6 @@ const AppDatePicker = ({
     return response.data;
   });
   const handleSelectEvent = (event) => {
-    console.log(`🚀 ~ file: date-picker.jsx:44 ~ event:`, event);
-
     setMessage(event?.message);
     setSelectedLeave(event);
     setCalendarOpen(true);
@@ -75,7 +84,7 @@ const AppDatePicker = ({
     return {};
   };
 
-  const handleSelectSlot = ({ start, end }) => {
+  const handleSelectSlot = async ({ start, end }) => {
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "days");
 
@@ -94,6 +103,7 @@ const AppDatePicker = ({
       }
       currentDate.add(1, "day");
     }
+    await queryClient.invalidateQueries("employee-leave-table-without-default");
 
     const isOverlap = [
       ...data?.currentYearLeaves,
@@ -200,11 +210,18 @@ const AppDatePicker = ({
         </div>
         <div className="flex w-full flex-row-reverse px-3 text-red-500 italic font-extrabold text-xs h-[20px]">
           {" "}
-          {selectEvent ? "Please select dates for you leaves" : message}{" "}
+          {selectEvent
+            ? `Updating existing entry from ${moment(
+                selectedLeave?.start
+              ).format("DD-MM-YYYY")} to ${moment(selectedLeave?.end).format(
+                "DD-MM-YYYY"
+              )}`
+            : message}{" "}
         </div>
       </>
     );
   };
+  console.log(`🚀 ~ file: date-picker.jsx:204 ~ selectedLeave:`, selectedLeave);
   const handleClickAway = (event) => {
     const clickableElements = document.querySelectorAll(`.rbc-event-content`);
 
@@ -272,6 +289,7 @@ const AppDatePicker = ({
                     ...data?.currentYearLeaves,
                     ...shiftData?.requests,
                     ...newAppliedLeaveEvents,
+                    ...filteredHolidayWithStartAndEnd,
                   ]
                 : [...newAppliedLeaveEvents]
             }
@@ -336,6 +354,7 @@ const AppDatePicker = ({
           variant="contained"
           onClick={async () => {
             await handleUpdateFunction();
+
             setUpdate(false);
           }}
           className="rbc-event-content"

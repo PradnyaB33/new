@@ -529,7 +529,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "manageTraining",
             isVisible:
-              ["HR", "Super-Admin"].includes(role) &&
+              ["HR", "Super-Admin", "Delegate-Super-Admin"].includes(role) &&
               window.location.pathname?.includes("organisation"),
             link: `/organisation/${orgId}/manage-training`,
             icon: (

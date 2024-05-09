@@ -21,7 +21,8 @@ const useGetDelegateSuperAdmin = () => {
         console.error("Error fetching data:", error);
         throw error; // Rethrow the error to be caught by React Query
       }
-    }
+    },
+    { retry: false }
   );
   return { data, isLoading, isFetching };
 };

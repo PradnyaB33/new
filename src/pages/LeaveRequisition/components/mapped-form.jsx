@@ -10,6 +10,7 @@ import {
 import { differenceInDays, format, parseISO } from "date-fns";
 import moment from "moment";
 import React, { useState } from "react";
+import { useQueryClient } from "react-query";
 import useLeaveRequesationHook from "../../../hooks/QueryHook/Leave-Requsation/hook";
 import useLeaveRequisitionMutation from "../../../hooks/QueryHook/Leave-Requsation/mutaion";
 
@@ -21,7 +22,9 @@ const Mapped = ({
   setNewAppliedLeaveEvents,
   setCalendarOpen,
 }) => {
-  const { data } = useLeaveRequesationHook();
+  console.log(`🚀 ~ file: mapped-form.jsx:24 ~ item:`, item);
+  const queryClient = useQueryClient();
+  const { data, invalidateLeaveTable } = useLeaveRequesationHook();
   const { calculateDays, checkLeaveProblem } = useLeaveRequisitionMutation();
 
   const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
@@ -48,11 +51,12 @@ const Mapped = ({
       setNewAppliedLeaveEvents(newAppliedLeaveEvents);
     }
   };
-  const removeItem = (idToRemove) => {
+  const removeItem = async (idToRemove) => {
     const updatedAppliedLeaveEvents = newAppliedLeaveEvents.filter(
       (_, i) => i !== idToRemove
     );
     setNewAppliedLeaveEvents(updatedAppliedLeaveEvents);
+    // await queryClient.invalidateQueries("employee-leave-table-without-default");
   };
   return (
     <div
