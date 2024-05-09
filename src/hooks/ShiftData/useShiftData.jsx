@@ -1,13 +1,11 @@
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
-import useShiftStore from "../../pages/SetupPage/ShiftManagement/store/useShiftStore";
 
 const useShiftData = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-  const { shiftName } = useShiftStore();
   const [id, setId] = useState(null);
   const [isCalendarOpen, setCalendarOpen] = useState(false);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
@@ -17,6 +15,10 @@ const useShiftData = () => {
   const [disabledShiftId, setDisabledShiftId] = useState(null);
   // const [isUpdating, setIsUpdating] = useState(false);
   const [selectEvent, setselectEvent] = useState(false);
+
+  useEffect(() => {
+    console.log("names array", newAppliedLeaveEvents);
+  }, [newAppliedLeaveEvents]);
 
   const { data, isLoading, isError, error } = useQuery(
     "employee-leave-table-without-default",
@@ -48,45 +50,34 @@ const useShiftData = () => {
   );
   const createShifts = async () => {
     console.log("This is final selected leave", selectedLeave);
-    try {
-      if (selectedLeave) {
-        await axios.post(
-          `${process.env.REACT_APP_API}/route/shiftApply/create`,
-          {
-            title: shiftName,
-            start: newAppliedLeaveEvents[0]?.start,
-            end: newAppliedLeaveEvents[0]?.end,
-          },
-          {
-            headers: {
-              Authorization: authToken,
+    newAppliedLeaveEvents.forEach(async (value, idx) => {
+      console.log("value", value);
+      try {
+        if (selectedLeave) {
+          await axios.post(
+            `${process.env.REACT_APP_API}/route/shiftApply/create`,
+            {
+              title: value?.name,
+              start: value?.start,
+              end: value?.end,
             },
-          }
-        );
-      } else {
-        await axios.patch(
-          `${process.env.REACT_APP_API}/route/shiftApply/update/${id}`,
-          {
-            title: shiftName,
-            start: newAppliedLeaveEvents[0]?.start,
-            end: newAppliedLeaveEvents[0]?.end,
-          },
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        );
+            {
+              headers: {
+                Authorization: authToken,
+              },
+            }
+          );
+        }
+        // Invalidate queries and reset state after successful mutation
+        queryclient.invalidateQueries("employee-leave-table");
+        queryclient.invalidateQueries("employee-summary-table");
+        queryclient.invalidateQueries("employee-leave-table-without-default");
+        setNewAppliedLeaveEvents([]);
+        setDisabledShiftId(selectedLeave ? selectedLeave._id : id);
+      } catch (error) {
+        console.error("Error creating or updating shifts:", error);
       }
-      // Invalidate queries and reset state after successful mutation
-      queryclient.invalidateQueries("employee-leave-table");
-      queryclient.invalidateQueries("employee-summary-table");
-      queryclient.invalidateQueries("employee-leave-table-without-default");
-      setNewAppliedLeaveEvents([]);
-      setDisabledShiftId(selectedLeave ? selectedLeave._id : id);
-    } catch (error) {
-      console.error("Error creating or updating shifts:", error);
-    }
+    });
   };
 
   const leaveMutation = useMutation(createShifts, {
