@@ -124,7 +124,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
                   {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
                 </h1>
               ) : (
-                <h1>
+                <h1 className="text-xl px-4 md:!px-0 font-semibold ">
                   {" "}
                   {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
                   has raised a {items?.leaveTypeDetailsId?.leaveName} request on{" "}
