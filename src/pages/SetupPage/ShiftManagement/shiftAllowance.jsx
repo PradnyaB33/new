@@ -16,6 +16,8 @@ const ShiftAllowance = () => {
     data,
     leaveData,
     setCalendarOpen,
+    newData,
+    setNewData,
     isLoading,
     handleSubmit,
     handleInputChange,
@@ -31,11 +33,28 @@ const ShiftAllowance = () => {
     disabledShiftId,
   } = useShiftData();
   const { cookies } = useContext(UseContext);
+  const { setAppAlert } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const queryclient = useQueryClient();
   const [shouldHideSelectedShift, setShouldHideSelectedShift] = useState(false);
   const [updateId, setUpdateId] = useState();
   const [selectedLeaveIndex, setSelectedLeaveIndex] = useState(null);
+  const getLatestShifts = async () => {
+    try {
+      const resp = await axios.get(
+        `${process.env.REACT_APP_API}/route/shiftApply/get`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setNewData(resp.data.requests);
+      queryclient.invalidateQueries("employee-leave-table-without-default");
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
   const handleUpdateClick = async () => {
     setSelectedLeaveIndex("number");
@@ -55,9 +74,15 @@ const ShiftAllowance = () => {
           },
         }
       );
+      setAppAlert({
+        alert: true,
+        type: "success",
+        msg: "Shift Updated Successfully",
+      });
+      queryclient.invalidateQueries("employee-leave-table-without-default");
+      getLatestShifts();
       queryclient.invalidateQueries("employee-leave-table");
       queryclient.invalidateQueries("employee-summary-table");
-      queryclient.invalidateQueries("employee-leave-table-without-default");
       setNewAppliedLeaveEvents([]);
       console.log("Shift updated:", response.data);
     } catch (error) {
@@ -134,6 +159,8 @@ const ShiftAllowance = () => {
             {/* Date picker */}
             <AppDatePicker
               data={data}
+              setNewData={setNewData}
+              newData={newData}
               handleUpdateFunction={handleUpdateFunction}
               leaveData={leaveData}
               selectEvent={selectEvent}
@@ -198,7 +225,7 @@ const ShiftAllowance = () => {
                         type="button"
                         variant="contained"
                         className="font-bold m-auto w-fit"
-                        onClick={handleUpdateClick} // Handle the update button click
+                        onClick={handleUpdateClick}
                       >
                         Update
                       </Button>

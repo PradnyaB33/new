@@ -8,6 +8,7 @@ const useShiftData = () => {
   const authToken = cookies["aegis"];
   const [id, setId] = useState(null);
   const [isCalendarOpen, setCalendarOpen] = useState(false);
+  const [newData, setNewData] = useState([]);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
   const queryclient = useQueryClient();
   const { setAppAlert } = useContext(UseContext);
@@ -31,7 +32,6 @@ const useShiftData = () => {
       );
       queryclient.invalidateQueries("employee-leave-table");
       queryclient.invalidateQueries("employee-summary-table");
-      queryclient.invalidateQueries("employee-leave-table-without-default");
       return response.data;
     }
   );
@@ -113,7 +113,6 @@ const useShiftData = () => {
 
   const handleUpdateFunction = (e) => {
     setselectEvent(true);
-    setSelectedLeave(null);
     console.log("event", e);
     console.log("shift events", newAppliedLeaveEvents);
 
@@ -123,6 +122,7 @@ const useShiftData = () => {
     });
 
     // Update the state or query data with the filtered requests
+    queryclient.invalidateQueries("employee-leave-table-without-default");
     queryclient.setQueryData("employee-leave-table-without-default", (old) => {
       old.currentYearLeaves = filteredRequests;
       return { ...old };
@@ -135,6 +135,8 @@ const useShiftData = () => {
     data,
     leaveData,
     isLoading,
+    newData,
+    setNewData,
     isError,
     error,
     handleSubmit,
