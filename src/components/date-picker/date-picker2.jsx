@@ -5,6 +5,7 @@ import { momentLocalizer } from "react-big-calendar";
 import { useQuery, useQueryClient } from "react-query";
 
 import axios from "axios";
+import { differenceInDays, format, parseISO } from "date-fns";
 import React, { useContext, useEffect, useState } from "react";
 import { Calendar } from "react-big-calendar";
 import { TestContext } from "../../State/Function/Main";
@@ -13,6 +14,8 @@ import { UseContext } from "../../State/UseState/UseContext";
 const AppDatePicker = ({
   data,
   leaveData,
+  newData,
+  setNewData,
   handleUpdateFunction,
   setNamesArray,
   selectEvent,
@@ -28,7 +31,8 @@ const AppDatePicker = ({
 }) => {
   const localizer = momentLocalizer(moment);
   const { handleAlert } = useContext(TestContext);
-  const [newData, setNewData] = useState([]);
+  const [selectedEventsToUpdate, setSelectedEventsToUpdate] = useState();
+  // const [newData, setNewData] = useState([]);
   // const [newLeave, setNewLeave] = useState([]);
   const queryClient = useQueryClient();
   const { cookies } = useContext(UseContext);
@@ -42,6 +46,7 @@ const AppDatePicker = ({
       return item._id !== disabledShiftId;
     });
     setNewData(newArr);
+    // eslint-disable-next-line
   }, [disabledShiftId, arr]);
 
   console.log("my shiftData", newData);
@@ -90,6 +95,7 @@ const AppDatePicker = ({
   });
   const handleSelectEvent = (event, eventId) => {
     setUpdateId(eventId);
+    console.log("this is main event", event);
     console.log("Selected Event ID:", eventId);
     if (event.title === "Selected Leave") {
       const filteredEvents = newAppliedLeaveEvents.filter(
@@ -98,6 +104,7 @@ const AppDatePicker = ({
       setNewAppliedLeaveEvents(filteredEvents);
     }
     setSelectedLeave(event);
+    setSelectedEventsToUpdate(event);
     setCalendarOpen(true);
     console.log("title", event.title);
     if (event.title === "Selected Leave") {
@@ -260,29 +267,54 @@ const AppDatePicker = ({
           </Select>
         </div>
         <div className="flex w-full flex-row-reverse px-3 text-red-500 italic font-extrabold text-xs h-[20px]">
-          {" "}
-          {selectEvent
-            ? "Please select dates for you leaves"
-            : selectedLeave?.status &&
-              !selectedLeave?.color && (
-                <div className="text-center font-semibold">
-                  The application for this shift is{" "}
-                  <span
-                    style={{
-                      color:
-                        selectedLeave.status === "Approved"
-                          ? "green"
-                          : selectedLeave.status === "Pending"
-                          ? "#f2a81b"
-                          : selectedLeave.status === "Rejected"
-                          ? "red"
-                          : "Yellow",
-                    }}
-                  >
-                    {selectedLeave.status}
-                  </span>
-                </div>
-              )}
+          {selectedLeave && selectEvent ? (
+            differenceInDays(
+              parseISO(selectedEventsToUpdate?.end),
+              parseISO(selectedEventsToUpdate?.start)
+            ) !== 1 ? (
+              <h1>
+                Updating existing entry from{" "}
+                {console.log("my selected shift bro", selectedLeave)}
+                {selectedEventsToUpdate?.start &&
+                  format(
+                    new Date(selectedEventsToUpdate?.start),
+                    "dd-MM-yyyy"
+                  )}{" "}
+                to{" "}
+                {selectedEventsToUpdate?.end &&
+                  moment(selectedEventsToUpdate?.end)
+                    .subtract(1, "days")
+                    .format("DD-MM-YYYY")}
+              </h1>
+            ) : (
+              <h1>
+                Updating existing entry of{" "}
+                {selectedEventsToUpdate?.start &&
+                  format(new Date(selectedEventsToUpdate?.start), "dd-MM-yyyy")}
+              </h1>
+            )
+          ) : (
+            selectedLeave?.status &&
+            !selectedLeave?.color && (
+              <div className="text-center font-semibold">
+                The application for this shift is{" "}
+                <span
+                  style={{
+                    color:
+                      selectedLeave.status === "Approved"
+                        ? "green"
+                        : selectedLeave.status === "Pending"
+                        ? "#f2a81b"
+                        : selectedLeave.status === "Rejected"
+                        ? "red"
+                        : "Yellow",
+                  }}
+                >
+                  {selectedLeave.status}
+                </span>
+              </div>
+            )
+          )}
         </div>
       </>
     );
@@ -376,10 +408,6 @@ const AppDatePicker = ({
       style={{ height: "500px !important" }}
     >
       <div className=" bg-white shadow-lg z-10">
-        <div className="fled w-full flex-row-reverse text-center px-3 text-blue-500 italic font-extrabold">
-          {" "}
-          {selectEvent ? "select the dates to update" : ""}
-        </div>
         <div className="w-full">
           <Calendar
             localizer={localizer}
