@@ -87,6 +87,7 @@ import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculatio
 import LetterSetup from "./pages/LetterTypes/LetterSetup";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
+import LoanNotificationToEmp from "./pages/LoanMgtNotified/LoanNotificationToEmp";
 import MissPunchInOut from "./pages/MissPunch/MissPunchInOut";
 import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
 import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
@@ -105,7 +106,7 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import EmpCommunication from "./pages/SetUpOrganization/EmpCommunication/EmpCommunication";
+
 const App = () => {
   return (
     <AuthProvider>
@@ -646,14 +647,14 @@ const App = () => {
             </RequireAuth>
           }
         />
-          <Route
+        {/* <Route
           path="/organisation/:organisationId/setup/email-communicaiton"
           element={
             <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
               <EmpCommunication />
             </RequireAuth>
           }
-        />
+        /> */}
         <Route
           path="/organisation/:organisationId/setup/set-shifts"
           element={
@@ -979,6 +980,10 @@ const App = () => {
         <Route path="*" element={<NotFound />} />
         <Route path="/loan-notification" element={<LoanMgtNotification />} />
         <Route path="/loan-approval/:loanId" element={<LoanMgtApproval />} />
+        <Route
+          path="/loan-notification-to-emp"
+          element={<LoanNotificationToEmp />}
+        />
       </Routes>
     </AuthProvider>
   );

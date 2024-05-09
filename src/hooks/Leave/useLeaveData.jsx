@@ -85,6 +85,40 @@ const useLeaveData = () => {
       console.error(error);
     },
   });
+
+  const deleteLeaveMutation = useMutation(
+    async (id) => {
+      await axios.delete(
+        `${process.env.REACT_APP_API}/route/leave/delete/${id}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: async () => {
+        await queryclient.invalidateQueries({
+          queryKey: ["employee-leave-table"],
+        });
+        await queryclient.invalidateQueries({
+          queryKey: ["employee-leave-table"],
+        });
+        await queryclient.invalidateQueries({
+          queryKey: ["employee-summary-table"],
+        });
+        await queryclient.invalidateQueries(
+          "employee-leave-table-without-default"
+        );
+        handleAlert(true, "success", "Leave deleted successfully");
+      },
+      onError: (error) => {
+        console.error(error);
+        handleAlert(true, "error", "Leave not deleted successfully");
+      },
+    }
+  );
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -128,6 +162,7 @@ const useLeaveData = () => {
     handleUpdateFunction,
     selectEvent,
     setselectEvent,
+    deleteLeaveMutation,
   };
 };
 
