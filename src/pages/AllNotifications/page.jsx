@@ -25,6 +25,8 @@ const ParentNotification = () => {
     role === "Accountant"
       ? `/notification/income-tax`
       : `/notification/income-tax-details`;
+  console.log(`🚀 ~ tdsRoute:`, tdsRoute);
+
   const dummyData = [
     {
       name: "Leave Notification",
@@ -56,6 +58,12 @@ const ParentNotification = () => {
       color: "#51FD96",
       url: "/punch-notification",
     },
+    // {
+    //   name: "TDS Notification",
+    //   count: tds ?? 0,
+    //   color: "#51E8FD",
+    //   url: tdsRoute,
+    // },
 
     {
       name: "Document Approval Notification",

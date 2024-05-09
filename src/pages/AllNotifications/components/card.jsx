@@ -15,6 +15,7 @@ const Card = ({ card, loading }) => {
     DepartmentIcon,
     TrendingUp,
     FolderIcon,
+    TrendingUp,
   ];
 
   const Skeleton = () => {
