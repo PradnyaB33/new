@@ -1,20 +1,13 @@
 import React, { useContext, useState } from "react";
 
-import { Info, WorkHistory } from "@mui/icons-material";
-import {
-  Autocomplete,
-  Avatar,
-  Card,
-  CircularProgress,
-  TextField,
-} from "@mui/material";
+import { Info } from "@mui/icons-material";
+import { Card, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { CategoryScale, Chart } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { useQuery } from "react-query";
 import Select from "react-select";
 import { UseContext } from "../../../../State/UseState/UseContext";
-import UserProfile from "../../../../hooks/UserData/useUser";
 Chart.register(CategoryScale);
 
 const ManagerEmployeeChart = ({
@@ -24,16 +17,70 @@ const ManagerEmployeeChart = ({
 }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
+  // const { getCurrentUser } = UserProfile();
+  const monthOptions = [
+    {
+      value: 1,
+      label: "January",
+    },
+    {
+      value: 2,
+      label: "February",
+    },
+    {
+      value: 3,
+      label: "March",
+    },
+    {
+      value: 4,
+      label: "April",
+    },
+    {
+      value: 5,
+      label: "May",
+    },
+    {
+      value: 6,
+      label: "June",
+    },
+    {
+      value: 7,
+      label: "July",
+    },
+    {
+      value: 8,
+      label: "August",
+    },
+    {
+      value: 9,
+      label: "September",
+    },
+    {
+      value: 10,
+      label: "October",
+    },
+    {
+      value: 11,
+      label: "November",
+    },
+    {
+      value: 12,
+      label: "December",
+    },
+  ];
+  const [selectMonth, setSelectMonth] = useState({
+    label: monthOptions.find((item) => item.value === new Date().getMonth() + 1)
+      .label,
+    value: new Date().getMonth() + 1,
+  });
+  // const user = getCurrentUser();
   // const RemainingLeaves = useLeaveTable();
-  const [userId, setuserId] = useState();
+  // const, setuserId] = useState();
 
   const customStyles = {
     control: (base) => ({
       ...base,
       border: ".5px solid #f1f1f1",
-      background: "#f9fafb",
       boxShadow: "none",
       hover: {
         cursor: "pointer !important",
@@ -64,6 +111,12 @@ const ManagerEmployeeChart = ({
   });
 
   const options = {
+    elements: {
+      line: {
+        tension: 0.5,
+      },
+    },
+
     scales: {
       x: {
         grid: {
@@ -71,17 +124,25 @@ const ManagerEmployeeChart = ({
         },
       },
       y: {
+        suggestedMax: 31,
+        ticks: {
+          max: 31,
+          beginAtZero: true,
+          stepSize: 5,
+          min: 0,
+        },
         grid: {
           display: true,
         },
       },
     },
     maintainAspectRatio: false,
+    responsive: true,
   };
 
   const getYearLeaves = async () => {
     const { data } = await axios.get(
-      `${process.env.REACT_APP_API}/route/leave/getYearLeaves/${userId}/${selectedyear.value}`,
+      `${process.env.REACT_APP_API}/route/leave/getManagerEmployeeAttendence/${selectedyear.value}/${selectMonth.value}`,
       {
         headers: {
           Authorization: authToken,
@@ -92,104 +153,145 @@ const ManagerEmployeeChart = ({
   };
 
   const { data: LeaveYearData, isLoading: leaveYearLoading } = useQuery(
-    ["leaveData", userId, selectedyear],
+    ["leaveData", selectedyear, selectMonth],
     getYearLeaves
   );
 
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+  console.log(`🚀 ~ LeaveYearData:`, LeaveYearData);
 
-  const allMonths = monthNames;
+  // const monthNames = [
+  //   "January",
+  //   "February",
+  //   "March",
+  //   "April",
+  //   "May",
+  //   "June",
+  //   "July",
+  //   "August",
+  //   "September",
+  //   "October",
+  //   "November",
+  //   "December",
+  // ];
 
-  const organizeDataByMonth = (data) => {
-    const organizedData = Array.from({ length: 12 }, (_, index) => {
-      const month = index + 1;
-      return {
-        month,
-        year: null,
-        PresentPercent: 0,
-        absentPercent: 0,
-      };
-    });
+  // const allMonths = monthNames;
 
-    Array.isArray(data) &&
-      data?.forEach((monthData) => {
-        const monthIndex = monthData.month - 1;
-        organizedData[monthIndex] = {
-          month: monthData.month,
-          year: monthData.year,
-          availableDays: monthData.availableDays,
-          unpaidleaveDays: monthData.unpaidleaveDays,
-          paidleaveDays: monthData.paidleaveDays,
-        };
-      });
+  // const organizeDataByMonth = (data) => {
+  //   const organizedData = Array.from({ length: 12 }, (_, index) => {
+  //     console.log(`🚀 ~ LeaveYearData:`, LeaveYearData);
+  //     const month = index + 1;
+  //     return {
+  //       month,
+  //       year: null,
+  //       PresentPercent: 0,
+  //       absentPercent: 0,
+  //     };
+  //   });
 
-    return organizedData ?? [];
-  };
+  //   Array.isArray(data) &&
+  //     data?.forEach((monthData) => {
+  //       const monthIndex = monthData.month - 1;
+  //       organizedData[monthIndex] = {
+  //         month: monthData.month,
+  //         year: monthData.year,
+  //         availableDays: monthData.availableDays,
+  //         unpaidleaveDays: monthData.unpaidleaveDays,
+  //         paidleaveDays: monthData.paidleaveDays,
+  //       };
+  //     });
 
-  const EmployeeleaveData = organizeDataByMonth(LeaveYearData);
-  const MonthArray = allMonths.map((month) => month);
+  //   return organizedData ?? [];
+  // };
+
+  // const EmployeeleaveData = organizeDataByMonth(LeaveYearData);
+  // const MonthArray = allMonths.map((month) => month);
 
   const data = {
-    labels: MonthArray,
+    labels: LeaveYearData?.map((monthData) => `${monthData?.empName}`),
     datasets: [
       {
         label: "Available Days",
-        data: EmployeeleaveData.map((monthData) => monthData.availableDays),
+        data: LeaveYearData?.map((monthData) => monthData.availableDays),
         backgroundColor: "#00b0ff",
         borderWidth: 1,
       },
       {
         label: "Unpaid Leave Days",
-        data: EmployeeleaveData.map((monthData) => monthData.unpaidleaveDays),
+        data: LeaveYearData?.map((monthData) => monthData.unpaidleaveDays),
         backgroundColor: "#f50057",
         borderWidth: 1,
       },
       {
         label: "Paid Leave Days",
-        data: EmployeeleaveData.map((monthData) => monthData.paidleaveDays),
+        data: LeaveYearData?.map((monthData) => monthData.paidleaveDays),
         backgroundColor: "#4caf50",
         borderWidth: 1,
       },
     ],
   };
 
-  const handleSelect = (event, newValue) => {
-    if (newValue) {
-      setuserId(newValue?._id);
-    } else {
-      setuserId(user._id);
-    }
-  };
+  // const handleSelect = (event, newValue) => {
+  //   if (newValue) {
+  //     setuserId(newValue?._id);
+  //   } else {
+  //     setuserId(user._id);
+  //   }
+  // };
 
   return (
     <>
       <Card elevation={3}>
         <div className="flex flex-col w-full px-4 items-start justify-between">
-          <div className="flex items-center gap-2 py-2  ">
-            <Avatar
+          <div className="flex items-center w-full justify-between gap-2 py-2  ">
+            {/* <Avatar
               variant="circle"
               className="!bg-sky-400 p-1 !h-[32px] !w-[32px] rounded-full"
             >
               <WorkHistory className="!text-lg" />
-            </Avatar>
-            <h1 className="md:text-xl text-lg py-3">Attendance Overview</h1>
+            </Avatar> */}
+            <h1 className="text-xl my-4 font-bold text-[#67748E]">
+              Attendance Overview
+            </h1>
+            <div className="flex gap-4 w-max">
+              <div className="w-[150px] ">
+                <label className="text-sm my-4 font-bold text-[#67748E]">
+                  Select Year
+                </label>
+                <Select
+                  placeholder={"Select year"}
+                  onChange={(year) => {
+                    setSelectedYear(year);
+                  }}
+                  components={{
+                    IndicatorSeparator: () => null,
+                  }}
+                  styles={customStyles}
+                  value={selectedyear} // Add this line
+                  options={yearOptions}
+                />
+              </div>
+              <div className="w-[150px]">
+                <label className="text-sm my-4 font-bold text-[#67748E]">
+                  Select Month
+                </label>
+                <Select
+                  placeholder={"Select Month"}
+                  onChange={(month) => {
+                    setSelectMonth(month);
+                  }}
+                  components={{
+                    IndicatorSeparator: () => null,
+                  }}
+                  styles={customStyles}
+                  value={selectMonth} // Add this line
+                  options={monthOptions}
+                />
+              </div>
+            </div>
           </div>
 
-          <div className="flex gap-2 w-full">
-            <Autocomplete
+          <div className="flex gap-4 w-full">
+            {/* <Autocomplete
               disablePortal
               id="combo-box-demo"
               className="w-full"
@@ -208,9 +310,12 @@ const ManagerEmployeeChart = ({
               renderInput={(params) => (
                 <TextField {...params} label="Search Employee" />
               )}
-            />
+            /> */}
 
-            <div className="w-[15%]">
+            {/* <div className="w-[150px] ">
+              <label className="text-sm my-4 font-bold text-[#67748E]">
+                Select Year
+              </label>
               <Select
                 placeholder={"Select year"}
                 onChange={(year) => {
@@ -224,21 +329,29 @@ const ManagerEmployeeChart = ({
                 options={yearOptions}
               />
             </div>
+            <div className="w-[150px]">
+              <label className="text-sm my-4 font-bold text-[#67748E]">
+                Select Month
+              </label>
+              <Select
+                placeholder={"Select Month"}
+                onChange={(month) => {
+                  setSelectMonth(month);
+                }}
+                components={{
+                  IndicatorSeparator: () => null,
+                }}
+                styles={customStyles}
+                value={selectMonth} // Add this line
+                options={monthOptions}
+              />
+            </div> */}
           </div>
         </div>
 
         <div className="flex flex-col gap-2">
           <Card elevation={0} className="w-full ">
-            {!userId || userId === "" ? (
-              <Card elevation={0} className="  mx-4 py-6 ">
-                <article className="flex items-center mb-1 text-blue-500 gap-2">
-                  <Info className="!text-2xl" />
-                  <h1 className="text-xl ">
-                    Select the employee to see the attendance overview
-                  </h1>
-                </article>
-              </Card>
-            ) : MonthArray.length <= 0 ? (
+            {LeaveYearData?.length <= 0 ? (
               <Card elevation={0} className="  mx-4 py-6 ">
                 <article className="flex items-center mb-1 text-red-500 gap-2">
                   <Info className="!text-2xl" />
@@ -265,15 +378,6 @@ const ManagerEmployeeChart = ({
                     />
                   )}
                 </div>
-
-                {/* <Card className="w-[45%]" elevation={0}>
-                  <div className="px-4 pt-4">
-                    <h1 className="text-xl">Total Leaves Left</h1>
-                  </div>
-                  <div className="p-2  flex items-center  ">
-                    <Pie data={dataPie} options={optionsPie} />
-                  </div>
-                </Card> */}
               </div>
             )}
           </Card>

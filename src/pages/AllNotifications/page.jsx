@@ -2,12 +2,12 @@ import React from "react";
 import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 import useDocNotification from "../../hooks/QueryHook/notification/document-notification/hook";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
+import useLoanNotification from "../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
 import usePunchNotification from "../../hooks/QueryHook/notification/punch-notification/hook";
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
 import useTDSNotificationHook from "../../hooks/QueryHook/notification/tds-notification/hook";
 import UserProfile from "../../hooks/UserData/useUser";
 import Card from "./components/card";
-import useLoanNotification from "../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
 
 const ParentNotification = () => {
   const { data, isLoading } = useLeaveNotificationHook();
@@ -26,6 +26,7 @@ const ParentNotification = () => {
       ? `/notification/income-tax`
       : `/notification/income-tax-details`;
   console.log(`🚀 ~ tdsRoute:`, tdsRoute);
+
   const dummyData = [
     {
       name: "Leave Notification",
@@ -57,6 +58,12 @@ const ParentNotification = () => {
       color: "#51FD96",
       url: "/punch-notification",
     },
+    // {
+    //   name: "TDS Notification",
+    //   count: tds ?? 0,
+    //   color: "#51E8FD",
+    //   url: tdsRoute,
+    // },
 
     {
       name: "Document Approval Notification",
@@ -64,7 +71,12 @@ const ParentNotification = () => {
       color: "#FF7373",
       url: "/doc-notification",
     },
-   
+    {
+      name: "TDS Notification",
+      count: tds ?? 0,
+      color: "#51E8FD",
+      url: tdsRoute,
+    },
   ];
 
   return (
