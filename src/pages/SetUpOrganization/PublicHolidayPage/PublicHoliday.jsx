@@ -24,10 +24,11 @@ import axios from "axios";
 import { format } from "date-fns";
 import dayjs from "dayjs";
 import React, { useContext, useEffect, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../Setup";
+import usePublicHoliday from "./usePublicHoliday";
 
 const PublicHoliday = () => {
   const id = useParams().organisationId;
@@ -71,21 +72,8 @@ const PublicHoliday = () => {
     })();
   }, [authToken, id]);
 
-  const { data } = useQuery("holidays", async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/holiday/get/${id}`
-      );
-      return response.data.holidays;
-    } catch (error) {
-      console.error("Error fetching holidays:", error);
-      setAppAlert({
-        alert: true,
-        type: "error",
-        msg: "An Error occurred while fetching holidays",
-      });
-    }
-  });
+  const { data } = usePublicHoliday(id);
+
   const handleData = (e) => {
     const { name, value } = e.target;
 

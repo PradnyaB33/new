@@ -77,10 +77,10 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
 
   return (
     <Box
-      className="py-2 space-y-5 h-max"
+      className="h-max"
       sx={{
         flexGrow: 1,
-        p: 5,
+        py: 2,
       }}
     >
       <Grid
