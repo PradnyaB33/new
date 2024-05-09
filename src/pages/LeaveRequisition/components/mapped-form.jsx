@@ -10,7 +10,6 @@ import {
 import { differenceInDays, format, parseISO } from "date-fns";
 import moment from "moment";
 import React, { useState } from "react";
-import { useQueryClient } from "react-query";
 import useLeaveRequesationHook from "../../../hooks/QueryHook/Leave-Requsation/hook";
 import useLeaveRequisitionMutation from "../../../hooks/QueryHook/Leave-Requsation/mutaion";
 
@@ -23,8 +22,7 @@ const Mapped = ({
   setCalendarOpen,
 }) => {
   console.log(`🚀 ~ file: mapped-form.jsx:24 ~ item:`, item);
-  const queryClient = useQueryClient();
-  const { data, invalidateLeaveTable } = useLeaveRequesationHook();
+  const { data } = useLeaveRequesationHook();
   const { calculateDays, checkLeaveProblem } = useLeaveRequisitionMutation();
 
   const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
