@@ -2,6 +2,7 @@ import React from "react";
 import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 import useDocNotification from "../../hooks/QueryHook/notification/document-notification/hook";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
+import useLoanNotification from "../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
 import usePunchNotification from "../../hooks/QueryHook/notification/punch-notification/hook";
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
 import useTDSNotificationHook from "../../hooks/QueryHook/notification/tds-notification/hook";
@@ -15,6 +16,7 @@ const ParentNotification = () => {
   const { data: tds } = useTDSNotificationHook();
   console.log(`🚀 ~ tds:`, tds);
   const { data: data4 } = useDocNotification();
+  const { getEmployeeRequestLoanApplication } = useLoanNotification();
   const { missPunchData } = useMissedPunchNotificationCount();
 
   const { useGetCurrentRole } = UserProfile();
@@ -29,6 +31,12 @@ const ParentNotification = () => {
       count: data?.leaveRequests?.length ?? 0,
       color: "#FF7373",
       url: "/leave-notification",
+    },
+    {
+      name: "Loan Notification",
+      count: getEmployeeRequestLoanApplication?.length ?? 0,
+      color: "#51E8FD",
+      url: "/loan-notification",
     },
     {
       name: "Missed Punch Notification",

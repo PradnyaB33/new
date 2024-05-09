@@ -14,6 +14,7 @@ const AppDatePicker = ({
   data,
   leaveData,
   handleUpdateFunction,
+  setNamesArray,
   selectEvent,
   setselectEvent,
   setCalendarOpen,
@@ -25,7 +26,6 @@ const AppDatePicker = ({
   disabledShiftId,
 }) => {
   const localizer = momentLocalizer(moment);
-  console.log("this is the shift Data", data);
   const { handleAlert } = useContext(TestContext);
   const [newData, setNewData] = useState([]);
   // const [newLeave, setNewLeave] = useState([]);
@@ -34,7 +34,6 @@ const AppDatePicker = ({
   const { setAppAlert } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const arr = data;
-  console.log("this is leave data", leaveData);
 
   useEffect(() => {
     const arrayOfData = arr && arr.requests ? arr.requests : [];
@@ -83,6 +82,7 @@ const AppDatePicker = ({
     return response.data;
   });
   const handleSelectEvent = (event) => {
+    console.log("event", event);
     if (event.title === "Selected Leave") {
       const filteredEvents = newAppliedLeaveEvents.filter(
         (item) => item.title !== "Selected Leave"

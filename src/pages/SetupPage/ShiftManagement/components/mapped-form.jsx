@@ -61,8 +61,22 @@ const Mapped = ({
   }, []);
 
   const handleChange = (event) => {
-    const selectedShiftId = event.target.value;
-    setLeavesTypes(selectedShiftId);
+    const selectedShiftName = event.target.value;
+    setLeavesTypes(selectedShiftName);
+
+    setNewAppliedLeaveEvents((prevEvents) => {
+      const updatedEvents = [...prevEvents];
+      if (index >= 0 && index < updatedEvents.length) {
+        updatedEvents[index] = {
+          ...updatedEvents[index],
+          name: selectedShiftName,
+        };
+      }
+      return updatedEvents;
+    });
+
+    // Update the shift name in the store
+    setShiftName(selectedShiftName);
   };
 
   console.log(newAppliedLeaveEvents);
@@ -137,17 +151,18 @@ const Mapped = ({
             required
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={leavesTypes}
+            value={item.name}
             label="Select Type"
             onChange={handleChange}
           >
             {sName?.map((item, index) => {
+              console.log("items in side", item);
               return (
                 <MenuItem
                   selected={leavesTypes === item.leaveTypeDetailsId}
                   id={index}
                   key={index}
-                  value={item._id}
+                  value={item.shiftName}
                   onClick={() => handleChange2(item.shiftName)}
                 >
                   <div className="flex justify-between w-full">

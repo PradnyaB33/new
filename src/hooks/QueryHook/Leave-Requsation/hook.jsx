@@ -17,8 +17,7 @@ const useLeaveRequesationHook = () => {
       return response.data;
     }
   );
-  const invalidateLeaveTable = async () => {};
-  return { data, isLoading, isError, error, invalidateLeaveTable };
+  return { data, isLoading, isError, error };
 };
 
 export default useLeaveRequesationHook;
