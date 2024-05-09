@@ -24,6 +24,7 @@ const AppDatePicker = ({
   newAppliedLeaveEvents,
   isCalendarOpen,
   shiftData,
+  deleteLeaveMutation,
 }) => {
   const localizer = momentLocalizer(moment);
   const queryClient = useQueryClient();
@@ -59,6 +60,7 @@ const AppDatePicker = ({
       setUpdate(false);
     } else if (event.color) {
       setUpdate(true);
+      setDelete(true);
     } else {
       setDelete(false);
       setUpdate(false);
@@ -235,6 +237,10 @@ const AppDatePicker = ({
     }
   };
   const handleDelete = (e) => {
+    console.log(
+      `🚀 ~ file: date-picker.jsx:240 ~ selectedLeave:`,
+      selectedLeave
+    );
     if (selectedLeave.title === "Selected Leave") {
       setNewAppliedLeaveEvents((prev) =>
         prev.filter((data) => {
@@ -246,6 +252,8 @@ const AppDatePicker = ({
           );
         })
       );
+    } else {
+      deleteLeaveMutation.mutate(selectedLeave._id);
     }
     setDelete(false);
   };
@@ -354,7 +362,7 @@ const AppDatePicker = ({
           variant="contained"
           onClick={async () => {
             await handleUpdateFunction();
-
+            setDelete(false);
             setUpdate(false);
           }}
           className="rbc-event-content"
