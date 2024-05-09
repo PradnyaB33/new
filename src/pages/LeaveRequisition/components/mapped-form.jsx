@@ -21,6 +21,7 @@ const Mapped = ({
   setNewAppliedLeaveEvents,
   setCalendarOpen,
 }) => {
+  console.log(`🚀 ~ file: mapped-form.jsx:24 ~ item:`, item);
   const { data } = useLeaveRequesationHook();
   const { calculateDays, checkLeaveProblem } = useLeaveRequisitionMutation();
 
