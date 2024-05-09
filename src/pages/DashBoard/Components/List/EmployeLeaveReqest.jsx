@@ -1,4 +1,4 @@
-import { BeachAccessOutlined, Info } from "@mui/icons-material";
+import { Info } from "@mui/icons-material";
 import { Avatar, Card } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import axios from "axios";
@@ -50,14 +50,10 @@ const EmployeeLeaveRequest = () => {
     <Card elevation={3}>
       <div className="bg-white rounded-md  w-full shadow-md">
         <div className="flex w-full px-4 items-center justify-between">
-          <div className="flex items-center gap-2 py-2  ">
-            <Avatar
-              variant="circle"
-              className="!bg-sky-400 p-1 !h-[32px] !w-[32px] rounded-full"
-            >
-              <BeachAccessOutlined className="!text-xl" />
-            </Avatar>
-            <h1 className="md:text-xl text-lg py-3">Employee Leave Request</h1>
+          <div className="flex items-center gap-2 py-1  ">
+            <h1 className="text-xl my-2 font-bold text-[#67748E]">
+              Employee Leave Request
+            </h1>
           </div>
           <Link
             to={"/notification"}
@@ -73,19 +69,15 @@ const EmployeeLeaveRequest = () => {
               <div key={id} className="gap-3   flex">
                 <Avatar variant="circle" />
                 <div>
-                  <div className="flex items-center gap-6">
-                    <h1 className="text-md font-semibold">
+                  <div className="flex items-center gap-3">
+                    <h1 className="text-lg tracking-tight">
                       {item?.employeeId?.first_name}{" "}
                       {item?.employeeId?.last_name}
                     </h1>
-                    {/* <div className="text-sm flex items-center gap-2 border-[.5px] text-[red] border-[red] rounded-full px-4">
-                      <div className="bg-[red]  h-0 p-1 rounded-full"></div>
-                      <p>{item.status}</p>
-                    </div> */}
+                    <h1 className={`font-bold text-sm text-[#67748E]`}>
+                      {item.title}
+                    </h1>{" "}
                   </div>
-                  <span className={`text-sm  text-[${item.color}]`}>
-                    {item.title}
-                  </span>{" "}
                   <p className="text-md">
                     {format(new Date(item?.start), "PP")} -{" "}
                     {format(new Date(item?.end), "PP")}{" "}
