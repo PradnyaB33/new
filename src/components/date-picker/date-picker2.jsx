@@ -24,6 +24,7 @@ const AppDatePicker = ({
   newAppliedLeaveEvents,
   isCalendarOpen,
   disabledShiftId,
+  setUpdateId,
 }) => {
   const localizer = momentLocalizer(moment);
   const { handleAlert } = useContext(TestContext);
@@ -43,6 +44,11 @@ const AppDatePicker = ({
     setNewData(newArr);
   }, [disabledShiftId, arr]);
 
+  console.log("my shiftData", newData);
+  useEffect(() => {
+    console.log("selected leave", selectedLeave);
+  }, [selectedLeave]);
+
   const getLatestShifts = async () => {
     try {
       const resp = await axios.get(
@@ -54,6 +60,7 @@ const AppDatePicker = ({
         }
       );
       setNewData(resp.data.requests);
+      queryClient.invalidateQueries("employee-leave-table-without-default");
     } catch (error) {
       console.error(error.message);
     }
@@ -81,8 +88,9 @@ const AppDatePicker = ({
 
     return response.data;
   });
-  const handleSelectEvent = (event) => {
-    console.log("event", event);
+  const handleSelectEvent = (event, eventId) => {
+    setUpdateId(eventId);
+    console.log("Selected Event ID:", eventId);
     if (event.title === "Selected Leave") {
       const filteredEvents = newAppliedLeaveEvents.filter(
         (item) => item.title !== "Selected Leave"
@@ -91,11 +99,13 @@ const AppDatePicker = ({
     }
     setSelectedLeave(event);
     setCalendarOpen(true);
+    console.log("title", event.title);
     if (event.title === "Selected Leave") {
+      // Additional logic if needed
     } else {
+      // Additional logic if needed
     }
   };
-
   const dayPropGetter = (date) => {
     const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "short" });
 
@@ -114,7 +124,7 @@ const AppDatePicker = ({
     return {};
   };
 
-  const handleSelectSlot = ({ start, end }) => {
+  const handleSelectSlot = ({ start, end, _id }) => {
     getLatestShifts();
     getLatestLeave();
     const selectedStartDate = moment(start).startOf("day");
@@ -187,14 +197,16 @@ const AppDatePicker = ({
         "You have already selected this leave"
       );
     } else {
-      const newLeave = {
+      const newShift = {
         title: selectEvent ? "Updated Shift" : "Selected Shift",
         start: new Date(start).toISOString(),
         end: new Date(end).toISOString(),
+        color: selectEvent ? "black" : "blue", // Set background color to black for updated shift
       };
 
-      setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
-      setSelectedLeave(selectEvent ? null : newLeave);
+      // Update state accordingly
+      setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newShift]);
+      setSelectedLeave(selectEvent ? null : newShift);
       setselectEvent(false);
     }
   };
@@ -211,46 +223,68 @@ const AppDatePicker = ({
     };
 
     return (
-      <div className="flex-row-reverse flex gap-4 items-center">
-        <Button
-          // variant="outlined"
-          color="error"
-          className="!h-full hover:!bg-[#da4f4f] hover:!text-white"
-          size="small"
-          onClick={() => setCalendarOpen(false)}
-        >
-          <Close />
-        </Button>
-        <Select
-          className="m-2"
-          size="small"
-          value={moment(toolbar.date).month()}
-          onChange={handleMonthChange}
-        >
-          {moment.months().map((month, index) => (
-            <MenuItem key={index} value={index}>
-              {month}
-            </MenuItem>
-          ))}
-        </Select>
-        <Select
-          className="m-2"
-          size="small"
-          value={moment(toolbar.date).year()}
-          onChange={handleYearChange}
-        >
-          {Array.from({ length: 10 }).map((_, index) => (
-            <MenuItem key={index} value={moment(toolbar.date).year() + index}>
-              {moment(toolbar.date).year() + index}
-            </MenuItem>
-          ))}
-        </Select>
-
-        <div className="fled w-full flex-row-reverse px-3 text-blue-500 italic font-extrabold">
-          {" "}
-          {selectEvent ? "select the dates to update" : ""}
+      <>
+        <div className="flex-row-reverse flex gap-4 items-center">
+          <Button
+            // variant="outlined"
+            color="error"
+            className="!h-full hover:!bg-[#da4f4f] hover:!text-white"
+            size="small"
+            onClick={() => setCalendarOpen(false)}
+          >
+            <Close />
+          </Button>
+          <Select
+            className="m-2"
+            size="small"
+            value={moment(toolbar.date).month()}
+            onChange={handleMonthChange}
+          >
+            {moment.months().map((month, index) => (
+              <MenuItem key={index} value={index}>
+                {month}
+              </MenuItem>
+            ))}
+          </Select>
+          <Select
+            className="m-2"
+            size="small"
+            value={moment(toolbar.date).year()}
+            onChange={handleYearChange}
+          >
+            {Array.from({ length: 10 }).map((_, index) => (
+              <MenuItem key={index} value={moment(toolbar.date).year() + index}>
+                {moment(toolbar.date).year() + index}
+              </MenuItem>
+            ))}
+          </Select>
         </div>
-      </div>
+        <div className="flex w-full flex-row-reverse px-3 text-red-500 italic font-extrabold text-xs h-[20px]">
+          {" "}
+          {selectEvent
+            ? "Please select dates for you leaves"
+            : selectedLeave?.status &&
+              !selectedLeave?.color && (
+                <div className="text-center font-semibold">
+                  The application for this shift is{" "}
+                  <span
+                    style={{
+                      color:
+                        selectedLeave.status === "Approved"
+                          ? "green"
+                          : selectedLeave.status === "Pending"
+                          ? "#f2a81b"
+                          : selectedLeave.status === "Rejected"
+                          ? "red"
+                          : "Yellow",
+                    }}
+                  >
+                    {selectedLeave.status}
+                  </span>
+                </div>
+              )}
+        </div>
+      </>
     );
   };
   const handleClickAway = (event) => {
@@ -265,6 +299,7 @@ const AppDatePicker = ({
     }
   };
   const handleDelete = async () => {
+    console.log("selectedLeave", selectedLeave);
     try {
       if (selectedLeave.status === "Approved") {
         setAppAlert({
@@ -287,7 +322,10 @@ const AppDatePicker = ({
           prevEvents.filter((event) => event._id !== selectedLeave._id)
         );
         getLatestShifts();
+        queryClient.invalidateQueries("employee-leave-table-without-default");
+
         setSelectedLeave(null); // Reset selectedLeave state
+        queryClient.invalidateQueries("table");
         queryClient.invalidateQueries("table");
         setAppAlert({
           alert: true,
@@ -338,26 +376,11 @@ const AppDatePicker = ({
       style={{ height: "500px !important" }}
     >
       <div className=" bg-white shadow-lg z-10">
+        <div className="fled w-full flex-row-reverse text-center px-3 text-blue-500 italic font-extrabold">
+          {" "}
+          {selectEvent ? "select the dates to update" : ""}
+        </div>
         <div className="w-full">
-          {selectedLeave?.status && (
-            <div className="text-center font-semibold">
-              The application for this shift is{" "}
-              <span
-                style={{
-                  color:
-                    selectedLeave.status === "Approved"
-                      ? "green"
-                      : selectedLeave.status === "Pending"
-                      ? "#f2a81b"
-                      : selectedLeave.status === "Rejected"
-                      ? "red"
-                      : "Yellow",
-                }}
-              >
-                {selectedLeave.status}
-              </span>
-            </div>
-          )}
           <Calendar
             localizer={localizer}
             views={["month"]}
@@ -382,11 +405,14 @@ const AppDatePicker = ({
             }}
             selectable
             onSelectSlot={handleSelectSlot}
-            onSelectEvent={handleSelectEvent}
+            onSelectEvent={(event) => handleSelectEvent(event, event._id)}
             datePropGetter={selectedLeave}
             dayPropGetter={dayPropGetter}
             eventPropGetter={(event) => {
               let backgroundColor = "blue";
+              if (event.title === "Updated Shift") {
+                backgroundColor = "black";
+              }
 
               if (event?.status) {
                 switch (event.status) {
@@ -424,12 +450,33 @@ const AppDatePicker = ({
         </Button>
         <Button
           variant="contained"
-          onClick={handleDelete}
+          onClick={async () => {
+            await handleUpdateFunction();
+          }}
           className="rbc-event-content"
-          disabled={!selectedLeave}
+          disabled={selectedLeave?.color}
         >
-          Delete
+          Update
         </Button>
+
+        {selectedLeave?.title === "Selected Shift" ? (
+          <Button
+            variant="contained"
+            onClick={handleDelete}
+            className="rbc-event-content"
+          >
+            Delete
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            onClick={handleDelete}
+            className="rbc-event-content"
+            disabled={selectedLeave?.color}
+          >
+            Delete
+          </Button>
+        )}
       </div>
     </Popover>
   );

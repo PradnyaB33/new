@@ -2,9 +2,9 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { Popover, Skeleton } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
+import { useQuery } from "react-query";
 import { UseContext } from "../../../../State/UseState/UseContext";
 import SummaryTable from "./SummaryTable";
-import { useQuery } from "react-query";
 
 const ShiftsTable = () => {
   const { cookies } = useContext(UseContext);
@@ -55,7 +55,7 @@ const ShiftsTable = () => {
     );
   }
 
-  console.log(data.length);
+  console.log(data?.length);
 
   const handlePopoverClose = () => {
     setAnchorEl(null);

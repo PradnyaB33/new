@@ -52,6 +52,7 @@ const useShiftData = () => {
     console.log("This is final selected leave", selectedLeave);
     newAppliedLeaveEvents.forEach(async (value, idx) => {
       console.log("value", value);
+      setId(idx);
       try {
         if (selectedLeave) {
           await axios.post(
@@ -96,6 +97,8 @@ const useShiftData = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     queryclient.invalidateQueries("table");
+    queryclient.invalidateQueries("employee-leave-table-without-default");
+
     setCalendarOpen(false);
     leaveMutation.mutate();
     setAppAlert({
@@ -109,27 +112,24 @@ const useShiftData = () => {
   };
 
   const handleUpdateFunction = (e) => {
-    console.log(
-      `🚀 ~ file: useLeaveData.jsx:88 ~ selectedLeave._id:`,
-      selectedLeave
-    );
     setselectEvent(true);
     setSelectedLeave(null);
-    // setIsUpdating(true);
-    setId(selectedLeave._id);
+    console.log("event", e);
+    console.log("shift events", newAppliedLeaveEvents);
 
-    let array = data?.requests.filter((item) => {
+    // Filter out the selected event from the requests data
+    const filteredRequests = data?.requests.filter((item) => {
       return item._id !== selectedLeave?._id;
     });
+
+    // Update the state or query data with the filtered requests
     queryclient.setQueryData("employee-leave-table-without-default", (old) => {
-      old.currentYearLeaves = old?.requests.filter((item) => {
-        return item._id !== selectedLeave?._id;
-      });
+      old.currentYearLeaves = filteredRequests;
       return { ...old };
     });
+
     setDisabledShiftId(selectedLeave._id);
-    setSelectedLeave(array);
-    console.log(selectedLeave);
+    setSelectedLeave(filteredRequests);
   };
   return {
     data,

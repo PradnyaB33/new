@@ -1,9 +1,11 @@
 import { CalendarMonth, West } from "@mui/icons-material";
 import { Badge, Button, Skeleton } from "@mui/material";
-import React from "react";
-import "react-big-calendar/lib/css/react-big-calendar.css";
+import axios from "axios"; // Import axios for making HTTP requests
+import React, { useContext, useState } from "react";
+import { useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import "tailwindcss/tailwind.css";
+import { UseContext } from "../../../State/UseState/UseContext";
 import AppDatePicker from "../../../components/date-picker/date-picker2";
 import useShiftData from "../../../hooks/ShiftData/useShiftData";
 import ShiftsTable from "./components/ShiftsTable";
@@ -28,7 +30,40 @@ const ShiftAllowance = () => {
     isUpdating,
     disabledShiftId,
   } = useShiftData();
-  console.log(selectedLeave);
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
+  const queryclient = useQueryClient();
+  const [shouldHideSelectedShift, setShouldHideSelectedShift] = useState(false);
+  const [updateId, setUpdateId] = useState();
+  const [selectedLeaveIndex, setSelectedLeaveIndex] = useState(null);
+
+  const handleUpdateClick = async () => {
+    setSelectedLeaveIndex("number");
+    setShouldHideSelectedShift(true);
+    try {
+      console.log("inside the update function", newAppliedLeaveEvents);
+      const response = await axios.patch(
+        `${process.env.REACT_APP_API}/route/shiftApply/update/${updateId}`,
+        {
+          title: newAppliedLeaveEvents[0].name,
+          start: newAppliedLeaveEvents[0].start,
+          end: newAppliedLeaveEvents[0].end,
+        },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      queryclient.invalidateQueries("employee-leave-table");
+      queryclient.invalidateQueries("employee-summary-table");
+      queryclient.invalidateQueries("employee-leave-table-without-default");
+      setNewAppliedLeaveEvents([]);
+      console.log("Shift updated:", response.data);
+    } catch (error) {
+      console.error("Error updating shift:", error);
+    }
+  };
 
   return (
     <>
@@ -102,6 +137,7 @@ const ShiftAllowance = () => {
               handleUpdateFunction={handleUpdateFunction}
               leaveData={leaveData}
               selectEvent={selectEvent}
+              setUpdateId={setUpdateId}
               setselectEvent={setselectEvent}
               setCalendarOpen={setCalendarOpen}
               setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
@@ -125,7 +161,7 @@ const ShiftAllowance = () => {
                   </h1>
                   <div className="flex flex-col gap-4">
                     {/* Mapping through newAppliedLeaveEvents */}
-                    {newAppliedLeaveEvents?.map((item, index) => (
+                    {newAppliedLeaveEvents.map((item, index) => (
                       <Mapped
                         key={index}
                         setCalendarOpen={setCalendarOpen}
@@ -136,8 +172,15 @@ const ShiftAllowance = () => {
                         setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
                         isUpdating={isUpdating} // Pass isUpdating to Mapped component
                         isDisabled={item._id === disabledShiftId} // Check if the current shift is disabled
+                        shouldHide={
+                          shouldHideSelectedShift &&
+                          index === selectedLeaveIndex
+                        } // Hide the selected shift
                       />
                     ))}
+                  </div>
+                  {/* Show Apply for Shift button if not updating */}
+                  {newAppliedLeaveEvents[0].title === "Selected Shift" && (
                     <div className="w-full m-auto flex justify-center my-4">
                       <Button
                         type="submit"
@@ -147,25 +190,37 @@ const ShiftAllowance = () => {
                         Apply for shift
                       </Button>
                     </div>
-                  </div>
+                  )}
+                  {/* Show Update button if updating */}
+                  {newAppliedLeaveEvents[0].title === "Updated Shift" && (
+                    <div className="w-full m-auto flex justify-center my-4">
+                      <Button
+                        type="button"
+                        variant="contained"
+                        className="font-bold m-auto w-fit"
+                        onClick={handleUpdateClick} // Handle the update button click
+                      >
+                        Update
+                      </Button>
+                    </div>
+                  )}
                 </form>
               </>
             ) : (
               // Render if no shifts available
               <>
-                <div className="w-full h-max grid justify-center relative gap-4 !mt-4 space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg">
-                  <Button
-                    disabled={isLoading}
-                    onClick={() => setCalendarOpen(true)}
-                    variant="text"
-                    size="large"
-                    className="text-center w-fit !m-auto !capitalize !underline "
-                  >
-                    {!isLoading
-                      ? "Apply for Shifts"
-                      : "Wait Calendar is Loading"}
-                  </Button>
-                </div>
+                {!isUpdating && (
+                  <div className="w-full m-auto flex justify-center my-4">
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      onClick={() => setCalendarOpen(true)}
+                      className="font-bold m-auto w-fit"
+                    >
+                      Apply for shift
+                    </Button>
+                  </div>
+                )}
               </>
             )}
           </article>
