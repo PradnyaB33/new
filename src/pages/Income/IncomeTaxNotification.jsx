@@ -58,7 +58,7 @@ const IncomeTaxNotification = () => {
             </div>
             <Skeleton variant="rectangular" height={24} width={80} />
           </div>
-        ) : empTDSData.length <= 0 ? (
+        ) : empTDSData?.length <= 0 ? (
           <div className="flex px-4 w-full items-center my-4">
             <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
               <Info /> No notification found
