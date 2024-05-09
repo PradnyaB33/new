@@ -105,7 +105,8 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import EmpCommunication from "./pages/SetUpOrganization/EmpCommunication/EmpCommunication";
+import LoanNotificationToEmp from "./pages/LoanMgtNotified/LoanNotificationToEmp";
+
 const App = () => {
   return (
     <AuthProvider>
@@ -979,6 +980,7 @@ const App = () => {
         <Route path="*" element={<NotFound />} />
         <Route path="/loan-notification" element={<LoanMgtNotification />} />
         <Route path="/loan-approval/:loanId" element={<LoanMgtApproval />} />
+        <Route path="/loan-notification-to-emp" element={<LoanNotificationToEmp />} />
       </Routes>
     </AuthProvider>
   );

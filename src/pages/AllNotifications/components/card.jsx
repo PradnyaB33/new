@@ -15,7 +15,10 @@ const Card = ({ card, loading }) => {
     DepartmentIcon,
     TrendingUp,
     FolderIcon,
+<<<<<<< HEAD
     TrendingUp,
+=======
+>>>>>>> 040baf340252e0ed0f8bfc3ff91f2e40d21ae3fa
   ];
 
   const Skeleton = () => {
