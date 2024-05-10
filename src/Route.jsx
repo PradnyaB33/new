@@ -12,6 +12,7 @@ import ResetPassword from "./components/resetpassword/resetpassword";
 import RequireAuth, { AuthProvider } from "./context/AuthProvider";
 import useSubscription from "./hooks/Subscription/subscription";
 import NewOranisationForm from "./pages/AddOrganisation/OrgFrom";
+import EmpShiftNotification from "./pages/AllNotifications/empShiftNotification";
 import Application from "./pages/Application/Application";
 import Billing from "./pages/Billing/page";
 import DashBoardHR from "./pages/DashBoard/DashBoardHR";
@@ -189,6 +190,7 @@ const App = () => {
         {/* <Route path="/notification" element={<ParentNotification />} /> */}
         <Route path="/leave-notification" element={<LeaveNotification />} />
         <Route path="/punch-notification" element={<PunchNotification />} />
+        <Route path="/shift-notification" element={<EmpShiftNotification />} />
         <Route
           path="/punch-notification/:employeeId"
           element={<PunchNotification />}
