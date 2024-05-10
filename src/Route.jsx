@@ -195,6 +195,10 @@ const App = () => {
         <Route path="/sign-up" element={<Signup />} />
         {/* <Route path="/notification" element={<ParentNotification />} /> */}
         <Route path="/leave-notification" element={<LeaveNotification />} />
+        <Route
+          path="/leave-notification/:employeeId"
+          element={<LeaveNotification />}
+        />
         <Route path="/punch-notification" element={<PunchNotification />} />
         <Route path="/emp-notification" element={<EmpNotification />} />
         <Route
@@ -652,14 +656,7 @@ const App = () => {
             </RequireAuth>
           }
         />
-        {/* <Route
-          path="/organisation/:organisationId/setup/email-communicaiton"
-          element={
-            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-              <EmpCommunication />
-            </RequireAuth>
-          }
-        /> */}
+
         <Route
           path="/organisation/:organisationId/setup/set-shifts"
           element={

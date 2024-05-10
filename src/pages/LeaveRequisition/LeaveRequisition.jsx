@@ -26,6 +26,8 @@ const LeaveRequisition = () => {
     selectedLeave,
     setselectEvent,
     deleteLeaveMutation,
+    calLoader,
+    setCalLoader,
   } = useLeaveData();
 
   return (
@@ -108,6 +110,8 @@ const LeaveRequisition = () => {
               newAppliedLeaveEvents={newAppliedLeaveEvents}
               isCalendarOpen={isCalendarOpen}
               deleteLeaveMutation={deleteLeaveMutation}
+              calLoader={calLoader}
+              setCalLoader={setCalLoader}
             />
 
             {newAppliedLeaveEvents.length > 0 &&
