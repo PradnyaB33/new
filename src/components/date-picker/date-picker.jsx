@@ -35,6 +35,10 @@ const AppDatePicker = ({
   calLoader,
   setCalLoader,
 }) => {
+  console.log(
+    `🚀 ~ file: date-picker.jsx:38 ~ newAppliedLeaveEvents:`,
+    newAppliedLeaveEvents
+  );
   const localizer = momentLocalizer(moment);
   const queryClient = useQueryClient();
   const { organisationId } = useParams();
@@ -43,7 +47,7 @@ const AppDatePicker = ({
   const { handleAlert } = useContext(TestContext);
   const [message, setMessage] = useState("");
   const { authToken } = useGetUser();
-  const { data: publicHoliday, filteredHolidayWithStartAndEnd } =
+  const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
     usePublicHoliday(organisationId);
 
   const { data: data2 } = useQuery(
@@ -306,14 +310,14 @@ const AppDatePicker = ({
       }}
       style={{ height: "500px !important" }}
     >
-      <div className=" bg-white z-10 relative">
-        {calLoader && (
-          <div className="absolute h-[-webkit-fill-available] w-[-webkit-fill-available] flex items-center justify-center z-50">
-            <Backdrop style={{ position: "absolute" }} open={true}>
-              <CircularProgress />
-            </Backdrop>
-          </div>
-        )}
+      {calLoader && (
+        <div className="absolute h-[-webkit-fill-available] w-[-webkit-fill-available] flex items-center justify-center z-50">
+          <Backdrop style={{ position: "absolute" }} open={true}>
+            <CircularProgress />
+          </Backdrop>
+        </div>
+      )}
+      <div className=" bg-white z-10 ">
         <div className="w-full">
           <Calendar
             localizer={localizer}
@@ -328,6 +332,7 @@ const AppDatePicker = ({
                     ...shiftData?.requests,
                     ...newAppliedLeaveEvents,
                     ...filteredHolidayWithStartAndEnd,
+                    ...allPublicHoliday,
                   ]
                 : [...newAppliedLeaveEvents]
             }
