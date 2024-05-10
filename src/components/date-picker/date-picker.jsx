@@ -1,5 +1,12 @@
 import { Close } from "@mui/icons-material";
-import { Button, MenuItem, Popover, Select } from "@mui/material";
+import {
+  Backdrop,
+  Button,
+  CircularProgress,
+  MenuItem,
+  Popover,
+  Select,
+} from "@mui/material";
 import moment from "moment";
 import { momentLocalizer } from "react-big-calendar";
 import { useQuery, useQueryClient } from "react-query";
@@ -25,6 +32,8 @@ const AppDatePicker = ({
   isCalendarOpen,
   shiftData,
   deleteLeaveMutation,
+  calLoader,
+  setCalLoader,
 }) => {
   const localizer = momentLocalizer(moment);
   const queryClient = useQueryClient();
@@ -36,22 +45,31 @@ const AppDatePicker = ({
   const { authToken } = useGetUser();
   const { data: publicHoliday, filteredHolidayWithStartAndEnd } =
     usePublicHoliday(organisationId);
-  console.log(
-    `🚀 ~ file: date-picker.jsx:37 ~ publicHoliday, filteredHolidayWithStartAndEnd:`,
-    publicHoliday,
-    filteredHolidayWithStartAndEnd
-  );
-  const { data: data2 } = useQuery("employee-disable-weekends", async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/weekend/get`,
-      {
-        headers: { Authorization: authToken },
-      }
-    );
 
-    return response.data;
-  });
+  const { data: data2 } = useQuery(
+    "employee-disable-weekends",
+    async () => {
+      setCalLoader(true);
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/weekend/get`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+
+      return response.data;
+    },
+    {
+      onSuccess: () => {
+        setCalLoader(false);
+      },
+      onError: () => {
+        setCalLoader(false);
+      },
+    }
+  );
   const handleSelectEvent = (event) => {
+    setCalLoader(true);
     setMessage(event?.message);
     setSelectedLeave(event);
     setCalendarOpen(true);
@@ -65,6 +83,7 @@ const AppDatePicker = ({
       setDelete(false);
       setUpdate(false);
     }
+    setCalLoader(false);
   };
 
   const dayPropGetter = (date) => {
@@ -87,6 +106,7 @@ const AppDatePicker = ({
   };
 
   const handleSelectSlot = async ({ start, end }) => {
+    setCalLoader(true);
     const selectedStartDate = moment(start).startOf("day");
     const selectedEndDate = moment(end).startOf("day").subtract(1, "days");
 
@@ -161,6 +181,7 @@ const AppDatePicker = ({
       setSelectedLeave(selectEvent ? null : newLeave);
       setselectEvent(false);
     }
+    setCalLoader(false);
   };
 
   const CustomToolbar = (toolbar) => {
@@ -170,8 +191,10 @@ const AppDatePicker = ({
     };
 
     const handleYearChange = (event) => {
+      setCalLoader(true);
       const newDate = moment(toolbar.date).year(event.target.value).toDate();
       toolbar.onNavigate("current", newDate);
+      setCalLoader(false);
     };
 
     return (
@@ -270,7 +293,7 @@ const AppDatePicker = ({
     <Popover
       PaperProps={{
         className:
-          "w-full xl:w-[400px] xl:h-[470px] !bottom-0 !p-0 flex flex-col justify-between !top-auto ",
+          "w-full xl:w-[400px] xl:h-[470px] !bottom-0 !p-0 flex flex-col justify-between !top-auto relative",
       }}
       open={isCalendarOpen}
       onClose={() => setCalendarOpen(false)}
@@ -283,7 +306,14 @@ const AppDatePicker = ({
       }}
       style={{ height: "500px !important" }}
     >
-      <div className=" bg-white z-10">
+      <div className=" bg-white z-10 relative">
+        {calLoader && (
+          <div className="absolute h-[-webkit-fill-available] w-[-webkit-fill-available] flex items-center justify-center z-50">
+            <Backdrop style={{ position: "absolute" }} open={true}>
+              <CircularProgress />
+            </Backdrop>
+          </div>
+        )}
         <div className="w-full">
           <Calendar
             localizer={localizer}
