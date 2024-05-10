@@ -1,3 +1,37 @@
+// import {
+//   Button,
+//   Container,
+//   Dialog,
+//   DialogActions,
+//   DialogContent,
+//   TextField,
+//   Typography,
+//   Tooltip,
+// } from "@mui/material";
+// import axios from "axios";
+// import React, { useContext, useEffect, useState } from "react";
+// import { TestContext } from "../../../State/Function/Main";
+// import { UseContext } from "../../../State/UseState/UseContext";
+// const AttendanceBioModal = ({
+//   handleClose,
+//   open,
+//   organisationId,
+//   selectedEmployees,
+// }) => {
+//   const { cookies } = useContext(UseContext);
+//   const authToken = cookies["aegis"];
+//   const { handleAlert } = useContext(TestContext);
+//   const [emailSearch, setEmailSearch] = useState("");
+//   const [availableEmployee, setAvailableEmployee] = useState([]);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [totalPages, setTotalPages] = useState(1);
+//   const [numbers, setNumbers] = useState([]);
+//   const [checkedEmployees, setCheckedEmployees] = useState([]);
+//   const [emailNotFound, setEmailNotFound] = useState(false);
+//   console.log("email not found", emailNotFound);
+
+//   const fetchAvailableEmployee = async (page) => {
+//     try {
 import {
   Button,
   Container,
@@ -12,6 +46,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+
 const AttendanceBioModal = ({
   handleClose,
   open,
@@ -27,9 +62,9 @@ const AttendanceBioModal = ({
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const [checkedEmployees, setCheckedEmployees] = useState([]);
- 
+  const [emailNotFound, setEmailNotFound] = useState(false);
+  console.log(emailNotFound);
 
-  // pull employee
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
@@ -41,7 +76,6 @@ const AttendanceBioModal = ({
       setAvailableEmployee(response.data.employees);
       setCurrentPage(page);
       setTotalPages(response.data.totalPages || 1);
-      // Generate an array of page numbers
       const numbersArray = Array.from(
         { length: response.data.totalPages || 1 },
         (_, index) => index + 1
@@ -54,25 +88,29 @@ const AttendanceBioModal = ({
 
   useEffect(() => {
     fetchAvailableEmployee(currentPage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, [currentPage]);
 
+  // Function to handle previous page
   const prePage = () => {
     if (currentPage !== 1) {
       fetchAvailableEmployee(currentPage - 1);
     }
   };
 
+  // Function to handle next page
   const nextPage = () => {
     if (currentPage !== totalPages) {
       fetchAvailableEmployee(currentPage + 1);
     }
   };
 
+  // Function to change page
   const changePage = (id) => {
     fetchAvailableEmployee(id);
   };
 
+  // Function to handle checking/unchecking employee
   const handleCheckEmp = (employeeId) => {
     const isChecked = checkedEmployees.includes(employeeId);
     if (isChecked) {
@@ -81,24 +119,40 @@ const AttendanceBioModal = ({
       setCheckedEmployees([...checkedEmployees, employeeId]);
     }
   };
-  console.log("employee from aegis", checkedEmployees);
-  console.log("employee from biomatric", selectedEmployees);
 
+  // Validate email format
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  // Handle sync
   const handleSync = async () => {
     try {
+      if (checkedEmployees.length === 0 && emailSearch.trim() !== "") {
+        setEmailNotFound(true);
+        return;
+      }
+  
+      // Verify email for each checked employee
+      const invalidEmails = checkedEmployees.filter((employee) => {
+        const email = employee?.email || "";
+        return !validateEmail(email);
+      });
+  
+      if (invalidEmails.length > 0) {
+        handleAlert(true, "error", "Please enter valid email addresses.");
+        return;
+      }
+  
       const syncedData = selectedEmployees.map((employee) => ({
         date: employee[3],
         punchingTime: employee[4],
         punchingStatus: employee[5],
       }));
-
-      // Extract EmployeeIds from checkedEmployees
       const EmployeeIds = checkedEmployees
         .map((employee) => employee._id)
         .filter(Boolean);
-      console.log("emp id", EmployeeIds);
-
-      // Make a POST request to the backend API for each EmployeeId
       EmployeeIds.forEach((EmployeeId) => {
         axios.post(
           `${process.env.REACT_APP_API}/route/organization/${organisationId}/add-attendance-data`,
@@ -114,8 +168,9 @@ const AttendanceBioModal = ({
         );
       });
 
-      handleAlert(true, "success", "Synced data successfully..");
+      handleAlert(true, "success", "Synced data successfully.");
       handleClose();
+      setCheckedEmployees([]);
     } catch (error) {
       console.error("Failed to sync attendance data:", error);
     }
@@ -137,13 +192,13 @@ const AttendanceBioModal = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <DialogContent className="border-none  !pt-0 !px-0  shadow-md outline-none rounded-md">
-        <Container maxWidth="xl" className="bg-gray-50 ">
-          <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
+      <DialogContent className="border-none !pt-0 !px-0 shadow-md outline-none rounded-md">
+        <Container maxWidth="xl" className="bg-gray-50">
+          <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
             Employee’s List
           </Typography>
           <p className="text-xs text-gray-600 pl-10 text-center">
-           List of employee's from organsation .
+            List of employees from the organisation.
           </p>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
@@ -161,8 +216,8 @@ const AttendanceBioModal = ({
           </div>
 
           <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-            <table className="min-w-full bg-white  text-left !text-sm font-light">
-              <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
+            <table className="min-w-full bg-white text-left !text-sm font-light">
+              <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                 <tr className="!font-semibold">
                   <th scope="col" className="!text-left pl-8 py-3">
                     Select
@@ -182,7 +237,7 @@ const AttendanceBioModal = ({
                   <th scope="col" className="!text-left pl-8 py-3">
                     Email
                   </th>
-                  
+
                   <th scope="col" className="!text-left pl-8 py-3">
                     Location
                   </th>
@@ -313,7 +368,7 @@ const AttendanceBioModal = ({
             </nav>
           </div>
           <DialogActions sx={{ justifyContent: "center" }}>
-            <Tooltip title={"Sync employee here"} arrow>
+            <Tooltip title={"Please select the employee to sync"} arrow>
               <Button variant="contained" color="primary" onClick={handleSync}>
                 Sync
               </Button>

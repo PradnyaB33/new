@@ -82,10 +82,12 @@ import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
+import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LetterSetup from "./pages/LetterTypes/LetterSetup";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
+import LoanNotificationToEmp from "./pages/LoanMgtNotified/LoanNotificationToEmp";
 import MissPunchInOut from "./pages/MissPunch/MissPunchInOut";
 import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
 import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
@@ -175,7 +177,7 @@ const App = () => {
         />
         <Route path="/remote/info/:Id" element={<RemoteManager />} />
         <Route path="/remote/notification" element={<RemoteNotification />} />
-        <Route path="/remote/emp-notification" element={<EmpNotification />} />
+        <Route path="/doc-notification" element={<DocNotification />} />
         <Route path="/emp/docs" element={<DocManage />} />
         <Route path="/org/docs" element={<OrgDocManage />} />
         <Route path="/org/docs/auth" element={<DocManageAuth />} />
@@ -192,29 +194,17 @@ const App = () => {
         <Route path="/sign-up" element={<Signup />} />
         {/* <Route path="/notification" element={<ParentNotification />} /> */}
         <Route path="/leave-notification" element={<LeaveNotification />} />
-        <Route
-          path="/leave-notification/:employeeId"
-          element={<LeaveNotification />}
-        />
         <Route path="/punch-notification" element={<PunchNotification />} />
+        <Route path="/emp-notification" element={<EmpNotification />} />
         <Route
           path="/punch-notification/:employeeId"
           element={<PunchNotification />}
         />
         <Route path="/shift-notification" element={<ShiftNotification />} />
         <Route
-          path="/shift-notification/:employeeId"
-          element={<ShiftNotification />}
-        />
-        <Route
           path="/missedPunch-notification"
           element={<MissedPunchNotification />}
         />
-        <Route path="/doc-notification" element={<DocNotification />} />
-        {/* <Route
-          path="/missed-punch-notification/:employeeId"
-          element={<MissedPunchNotified />}
-        /> */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route
@@ -657,6 +647,14 @@ const App = () => {
             </RequireAuth>
           }
         />
+        {/* <Route
+          path="/organisation/:organisationId/setup/email-communicaiton"
+          element={
+            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+              <EmpCommunication />
+            </RequireAuth>
+          }
+        /> */}
         <Route
           path="/organisation/:organisationId/setup/set-shifts"
           element={
@@ -888,12 +886,13 @@ const App = () => {
         <Route path="/income-tax" element={<IncomeTax />} />
         <Route path="/income-tax/declarations" element={<TDSTab1 />} />
         <Route path="/income-tax/calculation" element={<TDSCalculation />} />
+        <Route path="/notification/income-tax" element={<DeclarationPage />} />
         <Route
-          path="/income-tax/accountant-declarations"
-          element={<DeclarationPage />}
+          path="/notification/income-tax-details"
+          element={<IncomeTaxNotification />}
         />
         <Route
-          path="/income-tax/accountant-declarations/:id"
+          path="/notification/income-tax/:id"
           element={<DeclarationPage />}
         />
         <Route path="/application" element={<Application />} />
@@ -981,6 +980,10 @@ const App = () => {
         <Route path="*" element={<NotFound />} />
         <Route path="/loan-notification" element={<LoanMgtNotification />} />
         <Route path="/loan-approval/:loanId" element={<LoanMgtApproval />} />
+        <Route
+          path="/loan-notification-to-emp"
+          element={<LoanNotificationToEmp />}
+        />
       </Routes>
     </AuthProvider>
   );

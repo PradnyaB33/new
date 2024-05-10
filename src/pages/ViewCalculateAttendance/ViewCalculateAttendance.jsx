@@ -17,6 +17,8 @@ const ViewCalculateAttendance = () => {
   const [numbers, setNumbers] = useState([]);
   console.log(setTotalPages);
   console.log(setNumbers);
+  
+   
   // For Get Query
   const { data: calculateAttendanceData,  } = useQuery(
     ["calculateAttendanceData", organisationId],
@@ -73,7 +75,7 @@ const ViewCalculateAttendance = () => {
           Employee’s Calendar View
           </Typography>
           <p className="text-xs text-gray-600 pl-10 text-center">
-            View  the attendance of employees here.
+           Calendar view of employee attendance
           </p>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">

@@ -11,6 +11,7 @@ import axios from "axios";
 import { differenceInDays, format, parseISO } from "date-fns";
 import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
+import { useQueryClient } from "react-query";
 import { UseContext } from "../../../../State/UseState/UseContext";
 import UserProfile from "../../../../hooks/UserData/useUser";
 import useShiftStore from "../store/useShiftStore";
@@ -22,12 +23,14 @@ const Mapped = ({
   newAppliedLeaveEvents,
   setNewAppliedLeaveEvents,
   setCalendarOpen,
+  isUpdatingShift,
 }) => {
   const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { setShiftName } = useShiftStore();
   const { getCurrentUser } = UserProfile();
+  const queryclient = useQueryClient();
   const user = getCurrentUser();
   const id = user.organizationId;
   console.log("userId", id);
@@ -53,6 +56,7 @@ const Mapped = ({
           }
         );
         setSName(resp?.data.shifts);
+        queryclient.invalidateQueries("employee-leave-table-without-default");
       } catch (error) {
         console.error(error);
       }
@@ -79,7 +83,7 @@ const Mapped = ({
     setShiftName(selectedShiftName);
   };
 
-  console.log(newAppliedLeaveEvents);
+  console.log("Current newAppliedLeaveEvents", newAppliedLeaveEvents);
   const removeItem = (idToRemove) => {
     console.log("Removing item with id:", idToRemove);
     console.log("Current newAppliedLeaveEvents:", newAppliedLeaveEvents);
@@ -96,7 +100,9 @@ const Mapped = ({
   return (
     <div
       key={index}
-      className=" border border-gray-200 flex-col lg:flex-row group  flex gap-4 lg:items-center justify-between items-start rounded-lg hover:bg-gray-100 border-b p-2 cursor-pointer"
+      className={`border border-gray-200 flex-col lg:flex-row group  flex gap-4 lg:items-center justify-between items-start rounded-lg hover:bg-gray-100 border-b p-2 cursor-pointer ${
+        isUpdatingShift ? "hidden" : "" // Conditionally hide the component
+      }`}
     >
       <div className="flex items-cente gap-4 pt-4">
         <Badge

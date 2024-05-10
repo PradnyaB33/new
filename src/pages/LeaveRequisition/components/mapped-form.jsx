@@ -49,12 +49,11 @@ const Mapped = ({
       setNewAppliedLeaveEvents(newAppliedLeaveEvents);
     }
   };
-  const removeItem = async (idToRemove) => {
+  const removeItem = (idToRemove) => {
     const updatedAppliedLeaveEvents = newAppliedLeaveEvents.filter(
       (_, i) => i !== idToRemove
     );
     setNewAppliedLeaveEvents(updatedAppliedLeaveEvents);
-    // await queryClient.invalidateQueries("employee-leave-table-without-default");
   };
   return (
     <div

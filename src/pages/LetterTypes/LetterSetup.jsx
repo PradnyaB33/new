@@ -46,7 +46,7 @@ const LetterSetup = () => {
       ];
 
       documentNames.forEach((name) => {
-        initialFormData[name] = { workflow: false, downcast: false };
+        initialFormData[name] = { workflow: false };
       });
       setFormData(initialFormData);
     }
@@ -73,12 +73,12 @@ const LetterSetup = () => {
     }
   };
 
-  const handleChange = (documentName, propertyName, checked) => {
+  const handleChange = (documentName, checked) => {
     setFormData((prevData) => ({
       ...prevData,
       [documentName]: {
         ...prevData[documentName],
-        [propertyName]: checked,
+        workflow: checked,
       },
     }));
   };
@@ -99,6 +99,14 @@ const LetterSetup = () => {
               </div>
             </div>
 
+            <div className="mt-2 p-1 w-[840px]">
+              <div className="flex items-center justify-center">
+                <h2 className="text-sm text-gray-400 w-[300px]">
+                  Manager Workflow
+                </h2>
+              </div>
+            </div>
+
             {Object.entries(formData).map(([documentName, values]) => (
               <div key={documentName} className="p-4">
                 <div className="flex justify-start items-center mb-2">
@@ -106,32 +114,12 @@ const LetterSetup = () => {
                     {documentName}
                   </h2>
                   <div className="flex items-center gap-2">
-                    <label
-                      className="text-[#6d7482] font-semibold"
-                      htmlFor={`${documentName}-managerWorkflow`}
-                    >
-                      Manager Workflow
-                    </label>
                     <input
                       type="checkbox"
                       id={`${documentName}-managerWorkflow`}
                       checked={values.workflow}
                       onChange={(e) =>
-                        handleChange(documentName, "workflow", e.target.checked)
-                      }
-                    />
-                    <label
-                      className="text-[#6d7482] font-semibold"
-                      htmlFor={`${documentName}-downcast`}
-                    >
-                      Downcast
-                    </label>
-                    <input
-                      type="checkbox"
-                      id={`${documentName}-downcast`}
-                      checked={values.downcast}
-                      onChange={(e) =>
-                        handleChange(documentName, "downcast", e.target.checked)
+                        handleChange(documentName, e.target.checked)
                       }
                     />
                   </div>

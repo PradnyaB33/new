@@ -1,20 +1,13 @@
 import React, { useContext, useState } from "react";
 
-import { Info, WorkHistory } from "@mui/icons-material";
-import {
-  Autocomplete,
-  Avatar,
-  Card,
-  CircularProgress,
-  TextField,
-} from "@mui/material";
+import { Info } from "@mui/icons-material";
+import { Card, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { CategoryScale, Chart } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { useQuery } from "react-query";
 import Select from "react-select";
 import { UseContext } from "../../../../State/UseState/UseContext";
-import UserProfile from "../../../../hooks/UserData/useUser";
 Chart.register(CategoryScale);
 
 const ManagerEmployeeChart = ({
@@ -24,46 +17,7 @@ const ManagerEmployeeChart = ({
 }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-  const { getCurrentUser } = UserProfile();
-  const [selectMonth, setSelectMonth] = useState(new Date().getMonth() + 1);
-  const user = getCurrentUser();
-  // const RemainingLeaves = useLeaveTable();
-  const [userId, setuserId] = useState();
-
-  const customStyles = {
-    control: (base) => ({
-      ...base,
-      border: ".5px solid #f1f1f1",
-      background: "#f9fafb",
-      boxShadow: "none",
-      hover: {
-        cursor: "pointer !important",
-      },
-    }),
-    menu: (base) => ({
-      ...base,
-      width: "max-content",
-      minWidth: "100%",
-      right: 0,
-    }),
-    placeholder: (defaultStyles) => {
-      return {
-        ...defaultStyles,
-        color: "#000",
-      };
-    },
-  };
-
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 5 }, (_, index) => currentYear - index);
-
-  const yearOptions = years.map((year) => {
-    return {
-      value: year.toString(),
-      label: year,
-    };
-  });
-
+  // const { getCurrentUser } = UserProfile();
   const monthOptions = [
     {
       value: 1,
@@ -114,7 +68,55 @@ const ManagerEmployeeChart = ({
       label: "December",
     },
   ];
+  const [selectMonth, setSelectMonth] = useState({
+    label: monthOptions.find((item) => item.value === new Date().getMonth() + 1)
+      .label,
+    value: new Date().getMonth() + 1,
+  });
+  // const user = getCurrentUser();
+  // const RemainingLeaves = useLeaveTable();
+  // const, setuserId] = useState();
+
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      border: ".5px solid #f1f1f1",
+      boxShadow: "none",
+      hover: {
+        cursor: "pointer !important",
+      },
+    }),
+    menu: (base) => ({
+      ...base,
+      width: "max-content",
+      minWidth: "100%",
+      right: 0,
+    }),
+    placeholder: (defaultStyles) => {
+      return {
+        ...defaultStyles,
+        color: "#000",
+      };
+    },
+  };
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 5 }, (_, index) => currentYear - index);
+
+  const yearOptions = years.map((year) => {
+    return {
+      value: year.toString(),
+      label: year,
+    };
+  });
+
   const options = {
+    elements: {
+      line: {
+        tension: 0.5,
+      },
+    },
+
     scales: {
       x: {
         grid: {
@@ -122,24 +124,28 @@ const ManagerEmployeeChart = ({
         },
       },
       y: {
+        suggestedMax: 31,
+        ticks: {
+          max: 31,
+          beginAtZero: true,
+          stepSize: 5,
+          min: 0,
+        },
         grid: {
           display: true,
         },
       },
     },
     maintainAspectRatio: false,
+    responsive: true,
   };
 
   const getYearLeaves = async () => {
     const { data } = await axios.get(
-      `${process.env.REACT_APP_API}/route/leave/getAllLeaveForManager`,
+      `${process.env.REACT_APP_API}/route/leave/getManagerEmployeeAttendence/${selectedyear.value}/${selectMonth.value}`,
       {
         headers: {
           Authorization: authToken,
-        },
-        params: {
-          month: selectMonth.value,
-          year: selectedyear.value,
         },
       }
     );
@@ -147,9 +153,11 @@ const ManagerEmployeeChart = ({
   };
 
   const { data: LeaveYearData, isLoading: leaveYearLoading } = useQuery(
-    ["leaveData", userId, selectedyear, selectMonth],
+    ["leaveData", selectedyear, selectMonth],
     getYearLeaves
   );
+
+  console.log(`🚀 ~ LeaveYearData:`, LeaveYearData);
 
   // const monthNames = [
   //   "January",
@@ -199,10 +207,7 @@ const ManagerEmployeeChart = ({
   // const MonthArray = allMonths.map((month) => month);
 
   const data = {
-    labels: LeaveYearData?.map(
-      (monthData) =>
-        `${monthData?.employee?.employeeId?.first_name} ${monthData?.employee?.employeeId?.last_name}`
-    ),
+    labels: LeaveYearData?.map((monthData) => `${monthData?.empName}`),
     datasets: [
       {
         label: "Available Days",
@@ -225,30 +230,68 @@ const ManagerEmployeeChart = ({
     ],
   };
 
-  const handleSelect = (event, newValue) => {
-    if (newValue) {
-      setuserId(newValue?._id);
-    } else {
-      setuserId(user._id);
-    }
-  };
+  // const handleSelect = (event, newValue) => {
+  //   if (newValue) {
+  //     setuserId(newValue?._id);
+  //   } else {
+  //     setuserId(user._id);
+  //   }
+  // };
 
   return (
     <>
       <Card elevation={3}>
         <div className="flex flex-col w-full px-4 items-start justify-between">
-          <div className="flex items-center gap-2 py-2  ">
-            <Avatar
+          <div className="flex items-center w-full justify-between gap-2 py-2  ">
+            {/* <Avatar
               variant="circle"
               className="!bg-sky-400 p-1 !h-[32px] !w-[32px] rounded-full"
             >
               <WorkHistory className="!text-lg" />
-            </Avatar>
-            <h1 className="md:text-xl text-lg py-3">Attendance Overview</h1>
+            </Avatar> */}
+            <h1 className="text-xl my-4 font-bold text-[#67748E]">
+              Attendance Overview
+            </h1>
+            <div className="flex gap-4 w-max">
+              <div className="w-[150px] ">
+                <label className="text-sm my-4 font-bold text-[#67748E]">
+                  Select Year
+                </label>
+                <Select
+                  placeholder={"Select year"}
+                  onChange={(year) => {
+                    setSelectedYear(year);
+                  }}
+                  components={{
+                    IndicatorSeparator: () => null,
+                  }}
+                  styles={customStyles}
+                  value={selectedyear} // Add this line
+                  options={yearOptions}
+                />
+              </div>
+              <div className="w-[150px]">
+                <label className="text-sm my-4 font-bold text-[#67748E]">
+                  Select Month
+                </label>
+                <Select
+                  placeholder={"Select Month"}
+                  onChange={(month) => {
+                    setSelectMonth(month);
+                  }}
+                  components={{
+                    IndicatorSeparator: () => null,
+                  }}
+                  styles={customStyles}
+                  value={selectMonth} // Add this line
+                  options={monthOptions}
+                />
+              </div>
+            </div>
           </div>
 
-          <div className="flex gap-2 w-full">
-            <Autocomplete
+          <div className="flex gap-4 w-full">
+            {/* <Autocomplete
               disablePortal
               id="combo-box-demo"
               className="w-full"
@@ -267,9 +310,12 @@ const ManagerEmployeeChart = ({
               renderInput={(params) => (
                 <TextField {...params} label="Search Employee" />
               )}
-            />
+            /> */}
 
-            <div className="w-[25%]">
+            {/* <div className="w-[150px] ">
+              <label className="text-sm my-4 font-bold text-[#67748E]">
+                Select Year
+              </label>
               <Select
                 placeholder={"Select year"}
                 onChange={(year) => {
@@ -283,7 +329,10 @@ const ManagerEmployeeChart = ({
                 options={yearOptions}
               />
             </div>
-            <div className="w-[30%]">
+            <div className="w-[150px]">
+              <label className="text-sm my-4 font-bold text-[#67748E]">
+                Select Month
+              </label>
               <Select
                 placeholder={"Select Month"}
                 onChange={(month) => {
@@ -296,7 +345,7 @@ const ManagerEmployeeChart = ({
                 value={selectMonth} // Add this line
                 options={monthOptions}
               />
-            </div>
+            </div> */}
           </div>
         </div>
 

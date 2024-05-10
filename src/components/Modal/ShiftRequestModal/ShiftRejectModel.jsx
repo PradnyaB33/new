@@ -74,8 +74,6 @@ const ShiftRejectModel = ({ items, key }) => {
           msg: "Request Rejected Successfully",
         });
         queryClient.invalidateQueries("shift-request");
-        queryClient.invalidateQueries("ShiftData");
-        queryClient.invalidateQueries("ShiftData2");
         handleClose();
       },
     }
@@ -94,8 +92,6 @@ const ShiftRejectModel = ({ items, key }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("shift-request");
-        queryClient.invalidateQueries("ShiftData");
-        queryClient.invalidateQueries("ShiftData2");
         queryClient.invalidateQueries("table");
         setAppAlert({
           alert: true,
@@ -119,8 +115,6 @@ const ShiftRejectModel = ({ items, key }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("shift-request");
-        queryClient.invalidateQueries("ShiftData");
-        queryClient.invalidateQueries("ShiftData2");
         setAppAlert({
           alert: true,
           type: "success",
@@ -149,8 +143,6 @@ const ShiftRejectModel = ({ items, key }) => {
           msg: "Request Rejected Successfully",
         });
         queryClient.invalidateQueries("shift-request");
-        queryClient.invalidateQueries("ShiftData");
-        queryClient.invalidateQueries("ShiftData2");
         handleClose();
       },
     }
@@ -340,7 +332,7 @@ const ShiftRejectModel = ({ items, key }) => {
               id="modal-modal-title"
               className="text-xl font-semibold leading-relaxed "
             >
-              Reject leave request
+              Reject shift request
             </h1>
           </header>
           <form onSubmit={handleSubmit}>

@@ -44,7 +44,7 @@ const MissPunchInOut = () => {
               key={index}
               className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center mb-4"
             >
-              <Typography variant="h6" className="pl-2 mb-10 mt-10">
+              <Typography variant="h7" className="pl-2 mb-20 mt-20">
                 {record.employeeId.first_name} {record.employeeId.last_name}
               </Typography>
               {record.unavailableRecords?.length > 0 ? (
@@ -74,22 +74,22 @@ const MissPunchInOut = () => {
                         (unavailableRecord, id) => (
                           <tr className="!font-medium border-b" key={id}>
                             <td className="!text-left pl-8 py-3">{id + 1}</td>
-                            <td className="!text-left pl-4 py-3">
+                            <td className="!text-left pl-6 py-3">
                               {new Date(
                                 unavailableRecord.recordDate
                               ).toLocaleDateString()}
                             </td>
-                            <td className="!text-left pl-4 py-3">
+                            <td className="!text-left pl-6 py-3">
                               {unavailableRecord.status}
                             </td>
-                            <td className="!text-left pl-4 py-3">
+                            <td className="!text-left pl-6 py-3">
                               {unavailableRecord.punchInTime
                                 ? new Date(
                                     unavailableRecord.punchInTime
                                   ).toLocaleTimeString()
                                 : "-"}
                             </td>
-                            <td className="!text-left pl-4 py-3">
+                            <td className="!text-left pl-6 py-3">
                               {unavailableRecord.punchOutTime
                                 ? new Date(
                                     unavailableRecord.punchOutTime

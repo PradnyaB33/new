@@ -78,13 +78,10 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     // eslint-disable-next-line
   }, [loanDisbursementDate, noOfEmi]);
 
- 
- 
   const handleNoOfEmiChange = (e) => {
     const value = e.target.value;
     if (!isNaN(value) && parseInt(value) >= 0) {
       setNoOfEmi(value);
-     
       setNoOfEmiError("");
       if (loanDisbursementDate) {
         calculateCompletionDate(loanDisbursementDate, value);
@@ -94,7 +91,6 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
       setNoOfEmiError("No of EMI should not be negative");
     }
   };
-  
 
   const calculateCompletionDate = (disbursementDate, emiCount) => {
     const monthsToAdd = parseInt(emiCount);
@@ -222,7 +218,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
           Apply For Loans
         </h1>
       </div>
-    
+
       <DialogContent className="border-none  !pt-0 !px-0  shadow-md outline-none rounded-md">
         <div className="px-5 space-y-4 mt-4">
           <div className="px-5 space-y-4 mt-4">

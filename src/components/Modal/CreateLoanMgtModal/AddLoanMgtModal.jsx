@@ -5,13 +5,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
-import { Business } from "@mui/icons-material";
+import { Business, Person } from "@mui/icons-material";
 import useLoanOption from "../../../hooks/LoanManagemet/useLoanOption";
+import useCalculation from "../../../hooks/LoanManagemet/useCalculation";
 import { useMutation, useQueryClient } from "react-query";
 import { UseContext } from "../../../State/UseState/UseContext";
 import { TestContext } from "../../../State/Function/Main";
 import axios from "axios";
-import useCalculation from "../../../hooks/LoanManagemet/useCalculation";
 
 const AddLoanMgtModal = ({ handleClose, open, organisationId }) => {
   const { cookies } = useContext(UseContext);
@@ -26,30 +26,29 @@ const AddLoanMgtModal = ({ handleClose, open, organisationId }) => {
     loanCompletedDate,
   } = useLaonState();
 
+  const { LoanTypeListOption } = useLoanOption(organisationId);
+
   const {
-    getPrincipalMonth ,
-    getSimpleInterest,
-    getTotalDeduction,
-    getTotalDeductionWithSimpleInterest,
+    interestPerMonth,
+    principalPerMonth,
+    totalDeductionPerMonth,
+    totalAmountWithSimpleInterest,
   } = useCalculation();
 
-  const { LoanTypeListOption } = useLoanOption(organisationId);
   const LoanManagemetSchema = z.object({
     loanType: z.object({
       label: z.string(),
       value: z.string(),
-      rateofinterest: z.string(),
     }),
     rateOfIntereset: z.string(),
     loanAmount: z.string(),
     loanDisbursementDate: z.string(),
     noOfEmi: z.string(),
     loanCompletedDate: z.string(),
-    principalPerMonth: z.string(),
   });
-  
-  const { control, formState, handleSubmit, setValue, watch } = useForm({
-      defaultValues: {
+
+  const { control, formState, handleSubmit, setValue } = useForm({
+    defaultValues: {
       loanType: loanType,
       rateOfIntereset: rateOfIntereset,
       loanAmount: loanAmount,
@@ -60,33 +59,24 @@ const AddLoanMgtModal = ({ handleClose, open, organisationId }) => {
     resolver: zodResolver(LoanManagemetSchema),
   });
 
-  
-
   useEffect(() => {
-    if (loanType && LoanTypeListOption) {
-      const selectedLoanType = LoanTypeListOption.find(
-        (option) => option.value === loanType.value
-      );
-      if (selectedLoanType) {
-        console.log("selected", selectedLoanType);
-        setValue("rateOfIntereset", selectedLoanType.rateOfInterest || "");
-      }
-    }
-  }, [loanType, setValue, LoanTypeListOption]);
-  
+    setValue("principalPerMonth", principalPerMonth.toString());
+    setValue("interestPerMonth", interestPerMonth.toString());
+    setValue("totalDeductionPerMonth", totalDeductionPerMonth.toString());
+    setValue("totalAmountWithSimpleInterest", totalAmountWithSimpleInterest.toString());
+  }, [principalPerMonth, interestPerMonth, totalDeductionPerMonth, totalAmountWithSimpleInterest, setValue]);
+
   const { errors } = formState;
+
   const queryClient = useQueryClient();
+
   const ApplyLoan = useMutation(
     (data) =>
-      axios.post(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/add-loan-data`,
-        data,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      ),
+      axios.post(`${process.env.REACT_APP_API}/route/organization/${organisationId}/add-loan-data`, data, {
+        headers: {
+          Authorization: authToken,
+        },
+      }),
     {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["loanDatas"] });
@@ -102,7 +92,8 @@ const AddLoanMgtModal = ({ handleClose, open, organisationId }) => {
       },
     }
   );
-  const onSubmit = async () => {
+
+  const onSubmit = async (data) => {
     try {
       const requestData = {
         loanType: loanType,
@@ -111,13 +102,12 @@ const AddLoanMgtModal = ({ handleClose, open, organisationId }) => {
         loanDisbursementDate: loanDisbursementDate,
         loanCompletedDate: loanCompletedDate,
         noOfEmi: noOfEmi,
-        // loanPrincipalAmount: principalPerMonth,
-        // loanInteresetAmount: interestPerMonth,
-        // totalDeduction: totalDeductionPerMonth,
-        // totalDeductionWithSi: totalAmountWithSimpleInterest,
+        loanPrincipalAmount: principalPerMonth,
+        loanInteresetAmount: interestPerMonth,
+        totalDeduction: totalDeductionPerMonth,
+        totalDeductionWithSi: totalAmountWithSimpleInterest,
         organizationId: organisationId,
       };
-      console.log(loanAmount);
       await ApplyLoan.mutateAsync(requestData);
     } catch (error) {
       console.error(error);
@@ -143,16 +133,11 @@ const AddLoanMgtModal = ({ handleClose, open, organisationId }) => {
         aria-describedby="modal-modal-description"
       >
         <div className="flex w-full justify-between py-4 items-center  px-4">
-          <h1 className="text-xl pl-2 font-semibold font-sans">
-            Apply For Loans
-          </h1>
+          <h1 className="text-xl pl-2 font-semibold font-sans">Apply For Loans</h1>
         </div>
 
         <DialogContent className="border-none  !pt-0 !px-0  shadow-md outline-none rounded-md">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="px-5 space-y-4 mt-4"
-          >
+          <form onSubmit={handleSubmit(onSubmit)} className="px-5 space-y-4 mt-4">
             <div className="px-5 space-y-4 mt-4">
               <div className="px-5 space-y-4 mt-4">
                 <div className="space-y-2 ">
@@ -208,6 +193,20 @@ const AddLoanMgtModal = ({ handleClose, open, organisationId }) => {
                     min={new Date().toISOString().split("T")[0]}
                   />
                 </div>
+
+                <div className="space-y-2 ">
+                  <AuthInputFiled
+                    name="loanCompletedDate"
+                    icon={Business}
+                    control={control}
+                    type="date"
+                    placeholder="dd-mm-yyyy"
+                    label="Loan Completion Date *"
+                    errors={errors}
+                    error={errors.loanCompletedDate}
+                  />
+                </div>
+
                 <div className="space-y-2 ">
                   <AuthInputFiled
                     name="noOfEmi"
@@ -220,43 +219,59 @@ const AddLoanMgtModal = ({ handleClose, open, organisationId }) => {
                     error={errors.noOfEmi}
                   />
                 </div>
-                 
-                <div>
-                  Loan Completion Date :
-                
+
+                <div className="flex w-full gap-2">
+                  <div className=" w-[50%] ">
+                    <AuthInputFiled
+                      name="principalPerMonth"
+                      icon={Person}
+                      control={control}
+                      type="text"
+                      placeholder="Principal amount monthly"
+                      label="Principal amount monthly *"
+                      errors={errors}
+                      error={errors.principalPerMonth}
+                    />
+                  </div>
+                  <div className=" w-[50%]">
+                    <AuthInputFiled
+                      name="interestPerMonth"
+                      icon={Person}
+                      control={control}
+                      type="text"
+                      placeholder="Interest amount monthly"
+                      label="Interest amount monthly *"
+                      errors={errors}
+                      error={errors.interestPerMonth}
+                    />
+                  </div>
                 </div>
-                 
-                <div>
-                  Principal per month{" "}
-                  {getPrincipalMonth(
-                    watch("loanAmount"),
-                    watch("rateOfIntereset"),
-                    watch("noOfEmi")
-                  )}
-                </div>
-                <div>
-                  Interest per month{" "}
-                  {getSimpleInterest(
-                    watch("loanAmount"),
-                    watch("rateOfIntereset"),
-                    watch("noOfEmi")
-                  )}
-                </div>
-                <div>
-                  total deduction per month{" "}
-                  {getTotalDeduction(
-                    watch("loanAmount"),
-                    watch("rateOfIntereset"),
-                    watch("noOfEmi")
-                  )}
-                </div>
-                <div>
-                  total deduction with simple interest{" "}
-                  {getTotalDeductionWithSimpleInterest(
-                    watch("loanAmount"),
-                    watch("rateOfIntereset"),
-                    watch("noOfEmi")
-                  )}
+
+                <div className="flex w-full gap-2">
+                  <div className=" w-[50%] ">
+                    <AuthInputFiled
+                      name="totalDeductionPerMonth"
+                      icon={Person}
+                      control={control}
+                      type="text"
+                      placeholder=" Total amount monthly deducted"
+                      label=" Total amount monthly deducted *"
+                      errors={errors}
+                      error={errors.totalDeductionPerMonth}
+                    />
+                  </div>
+                  <div className=" w-[50%]">
+                    <AuthInputFiled
+                      name="totalAmountWithSimpleInterest"
+                      icon={Person}
+                      control={control}
+                      type="text"
+                      placeholder=" Total amount with simple interest"
+                      label=" Total amount with simple interest *"
+                      errors={errors}
+                      error={errors.totalAmountWithSimpleInterest}
+                    />
+                  </div>
                 </div>
               </div>
               <DialogActions sx={{ justifyContent: "end" }}>

@@ -219,7 +219,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "createsalary",
             isVisible:
-              isVisible && ["Super-Admin", "HR", "Accountant"].includes(role),
+              isVisible && ["Super-Admin", "HR", "Accountant" , "Delegate-Super-Admin"].includes(role),
             link: `/organisation/${orgId}/salary-management`,
             icon: (
               <AccountBalanceWalletOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
@@ -301,11 +301,23 @@ const TestNavItems = ({ toggleDrawer }) => {
         icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
         isVisible:
           window.location.pathname?.includes("organisation") &&
-          ["Super-Admin", "Delegate-Super-Admin", "HR"]?.includes(role),
+          [
+            "Super-Admin",
+            "Delegate-Super-Admin",
+            "Department-Head",
+            "Delegate-Department-Head",
+            "Department-Admin",
+            "Delegate-Department-Admin",
+            "Accountant",
+            "Delegate-Accountant",
+            "HR",
+            "Manager",
+            "Employee",
+          ]?.includes(role),
         routes: [
           {
             key: "punchingMachine",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/emo-info-punch-status`,
@@ -315,7 +327,7 @@ const TestNavItems = ({ toggleDrawer }) => {
 
           {
             key: "viewAttendance",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/view-attendance-biomatric`,
@@ -324,7 +336,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "viewCalculate",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/view-calculate-data`,
@@ -335,7 +347,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "misspunchInOutRecord",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/missed-punch-in-out`,

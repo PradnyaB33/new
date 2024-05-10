@@ -6,13 +6,13 @@ import { UseContext } from "../../State/UseState/UseContext";
 import { useQuery } from "react-query";
 import EmployeeTypeSkeleton from "../SetUpOrganization/components/EmployeeTypeSkeleton";
 import { Info } from "@mui/icons-material";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CalculateHourEmpModal from "../../components/Modal/CalculateHourEmpModal/CalculateHourEmpModal";
-
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 const ViewAttendacneBiomatric = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { organisationId } = useParams();
+  
 
   //for  Get Query
   const { data: empAttendanceData, isLoading } = useQuery(
@@ -101,7 +101,7 @@ const ViewAttendacneBiomatric = () => {
                               size="small"
                               onClick={() => handleModalOpen(empAttendanceItem)}
                             >
-                              <CalendarMonthIcon sx={{ color: "green" }} />
+                              <AccessTimeIcon sx={{ color: "green" }} />
                             </IconButton>
                           </Tooltip>
                         </td>

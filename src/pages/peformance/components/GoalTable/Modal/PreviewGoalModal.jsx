@@ -11,9 +11,9 @@ import { format } from "date-fns";
 import DOMPurify from "dompurify";
 import React, { useContext } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { TestContext } from "../../../State/Function/Main";
-import useAuthToken from "../../../hooks/Token/useAuth";
-import UserProfile from "../../../hooks/UserData/useUser";
+import { TestContext } from "../../../../../State/Function/Main";
+import useAuthToken from "../../../../../hooks/Token/useAuth";
+import UserProfile from "../../../../../hooks/UserData/useUser";
 
 const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
   const { handleAlert } = useContext(TestContext);
@@ -31,23 +31,6 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
     p: 4,
   };
 
-  const { data: getGoal, isFetching } = useQuery({
-    queryKey: "getGoalForPreview",
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getGoalDetails/${id}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      return data;
-    },
-    enabled: !!id,
-  });
-
-  const sanitizedDescription = DOMPurify.sanitize(getGoal?.description);
   // const sanitizedMeasurment = DOMPurify.sanitize(getGoal?.measurement);
   const { useGetCurrentRole, getCurrentUser } = UserProfile();
   const user = getCurrentUser();
@@ -56,9 +39,10 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
 
   let { data: getSingleGoal, isFetching: goalFetching } = useQuery({
     queryKey: ["getSingleGoal", id],
+    refetchOnMount: false,
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id}/${assignee}`,
+        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id}`,
         {
           headers: {
             Authorization: authToken,
@@ -72,13 +56,24 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
 
   const sanitizedReview = DOMPurify.sanitize(getSingleGoal?.review);
   const sanitizedComments = DOMPurify.sanitize(getSingleGoal?.comments);
+  const sanitizedmanagerMesurments = DOMPurify.sanitize(
+    getSingleGoal?.managerMeasurments
+  );
+  console.log(`🚀 ~ sanitizedmanagerMesurments:`, sanitizedmanagerMesurments);
+  const sanitizedDescription = DOMPurify.sanitize(getSingleGoal?.description);
 
   const SubmitGoal = async () => {
     try {
       const assignee = { label: user.name, value: user._id };
+
+      let status =
+        getSingleGoal?.creatorId === user._id
+          ? "Goal Submitted"
+          : "Goal Accepted";
+
       await axios.patch(
         `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${id}`,
-        { data: { status: "goal submitted", assignee } },
+        { data: { status, assignee } },
         {
           headers: {
             Authorization: authToken,
@@ -105,13 +100,13 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
           sx={style}
           className="border-none !z-10 !pt-0 !px-0 !w-[90%] lg:!w-[70%] md:!w-[70%] shadow-md outline-none rounded-md"
         >
-          {isFetching || goalFetching ? (
+          {goalFetching ? (
             <CircularProgress />
           ) : (
             <>
               <div className="flex justify-between py-4 items-center  px-4">
                 <h1 id="modal-modal-title" className="text-2xl pl-2">
-                  {getGoal?.goal}
+                  {getSingleGoal?.goal}
                 </h1>
                 <IconButton onClick={handleClose}>
                   <Close className="!text-[16px]" />
@@ -131,13 +126,13 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
 
                     <div className=" p-2 bg-gray-50 border-gray-200 border rounded-md">
                       Start Date: -{" "}
-                      {getGoal?.startDate &&
-                        format(new Date(getGoal?.startDate), "PP")}
+                      {getSingleGoal?.startDate &&
+                        format(new Date(getSingleGoal?.startDate), "PP")}
                     </div>
                     <div className=" p-2 bg-gray-50 border-gray-200 border rounded-md">
                       End Date : -{" "}
-                      {getGoal?.endDate &&
-                        format(new Date(getGoal?.endDate), "PP")}
+                      {getSingleGoal?.endDate &&
+                        format(new Date(getSingleGoal?.endDate), "PP")}
                     </div>
                   </div>
 
@@ -164,10 +159,14 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
 
                 <div className="hover:bg-gray-100 rounded-md ">
                   <p className="px-2">Measurments</p>
-                  <p
-                    className="preview px-2 "
-                    dangerouslySetInnerHTML={{ __html: "No data" }}
-                  ></p>
+                  {role !== "Employee" && (
+                    <p
+                      className="preview px-2 "
+                      dangerouslySetInnerHTML={{
+                        __html: sanitizedmanagerMesurments,
+                      }}
+                    ></p>
+                  )}
                 </div>
                 <div className="hover:bg-gray-100 rounded-md ">
                   <p className="px-2">comments</p>
