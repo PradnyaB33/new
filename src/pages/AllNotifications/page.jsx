@@ -3,14 +3,26 @@ import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import usePunchNotification from "../../hooks/QueryHook/notification/punch-notification/hook";
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
+import UserProfile from "../../hooks/UserData/useUser";
 import Card from "./components/card";
 
 const ParentNotification = () => {
   const { data, isLoading } = useLeaveNotificationHook();
-  const { data: data2 } = useShiftNotification();
+  const { data: data2, count } = useShiftNotification();
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
+  console.log("shiftnoflkdjlkfjl", data2);
   const { data: data3 } = usePunchNotification();
   const { missPunchData } = useMissedPunchNotificationCount();
 
+  let isAcc = false;
+  const profileArr = user.profile;
+
+  profileArr.forEach((element) => {
+    if (element === "Accountant") {
+      isAcc = true;
+    }
+  });
   const dummyData = [
     {
       name: "Leave Notification",
@@ -20,7 +32,7 @@ const ParentNotification = () => {
     },
     {
       name: "Shift Notification",
-      count: data2?.length ?? 0,
+      count: isAcc ? count?.length : data2?.length,
       color: "#3668ff",
       url: "/shift-notification",
     },
