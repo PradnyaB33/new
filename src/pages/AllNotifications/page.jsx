@@ -17,7 +17,6 @@ const ParentNotification = () => {
   console.log("shiftnoflkdjlkfjl", data2);
   const { data: data3 } = usePunchNotification();
   const { data: tds } = useTDSNotificationHook();
-  console.log(`🚀 ~ tds:`, tds);
   const { data: data4 } = useDocNotification();
   const { getEmployeeRequestLoanApplication } = useLoanNotification();
   const { missPunchData } = useMissedPunchNotificationCount();
