@@ -53,7 +53,6 @@ const TestNavItems = ({ toggleDrawer }) => {
   const location = useLocation();
   const [decodedToken, setDecodedToken] = useState("");
   const { decodedToken: decoded } = useGetUser();
-  console.log(orgId);
 
   // Update organization ID when URL changes
   useEffect(() => {
