@@ -1,37 +1,43 @@
+import moment from "moment";
 import React from "react";
-import { z } from "zod";
-import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
+import Select from "react-select";
+import useLeaveNotification from "../useLeaveNotification";
 
 const InputForm = () => {
-  const inputFormSchema = z.object({
-    selectedMonth: z.string(),
-    selectedLeaveType: z.array(
-      z.object({
-        value: z.string(),
-        label: z.string(),
-      })
-    ),
-    selectedStatus: z.string(),
-  });
+  const { data } = useLeaveNotification();
+  console.log(`🚀 ~ file: input-form.jsx:9 ~ data:`, data);
+  console.log(
+    `🚀 ~ file: input-form.jsx:46 ~ moment().months():`,
+    moment.months()
+  );
+
   return (
-    <div>
-      <h1 className="text-2xl font-bold">Your personal leave notification</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex w-full">
+      <div>
         <div className="w-full p-4 flex flex-wrap gap-4">
-          <AuthInputFiled
-            control={control}
-            name="selectedMonth"
-            label="Select Month"
-            type="month"
+          <Select
+            aria-errormessage=""
+            placeholder={"Select Months"}
+            styles={{
+              control: (styles) => ({
+                ...styles,
+                borderWidth: "0px",
+                boxShadow: "none",
+              }),
+            }}
+            defaultInputValue={""}
+            className={`bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+            components={{
+              IndicatorSeparator: () => null,
+            }}
+            options={moment.months().map((month, index) => ({
+              label: month,
+              value: month,
+            }))}
           />
         </div>
-        <div className="w-full flex justify-center mb-4 mt-2">
-          <Button disabled={!isDirty} variant="contained" type="submit">
-            Apply For Changes
-          </Button>
-        </div>
-      </form>
-    </div>
+      </div>
+    </form>
   );
 };
 
