@@ -25,8 +25,8 @@ const InputForm = () => {
                 boxShadow: "none",
               }),
             }}
-            defaultInputValue={""}
-            className={`bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+            defaultInputValue={"January"}
+            className={` border-sky-300 bg-white w-full px-2`}
             components={{
               IndicatorSeparator: () => null,
             }}
