@@ -69,12 +69,13 @@ const TestNavItems = ({ toggleDrawer }) => {
     let orgId;
 
     if (orgIndex !== -1 && parts.length > orgIndex + 1) {
-    
       if (parts[orgIndex + 1] === null || undefined) {
         orgId = decoded?.user?.organizationId;
       } else {
         orgId = parts[orgIndex + 1];
       }
+    } else {
+      orgId = decoded?.user?.organizationId;
     }
     setOrgId(orgId);
   };
