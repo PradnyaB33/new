@@ -6,6 +6,9 @@ const SelfLeaveNotification = () => {
       <h1 className="w-full px-14 pt-4 text-xl font-bold">
         Attendance and Leave Notifications
       </h1>
+      <div className="flex flex-col">
+        <div></div>
+      </div>
     </div>
   );
 };
