@@ -35,10 +35,6 @@ const AppDatePicker = ({
   calLoader,
   setCalLoader,
 }) => {
-  console.log(
-    `🚀 ~ file: date-picker.jsx:38 ~ newAppliedLeaveEvents:`,
-    newAppliedLeaveEvents
-  );
   const localizer = momentLocalizer(moment);
   const queryClient = useQueryClient();
   const { organisationId } = useParams();
@@ -250,7 +246,6 @@ const AppDatePicker = ({
       </>
     );
   };
-  console.log(`🚀 ~ file: date-picker.jsx:204 ~ selectedLeave:`, selectedLeave);
   const handleClickAway = (event) => {
     const clickableElements = document.querySelectorAll(`.rbc-event-content`);
 
@@ -264,10 +259,6 @@ const AppDatePicker = ({
     }
   };
   const handleDelete = (e) => {
-    console.log(
-      `🚀 ~ file: date-picker.jsx:240 ~ selectedLeave:`,
-      selectedLeave
-    );
     if (selectedLeave.title === "Selected Leave") {
       setNewAppliedLeaveEvents((prev) =>
         prev.filter((data) => {

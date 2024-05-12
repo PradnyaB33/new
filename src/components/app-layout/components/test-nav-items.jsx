@@ -43,15 +43,17 @@ import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
+import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
+
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
   const location = useLocation();
   const [decodedToken, setDecodedToken] = useState("");
-  console.log(orgId);
+  const { decodedToken: decoded } = useGetUser();
 
   // Update organization ID when URL changes
   useEffect(() => {
@@ -64,9 +66,18 @@ const TestNavItems = ({ toggleDrawer }) => {
   const getOrganizationIdFromPathname = (pathname) => {
     const parts = pathname.split("/");
     const orgIndex = parts.indexOf("organisation");
+    let orgId;
+
     if (orgIndex !== -1 && parts.length > orgIndex + 1) {
-      setOrgId(parts[orgIndex + 1]);
+      if (parts[orgIndex + 1] === null || undefined) {
+        orgId = decoded?.user?.organizationId;
+      } else {
+        orgId = parts[orgIndex + 1];
+      }
+    } else {
+      orgId = decoded?.user?.organizationId;
     }
+    setOrgId(orgId);
   };
 
   const { useGetCurrentRole } = UserProfile();
@@ -165,6 +176,15 @@ const TestNavItems = ({ toggleDrawer }) => {
               <CircleNotifications className=" !text-[1.2em] text-[#67748E]" />
             ),
             text: "Notifications",
+          },
+          {
+            key: "listNotification",
+            isVisible: ["Employee"].includes(role) ? true : false,
+            link: "/self-notification",
+            icon: (
+              <CircleNotifications className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Your Notification",
           },
         ],
       },
