@@ -28,6 +28,7 @@ import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import ArticleIcon from "@mui/icons-material/Article";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import FolderIcon from "@mui/icons-material/Folder";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
@@ -134,6 +135,15 @@ const TestNavItems = ({ toggleDrawer }) => {
               <HomeRepairServiceOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
             text: "Shift Management",
+          },
+          {
+            key: "shiftNotification",
+            isVisible: ["Employee"].includes(role),
+            link: "/emp-shift-notification",
+            icon: (
+              <CircleNotificationsIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Shift Notification",
           },
         ],
       },
@@ -493,14 +503,14 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible: ["Employee"].includes(role),
             link: "/org/docs",
             icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Organization Records",
+            text: "Organisation Records",
           },
           {
             key: "orgDocs",
             isVisible: ["HR", "Super-Admin"].includes(role),
             link: "/org/docs/auth",
             icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Organization Records",
+            text: "Organisation Records",
           },
         ],
       },

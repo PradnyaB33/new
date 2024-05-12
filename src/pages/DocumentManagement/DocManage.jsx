@@ -247,7 +247,7 @@ const DocManage = () => {
     setDocumentFields(updatedDocumentFields);
   };
 
-  const remainingFileSizeKB = (MAX_TOTAL_FILE_SIZE - totalFileSize) / 1024; // Convert remaining size to KB
+  const remainingFileSizeKB = (MAX_TOTAL_FILE_SIZE - totalFileSize) / 1024;
 
   return (
     <>
@@ -258,11 +258,11 @@ const DocManage = () => {
               boxShadow:
                 "0 1px 2px 0 rgba(60,64,67,.3), 0 2px 6px 2px rgba(60,64,67,.15)",
             }}
-            className="w-[800px] mt-6 pl-6 pr-6 pt-3 pb-3 rounded-lg"
+            className="md:w-[800px] w-[350px] m-auto mt-6 md:pl-6 pl-3 md:pr-6 pr-3 pt-3 pb-3 rounded-lg"
           >
             <div
               style={{ borderBottom: "2px solid #b8b8b8" }}
-              className="text-center text-3xl mb-5 pb-3 w-full"
+              className="text-center md:text-3xl text-2xl mb-5 pb-3 w-full"
             >
               Document Management
             </div>
@@ -273,12 +273,13 @@ const DocManage = () => {
                   boxShadow:
                     "0 1px 2px 0 rgba(60,64,67,.3), 0 2px 6px 2px rgba(60,64,67,.15)",
                 }}
-                className="w-full h-[8vh] flex items-center justify-between pl-3 pr-3 mb-4 rounded-lg"
+                className="w-full h-auto md:h-[8vh] md:flex md:items-center md:justify-between pl-3 pt-3 md:pt-0 pr-3 mb-4 rounded-lg"
               >
                 {field.isCustom ? (
                   <TextField
                     label="Custom Document Name"
                     size="small"
+                    sx={{ width: "100%" }}
                     variant="outlined"
                     value={field.customDocumentName}
                     onChange={(e) =>
@@ -286,7 +287,7 @@ const DocManage = () => {
                     }
                   />
                 ) : (
-                  <FormControl className="sm:w-[170px]" size="small">
+                  <FormControl className="md:w-[170px] w-full" size="small">
                     <InputLabel id={`select-doc-label-${index}`}>
                       Select Document
                     </InputLabel>
@@ -312,7 +313,10 @@ const DocManage = () => {
                     </Select>
                   </FormControl>
                 )}
-                <div style={{ display: "flex", alignItems: "center" }}>
+                <div
+                  className="md:justify-normal justify-between md:mt-0 mt-3 pb-3 md:pb-0"
+                  style={{ display: "flex", alignItems: "center" }}
+                >
                   {/* {field.loading ? (
                     <CircularProgress size={24} />
                   ) : ( */}
@@ -339,8 +343,9 @@ const DocManage = () => {
                         )
                       )}
                     </div>
+
                     <label htmlFor={`file-upload-${index}`}>
-                      <div className="w-28">
+                      <div className="md:w-28">
                         <Button
                           size="small"
                           variant="contained"
@@ -351,7 +356,9 @@ const DocManage = () => {
                         </Button>
                       </div>
                     </label>
-                    <span className="w-28 text-xs">{field.fileName}</span>
+                    <span className="md:w-28 mr-3 ml-3 text-xs">
+                      {field.fileName}
+                    </span>
                     <Button
                       size="small"
                       color="info"

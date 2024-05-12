@@ -1,14 +1,14 @@
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Button } from "@mui/material";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import useGetUser from "../../hooks/Token/useUser";
-import ShowDoc from "./components/ShowDoc";
+import DocPreviewModal from "./components/Modal2";
 
 const OrgDocManage = () => {
   const { authToken } = useGetUser();
-  const [open, setOpen] = useState("");
+  const [open, setOpen] = useState(false);
+  const [selectedDocumentUrl, setSelectedDocumentUrl] = useState(""); // State to store the URL of the selected document
   const { data } = useQuery(`getdocsforemp`, async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/org/getdocsforemp`,
@@ -19,44 +19,55 @@ const OrgDocManage = () => {
     console.log(response.data.documents);
     return response.data.documents;
   });
-  useEffect(() => {
-    console.log(open);
-  }, [open]);
+
+  const handleOpenModal = (documentUrl) => {
+    setSelectedDocumentUrl(documentUrl);
+    setOpen(true);
+  };
+
+  // Function to handle closing the modal
 
   return (
     <div className="w-full h-full p-5">
-      <div className="w-[50%] h-auto pb-4 mt-4 border-2 m-auto rounded-3xl relative">
-        {/* Ensure the clickable area is large enough */}
-
-        {open === "" && <ShowDoc data={data} setOpen={setOpen} />}
-
-        {open === "doc" && (
-          <>
+      <div
+        style={{
+          boxShadow:
+            "0 1px 2px 0 rgba(60,64,67,.3), 0 2px 6px 2px rgba(60,64,67,.15)",
+        }}
+        className="w-[50%] h-auto pb-4 mt-11 m-auto rounded-lg relative pl-6 pr-6"
+      >
+        <div>
+          <div
+            style={{ borderBottom: "2px solid #b8b8b8" }}
+            className="text-3xl w-full text-center py-3 mb-5"
+          >
+            Organisation Documents
+          </div>
+          {data?.map((document, idx) => (
             <div
-              className="cursor-pointer absolute top-2 border-2 rounded-full left-3 p-1"
-              onClick={() => setOpen("")}
+              key={idx}
+              style={{
+                boxShadow:
+                  "0 1px 2px 0 rgba(60,64,67,.3), 0 2px 6px 2px rgba(60,64,67,.15)",
+              }}
+              className="w-[500px] h-[60px] px-4 m-auto flex gap-6 items-center justify-between mb-4"
             >
-              <ArrowBackIcon onClick={() => setOpen("")} />
-            </div>
-            <div
-              style={{ borderBottom: "2px solid #E5E7EB" }}
-              className="text-3xl font-semibold w-full text-center my-2 pb-2"
-            >
-              Organization Documents
-            </div>
-            {data?.map((item, idx) => (
-              <div
-                key={idx}
-                className="w-[500px] h-[60px] px-4 m-auto shadow-md flex gap-4 items-center justify-between"
+              <div className="text-lg">{document.title}</div>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => handleOpenModal(document.url)}
               >
-                <div className="text-lg">{item.title}</div>
-                <Button variant="contained" size="small">
-                  SHOW doc
-                </Button>
-              </div>
-            ))}
-          </>
-        )}
+                SHOW
+              </Button>
+            </div>
+          ))}
+        </div>
+        <DocPreviewModal
+          fileData={selectedDocumentUrl}
+          setOpenState={setOpen}
+          openState={open}
+        />
       </div>
     </div>
   );
