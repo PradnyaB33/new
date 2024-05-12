@@ -1,14 +1,19 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { IconButton, Modal } from "@mui/material";
+import { Button, IconButton, Modal } from "@mui/material";
 import React from "react";
 
-export const DocPreviewModal = ({ fileData, setOpenState, openState }) => {
+const DocPreviewModal = ({ fileData, setOpenState, openState }) => {
   const closeModal = () => {
     setOpenState(false);
   };
 
-  const isImage = (fileData) => {
-    return fileData.type.startsWith("image/");
+  const isPDF = (fileData) => {
+    return fileData && fileData.type && fileData.type === "application/pdf";
+  };
+
+  const openPDFInNewTab = () => {
+    const fileURL = URL.createObjectURL(fileData);
+    window.open(fileURL, "_blank");
   };
 
   return (
@@ -21,7 +26,15 @@ export const DocPreviewModal = ({ fileData, setOpenState, openState }) => {
         justifyContent: "center",
       }}
     >
-      <div className="bg-white p-[30px] w-[40%] h-[80%] rounded-lg relative flex justify-center flex-col">
+      <div
+        className="bg-white p-[30px] md:w-[40%] md:h-[40%] w-[300px] h-[200px] rounded-lg relative"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         {fileData && (
           <>
             <IconButton
@@ -37,30 +50,24 @@ export const DocPreviewModal = ({ fileData, setOpenState, openState }) => {
               <CloseIcon style={{ color: "white" }} />
             </IconButton>
             <div
+              className="w-full h-full flex justify-center items-center"
               style={{
-                display: "flex",
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
+                width: "100%",
+                height: "100%",
+                overflowY: "auto",
+                overflowX: "hidden",
               }}
             >
-              {isImage(fileData) ? (
-                <img
-                  className="w-[400px]"
-                  src={URL.createObjectURL(fileData)}
-                  alt=""
-                />
+              {isPDF(fileData) ? (
+                <Button
+                  size="large"
+                  variant="contained"
+                  onClick={openPDFInNewTab}
+                >
+                  Open PDF
+                </Button>
               ) : (
-                <iframe
-                  title="Document Preview"
-                  src={URL.createObjectURL(fileData)}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    border: "none",
-                    objectFit: "cover",
-                  }}
-                />
+                <p>Unsupported file format. Please upload a PDF.</p>
               )}
             </div>
           </>
