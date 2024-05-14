@@ -111,7 +111,7 @@ const LetterSetup = () => {
               <div key={documentName} className="p-4">
                 <div className="flex justify-start items-center mb-2">
                   <h2 className="text-lg font-bold w-[300px]">
-                    {documentName}
+                    {documentName.replace(/([a-z])([A-Z])/g, "$1 $2")}
                   </h2>
                   <div className="flex items-center gap-2">
                     <input
