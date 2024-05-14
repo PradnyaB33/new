@@ -147,7 +147,7 @@ const PunchMapModal = ({ items, idx }) => {
             {items.punchData[0].image === "" ? (
               <h1>Requested For : {items.punchData.length} times</h1>
             ) : (
-              <h1>Punching restarted: {items.punchData.length} times</h1>
+              <h1>Punching Restarted: {items.punchData.length} times</h1>
             )}
           </div>
         </div>
