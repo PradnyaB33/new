@@ -35,6 +35,8 @@ const PunchAcceptModal = () => {
     enabled: employeeId !== undefined,
   });
 
+  console.log("empnotifiactions", EmpNotification);
+
   return (
     <div>
       <header className="text-xl w-full pt-6 border bg-white shadow-md   p-4">
@@ -107,7 +109,7 @@ const PunchAcceptModal = () => {
               <CircularProgress />
             </div>
           ) : employeeId ? (
-            EmpNotification?.length <= 0 ? (
+            EmpNotification?.punchNotification?.length <= 0 ? (
               <div className="flex px-4 w-full items-center my-4">
                 <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
                   <Info /> No Punch Request Found

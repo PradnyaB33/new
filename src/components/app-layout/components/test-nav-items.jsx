@@ -506,7 +506,7 @@ const TestNavItems = ({ toggleDrawer }) => {
 
       RemotePunch: {
         open: false,
-        isVisible: ["Employee", "Manager"].includes(role),
+        isVisible: ["Employee"].includes(role),
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
