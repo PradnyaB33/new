@@ -442,7 +442,11 @@ const DepartmentList = () => {
               label="Cost Center Name"
               type="text"
               placeholder="Enter Cost Center"
-              onChange={(e) => setCostCenterName(e.target.value)}
+              onChange={(e) => {
+                if (e.target.value <= 35) {
+                  setCostCenterName(e.target.value);
+                }
+              }}
             />
 
             <TextField
