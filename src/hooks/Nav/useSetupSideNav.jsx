@@ -209,7 +209,8 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/performance-management`,
-      isVisible: true,
+      isVisible:
+        true && data?.organisation?.packageInfo === "Intermediate Plan",
       // isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
     },
     {
@@ -219,8 +220,10 @@ const useSetupSideNav = (organisationId) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/letter-types`,
-      isVisible: user?.profile?.some((role) =>
-        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      isVisible: user?.profile?.some(
+        (role) =>
+          ["Super-Admin", "Delegate-Super-Admin"].includes(role) &&
+          data?.organisation?.packageInfo === "Intermediate Plan"
       ),
     },
   ];

@@ -333,14 +333,14 @@ const AppDatePicker = ({
   const handleDelete = async () => {
     console.log("selectedLeave", selectedLeave);
     try {
-      if (selectedLeave.status === "Approved") {
-        setAppAlert({
-          alert: true,
-          type: "error",
-          msg: "Cannot Delete Approved Shift",
-        });
-        return;
-      }
+      // if (selectedLeave.status === "Approved") {
+      //   setAppAlert({
+      //     alert: true,
+      //     type: "error",
+      //     msg: "Cannot Delete Approved Shift",
+      //   });
+      //   return;
+      // }
       if (selectedLeave._id) {
         await axios.delete(
           `${process.env.REACT_APP_API}/route/shiftApply/delete/${selectedLeave._id}`,
@@ -365,7 +365,6 @@ const AppDatePicker = ({
           msg: "Request Deleted Successfully",
         });
       } else if (selectedLeave) {
-        // If selectedLeave does not have an _id, filter it out from newAppliedLeaveEvents
         setNewAppliedLeaveEvents((prevEvents) =>
           prevEvents.filter(
             (event) =>
@@ -378,6 +377,11 @@ const AppDatePicker = ({
       }
     } catch (error) {
       console.error("Error deleting shift:", error);
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: error.response.data.message,
+      });
     }
   };
 
