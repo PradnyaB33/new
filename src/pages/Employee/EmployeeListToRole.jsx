@@ -10,8 +10,8 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
-//import UpdateEmployeeModal from "../../components/Modal/EditEmployeeModal/UpdateEmployeeModal";
 import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
+import UserProfile from "../../hooks/UserData/useUser";
 const EmployeeListToRole = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -23,8 +23,9 @@ const EmployeeListToRole = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
-
-  console.log(availableEmployee, "avialabel days");
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
+  console.log("role", role);
 
   const fetchAvailableEmployee = async (page) => {
     try {
@@ -223,9 +224,7 @@ const EmployeeListToRole = () => {
                           </IconButton>
                         </td>
                       </tr>
-                    ))
-              
-                }
+                    ))}
               </tbody>
             </table>
             <nav
@@ -313,6 +312,7 @@ const EmployeeListToRole = () => {
 
       {/* edit model */}
       <EditModelOpen
+        role={role}
         handleClose={handleClose}
         open={editModalOpen}
         employeeId={employeeId}
