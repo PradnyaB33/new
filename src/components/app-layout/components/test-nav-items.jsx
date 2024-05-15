@@ -83,7 +83,7 @@ const TestNavItems = ({ toggleDrawer }) => {
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
   const [isVisible, setisVisible] = useState(true);
-
+  console.log("role" , role);
   let navItems = useMemo(
     () => ({
       Home: {
@@ -435,6 +435,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               "Department-Head",
               "Delegate-Department-Head",
               "Department-Admin",
+              "Delegate-Department-Admin",
             ].includes(role),
             link: `/organisation/${orgId}/add-department`,
             icon: (
@@ -452,6 +453,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               "Department-Head",
               "Delegate-Department-Head",
               "Department-Admin",
+              "Delegate-Department-Admin",
             ].includes(role),
             link: `/organisation/${orgId}/dept-deletion`,
             icon: (
@@ -468,6 +470,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               "Department-Head",
               "Delegate-Department-Head",
               "Department-Admin",
+              "Delegate-Department-Admin",
             ].includes(role),
             link: `/organisation/${orgId}/department-list`,
             icon: (
