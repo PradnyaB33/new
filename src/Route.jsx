@@ -12,7 +12,6 @@ import ResetPassword from "./components/resetpassword/resetpassword";
 import RequireAuth, { AuthProvider } from "./context/AuthProvider";
 import useSubscription from "./hooks/Subscription/subscription";
 import NewOranisationForm from "./pages/AddOrganisation/OrgFrom";
-import EmpShiftNotification from "./pages/AllNotifications/empShiftNotification";
 import Application from "./pages/Application/Application";
 import Billing from "./pages/Billing/page";
 import DashBoardHR from "./pages/DashBoard/DashBoardHR";
@@ -103,6 +102,9 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import MissedPunchNotified from "./pages/MissedPunchNotification/missedPunchNotified";
+import MissedPunchNotificationToEmp from "./pages/MissedPunchNotification/MissedPunchNotificationToEmp";
+
 const App = () => {
   return (
     <AuthProvider>
@@ -191,21 +193,17 @@ const App = () => {
         <Route path="/leave-notification" element={<LeaveNotification />} />
         <Route path="/punch-notification" element={<PunchNotification />} />
         <Route
-          path="/emp-shift-notification"
-          element={<EmpShiftNotification />}
-        />
-        <Route
           path="/punch-notification/:employeeId"
           element={<PunchNotification />}
         />
         <Route path="/shift-notification" element={<ShiftNotification />} />
         <Route
-          path="/shift-notification/:employeeId"
-          element={<ShiftNotification />}
-        />
-        <Route
           path="/missedPunch-notification"
           element={<MissedPunchNotification />}
+        />
+          <Route
+          path="/missed-punch-notification/:employeeId"
+          element={<MissedPunchNotified />}
         />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -249,7 +247,7 @@ const App = () => {
 
         {/* Dashboard Routes */}
         <Route
-          path="/organisation/:id/dashboard/employee-dashboard"
+          path="/organisation/dashboard/employee-dashboard"
           element={
             <RequireAuth
               permission={[
@@ -294,7 +292,7 @@ const App = () => {
         <Route
           path="/organisation/:organisationId/dashboard/super-admin"
           element={
-            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+            <RequireAuth permission={["Super-Admin"]}>
               <SuperAdmin />
             </RequireAuth>
           }
@@ -513,15 +511,10 @@ const App = () => {
               permission={[
                 "Super-Admin",
                 "Delegate-Super-Admin",
-                "Department-Head",
-                "Delegate-Department-Head",
-                "Department-Admin",
-                "Delegate-Department-Admin",
-                "Accountant",
-                "Delegate-Accountant",
                 "HR",
                 "Manager",
-                "Employee",
+                "Department-Head",
+                "Accoutant",
               ]}
             >
               <Employee />
@@ -898,7 +891,7 @@ const App = () => {
           }
         />
         <Route
-          path="/organisation/:organisationId/leave"
+          path="/leave"
           element={
             <RequireAuth
               permission={[
@@ -911,7 +904,6 @@ const App = () => {
                 "Delegate-Department-Admin",
                 "HR",
                 "Accountant",
-                "Manager",
               ]}
             >
               <LeaveRequisition />
@@ -966,6 +958,7 @@ const App = () => {
         <Route path="*" element={<NotFound />} />
         <Route path="/pendingLoan" element={<LoanMgtNotification />} />
         <Route path="/loan-approval/:loanId" element={<LoanMgtApproval />} />
+        <Route path="/missed-punch-notification-to-emp" element={<MissedPunchNotificationToEmp />} />
       </Routes>
     </AuthProvider>
   );
