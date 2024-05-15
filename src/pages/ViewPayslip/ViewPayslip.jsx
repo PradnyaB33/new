@@ -413,7 +413,7 @@ const ViewPayslip = () => {
             <div>
               <img
                 src="/payslip.svg"
-                style={{ height: "600px", marginLeft: "20%" }}
+                style={{ height: "600px", marginLeft: "25%" }}
                 alt="none"
               />
             </div>
