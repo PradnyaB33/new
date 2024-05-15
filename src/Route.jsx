@@ -103,6 +103,7 @@ import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
 import MissedPunchNotified from "./pages/MissedPunchNotification/missedPunchNotified";
+import MissedPunchNotificationToEmp from "./pages/MissedPunchNotification/MissedPunchNotificationToEmp";
 
 const App = () => {
   return (
@@ -957,6 +958,7 @@ const App = () => {
         <Route path="*" element={<NotFound />} />
         <Route path="/pendingLoan" element={<LoanMgtNotification />} />
         <Route path="/loan-approval/:loanId" element={<LoanMgtApproval />} />
+        <Route path="/missed-punch-notification-to-emp" element={<MissedPunchNotificationToEmp />} />
       </Routes>
     </AuthProvider>
   );
