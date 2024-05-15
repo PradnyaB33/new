@@ -83,7 +83,7 @@ const TestNavItems = ({ toggleDrawer }) => {
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
   const [isVisible, setisVisible] = useState(true);
-  console.log("role" , role);
+  console.log("role", role);
   let navItems = useMemo(
     () => ({
       Home: {
@@ -422,6 +422,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             "Department-Head",
             "Delegate-Department-Head",
             "Department-Admin",
+            "Delegate-Department-Admin",
           ].includes(role),
         // : false
         icon: <Business className=" !text-[1.2em] text-[#67748E]" />,
