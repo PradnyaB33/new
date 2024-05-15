@@ -90,6 +90,7 @@ import MissPunchInOut from "./pages/MissPunch/MissPunchInOut";
 import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
 import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
 import MyTraining from "./pages/My-Training/page";
+import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
@@ -191,6 +192,17 @@ const App = () => {
         <Route path="/sign-up" element={<Signup />} />
         {/* <Route path="/notification" element={<ParentNotification />} /> */}
         <Route path="/leave-notification" element={<LeaveNotification />} />
+<<<<<<< HEAD
+=======
+        <Route
+          path="/self/leave-notification"
+          element={<SelfLeaveNotification />}
+        />
+        <Route
+          path="/leave-notification/:employeeId"
+          element={<LeaveNotification />}
+        />
+>>>>>>> 02bf18dbf604b0f8725c1b644c71f09377e3ec81
         <Route path="/punch-notification" element={<PunchNotification />} />
         <Route
           path="/punch-notification/:employeeId"
