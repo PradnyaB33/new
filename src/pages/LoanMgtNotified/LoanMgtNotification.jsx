@@ -26,8 +26,6 @@ const LoanMgtNotification = () => {
           .includes(searchQuery.toLowerCase())
     );
   }
-  
-
 
   return (
     <div className="w-full">
@@ -39,7 +37,9 @@ const LoanMgtNotification = () => {
         <article className="w-[20%] overflow-auto max-h-[90vh] h-full bg-white border-gray-200">
           <div className="p-6 !py-2">
             <div className="space-y-2">
-              <div className={`flex rounded-md items-center px-2 outline-none border-gray-200 border-[.5px] bg-white py-1 md:py-[6px]`}>
+              <div
+                className={`flex rounded-md items-center px-2 outline-none border-gray-200 border-[.5px] bg-white py-1 md:py-[6px]`}
+              >
                 <Search className="text-gray-700 md:text-lg !text-[1em]" />
                 <input
                   type={"text"}
@@ -51,7 +51,7 @@ const LoanMgtNotification = () => {
               </div>
             </div>
           </div>
-          {  filteredEmployees && filteredEmployees.length > 0 && (
+          {filteredEmployees && filteredEmployees.length > 0 && (
             <div>
               {filteredEmployees?.map((employee) => (
                 <div
@@ -62,9 +62,10 @@ const LoanMgtNotification = () => {
                   <Avatar src={employee?.avatarSrc} />
                   <div>
                     <h1 className="text-[1.2rem]">
-                      {employee?.userId?.first_name}
+                      {employee?.userId?.first_name}{" "}
                       {employee?.userId?.last_name}
                     </h1>
+
                     <h1 className={`text-sm text-gray-500`}>
                       {employee?.userId?.email}
                     </h1>
