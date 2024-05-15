@@ -6,10 +6,10 @@ import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import CreateSalaryModel from "../../components/Modal/CreateSalaryModel/CreateSalaryModel";
 import { MoreVert } from "@mui/icons-material";
-import {Menu,MenuItem,} from "@mui/material";
+import { Menu, MenuItem } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import EditIcon from '@mui/icons-material/Edit';
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import EditIcon from "@mui/icons-material/Edit";
 import UpdateSalaryModal from "../../components/Modal/CreateSalaryModel/UpdateSalaryModal";
 
 const SalaryManagement = () => {
@@ -24,7 +24,6 @@ const SalaryManagement = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
- 
 
   const navigate = useNavigate();
 
@@ -70,19 +69,19 @@ const SalaryManagement = () => {
 
   const changePage = (id) => {
     fetchAvailableEmployee(id);
-  };  
+  };
 
-   // for morevert icon
-   const [anchorEl, setAnchorEl] = useState(null);
-   const [employeeId, setEmployeeId] = useState(null);
+  // for morevert icon
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [employeeId, setEmployeeId] = useState(null);
 
-   const handleClick = (e, id) => {
-     setAnchorEl(e.currentTarget);
-     setEmployeeId(id);
-   };
-   const handleCloseIcon = () => {
-     setAnchorEl(null);
-   };
+  const handleClick = (e, id) => {
+    setAnchorEl(e.currentTarget);
+    setEmployeeId(id);
+  };
+  const handleCloseIcon = () => {
+    setAnchorEl(null);
+  };
 
   // modal for create salary
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -93,19 +92,18 @@ const SalaryManagement = () => {
   const handleClose = () => {
     setCreateModalOpen(false);
     setAnchorEl(null);
-  };  
+  };
 
+  // modal for update salary
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const handleUpdateModalOpen = () => {
+    setUpdateModalOpen(true);
+  };
 
-   // modal for update salary
-   const [updateModalOpen, setUpdateModalOpen] = useState(false);
-   const handleUpdateModalOpen = () => {
-     setUpdateModalOpen(true);
-   }; 
-
-   const handleUpdateModalClose = () => {
-      setUpdateModalOpen(false);
-      setAnchorEl(null);
-   }; 
+  const handleUpdateModalClose = () => {
+    setUpdateModalOpen(false);
+    setAnchorEl(null);
+  };
 
   return (
     <>
@@ -185,111 +183,113 @@ const SalaryManagement = () => {
                 </tr>
               </thead>
               <tbody>
-                {availableEmployee.length > 0 &&  availableEmployee
-                  .filter((item) => {
-                    return (
-                      (!nameSearch.toLowerCase() ||
-                        (item.first_name !== null &&
-                          item.first_name !== undefined &&
-                          item.first_name
-                            .toLowerCase()
-                            .includes(nameSearch))) &&
-                      (!deptSearch ||
-                        (item.deptname !== null &&
-                          item.deptname !== undefined &&
-                          item.deptname.some(
-                            (dept) =>
-                              dept.departmentName !== null &&
-                              dept.departmentName
+                {availableEmployee.length > 0 &&
+                  availableEmployee
+                    .filter((item) => {
+                      return (
+                        (!nameSearch.toLowerCase() ||
+                          (item.first_name !== null &&
+                            item.first_name !== undefined &&
+                            item.first_name
+                              .toLowerCase()
+                              .includes(nameSearch))) &&
+                        (!deptSearch ||
+                          (item.deptname !== null &&
+                            item.deptname !== undefined &&
+                            item.deptname.some(
+                              (dept) =>
+                                dept.departmentName !== null &&
+                                dept.departmentName
+                                  .toLowerCase()
+                                  .includes(deptSearch.toLowerCase())
+                            ))) &&
+                        (!locationSearch.toLowerCase() ||
+                          item.worklocation.some(
+                            (location) =>
+                              location &&
+                              location.city !== null &&
+                              location.city !== undefined &&
+                              location.city
                                 .toLowerCase()
-                                .includes(deptSearch.toLowerCase())
-                          ))) &&
-                      (!locationSearch.toLowerCase() ||
-                        item.worklocation.some(
-                          (location) =>
-                            location &&
-                            location.city !== null &&
-                            location.city !== undefined &&
-                            location.city.toLowerCase().includes(locationSearch)
-                        ))
-                    );
-                  })
-                  ?.map((item, id) => (
-                    <tr className="!font-medium border-b" key={id}>
-                      <td className="!text-left pl-8 py-3">{id + 1}</td>
-                      <td className="py-3 pl-8">{item?.first_name}</td>
-                      <td className="py-3 pl-8 ">{item?.last_name}</td>
-                      <td className="py-3 pl-8">{item?.email}</td>
-                      <td className="py-3 pl-8">{item?.empId}</td>
-                      <td className="py-3 pl-8">
-                        {item?.worklocation?.map((location, index) => (
-                          <span key={index}>{location?.city}</span>
-                        ))}
-                      </td>
-                      <td className="py-3">
-                        {item?.deptname?.map((dept, index) => {
-                          return (
-                            <span key={index}>{dept?.departmentName}</span>
-                          );
-                        })}
-                      </td>
-                      <td className="py-3 pl-8">
-                        {item?.salarystructure?.name}
-                      </td>
-                      <td>
+                                .includes(locationSearch)
+                          ))
+                      );
+                    })
+                    ?.map((item, id) => (
+                      <tr className="!font-medium border-b" key={id}>
+                        <td className="!text-left pl-8 py-3">{id + 1}</td>
+                        <td className="py-3 pl-8">{item?.first_name}</td>
+                        <td className="py-3 pl-8 ">{item?.last_name}</td>
+                        <td className="py-3 pl-8">{item?.email}</td>
+                        <td className="py-3 pl-8">{item?.empId}</td>
+                        <td className="py-3 pl-8">
+                          {item?.worklocation?.map((location, index) => (
+                            <span key={index}>{location?.city}</span>
+                          ))}
+                        </td>
+                        <td className="py-3 pl-9">
+                          {item?.deptname?.map((dept, index) => {
+                            return (
+                              <span key={index}>{dept?.departmentName}</span>
+                            );
+                          })}
+                        </td>
+                        <td className="py-3 pl-9">
+                          {item?.salarystructure?.name}
+                        </td>
+                        <td className="py-3 pl-4">
                           <MoreVert
-                          onClick={(e) => handleClick(e, item._id)} 
-                          className="cursor-pointer"
-                        />
-                        <Menu
-                          elevation={2}
-                          anchorEl={anchorEl}
-                          key={id}
-                          open={Boolean(anchorEl)}
-                          onClose={handleCloseIcon}
-                        >
-                          <Tooltip title="Button for creating salary">
-                            <MenuItem onClick={() => handleCreateModalOpen()}>
-                              <AddBoxIcon
-                                color="primary"
-                                aria-label="edit"
-                                style={{
-                                  color: "#f50057",
-                                  marginRight: "10px",
-                                }}
-                              />
-                            </MenuItem>
-                          </Tooltip>
-                          <Tooltip title="Button for editing salary">
-                            <MenuItem  onClick={() => handleUpdateModalOpen()}>
-                              <EditIcon
-                                color="primary"
-                                aria-label="edit"
-                                style={{
-                                  color: "#2196f3",
-                                  marginRight: "10px",
-                                }}
-                              />
-                            </MenuItem>
-                          </Tooltip>
-                        
-                        </Menu>
-                      </td>
-                      <td>
-                        <button
-                          type="submit"
-                          onClick={() =>
-                            navigate(
-                              `/organisation/${organisationId}/salary-calculate/${item._id}`
-                            )
-                          }
-                          className="flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-                        >
-                          Calculate Salary
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                            onClick={(e) => handleClick(e, item._id)}
+                            className="cursor-pointer"
+                          />
+                          <Menu
+                            elevation={2}
+                            anchorEl={anchorEl}
+                            key={id}
+                            open={Boolean(anchorEl)}
+                            onClose={handleCloseIcon}
+                          >
+                            <Tooltip title="Button for creating salary">
+                              <MenuItem onClick={() => handleCreateModalOpen()}>
+                                <AddBoxIcon
+                                  color="primary"
+                                  aria-label="edit"
+                                  style={{
+                                    color: "#f50057",
+                                    marginRight: "10px",
+                                  }}
+                                />
+                              </MenuItem>
+                            </Tooltip>
+                            <Tooltip title="Button for editing salary">
+                              <MenuItem onClick={() => handleUpdateModalOpen()}>
+                                <EditIcon
+                                  color="primary"
+                                  aria-label="edit"
+                                  style={{
+                                    color: "#2196f3",
+                                    marginRight: "10px",
+                                  }}
+                                />
+                              </MenuItem>
+                            </Tooltip>
+                          </Menu>
+                        </td>
+                        <td className="py-3 pl-6">
+                          <button
+                            type="submit"
+                            onClick={() =>
+                              navigate(
+                                `/organisation/${organisationId}/salary-calculate/${item._id}`
+                              )
+                            }
+                            className="flex group justify-center gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                          >
+                            Calculate Salary
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
               </tbody>
             </table>
             <nav
@@ -382,7 +382,7 @@ const SalaryManagement = () => {
         handleClose={handleClose}
         empId={employeeId}
       />
-       <UpdateSalaryModal
+      <UpdateSalaryModal
         id={organisationId}
         open={updateModalOpen}
         handleClose={handleUpdateModalClose}
