@@ -44,7 +44,9 @@ const InputForm = () => {
           }))}
           onChange={(value) => {
             setMonth(value.value);
-            if (value === null) return;
+            if (value === null) {
+              return setMonth(null);
+            }
             console.log(`🚀 ~ file: input-form.jsx:25 ~ value`, value);
             // get start date of month
             const startDate = moment(value.value, "MMMM").startOf("month");
