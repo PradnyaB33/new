@@ -1,37 +1,3 @@
-// import {
-//   Button,
-//   Container,
-//   Dialog,
-//   DialogActions,
-//   DialogContent,
-//   TextField,
-//   Typography,
-//   Tooltip,
-// } from "@mui/material";
-// import axios from "axios";
-// import React, { useContext, useEffect, useState } from "react";
-// import { TestContext } from "../../../State/Function/Main";
-// import { UseContext } from "../../../State/UseState/UseContext";
-// const AttendanceBioModal = ({
-//   handleClose,
-//   open,
-//   organisationId,
-//   selectedEmployees,
-// }) => {
-//   const { cookies } = useContext(UseContext);
-//   const authToken = cookies["aegis"];
-//   const { handleAlert } = useContext(TestContext);
-//   const [emailSearch, setEmailSearch] = useState("");
-//   const [availableEmployee, setAvailableEmployee] = useState([]);
-//   const [currentPage, setCurrentPage] = useState(1);
-//   const [totalPages, setTotalPages] = useState(1);
-//   const [numbers, setNumbers] = useState([]);
-//   const [checkedEmployees, setCheckedEmployees] = useState([]);
-//   const [emailNotFound, setEmailNotFound] = useState(false);
-//   console.log("email not found", emailNotFound);
-
-//   const fetchAvailableEmployee = async (page) => {
-//     try {
 import {
   Button,
   Container,
@@ -62,8 +28,6 @@ const AttendanceBioModal = ({
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const [checkedEmployees, setCheckedEmployees] = useState([]);
-  const [emailNotFound, setEmailNotFound] = useState(false);
-  console.log(emailNotFound);
 
   const fetchAvailableEmployee = async (page) => {
     try {
@@ -127,24 +91,75 @@ const AttendanceBioModal = ({
   };
 
   // Handle sync
+  // const handleSync = async () => {
+  //   try {
+  //     if (checkedEmployees.length === 0 && emailSearch.trim() !== "") {
+  //       setEmailNotFound(true);
+  //       return;
+  //     }
+
+  //     // Verify email for each checked employee
+  //     const invalidEmails = checkedEmployees.filter((employee) => {
+  //       const email = employee?.email || "";
+  //       return !validateEmail(email);
+  //     });
+
+  //     if (invalidEmails.length > 0) {
+  //       handleAlert(true, "error", "Please enter valid email addresses.");
+  //       return;
+  //     }
+
+  //     const syncedData = selectedEmployees.map((employee) => ({
+  //       date: employee[3],
+  //       punchingTime: employee[4],
+  //       punchingStatus: employee[5],
+  //     }));
+  //     const EmployeeIds = checkedEmployees
+  //       .map((employee) => employee._id)
+  //       .filter(Boolean);
+  //     EmployeeIds.forEach((EmployeeId) => {
+  //       axios.post(
+  //         `${process.env.REACT_APP_API}/route/organization/${organisationId}/add-attendance-data`,
+  //         {
+  //           EmployeeId: EmployeeId,
+  //           punchingRecords: syncedData,
+  //         },
+  //         {
+  //           headers: {
+  //             Authorization: authToken,
+  //           },
+  //         }
+  //       );
+  //     });
+
+  //     handleAlert(true, "success", "Synced data successfully.");
+  //     handleClose();
+  //     setCheckedEmployees([]);
+  //   } catch (error) {
+  //     console.error("Failed to sync attendance data:", error);
+  //   }
+  // };
+  // Handle sync
   const handleSync = async () => {
     try {
-      if (checkedEmployees.length === 0 && emailSearch.trim() !== "") {
-        setEmailNotFound(true);
+      if (!validateEmail(emailSearch)) {
+        handleAlert(true, "error", "Please enter a valid email address.");
         return;
       }
-  
-      // Verify email for each checked employee
-      const invalidEmails = checkedEmployees.filter((employee) => {
-        const email = employee?.email || "";
-        return !validateEmail(email);
-      });
-  
-      if (invalidEmails.length > 0) {
-        handleAlert(true, "error", "Please enter valid email addresses.");
+
+      // Check if the entered email matches any of the checked employees' emails
+      const isMatch = selectedEmployees.some(
+        (employee) => employee.email === emailSearch
+      );
+      if (!isMatch) {
+        handleAlert(
+          true,
+          "error",
+          "Entered email does not match any selected employee's email."
+        );
         return;
       }
-  
+
       const syncedData = selectedEmployees.map((employee) => ({
         date: employee[3],
         punchingTime: employee[4],
