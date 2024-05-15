@@ -89,6 +89,8 @@ import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
 import MissPunchInOut from "./pages/MissPunch/MissPunchInOut";
 import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
 import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
+import MissedPunchNotificationToEmp from "./pages/MissedPunchNotification/MissedPunchNotificationToEmp";
+import MissedPunchNotified from "./pages/MissedPunchNotification/missedPunchNotified";
 import MyTraining from "./pages/My-Training/page";
 import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
@@ -103,8 +105,6 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import MissedPunchNotified from "./pages/MissedPunchNotification/missedPunchNotified";
-import MissedPunchNotificationToEmp from "./pages/MissedPunchNotification/MissedPunchNotificationToEmp";
 
 const App = () => {
   return (
@@ -192,8 +192,6 @@ const App = () => {
         <Route path="/sign-up" element={<Signup />} />
         {/* <Route path="/notification" element={<ParentNotification />} /> */}
         <Route path="/leave-notification" element={<LeaveNotification />} />
-<<<<<<< HEAD
-=======
         <Route
           path="/self/leave-notification"
           element={<SelfLeaveNotification />}
@@ -202,7 +200,6 @@ const App = () => {
           path="/leave-notification/:employeeId"
           element={<LeaveNotification />}
         />
->>>>>>> 02bf18dbf604b0f8725c1b644c71f09377e3ec81
         <Route path="/punch-notification" element={<PunchNotification />} />
         <Route
           path="/punch-notification/:employeeId"
@@ -213,7 +210,7 @@ const App = () => {
           path="/missedPunch-notification"
           element={<MissedPunchNotification />}
         />
-          <Route
+        <Route
           path="/missed-punch-notification/:employeeId"
           element={<MissedPunchNotified />}
         />
@@ -337,7 +334,7 @@ const App = () => {
                 "Delegate-Department-Head",
                 "Department-Admin",
                 "Delegate-Department-Admin",
-                "HR"
+                "HR",
               ]}
             >
               <DepartmentTest />
@@ -971,7 +968,10 @@ const App = () => {
         <Route path="*" element={<NotFound />} />
         <Route path="/pendingLoan" element={<LoanMgtNotification />} />
         <Route path="/loan-approval/:loanId" element={<LoanMgtApproval />} />
-        <Route path="/missed-punch-notification-to-emp" element={<MissedPunchNotificationToEmp />} />
+        <Route
+          path="/missed-punch-notification-to-emp"
+          element={<MissedPunchNotificationToEmp />}
+        />
       </Routes>
     </AuthProvider>
   );
