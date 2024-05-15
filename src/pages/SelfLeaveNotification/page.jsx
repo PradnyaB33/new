@@ -3,8 +3,8 @@ import InputForm from "./components/input-form";
 
 const SelfLeaveNotification = () => {
   return (
-    <div className="flex w-full flex-col">
-      <h1 className="w-full px-14 pt-4 text-xl font-bold">
+    <div className="flex w-full flex-col px-14 gap-6">
+      <h1 className="w-full pt-5 text-xl font-bold">
         Attendance and Leave Notifications
       </h1>
       <div className="w-full flex justify-between">

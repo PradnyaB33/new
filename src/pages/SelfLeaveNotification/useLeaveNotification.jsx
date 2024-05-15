@@ -6,12 +6,14 @@ import useGetUser from "../../hooks/Token/useUser";
 const useLeaveNotification = () => {
   const [status, setStatus] = useState("");
   const [leaveTypeDetailsId, setLeaveTypeDetailsId] = useState("");
-  const [month, setMonth] = useState("");
+  const [minDate, setMinDate] = useState("");
+  const [maxDate, setMaxDate] = useState("");
+  const [skip, setSkip] = useState(0);
 
   const { authToken, decodedToken } = useGetUser();
   const getLeaveNotification = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/leave/get-leave-notification/${decodedToken?.user?._id}`,
+      `${process.env.REACT_APP_API}/route/leave/get-leave-notification/${decodedToken?.user?._id}?status=${status}&leaveTypeDetailsId=${leaveTypeDetailsId}&minDate=${minDate}&maxDate=${maxDate}&skip=${skip}`,
       {
         headers: { Authorization: authToken },
       }
@@ -19,8 +21,15 @@ const useLeaveNotification = () => {
     return response.data;
   };
 
-  const { data, refetch } = useQuery({
-    queryKey: "leave-notification",
+  const { data, refetch, isLoading, isFetching } = useQuery({
+    queryKey: [
+      "leave-notification",
+      status,
+      minDate,
+      maxDate,
+      leaveTypeDetailsId,
+      skip,
+    ],
     queryFn: getLeaveNotification,
     refetchOnWindowFocus: false,
   });
@@ -32,8 +41,14 @@ const useLeaveNotification = () => {
     setStatus,
     leaveTypeDetailsId,
     setLeaveTypeDetailsId,
-    month,
-    setMonth,
+    minDate,
+    setMinDate,
+    maxDate,
+    setMaxDate,
+    skip,
+    setSkip,
+    isLoading,
+    isFetching,
   };
 };
 

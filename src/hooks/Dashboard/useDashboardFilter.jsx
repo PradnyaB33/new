@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import useAuthToken from "../Token/useAuth";
 import useDashGlobal from "./useDashGlobal";
+import useEmployee from "./useEmployee";
 
 export default function useDashboardFilter(organisationId) {
   const authToken = useAuthToken();
@@ -12,17 +13,21 @@ export default function useDashboardFilter(organisationId) {
   const [locations, setLocations] = useState("");
   const [data, setData] = useState([]);
   const [date, setDate] = useState(2024);
-  console.log(`🚀 ~ file: useDashboardFilter.jsx:14 ~ setDate:`, setDate);
+  console.log(`🚀 ~ file: useDashboardFilter.jsx:16 ~ setDate:`, setDate);
   const [salaryData, setSalaryData] = useState([]);
   const { selectedYear, selectedSalaryYear } = useDashGlobal();
+  const { employee } = useEmployee(organisationId);
 
   // Card Data
   const { data: absentEmployee } = useQuery(
-    ["absents", organisationId],
+    ["absents", organisationId, employee],
     async () => {
       try {
-        const response = await axios.get(
+        const response = await axios.post(
           `${process.env.REACT_APP_API}/route/leave/getAbsent/${organisationId}`,
+          {
+            employeeId: employee?.employees.map((item) => item._id),
+          },
           {
             headers: {
               Authorization: authToken,
@@ -31,9 +36,15 @@ export default function useDashboardFilter(organisationId) {
         );
         return response.data;
       } catch (error) {}
+    },
+    {
+      enabled: employee?.employees ? true : false,
     }
   );
-
+  console.log(
+    `🚀 ~ file: useDashboardFilter.jsx:45 ~ absentEmployee:`,
+    absentEmployee
+  );
   // Department data
   const getAPIData = async (url) => {
     try {
