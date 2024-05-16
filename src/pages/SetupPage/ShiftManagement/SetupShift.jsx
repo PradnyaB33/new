@@ -2,26 +2,47 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Money } from "@mui/icons-material";
 import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
 import { Button } from "@mui/material";
+import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
+import useAuthToken from "../../../hooks/Token/useAuth";
 import Setup from "../../SetUpOrganization/Setup";
 
 const SetupShift = () => {
+  const orgId = useParams().organisationId;
+  const authToken = useAuthToken();
   const formSchema = z.object({
-    amount: z.number(),
+    amount: z.string(),
   });
-  const { control, formState, handleSubmit, reset } = useForm({
+  const { control, formState, handleSubmit } = useForm({
     defaultValues: {
-      email: "",
+      amount: "",
     },
     resolver: zodResolver(formSchema),
   });
   const { errors } = formState;
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log("shift allowance data", data);
+    try {
+      const resp = await axios.post(
+        `${process.env.REACT_APP_API}/route/shiftApply/getallowance/${orgId}`,
+        {
+          data,
+        },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      console.log(resp);
+    } catch (error) {
+      console.log("operation not completed", error.message);
+    }
   };
   return (
     <div>
@@ -54,15 +75,16 @@ const SetupShift = () => {
                   errors={errors}
                   error={errors.allowanceQuantity}
                 />
-
-                <Button
-                  className="mt-4"
-                  size="small"
-                  type="submit"
-                  variant="contained"
-                >
-                  Submit
-                </Button>
+                <div className="py-2">
+                  <Button
+                    className="mt-4"
+                    size="small"
+                    type="submit"
+                    variant="contained"
+                  >
+                    Submit
+                  </Button>
+                </div>
               </form>
             </div>
           </article>
