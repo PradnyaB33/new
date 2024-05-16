@@ -22,38 +22,38 @@ import {
   TrendingUp,
   Work,
 } from "@mui/icons-material";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import ArticleIcon from "@mui/icons-material/Article";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import CallMissedIcon from "@mui/icons-material/CallMissed";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import FolderIcon from "@mui/icons-material/Folder";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
+import PunchClockIcon from "@mui/icons-material/PunchClock";
 import ReceiptIcon from "@mui/icons-material/Receipt";
-import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
+import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
-import PunchClockIcon from "@mui/icons-material/PunchClock";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import CallMissedIcon from "@mui/icons-material/CallMissed";
+
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
   const location = useLocation();
   const [decodedToken, setDecodedToken] = useState("");
-  const [emp, setEmp] = useState();
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
+  const { decodedToken: decoded } = useGetUser();
 
   // Update organization ID when URL changes
   useEffect(() => {
@@ -61,35 +61,29 @@ const TestNavItems = ({ toggleDrawer }) => {
     getOrganizationIdFromPathname(location.pathname);
     // eslint-disable-next-line
   }, [location.pathname, orgId]);
-  useEffect(() => {
-    (async () => {
-      const resp = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get/profile/${user._id}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      setEmp(resp.data.employee.organizationId);
-      console.log("emp data", resp.data.employee.organizationId);
-    })();
-    // eslint-disable-next-line
-  }, []);
 
   // Function to extract organization ID from pathname
   const getOrganizationIdFromPathname = (pathname) => {
     const parts = pathname.split("/");
     const orgIndex = parts.indexOf("organisation");
+    let orgId;
+
     if (orgIndex !== -1 && parts.length > orgIndex + 1) {
-      setOrgId(parts[orgIndex + 1]);
+      if (parts[orgIndex + 1] === null || undefined) {
+        orgId = decoded?.user?.organizationId;
+      } else {
+        orgId = parts[orgIndex + 1];
+      }
+    } else {
+      orgId = decoded?.user?.organizationId;
     }
+    setOrgId(orgId);
   };
 
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
   const [isVisible, setisVisible] = useState(true);
-
+  console.log("role", role);
   let navItems = useMemo(
     () => ({
       Home: {
@@ -106,7 +100,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                 : role === "HR"
                 ? `/organisation/${orgId}/dashboard/HR-dashboard`
                 : role === "Employee"
-                ? "/organisation/dashboard/employee-dashboard"
+                ? `/organisation/${orgId}/dashboard/employee-dashboard`
                 : "/organizationList",
             icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
             text: "Dashboard",
@@ -183,6 +177,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Notifications",
           },
+          {
+            key: "listNotification",
+            isVisible: ["Employee"].includes(role) ? true : false,
+            link: "/self-notification",
+            icon: (
+              <CircleNotifications className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Your Notification",
+          },
         ],
       },
       Performance: {
@@ -246,7 +249,13 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "createsalary",
             isVisible:
-              isVisible && ["Super-Admin", "HR", "Accountant"].includes(role),
+              isVisible &&
+              [
+                "Super-Admin",
+                "HR",
+                "Accountant",
+                "Delegate-Super-Admin",
+              ].includes(role),
             link: `/organisation/${orgId}/salary-management`,
             icon: (
               <AccountBalanceWalletOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
@@ -261,13 +270,6 @@ const TestNavItems = ({ toggleDrawer }) => {
               <MonetizationOnOutlined className=" !text-[1.2em] text-[#67748E]" />
             ),
             text: "Loan Management",
-          },
-          {
-            key: "missjustify",
-            isVisible: true,
-            link: `/missed-justify`,
-            icon: <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Missed Justify",
           },
         ],
       },
@@ -292,22 +294,22 @@ const TestNavItems = ({ toggleDrawer }) => {
         routes: [
           {
             key: "onboarding",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/employee-onboarding`,
             icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Employee Onboarding",
+            text: "Onboarding",
           },
 
           {
             key: "offboarding",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
+            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
               role
             ),
             link: `organisation/${orgId}/employee-offboarding`,
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Employee Offboarding",
+            text: "Offboarding",
           },
           {
             key: "employeeList",
@@ -415,7 +417,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           window.location.pathname.includes("organisation") &&
           [
             "Super-Admin",
-            "Delegate-Super Admin",
+            "Delegate-Super-Admin",
             "HR",
             "Department-Head",
             "Delegate-Department-Head",
@@ -434,6 +436,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               "Department-Head",
               "Delegate-Department-Head",
               "Department-Admin",
+              "Delegate-Department-Admin",
             ].includes(role),
             link: `/organisation/${orgId}/add-department`,
             icon: (
@@ -459,7 +462,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Delete Department",
           },
-
           {
             key: "departmentList",
             isVisible: [
@@ -486,7 +488,7 @@ const TestNavItems = ({ toggleDrawer }) => {
         routes: [
           {
             key: "addOrganisation",
-            isVisible: ["Super-Admin", "Delegate-Super Admin"].includes(role),
+            isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role),
             link: "/add-organisation",
             icon: (
               <BusinessOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
@@ -496,7 +498,7 @@ const TestNavItems = ({ toggleDrawer }) => {
 
           {
             key: "organisationList",
-            isVisible: ["Super-Admin", "Delegate-Super Admin"].includes(role),
+            isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role),
             link: "/organizationList",
             icon: (
               <AccountTreeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
@@ -508,9 +510,7 @@ const TestNavItems = ({ toggleDrawer }) => {
 
       RemotePunch: {
         open: false,
-        isVisible:
-          ["Employee", "Manager"].includes(role) &&
-          emp?.packageInfo === "Intermediate Plan",
+        isVisible: ["Employee"].includes(role),
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
@@ -526,6 +526,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             link: "/remotePunching",
             icon: <PanToolAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Apply Miss For Punch",
+          },
+          {
+            key: "empNotification",
+            isVisible: ["Employee"].includes(role),
+            link: "/emp-notification",
+            icon: (
+              <AssignmentTurnedInIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Remote Punching Status",
           },
         ],
       },
@@ -572,7 +581,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "manageTraining",
             isVisible:
-              ["HR", "Super-Admin"].includes(role) &&
+              ["HR", "Super-Admin", "Delegate-Super-Admin"].includes(role) &&
               window.location.pathname?.includes("organisation"),
             link: `/organisation/${orgId}/manage-training`,
             icon: (
