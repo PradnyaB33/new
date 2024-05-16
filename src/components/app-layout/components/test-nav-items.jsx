@@ -414,6 +414,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Delete Department",
           },
+
           {
             key: "departmentList",
             isVisible: [
