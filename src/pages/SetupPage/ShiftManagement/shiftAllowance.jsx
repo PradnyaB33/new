@@ -85,7 +85,6 @@ const ShiftAllowance = () => {
       queryclient.invalidateQueries("employee-summary-table");
       setNewAppliedLeaveEvents([]);
       console.log("Shift updated:", response.data);
-      console.log("Shift updated:", response);
     } catch (error) {
       console.error("Error updating shift:", error);
     }
