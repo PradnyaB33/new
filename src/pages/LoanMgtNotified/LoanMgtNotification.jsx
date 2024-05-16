@@ -13,7 +13,7 @@ const LoanMgtNotification = () => {
   const handleEmployeeClick = (employee) => {
     setSelectedEmployee(employee);
   };
-
+  
   let filteredEmployees = [];
 
   if (Array.isArray(getEmployeeRequestLoanApplication)) {
