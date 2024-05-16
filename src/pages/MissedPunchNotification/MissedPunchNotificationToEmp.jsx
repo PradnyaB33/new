@@ -8,6 +8,7 @@ import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
 import { Info } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import CalendarViewDayIcon from "@mui/icons-material/CalendarViewDay";
+import MissedPunchNotificatonToEmp from "../../components/Modal/MissedPunchNotificationToEmp/MissedPunchNotificatonToEmp";
 
 const MissedPunchNotificationToEmp = () => {
   const { cookies } = useContext(UseContext);
@@ -28,7 +29,9 @@ const MissedPunchNotificationToEmp = () => {
       return response.data.data;
     }
   );
-  console.log("data", getMissedPunchData);
+
+  const missedData = getMissedPunchData.map((data) => data.unavailableRecords);
+  console.log("missedData", missedData);
 
   const getTimeAgo = (updatedAt) => {
     const now = new Date();
@@ -58,26 +61,11 @@ const MissedPunchNotificationToEmp = () => {
       })
     : [];
 
-  // for view
-  const [viewOpenMissedPunchDataModal, setMissedPunchDataModal] =
-    useState(false);
-  const [missedPunchData, setMissedPunchData] = useState(null);
   const [selectedTimePeriod, setSelectedTimePeriod] = useState("all");
-  console.log(viewOpenMissedPunchDataModal);
-  const handleOpenMissedPunchDataModal = (data) => {
-    setMissedPunchDataModal(true);
-    setMissedPunchData(data);
-  };
-  console.log(missedPunchData);
-  const handleCloseMissedPunchDataModal = () => {
-    setMissedPunchDataModal(false);
-  };
-
   const handleTimePeriodChange = (event) => {
     setSelectedTimePeriod(event.target.value);
-  }; 
-  console.log(handleCloseMissedPunchDataModal);
-  console.log(handleOpenMissedPunchDataModal);
+  };
+
   // Filter loan data based on selected time period
   const filteredMissedPunchData = () => {
     if (selectedTimePeriod === "all") {
@@ -94,6 +82,18 @@ const MissedPunchNotificationToEmp = () => {
         (data) => new Date(data.updatedAt) <= cutoffDate
       );
     }
+  };
+
+  // for open the modal for display unavialble record in calender
+  const [missedDataModalOpen, setMissedDataModalOpen] = useState(false);
+  const [employeeMissedData, setEmployeeMissedData] = useState([]);
+  const handleMissedDataModalOpen = (missedData) => {
+    setEmployeeMissedData(missedData);
+    setMissedDataModalOpen(true);
+  };
+  const handleMissedDataModalClose = () => {
+    setMissedDataModalOpen(false);
+    setEmployeeMissedData([]);
   };
 
   return (
@@ -130,7 +130,10 @@ const MissedPunchNotificationToEmp = () => {
               </div>
               <Box sx={{ p: 2 }}>
                 <div className="flex justify-center gap-10">
-                  <CalendarViewDayIcon sx={{ color: "primary.main" }} />
+                  <CalendarViewDayIcon
+                    onClick={() => handleMissedDataModalOpen(missedData)}
+                    sx={{ color: "primary.main" }}
+                  />
                   <CloseIcon />
                 </div>
               </Box>
@@ -170,6 +173,12 @@ const MissedPunchNotificationToEmp = () => {
             )}
           </article>
         </Container>
+
+        <MissedPunchNotificatonToEmp
+          handleClose={handleMissedDataModalClose}
+          open={missedDataModalOpen}
+          employeeMissedData={employeeMissedData}
+        />
       </div>
     </>
   );
