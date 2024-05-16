@@ -128,7 +128,6 @@ const InputForm = () => {
         <Button
           variant="contained"
           onChange={() => {
-            console.log(`🚀 ~ file: input-form.jsx:25 ~ prev`, prev);
             setSkip((prev) => prev + 1);
           }}
         >
