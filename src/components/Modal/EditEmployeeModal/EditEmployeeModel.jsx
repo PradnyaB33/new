@@ -56,6 +56,7 @@ const EditModelOpen = ({
 
   const [additionalInfo, setAdditionalInfo] = useState({
     "Emergency Contact": "",
+    "Passport No": "",
     "Middle Name": "",
     "Permanent Address": "",
     "Primary Nationality": "",
@@ -367,20 +368,30 @@ const EditModelOpen = ({
         gender: employeeData?.gender || "",
       });
 
-      setAdditionalInfo({
-        Education: employeeData?.additionalInfo?.Education || "",
-        "Emergency Contact":
-          employeeData?.additionalInfo?.["Emergency Contact"] || "",
-        "Marital Status":
-          employeeData?.additionalInfo?.["Marital Status"] || "",
-        "Middle Name": employeeData?.additionalInfo?.["Middle Name"] || "",
-        "Permanent Address":
-          employeeData?.additionalInfo?.["Permanent Address"] || "",
-        "Primary Nationality":
-          employeeData?.additionalInfo?.["Primary Nationality"] || "",
-        "Relative Information":
-          employeeData?.additionalInfo?.["Relative Information"] || "",
-      });
+      if (employeeData?.additionalInfo) {
+        const additionalInfoData = employeeData.additionalInfo;
+        setAdditionalInfo({
+          Education: additionalInfoData.Education ?? "",
+          "Emergency Contact":
+            additionalInfoData["Emergency Contact"] &&
+            additionalInfoData["Emergency Contact"] !== null
+              ? additionalInfoData["Emergency Contact"]
+              : "",
+          "Marital Status":
+            additionalInfoData["Marital Status"] &&
+            additionalInfoData["Marital Status"] !== null
+              ? additionalInfoData["Marital Status"]
+              : "",
+          "Middle Name": additionalInfoData["Middle Name"] ?? "",
+          "Permanent Address": additionalInfoData["Permanent Address"] ?? "",
+          "Passport No": additionalInfoData["Passport No"] ?? "",
+          "Primary Nationality":
+            additionalInfoData["Primary Nationality"] ?? "",
+          "Relative Information":
+            additionalInfoData["Relative Information"] ?? "",
+        });
+      }
+
       // pull work location of employee which is already stored in database
       const employeeWorkLocations = employeeData?.worklocation || "";
       const workLocationName = employeeWorkLocations[0]?.city || "";
@@ -734,6 +745,7 @@ const EditModelOpen = ({
               />
             </FormControl>
           </div>
+
           <div className="space-y-2">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
@@ -742,31 +754,12 @@ const EditModelOpen = ({
               <OutlinedInput
                 id="outlined-adornment-password"
                 label="Emergency Contact"
-                name="Emergency contact"
-                value={additionalInfo["Emergency contact"]}
+                name="Emergency Contact"
+                value={additionalInfo["Emergency Contact"]}
                 onChange={(e) =>
                   setAdditionalInfo((prevData) => ({
                     ...prevData,
-                    "Emergency contact": e.target.value,
-                  }))
-                }
-              />
-            </FormControl>
-          </div>
-          <div className="space-y-2">
-            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">
-                Marital Status
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                label="Marital  Status"
-                name="Marital status"
-                value={additionalInfo["Marital status"]}
-                onChange={(e) =>
-                  setAdditionalInfo((prevData) => ({
-                    ...prevData,
-                    "Marital status": e.target.value,
+                    "Emergency Contact": e.target.value,
                   }))
                 }
               />
@@ -812,6 +805,7 @@ const EditModelOpen = ({
               />
             </FormControl>
           </div>
+
           <div className="space-y-2">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
@@ -820,12 +814,12 @@ const EditModelOpen = ({
               <OutlinedInput
                 id="outlined-adornment-password"
                 label="Primary Nationality"
-                name="Primary nationality"
-                value={additionalInfo["Primary nationality"]}
+                name="Primary Nationality"
+                value={additionalInfo["Primary Nationality"]}
                 onChange={(e) =>
                   setAdditionalInfo((prevData) => ({
                     ...prevData,
-                    "Primary nationality": e.target.value,
+                    "Primary Nationality": e.target.value,
                   }))
                 }
               />
@@ -845,6 +839,25 @@ const EditModelOpen = ({
                   setAdditionalInfo((prevData) => ({
                     ...prevData,
                     "Relative Information": e.target.value,
+                  }))
+                }
+              />
+            </FormControl>
+          </div>
+          <div className="space-y-2">
+            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
+              <InputLabel htmlFor="outlined-adornment-password">
+                Passport No
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                label="Passport No"
+                name="Passport No"
+                value={additionalInfo["Passport No"]}
+                onChange={(e) =>
+                  setAdditionalInfo((prevData) => ({
+                    ...prevData,
+                    "Passport No": e.target.value,
                   }))
                 }
               />
@@ -1067,24 +1080,6 @@ const EditModelOpen = ({
             >
               Manager :
             </label>
-            <select
-              value={mgrempid || ""}
-              onChange={(e) => setMgrempid(e.target.value)}
-              style={{
-                width: "750px",
-                padding: "8px",
-                borderColor: "rgba(0, 0, 0, 0.3)",
-              }}
-              disabled
-            >
-              <option value="">Select Manager</option>
-              {Array.isArray(managerData) &&
-                managerData?.map((manager) => (
-                  <option key={manager._id} value={manager._id}>
-                    {`${manager?.first_name} ${manager?.last_name}`}
-                  </option>
-                ))}
-            </select>
 
             <select
               value={mgrempid || ""}
