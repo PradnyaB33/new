@@ -31,7 +31,7 @@ const EditModelOpen = ({
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
- 
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -54,7 +54,6 @@ const EditModelOpen = ({
     setSelectedGender(event.target.value);
   };
 
-  
   const [additionalInfo, setAdditionalInfo] = useState({
     "Emergency Contact": "",
     "Middle Name": "",
@@ -65,7 +64,6 @@ const EditModelOpen = ({
     Education: "",
   });
 
- 
   const [profile, setProfile] = useState([]);
   const [selectedWorkLocation, setSelectedWorkLocation] = useState(null);
   const [deptname, setDepartment] = useState(null);
@@ -101,7 +99,6 @@ const EditModelOpen = ({
   }, [open, employeeId, authToken]);
   console.log(employeeData);
 
-  
   const [availabelLocation, setAvailableLocation] = useState([]);
   const fetchAvailableLocation = async () => {
     try {
@@ -124,7 +121,6 @@ const EditModelOpen = ({
     // eslint-disable-next-line
   }, []);
 
-  
   const [availabelDepartment, setAvailableDepartment] = useState([]);
   const fetchAvailableDepartment = async () => {
     try {
@@ -147,7 +143,6 @@ const EditModelOpen = ({
     // eslint-disable-next-line
   }, []);
 
-  
   const [availabelDesignation, setAvailableDesignation] = useState([]);
   const fetchAvailableDesignation = async () => {
     try {
@@ -167,7 +162,6 @@ const EditModelOpen = ({
     // eslint-disable-next-line
   }, []);
 
-  
   const [availabelSalaryTemplate, setAvailabaleSalaryTemplate] = useState([]);
   const fetchAvailableSalaryTemplate = async () => {
     try {
@@ -190,7 +184,6 @@ const EditModelOpen = ({
     // eslint-disable-next-line
   }, []);
 
-  
   const [availabelEmpTypes, setAvailableEmpTypes] = useState([]);
   const fetchAvailabeEmpTypes = async () => {
     try {
@@ -214,7 +207,6 @@ const EditModelOpen = ({
     // eslint-disable-next-line
   }, []);
 
-  
   const [managerData, setManagerData] = useState([]);
   const fetchManagerData = async () => {
     try {
@@ -236,7 +228,6 @@ const EditModelOpen = ({
     fetchManagerData();
     // eslint-disable-next-line
   }, []);
-  
 
   // pull the profile
   const [availableProfiles, setAvailableProfiles] = useState([]);
@@ -270,7 +261,6 @@ const EditModelOpen = ({
     // eslint-disable-next-line
   }, [organisationId]);
 
-  
   const [availaleCostCenterId, setAvailableCostCenter] = useState([]);
   const fetchAvailableCostCenter = async () => {
     try {
@@ -1077,44 +1067,42 @@ const EditModelOpen = ({
             >
               Manager :
             </label>
-            {role === "Super-Admin" || role === "Delegate Super Admin" ? (
-              <select
-                value={mgrempid || ""}
-                onChange={(e) => setMgrempid(e.target.value)}
-                style={{
-                  width: "750px",
-                  padding: "8px",
-                  borderColor: "rgba(0, 0, 0, 0.3)",
-                }}
-                disabled
-              >
-                <option value="">Select Manager</option>
-                {Array.isArray(managerData) &&
-                  managerData?.map((manager) => (
-                    <option key={manager._id} value={manager._id}>
-                      {`${manager?.first_name} ${manager?.last_name}`}
-                    </option>
-                  ))}
-              </select>
-            ) : (
-              <select
-                value={mgrempid || ""}
-                onChange={(e) => setMgrempid(e.target.value)}
-                style={{
-                  width: "750px",
-                  padding: "8px",
-                  borderColor: "rgba(0, 0, 0, 0.3)",
-                }}
-              >
-                <option value="">Select Manager</option>
-                {Array.isArray(managerData) &&
-                  managerData?.map((manager) => (
-                    <option key={manager._id} value={manager._id}>
-                      {`${manager?.first_name} ${manager?.last_name}`}
-                    </option>
-                  ))}
-              </select>
-            )}
+            <select
+              value={mgrempid || ""}
+              onChange={(e) => setMgrempid(e.target.value)}
+              style={{
+                width: "750px",
+                padding: "8px",
+                borderColor: "rgba(0, 0, 0, 0.3)",
+              }}
+              disabled
+            >
+              <option value="">Select Manager</option>
+              {Array.isArray(managerData) &&
+                managerData?.map((manager) => (
+                  <option key={manager._id} value={manager._id}>
+                    {`${manager?.first_name} ${manager?.last_name}`}
+                  </option>
+                ))}
+            </select>
+
+            <select
+              value={mgrempid || ""}
+              onChange={(e) => setMgrempid(e.target.value)}
+              style={{
+                width: "750px",
+                padding: "8px",
+                borderColor: "rgba(0, 0, 0, 0.3)",
+              }}
+            >
+              <option value="">Select Manager</option>
+              {Array.isArray(managerData) &&
+                managerData?.map((manager) => (
+                  <option key={manager._id} value={manager._id}>
+                    {`${manager?.first_name} ${manager?.last_name}`}
+                  </option>
+                ))}
+            </select>
           </div>
 
           <div className="space-y-2 ">
