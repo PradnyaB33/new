@@ -340,6 +340,7 @@ const App = () => {
                 "Delegate-Department-Head",
                 "Department-Admin",
                 "Delegate-Department-Admin",
+                "HR",
               ]}
             >
               <DepartmentTest />
