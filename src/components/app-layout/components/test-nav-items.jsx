@@ -39,6 +39,7 @@ import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairService
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
 import ReceiptIcon from "@mui/icons-material/Receipt";
+import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -53,7 +54,10 @@ const TestNavItems = ({ toggleDrawer }) => {
   const token = cookies["aegis"];
   const location = useLocation();
   const [decodedToken, setDecodedToken] = useState("");
+  const [emp, setEmp] = useState();
   const { decodedToken: decoded } = useGetUser();
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
 
   // Update organization ID when URL changes
   useEffect(() => {
@@ -61,6 +65,23 @@ const TestNavItems = ({ toggleDrawer }) => {
     getOrganizationIdFromPathname(location.pathname);
     // eslint-disable-next-line
   }, [location.pathname, orgId]);
+
+  useEffect(() => {
+    (async () => {
+      const resp = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/get/profile/${user._id}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setEmp(resp.data.employee.organizationId);
+      console.log("emp data", resp.data.employee.organizationId);
+    })();
+    // eslint-disable-next-line
+  }, []);
+  const check = emp?.packageInfo === "Intermediate Plan";
 
   // Function to extract organization ID from pathname
   const getOrganizationIdFromPathname = (pathname) => {
@@ -84,6 +105,11 @@ const TestNavItems = ({ toggleDrawer }) => {
   const role = useGetCurrentRole();
   const [isVisible, setisVisible] = useState(true);
   console.log("role", role);
+  console.log(
+    "boolean",
+    ["Employee", "Manager"].includes(role) &&
+      emp?.packageInfo === "Intermediate Plan"
+  );
   let navItems = useMemo(
     () => ({
       Home: {
@@ -510,7 +536,7 @@ const TestNavItems = ({ toggleDrawer }) => {
 
       RemotePunch: {
         open: false,
-        isVisible: ["Employee"].includes(role),
+        isVisible: check && ["Employee", "Manager"].includes(role),
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
@@ -593,7 +619,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
     }),
     // eslint-disable-next-line
-    [isVisible, orgId]
+    [isVisible, orgId, check]
   );
 
   useEffect(() => {
