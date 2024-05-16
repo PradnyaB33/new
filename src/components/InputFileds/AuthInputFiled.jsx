@@ -294,7 +294,7 @@ const AuthInputFiled = ({
                     components={{
                       IndicatorSeparator: () => null,
                     }}
-                    options={moment()
+                    options={moment
                       .months()
                       .map((month, index) => ({ label: month, value: month }))}
                     onChange={(value) => {

@@ -21,16 +21,17 @@ const InputForm = () => {
     leaveTypeDetails,
     isFetching,
   } = useLeaveNotification();
-  console.log(`🚀 ~ file: input-form.jsx:23 ~ skip:`, skip);
+
   const { data: leaveMain2 } = useLeaveData();
   const { data: leaveMain } = useLeaveRequesationHook();
-  const [month, setMonth] = useState();
+  const [month, setMonth] = useState(moment().format("MMMM"));
 
   return (
     <form className="flex w-full flex-col gap-4">
       <div className="w-full py-4 flex flex-wrap gap-4 justify-between">
         <Select
-          value={{ value: month, label: month }}
+          value={{ label: month, value: month }}
+          // inputValue={month}
           isClearable
           aria-errormessage=""
           placeholder={"Select Months"}
@@ -43,11 +44,12 @@ const InputForm = () => {
             value: month,
           }))}
           onChange={(value) => {
-            setMonth(value.value);
+            console.log(`🚀 ~ file: input-form.jsx:48 ~ value:`, value);
+            // setMonth(value.value);
             if (value === null) {
-              return setMonth(null);
+              return setMonth(undefined);
             }
-            console.log(`🚀 ~ file: input-form.jsx:25 ~ value`, value);
+            setMonth(value.value);
             // get start date of month
             const startDate = moment(value.value, "MMMM").startOf("month");
             // get end date of month
@@ -75,6 +77,9 @@ const InputForm = () => {
             }))}
             onChange={(value) => {
               console.log(`🚀 ~ file: input-form.jsx:25 ~ value`, value);
+              if (value === null) {
+                return setLeaveTypeDetailsId("");
+              }
               setLeaveTypeDetailsId(value.value);
             }}
           />
@@ -99,6 +104,9 @@ const InputForm = () => {
           }))}
           onChange={(value) => {
             console.log(`🚀 ~ file: input-form.jsx:25 ~ value`, value);
+            if (value === null) {
+              return setStatus("");
+            }
             setStatus(value.value);
           }}
         />
@@ -113,13 +121,16 @@ const InputForm = () => {
         <Button
           variant="contained"
           disabled={skip >= 0 ? true : false}
-          onClick={() => setSkip((prev) => prev + 1)}
+          onClick={() => setSkip((prev) => prev - 1)}
         >
           Previous
         </Button>
         <Button
           variant="contained"
-          onChange={() => setSkip((prev) => prev - 1)}
+          onChange={() => {
+            console.log(`🚀 ~ file: input-form.jsx:25 ~ prev`, prev);
+            setSkip((prev) => prev + 1);
+          }}
         >
           Next
         </Button>
