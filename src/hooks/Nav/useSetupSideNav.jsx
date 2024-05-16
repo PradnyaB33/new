@@ -12,6 +12,7 @@ import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import HolidayVillageOutlinedIcon from "@mui/icons-material/HolidayVillageOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import PersonPinOutlinedIcon from "@mui/icons-material/PersonPinOutlined";
 import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
@@ -193,6 +194,15 @@ const useSetupSideNav = (organisationId) => {
         location.pathname ===
         `/organisation/${organisationId}/setup/remote-punching`,
       isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
+    },
+    {
+      label: "Shift Allowance",
+      icon: PaidOutlinedIcon,
+      href: `/organisation/${organisationId}/setup/shift-allowance`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/shift-allowance`,
+      isVisible: true,
     },
     {
       label: "Training",

@@ -95,6 +95,7 @@ import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceS
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
 import Training from "./pages/SetUpOrganization/Traning/Training";
+import SetupShift from "./pages/SetupPage/ShiftManagement/SetupShift";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttendacneBiomatric";
 import ViewCalculateAttendance from "./pages/ViewCalculateAttendance/ViewCalculateAttendance";
@@ -646,6 +647,14 @@ const App = () => {
           element={
             <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
               <EmpLoanMgt />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/setup/shift-allowance"
+          element={
+            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+              <SetupShift />
             </RequireAuth>
           }
         />
