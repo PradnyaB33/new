@@ -6,6 +6,7 @@ import useLoanNotification from "../../hooks/QueryHook/notification/loan-notific
 import usePunchNotification from "../../hooks/QueryHook/notification/punch-notification/hook";
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
 import Card from "./components/card";
+import UserProfile from "../../hooks/UserData/useUser";
 
 const ParentNotification = () => {
   const { data, isLoading } = useLeaveNotificationHook();
@@ -14,7 +15,9 @@ const ParentNotification = () => {
   const { data: data4 } = useDocNotification();
   const { missPunchData } = useMissedPunchNotificationCount();
   const { getEmployeeRequestLoanApplication } = useLoanNotification();
-
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
+  console.log("role", role);
   console.log("get pending loan", getEmployeeRequestLoanApplication);
   console.log(missPunchData);
   console.log("mydata", data4);
@@ -50,13 +53,16 @@ const ParentNotification = () => {
       color: "#FF7373",
       url: "/doc-notification",
     },
-    {
+  ];
+
+  if (role === "HR" || role === "Super-admin") {
+    dummyData.push({
       name: "Loan Notification",
       count: getEmployeeRequestLoanApplication?.length ?? 0,
       color: "#51E8FD",
       url: "/loan-notification",
-    },
-  ];
+    });
+  }
 
   return (
     <div className="pt-5">
