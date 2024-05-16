@@ -7,7 +7,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
 import { Info } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
-import CalendarViewDayIcon from "@mui/icons-material/CalendarViewDay";
+import moment from "moment";
 
 const MissedPunchNotificationToEmp = () => {
   const { cookies } = useContext(UseContext);
@@ -28,7 +28,6 @@ const MissedPunchNotificationToEmp = () => {
       return response.data.data;
     }
   );
-  console.log("data", getMissedPunchData);
 
   const getTimeAgo = (updatedAt) => {
     const now = new Date();
@@ -58,26 +57,11 @@ const MissedPunchNotificationToEmp = () => {
       })
     : [];
 
-  // for view
-  const [viewOpenMissedPunchDataModal, setMissedPunchDataModal] =
-    useState(false);
-  const [missedPunchData, setMissedPunchData] = useState(null);
   const [selectedTimePeriod, setSelectedTimePeriod] = useState("all");
-  console.log(viewOpenMissedPunchDataModal);
-  const handleOpenMissedPunchDataModal = (data) => {
-    setMissedPunchDataModal(true);
-    setMissedPunchData(data);
-  };
-  console.log(missedPunchData);
-  const handleCloseMissedPunchDataModal = () => {
-    setMissedPunchDataModal(false);
-  };
-
   const handleTimePeriodChange = (event) => {
     setSelectedTimePeriod(event.target.value);
-  }; 
-  console.log(handleCloseMissedPunchDataModal);
-  console.log(handleOpenMissedPunchDataModal);
+  };
+
   // Filter loan data based on selected time period
   const filteredMissedPunchData = () => {
     if (selectedTimePeriod === "all") {
@@ -124,13 +108,21 @@ const MissedPunchNotificationToEmp = () => {
                 >
                   <option value="all">All</option>
                   <option value="1">Last Month Ago</option>
+                  <option value="2">Second Month Ago</option>
+                  <option value="3">Third Month Ago</option>
+                  <option value="4">Fourth Month Ago</option>
+                  <option value="5">Fifth Month Ago</option>
                   <option value="6">Sixth Month Ago</option>
+                  <option value="7">Seventh Month Ago</option>
+                  <option value="8">Eigth Month Ago</option>
+                  <option value="9">Ningth Month Ago</option>
+                  <option value="10">Tenth Month Ago</option>
+                  <option value="11">Eleventh Month Ago</option>
                   <option value="12">Year Ago</option>
                 </select>
               </div>
               <Box sx={{ p: 2 }}>
                 <div className="flex justify-center gap-10">
-                  <CalendarViewDayIcon sx={{ color: "primary.main" }} />
                   <CloseIcon />
                 </div>
               </Box>
@@ -147,8 +139,12 @@ const MissedPunchNotificationToEmp = () => {
                         <div key={id} className="mb-2">
                           <p className="text-lg font-semibold">
                             {record.status === "Available"
-                              ? "This unavailable record is approved as available"
-                              : "This unavailable record is approved as a leave."}
+                              ? `${moment(record.recordDate).format(
+                                  "YYYY-MM-DD"
+                                )}   This unavailable record is approved as available`
+                              : ` ${moment(record.recordDate).format(
+                                  "YYYY-MM-DD"
+                                )} This unavailable record is approved as a leave.`}
                           </p>
                           <p className="text-sm text-gray-500">
                             Updated {getTimeAgo(record.updatedAt)} ago by{" "}

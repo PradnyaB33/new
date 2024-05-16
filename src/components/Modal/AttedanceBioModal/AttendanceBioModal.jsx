@@ -89,74 +89,11 @@ const AttendanceBioModal = ({
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   };
-
-  // Handle sync
-  // const handleSync = async () => {
-  //   try {
-  //     if (checkedEmployees.length === 0 && emailSearch.trim() !== "") {
-  //       setEmailNotFound(true);
-  //       return;
-  //     }
-
-  //     // Verify email for each checked employee
-  //     const invalidEmails = checkedEmployees.filter((employee) => {
-  //       const email = employee?.email || "";
-  //       return !validateEmail(email);
-  //     });
-
-  //     if (invalidEmails.length > 0) {
-  //       handleAlert(true, "error", "Please enter valid email addresses.");
-  //       return;
-  //     }
-
-  //     const syncedData = selectedEmployees.map((employee) => ({
-  //       date: employee[3],
-  //       punchingTime: employee[4],
-  //       punchingStatus: employee[5],
-  //     }));
-  //     const EmployeeIds = checkedEmployees
-  //       .map((employee) => employee._id)
-  //       .filter(Boolean);
-  //     EmployeeIds.forEach((EmployeeId) => {
-  //       axios.post(
-  //         `${process.env.REACT_APP_API}/route/organization/${organisationId}/add-attendance-data`,
-  //         {
-  //           EmployeeId: EmployeeId,
-  //           punchingRecords: syncedData,
-  //         },
-  //         {
-  //           headers: {
-  //             Authorization: authToken,
-  //           },
-  //         }
-  //       );
-  //     });
-
-  //     handleAlert(true, "success", "Synced data successfully.");
-  //     handleClose();
-  //     setCheckedEmployees([]);
-  //   } catch (error) {
-  //     console.error("Failed to sync attendance data:", error);
-  //   }
-  // };
-  // Handle sync
+  console.log(checkedEmployees);
   const handleSync = async () => {
     try {
       if (!validateEmail(emailSearch)) {
         handleAlert(true, "error", "Please enter a valid email address.");
-        return;
-      }
-
-      // Check if the entered email matches any of the checked employees' emails
-      const isMatch = selectedEmployees.some(
-        (employee) => employee.email === emailSearch
-      );
-      if (!isMatch) {
-        handleAlert(
-          true,
-          "error",
-          "Entered email does not match any selected employee's email."
-        );
         return;
       }
 
