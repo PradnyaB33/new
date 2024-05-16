@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import useGetUser from "../../hooks/Token/useUser";
@@ -6,8 +7,8 @@ import useGetUser from "../../hooks/Token/useUser";
 const useLeaveNotification = () => {
   const [status, setStatus] = useState("");
   const [leaveTypeDetailsId, setLeaveTypeDetailsId] = useState("");
-  const [minDate, setMinDate] = useState("");
-  const [maxDate, setMaxDate] = useState("");
+  const [minDate, setMinDate] = useState(moment().startOf("month"));
+  const [maxDate, setMaxDate] = useState(moment().endOf("month"));
   const [skip, setSkip] = useState(0);
 
   const { authToken, decodedToken } = useGetUser();
