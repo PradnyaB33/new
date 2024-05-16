@@ -426,6 +426,7 @@ const ViewPayslip = () => {
                   marginLeft: "35%",
                   display: "flex",
                   justifyContent: "center",
+                  
                 }}
               >
                 " Please select the month for which you need the payslip
