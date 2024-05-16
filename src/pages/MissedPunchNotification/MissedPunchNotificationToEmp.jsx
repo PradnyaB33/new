@@ -7,8 +7,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
 import { Info } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
-import CalendarViewDayIcon from "@mui/icons-material/CalendarViewDay";
-import MissedPunchNotificatonToEmp from "../../components/Modal/MissedPunchNotificationToEmp/MissedPunchNotificatonToEmp";
+import moment from "moment";
 
 const MissedPunchNotificationToEmp = () => {
   const { cookies } = useContext(UseContext);
@@ -29,9 +28,6 @@ const MissedPunchNotificationToEmp = () => {
       return response.data.data;
     }
   );
-
-  const missedData = getMissedPunchData.map((data) => data.unavailableRecords);
-  console.log("missedData", missedData);
 
   const getTimeAgo = (updatedAt) => {
     const now = new Date();
@@ -84,18 +80,6 @@ const MissedPunchNotificationToEmp = () => {
     }
   };
 
-  // for open the modal for display unavialble record in calender
-  const [missedDataModalOpen, setMissedDataModalOpen] = useState(false);
-  const [employeeMissedData, setEmployeeMissedData] = useState([]);
-  const handleMissedDataModalOpen = (missedData) => {
-    setEmployeeMissedData(missedData);
-    setMissedDataModalOpen(true);
-  };
-  const handleMissedDataModalClose = () => {
-    setMissedDataModalOpen(false);
-    setEmployeeMissedData([]);
-  };
-
   return (
     <>
       <div style={{ marginTop: "7%" }}>
@@ -124,16 +108,21 @@ const MissedPunchNotificationToEmp = () => {
                 >
                   <option value="all">All</option>
                   <option value="1">Last Month Ago</option>
+                  <option value="2">Second Month Ago</option>
+                  <option value="3">Third Month Ago</option>
+                  <option value="4">Fourth Month Ago</option>
+                  <option value="5">Fifth Month Ago</option>
                   <option value="6">Sixth Month Ago</option>
+                  <option value="7">Seventh Month Ago</option>
+                  <option value="8">Eigth Month Ago</option>
+                  <option value="9">Ningth Month Ago</option>
+                  <option value="10">Tenth Month Ago</option>
+                  <option value="11">Eleventh Month Ago</option>
                   <option value="12">Year Ago</option>
                 </select>
               </div>
               <Box sx={{ p: 2 }}>
                 <div className="flex justify-center gap-10">
-                  <CalendarViewDayIcon
-                    onClick={() => handleMissedDataModalOpen(missedData)}
-                    sx={{ color: "primary.main" }}
-                  />
                   <CloseIcon />
                 </div>
               </Box>
@@ -150,8 +139,12 @@ const MissedPunchNotificationToEmp = () => {
                         <div key={id} className="mb-2">
                           <p className="text-lg font-semibold">
                             {record.status === "Available"
-                              ? "This unavailable record is approved as available"
-                              : "This unavailable record is approved as a leave."}
+                              ? `${moment(record.recordDate).format(
+                                  "YYYY-MM-DD"
+                                )}   This unavailable record is approved as available`
+                              : ` ${moment(record.recordDate).format(
+                                  "YYYY-MM-DD"
+                                )} This unavailable record is approved as a leave.`}
                           </p>
                           <p className="text-sm text-gray-500">
                             Updated {getTimeAgo(record.updatedAt)} ago by{" "}
@@ -173,12 +166,6 @@ const MissedPunchNotificationToEmp = () => {
             )}
           </article>
         </Container>
-
-        <MissedPunchNotificatonToEmp
-          handleClose={handleMissedDataModalClose}
-          open={missedDataModalOpen}
-          employeeMissedData={employeeMissedData}
-        />
       </div>
     </>
   );
