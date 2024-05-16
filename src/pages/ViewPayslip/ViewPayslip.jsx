@@ -91,7 +91,7 @@ const ViewPayslip = () => {
 
   return (
     <>
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto p-6 ">
         <div className="flex items-center justify-center mb-6">
           <div className="text-center">
             <h3 className="text-lg font-bold text-gray-700">
@@ -423,8 +423,8 @@ const ViewPayslip = () => {
                 severity="error"
                 sx={{
                   width: "100%",
-                  maxWidth: "650px",
-                  marginLeft: "25%",
+                  maxWidth: "500px",
+                  marginLeft: "35%",
                   display: "flex",
                   justifyContent: "center",
                 }}
