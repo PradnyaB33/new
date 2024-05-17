@@ -35,6 +35,7 @@ const ParentNotification = () => {
       count: isAcc ? count?.length : data2?.length,
       color: "#3668ff",
       url: "/shift-notification",
+      url2: "self/shift-notification",
     },
     {
       name: "Remote Punching Notification",

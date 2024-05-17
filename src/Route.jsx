@@ -192,7 +192,7 @@ const App = () => {
         <Route path="/leave-notification" element={<LeaveNotification />} />
         <Route path="/punch-notification" element={<PunchNotification />} />
         <Route
-          path="/emp-shift-notification"
+          path="self/shift-notification"
           element={<EmpShiftNotification />}
         />
         <Route
