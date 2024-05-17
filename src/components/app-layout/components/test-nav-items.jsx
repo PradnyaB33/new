@@ -77,7 +77,6 @@ const TestNavItems = ({ toggleDrawer }) => {
         }
       );
       setEmp(resp.data.employee.organizationId);
-      console.log("emp data", resp.data.employee.organizationId);
     })();
     // eslint-disable-next-line
   }, []);
@@ -104,12 +103,7 @@ const TestNavItems = ({ toggleDrawer }) => {
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
   const [isVisible, setisVisible] = useState(true);
-  console.log("role", role);
-  console.log(
-    "boolean",
-    ["Employee", "Manager"].includes(role) &&
-      emp?.packageInfo === "Intermediate Plan"
-  );
+
   let navItems = useMemo(
     () => ({
       Home: {
