@@ -5,8 +5,8 @@ import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-n
 import useLoanNotification from "../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
 import usePunchNotification from "../../hooks/QueryHook/notification/punch-notification/hook";
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
-import Card from "./components/card";
 import UserProfile from "../../hooks/UserData/useUser";
+import Card from "./components/card";
 
 const ParentNotification = () => {
   const { data, isLoading } = useLeaveNotificationHook();
@@ -34,6 +34,7 @@ const ParentNotification = () => {
       count: data2?.length ?? 0,
       color: "#3668ff",
       url: "/shift-notification",
+      url2: "/self/shift-notification",
     },
     {
       name: "Remote Punching Notification",
@@ -58,8 +59,7 @@ const ParentNotification = () => {
   if (
     role === "HR" ||
     role === "Super-Admin" ||
-    role === "Delegate-Super-Admin" 
-   
+    role === "Delegate-Super-Admin"
   ) {
     dummyData.push({
       name: "Loan Notification",

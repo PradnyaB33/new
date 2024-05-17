@@ -9,6 +9,12 @@ const EmployeeNotification = () => {
       color: "#FF7373",
       url: "/self/leave-notification",
     },
+    {
+      name: "Shift Notification",
+      count: 0,
+      color: "#3668ff",
+      url: "/emp-shift-notification",
+    },
   ];
 
   return (

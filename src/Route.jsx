@@ -93,6 +93,7 @@ import LoanNotificationToEmp from "./pages/LoanMgtNotified/LoanNotificationToEmp
 import MissPunchInOut from "./pages/MissPunch/MissPunchInOut";
 import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
 import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
+import MissedPunchNotificationToEmp from "./pages/MissedPunchNotification/MissedPunchNotificationToEmp";
 import MyTraining from "./pages/My-Training/page";
 import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
@@ -110,7 +111,6 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import MissedPunchNotificationToEmp from "./pages/MissedPunchNotification/MissedPunchNotificationToEmp";
 const App = () => {
   return (
     <AuthProvider>
@@ -209,7 +209,7 @@ const App = () => {
         <Route path="/punch-notification" element={<PunchNotification />} />
         <Route path="/emp-notification" element={<EmpNotification />} />
         <Route
-          path="/emp-shift-notification"
+          path="/self/shift-notification"
           element={<EmpShiftNotification />}
         />
         <Route
@@ -1028,7 +1028,10 @@ const App = () => {
           path="/loan-notification-to-emp"
           element={<LoanNotificationToEmp />}
         />
-         <Route path="/missed-punch-notification-to-emp" element={<MissedPunchNotificationToEmp />} />
+        <Route
+          path="/missed-punch-notification-to-emp"
+          element={<MissedPunchNotificationToEmp />}
+        />
       </Routes>
     </AuthProvider>
   );
