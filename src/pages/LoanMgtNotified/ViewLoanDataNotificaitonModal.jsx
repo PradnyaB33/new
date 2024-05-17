@@ -28,7 +28,7 @@ const ViewLoanDataNotificationModal = ({ handleClose, open, loanData }) => {
     >
       <Box
         sx={style}
-        className="border-none !z-10 !pt-0 !px-0 !w-[100%] lg:!w-[80%] md:!w-[100%] shadow-md outline-none rounded-md"
+        className="border-none !z-10 !pt-0 !px-0 !w-[100%] lg:!w-[60%] md:!w-[100%] shadow-md outline-none rounded-md"
       >
         <div
           style={{
