@@ -535,8 +535,8 @@ const PublicHoliday = () => {
                   <DialogTitle>Confirm Deletion</DialogTitle>
                   <DialogContent>
                     <p>
-                      Please confirm your decision to delete this salary
-                      computation day, as this action cannot be undone.
+                      Please confirm your decision to delete this holiday, as
+                      this action cannot be undone.
                     </p>
                   </DialogContent>
                   <DialogActions>
