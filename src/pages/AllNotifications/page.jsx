@@ -5,11 +5,11 @@ import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-n
 import useLoanNotification from "../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
 import usePunchNotification from "../../hooks/QueryHook/notification/punch-notification/hook";
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
-import Card from "./components/card";
 import UserProfile from "../../hooks/UserData/useUser";
+import Card from "./components/card";
 
 const ParentNotification = () => {
-  const { data, isLoading } = useLeaveNotificationHook();
+  const { data } = useLeaveNotificationHook();
   const { data: data2 } = useShiftNotification();
   const { data: data3 } = usePunchNotification();
   const { data: data4 } = useDocNotification();
@@ -28,6 +28,7 @@ const ParentNotification = () => {
       count: data?.leaveRequests?.length ?? 0,
       color: "#FF7373",
       url: "/leave-notification",
+      url2: "/self/leave-notification",
     },
     {
       name: "Shift Notification",
@@ -58,8 +59,7 @@ const ParentNotification = () => {
   if (
     role === "HR" ||
     role === "Super-Admin" ||
-    role === "Delegate-Super-Admin" 
-   
+    role === "Delegate-Super-Admin"
   ) {
     dummyData.push({
       name: "Loan Notification",
@@ -72,7 +72,7 @@ const ParentNotification = () => {
   return (
     <div className="pt-5">
       <div className="w-full h-full gap-2 flex p-4 md:flex-wrap md:flex-row flex-col justify-center">
-        <Card card={dummyData} loading={isLoading} />
+        <Card card={dummyData} />
       </div>
     </div>
   );
