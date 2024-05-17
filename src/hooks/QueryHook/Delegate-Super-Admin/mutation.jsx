@@ -34,7 +34,12 @@ const useDelegateSuperAdmin = () => {
       });
     },
     onError: (data) => {
-      console.log(data);
+      console.error(`🚀 ~ file: mutation.jsx:37 ~ data:`, data);
+      handleAlert(
+        true,
+        "error",
+        data?.response?.data?.message || "Something went wrong"
+      );
     },
   });
 
