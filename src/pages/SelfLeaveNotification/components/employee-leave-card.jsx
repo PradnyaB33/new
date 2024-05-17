@@ -51,17 +51,20 @@ const LeaveRequestCard = ({ items }) => {
                 parseISO(items?.start)
               ) !== 1 ? (
                 <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                  You raised a {items?.leaveTypeDetailsId?.leaveName} request on{" "}
+                  Your request for {items?.leaveTypeDetailsId?.leaveName} on{" "}
                   {moment(items?.start).format("DD-MM-YYYY") ?? ""} to{" "}
                   {moment(items?.end)
                     .subtract(1, "days")
                     .format("DD-MM-YYYY") ?? ""}
+                  &nbsp; is {items?.status}.
                 </h1>
               ) : (
                 <h1 className="text-xl px-4 md:!px-0 font-semibold ">
                   {" "}
-                  You has raised a {items?.leaveTypeDetailsId?.leaveName}{" "}
-                  request on {format(new Date(items?.start), "dd-MM-yyyy")}
+                  Your request for {
+                    items?.leaveTypeDetailsId?.leaveName
+                  } on {format(new Date(items?.start), "dd-MM-yyyy ")} is{" "}
+                  {items?.status}.
                 </h1>
               )}
             </div>
