@@ -65,6 +65,7 @@ const useDelegateSuperAdmin = () => {
       await queryClient.invalidateQueries({
         queryKey: [`delegate-super-admin-${decodedToken?.user?._id}`],
       });
+      window.location.reload(false);
     },
     onError: (data, variables, context) => {
       console.log(`🚀 ~ file: mutation.jsx:70 ~ context:`, context);
