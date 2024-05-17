@@ -25,7 +25,10 @@ const InputForm = () => {
   const { data: leaveMain2 } = useLeaveData();
   const { data: leaveMain } = useLeaveRequesationHook();
   const [month, setMonth] = useState(moment().format("MMMM"));
-
+  console.log(
+    `🚀 ~ file: input-form.jsx:126 ~ data?.leaveRequests?.length:`,
+    data?.leaveRequests?.length
+  );
   return (
     <>
       {" "}
@@ -122,6 +125,8 @@ const InputForm = () => {
         {data?.leaveRequests?.map((item, index) => (
           <LeaveRequestCard key={index} items={item} />
         ))}
+        {data?.leaveRequests?.length < 1 && <h1>Sorry no request found</h1>}
+
         <div className="flex justify-between">
           <Button
             variant="contained"
