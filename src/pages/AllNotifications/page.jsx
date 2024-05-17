@@ -58,7 +58,8 @@ const ParentNotification = () => {
   if (
     role === "HR" ||
     role === "Super-Admin" ||
-    role === "Delegate-Super-Admin"
+    role === "Delegate-Super-Admin" 
+   
   ) {
     dummyData.push({
       name: "Loan Notification",
