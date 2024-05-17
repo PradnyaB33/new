@@ -7,7 +7,6 @@ import { UseContext } from "../../State/UseState/UseContext";
 import ViewLoanDataNotificationModal from "./ViewLoanDataNotificaitonModal";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
 import { Info } from "@mui/icons-material";
-import CloseIcon from "@mui/icons-material/Close";
 import CalendarViewDayIcon from "@mui/icons-material/CalendarViewDay";
 const LoanNotificationToEmp = () => {
   const { cookies } = useContext(UseContext);
@@ -49,48 +48,34 @@ const LoanNotificationToEmp = () => {
     }
   };
 
-  // Sorting loan data based on updatedAt
-  const sortedLoanData = getApprovedRejectLoanDataByApprover
-    ? getApprovedRejectLoanDataByApprover.slice().sort((a, b) => {
-        const timeA = new Date(a.updatedAt).getTime();
-        const timeB = new Date(b.updatedAt).getTime();
-        return timeB - timeA;
-      })
-    : [];
-
-  // for update
-  const [viewLoanDataOpenModal, setViewLoanDataOpenModal] = useState(false);
-  const [loanData, setLoanData] = useState(null);
   const [selectedTimePeriod, setSelectedTimePeriod] = useState("all");
-
-  const handleOpenViewLoanDataModal = (loan) => {
-    setViewLoanDataOpenModal(true);
-    setLoanData(loan);
-  };
-
-  const handleCloseViewLoanDataModal = () => {
-    setViewLoanDataOpenModal(false);
-  };
 
   const handleTimePeriodChange = (event) => {
     setSelectedTimePeriod(event.target.value);
   };
-
-  // Filter loan data based on selected time period
   const filteredLoanData = () => {
+    if (!getApprovedRejectLoanDataByApprover) {
+      return [];
+    }
+
     if (selectedTimePeriod === "all") {
-      return sortedLoanData;
+      return getApprovedRejectLoanDataByApprover;
     } else {
-      const currentTime = new Date();
-      const cutoffDate = new Date(
-        currentTime.getFullYear(),
-        currentTime.getMonth() - parseInt(selectedTimePeriod) + 1,
-        1
-      );
       return getApprovedRejectLoanDataByApprover.filter(
-        (loan) => new Date(loan.updatedAt) <= cutoffDate
+        (data) => data.status === selectedTimePeriod
       );
     }
+  };
+
+  // for update
+  const [viewLoanDataOpenModal, setViewLoanDataOpenModal] = useState(false);
+  const [loanData, setLoanData] = useState(null);
+  const handleOpenViewLoanDataModal = (loan) => {
+    setViewLoanDataOpenModal(true);
+    setLoanData(loan);
+  };
+  const handleCloseViewLoanDataModal = () => {
+    setViewLoanDataOpenModal(false);
   };
 
   return (
@@ -113,16 +98,17 @@ const LoanNotificationToEmp = () => {
             </div>
             <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
               <div className="flex items-center gap-3 mb-3 md:mb-0">
+                <label htmlFor="statusDropdown">Select Status: </label>
                 <select
+                  id="statusDropdown"
                   value={selectedTimePeriod}
                   onChange={handleTimePeriodChange}
                   className="bg-white border rounded-lg px-3 py-2 outline-none "
                   style={{ width: "300px" }}
                 >
                   <option value="all">All</option>
-                  <option value="1">Last Month Ago</option>
-                  <option value="6">Sixth Month Ago</option>
-                  <option value="12">Year Ago</option>
+                  <option value="Ongoing">Accepted</option>
+                  <option value="Rejected">Rejected</option>
                 </select>
               </div>
             </div>
@@ -153,7 +139,6 @@ const LoanNotificationToEmp = () => {
                           onClick={() => handleOpenViewLoanDataModal(loanData)}
                           sx={{ color: "primary.main" }}
                         />
-                        <CloseIcon />
                       </div>
                     </Box>
                   </div>

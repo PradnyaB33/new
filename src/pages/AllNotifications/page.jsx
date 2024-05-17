@@ -13,7 +13,8 @@ const ParentNotification = () => {
   const { data: data2 } = useShiftNotification();
   const { data: data3 } = usePunchNotification();
   const { data: data4 } = useDocNotification();
-  const { missPunchData } = useMissedPunchNotificationCount();
+  const { missPunchData,  } =
+    useMissedPunchNotificationCount();
   const { getEmployeeRequestLoanApplication } = useLoanNotification();
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
@@ -48,6 +49,7 @@ const ParentNotification = () => {
       count: missPunchData?.length ?? 0,
       color: "#51E8FD",
       url: "/missedPunch-notification",
+      url2: "/missed-punch-notification-to-emp",
     },
     {
       name: "Document Approval Notification",
@@ -55,20 +57,27 @@ const ParentNotification = () => {
       color: "#FF7373",
       url: "/doc-notification",
     },
-  ];
-
-  if (
-    role === "HR" ||
-    role === "Super-Admin" ||
-    role === "Delegate-Super-Admin"
-  ) {
-    dummyData.push({
+    {
       name: "Loan Notification",
       count: getEmployeeRequestLoanApplication?.length ?? 0,
       color: "#51E8FD",
       url: "/loan-notification",
-    });
-  }
+      url2: "/loan-notification-to-emp",
+    },
+  ];
+
+  // if (
+  //   role === "HR" ||
+  //   role === "Super-Admin" ||
+  //   role === "Delegate-Super-Admin"
+  // ) {
+  //   dummyData.push({
+  //     name: "Loan Notification",
+  //     count: getEmployeeRequestLoanApplication?.length ?? 0,
+  //     color: "#51E8FD",
+  //     url: "/loan-notification",
+  //   });
+  // }
 
   return (
     <div className="pt-5">
