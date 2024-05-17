@@ -55,7 +55,12 @@ const ParentNotification = () => {
     },
   ];
 
-  if (role === "HR" || role === "Super-admin") {
+  if (
+    role === "HR" ||
+    role === "Super-Admin" ||
+    role === "Delegate-Super-Admin" 
+   
+  ) {
     dummyData.push({
       name: "Loan Notification",
       count: getEmployeeRequestLoanApplication?.length ?? 0,
