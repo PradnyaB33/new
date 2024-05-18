@@ -109,7 +109,10 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         label: z.string(),
         value: z.string(),
       }),
-      empId: z.string().min(3, { message: "EmpId is required" }),
+      empId: z
+        .string()
+        .min(1, { message: "Employee code is required" })
+        .max(25, { message: "Employee code is not greater than 25 character" }),
       mgrempid: z
         .object({
           label: z.string(),
