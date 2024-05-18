@@ -32,7 +32,6 @@ import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CallMissedIcon from "@mui/icons-material/CallMissed";
-import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import FolderIcon from "@mui/icons-material/Folder";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
@@ -171,15 +170,6 @@ const TestNavItems = ({ toggleDrawer }) => {
               <HomeRepairServiceOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
             text: "Shift Management",
-          },
-          {
-            key: "shiftNotification",
-            isVisible: ["Employee"].includes(role),
-            link: "/emp-shift-notification",
-            icon: (
-              <CircleNotificationsIcon className=" !text-[1.2em] text-[#67748E]" />
-            ),
-            text: "Shift Notification",
           },
         ],
       },

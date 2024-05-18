@@ -12,7 +12,6 @@ import ResetPassword from "./components/resetpassword/resetpassword";
 import RequireAuth, { AuthProvider } from "./context/AuthProvider";
 import useSubscription from "./hooks/Subscription/subscription";
 import NewOranisationForm from "./pages/AddOrganisation/OrgFrom";
-import EmpShiftNotification from "./pages/AllNotifications/empShiftNotification";
 import Application from "./pages/Application/Application";
 import Billing from "./pages/Billing/page";
 import DashBoardHR from "./pages/DashBoard/DashBoardHR";
@@ -96,6 +95,7 @@ import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunch
 import MissedPunchNotificationToEmp from "./pages/MissedPunchNotification/MissedPunchNotificationToEmp";
 import MyTraining from "./pages/My-Training/page";
 import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
+import SelfShiftNotification from "./pages/SelfShiftNotification/page";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
@@ -106,7 +106,6 @@ import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttenda
 import ViewCalculateAttendance from "./pages/ViewCalculateAttendance/ViewCalculateAttendance";
 import CustomCalander from "./pages/custom/Calendar";
 import DocNotification from "./pages/doc-notification/DocNotification";
-import EmpNotification from "./pages/emp-notifications/EmpNotification";
 import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
@@ -209,11 +208,10 @@ const App = () => {
           element={<LeaveNotification />}
         />
         <Route path="/punch-notification" element={<PunchNotification />} />
-        <Route path="/emp-notification" element={<EmpNotification />} />
-        <Route
-          path="/self/shift-notification"
+        {/* <Route
+          path="self/shift-notification"
           element={<EmpShiftNotification />}
-        />
+        /> */}
         <Route
           path="/punch-notification/:employeeId"
           element={<PunchNotification />}
@@ -222,6 +220,10 @@ const App = () => {
         <Route
           path="/shift-notification/:employeeId"
           element={<ShiftNotification />}
+        />
+        <Route
+          path="/self/shift-notification"
+          element={<SelfShiftNotification />}
         />
         <Route
           path="/missedPunch-notification"
