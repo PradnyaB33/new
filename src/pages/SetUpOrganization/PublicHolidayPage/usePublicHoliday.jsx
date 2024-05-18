@@ -7,6 +7,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 const usePublicHoliday = (id) => {
   const { setAppAlert } = useContext(UseContext);
   const [allPublicHoliday, setAllPublicHoliday] = useState([]);
+  let filteredHolidayWithStartAndEnd = [];
 
   const { data, isLoading, isError } = useQuery(
     "holidays",
@@ -32,7 +33,7 @@ const usePublicHoliday = (id) => {
       },
     }
   );
-  const filteredHolidayWithStartAndEnd = data?.map((holiday) => {
+  filteredHolidayWithStartAndEnd = data?.map((holiday) => {
     return {
       ...holiday,
       start: moment(holiday.date),

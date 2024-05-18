@@ -124,7 +124,7 @@ const PunchAcceptModal = () => {
                   <div>
                     <h1 className=" text-xl">Punch Requests</h1>
                     <p className="text-sm">
-                      Here manager would be able to approve or reject the punch
+                      Here you will be able to approve or reject the punch
                       notifications
                     </p>
                   </div>

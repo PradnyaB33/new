@@ -14,7 +14,7 @@ const LeaveAcceptModal = () => {
   console.log("my data", data?.arrayOfEmployee);
 
   const { data: EmpNotification, isLoading: empDataLoading } = useQuery({
-    queryKey: ["EmpDataPunch", employeeId],
+    queryKey: ["EmpDataLeave", employeeId],
     queryFn: async () => {
       try {
         const res = await axios.get(
@@ -121,7 +121,7 @@ const LeaveAcceptModal = () => {
                   <div>
                     <h1 className=" md:text-xl text-lg ">Leave Requests</h1>
                     <p className="text-sm">
-                      Here manager would be able to approve or reject the leave
+                      Here you will be able to approve or reject the leave
                       notifications
                     </p>
                   </div>

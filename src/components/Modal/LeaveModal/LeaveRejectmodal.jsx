@@ -46,6 +46,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("employee-leave");
+        queryClient.invalidateQueries("EmpDataLeave");
         handleClose();
       },
     }
@@ -64,6 +65,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("employee-leave");
+        queryClient.invalidateQueries("EmpDataLeave");
       },
     }
   );
