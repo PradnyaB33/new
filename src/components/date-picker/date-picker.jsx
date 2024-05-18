@@ -117,6 +117,7 @@ const AppDatePicker = ({
     while (currentDate.isSameOrBefore(selectedEndDate)) {
       const currentDay = currentDate.format("ddd");
       if (includedDays.includes(currentDay)) {
+        setCalLoader(false);
         return handleAlert(
           true,
           "warning",
@@ -162,6 +163,7 @@ const AppDatePicker = ({
     });
 
     if (isOverlap) {
+      setCalLoader(false);
       return handleAlert(
         true,
         "warning",
