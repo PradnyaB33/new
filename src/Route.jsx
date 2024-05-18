@@ -12,7 +12,6 @@ import ResetPassword from "./components/resetpassword/resetpassword";
 import RequireAuth, { AuthProvider } from "./context/AuthProvider";
 import useSubscription from "./hooks/Subscription/subscription";
 import NewOranisationForm from "./pages/AddOrganisation/OrgFrom";
-import EmpShiftNotification from "./pages/AllNotifications/empShiftNotification";
 import Application from "./pages/Application/Application";
 import Billing from "./pages/Billing/page";
 import DashBoardHR from "./pages/DashBoard/DashBoardHR";
@@ -91,6 +90,7 @@ import MissPunchInOut from "./pages/MissPunch/MissPunchInOut";
 import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
 import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
 import MyTraining from "./pages/My-Training/page";
+import SelfShiftNotification from "./pages/SelfShiftNotification/page";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
@@ -191,10 +191,10 @@ const App = () => {
         {/* <Route path="/notification" element={<ParentNotification />} /> */}
         <Route path="/leave-notification" element={<LeaveNotification />} />
         <Route path="/punch-notification" element={<PunchNotification />} />
-        <Route
+        {/* <Route
           path="self/shift-notification"
           element={<EmpShiftNotification />}
-        />
+        /> */}
         <Route
           path="/punch-notification/:employeeId"
           element={<PunchNotification />}
@@ -203,6 +203,10 @@ const App = () => {
         <Route
           path="/shift-notification/:employeeId"
           element={<ShiftNotification />}
+        />
+        <Route
+          path="/self/shift-notification"
+          element={<SelfShiftNotification />}
         />
         <Route
           path="/missedPunch-notification"
