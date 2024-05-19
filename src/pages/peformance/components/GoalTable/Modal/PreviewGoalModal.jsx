@@ -163,7 +163,9 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
                   ></p>
                 </div>
                 <div className="hover:bg-gray-100 rounded-md  px-2 ">
-                  <p className="font-semibold text-[#67748E]">comments</p>
+                  <p className="font-semibold text-[#67748E]">
+                    Monitoring points
+                  </p>
                   <p
                     className="preview"
                     dangerouslySetInnerHTML={{

@@ -1,7 +1,7 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { Close, Send, Visibility, VisibilityOff } from "@mui/icons-material";
 import { Avatar, Button } from "@mui/material";
-import { default as React } from "react";
+import { default as React, useMemo } from "react";
 import Autocomplete, { usePlacesWidget } from "react-google-autocomplete";
 import { Controller } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
@@ -1192,12 +1192,12 @@ const AuthInputFiled = ({
         }}
       />
       <p className="text-xs w-full h-fit">{descriptionText}</p>
-      <div className="h-4 !mb-1">
+      <div className="h-4 !mb-1 !relative">
         <ErrorMessage
           errors={errors}
           name={name}
           render={({ message }) => (
-            <p className="!absolute text-sm mb-4 h-max  !bg-white  text-red-500">
+            <p className="!absolute top-0 text-sm mb-4 h-max  !bg-white  text-red-500">
               {message}
             </p>
           )}

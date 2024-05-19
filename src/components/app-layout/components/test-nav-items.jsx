@@ -1,6 +1,7 @@
 import {
   Business,
   Category,
+  CircleNotifications,
   CurrencyRupee,
   Dashboard,
   Description,
@@ -10,6 +11,7 @@ import {
   ModelTrainingOutlined,
   MonetizationOn,
   MonetizationOnOutlined,
+  NotificationsActive,
   PanToolAlt,
   Payment,
   PeopleAlt,
@@ -93,9 +95,8 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
-
-      "Leave Management": {
-        open: false,
+      "Self Help": {
+        open: true,
         icon: <Category className=" !text-[1.2em] text-[#67748E]" />,
         isVisible: true,
         routes: [
@@ -106,7 +107,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: (
               <AccessTimeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
-            text: "Attendance",
+            text: "Attendance & Leave Management",
           },
 
           {

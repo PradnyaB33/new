@@ -8,6 +8,7 @@ import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 import GoalSettingTab from "../Tabs/GoalSettingTab";
 import PerformanceDashboard from "../Tabs/PerformanceDashboard";
+import ReviewTab from "../Tabs/ReviewTab";
 
 const TestTab = () => {
   function classNames(...classes) {
@@ -52,7 +53,7 @@ const TestTab = () => {
     // },
     {
       title: "Review & Feedback",
-      component: <GoalSettingTab />,
+      component: <ReviewTab />,
       disabled:
         performance?.stages !==
         "KRA stage/Ratings Feedback/Manager review stage"
@@ -115,6 +116,9 @@ const TestTab = () => {
             </Tab.Panel>
             <Tab.Panel>
               <GoalSettingTab />
+            </Tab.Panel>
+            <Tab.Panel>
+              <ReviewTab />
             </Tab.Panel>
             {/* <Tab.Panel>Content 3</Tab.Panel> */}
           </Tab.Panels>

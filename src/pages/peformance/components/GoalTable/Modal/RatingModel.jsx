@@ -77,7 +77,6 @@ const RatingModel = ({ handleClose, open, options, id, performance }) => {
   );
 
   const { isFetching } = useQuery({
-  const { isFetching } = useQuery({
     queryKey: ["getGoalReview", id],
     queryFn: async () => {
       const { data } = await axios.get(

@@ -4,6 +4,8 @@ import useDocNotification from "../../hooks/QueryHook/notification/document-noti
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import usePunchNotification from "../../hooks/QueryHook/notification/punch-notification/hook";
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
+
+import useLoanNotification from "../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
 import Card from "./components/card";
 
 const ParentNotification = () => {
@@ -12,6 +14,8 @@ const ParentNotification = () => {
   const { data: data3 } = usePunchNotification();
   const { data: data4 } = useDocNotification();
   const { missPunchData } = useMissedPunchNotificationCount();
+  const { getEmployeeRequestLoanApplication, isLoading: isLoadingLoan } =
+    useLoanNotification();
   console.log("data 3", data3);
   const dummyData = [
     {
