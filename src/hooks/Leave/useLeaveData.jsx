@@ -114,10 +114,17 @@ const useLeaveData = () => {
   });
 
   const deleteLeaveMutation = useMutation(
-    async (id) => {
+    async ({ id, deleteReason }) => {
+      console.log(`🚀 ~ file: useLeaveData.jsx:118 ~ { id, message }:`, {
+        id,
+        deleteReason,
+      });
       setCalLoader(true);
-      await axios.delete(
+      await axios.post(
         `${process.env.REACT_APP_API}/route/leave/delete/${id}`,
+        {
+          deleteReason,
+        },
         {
           headers: {
             Authorization: authToken,

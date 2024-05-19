@@ -18,6 +18,8 @@ import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import useGetUser from "../../hooks/Token/useUser";
 import usePublicHoliday from "../../pages/SetUpOrganization/PublicHolidayPage/usePublicHoliday";
+import ReusableModal from "../Modal/component";
+import MiniForm from "./components/mini-form";
 
 const AppDatePicker = ({
   data,
@@ -43,6 +45,7 @@ const AppDatePicker = ({
   const { handleAlert } = useContext(TestContext);
   const [message, setMessage] = useState("");
   const { authToken } = useGetUser();
+  const [openDelete, setOpenDelete] = useState(false);
   const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
     usePublicHoliday(organisationId);
 
@@ -273,7 +276,7 @@ const AppDatePicker = ({
         })
       );
     } else {
-      deleteLeaveMutation.mutate(selectedLeave._id);
+      setOpenDelete(true);
     }
     setDelete(false);
   };
@@ -286,26 +289,7 @@ const AppDatePicker = ({
       document.removeEventListener("click", handleClickAway);
     };
   }, []);
-  console.log(
-    `🚀 ~ file: date-picker.jsx:333 ~ allPublicHoliday:`,
-    allPublicHoliday
-  );
-  console.log(
-    `🚀 ~ file: date-picker.jsx:333 ~ filteredHolidayWithStartAndEnd:`,
-    filteredHolidayWithStartAndEnd
-  );
-  console.log(
-    `🚀 ~ file: date-picker.jsx:333 ~ newAppliedLeaveEvents:`,
-    newAppliedLeaveEvents
-  );
-  console.log(
-    `🚀 ~ file: date-picker.jsx:333 ~ shiftData?.requests:`,
-    shiftData?.requests
-  );
-  console.log(
-    `🚀 ~ file: date-picker.jsx:333 ~ data?.currentYearLeaves:`,
-    data?.currentYearLeaves
-  );
+
   return (
     <Popover
       PaperProps={{
@@ -424,6 +408,16 @@ const AppDatePicker = ({
           Update
         </Button>
       </div>
+      <ReusableModal
+        open={openDelete}
+        onClose={() => setOpenDelete(false)}
+        heading={"Are you sure want delete ?"}
+      >
+        <MiniForm
+          id={selectedLeave?._id}
+          mutate={deleteLeaveMutation?.mutate}
+        />
+      </ReusableModal>
     </Popover>
   );
 };
