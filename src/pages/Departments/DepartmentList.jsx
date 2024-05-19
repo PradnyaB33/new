@@ -1,4 +1,6 @@
 import { Warning } from "@mui/icons-material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Button,
   Checkbox,
@@ -21,8 +23,6 @@ import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 const DepartmentList = () => {
   const { handleAlert } = useContext(TestContext);
@@ -244,7 +244,7 @@ const DepartmentList = () => {
         <div className="w-[75vw] m-auto h-full">
           <div className="p-4 ">
             <Typography variant="h4" className="text-center mb-6">
-             Delete Department
+              Manage Department
             </Typography>
             <p className="text-xs text-gray-600  text-center">
               Manage your departments here.
@@ -442,7 +442,11 @@ const DepartmentList = () => {
               label="Cost Center Name"
               type="text"
               placeholder="Enter Cost Center"
-              onChange={(e) => setCostCenterName(e.target.value)}
+              onChange={(e) => {
+                if (e.target.value <= 35) {
+                  setCostCenterName(e.target.value);
+                }
+              }}
             />
 
             <TextField
@@ -557,10 +561,7 @@ const DepartmentList = () => {
                 // Add label prop for better alignment
               >
                 {headList?.map((data, index) => (
-                  <MenuItem
-                    key={index}
-                    value={data._id}
-                  >
+                  <MenuItem key={index} value={data._id}>
                     {!data ? (
                       <MenuItem>No department head present!</MenuItem>
                     ) : (
@@ -597,10 +598,7 @@ const DepartmentList = () => {
                 // Add label prop for better alignment
               >
                 {delegateHeadList?.map((data, index) => (
-                  <MenuItem
-                    key={index}
-                    value={data._id}
-                  >
+                  <MenuItem key={index} value={data._id}>
                     {!data ? (
                       <MenuItem>No delegate head present!</MenuItem>
                     ) : (

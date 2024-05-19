@@ -12,6 +12,7 @@ const LeaveTable = () => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const { data, isLoading, isError, error } = useLeaveRequesationHook();
+  console.log(`🚀 ~ file: LeaveTabel.jsx:15 ~ data:`, data);
 
   if (isError) {
     handleAlert(

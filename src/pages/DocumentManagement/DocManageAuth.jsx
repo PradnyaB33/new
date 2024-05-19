@@ -204,7 +204,16 @@ const DocManageAuth = () => {
             data={data2}
           />
         )}
-        {option === "" && <Options setOption={setOption} />}
+        {option === "" && (
+          <>
+            {" "}
+            <p className="font-semibold">
+              Manage Organizational Records, Used For Generation And
+              Distribution of Information To The Employees.
+            </p>{" "}
+            <Options setOption={setOption} />{" "}
+          </>
+        )}
       </Container>
 
       <Container className="w-[600px] h-[80vh] border-2 mt-5">

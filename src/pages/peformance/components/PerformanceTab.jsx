@@ -8,6 +8,7 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import GoalSettingTab from "../Tabs/GoalSettingTab";
 import PerformanceDashboard from "../Tabs/PerformanceDashboard";
+import ReviewTab from "../Tabs/ReviewTab";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -122,6 +123,9 @@ export default function PerformanceTab() {
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           <GoalSettingTab />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+          <ReviewTab />
         </CustomTabPanel>
       </Box>
     </>

@@ -1,9 +1,9 @@
-import { Error } from "@mui/icons-material";
 import axios from "axios";
-import React from "react";
+import React, { useContext } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
+import { TestContext } from "../../../State/Function/Main";
 import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
@@ -43,6 +43,7 @@ const Test4 = ({ prevStep }) => {
   } = useEmpState();
 
   const navigate = useNavigate("");
+  const { handleAlert } = useContext(TestContext);
 
   const authToken = useAuthToken();
 
@@ -98,10 +99,11 @@ const Test4 = ({ prevStep }) => {
         navigate(`/organisation/${organisationId}/employee-list`);
       },
       onError: (error) => {
-        console.log("error.response", error.response);
-        if (error.response.status === 400) {
-          toast.error(error.response?.data.message ?? "Something went wrong");
-        }
+        handleAlert(
+          "true",
+          "error",
+          error.response?.data.message ?? "Something went wrong"
+        );
       },
     }
   );
@@ -111,7 +113,7 @@ const Test4 = ({ prevStep }) => {
       <div className="w-full mt-4">
         <h1 className="text-2xl mb-2 font-bold">Confirm Details</h1>
 
-        {designation?.value &&
+        {/* {designation?.value &&
         worklocation?.value &&
         deptname?.value &&
         employmentType?.value &&
@@ -133,173 +135,169 @@ const Test4 = ({ prevStep }) => {
         date_of_birth &&
         empId &&
         companyemail &&
-        joining_date ? (
-          <>
-            <div className="md:p-3 py-1 ">
-              <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
-                Personal Details
-              </h1>
-              <div className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ">
-                <div className=" p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 w-full text-sm">Full Name</h1>
-                  <p className="w-full">
-                    {first_name} {last_name}
-                  </p>
-                </div>
-                <div className="p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 text-sm w-full">
-                    Personal Email
-                  </h1>
-                  <p className="">{email}</p>
-                </div>
-                <div className="p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 text-sm">Contact</h1>
-                  <p className="">{phone_number}</p>
-                </div>
+        joining_date ? ( */}
+        <>
+          <div className="md:p-3 py-1 ">
+            <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
+              Personal Details
+            </h1>
+            <div className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ">
+              <div className=" p-2 w-[30%] rounded-sm ">
+                <h1 className="text-gray-500 w-full text-sm">Full Name</h1>
+                <p className="w-full">
+                  {first_name} {last_name}
+                </p>
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-                <div className=" p-2 w-[30%] rounded-sm w-full">
-                  <h1 className="text-gray-500 text-sm">Gender</h1>
-                  <p className="">{gender}</p>
-                </div>
-                <div className="p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 text-sm w-full">
-                    Date Of Birth
-                  </h1>
-                  <p className="">{date_of_birth}</p>
-                </div>
-                <div className="p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 text-sm w-full">
-                    Current Address
-                  </h1>
-                  <p className="">{address}</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:!grid-cols-2 md:!grid-cols-3 justify-between">
-                <div className=" p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 text-sm w-full">Aadhar No</h1>
-                  <p className="">{adhar_card_number}</p>
-                </div>
-                <div className="p-2 w-[30%] rounded-sm ">
-                  <h1 className="text-gray-500 text-sm w-full">PAN card</h1>
-                  <p className="">{pan_card_number}</p>
-                </div>
-                <div className="p-2 w-[30%] rounded-sm w-full">
-                  <h1 className="text-gray-500 text-sm">Citizenship Status</h1>
-                  <p className="">{citizenship}</p>
-                </div>
-              </div>
-
               <div className="p-2 w-[30%] rounded-sm ">
-                <h1 className="text-gray-500 text-sm">Bank Account</h1>
-                <p className="">{bank_account_no}</p>
+                <h1 className="text-gray-500 text-sm w-full">Personal Email</h1>
+                <p className="">{email}</p>
               </div>
-
-              <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
-                Company Details
-              </h1>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
-                <div className=" p-2 rounded-sm w-full">
-                  <h1 className="text-gray-500 text-sm">Employee No</h1>
-                  <p className="">{empId}</p>
-                </div>
-                <div className="p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm w-full">Profile</h1>
-                  <p className="">{profile?.map((item) => item)}</p>
-                </div>
-                <div className="p-2 rounded-sm w-full">
-                  <h1 className="text-gray-500 text-sm">Company Email</h1>
-                  <p className="">{companyemail}</p>
-                </div>
+              <div className="p-2 w-[30%] rounded-sm ">
+                <h1 className="text-gray-500 text-sm">Contact</h1>
+                <p className="">{phone_number}</p>
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
-                <div className=" p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm w-full">
-                    Date Of Joining
-                  </h1>
-                  <p className="">{joining_date}</p>
-                </div>
-                <div className="p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm w-full">Department</h1>
-                  <p className="">{deptname?.label}</p>
-                </div>
-                <div className="p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm w-full">Designation</h1>
-                  <p className="">{designation?.label}</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
-                <div className=" p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm w-full">Shift</h1>
-                  <p className="">{shift_allocation?.label}</p>
-                </div>
-                <div className="p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm w-full">
-                    Department Cost No
-                  </h1>
-                  <p className="">{dept_cost_center_no?.label}</p>
-                </div>
-                <div className="p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm w-full">Location</h1>
-                  <p className="">{worklocation?.label}</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
-                <div className=" p-2 rounded-sm">
-                  <h1 className="text-gray-500 w-full text-sm">
-                    Employment Types
-                  </h1>
-                  <p className="">{employmentType?.label}</p>
-                </div>
-                <div className="p-2 rounded-sm ">
-                  <h1 className="text-gray-500 text-sm w-full">
-                    Salary Template
-                  </h1>
-                  <p className="">{salarystructure?.label}</p>
-                </div>
-              </div>
-
-              {data && (
-                <>
-                  <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
-                    Additional Details
-                  </h1>
-                  <div className="grid grid-cols-3 justify-between">
-                    {Object.entries(data)?.map(([key, value]) => (
-                      <div className="p-2 rounded-sm ">
-                        <h1 className="text-gray-500 text-sm">{key}</h1>
-                        <p className="">{value}</p>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
             </div>
-            <div className="flex items-end w-full justify-between">
-              <button
-                type="button"
-                onClick={() => {
-                  prevStep();
-                }}
-                className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-              >
-                Prev
-              </button>
-              <button
-                onClick={() => handleSubmit.mutate()}
-                className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-              >
-                Submit
-              </button>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+              <div className=" p-2 w-[30%] rounded-sm w-full">
+                <h1 className="text-gray-500 text-sm">Gender</h1>
+                <p className="">{gender}</p>
+              </div>
+              <div className="p-2 w-[30%] rounded-sm ">
+                <h1 className="text-gray-500 text-sm w-full">Date Of Birth</h1>
+                <p className="">{date_of_birth}</p>
+              </div>
+              <div className="p-2 w-[30%] rounded-sm ">
+                <h1 className="text-gray-500 text-sm w-full">
+                  Current Address
+                </h1>
+                <p className="">{address}</p>
+              </div>
             </div>
-          </>
-        ) : (
+
+            <div className="grid grid-cols-1 sm:!grid-cols-2 md:!grid-cols-3 justify-between">
+              <div className=" p-2 w-[30%] rounded-sm ">
+                <h1 className="text-gray-500 text-sm w-full">Aadhar No</h1>
+                <p className="">{adhar_card_number}</p>
+              </div>
+              <div className="p-2 w-[30%] rounded-sm ">
+                <h1 className="text-gray-500 text-sm w-full">PAN card</h1>
+                <p className="">{pan_card_number}</p>
+              </div>
+              <div className="p-2 w-[30%] rounded-sm w-full">
+                <h1 className="text-gray-500 text-sm">Citizenship Status</h1>
+                <p className="">{citizenship}</p>
+              </div>
+            </div>
+
+            <div className="p-2 w-[30%] rounded-sm ">
+              <h1 className="text-gray-500 text-sm">Bank Account</h1>
+              <p className="">{bank_account_no}</p>
+            </div>
+
+            <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
+              Company Details
+            </h1>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
+              <div className=" p-2 rounded-sm w-full">
+                <h1 className="text-gray-500 text-sm">Employee No</h1>
+                <p className="">{empId}</p>
+              </div>
+              <div className="p-2 rounded-sm ">
+                <h1 className="text-gray-500 text-sm w-full">Profile</h1>
+                <p className="">{profile?.map((item) => item)}</p>
+              </div>
+              <div className="p-2 rounded-sm w-full">
+                <h1 className="text-gray-500 text-sm">Company Email</h1>
+                <p className="">{companyemail}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
+              <div className=" p-2 rounded-sm ">
+                <h1 className="text-gray-500 text-sm w-full">
+                  Date Of Joining
+                </h1>
+                <p className="">{joining_date}</p>
+              </div>
+              <div className="p-2 rounded-sm ">
+                <h1 className="text-gray-500 text-sm w-full">Department</h1>
+                <p className="">{deptname?.label}</p>
+              </div>
+              <div className="p-2 rounded-sm ">
+                <h1 className="text-gray-500 text-sm w-full">Designation</h1>
+                <p className="">{designation?.label}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
+              <div className=" p-2 rounded-sm ">
+                <h1 className="text-gray-500 text-sm w-full">Shift</h1>
+                <p className="">{shift_allocation?.label}</p>
+              </div>
+              <div className="p-2 rounded-sm ">
+                <h1 className="text-gray-500 text-sm w-full">
+                  Department Cost No
+                </h1>
+                <p className="">{dept_cost_center_no?.label}</p>
+              </div>
+              <div className="p-2 rounded-sm ">
+                <h1 className="text-gray-500 text-sm w-full">Location</h1>
+                <p className="">{worklocation?.label}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between">
+              <div className=" p-2 rounded-sm">
+                <h1 className="text-gray-500 w-full text-sm">
+                  Employment Types
+                </h1>
+                <p className="">{employmentType?.label}</p>
+              </div>
+              <div className="p-2 rounded-sm ">
+                <h1 className="text-gray-500 text-sm w-full">
+                  Salary Template
+                </h1>
+                <p className="">{salarystructure?.label}</p>
+              </div>
+            </div>
+
+            {data && (
+              <>
+                <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
+                  Additional Details
+                </h1>
+                <div className="grid grid-cols-3 justify-between">
+                  {Object.entries(data)?.map(([key, value]) => (
+                    <div className="p-2 rounded-sm ">
+                      <h1 className="text-gray-500 text-sm">{key}</h1>
+                      <p className="">{value}</p>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+          <div className="flex items-end w-full justify-between">
+            <button
+              type="button"
+              onClick={() => {
+                prevStep();
+              }}
+              className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+            >
+              Prev
+            </button>
+            <button
+              onClick={() => handleSubmit.mutate()}
+              className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+            >
+              Submit
+            </button>
+          </div>
+        </>
+        {/* ) : (
           <section className=" py-6 px-8 rounded-md w-full">
             <article className="flex items-center mb-1 text-red-500 gap-2">
               <Error className="!text-2xl" />
@@ -310,7 +308,7 @@ const Test4 = ({ prevStep }) => {
               confirm the new employee onboarding
             </p>
           </section>
-        )}
+        )} */}
       </div>
     </>
   );

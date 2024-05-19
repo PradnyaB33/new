@@ -1,4 +1,9 @@
-import { AssignmentTurnedIn, ErrorOutline, Groups } from "@mui/icons-material";
+import {
+  AssignmentTurnedIn,
+  CoPresent,
+  ErrorOutline,
+  Groups,
+} from "@mui/icons-material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useQuery } from "react-query";
@@ -96,6 +101,7 @@ const DashboardManger = () => {
               <div className="flex flex-1  flex-wrap w-full justify-between gap-2 md:gap-5 ">
                 <SuperAdminCard
                   icon={Groups}
+                  className={"!min-w-[150px]"}
                   title={"Total Employees"}
                   data={
                     EmployeeDataOfManager?.data[0]?.reporteeIds?.length ?? 0
@@ -103,14 +109,27 @@ const DashboardManger = () => {
                   color={"!bg-sky-500"}
                 />
                 <SuperAdminCard
+                  className={"!min-w-[150px]"}
                   icon={AssignmentTurnedIn}
                   title={"Shift Allowance"}
                   isLoading={managerShiftLoading}
                   data={managerShift ?? 0}
+                  color={"!bg-orange-500"}
+                />
+                <SuperAdminCard
+                  icon={CoPresent}
+                  className={"!min-w-[150px]"}
+                  data={
+                    EmployeeDataOfManager?.data[0]?.reporteeIds?.length -
+                      managerAttendence ?? 0
+                  }
+                  isLoading={managerAttendenceLoading}
+                  title={"Present Today"}
                   color={"!bg-green-500"}
                 />
                 <SuperAdminCard
                   icon={ErrorOutline}
+                  className={"!min-w-[150px]"}
                   data={managerAttendence ?? 0}
                   isLoading={managerAttendenceLoading}
                   title={"Today's Leave"}

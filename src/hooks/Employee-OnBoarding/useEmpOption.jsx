@@ -36,13 +36,14 @@ const useEmpOption = (organisationId) => {
     };
   });
 
-  const Manageroptions = ManagerList?.data?.map((item) => {
+  const Manageroptions = ManagerList?.manager?.map((item) => {
     return {
       value: item?._id,
       label: `${item?.first_name} ${item?.last_name}`,
     };
   });
 
+  console.log(`🚀 ~ Manageroptions:`, Manageroptions);
   const EmpCodeoptions = empCode?.EmpCodeoptions?.map((item) => {
     return {
       value: item?._id,

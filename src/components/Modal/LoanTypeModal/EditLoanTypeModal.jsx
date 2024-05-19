@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AttachMoney, Title } from "@mui/icons-material";
+import { Title } from "@mui/icons-material";
 import { Box, Button, Modal } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -9,7 +9,8 @@ import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
-
+import MoneyIcon from "@mui/icons-material/Money";
+import PercentIcon from "@mui/icons-material/Percent";
 const style = {
   position: "absolute",
   top: "50%",
@@ -26,11 +27,72 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
   const authToken = cookies["aegis"];
   const [error, setError] = useState("");
   console.log(error);
+
   const EmpLoanMgtSchema = z.object({
-    loanName: z.string(),
-    loanValue: z.string(),
-    rateOfInterest: z.string(),
-    maxLoanValue: z.string(),
+    loanName: z
+      .string()
+      .min(2)
+      .max(35)
+      .refine((value) => /^[A-Za-z\s]+$/.test(value), {
+        message: "Loan name should only contain alphabetic characters",
+      }),
+    loanValue: z
+      .string()
+      .refine(
+        (value) => {
+          const floatValue = parseFloat(value);
+          return (
+            floatValue >= 0 &&
+            floatValue <= 10000000 &&
+            !Object.is(floatValue, -0)
+          );
+        },
+        {
+          message: "Loan value should be between 0 and 1 crore",
+        }
+      )
+      .refine(
+        (value) => {
+          const floatValue = parseFloat(value);
+          return floatValue >= 0;
+        },
+        {
+          message: "Loan value should be a positive number",
+        }
+      ),
+    maxLoanValue: z
+      .string()
+      .refine(
+        (value) => {
+          const floatValue = parseFloat(value);
+          return (
+            floatValue >= 0 &&
+            floatValue <= 10000000 &&
+            !Object.is(floatValue, -0)
+          );
+        },
+        {
+          message: "Maximum loan value should be between 0 and 1 crore",
+        }
+      )
+      .refine(
+        (value) => {
+          const floatValue = parseFloat(value);
+          return floatValue >= 0;
+        },
+        {
+          message: "Maximum loan value should be a positive number",
+        }
+      ),
+    rateOfInterest: z.string().refine(
+      (value) => {
+        const floatValue = parseFloat(value);
+        return floatValue > 0 && floatValue < 100;
+      },
+      {
+        message: "Rate of interest should be between 0 and 99%",
+      }
+    ),
   });
 
   const {
@@ -57,7 +119,7 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
       return response.data.data;
     }
   );
-  console.log("getLoanTypeById" , getLoanTypeById);
+  console.log("getLoanTypeById", getLoanTypeById);
   useEffect(() => {
     if (getLoanTypeById) {
       setValue("loanName", getLoanTypeById.loanName);
@@ -66,6 +128,23 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
       setValue("rateOfInterest", getLoanTypeById.rateOfInterest.toString());
     }
   }, [getLoanTypeById, setValue]);
+
+  //for  Get Query
+  const { data: getEmployeeLoans } = useQuery(
+    ["loanType", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-loan-type`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
+  console.log(getEmployeeLoans);
 
   const EditLoanType = useMutation(
     (data) =>
@@ -92,7 +171,30 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
 
   const onSubmit = async (data) => {
     try {
+      console.log(data);
+
+      if (parseFloat(data.loanValue) === parseFloat(data.maxLoanValue)) {
+        setError("Min loan value and max loan value should not be the same.");
+        return;
+      }
+
+      if (parseFloat(data.loanValue) >= parseFloat(data.maxLoanValue)) {
+        setError("Min loan value should be less than max loan value.");
+        return;
+      }
+
+      if (parseFloat(data.maxLoanValue) <= parseFloat(data.loanValue)) {
+        setError("Max loan value should be greater than min loan value.");
+        return;
+      }
+
+      const existingLoanNames = getEmployeeLoans.map((data) => data.loanName);
+      if (existingLoanNames.includes(data.loanName)) {
+        setError("Loan name must be unique.");
+        return;
+      }
       await EditLoanType.mutateAsync(data);
+      setError(null);
     } catch (error) {
       console.error(error);
       setError("An error occurred while creating a new loan type.");
@@ -117,6 +219,7 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="px-5 space-y-4 mt-4">
+            {error && <div className="text-red-500">{error}</div>}
             <div className="space-y-2 ">
               <AuthInputFiled
                 name="loanName"
@@ -132,7 +235,7 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
             <div className="space-y-2 ">
               <AuthInputFiled
                 name="loanValue"
-                icon={AttachMoney}
+                icon={MoneyIcon}
                 control={control}
                 type="number"
                 placeholder="Minimum Loan Value"
@@ -140,43 +243,42 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
                 errors={errors}
                 error={errors.loanValue}
               />
-               <div className="space-y-2 ">
-              <AuthInputFiled
-                name="maxLoanValue"
-                icon={AttachMoney}
-                control={control}
-                type="number"
-                placeholder="Maximum Loan Value"
-                label=" Maximum Loan Value *"
-                errors={errors}
-                error={errors.maxLoanValue}
-              />
+              <div className="space-y-2 ">
+                <AuthInputFiled
+                  name="maxLoanValue"
+                  icon={MoneyIcon}
+                  control={control}
+                  type="number"
+                  placeholder="Maximum Loan Value"
+                  label=" Maximum Loan Value *"
+                  errors={errors}
+                  error={errors.maxLoanValue}
+                />
+              </div>
+              <div className="space-y-2 ">
+                <AuthInputFiled
+                  name="rateOfInterest"
+                  icon={PercentIcon}
+                  control={control}
+                  type="number"
+                  placeholder="Rate Of Interest"
+                  label="Rate Of Interest "
+                  errors={errors}
+                  error={errors.rateOfInterest}
+                />
+              </div>
             </div>
-            <div className="space-y-2 ">
-              <AuthInputFiled
-                name="rateOfInterest"
-                icon={AttachMoney}
-                control={control}
-                type="number"
-                placeholder="Rate Of Interest"
-                label="Rate Of Interest "
-                errors={errors}
-                error={errors.rateOfInterest}
-              />
-            </div>
-          </div>
 
-          <div className="flex gap-4 mt-4 mr-4  mb-4 justify-end ">
-            <Button onClick={handleClose} color="error" variant="outlined">
-              Cancel
-            </Button>
-            <Button type="submit" variant="contained" color="primary">
-              Apply
-            </Button>
-          </div>
+            <div className="flex gap-4 mt-4 mr-4  mb-4 justify-end ">
+              <Button onClick={handleClose} color="error" variant="outlined">
+                Cancel
+              </Button>
+              <Button type="submit" variant="contained" color="primary">
+                Apply
+              </Button>
+            </div>
           </div>
         </form>
-       
       </Box>
     </Modal>
   );

@@ -4,9 +4,7 @@ import Box from "@mui/material/Box";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import * as React from "react";
 import { useCallback } from "react"; // Import useCallback
-import { useQuery } from "react-query";
-import { useLocation, useParams } from "react-router-dom";
-import useOrganisationApi from "../../hooks/Organisation/useOrganisationApi";
+import { useLocation } from "react-router-dom";
 import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
 import ChangeRole from "../InputFileds/ChangeRole";
@@ -21,15 +19,15 @@ export default function SwipeableTemporaryDrawer() {
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
   const authToken = useAuthToken();
-  const { organisationId } = useParams();
-  console.log(`🚀 ~ organisationId:`, organisationId);
+  // const { organisationId } = useParams();
+  // console.log(`🚀 ~ organisationId:`, organisationId);
 
-  const { fetchData } = useOrganisationApi();
+  // const { fetchData } = useOrganisationApi();
 
-  const { data } = useQuery("getOrganization", () =>
-    fetchData({ authToken, organisationId })
-  );
-  console.log(`🚀 ~ data:`, data);
+  // const { data } = useQuery("getOrganization", () =>
+  //   fetchData({ authToken, organisationId })
+  // );
+  // console.log(`🚀 ~ data:`, data);
 
   // Use useCallback to memoize the toggleDrawer function
   const toggleDrawer = useCallback(() => {
@@ -40,7 +38,7 @@ export default function SwipeableTemporaryDrawer() {
     <Box
       sx={{ width: 250, height: 100 }}
       role="presentation"
-      onClick={toggleDrawer}
+      // onClick={toggleDrawer}
       onKeyDown={toggleDrawer}
     >
       <TestNavItems toggleDrawer={toggleDrawer} />

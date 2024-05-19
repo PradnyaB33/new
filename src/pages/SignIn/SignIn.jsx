@@ -21,25 +21,33 @@ const SignIn = () => {
   const role = useGetCurrentRole();
 
   useEffect(() => {
-    if(user?._id){
-    if (role === "Super-Admin" || role === "Delegate-Super-Admin")
-      return redirect("/");
-    else if (role === "HR")
-      return redirect(
-        `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
-      );
-    else if (role === "Delegate-Department-Head" || role === "Department-Head")
-      return redirect(
-        `/organisation/${user?.organizationId}/dashboard/DH-dashboard`
-      );
-    else if (role === "Accountant")
-      return redirect(
-        `/organisation/${user?._id}/dashboard/employee-dashboard`
-      );
-    else if (role === "Manager")
-      return redirect(`/organisation/${user?._id}/dashboard/manager-dashboard`);
-    else if (role === "Employee")
-      return redirect(`/organisation/dashboard/employee-dashboard`)};
+    if (user?._id) {
+      if (role === "Super-Admin" || role === "Delegate-Super-Admin")
+        return redirect("/");
+      else if (role === "HR")
+        return redirect(
+          `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
+        );
+      else if (
+        role === "Delegate-Department-Head" ||
+        role === "Department-Head"
+      )
+        return redirect(
+          `/organisation/${user?.organizationId}/dashboard/DH-dashboard`
+        );
+      else if (role === "Accountant")
+        return redirect(
+          `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
+        );
+      else if (role === "Manager")
+        return redirect(
+          `/organisation/${user?._id}/dashboard/manager-dashboard`
+        );
+      else if (role === "Employee")
+        return redirect(
+          `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
+        );
+    }
     // eslint-disable-next-line
   }, [role, window.location.pathname]);
 
@@ -132,13 +140,17 @@ const SignIn = () => {
             role: "Department-Admin",
             email: response.data.user?.email,
           });
-          return redirect(`/organisation/dashboard/employee-dashboard`);
+          return redirect(
+            `/organisation/${response?.data?.user?.organizationId}/dashboard/employee-dashboard`
+          );
         } else if (response.data.user?.profile.includes("Accountant")) {
           handleRole.mutate({
             role: "Accountant",
             email: response.data.user?.email,
           });
-          return redirect(`/organisation/dashboard/employee-dashboard`);
+          return redirect(
+            `/organisation/${response?.data?.user?.organizationId}/dashboard/employee-dashboard`
+          );
         } else if (
           response.data.user?.profile.includes("Delegate-Accountant")
         ) {
@@ -146,13 +158,17 @@ const SignIn = () => {
             role: "Delegate-Accountant",
             email: response.data.user?.email,
           });
-          return redirect(`/organisation/dashboard/employee-dashboard`);
+          return redirect(
+            `/organisation/${response?.data?.user?.organizationId}/dashboard/employee-dashboard`
+          );
         } else if (response.data.user?.profile.includes("Employee")) {
           handleRole.mutate({
             role: "Employee",
             email: response.data.user?.email,
           });
-          return redirect(`/organisation/dashboard/employee-dashboard`);
+          return redirect(
+            `/organisation/${response?.data?.user?.organizationId}/dashboard/employee-dashboard`
+          );
         }
         window.location.reload();
       },
@@ -338,7 +354,7 @@ const SignIn = () => {
                     ? "/sign-in"
                     : "/sign-up"
                 }
-                className="font-medium text-blue-500 hover:font-bold transition-all "
+                className="font-medium text-blue-500 hover:underline transition-all "
               >
                 Sign up for AEGIS
               </Link>

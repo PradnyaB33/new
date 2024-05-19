@@ -10,7 +10,6 @@ import {
 import axios from "axios";
 import { differenceInDays, format, parseISO } from "date-fns";
 import React, { useEffect, useState } from "react";
-// import useShiftData from "../../../hooks/MissedData/useMissedData";
 import useShiftStore from "../../SetupPage/ShiftManagement/store/useShiftStore";
 const Mapped = ({
   item,
@@ -31,7 +30,6 @@ const Mapped = ({
     },
   };
   const [sName, setSName] = useState([]);
-  // const [openAlert, setOpenAlert] = useState(false); // State for alert visibility
 
   // Fetch initial shift types
   useEffect(() => {
@@ -52,13 +50,6 @@ const Mapped = ({
     setLeavesTypes(selectedShiftId);
   };
 
-  // const handleUpdate = () => {
-  //   // Clear the selected shift
-  //   setLeavesTypes("");
-  //   // Open the calendar for selection
-  //   setCalendarOpen(true);
-  // };
-
   console.log(newAppliedLeaveEvents);
   const removeItem = (idToRemove) => {
     console.log("Removing item with id:", idToRemove);
@@ -72,13 +63,6 @@ const Mapped = ({
   const handleChange2 = (name) => {
     setShiftName(name);
   };
-
-  // const handleAlertClose = (event, reason) => {
-  //   if (reason === "clickaway") {
-  //     return;
-  //   }
-  //   // setOpenAlert(false);
-  // };
 
   return (
     <div
@@ -133,7 +117,7 @@ const Mapped = ({
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={leavesTypes}
-            label="Select Leave Type"
+            label="Select Type"
             onChange={handleChange}
           >
             {sName?.map((item, index) => {

@@ -2,6 +2,7 @@ import {
   Article,
   Cancel,
   CheckCircle,
+  Close,
   DeleteOutlined,
   EditOutlined,
   Error,
@@ -227,23 +228,33 @@ const TDSTable2 = () => {
 
   const { handleAlert } = useContext(TestContext);
   const [editStatus, setEditStatus] = useState({});
+  const [declarationData, setDeclarationData] = useState({});
+  console.log(`🚀 ~ declarationData:`, declarationData);
 
   const handleEditClick = (itemIndex, fieldIndex) => {
+    const newData = [...tableData];
+    setDeclarationData(
+      newData[itemIndex][Object.keys(newData[itemIndex])[0]][fieldIndex]
+    );
     setEditStatus({ ...editStatus, [itemIndex]: fieldIndex });
   };
 
   const handleAmountChange = (e, itemIndex, id) => {
-    const newData = [...tableData];
-    newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].declaration =
-      e.target.value;
+    // const newData = [...tableData];
+    // newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].declaration =
+    //   e.target.value;
+    setDeclarationData((prev) => ({
+      ...prev,
+      declaration: e.target.value,
+    }));
 
-    setTableData(newData);
+    // setTableData(newData);
   };
 
   const handleProofChange = (e, itemIndex, id) => {
-    const newData = [...tableData];
-    newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].proof =
-      e.target.files[0];
+    // const newData = [...tableData];
+    // newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].proof =
+    //   e.target.files[0];
 
     if (e.target.files[0]?.type !== "application/pdf") {
       handleAlert(true, "error", "Only PDF format allowed");
@@ -253,21 +264,34 @@ const TDSTable2 = () => {
       handleAlert(true, "error", "File size must be under 500kb");
       return {};
     }
-    setTableData(newData);
+
+    setDeclarationData((prev) => ({
+      ...prev,
+      proof: e.target.files[0],
+    }));
+    // setTableData(newData);
   };
 
   const handleProperty1 = (e, itemIndex, id) => {
-    const newData = [...tableData];
-    newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property1 =
-      e.target.value;
-    setTableData(newData);
+    // const newData = [...tableData];
+    // newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property1 =
+    //   e.target.value;
+    setDeclarationData((prev) => ({
+      ...prev,
+      property1: e.target.value,
+    }));
+    // setTableData(newData);
   };
 
   const handleProperty2 = (e, itemIndex, id) => {
-    const newData = [...tableData];
-    newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property2 =
-      e.target.value;
-    setTableData(newData);
+    // const newData = [...tableData];
+    // newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property2 =
+    //   e.target.value;
+    setDeclarationData((prev) => ({
+      ...prev,
+      property2: e.target.value,
+    }));
+    // setTableData(newData);
   };
 
   const handleDelete = async (index, id) => {
@@ -307,13 +331,13 @@ const TDSTable2 = () => {
     }
   };
 
-  const handleDownload = (pdf) => {
-    // You can use any method to trigger the download, such as creating an invisible link and clicking it
-    const link = document.createElement("a");
-    link.href = pdf;
-    link.download = "File1.pdf";
-    link.click();
-  };
+  // const handleDownload = (pdf) => {
+  //   // You can use any method to trigger the download, such as creating an invisible link and clicking it
+  //   const link = document.createElement("a");
+  //   link.href = pdf;
+  //   link.download = "File1.pdf";
+  //   link.click();
+  // };
   const uploadProof = async (tdsfile) => {
     const data = await axios.get(
       `${process.env.REACT_APP_API}/route/s3createFile/TDS`,
@@ -334,11 +358,9 @@ const TDSTable2 = () => {
     return data?.data?.url?.split("?")[0];
   };
 
-  console.log(`🚀 ~ handleDownload:`, handleDownload);
-
   const handleSaveClick = async (index, id) => {
     const newData = [...tableData];
-    const value = newData[index][Object.keys(newData[index])[0]][id];
+    const value = declarationData;
     const tdsfile = value.proof;
 
     let uploadproof = "";
@@ -426,6 +448,8 @@ const TDSTable2 = () => {
 
   const handleClose = (index) => {
     setEditStatus({ [index]: null });
+    setDeclarationData(null);
+    console.log(declarationData);
   };
 
   return (
@@ -445,7 +469,7 @@ const TDSTable2 = () => {
                       <h1 className="text-xl"> {Object.keys(item)[0]}</h1>
                     </div>
 
-                    <table className="table-auto border border-collapse min-w-full bg-white  text-left   !text-sm font-light">
+                    <table className="overflow-hidden table-auto border border-collapse min-w-full bg-white  text-left   !text-sm font-light">
                       <thead className="border-b bg-gray-100 font-bold">
                         <tr className="!font-semibold ">
                           <th
@@ -503,7 +527,8 @@ const TDSTable2 = () => {
                                       <input
                                         type="number"
                                         className="border-none w-[90px] h-auto outline-none  "
-                                        value={ele.property1}
+                                        // value={ele.property1}
+                                        defaultValue={ele.property1}
                                         min={0}
                                         onChange={(e) =>
                                           handleProperty1(e, itemIndex, id)
@@ -525,7 +550,8 @@ const TDSTable2 = () => {
                                       <input
                                         type="number"
                                         className="border-none w-[90px] h-auto outline-none  "
-                                        value={ele.property2}
+                                        // value={ele.property2}
+                                        defaultValue={ele.property1}
                                         min={0}
                                         onChange={(e) =>
                                           handleProperty2(e, itemIndex, id)
@@ -551,7 +577,7 @@ const TDSTable2 = () => {
                                   <input
                                     type="number"
                                     className="border-none w-[90px] h-auto outline-none  "
-                                    value={ele.declaration}
+                                    defaultValue={ele.declaration}
                                     onChange={(e) =>
                                       handleAmountChange(e, itemIndex, id)
                                     }
@@ -564,28 +590,72 @@ const TDSTable2 = () => {
                               )}
                             </td>
                             <td className="text-left h-14 px-2 leading-7 text-[16px] w-[200px]  border ">
-                              {editStatus[itemIndex] === id &&
-                              editStatus[itemIndex] === id ? (
-                                <div className="px-2">
-                                  <label className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 text-sm rounded cursor-pointer">
-                                    Upload File
-                                    <input
-                                      type="file"
-                                      className="hidden"
-                                      onChange={(e) =>
-                                        handleProofChange(e, itemIndex, id)
-                                      }
-                                    />
-                                  </label>
-                                </div>
+                              {editStatus[itemIndex] === id ? (
+                                <>
+                                  {declarationData.proof ? (
+                                    <div className="px-2 flex gap-2 items-center h-max w-max">
+                                      <div
+                                        onClick={() =>
+                                          handlePDF(
+                                            URL.createObjectURL(
+                                              declarationData?.proof
+                                            )
+                                          )
+                                        }
+                                        className="px-2 flex gap-2 items-center h-max w-max"
+                                      >
+                                        <Article className="text-blue-500 " />
+                                        <h1 className="truncate w-[125px]">
+                                          {declarationData?.proof?.name}
+                                        </h1>
+                                      </div>
+                                      <Close
+                                        onClick={() =>
+                                          setDeclarationData((prev) => ({
+                                            ...prev,
+                                            proof: undefined,
+                                          }))
+                                        }
+                                        className="!text-sm text-gray-700 cursor-pointer"
+                                      />
+                                    </div>
+                                  ) : (
+                                    <div className="px-2 w-[150px]">
+                                      <label className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 text-sm rounded cursor-pointer">
+                                        Upload File
+                                        <input
+                                          type="file"
+                                          className="hidden"
+                                          onChange={(e) =>
+                                            handleProofChange(e, itemIndex, id)
+                                          }
+                                        />
+                                      </label>
+                                    </div>
+                                  )}
+                                </>
                               ) : ele.proof ? (
-                                typeof ele.proof === "string" && (
+                                typeof ele.proof === "string" ? (
                                   <div
                                     onClick={() => handlePDF(ele.proof)}
                                     className="px-2 flex gap-2 items-center h-max w-max  cursor-pointer"
                                   >
                                     <Article className="text-blue-500" />
                                     <h1>View Proof</h1>
+                                  </div>
+                                ) : (
+                                  <div
+                                    onClick={() =>
+                                      handlePDF(
+                                        URL.createObjectURL(
+                                          declarationData.proof
+                                        )
+                                      )
+                                    }
+                                    className="px-2 flex gap-2 items-center h-max w-max"
+                                  >
+                                    <Article className="text-blue-500" />
+                                    <h1>{item?.proof?.name}</h1>
                                   </div>
                                 )
                               ) : (

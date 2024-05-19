@@ -55,34 +55,38 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
     {
       enabled: open && empId !== null && empId !== undefined,
     }
-  ); 
+  );
+  console.log("salaryInput", salaryInput);
 
-  console.log("salaryInput" ,salaryInput);
-
-   // fetch the data in input field which is already stored
-   useEffect(() => {
-    if (salaryInput !== undefined && salaryInput !== null) {
-      // Accessing properties with optional chaining and providing default values with nullish coalescing
-      setDeduction(salaryInput?.employee?.deduction ?? "");
-      setEsic(salaryInput?.employee?.esic ?? "");
-      setEmployeePf(salaryInput?.employee?.employee_pf ?? "");
-  
-      // Accessing nested properties with optional chaining and providing default values with nullish coalescing
+  useEffect(() => {
+    if (
+      salaryInput !== undefined &&
+      salaryInput !== null &&
+      salaryInput.employee &&
+      salaryInput.employee.salaryComponent
+    ) {
+      setDeduction(salaryInput.employee.deduction ?? "");
+      setEsic(salaryInput.employee.esic ?? "");
+      setEmployeePf(salaryInput.employee.employee_pf ?? "");
       setInputValue({
-        Basic: salaryInput?.employee?.salaryComponent?.Basic ?? "",
-        HRA: salaryInput?.employee?.salaryComponent?.HRA ?? "",
-        DA: salaryInput?.employee?.salaryComponent?.DA ?? "",
-        "Food allowance": salaryInput?.employee?.salaryComponent["Food allowance"] ?? "",
-        "Variable allowance": salaryInput?.employee?.salaryComponent["Variable allowance"] ?? "",
-        "Special allowance": salaryInput?.employee?.salaryComponent["Special allowance"] ?? "",
-        "Travel allowance": salaryInput?.employee?.salaryComponent["Travel allowance"] ?? "",
-        "Sales allowance": salaryInput?.employee?.salaryComponent["Sales allowance"] ?? "",
+        Basic: salaryInput.employee.salaryComponent.Basic ?? "",
+        HRA: salaryInput.employee.salaryComponent.HRA ?? "",
+        DA: salaryInput.employee.salaryComponent.DA ?? "",
+        "Food allowance":
+          salaryInput.employee.salaryComponent["Food allowance"] ?? "",
+        "Variable allowance":
+          salaryInput.employee.salaryComponent["Variable allowance"] ?? "",
+        "Special allowance":
+          salaryInput.employee.salaryComponent["Special allowance"] ?? "",
+        "Travel allowance":
+          salaryInput.employee.salaryComponent["Travel allowance"] ?? "",
+        "Sales allowance":
+          salaryInput.employee.salaryComponent["Sales allowance"] ?? "",
       });
     }
   }, [salaryInput]);
-  
 
-    // Function to calculate total salary
+  // Function to calculate total salary
   const calculateTotalSalary = () => {
     const {
       Basic,
@@ -122,24 +126,20 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
     return total.toFixed(2);
   };
   let totalSalary = calculateTotalSalary();
- 
+
   console.log(totalSalary);
- 
 
   const handleInputChange = (name, value) => {
     setInputValue({
       ...inputValue,
       [name]: value,
     });
-  }; 
-
+  };
 
   const queryClient = useQueryClient();
 
   const EditShift = useMutation(
-    
     (data) =>
-   
       axios.put(
         `${process.env.REACT_APP_API}/route/employee/salary/update/${empId}`,
         data,
@@ -154,42 +154,30 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
         queryClient.invalidateQueries({ queryKey: ["editsalary"] });
         handleClose();
         handleAlert(true, "success", "Salary updated succesfully");
-        console.log("data" , data);
+        console.log("data", data);
       },
       onError: () => {
-        handleAlert(
-          true,
-          "error",
-          "An error occurred while updating salary"
-        );
+        handleAlert(true, "error", "An error occurred while updating salary");
       },
     }
   );
 
   const EditSalaryData = async (data) => {
     try {
-     
-        const data = {
-            inputValue,
-            deduction,
-            employee_pf,
-            esic,
-            totalSalary,
-          };
-       
-        await EditShift.mutateAsync(data);
-      
+      const data = {
+        inputValue,
+        deduction,
+        employee_pf,
+        esic,
+        totalSalary,
+      };
+
+      await EditShift.mutateAsync(data);
     } catch (error) {
       console.error(error);
-      handleAlert(
-        true,
-        "error",
-        "An error occurred while updating salary"
-      );
+      handleAlert(true, "error", "An error occurred while updating salary");
     }
   };
-
-
 
   return (
     <Dialog
@@ -256,37 +244,40 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
                   </tr>
                 ) : (
                   <>
-                          {salaryInput?.employee?.salarystructure?.salaryStructure &&
-                           salaryInput?.employee?.salarystructure?.salaryStructure?.length > 0 &&
-                        salaryInput?.employee?.salarystructure?.salaryStructure?.map(
-               (item, id) => (
-         <tr key={id} className="space-y-4 w-full">
-           <td className="!text-left w-full pl-8 pr-8 py-3">
-          {item?.salaryComponent || ""}
-        </td>
-        <td>
-          <input
-            type="number"
-            placeholder="Enter the input"
-            style={{
-              padding: "10px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-            }}
-            value={inputValue[item?.salaryComponent] || ""}
-            onChange={(e) => {
-              const inputValue = e.target.value;
-              if (!isNaN(inputValue) && inputValue >= 0) {
-                handleInputChange(item?.salaryComponent, inputValue);
-              }
-            }}
-          />
-        </td>
-      </tr>
-    )
-  )}
-
-                   </>
+                    {salaryInput?.employee?.salarystructure?.salaryStructure &&
+                      salaryInput?.employee?.salarystructure?.salaryStructure
+                        ?.length > 0 &&
+                      salaryInput?.employee?.salarystructure?.salaryStructure?.map(
+                        (item, id) => (
+                          <tr key={id} className="space-y-4 w-full">
+                            <td className="!text-left w-full pl-8 pr-8 py-3">
+                              {item?.salaryComponent ?? ""}
+                            </td>
+                            <td>
+                              <input
+                                type="number"
+                                placeholder="Enter the input"
+                                style={{
+                                  padding: "10px",
+                                  border: "1px solid #ccc",
+                                  borderRadius: "4px",
+                                }}
+                                value={inputValue[item?.salaryComponent] ?? ""}
+                                onChange={(e) => {
+                                  const inputValue = e.target.value;
+                                  if (!isNaN(inputValue) && inputValue >= 0) {
+                                    handleInputChange(
+                                      item?.salaryComponent,
+                                      inputValue
+                                    );
+                                  }
+                                }}
+                              />
+                            </td>
+                          </tr>
+                        )
+                      )}
+                  </>
                 )}
                 <tr className="!mt-4">
                   <td className="!text-left pl-8 pr-8 py-3">
@@ -299,7 +290,7 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
                       padding: "10px",
                       border: "1px solid #ccc",
                       borderRadius: "4px",
-                      marginTop: "10px"
+                      marginTop: "10px",
                     }}
                     value={deduction}
                     onChange={(e) => {
@@ -376,7 +367,7 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
                   fontWeight: "bold",
                 }}
                 value={totalSalary}
-                readOnly 
+                readOnly
               />
             </div>
           </div>
@@ -385,7 +376,11 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>
-            <Button onClick={EditSalaryData} variant="contained" color="primary">
+            <Button
+              onClick={EditSalaryData}
+              variant="contained"
+              color="primary"
+            >
               Apply
             </Button>
           </DialogActions>

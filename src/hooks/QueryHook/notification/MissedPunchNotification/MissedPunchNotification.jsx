@@ -13,7 +13,7 @@ const useMissedPunchNotificationCount = () => {
 
   const getMissedPunchNotification = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/organization/${organisationId}/unavailable-record-to-approval`,
+      `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-unavaialble-record`,
       {
         headers: { Authorization: authToken },
       }
@@ -25,7 +25,7 @@ const useMissedPunchNotificationCount = () => {
     "employee-missed-punch",
     getMissedPunchNotification
   );
-
+  
   return {
     missPunchData,
     isLoading,

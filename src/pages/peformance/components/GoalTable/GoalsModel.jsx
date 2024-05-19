@@ -9,16 +9,23 @@ import {
 } from "@mui/icons-material";
 import { Box, Button, IconButton, Modal } from "@mui/material";
 import axios from "axios";
-import { default as React, useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
-import { TestContext } from "../../../State/Function/Main";
-import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import useAuthToken from "../../../hooks/Token/useAuth";
-import UserProfile from "../../../hooks/UserData/useUser";
+import { TestContext } from "../../../../State/Function/Main";
+import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
+import useAuthToken from "../../../../hooks/Token/useAuth";
+import UserProfile from "../../../../hooks/UserData/useUser";
 
-const GoalsModel = ({ handleClose, open, options, id, performance }) => {
+const GoalsModel = ({
+  handleClose,
+  open,
+  options,
+  id,
+  performance,
+  assignee,
+}) => {
   const { handleAlert } = useContext(TestContext);
   const style = {
     position: "absolute",
@@ -35,7 +42,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
     queryKey: "getSingleGoal",
     queryFn: async () => {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/getSingleEmployeeGoals/${id}`,
+        `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id._id}`,
         {
           headers: {
             Authorization: authToken,
@@ -55,7 +62,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
   const zodSchema = z.object({
     goal: z.string(),
     description: z.string(),
-    measurement: z.string().optional(),
+    downcasted: z.boolean().optional(),
     comments: z.string().optional(),
     assignee: z
       .array(z.object({ value: z.string(), label: z.string() }))
@@ -68,7 +75,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
       startDate: z.string(),
       endDate: z.string(),
     }),
-    // goaltype: z.object({ value: z.string(), label: z.string() }),
+    goalType: z.object({ value: z.string(), label: z.string() }),
     attachment: z.string().optional(),
   });
 
@@ -76,6 +83,8 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
     handleSubmit,
     control,
     setValue,
+    reset,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -88,7 +97,7 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
   useEffect(() => {
     setValue("goal", goalData?.goal);
     setValue("description", goalData?.description);
-    setValue("measurement", goalData?.measurement);
+    // setValue("measurement", goalData?.measurement);
     setValue("comments", goalData?.comments);
     setValue(
       "assignee",
@@ -108,13 +117,29 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
     //eslint-disable-next-line
   }, [goalData]);
 
-  const queryClient = useQueryClient();
+  useEffect(() => {
+    if (id) {
+      reset({
+        goal: undefined,
+        description: undefined,
+        downcasted: undefined,
+        comments: undefined,
+        assignee: undefined,
+      });
+    }
+    //eslint-disable-next-line
+  }, [id]);
 
-  const performanceSetup = useMutation(
+  const queryClient = useQueryClient();
+  const addMutation = useMutation(
     async (data) => {
       let currentData = { ...data, creatorRole: role };
+      console.log(`🚀 ~ data:`, data);
       if (role === "Employee") {
         currentData.assignee = [user._id];
+      } else {
+        currentData.assignee = data?.assignee?.map((emp) => emp) ?? [];
+        console.log(data?.assignee?.map((emp) => emp));
       }
       await axios.post(
         `${process.env.REACT_APP_API}/route/performance/createGoal`,
@@ -135,11 +160,17 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
     }
   );
 
-  const performanceEditSetup = useMutation(
+  const updateMutation = useMutation(
     async (data) => {
-      await axios.put(
-        `${process.env.REACT_APP_API}/route/performance/updateGoal/${id}`,
-        { data },
+      const goals = {
+        ...data,
+        assignee: { label: id?.empId._id, value: id?.empId._id },
+      };
+      await axios.patch(
+        `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${id._id}`,
+        {
+          data: goals,
+        },
         {
           headers: {
             Authorization: authToken,
@@ -149,73 +180,32 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
     },
     {
       onSuccess: () => {
-        handleAlert(true, "success", "Goals updated  successfully");
+        handleAlert(true, "success", "Performance setup created successfully");
         queryClient.invalidateQueries("orggoals");
         handleClose();
       },
     }
   );
 
-  const { data: getGoal, isFetching } = useQuery({
-    queryKey: "getGoal",
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/performance/getGoalDetails/${id}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      return data;
-    },
-    enabled: !!id,
-  });
-
-  useEffect(() => {
-    if (!isFetching && getGoal) {
-      setValue("goal", getGoal?.document?.goal);
-      setValue("description", getGoal?.document?.description);
-      setValue("measurement", getGoal?.document?.measurement);
-      setValue(
-        "assignee",
-        getGoal?.document?.assignee.map((emp) => ({
-          value: emp._id,
-          label: `${emp.first_name} ${emp.last_name}`,
-          image: emp.user_logo_url,
-        })) || []
-      );
-      setValue("startDate", {
-        startDate: getGoal?.document?.startDate,
-        endDate: getGoal?.document?.startDate,
-      });
-      setValue("goalStatus", getGoal?.document?.goalStatus);
-      setValue("endDate", {
-        startDate: getGoal?.document?.endDate,
-        endDate: getGoal?.document?.endDate,
-      });
-      // Set other fields...
-    }
-    // eslint-disable-next-line
-  }, [isFetching]);
-
   const onSubmit = async (data) => {
     const goals = {
       goal: data.goal,
       description: data.description,
-      measurement: data.measurement,
+      downcasted: data.downcasted,
+      // measurement: data.measurement,
       assignee: data?.assignee?.map((emp) => emp.value) ?? [],
       startDate: data.startDate.startDate,
       endDate: data.endDate.startDate,
-      // goaltype: data.goaltype.value,
+      goalType: data.goalType.value,
       attachment: data.attachment,
     };
-    console.log(`🚀 ~ goals:`, goals);
 
-    if (id) {
-      performanceEditSetup.mutate(goals);
+    if (!id) {
+      console.log(`🚀 ~ id:`, id);
+      addMutation.mutate(goals);
     } else {
-      performanceSetup.mutate(goals);
+      console.log(`🚀 ~ id:`, id);
+      updateMutation.mutate(goals);
     }
   };
 
@@ -231,27 +221,16 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
     return data;
   });
 
+  const goalTypeOption = performance?.goals.map((goal) => ({
+    label: goal,
+    value: goal,
+  }));
+
   const empoptions = employeeData?.map((emp) => ({
     value: emp._id,
     label: `${emp.first_name} ${emp.last_name}`,
     image: emp.user_logo_url,
   }));
-
-  // const SubmitGoal = async () => {
-  //   try {
-  //     await axios.post(
-  //       `${process.env.REACT_APP_API}/route/performance/submitGoals`,
-  //       { goalId: id },
-  //       {
-  //         headers: {
-  //           Authorization: authToken,
-  //         },
-  //       }
-  //     );
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
 
   return (
     <>
@@ -302,14 +281,15 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
             />
 
             <AuthInputFiled
-              name="measurement"
+              name="goalType"
               icon={Paid}
               control={control}
-              type="texteditor"
-              placeholder="100"
-              label="Enter measurements name"
+              type="select"
+              options={goalTypeOption}
+              placeholder="Goal Type"
+              label="Enter goal type"
               errors={errors}
-              error={errors.measurement}
+              error={errors.goalType}
             />
             {performance?.stages ===
               "Monitoring stage/Feedback collection stage" &&
@@ -325,7 +305,20 @@ const GoalsModel = ({ handleClose, open, options, id, performance }) => {
                   error={errors.comments}
                 />
               )}
+
             {role !== "Employee" && (
+              <AuthInputFiled
+                name="downcasted"
+                // icon={ToggleOn}
+                control={control}
+                type="checkbox"
+                placeholder="eg. 4"
+                label="Downcast goal *"
+                errors={errors}
+                error={errors.downcasted}
+              />
+            )}
+            {role !== "Employee" && !watch("downcasted") && !id && (
               <AuthInputFiled
                 name="assignee"
                 icon={PersonOutline}

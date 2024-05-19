@@ -45,13 +45,12 @@ const Step2 = ({ nextStep, departments, orgTrainingType }) => {
   const trainingDetailSchema = z.object({
     trainingStartDate: z.string().optional(),
     trainingEndDate: z.string().optional(),
-    trainingLocation: z.any({
+    trainingLocation: z.object({
       address: z.string(),
       position: z.object({
         lat: z.number(),
         lng: z.number(),
       }),
-      placeId: z.string(),
     }),
     trainingLink: z.string().url(),
     trainingDownCasted: z.boolean(),
@@ -104,6 +103,7 @@ const Step2 = ({ nextStep, departments, orgTrainingType }) => {
     resolver: zodResolver(trainingDetailSchema),
   });
   const { errors } = formState;
+  console.log(`🚀 ~ file: page.jsx:107 ~ errors:`, errors);
   const onSubmit = (data) => {
     setStep2(data);
     nextStep();
@@ -208,7 +208,7 @@ const Step2 = ({ nextStep, departments, orgTrainingType }) => {
             control={control}
             type="checkbox"
             placeholder="Downcasted"
-            label="Downcasted"
+            label="Down Cast"
             errors={errors}
             error={errors.trainingDownCasted}
             icon={TrendingDownOutlined}
