@@ -118,7 +118,7 @@ const useSetupSideNav = (organisationId) => {
         location.pathname ===
         `/organisation/${organisationId}/setup/set-salary-input-selection`,
       isVisible: user?.profile?.some((role) =>
-        ["Super-Admin", "HR" , "Delegate-Super-Admin"].includes(role)
+        ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(role)
       ),
     },
     {
@@ -137,7 +137,8 @@ const useSetupSideNav = (organisationId) => {
       icon: EmailOutlinedIcon,
       href: `/organisation/${organisationId}/setup/email-communicaiton`,
       active:
-        location.pathname === `/organisation/${organisationId}/setup/email-communicaiton`,
+        location.pathname ===
+        `/organisation/${organisationId}/setup/email-communicaiton`,
       isVisible: user?.profile?.some((role) =>
         ["Super-Admin", "Delegate-Super-Admin"].includes(role)
       ),

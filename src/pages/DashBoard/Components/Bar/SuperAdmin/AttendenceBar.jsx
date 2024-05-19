@@ -111,7 +111,9 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
         </div>
       ) : (
         <div className="px-4 pb-4 bg-white shadow-md rounded-md flex flex-col justify-center">
-          <h1 className="text-lg my-4 font-bold text-[#67748E]">Attendance</h1>
+          <h1 className="text-lg my-4 font-bold text-[#67748E]">
+            Attendance Overview
+          </h1>
           <div className="h-[250px] md:h-[340px] w-full ">
             <Bar options={options} data={data} />
           </div>
