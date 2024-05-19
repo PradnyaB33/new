@@ -4,7 +4,10 @@ import Box from "@mui/material/Box";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import * as React from "react";
 import { useCallback } from "react"; // Import useCallback
-import { useLocation } from "react-router-dom";
+import { useQuery } from "react-query";
+import { useLocation, useParams } from "react-router-dom";
+import useOrganisationApi from "../../hooks/Organisation/useOrganisationApi";
+import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
 import ChangeRole from "../InputFileds/ChangeRole";
 import ProfileIcon from "../profieicon/profileIcon";
@@ -14,8 +17,19 @@ import TestNavItems from "./components/test-nav-items";
 export default function SwipeableTemporaryDrawer() {
   const [open, setOpen] = React.useState(false);
   const location = useLocation();
+  console.log(`🚀 ~ location:`, location);
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
+  const authToken = useAuthToken();
+  const { organisationId } = useParams();
+  console.log(`🚀 ~ organisationId:`, organisationId);
+
+  const { fetchData } = useOrganisationApi();
+
+  const { data } = useQuery("getOrganization", () =>
+    fetchData({ authToken, organisationId })
+  );
+  console.log(`🚀 ~ data:`, data);
 
   // Use useCallback to memoize the toggleDrawer function
   const toggleDrawer = useCallback(() => {
@@ -64,6 +78,10 @@ export default function SwipeableTemporaryDrawer() {
             </Typography>
           </Badge>
           <div className="flex gap-2 items-center">
+            {/* <h1 className="py-[0.125em] px-2 rounded-sm  font-bold">
+              Organization one
+            </h1> */}
+
             {role && role !== "Employee" && <NotificationIcon />}
 
             <ProfileIcon />
