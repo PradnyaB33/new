@@ -8,6 +8,7 @@ import {
   Select,
 } from "@mui/material";
 import { differenceInDays, format, parseISO } from "date-fns";
+import moment from "moment";
 import React, { useState } from "react";
 import useLeaveRequesationHook from "../../../hooks/QueryHook/Leave-Requsation/hook";
 import useLeaveRequisitionMutation from "../../../hooks/QueryHook/Leave-Requsation/mutaion";
@@ -20,8 +21,13 @@ const Mapped = ({
   setNewAppliedLeaveEvents,
   setCalendarOpen,
 }) => {
+  console.log(
+    `🚀 ~ file: mapped-form.jsx:24 ~ subtractedLeaves:`,
+    subtractedLeaves
+  );
   const { data } = useLeaveRequesationHook();
   const { calculateDays, checkLeaveProblem } = useLeaveRequisitionMutation();
+  let array = [];
 
   const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
   const badgeStyle = {
@@ -34,11 +40,14 @@ const Mapped = ({
   };
 
   const handleChange = async (event) => {
+    newAppliedLeaveEvents[index].leaveTypeDetailsId = event.target.value;
+    let temp = newAppliedLeaveEvents;
+    console.log(`🚀 ~ file: mapped-form.jsx:40 ~ temp:`, temp);
     let result = await checkLeaveProblem(
       data?.leaveTypes,
       event.target.value,
       item,
-      newAppliedLeaveEvents,
+      temp,
       calculateDays(item?.start, item?.end)
     );
     if (result === true) {
@@ -47,18 +56,30 @@ const Mapped = ({
       setNewAppliedLeaveEvents(newAppliedLeaveEvents);
     }
   };
+  console.log(
+    `🚀 ~ file: mapped-form.jsx:51 ~ newAppliedLeaveEvents:`,
+    newAppliedLeaveEvents
+  );
   const removeItem = (idToRemove) => {
     const updatedAppliedLeaveEvents = newAppliedLeaveEvents.filter(
       (_, i) => i !== idToRemove
     );
     setNewAppliedLeaveEvents(updatedAppliedLeaveEvents);
   };
+  if (data?.leaveTypes) {
+    array = [
+      ...subtractedLeaves.filter((item) => item.count < 0),
+      ...data?.leaveTypes.filter((item) => item.count > 0),
+    ];
+    console.log(`🚀 ~ file: mapped-form.jsx:69 ~ array:`, array);
+  }
+
   return (
     <div
       key={index}
       className=" border border-gray-200 flex-col lg:flex-row group  flex gap-4 lg:items-center justify-between items-start rounded-lg hover:bg-gray-100 border-b p-2 cursor-pointer"
     >
-      <div className="flex items-cente gap-4 pt-4">
+      <div className="flex items-center gap-4 pt-4">
         <Badge
           slotProps={{
             badge: {
@@ -91,7 +112,9 @@ const Mapped = ({
               ? `Selected dates from ${format(
                   new Date(item.start),
                   "do 'of' MMMM"
-                )} to  ${format(new Date(item.end), "do ' of' MMMM")}`
+                )} to  ${moment(item.end)
+                  .subtract(1, "days")
+                  .format("Do of MMMM")}`
               : `Your selected date is ${format(
                   new Date(item.start),
                   "do 'of' MMMM"
@@ -101,21 +124,20 @@ const Mapped = ({
       </div>
       <div className="flex lg:w-fit lg:justify-end justify-between w-full items-center gap-2">
         <FormControl sx={{ width: 180 }} size="small" fullWidth>
-          <InputLabel id="demo-simple-select-label">
-            Select Leave Type
-          </InputLabel>
+          <InputLabel id="demo-simple-select-label">Select Type</InputLabel>
           <Select
             defaultValue={leavesTypes}
             required
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={leavesTypes}
-            label="Select Leave Type"
+            label="Select Type"
             onChange={handleChange}
           >
-            {subtractedLeaves?.map((item, index) => {
+            {array?.map((item, index) => {
               return (
-                item.isActive && (
+                item.isActive &&
+                item.count !== 0 && (
                   <MenuItem
                     selected={leavesTypes === item.leaveTypeDetailsId}
                     id={index}

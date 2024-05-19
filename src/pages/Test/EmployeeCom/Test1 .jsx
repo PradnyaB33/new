@@ -15,6 +15,23 @@ import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
 
+export const isAtLeastNineteenYearsOld = (value) => {
+  const currentDate = new Date();
+  const dob = new Date(value);
+  let differenceInYears = currentDate.getFullYear() - dob.getFullYear();
+  const monthDiff = currentDate.getMonth() - dob.getMonth();
+
+  // If the birth month is after the current month, reduce the age by 1
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && currentDate.getDate() < dob.getDate())
+  ) {
+    differenceInYears--;
+  }
+
+  return differenceInYears >= 19;
+};
+
 const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
   const {
     setStep1Data,
@@ -32,23 +49,6 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
   } = useEmpState();
 
   console.log("test");
-
-  const isAtLeastNineteenYearsOld = (value) => {
-    const currentDate = new Date();
-    const dob = new Date(value);
-    let differenceInYears = currentDate.getFullYear() - dob.getFullYear();
-    const monthDiff = currentDate.getMonth() - dob.getMonth();
-
-    // If the birth month is after the current month, reduce the age by 1
-    if (
-      monthDiff < 0 ||
-      (monthDiff === 0 && currentDate.getDate() < dob.getDate())
-    ) {
-      differenceInYears--;
-    }
-
-    return differenceInYears >= 19;
-  };
 
   const EmployeeSchema = z.object({
     first_name: z
@@ -91,9 +91,12 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
       .regex(/^[^*@]+$/, {
         message: "A PAN No cannot contain a special character, e.g., *,#.",
       }),
-    bank_account_no: z.string().regex(/^(?:0|[1-9]\d*)$/, {
-      message: "Bank number cannot be negative.",
-    }),
+    bank_account_no: z
+      .string()
+      .max(35, { message: "Only 35 numbers allowed" })
+      .regex(/^\d*$/, {
+        message: "Bank number cannot be negative.",
+      }),
   });
 
   const { control, formState, handleSubmit } = useForm({

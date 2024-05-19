@@ -11,14 +11,16 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "axios";
-import { format } from "date-fns";
+import { differenceInDays, format, parseISO } from "date-fns";
 import dayjs from "dayjs";
+import moment from "moment";
 import React, { useContext, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Loader from "../../../pages/Notification/Loader";
 
-const LeaveRejectmodal = ({ items }) => {
+const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
+  console.log(`🚀 ~ file: LeaveRejectmodal.jsx:23 ~ items:`, items);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [open, setOpen] = useState(false);
@@ -44,6 +46,7 @@ const LeaveRejectmodal = ({ items }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("employee-leave");
+        queryClient.invalidateQueries("EmpDataLeave");
         handleClose();
       },
     }
@@ -62,6 +65,7 @@ const LeaveRejectmodal = ({ items }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("employee-leave");
+        queryClient.invalidateQueries("EmpDataLeave");
       },
     }
   );
@@ -74,7 +78,13 @@ const LeaveRejectmodal = ({ items }) => {
   };
 
   return (
-    <>
+    <Box
+      className="py-2 space-y-5 h-max"
+      sx={{
+        flexGrow: 1,
+        p: 5,
+      }}
+    >
       <Grid
         container
         spacing={2}
@@ -107,12 +117,22 @@ const LeaveRejectmodal = ({ items }) => {
             </div>
 
             <div className="space-y-4 w-full flex flex-col items-center md:items-start justify-center">
-              <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
-                has raised a leave request on{" "}
-                {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
-                {format(new Date(items.end), "dd-MM-yyyy")}
-              </h1>
+              {differenceInDays(parseISO(items.end), parseISO(items.start)) !==
+              1 ? (
+                <h1 className="text-xl px-4 md:!px-0 font-semibold ">
+                  {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
+                  has raised a {items?.leaveTypeDetailsId?.leaveName} request on{" "}
+                  {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
+                  {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
+                </h1>
+              ) : (
+                <h1 className="text-xl px-4 md:!px-0 font-semibold ">
+                  {" "}
+                  {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
+                  has raised a {items?.leaveTypeDetailsId?.leaveName} request on{" "}
+                  {format(new Date(items.start), "dd-MM-yyyy")}
+                </h1>
+              )}
 
               <Chip
                 label={items?.description}
@@ -127,6 +147,7 @@ const LeaveRejectmodal = ({ items }) => {
                 <Box sx={{ mt: 3, mb: 3 }}>
                   <Stack direction="row" spacing={3}>
                     <Button
+                      disabled={isLoading || isFetching}
                       variant="contained"
                       onClick={() => acceptLeaveMutation({ id: items._id })}
                       color="primary"
@@ -217,7 +238,7 @@ const LeaveRejectmodal = ({ items }) => {
                     handleClose
                   );
 
-                  await handleClose();
+                  handleClose();
                 }}
                 color="error"
                 variant="contained"
@@ -236,7 +257,7 @@ const LeaveRejectmodal = ({ items }) => {
           </form>
         </Box>
       </Modal>
-    </>
+    </Box>
   );
 };
 

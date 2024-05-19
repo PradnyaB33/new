@@ -23,6 +23,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
+import useIncomeTax from "../../../../hooks/IncomeTax/useIncomeTax";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import TDSDeclarationModel from "./components/TDSDeclarationModel";
 
@@ -32,6 +33,7 @@ const DeclarationPage = () => {
   const [investment, setInvestment] = useState({});
   const [isReject, setIsReject] = useState(false);
   const [pdf, setPdf] = useState(null);
+  const { financialYear } = useIncomeTax();
 
   const handlePDF = (id) => {
     setPdf(id);
@@ -74,7 +76,7 @@ const DeclarationPage = () => {
     queryFn: async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API}/route/tds/getTDSWorkflow/${id}/2023-2024`,
+          `${process.env.REACT_APP_API}/route/tds/getTDSWorkflow/${id}/${financialYear}`,
           {
             headers: {
               Authorization: authToken,
@@ -152,7 +154,7 @@ const DeclarationPage = () => {
               })
               .map((ele) => (
                 <Link
-                  to={`/income-tax/accountant-declarations/${ele.empId._id}`}
+                  to={`/notification/income-tax/${ele.empId._id}`}
                   className={` px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50
                 ${
                   ele.empId._id === id &&

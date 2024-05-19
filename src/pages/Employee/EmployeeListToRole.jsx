@@ -4,8 +4,8 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
-//import UpdateEmployeeModal from "../../components/Modal/EditEmployeeModal/UpdateEmployeeModal";
- import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
+import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
+import UserProfile from "../../hooks/UserData/useUser";
 const EmployeeListToRole = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -17,35 +17,11 @@ const EmployeeListToRole = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
-
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
+  console.log("role", role);
   console.log(availableEmployee, "avialabel days");
 
-  // const fetchAvailableEmployee = async (page) => {
-  //   try {
-  //     const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
-  //     const response = await axios.get(apiUrl, {
-  //       headers: {
-  //         Authorization: authToken,
-  //       },
-  //     });
-  //     setAvailableEmployee(response.data.employees);
-  //     setCurrentPage(page);
-  //     setTotalPages(response.data.totalPages || 1);
-  //     // Generate an array of page numbers
-  //     const numbersArray = Array.from(
-  //       { length: response.data.totalPages || 1 },
-  //       (_, index) => index + 1
-  //     );
-  //     setNumbers(numbersArray);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchAvailableEmployee(currentPage);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [currentPage]);
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
@@ -182,73 +158,67 @@ const EmployeeListToRole = () => {
                 </tr>
               </thead>
               <tbody>
-  {availableEmployee.length > 0 ? (
-    availableEmployee
-      .filter((item) => {
-        return (
-          (!nameSearch.toLowerCase() ||
-            (item.first_name !== null &&
-              item.first_name !== undefined &&
-              item.first_name
-                .toLowerCase()
-                .includes(nameSearch))) &&
-          (!deptSearch ||
-            (item.deptname !== null &&
-              item.deptname !== undefined &&
-              item.deptname.some(
-                (dept) =>
-                  dept.departmentName !== null &&
-                  dept.departmentName
-                    .toLowerCase()
-                    .includes(deptSearch.toLowerCase())
-              ))) &&
-          (!locationSearch.toLowerCase() ||
-            item.worklocation.some(
-              (location) =>
-                location &&
-                location.city !== null &&
-                location.city !== undefined &&
-                location.city.toLowerCase().includes(locationSearch)
-            ))
-        );
-      })
-      .map((item, id) => (
-        <tr className="!font-medium border-b" key={id}>
-          <td className="!text-left pl-8 py-3">{id + 1}</td>
-          <td className="py-3 pl-8">{item?.first_name}</td>
-          <td className="py-3 pl-8">{item?.last_name}</td>
-          <td className="py-3 pl-8">{item?.email}</td>
-          <td className="py-3 pl-8">{item?.empId}</td>
-          <td className="py-3 pl-8">
-            {item?.worklocation?.map((location, index) => (
-              <span key={index}>{location?.city}</span>
-            ))}
-          </td>
-          <td className="py-3 pl-8 ">
-            {item?.deptname?.map((dept, index) => (
-              <span key={index}>{dept?.departmentName}</span>
-            ))}
-          </td>
-          <td className="whitespace-nowrap px-6 py-2">
-            <IconButton
-              color="primary"
-              aria-label="edit"
-              onClick={() => handleEditModalOpen(item._id)}
-            >
-              <EditOutlinedIcon />
-            </IconButton>
-          </td>
-        </tr>
-      ))
-  ) : (
-    <tr>
-      <td colSpan="8" className="text-center py-3">
-        No results found.
-      </td>
-    </tr>
-  )}
-</tbody>
-
+                {availableEmployee.length > 0 &&
+                  availableEmployee
+                    .filter((item) => {
+                      return (
+                        (!nameSearch.toLowerCase() ||
+                          (item.first_name !== null &&
+                            item.first_name !== undefined &&
+                            item.first_name
+                              .toLowerCase()
+                              .includes(nameSearch))) &&
+                        (!deptSearch ||
+                          (item.deptname !== null &&
+                            item.deptname !== undefined &&
+                            item.deptname.some(
+                              (dept) =>
+                                dept.departmentName !== null &&
+                                dept.departmentName
+                                  .toLowerCase()
+                                  .includes(deptSearch.toLowerCase())
+                            ))) &&
+                        (!locationSearch.toLowerCase() ||
+                          item.worklocation.some(
+                            (location) =>
+                              location &&
+                              location.city !== null &&
+                              location.city !== undefined &&
+                              location.city
+                                .toLowerCase()
+                                .includes(locationSearch)
+                          ))
+                      );
+                    })
+                    .map((item, id) => (
+                      <tr className="!font-medium border-b" key={id}>
+                        <td className="!text-left pl-8 py-3">{id + 1}</td>
+                        <td className="py-3 pl-8">{item?.first_name}</td>
+                        <td className="py-3 pl-8">{item?.last_name}</td>
+                        <td className="py-3 pl-8">{item?.email}</td>
+                        <td className="py-3 pl-8">{item?.empId}</td>
+                        <td className="py-3 pl-8">
+                          {item?.worklocation?.map((location, index) => (
+                            <span key={index}>{location?.city}</span>
+                          ))}
+                        </td>
+                        <td className="py-3 pl-8 ">
+                          {item?.deptname?.map((dept, index) => (
+                            <span key={index}>{dept?.departmentName}</span>
+                          ))}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-2">
+                          <IconButton
+                            color="primary"
+                            aria-label="edit"
+                            onClick={() => handleEditModalOpen(item._id)}
+                          >
+                            <EditOutlinedIcon />
+                          </IconButton>
+                        </td>
+                      </tr>
+                    ))}
+              </tbody>
             </table>
             <nav
               style={{
@@ -335,6 +305,7 @@ const EmployeeListToRole = () => {
 
       {/* edit model */}
       <EditModelOpen
+        role={role}
         handleClose={handleClose}
         open={editModalOpen}
         employeeId={employeeId}

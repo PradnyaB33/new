@@ -1,6 +1,8 @@
 import axios from "axios";
+import { useContext } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
+import { TestContext } from "../../../../../State/Function/Main";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
 import useTrainingStore from "./zustand-store";
 
@@ -8,6 +10,7 @@ const useTrainingCreationMutation = () => {
   const authToken = useAuthToken();
   const { setOpen } = useTrainingStore();
   const queryClient = useQueryClient();
+  const { handleAlert } = useContext(TestContext);
 
   const { organisationId } = useParams();
   const getTrainingImageUrl = async (fullObject) => {
@@ -49,6 +52,7 @@ const useTrainingCreationMutation = () => {
           queryKey: [`getTrainingDetailsWithNameLimit10WithCreatorId`],
           exact: false,
         });
+        handleAlert(true, "success", "Training Created Successfully");
       },
       onError: (error) => {
         console.error("onError", error);
@@ -99,6 +103,7 @@ const useTrainingCreationMutation = () => {
           }
         );
         setOpen(false);
+        handleAlert(true, "success", "Training Updated Successfully");
         await queryClient?.invalidateQueries({
           queryKey: ["getTrainingDetailsWithNameLimit10WithCreatorId"],
           exact: false,

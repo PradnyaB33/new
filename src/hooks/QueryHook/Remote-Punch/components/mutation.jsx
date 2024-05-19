@@ -30,6 +30,7 @@ const useNotificationRemotePunching = () => {
       });
       handleAlert(true, "success", `Request approved successfully`);
       queryClient.invalidateQueries("punch-request");
+      queryClient.invalidateQueries("EmpDataPunch");
     },
     onError: (data) => {
       console.error(data);
@@ -37,7 +38,7 @@ const useNotificationRemotePunching = () => {
     },
   });
   const notifyToAccountant = async (punchId) => {
-    let role;
+    let role = "manager";
     if (decodedToken.user.profile.includes("Accountant")) {
       role = "accountant";
     } else if (decodedToken.user.profile.includes("Manager")) {
@@ -63,6 +64,7 @@ const useNotificationRemotePunching = () => {
       });
       handleAlert(true, "success", `Request approved successfully`);
       queryClient.invalidateQueries("punch-request");
+      queryClient.invalidateQueries("EmpDataPunch");
     },
     onError: (data) => {
       console.error(data);
@@ -72,16 +74,17 @@ const useNotificationRemotePunching = () => {
 
   const handleRejectManager = async (punchId) => {
     try {
-      let role;
+      console.log("reason", punchId);
+      let role = "manager";
       if (decodedToken.user.profile.includes("Accountant")) {
         role = "accountant";
       } else if (decodedToken.user.profile.includes("Manager")) {
         role = "manager";
       }
       const resp = await axios.patch(
-        `${process.env.REACT_APP_API}/route/punch/${role}/reject/${punchId}`,
+        `${process.env.REACT_APP_API}/route/punch/${role}/reject/${punchId.id}`,
         {
-          status: "M-Rejected",
+          mReason: punchId.mReason,
         },
         {
           headers: {
@@ -104,6 +107,7 @@ const useNotificationRemotePunching = () => {
       });
       handleAlert(true, "success", `Request Rejected Successfully`);
       queryClient.invalidateQueries("punch-request");
+      queryClient.invalidateQueries("EmpDataPunch");
     },
     onError: (data) => {
       console.error(data);
@@ -139,6 +143,7 @@ const useNotificationRemotePunching = () => {
       });
       handleAlert(true, "success", `Request Rejected Successfully`);
       queryClient.invalidateQueries("punch-request");
+      queryClient.invalidateQueries("EmpDataPunch");
     },
     onError: (data) => {
       console.error(data);

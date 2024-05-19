@@ -1,15 +1,23 @@
 import { Close } from "@mui/icons-material";
-import { Button, MenuItem, Popover, Select } from "@mui/material";
+import {
+  Backdrop,
+  Button,
+  CircularProgress,
+  MenuItem,
+  Popover,
+  Select,
+} from "@mui/material";
 import moment from "moment";
 import { momentLocalizer } from "react-big-calendar";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 import axios from "axios";
-import { format } from "date-fns";
 import React, { useContext, useEffect, useState } from "react";
 import { Calendar } from "react-big-calendar";
+import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
-import { UseContext } from "../../State/UseState/UseContext";
+import useGetUser from "../../hooks/Token/useUser";
+import usePublicHoliday from "../../pages/SetUpOrganization/PublicHolidayPage/usePublicHoliday";
 
 const AppDatePicker = ({
   data,
@@ -22,39 +30,60 @@ const AppDatePicker = ({
   setSelectedLeave,
   newAppliedLeaveEvents,
   isCalendarOpen,
+  shiftData,
+  deleteLeaveMutation,
+  calLoader,
+  setCalLoader,
 }) => {
   const localizer = momentLocalizer(moment);
+  const queryClient = useQueryClient();
+  const { organisationId } = useParams();
   const [Delete, setDelete] = useState(false);
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
-  const { cookies } = useContext(UseContext);
-  const [leaveText, setLeaveText] = useState("");
-  const authToken = cookies["aegis"];
-  const { data: data2 } = useQuery("employee-disable-weekends", async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/weekend/get`,
-      {
-        headers: { Authorization: authToken },
-      }
-    );
+  const [message, setMessage] = useState("");
+  const { authToken } = useGetUser();
+  const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
+    usePublicHoliday(organisationId);
 
-    return response.data;
-  });
+  const { data: data2 } = useQuery(
+    "employee-disable-weekends",
+    async () => {
+      setCalLoader(true);
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/weekend/get`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+
+      return response.data;
+    },
+    {
+      onSuccess: () => {
+        setCalLoader(false);
+      },
+      onError: () => {
+        setCalLoader(false);
+      },
+    }
+  );
   const handleSelectEvent = (event) => {
-    setLeaveText(
-      `The application for ${format(new Date(event.start), "dd-MM-yyyy")} is ${
-        event?.status
-      } state`
-    );
+    setCalLoader(true);
+    setMessage(event?.message);
     setSelectedLeave(event);
     setCalendarOpen(true);
     if (event.title === "Selected Leave") {
       setDelete(true);
       setUpdate(false);
+    } else if (event.color) {
+      setUpdate(true);
+      setDelete(true);
     } else {
       setDelete(false);
-      setUpdate(true);
+      setUpdate(false);
     }
+    setCalLoader(false);
   };
 
   const dayPropGetter = (date) => {
@@ -76,26 +105,10 @@ const AppDatePicker = ({
     return {};
   };
 
-  // const checkOverlappingMistake = (
-  //   array1,
-  //   selectedStartDate,
-  //   selectedEndDate
-  // ) => {
-  //   array1.some(
-  //     (event) =>
-  //       (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
-  //         selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
-  //       (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
-  //         selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
-  //       (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
-  //         selectedEndDate.isAfter(moment(event.end).startOf("day")))
-  //   );
-  // };
-
-  const handleSelectSlot = ({ start, end }) => {
+  const handleSelectSlot = async ({ start, end }) => {
+    setCalLoader(true);
     const selectedStartDate = moment(start).startOf("day");
-    const selectedEndDate = moment(end).startOf("day").subtract(1, "day");
-    const difference = selectedEndDate.diff(selectedStartDate, "days");
+    const selectedEndDate = moment(end).startOf("day").subtract(1, "days");
 
     const currentDate = moment(selectedStartDate);
 
@@ -104,6 +117,7 @@ const AppDatePicker = ({
     while (currentDate.isSameOrBefore(selectedEndDate)) {
       const currentDay = currentDate.format("ddd");
       if (includedDays.includes(currentDay)) {
+        setCalLoader(false);
         return handleAlert(
           true,
           "warning",
@@ -112,21 +126,44 @@ const AppDatePicker = ({
       }
       currentDate.add(1, "day");
     }
+    await queryClient.invalidateQueries("employee-leave-table-without-default");
 
     const isOverlap = [
       ...data?.currentYearLeaves,
       ...newAppliedLeaveEvents,
-    ].some(
-      (event) =>
-        (selectedStartDate.isSameOrAfter(moment(event.start).startOf("day")) &&
-          selectedStartDate.isBefore(moment(event.end).startOf("day"))) ||
-        (selectedEndDate.isAfter(moment(event.start).startOf("day")) &&
-          selectedEndDate.isSameOrBefore(moment(event.end).startOf("day"))) ||
-        (selectedStartDate.isBefore(moment(event.start).startOf("day")) &&
-          selectedEndDate.isAfter(moment(event.end).startOf("day")))
-    );
+      ...shiftData?.requests,
+    ].some((range) => {
+      // Convert range start and end dates to Moment.js objects
+      const rangeStart = range.start;
+      const rangeEnd = moment(range.end).startOf("day").subtract(1, "days");
 
-    if (isOverlap && difference > 0) {
+      // Check if selected start date is between any existing range
+      const isStartBetween = selectedStartDate.isBetween(
+        rangeStart,
+        rangeEnd,
+        undefined,
+        "[)"
+      );
+
+      // Check if selected end date is between any existing range
+      const isEndBetween = selectedEndDate.isBetween(
+        rangeStart,
+        rangeEnd,
+        undefined,
+        "(]"
+      );
+
+      // Check if selected start and end date overlaps with any existing range
+
+      const isOverlap =
+        selectedStartDate.isSameOrBefore(rangeEnd) &&
+        selectedEndDate.isSameOrAfter(rangeStart);
+      // Return true if any overlap is found
+      return isStartBetween || isEndBetween || isOverlap;
+    });
+
+    if (isOverlap) {
+      setCalLoader(false);
       return handleAlert(
         true,
         "warning",
@@ -146,6 +183,7 @@ const AppDatePicker = ({
       setSelectedLeave(selectEvent ? null : newLeave);
       setselectEvent(false);
     }
+    setCalLoader(false);
   };
 
   const CustomToolbar = (toolbar) => {
@@ -155,15 +193,16 @@ const AppDatePicker = ({
     };
 
     const handleYearChange = (event) => {
+      setCalLoader(true);
       const newDate = moment(toolbar.date).year(event.target.value).toDate();
       toolbar.onNavigate("current", newDate);
+      setCalLoader(false);
     };
 
     return (
       <>
         <div className="flex-row-reverse flex gap-4 items-center">
           <Button
-            // variant="outlined"
             color="error"
             className="!h-full hover:!bg-[#da4f4f] hover:!text-white"
             size="small"
@@ -198,7 +237,13 @@ const AppDatePicker = ({
         </div>
         <div className="flex w-full flex-row-reverse px-3 text-red-500 italic font-extrabold text-xs h-[20px]">
           {" "}
-          {selectEvent ? "Please select dates for you leaves" : leaveText}
+          {selectEvent
+            ? `Updating existing entry from ${moment(
+                selectedLeave?.start
+              ).format("DD-MM-YYYY")} to ${moment(selectedLeave?.end).format(
+                "DD-MM-YYYY"
+              )}`
+            : message}{" "}
         </div>
       </>
     );
@@ -211,7 +256,7 @@ const AppDatePicker = ({
         element.contains(event.target)
       )
     ) {
-      setLeaveText("");
+      setMessage("");
     } else {
     }
   };
@@ -227,6 +272,8 @@ const AppDatePicker = ({
           );
         })
       );
+    } else {
+      deleteLeaveMutation.mutate(selectedLeave._id);
     }
     setDelete(false);
   };
@@ -239,11 +286,31 @@ const AppDatePicker = ({
       document.removeEventListener("click", handleClickAway);
     };
   }, []);
+  console.log(
+    `🚀 ~ file: date-picker.jsx:333 ~ allPublicHoliday:`,
+    allPublicHoliday
+  );
+  console.log(
+    `🚀 ~ file: date-picker.jsx:333 ~ filteredHolidayWithStartAndEnd:`,
+    filteredHolidayWithStartAndEnd
+  );
+  console.log(
+    `🚀 ~ file: date-picker.jsx:333 ~ newAppliedLeaveEvents:`,
+    newAppliedLeaveEvents
+  );
+  console.log(
+    `🚀 ~ file: date-picker.jsx:333 ~ shiftData?.requests:`,
+    shiftData?.requests
+  );
+  console.log(
+    `🚀 ~ file: date-picker.jsx:333 ~ data?.currentYearLeaves:`,
+    data?.currentYearLeaves
+  );
   return (
     <Popover
       PaperProps={{
         className:
-          "w-full xl:w-[400px] xl:h-[470px] !bottom-0 !p-0 flex flex-col justify-between",
+          "w-full xl:w-[400px] xl:h-[470px] !bottom-0 !p-0 flex flex-col justify-between !top-auto relative",
       }}
       open={isCalendarOpen}
       onClose={() => setCalendarOpen(false)}
@@ -256,37 +323,79 @@ const AppDatePicker = ({
       }}
       style={{ height: "500px !important" }}
     >
-      <div className=" bg-white z-10">
+      {calLoader && (
+        <div className="absolute h-[-webkit-fill-available] w-[-webkit-fill-available] flex items-center justify-center z-50">
+          <Backdrop style={{ position: "absolute" }} open={true}>
+            <CircularProgress />
+          </Backdrop>
+        </div>
+      )}
+      <div className=" bg-white z-10 ">
         <div className="w-full">
-          <Calendar
-            localizer={localizer}
-            views={["month"]}
-            components={{
-              toolbar: CustomToolbar,
-            }}
-            events={
-              data
-                ? [...data?.currentYearLeaves, ...newAppliedLeaveEvents]
-                : [...newAppliedLeaveEvents]
-            }
-            startAccessor="start"
-            endAccessor="end"
-            style={{
-              height: "400px",
-              width: "100%",
-              background: "#fff",
-            }}
-            selectable
-            onSelectSlot={handleSelectSlot}
-            onSelectEvent={handleSelectEvent}
-            datePropGetter={selectedLeave}
-            eventPropGetter={(event) => ({
-              style: {
-                backgroundColor: event.color,
-              },
-            })}
-            dayPropGetter={dayPropGetter}
-          />
+          {allPublicHoliday &&
+            filteredHolidayWithStartAndEnd &&
+            shiftData?.requests &&
+            data?.currentYearLeaves && (
+              <Calendar
+                localizer={localizer}
+                views={["month"]}
+                components={{
+                  toolbar: CustomToolbar,
+                }}
+                events={
+                  data
+                    ? [
+                        ...data?.currentYearLeaves,
+                        ...shiftData?.requests,
+                        ...newAppliedLeaveEvents,
+                        ...filteredHolidayWithStartAndEnd,
+                        ...allPublicHoliday,
+                      ]
+                    : [...newAppliedLeaveEvents]
+                }
+                startAccessor="start"
+                endAccessor="end"
+                style={{
+                  height: "400px",
+                  width: "100%",
+                  background: "#fff",
+                }}
+                selectable
+                onSelectSlot={handleSelectSlot}
+                onSelectEvent={handleSelectEvent}
+                datePropGetter={selectedLeave}
+                eventPropGetter={(event) => {
+                  let backgroundColor = "blue";
+
+                  if (event?.status) {
+                    switch (event.status) {
+                      case "Pending":
+                        backgroundColor = "orange";
+                        break;
+                      case "Rejected":
+                        backgroundColor = "red";
+                        break;
+                      case "Approved":
+                        backgroundColor = "green";
+                        break;
+                      default:
+                        backgroundColor = "blue";
+                        break;
+                    }
+                  }
+                  if (event.color) {
+                    backgroundColor = event.color;
+                  }
+
+                  return {
+                    style: {
+                      backgroundColor,
+                    },
+                  };
+                }}
+                dayPropGetter={dayPropGetter}
+              />
+            )}
         </div>
       </div>
 
@@ -306,6 +415,7 @@ const AppDatePicker = ({
           variant="contained"
           onClick={async () => {
             await handleUpdateFunction();
+            setDelete(false);
             setUpdate(false);
           }}
           className="rbc-event-content"

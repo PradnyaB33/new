@@ -15,12 +15,11 @@ const MiniForm = ({ mutate, doc }) => {
       (file) => {
         return !!file && file.size >= 5 * 1024 && file.size <= 50 * 1024;
       },
-      { message: "Image size maximum 50kb" }
+      {
+        message: "Image size maximum 50kb and minimum 5kb",
+      }
     ),
-    rating: z.object({
-      value: z.number(),
-      label: z.number(),
-    }),
+    rating: z.number(),
     feedback: z.string().min(10),
     employeeTrainingId: z.string(),
   });

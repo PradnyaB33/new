@@ -1,8 +1,24 @@
 import { Skeleton } from "@mui/material";
 import React from "react";
 import { Bar } from "react-chartjs-2";
+import useDashGlobal from "../../../../../hooks/Dashboard/useDashGlobal";
+import useDashboardFilter from "../../../../../hooks/Dashboard/useDashboardFilter";
+import UserProfile from "../../../../../hooks/UserData/useUser";
 
 const AttendenceBar = ({ attendenceData, isLoading }) => {
+  const { setSelectedYear, selectedYear } = useDashGlobal();
+  const user = UserProfile().getCurrentUser();
+  const { customStyles } = useDashboardFilter(user.organizationId);
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 5 }, (_, index) => currentYear - index);
+
+  const yearOptions = years.map((year) => {
+    return {
+      value: year.toString(),
+      label: year,
+    };
+  });
   // console.log(attendenceData);
   const monthNames = [
     "January",
@@ -89,7 +105,7 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
           <h1 className="text-lg my-4 font-bold text-[#67748E]">
             <Skeleton variant="text" width={150} height={20} />
           </h1>
-          <div className="h-[370px] 2xl:h-[400px] w-full ">
+          <div className="h-[250px] md:h-[340px] w-full ">
             <Skeleton variant="rect" width="100%" height="100%" />
           </div>
         </div>
