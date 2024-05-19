@@ -42,6 +42,7 @@ import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
+import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
 const TestNavItems = ({ toggleDrawer }) => {
@@ -68,6 +69,11 @@ const TestNavItems = ({ toggleDrawer }) => {
     }
   };
 
+  const { data } = useSubscriptionGet({
+    organisationId: orgId,
+  });
+
+  console.log(`🚀 ~ data:`, data);
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
   const [isVisible, setisVisible] = useState(true);
@@ -160,7 +166,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
       Performance: {
         open: false,
-        isVisible: true,
+        isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
         icon: <Payment className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {

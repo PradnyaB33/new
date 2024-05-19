@@ -116,7 +116,7 @@ const DashBoardHR = () => {
             <div className="border-b-[.5px] items-center justify-between flex gap-2 py-2 px-4 border-gray-300">
               <div className="flex items-center gap-2">
                 <Dashboard className="!text-[#67748E]" />
-                <h1 className="text-md font-bold text-[#67748E]">Dashboard</h1>
+                {/* <h1 className="text-md font-bold text-[#67748E]">Dashboard</h1> */}
               </div>
               <div className=" w-[80%]  md:hidden flex gap-6 items-center justify-end">
                 <IconButton onClick={handleClick}>

@@ -1,7 +1,6 @@
 import {
   AccessTime,
   AdminPanelSettings,
-  Dashboard,
   ErrorOutline,
   Groups,
 } from "@mui/icons-material";
@@ -14,7 +13,6 @@ import UserProfile from "../../hooks/UserData/useUser";
 import LineGraph from "./Components/Bar/LineGraph";
 import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
-import SkeletonFilterSection from "./Components/Skeletons/SkeletonFilterSection";
 
 const DashboardDH = () => {
   const { getCurrentUser } = UserProfile();
@@ -169,18 +167,17 @@ const DashboardDH = () => {
             title={"Special Shift"}
           />
         </div>
-        {false ? (
+        {/* {false ? (
           <SkeletonFilterSection />
         ) : (
           <div className="mt-4 w-full  bg-white shadow-md rounded-md  ">
             <div className="border-b-[.5px] items-center justify-between flex gap-2 py-2 px-4 border-gray-300">
               <div className="flex items-center gap-2">
                 <Dashboard className="!text-[#67748E]" />
-                <h1 className="text-md font-bold text-[#67748E]">Dashboard</h1>
               </div>
             </div>
           </div>
-        )}
+        )} */}
 
         <div className="w-full md:gap-4 md:space-y-0 space-y-3 mt-4 flex md:flex-row flex-col items-center">
           <div className="w-[100%] md:w-[50%]">
