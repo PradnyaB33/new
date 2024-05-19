@@ -268,14 +268,7 @@ const ManagerEmployeeChart = ({
                   )}
                 </div>
 
-                {/* <Card className="w-[45%]" elevation={0}>
-                  <div className="px-4 pt-4">
-                    <h1 className="text-xl">Total Leaves Left</h1>
-                  </div>
-                  <div className="p-2  flex items-center  ">
-                    <Pie data={dataPie} options={optionsPie} />
-                  </div>
-                </Card> */}
+            
               </div>
             )}
           </Card>

@@ -27,7 +27,7 @@ const HRgraph = () => {
   const customStyles = {
     control: (base) => ({
       ...base,
-      background: "#f9fafb",
+
       boxShadow: "none",
       border: ".5px solid #f1f1f1",
       hover: {
@@ -235,7 +235,7 @@ const HRgraph = () => {
               <button
                 onClick={() => mutation.mutate()}
                 disabled={mutation.isLoading}
-                className={` flex group justify-center w-max gap-2 items-center rounded-md h-[30px] px-4 py-3 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500
+                className={` flex group justify-center w-max gap-2 items-center rounded-sm h-[30px] px-4 py-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500
                   ${
                     mutation.isLoading &&
                     "cursor-not-allowed bg-gray-400 text-gray-700"
@@ -259,7 +259,7 @@ const HRgraph = () => {
             </div>
           </div>
 
-          <div className="md:w-[90%] w-[100%] h-[250px] md:h-[300px] px-0 md:px-4 flex items-center">
+          <div className="w-full h-[250px] md:h-[300px] px-0 md:px-4 flex items-center">
             <Bar
               data={data}
               options={{

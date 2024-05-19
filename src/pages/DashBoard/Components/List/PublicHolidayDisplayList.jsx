@@ -54,7 +54,7 @@ const PublicHolidayDisplayList = () => {
           <Divider variant="fullWidth" orientation="horizontal" />
 
           {upcomingHoliday?.data?.upcomingHolidays?.length <= 0 ? (
-            <div className="px-5 py-2 ">
+            <div className="px-5 py-2  ">
               <div className="space-x-2 items-center text-red-600  flex">
                 <Info className="text-xl text-red-600" />
                 <h1 className="text-lg  font-bold">No vacations</h1>

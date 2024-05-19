@@ -40,7 +40,7 @@ const LineGraph = ({
     control: (base) => ({
       ...base,
       border: ".5px solid #f1f1f1",
-      background: "#f9fafb",
+
       boxShadow: "none",
       hover: {
         cursor: "pointer !important",
@@ -237,18 +237,20 @@ const LineGraph = ({
             </h1>
 
             <div className="flex gap-2 items-center">
-              <button
-                onClick={() => mutation.mutate()}
-                disabled={mutation.isLoading}
-                className={` flex group justify-center w-max gap-2 items-center rounded-sm h-[30px] px-4 py-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500
+              {window.location.pathname.includes("/employee-dashboard") && (
+                <button
+                  onClick={() => mutation.mutate()}
+                  disabled={mutation.isLoading}
+                  className={` flex group justify-center w-max gap-2 items-center rounded-sm h-[30px] px-4 py-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500
                   ${
                     mutation.isLoading &&
                     "cursor-not-allowed bg-gray-400 text-gray-700"
                   }
                   `}
-              >
-                Generate Report
-              </button>
+                >
+                  Generate Report
+                </button>
+              )}
               {window.location.pathname.includes("/employee-dashboard") && (
                 <Select
                   placeholder={"Select year"}
