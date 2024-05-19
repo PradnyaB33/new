@@ -871,6 +871,7 @@ const AuthInputFiled = ({
                   onChange={(value, data, event, formattedValue) => {
                     field.onChange(value.slice(data.dialCode.length));
                   }}
+                  value={value}
                   containerStyle={{
                     height: "100%",
                     width: "auto",

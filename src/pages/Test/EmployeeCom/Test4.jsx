@@ -263,7 +263,7 @@ const Test4 = ({ prevStep }) => {
               </div>
             </div>
 
-            {data && (
+            {Object.entries(data).length > 0 && (
               <>
                 <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
                   Additional Details
@@ -272,7 +272,7 @@ const Test4 = ({ prevStep }) => {
                   {Object.entries(data)?.map(([key, value]) => (
                     <div className="p-2 rounded-sm ">
                       <h1 className="text-gray-500 text-sm">{key}</h1>
-                      <p className="">{value}</p>
+                      <p className="">{value ? value : "-"}</p>
                     </div>
                   ))}
                 </div>
