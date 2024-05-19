@@ -18,6 +18,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useGetUser from "../../../hooks/Token/useUser";
+import UserProfile from "../../../hooks/UserData/useUser";
 
 const DataTable = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -36,6 +37,8 @@ const DataTable = () => {
   const [showManagerSelect, setShowManagerSelect] = useState(false); // State to track checkbox status
   const { setAppAlert } = useContext(UseContext);
   const [selectAll, setSelectAll] = useState(false);
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
   const authToken = useGetUser().authToken;
 
   const handleSelectAllClick = async (event) => {
@@ -129,7 +132,17 @@ const DataTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
+        let response;
+        if (role === "HR") {
+          response = await axios.get(
+            `${process.env.REACT_APP_API}/route/organization/getOneOrgHr`,
+            {
+              headers: { Authorization: authToken },
+            }
+          );
+          setData1(response.data.orgData);
+        }
+        response = await axios.get(
           `${process.env.REACT_APP_API}/route/organization/getall`,
           {
             headers: { Authorization: authToken },
@@ -142,7 +155,10 @@ const DataTable = () => {
     };
 
     fetchData();
+    // eslint-disable-next-line
   }, [authToken]);
+
+  console.log("this is the data1", data1);
 
   useEffect(() => {
     (async () => {
@@ -405,13 +421,13 @@ const DataTable = () => {
                       onChange={handleSelectAllClick}
                     />
                   </TableCell>
-                  <TableCell>ID</TableCell>
+                  <TableCell>Sr.No</TableCell>
                   <TableCell>First Name</TableCell>
                   <TableCell>Last Name</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {employeeData.map((employee) => {
+                {employeeData.map((employee, idx) => {
                   const isItemSelected = isSelected(employee._id);
                   return (
                     <TableRow
@@ -427,7 +443,7 @@ const DataTable = () => {
                       <TableCell padding="checkbox">
                         <Checkbox checked={isItemSelected} />
                       </TableCell>
-                      <TableCell>{employee.id}</TableCell>
+                      <TableCell>{idx + 1}</TableCell>
                       <TableCell>{employee.first_name}</TableCell>
                       <TableCell>{employee.last_name}</TableCell>
                     </TableRow>

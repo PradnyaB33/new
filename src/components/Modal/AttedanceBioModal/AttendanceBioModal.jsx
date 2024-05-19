@@ -1,37 +1,3 @@
-// import {
-//   Button,
-//   Container,
-//   Dialog,
-//   DialogActions,
-//   DialogContent,
-//   TextField,
-//   Typography,
-//   Tooltip,
-// } from "@mui/material";
-// import axios from "axios";
-// import React, { useContext, useEffect, useState } from "react";
-// import { TestContext } from "../../../State/Function/Main";
-// import { UseContext } from "../../../State/UseState/UseContext";
-// const AttendanceBioModal = ({
-//   handleClose,
-//   open,
-//   organisationId,
-//   selectedEmployees,
-// }) => {
-//   const { cookies } = useContext(UseContext);
-//   const authToken = cookies["aegis"];
-//   const { handleAlert } = useContext(TestContext);
-//   const [emailSearch, setEmailSearch] = useState("");
-//   const [availableEmployee, setAvailableEmployee] = useState([]);
-//   const [currentPage, setCurrentPage] = useState(1);
-//   const [totalPages, setTotalPages] = useState(1);
-//   const [numbers, setNumbers] = useState([]);
-//   const [checkedEmployees, setCheckedEmployees] = useState([]);
-//   const [emailNotFound, setEmailNotFound] = useState(false);
-//   console.log("email not found", emailNotFound);
-
-//   const fetchAvailableEmployee = async (page) => {
-//     try {
 import {
   Button,
   Container,
@@ -62,8 +28,6 @@ const AttendanceBioModal = ({
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const [checkedEmployees, setCheckedEmployees] = useState([]);
-  const [emailNotFound, setEmailNotFound] = useState(false);
-  console.log(emailNotFound);
 
   const fetchAvailableEmployee = async (page) => {
     try {
@@ -125,26 +89,14 @@ const AttendanceBioModal = ({
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   };
-
-  // Handle sync
+  console.log(checkedEmployees);
   const handleSync = async () => {
     try {
-      if (checkedEmployees.length === 0 && emailSearch.trim() !== "") {
-        setEmailNotFound(true);
+      if (!validateEmail(emailSearch)) {
+        handleAlert(true, "error", "Please enter a valid email address.");
         return;
       }
-  
-      // Verify email for each checked employee
-      const invalidEmails = checkedEmployees.filter((employee) => {
-        const email = employee?.email || "";
-        return !validateEmail(email);
-      });
-  
-      if (invalidEmails.length > 0) {
-        handleAlert(true, "error", "Please enter valid email addresses.");
-        return;
-      }
-  
+
       const syncedData = selectedEmployees.map((employee) => ({
         date: employee[3],
         punchingTime: employee[4],

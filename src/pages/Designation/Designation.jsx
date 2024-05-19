@@ -126,7 +126,7 @@ const Designation = () => {
           setAppAlert({
             alert: true,
             type: "error",
-            msg: "Error adding designation",
+            msg: error.response.data.message,
           });
           console.error("Error adding designation:", error);
         });
@@ -355,7 +355,11 @@ const Designation = () => {
                   label="Designation Name"
                   type="text"
                   value={designationName}
-                  onChange={(e) => setDesignationName(e.target.value)}
+                  onChange={(e) => {
+                    if (e.target.value.length <= 35) {
+                      setDesignationName(e.target.value);
+                    }
+                  }}
                 />
                 {designationIdRequired && (
                   <>

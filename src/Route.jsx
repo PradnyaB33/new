@@ -82,6 +82,7 @@ import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
+import EmployeeNotification from "./pages/Employee-Notification/page";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LetterSetup from "./pages/LetterTypes/LetterSetup";
@@ -91,21 +92,25 @@ import LoanNotificationToEmp from "./pages/LoanMgtNotified/LoanNotificationToEmp
 import MissPunchInOut from "./pages/MissPunch/MissPunchInOut";
 import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
 import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
+import MissedPunchNotificationToEmp from "./pages/MissedPunchNotification/MissedPunchNotificationToEmp";
 import MyTraining from "./pages/My-Training/page";
+import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
+import SelfShiftNotification from "./pages/SelfShiftNotification/page";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
 import Training from "./pages/SetUpOrganization/Traning/Training";
+import SetupShift from "./pages/SetupPage/ShiftManagement/SetupShift";
 import RemoteEmployee from "./pages/Test/RemoteEmployee/page";
 import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttendacneBiomatric";
 import ViewCalculateAttendance from "./pages/ViewCalculateAttendance/ViewCalculateAttendance";
 import CustomCalander from "./pages/custom/Calendar";
 import DocNotification from "./pages/doc-notification/DocNotification";
-import EmpNotification from "./pages/emp-notifications/EmpNotification";
 import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import PayslipNotification from "./pages/PayslipNotification/PayslipNotification";
 
 const App = () => {
   return (
@@ -194,13 +199,32 @@ const App = () => {
         <Route path="/sign-up" element={<Signup />} />
         {/* <Route path="/notification" element={<ParentNotification />} /> */}
         <Route path="/leave-notification" element={<LeaveNotification />} />
+        <Route
+          path="/self/leave-notification"
+          element={<SelfLeaveNotification />}
+        />
+        <Route
+          path="/leave-notification/:employeeId"
+          element={<LeaveNotification />}
+        />
         <Route path="/punch-notification" element={<PunchNotification />} />
-        <Route path="/emp-notification" element={<EmpNotification />} />
+        {/* <Route
+          path="self/shift-notification"
+          element={<EmpShiftNotification />}
+        /> */}
         <Route
           path="/punch-notification/:employeeId"
           element={<PunchNotification />}
         />
         <Route path="/shift-notification" element={<ShiftNotification />} />
+        <Route
+          path="/shift-notification/:employeeId"
+          element={<ShiftNotification />}
+        />
+        <Route
+          path="/self/shift-notification"
+          element={<SelfShiftNotification />}
+        />
         <Route
           path="/missedPunch-notification"
           element={<MissedPunchNotification />}
@@ -325,6 +349,7 @@ const App = () => {
                 "Delegate-Department-Head",
                 "Department-Admin",
                 "Delegate-Department-Admin",
+                "HR",
               ]}
             >
               <DepartmentTest />
@@ -647,14 +672,15 @@ const App = () => {
             </RequireAuth>
           }
         />
-        {/* <Route
-          path="/organisation/:organisationId/setup/email-communicaiton"
+
+        <Route
+          path="/organisation/:organisationId/setup/shift-allowance"
           element={
             <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-              <EmpCommunication />
+              <SetupShift />
             </RequireAuth>
           }
-        /> */}
+        />
         <Route
           path="/organisation/:organisationId/setup/set-shifts"
           element={
@@ -866,6 +892,28 @@ const App = () => {
           }
         />
         <Route
+          path="/self-notification"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <EmployeeNotification />
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/organisation/:organisationId/dept-deletion"
           element={
             <RequireAuth
@@ -983,6 +1031,14 @@ const App = () => {
         <Route
           path="/loan-notification-to-emp"
           element={<LoanNotificationToEmp />}
+        />
+        <Route
+          path="/missed-punch-notification-to-emp"
+          element={<MissedPunchNotificationToEmp />}
+        />
+        <Route
+          path="/payslip-notification-to-emp"
+          element={<PayslipNotification />}
         />
       </Routes>
     </AuthProvider>
