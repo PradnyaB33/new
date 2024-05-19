@@ -253,20 +253,20 @@ const LineGraph = ({
                   Generate Report
                 </button>
               )}
-              {window.location.pathname.includes("/employee-dashboard") && (
-                <Select
-                  placeholder={"Select year"}
-                  onChange={(year) => {
-                    setSelectedYear(year);
-                  }}
-                  components={{
-                    IndicatorSeparator: () => null,
-                  }}
-                  styles={customStyles}
-                  value={selectedyear} // Add this line
-                  options={yearOptions}
-                />
-              )}
+              {/* {window.location.pathname.includes("/employee-dashboard") && ( */}
+              <Select
+                placeholder={"Select year"}
+                onChange={(year) => {
+                  setSelectedSalaryYear(year);
+                }}
+                components={{
+                  IndicatorSeparator: () => null,
+                }}
+                styles={customStyles}
+                value={selectedSalaryYear} // Add this line
+                options={yearOptions}
+              />
+              {/* )} */}
             </div>
           </div>
           <div className="h-[250px] md:h-[340px] w-full ">

@@ -125,7 +125,7 @@ export default function useDashboardFilter(organisationId) {
     control: (base) => ({
       ...base,
       border: 0,
-      background: "#f9fafb",
+      // background: "#f9fafb",
       boxShadow: "none",
       hover: {
         cursor: "pointer !important",
