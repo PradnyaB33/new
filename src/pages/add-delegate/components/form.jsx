@@ -318,6 +318,7 @@ const MiniForm = ({ data }) => {
           <Button
             fullWidth
             variant="contained"
+            color="error"
             disabled={!data?.delegateSuperAdmin?._id}
             onClick={async () => {
               deleteDelegateMutation.mutate({

@@ -286,6 +286,26 @@ const AppDatePicker = ({
       document.removeEventListener("click", handleClickAway);
     };
   }, []);
+  console.log(
+    `🚀 ~ file: date-picker.jsx:333 ~ allPublicHoliday:`,
+    allPublicHoliday
+  );
+  console.log(
+    `🚀 ~ file: date-picker.jsx:333 ~ filteredHolidayWithStartAndEnd:`,
+    filteredHolidayWithStartAndEnd
+  );
+  console.log(
+    `🚀 ~ file: date-picker.jsx:333 ~ newAppliedLeaveEvents:`,
+    newAppliedLeaveEvents
+  );
+  console.log(
+    `🚀 ~ file: date-picker.jsx:333 ~ shiftData?.requests:`,
+    shiftData?.requests
+  );
+  console.log(
+    `🚀 ~ file: date-picker.jsx:333 ~ data?.currentYearLeaves:`,
+    data?.currentYearLeaves
+  );
   return (
     <Popover
       PaperProps={{
@@ -312,65 +332,70 @@ const AppDatePicker = ({
       )}
       <div className=" bg-white z-10 ">
         <div className="w-full">
-          <Calendar
-            localizer={localizer}
-            views={["month"]}
-            components={{
-              toolbar: CustomToolbar,
-            }}
-            events={
-              data
-                ? [
-                    ...data?.currentYearLeaves,
-                    ...shiftData?.requests,
-                    ...newAppliedLeaveEvents,
-                    ...filteredHolidayWithStartAndEnd,
-                    ...allPublicHoliday,
-                  ]
-                : [...newAppliedLeaveEvents]
-            }
-            startAccessor="start"
-            endAccessor="end"
-            style={{
-              height: "400px",
-              width: "100%",
-              background: "#fff",
-            }}
-            selectable
-            onSelectSlot={handleSelectSlot}
-            onSelectEvent={handleSelectEvent}
-            datePropGetter={selectedLeave}
-            eventPropGetter={(event) => {
-              let backgroundColor = "blue";
-
-              if (event?.status) {
-                switch (event.status) {
-                  case "Pending":
-                    backgroundColor = "orange";
-                    break;
-                  case "Rejected":
-                    backgroundColor = "red";
-                    break;
-                  case "Approved":
-                    backgroundColor = "green";
-                    break;
-                  default:
-                    backgroundColor = "blue";
-                    break;
+          {allPublicHoliday &&
+            filteredHolidayWithStartAndEnd &&
+            shiftData?.requests &&
+            data?.currentYearLeaves && (
+              <Calendar
+                localizer={localizer}
+                views={["month"]}
+                components={{
+                  toolbar: CustomToolbar,
+                }}
+                events={
+                  data
+                    ? [
+                        ...data?.currentYearLeaves,
+                        ...shiftData?.requests,
+                        ...newAppliedLeaveEvents,
+                        ...filteredHolidayWithStartAndEnd,
+                        ...allPublicHoliday,
+                      ]
+                    : [...newAppliedLeaveEvents]
                 }
-              }
-              if (event.color) {
-                backgroundColor = event.color;
-              }
+                startAccessor="start"
+                endAccessor="end"
+                style={{
+                  height: "400px",
+                  width: "100%",
+                  background: "#fff",
+                }}
+                selectable
+                onSelectSlot={handleSelectSlot}
+                onSelectEvent={handleSelectEvent}
+                datePropGetter={selectedLeave}
+                eventPropGetter={(event) => {
+                  let backgroundColor = "blue";
 
-              return {
-                style: {
-                  backgroundColor,
-                },
-              };
-            }}
-            dayPropGetter={dayPropGetter}
-          />
+                  if (event?.status) {
+                    switch (event.status) {
+                      case "Pending":
+                        backgroundColor = "orange";
+                        break;
+                      case "Rejected":
+                        backgroundColor = "red";
+                        break;
+                      case "Approved":
+                        backgroundColor = "green";
+                        break;
+                      default:
+                        backgroundColor = "blue";
+                        break;
+                    }
+                  }
+                  if (event.color) {
+                    backgroundColor = event.color;
+                  }
+
+                  return {
+                    style: {
+                      backgroundColor,
+                    },
+                  };
+                }}
+                dayPropGetter={dayPropGetter}
+              />
+            )}
         </div>
       </div>
 
