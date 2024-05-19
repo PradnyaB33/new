@@ -11,8 +11,8 @@ const IncomeTax = () => {
     setOpen(true);
   };
 
-  const { useGetCurrentRole, getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
+  const { useGetCurrentRole } = UserProfile();
+  // const user = getCurrentUser();
   const role = useGetCurrentRole();
 
   const redirect = useNavigate();

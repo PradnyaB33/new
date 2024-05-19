@@ -5,7 +5,6 @@ import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import * as React from "react";
 import { useCallback } from "react"; // Import useCallback
 import { useLocation } from "react-router-dom";
-import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
 import ChangeRole from "../InputFileds/ChangeRole";
 import ProfileIcon from "../profieicon/profileIcon";
@@ -18,7 +17,7 @@ export default function SwipeableTemporaryDrawer() {
   console.log(`🚀 ~ location:`, location);
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
-  const authToken = useAuthToken();
+  // const authToken = useAuthToken();
   // const { organisationId } = useParams();
   // console.log(`🚀 ~ organisationId:`, organisationId);
 

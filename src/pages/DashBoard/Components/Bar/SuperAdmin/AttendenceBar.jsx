@@ -1,6 +1,7 @@
 import { Skeleton } from "@mui/material";
 import React from "react";
 import { Bar } from "react-chartjs-2";
+import Select from "react-select";
 import useDashGlobal from "../../../../../hooks/Dashboard/useDashGlobal";
 import useDashboardFilter from "../../../../../hooks/Dashboard/useDashboardFilter";
 import UserProfile from "../../../../../hooks/UserData/useUser";
@@ -105,13 +106,29 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
           <h1 className="text-lg my-4 font-bold text-[#67748E]">
             <Skeleton variant="text" width={150} height={20} />
           </h1>
-          <div className="h-[250px] md:h-[340px] w-full ">
+          <div className="h-[370px] 2xl:h-[400px] w-full ">
             <Skeleton variant="rect" width="100%" height="100%" />
           </div>
         </div>
       ) : (
         <div className="px-4 pb-4 bg-white shadow-md rounded-md flex flex-col justify-center">
-          <h1 className="text-lg my-4 font-bold text-[#67748E]">Attendance</h1>
+          <div className="flex justify-between items-center">
+            <h1 className="text-lg my-4 font-bold text-[#67748E]">
+              Attendance Overview
+            </h1>
+            <Select
+              placeholder={"Select year"}
+              onChange={(year) => {
+                setSelectedYear(year);
+              }}
+              components={{
+                IndicatorSeparator: () => null,
+              }}
+              styles={customStyles}
+              value={selectedYear} // Add this line
+              options={yearOptions}
+            />
+          </div>
           <div className="h-[250px] md:h-[340px] w-full ">
             <Bar options={options} data={data} />
           </div>
