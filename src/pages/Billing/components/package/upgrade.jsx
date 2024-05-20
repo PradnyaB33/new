@@ -8,16 +8,7 @@ import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
 import ReusableModal from "../../../../components/Modal/component";
 import useManageSubscriptionMutation from "./subscription-mutaiton";
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  bgcolor: "background.paper",
-  width: 400,
-  height: 500,
-  overflow: "hidden",
-};
+
 const UpgradePackage = ({ handleClose, open, organisation }) => {
   console.log(`🚀 ~ file: upgrade.jsx:22 ~ organisation:`, organisation);
   const [amount, setAmount] = React.useState(0);
