@@ -294,9 +294,12 @@ const AuthInputFiled = ({
                     components={{
                       IndicatorSeparator: () => null,
                     }}
-                    options={moment
-                      .months()
-                      .map((month, index) => ({ label: month, value: month }))}
+                    options={
+                      options ||
+                      moment
+                        .months()
+                        .map((month, index) => ({ label: month, value: month }))
+                    }
                     onChange={(value) => {
                       field.onChange(value.value);
                     }}
@@ -874,6 +877,7 @@ const AuthInputFiled = ({
                   onChange={(value, data, event, formattedValue) => {
                     field.onChange(value.slice(data.dialCode.length));
                   }}
+                  value={value}
                   containerStyle={{
                     height: "100%",
                     width: "auto",

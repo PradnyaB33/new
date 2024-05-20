@@ -18,6 +18,8 @@ import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import useGetUser from "../../hooks/Token/useUser";
 import usePublicHoliday from "../../pages/SetUpOrganization/PublicHolidayPage/usePublicHoliday";
+import ReusableModal from "../Modal/component";
+import MiniForm from "./components/mini-form";
 
 const AppDatePicker = ({
   data,
@@ -43,6 +45,7 @@ const AppDatePicker = ({
   const { handleAlert } = useContext(TestContext);
   const [message, setMessage] = useState("");
   const { authToken } = useGetUser();
+  const [openDelete, setOpenDelete] = useState(false);
   const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
     usePublicHoliday(organisationId);
 
@@ -117,6 +120,7 @@ const AppDatePicker = ({
     while (currentDate.isSameOrBefore(selectedEndDate)) {
       const currentDay = currentDate.format("ddd");
       if (includedDays.includes(currentDay)) {
+        setCalLoader(false);
         return handleAlert(
           true,
           "warning",
@@ -162,6 +166,7 @@ const AppDatePicker = ({
     });
 
     if (isOverlap) {
+      setCalLoader(false);
       return handleAlert(
         true,
         "warning",
@@ -271,7 +276,7 @@ const AppDatePicker = ({
         })
       );
     } else {
-      deleteLeaveMutation.mutate(selectedLeave._id);
+      setOpenDelete(true);
     }
     setDelete(false);
   };
@@ -284,6 +289,7 @@ const AppDatePicker = ({
       document.removeEventListener("click", handleClickAway);
     };
   }, []);
+
   return (
     <Popover
       PaperProps={{
@@ -310,65 +316,70 @@ const AppDatePicker = ({
       )}
       <div className=" bg-white z-10 ">
         <div className="w-full">
-          <Calendar
-            localizer={localizer}
-            views={["month"]}
-            components={{
-              toolbar: CustomToolbar,
-            }}
-            events={
-              data
-                ? [
-                    ...data?.currentYearLeaves,
-                    ...shiftData?.requests,
-                    ...newAppliedLeaveEvents,
-                    ...filteredHolidayWithStartAndEnd,
-                    ...allPublicHoliday,
-                  ]
-                : [...newAppliedLeaveEvents]
-            }
-            startAccessor="start"
-            endAccessor="end"
-            style={{
-              height: "400px",
-              width: "100%",
-              background: "#fff",
-            }}
-            selectable
-            onSelectSlot={handleSelectSlot}
-            onSelectEvent={handleSelectEvent}
-            datePropGetter={selectedLeave}
-            eventPropGetter={(event) => {
-              let backgroundColor = "blue";
-
-              if (event?.status) {
-                switch (event.status) {
-                  case "Pending":
-                    backgroundColor = "orange";
-                    break;
-                  case "Rejected":
-                    backgroundColor = "red";
-                    break;
-                  case "Approved":
-                    backgroundColor = "green";
-                    break;
-                  default:
-                    backgroundColor = "blue";
-                    break;
+          {allPublicHoliday &&
+            filteredHolidayWithStartAndEnd &&
+            shiftData?.requests &&
+            data?.currentYearLeaves && (
+              <Calendar
+                localizer={localizer}
+                views={["month"]}
+                components={{
+                  toolbar: CustomToolbar,
+                }}
+                events={
+                  data
+                    ? [
+                        ...data?.currentYearLeaves,
+                        ...shiftData?.requests,
+                        ...newAppliedLeaveEvents,
+                        ...filteredHolidayWithStartAndEnd,
+                        ...allPublicHoliday,
+                      ]
+                    : [...newAppliedLeaveEvents]
                 }
-              }
-              if (event.color) {
-                backgroundColor = event.color;
-              }
+                startAccessor="start"
+                endAccessor="end"
+                style={{
+                  height: "400px",
+                  width: "100%",
+                  background: "#fff",
+                }}
+                selectable
+                onSelectSlot={handleSelectSlot}
+                onSelectEvent={handleSelectEvent}
+                datePropGetter={selectedLeave}
+                eventPropGetter={(event) => {
+                  let backgroundColor = "blue";
 
-              return {
-                style: {
-                  backgroundColor,
-                },
-              };
-            }}
-            dayPropGetter={dayPropGetter}
-          />
+                  if (event?.status) {
+                    switch (event.status) {
+                      case "Pending":
+                        backgroundColor = "orange";
+                        break;
+                      case "Rejected":
+                        backgroundColor = "red";
+                        break;
+                      case "Approved":
+                        backgroundColor = "green";
+                        break;
+                      default:
+                        backgroundColor = "blue";
+                        break;
+                    }
+                  }
+                  if (event.color) {
+                    backgroundColor = event.color;
+                  }
+
+                  return {
+                    style: {
+                      backgroundColor,
+                    },
+                  };
+                }}
+                dayPropGetter={dayPropGetter}
+              />
+            )}
         </div>
       </div>
 
@@ -397,6 +408,17 @@ const AppDatePicker = ({
           Update
         </Button>
       </div>
+      <ReusableModal
+        open={openDelete}
+        onClose={() => setOpenDelete(false)}
+        heading={"Are you sure want delete ?"}
+      >
+        <MiniForm
+          id={selectedLeave?._id}
+          mutate={deleteLeaveMutation?.mutate}
+          onClose={() => setOpenDelete(false)}
+        />
+      </ReusableModal>
     </Popover>
   );
 };

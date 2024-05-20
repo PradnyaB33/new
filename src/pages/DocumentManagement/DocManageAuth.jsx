@@ -13,7 +13,6 @@ import { getSignedUrlForOrgDocs, uploadFile } from "../../services/docManageS3";
 import DataTable from "./components/DataTable";
 import DocList from "./components/DocList";
 import Options from "./components/Options";
-
 const DocManageAuth = () => {
   const { authToken } = useGetUser();
   const [option, setOption] = useState("");

@@ -69,7 +69,7 @@ const InputForm = () => {
               isClearable
               className="min-w-60 z-50"
               aria-errormessage=""
-              placeholder={"Select leave type"}
+              placeholder={"Select attendace type"}
               components={{
                 IndicatorSeparator: () => null,
               }}

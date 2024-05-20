@@ -6,34 +6,30 @@ import useLoanNotification from "../../hooks/QueryHook/notification/loan-notific
 import usePunchNotification from "../../hooks/QueryHook/notification/punch-notification/hook";
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
 import Card from "./components/card";
-import UserProfile from "../../hooks/UserData/useUser";
+import usePayslipNotificationHook from "../../hooks/QueryHook/notification/PayslipNotification/usePayslipNotificaitonHook";
 
 const ParentNotification = () => {
-  const { data, isLoading } = useLeaveNotificationHook();
+  const { data } = useLeaveNotificationHook();
   const { data: data2 } = useShiftNotification();
   const { data: data3 } = usePunchNotification();
   const { data: data4 } = useDocNotification();
   const { missPunchData } = useMissedPunchNotificationCount();
   const { getEmployeeRequestLoanApplication } = useLoanNotification();
-  const { useGetCurrentRole } = UserProfile();
-  const role = useGetCurrentRole();
-  console.log("role", role);
-  console.log("get pending loan", getEmployeeRequestLoanApplication);
-  console.log(missPunchData);
-  console.log("mydata", data4);
-
+  const { PayslipNotification } = usePayslipNotificationHook();
   const dummyData = [
     {
       name: "Leave Notification",
       count: data?.leaveRequests?.length ?? 0,
       color: "#FF7373",
       url: "/leave-notification",
+      url2: "/self/leave-notification",
     },
     {
       name: "Shift Notification",
       count: data2?.length ?? 0,
       color: "#3668ff",
       url: "/shift-notification",
+      url2: "/self/shift-notification",
     },
     {
       name: "Remote Punching Notification",
@@ -46,6 +42,21 @@ const ParentNotification = () => {
       count: missPunchData?.length ?? 0,
       color: "#51E8FD",
       url: "/missedPunch-notification",
+      url2: "/missed-punch-notification-to-emp",
+    },
+
+    {
+      name: "Loan Notification",
+      count: getEmployeeRequestLoanApplication?.length ?? 0,
+      color: "#51E8FD",
+      url: "/loan-notification",
+      url2: "/loan-notification-to-emp",
+    },
+    {
+      name: "Payslip Notification",
+      count: PayslipNotification?.length ?? 0,
+      color: "#51E8FD",
+      url: "/payslip-notification-to-emp",
     },
     {
       name: "Document Approval Notification",
@@ -55,24 +66,23 @@ const ParentNotification = () => {
     },
   ];
 
-  if (
-    role === "HR" ||
-    role === "Super-Admin" ||
-    role === "Delegate-Super-Admin" 
-   
-  ) {
-    dummyData.push({
-      name: "Loan Notification",
-      count: getEmployeeRequestLoanApplication?.length ?? 0,
-      color: "#51E8FD",
-      url: "/loan-notification",
-    });
-  }
+  // if (
+  //   role === "HR" ||
+  //   role === "Super-Admin" ||
+  //   role === "Delegate-Super-Admin"
+  // ) {
+  //   dummyData.push({
+  //     name: "Loan Notification",
+  //     count: getEmployeeRequestLoanApplication?.length ?? 0,
+  //     color: "#51E8FD",
+  //     url: "/loan-notification",
+  //   });
+  // }
 
   return (
     <div className="pt-5">
       <div className="w-full h-full gap-2 flex p-4 md:flex-wrap md:flex-row flex-col justify-center">
-        <Card card={dummyData} loading={isLoading} />
+        <Card card={dummyData} />
       </div>
     </div>
   );

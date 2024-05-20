@@ -32,7 +32,6 @@ import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CallMissedIcon from "@mui/icons-material/CallMissed";
-import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import FolderIcon from "@mui/icons-material/Folder";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
@@ -44,6 +43,7 @@ import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
+import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
@@ -68,15 +68,17 @@ const TestNavItems = ({ toggleDrawer }) => {
 
   useEffect(() => {
     (async () => {
-      const resp = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get/profile/${user._id}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      setEmp(resp.data.employee.organizationId);
+      if (user?._id) {
+        const resp = await axios.get(
+          `${process.env.REACT_APP_API}/route/employee/get/profile/${user?._id}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setEmp(resp.data.employee.organizationId);
+      }
     })();
     // eslint-disable-next-line
   }, []);
@@ -100,6 +102,11 @@ const TestNavItems = ({ toggleDrawer }) => {
     setOrgId(orgId);
   };
 
+  const { data } = useSubscriptionGet({
+    organisationId: orgId,
+  });
+
+  console.log(`🚀 ~ data:`, data);
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
   const [isVisible, setisVisible] = useState(true);
@@ -172,15 +179,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Shift Management",
           },
-          {
-            key: "shiftNotification",
-            isVisible: ["Employee"].includes(role),
-            link: "/emp-shift-notification",
-            icon: (
-              <CircleNotificationsIcon className=" !text-[1.2em] text-[#67748E]" />
-            ),
-            text: "Shift Notification",
-          },
         ],
       },
       Notification: {
@@ -197,20 +195,11 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Notifications",
           },
-          {
-            key: "listNotification",
-            isVisible: ["Employee"].includes(role) ? true : false,
-            link: "/self-notification",
-            icon: (
-              <CircleNotifications className=" !text-[1.2em] text-[#67748E]" />
-            ),
-            text: "Your Notification",
-          },
         ],
       },
       Performance: {
         open: false,
-        isVisible: true,
+        isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
         icon: <Payment className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
@@ -560,7 +549,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
       Records: {
         open: false,
-        isVisible: true,
+        isVisible: emp?.packageInfo === "Intermediate Plan",
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {

@@ -205,7 +205,7 @@ export default function useDashboardFilter(organisationId) {
     ["location-attenedence", locations, selectedYear],
     () =>
       getAttendenceData(
-        `${process.env.REACT_APP_API}/route/leave/getLocationAttendece/${locations}/`
+        `${process.env.REACT_APP_API}/route/leave/getLocationAttendece/${locations}/${selectedYear.value}`
       ),
     {
       onSuccess: (attendenceData) => setData(attendenceData),
@@ -276,7 +276,7 @@ export default function useDashboardFilter(organisationId) {
     ["location-salary", locations],
     () =>
       getSalaryData(
-        `${process.env.REACT_APP_API}/route/employeeSalary/locationSalaryOverview/${locations}`
+        `${process.env.REACT_APP_API}/route/employeeSalary/locationSalaryOverview/${locations}/${selectedSalaryYear.value}`
       ),
     {
       onSuccess: (organizationAttendenceData) => {
