@@ -172,15 +172,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Shift Management",
           },
-          {
-            key: "shiftNotification",
-            isVisible: ["Employee"].includes(role),
-            link: "/emp-shift-notification",
-            icon: (
-              <CircleNotificationsIcon className=" !text-[1.2em] text-[#67748E]" />
-            ),
-            text: "Shift Notification",
-          },
         ],
       },
       Notification: {

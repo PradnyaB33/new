@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Money } from "@mui/icons-material";
+import { Business, Money } from "@mui/icons-material";
 import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
 import { Button } from "@mui/material";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
@@ -14,19 +14,26 @@ import useAuthToken from "../../../hooks/Token/useAuth";
 import Setup from "../../SetUpOrganization/Setup";
 
 const SetupShift = () => {
-  const orgId = useParams().organisationId;
+  const { organisationId: orgId } = useParams();
   const authToken = useAuthToken();
   const { setAppAlert } = useContext(UseContext);
   const queryClient = useQueryClient();
+
   const formSchema = z.object({
-    amount: z.string(),
+    amount: z.string().refine((val) => !isNaN(Number(val)), {
+      message: "Amount must be a number",
+    }),
+    dualWorkflow: z.boolean(),
   });
-  const { control, formState, handleSubmit, reset } = useForm({
+
+  const { control, formState, handleSubmit, setValue } = useForm({
     defaultValues: {
       amount: "",
+      dualWorkflow: false,
     },
     resolver: zodResolver(formSchema),
   });
+
   const { errors } = formState;
 
   const onSubmit = async (data) => {
@@ -34,24 +41,18 @@ const SetupShift = () => {
     try {
       const resp = await axios.post(
         `${process.env.REACT_APP_API}/route/shiftApply/postallowance/${orgId}`,
-        {
-          data,
-        },
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
+        { data: { ...data, amount: Number(data.amount) } },
+        { headers: { Authorization: authToken } }
       );
       console.log(resp);
       setAppAlert({
         alert: true,
         type: "success",
-        msg: "your request is successfull",
+        msg: "Your request is successful",
       });
       queryClient.invalidateQueries("get-shift-allowance");
     } catch (error) {
-      console.log("operation not completed", error.message);
+      console.log("Operation not completed", error.message);
     }
   };
 
@@ -62,10 +63,14 @@ const SetupShift = () => {
         headers: { Authorization: authToken },
       }
     );
-    console.log(data);
-    reset({ amount: response?.data.existingAllowance.amount || "" });
     return response.data;
   });
+
+  useEffect(() => {
+    if (data?.existingAllowance) {
+      setValue("amount", data.existingAllowance.amount.toString());
+    }
+  }, [data, setValue]);
 
   return (
     <div>
@@ -80,13 +85,26 @@ const SetupShift = () => {
                 <div>
                   <h1 className="!text-lg">Shift Allowance</h1>
                   <p className="text-xs text-gray-600">
-                    this setup is used to add the amount for the shift allowance
+                    This setup is used to add the amount for the shift allowance
                   </p>
                 </div>
               </div>
             </div>
             <div className="p-5">
               <form onSubmit={handleSubmit(onSubmit)} action="">
+                <AuthInputFiled
+                  name="dualWorkflow"
+                  icon={Business}
+                  control={control}
+                  type="checkbox"
+                  placeholder="Dual Workflow"
+                  label="Dual Workflow"
+                  errors={errors}
+                  error={errors.dualWorkflow}
+                  descriptionText={
+                    "Enabling workflow ensures account approval after manager's approval otherwise added directly as allowance."
+                  }
+                />
                 <AuthInputFiled
                   className="w-[40vw]"
                   name="amount"
@@ -96,7 +114,7 @@ const SetupShift = () => {
                   placeholder="Enter Allowance Amount"
                   label="Enter Amount *"
                   errors={errors}
-                  error={errors.allowanceQuantity}
+                  error={errors.amount}
                 />
                 <div className="py-2">
                   <Button
