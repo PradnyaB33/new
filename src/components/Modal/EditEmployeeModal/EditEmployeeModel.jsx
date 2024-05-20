@@ -312,6 +312,9 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   const handleLocationChange = (event) => {
     setSelectedWorkLocation(event.target.value);
   };
+  const handleShiftChange = (event) => {
+    setShiftAllocation(event.target.value);
+  };
 
   const handleDepartmnetChange = (event) => {
     setDepartment(event.target.value);
@@ -441,6 +444,8 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
       } else {
         setEmployementType(null);
       }
+      let shift_id = employeeData?.shift_allocation || "";
+      console.log("shift id", shift_id);
       const employeeProfileData = employeeData?.profile || [];
       setProfile(employeeProfileData);
       setMgrempid(employeeData?.mgrempid || "");
@@ -1053,8 +1058,8 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               Shift :
             </label>
             <select
-              value={shift_allocation}
-              onChange={(e) => setShiftAllocation(e.target.value)}
+              value={shift_allocation || ""}
+              onChange={handleShiftChange}
               style={{
                 width: "750px",
                 padding: "8px",
@@ -1097,7 +1102,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 ))}
             </select>
           </div>
-         
 
           <div className="space-y-2 ">
             <RadioGroup
