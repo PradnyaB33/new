@@ -1,8 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FactoryOutlined, Numbers } from "@mui/icons-material";
 import { Button } from "@mui/material";
-import moment from "moment";
-import React, { useCallback } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
@@ -12,6 +11,7 @@ import useManageSubscriptionMutation from "./subscription-mutaiton";
 const UpgradePackage = ({ handleClose, open, organisation }) => {
   console.log(`🚀 ~ file: upgrade.jsx:22 ~ organisation:`, organisation);
   const [amount, setAmount] = React.useState(0);
+  console.log(`🚀 ~ file: upgrade.jsx:15 ~ setAmount:`, setAmount);
   const { verifyPromoCodeMutation, handleUpgradeFunction } =
     useManageSubscriptionMutation();
 
@@ -52,35 +52,36 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
     handleUpgradeFunction(data, organisation);
   }
 
-  const checkCallback = useCallback(() => {
-    // on package change update the per day value
-    let perDayValue = 0;
-    if (watch("packageInfo").value === "Basic Plan") {
-      perDayValue =
-        Number(process.env.REACT_APP_BASIC_PACKAGE_COST_DAY) /
-        moment().daysInMonth();
-    } else if (watch("packageInfo").value === "Intermediate Plan") {
-      perDayValue =
-        Number(process.env.REACT_APP_INTERMEDIATE_PACKAGE_COST_DAY) /
-        moment().daysInMonth();
-    } else {
-      perDayValue =
-        Number(process.env.REACT_APP_ENTERPRIZE_PACKAGE_COST_DAY) /
-        moment().daysInMonth();
-    }
-    return (
-      perDayValue *
-      moment(organisation?.subscriptionDetails?.expirationDate).diff(
-        moment(),
-        "days"
-      )
-    );
-  }, [
-    watch("packageInfo"),
-    watch("memberCount"),
-    watch("promoCode"),
-    watch("paymentType"),
-  ]);
+  // const checkCallback = useCallback(() => {
+  //   // on package change update the per day value
+  //   let perDayValue = 0;
+  //   if (watch("packageInfo").value === "Basic Plan") {
+  //     perDayValue =
+  //       Number(process.env.REACT_APP_BASIC_PACKAGE_COST_DAY) /
+  //       moment().daysInMonth();
+  //   } else if (watch("packageInfo").value === "Intermediate Plan") {
+  //     perDayValue =
+  //       Number(process.env.REACT_APP_INTERMEDIATE_PACKAGE_COST_DAY) /
+  //       moment().daysInMonth();
+  //   } else {
+  //     perDayValue =
+  //       Number(process.env.REACT_APP_ENTERPRIZE_PACKAGE_COST_DAY) /
+  //       moment().daysInMonth();
+  //   }
+  //   return (
+  //     perDayValue *
+  //     moment(organisation?.subscriptionDetails?.expirationDate).diff(
+  //       moment(),
+  //       "days"
+  //     )
+  //   );
+  // }, [
+  //   watch("packageInfo"),
+  //   watch("memberCount"),
+  //   watch("promoCode"),
+  //   watch("paymentType"),
+  //   watch,
+  // ]);
   const checkDisability = () => {
     if (Object.keys(dirtyFields).length <= 1) {
       if (Object.keys(dirtyFields).includes("promoCode")) {
@@ -181,7 +182,7 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
           />
         </div>
         <Button variant="contained" disabled={checkDisability()} type="submit">
-          Pay {Math.round(checkCallback())} Rs
+          Pay {Math.round(0)} Rs
         </Button>
       </form>
     </ReusableModal>
