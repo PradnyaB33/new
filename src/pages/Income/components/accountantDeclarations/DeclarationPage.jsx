@@ -154,7 +154,7 @@ const DeclarationPage = () => {
               })
               .map((ele) => (
                 <Link
-                  to={`/income-tax/accountant-declarations/${ele.empId._id}`}
+                  to={`/notification/income-tax/${ele.empId._id}`}
                   className={` px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50
                 ${
                   ele.empId._id === id &&

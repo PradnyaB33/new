@@ -53,6 +53,19 @@ const useIncomeTax = create((set) => ({
         },
       };
     }),
+  setProofEmpty: (itemIndex) =>
+    set((state) => {
+      const newData = [...state.tableData];
+      const { amount, proof, ...otherData } = newData[itemIndex];
+      console.log("cliked");
+      return {
+        declarationData: {
+          ...state.declarationData,
+          ...otherData,
+          proof: undefined,
+        },
+      };
+    }),
   handleProofChange: (e, itemIndex, handleAlert) =>
     set((state) => {
       const file = e.target.files[0];
