@@ -6,8 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
 
-const MiniForm = ({ id, mutate }) => {
-  console.log(`🚀 ~ file: mini-form.jsx:10 ~ id:`, id);
+const MiniForm = ({ id, mutate, onClose }) => {
   const formSchema = z.object({
     id: z.string(),
     deleteReason: z
@@ -23,8 +22,12 @@ const MiniForm = ({ id, mutate }) => {
     resolver: zodResolver(formSchema),
   });
   const { errors } = formState;
+  const onSubmit = async (data) => {
+    mutate({ ...data, onClose });
+  };
+
   return (
-    <form onSubmit={handleSubmit(mutate)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col gap-2">
         <AuthInputFiled
           label="Delete Reason"

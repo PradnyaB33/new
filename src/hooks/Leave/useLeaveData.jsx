@@ -115,10 +115,6 @@ const useLeaveData = () => {
 
   const deleteLeaveMutation = useMutation(
     async ({ id, deleteReason }) => {
-      console.log(`🚀 ~ file: useLeaveData.jsx:118 ~ { id, message }:`, {
-        id,
-        deleteReason,
-      });
       setCalLoader(true);
       await axios.post(
         `${process.env.REACT_APP_API}/route/leave/delete/${id}`,
@@ -133,7 +129,11 @@ const useLeaveData = () => {
       );
     },
     {
-      onSuccess: async () => {
+      onSuccess: async (data, variable) => {
+        console.log(
+          `🚀 ~ file: useLeaveData.jsx:138 ~ variable:`,
+          variable?.onClose()
+        );
         await queryclient.invalidateQueries({
           queryKey: ["employee-leave-table"],
         });

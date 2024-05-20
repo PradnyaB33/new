@@ -416,6 +416,7 @@ const AppDatePicker = ({
         <MiniForm
           id={selectedLeave?._id}
           mutate={deleteLeaveMutation?.mutate}
+          onClose={() => setOpenDelete(false)}
         />
       </ReusableModal>
     </Popover>

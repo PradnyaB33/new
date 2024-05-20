@@ -6,8 +6,8 @@ const useLeaveData = () => {
   const { authToken } = useGetUser();
   const queryClient = useQueryClient();
   const { mutate: acceptDeleteLeaveMutation } = useMutation(
-    ({ id }) =>
-      axios.post(
+    async ({ id }) => {
+      const response = await axios.post(
         `${process.env.REACT_APP_API}/route/leave/delete-request-accept/${id}`,
         { message: "Your Request is successfully approved" },
         {
@@ -15,9 +15,11 @@ const useLeaveData = () => {
             Authorization: authToken,
           },
         }
-      ),
+      );
+      return response.data;
+    },
     {
-      onSuccess: async () => {
+      onSuccess: async (data, varM) => {
         await queryClient?.invalidateQueries("employee-leave");
         await queryClient?.invalidateQueries("EmpDataLeave");
       },
