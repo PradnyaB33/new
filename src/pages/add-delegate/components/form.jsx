@@ -44,7 +44,7 @@ const packageSchema = z.object({
       message: "Last Name is required",
     }
   ),
-  middle_name: z.string(),
+  middle_name: z.string().optional(),
   joining_date: z.string(),
   email: z.string().email(),
   phone_number: z
@@ -96,7 +96,7 @@ const MiniForm = ({ data }) => {
   const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
 
-  const { control, formState, handleSubmit, watch } = useForm({
+  const { control, formState, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
       first_name: data?.delegateSuperAdmin?.first_name,
       last_name: data?.delegateSuperAdmin?.last_name,
@@ -114,6 +114,7 @@ const MiniForm = ({ data }) => {
       profile: ["Delegate-Super-Admin", "Employee"],
       citizenship: data?.delegateSuperAdmin?.citizenship,
       _id: data?.delegateSuperAdmin?._id || "",
+      confirmPassword: undefined,
     },
     resolver: zodResolver(packageSchema),
   });
@@ -123,6 +124,20 @@ const MiniForm = ({ data }) => {
   const onSubmit = async (data) => {
     console.log(`🚀 ~ file: form.jsx:64 ~ data:`, data);
     addDelegateMutation.mutate(data);
+  };
+  const reset = async () => {
+    setValue("_id", "");
+    setValue("first_name", undefined);
+    setValue("last_name", undefined);
+    setValue("citizenship", undefined);
+    setValue("date_of_birth", undefined);
+    setValue("email", undefined);
+    setValue("gender", undefined);
+    setValue("joining_date", undefined);
+    setValue("middle_name", undefined);
+    setValue("password", undefined);
+    setValue("phone_number", undefined);
+    setValue("confirmPassword", undefined);
   };
   pass = watch;
 
@@ -286,9 +301,12 @@ const MiniForm = ({ data }) => {
           <Button
             fullWidth
             variant="contained"
-            onClick={async () =>
-              deleteDelegateMutation.mutate(data?.delegateSuperAdmin?._id)
-            }
+            onClick={async () => {
+              deleteDelegateMutation.mutate({
+                id: data?.delegateSuperAdmin?._id,
+                reset: reset,
+              });
+            }}
             type="button"
           >
             Delete

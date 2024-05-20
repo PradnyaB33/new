@@ -43,10 +43,10 @@ const useDelegateSuperAdmin = () => {
     },
   });
 
-  const deleteDelegate = async (data) => {
-    console.log(`🚀 ~ file: mutation.jsx:13 ~ data:`, data);
+  const deleteDelegate = async ({ id, reset }) => {
+    console.log(`🚀 ~ file: mutation.jsx:13 ~ id:`, id);
     const response = await axios.delete(
-      `${process.env.REACT_APP_API}/route/employee/delegate?employeeId=${data}`,
+      `${process.env.REACT_APP_API}/route/employee/delegate?employeeId=${id}`,
       {
         headers: {
           Authorization: authToken,
@@ -58,14 +58,17 @@ const useDelegateSuperAdmin = () => {
   };
   const deleteDelegateMutation = useMutation({
     mutationFn: deleteDelegate,
-    onSuccess: async (data) => {
+    onSuccess: async (data, variables) => {
+      console.log(`🚀 ~ file: mutation.jsx:62 ~ variables:`, variables);
       console.log(data);
       handleAlert(true, "success", "Delegate super admin deleted successfully");
       await queryClient.invalidateQueries({
         queryKey: [`delegate-super-admin-${decodedToken?.user?._id}`],
       });
     },
-    onError: (data) => {
+    onError: (data, variables, context) => {
+      console.log(`🚀 ~ file: mutation.jsx:70 ~ context:`, context);
+      console.log(`🚀 ~ file: mutation.jsx:70 ~ variables:`, variables);
       console.log(data);
     },
   });

@@ -197,15 +197,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Notifications",
           },
-          {
-            key: "listNotification",
-            isVisible: ["Employee"].includes(role) ? true : false,
-            link: "/self-notification",
-            icon: (
-              <CircleNotifications className=" !text-[1.2em] text-[#67748E]" />
-            ),
-            text: "Your Notification",
-          },
         ],
       },
       Performance: {
@@ -560,7 +551,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
       Records: {
         open: false,
-        isVisible: true,
+        isVisible: emp?.packageInfo === "Intermediate Plan",
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {

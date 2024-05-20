@@ -1,12 +1,10 @@
 import React, { useContext, useState } from "react";
-import Box from "@mui/material/Box";
 import { Container } from "@mui/material";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
 import { Info } from "@mui/icons-material";
-import CloseIcon from "@mui/icons-material/Close";
 import moment from "moment";
 
 const MissedPunchNotificationToEmp = () => {
@@ -28,6 +26,7 @@ const MissedPunchNotificationToEmp = () => {
       return response.data.data;
     }
   );
+  console.log(getMissedPunchData);
 
   const getTimeAgo = (updatedAt) => {
     const now = new Date();
@@ -48,35 +47,32 @@ const MissedPunchNotificationToEmp = () => {
     }
   };
 
-  // Sorting missed punch data based on updatedAt
-  const sortedMissedPunchData = getMissedPunchData
-    ? getMissedPunchData.slice().sort((a, b) => {
-        const timeA = new Date(a.updatedAt).getTime();
-        const timeB = new Date(b.updatedAt).getTime();
-        return timeB - timeA;
-      })
-    : [];
-
   const [selectedTimePeriod, setSelectedTimePeriod] = useState("all");
   const handleTimePeriodChange = (event) => {
     setSelectedTimePeriod(event.target.value);
   };
 
-  // Filter loan data based on selected time period
   const filteredMissedPunchData = () => {
+    if (!getMissedPunchData) {
+      return [];
+    }
+
     if (selectedTimePeriod === "all") {
-      console.log(sortedMissedPunchData);
-      return sortedMissedPunchData;
+      return getMissedPunchData;
     } else {
-      const currentTime = new Date();
-      const cutoffDate = new Date(
-        currentTime.getFullYear(),
-        currentTime.getMonth() - parseInt(selectedTimePeriod) + 1,
-        1
-      );
-      return getMissedPunchData.filter(
-        (data) => new Date(data.updatedAt) <= cutoffDate
-      );
+      const filteredData = [];
+      getMissedPunchData.forEach((data) => {
+        const filteredRecords = data.unavailableRecords.filter(
+          (record) => record.status === selectedTimePeriod
+        );
+        if (filteredRecords.length > 0) {
+          filteredData.push({
+            ...data,
+            unavailableRecords: filteredRecords,
+          });
+        }
+      });
+      return filteredData;
     }
   };
 
@@ -100,32 +96,19 @@ const MissedPunchNotificationToEmp = () => {
             </div>
             <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
               <div className="flex items-center gap-3 mb-3 md:mb-0">
+                <label htmlFor="statusDropdown">Select Status: </label>
                 <select
+                  id="statusDropdown"
                   value={selectedTimePeriod}
                   onChange={handleTimePeriodChange}
                   className="bg-white border rounded-lg px-3 py-2 outline-none "
                   style={{ width: "300px" }}
                 >
                   <option value="all">All</option>
-                  <option value="1">Last Month Ago</option>
-                  <option value="2">Second Month Ago</option>
-                  <option value="3">Third Month Ago</option>
-                  <option value="4">Fourth Month Ago</option>
-                  <option value="5">Fifth Month Ago</option>
-                  <option value="6">Sixth Month Ago</option>
-                  <option value="7">Seventh Month Ago</option>
-                  <option value="8">Eigth Month Ago</option>
-                  <option value="9">Ningth Month Ago</option>
-                  <option value="10">Tenth Month Ago</option>
-                  <option value="11">Eleventh Month Ago</option>
-                  <option value="12">Year Ago</option>
+                  <option value="Available">Available</option>
+                  <option value="Leave">Leave</option>
                 </select>
               </div>
-              <Box sx={{ p: 2 }}>
-                <div className="flex justify-center gap-10">
-                  <CloseIcon />
-                </div>
-              </Box>
             </div>
             {filteredMissedPunchData().length > 0 ? (
               filteredMissedPunchData().map((missedData, index) => (

@@ -19,19 +19,16 @@ import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import UserProfile from "../../../hooks/UserData/useUser";
 
-const EditModelOpen = ({
-  handleClose,
-  open,
-  employeeId,
-  organisationId,
-  role,
-}) => {
+const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
-
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
+  console.log("role", role);
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -98,6 +95,7 @@ const EditModelOpen = ({
     fetchData();
     return () => {};
   }, [open, employeeId, authToken]);
+
   console.log(employeeData);
 
   const [availabelLocation, setAvailableLocation] = useState([]);
@@ -1099,6 +1097,7 @@ const EditModelOpen = ({
                 ))}
             </select>
           </div>
+         
 
           <div className="space-y-2 ">
             <RadioGroup
