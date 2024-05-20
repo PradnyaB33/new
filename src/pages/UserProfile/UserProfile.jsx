@@ -73,6 +73,16 @@ const EmployeeProfile = () => {
 
   const handleAddAdditionalDetails = async () => {
     try {
+      if (phoneNumberError || !/^\d{10}$/.test(additionalPhoneNumber)) {
+        setPhoneNumberError("Mobile number should be 10 digits");
+        handleAlert(
+          true,
+          "error",
+          "Please enter a valid 10-digit phone number."
+        );
+        return;
+      }
+
       let imageUrl;
       if (file) {
         const signedUrlResponse = await getSignedUrl();
@@ -251,7 +261,11 @@ const EmployeeProfile = () => {
                 const enteredNumber = e.target.value;
                 if (/^\d{0,10}$/.test(enteredNumber)) {
                   setAdditionalPhoneNumber(enteredNumber);
-                  setPhoneNumberError("");
+                  if (enteredNumber.length !== 10) {
+                    setPhoneNumberError("Mobile number should be 10 digits");
+                  } else {
+                    setPhoneNumberError("");
+                  }
                 } else {
                   setPhoneNumberError("Mobile number should be 10 digits");
                 }
