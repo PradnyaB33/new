@@ -94,6 +94,7 @@ import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
 import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
 import MissedPunchNotificationToEmp from "./pages/MissedPunchNotification/MissedPunchNotificationToEmp";
 import MyTraining from "./pages/My-Training/page";
+import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
 import SelfShiftNotification from "./pages/SelfShiftNotification/page";
 import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
@@ -106,11 +107,12 @@ import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttenda
 import ViewCalculateAttendance from "./pages/ViewCalculateAttendance/ViewCalculateAttendance";
 import CustomCalander from "./pages/custom/Calendar";
 import DocNotification from "./pages/doc-notification/DocNotification";
-import EmpNotification from "./pages/emp-notifications/EmpNotification";
 import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import PayslipNotification from "./pages/PayslipNotification/PayslipNotification";
+
 const App = () => {
   return (
     <AuthProvider>
@@ -1034,6 +1036,10 @@ const App = () => {
         <Route
           path="/missed-punch-notification-to-emp"
           element={<MissedPunchNotificationToEmp />}
+        />
+        <Route
+          path="/payslip-notification-to-emp"
+          element={<PayslipNotification />}
         />
       </Routes>
     </AuthProvider>

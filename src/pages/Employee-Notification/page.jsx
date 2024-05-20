@@ -13,7 +13,7 @@ const EmployeeNotification = () => {
       name: "Shift Notification",
       count: 0,
       color: "#3668ff",
-      url: "/emp-shift-notification",
+      url: "/self/shift-notification",
     },
   ];
 

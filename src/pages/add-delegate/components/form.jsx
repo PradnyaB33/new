@@ -11,6 +11,7 @@ import {
   Person,
   Person2,
   Person3,
+  Work,
 } from "@mui/icons-material";
 import { Button, IconButton } from "@mui/material";
 import moment from "moment";
@@ -88,6 +89,10 @@ const packageSchema = z.object({
   confirmPassword: z.string().refine((data) => {
     return data === pass("password");
   }),
+  empId: z
+    .string()
+    .min(1, { message: "Employee code is required" })
+    .max(25, { message: "Employee code is not greater than 25 character" }),
   _id: z.string(),
 });
 const MiniForm = ({ data }) => {
@@ -115,6 +120,7 @@ const MiniForm = ({ data }) => {
       citizenship: data?.delegateSuperAdmin?.citizenship,
       _id: data?.delegateSuperAdmin?._id || "",
       confirmPassword: undefined,
+      empId: data?.delegateSuperAdmin?.empId || "",
     },
     resolver: zodResolver(packageSchema),
   });
@@ -138,6 +144,7 @@ const MiniForm = ({ data }) => {
     setValue("password", undefined);
     setValue("phone_number", undefined);
     setValue("confirmPassword", undefined);
+    setValue("empId", undefined);
   };
   pass = watch;
 
@@ -149,7 +156,7 @@ const MiniForm = ({ data }) => {
       >
         <Close />
       </IconButton>
-      <h1 className="text-xl font-semibold font-sans">
+      <h1 className="text-xl font-semibold font-sans mb-6">
         Add Delegate Super Admin
       </h1>
       <form
@@ -296,11 +303,23 @@ const MiniForm = ({ data }) => {
             errors={errors}
             error={errors?.citizenship}
           />
+          <AuthInputFiled
+            name="empId"
+            icon={Work}
+            control={control}
+            type="text"
+            placeholder="Employee Code"
+            label="Employee Code *"
+            errors={errors}
+            error={errors.empId}
+          />
         </div>
         <div className="flex gap-6 w-full">
           <Button
             fullWidth
             variant="contained"
+            color="error"
+            disabled={!data?.delegateSuperAdmin?._id}
             onClick={async () => {
               deleteDelegateMutation.mutate({
                 id: data?.delegateSuperAdmin?._id,
