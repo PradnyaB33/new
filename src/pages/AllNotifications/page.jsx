@@ -7,12 +7,15 @@ import usePunchNotification from "../../hooks/QueryHook/notification/punch-notif
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
 import Card from "./components/card";
 import usePayslipNotificationHook from "../../hooks/QueryHook/notification/PayslipNotification/usePayslipNotificaitonHook";
+import UserProfile from "../../hooks/UserData/useUser";
+import useTDSNotificationHook from "../../hooks/QueryHook/notification/tds-notification/hook";
 
 const ParentNotification = () => {
   const { data } = useLeaveNotificationHook();
   const { data: data2 } = useShiftNotification();
   const { data: data3 } = usePunchNotification();
   const { data: data4 } = useDocNotification();
+  const {data:tds}=useTDSNotificationHook()
   const { missPunchData } = useMissedPunchNotificationCount();
   const { getEmployeeRequestLoanApplication } = useLoanNotification();
   const { PayslipNotification } = usePayslipNotificationHook();
