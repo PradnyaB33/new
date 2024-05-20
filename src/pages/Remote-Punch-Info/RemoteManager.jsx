@@ -14,8 +14,8 @@ const RemoteManager = () => {
   });
   return (
     <div className="w-full h-[100%] flex justify-between relative">
-      <div className="z-50 md:p-6 p-2 flex flex-col mt-7 md:w-[30vw] w-[50vw] bg-white gap-4">
-        <div className="w-full md:flex flex-none flex-col bg-white h-full justify-between">
+      <div className="z-50 p-6 flex flex-col mt-7 w-[30vw] bg-white gap-4">
+        <div className="w-full flex flex-col bg-white h-full justify-between">
           <MappedPunches
             {...{
               Id,

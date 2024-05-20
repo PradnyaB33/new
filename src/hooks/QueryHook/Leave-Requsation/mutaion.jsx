@@ -6,8 +6,8 @@ const useLeaveRequisitionMutation = () => {
   const { handleAlert } = useContext(TestContext);
   function calculateDays(startDateString, endDateString) {
     // Parse the start and end dates using Moment.js
-    var startDate = moment(startDateString, "YYYY-MM-DD");
-    var endDate = moment(endDateString, "YYYY-MM-DD");
+    var startDate = moment(startDateString);
+    var endDate = moment(endDateString);
 
     // Calculate the difference in days
     var daysDifference = endDate.diff(startDate, "days");
@@ -21,30 +21,25 @@ const useLeaveRequisitionMutation = () => {
     newLeaveArray,
     itemDays
   ) {
-    console.log(`🚀 ~ file: mutaion.jsx:24 ~ dataArray:`, dataArray);
     let maxCount = 0;
-    let totalCountOfLeave = itemDays;
-    newLeaveArray.forEach((item) => {
+    let totalCountOfLeave = 0;
+    await newLeaveArray.forEach((item) => {
       if (item.leaveTypeDetailsId === id) {
-        totalCountOfLeave += calculateDays(item?.start, item?.end);
+        totalCountOfLeave =
+          totalCountOfLeave + calculateDays(item?.start, item?.end);
       }
     });
-    console.log(
-      `🚀 ~ file: mutaion.jsx:29 ~ totalCountOfLeave:`,
-      totalCountOfLeave
-    );
 
-    dataArray.forEach((item) => {
+    await dataArray.forEach((item) => {
       if (item._id === id) {
         maxCount = item?.count;
       }
     });
-    console.log(`🚀 ~ file: mutaion.jsx:43 ~ maxCount:`, maxCount);
+
     if (maxCount < totalCountOfLeave) {
       if (maxCount === 0) {
         return true;
       }
-      console.log("i am here");
       handleAlert(
         true,
         "error",

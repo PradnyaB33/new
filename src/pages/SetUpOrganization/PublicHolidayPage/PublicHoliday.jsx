@@ -24,11 +24,10 @@ import axios from "axios";
 import { format } from "date-fns";
 import dayjs from "dayjs";
 import React, { useContext, useEffect, useState } from "react";
-import { useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../Setup";
-import usePublicHoliday from "./usePublicHoliday";
 
 const PublicHoliday = () => {
   const id = useParams().organisationId;
@@ -45,6 +44,8 @@ const PublicHoliday = () => {
   const authToken = cookies["aegis"];
   const [formSubmitted, setFormSubmitted] = useState(false);
   const queryClient = useQueryClient();
+
+  const orgId = useParams().organisationId;
 
   const [inputdata, setInputData] = useState({
     name: "",
@@ -72,15 +73,30 @@ const PublicHoliday = () => {
     })();
   }, [authToken, id]);
 
-  const { data } = usePublicHoliday(id);
-
+  const { data } = useQuery("holidays", async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/holiday/get/${id}`
+      );
+      return response.data.holidays;
+    } catch (error) {
+      console.error("Error fetching holidays:", error);
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: "An Error occurred while fetching holidays",
+      });
+    }
+  });
   const handleData = (e) => {
     const { name, value } = e.target;
 
-    setInputData({
-      ...inputdata,
-      [name]: value,
-    });
+    if (value.length <= 35) {
+      setInputData({
+        ...inputdata,
+        [name]: value,
+      });
+    }
   };
 
   const handleClose = () => {
@@ -125,7 +141,7 @@ const PublicHoliday = () => {
       setAppAlert({
         alert: true,
         type: "error",
-        msg: "An Error occurred while creating holiday.",
+        msg: error.response.data.message,
       });
     }
   };
@@ -164,10 +180,12 @@ const PublicHoliday = () => {
         name,
         type,
         region,
+        date: inputdata.date,
+        organizationId: orgId,
       };
       await axios
         .patch(
-          `${process.env.REACT_APP_API}/route/holiday/update/${id}`,
+          `${process.env.REACT_APP_API}/route/holiday/update/${selectedHolidayId}`,
           patchData
         )
         .then((response) => {
@@ -432,7 +450,11 @@ const PublicHoliday = () => {
                       type="text"
                       name="name"
                       value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={(e) => {
+                        if (e.target.value.length <= 35) {
+                          setName(e.target.value);
+                        }
+                      }}
                     />
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={["DatePicker"]} required>

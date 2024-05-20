@@ -30,6 +30,7 @@ const ShiftAcceptModal = ({ data }) => {
       const response = await axios.get(url, {
         headers: { Authorization: authToken },
       });
+      console.log("finalData", response.data);
       return response.data;
     } else {
       url = `${process.env.REACT_APP_API}/route/shiftApply/getForManager`;
@@ -53,7 +54,7 @@ const ShiftAcceptModal = ({ data }) => {
             },
           }
         );
-        console.log("this is my data bro", res.data);
+        console.log("this is emp1", res.data);
         return res.data;
       } catch (error) {
         console.log(error);
@@ -74,7 +75,7 @@ const ShiftAcceptModal = ({ data }) => {
             },
           }
         );
-        console.log("this is my data bro", res.data);
+        console.log("this is emp2", res.data);
         return res.data;
       } catch (error) {
         console.log(error);
@@ -190,12 +191,13 @@ const ShiftAcceptModal = ({ data }) => {
                       </h1>
                     </div>
                   )}
+
                   {EmpNotification &&
                     EmpNotification?.requests?.map((item, idx) => (
                       <ShiftRejectModel items={item} />
                     ))}
                   {EmpNotification2 &&
-                    EmpNotification2?.requests?.map((item, idx) => (
+                    EmpNotification2?.newReq?.map((item, idx) => (
                       <ShiftRejectModel items={item} />
                     ))}
                 </div>

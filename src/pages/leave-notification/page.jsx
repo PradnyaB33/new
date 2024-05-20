@@ -7,14 +7,6 @@ const LeaveNotification = () => {
   console.log("leave data", data);
   return (
     <div className="flex flex-col">
-      {/* {data?.leaveRequests?.map((items, idx) => (
-        <LeaveRejectmodal
-          key={idx}
-          items={items}
-          isFetching={isFetching}
-          isLoading={isLoading}
-        />
-      ))} */}
       <LeaveAcceptModal data={data} />
     </div>
   );

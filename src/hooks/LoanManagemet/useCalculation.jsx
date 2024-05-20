@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import useLaonState from "./useLaonState";
-
 const useCalculation = () => {
   const {
     rateOfIntereset,
@@ -21,7 +20,7 @@ const useCalculation = () => {
     const monthsToAdd = parseInt(emiCount);
     if (!isNaN(monthsToAdd)) {
       const completionDate = dayjs(disbursementDate)
-        .add(monthsToAdd , "month")
+        .add(monthsToAdd, "month")
         .format("MM-DD-YYYY");
       setCompletedDate(completionDate);
     }
@@ -38,9 +37,12 @@ const useCalculation = () => {
 
   // Calculate interest per month
   const interestPerMonth =
-    isNaN(loanAmount) || isNaN(roi) || loanAmount === "" || rateOfIntereset === ""
+    isNaN(loanAmount) ||
+    isNaN(roi) ||
+    loanAmount === "" ||
+    rateOfIntereset === ""
       ? 0
-      : parseFloat(loanAmount) * roi / 12;
+      : (parseFloat(loanAmount) * roi) / 12;
   const interestPerMonths = interestPerMonth.toFixed(2);
 
   // Calculate total deduction per month
@@ -52,13 +54,14 @@ const useCalculation = () => {
   const totalAmountWithSimpleInterest =
     isNaN(loanAmount) || isNaN(noOfEmi) || loanAmount === "" || noOfEmi === ""
       ? 0
-      : parseFloat(loanAmount) + parseFloat(interestPerMonths) * parseInt(noOfEmi);
+      : parseFloat(loanAmount) +
+        parseFloat(interestPerMonths) * parseInt(noOfEmi);
 
   return {
     principalPerMonth,
     interestPerMonths,
     totalDeductionPerMonth,
-    totalAmountWithSimpleInterest: totalAmountWithSimpleInterest ,
+    totalAmountWithSimpleInterest: totalAmountWithSimpleInterest,
     handleNoOfEmiChange,
   };
 };

@@ -21,9 +21,13 @@ const Mapped = ({
   setNewAppliedLeaveEvents,
   setCalendarOpen,
 }) => {
-  console.log(`🚀 ~ file: mapped-form.jsx:24 ~ item:`, item);
+  console.log(
+    `🚀 ~ file: mapped-form.jsx:24 ~ subtractedLeaves:`,
+    subtractedLeaves
+  );
   const { data } = useLeaveRequesationHook();
   const { calculateDays, checkLeaveProblem } = useLeaveRequisitionMutation();
+  let array = [];
 
   const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
   const badgeStyle = {
@@ -36,11 +40,14 @@ const Mapped = ({
   };
 
   const handleChange = async (event) => {
+    newAppliedLeaveEvents[index].leaveTypeDetailsId = event.target.value;
+    let temp = newAppliedLeaveEvents;
+    console.log(`🚀 ~ file: mapped-form.jsx:40 ~ temp:`, temp);
     let result = await checkLeaveProblem(
       data?.leaveTypes,
       event.target.value,
       item,
-      newAppliedLeaveEvents,
+      temp,
       calculateDays(item?.start, item?.end)
     );
     if (result === true) {
@@ -49,13 +56,24 @@ const Mapped = ({
       setNewAppliedLeaveEvents(newAppliedLeaveEvents);
     }
   };
-  const removeItem = async (idToRemove) => {
+  console.log(
+    `🚀 ~ file: mapped-form.jsx:51 ~ newAppliedLeaveEvents:`,
+    newAppliedLeaveEvents
+  );
+  const removeItem = (idToRemove) => {
     const updatedAppliedLeaveEvents = newAppliedLeaveEvents.filter(
       (_, i) => i !== idToRemove
     );
     setNewAppliedLeaveEvents(updatedAppliedLeaveEvents);
-    // await queryClient.invalidateQueries("employee-leave-table-without-default");
   };
+  if (data?.leaveTypes) {
+    array = [
+      ...subtractedLeaves.filter((item) => item.count < 0),
+      ...data?.leaveTypes.filter((item) => item.count > 0),
+    ];
+    console.log(`🚀 ~ file: mapped-form.jsx:69 ~ array:`, array);
+  }
+
   return (
     <div
       key={index}
@@ -116,9 +134,10 @@ const Mapped = ({
             label="Select Type"
             onChange={handleChange}
           >
-            {subtractedLeaves?.map((item, index) => {
+            {array?.map((item, index) => {
               return (
-                item.isActive && (
+                item.isActive &&
+                item.count !== 0 && (
                   <MenuItem
                     selected={leavesTypes === item.leaveTypeDetailsId}
                     id={index}
