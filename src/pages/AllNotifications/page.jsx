@@ -18,7 +18,9 @@ const ParentNotification = () => {
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
   const tdsRoute =
-    role === "Accountant"
+    role === "Accountant" ||
+    role === "Super-Admin" ||
+    role === "delegate Super-Admin"
       ? `/notification/income-tax`
       : `/notification/income-tax-details`;
   console.log(`🚀 ~ tdsRoute:`, tdsRoute);
