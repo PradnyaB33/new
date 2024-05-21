@@ -6,6 +6,8 @@ import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-n
 import useLoanNotification from "../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
 import usePunchNotification from "../../hooks/QueryHook/notification/punch-notification/hook";
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
+import useTDSNotificationHook from "../../hooks/QueryHook/notification/tds-notification/hook";
+import UserProfile from "../../hooks/UserData/useUser";
 import Card from "./components/card";
 
 const ParentNotification = () => {
@@ -14,6 +16,7 @@ const ParentNotification = () => {
   const { data: data3 } = usePunchNotification();
   const { data: data4 } = useDocNotification();
   const { missPunchData } = useMissedPunchNotificationCount();
+  const { data: tds } = useTDSNotificationHook();
 
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
@@ -73,6 +76,12 @@ const ParentNotification = () => {
       count: data4?.data?.doc.length ?? 0,
       color: "#FF7373",
       url: "/doc-notification",
+    },
+    {
+      name: "TDS Notification",
+      count: tds ?? 0,
+      color: "#51E8FD",
+      url: tdsRoute,
     },
   ];
 
