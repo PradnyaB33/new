@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 import usePayslipNotificationHook from "../../hooks/QueryHook/notification/PayslipNotification/usePayslipNotificaitonHook";
 import useDocNotification from "../../hooks/QueryHook/notification/document-notification/hook";
@@ -20,12 +20,18 @@ const ParentNotification = () => {
 
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
-  const tdsRoute =
-    role === "Accountant" ||
-    role === "Super-Admin" ||
-    role === "delegate Super-Admin"
-      ? `/notification/income-tax`
-      : `/notification/income-tax-details`;
+  console.log(`🚀 ~ role:`, role);
+  const tdsRoute = useMemo(() => {
+    if (
+      role === "Accountant" ||
+      role === "Super-Admin" ||
+      role === "delegate Super-Admin"
+    ) {
+      return "/notification/income-tax";
+    }
+    return "/";
+  }, [role]);
+
   console.log(`🚀 ~ tdsRoute:`, tdsRoute);
   const { getEmployeeRequestLoanApplication } = useLoanNotification();
   const { PayslipNotification } = usePayslipNotificationHook();
@@ -82,6 +88,7 @@ const ParentNotification = () => {
       count: tds ?? 0,
       color: "#51E8FD",
       url: tdsRoute,
+      url2: "/notification/income-tax-details",
     },
   ];
 
