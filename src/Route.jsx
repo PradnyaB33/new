@@ -111,6 +111,7 @@ import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
 import PayslipNotification from "./pages/PayslipNotification/PayslipNotification";
+import Form16Notification from "./pages/Form16NotificationToEmp/Form16Notification";
 
 const App = () => {
   return (
@@ -1039,6 +1040,10 @@ const App = () => {
         <Route
           path="/payslip-notification-to-emp"
           element={<PayslipNotification />}
+        />
+         <Route
+          path="/form16-notification-to-emp"
+          element={<Form16Notification />}
         />
       </Routes>
     </AuthProvider>
