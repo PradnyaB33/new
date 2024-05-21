@@ -29,6 +29,7 @@ const BackComponent = () => {
     // "/organizationList",
     // "/organisation/employee-dashboard",
     // "/organisation",
+    "/leave",
   ];
 
   if (backFalseRoutes.some((value) => location.pathname.includes(value))) {
