@@ -13,7 +13,6 @@ export default function useDashboardFilter(organisationId) {
   const [locations, setLocations] = useState("");
   const [data, setData] = useState([]);
   const [date, setDate] = useState(2024);
-  console.log(`🚀 ~ file: useDashboardFilter.jsx:16 ~ setDate:`, setDate);
   const [salaryData, setSalaryData] = useState([]);
   const { selectedYear, selectedSalaryYear } = useDashGlobal();
   const { employee } = useEmployee(organisationId);
@@ -41,10 +40,7 @@ export default function useDashboardFilter(organisationId) {
       enabled: employee?.employees ? true : false,
     }
   );
-  console.log(
-    `🚀 ~ file: useDashboardFilter.jsx:45 ~ absentEmployee:`,
-    absentEmployee
-  );
+
   // Department data
   const getAPIData = async (url) => {
     try {
@@ -124,8 +120,7 @@ export default function useDashboardFilter(organisationId) {
   const customStyles = {
     control: (base) => ({
       ...base,
-      border: 0,
-      // background: "#f9fafb",
+      border: ".5px solid #f1f1f1",
       boxShadow: "none",
       hover: {
         cursor: "pointer !important",
@@ -311,6 +306,7 @@ export default function useDashboardFilter(organisationId) {
     // States
     data,
     date,
+    setDate,
     setData,
     locations,
     setLocations,

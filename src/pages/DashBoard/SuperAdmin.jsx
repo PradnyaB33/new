@@ -11,6 +11,7 @@ import React from "react";
 import { useQueryClient } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import Select from "react-select";
+import useDashGlobal from "../../hooks/Dashboard/useDashGlobal";
 import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
 import useEmployee from "../../hooks/Dashboard/useEmployee";
 import LineGraph from "./Components/Bar/LineGraph";
@@ -45,6 +46,8 @@ const SuperAdmin = () => {
     salaryData,
   } = useDashboardFilter(organisationId);
 
+  const { setSelectedSalaryYear, selectedSalaryYear } = useDashGlobal();
+
   //? Salary Graph Data
 
   return (
@@ -55,7 +58,7 @@ const SuperAdmin = () => {
           <Link to={"/organizationList"}>
             <West className="mx-4 !text-xl" />
           </Link>
-          Organisation Overview
+          Organisation Dashboard
         </header>
         {/* <Link to={"/organizationList"} className="my-4 px-8 flex gap-1">
         <KeyboardBackspace />
@@ -104,9 +107,9 @@ const SuperAdmin = () => {
               <div className="border-b-[.5px] items-center justify-between flex gap-2 py-2 px-4 border-gray-300">
                 <div className="flex items-center gap-2">
                   <Dashboard className="!text-[#67748E]" />
-                  <h1 className="text-md font-bold text-[#67748E]">
+                  {/* <h1 className="text-md font-bold text-[#67748E]">
                     Dashboard
-                  </h1>
+                  </h1> */}
                 </div>
                 <div className="flex w-[80%] gap-6 items-center justify-end">
                   <button
@@ -192,7 +195,11 @@ const SuperAdmin = () => {
 
           <div className="w-full md:gap-4 md:space-y-0 space-y-3 mt-4 flex md:flex-row flex-col items-center">
             <div className="w-[100%] md:w-[50%]">
-              <LineGraph salarydata={salaryData} />
+              <LineGraph
+                salarydata={salaryData}
+                selectedyear={selectedSalaryYear}
+                setSelectedYear={setSelectedSalaryYear}
+              />
             </div>
             <div className="w-[100%] md:w-[50%]">
               <AttendenceBar

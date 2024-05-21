@@ -43,6 +43,7 @@ import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
+import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
@@ -55,27 +56,33 @@ const TestNavItems = ({ toggleDrawer }) => {
   const [decodedToken, setDecodedToken] = useState("");
   const [emp, setEmp] = useState();
   const { decodedToken: decoded } = useGetUser();
-  const { getCurrentUser } = UserProfile();
+  const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
+  const role = useGetCurrentRole();
 
   // Update organization ID when URL changes
   useEffect(() => {
-    // const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
-    getOrganizationIdFromPathname(location.pathname);
+    if (role === "Super-Admin") {
+      getOrganizationIdFromPathname(location.pathname);
+    } else {
+      setOrgId(user?.organizationId);
+    }
     // eslint-disable-next-line
   }, [location.pathname, orgId]);
 
   useEffect(() => {
     (async () => {
-      const resp = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get/profile/${user._id}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      setEmp(resp.data.employee.organizationId);
+      if (user?._id) {
+        const resp = await axios.get(
+          `${process.env.REACT_APP_API}/route/employee/get/profile/${user?._id}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setEmp(resp.data.employee.organizationId);
+      }
     })();
     // eslint-disable-next-line
   }, []);
@@ -99,9 +106,15 @@ const TestNavItems = ({ toggleDrawer }) => {
     setOrgId(orgId);
   };
 
-  const { useGetCurrentRole } = UserProfile();
-  const role = useGetCurrentRole();
+  const { data } = useSubscriptionGet({
+    organisationId: orgId,
+  });
+
   const [isVisible, setisVisible] = useState(true);
+
+  useEffect(() => {
+    setisVisible(location.pathname.includes("/organisation"));
+  }, [location.pathname]);
 
   let navItems = useMemo(
     () => ({
@@ -191,7 +204,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
       Performance: {
         open: false,
-        isVisible: true,
+        isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
         icon: <Payment className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
@@ -541,7 +554,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
       Records: {
         open: false,
-        isVisible: emp?.packageInfo === "Intermediate Plan",
+        isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
@@ -569,7 +582,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
       Training: {
         open: false,
-        isVisible: true,
+        isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
@@ -594,12 +607,15 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
     }),
     // eslint-disable-next-line
-    [isVisible, orgId, check]
+    [
+      isVisible,
+      orgId,
+      check,
+      data?.organisation?.packageInfo,
+      location.pathname,
+      role
+    ]
   );
-
-  useEffect(() => {
-    setisVisible(location.pathname.includes("/organisation"));
-  }, [location, navItems]);
 
   useEffect(() => {
     try {

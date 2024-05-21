@@ -5,7 +5,6 @@ import { useMutation } from "react-query";
 import Select from "react-select";
 import * as XLSX from "xlsx";
 import { TestContext } from "../../../../State/Function/Main";
-import useDashGlobal from "../../../../hooks/Dashboard/useDashGlobal";
 
 const LineGraph = ({
   salarydata,
@@ -15,7 +14,7 @@ const LineGraph = ({
   isLoading,
 }) => {
   const { handleAlert } = useContext(TestContext);
-  const { setSelectedSalaryYear, selectedSalaryYear } = useDashGlobal();
+
   const option = {
     elements: {
       line: {
@@ -147,18 +146,18 @@ const LineGraph = ({
   };
 
   const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
     "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
   ];
 
   const allMonths = monthNames;
@@ -233,8 +232,8 @@ const LineGraph = ({
           className="w-full 
       px-4 pb-4  flex flex-col border rounded-sm bg-white  justify-center"
         >
-          <div className="flex justify-between items-center">
-            <h1 className="text-lg my-4 font-bold text-[#67748E]">
+          <div className="flex my-4 justify-between items-center">
+            <h1 className="text-lg  font-bold text-[#67748E]">
               Salary Overview
             </h1>
 
