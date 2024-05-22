@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import useForm16NotificationHook from "../../hooks/QueryHook/notification/Form16Notification/useForm16NotificationHook";
 import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 import usePayslipNotificationHook from "../../hooks/QueryHook/notification/PayslipNotification/usePayslipNotificaitonHook";
 import useDocNotification from "../../hooks/QueryHook/notification/document-notification/hook";
@@ -17,7 +18,10 @@ const ParentNotification = () => {
   const { data: data4 } = useDocNotification();
   const { missPunchData } = useMissedPunchNotificationCount();
   const { data: tds } = useTDSNotificationHook();
-
+  const { Form16Notification } = useForm16NotificationHook();
+  const { getEmployeeRequestLoanApplication } = useLoanNotification();
+  const { PayslipNotification } = usePayslipNotificationHook();
+  console.log("form16", Form16Notification);
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
   console.log(`🚀 ~ role:`, role);
@@ -57,13 +61,17 @@ const ParentNotification = () => {
       url: "/punch-notification",
     },
     {
-      name: "Missed Punch Notification",
-      count: missPunchData?.length ?? 0,
+      name: "TDS Notification",
+      count: tds ?? 0,
       color: "#51E8FD",
-      url: "/missedPunch-notification",
-      url2: "/missed-punch-notification-to-emp",
+      url: tdsRoute,
     },
-
+    {
+      name: "Document Approval Notification",
+      count: data4?.data?.doc.length ?? 0,
+      color: "#FF7373",
+      url: "/doc-notification",
+    },
     {
       name: "Loan Notification",
       count: getEmployeeRequestLoanApplication?.length ?? 0,
@@ -72,14 +80,21 @@ const ParentNotification = () => {
       url2: "/loan-notification-to-emp",
     },
     {
+      name: "Missed Punch Notification",
+      count: missPunchData?.length ?? 0,
+      color: "#51E8FD",
+      url: "/missedPunch-notification",
+      url2: "/missed-punch-notification-to-emp",
+    },
+    {
       name: "Payslip Notification",
       count: PayslipNotification?.length ?? 0,
       color: "#51E8FD",
       url: "/payslip-notification-to-emp",
     },
     {
-      name: "Document Approval Notification",
-      count: data4?.data?.doc.length ?? 0,
+      name: "Form 16 Notification",
+      count: Form16Notification?.length ?? 0,
       color: "#FF7373",
       url: "/doc-notification",
     },
@@ -104,6 +119,9 @@ const ParentNotification = () => {
   //     url: "/loan-notification",
   //   });
   // }
+      url: "/form16-notification-to-emp",
+    },
+  ];
 
   return (
     <div className="pt-5">

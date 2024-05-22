@@ -1,62 +1,59 @@
-import {
-  Button,
-  Divider,
-  FormControl,
-  InputLabel,
-  Paper,
-  Skeleton,
-  TextField,
-  FormHelperText,
-  Typography,
-} from "@mui/material";
+import { Button, Divider, Paper } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useRef, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import React, { useContext, useState, useRef } from "react";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "react-query";
+import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
+import { ContactEmergency } from "@mui/icons-material";
+import ChatIcon from "@mui/icons-material/Chat";
+import InfoIcon from "@mui/icons-material/Info";
+import useHook from "../../hooks/UserProfile/useHook";
+import { Skeleton } from "@mui/material";
 import { getSignedUrl, uploadFile } from "../../services/api";
 
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
-  const token = cookies["aegis"];
+  const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const userId = user._id;
-  const [url, setUrl] = useState();
-  const [additionalPhoneNumber, setAdditionalPhoneNumber] = useState("");
-  const [chatId, setChatId] = useState("");
-  const [fetched, setFetched] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("");
-  const [file, setFile] = useState();
-  const [phoneNumberError, setPhoneNumberError] = useState("");
-  const fileInputRef = useRef();
   const queryClient = useQueryClient();
-
-  const { data } = useQuery("profile", async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get/profile/${userId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      setChatId(response?.data?.employee?.chat_id);
-      setAdditionalPhoneNumber(
-        response?.data?.employee?.additional_phone_number
-      );
-      setStatusMessage(response?.data?.employee?.status_message);
-      setFetched(true);
-      return response.data.employee;
-    } catch (error) {
-      handleAlert(true, "error", "Failed to fetch User Profile Data");
-      console.error("Error fetching user profile data:", error);
-    }
+  const [error, setError] = useState();
+  const { UserInformation } = useHook();
+  const [url, setUrl] = useState();
+  const fileInputRef = useRef();
+  const [file, setFile] = useState();
+  const UserProfileSchema = z.object({
+    additional_phone_number: z
+      .string()
+      .max(10, { message: "Phone Number must be 10 digits" })
+      .refine((value) => value.length === 10, {
+        message: "Phone Number must be exactly 10 digits",
+      })
+      .optional(),
+    chat_id: z.string().optional(),
+    status_message: z.string().optional(),
   });
 
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    reset,
+  } = useForm({
+    defaultValues: {
+      additional_phone_number: "",
+      chat_id: "",
+      status_message: "",
+    },
+    resolver: zodResolver(UserProfileSchema),
+  });
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type.startsWith("image/")) {
@@ -71,59 +68,53 @@ const EmployeeProfile = () => {
     }
   };
 
-  const handleAddAdditionalDetails = async () => {
-    try {
-      if (phoneNumberError || !/^\d{10}$/.test(additionalPhoneNumber)) {
-        setPhoneNumberError("Mobile number should be 10 digits");
-        handleAlert(
-          true,
-          "error",
-          "Please enter a valid 10-digit phone number."
-        );
-        return;
-      }
+  const AddAdditionalInformation = useMutation(
+    (data) =>
+      axios.post(
+        `${process.env.REACT_APP_API}/route/employee/profile/add/${userId}`,
+        data,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      ),
 
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["additionalField"] });
+        handleAlert(true, "success", "Additional details added successfully!");
+        reset();
+      },
+      onError: () => {
+        setError("Error updating additional details.");
+      },
+    }
+  );
+
+  const onSubmit = async (data) => {
+    try {
       let imageUrl;
       if (file) {
         const signedUrlResponse = await getSignedUrl();
         const signedUrl = signedUrlResponse.url;
         imageUrl = await uploadFile(signedUrl, file);
       }
-      const response = await axios.post(
-        `${process.env.REACT_APP_API}/route/employee/profile/add/${userId}`,
-        {
-          additional_phone_number: additionalPhoneNumber,
-          chat_id: chatId,
-          status_message: statusMessage,
-          user_logo_url: imageUrl?.Location.split("?")[0],
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-        }
-      );
 
-      if (response.status === 200) {
-        handleAlert(true, "success", "Additional details added successfully!");
-        queryClient.invalidateQueries("emp-profile");
-        queryClient.invalidateQueries("profile");
-        setAdditionalPhoneNumber("");
-        setChatId("");
-        setStatusMessage("");
-      } else {
-        console.error("Failed to update additional details");
-      }
+      const requestData = {
+        ...data,
+        user_logo_url: imageUrl?.Location.split("?")[0],
+      };
+      console.log(requestData);
+      await AddAdditionalInformation.mutateAsync(requestData);
     } catch (error) {
-      console.error("Error updating additional details:", error);
-      handleAlert(
-        true,
-        "error",
-        error.response ? error.response.data.message : error.message
-      );
+      console.error(error);
+      handleAlert(true, "error", "Error updating additional details");
+      setError("Error updating additional details");
     }
   };
+
+  console.log(error);
 
   return (
     <div>
@@ -144,196 +135,172 @@ const EmployeeProfile = () => {
           </p>
         </div>
 
-        <div className="flex justify-around items-center w-full h-[25vh]">
-          <div className="w-[50%]">
-            <div>
-              <input
-                style={{ display: "none" }}
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-              <div className="w-full h-full flex flex-col justify-center items-center">
-                {url || data?.user_logo_url ? (
-                  <img
-                    src={url || data?.user_logo_url}
-                    alt="Selected"
-                    style={{
-                      width: "150px",
-                      height: "150px",
-                      borderRadius: "50%",
-                    }}
-                  />
-                ) : (
-                  <Skeleton variant="circular" width="150px" height="150px" />
-                )}
-                <button
-                  onClick={() => fileInputRef.current.click()}
-                  className="flex justify-center h-full bg-[#1976d2] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="flex justify-around items-center w-full h-[25vh]">
+            <div className="w-[50%]">
+              <div>
+                <input
+                  style={{ display: "none" }}
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+                <div className="w-full h-full flex flex-col justify-center items-center">
+                  {url || UserInformation?.user_logo_url ? (
+                    <img
+                      src={url || UserInformation?.user_logo_url}
+                      alt="Selected"
+                      style={{
+                        width: "150px",
+                        height: "150px",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  ) : (
+                    <Skeleton variant="circular" width="150px" height="150px" />
+                  )}
+                  <button
+                    onClick={() => fileInputRef.current.click()}
+                    className="flex justify-center h-full bg-[#1976d2] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
+                  >
+                    {UserInformation?.user_logo_url
+                      ? "Update Profile Picture"
+                      : "Select Profile Picture"}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-[50%] ml-20">
+              <div className="w-full h-full flex flex-col items-start">
+                <h1
+                  style={{
+                    fontSize: "24px",
+                    fontWeight: "bold",
+                    color: "#333",
+                    textAlign: "center",
+                  }}
+                  className="text-left"
                 >
-                  {data?.user_logo_url
-                    ? "Update Profile Picture"
-                    : "Select Profile Picture"}
-                </button>
+                  {`${user?.first_name} ${user?.last_name}`}
+                </h1>
+                <h1 className="text-lg font-semibold text-left">
+                  {user?.profile.join(", ")}
+                </h1>
+
+                <div className="w-full">
+                  <h1 className="text-lg text-left" style={{ color: "#000" }}>
+                    {!UserInformation?.status_message ? (
+                      <div className="w-full">
+                        <Skeleton
+                          variant="text"
+                          width="200px"
+                          className="flex m-auto"
+                          sx={{ fontSize: "1rem" }}
+                        />
+                      </div>
+                    ) : (
+                      <>
+                        <span>
+                          <strong>Status:</strong>{" "}
+                          {UserInformation?.status_message || ""}
+                        </span>
+                      </>
+                    )}
+                  </h1>
+                  <h1 className="text-lg text-left" style={{ color: "#000" }}>
+                    {!UserInformation?.chat_id ? (
+                      <div className="w-full">
+                        <Skeleton
+                          variant="text"
+                          width="200px"
+                          className="flex m-auto"
+                          sx={{ fontSize: "1rem" }}
+                        />
+                      </div>
+                    ) : (
+                      <>
+                        <span>
+                          <strong>Chat ID:</strong>{" "}
+                          {UserInformation?.chat_id || ""}
+                        </span>
+                      </>
+                    )}
+                  </h1>
+                  <h1 className="text-lg text-left" style={{ color: "#000" }}>
+                    {!UserInformation?.additional_phone_number ? (
+                      <div className="w-full">
+                        <Skeleton
+                          variant="text"
+                          width="200px"
+                          className="flex m-auto"
+                          sx={{ fontSize: "1rem" }}
+                        />
+                      </div>
+                    ) : (
+                      <>
+                        <span>
+                          <strong>Contact:</strong>{" "}
+                          {UserInformation?.additional_phone_number || ""}
+                        </span>
+                      </>
+                    )}
+                  </h1>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="w-[50%] ml-20">
-            <div className="w-full h-full flex flex-col items-start">
-              <h1
-                style={{
-                  fontSize: "24px",
-                  fontWeight: "bold",
-                  color: "#333",
-                  textAlign: "center",
-                }}
-                className="text-left"
-              >
-                {`${user?.first_name} ${user?.last_name}`}
-              </h1>
-              <h1 className="text-lg font-semibold text-left">
-                {user?.profile.join(", ")}
-              </h1>
+          <div className="w-full py-6">
+            <Divider variant="fullWidth" orientation="horizontal" />
+          </div>
 
-              <div className="w-full">
-                <h1 className="text-lg text-left" style={{ color: "#000" }}>
-                  {!data?.status_message && !fetched ? (
-                    <div className="w-full">
-                      <Skeleton
-                        variant="text"
-                        width="200px"
-                        className="flex m-auto"
-                        sx={{ fontSize: "1rem" }}
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      <span>
-                        <strong>Status:</strong> {data?.status_message || ""}
-                      </span>
-                    </>
-                  )}
-                </h1>
-                <h1 className="text-lg text-left" style={{ color: "#000" }}>
-                  {!data?.chat_id && !fetched ? (
-                    <div className="w-full">
-                      <Skeleton
-                        variant="text"
-                        width="200px"
-                        className="flex m-auto"
-                        sx={{ fontSize: "1rem" }}
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      <span>
-                        <strong>Chat ID:</strong> {data?.chat_id || ""}
-                      </span>
-                    </>
-                  )}
-                </h1>
-              </div>
+          <div className="px-5 space-y-4 mt-4">
+            <div className="space-y-2 ">
+              <AuthInputFiled
+                name="additional_phone_number"
+                icon={ContactEmergency}
+                control={control}
+                type="text"
+                placeholder="Contact"
+                label="Contact"
+                errors={errors}
+                error={errors.additional_phone_number}
+              />
+            </div>
+            <div className="space-y-2 ">
+              <AuthInputFiled
+                name="chat_id"
+                icon={ChatIcon}
+                control={control}
+                type="text"
+                placeholder="Chat Id"
+                label="Chat Id"
+                errors={errors}
+                error={errors.chat_id}
+              />
+            </div>
+            <div className="space-y-2 ">
+              <AuthInputFiled
+                name="status_message"
+                icon={InfoIcon}
+                control={control}
+                type="text"
+                placeholder="status"
+                label="status"
+                errors={errors}
+                error={errors.status_message}
+              />
+            </div>
+
+            <div className="flex gap-4 mt-4 justify-center">
+              <Button type="submit" variant="contained" color="primary">
+                Submit
+              </Button>
             </div>
           </div>
-        </div>
-
-        <div className="w-full py-6">
-          <Divider variant="fullWidth" orientation="horizontal" />
-        </div>
-
-        <div className="w-full px-4">
-          <InputLabel htmlFor="additionalPhoneNumber">
-            <Typography variant="body1" fontWeight="bold">
-              Phone Number
-            </Typography>
-          </InputLabel>
-          <FormControl sx={{ width: "100%" }}>
-            <TextField
-              id="additionalPhoneNumber"
-              size="small"
-              type="number"
-              fullWidth
-              margin="normal"
-              value={additionalPhoneNumber}
-              onChange={(e) => {
-                const enteredNumber = e.target.value;
-                if (/^\d{0,10}$/.test(enteredNumber)) {
-                  setAdditionalPhoneNumber(enteredNumber);
-                  if (enteredNumber.length !== 10) {
-                    setPhoneNumberError("Mobile number should be 10 digits");
-                  } else {
-                    setPhoneNumberError("");
-                  }
-                } else {
-                  setPhoneNumberError("Mobile number should be 10 digits");
-                }
-              }}
-              error={!!phoneNumberError}
-            />
-            {!!phoneNumberError && (
-              <FormHelperText error>{phoneNumberError}</FormHelperText>
-            )}
-          </FormControl>
-        </div>
-
-        <div className="w-full px-4">
-          <InputLabel htmlFor="chatId">
-            <Typography variant="body1" fontWeight="bold">
-              Chat Id
-            </Typography>
-          </InputLabel>
-          <FormControl sx={{ width: "100%" }}>
-            <TextField
-              id="chatId"
-              size="small"
-              type="text"
-              fullWidth
-              margin="normal"
-              value={chatId}
-              onChange={(e) => setChatId(e.target.value)}
-            />
-          </FormControl>
-        </div>
-
-        <div className="w-full px-4">
-          <InputLabel htmlFor="statusMessage">
-            <Typography variant="body1" fontWeight="bold">
-              Status Message
-            </Typography>
-          </InputLabel>
-          <FormControl sx={{ width: "100%" }}>
-            <TextField
-              id="statusMessage"
-              size="small"
-              type="text"
-              fullWidth
-              margin="normal"
-              value={statusMessage}
-              onChange={(e) => setStatusMessage(e.target.value)}
-            />
-          </FormControl>
-        </div>
-
-        {/* Submit Button */}
-        <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddAdditionalDetails}
-            style={{
-              backgroundColor: "#1976D2",
-              color: "#fff",
-              padding: "5px 20px",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            Submit
-          </Button>
-        </div>
+        </form>
       </Paper>
     </div>
   );

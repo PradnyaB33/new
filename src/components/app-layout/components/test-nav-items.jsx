@@ -20,7 +20,6 @@ import {
   Settings,
   SupervisorAccount,
   TrendingUp,
-  Work,
 } from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
@@ -249,17 +248,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <Description className=" !text-[1.2em] text-[#67748E]" />,
             text: "Form-16",
           },
-          {
-            key: "shiftAllowance",
-            isVisible:
-              isVisible &&
-              ["Super-Admin", "HR", "Manager", "Delegate-Super Admin"].includes(
-                role
-              ),
-            link: "/shift-management",
-            icon: <Work className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Shift Allowance",
-          },
+
           {
             key: "createsalary",
             isVisible:
@@ -314,6 +303,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             link: `organisation/${orgId}/employee-onboarding`,
             icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
             text: "Onboarding",
+          },
+          {
+            key: "onboardingExcel",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/employee-onboarding-excel`,
+            icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Onboarding Excel",
           },
 
           {
