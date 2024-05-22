@@ -5,10 +5,15 @@ import {
   Person,
   West,
 } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Button, Checkbox, FormControlLabel, IconButton } from "@mui/material";
+import axios from "axios";
+import React, { useContext, useRef, useState } from "react";
+import { CSVLink } from "react-csv";
+import { useNavigate, useParams } from "react-router-dom";
+import * as XLSX from "xlsx";
+import { UseContext } from "../../State/UseState/UseContext";
 import StepFormWrapper from "../../components/step-form/wrapper";
+import useGetUser from "../../hooks/Token/useUser";
 import useMultiStepForm from "../../hooks/useStepForm";
 import Test1 from "./EmployeeCom/Test1 ";
 import Test2 from "./EmployeeCom/Test2";
@@ -16,6 +21,92 @@ import Test3 from "./EmployeeCom/Test3";
 import Test4 from "./EmployeeCom/Test4";
 
 const EmployeeTest = () => {
+  const { authToken } = useGetUser();
+  const fileInputRef = useRef(null);
+  const { setAppAlert } = useContext(UseContext);
+  const [showExcelOnboarding, setShowExcelOnboarding] = useState(false);
+
+  const orgId = useParams().organisationId;
+  console.log(orgId);
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      const binaryStr = event.target.result;
+      const workbook = XLSX.read(binaryStr, { type: "binary" });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+
+      worksheet["!cols"] = [
+        { wch: 30 },
+        { wch: 40 },
+        { wch: 30 },
+        { wch: 30 },
+        { wch: 30 },
+      ];
+
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+
+      const finalData = jsonData.map((data) => ({
+        empId: data.empId,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        email: data.email,
+        password: data.password,
+        organizationId: orgId,
+      }));
+
+      console.log("Final Data", finalData);
+
+      finalData.forEach(async (employee) => {
+        try {
+          await axios.post(
+            `${process.env.REACT_APP_API}/route/employee/add-employee`,
+            employee,
+            {
+              headers: {
+                Authorization: authToken,
+              },
+            }
+          );
+          console.log(`Employee ${employee.empId} posted successfully`);
+          setAppAlert({
+            alert: true,
+            type: "success",
+            msg: "Onboarding Process Completed",
+          });
+        } catch (error) {
+          console.error(`Error posting employee ${employee.empId}:`, error);
+          setAppAlert({
+            alert: true,
+            type: "error",
+            msg: error.response.data.message,
+          });
+        }
+      });
+    };
+
+    reader.readAsBinaryString(file);
+  };
+
+  const handleButtonClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const csvTemplateData = [
+    { empId: "", first_name: "", last_name: "", email: "", password: "" },
+  ];
+
+  const csvHeaders = [
+    { label: "empId", key: "empId" },
+    { label: "first_name", key: "first_name" },
+    { label: "last_name", key: "last_name" },
+    { label: "email", key: "email" },
+    { label: "password", key: "password" },
+  ];
+
   const {
     step,
     nextStep,
@@ -64,22 +155,74 @@ const EmployeeTest = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen h-auto">
-      <header className="text-xl w-full pt-6 flex items-start gap-2 bg-white shadow-md   p-4">
+      <header className="text-xl w-full pt-6 flex items-start gap-2 bg-white shadow-md p-4">
         <IconButton onClick={() => navigate(-1)}>
           <West className=" !text-xl" />
         </IconButton>
-
-        <div>
-          Employee Onboarding
-          <p className="text-xs text-gray-600  ">
-            Welcome your employees by creating their profiles here.
-          </p>
+        <div className="flex justify-between w-full">
+          <div>
+            Employee Onboarding
+            <p className="text-xs text-gray-600">
+              Welcome your employees by creating their profiles here.
+            </p>
+          </div>
+          <div>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={showExcelOnboarding}
+                  onChange={() => setShowExcelOnboarding(!showExcelOnboarding)}
+                />
+              }
+              label="Excel Onboarding"
+            />
+          </div>
         </div>
       </header>
 
+      {showExcelOnboarding && (
+        <div className="w-full flex justify-center items-center mt-6">
+          <div className="flex flex-col gap-5 py-4 bg-white shadow-md">
+            <h1 className="text-xl text-center">Excel Onboarding</h1>
+            <h1 className="text-xs text-gray-600 w-[80%] m-auto text-center">
+              You can onboard employees efficiently by downloading the template,
+              filling in the employee data, and uploading the completed Excel
+              sheet below.
+            </h1>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileUpload}
+              accept=".xlsx, .xls, .csv"
+              style={{ display: "none" }}
+            />
+            <div className="flex gap-5 w-full justify-center">
+              <Button size="small" variant="contained" color="warning">
+                <CSVLink
+                  data={csvTemplateData}
+                  headers={csvHeaders}
+                  filename="employee_onboard_template.csv"
+                  className="btn btn-secondary text-white"
+                  target="_blank"
+                >
+                  Download CSV Template
+                </CSVLink>
+              </Button>
+              <Button
+                size="small"
+                onClick={handleButtonClick}
+                variant="contained"
+              >
+                Upload Excel File
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <section className="md:px-8 flex space-x-2 md:py-6">
-        <article className="w-full rounded-lg bg-white ">
-          <div className=" w-full md:px-5 px-1 ">
+        <article className="w-full rounded-lg bg-white">
+          <div className="w-full md:px-5 px-1">
             <StepFormWrapper
               {...{
                 goToStep,
