@@ -81,8 +81,10 @@ import ParentNotification from "./pages/AllNotifications/page";
 import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
+import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
 import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 import EmployeeNotification from "./pages/Employee-Notification/page";
+import Form16Notification from "./pages/Form16NotificationToEmp/Form16Notification";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LetterSetup from "./pages/LetterTypes/LetterSetup";
@@ -94,6 +96,7 @@ import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
 import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
 import MissedPunchNotificationToEmp from "./pages/MissedPunchNotification/MissedPunchNotificationToEmp";
 import MyTraining from "./pages/My-Training/page";
+import PayslipNotification from "./pages/PayslipNotification/PayslipNotification";
 import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
 import SelfShiftNotification from "./pages/SelfShiftNotification/page";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
@@ -110,8 +113,6 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import PayslipNotification from "./pages/PayslipNotification/PayslipNotification";
-import Form16Notification from "./pages/Form16NotificationToEmp/Form16Notification";
 
 const App = () => {
   return (
@@ -648,6 +649,28 @@ const App = () => {
           }
         />
         <Route
+          path="/organisation/:organisationId/employee-onboarding-excel"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <EmpExcelOnboard />
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/terms-and-conditions"
           element={<TermsAndConditionsPage />}
         />
@@ -1041,7 +1064,7 @@ const App = () => {
           path="/payslip-notification-to-emp"
           element={<PayslipNotification />}
         />
-         <Route
+        <Route
           path="/form16-notification-to-emp"
           element={<Form16Notification />}
         />
