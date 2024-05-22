@@ -37,8 +37,8 @@ const ParentNotification = () => {
   }, [role]);
 
   console.log(`🚀 ~ tdsRoute:`, tdsRoute);
-  const { getEmployeeRequestLoanApplication } = useLoanNotification();
-  const { PayslipNotification } = usePayslipNotificationHook();
+  // const { getEmployeeRequestLoanApplication } = useLoanNotification();
+  // const { PayslipNotification } = usePayslipNotificationHook();
   const dummyData = [
     {
       name: "Leave Notification",
@@ -60,12 +60,7 @@ const ParentNotification = () => {
       color: "#51FD96",
       url: "/punch-notification",
     },
-    {
-      name: "TDS Notification",
-      count: tds ?? 0,
-      color: "#51E8FD",
-      url: tdsRoute,
-    },
+
     {
       name: "Document Approval Notification",
       count: data4?.data?.doc.length ?? 0,
@@ -119,9 +114,9 @@ const ParentNotification = () => {
   //     url: "/loan-notification",
   //   });
   // }
-      url: "/form16-notification-to-emp",
-    },
-  ];
+  //     url: "/form16-notification-to-emp",
+  //   },
+  // ];
 
   return (
     <div className="pt-5">
