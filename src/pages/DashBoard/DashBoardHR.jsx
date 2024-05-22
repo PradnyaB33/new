@@ -138,8 +138,8 @@ const DashBoardHR = () => {
         {oraganizationLoading ? (
           <SkeletonFilterSection />
         ) : (
-          <div className="mt-4  w-full  bg-white shadow-md rounded-md  ">
-            <div className="border-b-[.5px] items-center justify-between flex gap-2 py-2 px-4 border-gray-300">
+          <div className="mt-4  w-full  bg-white border  rounded-md  ">
+            <div className=" items-center justify-between flex gap-2 py-2 px-4 ">
               <div className="flex items-center gap-2">
                 <Dashboard className="!text-[#67748E]" />
                 {/* <h1 className="text-md font-bold text-[#67748E]">Dashboard</h1> */}
