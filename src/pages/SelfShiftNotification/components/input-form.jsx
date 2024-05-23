@@ -36,6 +36,8 @@ const InputForm = () => {
     data?.leaveRequests?.length
   );
 
+  console.log("data", data);
+
   return (
     <div className="flex w-full flex-col gap-4">
       <div className="w-full py-4 flex flex-wrap gap-4 justify-between">
