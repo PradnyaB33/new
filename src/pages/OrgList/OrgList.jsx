@@ -17,13 +17,13 @@ const OrgList = () => {
           <Link to={"/organizationList"}>
             <West className="mx-4 !text-xl" />
           </Link>
-          Organisation
+          Organisation list
         </header>
         <div className="md:px-8 mt-6 mb-4 w-full">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="md:text-2xl text-xl font-semibold">
-                Organisations
+                Organisations List
               </h1>
               <p className="md:text-lg text-sm ">
                 Select and Manage Your Organisation

@@ -1,24 +1,33 @@
 import { CheckCircle, CorporateFare, West } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
+import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import useOrgList from "../../hooks/QueryHook/Orglist/hook";
 import useAuthToken from "../../hooks/Token/useAuth";
+import UserProfile from "../../hooks/UserData/useUser";
 const AssignOrg = () => {
-  const [selected, setSelected] = useState(null);
-  const [organizationId, setOrganizationId] = useState();
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
+  const { data } = useOrgList();
+  const orgList = data?.organizations;
+  // const [selected, setSelected] = useState(null);
+  // useEffect(() => {
+  //   setSelected(() =>
+  //     orgList?.findIndex((item) => item._id === user?.organizationId)
+  //   );
+  // }, [data]);
+  const [organizationId, setOrganizationId] = useState(user.organizationId);
   const handleRadioChange = (index, item) => {
-    setSelected(index);
+    // setSelected(index);
     setOrganizationId(item);
   };
 
   const { handleAlert } = useContext(TestContext);
 
-  const { data, isLoading } = useOrgList();
-  console.log(`🚀 ~ data:`, data);
   const authToken = useAuthToken();
-  const orgList = data?.organizations;
   const handleSubmit = async () => {
     try {
       const data = await axios.put(
@@ -38,8 +47,15 @@ const AssignOrg = () => {
     }
   };
 
+  const mutation = useMutation(handleSubmit);
+
   return (
     <div className="bg-gray-50 h-screen">
+      {mutation.isLoading && (
+        <div className="fixed top-0 bottom-0 right-0 left-0 flex items-center justify-center h-screen w-full bg-black/10">
+          <CircularProgress />
+        </div>
+      )}
       <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
         {/* <BackComponent /> */}
         <Link to={"/organizationList"}>
@@ -64,21 +80,25 @@ const AssignOrg = () => {
                   <label
                     key={index}
                     className={`inline-flex items-center space-x-2 cursor-pointer w-full border-[.5px] border-gray-300 p-4 py-3  rounded-lg ${
-                      selected === index && "bg-blue-400 "
+                      organizationId === item._id && "bg-blue-400 "
                     }`}
                   >
                     <input
                       type="radio"
                       className="hidden"
-                      checked={selected === index}
+                      checked={organizationId === item._id}
                       onChange={() => handleRadioChange(index, item?._id)}
                     />
                     <span
                       className={`text-gray-700 space-x-2 ${
-                        selected === index && "text-white"
+                        organizationId === item._id && "text-white"
                       }`}
                     >
-                      {selected === index ? <CheckCircle /> : <CorporateFare />}{" "}
+                      {organizationId === item._id ? (
+                        <CheckCircle />
+                      ) : (
+                        <CorporateFare />
+                      )}{" "}
                       {item?.orgName}
                     </span>
                   </label>
@@ -87,7 +107,7 @@ const AssignOrg = () => {
               <div className="flex justify-end w-full">
                 <button
                   type="button"
-                  onClick={handleSubmit}
+                  onClick={() => mutation.mutate()}
                   className="bg-blue-500 text-end my-4 text-white p-2 px-4 rounded-md"
                 >
                   Submit
