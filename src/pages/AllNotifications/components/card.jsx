@@ -27,6 +27,8 @@ const Card = ({ card = false }) => {
     ReceiptIcon,
     InsertDriveFileIcon,
     TrendingUp,
+    TrendingUp,
+    TrendingUp,
   ];
 
   return (

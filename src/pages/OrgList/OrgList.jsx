@@ -1,19 +1,35 @@
+import { West } from "@mui/icons-material";
 import { Avatar, Skeleton } from "@mui/material";
 import React from "react";
-import { IoBusiness } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import useOrgList from "../../hooks/QueryHook/Orglist/hook";
 import Organisation from "../Home/components/Organisation";
 
 const OrgList = () => {
   const { data, isLoading } = useOrgList();
+  console.log(data?.organizations?.map((item) => item?._id));
 
   return (
     <>
       <div className="bg-gray-50 h-screen">
-        <div className="md:p-10  sm:p-4 p-1 py-4  !pb-6">
+        <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
+          {/* <BackComponent /> */}
+          <Link to={"/organizationList"}>
+            <West className="mx-4 !text-xl" />
+          </Link>
+          Organisation list
+        </header>
+        <div className="md:px-8 mt-6 mb-4 w-full">
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-3">
+            <div>
+              <h1 className="md:text-2xl text-xl font-semibold">
+                Organisations List
+              </h1>
+              <p className="md:text-lg text-sm ">
+                Select and Manage Your Organisation
+              </p>
+            </div>
+            {/* <div className="flex items-center gap-3">
               <Avatar
                 className="!bg-blue-500 !h-[40px] md:h-[100] text-xl md:text-4xl p-1 shadow-sm"
                 variant="rounded"
@@ -28,18 +44,25 @@ const OrgList = () => {
                   Select and Manage Your Organisation
                 </p>
               </div>
-            </div>
+            </div> */}
 
-            <Link to={"/add-organisation"}>
-              <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
-                Add Organisation
-              </button>
-            </Link>
+            <div className="flex items-center gap-2 justify-end">
+              <Link to={"/assingOrganizationToSelf"}>
+                <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
+                  Assign Organization
+                </button>
+              </Link>
+              <Link to={"/add-organisation"}>
+                <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
+                  Add Organisation
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
 
         {isLoading ? (
-          <div className="flex flex-wrap sm:justify-start justify-center  gap-x-6 gap-y-2 sm:px-10">
+          <div className="flex flex-wrap sm:justify-start justify-center  gap-x-6 gap-y-2 sm:px-8">
             <div
               className={`border-b-[3px]  block min-w-[21rem] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-200`}
             >
@@ -62,7 +85,7 @@ const OrgList = () => {
             </div>
           </div>
         ) : (
-          <div className="flex flex-wrap sm:justify-start justify-center  gap-x-6 gap-y-2 sm:px-10">
+          <div className="flex flex-wrap sm:justify-start justify-center   gap-x-6 gap-y-2 sm:px-8">
             {data?.organizations?.length <= 0 ? (
               <p>NO data</p>
             ) : (

@@ -16,6 +16,7 @@ const ParentNotification = () => {
   const { data: data2 } = useShiftNotification();
   const { data: data3 } = usePunchNotification();
   const { data: data4 } = useDocNotification();
+  const { data: tds } = useTDSNotificationHook();
   const { missPunchData } = useMissedPunchNotificationCount();
   const { data: tds } = useTDSNotificationHook();
   const { Form16Notification } = useForm16NotificationHook();
