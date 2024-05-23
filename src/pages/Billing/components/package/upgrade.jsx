@@ -60,40 +60,13 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
     handleUpgradeFunction(data, organisation);
   }
 
-  // const checkCallback = useCallback(() => {
-  //   // on package change update the per day value
-  //   let perDayValue = 0;
-  //   if (watch("packageInfo").value === "Basic Plan") {
-  //     perDayValue =
-  //       Number(process.env.REACT_APP_BASIC_PACKAGE_COST_DAY) /
-  //       moment().daysInMonth();
-  //   } else if (watch("packageInfo").value === "Intermediate Plan") {
-  //     perDayValue =
-  //       Number(process.env.REACT_APP_INTERMEDIATE_PACKAGE_COST_DAY) /
-  //       moment().daysInMonth();
-  //   } else {
-  //     perDayValue =
-  //       Number(process.env.REACT_APP_ENTERPRIZE_PACKAGE_COST_DAY) /
-  //       moment().daysInMonth();
-  //   }
-  //   return (
-  //     perDayValue *
-  //     moment(organisation?.subscriptionDetails?.expirationDate).diff(
-  //       moment(),
-  //       "days"
-  //     )
-  //   );
-  // }, [
-  //   watch("packageInfo"),
-  //   watch("memberCount"),
-  //   watch("promoCode"),
-  //   watch("paymentType"),
-  //   watch,
-  // ]);
   const packageInfo = watch("packageInfo").value;
   const employeeToAdd = Number(watch("employeeToAdd"));
   console.log(`🚀 ~ file: upgrade.jsx:97 ~ employeeToAdd:`, employeeToAdd);
   const expirationDate = organisation?.subscriptionDetails?.expirationDate;
+
+  const promoCode = watch("discount");
+  console.log(`🚀 ~ file: upgrade.jsx:99 ~ promoCode:`, promoCode);
 
   useEffect(() => {
     let perDayValue = 0;
@@ -106,8 +79,10 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
     } else {
       perDayValue = 1.277;
     }
+    // apply discount if promo code is valid
+
     setAmount(Math.round(perDayValue * employeeToAdd * remainingDays));
-  }, [employeeToAdd, packageInfo, expirationDate]);
+  }, [employeeToAdd, packageInfo, expirationDate, promoCode]);
 
   const checkDisability = () => {
     if (Object.keys(dirtyFields).length <= 1) {
@@ -202,6 +177,7 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
               verifyPromoCodeMutation({ promoCode: value, setValue });
             }}
             onInputActionClear={() => {
+              console.log("check i am running");
               setValue("discount", 0);
               setValue("promoCode", "");
             }}

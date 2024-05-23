@@ -207,15 +207,15 @@ const useManageSubscriptionMutation = () => {
         },
       }
     );
-    result.data.setValue = setValue;
+    console.log(`🚀 ~ file: subscription-mutaiton.jsx:210 ~ result:`, result);
     return result.data;
   };
 
   const { mutate: verifyPromoCodeMutation } = useMutation(verifyPromoCode, {
-    onSuccess: (data) => {
+    onSuccess: (data, { setValue }) => {
       console.log(`🚀 ~ file: subscription-mutaiton.jsx ~ data:`, data);
       handleAlert(true, "success", data?.message);
-      data.setValue("discount", data?.promoCode?.discount);
+      setValue("discount", data?.promoCode?.discount);
     },
     onError: (error, { setValue }) => {
       console.log(
