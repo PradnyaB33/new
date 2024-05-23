@@ -20,6 +20,8 @@ const Card = ({ card, loading = false }) => {
     TrendingUp,
     FolderIcon,
     TrendingUp,
+    TrendingUp,
+    TrendingUp,
   ];
 
   return (
