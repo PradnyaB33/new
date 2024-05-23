@@ -13,10 +13,6 @@ import {
   OutlinedInput,
   Radio,
   RadioGroup,
-<<<<<<< HEAD
-  FormControlLabel,
-=======
->>>>>>> fc78f675e5b8894c7a56fdc83bef4a62be274a6f
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -231,10 +227,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     fetchManagerData();
     // eslint-disable-next-line
   }, []);
-<<<<<<< HEAD
-=======
   console.log("manager data ", managerData);
->>>>>>> fc78f675e5b8894c7a56fdc83bef4a62be274a6f
 
   // pull the profile
   const [availableProfiles, setAvailableProfiles] = useState([]);

@@ -522,13 +522,9 @@ const TestNavItems = ({ toggleDrawer }) => {
 
       RemotePunch: {
         open: false,
-<<<<<<< HEAD
-        isVisible: check && ["Employee", "Manager"].includes(role),
-=======
         isVisible:
           ["Employee", "Manager", "Super-Admin"].includes(role) &&
           emp?.packageInfo === "Intermediate Plan",
->>>>>>> fc78f675e5b8894c7a56fdc83bef4a62be274a6f
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
@@ -617,7 +613,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       check,
       data?.organisation?.packageInfo,
       location.pathname,
-      role
+      role,
     ]
   );
 

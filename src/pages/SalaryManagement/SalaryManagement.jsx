@@ -1,16 +1,17 @@
-import { Container, TextField } from "@mui/material";
+import { MoreVert } from "@mui/icons-material";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import EditIcon from "@mui/icons-material/Edit";
+import { Button, Container, Menu, MenuItem, TextField } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import CreateSalaryModel from "../../components/Modal/CreateSalaryModel/CreateSalaryModel";
-import { MoreVert } from "@mui/icons-material";
-import { Menu, MenuItem } from "@mui/material";
-import Tooltip from "@mui/material/Tooltip";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import EditIcon from "@mui/icons-material/Edit";
 import UpdateSalaryModal from "../../components/Modal/CreateSalaryModel/UpdateSalaryModal";
+import ChallanModal from "./components/ChallanModal";
 
 const SalaryManagement = () => {
   const { handleAlert } = useContext(TestContext);
@@ -105,6 +106,11 @@ const SalaryManagement = () => {
     setAnchorEl(null);
   };
 
+  const [openChallanModal, setOpenChallanModal] = useState(false);
+  const handleChallanModalClose = () => {
+    setOpenChallanModal(false);
+  };
+
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
@@ -115,6 +121,20 @@ const SalaryManagement = () => {
           <p className="text-xs text-gray-600 text-center">
             Create and calculate the salary of your employee here.
           </p>
+          <div className="flex w-full justify-center my-2 items-center">
+            <Button
+              onClick={() => setOpenChallanModal(true)}
+              variant="contained"
+            >
+              Generate Challan
+            </Button>
+          </div>
+
+          <ChallanModal
+            open={openChallanModal}
+            handleClose={handleChallanModalClose}
+            id={organisationId}
+          />
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center gap-3 mb-3 md:mb-0">

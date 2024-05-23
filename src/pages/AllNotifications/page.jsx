@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useMemo } from "react";
+import useForm16NotificationHook from "../../hooks/QueryHook/notification/Form16Notification/useForm16NotificationHook";
 import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 import usePayslipNotificationHook from "../../hooks/QueryHook/notification/PayslipNotification/usePayslipNotificaitonHook";
 import useDocNotification from "../../hooks/QueryHook/notification/document-notification/hook";
@@ -9,7 +10,6 @@ import useShiftNotification from "../../hooks/QueryHook/notification/shift-notif
 import useTDSNotificationHook from "../../hooks/QueryHook/notification/tds-notification/hook";
 import UserProfile from "../../hooks/UserData/useUser";
 import Card from "./components/card";
-import useForm16NotificationHook from "../../hooks/QueryHook/notification/Form16Notification/useForm16NotificationHook";
 
 const ParentNotification = () => {
   const { data } = useLeaveNotificationHook();
@@ -24,14 +24,21 @@ const ParentNotification = () => {
   console.log("form16", Form16Notification);
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
+  console.log(`🚀 ~ role:`, role);
+  const tdsRoute = useMemo(() => {
+    if (
+      role === "Accountant" ||
+      role === "Super-Admin" ||
+      role === "delegate Super-Admin"
+    ) {
+      return "/notification/income-tax";
+    }
+    return "/";
+  }, [role]);
 
-  const tdsRoute =
-    role === "Accountant" ||
-    role === "Super-Admin" ||
-    role === "delegate Super-Admin"
-      ? `/notification/income-tax`
-      : `/notification/income-tax-details`;
-
+  console.log(`🚀 ~ tdsRoute:`, tdsRoute);
+  // const { getEmployeeRequestLoanApplication } = useLoanNotification();
+  // const { PayslipNotification } = usePayslipNotificationHook();
   const dummyData = [
     {
       name: "Leave Notification",
@@ -53,12 +60,7 @@ const ParentNotification = () => {
       color: "#51FD96",
       url: "/punch-notification",
     },
-    {
-      name: "TDS Notification",
-      count: tds ?? 0,
-      color: "#51E8FD",
-      url: tdsRoute,
-    },
+
     {
       name: "Document Approval Notification",
       count: data4?.data?.doc.length ?? 0,
@@ -89,9 +91,32 @@ const ParentNotification = () => {
       name: "Form 16 Notification",
       count: Form16Notification?.length ?? 0,
       color: "#FF7373",
-      url: "/form16-notification-to-emp",
+      url: "/doc-notification",
+    },
+    {
+      name: "TDS Notification",
+      count: tds ?? 0,
+      color: "#51E8FD",
+      url: tdsRoute,
+      url2: "/notification/income-tax-details",
     },
   ];
+
+  // if (
+  //   role === "HR" ||
+  //   role === "Super-Admin" ||
+  //   role === "Delegate-Super-Admin"
+  // ) {
+  //   dummyData.push({
+  //     name: "Loan Notification",
+  //     count: getEmployeeRequestLoanApplication?.length ?? 0,
+  //     color: "#51E8FD",
+  //     url: "/loan-notification",
+  //   });
+  // }
+  //     url: "/form16-notification-to-emp",
+  //   },
+  // ];
 
   return (
     <div className="pt-5">

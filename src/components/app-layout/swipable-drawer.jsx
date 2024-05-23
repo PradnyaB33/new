@@ -100,7 +100,6 @@ export default function SwipeableTemporaryDrawer() {
             {/* <h1 className="py-[0.125em] px-2 rounded-sm  font-bold">
               Organization one
             </h1> */}
-
             {data?.organisation?.orgName && data?.organisation?.orgName}
             {role && role !== "Employee" && <NotificationIcon />}
 

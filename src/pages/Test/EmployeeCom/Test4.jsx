@@ -1,3 +1,4 @@
+import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useContext } from "react";
 import toast from "react-hot-toast";
@@ -51,6 +52,11 @@ const Test4 = ({ prevStep }) => {
 
   const handleSubmit = useMutation(
     () => {
+      const filteredData = Object.fromEntries(
+        Object.entries(data).filter(([key, value]) => value !== null)
+      );
+
+      // Use filteredData in your component or wherever you need the data
       const userData = {
         first_name,
         last_name,
@@ -69,7 +75,8 @@ const Test4 = ({ prevStep }) => {
         empId,
         companyemail,
         joining_date,
-        data,
+        //TODO This is additonal field data
+        ...filteredData,
         designation: designation.value,
         worklocation: worklocation.value,
         deptname: deptname.value,
@@ -110,6 +117,12 @@ const Test4 = ({ prevStep }) => {
 
   return (
     <>
+      {handleSubmit.isLoading && (
+        <div className="flex items-center justify-center fixed top-0 bottom-0 right-0 left-0  bg-black/20">
+          <CircularProgress />
+        </div>
+      )}
+
       <div className="w-full mt-4">
         <h1 className="text-2xl mb-2 font-bold">Confirm Details</h1>
 
@@ -259,25 +272,30 @@ const Test4 = ({ prevStep }) => {
                 <h1 className="text-gray-500 text-sm w-full">
                   Salary Template
                 </h1>
-                <p className="">{salarystructure?.label}</p>
+                <p className="">
+                  {typeof salarystructure === "object" &&
+                    salarystructure?.label}
+                </p>
               </div>
             </div>
 
-            {Object.entries(data).length > 0 && (
-              <>
-                <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
-                  Additional Details
-                </h1>
-                <div className="grid grid-cols-3 justify-between">
-                  {Object.entries(data)?.map(([key, value]) => (
-                    <div className="p-2 rounded-sm ">
-                      <h1 className="text-gray-500 text-sm">{key}</h1>
-                      <p className="">{value ? value : "-"}</p>
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
+            {data &&
+              typeof data === "object" &&
+              Object.entries(data).length > 0 && (
+                <>
+                  <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
+                    Additional Details
+                  </h1>
+                  <div className="grid grid-cols-3 justify-between">
+                    {Object.entries(data)?.map(([key, value]) => (
+                      <div className="p-2 rounded-sm ">
+                        <h1 className="text-gray-500 text-sm">{key}</h1>
+                        <p className="">{value ? value : "-"}</p>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
           </div>
           <div className="flex items-end w-full justify-between">
             <button

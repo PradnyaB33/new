@@ -107,9 +107,6 @@ const SuperAdmin = () => {
               <div className="border-b-[.5px] items-center justify-between flex gap-2 py-2 px-4 border-gray-300">
                 <div className="flex items-center gap-2">
                   <Dashboard className="!text-[#67748E]" />
-                  {/* <h1 className="text-md font-bold text-[#67748E]">
-                    Dashboard
-                  </h1> */}
                 </div>
                 <div className="flex w-[80%] gap-6 items-center justify-end">
                   <button
@@ -118,6 +115,7 @@ const SuperAdmin = () => {
                       setDepartment("");
                       setManager("");
                       queryClient.invalidateQueries("organization-attenedence");
+                      queryClient.invalidateQueries("Org-Salary-overview");
                     }}
                     className="!w-max flex justify-center h-[25px]  gap-2 items-center rounded-md px-1 text-sm font-semibold text-[#152745]  hover:bg-gray-50 focus-visible:outline-gray-100"
                   >
