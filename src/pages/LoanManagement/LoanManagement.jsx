@@ -49,7 +49,6 @@ const LoanManagement = () => {
     return date.toDateString();
   };
 
- 
   const calculateLoanStatus = (loan) => {
     const currentDate = new Date();
     const loanStartingDate = loan?.loanDisbursementDate

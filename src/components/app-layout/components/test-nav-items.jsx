@@ -20,7 +20,6 @@ import {
   Settings,
   SupervisorAccount,
   TrendingUp,
-  Work,
 } from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
@@ -56,13 +55,17 @@ const TestNavItems = ({ toggleDrawer }) => {
   const [decodedToken, setDecodedToken] = useState("");
   const [emp, setEmp] = useState();
   const { decodedToken: decoded } = useGetUser();
-  const { getCurrentUser } = UserProfile();
+  const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
+  const role = useGetCurrentRole();
 
   // Update organization ID when URL changes
   useEffect(() => {
-    // const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
-    getOrganizationIdFromPathname(location.pathname);
+    if (role === "Super-Admin") {
+      getOrganizationIdFromPathname(location.pathname);
+    } else {
+      setOrgId(user?.organizationId);
+    }
     // eslint-disable-next-line
   }, [location.pathname, orgId]);
 
@@ -106,10 +109,11 @@ const TestNavItems = ({ toggleDrawer }) => {
     organisationId: orgId,
   });
 
-  console.log(`🚀 ~ data:`, data);
-  const { useGetCurrentRole } = UserProfile();
-  const role = useGetCurrentRole();
   const [isVisible, setisVisible] = useState(true);
+
+  useEffect(() => {
+    setisVisible(location.pathname.includes("/organisation"));
+  }, [location.pathname]);
 
   let navItems = useMemo(
     () => ({
@@ -244,17 +248,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <Description className=" !text-[1.2em] text-[#67748E]" />,
             text: "Form-16",
           },
-          {
-            key: "shiftAllowance",
-            isVisible:
-              isVisible &&
-              ["Super-Admin", "HR", "Manager", "Delegate-Super Admin"].includes(
-                role
-              ),
-            link: "/shift-management",
-            icon: <Work className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Shift Allowance",
-          },
+
           {
             key: "createsalary",
             isVisible:
@@ -309,6 +303,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             link: `organisation/${orgId}/employee-onboarding`,
             icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
             text: "Onboarding",
+          },
+          {
+            key: "onboardingExcel",
+            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
+              role
+            ),
+            link: `organisation/${orgId}/employee-onboarding-excel`,
+            icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Onboarding Excel",
           },
 
           {
@@ -549,7 +552,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
       Records: {
         open: false,
-        isVisible: emp?.packageInfo === "Intermediate Plan",
+        isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
@@ -577,7 +580,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
       Training: {
         open: false,
-        isVisible: true,
+        isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
@@ -602,12 +605,15 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
     }),
     // eslint-disable-next-line
-    [isVisible, orgId, check]
+    [
+      isVisible,
+      orgId,
+      check,
+      data?.organisation?.packageInfo,
+      location.pathname,
+      role
+    ]
   );
-
-  useEffect(() => {
-    setisVisible(location.pathname.includes("/organisation"));
-  }, [location, navItems]);
 
   useEffect(() => {
     try {
