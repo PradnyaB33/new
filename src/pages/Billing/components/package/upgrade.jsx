@@ -42,7 +42,7 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
 
   const { control, formState, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
-      employeeToAdd: `0` || "",
+      employeeToAdd: "0",
       packageInfo: {
         value: organisation?.packageInfo,
         label: organisation?.packageInfo,
@@ -53,7 +53,8 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
     },
     resolver: zodResolver(packageSchema),
   });
-  const { errors, dirtyFields } = formState;
+
+  const { errors } = formState;
 
   async function onSubmit(data) {
     data.totalAmount = amount;
@@ -62,16 +63,13 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
 
   const packageInfo = watch("packageInfo").value;
   const employeeToAdd = Number(watch("employeeToAdd"));
-  console.log(`🚀 ~ file: upgrade.jsx:97 ~ employeeToAdd:`, employeeToAdd);
   const expirationDate = organisation?.subscriptionDetails?.expirationDate;
 
   const promoCode = watch("discount");
-  console.log(`🚀 ~ file: upgrade.jsx:99 ~ promoCode:`, promoCode);
 
   useEffect(() => {
     let perDayValue = 0;
     let remainingDays = moment(expirationDate).diff(moment(), "days");
-
     if (packageInfo === "Basic Plan") {
       perDayValue = 0.611;
     } else if (packageInfo === "Intermediate Plan") {
@@ -80,24 +78,16 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
       perDayValue = 1.277;
     }
     // apply discount if promo code is valid
+    let discountedToMinus =
+      perDayValue * employeeToAdd * remainingDays * (promoCode / 100);
 
-    setAmount(Math.round(perDayValue * employeeToAdd * remainingDays));
+    setAmount(
+      Math.round(
+        perDayValue * employeeToAdd * remainingDays - discountedToMinus
+      )
+    );
   }, [employeeToAdd, packageInfo, expirationDate, promoCode]);
 
-  const checkDisability = () => {
-    if (Object.keys(dirtyFields).length <= 1) {
-      if (Object.keys(dirtyFields).includes("promoCode")) {
-        return true;
-      } else {
-        if (Object.keys(dirtyFields).length === 0) {
-          return true;
-        }
-        return false;
-      }
-    } else {
-      return false;
-    }
-  };
   return (
     <ReusableModal
       heading={"Upgrade subscription"}
@@ -177,7 +167,6 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
               verifyPromoCodeMutation({ promoCode: value, setValue });
             }}
             onInputActionClear={() => {
-              console.log("check i am running");
               setValue("discount", 0);
               setValue("promoCode", "");
             }}
@@ -199,21 +188,3 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
 };
 
 export default UpgradePackage;
-// const getPrice = (plan, daysToEnd = 90) => {
-//   if (plan === "Basic Plan") {
-//     return Math.round(0.611 * daysToEnd);
-//   } else if (plan === "Intermediate Plan") {
-//     return Math.round(0.944 * daysToEnd);
-//   } else {
-//     return 115;
-//   }
-// };
-// const getPlanPrice = (plan) => {
-//   if (plan === "Basic Plan") {
-//     return Math.round(0.611 * 90);
-//   } else if (plan === "Intermediate Plan") {
-//     return Math.round(0.944 * 90);
-//   } else {
-//     return Math.round(115 * 90);
-//   }
-// };
