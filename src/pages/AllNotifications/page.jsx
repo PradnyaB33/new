@@ -18,7 +18,6 @@ const ParentNotification = () => {
   const { data: data4 } = useDocNotification();
   const { data: tds } = useTDSNotificationHook();
   const { missPunchData } = useMissedPunchNotificationCount();
-  const { data: tds } = useTDSNotificationHook();
   const { Form16Notification } = useForm16NotificationHook();
   const { getEmployeeRequestLoanApplication } = useLoanNotification();
   const { PayslipNotification } = usePayslipNotificationHook();
