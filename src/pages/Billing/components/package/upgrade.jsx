@@ -1,7 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FactoryOutlined, Numbers } from "@mui/icons-material";
 import { Button } from "@mui/material";
-import React from "react";
+import moment from "moment";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
@@ -9,19 +10,26 @@ import ReusableModal from "../../../../components/Modal/component";
 import useManageSubscriptionMutation from "./subscription-mutaiton";
 
 const UpgradePackage = ({ handleClose, open, organisation }) => {
-  console.log(`🚀 ~ file: upgrade.jsx:22 ~ organisation:`, organisation);
   const [amount, setAmount] = React.useState(0);
-  console.log(`🚀 ~ file: upgrade.jsx:15 ~ setAmount:`, setAmount);
   const { verifyPromoCodeMutation, handleUpgradeFunction } =
     useManageSubscriptionMutation();
 
   const packageSchema = z.object({
-    memberCount: z
+    employeeToAdd: z
       .string()
-      .refine((doc) => Number(doc) >= organisation?.memberCount, {
-        message:
-          "You can't decrease your member count while subscription is active but you can increase it.",
-      }),
+      .min(0)
+      .refine(
+        (value) => {
+          // spaces not aloud
+          value = value.replace(/\s/g, "");
+          // check if value is not empty
+          return (
+            value.length > 0 && !isNaN(Number(value)) && Number(value) >= 0
+          );
+        },
+        { message: "Employee to add should be a greater than 0" }
+      ),
+
     packageInfo: z.object({
       value: z.string(),
       label: z.string(),
@@ -34,7 +42,7 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
 
   const { control, formState, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
-      memberCount: `${organisation?.memberCount}` || "",
+      employeeToAdd: `0` || "",
       packageInfo: {
         value: organisation?.packageInfo,
         label: organisation?.packageInfo,
@@ -82,6 +90,25 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
   //   watch("paymentType"),
   //   watch,
   // ]);
+  const packageInfo = watch("packageInfo").value;
+  const employeeToAdd = Number(watch("employeeToAdd"));
+  console.log(`🚀 ~ file: upgrade.jsx:97 ~ employeeToAdd:`, employeeToAdd);
+  const expirationDate = organisation?.subscriptionDetails?.expirationDate;
+
+  useEffect(() => {
+    let perDayValue = 0;
+    let remainingDays = moment(expirationDate).diff(moment(), "days");
+
+    if (packageInfo === "Basic Plan") {
+      perDayValue = 0.611;
+    } else if (packageInfo === "Intermediate Plan") {
+      perDayValue = 0.944;
+    } else {
+      perDayValue = 1.277;
+    }
+    setAmount(Math.round(perDayValue * employeeToAdd * remainingDays));
+  }, [employeeToAdd, packageInfo, expirationDate]);
+
   const checkDisability = () => {
     if (Object.keys(dirtyFields).length <= 1) {
       if (Object.keys(dirtyFields).includes("promoCode")) {
@@ -105,18 +132,17 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="overflow-auto h-full gap-4 flex-col flex"
-        noValidate
       >
         <div className="flex flex-col">
           <AuthInputFiled
-            name="memberCount"
+            name="employeeToAdd"
             icon={Numbers}
             control={control}
             type="number"
-            placeholder="Member Count "
-            label="Member Count *"
+            placeholder="Employee To Add "
+            label="Employee To Add *"
             errors={errors}
-            error={errors.memberCount}
+            error={errors.employeeToAdd}
           />
           <AuthInputFiled
             name="packageInfo"
@@ -181,9 +207,16 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
             }}
           />
         </div>
-        <Button variant="contained" disabled={checkDisability()} type="submit">
-          Pay {Math.round(0)} Rs
-        </Button>
+        <div className="gap-4 flex w-full">
+          <Button
+            variant="contained"
+            disabled={amount === 0}
+            type="submit"
+            className="!w-full"
+          >
+            Pay {amount} Rs
+          </Button>
+        </div>
       </form>
     </ReusableModal>
   );
