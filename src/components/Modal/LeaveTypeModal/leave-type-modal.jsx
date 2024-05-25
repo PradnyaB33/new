@@ -17,7 +17,10 @@ import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
 const leaveTypeSchema = z.object({
-  leaveName: z.string(),
+  leaveName: z
+    .string()
+    .min(3, { message: "Minimum 3 characters required" })
+    .max(35, { message: "Maximum 35 characters allowed" }),
   count: z
     .string()
     .refine((doc) => Number(doc) > 0, { message: "Count is greater than 0" }),

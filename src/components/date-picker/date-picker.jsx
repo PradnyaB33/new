@@ -37,6 +37,7 @@ const AppDatePicker = ({
   calLoader,
   setCalLoader,
 }) => {
+  console.log(`🚀 ~ file: date-picker.jsx:40 ~ selectedLeave:`, selectedLeave);
   const localizer = momentLocalizer(moment);
   const queryClient = useQueryClient();
   const { organisationId } = useParams();

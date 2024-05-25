@@ -11,11 +11,13 @@ const HeaderBackComponent = ({ heading, oneLineInfo }) => {
       <IconButton onClick={() => navigate(-1)}>
         <West className="" />
       </IconButton>
-      <div>
+      <div className="flex items-baseline justify-center flex-col">
         {heading}
-        <p className="text-xs text-gray-600 truncate w-full max-w-[250px]">
-          {oneLineInfo}
-        </p>
+        {oneLineInfo && (
+          <p className="text-xs text-gray-600 truncate w-full max-w-[250px]">
+            {oneLineInfo}
+          </p>
+        )}
       </div>
     </header>
   );
