@@ -1,4 +1,4 @@
-import { Divider, Skeleton } from "@mui/material";
+import { Skeleton } from "@mui/material";
 import React from "react";
 import { Pie } from "react-chartjs-2";
 import useLeaveTable from "../../../../hooks/Leave/useLeaveTable";
@@ -41,14 +41,14 @@ const EmployeeLeavePie = () => {
         </div>
       ) : (
         <div className="w-full">
-          <div className="flex w-full px-4 items-center justify-between">
+          <div className="border-b-[2px] flex w-full px-4 items-center justify-between">
             <div className="flex items-center gap-2 py-2  ">
               <h1 className="text-lg  font-bold text-[#67748E]">
                 Total Leaves Left
               </h1>
             </div>
           </div>
-          <Divider variant="fullWidth" orientation="horizontal" />
+          {/* <Divider variant="fullWidth" orientation="horizontal" /> */}
           <div className="p-2  w-auto ">
             <Pie data={data} options={options} />
           </div>

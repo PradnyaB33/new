@@ -35,23 +35,13 @@ const PublicHolidayDisplayList = () => {
         <PublicSkeletonComponent />
       ) : (
         <div className="bg-white rounded-md  w-full border">
-          <div className="flex w-full px-4 items-center justify-between">
+          <div className="border-b-[2px] flex w-full px-4 items-center justify-between">
             <div className="flex items-center gap-2 py-2  ">
-              {/* <Avatar
-                variant="rounded"
-                className="!bg-sky-400 p-1 h-[30px] rounded-full"
-              >
-                <BeachAccessOutlined />
-              </Avatar> */}
               <h1 className="text-lg  font-bold text-[#67748E]">
                 Upcoming Public Holiday
               </h1>
             </div>
-            {/* <button className=" flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
-            View All
-          </button> */}
           </div>
-          <Divider variant="fullWidth" orientation="horizontal" />
 
           {upcomingHoliday?.data?.upcomingHolidays?.length <= 0 ? (
             <div className="px-5 py-2  ">

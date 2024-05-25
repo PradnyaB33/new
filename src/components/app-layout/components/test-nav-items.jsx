@@ -56,13 +56,17 @@ const TestNavItems = ({ toggleDrawer }) => {
   const [decodedToken, setDecodedToken] = useState("");
   const [emp, setEmp] = useState();
   const { decodedToken: decoded } = useGetUser();
-  const { getCurrentUser } = UserProfile();
+  const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
+  const role = useGetCurrentRole();
 
   // Update organization ID when URL changes
   useEffect(() => {
-    // const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
-    getOrganizationIdFromPathname(location.pathname);
+    if (role === "Super-Admin") {
+      getOrganizationIdFromPathname(location.pathname);
+    } else {
+      setOrgId(user?.organizationId);
+    }
     // eslint-disable-next-line
   }, [location.pathname, orgId]);
 
@@ -106,10 +110,11 @@ const TestNavItems = ({ toggleDrawer }) => {
     organisationId: orgId,
   });
 
-  console.log(`🚀 ~ data:`, data);
-  const { useGetCurrentRole } = UserProfile();
-  const role = useGetCurrentRole();
   const [isVisible, setisVisible] = useState(true);
+
+  useEffect(() => {
+    setisVisible(location.pathname.includes("/organisation"));
+  }, [location.pathname]);
 
   let navItems = useMemo(
     () => ({
@@ -549,7 +554,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
       Records: {
         open: false,
-        isVisible: emp?.packageInfo === "Intermediate Plan",
+        isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
@@ -577,7 +582,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
       Training: {
         open: false,
-        isVisible: true,
+        isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
@@ -602,12 +607,15 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
     }),
     // eslint-disable-next-line
-    [isVisible, orgId, check]
+    [
+      isVisible,
+      orgId,
+      check,
+      data?.organisation?.packageInfo,
+      location.pathname,
+      role
+    ]
   );
-
-  useEffect(() => {
-    setisVisible(location.pathname.includes("/organisation"));
-  }, [location, navItems]);
 
   useEffect(() => {
     try {
