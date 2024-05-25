@@ -522,19 +522,21 @@ const TestNavItems = ({ toggleDrawer }) => {
 
       RemotePunch: {
         open: false,
-        isVisible: check && ["Employee", "Manager"].includes(role),
+        isVisible:
+          ["Employee", "Manager", "Super-Admin"].includes(role) &&
+          emp?.packageInfo === "Intermediate Plan",
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
             key: "addPunch",
-            isVisible: ["Employee"].includes(role),
+            isVisible: ["Employee", "Super-Admin"].includes(role),
             link: "/employee-remote-punching",
             icon: <Fingerprint className=" !text-[1.2em] text-[#67748E]" />,
             text: "Remote Punch-in-out",
           },
           {
             key: "missPunch",
-            isVisible: ["Employee"].includes(role),
+            isVisible: ["Employee", "Super-Admin"].includes(role),
             link: "/remotePunching",
             icon: <PanToolAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Apply Miss For Punch",
@@ -611,7 +613,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       check,
       data?.organisation?.packageInfo,
       location.pathname,
-      role
+      role,
     ]
   );
 

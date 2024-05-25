@@ -8,10 +8,8 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { TestContext } from "../../State/Function/Main";
 import { useQuery, useQueryClient } from "react-query";
-import PanoramaIcon from "@mui/icons-material/Panorama";
-import IconButton from "@mui/material/IconButton";
 import ViewDocumentModal from "./ViewDocumentModal";
-
+import Button from "@mui/material/Button";
 const LoanMgtApproval = ({ employee }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -214,9 +212,14 @@ const LoanMgtApproval = ({ employee }) => {
               <Typography gutterBottom variant="h6" component="div">
                 Document
               </Typography>
-              <IconButton aria-label="document" onClick={handleViewModalOpen}>
-                <PanoramaIcon />
-              </IconButton>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleViewModalOpen}
+                sx={{ textTransform: "none" }}
+              >
+                View
+              </Button>
             </Stack>
           </Box>
           <Divider />

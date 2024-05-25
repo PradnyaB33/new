@@ -7,6 +7,8 @@ const ViewDocumentModal = ({ handleClose, open, userUploadDocumnet }) => {
   let documentUrl = userUploadDocumnet?.file;
   console.log(documentUrl);
 
+  const isImage = documentUrl && (documentUrl.endsWith(".jpg") || documentUrl.endsWith(".jpeg") || documentUrl.endsWith(".png"));
+
   return (
     <>
       <Dialog
@@ -35,14 +37,24 @@ const ViewDocumentModal = ({ handleClose, open, userUploadDocumnet }) => {
 
         <DialogContent className="border-none !pt-0 !px-0 shadow-md outline-none rounded-md">
           {documentUrl ? (
-            <object
-              type="application/pdf"
-              width="100%"
-              height="400px"
-              data={documentUrl}
-              aria-label="User Document"
-              className="w-full"
-            />
+            isImage ? (
+              <div className="flex justify-center items-center h-full">
+                <img
+                  src={documentUrl}
+                  alt="User Document"
+                  style={{ maxHeight: '80vh', maxWidth: '100%' }}
+                />
+              </div>
+            ) : (
+              <object
+                type="application/pdf"
+                width="100%"
+                height="400px"
+                data={documentUrl}
+                aria-label="User Document"
+                className="w-full"
+              />
+            )
           ) : (
             <p className="text-center mt-4">Document is not uploaded.</p>
           )}
