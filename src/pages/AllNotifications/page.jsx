@@ -16,8 +16,8 @@ const ParentNotification = () => {
   const { data: data2 } = useShiftNotification();
   const { data: data3 } = usePunchNotification();
   const { data: data4 } = useDocNotification();
-  const { missPunchData } = useMissedPunchNotificationCount();
   const { data: tds } = useTDSNotificationHook();
+  const { missPunchData } = useMissedPunchNotificationCount();
   const { Form16Notification } = useForm16NotificationHook();
   const { getEmployeeRequestLoanApplication } = useLoanNotification();
   const { PayslipNotification } = usePayslipNotificationHook();
@@ -57,12 +57,7 @@ const ParentNotification = () => {
       color: "#51FD96",
       url: "/punch-notification",
     },
-    {
-      name: "TDS Notification",
-      count: tds ?? 0,
-      color: "#51E8FD",
-      url: tdsRoute,
-    },
+
     {
       name: "Document Approval Notification",
       count: data4?.data?.doc.length ?? 0,

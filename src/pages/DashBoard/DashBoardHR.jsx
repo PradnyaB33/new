@@ -170,6 +170,7 @@ const DashBoardHR = () => {
                       setDepartment("");
                       setManager("");
                       queryClient.invalidateQueries("organization-attenedence");
+                      queryClient.invalidateQueries("Org-Salary-overview");
                     }}
                     className="!w-max flex justify-center h-[25px]  gap-2 items-center rounded-md px-1 text-sm font-semibold text-[#152745]  hover:bg-gray-50 focus-visible:outline-gray-100"
                   >
