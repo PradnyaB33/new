@@ -5,7 +5,7 @@ import { Button, Checkbox, FormControlLabel } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import Select from "react-select";
 import { z } from "zod";
@@ -41,7 +41,7 @@ const SetupShift = () => {
             },
           }
         );
-        setValue("amount", resp.data?.shifts?.allowance);
+        setValue("amount", String(resp.data?.shifts?.allowance));
         console.log("this is shift data", resp.data.shifts);
       } catch (error) {
         console.error(error);
@@ -72,7 +72,7 @@ const SetupShift = () => {
   }, [orgId, authToken]);
 
   const formSchema = z.object({
-    amount: z.string().refine((val) => !isNaN(Number(val)), {
+    amount: z.string().refine((val) => !isNaN(val), {
       message: "Amount must be a number",
     }),
     dualWorkflow: z.boolean(),
@@ -86,7 +86,7 @@ const SetupShift = () => {
 
   const { control, formState, handleSubmit, setValue } = useForm({
     defaultValues: {
-      amount: 0,
+      amount: "0",
       dualWorkflow: false,
       extraAllowance: "",
     },
@@ -98,21 +98,40 @@ const SetupShift = () => {
   const onSubmit = async (data) => {
     console.log("shift allowance data", data);
     try {
-      const resp = await axios.post(
-        `${process.env.REACT_APP_API}/route/shifts/setAllowance/${orgId}`,
-        {
-          data: {
-            ...data,
-            amount: Number(data.amount),
-            extraAllowance: data.extraAllowance
-              ? Number(data.extraAllowance)
-              : undefined,
-            shiftId: shiftId,
+      if (data.amount === "0") {
+        const resp2 = await axios.post(
+          `${process.env.REACT_APP_API}/route/shiftApply/postallowance/${orgId}`,
+          {
+            data: {
+              ...data,
+              amount: Number(data.amount),
+              extraAllowance: data.extraAllowance
+                ? Number(data.extraAllowance)
+                : undefined,
+            },
           },
-        },
-        { headers: { Authorization: authToken } }
-      );
-      console.log(resp);
+          { headers: { Authorization: authToken } }
+        );
+        console.log(resp2);
+      } else {
+        const resp1 = await axios.post(
+          `${process.env.REACT_APP_API}/route/shifts/setAllowance/${orgId}`,
+          {
+            data: {
+              ...data,
+              amount: Number(data.amount),
+              extraAllowance: data.extraAllowance
+                ? Number(data.extraAllowance)
+                : undefined,
+              shiftId: shiftId,
+            },
+          },
+          { headers: { Authorization: authToken } }
+        );
+
+        console.log(resp1);
+      }
+
       setAppAlert({
         alert: true,
         type: "success",
@@ -123,6 +142,22 @@ const SetupShift = () => {
       console.log("Operation not completed", error.message);
     }
   };
+
+  const { data } = useQuery("get-shift-allowance", async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/shiftApply/getallowance/${orgId}`,
+      {
+        headers: { Authorization: authToken },
+      }
+    );
+    return response.data;
+  });
+
+  useEffect(() => {
+    if (data?.existingAllowance) {
+      setValue("dualWorkflow", data.existingAllowance.check);
+    }
+  }, [data, setValue]);
 
   return (
     <div>
