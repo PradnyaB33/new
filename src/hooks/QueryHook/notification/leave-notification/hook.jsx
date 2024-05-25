@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useQuery } from "react-query";
+import useNotificationCount from "../../../../components/app-layout/notification-zustand";
 import useGetUser from "../../../Token/useUser";
 
 const useLeaveNotificationHook = () => {
   const { authToken } = useGetUser();
+  const { setNotificationCount } = useNotificationCount();
   const getUserNotification = async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/leave/get`,
@@ -15,7 +17,13 @@ const useLeaveNotificationHook = () => {
   };
   const { data, isLoading, isFetching } = useQuery(
     "employee-leave",
-    getUserNotification
+    getUserNotification,
+    {
+      onSuccess: async (data) => {
+        console.log(`🚀 ~ file: hook.jsx:33 ~ data:`, data);
+        setNotificationCount(data.leaveRequests?.length);
+      },
+    }
   );
   return {
     data,

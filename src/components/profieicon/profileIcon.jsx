@@ -78,9 +78,7 @@ export default function ProfileIcon() {
       >
         {user?._id ? (
           <div>
-           <h1 className="!px-4 pt-4 text-lg font-bold">Account</h1>
-
-            {/* <Divider variant="fullWidth" orientation="horizontal" /> */}
+            <h1 className="!px-4 pt-4 text-lg font-bold">Account</h1>
             <div className="flex !pl-0 !pr-2 !w-[230px] flex-col !z-10  mx-4 !py-0 bg-white   !items-start !justify-start">
               <div className="w-max flex gap-3 pt-4 pb-6  items-center  h-max rounded-full ">
                 <Avatar
@@ -99,9 +97,7 @@ export default function ProfileIcon() {
                 </div>
               </div>
             </div>
-
             <Divider variant="fullWidth" orientation="horizontal" />
-
             <MenuItem
               key="profile"
               onClick={() => handleNavigate("/employee-profile")}
