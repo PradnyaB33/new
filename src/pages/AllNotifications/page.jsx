@@ -16,8 +16,8 @@ const ParentNotification = () => {
   const { data: data2 } = useShiftNotification();
   const { data: data3 } = usePunchNotification();
   const { data: data4 } = useDocNotification();
-  const { missPunchData } = useMissedPunchNotificationCount();
   const { data: tds } = useTDSNotificationHook();
+  const { missPunchData } = useMissedPunchNotificationCount();
   const { Form16Notification } = useForm16NotificationHook();
   const { getEmployeeRequestLoanApplication } = useLoanNotification();
   const { PayslipNotification } = usePayslipNotificationHook();
@@ -36,9 +36,6 @@ const ParentNotification = () => {
     return "/";
   }, [role]);
 
-  console.log(`🚀 ~ tdsRoute:`, tdsRoute);
-  // const { getEmployeeRequestLoanApplication } = useLoanNotification();
-  // const { PayslipNotification } = usePayslipNotificationHook();
   const dummyData = [
     {
       name: "Leave Notification",
@@ -91,7 +88,7 @@ const ParentNotification = () => {
       name: "Form 16 Notification",
       count: Form16Notification?.length ?? 0,
       color: "#FF7373",
-      url: "/doc-notification",
+      url: "/form16-notification-to-emp",
     },
     {
       name: "TDS Notification",
@@ -114,7 +111,7 @@ const ParentNotification = () => {
   //     url: "/loan-notification",
   //   });
   // }
-  //     url: "/form16-notification-to-emp",
+  // url: "/form16-notification-to-emp",
   //   },
   // ];
 
