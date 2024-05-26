@@ -1,5 +1,4 @@
 import axios from "axios";
-import moment from "moment";
 import { useContext } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
@@ -285,38 +284,6 @@ const useManageSubscriptionMutation = () => {
       handleAlert(true, "error", error?.response?.data?.message);
     },
   });
-
-  const getPackagePerDayCost = (packageInfo, days) => {
-    switch (packageInfo) {
-      case "Basic Plan":
-        return 55 / days;
-      case "Intermediate Plan":
-        return 85 / days;
-      case "Enterprise Plan":
-        return 105 / days;
-      default:
-        return 0;
-    }
-  };
-
-  const handlePackageFunction = (data, organisation) => {
-    let oldPackage = organisation?.packageInfo;
-    let newPackage = data?.packageInfo?.value;
-    let totalDaysToExpire = moment(
-      organisation?.subscriptionDetails?.expirationDate
-    ).diff(moment(organisation?.subscriptionDetails?.paymentDate), "days");
-    let oldPerDayCost = getPackagePerDayCost(oldPackage, totalDaysToExpire);
-    let newPerDayCost = getPackagePerDayCost(newPackage, totalDaysToExpire);
-    let remainingDays = moment(
-      organisation?.subscriptionDetails?.expirationDate
-    ).diff(moment(), "days");
-    let oldRemainingAmount =
-      organisation?.memberCount * remainingDays * oldPerDayCost;
-    let newRemainingAmount =
-      organisation?.memberCount * remainingDays * newPerDayCost;
-    let amount = newRemainingAmount - oldRemainingAmount;
-    return amount;
-  };
 
   return {
     updateMemberCount,

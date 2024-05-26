@@ -27,7 +27,7 @@ const ManageSubscription = ({ handleClose, open, organisation }) => {
     }),
   });
 
-  const { control, formState, handleSubmit, reset } = useForm({
+  const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       packageInfo: {
         value: organisation?.packageInfo || "",
