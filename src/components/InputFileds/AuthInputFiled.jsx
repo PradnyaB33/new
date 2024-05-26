@@ -1045,7 +1045,7 @@ const AuthInputFiled = ({
                       variant="contained"
                       color="error"
                       type="button"
-                      onClick={onInputActionClear.bind(this, field.value)}
+                      onClick={onInputActionClear}
                       className="!min-w-9 !text-white"
                     >
                       <Close className="md:text-lg !text-[1em]" />

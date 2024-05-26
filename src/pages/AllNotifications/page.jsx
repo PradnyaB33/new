@@ -9,10 +9,16 @@ import usePunchNotification from "../../hooks/QueryHook/notification/punch-notif
 import useShiftNotification from "../../hooks/QueryHook/notification/shift-notificatoin/hook";
 import useTDSNotificationHook from "../../hooks/QueryHook/notification/tds-notification/hook";
 import UserProfile from "../../hooks/UserData/useUser";
+import useLeaveNotification from "../SelfLeaveNotification/useLeaveNotification";
 import Card from "./components/card";
 
 const ParentNotification = () => {
   const { data } = useLeaveNotificationHook();
+  const { data: selfLeaveNotification } = useLeaveNotification();
+  console.log(
+    `🚀 ~ file: page.jsx:18 ~ selfLeaveNotification:`,
+    selfLeaveNotification
+  );
   const { data: data2 } = useShiftNotification();
   const { data: data3 } = usePunchNotification();
   const { data: data4 } = useDocNotification();
@@ -35,15 +41,23 @@ const ParentNotification = () => {
     }
     return "/";
   }, [role]);
+  console.log(
+    `🚀 ~ file: page.jsx:49 ~ data?.leaveRequests?.length:`,
+    data?.leaveRequests?.length
+  );
 
   const dummyData = [
     {
       name: "Leave Notification",
-      count: data?.leaveRequests?.length ?? 0,
+      count:
+        data?.leaveRequests?.length ??
+        selfLeaveNotification?.leaveRequests?.length ??
+        0,
       color: "#FF7373",
       url: "/leave-notification",
       url2: "/self/leave-notification",
     },
+
     {
       name: "Shift Notification",
       count: data2?.length ?? 0,

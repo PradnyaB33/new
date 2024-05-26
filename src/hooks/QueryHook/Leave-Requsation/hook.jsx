@@ -15,6 +15,9 @@ const useLeaveRequesationHook = () => {
       );
 
       return response.data;
+    },
+    {
+      onSuccess: async (data) => {},
     }
   );
   return { data, isLoading, isError, error };

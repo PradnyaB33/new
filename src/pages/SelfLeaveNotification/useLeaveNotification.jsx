@@ -2,6 +2,7 @@ import axios from "axios";
 import moment from "moment";
 import { useState } from "react";
 import { useQuery } from "react-query";
+import useNotificationCount from "../../components/app-layout/notification-zustand";
 import useGetUser from "../../hooks/Token/useUser";
 
 const useLeaveNotification = () => {
@@ -9,7 +10,14 @@ const useLeaveNotification = () => {
   const [leaveTypeDetailsId, setLeaveTypeDetailsId] = useState("");
   const [minDate, setMinDate] = useState(moment().startOf("month"));
   const [maxDate, setMaxDate] = useState(moment().endOf("month"));
+  const [firstTime, setFirstTime] = useState(false);
   const [skip, setSkip] = useState(0);
+  const { setNotificationCount, notificationCount } = useNotificationCount();
+  console.log(
+    `🚀 ~ file: useLeaveNotification.jsx:15 ~ notificationCount:`,
+    notificationCount,
+    setNotificationCount
+  );
 
   const { authToken, decodedToken } = useGetUser();
   const getLeaveNotification = async () => {
@@ -33,6 +41,13 @@ const useLeaveNotification = () => {
     ],
     queryFn: getLeaveNotification,
     refetchOnWindowFocus: false,
+    onSuccess: async (data) => {
+      if (!firstTime) {
+        setFirstTime(true);
+        setNotificationCount(data.leaveRequests?.length);
+      }
+    },
+    refetchOnMount: false,
   });
 
   return {
