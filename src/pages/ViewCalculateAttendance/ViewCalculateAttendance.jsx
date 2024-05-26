@@ -1,11 +1,11 @@
-import { Container, Typography , TextField, IconButton } from "@mui/material";
+import { Container, Typography, TextField, IconButton } from "@mui/material";
 import axios from "axios";
-import React, { useContext , useState,} from "react";
+import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useQuery } from "react-query";
 import ViewAttendanceCallModal from "../../components/Modal/ViewAttendanceCalModal/ViewAttendanceCalModal";
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 const ViewCalculateAttendance = () => {
   const { cookies } = useContext(UseContext);
@@ -17,8 +17,9 @@ const ViewCalculateAttendance = () => {
   const [numbers, setNumbers] = useState([]);
   console.log(setTotalPages);
   console.log(setNumbers);
+
   // For Get Query
-  const { data: calculateAttendanceData,  } = useQuery(
+  const { data: calculateAttendanceData } = useQuery(
     ["calculateAttendanceData", organisationId],
     async () => {
       const response = await axios.get(
@@ -32,8 +33,6 @@ const ViewCalculateAttendance = () => {
       return response.data.data;
     }
   );
-   
-  
 
   const prePage = () => {
     if (currentPage !== 1) {
@@ -49,31 +48,29 @@ const ViewCalculateAttendance = () => {
 
   const changePage = (id) => {
     setCurrentPage(id);
-  }; 
+  };
 
-   // for open the modal for display employee
-   const [empModalOpen, setEmpModalOpen] = useState(false);
-   const [employee, setEmployee] = useState();
-   const handleEmpModalOpen = (employee) => {
-     setEmployee(employee)
-     setEmpModalOpen(true);
-   };
-   const handleEmpModalClose = () => {
-     setEmpModalOpen(false);
-     setEmployee();
-    
-   };
- 
+  // for open the modal for display employee
+  const [empModalOpen, setEmpModalOpen] = useState(false);
+  const [employee, setEmployee] = useState();
+  const handleEmpModalOpen = (employee) => {
+    setEmployee(employee);
+    setEmpModalOpen(true);
+  };
+  const handleEmpModalClose = () => {
+    setEmpModalOpen(false);
+    setEmployee();
+  };
 
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
-          Employee’s Calendar View
+            Employee’s Calendar View
           </Typography>
           <p className="text-xs text-gray-600 pl-10 text-center">
-            View  the attendance of employees here.
+            Calendar view of employee attendance
           </p>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
@@ -102,36 +99,50 @@ const ViewCalculateAttendance = () => {
                     Employee Name
                   </th>
                   <th scope="col" className="px-6 py-3">
-                  Employee Email
-                  </th>  
+                    Employee Email
+                  </th>
                   <th scope="col" className="!text-left pl-8 py-3">
                     Action
-                  </th>  
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {calculateAttendanceData?.filter((item) => {
-                  return (
-                    !emailSearch.toLowerCase() ||
-                    (item?.EmployeeId?.email !== null &&
-                      item?.EmployeeId?.email !== undefined &&
-                      item?.EmployeeId?.email.toLowerCase().includes(emailSearch))
-                  );
-                }).map((item, id) => (
-                  <tr className="!font-medium border-b" key={id}>
-                    <td className="!text-left pl-8 py-3">{id + 1}</td>
-                    <td className="py-3 pl-6">{item?.EmployeeId?.empId || ""}</td>
-                    <td className="py-3 pl-6">{item?.EmployeeId?.first_name || ""}</td>
-                    <td className="py-3 pl-6">{item?.EmployeeId?.email || ""}</td>
-                    <td className="!text-left pl-6 py-3">
-                      <IconButton aria-label="view" size="small" onClick={() => {
-                          handleEmpModalOpen(item);
-                           }}>
-                        <CalendarMonthIcon sx={{ color: 'green' }} />
-                      </IconButton>
-                    </td>
-                  </tr>
-                ))}
+                {calculateAttendanceData
+                  ?.filter((item) => {
+                    return (
+                      !emailSearch.toLowerCase() ||
+                      (item?.EmployeeId?.email !== null &&
+                        item?.EmployeeId?.email !== undefined &&
+                        item?.EmployeeId?.email
+                          .toLowerCase()
+                          .includes(emailSearch))
+                    );
+                  })
+                  .map((item, id) => (
+                    <tr className="!font-medium border-b" key={id}>
+                      <td className="!text-left pl-8 py-3">{id + 1}</td>
+                      <td className="py-3 pl-6">
+                        {item?.EmployeeId?.empId || ""}
+                      </td>
+                      <td className="py-3 pl-6">
+                        {item?.EmployeeId?.first_name || ""}
+                      </td>
+                      <td className="py-3 pl-6">
+                        {item?.EmployeeId?.email || ""}
+                      </td>
+                      <td className="!text-left pl-6 py-3">
+                        <IconButton
+                          aria-label="view"
+                          size="small"
+                          onClick={() => {
+                            handleEmpModalOpen(item);
+                          }}
+                        >
+                          <CalendarMonthIcon sx={{ color: "green" }} />
+                        </IconButton>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
 
@@ -170,9 +181,7 @@ const ViewCalculateAttendance = () => {
                 {numbers.map((n, i) => (
                   <li
                     key={i}
-                    className={`page-item ${
-                      currentPage === n ? "active" : ""
-                    }`}
+                    className={`page-item ${currentPage === n ? "active" : ""}`}
                     style={{
                       display: "inline-block",
                       marginRight: "5px",
@@ -218,12 +227,12 @@ const ViewCalculateAttendance = () => {
             </nav>
           </div>
         </article>
-      </Container> 
+      </Container>
 
       <ViewAttendanceCallModal
         handleClose={handleEmpModalClose}
         open={empModalOpen}
-        employee = {employee}
+        employee={employee}
       />
     </>
   );

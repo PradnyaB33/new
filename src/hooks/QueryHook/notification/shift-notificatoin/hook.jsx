@@ -33,13 +33,25 @@ const useShiftNotification = () => {
       return data;
     }
   };
+  const getCount = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/shiftApply/getCount`,
+      {
+        headers: { Authorization: authToken },
+      }
+    );
+    return response.data.newReq;
+  };
 
   const { data, isLoading, isFetching } = useQuery(
     "shift-request",
     getShiftNotification
   );
+  const { data: count } = useQuery("shift-count", getCount);
+  console.log("count", count);
   return {
     data,
+    count,
     isLoading,
     isFetching,
   };

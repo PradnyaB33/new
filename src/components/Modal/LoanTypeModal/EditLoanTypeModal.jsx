@@ -10,7 +10,7 @@ import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
 import MoneyIcon from "@mui/icons-material/Money";
-import PercentIcon from '@mui/icons-material/Percent';
+import PercentIcon from "@mui/icons-material/Percent";
 const style = {
   position: "absolute",
   top: "50%",
@@ -29,38 +29,72 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
   console.log(error);
 
   const EmpLoanMgtSchema = z.object({
-    loanName: z.string(),
-    loanValue: z.string().refine((value) => {
-      const floatValue = parseFloat(value);
-      return floatValue >= 0 && floatValue <= 1000000 && !Object.is(floatValue, -0); 
-    }, {
-      message: "Loan value should be between 0 and 1,000,000",
-    }).refine((value) => {
-      const floatValue = parseFloat(value);
-      return floatValue >= 0;
-    }, {
-      message: "Loan value should be a positive number",
-    }),
-    maxLoanValue: z.string().refine((value) => {
-      const floatValue = parseFloat(value);
-      return floatValue >= 0 && floatValue <= 1000000 && !Object.is(floatValue, -0); 
-    }, {
-      message: "Maximum loan value should be between 0 and 1,000,000",
-    }).refine((value) => {
-      const floatValue = parseFloat(value);
-      return floatValue >= 0; 
-    }, {
-      message: "Maximum loan value should be a positive number",
-    }),
-    rateOfInterest: z.string().refine((value) => {
-      const floatValue = parseFloat(value);
-      return floatValue > 0 && floatValue < 100;
-    }, {
-      message: "Rate of interest should be between 0 and 99%",
-    }),
+    loanName: z
+      .string()
+      .min(2)
+      .max(35)
+      .refine((value) => /^[A-Za-z\s]+$/.test(value), {
+        message: "Loan name should only contain alphabetic characters",
+      }),
+    loanValue: z
+      .string()
+      .refine(
+        (value) => {
+          const floatValue = parseFloat(value);
+          return (
+            floatValue >= 0 &&
+            floatValue <= 10000000 &&
+            !Object.is(floatValue, -0)
+          );
+        },
+        {
+          message: "Loan value should be between 0 and 1 crore",
+        }
+      )
+      .refine(
+        (value) => {
+          const floatValue = parseFloat(value);
+          return floatValue >= 0;
+        },
+        {
+          message: "Loan value should be a positive number",
+        }
+      ),
+    maxLoanValue: z
+      .string()
+      .refine(
+        (value) => {
+          const floatValue = parseFloat(value);
+          return (
+            floatValue >= 0 &&
+            floatValue <= 10000000 &&
+            !Object.is(floatValue, -0)
+          );
+        },
+        {
+          message: "Maximum loan value should be between 0 and 1 crore",
+        }
+      )
+      .refine(
+        (value) => {
+          const floatValue = parseFloat(value);
+          return floatValue >= 0;
+        },
+        {
+          message: "Maximum loan value should be a positive number",
+        }
+      ),
+    rateOfInterest: z.string().refine(
+      (value) => {
+        const floatValue = parseFloat(value);
+        return floatValue > 0 && floatValue < 100;
+      },
+      {
+        message: "Rate of interest should be between 0 and 99%",
+      }
+    ),
   });
-  
-  
+
   const {
     control,
     formState: { errors },
@@ -95,6 +129,23 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
     }
   }, [getLoanTypeById, setValue]);
 
+  //for  Get Query
+  const { data: getEmployeeLoans } = useQuery(
+    ["loanType", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-loan-type`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
+  console.log(getEmployeeLoans);
+
   const EditLoanType = useMutation(
     (data) =>
       axios.put(
@@ -121,22 +172,29 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
   const onSubmit = async (data) => {
     try {
       console.log(data);
-      // Check if loanValue is equal to maxLoanValue
+
       if (parseFloat(data.loanValue) === parseFloat(data.maxLoanValue)) {
         setError("Min loan value and max loan value should not be the same.");
         return;
       }
-      // Check if loanValue is greater than maxLoanValue
+
       if (parseFloat(data.loanValue) >= parseFloat(data.maxLoanValue)) {
         setError("Min loan value should be less than max loan value.");
         return;
       }
-      // Check if maxLoanValue is less than loanValue
+
       if (parseFloat(data.maxLoanValue) <= parseFloat(data.loanValue)) {
         setError("Max loan value should be greater than min loan value.");
         return;
       }
+
+      const existingLoanNames = getEmployeeLoans.map((data) => data.loanName);
+      if (existingLoanNames.includes(data.loanName)) {
+        setError("Loan name must be unique.");
+        return;
+      }
       await EditLoanType.mutateAsync(data);
+      setError(null);
     } catch (error) {
       console.error(error);
       setError("An error occurred while creating a new loan type.");

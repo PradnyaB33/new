@@ -41,6 +41,11 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+input[type="radio"]:checked {
+  background-color: blue !important;
+}
+
 body {
   margin: 0;
   -webkit-font-smoothing: antialiased;

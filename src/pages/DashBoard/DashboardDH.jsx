@@ -1,7 +1,6 @@
 import {
   AccessTime,
   AdminPanelSettings,
-  Dashboard,
   ErrorOutline,
   Groups,
 } from "@mui/icons-material";
@@ -9,23 +8,28 @@ import axios from "axios";
 import { default as React } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom/dist";
+import useDashGlobal from "../../hooks/Dashboard/useDashGlobal";
+import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
 import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
 import LineGraph from "./Components/Bar/LineGraph";
 import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
-import SkeletonFilterSection from "./Components/Skeletons/SkeletonFilterSection";
 
 const DashboardDH = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const authToken = useAuthToken();
+
+  const { setSelectedSalaryYear, selectedSalaryYear } = useDashGlobal();
   const { organisationId } = useParams("");
 
   console.log(user.deptname);
 
   // custom hooks
-  // const { oraganizationLoading } = useDashboardFilter(user.organizationId);
+  const { oraganizationLoading, salaryGraphLoading } = useDashboardFilter(
+    user.organizationId
+  );
 
   const { data: deptAttendenceData } = useQuery({
     queryKey: ["deptAttendece"],
@@ -47,7 +51,7 @@ const DashboardDH = () => {
     },
   });
 
-  const { data: deptSalaryData, isLoading: salaryLoading } = useQuery({
+  const { data: deptSalaryData } = useQuery({
     queryKey: ["deptSalary"],
     queryFn: async () => {
       try {
@@ -169,26 +173,30 @@ const DashboardDH = () => {
             title={"Special Shift"}
           />
         </div>
-        {false ? (
+        {/* {false ? (
           <SkeletonFilterSection />
         ) : (
           <div className="mt-4 w-full  bg-white shadow-md rounded-md  ">
             <div className="border-b-[.5px] items-center justify-between flex gap-2 py-2 px-4 border-gray-300">
               <div className="flex items-center gap-2">
                 <Dashboard className="!text-[#67748E]" />
-                <h1 className="text-md font-bold text-[#67748E]">Dashboard</h1>
               </div>
             </div>
           </div>
-        )}
+        )} */}
 
         <div className="w-full md:gap-4 md:space-y-0 space-y-3 mt-4 flex md:flex-row flex-col items-center">
           <div className="w-[100%] md:w-[50%]">
-            <LineGraph salarydata={deptSalaryData} isLoading={salaryLoading} />
+            <LineGraph
+              salarydata={deptSalaryData}
+              isLoading={salaryGraphLoading}
+              selectedyear={selectedSalaryYear}
+              setSelectedYear={setSelectedSalaryYear}
+            />
           </div>
           <div className="w-[100%] md:w-[50%]">
             <AttendenceBar
-              // isLoading={oraganizationLoading}
+              isLoading={oraganizationLoading}
               attendenceData={deptAttendenceData}
             />
           </div>

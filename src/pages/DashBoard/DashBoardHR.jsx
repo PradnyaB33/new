@@ -1,17 +1,20 @@
 import {
-  AccessTimeSharp,
   Dashboard,
-  ErrorOutline,
+  EventAvailable,
+  EventBusy,
   FilterAlt,
   FilterAltOff,
   Groups,
   LocationOn,
+  NearMe,
+  SupervisorAccount,
 } from "@mui/icons-material";
 import { IconButton, Popover } from "@mui/material";
 import { default as React, useEffect } from "react";
 import { useQueryClient } from "react-query";
 import { useLocation } from "react-router-dom/dist";
 import Select from "react-select";
+import useDashGlobal from "../../hooks/Dashboard/useDashGlobal";
 import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
 import useEmployee from "../../hooks/Dashboard/useEmployee";
 import UserProfile from "../../hooks/UserData/useUser";
@@ -24,6 +27,7 @@ const DashBoardHR = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const { employee, employeeLoading } = useEmployee(user.organizationId);
+  const { setSelectedSalaryYear, selectedSalaryYear } = useDashGlobal();
   const location = useLocation("");
 
   const queryClient = useQueryClient();
@@ -47,6 +51,7 @@ const DashBoardHR = () => {
     Managers,
     managerLoading,
     oraganizationLoading,
+    salaryGraphLoading,
     locationOptions,
     managerOptions,
     Departmentoptions,
@@ -79,7 +84,7 @@ const DashBoardHR = () => {
           : "HR Dashboard"}
       </header>
       <div className="md:px-8 px-2 w-full">
-        <div className="flex flex-1 mt-6 flex-wrap w-full justify-between gap-2 md:gap-5 ">
+        <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1  mt-6  w-full   gap-2 md:gap-5 ">
           <SuperAdminCard
             icon={Groups}
             color={"!bg-blue-500"}
@@ -87,19 +92,32 @@ const DashBoardHR = () => {
             isLoading={employeeLoading}
             title={"Overall Employees"}
           />
+
           <SuperAdminCard
             color={"!bg-green-500"}
-            icon={AccessTimeSharp}
-            data={Managers?.length}
-            isLoading={managerLoading}
-            title={"People's Manager"}
+            isLoading={employeeLoading}
+            icon={EventAvailable}
+            data={
+              !isNaN(employee?.totalEmployees)
+                ? employee?.totalEmployees - absentEmployee
+                : 0
+            }
+            title={"Present Today"}
           />
           <SuperAdminCard
             title={"Today's Leave"}
-            icon={ErrorOutline}
+            icon={EventBusy}
             color={"!bg-red-500"}
             data={absentEmployee}
             isLoading={false}
+          />
+
+          <SuperAdminCard
+            color={"!bg-amber-500"}
+            icon={SupervisorAccount}
+            data={Managers?.length}
+            isLoading={managerLoading}
+            title={"People's Manager"}
           />
           <SuperAdminCard
             color={"!bg-orange-500"}
@@ -108,15 +126,23 @@ const DashBoardHR = () => {
             data={loc?.locationCount}
             title={"Locations"}
           />
+
+          <SuperAdminCard
+            color={"!bg-indigo-500"}
+            isLoading={false}
+            icon={NearMe}
+            data={loc?.locationCount}
+            title={"Remote Employees"}
+          />
         </div>
         {oraganizationLoading ? (
           <SkeletonFilterSection />
         ) : (
-          <div className="mt-4 w-full  bg-white shadow-md rounded-md  ">
-            <div className="border-b-[.5px] items-center justify-between flex gap-2 py-2 px-4 border-gray-300">
+          <div className="mt-4  w-full  bg-white border  rounded-md  ">
+            <div className=" items-center justify-between flex gap-2 py-2 px-4 ">
               <div className="flex items-center gap-2">
                 <Dashboard className="!text-[#67748E]" />
-                <h1 className="text-md font-bold text-[#67748E]">Dashboard</h1>
+                {/* <h1 className="text-md font-bold text-[#67748E]">Dashboard</h1> */}
               </div>
               <div className=" w-[80%]  md:hidden flex gap-6 items-center justify-end">
                 <IconButton onClick={handleClick}>
@@ -144,6 +170,7 @@ const DashBoardHR = () => {
                       setDepartment("");
                       setManager("");
                       queryClient.invalidateQueries("organization-attenedence");
+                      queryClient.invalidateQueries("Org-Salary-overview");
                     }}
                     className="!w-max flex justify-center h-[25px]  gap-2 items-center rounded-md px-1 text-sm font-semibold text-[#152745]  hover:bg-gray-50 focus-visible:outline-gray-100"
                   >
@@ -300,10 +327,16 @@ const DashBoardHR = () => {
 
         <div className="w-full md:gap-4 md:space-y-0 space-y-3 mt-4 flex md:flex-row flex-col items-center">
           <div className="w-[100%] md:w-[50%]">
-            <LineGraph salarydata={salaryData} />
+            <LineGraph
+              salarydata={salaryData}
+              isLoading={salaryGraphLoading}
+              selectedyear={selectedSalaryYear}
+              setSelectedYear={setSelectedSalaryYear}
+            />
           </div>
           <div className="w-[100%] md:w-[50%]">
             <AttendenceBar
+              orgId={user.organizationId}
               isLoading={oraganizationLoading}
               attendenceData={data}
             />

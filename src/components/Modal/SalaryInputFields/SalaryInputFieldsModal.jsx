@@ -77,7 +77,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
           value: z.string(),
         })
       )
-      .length(1, { message: "required" }),
+      .nonempty({ message: "required" }),
   });
 
   const {

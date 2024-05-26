@@ -62,7 +62,6 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
       return;
     }
 
-    
     setErrorMessage("");
     setInputValue({
       ...inputValue,
@@ -134,7 +133,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
         handleAlert(true, "error", "Invalid authorization");
       } else {
         handleAlert(true, "success", "Salary Detail added Successfully");
-      
+
         setInputValue({
           Basic: "",
           HRA: "",
@@ -148,7 +147,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
         setDeduction("");
         setEmployeePf("");
         setEsic("");
-        totalSalary = ""; 
+        totalSalary = "";
         handleClose();
       }
     } catch (error) {
@@ -222,37 +221,40 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                   </tr>
                 ) : (
                   <>
-                           {salaryInput?.employee?.salarystructure?.salaryStructure &&
-  salaryInput?.employee?.salarystructure?.salaryStructure?.length > 0 &&
-  salaryInput?.employee?.salarystructure?.salaryStructure?.map(
-    (item, id) => (
-      <tr key={id} className="space-y-4 w-full">
-        <td className="!text-left w-full pl-8 pr-8 py-3">
-          {item?.salaryComponent || ""}
-        </td>
-        <td>
-          <input
-            type="number"
-            placeholder="Enter the input"
-            style={{
-              padding: "10px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-            }}
-            value={inputValue[item?.salaryComponent] || ""}
-            onChange={(e) => {
-              const inputValue = e.target.value;
-              if (!isNaN(inputValue) && inputValue >= 0) {
-                handleInputChange(item.salaryComponent, inputValue);
-              }
-            }}
-          />
-        </td>
-      </tr>
-    )
-  )}
-
-                   </>
+                    {salaryInput?.employee?.salarystructure?.salaryStructure &&
+                      salaryInput?.employee?.salarystructure?.salaryStructure
+                        ?.length > 0 &&
+                      salaryInput?.employee?.salarystructure?.salaryStructure?.map(
+                        (item, id) => (
+                          <tr key={id} className="space-y-4 w-full">
+                            <td className="!text-left w-full pl-8 pr-8 py-3">
+                              {item?.salaryComponent || ""}
+                            </td>
+                            <td>
+                              <input
+                                type="number"
+                                placeholder="Enter the input"
+                                style={{
+                                  padding: "10px",
+                                  border: "1px solid #ccc",
+                                  borderRadius: "4px",
+                                }}
+                                value={inputValue[item?.salaryComponent] || ""}
+                                onChange={(e) => {
+                                  const inputValue = e.target.value;
+                                  if (!isNaN(inputValue) && inputValue >= 0) {
+                                    handleInputChange(
+                                      item.salaryComponent,
+                                      inputValue
+                                    );
+                                  }
+                                }}
+                              />
+                            </td>
+                          </tr>
+                        )
+                      )}
+                  </>
                 )}
                 <tr className="!mt-4">
                   <td className="!text-left pl-8 pr-8 py-3">
@@ -265,7 +267,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                       padding: "10px",
                       border: "1px solid #ccc",
                       borderRadius: "4px",
-                      marginTop: "10px"
+                      marginTop: "10px",
                     }}
                     value={deduction}
                     onChange={(e) => {
@@ -342,7 +344,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                   fontWeight: "bold",
                 }}
                 value={totalSalary}
-                readOnly 
+                readOnly
               />
             </div>
           </div>

@@ -109,7 +109,10 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         label: z.string(),
         value: z.string(),
       }),
-      empId: z.string().min(3, { message: "required" }),
+      empId: z
+        .string()
+        .min(1, { message: "Employee code is required" })
+        .max(25, { message: "Employee code is not greater than 25 character" }),
       mgrempid: z
         .object({
           label: z.string(),
@@ -189,7 +192,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         onSubmit={handleSubmit(onsubmit)}
         className="w-full flex space-y-2  flex-1 flex-col"
       >
-        <div className="w-full ">
+        <div className="md:flex block w-full ">
           <AuthInputFiled
             name="empId"
             icon={Work}
@@ -250,7 +253,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             label="Company Email *"
             errors={errors}
             error={errors.companyemail}
-            // wrapperMessage={"Note this email is used for login credentails"}
+            wrapperMessage={"Note this email is used for login credentails"}
           />
           <AuthInputFiled
             name="joining_date"

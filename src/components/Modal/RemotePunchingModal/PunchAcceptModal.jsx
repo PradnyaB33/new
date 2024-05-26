@@ -35,16 +35,18 @@ const PunchAcceptModal = () => {
     enabled: employeeId !== undefined,
   });
 
+  console.log("empnotifiactions", EmpNotification);
+
   return (
     <div>
-      <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
+      <header className="text-xl w-full pt-6 border bg-white shadow-md   p-4">
         <Link to={"/income-tax"}>
           <West className="mx-4 !text-xl" />
         </Link>
         Employee Punch Request
       </header>
       <section className="min-h-[90vh] flex  ">
-        <article className="md:w-[25%] w-[200px] overflow-auto max-h-[90vh] h-full bg-white  border-gray-200">
+        <article className="w-[25%] overflow-auto max-h-[90vh] h-full bg-white  border-gray-200">
           <div className="p-6 !py-2  ">
             <div className="space-y-2">
               <div
@@ -67,7 +69,7 @@ const PunchAcceptModal = () => {
                 <input
                   type={"test"}
                   placeholder={"Search Employee"}
-                  className={`border-none bg-white w-full outline-none md:px-2 px-0  `}
+                  className={`border-none bg-white w-full outline-none px-2  `}
                 />
               </div>
             </div>
@@ -77,7 +79,7 @@ const PunchAcceptModal = () => {
               employee !== null && (
                 <Link
                   to={`/punch-notification/${employee?._id}`}
-                  className={`md:px-6 px-2  my-1 md:mx-3 mx-0 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${
+                  className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${
                     employee?._id === employeeId &&
                     "bg-blue-500 text-white hover:!bg-blue-300"
                   }`}
@@ -85,11 +87,11 @@ const PunchAcceptModal = () => {
                 >
                   <Avatar />
                   <div>
-                    <h1 className="md:text-[1.2rem] text-sm">
+                    <h1 className="text-[1.2rem]">
                       {employee?.first_name} {employee?.last_name}
                     </h1>
                     <h1
-                      className={`md:text-sm text-xs text-gray-500 ${
+                      className={`text-sm text-gray-500 ${
                         employee?._id === employeeId && "text-white"
                       }`}
                     >
@@ -107,7 +109,7 @@ const PunchAcceptModal = () => {
               <CircularProgress />
             </div>
           ) : employeeId ? (
-            EmpNotification?.length <= 0 ? (
+            EmpNotification?.punchNotification?.length <= 0 ? (
               <div className="flex px-4 w-full items-center my-4">
                 <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
                   <Info /> No Punch Request Found
@@ -120,15 +122,15 @@ const PunchAcceptModal = () => {
                     <RequestQuote />
                   </Avatar>
                   <div>
-                    <h1 className=" md:text-xl text-lg ">Punch Requests</h1>
+                    <h1 className=" text-xl">Punch Requests</h1>
                     <p className="text-sm">
-                      Here manager would be able to approve or reject the punch
+                      Here you will be able to approve or reject the punch
                       notifications
                     </p>
                   </div>
                 </div>
 
-                <div className=" md:px-4 px-0 ">
+                <div className=" px-4 ">
                   {EmpNotification?.punchNotification?.map(
                     (items, itemIndex) => (
                       <PunchMapModal items={items} idx={itemIndex} />
@@ -139,7 +141,7 @@ const PunchAcceptModal = () => {
             )
           ) : (
             <div className="flex px-4 w-full items-center my-4">
-              <h1 className="md:text-lg text-sm w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
+              <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
                 <Info /> Select employee to see their requests
               </h1>
             </div>

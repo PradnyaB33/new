@@ -11,8 +11,8 @@ const IncomeTax = () => {
     setOpen(true);
   };
 
-  const { useGetCurrentRole, getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
+  const { useGetCurrentRole } = UserProfile();
+  // const user = getCurrentUser();
   const role = useGetCurrentRole();
 
   const redirect = useNavigate();
@@ -22,26 +22,27 @@ const IncomeTax = () => {
   };
 
   const goBack = () => {
-    if (role === "Super-Admin" || role === "Delegate-Super-Admin")
-      return redirect("/");
-    else if (role === "HR")
-      return redirect(
-        `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
-      );
-    else if (role === "Delegate-Department-Head" || role === "Department-Head")
-      return redirect(
-        `/organisation/${user?.organizationId}/dashboard/DH-dashboard`
-      );
-    else if (role === "Accountant")
-      return redirect(
-        `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
-      );
-    else if (role === "Manager")
-      return redirect(`/organisation/${user?._id}/dashboard/manager-dashboard`);
-    else if (role === "Employee")
-      return redirect(
-        `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
-      );
+    redirect(-1);
+    // if (role === "Super-Admin" || role === "Delegate-Super-Admin")
+    //   return redirect("/");
+    // else if (role === "HR")
+    //   return redirect(
+    //     `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
+    //   );
+    // else if (role === "Delegate-Department-Head" || role === "Department-Head")
+    //   return redirect(
+    //     `/organisation/${user?.organizationId}/dashboard/DH-dashboard`
+    //   );
+    // else if (role === "Accountant")
+    //   return redirect(
+    //     `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
+    //   );
+    // else if (role === "Manager")
+    //   return redirect(`/organisation/${user?._id}/dashboard/manager-dashboard`);
+    // else if (role === "Employee")
+    //   return redirect(
+    //     `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
+    //   );
   };
   return (
     <>
@@ -97,27 +98,29 @@ const IncomeTax = () => {
             </article>
           </div>
 
-          {role === "Accountant" && (
-            <div className="bg-white border-[.5px] border-gray-200 p-4">
-              <div className="mb-4   w-full space-y-3">
-                <h1 className="text-[1.2em] text-gray-500">TDS Requests</h1>
-              </div>
-
-              <article className="flex  gap-4 items-center">
-                <Link
-                  to={"/income-tax/accountant-declarations"}
-                  className="hover:scale-[1.02] transition-all"
-                >
-                  <div className="flex-col w-[225px] bg-white border-[.5px] border-gray-200 gap-3 flex items-center px-4 py-6 rounded-sm shadow-sm">
-                    <Avatar className="!bg-yellow-500">
-                      <DoneAll />
-                    </Avatar>
-                    <h1 className="text-lg">Employee Declarations</h1>
-                  </div>
-                </Link>
-              </article>
+          <div className="bg-white border-[.5px] border-gray-200 p-4">
+            <div className="mb-4   w-full space-y-3">
+              <h1 className="text-[1.2em] text-gray-500">TDS Requests</h1>
             </div>
-          )}
+
+            <article className="flex  gap-4 items-center">
+              <Link
+                to={
+                  role === "Accountant"
+                    ? `/notification/income-tax`
+                    : `/notification/income-tax-details`
+                }
+                className="hover:scale-[1.02] transition-all"
+              >
+                <div className="flex-col w-[225px] bg-white border-[.5px] border-gray-200 gap-3 flex items-center px-4 py-6 rounded-sm shadow-sm">
+                  <Avatar className="!bg-yellow-500">
+                    <DoneAll />
+                  </Avatar>
+                  <h1 className="text-lg">Employee Declarations</h1>
+                </div>
+              </Link>
+            </article>
+          </div>
         </div>
         <RegimeModel handleClose={handleClose} open={open} />
       </section>
