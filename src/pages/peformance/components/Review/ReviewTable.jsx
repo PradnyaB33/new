@@ -1,12 +1,11 @@
 import { Edit } from "@mui/icons-material";
 import { Avatar, IconButton } from "@mui/material";
 import { React, useState } from "react";
-import RatingModel from "../GoalTable/Modal/RatingModel";
+import Rate_Review_Model from "../GoalTable/Modal/Rate_Review_Model";
 
 const ReviewTable = ({ tableData }) => {
   const [page, setPage] = useState(1);
   const [isOpen, setIsOpen] = useState(null);
-
   const [openEdit, setOpenEdit] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
 
@@ -83,13 +82,21 @@ const ReviewTable = ({ tableData }) => {
                 onClick={() => setIsOpen(goal)}
                 className="text-sm cursor-pointer truncate text-left ml-auto   px-2"
               >
-                <p className="space-x-3 truncate">-</p>
+                <p className="space-x-3 truncate">
+                  {goal?.others[0]?.managerFeedback
+                    ? goal?.others[0]?.managerFeedback
+                    : "-"}
+                </p>
               </td>
               <td
                 onClick={() => setIsOpen(goal)}
                 className="text-sm cursor-pointer truncate text-left ml-auto   px-2"
               >
-                <p className="space-x-3 truncate">-</p>
+                <p className="space-x-3 truncate">
+                  {goal?.others[0]?.managerRating
+                    ? goal?.others[0]?.managerRating
+                    : "-"}
+                </p>
               </td>
               <td className="cursor-pointer text-left text-sm  ">
                 <IconButton className="!text-blue-500" id="basic-button">
@@ -104,7 +111,7 @@ const ReviewTable = ({ tableData }) => {
         </tbody>
       </table>
 
-      <RatingModel
+      <Rate_Review_Model
         open={openEdit}
         id={openMenu}
         performance={performance}

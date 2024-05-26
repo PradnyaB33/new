@@ -614,7 +614,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       check,
       data?.organisation?.packageInfo,
       location.pathname,
-      role
+      role,
     ]
   );
 

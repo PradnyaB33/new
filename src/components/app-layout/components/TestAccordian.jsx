@@ -41,7 +41,7 @@ const TestAccordian = ({
         </div>
       )}
 
-      {open &&
+      {(routes.length > 1 ? open : true) &&
         routes.map((route, i) => (
           <div className={`${route.isVisible ? "block" : "hidden"} `} key={i}>
             <Link
