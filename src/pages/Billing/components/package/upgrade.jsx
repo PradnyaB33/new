@@ -11,8 +11,7 @@ import useManageSubscriptionMutation from "./subscription-mutaiton";
 
 const UpgradePackage = ({ handleClose, open, organisation }) => {
   const [amount, setAmount] = React.useState(0);
-  const { verifyPromoCodeMutation, handleUpgradeFunction } =
-    useManageSubscriptionMutation();
+  const { verifyPromoCodeMutation, mutate } = useManageSubscriptionMutation();
 
   const packageSchema = z.object({
     employeeToAdd: z
@@ -57,8 +56,17 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
   const { errors } = formState;
 
   async function onSubmit(data) {
-    data.totalAmount = amount;
-    handleUpgradeFunction(data, organisation);
+    console.log(
+      `🚀 ~ file: upgrade.jsx:69 ~ organisation?._id:`,
+      organisation?._id
+    );
+    mutate({
+      count: data?.employeeToAdd,
+      packageName: data?.packageInfo?.value,
+      totalPrice: amount,
+      paymentType: data?.paymentType,
+      organisationId: organisation?._id,
+    });
   }
 
   const packageInfo = watch("packageInfo").value;
