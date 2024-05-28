@@ -192,8 +192,8 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
         handleAlert(true, "success", "Salary Template generated succesfully.");
       },
 
-      onError: () => {
-        handleAlert(true, "error", "Something went wrong");
+      onError: (err) => {
+        handleAlert(true, "error", err?.response?.data?.error);
       },
     }
   );
@@ -224,8 +224,8 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
         handleClose();
         await queryClient.invalidateQueries("salaryTemplates");
       },
-      onError: () => {
-        handleAlert(true, "error", "Something went wrong");
+      onError: (err) => {
+        handleAlert(true, "error", err?.response?.data?.error);
       },
     }
   );

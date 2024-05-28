@@ -29,7 +29,8 @@ const useLeaveData = () => {
       return response.data;
     },
     {
-      onSuccess: async () => {
+      onSuccess: async (data) => {
+        console.log(`🚀 ~ file: useLeaveData.jsx:33 ~ data:`, data);
         setCalLoader(false);
       },
       onError: async (error) => {

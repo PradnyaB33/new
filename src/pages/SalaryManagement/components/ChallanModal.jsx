@@ -183,8 +183,9 @@ const ChallanModal = ({ handleClose, open, id }) => {
 
       //Text File format
       if (challanData?.fileType === "txt" || challanData?.fileType === "both") {
+        console.log("hii there");
         const pfChallanText = getResponse?.data
-          .map((item) =>
+          ?.map((item) =>
             [
               item?.name ?? "",
               item?.grossSalary ?? "",
@@ -199,6 +200,7 @@ const ChallanModal = ({ handleClose, open, id }) => {
             ].join("#~#")
           )
           .join("\n");
+        console.log(`🚀 ~ pfChallanText:`, pfChallanText);
 
         const element = document.createElement("a");
         const file = new Blob([pfChallanText], {

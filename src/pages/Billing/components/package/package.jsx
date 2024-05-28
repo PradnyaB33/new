@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Numbers } from "@mui/icons-material";
 import { Box, Button, Modal } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
@@ -27,7 +27,7 @@ const ManageSubscription = ({ handleClose, open, organisation }) => {
     }),
   });
 
-  const { control, formState, handleSubmit, reset } = useForm({
+  const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       packageInfo: {
         value: organisation?.packageInfo || "",
@@ -36,10 +36,6 @@ const ManageSubscription = ({ handleClose, open, organisation }) => {
     },
     resolver: zodResolver(packageSchema),
   });
-  useEffect(() => {
-    reset();
-    console.log("use effect run");
-  }, [reset]);
 
   const { errors, isDirty } = formState;
   function onSubmit(data) {

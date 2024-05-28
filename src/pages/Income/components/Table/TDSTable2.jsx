@@ -229,7 +229,6 @@ const TDSTable2 = () => {
   const { handleAlert } = useContext(TestContext);
   const [editStatus, setEditStatus] = useState({});
   const [declarationData, setDeclarationData] = useState({});
-  console.log(`🚀 ~ declarationData:`, declarationData);
 
   const handleEditClick = (itemIndex, fieldIndex) => {
     const newData = [...tableData];
@@ -324,7 +323,7 @@ const TDSTable2 = () => {
         }
       );
 
-      handleAlert(true, "success", `Data deleted successfully`);
+      handleAlert(true, "success", `Declarations deleted successfully`);
       queryClient.invalidateQueries({ queryKey: ["incomeHouse"] });
     } catch (error) {
       console.log(error);
@@ -434,7 +433,7 @@ const TDSTable2 = () => {
         }
       );
 
-      handleAlert(true, "success", `Data uploaded successfully`);
+      handleAlert(true, "success", `Declarations submitted successfully`);
       queryClient.invalidateQueries({ queryKey: ["incomeHouse"] });
     } catch (error) {
       console.log(error);
