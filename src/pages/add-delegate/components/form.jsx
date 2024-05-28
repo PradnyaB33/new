@@ -96,34 +96,36 @@ const packageSchema = z.object({
   _id: z.string(),
 });
 const MiniForm = ({ data }) => {
+  console.log(`🚀 ~ file: form.jsx:99 ~ data:`, data);
   const { addDelegateMutation, deleteDelegateMutation } =
     useDelegateSuperAdmin();
   const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
 
-  const { control, formState, handleSubmit, watch, setValue } = useForm({
-    defaultValues: {
-      first_name: data?.delegateSuperAdmin?.first_name,
-      last_name: data?.delegateSuperAdmin?.last_name,
-      middle_name: data?.delegateSuperAdmin?.middle_name || "",
-      joining_date: moment(data?.delegateSuperAdmin?.joining_date).format(
-        "yyyy-MM-DD"
-      ),
-      email: data?.delegateSuperAdmin?.email,
-      phone_number: data?.delegateSuperAdmin?.phone_number,
-      password: undefined,
-      date_of_birth: moment(data?.delegateSuperAdmin?.date_of_birth).format(
-        "yyyy-MM-DD"
-      ),
-      gender: data?.delegateSuperAdmin?.gender,
-      profile: ["Delegate-Super-Admin", "Employee"],
-      citizenship: data?.delegateSuperAdmin?.citizenship,
-      _id: data?.delegateSuperAdmin?._id || "",
-      confirmPassword: undefined,
-      empId: data?.delegateSuperAdmin?.empId || "",
-    },
-    resolver: zodResolver(packageSchema),
-  });
+  const { control, formState, handleSubmit, watch, setValue, getValues } =
+    useForm({
+      defaultValues: {
+        first_name: data?.delegateSuperAdmin?.first_name,
+        last_name: data?.delegateSuperAdmin?.last_name,
+        middle_name: data?.delegateSuperAdmin?.middle_name || "",
+        joining_date: moment(data?.delegateSuperAdmin?.joining_date).format(
+          "yyyy-MM-DD"
+        ),
+        email: data?.delegateSuperAdmin?.email,
+        phone_number: data?.delegateSuperAdmin?.phone_number,
+        password: undefined,
+        date_of_birth: moment(data?.delegateSuperAdmin?.date_of_birth).format(
+          "yyyy-MM-DD"
+        ),
+        gender: data?.delegateSuperAdmin?.gender,
+        profile: ["Delegate-Super-Admin", "Employee"],
+        citizenship: data?.delegateSuperAdmin?.citizenship,
+        _id: data?.delegateSuperAdmin?._id || "",
+        confirmPassword: undefined,
+        empId: data?.delegateSuperAdmin?.empId || "",
+      },
+      resolver: zodResolver(packageSchema),
+    });
   joinDate = watch("joining_date");
   const { errors, isDirty } = formState;
   console.log(`🚀 ~ file: form.jsx:62 ~ errors:`, errors);
@@ -148,6 +150,7 @@ const MiniForm = ({ data }) => {
   };
   pass = watch;
 
+  console.log(`🚀 ~ file: form.jsx:153 ~ getValues:`, getValues());
   return (
     <div className="relative">
       <IconButton
@@ -323,7 +326,7 @@ const MiniForm = ({ data }) => {
             onClick={async () => {
               deleteDelegateMutation.mutate({
                 id: data?.delegateSuperAdmin?._id,
-                reset: reset,
+                reset,
               });
             }}
             type="button"

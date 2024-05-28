@@ -7,6 +7,7 @@ import Organisation from "../Home/components/Organisation";
 
 const OrgList = () => {
   const { data, isLoading } = useOrgList();
+  console.log(data?.organizations?.map((item) => item?._id));
 
   return (
     <>
