@@ -7,7 +7,7 @@ import {
 } from "@mui/icons-material";
 import { Button, Checkbox, FormControlLabel, IconButton } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { CSVLink } from "react-csv";
 import { useNavigate, useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
@@ -20,17 +20,48 @@ import Test2 from "./EmployeeCom/Test2";
 import Test3 from "./EmployeeCom/Test3";
 import Test4 from "./EmployeeCom/Test4";
 
+// Helper function to convert date format
+const convertToISOFormat = (dateStr) => {
+  const [day, month, year] = dateStr.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return date.toISOString();
+};
+
 const EmployeeTest = () => {
   const { authToken } = useGetUser();
   const fileInputRef = useRef(null);
   const { setAppAlert } = useContext(UseContext);
+  const [org, setOrg] = useState();
+  const [members, setMembers] = useState();
   const [showExcelOnboarding, setShowExcelOnboarding] = useState(false);
+  const [uploadedFileName, setUploadedFileName] = useState(null);
 
   const orgId = useParams().organisationId;
   console.log(orgId);
 
+  useEffect(() => {
+    (async () => {
+      const resp = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/get/${orgId}`
+      );
+      console.log("this is the data", resp.data.organizations);
+      setOrg(resp.data.organizations);
+    })();
+  }, [orgId]);
+
+  useEffect(() => {
+    (async () => {
+      const resp = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/getmembers/${orgId}`
+      );
+      console.log("this is the data", resp.data.organizations);
+      setMembers(resp.data.members);
+    })();
+  }, [orgId]);
+
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
+    setUploadedFileName(file.name);
     const reader = new FileReader();
 
     reader.onload = (event) => {
@@ -56,6 +87,14 @@ const EmployeeTest = () => {
         email: data.email,
         password: data.password,
         organizationId: orgId,
+        date_of_birth: convertToISOFormat(data.date_of_birth),
+        phone_number: data.phone_number,
+        address: data.address,
+        gender: data.gender,
+        adhar_card_number: data.adhar_card_number,
+        pan_card_number: data.pan_card_number,
+        bank_account_no: data.bank_account_no,
+        citizenship: data.citizenship,
       }));
 
       console.log("Final Data", finalData);
@@ -86,6 +125,9 @@ const EmployeeTest = () => {
           });
         }
       });
+
+      // Clear file input value to allow re-uploading the same file
+      fileInputRef.current.value = null;
     };
 
     reader.readAsBinaryString(file);
@@ -105,6 +147,14 @@ const EmployeeTest = () => {
     { label: "last_name", key: "last_name" },
     { label: "email", key: "email" },
     { label: "password", key: "password" },
+    { label: "date_of_birth", key: "date_of_birth" },
+    { label: "phone_number", key: "phone_number" },
+    { label: "address", key: "address" },
+    { label: "gender", key: "gender" },
+    { label: "adhar_card_number", key: "adhar_card_number" },
+    { label: "pan_card_number", key: "pan_card_number" },
+    { label: "bank_account_no", key: "bank_account_no" },
+    { label: "citizenship", key: "citizenship" },
   ];
 
   const {
@@ -184,6 +234,14 @@ const EmployeeTest = () => {
         <div className="w-full flex justify-center items-center mt-6">
           <div className="flex flex-col gap-5 py-4 bg-white shadow-md">
             <h1 className="text-xl text-center">Excel Onboarding</h1>
+            <div className="w-full flex flex-col">
+              <h1 className="w-full text-center text-sm">
+                Onboarding Limit : {org?.memberCount}
+              </h1>
+              <h1 className="w-full text-center text-sm">
+                Current Employee Count : {members?.length}
+              </h1>
+            </div>
             <h1 className="text-xs text-gray-600 w-[80%] m-auto text-center">
               You can onboard employees efficiently by downloading the template,
               filling in the employee data, and uploading the completed Excel
@@ -196,6 +254,11 @@ const EmployeeTest = () => {
               accept=".xlsx, .xls, .csv"
               style={{ display: "none" }}
             />
+            {uploadedFileName && (
+              <div className="text-center text-sm text-gray-600">
+                Uploaded File: {uploadedFileName}
+              </div>
+            )}
             <div className="flex gap-5 w-full justify-center">
               <Button size="small" variant="contained" color="warning">
                 <CSVLink
