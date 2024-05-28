@@ -1,6 +1,7 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { Close, Send, Visibility, VisibilityOff } from "@mui/icons-material";
 import { Avatar, Button } from "@mui/material";
+import moment from "moment";
 import { default as React, useMemo } from "react";
 import Autocomplete, { usePlacesWidget } from "react-google-autocomplete";
 import { Controller } from "react-hook-form";
@@ -148,7 +149,6 @@ const AuthInputFiled = ({
                   asSingle={true}
                   popoverDirection="down"
                   readOnly={true}
-                  displayFormat={"MM/DD/YYYY"}
                   onChange={(value) => {
                     field.onChange(value);
                   }}
@@ -344,7 +344,12 @@ const AuthInputFiled = ({
                     components={{
                       IndicatorSeparator: () => null,
                     }}
-                    options={options}
+                    options={
+                      options ||
+                      moment
+                        .months()
+                        .map((month, index) => ({ label: month, value: month }))
+                    }
                     onChange={(value) => {
                       field.onChange(value.value);
                     }}
@@ -929,6 +934,7 @@ const AuthInputFiled = ({
                   onChange={(value, data, event, formattedValue) => {
                     field.onChange(value.slice(data.dialCode.length));
                   }}
+                  value={value}
                   containerStyle={{
                     height: "100%",
                     width: "auto",
@@ -1192,12 +1198,12 @@ const AuthInputFiled = ({
         }}
       />
       <p className="text-xs w-full h-fit">{descriptionText}</p>
-      <div className="h-4 !mb-1 !relative">
+      <div className="h-4 !mb-1">
         <ErrorMessage
           errors={errors}
           name={name}
           render={({ message }) => (
-            <p className="!absolute top-0 text-sm mb-4 h-max  !bg-white  text-red-500">
+            <p className="!absolute text-sm mb-4 h-max  !bg-white  text-red-500">
               {message}
             </p>
           )}

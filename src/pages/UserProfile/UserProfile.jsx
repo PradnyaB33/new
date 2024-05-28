@@ -7,6 +7,7 @@ import {
   Skeleton,
   TextField,
   FormHelperText,
+  Typography,
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useRef, useState } from "react";
@@ -43,9 +44,11 @@ const EmployeeProfile = () => {
           },
         }
       );
-      setChatId(response.data.employee.chat_id);
-      setAdditionalPhoneNumber(response.data.employee.additional_phone_number);
-      setStatusMessage(response.data.employee.status_message);
+      setChatId(response?.data?.employee?.chat_id);
+      setAdditionalPhoneNumber(
+        response?.data?.employee?.additional_phone_number
+      );
+      setStatusMessage(response?.data?.employee?.status_message);
       setFetched(true);
       return response.data.employee;
     } catch (error) {
@@ -70,11 +73,6 @@ const EmployeeProfile = () => {
 
   const handleAddAdditionalDetails = async () => {
     try {
-      if (additionalPhoneNumber.length !== 10) {
-        setPhoneNumberError("Mobile number should be 10 digits");
-        return; // Return early if phone number length is not 10
-      }
-      setPhoneNumberError("");
       let imageUrl;
       if (file) {
         const signedUrlResponse = await getSignedUrl();
@@ -101,6 +99,9 @@ const EmployeeProfile = () => {
         handleAlert(true, "success", "Additional details added successfully!");
         queryClient.invalidateQueries("emp-profile");
         queryClient.invalidateQueries("profile");
+        setAdditionalPhoneNumber("");
+        setChatId("");
+        setStatusMessage("");
       } else {
         console.error("Failed to update additional details");
       }
@@ -170,80 +171,73 @@ const EmployeeProfile = () => {
           </div>
 
           <div className="w-[50%] ml-20">
-          <div className="w-full h-full flex flex-col items-start">
-    <h1
-      style={{
-        fontSize: "24px",
-        fontWeight: "bold",
-        color: "#333",
-        textAlign: "center", // Change textAlign to left
-      }}
-      className="text-left" // Add text-left class
-    >
-      {`${user?.first_name} ${user?.last_name}`}
-    </h1>
-    <h1 className="text-lg font-semibold text-left"> {/* Add text-left class */}
-      {user?.profile.join(", ")}
-    </h1>
-    <div className="w-full">
-      <h1
-        className="text-lg text-left" // Add text-left class
-        style={{ color: "#000" }} // Remove textAlign style
-      >
-        {!data?.status_message && !fetched ? (
-          <div className="w-full">
-            <Skeleton
-              variant="text"
-              width="200px"
-              className="flex m-auto"
-              sx={{ fontSize: "1rem" }}
-            />
-          </div>
-        ) : (
-          <>
-            Status:{" "}
-            <span className="font-semibold">
-              {data?.status_message || "NA"}
-            </span>
-          </>
-        )}
-      </h1>
-      <h1
-        className="text-lg text-left" // Add text-left class
-        style={{ color: "#000" }} // Remove textAlign style
-      >
-        {!data?.chat_id && !fetched ? (
-          <div className="w-full">
-            <Skeleton
-              variant="text"
-              width="200px"
-              className="flex m-auto"
-              sx={{ fontSize: "1rem" }}
-            />
-          </div>
-        ) : (
-          <>
-            Chat Id:{" "}
-            <span className="font-semibold">
-              {data?.chat_id || "NA"}
-            </span>
-          </>
-        )}
-      </h1>
-    </div>
-  </div>
-          </div>
+            <div className="w-full h-full flex flex-col items-start">
+              <h1
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "bold",
+                  color: "#333",
+                  textAlign: "center",
+                }}
+                className="text-left"
+              >
+                {`${user?.first_name} ${user?.last_name}`}
+              </h1>
+              <h1 className="text-lg font-semibold text-left">
+                {user?.profile.join(", ")}
+              </h1>
 
+              <div className="w-full">
+                <h1 className="text-lg text-left" style={{ color: "#000" }}>
+                  {!data?.status_message && !fetched ? (
+                    <div className="w-full">
+                      <Skeleton
+                        variant="text"
+                        width="200px"
+                        className="flex m-auto"
+                        sx={{ fontSize: "1rem" }}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <span>
+                        <strong>Status:</strong> {data?.status_message || ""}
+                      </span>
+                    </>
+                  )}
+                </h1>
+                <h1 className="text-lg text-left" style={{ color: "#000" }}>
+                  {!data?.chat_id && !fetched ? (
+                    <div className="w-full">
+                      <Skeleton
+                        variant="text"
+                        width="200px"
+                        className="flex m-auto"
+                        sx={{ fontSize: "1rem" }}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <span>
+                        <strong>Chat ID:</strong> {data?.chat_id || ""}
+                      </span>
+                    </>
+                  )}
+                </h1>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="w-full py-6">
           <Divider variant="fullWidth" orientation="horizontal" />
         </div>
 
-       
         <div className="w-full px-4">
           <InputLabel htmlFor="additionalPhoneNumber">
-            Phone Number
+            <Typography variant="body1" fontWeight="bold">
+              Phone Number
+            </Typography>
           </InputLabel>
           <FormControl sx={{ width: "100%" }}>
             <TextField
@@ -257,14 +251,13 @@ const EmployeeProfile = () => {
                 const enteredNumber = e.target.value;
                 if (/^\d{0,10}$/.test(enteredNumber)) {
                   setAdditionalPhoneNumber(enteredNumber);
-                  setPhoneNumberError(""); // Clear phone number error if input is valid
+                  setPhoneNumberError("");
                 } else {
                   setPhoneNumberError("Mobile number should be 10 digits");
                 }
               }}
-              error={!!phoneNumberError} // Set error prop based on whether there is an error message
+              error={!!phoneNumberError}
             />
-            {/* Display error message if there is one */}
             {!!phoneNumberError && (
               <FormHelperText error>{phoneNumberError}</FormHelperText>
             )}
@@ -272,7 +265,11 @@ const EmployeeProfile = () => {
         </div>
 
         <div className="w-full px-4">
-          <InputLabel htmlFor="chatId"> Chat Id</InputLabel>
+          <InputLabel htmlFor="chatId">
+            <Typography variant="body1" fontWeight="bold">
+              Chat Id
+            </Typography>
+          </InputLabel>
           <FormControl sx={{ width: "100%" }}>
             <TextField
               id="chatId"
@@ -287,7 +284,11 @@ const EmployeeProfile = () => {
         </div>
 
         <div className="w-full px-4">
-          <InputLabel htmlFor="statusMessage"> Status Message</InputLabel>
+          <InputLabel htmlFor="statusMessage">
+            <Typography variant="body1" fontWeight="bold">
+              Status Message
+            </Typography>
+          </InputLabel>
           <FormControl sx={{ width: "100%" }}>
             <TextField
               id="statusMessage"

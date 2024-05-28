@@ -25,7 +25,7 @@ const useMissedPunchNotificationCount = () => {
     "employee-missed-punch",
     getMissedPunchNotification
   );
-
+  
   return {
     missPunchData,
     isLoading,

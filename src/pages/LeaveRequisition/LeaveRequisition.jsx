@@ -1,10 +1,10 @@
-import { CalendarMonth, West } from "@mui/icons-material";
+import { CalendarMonth } from "@mui/icons-material";
 import { Badge, Button, Skeleton } from "@mui/material";
 import React from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Link } from "react-router-dom";
 import "tailwindcss/tailwind.css";
 import AppDatePicker from "../../components/date-picker/date-picker";
+import HeaderBackComponent from "../../components/header/component";
 import useLeaveData from "../../hooks/Leave/useLeaveData";
 import LeaveTable from "./components/LeaveTabel";
 import Mapped from "./components/mapped-form";
@@ -25,24 +25,20 @@ const LeaveRequisition = () => {
     setSelectedLeave,
     selectedLeave,
     setselectEvent,
+    deleteLeaveMutation,
+    calLoader,
+    setCalLoader,
   } = useLeaveData();
 
   return (
     <>
       <section className="">
-        <header className="text-xl pt-6 bg-gray-50 shadow-md p-4">
-          <Link to={"/"}>
-            <West className="mx-4 !text-xl" />
-          </Link>
-          Attendance & Leave Management
-          <div>
-            <p className="text-xs text-gray-600 pl-12">
-              Track your attendance and submit your leave requests here for
-              timely approval and efficient management .
-            </p>
-          </div>
-        </header>
-
+        <HeaderBackComponent
+          heading={"Attendance & Leave Management"}
+          oneLineInfo={
+            "Track your attendance and submit your leave requests here for timely approval and efficient management "
+          }
+        />
         <div className="flex flex-col-reverse md:flex-row w-full justify-start p-6 gap-4">
           <div className="flex flex-col gap-4">
             <LeaveTable />
@@ -106,6 +102,9 @@ const LeaveRequisition = () => {
               setSelectedLeave={setSelectedLeave}
               newAppliedLeaveEvents={newAppliedLeaveEvents}
               isCalendarOpen={isCalendarOpen}
+              deleteLeaveMutation={deleteLeaveMutation}
+              calLoader={calLoader}
+              setCalLoader={setCalLoader}
             />
 
             {newAppliedLeaveEvents.length > 0 &&

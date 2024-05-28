@@ -15,7 +15,7 @@ import {
   Modal,
 } from "@mui/material";
 import axios from "axios";
-import { default as React, useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
@@ -208,7 +208,6 @@ const GoalsModel = ({
       goalType: data.goalType.value,
       attachment: data.attachment,
     };
-    console.log(`🚀 ~ goals:`, goals);
 
     if (!id) {
       console.log(`🚀 ~ id:`, id);

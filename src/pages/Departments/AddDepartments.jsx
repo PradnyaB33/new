@@ -308,7 +308,11 @@ const AddDepartments = () => {
                 name="dept_cost_center_name"
                 id="dept_cost_center_name"
                 value={dept_cost_center_name}
-                onChange={(e) => setDepartmentCostCenterName(e.target.value)}
+                onChange={(e) => {
+                  if (e.target.value <= 35) {
+                    setDepartmentCostCenterName(e.target.value);
+                  }
+                }}
               />
             </FormControl>
             <FormControl sx={{ width: "100%", marginTop: "1rem" }}>

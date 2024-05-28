@@ -30,6 +30,7 @@ const useNotificationRemotePunching = () => {
       });
       handleAlert(true, "success", `Request approved successfully`);
       queryClient.invalidateQueries("punch-request");
+      queryClient.invalidateQueries("EmpDataPunch");
     },
     onError: (data) => {
       console.error(data);
@@ -63,6 +64,7 @@ const useNotificationRemotePunching = () => {
       });
       handleAlert(true, "success", `Request approved successfully`);
       queryClient.invalidateQueries("punch-request");
+      queryClient.invalidateQueries("EmpDataPunch");
     },
     onError: (data) => {
       console.error(data);
@@ -105,6 +107,7 @@ const useNotificationRemotePunching = () => {
       });
       handleAlert(true, "success", `Request Rejected Successfully`);
       queryClient.invalidateQueries("punch-request");
+      queryClient.invalidateQueries("EmpDataPunch");
     },
     onError: (data) => {
       console.error(data);
@@ -140,6 +143,7 @@ const useNotificationRemotePunching = () => {
       });
       handleAlert(true, "success", `Request Rejected Successfully`);
       queryClient.invalidateQueries("punch-request");
+      queryClient.invalidateQueries("EmpDataPunch");
     },
     onError: (data) => {
       console.error(data);

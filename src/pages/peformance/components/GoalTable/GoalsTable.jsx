@@ -508,18 +508,18 @@ const GoalsTable = ({ performance }) => {
                       >
                         <div className="flex items-center gap-4">
                           <Tooltip
-                            title={`${goal.empId.first_name} ${goal.empId.last_name}`}
+                            title={`${goal?.empId?.first_name} ${goal?.empId?.last_name}`}
                           >
-                            <Avatar src={goal.empId.user_logo_url} />
+                            <Avatar src={goal?.empId?.user_logo_url} />
                           </Tooltip>
                           <p className="text-sm">
-                            {goal.empId.first_name} {goal.empId.last_name}
+                            {goal?.empId?.first_name} {goal?.empId?.last_name}
                           </p>
                         </div>
                       </td>
 
                       <td
-                        onClick={() => handleOpen(goal._id)}
+                        onClick={() => handleOpen(goal?._id)}
                         className=" cursor-pointer text-left !p-0 !w-[250px]  "
                       >
                         <p

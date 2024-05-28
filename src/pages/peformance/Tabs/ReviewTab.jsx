@@ -1,20 +1,26 @@
 import { format } from "date-fns";
 import moment from "moment";
-import { default as React, useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import usePerformanceApi from "../../../hooks/Performance/usePerformanceApi";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 import Message from "../components/Message";
 import ReviewTable from "../components/Review/ReviewTable";
-
 const ReviewTab = () => {
   const authToken = useAuthToken();
   const [message, setMessage] = useState("Welcome to Goal Settings");
-  const { getCurrentUser } = UserProfile();
+  const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
+  const role = useGetCurrentRole();
 
-  const { fetchPerformanceSetup } = usePerformanceApi();
+  const { fetchPerformanceSetup, getPerformanceDashboardTable } =
+    usePerformanceApi();
+
+  const { data: tableData, isFetching } = useQuery(["dashboardTable"], () =>
+    getPerformanceDashboardTable({ role, authToken })
+  );
+
   const { data: performance } = useQuery(
     ["performancePeriod"],
     () => fetchPerformanceSetup({ user, authToken }),
@@ -109,28 +115,16 @@ const ReviewTab = () => {
   return (
     <div>
       <div className="flex items-center justify-between ">
-        {/* <div className="w-full px-8 py-4  ">
-          <h1 className="text-2xl ">Goal Settings</h1>
-          <p>Manage and organize goals setting</p>
-        </div> */}
-
         <div class="flex items-center justify-between ">
           <div class="space-y-1">
-            <h2 class=" text-2xl tracking-tight">Review & Rate Employees</h2>
+            <h2 class=" text-2xl tracking-tight">Review & Rating</h2>
             <p class="text-sm text-muted-foreground">
-              Rate and review employees based on their performance
+              Review and rate your employees
             </p>
           </div>
         </div>
       </div>
 
-      {/* <div className="py-4 w-full h-max">
-        <div className="bg-blue-100 p-2 overflow-hidden rounded-md">
-          <h1 className="text-lg scrolling-text text-red-600   gap-2 flex items-center">
-            <InfoOutlined /> Important Notice :- {message}
-          </h1>
-        </div>
-      </div> */}
       <Message />
 
       <div className="flex  pb-4  gap-8">
@@ -178,8 +172,7 @@ const ReviewTab = () => {
         </div>
       </div>
 
-      <ReviewTable />
-      {/* <GoalsTable performance={performance} /> */}
+      <ReviewTable tableData={tableData} />
     </div>
   );
 };

@@ -1,46 +1,24 @@
-import { MoreHoriz } from "@mui/icons-material";
+import { Edit } from "@mui/icons-material";
 import { Avatar, IconButton } from "@mui/material";
-import LinearProgress, {
-  linearProgressClasses,
-} from "@mui/material/LinearProgress";
-import { styled } from "@mui/material/styles";
-import React, { useState } from "react";
-import { useQuery } from "react-query";
-import usePerformanceApi from "../../../../hooks/Performance/usePerformanceApi";
-import useAuthToken from "../../../../hooks/Token/useAuth";
-import UserProfile from "../../../../hooks/UserData/useUser";
+import { React, useState } from "react";
+import Rate_Review_Model from "../GoalTable/Modal/Rate_Review_Model";
 
-const ReviewTable = () => {
+const ReviewTable = ({ tableData }) => {
   const [page, setPage] = useState(1);
   const [isOpen, setIsOpen] = useState(null);
-  console.log(`🚀 ~ isOpen:`, isOpen);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openMenu, setOpenMenu] = useState(null);
+
+  const handleClose = () => {
+    setOpenEdit(false);
+  };
+
+  const handleOpen = (id) => {
+    setOpenEdit(true);
+    setOpenMenu(id);
+  };
+
   const itemsPerPage = 10;
-
-  const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-    height: 10,
-    borderRadius: 5,
-    [`&.${linearProgressClasses.colorPrimary}`]: {
-      backgroundColor:
-        theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
-    },
-    [`& .${linearProgressClasses.bar}`]: {
-      borderRadius: 5,
-      backgroundColor: theme.palette.mode === "light" ? "#1a90ff" : "#308fe8",
-    },
-  }));
-
-  const user = UserProfile().getCurrentUser();
-  const role = UserProfile().useGetCurrentRole();
-  const authToken = useAuthToken();
-  const { fetchPerformanceSetup, getPerformanceDashboardTable } =
-    usePerformanceApi();
-  const { data: performance } = useQuery(["performancePeriod"], () =>
-    fetchPerformanceSetup({ user, authToken })
-  );
-
-  const { data: tableData, isFetching } = useQuery(["dashboardTable"], () =>
-    getPerformanceDashboardTable({ role, authToken })
-  );
 
   const handleChange = (event, value) => {
     setPage(value);
@@ -50,6 +28,7 @@ const ReviewTable = () => {
     (page - 1) * itemsPerPage,
     page * itemsPerPage
   );
+
   return (
     <div>
       <table
@@ -65,22 +44,31 @@ const ReviewTable = () => {
               Assignee
             </th>
 
-            <th scope="col" className="py-3 text-sm  ">
+            <th scope="col" className="py-3 text-sm px-2 ml-auto ">
+              Review
+            </th>
+            <th scope="col" className="py-3 text-sm px-2 ml-auto ">
               Rating
             </th>
-            <th scope="col" className="py-3 text-sm   ">
-              Actions
+            <th scope="col" className="py-3 text-sm px-2 ml-auto ">
+              Action
             </th>
           </tr>
         </thead>
         <tbody>
           {paginatedData?.map((goal, id) => (
             <tr className={` hover:bg-gray-50 !font-medium  w-max border-b `}>
-              <td className="!text-left  cursor-pointer py-4    px-2 text-sm w-[70px]  ">
+              <td
+                onClick={() => setIsOpen(goal)}
+                className="!text-left  cursor-pointer py-4    px-2 text-sm w-[70px]  "
+              >
                 {id + 1}
               </td>
 
-              <td className="text-sm cursor-pointer  text-left   px-2">
+              <td
+                onClick={() => setIsOpen(goal)}
+                className="text-sm cursor-pointer  text-left   px-2"
+              >
                 <div className="flex items-center gap-4">
                   <Avatar src={goal?.empId?.user_logo_url} />
 
@@ -90,32 +78,45 @@ const ReviewTable = () => {
                 </div>
               </td>
 
-              <td className="text-sm cursor-pointer truncate text-left ml-auto   px-2">
+              <td
+                onClick={() => setIsOpen(goal)}
+                className="text-sm cursor-pointer truncate text-left ml-auto   px-2"
+              >
                 <p className="space-x-3 truncate">
-                  {goal?.others?.ManagerRating
-                    ? goal?.others?.ManagerRating
+                  {goal?.others[0]?.managerFeedback
+                    ? goal?.others[0]?.managerFeedback
                     : "-"}
                 </p>
               </td>
-              <td className="text-sm cursor-pointer truncate text-left">
-                <IconButton
-                  id="basic-button"
-                  //   aria-controls={openMenu ? "basic-menu" : undefined}
-                  aria-haspopup="true"
-                  //   aria-expanded={openMenu ? "true" : undefined}
-                  onClick={(e) => {
-                    //   handleClick(e);
-                    // setCurrentGoal(goal);
-                    //   setopenMenu(goal);
-                  }}
-                >
-                  <MoreHoriz />
+              <td
+                onClick={() => setIsOpen(goal)}
+                className="text-sm cursor-pointer truncate text-left ml-auto   px-2"
+              >
+                <p className="space-x-3 truncate">
+                  {goal?.others[0]?.managerRating
+                    ? goal?.others[0]?.managerRating
+                    : "-"}
+                </p>
+              </td>
+              <td className="cursor-pointer text-left text-sm  ">
+                <IconButton className="!text-blue-500" id="basic-button">
+                  <Edit
+                    onClick={() => handleOpen(goal)}
+                    className="!h-5 !w-5"
+                  />
                 </IconButton>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <Rate_Review_Model
+        open={openEdit}
+        id={openMenu}
+        performance={performance}
+        handleClose={handleClose}
+      />
     </div>
   );
 };

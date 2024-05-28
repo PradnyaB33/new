@@ -1,5 +1,4 @@
-import { BeachAccessOutlined, WarningOutlined } from "@mui/icons-material";
-import { Avatar, Chip } from "@mui/material";
+import { Info } from "@mui/icons-material";
 import Divider from "@mui/material/Divider";
 import axios from "axios";
 import { format } from "date-fns";
@@ -30,28 +29,30 @@ const LeaveDisplayList = () => {
 
   return (
     <article>
-      <div className="bg-white rounded-md  w-full shadow-md">
-        <div className="flex w-full px-4 items-center justify-between">
+      <div className="bg-white rounded-md  w-full border">
+        <div className=" border-b-[2px] flex w-full px-4 items-center justify-between">
           <div className="flex items-center gap-2 py-2  ">
-            <Avatar
+            {/* <Avatar
               variant="rounded"
               className="!bg-sky-400 p-1 h-[30px] rounded-full"
             >
               <BeachAccessOutlined />
-            </Avatar>
-            <h1 className="text-xl py-3">Last Taken Leaves</h1>
+            </Avatar> */}
+            <h1 className="text-lg  font-bold text-[#67748E]">
+              Last Taken Leaves
+            </h1>
           </div>
           {/* <button className=" flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
             View All
           </button> */}
         </div>
-        <Divider variant="fullWidth" orientation="horizontal" />
+        {/* <Divider variant="fullWidth" orientation="horizontal" /> */}
 
         {previousLeaves?.length <= 0 ? (
-          <div className="p-5 ">
+          <div className="px-5 py-2 ">
             <div className="space-x-2 items-center text-red-600  flex">
-              <WarningOutlined className="text-xl text-red-600" />
-              <h1 className="text-xl">No leaves taken by you</h1>
+              <Info className="text-xl text-red-600" />
+              <h1 className="text-lg  font-bold">No leaves found </h1>
             </div>
           </div>
         ) : (
@@ -59,8 +60,8 @@ const LeaveDisplayList = () => {
             <div key={id}>
               <div className="p-4">
                 <div className="flex gap-4 w-full items-center">
-                  <h1 className="text-md font-semibold">{item.title}</h1>
-                  <Chip
+                  <h1 className="text-lg ">{item.title}</h1>
+                  {/* <Chip
                     color={`${
                       item.status === "Approved"
                         ? "primary"
@@ -71,9 +72,9 @@ const LeaveDisplayList = () => {
                     size="small"
                     variant="outlined"
                     label={item.status}
-                  />
+                  /> */}
                 </div>
-                <p className="text-lg">
+                <p className="text-md">
                   {format(new Date(item.start), "PP")} -{" "}
                   {format(new Date(item.end), "PP")}{" "}
                 </p>
