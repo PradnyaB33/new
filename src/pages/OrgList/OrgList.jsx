@@ -14,7 +14,7 @@ const OrgList = () => {
       <div className="bg-gray-50 h-screen">
         <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
           {/* <BackComponent /> */}
-          <Link to={"/organizationList"}>
+          <Link to={"/"}>
             <West className="mx-4 !text-xl" />
           </Link>
           Organisation list
@@ -49,7 +49,7 @@ const OrgList = () => {
             <div className="flex items-center gap-2 justify-end">
               <Link to={"/assingOrganizationToSelf"}>
                 <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
-                  Assign Organization
+                  Assign Organisation
                 </button>
               </Link>
               <Link to={"/add-organisation"}>
