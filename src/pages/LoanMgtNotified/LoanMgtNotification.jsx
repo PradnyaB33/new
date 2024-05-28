@@ -87,7 +87,7 @@ const LoanMgtNotification = () => {
               <div>
                 <h1 className=" text-xl">Loan Requests</h1>
                 <p className="text-sm">
-                  Here Hr would be able to approve or reject the loan
+                  Here you would be able to approve or reject the loan
                   notifications
                 </p>
               </div>

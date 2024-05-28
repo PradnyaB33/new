@@ -50,21 +50,45 @@ const ShiftRequestCard = ({ items }) => {
                 parseISO(items?.end),
                 parseISO(items?.start)
               ) !== 1 ? (
-                <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                  Your request for {items?.title} from{" "}
-                  {moment(items?.start).format("DD-MM-YYYY") ?? ""} to{" "}
-                  {moment(items?.end)
-                    .subtract(1, "days")
-                    .format("DD-MM-YYYY") ?? ""}
-                  &nbsp; is {items?.status}.
-                </h1>
+                <>
+                  <h1 className="text-xl px-4 md:!px-0 font-semibold ">
+                    Your request for {items?.title} from{" "}
+                    {moment(items?.start).format("DD-MM-YYYY") ?? ""} to{" "}
+                    {moment(items?.end)
+                      .subtract(1, "days")
+                      .format("DD-MM-YYYY") ?? ""}
+                    &nbsp; is {items?.status}.
+                  </h1>
+                  {items.messageA && (
+                    <h1 className="text-gray-600">
+                      Accountant Reason : {items?.messageA}
+                    </h1>
+                  )}
+                  {items.messageM && (
+                    <h1 className="text-gray-600">
+                      Manager Reason : {items?.messageM}
+                    </h1>
+                  )}
+                </>
               ) : (
-                <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                  {" "}
-                  Your request for {items?.title} on{" "}
-                  {format(new Date(items?.start), "dd-MM-yyyy ")} is{" "}
-                  {items?.status}.
-                </h1>
+                <>
+                  <h1 className="text-xl px-4 md:!px-0 font-semibold ">
+                    {" "}
+                    Your request for {items?.title} on{" "}
+                    {format(new Date(items?.start), "dd-MM-yyyy ")} is{" "}
+                    {items?.status}.
+                  </h1>
+                  {items.messageA && (
+                    <h1 className="text-gray-600">
+                      Accountant Reason : {items?.messageA}
+                    </h1>
+                  )}
+                  {items.messageM && (
+                    <h1 className="text-gray-600">
+                      Manager Reason : {items?.messageM}
+                    </h1>
+                  )}
+                </>
               )}
             </div>
           </Box>

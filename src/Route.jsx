@@ -81,8 +81,10 @@ import ParentNotification from "./pages/AllNotifications/page";
 import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
+import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
 import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 import EmployeeNotification from "./pages/Employee-Notification/page";
+import Form16Notification from "./pages/Form16NotificationToEmp/Form16Notification";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LetterSetup from "./pages/LetterTypes/LetterSetup";
@@ -94,6 +96,7 @@ import MissPunchJustify from "./pages/MissPunch/MissPunchJustify";
 import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunchNotification";
 import MissedPunchNotificationToEmp from "./pages/MissedPunchNotification/MissedPunchNotificationToEmp";
 import MyTraining from "./pages/My-Training/page";
+import AssignOrg from "./pages/OrgList/AssignOrg";
 import PayslipNotification from "./pages/PayslipNotification/PayslipNotification";
 import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
 import SelfShiftNotification from "./pages/SelfShiftNotification/page";
@@ -335,6 +338,14 @@ const App = () => {
           element={
             <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
               <OrgList />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/assingOrganizationToSelf"
+          element={
+            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+              <AssignOrg />
             </RequireAuth>
           }
         />
@@ -643,6 +654,28 @@ const App = () => {
               ]}
             >
               <Form16 />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/employee-onboarding-excel"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <EmpExcelOnboard />
             </RequireAuth>
           }
         />
@@ -1039,6 +1072,10 @@ const App = () => {
         <Route
           path="/payslip-notification-to-emp"
           element={<PayslipNotification />}
+        />
+        <Route
+          path="/form16-notification-to-emp"
+          element={<Form16Notification />}
         />
       </Routes>
     </AuthProvider>

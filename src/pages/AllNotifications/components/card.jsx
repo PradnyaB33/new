@@ -1,14 +1,18 @@
 import { TrendingUp } from "@mui/icons-material";
-import ShiftIcon from "@mui/icons-material/AccessTime";
-import DepartmentIcon from "@mui/icons-material/AccountTree";
+import {
+  default as AccessTimeIcon,
+  default as ShiftIcon,
+} from "@mui/icons-material/AccessTime";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import RemoteIcon from "@mui/icons-material/Computer";
 import FolderIcon from "@mui/icons-material/Folder";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import NotificationIcon from "@mui/icons-material/NotificationImportant";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 import React from "react";
 import { Link } from "react-router-dom";
 import UserProfile from "../../../hooks/UserData/useUser";
-
-const Card = ({ card, loading = false }) => {
+const Card = ({ card = false }) => {
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
 
@@ -16,10 +20,15 @@ const Card = ({ card, loading = false }) => {
     NotificationIcon,
     ShiftIcon,
     RemoteIcon,
-    DepartmentIcon,
     TrendingUp,
     FolderIcon,
-    TrendingUp,
+    AttachMoneyIcon,
+    AccessTimeIcon,
+    AttachMoneyIcon,
+    AccessTimeIcon,
+    ReceiptIcon,
+    InsertDriveFileIcon,
+    InsertDriveFileIcon,
   ];
 
   return (

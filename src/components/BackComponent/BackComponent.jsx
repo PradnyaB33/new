@@ -24,6 +24,8 @@ const BackComponent = () => {
     "/DH-dashboard",
     "/income-tax",
     "/performance",
+    "/organizationList",
+    "/assingOrganizationToSelf",
     // "/billing",
     "employee-onboarding",
     // "/organizationList",

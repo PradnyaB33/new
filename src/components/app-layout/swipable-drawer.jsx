@@ -5,7 +5,8 @@ import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import * as React from "react";
 import { useCallback } from "react"; // Import useCallback
 import { useLocation } from "react-router-dom";
-import UserProfile from "../../hooks/UserData/useUser";
+import useSubscriptionGet from "../../hooks/QueryHook/Subscription/hook";
+import useGetUser from "../../hooks/Token/useUser";
 import ChangeRole from "../InputFileds/ChangeRole";
 import ProfileIcon from "../profieicon/profileIcon";
 import NotificationIcon from "./components/NotificationIcon";
@@ -14,21 +15,37 @@ import TestNavItems from "./components/test-nav-items";
 export default function SwipeableTemporaryDrawer() {
   const [open, setOpen] = React.useState(false);
   const location = useLocation();
-  console.log(`🚀 ~ location:`, location);
-  const { useGetCurrentRole } = UserProfile();
-  const role = useGetCurrentRole();
-  // const authToken = useAuthToken();
-  // const { organisationId } = useParams();
-  // console.log(`🚀 ~ organisationId:`, organisationId);
+  const [orgId, setOrgId] = React.useState(null);
+  const { decodedToken: decoded } = useGetUser();
+  // Function to extract organization ID from pathname
+  const getOrganizationIdFromPathname = (pathname) => {
+    const parts = pathname.split("/");
+    const orgIndex = parts.indexOf("organisation");
+    let orgId;
 
-  // const { fetchData } = useOrganisationApi();
+    if (orgIndex !== -1 && parts.length > orgIndex + 1) {
+      if (parts[orgIndex + 1] === null || undefined) {
+        orgId = decoded?.user?.organizationId;
+      } else {
+        orgId = parts[orgIndex + 1];
+      }
+    } else {
+      orgId = decoded?.user?.organizationId;
+    }
+    setOrgId(orgId);
+  };
 
-  // const { data } = useQuery("getOrganization", () =>
-  //   fetchData({ authToken, organisationId })
-  // );
-  // console.log(`🚀 ~ data:`, data);
+  // Update organization ID when URL changes
+  React.useEffect(() => {
+    // const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
+    getOrganizationIdFromPathname(location.pathname);
+    // eslint-disable-next-line
+  }, [location.pathname, orgId]);
 
-  // Use useCallback to memoize the toggleDrawer function
+  const { data } = useSubscriptionGet({
+    organisationId: orgId,
+  });
+
   const toggleDrawer = useCallback(() => {
     setOpen(!open);
   }, [open]);
@@ -37,11 +54,9 @@ export default function SwipeableTemporaryDrawer() {
     <Box
       sx={{ width: 250, height: 100 }}
       role="presentation"
-      // onClick={toggleDrawer}
       onKeyDown={toggleDrawer}
     >
       <TestNavItems toggleDrawer={toggleDrawer} />
-      {/* <NavItems toggleDrawer={toggleDrawer} /> */}
     </Box>
   );
 
@@ -75,11 +90,8 @@ export default function SwipeableTemporaryDrawer() {
             </Typography>
           </Badge>
           <div className="flex gap-2 items-center">
-            {/* <h1 className="py-[0.125em] px-2 rounded-sm  font-bold">
-              Organization one
-            </h1> */}
-
-            {role && role !== "Employee" && <NotificationIcon />}
+            {data?.organisation?.orgName && data?.organisation?.orgName}
+            <NotificationIcon />
 
             <ProfileIcon />
           </div>
@@ -99,19 +111,6 @@ export default function SwipeableTemporaryDrawer() {
             <h1 className="text-2xl">AEGIS</h1>
           </div>
         </div>
-
-        {/* <div className="mt-4 flex gap-3 px-4 w-full text-sm items-center">
-          <Select
-            options={user?.profile?.map((item) => {
-              return {
-                value: item,
-                label: item,
-              };
-            })}
-            placeholder={"Choose your role"}
-            className="w-full"
-          />
-        </div> */}
         <ChangeRole />
         {list}
       </SwipeableDrawer>

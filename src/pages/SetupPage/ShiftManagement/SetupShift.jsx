@@ -1,12 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Business, Money } from "@mui/icons-material";
 import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
-import { Button } from "@mui/material";
+import { Button, Checkbox, FormControlLabel } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
+import Select from "react-select";
 import { z } from "zod";
 import { UseContext } from "../../../State/UseState/UseContext";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
@@ -16,20 +17,78 @@ import Setup from "../../SetUpOrganization/Setup";
 const SetupShift = () => {
   const { organisationId: orgId } = useParams();
   const authToken = useAuthToken();
+  const [shifts, setShifts] = useState([]);
+  const [shiftId, setShiftId] = useState(null);
+  const [showAmountField, setShowAmountField] = useState(false);
   const { setAppAlert } = useContext(UseContext);
   const queryClient = useQueryClient();
 
+  useEffect(() => {
+    console.log(shiftId);
+  }, [shiftId]);
+
+  const handleChange = (value) => {
+    console.log("this is the value ", value);
+
+    setShiftId(value ? value.value : null);
+    (async () => {
+      try {
+        const resp = await axios.get(
+          `${process.env.REACT_APP_API}/route/getSingleshifts/${value.value}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        setValue("amount", String(resp.data?.shifts?.allowance));
+        console.log("this is shift data", resp.data.shifts);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const resp = await axios.get(
+          `${process.env.REACT_APP_API}/route/shifts/${orgId}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        const finalShifts = resp.data.shifts.map((item) => ({
+          value: item._id,
+          label: item.shiftName,
+        }));
+        setShifts(finalShifts);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, [orgId, authToken]);
+
   const formSchema = z.object({
-    amount: z.string().refine((val) => !isNaN(Number(val)), {
+    amount: z.string().refine((val) => !isNaN(val), {
       message: "Amount must be a number",
     }),
     dualWorkflow: z.boolean(),
+    extraAllowance: z
+      .string()
+      .optional()
+      .refine((val) => val === undefined || !isNaN(Number(val)), {
+        message: "Extra Allowance must be a number",
+      }),
   });
 
   const { control, formState, handleSubmit, setValue } = useForm({
     defaultValues: {
-      amount: "",
+      amount: "0",
       dualWorkflow: false,
+      extraAllowance: "",
     },
     resolver: zodResolver(formSchema),
   });
@@ -39,12 +98,40 @@ const SetupShift = () => {
   const onSubmit = async (data) => {
     console.log("shift allowance data", data);
     try {
-      const resp = await axios.post(
-        `${process.env.REACT_APP_API}/route/shiftApply/postallowance/${orgId}`,
-        { data: { ...data, amount: Number(data.amount) } },
-        { headers: { Authorization: authToken } }
-      );
-      console.log(resp);
+      if (data.amount === "0") {
+        const resp2 = await axios.post(
+          `${process.env.REACT_APP_API}/route/shiftApply/postallowance/${orgId}`,
+          {
+            data: {
+              ...data,
+              amount: Number(data.amount),
+              extraAllowance: data.extraAllowance
+                ? Number(data.extraAllowance)
+                : undefined,
+            },
+          },
+          { headers: { Authorization: authToken } }
+        );
+        console.log(resp2);
+      } else {
+        const resp1 = await axios.post(
+          `${process.env.REACT_APP_API}/route/shifts/setAllowance/${orgId}`,
+          {
+            data: {
+              ...data,
+              amount: Number(data.amount),
+              extraAllowance: data.extraAllowance
+                ? Number(data.extraAllowance)
+                : undefined,
+              shiftId: shiftId,
+            },
+          },
+          { headers: { Authorization: authToken } }
+        );
+
+        console.log(resp1);
+      }
+
       setAppAlert({
         alert: true,
         type: "success",
@@ -68,7 +155,7 @@ const SetupShift = () => {
 
   useEffect(() => {
     if (data?.existingAllowance) {
-      setValue("amount", data.existingAllowance.amount.toString());
+      setValue("dualWorkflow", data.existingAllowance.check);
     }
   }, [data, setValue]);
 
@@ -92,30 +179,66 @@ const SetupShift = () => {
             </div>
             <div className="p-5">
               <form onSubmit={handleSubmit(onSubmit)} action="">
-                <AuthInputFiled
-                  name="dualWorkflow"
-                  icon={Business}
-                  control={control}
-                  type="checkbox"
-                  placeholder="Dual Workflow"
-                  label="Dual Workflow"
-                  errors={errors}
-                  error={errors.dualWorkflow}
-                  descriptionText={
-                    "Enabling workflow ensures account approval after manager's approval otherwise added directly as allowance."
-                  }
-                />
-                <AuthInputFiled
-                  className="w-[40vw]"
-                  name="amount"
-                  icon={Money}
-                  control={control}
-                  type="number"
-                  placeholder="Enter Allowance Amount"
-                  label="Enter Amount *"
-                  errors={errors}
-                  error={errors.amount}
-                />
+                <div className="flex justify-between gap-4">
+                  <div className="w-full">
+                    <AuthInputFiled
+                      name="dualWorkflow"
+                      icon={Business}
+                      control={control}
+                      type="checkbox"
+                      placeholder="Dual Workflow"
+                      label="Dual Workflow"
+                      errors={errors}
+                      error={errors.dualWorkflow}
+                      descriptionText={
+                        "Enabling workflow ensures account approval after manager's approval otherwise added directly as allowance."
+                      }
+                    />
+                  </div>
+                  <div className="w-full">
+                    <FormControlLabel
+                      className="text-gray-700 font-body"
+                      control={
+                        <Checkbox
+                          checked={showAmountField}
+                          onChange={(e) => setShowAmountField(e.target.checked)}
+                          color="primary"
+                        />
+                      }
+                      label="Enable Allowance Amount"
+                    />
+                  </div>
+                </div>
+                {showAmountField && (
+                  <div className="flex flex-col gap-2 mt-4 w-[36vw]">
+                    <Select
+                      value={
+                        shifts.find((shift) => shift.value === shiftId) || null
+                      }
+                      isClearable
+                      className="min-w-60 z-50"
+                      aria-errormessage=""
+                      placeholder={"Select Shift"}
+                      components={{
+                        IndicatorSeparator: () => null,
+                      }}
+                      options={shifts}
+                      onChange={handleChange}
+                    />
+                    <AuthInputFiled
+                      className="w-[36vw]"
+                      name="amount"
+                      icon={Money}
+                      control={control}
+                      type="number"
+                      placeholder="Enter Allowance Amount"
+                      label="Enter Amount *"
+                      errors={errors}
+                      error={errors.amount}
+                    />
+                  </div>
+                )}
+
                 <div className="py-2">
                   <Button
                     className="mt-4"

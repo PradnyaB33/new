@@ -7,12 +7,12 @@ import {
   DialogContent,
   Divider,
   FormControl,
+  FormControlLabel,
   IconButton,
   InputLabel,
   OutlinedInput,
   Radio,
   RadioGroup,
-  FormControlLabel,
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -227,6 +227,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     fetchManagerData();
     // eslint-disable-next-line
   }, []);
+  console.log("manager data ", managerData);
 
   // pull the profile
   const [availableProfiles, setAvailableProfiles] = useState([]);
@@ -311,6 +312,9 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   };
   const handleLocationChange = (event) => {
     setSelectedWorkLocation(event.target.value);
+  };
+  const handleShiftChange = (event) => {
+    setShiftAllocation(event.target.value);
   };
 
   const handleDepartmnetChange = (event) => {
@@ -441,6 +445,8 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
       } else {
         setEmployementType(null);
       }
+      let shift_id = employeeData?.shift_allocation || "";
+      console.log("shift id", shift_id);
       const employeeProfileData = employeeData?.profile || [];
       setProfile(employeeProfileData);
       setMgrempid(employeeData?.mgrempid || "");
@@ -471,7 +477,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
         queryClient.invalidateQueries({ queryKey: ["employeeId"] });
         handleClose();
         handleAlert(true, "success", "Employee updated successfully");
-        window.location.reload();
       },
       onError: () => {
         handleAlert("Failed to update employee. Please try again.");
@@ -1053,8 +1058,8 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               Shift :
             </label>
             <select
-              value={shift_allocation}
-              onChange={(e) => setShiftAllocation(e.target.value)}
+              value={shift_allocation || ""}
+              onChange={handleShiftChange}
               style={{
                 width: "750px",
                 padding: "8px",
@@ -1097,7 +1102,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 ))}
             </select>
           </div>
-         
 
           <div className="space-y-2 ">
             <RadioGroup
