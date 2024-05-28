@@ -23,17 +23,11 @@ const Rate_Review_Model = ({ handleClose, open, options, id, performance }) => {
     p: 4,
   };
 
-  // const { useGetCurrentRole, getCurrentUser } = UserProfile();
-  // const role = useGetCurrentRole();
-  // const user = getCurrentUser();
-
   const authToken = useAuthToken();
   const zodSchema = z.object({
-    goal: z.string(),
     review: z.string(),
     rating: z.object({ value: z.string(), label: z.string() }),
     assignee: z.string(),
-    // assignee: z.object({ value: z.string(), label: z.string() }),
   });
 
   const {
@@ -42,10 +36,7 @@ const Rate_Review_Model = ({ handleClose, open, options, id, performance }) => {
     setValue,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      declaration: undefined,
-      message: undefined,
-    },
+    defaultValues: {},
     resolver: zodResolver(zodSchema),
   });
 
@@ -54,11 +45,14 @@ const Rate_Review_Model = ({ handleClose, open, options, id, performance }) => {
   }, [open, id]);
 
   const queryClient = useQueryClient();
-  const performanceSetup = useMutation(
+  const giveRating = useMutation(
     async (data) => {
-      await axios.patch(
-        `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${id._id}`,
-        { data },
+      await axios.put(
+        `${process.env.REACT_APP_API}/route/performance/giveRating`,
+        {
+          ...data,
+          empId: id.empId._id,
+        },
         {
           headers: {
             Authorization: authToken,
@@ -75,8 +69,6 @@ const Rate_Review_Model = ({ handleClose, open, options, id, performance }) => {
     }
   );
 
-  //   const { isFetching } = useQuery({
-  //     queryKey: ["getGoalReview", id],
   //     queryFn: async () => {
   //       const { data } = await axios.get(
   //         `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id._id}`,
@@ -96,14 +88,13 @@ const Rate_Review_Model = ({ handleClose, open, options, id, performance }) => {
   //   });
   const onSubmit = async (data) => {
     const goals = {
-      assignee: { label: id.empId._id, value: id.empId._id },
       review: data.review,
       rating: data.rating.value,
-      status: "Rating Completed",
-      isReviewCompleted: true,
+      // status: "Rating Completed",
+      // isReviewCompleted: true,
     };
 
-    performanceSetup.mutate(goals);
+    giveRating.mutate(goals);
   };
 
   useQuery("employee", async () => {

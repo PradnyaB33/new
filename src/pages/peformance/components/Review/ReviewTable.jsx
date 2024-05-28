@@ -1,6 +1,10 @@
 import { Edit } from "@mui/icons-material";
 import { Avatar, IconButton } from "@mui/material";
 import { React, useState } from "react";
+import { useQuery } from "react-query";
+import usePerformanceApi from "../../../../hooks/Performance/usePerformanceApi";
+import useAuthToken from "../../../../hooks/Token/useAuth";
+import UserProfile from "../../../../hooks/UserData/useUser";
 import Rate_Review_Model from "../GoalTable/Modal/Rate_Review_Model";
 
 const ReviewTable = ({ tableData }) => {
@@ -8,6 +12,14 @@ const ReviewTable = ({ tableData }) => {
   const [isOpen, setIsOpen] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
+
+  const { fetchPerformanceSetup } = usePerformanceApi();
+  const user = UserProfile().getCurrentUser();
+
+  const authToken = useAuthToken();
+  const { data: performance } = useQuery(["performancePeriod"], () =>
+    fetchPerformanceSetup({ user, authToken })
+  );
 
   const handleClose = () => {
     setOpenEdit(false);

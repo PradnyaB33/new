@@ -125,11 +125,6 @@ const GoalSettingTab = () => {
   return (
     <div>
       <div className="flex items-center justify-between ">
-        {/* <div className="w-full px-8 py-4  ">
-          <h1 className="text-2xl ">Goal Settings</h1>
-          <p>Manage and organize goals setting</p>
-        </div> */}
-
         <div class="flex items-center justify-between ">
           <div class="space-y-1">
             <h2 class=" text-2xl tracking-tight">Goal Settings</h2>
@@ -140,13 +135,6 @@ const GoalSettingTab = () => {
         </div>
       </div>
 
-      {/* <div className="py-4 w-full h-max">
-        <div className="bg-blue-100 p-2 overflow-hidden rounded-md">
-          <h1 className="text-lg scrolling-text text-red-600   gap-2 flex items-center">
-            <InfoOutlined /> Important Notice :- {message}
-          </h1>
-        </div>
-      </div> */}
       <Message />
 
       <div className="flex  pb-4  gap-8">
