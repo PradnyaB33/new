@@ -60,6 +60,12 @@ export default function SwipeableTemporaryDrawer() {
     </Box>
   );
 
+  const paths = ["/sign-in", "/organizationList"];
+  const isLocation = React.useMemo(() => {
+    return paths.some((path) => location.pathname.includes(path));
+  }, [location.pathname]);
+  console.log(`🚀 ~ isLocation:`, isLocation);
+
   return (
     <div
       className={`${
