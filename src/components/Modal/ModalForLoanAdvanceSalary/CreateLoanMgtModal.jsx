@@ -365,7 +365,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
             <div className="space-y-2">
             <FormControl>
               <FormLabel htmlFor="file-upload" className="text-md mb-2">
-                Uploaded Document
+              Upload Document
               </FormLabel>
               <label htmlFor="file-upload">
                 <input
@@ -377,7 +377,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                 />
 
                 <Button variant="contained" component="span">
-                  Upload File
+                Upload Document
                 </Button>
               </label>
               {errorMessage && (

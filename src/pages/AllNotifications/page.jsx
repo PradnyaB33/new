@@ -11,6 +11,7 @@ import useTDSNotificationHook from "../../hooks/QueryHook/notification/tds-notif
 import UserProfile from "../../hooks/UserData/useUser";
 import Card from "./components/card";
 
+
 const ParentNotification = () => {
   const { data } = useLeaveNotificationHook();
   const { data: data2 } = useShiftNotification();
@@ -21,10 +22,8 @@ const ParentNotification = () => {
   const { Form16Notification } = useForm16NotificationHook();
   const { getEmployeeRequestLoanApplication } = useLoanNotification();
   const { PayslipNotification } = usePayslipNotificationHook();
-  console.log("form16", Form16Notification);
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
-  console.log(`🚀 ~ role:`, role);
   const tdsRoute = useMemo(() => {
     if (
       role === "Accountant" ||
@@ -89,6 +88,12 @@ const ParentNotification = () => {
     },
     {
       name: "Form 16 Notification",
+      count: Form16Notification?.length ?? 0,
+      color: "#FF7373",
+      url2: "/form16-notification-to-emp"
+    },
+    {
+      name: "Advance Salary Notification",
       count: Form16Notification?.length ?? 0,
       color: "#FF7373",
       url: "/doc-notification",
