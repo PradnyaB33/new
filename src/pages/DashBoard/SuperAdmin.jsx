@@ -1,10 +1,12 @@
 import {
-  AccessTimeSharp,
-  Business,
   Dashboard,
+  EventAvailable,
+  EventBusy,
   FilterAltOff,
   Groups,
   LocationOn,
+  NearMe,
+  SupervisorAccount,
   West,
 } from "@mui/icons-material";
 import React from "react";
@@ -25,13 +27,14 @@ const SuperAdmin = () => {
   // custom hooks
   const { employee, employeeLoading } = useEmployee(organisationId);
   const {
-    Department,
-    departmentLoading,
+    // Department,
+    // departmentLoading,
     Managers,
     managerLoading,
-    location,
+    location: loc,
     oraganizationLoading,
-    locationLoading,
+    absentEmployee,
+    // locationLoading,
     locationOptions,
     managerOptions,
     Departmentoptions,
@@ -69,42 +72,63 @@ const SuperAdmin = () => {
       </div> */}
 
         <div className="md:px-8 px-2 w-full">
-          <div className="flex flex-1 mt-6 flex-wrap w-full justify-between gap-2 md:gap-5 ">
-            <SuperAdminCard
-              icon={Business}
-              color={"!bg-red-500"}
-              data={Department?.departmentCount}
-              isLoading={departmentLoading}
-              title={"Departments"}
-            />
+          <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1  mt-6  w-full   gap-2 md:gap-5 ">
             <SuperAdminCard
               icon={Groups}
-              data={employee?.totalEmployees}
               color={"!bg-blue-500"}
+              data={employee?.totalEmployees}
               isLoading={employeeLoading}
               title={"Overall Employees"}
             />
+
             <SuperAdminCard
               color={"!bg-green-500"}
-              icon={AccessTimeSharp}
+              isLoading={employeeLoading}
+              icon={EventAvailable}
+              data={
+                !isNaN(employee?.totalEmployees)
+                  ? employee?.totalEmployees - absentEmployee
+                  : 0
+              }
+              title={"Present Today"}
+            />
+            <SuperAdminCard
+              title={"Today's Leave"}
+              icon={EventBusy}
+              color={"!bg-red-500"}
+              data={absentEmployee}
+              isLoading={false}
+            />
+
+            <SuperAdminCard
+              color={"!bg-amber-500"}
+              icon={SupervisorAccount}
               data={Managers?.length}
               isLoading={managerLoading}
               title={"People's Manager"}
             />
             <SuperAdminCard
               color={"!bg-orange-500"}
-              isLoading={locationLoading}
+              isLoading={false}
               icon={LocationOn}
-              data={location?.locationCount}
+              data={loc?.locationCount}
               title={"Locations"}
+            />
+
+            <SuperAdminCard
+              color={"!bg-indigo-500"}
+              isLoading={false}
+              icon={NearMe}
+              data={loc?.locationCount}
+              title={"Remote Employees"}
             />
           </div>
 
           {oraganizationLoading ? (
             <SkeletonFilterSection />
           ) : (
-            <div className="mt-4 w-full  bg-white shadow-md rounded-md  ">
-              <div className="border-b-[.5px] items-center justify-between flex gap-2 py-2 px-4 border-gray-300">
+            <div className="mt-4 w-full  bg-white border rounded-md  ">
+              <div className="items-center justify-between flex gap-2 py-2 px-4 ">
                 <div className="flex items-center gap-2">
                   <Dashboard className="!text-[#67748E]" />
                 </div>

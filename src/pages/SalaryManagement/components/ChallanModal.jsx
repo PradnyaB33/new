@@ -27,17 +27,17 @@ const ChallanModal = ({ handleClose, open, id }) => {
   const { handleAlert } = useContext(TestContext);
   const [challanData, SetChallanData] = useState({
     challan: "",
-    year: new Date().getFullYear() + 1,
-    month: new Date().getMonth() + 1,
-    fileType: "csv",
+    year: "",
+    month: "",
+    fileType: "",
   });
 
   const isAllChecked = useMemo(() => {
     return (
-      !!challanData.challan &&
-      !!challanData.month &&
-      !!challanData.year &&
-      !!challanData.fileType
+      (challanData.challan === "PF" && !challanData.fileType) ||
+      !challanData.challan ||
+      !challanData.month ||
+      !challanData.year
     );
   }, [
     challanData.challan,
@@ -119,9 +119,9 @@ const ChallanModal = ({ handleClose, open, id }) => {
     if (!!open) {
       SetChallanData({
         challan: "",
-        year: new Date().getFullYear() + 1,
-        month: new Date().getMonth() + 1,
-        fileType: "csv",
+        year: "",
+        month: "",
+        fileType: "",
       });
     }
   }, [open]);
@@ -132,11 +132,54 @@ const ChallanModal = ({ handleClose, open, id }) => {
     }
 
     if (challanData.challan === "ESIC") {
-      handleAlert(true, "warning", "This service is available in future");
-      handleClose();
+      getESICChallan();
     }
   };
 
+  const getESICChallan = async () => {
+    try {
+      const getResponse = await axios.get(
+        `${process.env.REACT_APP_API}/route/employeeSalary/getESICChallan/${id}/${challanData?.year}/${challanData?.month}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      const headers = [
+        // "IP Number",
+        "IP Name",
+        "No of days work",
+        "Total month wages",
+        "IP Employer Contribution",
+        "IP Employee Contribution",
+        "Total Contribution",
+        "Reason code",
+        "Last Working Day",
+      ];
+
+      const employeeInfo = getResponse?.data?.map((item) => [
+        item?.name,
+        item?.workingDays,
+        item?.grossSalary,
+        item?.epmCtr,
+        item?.eplCtr,
+        item?.epfEpsDIFFR,
+        item?.reasonCode,
+        item?.lastDay,
+      ]);
+
+      const ws = XLSX.utils.aoa_to_sheet([headers, ...employeeInfo]);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+      XLSX.writeFile(wb, "EmployeeESIC.xlsx");
+      handleAlert(true, "success", "ESIC Challan Generated Successfully");
+      handleClose();
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const getPFChallan = async () => {
     try {
       const getResponse = await axios.get(
@@ -409,9 +452,9 @@ const ChallanModal = ({ handleClose, open, id }) => {
             </button>
             <button
               onClick={generateFunction}
-              disabled={!isAllChecked}
+              disabled={isAllChecked}
               className={`flex group justify-center w-max gap-2 items-center rounded-sm h-[30px] p-5 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500  focus-visible:outline-blue-500  ${
-                !isAllChecked && "!bg-gray-200 !text-gray-500"
+                isAllChecked && "!bg-gray-200 !text-gray-500"
               }`}
             >
               Generate Challan
