@@ -1,6 +1,7 @@
 import { CheckCircle, CorporateFare, West } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import axios from "axios";
+import Cookies from "js-cookie";
 import React, { useContext, useState } from "react";
 import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
@@ -13,6 +14,16 @@ const AssignOrg = () => {
   const user = getCurrentUser();
   const { data } = useOrgList();
   const orgList = data?.organizations;
+
+  // const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+
+  // const handleDeleteConfirmation = () => {
+  //   setDeleteConfirmation(true);
+  // };
+
+  // const handleCloseConfirmation = () => {
+  //   setDeleteConfirmation(false);
+  // };
   // const [selected, setSelected] = useState(null);
   // useEffect(() => {
   //   setSelected(() =>
@@ -40,7 +51,12 @@ const AssignOrg = () => {
         }
       );
 
+      console.log(data.data.token, "token");
+
+      Cookies.set("aegis", data.data.token, { expires: 4 / 24 });
+
       handleAlert(true, "success", "Organisation assigned successful");
+      window.location.reload();
       console.log(data);
     } catch (error) {
       console.log(error);
