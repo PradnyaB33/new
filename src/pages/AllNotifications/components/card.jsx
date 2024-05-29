@@ -24,11 +24,11 @@ const Card = ({ card = false }) => {
     FolderIcon,
     AttachMoneyIcon,
     AccessTimeIcon,
+    AttachMoneyIcon,
+    AccessTimeIcon,
     ReceiptIcon,
     InsertDriveFileIcon,
-    TrendingUp,
-    TrendingUp,
-    TrendingUp,
+    InsertDriveFileIcon,
   ];
 
   return (
