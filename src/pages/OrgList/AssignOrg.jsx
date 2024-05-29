@@ -15,15 +15,15 @@ const AssignOrg = () => {
   const { data } = useOrgList();
   const orgList = data?.organizations;
 
-  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  // const [deleteConfirmation, setDeleteConfirmation] = useState(null);
 
-  const handleDeleteConfirmation = () => {
-    setDeleteConfirmation(true);
-  };
+  // const handleDeleteConfirmation = () => {
+  //   setDeleteConfirmation(true);
+  // };
 
-  const handleCloseConfirmation = () => {
-    setDeleteConfirmation(false);
-  };
+  // const handleCloseConfirmation = () => {
+  //   setDeleteConfirmation(false);
+  // };
   // const [selected, setSelected] = useState(null);
   // useEffect(() => {
   //   setSelected(() =>
