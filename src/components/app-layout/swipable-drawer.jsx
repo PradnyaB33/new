@@ -7,6 +7,7 @@ import { useCallback } from "react"; // Import useCallback
 import { useLocation } from "react-router-dom";
 import useSubscriptionGet from "../../hooks/QueryHook/Subscription/hook";
 import useGetUser from "../../hooks/Token/useUser";
+import UserProfile from "../../hooks/UserData/useUser";
 import ChangeRole from "../InputFileds/ChangeRole";
 import ProfileIcon from "../profieicon/profileIcon";
 import NotificationIcon from "./components/NotificationIcon";
@@ -34,6 +35,8 @@ export default function SwipeableTemporaryDrawer() {
     }
     setOrgId(orgId);
   };
+
+  const role = UserProfile().useGetCurrentRole();
 
   // Update organization ID when URL changes
   React.useEffect(() => {
