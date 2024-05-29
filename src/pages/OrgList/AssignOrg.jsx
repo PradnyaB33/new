@@ -14,6 +14,16 @@ const AssignOrg = () => {
   const user = getCurrentUser();
   const { data } = useOrgList();
   const orgList = data?.organizations;
+
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+
+  const handleDeleteConfirmation = () => {
+    setDeleteConfirmation(true);
+  };
+
+  const handleCloseConfirmation = () => {
+    setDeleteConfirmation(false);
+  };
   // const [selected, setSelected] = useState(null);
   // useEffect(() => {
   //   setSelected(() =>
@@ -41,17 +51,12 @@ const AssignOrg = () => {
         }
       );
 
-      let currentCookie = Cookies.getJSON("aegis") || {};
+      console.log(data.data.token, "token");
 
-      console.log(`🚀 ~ currentCookie:`, currentCookie);
-
-      currentCookie.organizationId = organizationId;
-
-      Cookies.set("aegis", currentCookie, { path: "/" });
-
-      console.log(`🚀 ~ currentCookie:`, currentCookie);
+      Cookies.set("aegis", data.data.token, { expires: 4 / 24 });
 
       handleAlert(true, "success", "Organisation assigned successful");
+      window.location.reload();
       console.log(data);
     } catch (error) {
       console.log(error);
