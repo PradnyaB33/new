@@ -1,6 +1,7 @@
 import { CheckCircle, CorporateFare, West } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import axios from "axios";
+import Cookies from "js-cookie";
 import React, { useContext, useState } from "react";
 import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
@@ -39,6 +40,16 @@ const AssignOrg = () => {
           },
         }
       );
+
+      let currentCookie = Cookies.getJSON("aegis") || {};
+
+      console.log(`🚀 ~ currentCookie:`, currentCookie);
+
+      currentCookie.organizationId = organizationId;
+
+      Cookies.set("aegis", currentCookie, { path: "/" });
+
+      console.log(`🚀 ~ currentCookie:`, currentCookie);
 
       handleAlert(true, "success", "Organisation assigned successful");
       console.log(data);
