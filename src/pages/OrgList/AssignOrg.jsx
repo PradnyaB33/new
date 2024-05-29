@@ -9,27 +9,21 @@ import { TestContext } from "../../State/Function/Main";
 import useOrgList from "../../hooks/QueryHook/Orglist/hook";
 import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
+import AssignModal from "./AssignModal";
 const AssignOrg = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const { data } = useOrgList();
   const orgList = data?.organizations;
+  const [open, setOpen] = useState(false);
 
-  // const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  const openDialog = () => {
+    setOpen(true);
+  };
+  const closeDialog = () => {
+    setOpen(false);
+  };
 
-  // const handleDeleteConfirmation = () => {
-  //   setDeleteConfirmation(true);
-  // };
-
-  // const handleCloseConfirmation = () => {
-  //   setDeleteConfirmation(false);
-  // };
-  // const [selected, setSelected] = useState(null);
-  // useEffect(() => {
-  //   setSelected(() =>
-  //     orgList?.findIndex((item) => item._id === user?.organizationId)
-  //   );
-  // }, [data]);
   const [organizationId, setOrganizationId] = useState(user.organizationId);
   const handleRadioChange = (index, item) => {
     // setSelected(index);
@@ -39,6 +33,7 @@ const AssignOrg = () => {
   const { handleAlert } = useContext(TestContext);
 
   const authToken = useAuthToken();
+
   const handleSubmit = async () => {
     try {
       const data = await axios.put(
@@ -64,6 +59,8 @@ const AssignOrg = () => {
   };
 
   const mutation = useMutation(handleSubmit);
+
+  console.log(user.organizationId === organizationId);
 
   return (
     <div className="bg-gray-50 h-screen">
@@ -123,8 +120,14 @@ const AssignOrg = () => {
               <div className="flex justify-end w-full">
                 <button
                   type="button"
-                  onClick={() => mutation.mutate()}
-                  className="bg-blue-500 text-end my-4 text-white p-2 px-4 rounded-md"
+                  onClick={openDialog}
+                  disabled={user.organizationId === organizationId}
+                  className={`bg-blue-500 text-end my-4 text-white p-2 px-4 rounded-md
+                 ${
+                   user.organizationId === organizationId &&
+                   "!bg-gray-200 !text-gray-500"
+                 }
+                  `}
                 >
                   Submit
                 </button>
@@ -133,6 +136,13 @@ const AssignOrg = () => {
           </div>
         </article>
       </section>
+
+      <AssignModal
+        open={open}
+        openDialog={openDialog}
+        closeDialog={closeDialog}
+        mutation={mutation}
+      />
     </div>
   );
 };
