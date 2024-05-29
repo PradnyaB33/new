@@ -107,7 +107,6 @@ const ShiftModal = ({
 
     {
       onSuccess: (data) => {
-        console.log(data);
         setValue("shiftName", data?.shifts?.shiftName);
         setValue("startTime", data?.shifts?.startTime);
         setValue("endTime", data?.shifts?.endTime);
@@ -138,13 +137,18 @@ const ShiftModal = ({
     (data) =>
       axios.post(`${process.env.REACT_APP_API}/route/shifts/create`, data),
     {
-      onSuccess: () => {
+      onSuccess: (data) => {
+        if (!data.data.success) {
+          handleAlert(true, "error", "Shift name already exists");
+          return true;
+        }
         queryClient.invalidateQueries({ queryKey: ["shifts"] });
         handleClose();
         handleAlert(true, "success", "Shift generated succesfully");
       },
-      onError: () => {
-        console.log("An error occurred while creating a new shift");
+      onError: (err) => {
+        console.log(`🚀 ~ err:`, err?.response?.data?.error);
+        handleAlert(true, "error", err?.response?.data?.error);
       },
     }
   );
@@ -198,11 +202,11 @@ const ShiftModal = ({
       }
     } catch (error) {
       console.error(error);
-      handleAlert(
-        true,
-        "error",
-        "An error occurred while creating a new shift"
-      );
+      // handleAlert(
+      //   true,
+      //   "error",
+      //   "An error occurred while creating a new shift"
+      // );
     }
   };
 

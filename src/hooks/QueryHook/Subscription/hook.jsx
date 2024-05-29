@@ -22,7 +22,8 @@ const useSubscriptionGet = ({ organisationId }) => {
       queryKey: [`subscription-${organisationId}`],
       queryFn: getSubscription,
 
-      onError: (error) => {},
+    onError: (error) => {
+      // toast.error("Something went wrong");
     },
     {
       enabled: false,
