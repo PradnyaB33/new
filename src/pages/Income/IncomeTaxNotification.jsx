@@ -45,7 +45,7 @@ const IncomeTaxNotification = () => {
       <header className="text-xl w-full pt-6 flex items-start gap-2 bg-white shadow-md   p-4">
         <div onClick={() => navigate(-1)}>
           <IconButton>
-            <West className=" !text-xl" />
+            <West className="!text-xl" />
           </IconButton>
         </div>
         TDS Notifications
