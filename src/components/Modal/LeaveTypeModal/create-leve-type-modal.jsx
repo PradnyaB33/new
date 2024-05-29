@@ -28,7 +28,10 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
   const queryClient = useQueryClient();
   const param = useParams();
   const leaveTypeSchema = z.object({
-    leaveName: z.string(),
+    leaveName: z
+      .string()
+      .min(3, { message: "Minimum 3 characters required" })
+      .max(35, { message: "Maximum 35 characters allowed" }),
     count: z.string().refine((doc) => Number(doc) > 0 && Number(doc) < 365, {
       message: "Count will lie between 1 - 365",
     }),

@@ -90,7 +90,7 @@ const DashboardManger = () => {
 
   return (
     <section className=" bg-gray-50  min-h-screen w-full ">
-      <header className="text-xl w-full px-8 pt-6 bg-white shadow-md   p-4">
+      <header className="text-xl font-bold w-full px-8 pt-6 bg-white !text-[#67748E] shadow-md  p-4">
         Manager Dashboard
       </header>
 

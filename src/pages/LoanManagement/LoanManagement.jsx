@@ -16,13 +16,14 @@ import UserProfile from "../../hooks/UserData/useUser";
 import LoanManagementSkeleton from "./LoanManagementSkeleton";
 import LoanManagementPieChart from "./LoanManagementPieChart";
 import CreateLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/CreateLoanMgtModal";
-
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import { IconButton } from "@mui/material";
+import EditLoanModal from "../../components/Modal/CreateLoanMgtModal/EditLoanModal";
 const LoanManagement = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  console.log("user", user);
   const userId = user._id;
   const organisationId = user.organizationId;
 
@@ -42,14 +43,12 @@ const LoanManagement = () => {
     }
   );
 
-  console.log(getEmployeeLoanData);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toDateString();
   };
 
- 
   const calculateLoanStatus = (loan) => {
     const currentDate = new Date();
     const loanStartingDate = loan?.loanDisbursementDate
@@ -58,10 +57,6 @@ const LoanManagement = () => {
     const loanEndingDate = loan?.loanCompletedDate
       ? new Date(loan.loanCompletedDate)
       : null;
-
-    console.log("loan starting data", loanStartingDate);
-    console.log("loan ending data", loanEndingDate);
-
     const loanAmount = loan?.totalDeductionWithSi;
     const totalDeductionPerMonth = loan?.totalDeduction;
 
@@ -86,7 +81,6 @@ const LoanManagement = () => {
     }
 
     let currentDateToCheck = new Date(loanStartingDate);
-    console.log("currentdate to check", currentDateToCheck);
     while (
       currentDateToCheck <= loanEndingDate &&
       currentDateToCheck <= currentDate
@@ -115,8 +109,7 @@ const LoanManagement = () => {
         calculateLoanStatus(selectedLoan);
       paidAmount += loanAmountPaid;
       pendingAmount += loanAmountPending;
-      console.log(paidAmount);
-      console.log(pendingAmount);
+     
     });
 
     setTotalPaidAmount(paidAmount);
@@ -142,6 +135,17 @@ const LoanManagement = () => {
   };
   const handleCreateModalClose = () => {
     setCreateModalOpen(false);
+  };
+  // for edit
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [loan, setLoan] = useState(null);
+  const handleEditModalOpen = (loan) => {
+    setEditModalOpen(true);
+    setLoan(loan);
+  };
+  const handleEditModalClose = () => {
+    setEditModalOpen(false);
+    setLoan(null);
   };
 
   return (
@@ -222,6 +226,9 @@ const LoanManagement = () => {
                         <th scope="col" className="px-8 py-3">
                           Completion Date
                         </th>
+                        <th scope="col" className="px-8 py-3">
+                          Edit
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -296,6 +303,15 @@ const LoanManagement = () => {
                             <td className="py-3 pl-6">
                               {formatDate(loanMgtData?.loanCompletedDate) || ""}
                             </td>
+                            <td className="whitespace-nowrap px-6 py-2">
+                              <IconButton
+                                color="primary"
+                                aria-label="edit"
+                                onClick={() => handleEditModalOpen(loanMgtData)}
+                              >
+                                <EditOutlinedIcon />
+                              </IconButton>
+                            </td>
                           </tr>
                         );
                       })}
@@ -328,6 +344,14 @@ const LoanManagement = () => {
         handleClose={handleCreateModalClose}
         open={createModalOpen}
         organisationId={organisationId}
+      />
+
+      {/* for edit loan data */}
+      <EditLoanModal
+        handleClose={handleEditModalClose}
+        open={editModalOpen}
+        organisationId={organisationId}
+        loan={loan}
       />
     </>
   );

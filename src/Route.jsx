@@ -81,8 +81,10 @@ import ParentNotification from "./pages/AllNotifications/page";
 import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
+import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
 import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 import EmployeeNotification from "./pages/Employee-Notification/page";
+import Form16Notification from "./pages/Form16NotificationToEmp/Form16Notification";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LetterSetup from "./pages/LetterTypes/LetterSetup";
@@ -656,6 +658,28 @@ const App = () => {
           }
         />
         <Route
+          path="/organisation/:organisationId/employee-onboarding-excel"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <EmpExcelOnboard />
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/terms-and-conditions"
           element={<TermsAndConditionsPage />}
         />
@@ -1048,6 +1072,10 @@ const App = () => {
         <Route
           path="/payslip-notification-to-emp"
           element={<PayslipNotification />}
+        />
+        <Route
+          path="/form16-notification-to-emp"
+          element={<Form16Notification />}
         />
       </Routes>
     </AuthProvider>

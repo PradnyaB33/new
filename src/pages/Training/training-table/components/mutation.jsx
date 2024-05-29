@@ -63,7 +63,11 @@ const useTrainingDetailsMutation = () => {
   const { mutate: assignEmployee, isLoading: assignEmployeeLoading } =
     useMutation(addEmployeeToTraining, {
       onSuccess: async (data) => {
-        handleAlert(true, "success", "Employee Assigned Successfully");
+        handleAlert(
+          true,
+          "success",
+          "Training assigned to employee successfully"
+        );
         data.close();
         await queryClient.invalidateQueries(
           "getTrainingDetailsWithNameLimit10WithCreatorId"

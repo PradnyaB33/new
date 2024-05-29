@@ -97,7 +97,7 @@ const MissedPunchNotification = () => {
               <div>
                 <h1 className=" text-xl">Missed Punch Requests</h1>
                 <p className="text-sm">
-                  {` Here ${role} would be able to approve or reject the  missed punch
+                  {` Here you would be able to approve or reject the  missed punch
                 notifications`}
                 </p>
               </div>

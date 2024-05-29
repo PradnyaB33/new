@@ -16,8 +16,6 @@ import TestNavItems from "./components/test-nav-items";
 export default function SwipeableTemporaryDrawer() {
   const [open, setOpen] = React.useState(false);
   const location = useLocation();
-  const { useGetCurrentRole } = UserProfile();
-  const role = useGetCurrentRole();
   const [orgId, setOrgId] = React.useState(null);
   const { decodedToken: decoded } = useGetUser();
   // Function to extract organization ID from pathname
@@ -38,18 +36,18 @@ export default function SwipeableTemporaryDrawer() {
     setOrgId(orgId);
   };
 
+  const role = UserProfile().useGetCurrentRole();
+
   // Update organization ID when URL changes
   React.useEffect(() => {
     // const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
     getOrganizationIdFromPathname(location.pathname);
-    console.log(`🚀 ~ orgId:`, orgId);
     // eslint-disable-next-line
   }, [location.pathname, orgId]);
 
   const { data } = useSubscriptionGet({
     organisationId: orgId,
   });
-  console.log(`🚀 ~ data:`, data);
 
   const toggleDrawer = useCallback(() => {
     setOpen(!open);
@@ -59,11 +57,9 @@ export default function SwipeableTemporaryDrawer() {
     <Box
       sx={{ width: 250, height: 100 }}
       role="presentation"
-      // onClick={toggleDrawer}
       onKeyDown={toggleDrawer}
     >
       <TestNavItems toggleDrawer={toggleDrawer} />
-      {/* <NavItems toggleDrawer={toggleDrawer} /> */}
     </Box>
   );
 
@@ -131,19 +127,6 @@ export default function SwipeableTemporaryDrawer() {
             <h1 className="text-2xl">AEGIS</h1>
           </div>
         </div>
-
-        {/* <div className="mt-4 flex gap-3 px-4 w-full text-sm items-center">
-          <Select
-            options={user?.profile?.map((item) => {
-              return {
-                value: item,
-                label: item,
-              };
-            })}
-            placeholder={"Choose your role"}
-            className="w-full"
-          />
-        </div> */}
         <ChangeRole />
         {list}
       </SwipeableDrawer>
