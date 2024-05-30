@@ -52,7 +52,7 @@ const TDSCalculation = () => {
   return (
     <div>
       <header className="text-xl w-full pt-6 border bg-white shadow-md   p-4">
-        <Link to={"/income-tax"}>
+        <Link to={"/income-tax/organisation"}>
           <West className="mx-4 !text-xl" />
         </Link>
         TDS Calculation

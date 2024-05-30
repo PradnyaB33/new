@@ -4,7 +4,7 @@ import axios from "axios";
 import moment from "moment";
 import React from "react";
 import { useQuery } from "react-query";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useIncomeTax from "../../hooks/IncomeTax/useIncomeTax";
 import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
@@ -37,15 +37,17 @@ const IncomeTaxNotification = () => {
     },
   });
 
+  const navigate = useNavigate();
+
   console.log(`🚀 ~ empTDSData:`, empTDSData);
   return (
     <section className=" min-h-[90vh]  h-auto  bg-gray-50 ">
       <header className="text-xl w-full pt-6 flex items-start gap-2 bg-white shadow-md   p-4">
-        <Link to="/income-tax">
+        <div onClick={() => navigate(-1)}>
           <IconButton>
-            <West className=" !text-xl" />
+            <West className="!text-xl" />
           </IconButton>
-        </Link>
+        </div>
         TDS Notifications
       </header>
 

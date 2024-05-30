@@ -1,8 +1,8 @@
 import {
-  AssignmentTurnedIn,
-  CoPresent,
-  ErrorOutline,
+  EventAvailable,
+  EventBusy,
   Groups,
+  AccessTime,
 } from "@mui/icons-material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
@@ -110,14 +110,14 @@ const DashboardManger = () => {
                 />
                 <SuperAdminCard
                   className={"!min-w-[150px]"}
-                  icon={AssignmentTurnedIn}
+                  icon={AccessTime}
                   title={"Shift Allowance"}
                   isLoading={managerShiftLoading}
                   data={managerShift ?? 0}
                   color={"!bg-orange-500"}
                 />
                 <SuperAdminCard
-                  icon={CoPresent}
+                  icon={EventAvailable}
                   className={"!min-w-[150px]"}
                   data={
                     EmployeeDataOfManager?.data[0]?.reporteeIds?.length -
@@ -128,7 +128,7 @@ const DashboardManger = () => {
                   color={"!bg-green-500"}
                 />
                 <SuperAdminCard
-                  icon={ErrorOutline}
+                  icon={EventBusy}
                   className={"!min-w-[150px]"}
                   data={managerAttendence ?? 0}
                   isLoading={managerAttendenceLoading}

@@ -1,6 +1,7 @@
 import { CheckCircle, CorporateFare, West } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import axios from "axios";
+import Cookies from "js-cookie";
 import React, { useContext, useState } from "react";
 import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
@@ -8,17 +9,21 @@ import { TestContext } from "../../State/Function/Main";
 import useOrgList from "../../hooks/QueryHook/Orglist/hook";
 import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
+import AssignModal from "./AssignModal";
 const AssignOrg = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const { data } = useOrgList();
   const orgList = data?.organizations;
-  // const [selected, setSelected] = useState(null);
-  // useEffect(() => {
-  //   setSelected(() =>
-  //     orgList?.findIndex((item) => item._id === user?.organizationId)
-  //   );
-  // }, [data]);
+  const [open, setOpen] = useState(false);
+
+  const openDialog = () => {
+    setOpen(true);
+  };
+  const closeDialog = () => {
+    setOpen(false);
+  };
+
   const [organizationId, setOrganizationId] = useState(user.organizationId);
   const handleRadioChange = (index, item) => {
     // setSelected(index);
@@ -28,6 +33,7 @@ const AssignOrg = () => {
   const { handleAlert } = useContext(TestContext);
 
   const authToken = useAuthToken();
+
   const handleSubmit = async () => {
     try {
       const data = await axios.put(
@@ -40,7 +46,10 @@ const AssignOrg = () => {
         }
       );
 
+      console.log(data.data.token, "token");
+      Cookies.set("aegis", data.data.token, { expires: 4 / 24 });
       handleAlert(true, "success", "Organisation assigned successful");
+      window.location.reload();
       console.log(data);
     } catch (error) {
       console.log(error);
@@ -48,6 +57,8 @@ const AssignOrg = () => {
   };
 
   const mutation = useMutation(handleSubmit);
+
+  console.log(user.organizationId === organizationId);
 
   return (
     <div className="bg-gray-50 h-screen">
@@ -107,8 +118,14 @@ const AssignOrg = () => {
               <div className="flex justify-end w-full">
                 <button
                   type="button"
-                  onClick={() => mutation.mutate()}
-                  className="bg-blue-500 text-end my-4 text-white p-2 px-4 rounded-md"
+                  onClick={openDialog}
+                  disabled={user.organizationId === organizationId}
+                  className={`bg-blue-500 text-end my-4 text-white p-2 px-4 rounded-md
+                 ${
+                   user.organizationId === organizationId &&
+                   "!bg-gray-200 !text-gray-500"
+                 }
+                  `}
                 >
                   Submit
                 </button>
@@ -117,6 +134,13 @@ const AssignOrg = () => {
           </div>
         </article>
       </section>
+
+      <AssignModal
+        open={open}
+        openDialog={openDialog}
+        closeDialog={closeDialog}
+        mutation={mutation}
+      />
     </div>
   );
 };

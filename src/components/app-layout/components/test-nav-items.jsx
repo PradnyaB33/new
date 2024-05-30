@@ -237,7 +237,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "IncomeTax",
             isVisible: true,
-            link: "/income-tax",
+            link: "/income-tax/organisation",
             icon: <TrendingUp className=" !text-[1.2em] text-[#67748E]" />,
             text: "Income Tax",
           },

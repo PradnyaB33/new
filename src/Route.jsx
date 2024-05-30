@@ -964,16 +964,25 @@ const App = () => {
             </RequireAuth>
           }
         />
-        <Route path="/income-tax" element={<IncomeTax />} />
-        <Route path="/income-tax/declarations" element={<TDSTab1 />} />
-        <Route path="/income-tax/calculation" element={<TDSCalculation />} />
-        <Route path="/notification/income-tax" element={<DeclarationPage />} />
+        <Route path="/income-tax/organisation" element={<IncomeTax />} />
         <Route
-          path="/notification/income-tax-details"
+          path="/income-tax/organisation/declarations"
+          element={<TDSTab1 />}
+        />
+        <Route
+          path="/income-tax/organisation/calculation"
+          element={<TDSCalculation />}
+        />
+        <Route
+          path="/notification/income-tax/organisation"
+          element={<DeclarationPage />}
+        />
+        <Route
+          path="/notification/income-tax/organisation-details"
           element={<IncomeTaxNotification />}
         />
         <Route
-          path="/notification/income-tax/:id"
+          path="/notification/income-tax/organisation/:id"
           element={<DeclarationPage />}
         />
         <Route path="/application" element={<Application />} />
