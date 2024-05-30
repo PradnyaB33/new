@@ -43,7 +43,6 @@ const AppDatePicker = ({
   const [Delete, setDelete] = useState(false);
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
-  const [message, setMessage] = useState("");
   const { authToken } = useGetUser();
   const [openDelete, setOpenDelete] = useState(false);
   const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
@@ -73,7 +72,6 @@ const AppDatePicker = ({
   );
   const handleSelectEvent = (event) => {
     setCalLoader(true);
-    setMessage(event?.message);
     setSelectedLeave(event);
     setCalendarOpen(true);
     if (event.title === "Selected Leave") {
@@ -108,14 +106,15 @@ const AppDatePicker = ({
     return {};
   };
 
-  useMemo(() => {
-    console.log("selectEvent", selectedLeave);
-    if (selectedLeave.status === "Approved") {
+  const makeMessage = useMemo(() => {
+    if (selectedLeave?.status === "Approved") {
       return "Your leave has been approved";
-    } else if (selectedLeave.status === "Pending") {
+    } else if (selectedLeave?.status === "Pending") {
       return "Your leave is pending for approval";
+    } else if (selectedLeave?.status === "Rejected") {
+      return "Your leave has been rejected";
     } else {
-      re
+      return "";
     }
   }, [selectedLeave]);
 
@@ -251,13 +250,7 @@ const AppDatePicker = ({
         </div>
         <div className="flex w-full flex-row-reverse px-3 text-red-500 italic font-extrabold text-xs h-[20px]">
           {" "}
-          {selectEvent
-            ? `Updating existing entry from ${moment(
-                selectedLeave?.start
-              ).format("DD-MM-YYYY")} to ${moment(selectedLeave?.end).format(
-                "DD-MM-YYYY"
-              )}`
-            : message}{" "}
+          {selectedLeave && makeMessage}{" "}
         </div>
       </>
     );
@@ -270,7 +263,6 @@ const AppDatePicker = ({
         element.contains(event.target)
       )
     ) {
-      setMessage("");
     } else {
     }
   };
