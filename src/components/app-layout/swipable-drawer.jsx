@@ -65,7 +65,9 @@ export default function SwipeableTemporaryDrawer() {
 
   const paths = ["/sign-in", "/organizationList"];
   const isLocation = React.useMemo(() => {
-    return paths.some((path) => location.pathname.includes(path));
+    return paths.some((path) => {
+      return location.pathname.includes(path) || location.pathname === "/";
+    });
     // eslint-disable-next-line
   }, [location.pathname]);
   console.log(`🚀 ~ isLocation:`, isLocation);
