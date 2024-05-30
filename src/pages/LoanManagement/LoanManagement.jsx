@@ -10,7 +10,7 @@ import {
   Pending,
   Info,
 } from "@mui/icons-material";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
 import LoanManagementSkeleton from "./LoanManagementSkeleton";
@@ -19,10 +19,20 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { IconButton } from "@mui/material";
 import CreateLoanMgtModal from "../../components/Modal/ModalForLoanAdvanceSalary/CreateLoanMgtModal";
 import EditLoanModal from "../../components/Modal/ModalForLoanAdvanceSalary/EditLoanModal";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { TestContext } from "../../State/Function/Main";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 
 const LoanManagement = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
+  const { handleAlert } = useContext(TestContext);
+  const queryClient = useQueryClient();
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const userId = user._id;
@@ -147,7 +157,43 @@ const LoanManagement = () => {
     setLoan(null);
   };
 
-  
+   // for delete
+   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+   const handleDeleteConfirmation = (id) => {
+     setDeleteConfirmation(id);
+   };
+ 
+   const handleCloseConfirmation = () => {
+     setDeleteConfirmation(null);
+   };
+ 
+   const handleDelete = (id) => {
+     deleteMutation.mutate(id);
+     handleCloseConfirmation();
+   };
+ 
+   const deleteMutation = useMutation(
+     (id) =>
+       axios.delete(
+         `${process.env.REACT_APP_API}/route/delete-loan-data/${id}`,
+         {
+           headers: {
+             Authorization: authToken,
+           },
+         }
+       ),
+     {
+       onSuccess: () => {
+         queryClient.invalidateQueries("loanDatas");
+         handleAlert(
+           true,
+           "success",
+           "Loan data deleted successfully"
+         );
+       },
+     }
+   );
+
   return (
     <>
       <section className="bg-gray-50 min-h-screen w-full">
@@ -304,13 +350,30 @@ const LoanManagement = () => {
                               {formatDate(loanMgtData?.loanCompletedDate) || ""}
                             </td>
                             <td className="whitespace-nowrap px-6 py-2">
-                              <IconButton
-                                color="primary"
-                                aria-label="edit"
-                                onClick={() => handleEditModalOpen(loanMgtData)}
-                              >
-                                <EditOutlinedIcon />
-                              </IconButton>
+                              {loanMgtData.status === "Pending" && (
+                                <>
+                                  <IconButton
+                                    color="primary"
+                                    aria-label="edit"
+                                    onClick={() =>
+                                      handleEditModalOpen(loanMgtData)
+                                    }
+                                  >
+                                    <EditOutlinedIcon />
+                                  </IconButton>
+                                  <IconButton
+                                    color="error"
+                                    aria-label="delete"
+                                    onClick={() =>
+                                      handleDeleteConfirmation(
+                                        loanMgtData?._id
+                                      )
+                                    }
+                                  >
+                                    <DeleteOutlineIcon />
+                                  </IconButton>
+                                </>
+                              )}
                             </td>
                           </tr>
                         );
@@ -353,6 +416,38 @@ const LoanManagement = () => {
         organisationId={organisationId}
         loan={loan}
       />
+
+        {/* for delete */}
+        <Dialog
+        open={deleteConfirmation !== null}
+        onClose={handleCloseConfirmation}
+      >
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <p>
+            Please confirm your decision to delete this loan  data, as
+            this action cannot be undone.
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleCloseConfirmation}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => handleDelete(deleteConfirmation)}
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
