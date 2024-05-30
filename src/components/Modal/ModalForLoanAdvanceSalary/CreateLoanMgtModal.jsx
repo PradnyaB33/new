@@ -116,7 +116,6 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
       setErrorMessage("");
     }
   };
-  
 
   const queryClient = useQueryClient();
   const AddLoanData = useMutation(
@@ -170,7 +169,6 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     }
   };
 
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -363,30 +361,32 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
               {noofemiError && <p className="text-red-500">*{noofemiError}</p>}
             </div>
             <div className="space-y-2">
-            <FormControl>
-              <FormLabel htmlFor="file-upload" className="text-md mb-2">
-              Upload Document
-              </FormLabel>
-              <label htmlFor="file-upload">
-                <input
-                  style={{ display: "none" }}
-                  id="file-upload"
-                  type="file"
-                  accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
-                  onChange={handleFileChange}
-                />
+              <FormControl>
+                <FormLabel htmlFor="file-upload" className="text-md mb-2">
+                  Upload Document
+                </FormLabel>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                <label htmlFor="file-upload">
+                  <input
+                    style={{ display: "none" }}
+                    id="file-upload"
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                    onChange={handleFileChange}
+                  />
 
-                <Button variant="contained" component="span">
-                Upload Document
-                </Button>
-              </label>
-              {errorMessage && (
-                <p className="text-red-500 mt-2">{errorMessage}</p>
-              )}
-            </FormControl>
-          </div>
+                  <Button variant="contained" component="span">
+                    Upload Document
+                  </Button>
+                </label>
+                {file && <p className="text-green-500 ml-2 mt-2">{file.name}</p>}
+                </div>
+                {errorMessage && (
+                  <p className="text-red-500 mt-2">{errorMessage}</p>
+                )}
+              </FormControl>
+            </div>
 
-           
             <div>Rate of Interest : {rateOfIntereset || ""}</div>
             <div>Min loan value : {loanValue ?? "0"}</div>
             <div>Max loan value : {maxLoanValue ?? "0"}</div>
