@@ -61,6 +61,17 @@ const EmployeeTest = () => {
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
+    const fileExtension = file.name.split(".").pop().toLowerCase();
+
+    if (!["xlsx", "xls", "csv"].includes(fileExtension)) {
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: "Only Excel files are allowed",
+      });
+      return;
+    }
+
     setUploadedFileName(file.name);
     const reader = new FileReader();
 
@@ -209,6 +220,7 @@ const EmployeeTest = () => {
         <IconButton onClick={() => navigate(-1)}>
           <West className=" !text-xl" />
         </IconButton>
+
         <div className="flex justify-between w-full">
           <div>
             Employee Onboarding
@@ -216,7 +228,22 @@ const EmployeeTest = () => {
               Welcome your employees by creating their profiles here.
             </p>
           </div>
-          <div>
+          <div className="flex items-center gap-4">
+            <div>
+              <h1 className="w-full text-sm">
+                Onboarding Limit : {org?.memberCount}
+              </h1>
+            </div>
+            <div>
+              <h1 className="w-full text-sm">
+                Current Employee Count : {members?.length}
+              </h1>
+            </div>
+            <div>
+              <h1 className="w-full text-sm">
+                Vacancy Count : {org?.memberCount - members?.length}
+              </h1>
+            </div>
             <FormControlLabel
               control={
                 <Checkbox
@@ -232,16 +259,9 @@ const EmployeeTest = () => {
 
       {showExcelOnboarding && (
         <div className="w-full flex justify-center items-center mt-6">
-          <div className="flex flex-col gap-5 py-4 bg-white shadow-md">
+          <div className="flex flex-col gap-4 py-4 bg-white shadow-md">
             <h1 className="text-xl text-center">Excel Onboarding</h1>
-            <div className="w-full flex flex-col">
-              <h1 className="w-full text-center text-sm">
-                Onboarding Limit : {org?.memberCount}
-              </h1>
-              <h1 className="w-full text-center text-sm">
-                Current Employee Count : {members?.length}
-              </h1>
-            </div>
+            <div className="w-full flex flex-col"></div>
             <h1 className="text-xs text-gray-600 w-[80%] m-auto text-center">
               You can onboard employees efficiently by downloading the template,
               filling in the employee data, and uploading the completed Excel

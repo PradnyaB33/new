@@ -305,16 +305,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             text: "Onboarding",
           },
           {
-            key: "onboardingExcel",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
-              role
-            ),
-            link: `organisation/${orgId}/employee-onboarding-excel`,
-            icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Onboarding Excel",
-          },
-
-          {
             key: "offboarding",
             isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
               role
