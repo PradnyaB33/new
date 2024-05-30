@@ -18,47 +18,6 @@ const ManagerEmployeeChart = ({
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   // const { getCurrentUser } = UserProfile();
-  const [selectMonth, setSelectMonth] = useState({
-    label: new Date().getMonth() + 1,
-    value: new Date().getMonth() + 1,
-  });
-  // const user = getCurrentUser();
-  // const RemainingLeaves = useLeaveTable();
-  // const, setuserId] = useState();
-
-  const customStyles = {
-    control: (base) => ({
-      ...base,
-      border: ".5px solid #f1f1f1",
-      boxShadow: "none",
-      hover: {
-        cursor: "pointer !important",
-      },
-    }),
-    menu: (base) => ({
-      ...base,
-      width: "max-content",
-      minWidth: "100%",
-      right: 0,
-    }),
-    placeholder: (defaultStyles) => {
-      return {
-        ...defaultStyles,
-        color: "#000",
-      };
-    },
-  };
-
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 5 }, (_, index) => currentYear - index);
-
-  const yearOptions = years.map((year) => {
-    return {
-      value: year.toString(),
-      label: year,
-    };
-  });
-
   const monthOptions = [
     {
       value: 1,
@@ -109,6 +68,48 @@ const ManagerEmployeeChart = ({
       label: "December",
     },
   ];
+  const [selectMonth, setSelectMonth] = useState({
+    label: monthOptions.find((item) => item.value === new Date().getMonth() + 1)
+      .label,
+    value: new Date().getMonth() + 1,
+  });
+  // const user = getCurrentUser();
+  // const RemainingLeaves = useLeaveTable();
+  // const, setuserId] = useState();
+
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      border: ".5px solid #f1f1f1",
+      boxShadow: "none",
+      hover: {
+        cursor: "pointer !important",
+      },
+    }),
+    menu: (base) => ({
+      ...base,
+      width: "max-content",
+      minWidth: "100%",
+      right: 0,
+    }),
+    placeholder: (defaultStyles) => {
+      return {
+        ...defaultStyles,
+        color: "#000",
+      };
+    },
+  };
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 5 }, (_, index) => currentYear - index);
+
+  const yearOptions = years.map((year) => {
+    return {
+      value: year.toString(),
+      label: year,
+    };
+  });
+
   const options = {
     elements: {
       line: {
@@ -202,7 +203,9 @@ const ManagerEmployeeChart = ({
   //   return organizedData ?? [];
   // };
 
-  // const EmployeeleaveData = organizeDataByMonth(LeaveYearData);
+  // const EmployeeleaveData = organizeDataByMonth(
+  //   LeaveYearData?.sortedData ?? []
+  // );
   // const MonthArray = allMonths.map((month) => month);
 
   const data = {

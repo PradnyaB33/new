@@ -35,6 +35,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
   const [loanValue, setLoanValue] = useState(0);
   const [maxLoanValue, setMaxLoanValue] = useState(0);
   const [formErrors, setFormErrors] = useState({});
+
   const {
     loanType,
     rateOfIntereset,
@@ -78,13 +79,10 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     // eslint-disable-next-line
   }, [loanDisbursementDate, noOfEmi]);
 
- 
- 
   const handleNoOfEmiChange = (e) => {
     const value = e.target.value;
     if (!isNaN(value) && parseInt(value) >= 0) {
       setNoOfEmi(value);
-     
       setNoOfEmiError("");
       if (loanDisbursementDate) {
         calculateCompletionDate(loanDisbursementDate, value);
@@ -94,7 +92,6 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
       setNoOfEmiError("No of EMI should not be negative");
     }
   };
-  
 
   const calculateCompletionDate = (disbursementDate, emiCount) => {
     const monthsToAdd = parseInt(emiCount);
@@ -105,6 +102,21 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
       setCompletedDate(completionDate);
     }
   };
+
+  const [file, setFile] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    const fileSizeLimit = 150 * 1024;
+
+    if (selectedFile && selectedFile.size > fileSizeLimit) {
+      setErrorMessage("File size exceeds the limit of 150kb.");
+    } else {
+      setFile(selectedFile);
+      setErrorMessage("");
+    }
+  };
+  
 
   const queryClient = useQueryClient();
   const AddLoanData = useMutation(
@@ -158,9 +170,16 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     }
   };
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const requiredFields = [
+        "loanType",
+        "loanAmount",
+        "loanDisbursementDate",
+        "noOfEmi",
+      ];
       const data = {
         loanType: loanType,
         rateOfIntereset: rateOfIntereset,
@@ -173,14 +192,8 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
         totalDeduction: totalDeductionPerMonth,
         totalDeductionWithSi: totalAmountWithSimpleInterest,
         totalSalary: getTotalSalaryEmployee,
+        file: file,
       };
-
-      const requiredFields = [
-        "loanType",
-        "loanAmount",
-        "loanDisbursementDate",
-        "noOfEmi",
-      ];
       const missingFields = requiredFields.filter((field) => !data[field]);
 
       if (missingFields.length > 0) {
@@ -191,12 +204,28 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
         setFormErrors(errors);
         return;
       }
-      await createLoanData(data);
+
+      const formData = new FormData();
+      formData.append("loanType", loanType);
+      formData.append("rateOfIntereset", rateOfIntereset);
+      formData.append("loanAmount", loanAmount);
+      formData.append("loanDisbursementDate", loanDisbursementDate);
+      formData.append("loanCompletedDate", loanCompletedDate);
+      formData.append("noOfEmi", noOfEmi);
+      formData.append("loanPrincipalAmount", principalPerMonth);
+      formData.append("loanInteresetAmount", interestPerMonths);
+      formData.append("totalDeduction", totalDeductionPerMonth);
+      formData.append("totalDeductionWithSi", totalAmountWithSimpleInterest);
+      formData.append("totalSalary", getTotalSalaryEmployee);
+      formData.append("fileurl", file);
+
+      await createLoanData(formData);
     } catch (error) {
       console.error(error);
-      setErrors("An error occurred while creating a loan data");
+      setErrors("An error occurred while creating loan data");
     }
   };
+
   console.log(errors);
   console.log(loanValue);
   console.log("total salary ", getTotalSalaryEmployee);
@@ -222,7 +251,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
           Apply For Loans
         </h1>
       </div>
-    
+
       <DialogContent className="border-none  !pt-0 !px-0  shadow-md outline-none rounded-md">
         <div className="px-5 space-y-4 mt-4">
           <div className="px-5 space-y-4 mt-4">
@@ -333,7 +362,31 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
               </FormControl>
               {noofemiError && <p className="text-red-500">*{noofemiError}</p>}
             </div>
+            <div className="space-y-2">
+            <FormControl>
+              <FormLabel htmlFor="file-upload" className="text-md mb-2">
+                Uploaded Document
+              </FormLabel>
+              <label htmlFor="file-upload">
+                <input
+                  style={{ display: "none" }}
+                  id="file-upload"
+                  type="file"
+                  accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                  onChange={handleFileChange}
+                />
 
+                <Button variant="contained" component="span">
+                  Upload File
+                </Button>
+              </label>
+              {errorMessage && (
+                <p className="text-red-500 mt-2">{errorMessage}</p>
+              )}
+            </FormControl>
+          </div>
+
+           
             <div>Rate of Interest : {rateOfIntereset || ""}</div>
             <div>Min loan value : {loanValue ?? "0"}</div>
             <div>Max loan value : {maxLoanValue ?? "0"}</div>

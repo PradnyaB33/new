@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import useAuthToken from "../Token/useAuth";
 import useDashGlobal from "./useDashGlobal";
+import useEmployee from "./useEmployee";
 
 export default function useDashboardFilter(organisationId) {
   const authToken = useAuthToken();
@@ -12,17 +13,20 @@ export default function useDashboardFilter(organisationId) {
   const [locations, setLocations] = useState("");
   const [data, setData] = useState([]);
   const [date, setDate] = useState(2024);
-  console.log(`🚀 ~ file: useDashboardFilter.jsx:14 ~ setDate:`, setDate);
   const [salaryData, setSalaryData] = useState([]);
   const { selectedYear, selectedSalaryYear } = useDashGlobal();
+  const { employee } = useEmployee(organisationId);
 
   // Card Data
   const { data: absentEmployee } = useQuery(
-    ["absents", organisationId],
+    ["absents", organisationId, employee],
     async () => {
       try {
-        const response = await axios.get(
+        const response = await axios.post(
           `${process.env.REACT_APP_API}/route/leave/getAbsent/${organisationId}`,
+          {
+            employeeId: employee?.employees.map((item) => item._id),
+          },
           {
             headers: {
               Authorization: authToken,
@@ -31,6 +35,9 @@ export default function useDashboardFilter(organisationId) {
         );
         return response.data;
       } catch (error) {}
+    },
+    {
+      enabled: employee?.employees ? true : false,
     }
   );
 
@@ -113,8 +120,8 @@ export default function useDashboardFilter(organisationId) {
   const customStyles = {
     control: (base) => ({
       ...base,
-      border: 0,
-      background: "#f9fafb",
+      border: ".5px solid #f1f1f1",
+      // background: "#f9fafb",
       boxShadow: "none",
       hover: {
         cursor: "pointer !important",
@@ -182,7 +189,7 @@ export default function useDashboardFilter(organisationId) {
     ["manager-attenedence", manager, selectedYear],
     () =>
       getAttendenceData(
-        `${process.env.REACT_APP_API}/route/leave/getManagerEmployeeAttendence/${manager}/${selectedYear.value}`
+        `${process.env.REACT_APP_API}/route/leave/getManagerAttendence/${manager}/${selectedYear.value}`
       ),
     {
       onSuccess: (attendenceData) => setData(attendenceData),
@@ -194,7 +201,7 @@ export default function useDashboardFilter(organisationId) {
     ["location-attenedence", locations, selectedYear],
     () =>
       getAttendenceData(
-        `${process.env.REACT_APP_API}/route/leave/getLocationAttendece/${locations}/`
+        `${process.env.REACT_APP_API}/route/leave/getLocationAttendece/${locations}/${selectedYear.value}`
       ),
     {
       onSuccess: (attendenceData) => setData(attendenceData),
@@ -265,7 +272,7 @@ export default function useDashboardFilter(organisationId) {
     ["location-salary", locations],
     () =>
       getSalaryData(
-        `${process.env.REACT_APP_API}/route/employeeSalary/locationSalaryOverview/${locations}`
+        `${process.env.REACT_APP_API}/route/employeeSalary/locationSalaryOverview/${locations}/${selectedSalaryYear.value}`
       ),
     {
       onSuccess: (organizationAttendenceData) => {
@@ -300,6 +307,7 @@ export default function useDashboardFilter(organisationId) {
     // States
     data,
     date,
+    setDate,
     setData,
     locations,
     setLocations,

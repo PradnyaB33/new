@@ -102,19 +102,21 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
   return (
     <>
       {isLoading ? (
-        <div className=" px-4 pb-4 flex flex-col shadow-md rounded-md bg-white  justify-center">
-          <h1 className="text-lg my-4 font-bold text-[#67748E]">
-            <Skeleton variant="text" width={150} height={20} />
-          </h1>
+        <div className="w-full px-4 pb-4  flex flex-col border rounded-sm bg-white  justify-center">
+          <div className="my-4 ">
+            <h1 className="text-lg my-2 font-bold text-[#67748E]">
+              <Skeleton variant="text" width={150} height={20} />
+            </h1>
+          </div>
           <div className="h-[250px] md:h-[340px] w-full ">
             <Skeleton variant="rect" width="100%" height="100%" />
           </div>
         </div>
       ) : (
-        <div className="px-4 pb-4 bg-white shadow-md rounded-md flex flex-col justify-center">
-          <div className="flex justify-between items-center">
-            <h1 className="text-lg my-4 font-bold text-[#67748E]">
-              Attendance
+        <div className="w-full px-4 pb-4  flex flex-col border rounded-sm bg-white  justify-center">
+          <div className="flex my-4 justify-between items-center">
+            <h1 className="text-lg font-bold text-[#67748E]">
+              Attendance Overview
             </h1>
             <Select
               placeholder={"Select year"}

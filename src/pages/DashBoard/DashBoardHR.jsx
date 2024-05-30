@@ -10,12 +10,15 @@ import {
   SupervisorAccount,
 } from "@mui/icons-material";
 import { IconButton, Popover } from "@mui/material";
+import axios from "axios";
 import { default as React, useEffect } from "react";
-import { useQueryClient } from "react-query";
-import { useLocation } from "react-router-dom/dist";
+import { useQuery, useQueryClient } from "react-query";
+import { useLocation, useParams } from "react-router-dom/dist";
 import Select from "react-select";
+import useDashGlobal from "../../hooks/Dashboard/useDashGlobal";
 import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
 import useEmployee from "../../hooks/Dashboard/useEmployee";
+import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
 import LineGraph from "./Components/Bar/LineGraph";
 import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
@@ -26,7 +29,10 @@ const DashBoardHR = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const { employee, employeeLoading } = useEmployee(user.organizationId);
+  const { setSelectedSalaryYear, selectedSalaryYear } = useDashGlobal();
   const location = useLocation("");
+  const authToken = useAuthToken();
+  const { organisationId } = useParams();
 
   const queryClient = useQueryClient();
 
@@ -67,6 +73,27 @@ const DashBoardHR = () => {
     getAttendenceData,
   } = useDashboardFilter(user.organizationId);
 
+  const getRemoteEmployeeCount = async () => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/route/punch/getTodayRemoteEmp/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return data;
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  const { data: remoteEmployeeCount } = useQuery({
+    queryKey: ["remoteEmployee"],
+    queryFn: getRemoteEmployeeCount,
+  });
+
   useEffect(() => {
     if (location.pathname?.includes("/DH-dashboard")) {
       getAttendenceData();
@@ -74,6 +101,7 @@ const DashBoardHR = () => {
     // eslint-disable-next-line
   }, []);
 
+  console.log(`🚀 ~ remoteEmployeeCount:`, remoteEmployeeCount);
   return (
     <section className=" bg-gray-50  min-h-screen w-full ">
       <header className="text-xl font-bold w-full px-8 pt-6 bg-white !text-[#67748E] shadow-md  p-4">
@@ -129,18 +157,18 @@ const DashBoardHR = () => {
             color={"!bg-indigo-500"}
             isLoading={false}
             icon={NearMe}
-            data={loc?.locationCount}
+            data={remoteEmployeeCount}
             title={"Remote Employees"}
           />
         </div>
         {oraganizationLoading ? (
           <SkeletonFilterSection />
         ) : (
-          <div className="mt-4  w-full  bg-white shadow-md rounded-md  ">
-            <div className="border-b-[.5px] items-center justify-between flex gap-2 py-2 px-4 border-gray-300">
+          <div className="mt-4  w-full  bg-white border  rounded-md  ">
+            <div className=" items-center justify-between flex gap-2 py-2 px-4 ">
               <div className="flex items-center gap-2">
                 <Dashboard className="!text-[#67748E]" />
-                <h1 className="text-md font-bold text-[#67748E]">Dashboard</h1>
+                {/* <h1 className="text-md font-bold text-[#67748E]">Dashboard</h1> */}
               </div>
               <div className=" w-[80%]  md:hidden flex gap-6 items-center justify-end">
                 <IconButton onClick={handleClick}>
@@ -168,6 +196,7 @@ const DashBoardHR = () => {
                       setDepartment("");
                       setManager("");
                       queryClient.invalidateQueries("organization-attenedence");
+                      queryClient.invalidateQueries("Org-Salary-overview");
                     }}
                     className="!w-max flex justify-center h-[25px]  gap-2 items-center rounded-md px-1 text-sm font-semibold text-[#152745]  hover:bg-gray-50 focus-visible:outline-gray-100"
                   >
@@ -324,7 +353,12 @@ const DashBoardHR = () => {
 
         <div className="w-full md:gap-4 md:space-y-0 space-y-3 mt-4 flex md:flex-row flex-col items-center">
           <div className="w-[100%] md:w-[50%]">
-            <LineGraph salarydata={salaryData} isLoading={salaryGraphLoading} />
+            <LineGraph
+              salarydata={salaryData}
+              isLoading={salaryGraphLoading}
+              selectedyear={selectedSalaryYear}
+              setSelectedYear={setSelectedSalaryYear}
+            />
           </div>
           <div className="w-[100%] md:w-[50%]">
             <AttendenceBar

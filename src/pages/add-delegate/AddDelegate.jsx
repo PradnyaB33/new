@@ -7,7 +7,6 @@ import MiniForm from "./components/form";
 const AddDelegate = () => {
   const navigate = useNavigate();
   const { data, isLoading, isFetching } = useGetDelegateSuperAdmin();
-  console.log(`🚀 ~ file: AddDelegate.jsx:38 ~ data:`, data);
   if (isLoading) {
     return (
       <Modal

@@ -4,8 +4,9 @@ import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
 import { Container, Typography } from "@mui/material";
-import { Info } from "@mui/icons-material";
+import { Info, RequestQuote } from "@mui/icons-material";
 import { TestContext } from "../../State/Function/Main";
+import { Avatar } from "@mui/material";
 
 const MissedPunchNotified = ({ employeeId }) => {
   const { handleAlert } = useContext(TestContext);
@@ -49,9 +50,8 @@ const MissedPunchNotified = ({ employeeId }) => {
         }
       );
       console.log(response);
-      await queryClient.refetchQueries(["unavailableRecords", organisationId]);
+      await queryClient.invalidateQueries(["unavailableRecords", organisationId]);
       handleAlert(true, "success", "Approval updated successfully.");
-     
     } catch (error) {
       console.error("Error updating approval:", error);
       handleAlert(true, "error", "Failed to update approval.");
@@ -124,19 +124,25 @@ const MissedPunchNotified = ({ employeeId }) => {
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen py-8 px-4 ">
-        <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
-          Employee Missed Punch
-        </Typography>
-        <p className="text-xs text-gray-600 pl-10 text-center mb-2">
-          Unavailable records of employee
-        </p>
+        <div className="space-y-1 flex items-center gap-3 mb-4">
+          <Avatar className="text-white !bg-blue-500">
+            <RequestQuote />
+          </Avatar>
+          <div>
+            <h1 className=" md:text-xl text-lg ">Missed Punch Requests</h1>
+            <p className="text-sm">
+              Here you will be able to approve or reject the missed punch
+              notifications
+            </p>
+          </div>
+        </div>
         {unavailableRecord && unavailableRecord.length > 0 ? (
           unavailableRecord.map((record, index) => (
             <article
               key={index}
               className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center mb-4"
             >
-              <Typography variant="h6" className=" pl-2 mb-10 mt-10">
+              <Typography variant="h7" className=" pl-2 mb-20 mt-20">
                 {record?.employeeId?.first_name} {record?.employeeId?.last_name}
               </Typography>
 
@@ -176,32 +182,32 @@ const MissedPunchNotified = ({ employeeId }) => {
                           (unavailableRecord, id) => (
                             <tr className="!font-medium border-b" key={id}>
                               <td className="!text-left pl-8 py-3">{id + 1}</td>
-                              <td className="!text-left pl-4 py-3">
+                              <td className="!text-left pl-6 py-3">
                                 {new Date(
                                   unavailableRecord?.recordDate || ""
                                 ).toLocaleDateString()}
                               </td>
-                              <td className="!text-left pl-4 py-3">
+                              <td className="!text-left pl-6 py-3">
                                 {unavailableRecord?.status || ""}
                               </td>
-                              <td className="!text-left pl-4 py-3">
+                              <td className="!text-left pl-8 py-3">
                                 {unavailableRecord?.punchInTime
                                   ? new Date(
                                       unavailableRecord.punchInTime
                                     ).toLocaleTimeString()
                                   : "-"}
                               </td>
-                              <td className="!text-left pl-4 py-3">
+                              <td className="!text-left pl-8 py-3">
                                 {unavailableRecord?.punchOutTime
                                   ? new Date(
                                       unavailableRecord.punchOutTime
                                     ).toLocaleTimeString()
                                   : "-"}
                               </td>
-                              <td className="!text-left pl-4 py-3">
+                              <td className="!text-left pl-6 py-3">
                                 {unavailableRecord?.justify || ""}
                               </td>
-                              <td className="!text-left pl-4 py-3">
+                              <td className="!text-left pl-6 py-3">
                                 {role === "Manager" ? (
                                   <>
                                     <button
@@ -269,8 +275,6 @@ const MissedPunchNotified = ({ employeeId }) => {
                                     >
                                       Approved as leave
                                     </button>
-
-                                  
                                   </>
                                 ) : null}
                               </td>

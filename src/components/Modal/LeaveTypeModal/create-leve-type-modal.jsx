@@ -1,11 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Add, ToggleOn, WorkOffOutlined } from "@mui/icons-material";
+import { Add, Close, ToggleOn, WorkOffOutlined } from "@mui/icons-material";
 import {
   Box,
   Button,
   CircularProgress,
   FormControl,
   FormLabel,
+  IconButton,
   Modal,
   Stack,
 } from "@mui/material";
@@ -27,10 +28,13 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
   const queryClient = useQueryClient();
   const param = useParams();
   const leaveTypeSchema = z.object({
-    leaveName: z.string(),
-    count: z
+    leaveName: z
       .string()
-      .refine((doc) => Number(doc) > 0, { message: "Count is greater than 0" }),
+      .min(3, { message: "Minimum 3 characters required" })
+      .max(35, { message: "Maximum 35 characters allowed" }),
+    count: z.string().refine((doc) => Number(doc) > 0 && Number(doc) < 365, {
+      message: "Count will lie between 1 - 365",
+    }),
     color: z.string(),
     isActive: z.boolean(),
   });
@@ -97,7 +101,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
     left: "50%",
     transform: "translate(-50%, -50%)",
     bgcolor: "background.paper",
-    p: 4,
+    p: 3,
   };
 
   return (
@@ -110,11 +114,16 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
     >
       <Box
         sx={style}
-        className="border-none !z-10 shadow-md outline-none rounded-md gap-2 flex flex-col"
+        className="border-none !z-10 shadow-md outline-none rounded-md gap-6 flex flex-col"
       >
-        <h1 className="text-xl pl-2 font-semibold font-sans">Add leave type</h1>
+        <h1 className="text-xl font-semibold font-sans text-center pb-2 border-b-2 flex justify-between items-baseline">
+          Add leave type
+          <IconButton onClick={handleClose}>
+            <Close />
+          </IconButton>
+        </h1>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          <Stack spacing={2} width={400}>
+          <Stack width={400}>
             <AuthInputFiled
               name="leaveName"
               icon={WorkOffOutlined}
@@ -136,7 +145,12 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
               error={errors.count}
             />
             <FormControl component="fieldset">
-              <FormLabel component="legend">Color</FormLabel>
+              <FormLabel
+                component="legend"
+                className="!font-semibold !text-gray-500 !text-md"
+              >
+                Color
+              </FormLabel>
               <Controller
                 name="color"
                 control={control}

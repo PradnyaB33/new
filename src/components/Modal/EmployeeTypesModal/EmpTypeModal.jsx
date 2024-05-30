@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Person } from "@mui/icons-material";
 import { Box, Button, CircularProgress, Modal } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
@@ -45,7 +45,6 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
   const {
     handleSubmit,
     control,
-    reset,
     setValue,
     formState: { errors },
   } = useForm({
@@ -54,18 +53,6 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
       title: undefined,
     },
   });
-
-  useEffect(
-    () => {
-      if (!open) {
-        reset({
-          title: "",
-        });
-      }
-    },
-    // eslint-disable-next-line
-    [open]
-  );
 
   const queryClient = useQueryClient();
 
@@ -92,12 +79,8 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
           "An Employment Type generated succesfully"
         );
       },
-      onError: () => {
-        handleAlert(
-          true,
-          "error",
-          "Issue while creating a data please try again."
-        );
+      onError: (err) => {
+        handleAlert(true, "error", err?.response?.data?.error);
       },
     }
   );
@@ -119,12 +102,9 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
         handleClose();
         handleAlert(true, "success", "An Employment Type updated succesfully.");
       },
-      onError: () => {
-        handleAlert(
-          true,
-          "error",
-          "Issue while creating a data please try again."
-        );
+      onError: (err) => {
+        console.log(`🚀 ~ err:`, err);
+        handleAlert(true, "error", err?.response?.data?.error);
       },
     }
   );
@@ -136,16 +116,11 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
   // }, [data]);
 
   const onSubmit = async (data) => {
-    try {
-      if (empTypeId) {
-        await EditEmployeeType.mutateAsync(data);
-      } else {
-        // Use the AddEmployeeTypes function from React Query
-        await AddEmployeeTypes.mutateAsync(data);
-      }
-      // Reset form state
-    } catch (error) {
-      console.error(error);
+    if (empTypeId) {
+      await EditEmployeeType.mutateAsync(data);
+    } else {
+      // Use the AddEmployeeTypes function from React Query
+      await AddEmployeeTypes.mutateAsync(data);
     }
   };
 
