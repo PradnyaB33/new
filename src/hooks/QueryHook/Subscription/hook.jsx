@@ -25,7 +25,6 @@ const useSubscriptionGet = ({ organisationId }) => {
     onError: (error) => {
       // toast.error("Something went wrong");
     },
-    {
       enabled: false,
     }
   );
