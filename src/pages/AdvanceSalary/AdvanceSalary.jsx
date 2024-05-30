@@ -11,7 +11,7 @@ import {
 import LoanManagementSkeleton from "../LoanManagement/LoanManagementSkeleton";
 import ApplyAdvanceSalaryModal from "../../components/Modal/AdvanceSalaryModal/ApplyAdvanceSalaryModal";
 import UserProfile from "../../hooks/UserData/useUser";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
 import { IconButton } from "@mui/material";
@@ -19,10 +19,19 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Container } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import EditAdvanceSalaryModal from "../../components/Modal/AdvanceSalaryModal/EditAdvanceSalaryModal";
-
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { TestContext } from "../../State/Function/Main";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 const AdvanceSalary = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
+  const { handleAlert } = useContext(TestContext);
+  const queryClient = useQueryClient();
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const userId = user._id;
@@ -73,6 +82,43 @@ const AdvanceSalary = () => {
     setEditAdvanceSalaryModalOpen(false);
     setAdvanceSalary(null);
   };
+
+  // for delete
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  const handleDeleteConfirmation = (id) => {
+    setDeleteConfirmation(id);
+  };
+
+  const handleCloseConfirmation = () => {
+    setDeleteConfirmation(null);
+  };
+
+  const handleDelete = (id) => {
+    deleteMutation.mutate(id);
+    handleCloseConfirmation();
+  };
+
+  const deleteMutation = useMutation(
+    (id) =>
+      axios.delete(
+        `${process.env.REACT_APP_API}/route/delete-advance-salary-data/${id}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      ),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("advanceSalary");
+        handleAlert(
+          true,
+          "success",
+          "Advance salary data deleted successfully"
+        );
+      },
+    }
+  );
 
   return (
     <>
@@ -200,15 +246,30 @@ const AdvanceSalary = () => {
                             ""}
                         </td>
                         <td className="py-3 pl-6">
-                          <IconButton
-                            color="primary"
-                            aria-label="edit"
-                            onClick={() =>
-                              handleEditAdvanceSalaryModalOpen(advanceSalary)
-                            }
-                          >
-                            <EditOutlinedIcon />
-                          </IconButton>
+                          {advanceSalary.status === "Pending" && (
+                            <>
+                              <IconButton
+                                color="primary"
+                                aria-label="edit"
+                                onClick={() =>
+                                  handleEditAdvanceSalaryModalOpen(
+                                    advanceSalary
+                                  )
+                                }
+                              >
+                                <EditOutlinedIcon />
+                              </IconButton>
+                              <IconButton
+                                color="error"
+                                aria-label="delete"
+                                onClick={() =>
+                                  handleDeleteConfirmation(advanceSalary?._id)
+                                }
+                              >
+                                <DeleteOutlineIcon />
+                              </IconButton>
+                            </>
+                          )}
                         </td>
                       </tr>
                     ))}
@@ -243,6 +304,38 @@ const AdvanceSalary = () => {
         organisationId={organisationId}
         advanceSalary={advanceSalary}
       />
+
+      {/* for delete */}
+      <Dialog
+        open={deleteConfirmation !== null}
+        onClose={handleCloseConfirmation}
+      >
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <p>
+            Please confirm your decision to delete this advance salary data, as
+            this action cannot be undone.
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleCloseConfirmation}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => handleDelete(deleteConfirmation)}
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

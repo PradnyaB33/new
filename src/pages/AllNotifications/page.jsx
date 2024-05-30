@@ -10,8 +10,8 @@ import useShiftNotification from "../../hooks/QueryHook/notification/shift-notif
 import useTDSNotificationHook from "../../hooks/QueryHook/notification/tds-notification/hook";
 import UserProfile from "../../hooks/UserData/useUser";
 import useLeaveNotification from "../SelfLeaveNotification/useLeaveNotification";
+import useAdvanceSalaryData from "../../hooks/QueryHook/notification/advance-salary-notification/useAdvanceSalary";
 import Card from "./components/card";
-
 
 const ParentNotification = () => {
   const { data } = useLeaveNotificationHook();
@@ -28,6 +28,7 @@ const ParentNotification = () => {
   const { Form16Notification } = useForm16NotificationHook();
   const { getEmployeeRequestLoanApplication } = useLoanNotification();
   const { PayslipNotification } = usePayslipNotificationHook();
+  const { getAdvanceSalaryData} = useAdvanceSalaryData();
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
   const tdsRoute = useMemo(() => {
@@ -44,7 +45,7 @@ const ParentNotification = () => {
     `🚀 ~ file: page.jsx:49 ~ data?.leaveRequests?.length:`,
     data?.leaveRequests?.length
   );
-
+ console.log(getAdvanceSalaryData);
   const dummyData = [
     {
       name: "Leave Notification",
@@ -101,7 +102,14 @@ const ParentNotification = () => {
       name: "Form 16 Notification",
       count: Form16Notification?.length ?? 0,
       color: "#FF7373",
-      url: "/doc-notification",
+      url2: "/form16-notification-to-emp",
+    },
+    {
+      name: "Advance Salary Notification",
+      count: getAdvanceSalaryData?.length ?? 0,
+      color: "#FF7373",
+      url: "/advance-salary-notification",
+      url2: "/advance-salary-notification-to-emp",
     },
     {
       name: "TDS Notification",
@@ -112,21 +120,7 @@ const ParentNotification = () => {
     },
   ];
 
-  // if (
-  //   role === "HR" ||
-  //   role === "Super-Admin" ||
-  //   role === "Delegate-Super-Admin"
-  // ) {
-  //   dummyData.push({
-  //     name: "Loan Notification",
-  //     count: getEmployeeRequestLoanApplication?.length ?? 0,
-  //     color: "#51E8FD",
-  //     url: "/loan-notification",
-  //   });
-  // }
-  // url: "/form16-notification-to-emp",
-  //   },
-  // ];
+  
 
   return (
     <div className="pt-5">

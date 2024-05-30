@@ -17,15 +17,19 @@ import dayjs from "dayjs";
 import React, { useState, useEffect, useContext } from "react";
 import useAdvanceSalaryState from "../../../hooks/AdvanceSalaryHook/useAdvanceSalaryState";
 import useAdvanceSalaryQuery from "../../../hooks/AdvanceSalaryHook/useAdvanceSalaryQuery";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import { UseContext } from "../../../State/UseState/UseContext";
 import { TestContext } from "../../../State/Function/Main";
+import UserProfile from "../../../hooks/UserData/useUser";
 
 const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
+  const userId = user._id;
   const [noofemiError, setNoOfEmiError] = useState("");
   const [errors, setErrors] = useState("");
   const [formErrors, setFormErrors] = useState({});
@@ -90,6 +94,24 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
   };
   console.log(file);
 
+  //for get loan data
+  const { data: loanAmount } = useQuery(
+    ["loaninfo", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/${userId}/get-ongoing-loan-data`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
+
+  console.log("loan amount", loanAmount);
+
   const queryClient = useQueryClient();
   const AddAdvanceSalary = useMutation(
     (data) =>
@@ -143,6 +165,14 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
         setFormErrors(errors);
         return;
       }
+      if (loanAmount && loanAmount.length > 0) {
+        handleAlert(
+          true,
+          "error",
+          "You cannot apply for advance salary as you have an ongoing loan."
+        );
+        return;
+      }
 
       const formData = new FormData();
       formData.append("ememployee_name", employee_name);
@@ -185,8 +215,8 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
       </div>
       <div className="px-5 space-y-4 mt-4">
         <div>
-          {formErrors.noOfMont && (
-            <p className="text-red-500">*{formErrors.noOfMont}</p>
+          {formErrors.noOfMonth && (
+            <p className="text-red-500">*{formErrors.noOfMonth}</p>
           )}
         </div>
         <div className="space-y-2">

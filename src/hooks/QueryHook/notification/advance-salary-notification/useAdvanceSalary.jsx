@@ -22,8 +22,25 @@ const useAdvanceSalaryData = () => {
     }
   );
 
+  const { data: advanceSalaryNotification } = useQuery(
+    ["advance-salary-notification"],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/send-notification-to-emp`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
+
+
   return {
     getAdvanceSalaryData,
+    advanceSalaryNotification ,
     isLoading,
     isFetching,
   };

@@ -205,6 +205,11 @@ const EditAdvanceSalaryModal = ({
         </h1>
       </div>
       <div className="px-5 space-y-4 mt-4">
+      <div>
+          {formErrors.noOfMonth && (
+            <p className="text-red-500">*{formErrors.noOfMonth}</p>
+          )}
+        </div>
         <div className="space-y-2">
           <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
             <InputLabel>Employee Id</InputLabel>
@@ -220,26 +225,6 @@ const EditAdvanceSalaryModal = ({
           </FormControl>
         </div>
         <div className="space-y-2 ">
-          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer
-              className="w-full"
-              components={["DatePicker"]}
-              required
-            >
-              <DatePicker
-                label="Advance salary starting date"
-                value={advanceSalaryStartingDate}
-                onChange={(newDate) => {
-                  const formattedDate = dayjs(newDate).format("YYYY-MM-DD");
-                  setAdvanceSalaryStartingDate(formattedDate);
-                }}
-                slotProps={{
-                  textField: { size: "small", fullWidth: true },
-                }}
-                disablePast
-              />
-            </DemoContainer>
-          </LocalizationProvider> */}
           <FormControl fullWidth sx={{ marginBottom: "1rem" }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker"]}>
