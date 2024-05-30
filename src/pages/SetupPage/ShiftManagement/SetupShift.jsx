@@ -83,6 +83,7 @@ const SetupShift = () => {
         message: "Extra Allowance must be a number",
       }),
   });
+  console.log("some code");
 
   const { control, formState, handleSubmit, setValue } = useForm({
     defaultValues: {
