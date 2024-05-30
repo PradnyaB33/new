@@ -12,7 +12,7 @@ import { momentLocalizer } from "react-big-calendar";
 import { useQuery, useQueryClient } from "react-query";
 
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Calendar } from "react-big-calendar";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
@@ -37,7 +37,6 @@ const AppDatePicker = ({
   calLoader,
   setCalLoader,
 }) => {
-  console.log(`🚀 ~ file: date-picker.jsx:40 ~ selectedLeave:`, selectedLeave);
   const localizer = momentLocalizer(moment);
   const queryClient = useQueryClient();
   const { organisationId } = useParams();
@@ -108,6 +107,17 @@ const AppDatePicker = ({
 
     return {};
   };
+
+  useMemo(() => {
+    console.log("selectEvent", selectedLeave);
+    if (selectedLeave.status === "Approved") {
+      return "Your leave has been approved";
+    } else if (selectedLeave.status === "Pending") {
+      return "Your leave is pending for approval";
+    } else {
+      re
+    }
+  }, [selectedLeave]);
 
   const handleSelectSlot = async ({ start, end }) => {
     setCalLoader(true);
