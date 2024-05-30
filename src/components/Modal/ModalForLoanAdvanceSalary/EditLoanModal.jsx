@@ -67,7 +67,7 @@ const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
     if (loan) {
       setLoanType(loan.loanType._id);
       setLoanAmount(loan.loanAmount);
-      setDisbursementDate(dayjs(loan.loanDisbursementDate)); 
+      setDisbursementDate(dayjs(loan.loanDisbursementDate));
       setNoOfEmi(loan.noOfEmi);
       setFile(loan.file);
       setLoanId(loan._id);
@@ -135,12 +135,12 @@ const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
       setErrorMessage("");
     }
   };
+  console.log("file" , file);
 
   const getFileNameFromURL = (url) => {
     const parts = url.split("/");
     return parts[parts.length - 1];
   };
-
 
   const queryClient = useQueryClient();
   const updateLoanData = useMutation(
@@ -164,7 +164,6 @@ const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
           "Your loan application has been updated successfully. It is now awaiting approval from HR"
         );
         handleClose();
-        window.location.reload();
       },
       onError: () => {
         setErrors("An Error occurred while updating a loan data.");
@@ -235,20 +234,20 @@ const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
       formData.append(
         "loanDisbursementDate",
         dayjs(loanDisbursementDate).toISOString()
-      ); // Ensure proper date format
+      ); 
       formData.append(
         "loanCompletedDate",
         dayjs(loanCompletedDate).toISOString()
-      ); // Ensure proper date format
+      ); 
       formData.append("noOfEmi", noOfEmi);
       formData.append("loanPrincipalAmount", principalPerMonth);
       formData.append("loanInteresetAmount", interestPerMonths);
       formData.append("totalDeduction", totalDeductionPerMonth);
       formData.append("totalDeductionWithSi", totalAmountWithSimpleInterest);
       formData.append("totalSalary", getTotalSalaryEmployee);
-      formData.append("file", file);
+      formData.append("fileurl", file);
 
-      checkTotalSalary(data);
+      await checkTotalSalary(formData);
     } catch (error) {
       console.error("An error occurred while creating a loan data", error);
       setErrors("An Error occurred while updating a loan data.");
@@ -339,30 +338,31 @@ const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
             )}
           </div>
 
-          <FormControl fullWidth sx={{ marginBottom: "1rem" }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={["DatePicker"]}>
-                <DatePicker
-                  label="Loan Disbursement Date"
-                  value={
-                    loanDisbursementDate ? dayjs(loanDisbursementDate) : null
-                  }
-                  onChange={(newValue) => setDisbursementDate(dayjs(newValue))}
-                  slotProps={{
-                    textField: {
-                      variant: "outlined",
-                      error: Boolean(formErrors.loanDisbursementDate),
-                    },
-                  }}
-                />
-              </DemoContainer>
-            </LocalizationProvider>
-            {formErrors.loanDisbursementDate && (
-              <Typography color="error">
-                {formErrors.loanDisbursementDate}
-              </Typography>
-            )}
-          </FormControl>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer className="w-full" components={["DatePicker"]}>
+              <DatePicker
+                label="Loan Disbursement Date"
+                value={
+                  loanDisbursementDate ? dayjs(loanDisbursementDate) : null
+                }
+                onChange={(newValue) => setDisbursementDate(dayjs(newValue))}
+                slotProps={{
+                  textField: {
+                    size: "small",
+                    fullWidth: true,
+                    variant: "outlined",
+                    error: Boolean(formErrors.loanDisbursementDate),
+                  },
+                }}
+              />
+            </DemoContainer>
+          </LocalizationProvider>
+          {formErrors.loanDisbursementDate && (
+            <Typography color="error">
+              {formErrors.loanDisbursementDate}
+            </Typography>
+          )}
+
           <div className="space-y-2 ">
             <FormLabel className="text-md">
               No of EMIs for loan prepayment
@@ -390,7 +390,7 @@ const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
                   accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
                   onChange={handleFileChange}
                 />
-                  {loan && loan.file && (
+                {loan && loan.file && (
                   <div className="flex items-center mt-2">
                     <InsertDriveFileIcon color="action" className="mr-2" />
                     <Typography variant="body2" color="textSecondary">
@@ -398,13 +398,16 @@ const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
                     </Typography>
                   </div>
                 )}
+                 <div style={{ display: "flex", alignItems: "center" }}>
                 <Button
                   variant="contained"
                   component="span"
-                  style={{ marginTop: "5px" }}
+                  style={{ marginTop: "15px" }}
                 >
                   Upload File
                 </Button>
+                {file && <p className="text-green-500 ml-2 mt-2">{file.name}</p>}
+                </div>
               </label>
 
               {errorMessage && (
