@@ -114,6 +114,10 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import AdvanceSalary from "./pages/AdvanceSalary/AdvanceSalary";
+import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotification";
+import AdvanceSalaryApproval from "./pages/AdvanceSalaryNotification/AdvanceSalaryApproval";
+import AdvanceSalaryNotificationToEmp from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotificationToEmp";
 
 const App = () => {
   return (
@@ -603,6 +607,28 @@ const App = () => {
           }
         />
         <Route
+          path="/advance-salary"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <AdvanceSalary />
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/organisation/:organisationId/salary-calculate/:userId"
           element={
             <RequireAuth
@@ -1085,6 +1111,18 @@ const App = () => {
         <Route
           path="/form16-notification-to-emp"
           element={<Form16Notification />}
+        />
+        <Route
+          path="/advance-salary-notification"
+          element={<AdvanceSalaryNotification />}
+        />
+        <Route
+          path="/advance-salary-approval/:advanceSalaryId"
+          element={<AdvanceSalaryApproval />}
+        />
+        <Route
+          path="/advance-salary-notification-to-emp"
+          element={<AdvanceSalaryNotificationToEmp />}
         />
       </Routes>
     </AuthProvider>

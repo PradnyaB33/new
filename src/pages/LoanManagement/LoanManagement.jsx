@@ -15,10 +15,11 @@ import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
 import LoanManagementSkeleton from "./LoanManagementSkeleton";
 import LoanManagementPieChart from "./LoanManagementPieChart";
-import CreateLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/CreateLoanMgtModal";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { IconButton } from "@mui/material";
-import EditLoanModal from "../../components/Modal/CreateLoanMgtModal/EditLoanModal";
+import CreateLoanMgtModal from "../../components/Modal/ModalForLoanAdvanceSalary/CreateLoanMgtModal";
+import EditLoanModal from "../../components/Modal/ModalForLoanAdvanceSalary/EditLoanModal";
+
 const LoanManagement = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -42,7 +43,6 @@ const LoanManagement = () => {
       return response.data.data;
     }
   );
-
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -109,7 +109,6 @@ const LoanManagement = () => {
         calculateLoanStatus(selectedLoan);
       paidAmount += loanAmountPaid;
       pendingAmount += loanAmountPending;
-     
     });
 
     setTotalPaidAmount(paidAmount);
@@ -148,6 +147,7 @@ const LoanManagement = () => {
     setLoan(null);
   };
 
+  
   return (
     <>
       <section className="bg-gray-50 min-h-screen w-full">
