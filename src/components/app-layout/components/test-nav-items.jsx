@@ -279,6 +279,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Loan Management",
           },
+          {
+            key: "advanceSalary",
+            isVisible: true,
+            link: `/advance-salary`,
+            icon: (
+              <MonetizationOnOutlined className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Advance Salary",
+          },
         ],
       },
       Employee: {

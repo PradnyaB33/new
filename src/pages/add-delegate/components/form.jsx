@@ -93,7 +93,7 @@ const packageSchema = z.object({
     .string()
     .min(1, { message: "Employee code is required" })
     .max(25, { message: "Employee code is not greater than 25 character" }),
-  _id: z.string(),
+  _id: z.string().optional(),
 });
 const MiniForm = ({ data }) => {
   console.log(`🚀 ~ file: form.jsx:99 ~ data:`, data);
@@ -120,7 +120,7 @@ const MiniForm = ({ data }) => {
         gender: data?.delegateSuperAdmin?.gender,
         profile: ["Delegate-Super-Admin", "Employee"],
         citizenship: data?.delegateSuperAdmin?.citizenship,
-        _id: data?.delegateSuperAdmin?._id || "",
+        _id: data?.delegateSuperAdmin?._id || undefined,
         confirmPassword: undefined,
         empId: data?.delegateSuperAdmin?.empId || "",
       },
@@ -134,7 +134,7 @@ const MiniForm = ({ data }) => {
     addDelegateMutation.mutate(data);
   };
   const reset = async () => {
-    setValue("_id", "");
+    setValue("_id", undefined);
     setValue("first_name", undefined);
     setValue("last_name", undefined);
     setValue("citizenship", undefined);

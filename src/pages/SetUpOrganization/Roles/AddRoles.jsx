@@ -72,15 +72,15 @@ const AddRoles = () => {
     }));
   };
 
-  const handleIsApproverChange = (event, role) => {
-    setRoleState((prevRoles) => ({
-      ...prevRoles,
-      [role]: {
-        ...prevRoles[role],
-        isApprover: event.target.checked,
-      },
-    }));
-  };
+  // const handleIsApproverChange = (event, role) => {
+  //   setRoleState((prevRoles) => ({
+  //     ...prevRoles,
+  //     [role]: {
+  //       ...prevRoles[role],
+  //       isApprover: event.target.checked,
+  //     },
+  //   }));
+  // };
 
   const handleSubmit = async () => {
     await AddProfiles.mutateAsync(roleState);
