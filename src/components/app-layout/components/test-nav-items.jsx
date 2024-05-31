@@ -61,7 +61,7 @@ const TestNavItems = ({ toggleDrawer }) => {
 
   // Update organization ID when URL changes
   useEffect(() => {
-    if (role === "Super-Admin") {
+    if ((role === "Super-Admin", "Delegate-Super-Admin")) {
       getOrganizationIdFromPathname(location.pathname);
     } else {
       setOrgId(user?.organizationId);
@@ -162,14 +162,18 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "billing",
-            isVisible: ["Super-Admin"].includes(role) ? true : false,
+            isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+              ? true
+              : false,
             link: `/billing`,
             icon: <CurrencyRupee className="text-[#67748E]" />,
             text: "Billing",
           },
           {
             key: "add-delegate-super-admin",
-            isVisible: ["Super-Admin"].includes(role) ? true : false,
+            isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+              ? true
+              : false,
             link: `/add-delegate`,
             icon: <SupervisorAccount className="text-[#67748E]" />,
             text: "Add Delegate Super Admin",
@@ -255,6 +259,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               isVisible &&
               [
                 "Super-Admin",
+                "Delegate-Super-Admin",
                 "HR",
                 "Accountant",
                 "Delegate-Super-Admin",
@@ -284,6 +289,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           [
             "Super-Admin",
             "Delegate-Super-Admin",
+            "Delegate-Super-Admin",
             "Department-Head",
             "Delegate-Department-Head",
             "Department-Admin",
@@ -297,18 +303,24 @@ const TestNavItems = ({ toggleDrawer }) => {
         routes: [
           {
             key: "onboarding",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
-              role
-            ),
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "HR",
+              "Delegate-Super-Admin",
+            ].includes(role),
             link: `organisation/${orgId}/employee-onboarding`,
             icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
             text: "Onboarding",
           },
           {
             key: "offboarding",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
-              role
-            ),
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "HR",
+              "Delegate-Super-Admin",
+            ].includes(role),
             link: `organisation/${orgId}/employee-offboarding`,
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
             text: "Offboarding",
@@ -317,6 +329,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "employeeList",
             isVisible: [
               "Super-Admin",
+              "Delegate-Super-Admin",
               "Delegate-Super-Admin",
               "Department-Head",
               "Delegate-Department-Head",
@@ -342,6 +355,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           [
             "Super-Admin",
             "Delegate-Super-Admin",
+            "Delegate-Super-Admin",
             "Department-Head",
             "Delegate-Department-Head",
             "Department-Admin",
@@ -355,9 +369,12 @@ const TestNavItems = ({ toggleDrawer }) => {
         routes: [
           {
             key: "punchingMachine",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
-              role
-            ),
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "HR",
+              "Delegate-Super Admin",
+            ].includes(role),
             link: `organisation/${orgId}/emo-info-punch-status`,
             icon: <PunchClockIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Punch Sync ",
@@ -365,18 +382,24 @@ const TestNavItems = ({ toggleDrawer }) => {
 
           {
             key: "viewAttendance",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
-              role
-            ),
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "HR",
+              "Delegate-Super Admin",
+            ].includes(role),
             link: `organisation/${orgId}/view-attendance-biomatric`,
             icon: <AccessTimeIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Time Track",
           },
           {
             key: "viewCalculate",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
-              role
-            ),
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "HR",
+              "Delegate-Super Admin",
+            ].includes(role),
             link: `organisation/${orgId}/view-calculate-data`,
             icon: (
               <CalendarMonthIcon className=" !text-[1.2em] text-[#67748E]" />
@@ -385,9 +408,12 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "misspunchInOutRecord",
-            isVisible: ["Super-Admin", "HR", "Delegate-Super Admin"].includes(
-              role
-            ),
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "HR",
+              "Delegate-Super Admin",
+            ].includes(role),
             link: `organisation/${orgId}/missed-punch-in-out`,
             icon: <CallMissedIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Missed Punch ",
@@ -396,6 +422,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "missjustify",
             isVisible: [
               "Super-Admin",
+              "Delegate-Super-Admin",
               "Delegate-Super-Admin",
               "Department-Head",
               "Delegate-Department-Head",
@@ -420,6 +447,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           [
             "Super-Admin",
             "Delegate-Super-Admin",
+            "Delegate-Super-Admin",
             "HR",
             "Department-Head",
             "Delegate-Department-Head",
@@ -433,6 +461,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "addDepartment",
             isVisible: [
               "Super-Admin",
+              "Delegate-Super-Admin",
               "Delegate-Super-Admin",
               "HR",
               "Department-Head",
@@ -452,6 +481,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible: [
               "Super-Admin",
               "Delegate-Super-Admin",
+              "Delegate-Super-Admin",
               "HR",
               "Department-Head",
               "Delegate-Department-Head",
@@ -469,6 +499,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible: [
               "Super-Admin",
               "Delegate-Super-Admin",
+              "Delegate-Super-Admin",
               "HR",
               "Department-Head",
               "Delegate-Department-Head",
@@ -485,7 +516,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
       Organisation: {
         open: false,
-        isVisible: ["Super-Admin"].includes(role),
+        isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role),
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
@@ -513,20 +544,32 @@ const TestNavItems = ({ toggleDrawer }) => {
       RemotePunch: {
         open: false,
         isVisible:
-          ["Employee", "Manager", "Super-Admin"].includes(role) &&
-          emp?.packageInfo === "Intermediate Plan",
+          [
+            "Employee",
+            "Manager",
+            "Super-Admin",
+            "Delegate-Super-Admin",
+          ].includes(role) && emp?.packageInfo === "Intermediate Plan",
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
             key: "addPunch",
-            isVisible: ["Employee", "Super-Admin"].includes(role),
+            isVisible: [
+              "Employee",
+              "Super-Admin",
+              "Delegate-Super-Admin",
+            ].includes(role),
             link: "/employee-remote-punching",
             icon: <Fingerprint className=" !text-[1.2em] text-[#67748E]" />,
             text: "Remote Punch-in-out",
           },
           {
             key: "missPunch",
-            isVisible: ["Employee", "Super-Admin"].includes(role),
+            isVisible: [
+              "Employee",
+              "Super-Admin",
+              "Delegate-Super-Admin",
+            ].includes(role),
             link: "/remotePunching",
             icon: <PanToolAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Apply Miss For Punch",
@@ -563,7 +606,9 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "orgDocs",
-            isVisible: ["HR", "Super-Admin"].includes(role),
+            isVisible: ["HR", "Super-Admin", "Delegate-Super-Admin"].includes(
+              role
+            ),
             link: "/org/docs/auth",
             icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Organisation Records",

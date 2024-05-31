@@ -143,7 +143,13 @@ const App = () => {
           path="/performance"
           element={
             <RequireAuth
-              permission={["Super-Admin", "Employee", "Manager", "HR"]}
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Employee",
+                "Manager",
+                "HR",
+              ]}
             >
               <Performance />
             </RequireAuth>
