@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import usePayslipNotificationHook from "../../hooks/QueryHook/notification/PayslipNotification/usePayslipNotificaitonHook";
 import dayjs from "dayjs";
-import { Container } from "@mui/material";
-import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
+import { Container, Grid, Box } from "@mui/material";
 const PayslipNotification = () => {
   const { PayslipNotification } = usePayslipNotificationHook();
-  console.log("payslipdata", PayslipNotification);
 
   // for select date
   const [selectedDate, setSelectedDate] = useState(null);
@@ -16,13 +12,11 @@ const PayslipNotification = () => {
   };
 
   const monthFromSelectedDate = selectedDate ? selectedDate.format("M") : null;
-  const yearFromSelectedDate = selectedDate
-    ? selectedDate.format("YYYY")
-    : null;
+  const yearFromSelectedDate = selectedDate ? selectedDate.format("YYYY") : null;
   console.log({ monthFromSelectedDate, yearFromSelectedDate });
 
   const filteredPayslip = selectedDate
-    ? PayslipNotification.find(
+    ? PayslipNotification?.find(
         (payslip) =>
           payslip.month === parseInt(monthFromSelectedDate) &&
           payslip.year === parseInt(yearFromSelectedDate)
@@ -40,72 +34,72 @@ const PayslipNotification = () => {
       <div style={{ marginTop: "5%" }}>
         <Container maxWidth="xl" className="bg-gray-50 min-h-screen mt-4">
           <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
-            <div className="p-4 border-b-[.5px] flex justify-between gap-3 w-full border-gray-300">
-              <div className="flex gap-3">
-                <div className="mt-1">
-                  <CircleNotificationsIcon />
-                </div>
-                <div>
-                  <h1 className="!text-lg">Notification</h1>
-                  <p className="text-xs text-gray-600">
-                    Here you can see your notification.
-                  </p>
-                </div>
-              </div>
-            </div>
+            <h1 className="w-full pt-5 text-xl font-bold px-14 py-3 shadow-md bg-white border-b border-gray-300">
+              Payslip Notifications
+              <p className="text-sm font-extralight">
+                Here employees can check the status of their payslip requests
+              </p>
+            </h1>
             <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
               <div className="flex flex-col gap-3 mb-3 md:mb-0">
-                <h3 className="text-lg font-bold text-gray-700">
+                <h1 className="w-full pt-5 text-xl font-bold px-10 py-3 bg-white">
                   Please select the month
-                </h3>
-                <input
-                  type="month"
-                  value={selectedDate ? selectedDate.format("YYYY-MM") : ""}
-                  onChange={handleDateChange}
-                  style={{ width: "500px" }}
-                  className="border border-gray-300 rounded-md p-2 mt-2"
-                />
+                </h1>
+                <div className="px-10">
+                  <input
+                    type="month"
+                    value={selectedDate ? selectedDate.format("YYYY-MM") : ""}
+                    onChange={handleDateChange}
+                    style={{ width: "500px" }}
+                    className="border border-gray-300 rounded-md p-2"
+                  />
+                </div>
               </div>
             </div>
             {filteredPayslip ? (
-              <div className="p-4">
-                <Stack sx={{ width: "100%" }} spacing={2}>
-                  <Alert severity="success">
-                    {" "}
-                    Your salary calculated for{" "}
-                    {getMonthName(filteredPayslip.month)} {filteredPayslip.year}{" "}
-                    .
-                  </Alert>
-                </Stack>
+              <div className="p-4 px-12">
+                <Grid item className="gap-1 py-4 w-full h-max space-y-4">
+                  <Box className="flex md:flex-row items-center justify-center flex-col gap-8 md:gap-16">
+                    <div className="space-y-4 w-full flex flex-col items-center md:items-start justify-center">
+                      <>
+                        <h1 className="text-xl px-4 md:!px-0 font-semibold">
+                          Your salary calculated for{" "}
+                          {getMonthName(filteredPayslip.month)}{" "}
+                          {filteredPayslip.year}
+                        </h1>
+                      </>
+                    </div>
+                  </Box>
+                </Grid>
               </div>
             ) : selectedDate ? (
-              <div className="p-4">
-                {/* <h3 className="text-lg font-bold text-gray-700">
-                  No payslip data found for the selected month and year.
-                </h3> */}
-                <Stack sx={{ width: "100%" }} spacing={2}>
-                  <Alert severity="error">
-                    No payslip created for the selected month and year..
-                  </Alert>
-                </Stack>
+              <div className="p-4 px-12">
+                <h1>Sorry, no request found</h1>
               </div>
             ) : (
-              <div className="p-4">
-                <h3 className="text-lg font-bold text-gray-700 mb-5">
-                  All Payslip Notification
-                </h3>
-                {PayslipNotification &&
+              <div className="p-4 px-11">
+                {PayslipNotification && PayslipNotification.length > 0 ? (
                   PayslipNotification.map((payslip) => (
                     <div key={payslip._id} className="mb-4">
-                      <Stack sx={{ width: "100%" }} spacing={2}>
-                        <Alert severity="success">
-                          {" "}
-                          Your salary calculated for{" "}
-                          {getMonthName(payslip.month)} {payslip.year}.
-                        </Alert>
-                      </Stack>
+                      <Grid item className="gap-1 py-4 w-full h-max space-y-4">
+                        <Box className="flex md:flex-row items-center justify-center flex-col gap-8 md:gap-16">
+                          <div className="space-y-4 w-full flex flex-col items-center md:items-start justify-center">
+                            <>
+                              <h1 className="text-xl px-4 md:!px-0 font-semibold">
+                                Your salary calculated for{" "}
+                                {getMonthName(payslip.month)} {payslip.year}
+                              </h1>
+                            </>
+                          </div>
+                        </Box>
+                      </Grid>
                     </div>
-                  ))}
+                  ))
+                ) : (
+                  <div className="p-4 px-12">
+                  <h1>Sorry, no request found</h1>
+                </div>
+                )}
               </div>
             )}
           </article>
