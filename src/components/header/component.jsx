@@ -14,7 +14,7 @@ const HeaderBackComponent = ({ heading, oneLineInfo }) => {
       <div className="flex items-baseline justify-center flex-col">
         {heading}
         {oneLineInfo && (
-          <p className="text-xs text-gray-600 truncate w-full max-w-[250px]">
+          <p className="text-xs text-gray-600 truncate w-full min-w-[250px]">
             {oneLineInfo}
           </p>
         )}
