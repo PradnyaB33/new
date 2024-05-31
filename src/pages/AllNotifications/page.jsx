@@ -43,9 +43,9 @@ const ParentNotification = () => {
     if (
       role === "Accountant" ||
       role === "Super-Admin" ||
-      role === "delegate Super-Admin"
+      role === "Delegate-Super-Admin"
     ) {
-      return "/notification/income-tax/organisation";
+      return "/notification/income-tax";
     }
     return "/";
   }, [role]);

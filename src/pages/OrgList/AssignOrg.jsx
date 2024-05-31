@@ -21,6 +21,7 @@ const AssignOrg = () => {
     setOpen(true);
   };
   const closeDialog = () => {
+    setOrganizationId(user.organizationId);
     setOpen(false);
   };
 

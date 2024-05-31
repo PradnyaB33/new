@@ -3,7 +3,7 @@ import { Avatar, CircularProgress } from "@mui/material";
 import axios from "axios";
 import React from "react";
 import { useQuery } from "react-query";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import LeaveRejectmodal from "../../components/Modal/LeaveModal/LeaveRejectmodal";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import useAuthToken from "../../hooks/Token/useAuth";
@@ -33,12 +33,13 @@ const LeaveAcceptModal = () => {
     enabled: employeeId !== undefined,
   });
 
+  const navigate = useNavigate();
   return (
     <div>
       <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
-        <Link to={"/income-tax/organisation"}>
+        <span className="cursor-pointer" onClick={() => navigate(-1)}>
           <West className="mx-4 !text-xl" />
-        </Link>
+        </span>
         Employee Leave Request
       </header>
       <section className="min-h-[90vh] flex  ">
