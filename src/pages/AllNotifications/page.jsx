@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import useForm16NotificationHook from "../../hooks/QueryHook/notification/Form16Notification/useForm16NotificationHook";
 import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 import usePayslipNotificationHook from "../../hooks/QueryHook/notification/PayslipNotification/usePayslipNotificaitonHook";
+import useAdvanceSalaryData from "../../hooks/QueryHook/notification/advance-salary-notification/useAdvanceSalary";
 import useDocNotification from "../../hooks/QueryHook/notification/document-notification/hook";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import useLoanNotification from "../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
@@ -10,7 +11,6 @@ import useShiftNotification from "../../hooks/QueryHook/notification/shift-notif
 import useTDSNotificationHook from "../../hooks/QueryHook/notification/tds-notification/hook";
 import UserProfile from "../../hooks/UserData/useUser";
 import useLeaveNotification from "../SelfLeaveNotification/useLeaveNotification";
-import useAdvanceSalaryData from "../../hooks/QueryHook/notification/advance-salary-notification/useAdvanceSalary";
 import Card from "./components/card";
 
 const ParentNotification = () => {
@@ -28,16 +28,16 @@ const ParentNotification = () => {
   const { Form16Notification } = useForm16NotificationHook();
   const { getEmployeeRequestLoanApplication } = useLoanNotification();
   const { PayslipNotification } = usePayslipNotificationHook();
-  const { getAdvanceSalaryData} = useAdvanceSalaryData();
+  const { getAdvanceSalaryData } = useAdvanceSalaryData();
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
   const tdsRoute = useMemo(() => {
     if (
       role === "Accountant" ||
       role === "Super-Admin" ||
-      role === "delegate Super-Admin"
+      role === "Delegate-Super-Admin"
     ) {
-      return "/notification/income-tax/organisation";
+      return "/notification/income-tax";
     }
     return "/";
   }, [role]);
@@ -45,7 +45,7 @@ const ParentNotification = () => {
     `🚀 ~ file: page.jsx:49 ~ data?.leaveRequests?.length:`,
     data?.leaveRequests?.length
   );
- console.log(getAdvanceSalaryData);
+  console.log(getAdvanceSalaryData);
   const dummyData = [
     {
       name: "Leave Notification",
@@ -116,11 +116,9 @@ const ParentNotification = () => {
       count: tds ?? 0,
       color: "#51E8FD",
       url: tdsRoute,
-      url2: "/notification/income-tax/organisation-details",
+      url2: "/notification/income-tax-details",
     },
   ];
-
-  
 
   return (
     <div className="pt-5">
