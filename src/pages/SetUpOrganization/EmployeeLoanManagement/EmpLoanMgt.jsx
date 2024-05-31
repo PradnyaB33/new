@@ -88,7 +88,6 @@ const EmpLoanMgt = () => {
   );
 
   // for update
-
   const [editLoanModalOpen, setEditLoanModalOpen] = useState(false);
   const [loanId, setLoanId] = useState(null);
 

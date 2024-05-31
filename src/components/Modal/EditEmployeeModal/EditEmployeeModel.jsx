@@ -19,14 +19,16 @@ import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import UserProfile from "../../../hooks/UserData/useUser";
 
 const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
-
-  // define the state for storing the employee data
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
+  console.log("role", role);
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -45,14 +47,13 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
 
   const [selectedGender, setSelectedGender] = useState("");
 
-  // Handle changes to the selected gender state when radio buttons are clicked
   const handleGenderChange = (event) => {
     setSelectedGender(event.target.value);
   };
 
-  // define the state for store additional info data of employee
   const [additionalInfo, setAdditionalInfo] = useState({
     "Emergency Contact": "",
+    "Passport No": "",
     "Middle Name": "",
     "Permanent Address": "",
     "Primary Nationality": "",
@@ -61,7 +62,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     Education: "",
   });
 
-  // state for dynamically fetch
   const [profile, setProfile] = useState([]);
   const [selectedWorkLocation, setSelectedWorkLocation] = useState(null);
   const [deptname, setDepartment] = useState(null);
@@ -95,9 +95,9 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     fetchData();
     return () => {};
   }, [open, employeeId, authToken]);
+
   console.log(employeeData);
 
-  // pull the worklocation of organization
   const [availabelLocation, setAvailableLocation] = useState([]);
   const fetchAvailableLocation = async () => {
     try {
@@ -120,7 +120,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     // eslint-disable-next-line
   }, []);
 
-  // pull the department data
   const [availabelDepartment, setAvailableDepartment] = useState([]);
   const fetchAvailableDepartment = async () => {
     try {
@@ -143,7 +142,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     // eslint-disable-next-line
   }, []);
 
-  // pull the data of designation
   const [availabelDesignation, setAvailableDesignation] = useState([]);
   const fetchAvailableDesignation = async () => {
     try {
@@ -163,7 +161,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     // eslint-disable-next-line
   }, []);
 
-  // pull the salary template data
   const [availabelSalaryTemplate, setAvailabaleSalaryTemplate] = useState([]);
   const fetchAvailableSalaryTemplate = async () => {
     try {
@@ -186,7 +183,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     // eslint-disable-next-line
   }, []);
 
-  // pull the employement type of employee
   const [availabelEmpTypes, setAvailableEmpTypes] = useState([]);
   const fetchAvailabeEmpTypes = async () => {
     try {
@@ -210,7 +206,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     // eslint-disable-next-line
   }, []);
 
-  // pull the manager data
   const [managerData, setManagerData] = useState([]);
   const fetchManagerData = async () => {
     try {
@@ -222,7 +217,8 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
           },
         }
       );
-      setManagerData(response.data.data);
+      console.log("response", response);
+      setManagerData(response.data.manager);
     } catch (error) {
       console.error(error);
     }
@@ -265,7 +261,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     // eslint-disable-next-line
   }, [organisationId]);
 
-  // pull department cost center no
   const [availaleCostCenterId, setAvailableCostCenter] = useState([]);
   const fetchAvailableCostCenter = async () => {
     try {
@@ -287,7 +282,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     // eslint-disable-next-line
   }, []);
 
-  // pull the shift allocation
   const [availaleShiftAllocation, setAvailableShiftAllocation] = useState([]);
   const fetchAvailableShiftAllocation = async () => {
     try {
@@ -309,10 +303,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     // eslint-disable-next-line
   }, []);
 
-  console.log("dept cost center id", availaleCostCenterId);
-  console.log("shift allocation", availaleShiftAllocation);
-
-  // function for changing the data by user
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -323,39 +313,37 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
   const handleLocationChange = (event) => {
     setSelectedWorkLocation(event.target.value);
   };
+  const handleShiftChange = (event) => {
+    setShiftAllocation(event.target.value);
+  };
 
-  // function for change department
   const handleDepartmnetChange = (event) => {
     setDepartment(event.target.value);
   };
-  // function for chnage designation
+
   const handleDesignationChange = (event) => {
     setDesignation(event.target.value);
   };
 
-  // function for change salary template
   const handleSalaryTemplateChange = (event) => {
     setSalaryTemplate(event.target.value);
   };
-  // function for change employement type of employee
+
   const handleEmployementChange = (event) => {
     setEmployementType(event.target.value);
   };
-  // function for change department
+
   const handleProfileChange = (event) => {
     const selectedProfile = event.target.value;
     setProfile((prevProfiles) => {
       if (prevProfiles.includes(selectedProfile)) {
-        // If already selected, remove it
         return prevProfiles.filter((profile) => profile !== selectedProfile);
       } else {
-        // If not selected, add it
         return [...prevProfiles, selectedProfile];
       }
     });
   };
 
-  // fetch the data in input field which is already stored
   useEffect(() => {
     if (employeeData) {
       const formattedDateOfBirth = employeeData.date_of_birth
@@ -382,20 +370,30 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
         gender: employeeData?.gender || "",
       });
 
-      setAdditionalInfo({
-        Education: employeeData?.additionalInfo?.Education || "",
-        "Emergency Contact":
-          employeeData?.additionalInfo?.["Emergency Contact"] || "",
-        "Marital Status":
-          employeeData?.additionalInfo?.["Marital Status"] || "",
-        "Middle Name": employeeData?.additionalInfo?.["Middle Name"] || "",
-        "Permanent Address":
-          employeeData?.additionalInfo?.["Permanent Address"] || "",
-        "Primary Nationality":
-          employeeData?.additionalInfo?.["Primary Nationality"] || "",
-        "Relative Information":
-          employeeData?.additionalInfo?.["Relative Information"] || "",
-      });
+      if (employeeData?.additionalInfo) {
+        const additionalInfoData = employeeData.additionalInfo;
+        setAdditionalInfo({
+          Education: additionalInfoData.Education ?? "",
+          "Emergency Contact":
+            additionalInfoData["Emergency Contact"] &&
+            additionalInfoData["Emergency Contact"] !== null
+              ? additionalInfoData["Emergency Contact"]
+              : "",
+          "Marital Status":
+            additionalInfoData["Marital Status"] &&
+            additionalInfoData["Marital Status"] !== null
+              ? additionalInfoData["Marital Status"]
+              : "",
+          "Middle Name": additionalInfoData["Middle Name"] ?? "",
+          "Permanent Address": additionalInfoData["Permanent Address"] ?? "",
+          "Passport No": additionalInfoData["Passport No"] ?? "",
+          "Primary Nationality":
+            additionalInfoData["Primary Nationality"] ?? "",
+          "Relative Information":
+            additionalInfoData["Relative Information"] ?? "",
+        });
+      }
+
       // pull work location of employee which is already stored in database
       const employeeWorkLocations = employeeData?.worklocation || "";
       const workLocationName = employeeWorkLocations[0]?.city || "";
@@ -407,7 +405,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
       } else {
         setSelectedWorkLocation(null);
       }
-      // pull the  department of employee which is already stored in database
+
       const employeeDepartment = employeeData?.deptname || "";
       const employeeDepartmentName =
         employeeDepartment[0]?.departmentName || "";
@@ -421,7 +419,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
       } else {
         setDepartment(null);
       }
-      // pull the designation of employee which is already stored in database
+
       const employeeDesignation = employeeData?.designation || "";
       const employeeDesignationName =
         employeeDesignation[0]?.designationName || "";
@@ -433,20 +431,22 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
       } else {
         setDesignation(null);
       }
-      // pull the salary template data of employee which is already stored in database
+
       const empSalaryTemplate = employeeData?.salarystructure || "";
       if (empSalaryTemplate) {
         setSalaryTemplate(empSalaryTemplate._id);
       } else {
         setSalaryTemplate(null);
       }
-      // pull the employement type of employee which is already stored in the database
+
       const employementType = employeeData?.employmentType || "";
       if (employementType) {
         setEmployementType(employementType._id);
       } else {
         setEmployementType(null);
       }
+      let shift_id = employeeData?.shift_allocation || "";
+      console.log("shift id", shift_id);
       const employeeProfileData = employeeData?.profile || [];
       setProfile(employeeProfileData);
       setMgrempid(employeeData?.mgrempid || "");
@@ -460,8 +460,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     availabelDepartment,
     availabelDesignation,
   ]);
-  console.log("mgrempid", mgrempid);
-  // update the data of employee
+
   const EditEmployeeData = useMutation(
     (data) =>
       axios.put(
@@ -749,6 +748,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               />
             </FormControl>
           </div>
+
           <div className="space-y-2">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
@@ -757,31 +757,12 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               <OutlinedInput
                 id="outlined-adornment-password"
                 label="Emergency Contact"
-                name="Emergency contact"
-                value={additionalInfo["Emergency contact"]}
+                name="Emergency Contact"
+                value={additionalInfo["Emergency Contact"]}
                 onChange={(e) =>
                   setAdditionalInfo((prevData) => ({
                     ...prevData,
-                    "Emergency contact": e.target.value,
-                  }))
-                }
-              />
-            </FormControl>
-          </div>
-          <div className="space-y-2">
-            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">
-                Marital Status
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                label="Marital  Status"
-                name="Marital status"
-                value={additionalInfo["Marital status"]}
-                onChange={(e) =>
-                  setAdditionalInfo((prevData) => ({
-                    ...prevData,
-                    "Marital status": e.target.value,
+                    "Emergency Contact": e.target.value,
                   }))
                 }
               />
@@ -827,6 +808,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               />
             </FormControl>
           </div>
+
           <div className="space-y-2">
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
@@ -835,12 +817,12 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               <OutlinedInput
                 id="outlined-adornment-password"
                 label="Primary Nationality"
-                name="Primary nationality"
-                value={additionalInfo["Primary nationality"]}
+                name="Primary Nationality"
+                value={additionalInfo["Primary Nationality"]}
                 onChange={(e) =>
                   setAdditionalInfo((prevData) => ({
                     ...prevData,
-                    "Primary nationality": e.target.value,
+                    "Primary Nationality": e.target.value,
                   }))
                 }
               />
@@ -860,6 +842,25 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                   setAdditionalInfo((prevData) => ({
                     ...prevData,
                     "Relative Information": e.target.value,
+                  }))
+                }
+              />
+            </FormControl>
+          </div>
+          <div className="space-y-2">
+            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
+              <InputLabel htmlFor="outlined-adornment-password">
+                Passport No
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                label="Passport No"
+                name="Passport No"
+                value={additionalInfo["Passport No"]}
+                onChange={(e) =>
+                  setAdditionalInfo((prevData) => ({
+                    ...prevData,
+                    "Passport No": e.target.value,
                   }))
                 }
               />
@@ -1057,8 +1058,8 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               Shift :
             </label>
             <select
-              value={shift_allocation}
-              onChange={(e) => setShiftAllocation(e.target.value)}
+              value={shift_allocation || ""}
+              onChange={handleShiftChange}
               style={{
                 width: "750px",
                 padding: "8px",
@@ -1074,6 +1075,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 ))}
             </select>
           </div>
+
           <div className="space-y-2">
             <label
               htmlFor="workLocation"
@@ -1081,6 +1083,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
             >
               Manager :
             </label>
+
             <select
               value={mgrempid || ""}
               onChange={(e) => setMgrempid(e.target.value)}
@@ -1099,6 +1102,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
                 ))}
             </select>
           </div>
+
           <div className="space-y-2 ">
             <RadioGroup
               aria-label="gender"

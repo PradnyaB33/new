@@ -3,6 +3,7 @@ import {
   Adjust,
   CalendarMonth,
   Celebration,
+  Close,
   ContactEmergency,
   Email,
   Flag,
@@ -10,16 +11,19 @@ import {
   Person,
   Person2,
   Person3,
+  Work,
 } from "@mui/icons-material";
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useDelegateSuperAdmin from "../../../hooks/QueryHook/Delegate-Super-Admin/mutation";
 
 let joinDate = moment().format("yyyy-MM-DD");
+let pass;
 
 const packageSchema = z.object({
   first_name: z.string().refine(
@@ -41,11 +45,16 @@ const packageSchema = z.object({
       message: "Last Name is required",
     }
   ),
-  middle_name: z.string(),
+  middle_name: z.string().optional(),
   joining_date: z.string(),
   email: z.string().email(),
-  phone_number: z.string().min(10).max(10),
-  password: z.string(),
+  phone_number: z
+    .string()
+    .min(10, { message: "Phone number must be of 10  digit" })
+    .max(10, { message: "Phone number must be of 10  digit" }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be minimum of 8 characters" }),
   date_of_birth: z.string().refine(
     (date) => {
       // date will be has difference of 18 years from date of joining
@@ -77,33 +86,46 @@ const packageSchema = z.object({
       message: "Citizen Ship Name is required",
     }
   ),
-  _id: z.string(),
+  confirmPassword: z.string().refine((data) => {
+    return data === pass("password");
+  }),
+  empId: z
+    .string()
+    .min(1, { message: "Employee code is required" })
+    .max(25, { message: "Employee code is not greater than 25 character" }),
+  _id: z.string().optional(),
 });
 const MiniForm = ({ data }) => {
-  const { addDelegateMutation } = useDelegateSuperAdmin();
+  console.log(`🚀 ~ file: form.jsx:99 ~ data:`, data);
+  const { addDelegateMutation, deleteDelegateMutation } =
+    useDelegateSuperAdmin();
   const [visible, setVisible] = useState(false);
+  const navigate = useNavigate();
 
-  const { control, formState, handleSubmit, watch } = useForm({
-    defaultValues: {
-      first_name: data?.delegateSuperAdmin?.first_name,
-      last_name: data?.delegateSuperAdmin?.last_name,
-      middle_name: data?.delegateSuperAdmin?.middle_name || "",
-      joining_date: moment(data?.delegateSuperAdmin?.joining_date).format(
-        "yyyy-MM-DD"
-      ),
-      email: data?.delegateSuperAdmin?.email,
-      phone_number: data?.delegateSuperAdmin?.phone_number,
-      password: undefined,
-      date_of_birth: moment(data?.delegateSuperAdmin?.date_of_birth).format(
-        "yyyy-MM-DD"
-      ),
-      gender: data?.delegateSuperAdmin?.gender,
-      profile: ["Delegate-Super-Admin", "Employee"],
-      citizenship: data?.delegateSuperAdmin?.citizenship,
-      _id: data?.delegateSuperAdmin?._id || "",
-    },
-    resolver: zodResolver(packageSchema),
-  });
+  const { control, formState, handleSubmit, watch, setValue, getValues } =
+    useForm({
+      defaultValues: {
+        first_name: data?.delegateSuperAdmin?.first_name,
+        last_name: data?.delegateSuperAdmin?.last_name,
+        middle_name: data?.delegateSuperAdmin?.middle_name || "",
+        joining_date: moment(data?.delegateSuperAdmin?.joining_date).format(
+          "yyyy-MM-DD"
+        ),
+        email: data?.delegateSuperAdmin?.email,
+        phone_number: data?.delegateSuperAdmin?.phone_number,
+        password: undefined,
+        date_of_birth: moment(data?.delegateSuperAdmin?.date_of_birth).format(
+          "yyyy-MM-DD"
+        ),
+        gender: data?.delegateSuperAdmin?.gender,
+        profile: ["Delegate-Super-Admin", "Employee"],
+        citizenship: data?.delegateSuperAdmin?.citizenship,
+        _id: data?.delegateSuperAdmin?._id || undefined,
+        confirmPassword: undefined,
+        empId: data?.delegateSuperAdmin?.empId || "",
+      },
+      resolver: zodResolver(packageSchema),
+    });
   joinDate = watch("joining_date");
   const { errors, isDirty } = formState;
   console.log(`🚀 ~ file: form.jsx:62 ~ errors:`, errors);
@@ -111,10 +133,33 @@ const MiniForm = ({ data }) => {
     console.log(`🚀 ~ file: form.jsx:64 ~ data:`, data);
     addDelegateMutation.mutate(data);
   };
+  const reset = async () => {
+    setValue("_id", undefined);
+    setValue("first_name", undefined);
+    setValue("last_name", undefined);
+    setValue("citizenship", undefined);
+    setValue("date_of_birth", undefined);
+    setValue("email", undefined);
+    setValue("gender", undefined);
+    setValue("joining_date", undefined);
+    setValue("middle_name", undefined);
+    setValue("password", undefined);
+    setValue("phone_number", undefined);
+    setValue("confirmPassword", undefined);
+    setValue("empId", undefined);
+  };
+  pass = watch;
 
+  console.log(`🚀 ~ file: form.jsx:153 ~ getValues:`, getValues());
   return (
-    <>
-      <h1 className="text-xl pl-2 font-semibold font-sans">
+    <div className="relative">
+      <IconButton
+        className="!absolute !right-0 !top-0"
+        onClick={() => navigate(-1)}
+      >
+        <Close />
+      </IconButton>
+      <h1 className="text-xl font-semibold font-sans mb-6">
         Add Delegate Super Admin
       </h1>
       <form
@@ -236,7 +281,20 @@ const MiniForm = ({ data }) => {
             setVisible={setVisible}
             autoComplete={"off"}
           />
-
+          <AuthInputFiled
+            className={"!min-w-80 !max-w-64"}
+            name={"confirmPassword"}
+            icon={Password}
+            control={control}
+            type={"password"}
+            placeholder={"**********"}
+            label={`Confirm Password *`}
+            errors={errors}
+            error={errors?.confirmPassword}
+            visible={visible}
+            setVisible={setVisible}
+            autoComplete={"off"}
+          />
           <AuthInputFiled
             className={"!min-w-80 !max-w-80"}
             name={"citizenship"}
@@ -248,13 +306,44 @@ const MiniForm = ({ data }) => {
             errors={errors}
             error={errors?.citizenship}
           />
+          <AuthInputFiled
+            name="empId"
+            icon={Work}
+            control={control}
+            type="text"
+            placeholder="Employee Code"
+            label="Employee Code *"
+            errors={errors}
+            error={errors.empId}
+          />
         </div>
-
-        <Button variant="contained" disabled={!isDirty} type="submit">
-          Submit
-        </Button>
+        <div className="flex gap-6 w-full">
+          <Button
+            fullWidth
+            variant="contained"
+            color="error"
+            disabled={!data?.delegateSuperAdmin?._id}
+            onClick={async () => {
+              deleteDelegateMutation.mutate({
+                id: data?.delegateSuperAdmin?._id,
+                reset,
+              });
+            }}
+            type="button"
+          >
+            Delete
+          </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            disabled={!isDirty}
+            type="submit"
+          >
+            Submit
+          </Button>
+        </div>
       </form>
-    </>
+    </div>
   );
 };
 

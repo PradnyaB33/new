@@ -14,10 +14,12 @@ const useLeaveData = () => {
   const { handleAlert } = useContext(TestContext);
   const [selectedLeave, setSelectedLeave] = useState(null);
   const [selectEvent, setselectEvent] = useState(false);
+  const [calLoader, setCalLoader] = useState(false);
 
   const { data, isLoading, isError, error } = useQuery(
     "employee-leave-table-without-default",
     async () => {
+      setCalLoader(true);
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/leave/getEmployeeCurrentYearLeave`,
         {
@@ -25,23 +27,47 @@ const useLeaveData = () => {
         }
       );
       return response.data;
+    },
+    {
+      onSuccess: async (data) => {
+        console.log(`🚀 ~ file: useLeaveData.jsx:33 ~ data:`, data);
+        setCalLoader(false);
+      },
+      onError: async (error) => {
+        console.error(`🚀 ~ file: useLeaveData.jsx:36 ~ error:`, error);
+        setCalLoader(false);
+      },
     }
   );
 
-  const { data: shiftData } = useQuery("shifts-calender", async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/shiftApply/get`,
-      {
-        headers: { Authorization: authToken },
-      }
-    );
-    queryclient.invalidateQueries("employee-leave-table");
-    queryclient.invalidateQueries("employee-summary-table");
-    queryclient.invalidateQueries("employee-leave-table-without-default");
-    return response.data;
-  });
+  const { data: shiftData } = useQuery(
+    "shifts-calender",
+    async () => {
+      setCalLoader(true);
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/shiftApply/get`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+      queryclient.invalidateQueries("employee-leave-table");
+      queryclient.invalidateQueries("employee-summary-table");
+      queryclient.invalidateQueries("employee-leave-table-without-default");
+      return response.data;
+    },
+    {
+      onSuccess: async () => {
+        setCalLoader(false);
+      },
+      onError: async (error) => {
+        console.error(`🚀 ~ file: useLeaveData.jsx:36 ~ error:`, error);
+        setCalLoader(false);
+      },
+    }
+  );
 
   const createLeaves = async () => {
+    setCalLoader(true);
     newAppliedLeaveEvents.forEach(async (value) => {
       try {
         await axios.post(
@@ -53,6 +79,7 @@ const useLeaveData = () => {
             },
           }
         );
+        handleAlert(true, "success", "Leaves created succcesfully");
       } catch (error) {
         console.error(`🚀 ~ error:`, error);
         handleAlert(
@@ -77,38 +104,91 @@ const useLeaveData = () => {
       await queryclient.invalidateQueries(
         "employee-leave-table-without-default"
       );
+      setCalLoader(false);
       // handleAlert(true, "success", "Applied for leave successfully");
       setNewAppliedLeaveEvents([]);
     },
     onError: (error) => {
+      setCalLoader(false);
       console.error(error);
     },
   });
+
+  const deleteLeaveMutation = useMutation(
+    async ({ id, deleteReason }) => {
+      setCalLoader(true);
+      await axios.post(
+        `${process.env.REACT_APP_API}/route/leave/delete/${id}`,
+        {
+          deleteReason,
+        },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: async (data, variable) => {
+        console.log(
+          `🚀 ~ file: useLeaveData.jsx:138 ~ variable:`,
+          variable?.onClose()
+        );
+        await queryclient.invalidateQueries({
+          queryKey: ["employee-leave-table"],
+        });
+        await queryclient.invalidateQueries({
+          queryKey: ["employee-leave-table"],
+        });
+        await queryclient.invalidateQueries({
+          queryKey: ["employee-summary-table"],
+        });
+        await queryclient.invalidateQueries(
+          "employee-leave-table-without-default"
+        );
+        setCalLoader(false);
+        handleAlert(true, "success", "Leave deleted successfully");
+      },
+      onError: (error) => {
+        setCalLoader(false);
+        console.error(error);
+        handleAlert(true, "error", "Leave not deleted successfully");
+      },
+    }
+  );
   const handleSubmit = async (e) => {
+    setCalLoader(true);
     e.preventDefault();
 
     setCalendarOpen(false);
 
     leaveMutation.mutate();
+    setCalLoader(false);
   };
   const handleInputChange = () => {
     setCalendarOpen(true);
     setSelectedLeave(null);
   };
 
-  const handleUpdateFunction = (e) => {
+  const handleUpdateFunction = async (e) => {
+    setCalLoader(true);
     setselectEvent(true);
 
     let array = data?.currentYearLeaves.filter((item) => {
       return item._id !== selectedLeave?._id;
     });
     console.log(`🚀 ~ file: useLeaveData.jsx:82 ~ array:`, array);
-    queryclient.setQueryData("employee-leave-table-without-default", (old) => {
-      old.currentYearLeaves = old?.currentYearLeaves.filter((item) => {
-        return item._id !== selectedLeave?._id;
-      });
-      return { ...old };
-    });
+    await queryclient.setQueryData(
+      "employee-leave-table-without-default",
+      (old) => {
+        old.currentYearLeaves = old?.currentYearLeaves.filter((item) => {
+          return item._id !== selectedLeave?._id;
+        });
+        return { ...old };
+      }
+    );
+    setCalLoader(false);
   };
   return {
     data,
@@ -127,6 +207,9 @@ const useLeaveData = () => {
     handleUpdateFunction,
     selectEvent,
     setselectEvent,
+    deleteLeaveMutation,
+    calLoader,
+    setCalLoader,
   };
 };
 

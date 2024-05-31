@@ -28,6 +28,9 @@ const useEmpState = create((set) => {
     profile: [],
     shift_allocation: undefined,
     data: undefined,
+    pwd: false,
+    uanNo: undefined,
+    esicNo: undefined,
 
     // Setter function for updating multiple properties at once
     setStep2Data: (remotePunching) => {
@@ -80,6 +83,9 @@ const useEmpState = create((set) => {
         profile: [],
         shift_allocation: undefined,
         data: undefined,
+        pwd: false,
+        uanNo: undefined,
+        esicNo: undefined,
       });
     },
   };

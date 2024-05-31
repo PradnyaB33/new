@@ -18,14 +18,16 @@ import React, { useContext, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Loader from "../../../pages/Notification/Loader";
+import useLeaveData from "./useLeaveData";
 
 const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
-  console.log(`🚀 ~ file: LeaveRejectmodal.jsx:23 ~ items:`, items);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const queryClient = useQueryClient();
+  const { acceptDeleteLeaveMutation, rejectDeleteLeaveMutation } =
+    useLeaveData();
 
   const handleClose = () => {
     setOpen(false);
@@ -46,6 +48,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("employee-leave");
+        queryClient.invalidateQueries("EmpDataLeave");
         handleClose();
       },
     }
@@ -64,6 +67,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("employee-leave");
+        queryClient.invalidateQueries("EmpDataLeave");
       },
     }
   );
@@ -88,13 +92,13 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
         spacing={2}
         className="bg-white w-full"
         sx={{
-          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)", // Add a box shadow on hover
+          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
           borderRadius: "5px",
         }}
       >
         <Grid item className="gap-1  py-4 w-full  h-max space-y-4">
           <Box className="flex md:flex-row items-center  justify-center flex-col gap-8  md:gap-16">
-            <div className="w-max">
+            <div className="w-max gap-4 flex flex-col items-center">
               <Badge
                 badgeContent={`${dayjs(items.end).diff(
                   dayjs(items.start),
@@ -112,19 +116,43 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
                   <CalendarMonth className="!text-4xl text-gr" />
                 </Button>
               </Badge>
+              {items?.status === "Deleted" ? (
+                <Chip label={"Delete Request"} size="small" />
+              ) : (
+                <Chip label={"Leave Request"} size="small" />
+              )}
             </div>
 
             <div className="space-y-4 w-full flex flex-col items-center md:items-start justify-center">
               {differenceInDays(parseISO(items.end), parseISO(items.start)) !==
               1 ? (
+                items?.status === "Deleted" ? (
+                  <h1 className="text-xl px-4 md:!px-0 font-semibold ">
+                    {items?.employeeId?.first_name}{" "}
+                    {items?.employeeId?.last_name} has raised reject request of{" "}
+                    {items?.leaveTypeDetailsId?.leaveName} on{" "}
+                    {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
+                    {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
+                  </h1>
+                ) : (
+                  <h1 className="text-xl px-4 md:!px-0 font-semibold ">
+                    {items?.employeeId?.first_name}{" "}
+                    {items?.employeeId?.last_name} has submitted a request to
+                    delete {items?.leaveTypeDetailsId?.leaveName} on{" "}
+                    {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
+                    {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
+                  </h1>
+                )
+              ) : items?.status === "Deleted" ? (
                 <h1 className="text-xl px-4 md:!px-0 font-semibold ">
+                  {" "}
                   {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
-                  has raised a {items?.leaveTypeDetailsId?.leaveName} request on{" "}
-                  {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
-                  {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
+                  has raised reject request of{" "}
+                  {items?.leaveTypeDetailsId?.leaveName} on{" "}
+                  {format(new Date(items.start), "dd-MM-yyyy")}
                 </h1>
               ) : (
-                <h1>
+                <h1 className="text-xl px-4 md:!px-0 font-semibold ">
                   {" "}
                   {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
                   has raised a {items?.leaveTypeDetailsId?.leaveName} request on{" "}
@@ -177,6 +205,43 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
               ) : items.status === "Rejected" ? (
                 <Box>
                   <Chip label="Request rejected" color="error" />
+                </Box>
+              ) : items.status === "Deleted" ? (
+                <Box sx={{ mt: 3, mb: 3 }}>
+                  <Stack direction="row" spacing={3}>
+                    <Button
+                      disabled={isLoading || isFetching}
+                      variant="contained"
+                      onClick={() =>
+                        acceptDeleteLeaveMutation({ id: items._id })
+                      }
+                      color="primary"
+                      sx={{
+                        fontSize: "12px",
+                        padding: "5px 30px",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      Accept
+                    </Button>
+                    <Button
+                      onClick={() =>
+                        rejectDeleteLeaveMutation({ id: items._id })
+                      }
+                      variant="contained"
+                      sx={{
+                        fontSize: "12px",
+                        padding: "5px 30px",
+                        textTransform: "capitalize",
+                        backgroundColor: "#BB1F11",
+                        "&:hover": {
+                          backgroundColor: "#BB1F11",
+                        },
+                      }}
+                    >
+                      Reject
+                    </Button>
+                  </Stack>
                 </Box>
               ) : (
                 <Box>

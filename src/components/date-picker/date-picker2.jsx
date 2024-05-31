@@ -201,7 +201,7 @@ const AppDatePicker = ({
       return handleAlert(
         true,
         "warning",
-        "You have already selected this leave"
+        "You have already selected this shift"
       );
     } else {
       const newShift = {

@@ -13,7 +13,9 @@ const PublicSkeletonComponent = () => {
           >
             <BeachAccessOutlined />
           </Avatar>
-          <h1 className="text-xl py-3">Upcoming Public Holiday</h1>
+          <h1 className="text-lg  font-bold text-[#67748E]">
+            Upcoming Public Holiday
+          </h1>
         </div>
         {/* <button className=" flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
             View All

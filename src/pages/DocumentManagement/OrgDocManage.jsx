@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import useGetUser from "../../hooks/Token/useUser";
-import DocPreviewModal from "./components/Modal2";
+import DocPreviewModal from "./components/Modal";
 
 const OrgDocManage = () => {
   const { authToken } = useGetUser();

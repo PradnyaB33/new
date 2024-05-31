@@ -53,7 +53,7 @@ export default function PerformanceTab() {
   return (
     <>
       <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
-        <Link to={"/income-tax"}>
+        <Link to={"/income-tax/organisation"}>
           <West className="mx-4 !text-xl" />
         </Link>
         Performance Management
@@ -104,21 +104,6 @@ export default function PerformanceTab() {
             <Tab
               className="!px-4"
               label="Goal Setting"
-              {...a11yProps(1)}
-              sx={{
-                fontSize: "0.8rem", // Decrease the font size
-                minWidth: "70px", // Decrease the width
-
-                padding: "0px", // Decrease the padding
-                "&.Mui-selected": {
-                  color: "#1976d2",
-                  backgroundColor: "#fff", // Change the background color when selected
-                },
-              }}
-            />
-            <Tab
-              className="!px-4"
-              label="Review & Rate Employee"
               {...a11yProps(1)}
               sx={{
                 fontSize: "0.8rem", // Decrease the font size

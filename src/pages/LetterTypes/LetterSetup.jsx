@@ -95,6 +95,10 @@ const LetterSetup = () => {
                 </div>
                 <div>
                   <h1 className="!text-lg">Letter Setup</h1>
+                  <h1 className="text-xs">
+                    Here you can manage different types of letters for your
+                    organisation
+                  </h1>
                 </div>
               </div>
             </div>
@@ -110,8 +114,8 @@ const LetterSetup = () => {
             {Object.entries(formData).map(([documentName, values]) => (
               <div key={documentName} className="p-4">
                 <div className="flex justify-start items-center mb-2">
-                  <h2 className="text-lg font-bold w-[300px]">
-                    {documentName}
+                  <h2 className="text-lg w-[300px]">
+                    {documentName.replace(/([a-z])([A-Z])/g, "$1 $2")}
                   </h2>
                   <div className="flex items-center gap-2">
                     <input

@@ -61,7 +61,7 @@ const Step4 = () => {
     onSuccess: async (data) => {
       console.log(`🚀 ~ file: step-4.jsx:87 ~ data:`, data);
       if (data?.paymentType === "Phone_Pay") {
-        // window.location.href = data?.redirectUrl;
+        window.location.href = data?.redirectUrl;
       } else {
         const options = {
           key: data?.key,

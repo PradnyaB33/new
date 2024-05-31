@@ -1,154 +1,111 @@
-import React, { useContext } from "react";
-import { Container, Typography } from "@mui/material";
-import { Info } from "@mui/icons-material";
-import axios from "axios";
+import React, { useState } from "react";
+import { Search, West, RequestQuote } from "@mui/icons-material";
+import { Avatar } from "@mui/material";
+import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
+import MissedPunchNotified from "./missedPunchNotified";
 import UserProfile from "../../hooks/UserData/useUser";
-import { TestContext } from "../../State/Function/Main";
-import { UseContext } from "../../State/UseState/UseContext";
-import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissPunchNotification/MissedPunchNotification";
-
 
 const MissedPunchNotification = () => {
   const { missPunchData } = useMissedPunchNotificationCount();
-  const { handleAlert } = useContext(TestContext);
-  const { cookies } = useContext(UseContext);
-  const authToken = cookies["aegis"];
-  const { getCurrentUser, useGetCurrentRole } = UserProfile();
-  const user = getCurrentUser();
-  const organizationId = user.organizationId;
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
-  console.log(role);
-  
-  // for manager
-  const handleApprovalUpdate = async () => {
-    try {
-      const response = await axios.put(
-        `${process.env.REACT_APP_API}/route/organization/${organizationId}/update-approvalId`,
-        {},
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      console.log(response);
-      handleAlert(true, "success", "Approval updated successfully.");
-      window.location.reload();
-    } catch (error) {
-      console.error("Error updating approval:", error);
-      handleAlert(true, "error", "Failed to update approval.");
-    }
+
+  console.log("role", role);
+
+  const filteredEmployees =
+    missPunchData && Array.isArray(missPunchData)
+      ? missPunchData.filter(
+          (employee) =>
+            employee.employeeId?.first_name
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase()) ||
+            employee.employeeId?.last_name
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
+        )
+      : [];
+
+  const handleEmployeeClick = (employee) => {
+    setSelectedEmployee(employee);
   };
 
+  console.log("selected emplyee", selectedEmployee);
 
-  //  for hr
-  const handleApprovalUnavailableRecord = async (recordId) => {
-    try {
-      const response = await axios.put(
-        `${process.env.REACT_APP_API}/route/organization/${organizationId}/approved-unavailable-record/${recordId}`,
-        {},
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      console.log(response);
-      window.location.reload()
-      handleAlert(true, "success", "Record approved successfully.");
-    } catch (error) {
-      console.error("Error approving record:", error);
-      handleAlert(true, "error", "Failed to approve record.");
-    }
-  }; 
-  
-  
-  const handleRejectUnavailableRecord = async (recordId) => {
-    try {
-      const response = await axios.put(
-        `${process.env.REACT_APP_API}/route/organization/${organizationId}/reject-unavailable-record/${recordId}`,
-        {},
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      console.log(response);
-      window.location.reload()
-      handleAlert(true, "success", "Record approved successfully.");
-    } catch (error) {
-      console.error("Error approving record:", error);
-      handleAlert(true, "error", "Failed to approve record.");
-    }
-  };
-
+  const employeeId = selectedEmployee && selectedEmployee?.employeeId?._id;
+  console.log("employee id", employeeId);
 
   return (
-    <>
-      <Container maxWidth="xl" className="bg-gray-50 min-h-screen py-8 px-4">
-        <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
-          Missed Punch 
-        </Typography>
-        {missPunchData?.map((record, index) => (
-          <article key={index} className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center mb-4">
-            <Typography variant="h5" className=" pl-10 mb-6 mt-2">
-              {record.employeeId.first_name} {record.employeeId.last_name}
-            </Typography>
-            {missPunchData.length > 0 ? (
-              <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-                <table className="min-w-full bg-white text-left !text-sm font-light">
-                  <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-                    <tr className="font-semibold">
-                      <th scope="col" className="!text-left pl-8 py-3">Sr. No</th>
-                      <th scope="col" className="px-6 py-3">Date</th>
-                      <th scope="col" className="px-6 py-3">Status</th>
-                      <th scope="col" className="px-6 py-3">Punch In Time</th>
-                      <th scope="col" className="px-6 py-3">Punch Out Time</th>
-                      <th scope="col" className="px-6 py-3">Justify</th>
-                      <th scope="col" className="px-6 py-3">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {missPunchData?.map((record, id) => (
-                      <tr className="!font-medium border-b" key={id}>
-                        <td className="!text-left pl-8 py-3">{id + 1}</td>
-                        <td className="!text-left pl-4 py-3">{new Date(record.recordDate).toLocaleDateString()}</td>
-                        <td className="!text-left pl-4 py-3">{record.status}</td>
-                        <td className="!text-left pl-4 py-3">{record.punchInTime ? new Date(record.punchInTime).toLocaleTimeString() : "-"}</td>
-                        <td className="!text-left pl-4 py-3">{record.punchOutTime ? new Date(record.punchOutTime).toLocaleTimeString() : "-"}</td>
-                        <td className="!text-left pl-4 py-3">{record.justify}</td>
-                        <td className="!text-left pl-4 py-3">
-                          {role === "Manager" ? (
-                            <>
-                              <button onClick={handleApprovalUpdate} className="bg-green-500 text-white px-2 py-1 rounded-md mr-2">Accept</button>
-                              <button onClick={handleApprovalUpdate} className="bg-red-500 text-white px-2 py-1 rounded-md">Reject</button>
-                            </>
-                          ) : role === "HR" ? (
-                            <>
-                              <button onClick={() => handleApprovalUnavailableRecord(record._id)} className="bg-green-500 text-white px-2 py-1 rounded-md mr-2">Accept</button>
-                              <button onClick={() => handleRejectUnavailableRecord(record._id)} className="bg-red-500 text-white px-2 py-1 rounded-md">Reject</button>
-                            </>
-                          ) : null}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+    <div className="w-full">
+      <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
+        <West className="mx-4 !text-xl" />
+        Employee Missed Punch Request
+      </header>
+      <section className="min-h-[90vh] flex">
+        <article className="w-[20%] overflow-auto max-h-[90vh] h-full bg-white border-gray-200">
+          <div className="p-6 !py-2">
+            <div className="space-y-2">
+              <div
+                className={`flex rounded-md items-center px-2 outline-none border-gray-200 border-[.5px] bg-white py-1 md:py-[6px]`}
+              >
+                <Search className="text-gray-700 md:text-lg !text-[1em]" />
+                <input
+                  type={"text"}
+                  placeholder={"Search Employee"}
+                  className={`border-none bg-white w-full outline-none px-2`}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
               </div>
-            ) : (
-              <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
-                <article className="flex items-center mb-1 text-red-500 gap-2">
-                  <Info className="!text-2xl" />
-                  <h1 className="text-lg font-semibold">No Missed Data Found</h1>
-                </article>
-                <p>Calculate the hours of employee.</p>
-              </section>
-            )}
-          </article>
-        ))}
-      </Container>
-    </>
+            </div>
+          </div>
+          {filteredEmployees.length > 0 && (
+            <div>
+              {filteredEmployees.map((employee) => (
+                <div
+                  className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50`}
+                  key={employee?.employeeId?._id}
+                  onClick={() => handleEmployeeClick(employee)}
+                >
+                  <Avatar src={employee?.avatarSrc} />
+                  <div>
+                    <h1 className="text-[1.2rem]">
+                      {employee?.employeeId?.first_name}{" "}
+                      {employee?.employeeId?.last_name}
+                    </h1>
+                    <h1 className={`text-sm text-gray-500`}>
+                      {employee.employeeId?.email}
+                    </h1>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </article>
+        <div className="w-[80%]">
+          {selectedEmployee ? (
+            <MissedPunchNotified
+              employee={selectedEmployee}
+              employeeId={employeeId}
+            />
+          ) : (
+            <div className="p-4 space-y-1 flex items-center gap-3">
+              <Avatar className="text-white !bg-blue-500">
+                <RequestQuote />
+              </Avatar>
+              <div>
+                <h1 className=" text-xl">Missed Punch Requests</h1>
+                <p className="text-sm">
+                  {` Here you would be able to approve or reject the  missed punch
+                notifications`}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
   );
 };
 

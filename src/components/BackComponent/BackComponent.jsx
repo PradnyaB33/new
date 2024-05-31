@@ -22,13 +22,16 @@ const BackComponent = () => {
     "choose-role",
     "employeeTest",
     "/DH-dashboard",
-    "/income-tax",
+    "/income-tax/organisation",
     "/performance",
+    "/organizationList",
+    "/assingOrganizationToSelf",
     // "/billing",
     "employee-onboarding",
     // "/organizationList",
     // "/organisation/employee-dashboard",
     // "/organisation",
+    "/leave",
   ];
 
   if (backFalseRoutes.some((value) => location.pathname.includes(value))) {

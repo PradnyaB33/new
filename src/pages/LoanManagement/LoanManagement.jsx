@@ -10,23 +10,33 @@ import {
   Pending,
   Info,
 } from "@mui/icons-material";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
 import LoanManagementSkeleton from "./LoanManagementSkeleton";
 import LoanManagementPieChart from "./LoanManagementPieChart";
-import AddLoanMgtModal from "../../components/Modal/CreateLoanMgtModal/AddLoanMgtModal";
-
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import { IconButton } from "@mui/material";
+import CreateLoanMgtModal from "../../components/Modal/ModalForLoanAdvanceSalary/CreateLoanMgtModal";
+import EditLoanModal from "../../components/Modal/ModalForLoanAdvanceSalary/EditLoanModal";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { TestContext } from "../../State/Function/Main";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 
 const LoanManagement = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
+  const { handleAlert } = useContext(TestContext);
+  const queryClient = useQueryClient();
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  console.log("user", user);
   const userId = user._id;
   const organisationId = user.organizationId;
-  console.log(organisationId);
 
   //for get loan data
   const { data: getEmployeeLoanData, isLoading } = useQuery(
@@ -44,40 +54,35 @@ const LoanManagement = () => {
     }
   );
 
-  console.log(getEmployeeLoanData);
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toDateString();
   };
 
-  // Function to calculate loan amount paid and pending
   const calculateLoanStatus = (loan) => {
     const currentDate = new Date();
     const loanStartingDate = loan?.loanDisbursementDate
-      ? new Date(loan?.loanDisbursementDate)
+      ? new Date(loan.loanDisbursementDate)
       : null;
     const loanEndingDate = loan?.loanCompletedDate
       ? new Date(loan.loanCompletedDate)
       : null;
-
     const loanAmount = loan?.totalDeductionWithSi;
     const totalDeductionPerMonth = loan?.totalDeduction;
 
     let loanAmountPaid = 0;
     let loanAmountPending = loanAmount;
 
-    if (currentDate < loanStartingDate) {
-      loanAmountPaid = 0;
-      loanAmountPending = loanAmount;
-    } else {
-      const elapsedMonths = Math.max(
-        0,
+    if (!loanStartingDate || !loanEndingDate || !totalDeductionPerMonth) {
+      return { loanAmountPaid, loanAmountPending };
+    }
+
+    if (currentDate >= loanStartingDate && currentDate <= loanEndingDate) {
+      const elapsedMonths =
         (currentDate.getFullYear() - loanStartingDate.getFullYear()) * 12 +
-          currentDate.getMonth() -
-          loanStartingDate.getMonth() +
-          1
-      );
+        currentDate.getMonth() -
+        loanStartingDate.getMonth() +
+        1;
       loanAmountPaid = Math.min(
         loanAmount,
         totalDeductionPerMonth * elapsedMonths
@@ -90,8 +95,8 @@ const LoanManagement = () => {
       currentDateToCheck <= loanEndingDate &&
       currentDateToCheck <= currentDate
     ) {
-      loanAmountPaid += totalDeductionPerMonth;
-      loanAmountPending -= totalDeductionPerMonth;
+      loanAmountPaid = totalDeductionPerMonth;
+      loanAmountPending = loanAmount - loanAmountPaid;
       currentDateToCheck.setMonth(currentDateToCheck.getMonth() + 1);
     }
 
@@ -114,8 +119,6 @@ const LoanManagement = () => {
         calculateLoanStatus(selectedLoan);
       paidAmount += loanAmountPaid;
       pendingAmount += loanAmountPending;
-      console.log(paidAmount);
-      console.log(pendingAmount);
     });
 
     setTotalPaidAmount(paidAmount);
@@ -142,11 +145,59 @@ const LoanManagement = () => {
   const handleCreateModalClose = () => {
     setCreateModalOpen(false);
   };
+  // for edit
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [loan, setLoan] = useState(null);
+  const handleEditModalOpen = (loan) => {
+    setEditModalOpen(true);
+    setLoan(loan);
+  };
+  const handleEditModalClose = () => {
+    setEditModalOpen(false);
+    setLoan(null);
+  };
+
+   // for delete
+   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+   const handleDeleteConfirmation = (id) => {
+     setDeleteConfirmation(id);
+   };
+ 
+   const handleCloseConfirmation = () => {
+     setDeleteConfirmation(null);
+   };
+ 
+   const handleDelete = (id) => {
+     deleteMutation.mutate(id);
+     handleCloseConfirmation();
+   };
+ 
+   const deleteMutation = useMutation(
+     (id) =>
+       axios.delete(
+         `${process.env.REACT_APP_API}/route/delete-loan-data/${id}`,
+         {
+           headers: {
+             Authorization: authToken,
+           },
+         }
+       ),
+     {
+       onSuccess: () => {
+         queryClient.invalidateQueries("loanDatas");
+         handleAlert(
+           true,
+           "success",
+           "Loan data deleted successfully"
+         );
+       },
+     }
+   );
 
   return (
     <>
       <section className="bg-gray-50 min-h-screen w-full">
-        <article className="SetupSection bg-white w-[100%] md:w-[100%]  h-max shadow-md rounded-sm border  items-center">
+        <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center flex flex-col">
           <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
             <div className="flex  gap-3 ">
               <div className="mt-1">
@@ -159,18 +210,22 @@ const LoanManagement = () => {
             </div>
           </div>
           <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
-          <div className="flex gap-3">
-           <h1 className="text-xl">Your current active loans</h1>
-          </div>
+            {getEmployeeLoanData?.length > 0 && (
+              <div className="flex gap-2 w-full">
+                <h1 className="text-lg">Your current active loans</h1>
+              </div>
+            )}
 
-            <Button
-              className="!font-semibold !bg-sky-500 flex items-center gap-2"
-              variant="contained"
-              onClick={handleCreateModalOpen}
-            >
-              <Add />
-              Apply For Loan
-            </Button>
+            <div className="flex justify-end w-full">
+              <Button
+                className="!font-semibold !bg-sky-500 flex gap-2"
+                variant="contained"
+                onClick={handleCreateModalOpen}
+              >
+                <Add />
+                Apply For Loan
+              </Button>
+            </div>
           </div>
 
           {isLoading ? (
@@ -186,11 +241,12 @@ const LoanManagement = () => {
                         <th scope="col" className="text-left pl-6 py-3">
                           SR NO
                         </th>
-                        <th scope="col" className="px-8 py-3">
-                          Loan Type
-                        </th>
+
                         <th scope="col" className="px-6 py-3">
                           Loan Status
+                        </th>
+                        <th scope="col" className="px-8 py-3">
+                          Loan Type
                         </th>
                         <th scope="col" className="px-6 py-3">
                           Loan Amount Applied
@@ -199,7 +255,7 @@ const LoanManagement = () => {
                           Total Loan Amount
                         </th>
                         <th scope="col" className="px-6 py-3">
-                          Loan Amount Paid
+                          Loan Amount Paid Monthly
                         </th>
                         <th scope="col" className="px-6 py-3">
                           Loan Amount Pending
@@ -215,6 +271,9 @@ const LoanManagement = () => {
                         </th>
                         <th scope="col" className="px-8 py-3">
                           Completion Date
+                        </th>
+                        <th scope="col" className="px-8 py-3">
+                          Edit
                         </th>
                       </tr>
                     </thead>
@@ -234,9 +293,7 @@ const LoanManagement = () => {
                               />
                             </td>
                             <td className="text-left pl-6 py-3">{id + 1}</td>
-                            <td className="py-3 pl-6">
-                              {loanMgtData.loanType?.loanName}
-                            </td>
+
                             <td className="text-left leading-7 text-[16px] w-[200px] ">
                               {loanMgtData.status === "Pending" ? (
                                 <div className="flex items-center gap-2">
@@ -266,6 +323,9 @@ const LoanManagement = () => {
                                 </div>
                               )}
                             </td>
+                            <td className="py-3 pl-6">
+                              {loanMgtData.loanType?.loanName}
+                            </td>
 
                             <td className="py-3 pl-6">
                               {loanMgtData?.loanAmount}
@@ -289,6 +349,32 @@ const LoanManagement = () => {
                             <td className="py-3 pl-6">
                               {formatDate(loanMgtData?.loanCompletedDate) || ""}
                             </td>
+                            <td className="whitespace-nowrap px-6 py-2">
+                              {loanMgtData.status === "Pending" && (
+                                <>
+                                  <IconButton
+                                    color="primary"
+                                    aria-label="edit"
+                                    onClick={() =>
+                                      handleEditModalOpen(loanMgtData)
+                                    }
+                                  >
+                                    <EditOutlinedIcon />
+                                  </IconButton>
+                                  <IconButton
+                                    color="error"
+                                    aria-label="delete"
+                                    onClick={() =>
+                                      handleDeleteConfirmation(
+                                        loanMgtData?._id
+                                      )
+                                    }
+                                  >
+                                    <DeleteOutlineIcon />
+                                  </IconButton>
+                                </>
+                              )}
+                            </td>
                           </tr>
                         );
                       })}
@@ -297,7 +383,6 @@ const LoanManagement = () => {
                 </div>
               </div>
             </>
-            
           ) : (
             <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
               <article className="flex items-center mb-1 text-red-500 gap-2">
@@ -308,23 +393,61 @@ const LoanManagement = () => {
             </section>
           )}
         </article>
-          {/* Show LoanManagementPieChart if showPieChart is true */}
-          {showPieChart && (
-            <LoanManagementPieChart
-              totalPaidAmount={totalPaidAmount}
-              totalPendingAmount={totalPendingAmount}
-            />
-          )}
+        {/* Show LoanManagementPieChart if showPieChart is true */}
+        {showPieChart && (
+          <LoanManagementPieChart
+            totalPaidAmount={totalPaidAmount}
+            totalPendingAmount={totalPendingAmount}
+          />
+        )}
       </section>
-         
-     
 
       {/* for create */}
-      <AddLoanMgtModal
+      <CreateLoanMgtModal
         handleClose={handleCreateModalClose}
         open={createModalOpen}
         organisationId={organisationId}
       />
+
+      {/* for edit loan data */}
+      <EditLoanModal
+        handleClose={handleEditModalClose}
+        open={editModalOpen}
+        organisationId={organisationId}
+        loan={loan}
+      />
+
+        {/* for delete */}
+        <Dialog
+        open={deleteConfirmation !== null}
+        onClose={handleCloseConfirmation}
+      >
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <p>
+            Please confirm your decision to delete this loan  data, as
+            this action cannot be undone.
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleCloseConfirmation}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => handleDelete(deleteConfirmation)}
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
