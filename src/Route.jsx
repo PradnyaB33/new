@@ -84,7 +84,6 @@ import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
 import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 import EmployeeNotification from "./pages/Employee-Notification/page";
-import Form16Notification from "./pages/Form16NotificationToEmp/Form16Notification";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LetterSetup from "./pages/LetterTypes/LetterSetup";
@@ -118,6 +117,7 @@ import AdvanceSalary from "./pages/AdvanceSalary/AdvanceSalary";
 import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotification";
 import AdvanceSalaryApproval from "./pages/AdvanceSalaryNotification/AdvanceSalaryApproval";
 import AdvanceSalaryNotificationToEmp from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotificationToEmp";
+import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
 
 const App = () => {
   return (
@@ -1110,7 +1110,7 @@ const App = () => {
         />
         <Route
           path="/form16-notification-to-emp"
-          element={<Form16Notification />}
+          element={<Form16NotificationToEmp />}
         />
         <Route
           path="/advance-salary-notification"
