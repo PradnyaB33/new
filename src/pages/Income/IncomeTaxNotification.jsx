@@ -1,11 +1,9 @@
 import { Info, West } from "@mui/icons-material";
 import { Button, Chip, IconButton, Skeleton } from "@mui/material";
 import axios from "axios";
-import moment from "moment";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
-import Select from "react-select";
 import useIncomeTax from "../../hooks/IncomeTax/useIncomeTax";
 import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
@@ -40,8 +38,8 @@ const IncomeTaxNotification = () => {
 
   const navigate = useNavigate();
   const [skip, setSkip] = useState(0);
-  const [status, setStatus] = useState(0);
-  console.log(`🚀 ~ status:`, status);
+  // const [status, setStatus] = useState(0);
+  // console.log(`🚀 ~ status:`, status);
 
   // console.log(`🚀 ~ empTDSData:`, empTDSData);
   return (
@@ -56,7 +54,7 @@ const IncomeTaxNotification = () => {
       </header>
 
       <div className="p-4 space-y-2  ">
-        <Select
+        {/* <Select
           isClearable
           className="w-[250px] pb-4 z-50"
           aria-errormessage=""
@@ -79,7 +77,7 @@ const IncomeTaxNotification = () => {
             }
             setStatus(value.value);
           }}
-        />
+        /> */}
 
         {empDataLoading ? (
           <div className="bg-white py-4 px-8 rounded-md shadow-sm space-y-2">
@@ -107,9 +105,6 @@ const IncomeTaxNotification = () => {
                   {ele?.status.toLowerCase()} with amount INR{" "}
                   {ele?.amountAccepted}
                 </h1>
-                <p className="sm:text-[1em] text-sm">
-                  {moment(ele?.updatedAt).fromNow()}
-                </p>
               </div>
               {ele.message && <span>{ele.message}</span>}
 
