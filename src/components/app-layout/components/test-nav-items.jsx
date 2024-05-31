@@ -207,13 +207,29 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
       Performance: {
         open: false,
-        isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
+        isVisible:
+          data?.organisation?.packageInfo === "Intermediate Plan" &&
+          window.location.pathname?.includes("organisation") &&
+          [
+            "Super-Admin",
+            "Delegate-Super-Admin",
+            "Delegate-Super-Admin",
+            "Department-Head",
+            "Delegate-Department-Head",
+            "Department-Admin",
+            "Delegate-Department-Admin",
+            "Accountant",
+            "Delegate-Accountant",
+            "HR",
+            "Manager",
+            "Employee",
+          ]?.includes(role),
         icon: <Payment className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
             key: "performance",
             isVisible: true,
-            link: "/performance",
+            link: `/organisation/${orgId}/performance`,
             icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Performance",
           },
@@ -241,7 +257,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "IncomeTax",
             isVisible: true,
-            link: "/income-tax/organisation",
+            link: `/organisation/${orgId}/income-tax`,
             icon: <TrendingUp className=" !text-[1.2em] text-[#67748E]" />,
             text: "Income Tax",
           },

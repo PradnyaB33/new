@@ -77,6 +77,10 @@ import OrgChart from "./Test/OrgChart";
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
+import AdvanceSalary from "./pages/AdvanceSalary/AdvanceSalary";
+import AdvanceSalaryApproval from "./pages/AdvanceSalaryNotification/AdvanceSalaryApproval";
+import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotification";
+import AdvanceSalaryNotificationToEmp from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotificationToEmp";
 import ParentNotification from "./pages/AllNotifications/page";
 import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
@@ -114,10 +118,6 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import AdvanceSalary from "./pages/AdvanceSalary/AdvanceSalary";
-import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotification";
-import AdvanceSalaryApproval from "./pages/AdvanceSalaryNotification/AdvanceSalaryApproval";
-import AdvanceSalaryNotificationToEmp from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotificationToEmp";
 
 const App = () => {
   return (
@@ -144,7 +144,7 @@ const App = () => {
           }
         />
         <Route
-          path="/performance"
+          path="/organisation/:organisationId/performance"
           element={
             <RequireAuth
               permission={[
@@ -243,7 +243,7 @@ const App = () => {
           element={<MissedPunchNotification />}
         />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-     
+
         <Route
           path="/waiting"
           element={
@@ -996,25 +996,28 @@ const App = () => {
             </RequireAuth>
           }
         />
-        <Route path="/income-tax/organisation" element={<IncomeTax />} />
         <Route
-          path="/income-tax/organisation/declarations"
+          path="/organisation/:organisationId/income-tax"
+          element={<IncomeTax />}
+        />
+        <Route
+          path="/organisation/:organisationId/income-tax/declarations"
           element={<TDSTab1 />}
         />
         <Route
-          path="/income-tax/organisation/calculation"
+          path="/organisation/:organisationId/income-tax/calculation"
           element={<TDSCalculation />}
         />
         <Route
-          path="/notification/income-tax/organisation"
+          path="/notification/organisation/:organisationId/income-tax"
           element={<DeclarationPage />}
         />
         <Route
-          path="/notification/income-tax/organisation-details"
+          path="/notification/organisation/:organisationId/income-tax-details"
           element={<IncomeTaxNotification />}
         />
         <Route
-          path="/notification/income-tax/organisation/:id"
+          path="/notification/organisation/:organisationId/income-tax/:id"
           element={<DeclarationPage />}
         />
         <Route path="/application" element={<Application />} />
