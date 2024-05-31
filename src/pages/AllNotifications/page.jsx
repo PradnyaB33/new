@@ -37,7 +37,7 @@ const ParentNotification = () => {
       role === "Super-Admin" ||
       role === "Delegate-Super-Admin"
     ) {
-      return "/notification/organisation/:organisationId/income-tax";
+      return "/notification/income-tax";
     }
     return "/";
   }, [role]);
@@ -116,7 +116,7 @@ const ParentNotification = () => {
       count: tds ?? 0,
       color: "#51E8FD",
       url: tdsRoute,
-      url2: "/notification/organisation/:organisationId/income-tax-details",
+      url2: "/notification/income-tax-details",
     },
   ];
 

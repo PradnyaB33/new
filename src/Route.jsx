@@ -1008,16 +1008,13 @@ const App = () => {
           path="/organisation/:organisationId/income-tax/calculation"
           element={<TDSCalculation />}
         />
+        <Route path="/notification/income-tax" element={<DeclarationPage />} />
         <Route
-          path="/notification/organisation/:organisationId/income-tax"
-          element={<DeclarationPage />}
-        />
-        <Route
-          path="/notification/organisation/:organisationId/income-tax-details"
+          path="/notification/income-tax-details"
           element={<IncomeTaxNotification />}
         />
         <Route
-          path="/notification/organisation/:organisationId/income-tax/:id"
+          path="/notification/income-tax/:id"
           element={<DeclarationPage />}
         />
         <Route path="/application" element={<Application />} />
