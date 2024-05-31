@@ -96,7 +96,7 @@ const ParentNotification = () => {
       name: "Payslip Notification",
       count: PayslipNotification?.length ?? 0,
       color: "#51E8FD",
-      url: "/payslip-notification-to-emp",
+      url2: "/payslip-notification-to-emp",
     },
     {
       name: "Form 16 Notification",
