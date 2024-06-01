@@ -17,9 +17,7 @@ import { Button, Menu, MenuItem, alpha, styled } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
 import DescriptionBox from "./descripton-box";
-import PackageForm from "./package/memberCount";
-import ManageSubscription from "./package/package";
-import PrepaidCard from "./package/prePay";
+import RenewPackage from "./package/renew";
 import UpgradePackage from "./package/upgrade";
 const StyledMenu = styled((props) => (
   <Menu
@@ -68,9 +66,7 @@ const StyledMenu = styled((props) => (
 const BillingCard = ({ doc }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmOpen2, setConfirmOpen2] = useState(false);
-  const [confirmOpen3, setConfirmOpen3] = useState(false);
   const [confirmOpen4, setConfirmOpen4] = useState(false);
 
   const handleClick = (event) => {
@@ -114,34 +110,7 @@ const BillingCard = ({ doc }) => {
           >
             <MenuItem
               onClick={() => {
-                setConfirmOpen(true);
-              }}
-              disableRipple
-            >
-              <FilterNone />
-              Manage Member
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
                 setConfirmOpen2(true);
-              }}
-              disableRipple
-            >
-              <FilterNone />
-              Change Package
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                setConfirmOpen3(true);
-              }}
-              disableRipple
-            >
-              <FilterNone />
-              Prepay
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                setConfirmOpen3(true);
               }}
               disableRipple
             >
@@ -229,15 +198,7 @@ const BillingCard = ({ doc }) => {
         ) : null}
       </div>
 
-      <PackageForm
-        open={confirmOpen}
-        handleClose={() => {
-          setConfirmOpen(false);
-          handleClose();
-        }}
-        organisation={doc}
-      />
-      <ManageSubscription
+      <RenewPackage
         open={confirmOpen2}
         handleClose={() => {
           setConfirmOpen2(false);
@@ -245,14 +206,7 @@ const BillingCard = ({ doc }) => {
         }}
         organisation={doc}
       />
-      <PrepaidCard
-        open={confirmOpen3}
-        handleClose={() => {
-          setConfirmOpen3(false);
-          handleClose();
-        }}
-        organisation={doc}
-      />
+
       <UpgradePackage
         open={confirmOpen4}
         handleClose={() => {
