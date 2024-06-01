@@ -22,10 +22,23 @@ import Test4 from "./EmployeeCom/Test4";
 
 // Helper function to convert date format
 const convertToISOFormat = (dateStr) => {
-  const [day, month, year] = dateStr.split("-").map(Number);
+  let day, month, year;
+
+  if (dateStr.includes("-")) {
+    [day, month, year] = dateStr.split("-").map(Number);
+  } else if (dateStr.includes("/")) {
+    [day, month, year] = dateStr.split("/").map(Number);
+  } else {
+    throw new Error("Invalid date format");
+  }
+
   const date = new Date(Date.UTC(year, month - 1, day));
   return date.toISOString();
 };
+
+// Validation functions
+const isValidPanCard = (panCard) => /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(panCard);
+const isValidAadharCard = (aadharCard) => /^\d{12}$/.test(aadharCard);
 
 const EmployeeTest = () => {
   const { authToken } = useGetUser();
@@ -111,6 +124,25 @@ const EmployeeTest = () => {
       console.log("Final Data", finalData);
 
       finalData.forEach(async (employee) => {
+        // Validation for PAN and Aadhar card
+        if (!isValidPanCard(employee.pan_card_number)) {
+          setAppAlert({
+            alert: true,
+            type: "error",
+            msg: `Invalid PAN card format for employee no ${employee.empId}`,
+          });
+          return;
+        }
+
+        if (!isValidAadharCard(employee.adhar_card_number)) {
+          setAppAlert({
+            alert: true,
+            type: "error",
+            msg: `Invalid Aadhar card format for employee no ${employee.empId}`,
+          });
+          return;
+        }
+
         try {
           await axios.post(
             `${process.env.REACT_APP_API}/route/employee/add-employee`,

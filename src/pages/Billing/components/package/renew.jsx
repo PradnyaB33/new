@@ -1,5 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FactoryOutlined, Numbers } from "@mui/icons-material";
+import {
+  FactoryOutlined,
+  Numbers,
+  RecyclingRounded,
+} from "@mui/icons-material";
 import { Button } from "@mui/material";
 import moment from "moment";
 import React, { useEffect } from "react";
@@ -9,12 +13,13 @@ import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
 import ReusableModal from "../../../../components/Modal/component";
 import useManageSubscriptionMutation from "./subscription-mutaiton";
 
-const UpgradePackage = ({ handleClose, open, organisation }) => {
+const RenewPackage = ({ handleClose, open, organisation }) => {
   const [amount, setAmount] = React.useState(0);
-  const { verifyPromoCodeMutation, mutate } = useManageSubscriptionMutation();
+  const { verifyPromoCodeMutation, renewMutate } =
+    useManageSubscriptionMutation();
 
   const packageSchema = z.object({
-    employeeToAdd: z
+    memberCount: z
       .string()
       .min(0)
       .refine(
@@ -37,81 +42,86 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
     promoCode: z.string().optional(),
     paymentType: z.enum(["Phone_Pay", "RazorPay"]),
     discount: z.number().optional(),
+    cycleCount: z.string().refine((doc) => Number(doc) > 0, {
+      message: "Cycle Count is greater than 0",
+    }),
   });
 
   const { control, formState, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
-      employeeToAdd: "0",
+      memberCount: `${organisation?.memberCount}`,
       packageInfo: {
         value: organisation?.packageInfo,
         label: organisation?.packageInfo,
-        isDisabled: false,
       },
       paymentType: "RazorPay",
       discount: 0,
+      cycleCount: `${organisation?.cycleCount}`,
     },
     resolver: zodResolver(packageSchema),
   });
+  const packageInfo = watch("packageInfo").value;
+  const employeeToAdd = Number(watch("memberCount"));
+  const paymentType = watch("paymentType");
+  const promoCode = watch("discount");
+  const cycleCount = Number(watch("cycleCount"));
+
+  useEffect(() => {
+    let perDayValue = 0;
+    if (packageInfo === "Basic Plan") {
+      perDayValue = 55;
+    } else if (packageInfo === "Intermediate Plan") {
+      perDayValue = 85;
+    } else {
+      perDayValue = 115;
+    }
+    // apply discount if promo code is valid
+    let discountedToMinus = perDayValue * employeeToAdd * (promoCode / 100);
+
+    let addedAmountIfRazorPay =
+      perDayValue * employeeToAdd * (paymentType === "RazorPay" ? 0.02 : 0);
+
+    setAmount(
+      Math.round(
+        perDayValue * employeeToAdd * (cycleCount ?? 1) +
+          addedAmountIfRazorPay -
+          discountedToMinus
+      )
+    );
+  }, [employeeToAdd, packageInfo, promoCode, paymentType, cycleCount]);
 
   const { errors } = formState;
 
   async function onSubmit(data) {
-    console.log(
-      `🚀 ~ file: upgrade.jsx:69 ~ organisation?._id:`,
-      organisation?._id
+    let packageStartDate = moment(
+      organisation?.subscriptionDetails?.expirationDate
     );
-    mutate({
-      count: data?.employeeToAdd,
+
+    let nextDate = packageStartDate.add(3, "months");
+    console.log(`🚀 ~ file: renew.jsx:101 ~ nextDate:`, nextDate);
+    console.log(
+      `🚀 ~ file: renew.jsx:103 ~ packageStartDate:`,
+      packageStartDate
+    );
+
+    renewMutate({
+      memberCount: data?.memberCount,
       packageName: data?.packageInfo?.value,
       totalPrice: amount,
       paymentType: data?.paymentType,
       organisationId: organisation?._id,
+      packageStartDate: moment(
+        organisation?.subscriptionDetails?.expirationDate
+      ),
+      packageEndDate: moment(
+        organisation?.subscriptionDetails?.expirationDate
+      ).add(cycleCount, "month"),
     });
   }
 
-  const packageInfo = watch("packageInfo").value;
-  const employeeToAdd = Number(watch("employeeToAdd"));
-  const expirationDate = organisation?.subscriptionDetails?.expirationDate;
-  const paymentType = watch("paymentType");
-
-  const promoCode = watch("discount");
-
-  useEffect(() => {
-    let perDayValue = 0;
-    let remainingDays = moment(expirationDate).diff(moment(), "days");
-    if (packageInfo === "Basic Plan") {
-      perDayValue = 0.611;
-    } else if (packageInfo === "Intermediate Plan") {
-      perDayValue = 0.944;
-    } else {
-      perDayValue = 1.277;
-    }
-    // apply discount if promo code is valid
-    let discountedToMinus =
-      perDayValue * employeeToAdd * remainingDays * (promoCode / 100);
-
-    let addedAmountIfRazorPay =
-      perDayValue *
-      employeeToAdd *
-      remainingDays *
-      (paymentType === "RazorPay" ? 0.02 : 0);
-    console.log(
-      `🚀 ~ file: upgrade.jsx:94 ~ addedAmountIfRazorPay:`,
-      addedAmountIfRazorPay
-    );
-
-    setAmount(
-      Math.round(
-        perDayValue * employeeToAdd * remainingDays -
-          discountedToMinus +
-          addedAmountIfRazorPay
-      )
-    );
-  }, [employeeToAdd, packageInfo, expirationDate, promoCode, paymentType]);
-
   return (
     <ReusableModal
-      heading={"Upgrade subscription"}
+      heading={"Renew or Pre-Pay Subscription"}
       open={open}
       onClose={handleClose}
     >
@@ -121,14 +131,14 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
       >
         <div className="flex flex-col">
           <AuthInputFiled
-            name="employeeToAdd"
+            name="memberCount"
             icon={Numbers}
             control={control}
             type="number"
             placeholder="Employee To Add "
             label="Employee To Add *"
             errors={errors}
-            error={errors.employeeToAdd}
+            error={errors.memberCount}
           />
           <AuthInputFiled
             name="packageInfo"
@@ -144,14 +154,22 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
               {
                 value: "Basic Plan",
                 label: "Basic Plan",
-                isDisabled:
-                  organisation?.packageInfo === "Intermediate Plan"
-                    ? true
-                    : false,
               },
             ]}
           />
-
+          <AuthInputFiled
+            name="cycleCount"
+            icon={RecyclingRounded}
+            control={control}
+            type="number"
+            placeholder="Cycle count used for recycle your subscription"
+            label="Cycle Count *"
+            errors={errors}
+            error={errors.cycleCount}
+            descriptionText={
+              "if you select 2 then you will be charged every 3 months subscription with 2 cycle it mean it will be 6 months subscription just amount will be charged one time."
+            }
+          />
           <AuthInputFiled
             name="paymentType"
             icon={FactoryOutlined}
@@ -167,6 +185,7 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
             ]}
             descriptionText={"Additional 2% charges on razorpay transaction"}
           />
+
           <AuthInputFiled
             name="promoCode"
             icon={Numbers}
@@ -196,7 +215,7 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
         <div className="gap-4 flex w-full">
           <Button
             variant="contained"
-            disabled={amount === 0}
+            disabled={organisation?.upcomingPackageInfo?.packageName}
             type="submit"
             className="!w-full"
           >
@@ -208,4 +227,4 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
   );
 };
 
-export default UpgradePackage;
+export default RenewPackage;

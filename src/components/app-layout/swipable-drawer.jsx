@@ -109,7 +109,7 @@ export default function SwipeableTemporaryDrawer() {
             {data?.organisation?.orgName &&
               !isLocation &&
               data?.organisation?.orgName}
-            {role && role !== "Employee" && <NotificationIcon />}
+            {role && <NotificationIcon />}
 
             <ProfileIcon />
           </div>

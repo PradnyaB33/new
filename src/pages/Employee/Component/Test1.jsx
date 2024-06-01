@@ -13,15 +13,19 @@ import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
+import { useQuery } from "react-query";
+import { useParams } from "react-router";
+import axios from "axios";
+import { useContext } from "react";
+import { UseContext } from "../../../State/UseState/UseContext";
+import useEmployeeState from "../../../hooks/Employee-OnBoarding/useEmployeeState";
 
-export const isAtLeastNineteenYearsOld = (value) => {
+const isAtLeastNineteenYearsOld = (value) => {
   const currentDate = new Date();
   const dob = new Date(value);
   let differenceInYears = currentDate.getFullYear() - dob.getFullYear();
   const monthDiff = currentDate.getMonth() - dob.getMonth();
 
-  // If the birth month is after the current month, reduce the age by 1
   if (
     monthDiff < 0 ||
     (monthDiff === 0 && currentDate.getDate() < dob.getDate())
@@ -49,21 +53,23 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
     pwd,
     uanNo,
     esicNo,
-  } = useEmpState();
+  } = useEmployeeState();
 
-  console.log("test");
+  const { employeeId } = useParams();
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
 
   const EmployeeSchema = z.object({
     first_name: z
       .string()
       .min(1, { message: "Minimum 1 character required" })
       .max(15, { message: "Maximum 15 character allowed" })
-      .regex(/^[a-zA-Z]+$/, { message: "Only character allowed" }),
+      .regex(/^[a-zA-Z]+$/, { message: "Only characters allowed" }),
     last_name: z
       .string()
       .min(1, { message: "Minimum 1 character required" })
       .max(15, { message: "Maximum 15 character allowed" })
-      .regex(/^[a-zA-Z]+$/, { message: "Only character allowed" }),
+      .regex(/^[a-zA-Z]+$/, { message: "Only characters allowed" }),
     gender: z.string(),
     email: z.string().email(),
     phone_number: z
@@ -78,8 +84,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
     }),
     citizenship: z
       .string()
-      .min(3, { message: "min 3 character required" })
-      .regex(/^[a-zA-Z]+$/, { message: "Only character allowed" }),
+      .min(3, { message: "Minimum 3 characters required" })
+      .regex(/^[a-zA-Z]+$/, { message: "Only characters allowed" }),
     adhar_card_number: z
       .string()
       .length(12, { message: "Aadhar number must be 12 digits." })
@@ -92,13 +98,13 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
         message: "Invalid PAN No.",
       })
       .regex(/^[^*@]+$/, {
-        message: "A PAN No cannot contain a special character, e.g., *,#.",
+        message: "PAN No cannot contain special characters, e.g., *,#.",
       }),
     bank_account_no: z
       .string()
       .max(35, { message: "Only 35 numbers allowed" })
       .regex(/^\d*$/, {
-        message: "Bank number cannot be negative.",
+        message: "Bank account number cannot be negative.",
       }),
     pwd: z.boolean().optional(),
     uanNo: z
@@ -115,7 +121,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
       .optional(),
   });
 
-  const { control, formState, handleSubmit } = useForm({
+  const { control, formState, setValue, handleSubmit } = useForm({
     defaultValues: {
       first_name: first_name,
       last_name: last_name,
@@ -129,14 +135,82 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
       pan_card_number: pan_card_number,
       bank_account_no: bank_account_no,
       pwd,
-      uanNo: uanNo ? uanNo : undefined,
-      esicNo: esicNo ? esicNo : undefined,
+      uanNo: uanNo || undefined,
+      esicNo: esicNo || undefined,
     },
     resolver: zodResolver(EmployeeSchema),
   });
 
-  const { errors } = formState;
+  const { isFetching } = useQuery(
+    ["employeeId", employeeId],
+    async () => {
+      if (employeeId !== null && employeeId !== undefined) {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/employee/get/profile/${employeeId}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
 
+        return response.data;
+      }
+    },
+    {
+      onSuccess: (data) => {
+        console.log(data);
+        if (data) {
+          setValue("first_name", data.employee.first_name || "");
+          setValue("last_name", data.employee.last_name || "");
+          setValue(
+            "date_of_birth",
+            data.employee.date_of_birth
+              ? new Date(data.employee.date_of_birth)
+                  .toISOString()
+                  .split("T")[0]
+              : ""
+          );
+          setValue("email", data.employee.email || "");
+          setValue("gender", data.employee.gender || "");
+          setValue("phone_number", data.employee.phone_number || "");
+          setValue("address", data.employee.address || "");
+          setValue("citizenship", data.employee.citizenship || "");
+
+          setValue(
+            "adhar_card_number",
+            data.employee.adhar_card_number !== null &&
+              data.employee.adhar_card_number !== undefined
+              ? data.employee.adhar_card_number.toString()
+              : ""
+          );
+
+          setValue(
+            "pan_card_number",
+            data.employee.pan_card_number !== null &&
+              data.employee.pan_card_number !== undefined
+              ? data.employee.pan_card_number
+              : ""
+          );
+
+          setValue(
+            "bank_account_no",
+            data.employee.bank_account_no !== null &&
+              data.employee.bank_account_no !== undefined
+              ? data.employee.bank_account_no.toString()
+              : ""
+          );
+
+          setValue("uanNo", data.employee.uanNo || undefined);
+          setValue("esicNo", data.employee.esicNo || undefined);
+        }
+      },
+    }
+  );
+
+  console.log(isFetching);
+
+  const { errors } = formState;
   const onSubmit = async (data) => {
     console.log(`🚀 ~ data:`, data);
     setStep1Data(data);
@@ -157,7 +231,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             icon={Person}
             control={control}
             type="text"
-            placeholder="john"
+            placeholder="John"
             label="Employee First Name *"
             errors={errors}
             error={errors.first_name}
@@ -192,7 +266,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           control={control}
           type="text"
           placeholder="Employee Email"
-          label="Employee  Email *"
+          label="Employee Email *"
           errors={errors}
           error={errors.email}
         />
@@ -202,7 +276,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           icon={ContactEmergency}
           control={control}
           value={phone_number}
-          type="contact"
+          type="text"
           placeholder="1234567890"
           label="Contact *"
           errors={errors}
@@ -230,12 +304,12 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           error={errors.pwd}
         />
 
-        <div className="space-y-1 ">
+        <div className="space-y-1">
           <label
             htmlFor={"gender"}
             className={`${
               errors.gender && "text-red-500"
-            }  text-gray-500  font-bold  text-sm md:text-md`}
+            } text-gray-500 font-bold text-sm md:text-md`}
           >
             Gender *
           </label>
@@ -244,41 +318,39 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             name={"gender"}
             id={"gender"}
             render={({ field }) => (
-              <>
-                <div
-                  className={`flex items-center gap-5 rounded-md  px-2   bg-white py-1 md:py-[6px]`}
+              <div
+                className={`flex items-center gap-5 rounded-md px-2 bg-white py-1 md:py-[6px]`}
+              >
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  {...field}
                 >
-                  <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    {...field}
-                  >
-                    <FormControlLabel
-                      value="female"
-                      control={<Radio />}
-                      label="Female"
-                    />
-                    <FormControlLabel
-                      value="male"
-                      control={<Radio />}
-                      label="Male"
-                    />
-                    <FormControlLabel
-                      value="transgender"
-                      control={<Radio />}
-                      label="Transgender"
-                    />
-                  </RadioGroup>
-                </div>
-              </>
+                  <FormControlLabel
+                    value="female"
+                    control={<Radio />}
+                    label="Female"
+                  />
+                  <FormControlLabel
+                    value="male"
+                    control={<Radio />}
+                    label="Male"
+                  />
+                  <FormControlLabel
+                    value="transgender"
+                    control={<Radio />}
+                    label="Transgender"
+                  />
+                </RadioGroup>
+              </div>
             )}
           />
-          <div className="h-4 w-[200px]  !z-50   !mb-1">
+          <div className="h-4 w-[200px] !z-50 !mb-1">
             <ErrorMessage
               errors={errors}
               name={"gender"}
               render={({ message }) => (
-                <p className="text-sm mb-4 relative !bg-white  text-red-500">
+                <p className="text-sm mb-4 relative !bg-white text-red-500">
                   {message}
                 </p>
               )}
@@ -286,7 +358,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2">
           <AuthInputFiled
             name="adhar_card_number"
             icon={AccountBox}
@@ -309,7 +381,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           />
         </div>
 
-        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2">
           <AuthInputFiled
             name="bank_account_no"
             icon={AccountBalance}
@@ -325,15 +397,15 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             icon={LocationOn}
             control={control}
             type="text"
-            placeholder="Citizenship Status."
-            label="Citizenship Status. *"
+            placeholder="Citizenship Status"
+            label="Citizenship Status *"
             errors={errors}
             error={errors.citizenship}
             pattern="[A-Za-z\s]+"
           />
         </div>
 
-        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2">
           <AuthInputFiled
             name="uanNo"
             icon={AccountBalance}

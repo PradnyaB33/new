@@ -1,8 +1,7 @@
 import { Info, West } from "@mui/icons-material";
-import { Chip, IconButton, Skeleton } from "@mui/material";
+import { Button, Chip, IconButton, Skeleton } from "@mui/material";
 import axios from "axios";
-import moment from "moment";
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import useIncomeTax from "../../hooks/IncomeTax/useIncomeTax";
@@ -30,7 +29,7 @@ const IncomeTaxNotification = () => {
           }
         );
 
-        return res.data;
+        return res?.data;
       } catch (error) {
         console.log(error);
       }
@@ -38,11 +37,14 @@ const IncomeTaxNotification = () => {
   });
 
   const navigate = useNavigate();
+  const [skip, setSkip] = useState(0);
+  // const [status, setStatus] = useState(0);
+  // console.log(`🚀 ~ status:`, status);
 
-  console.log(`🚀 ~ empTDSData:`, empTDSData);
+  // console.log(`🚀 ~ empTDSData:`, empTDSData);
   return (
     <section className=" min-h-[90vh]  h-auto  bg-gray-50 ">
-      <header className="text-xl w-full pt-6 flex items-start gap-2 bg-white shadow-md   p-4">
+      <header className="text-xl w-full pt-6 pb-2  flex items-start gap-2 bg-white border-b   p-4">
         <div onClick={() => navigate(-1)}>
           <IconButton>
             <West className="!text-xl" />
@@ -52,6 +54,31 @@ const IncomeTaxNotification = () => {
       </header>
 
       <div className="p-4 space-y-2  ">
+        {/* <Select
+          isClearable
+          className="w-[250px] pb-4 z-50"
+          aria-errormessage=""
+          placeholder={"Select status"}
+          components={{
+            IndicatorSeparator: () => null,
+          }}
+          options={[
+            { label: "Approved", value: "Approved" },
+            { label: "Reject", value: "Reject" },
+            // { label: "Pending", value: "Pending" },
+          ].map((month) => ({
+            label: month?.label,
+            value: month?.value,
+          }))}
+          onChange={(value) => {
+            console.log(`🚀 ~ file: input-form.jsx:25 ~ value`, value);
+            if (value === null) {
+              return setStatus("");
+            }
+            setStatus(value.value);
+          }}
+        /> */}
+
         {empDataLoading ? (
           <div className="bg-white py-4 px-8 rounded-md shadow-sm space-y-2">
             <div>
@@ -60,22 +87,26 @@ const IncomeTaxNotification = () => {
             </div>
             <Skeleton variant="rectangular" height={24} width={80} />
           </div>
-        ) : empTDSData?.length <= 0 ? (
+        ) : empTDSData?.data?.length <= 0 ? (
           <div className="flex px-4 w-full items-center my-4">
             <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
               <Info /> No notification found
             </h1>
           </div>
         ) : (
-          empTDSData?.map((ele, id) => (
+          empTDSData?.data?.map((ele, id) => (
             <div
               key={id}
-              className="bg-white py-4 px-8 rounded-md shadow-sm space-y-2"
+              className="bg-white py-4 px-8 rounded-md border space-y-2"
             >
-              <div>
-                <h1 className="text-xl tracking-tight">{ele?.name}</h1>
-                {ele.message && <p>{ele.message}</p>}
+              <div className="flex  items-end gap-5">
+                <h1 className="md:text-xl   font-bold text-[#67748E]  tracking-tight">
+                  Declaration on {ele?.name.toLowerCase()} was{" "}
+                  {ele?.status.toLowerCase()} with amount INR{" "}
+                  {ele?.amountAccepted}
+                </h1>
               </div>
+              {ele.message && <span>{ele.message}</span>}
 
               <div className="flex items-center justify-between gap-4">
                 <Chip
@@ -86,11 +117,31 @@ const IncomeTaxNotification = () => {
                 ele.status === "Approved" ? "!bg-green-600" : "!bg-red-600"
               } !text-white`}
                 />
-                <p>{moment(ele?.updatedAt).fromNow()}</p>
               </div>
             </div>
           ))
         )}
+        <div className="flex pt-4 justify-between">
+          <Button
+            variant="contained"
+            disabled={skip >= 0 ? true : false}
+            onClick={() => {
+              setSkip((prev) => prev - 1);
+            }}
+            // type="button"
+          >
+            Previous
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setSkip((prev) => prev + 1);
+            }}
+            // type="button"
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </section>
   );

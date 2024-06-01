@@ -88,7 +88,7 @@ import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
 import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 import EmployeeNotification from "./pages/Employee-Notification/page";
-import Form16Notification from "./pages/Form16NotificationToEmp/Form16Notification";
+import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LetterSetup from "./pages/LetterTypes/LetterSetup";
@@ -118,6 +118,7 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import EditEmployee from "./pages/Employee/EditEmployee";
 
 const App = () => {
   return (
@@ -433,6 +434,16 @@ const App = () => {
             >
               {/* <EmployeeAdd /> */}
               <EmployeeTest />
+            </RequireAuth>
+          }
+        />
+         <Route
+          path="/organisation/:organisationId/edit-employee/:employeeId"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <EditEmployee />
             </RequireAuth>
           }
         />
@@ -1116,7 +1127,7 @@ const App = () => {
         />
         <Route
           path="/form16-notification-to-emp"
-          element={<Form16Notification />}
+          element={<Form16NotificationToEmp />}
         />
         <Route
           path="/advance-salary-notification"

@@ -21,6 +21,7 @@ import Loader from "../../../pages/Notification/Loader";
 import useLeaveData from "./useLeaveData";
 
 const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
+  console.log(`🚀 ~ file: LeaveRejectmodal.jsx:24 ~ items:`, items);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [open, setOpen] = useState(false);
@@ -129,7 +130,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
                 items?.status === "Deleted" ? (
                   <h1 className="text-xl px-4 md:!px-0 font-semibold ">
                     {items?.employeeId?.first_name}{" "}
-                    {items?.employeeId?.last_name} has raised reject request of{" "}
+                    {items?.employeeId?.last_name} has raised filed a request of{" "}
                     {items?.leaveTypeDetailsId?.leaveName} on{" "}
                     {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
                     {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
@@ -137,8 +138,8 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
                 ) : (
                   <h1 className="text-xl px-4 md:!px-0 font-semibold ">
                     {items?.employeeId?.first_name}{" "}
-                    {items?.employeeId?.last_name} has submitted a request to
-                    delete {items?.leaveTypeDetailsId?.leaveName} on{" "}
+                    {items?.employeeId?.last_name} has requested{" "}
+                    {items?.leaveTypeDetailsId?.leaveName} from{" "}
                     {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
                     {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
                   </h1>
@@ -147,7 +148,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
                 <h1 className="text-xl px-4 md:!px-0 font-semibold ">
                   {" "}
                   {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
-                  has raised reject request of{" "}
+                  has filed a request to refuse{" "}
                   {items?.leaveTypeDetailsId?.leaveName} on{" "}
                   {format(new Date(items.start), "dd-MM-yyyy")}
                 </h1>
