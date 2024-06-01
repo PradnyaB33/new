@@ -16,7 +16,7 @@ const MiniForm = ({ mutate, doc }) => {
         return !!file && file.size >= 5 * 1024 && file.size <= 50 * 1024;
       },
       {
-        message: "Image size maximum 50kb and minimum 5kb",
+        message: "Image size must be 5kb to 50kb",
       }
     ),
     rating: z.number(),
