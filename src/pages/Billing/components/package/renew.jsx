@@ -6,9 +6,10 @@ import {
 } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import moment from "moment";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { TestContext } from "../../../../State/Function/Main";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
 import ReusableModal from "../../../../components/Modal/component";
 import useManageSubscriptionMutation from "./subscription-mutaiton";
@@ -17,6 +18,7 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
   const [amount, setAmount] = React.useState(0);
   const { verifyPromoCodeMutation, renewMutate } =
     useManageSubscriptionMutation();
+  const { handleAlert } = useContext(TestContext);
 
   const packageSchema = z.object({
     memberCount: z
@@ -93,30 +95,36 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
   const { errors } = formState;
 
   async function onSubmit(data) {
-    let packageStartDate = moment(
-      organisation?.subscriptionDetails?.expirationDate
-    );
-
-    let nextDate = packageStartDate.add(3, "months");
-    console.log(`🚀 ~ file: renew.jsx:101 ~ nextDate:`, nextDate);
-    console.log(
-      `🚀 ~ file: renew.jsx:103 ~ packageStartDate:`,
-      packageStartDate
-    );
-
-    renewMutate({
-      memberCount: data?.memberCount,
-      packageName: data?.packageInfo?.value,
-      totalPrice: amount,
-      paymentType: data?.paymentType,
-      organisationId: organisation?._id,
-      packageStartDate: moment(
+    if (organisation?.upcomingPackageInfo?.packageName) {
+      // You already have a package waiting to be activated from January 06, 2024 to January 06, 2024. Please wait for it to happen.
+      // January 06
+      // moment(organisation?.upcomingPackageInfo?.endDate).format("")
+      handleAlert(
+        true,
+        "warning",
+        `You already have a package waiting to be activated from ${moment(
+          organisation?.upcomingPackageInfo?.startDate
+        ).format("MMMM DD, YYYY")} to ${moment(
+          organisation?.upcomingPackageInfo?.endDate
+        ).format("MMMM DD, YYYY")} please wait for it to be activated.`
+      );
+    } else {
+      let packageStartDate = moment(
         organisation?.subscriptionDetails?.expirationDate
-      ),
-      packageEndDate: moment(
-        organisation?.subscriptionDetails?.expirationDate
-      ).add(cycleCount, "month"),
-    });
+      );
+
+      let packageEndDate = packageStartDate.clone().add(3, "months");
+
+      renewMutate({
+        memberCount: data?.memberCount,
+        packageName: data?.packageInfo?.value,
+        totalPrice: amount,
+        paymentType: data?.paymentType,
+        organisationId: organisation?._id,
+        packageStartDate,
+        packageEndDate,
+      });
+    }
   }
 
   return (
@@ -215,7 +223,7 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
         <div className="gap-4 flex w-full">
           <Button
             variant="contained"
-            disabled={organisation?.upcomingPackageInfo?.packageName}
+            // disabled={organisation?.upcomingPackageInfo?.packageName}
             type="submit"
             className="!w-full"
           >

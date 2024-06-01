@@ -67,7 +67,6 @@ const useManageSubscriptionMutation = () => {
     },
   });
   const renewHandleForm = async (data) => {
-    console.log(`🚀 ~ file: subscription-mutaiton.jsx:48 ~ data:`, data);
     const result = await axios.post(
       `${process.env.REACT_APP_API}/route/organization/organization-renew/${data?.organisationId}`,
       data,

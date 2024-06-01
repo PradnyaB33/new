@@ -1,9 +1,9 @@
 import {
   AttachMoney,
+  Autorenew,
   Circle,
   ControlPoint,
   Discount,
-  FilterNone,
   KeyboardArrowDown,
   KeyboardArrowUp,
   Loop,
@@ -12,6 +12,7 @@ import {
   Repeat,
   ShoppingBag,
   Subscriptions,
+  TrendingUp,
 } from "@mui/icons-material";
 import { Button, Menu, MenuItem, alpha, styled } from "@mui/material";
 import moment from "moment";
@@ -114,7 +115,7 @@ const BillingCard = ({ doc }) => {
               }}
               disableRipple
             >
-              <FilterNone />
+              <Autorenew />
               Renew
             </MenuItem>
             <MenuItem
@@ -124,7 +125,7 @@ const BillingCard = ({ doc }) => {
               }}
               disableRipple
             >
-              <FilterNone />
+              <TrendingUp />
               Upgrade
             </MenuItem>
           </StyledMenu>
@@ -166,15 +167,18 @@ const BillingCard = ({ doc }) => {
             descriptionText={"Subscription status"}
             mainText={doc?.subscriptionDetails?.status}
           />
-
-          <DescriptionBox
-            Icon={Loop}
-            descriptionText={"Your next renewal is after"}
-            mainText={`${moment(doc?.subscriptionDetails?.expirationDate).diff(
-              moment(new Date()),
-              "days"
-            )} days`}
-          />
+          {moment(doc?.subscriptionDetails?.expirationDate).diff(
+            moment(new Date()),
+            "days"
+          ) > 0 && (
+            <DescriptionBox
+              Icon={Loop}
+              descriptionText={"Your next renewal is after"}
+              mainText={`${moment(
+                doc?.subscriptionDetails?.expirationDate
+              ).diff(moment(new Date()), "days")} days`}
+            />
+          )}
           <DescriptionBox
             Icon={Discount}
             descriptionText={"Organisation discount for next subscription"}
