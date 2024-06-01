@@ -77,6 +77,10 @@ import OrgChart from "./Test/OrgChart";
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
+import AdvanceSalary from "./pages/AdvanceSalary/AdvanceSalary";
+import AdvanceSalaryApproval from "./pages/AdvanceSalaryNotification/AdvanceSalaryApproval";
+import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotification";
+import AdvanceSalaryNotificationToEmp from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotificationToEmp";
 import ParentNotification from "./pages/AllNotifications/page";
 import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
@@ -144,10 +148,16 @@ const App = () => {
           }
         />
         <Route
-          path="/performance"
+          path="/organisation/:organisationId/performance"
           element={
             <RequireAuth
-              permission={["Super-Admin", "Employee", "Manager", "HR"]}
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Employee",
+                "Manager",
+                "HR",
+              ]}
             >
               <Performance />
             </RequireAuth>
@@ -237,7 +247,7 @@ const App = () => {
           element={<MissedPunchNotification />}
         />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-     
+
         <Route
           path="/waiting"
           element={
@@ -990,25 +1000,25 @@ const App = () => {
             </RequireAuth>
           }
         />
-        <Route path="/income-tax/organisation" element={<IncomeTax />} />
         <Route
-          path="/income-tax/organisation/declarations"
+          path="/organisation/:organisationId/income-tax"
+          element={<IncomeTax />}
+        />
+        <Route
+          path="/organisation/:organisationId/income-tax/declarations"
           element={<TDSTab1 />}
         />
         <Route
-          path="/income-tax/organisation/calculation"
+          path="/organisation/:organisationId/income-tax/calculation"
           element={<TDSCalculation />}
         />
+        <Route path="/notification/income-tax" element={<DeclarationPage />} />
         <Route
-          path="/notification/income-tax/organisation"
-          element={<DeclarationPage />}
-        />
-        <Route
-          path="/notification/income-tax/organisation-details"
+          path="/notification/income-tax-details"
           element={<IncomeTaxNotification />}
         />
         <Route
-          path="/notification/income-tax/organisation/:id"
+          path="/notification/income-tax/:id"
           element={<DeclarationPage />}
         />
         <Route path="/application" element={<Application />} />

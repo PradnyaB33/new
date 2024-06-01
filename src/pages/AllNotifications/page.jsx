@@ -5,6 +5,7 @@ import useForm16NotificationHook from "../../hooks/QueryHook/notification/Form16
 import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 import usePayslipNotificationHook from "../../hooks/QueryHook/notification/PayslipNotification/usePayslipNotificaitonHook";
 import useAdvanceSalaryData from "../../hooks/QueryHook/notification/advance-salary-notification/useAdvanceSalary";
+import useAdvanceSalaryData from "../../hooks/QueryHook/notification/advance-salary-notification/useAdvanceSalary";
 import useDocNotification from "../../hooks/QueryHook/notification/document-notification/hook";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import useLoanNotification from "../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
@@ -43,9 +44,9 @@ const ParentNotification = () => {
     if (
       role === "Accountant" ||
       role === "Super-Admin" ||
-      role === "delegate Super-Admin"
+      role === "Delegate-Super-Admin"
     ) {
-      return "/notification/income-tax/organisation";
+      return "/notification/income-tax";
     }
     return "/";
   }, [role]);
