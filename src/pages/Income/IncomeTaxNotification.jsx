@@ -42,6 +42,9 @@ const IncomeTaxNotification = () => {
   // console.log(`🚀 ~ status:`, status);
 
   // console.log(`🚀 ~ empTDSData:`, empTDSData);
+
+  console.log(`🚀 ~ empTDSData:`, empTDSData);
+
   return (
     <section className=" min-h-[90vh]  h-auto  bg-gray-50 ">
       <header className="text-xl w-full pt-6 pb-2  flex items-start gap-2 bg-white border-b   p-4">
@@ -78,7 +81,6 @@ const IncomeTaxNotification = () => {
             setStatus(value.value);
           }}
         /> */}
-
         {empDataLoading ? (
           <div className="bg-white py-4 px-8 rounded-md shadow-sm space-y-2">
             <div>
@@ -94,32 +96,34 @@ const IncomeTaxNotification = () => {
             </h1>
           </div>
         ) : (
-          empTDSData?.data?.map((ele, id) => (
-            <div
-              key={id}
-              className="bg-white py-4 px-8 rounded-md border space-y-2"
-            >
-              <div className="flex  items-end gap-5">
-                <h1 className="md:text-xl   font-bold text-[#67748E]  tracking-tight">
-                  Declaration on {ele?.name.toLowerCase()} was{" "}
-                  {ele?.status.toLowerCase()} with amount INR{" "}
-                  {ele?.amountAccepted}
-                </h1>
-              </div>
-              {ele.message && <span>{ele.message}</span>}
+          <>
+            {empTDSData?.map((ele, id) => (
+              <div
+                key={id}
+                className="bg-white py-4 px-8 rounded-md border space-y-2"
+              >
+                <div className="flex  items-end gap-5">
+                  <h1 className="md:text-xl   font-bold text-[#67748E]  tracking-tight">
+                    Declaration on {ele?.name.toLowerCase()} was{" "}
+                    {ele?.status.toLowerCase()} with amount INR{" "}
+                    {ele?.amountAccepted}
+                  </h1>
+                </div>
+                {ele.message && <span>{ele.message}</span>}
 
-              <div className="flex items-center justify-between gap-4">
-                <Chip
-                  size="small"
-                  label={ele.status}
-                  className={`
+                <div className="flex items-center justify-between gap-4">
+                  <Chip
+                    size="small"
+                    label={ele.status}
+                    className={`
               ${
                 ele.status === "Approved" ? "!bg-green-600" : "!bg-red-600"
               } !text-white`}
-                />
+                  />
+                </div>
               </div>
-            </div>
-          ))
+            ))}
+          </>
         )}
         <div className="flex pt-4 justify-between">
           <Button

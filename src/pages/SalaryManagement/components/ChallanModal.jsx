@@ -148,7 +148,7 @@ const ChallanModal = ({ handleClose, open, id }) => {
       );
 
       const headers = [
-        // "IP Number",
+        "IP Number",
         "IP Name",
         "No of days work",
         "Total month wages",
@@ -160,6 +160,7 @@ const ChallanModal = ({ handleClose, open, id }) => {
       ];
 
       const employeeInfo = getResponse?.data?.map((item) => [
+        item?.esicno,
         item?.name,
         item?.workingDays,
         item?.grossSalary,
@@ -192,6 +193,7 @@ const ChallanModal = ({ handleClose, open, id }) => {
       );
 
       const headers = [
+        "UAN NO",
         "MEMBER NAME",
         "GROSS WAGES",
         "EPF WAGES",
@@ -205,6 +207,7 @@ const ChallanModal = ({ handleClose, open, id }) => {
       ];
 
       const employeeInfo = getResponse?.data?.map((item) => [
+        item?.uanno,
         item?.name,
         item?.grossSalary,
         item?.epfWAGES,

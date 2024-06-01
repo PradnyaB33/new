@@ -37,7 +37,7 @@ const useEmpOption = (organisationId) => {
   });
 
   const Manageroptions = ManagerList?.manager?.map((item) => {
-    console.log("item",item)
+    console.log("item", item);
     return {
       value: item?._id,
       label: `${item?.managerId?.first_name} ${item?.managerId?.last_name}`,
@@ -62,6 +62,8 @@ const useEmpOption = (organisationId) => {
           label: key, // Use the role name as the label
         };
       });
+
+  console.log(empRolesList?.roles);
   // const RolesOptions =
   //   empRolesList?.roles &&
   //   Object.entries(empRolesList?.roles).map(([key, other], index) => {

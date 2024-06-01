@@ -149,7 +149,7 @@ const ParentNotification = () => {
       count: tds ?? 0,
       color: "#51E8FD",
       url: tdsRoute,
-      url2: "/notification/income-tax/organisation-details",
+      url2: "/notification/income-tax-details",
       visible: true,
     },
   ];
