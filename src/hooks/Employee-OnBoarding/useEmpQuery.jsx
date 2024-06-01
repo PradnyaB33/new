@@ -6,9 +6,6 @@ import useAuthToken from "../Token/useAuth";
 const useEmpQuery = ({ organisationId }) => {
   const authToken = useAuthToken();
   const { employeeId } = useParams();
-  console.log("employeeId", employeeId);
-
-  console.log("ids", organisationId);
 
   const getEmployeeDataApi = async (api) => {
     try {
