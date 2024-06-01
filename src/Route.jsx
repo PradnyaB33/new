@@ -118,6 +118,7 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import EditEmployee from "./pages/Employee/EditEmployee";
 
 const App = () => {
   return (
@@ -433,6 +434,16 @@ const App = () => {
             >
               {/* <EmployeeAdd /> */}
               <EmployeeTest />
+            </RequireAuth>
+          }
+        />
+         <Route
+          path="/organisation/:organisationId/edit-employee/:employeeId"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <EditEmployee />
             </RequireAuth>
           }
         />

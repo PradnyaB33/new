@@ -129,7 +129,7 @@ const useSetupSideNav = (organisationId) => {
         location.pathname ===
         `/organisation/${organisationId}/setup/designation`,
       isVisible: user?.profile?.some((role) =>
-        ["Super-Admin", "HR"].includes(role)
+        ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(role)
       ),
     },
     {
@@ -151,7 +151,7 @@ const useSetupSideNav = (organisationId) => {
         location.pathname ===
         `/organisation/${organisationId}/setup/weekly-off`,
       isVisible: user?.profile?.some((role) =>
-        ["Super-Admin", "HR"].includes(role)
+        ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(role)
       ),
     },
     {
