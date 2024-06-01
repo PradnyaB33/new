@@ -14,18 +14,16 @@ import axios from "axios";
 
 const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
   const organisationId = useParams("");
-    const { employeeId } = useParams("");
-    const { cookies } = useContext(UseContext);
-    const authToken = cookies["aegis"];
+  const { employeeId } = useParams("");
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
   const { AdditionalListCall } = useEmpQuery(organisationId);
   const { addtionalFields, addtionalLoading } = AdditionalListCall();
-
-  const { setStep3Data, data, profile } = useEmployeeState();
-  console.log(`🚀 ~ file: Test3.jsx:18 ~ data:`, profile);
+  const { setStep3Data, data } = useEmployeeState();
 
   const EmployeeSchema = z.object({}).catchall(z.string().optional());
 
-  const { control, formState, handleSubmit , setValue } = useForm({
+  const { control, formState, handleSubmit, setValue } = useForm({
     defaultValues: {
       ...data,
     },
@@ -44,13 +42,12 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
             },
           }
         );
-  
+
         return response.data;
       }
     },
     {
       onSuccess: (data) => {
-        console.log(data);
         if (data && data.employee && data.employee.additionalInfo) {
           const { additionalInfo } = data.employee;
           Object.keys(additionalInfo).forEach((key) => {
@@ -60,7 +57,6 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
       },
     }
   );
-  
 
   console.log(isFetching);
 
