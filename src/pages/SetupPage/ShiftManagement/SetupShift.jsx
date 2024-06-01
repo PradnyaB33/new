@@ -83,6 +83,7 @@ const SetupShift = () => {
         message: "Extra Allowance must be a number",
       }),
   });
+  console.log("some code");
 
   const { control, formState, handleSubmit, setValue } = useForm({
     defaultValues: {
@@ -180,7 +181,7 @@ const SetupShift = () => {
             <div className="p-5">
               <form onSubmit={handleSubmit(onSubmit)} action="">
                 <div className="flex justify-between gap-4">
-                  <div className="w-full">
+                  <div className="w-full mb-8">
                     <AuthInputFiled
                       name="dualWorkflow"
                       icon={Business}
@@ -210,7 +211,7 @@ const SetupShift = () => {
                   </div>
                 </div>
                 {showAmountField && (
-                  <div className="flex flex-col gap-2 mt-4 w-[36vw]">
+                  <div className="flex flex-col gap-2 mt-4 w-[36vw] mb-4">
                     <Select
                       value={
                         shifts.find((shift) => shift.value === shiftId) || null

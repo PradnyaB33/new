@@ -1,5 +1,4 @@
 import axios from "axios";
-import moment from "moment";
 import { useContext } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
@@ -74,6 +73,64 @@ const useManageSubscriptionMutation = () => {
       },
     }
   );
+  const handleForm = async (data) => {
+    console.log(`🚀 ~ file: subscription-mutaiton.jsx:48 ~ data:`, data);
+    const result = await axios.post(
+      `${process.env.REACT_APP_API}/route/organization/organization-upgrade/${data?.organisationId}`,
+      data,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+    console.log(`🚀 ~ file: subscription-mutaiton.jsx:57 ~ result:`, result);
+    return result.data;
+  };
+  const { mutate } = useMutation({
+    mutationFn: handleForm,
+    onSuccess: async (data) => {
+      console.log(`🚀 ~ file: step-4.jsx:87 ~ data:`, data);
+      if (data?.paymentType === "Phone_Pay") {
+        window.location.href = data?.redirectUrl;
+      } else {
+        // throw new Error("Payment type not found");
+        const options = {
+          key: data?.key,
+          amount: data?.order?.amount,
+          currency: "INR",
+          name: "Upgrading Plan with AEGIS", //your business name
+          description: "Get Access to all premium keys",
+          image: data?.organization?.image,
+          order_id: data.order.id, //This
+          callback_url: data?.callbackURI,
+          prefill: {
+            name: `${decodedToken?.user?.first_name} ${decodedToken?.user?.last_name}`, //your customer's name
+            email: decodedToken?.user?.email,
+            contact: decodedToken?.user?.phone_number,
+          },
+          notes: {
+            address:
+              "C503, The Onyx-Kalate Business Park, near Euro School, Shankar Kalat Nagar, Wakad, Pune, Pimpri-Chinchwad, Maharashtra 411057",
+          },
+          theme: {
+            color: "#1976d2",
+          },
+        };
+        const razor = new window.Razorpay(options);
+        razor.open();
+      }
+    },
+    onError: async (data) => {
+      console.error(`🚀 ~ file: mini-form.jsx:48 ~ data:`, data);
+
+      handleAlert(
+        true,
+        "error",
+        data?.response?.data?.message ?? "Please fill all mandatory field"
+      );
+    },
+  });
 
   const updatePlanWithAxios = async (data) => {
     console.log(`🚀 ~ file: subscription-mutaiton.jsx ~ data:`, data);
@@ -228,119 +285,12 @@ const useManageSubscriptionMutation = () => {
     },
   });
 
-  const getPackagePerDayCost = (packageInfo, days) => {
-    switch (packageInfo) {
-      case "Basic Plan":
-        return 55 / days;
-      case "Intermediate Plan":
-        return 85 / days;
-      case "Enterprise Plan":
-        return 105 / days;
-      default:
-        return 0;
-    }
-  };
-
-  const handleUpgradeFunction = async ({ data, organisation }) => {
-    // console.log(
-    //   `🚀 ~ file: subscription-mutaiton.jsx:245 ~ { data, organisation }:`,
-    //   { data, organisation }
-    // );
-    let amount = 0;
-    if (
-      Number(data?.memberCount) !== Number(organisation?.memberCount) &&
-      data?.packageInfo?.value !== organisation?.packageInfo
-    ) {
-      console.log("Both are different");
-      amount = handleCountAndPackageFunction(data, organisation);
-    } else if (
-      Number(data?.memberCount) !== Number(organisation?.memberCount) &&
-      data?.packageInfo?.value === organisation?.packageInfo
-    ) {
-      console.log("Member count is different");
-
-      amount = handleMemberCountFunction(data, organisation);
-    } else if (
-      Number(data?.memberCount) === Number(organisation?.memberCount) &&
-      data?.packageInfo?.value !== organisation?.packageInfo
-    ) {
-      console.log("Package is different");
-      amount = handlePackageFunction(data, organisation);
-    }
-    return Math.round(Math.max(amount, 0));
-  };
-
-  const handleMemberCountFunction = (data, organisation) => {
-    // Multiply member Count * Days to expire * Per day cost
-    let oldPackage = organisation?.packageInfo;
-
-    let oldMemberCount = organisation?.memberCount;
-    let oldPaymentDate = moment(organisation?.subscriptionDetails?.paymentDate);
-    let newMemberCount = data?.memberCount;
-
-    let expirationDate = moment(
-      organisation?.subscriptionDetails?.expirationDate
-    );
-
-    let perDayCost = getPackagePerDayCost(
-      oldPackage,
-      expirationDate.diff(oldPaymentDate, "days")
-    );
-
-    let remainingDays = expirationDate.diff(moment(), "days");
-
-    let oldRemainingAmount = oldMemberCount * perDayCost * remainingDays;
-
-    let newRemainingAmount = newMemberCount * perDayCost * remainingDays;
-
-    let amount = newRemainingAmount - oldRemainingAmount;
-    return amount;
-  };
-
-  const handlePackageFunction = (data, organisation) => {
-    let oldPackage = organisation?.packageInfo;
-    let newPackage = data?.packageInfo?.value;
-    let totalDaysToExpire = moment(
-      organisation?.subscriptionDetails?.expirationDate
-    ).diff(moment(organisation?.subscriptionDetails?.paymentDate), "days");
-    let oldPerDayCost = getPackagePerDayCost(oldPackage, totalDaysToExpire);
-    let newPerDayCost = getPackagePerDayCost(newPackage, totalDaysToExpire);
-    let remainingDays = moment(
-      organisation?.subscriptionDetails?.expirationDate
-    ).diff(moment(), "days");
-    let oldRemainingAmount =
-      organisation?.memberCount * remainingDays * oldPerDayCost;
-    let newRemainingAmount =
-      organisation?.memberCount * remainingDays * newPerDayCost;
-    let amount = newRemainingAmount - oldRemainingAmount;
-    return amount;
-  };
-
-  const handleCountAndPackageFunction = (data, organisation) => {
-    let oldPackage = organisation?.packageInfo;
-
-    let oldMemberCount = organisation?.memberCount;
-    let newPackage = data?.packageInfo?.value;
-    let newMemberCount = data?.memberCount;
-    let totalDaysToExpire = moment(
-      organisation?.subscriptionDetails?.expirationDate
-    ).diff(moment(organisation?.subscriptionDetails?.paymentDate), "days");
-    let oldPerDayCost = getPackagePerDayCost(oldPackage, totalDaysToExpire);
-    let newPerDayCost = getPackagePerDayCost(newPackage, totalDaysToExpire);
-    let remainingDays = moment(
-      organisation?.subscriptionDetails?.expirationDate
-    ).diff(moment(), "days");
-    let oldRemainingAmount = oldMemberCount * remainingDays * oldPerDayCost;
-    let newRemainingAmount = newMemberCount * remainingDays * newPerDayCost;
-    let amount = newRemainingAmount - oldRemainingAmount;
-    return amount;
-  };
   return {
     updateMemberCount,
     updatePlan,
     createPrePaidPlan,
     verifyPromoCodeMutation,
-    handleUpgradeFunction,
+    mutate,
   };
 };
 

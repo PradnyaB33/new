@@ -7,6 +7,7 @@ import { useCallback } from "react"; // Import useCallback
 import { useLocation } from "react-router-dom";
 import useSubscriptionGet from "../../hooks/QueryHook/Subscription/hook";
 import useGetUser from "../../hooks/Token/useUser";
+import UserProfile from "../../hooks/UserData/useUser";
 import ChangeRole from "../InputFileds/ChangeRole";
 import ProfileIcon from "../profieicon/profileIcon";
 import NotificationIcon from "./components/NotificationIcon";
@@ -35,6 +36,8 @@ export default function SwipeableTemporaryDrawer() {
     setOrgId(orgId);
   };
 
+  const role = UserProfile().useGetCurrentRole();
+
   // Update organization ID when URL changes
   React.useEffect(() => {
     // const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
@@ -62,7 +65,9 @@ export default function SwipeableTemporaryDrawer() {
 
   const paths = ["/sign-in", "/organizationList"];
   const isLocation = React.useMemo(() => {
-    return paths.some((path) => location.pathname.includes(path));
+    return paths.some((path) => {
+      return location.pathname.includes(path) || location.pathname === "/";
+    });
     // eslint-disable-next-line
   }, [location.pathname]);
   console.log(`🚀 ~ isLocation:`, isLocation);
@@ -97,8 +102,19 @@ export default function SwipeableTemporaryDrawer() {
             </Typography>
           </Badge>
           <div className="flex gap-2 items-center">
+<<<<<<< HEAD
             {data?.organisation?.orgName && data?.organisation?.orgName}
             <NotificationIcon />
+=======
+            {/* <h1 className="py-[0.125em] px-2 rounded-sm  font-bold">
+              Organization one
+            </h1> */}
+
+            {data?.organisation?.orgName &&
+              !isLocation &&
+              data?.organisation?.orgName}
+            {role && role !== "Employee" && <NotificationIcon />}
+>>>>>>> 3e2dbc585ba460876c1568aabfc006f3a03c12dd
 
             <ProfileIcon />
           </div>

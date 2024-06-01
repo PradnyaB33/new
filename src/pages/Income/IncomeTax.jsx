@@ -73,7 +73,7 @@ const IncomeTax = () => {
 
             <article className="flex flex-wrap gap-4 items-center">
               <Link
-                to={"/income-tax/calculation"}
+                to={"/income-tax/organisation/calculation"}
                 className="hover:scale-[1.02] transition-all"
               >
                 <div className="flex-col w-[225px]  border-[.5px] border-gray-200 gap-3 flex items-center md:px-4 px-2 md:py-6 py-4 rounded-md shadow-sm">
@@ -85,7 +85,7 @@ const IncomeTax = () => {
               </Link>
 
               <Link
-                to={"/income-tax/declarations"}
+                to={"/income-tax/organisation/declarations"}
                 className="hover:scale-[1.02] transition-all"
               >
                 <div className="flex-col w-[225px]  border-[.5px] border-gray-200 gap-3 flex items-center md:px-4 px-2 md:py-6 py-4  rounded-sm shadow-sm">
@@ -107,8 +107,8 @@ const IncomeTax = () => {
               <Link
                 to={
                   role === "Accountant"
-                    ? `/notification/income-tax`
-                    : `/notification/income-tax-details`
+                    ? `/notification/income-tax/organisation`
+                    : `/notification/income-tax/organisation-details`
                 }
                 className="hover:scale-[1.02] transition-all"
               >

@@ -10,6 +10,7 @@ import useShiftNotification from "../../hooks/QueryHook/notification/shift-notif
 import useTDSNotificationHook from "../../hooks/QueryHook/notification/tds-notification/hook";
 import UserProfile from "../../hooks/UserData/useUser";
 import useLeaveNotification from "../SelfLeaveNotification/useLeaveNotification";
+import useAdvanceSalaryData from "../../hooks/QueryHook/notification/advance-salary-notification/useAdvanceSalary";
 import Card from "./components/card";
 
 const ParentNotification = () => {
@@ -27,17 +28,16 @@ const ParentNotification = () => {
   const { Form16Notification } = useForm16NotificationHook();
   const { getEmployeeRequestLoanApplication } = useLoanNotification();
   const { PayslipNotification } = usePayslipNotificationHook();
-  console.log("form16", Form16Notification);
+  const { getAdvanceSalaryData} = useAdvanceSalaryData();
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
-  console.log(`🚀 ~ role:`, role);
   const tdsRoute = useMemo(() => {
     if (
       role === "Accountant" ||
       role === "Super-Admin" ||
       role === "delegate Super-Admin"
     ) {
-      return "/notification/income-tax";
+      return "/notification/income-tax/organisation";
     }
     return "/";
   }, [role]);
@@ -45,7 +45,7 @@ const ParentNotification = () => {
     `🚀 ~ file: page.jsx:49 ~ data?.leaveRequests?.length:`,
     data?.leaveRequests?.length
   );
-
+ console.log(getAdvanceSalaryData);
   const dummyData = [
     {
       name: "Leave Notification",
@@ -96,38 +96,31 @@ const ParentNotification = () => {
       name: "Payslip Notification",
       count: PayslipNotification?.length ?? 0,
       color: "#51E8FD",
-      url: "/payslip-notification-to-emp",
+      url2: "/payslip-notification-to-emp",
     },
     {
       name: "Form 16 Notification",
       count: Form16Notification?.length ?? 0,
       color: "#FF7373",
-      url: "/form16-notification-to-emp",
+      url2: "/form16-notification-to-emp",
+    },
+    {
+      name: "Advance Salary Notification",
+      count: getAdvanceSalaryData?.length ?? 0,
+      color: "#FF7373",
+      url: "/advance-salary-notification",
+      url2: "/advance-salary-notification-to-emp",
     },
     {
       name: "TDS Notification",
       count: tds ?? 0,
       color: "#51E8FD",
       url: tdsRoute,
-      url2: "/notification/income-tax-details",
+      url2: "/notification/income-tax/organisation-details",
     },
   ];
 
-  // if (
-  //   role === "HR" ||
-  //   role === "Super-Admin" ||
-  //   role === "Delegate-Super-Admin"
-  // ) {
-  //   dummyData.push({
-  //     name: "Loan Notification",
-  //     count: getEmployeeRequestLoanApplication?.length ?? 0,
-  //     color: "#51E8FD",
-  //     url: "/loan-notification",
-  //   });
-  // }
-  // url: "/form16-notification-to-emp",
-  //   },
-  // ];
+  
 
   return (
     <div className="pt-5">
