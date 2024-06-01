@@ -118,6 +118,12 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import AdvanceSalary from "./pages/AdvanceSalary/AdvanceSalary";
+import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotification";
+import AdvanceSalaryApproval from "./pages/AdvanceSalaryNotification/AdvanceSalaryApproval";
+import AdvanceSalaryNotificationToEmp from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotificationToEmp";
+import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
+import EditEmployee from "./pages/Employee/EditEmployee";
 
 const App = () => {
   return (
@@ -433,6 +439,16 @@ const App = () => {
             >
               {/* <EmployeeAdd /> */}
               <EmployeeTest />
+            </RequireAuth>
+          }
+        />
+         <Route
+          path="/organisation/:organisationId/edit-employee/:employeeId"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <EditEmployee />
             </RequireAuth>
           }
         />
