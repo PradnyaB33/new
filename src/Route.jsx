@@ -118,6 +118,7 @@ import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/Advance
 import AdvanceSalaryApproval from "./pages/AdvanceSalaryNotification/AdvanceSalaryApproval";
 import AdvanceSalaryNotificationToEmp from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotificationToEmp";
 import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
+import EditEmployee from "./pages/Employee/EditEmployee";
 
 const App = () => {
   return (
@@ -427,6 +428,16 @@ const App = () => {
             >
               {/* <EmployeeAdd /> */}
               <EmployeeTest />
+            </RequireAuth>
+          }
+        />
+         <Route
+          path="/organisation/:organisationId/edit-employee/:employeeId"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <EditEmployee />
             </RequireAuth>
           }
         />
