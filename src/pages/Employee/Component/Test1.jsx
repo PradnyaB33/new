@@ -161,26 +161,53 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
       onSuccess: (data) => {
         console.log(data);
         if (data) {
-          setValue("first_name", data.employee.first_name);
-          setValue("last_name", data.employee.last_name);
+          setValue("first_name", data.employee.first_name || "");
+          setValue("last_name", data.employee.last_name || "");
           setValue(
             "date_of_birth",
-            new Date(data.employee.date_of_birth).toISOString().split('T')[0]
+            data.employee.date_of_birth
+              ? new Date(data.employee.date_of_birth)
+                  .toISOString()
+                  .split("T")[0]
+              : ""
           );
-          setValue("email", data.employee.email);
-          setValue("gender", data.employee.gender);
-          setValue("phone_number", data.employee.phone_number);
-          setValue("address", data.employee.address);
-          setValue("citizenship", data.employee.citizenship);
-          setValue("adhar_card_number", data.employee.adhar_card_number.toString());
-          setValue("pan_card_number", data.employee.pan_card_number);
-          setValue("bank_account_no", data.employee.bank_account_no.toString());
+          setValue("email", data.employee.email || "");
+          setValue("gender", data.employee.gender || "");
+          setValue("phone_number", data.employee.phone_number || "");
+          setValue("address", data.employee.address || "");
+          setValue("citizenship", data.employee.citizenship || "");
+
+          setValue(
+            "adhar_card_number",
+            data.employee.adhar_card_number !== null &&
+              data.employee.adhar_card_number !== undefined
+              ? data.employee.adhar_card_number.toString()
+              : ""
+          );
+
+          setValue(
+            "pan_card_number",
+            data.employee.pan_card_number !== null &&
+              data.employee.pan_card_number !== undefined
+              ? data.employee.pan_card_number
+              : ""
+          );
+
+          setValue(
+            "bank_account_no",
+            data.employee.bank_account_no !== null &&
+              data.employee.bank_account_no !== undefined
+              ? data.employee.bank_account_no.toString()
+              : ""
+          );
+
           setValue("uanNo", data.employee.uanNo || undefined);
           setValue("esicNo", data.employee.esicNo || undefined);
         }
       },
     }
   );
+
   console.log(isFetching);
 
   const { errors } = formState;

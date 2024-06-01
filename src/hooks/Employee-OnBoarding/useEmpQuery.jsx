@@ -1,9 +1,12 @@
 import axios from "axios";
 import { useQuery } from "react-query";
 import useAuthToken from "../Token/useAuth";
+import { useParams } from "react-router";
 
 const useEmpQuery = ({  organisationId }) => {
   const authToken = useAuthToken();
+  const {employeeId} = useParams();
+  console.log("employeeId",employeeId)
 
   console.log("ids" , organisationId);
 
@@ -37,7 +40,7 @@ const useEmpQuery = ({  organisationId }) => {
       queryKey: ["managersList"],
       queryFn: () =>
         getEmployeeDataApi(
-          `${process.env.REACT_APP_API}/route/employee/getAllManager/${organisationId}`,
+          `${process.env.REACT_APP_API}/route/employee/getAllManager/${organisationId}/${employeeId}`,
           {
             headers: {
               Authorization: authToken,
@@ -66,7 +69,7 @@ const useEmpQuery = ({  organisationId }) => {
       queryKey: ["empRoleList"],
       queryFn: () =>
         getEmployeeDataApi(
-          ` ${process.env.REACT_APP_API}/route/profile/role/${organisationId}`
+          ` ${process.env.REACT_APP_API}/route/profile/role/${organisationId}/${employeeId}`
         ),
     });
 

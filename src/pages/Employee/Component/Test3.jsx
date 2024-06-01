@@ -44,23 +44,23 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
             },
           }
         );
-
+  
         return response.data;
       }
     },
     {
       onSuccess: (data) => {
         console.log(data);
-        if (data) {
-            const { additionalInfo } = data.employee;
-            Object.keys(additionalInfo).forEach((key) => {
-              setValue(key, additionalInfo[key]);
-            });
-          }
+        if (data && data.employee && data.employee.additionalInfo) {
+          const { additionalInfo } = data.employee;
+          Object.keys(additionalInfo).forEach((key) => {
+            setValue(key, additionalInfo[key]);
+          });
         }
       },
-    
+    }
   );
+  
 
   console.log(isFetching);
 

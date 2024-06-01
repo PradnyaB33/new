@@ -149,6 +149,107 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     resolver: zodResolver(EmployeeSchema),
   });
 
+  // const { isFetching } = useQuery(
+  //   ["employeeId", employeeId],
+  //   async () => {
+  //     if (employeeId !== null && employeeId !== undefined) {
+  //       const response = await axios.get(
+  //         `${process.env.REACT_APP_API}/route/employee/get/profile/${employeeId}`,
+  //         {
+  //           headers: {
+  //             Authorization: authToken,
+  //           },
+  //         }
+  //       );
+
+  //       return response.data;
+  //     }
+  //   },
+  //   {
+  //     onSuccess: (data) => {
+  //       console.log(data);
+  //       if (data) {
+  //         setValue("empId", data.employee.empId || "");
+  //         setValue("companyemail", data.employee.companyemail || "");
+  //         setValue(
+  //           "joining_date",
+  //           new Date(data.employee.joining_date).toISOString().split("T")[0] || ""
+  //         );
+  //         const designation = data.employee?.designation?.find(
+  //           (item) => item.value === data.employee?.designation?.item?._id
+  //         );
+
+  //         if (designation) {
+  //           setValue("designation", {
+  //             label: designation.designationName,
+  //             value: designation._id,
+  //           });
+  //         }
+  //         const deptname = data.employee?.deptname?.find(
+  //           (item) => item.value === data.employee?.deptname?.item?._id
+  //         );
+  //         if (deptname) {
+  //           setValue("deptname", {
+  //             label: deptname.departmentName,
+  //             value: deptname._id,
+  //           });
+  //         }
+  //         const worklocation = data.employee?.worklocation?.find(
+  //           (item) => item.value === data.employee?.worklocation?.item?._id
+  //         );
+  //         if (worklocation) {
+  //           setValue("worklocation", {
+  //             label: worklocation.city,
+  //             value: worklocation._id,
+  //           });
+  //         }
+
+  //         const employmentType = data.employee?.employmentType;
+  //         if (employmentType) {
+  //           setValue("employmentType", {
+  //             label: employmentType.title,
+  //             value: employmentType._id,
+  //           });
+  //         }
+
+  //         const salaryTemplate = data.employee?.salarystructure;
+  //         console.log("salary template", salaryTemplate);
+  //         if (salaryTemplate) {
+  //           setValue("salarystructure", {
+  //             label: salaryTemplate.name,
+  //             value: salaryTemplate._id,
+  //           });
+  //         }
+
+  //         setValue("dept_cost_center_no", {
+  //           label: cosnotoptions.find(
+  //             (val) => val.value === data?.employee?.dept_cost_center_no
+  //           )?.label,
+  //           value: data.employee.dept_cost_center_no,
+  //         });
+  //         setValue("shift_allocation", {
+  //           label: Shiftoptions.find(
+  //             (val) => val.value === data.employee.shift_allocation
+  //           )?.label,
+  //           value: data.employee.shift_allocation,
+  //         });
+  //         setValue("mgrempid", {
+  //           label: Manageroptions.find(
+  //             (val) => val.value === data.employee.mgrempid
+  //           )?.label,
+  //           value: data.employee.mgrempid,
+  //         });
+  //         if (data.employee.profile && Array.isArray(data.employee.profile)) {
+  //           const selectedProfiles = data.employee.profile.map(role => (
+  //             RolesOptions.find(option => option.value === role) || { label: role, value: role }
+  //           ));
+  //           setValue("profile", selectedProfiles);
+  //         }
+          
+  //       }
+  //     },
+  //   }
+  // );
   const { isFetching } = useQuery(
     ["employeeId", employeeId],
     async () => {
@@ -161,7 +262,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             },
           }
         );
-
+  
         return response.data;
       }
     },
@@ -169,24 +270,25 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       onSuccess: (data) => {
         console.log(data);
         if (data) {
-          setValue("empId", data.employee.empId);
-          setValue("companyemail", data.employee.companyemail);
+          setValue("empId", data.employee.empId || "");
+          setValue("companyemail", data.employee.companyemail || "");
           setValue(
             "joining_date",
-            new Date(data.employee.joining_date).toISOString().split("T")[0]
+            new Date(data.employee.joining_date).toISOString().split("T")[0] || ""
           );
+          
           const designation = data.employee?.designation?.find(
-            (item) => item.value === data.employee?.designation?.item?._id
+            (item) => item?.value === data.employee?.designation?.item?._id || ""
           );
-
           if (designation) {
             setValue("designation", {
               label: designation.designationName,
               value: designation._id,
             });
           }
+          
           const deptname = data.employee?.deptname?.find(
-            (item) => item.value === data.employee?.deptname?.item?._id
+            (item) => item?.value === data.employee?.deptname?.item?._id
           );
           if (deptname) {
             setValue("deptname", {
@@ -194,8 +296,9 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
               value: deptname._id,
             });
           }
+          
           const worklocation = data.employee?.worklocation?.find(
-            (item) => item.value === data.employee?.worklocation?.item?._id
+            (item) => item?.value === data.employee?.worklocation?.item?._id
           );
           if (worklocation) {
             setValue("worklocation", {
@@ -203,7 +306,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
               value: worklocation._id,
             });
           }
-
+  
           const employmentType = data.employee?.employmentType;
           if (employmentType) {
             setValue("employmentType", {
@@ -211,7 +314,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
               value: employmentType._id,
             });
           }
-
+  
           const salaryTemplate = data.employee?.salarystructure;
           console.log("salary template", salaryTemplate);
           if (salaryTemplate) {
@@ -220,34 +323,39 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
               value: salaryTemplate._id,
             });
           }
-
+  
           setValue("dept_cost_center_no", {
-            label: cosnotoptions.find(
-              (val) => val.value === data?.employee?.dept_cost_center_no
-            )?.label,
-            value: data.employee.dept_cost_center_no,
+            label: (data.employee?.dept_cost_center_no && cosnotoptions.find(
+              (val) => val.value === data.employee?.dept_cost_center_no
+            ))?.label || "",
+            value: data.employee.dept_cost_center_no || "",
           });
+          
           setValue("shift_allocation", {
-            label: Shiftoptions.find(
+            label: (data.employee?.shift_allocation && Shiftoptions.find(
               (val) => val.value === data.employee.shift_allocation
-            )?.label,
-            value: data.employee.shift_allocation,
+            ))?.label || "",
+            value: data.employee.shift_allocation || "",
           });
+          
           setValue("mgrempid", {
-            label: Manageroptions.find(
+            label: (data.employee?.mgrempid && Manageroptions.find(
               (val) => val.value === data.employee.mgrempid
-            )?.label,
-            value: data.employee.mgrempid,
+            ))?.label || "",
+            value: data.employee.mgrempid._id || "",
           });
+  
           if (data.employee.profile && Array.isArray(data.employee.profile)) {
-            setValue("profile", data.employee.profile);
+            const selectedProfiles = data.employee.profile.map(role => (
+              RolesOptions.find(option => option.value === role) || { label: role, value: role }
+            ));
+            setValue("profile", selectedProfiles);
           }
-          console.log(data.employee.profile);
-          console.log(profile);
         }
       },
     }
   );
+  
   console.log(isFetching);
 
   const { errors } = formState;
