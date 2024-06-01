@@ -102,9 +102,6 @@ export default function SwipeableTemporaryDrawer() {
             </Typography>
           </Badge>
           <div className="flex gap-2 items-center">
-
-            {data?.organisation?.orgName && data?.organisation?.orgName}
-            <NotificationIcon />
             {/* <h1 className="py-[0.125em] px-2 rounded-sm  font-bold">
               Organization one
             </h1> */}
