@@ -1,12 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import NotesIcon from "@mui/icons-material/Notes";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useDepartmentState from "../../../hooks/DepartmentHook/useDepartmentState";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import NotesIcon from "@mui/icons-material/Notes";
-import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 const Step2 = ({ isLastStep, nextStep, prevStep }) => {
   const {
     dept_cost_center_name,
@@ -78,7 +78,7 @@ const Step2 = ({ isLastStep, nextStep, prevStep }) => {
             control={control}
             type="text"
             placeholder="Department ID"
-            label="Department ID"
+            label="Department ID *"
             errors={errors}
             error={errors.dept_id}
           />
@@ -88,7 +88,7 @@ const Step2 = ({ isLastStep, nextStep, prevStep }) => {
             control={control}
             type="text"
             placeholder="Department Cost Center Id"
-            label="Department Cost Center ID"
+            label="Department Cost Center ID *"
             errors={errors}
             error={errors.dept_cost_center_id}
           />
