@@ -18,6 +18,7 @@ import { Button, Menu, MenuItem, alpha, styled } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
 import DescriptionBox from "./descripton-box";
+import PaySubscription from "./package/pay-sub";
 import RenewPackage from "./package/renew";
 import UpgradePackage from "./package/upgrade";
 const StyledMenu = styled((props) => (
@@ -67,9 +68,33 @@ const StyledMenu = styled((props) => (
 const BillingCard = ({ doc }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const [confirmOpen1, setConfirmOpen1] = useState(false);
   const [confirmOpen2, setConfirmOpen2] = useState(false);
-  const [confirmOpen4, setConfirmOpen4] = useState(false);
+  const [confirmOpen3, setConfirmOpen3] = useState(false);
 
+  const checkHasOrgDisabled = () => {
+    // if organization subscriptionDetails.status is pending and the difference between the current date and the expiration date is greater than 0 then return true else return false
+    if (doc?.subscriptionDetails?.status === "Active") {
+      // check if expired by checking subscriptionDetails.expirationDate
+      if (
+        moment(doc?.subscriptionDetails?.expirationDate).diff(
+          moment(),
+          "days"
+        ) > 0
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    } else if (doc?.subscriptionDetails?.status === "Pending") {
+      if (moment(doc?.createdAt).add(7, "days").diff(moment(), "days") > 0) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return true;
+  };
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -111,7 +136,7 @@ const BillingCard = ({ doc }) => {
           >
             <MenuItem
               onClick={() => {
-                setConfirmOpen2(true);
+                setConfirmOpen1(true);
               }}
               disableRipple
             >
@@ -120,7 +145,7 @@ const BillingCard = ({ doc }) => {
             </MenuItem>
             <MenuItem
               onClick={() => {
-                setConfirmOpen4(true);
+                setConfirmOpen2(true);
                 handleClose();
               }}
               disableRipple
@@ -185,6 +210,11 @@ const BillingCard = ({ doc }) => {
             mainText={`${Math.round(doc?.remainingBalance)}`}
           />
         </div>
+        {!checkHasOrgDisabled() && (
+          <Button onClick={() => setConfirmOpen3(true)} variant="contained">
+            Pay
+          </Button>
+        )}
       </div>
       <div className=" col-span-1 flex justify-center items-center">
         {doc?.subscriptionDetails?.status === "Active" ? (
@@ -203,6 +233,15 @@ const BillingCard = ({ doc }) => {
       </div>
 
       <RenewPackage
+        open={confirmOpen1}
+        handleClose={() => {
+          setConfirmOpen1(false);
+          handleClose();
+        }}
+        organisation={doc}
+      />
+
+      <UpgradePackage
         open={confirmOpen2}
         handleClose={() => {
           setConfirmOpen2(false);
@@ -210,11 +249,10 @@ const BillingCard = ({ doc }) => {
         }}
         organisation={doc}
       />
-
-      <UpgradePackage
-        open={confirmOpen4}
+      <PaySubscription
+        open={confirmOpen3}
         handleClose={() => {
-          setConfirmOpen4(false);
+          setConfirmOpen3(false);
           handleClose();
         }}
         organisation={doc}

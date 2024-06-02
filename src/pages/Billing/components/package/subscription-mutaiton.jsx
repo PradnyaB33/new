@@ -123,6 +123,63 @@ const useManageSubscriptionMutation = () => {
       );
     },
   });
+  const payHandleForm = async (data) => {
+    const result = await axios.post(
+      `${process.env.REACT_APP_API}/route/organization/organization-pay/${data?.organisationId}`,
+      data,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+    console.log(`🚀 ~ file: subscription-mutaiton.jsx:57 ~ result:`, result);
+    return result.data;
+  };
+  const { mutate: payMutate } = useMutation({
+    mutationFn: payHandleForm,
+    onSuccess: async (data) => {
+      console.log(`🚀 ~ file: step-4.jsx:87 ~ data:`, data);
+      if (data?.paymentType === "Phone_Pay") {
+        window.location.href = data?.redirectUrl;
+      } else {
+        // throw new Error("Payment type not found");
+        const options = {
+          key: data?.key,
+          amount: data?.order?.amount,
+          currency: "INR",
+          name: "Upgrading Plan with AEGIS", //your business name
+          description: "Get Access to all premium keys",
+          image: data?.organization?.image,
+          order_id: data.order.id, //This
+          callback_url: data?.callbackURI,
+          prefill: {
+            name: `${decodedToken?.user?.first_name} ${decodedToken?.user?.last_name}`, //your customer's name
+            email: decodedToken?.user?.email,
+            contact: decodedToken?.user?.phone_number,
+          },
+          notes: {
+            address:
+              "C503, The Onyx-Kalate Business Park, near Euro School, Shankar Kalat Nagar, Wakad, Pune, Pimpri-Chinchwad, Maharashtra 411057",
+          },
+          theme: {
+            color: "#1976d2",
+          },
+        };
+        const razor = new window.Razorpay(options);
+        razor.open();
+      }
+    },
+    onError: async (data) => {
+      console.error(`🚀 ~ file: mini-form.jsx:48 ~ data:`, data);
+
+      handleAlert(
+        true,
+        "error",
+        data?.response?.data?.message ?? "Please fill all mandatory field"
+      );
+    },
+  });
 
   const verifyPromoCode = async ({ promoCode, setValue }) => {
     console.log(
@@ -162,6 +219,7 @@ const useManageSubscriptionMutation = () => {
     verifyPromoCodeMutation,
     mutate,
     renewMutate,
+    payMutate,
   };
 };
 
