@@ -9,7 +9,7 @@ import {
   Person,
   TodayOutlined,
 } from "@mui/icons-material";
-import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import { CircularProgress, FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
@@ -141,7 +141,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
     resolver: zodResolver(EmployeeSchema),
   });
 
-  const { isFetching } = useQuery(
+  const { isLoading } = useQuery(
     ["employeeId", employeeId],
     async () => {
       if (employeeId !== null && employeeId !== undefined) {
@@ -159,7 +159,6 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
     },
     {
       onSuccess: (data) => {
-        console.log(data);
         if (data) {
           setValue("first_name", data.employee.first_name || "");
           setValue("last_name", data.employee.last_name || "");
@@ -200,15 +199,15 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
               ? data.employee.bank_account_no.toString()
               : ""
           );
-
           setValue("uanNo", data.employee.uanNo || undefined);
-          setValue("esicNo", data.employee.esicNo || undefined);
+          setValue("uanNo", data.employee.uanNo || undefined);
+          setValue("pwd", data.employee.pwd || undefined);
         }
       },
     }
   );
 
-  console.log(isFetching);
+  
 
   const { errors } = formState;
   const onSubmit = async (data) => {
@@ -220,7 +219,9 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
   return (
     <div className="w-full mt-4">
       <h1 className="text-2xl mb-4 font-bold">Personal Details</h1>
-
+        {
+          isLoading ? <CircularProgress/> : <>
+       
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full flex  flex-1 space-y-2 flex-col"
@@ -439,6 +440,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           </button>
         </div>
       </form>
+      </>
+        }
     </div>
   );
 };

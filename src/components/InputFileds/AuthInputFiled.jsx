@@ -211,7 +211,7 @@ const AuthInputFiled = ({
                     readOnly && "bg-[ghostwhite]"
                   } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
                 >
-                  <Icon className="text-gray-700 text-sm" />
+                  <Icon className="text-gray-700 text-xs" />
                   <Select
                     aria-errormessage=""
                     placeholder={placeholder}
@@ -389,6 +389,82 @@ const AuthInputFiled = ({
       </>
     );
   }
+  if (type === "multiselect") {
+    return (
+      <>
+        <div className={`space-y-1 w-full  ${className}`}>
+          <label
+            htmlFor={name}
+            className={`${
+              error && "text-red-500"
+            } font-semibold text-gray-500 text-md`}
+          >
+            {label}
+          </label>
+          <Controller
+            control={control}
+            name={name}
+            id={name}
+            render={({ field }) => (
+              <>
+                <div
+                  className={`${
+                    readOnly && "bg-[ghostwhite]"
+                  } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+                >
+                  <Icon className="text-gray-700" />
+                  <Select
+                    aria-errormessage="error"
+                    placeholder={placeholder}
+                    isMulti
+                    styles={{
+                      control: (styles) => ({
+                        ...styles,
+                        borderWidth: "0px",
+                        boxShadow: "none",
+                      }),
+                    }}
+                    className={`${
+                      readOnly && "bg-[ghostwhite]"
+                    } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                    components={{
+                      IndicatorSeparator: () => null,
+                    }}
+                    options={options}
+                    // value={field.value}
+                    // onChange={(value) => {
+                    //   field.onChange(
+                    //     value.map((item) => {
+                    //       return {
+                    //         label: item.value,
+                    //         value: item.value
+                    //       }
+                    //     })
+                    //   );
+                    // }}
+                    value={field?.value}
+                    onChange={(value) => {
+                      field.onChange(value);
+                    }}
+                  />
+                </div>
+              </>
+            )}
+          />
+          <div className="h-4 !mb-1">
+            <ErrorMessage
+              errors={errors}
+              name={name}
+              render={({ message }) => (
+                <p className="text-sm text-red-500">{message}</p>
+              )}
+            />
+          </div>
+        </div>
+      </>
+    );
+  }
+
   if (type === "location-picker") {
     return (
       <PlaceAutoComplete

@@ -6,18 +6,13 @@ const useEmpOption = (organisationId) => {
     DesignationCall,
     SalaryTempCall,
     EmpTypesCall,
-    // InputFieldCall,
     ManagerListCall,
     ShiftCall,
     CostNumberCall,
     EmpRoleListCall,
-    // AdditionalListCall,
     LocationListCall,
     EmpCodeCall,
   } = useEmpQuery(organisationId);
-
-  console.log("id", organisationId);
-
   const DepartmentList = DepartmentListCall();
   const ManagerList = ManagerListCall();
   const empCode = EmpCodeCall();
@@ -37,14 +32,12 @@ const useEmpOption = (organisationId) => {
   });
 
   const Manageroptions = ManagerList?.manager?.map((item) => {
-    console.log("item", item);
     return {
       value: item?._id,
       label: `${item?.managerId?.first_name} ${item?.managerId?.last_name}`,
     };
   });
 
-  console.log(`🚀 ~ Manageroptions:`, Manageroptions);
   const EmpCodeoptions = empCode?.EmpCodeoptions?.map((item) => {
     return {
       value: item?._id,
@@ -58,31 +51,11 @@ const useEmpOption = (organisationId) => {
       .filter(([key, other], index) => other?.isActive)
       .map(([key, other], index) => {
         return {
-          value: key, // Extract the _id property from the role object
-          label: key, // Use the role name as the label
+          value: key,
+          label: key,
         };
       });
 
-  console.log(empRolesList?.roles);
-  // const RolesOptions =
-  //   empRolesList?.roles &&
-  //   Object.entries(empRolesList?.roles).map(([key, other], index) => {
-  //     console.log(`🚀 ~ file: useEmpOption.jsx:54 ~ other:`, other);
-  //     console.log(`🚀 ~ file: useEmpOption.jsx:54 ~ key:`, key);
-  //     console.log(
-  //       `🚀 ~ file: useEmpOption.jsx:57 ~ other?.isActive :`,
-  //       other?.isActive
-  //     );
-  //     if (other?.isActive === true) {
-  //       return {
-  //         value: key, // Extract the _id property from the role object
-  //         label: key, // Use the role name as the label
-  //       };
-  //     } else {
-  //       return null;
-  //     }
-  //   });
-  console.log(`🚀 ~ file: useEmpOption.jsx:52 ~ RolesOptions:`, RolesOptions);
   const Shiftoptions = shiftList?.shifts?.map((item) => {
     return {
       value: item?._id,

@@ -29,23 +29,6 @@ const OrgList = () => {
                 Select and Manage Your Organisation
               </p>
             </div>
-            {/* <div className="flex items-center gap-3">
-              <Avatar
-                className="!bg-blue-500 !h-[40px] md:h-[100] text-xl md:text-4xl p-1 shadow-sm"
-                variant="rounded"
-              >
-                <IoBusiness />
-              </Avatar>
-              <div>
-                <h1 className="md:text-2xl text-xl font-semibold">
-                  Organisations
-                </h1>
-                <p className="md:text-lg text-sm ">
-                  Select and Manage Your Organisation
-                </p>
-              </div>
-            </div> */}
-
             <div className="flex items-center gap-2 justify-end">
               <Link to={"/assingOrganizationToSelf"}>
                 <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">

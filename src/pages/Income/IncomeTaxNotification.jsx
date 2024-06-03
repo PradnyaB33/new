@@ -97,7 +97,7 @@ const IncomeTaxNotification = () => {
           </div>
         ) : (
           <>
-            {empTDSData?.map((ele, id) => (
+            {empTDSData?.data?.map((ele, id) => (
               <div
                 key={id}
                 className="bg-white py-4 px-8 rounded-md border space-y-2"
