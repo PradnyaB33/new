@@ -57,7 +57,7 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
         value: organisation?.packageInfo,
         label: organisation?.packageInfo,
       },
-      paymentType: "RazorPay",
+      paymentType: undefined,
       discount: 0,
       cycleCount: `${organisation?.cycleCount}`,
     },
@@ -148,6 +148,7 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
             label="Employee Count*"
             errors={errors}
             error={errors.memberCount}
+            descriptionText={" Employee count you want to add in your package"}
           />
           <AuthInputFiled
             name="packageInfo"
@@ -165,6 +166,7 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
                 label: "Basic Plan",
               },
             ]}
+            descriptionText={" Select the package you want to subscribe"}
           />
           <AuthInputFiled
             name="cycleCount"
@@ -192,7 +194,11 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
               { value: "Phone_Pay", label: "Phone_Pay" },
               { value: "RazorPay", label: "RazorPay" },
             ]}
-            descriptionText={"Additional 2% charges on razorpay transaction"}
+            descriptionText={
+              watch("paymentType") === "RazorPay"
+                ? "Additional 2% charges on razor-pay transaction"
+                : "No additional charges on phone-pay transaction"
+            }
           />
 
           <AuthInputFiled
