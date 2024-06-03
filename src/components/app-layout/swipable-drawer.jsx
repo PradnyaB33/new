@@ -70,7 +70,6 @@ export default function SwipeableTemporaryDrawer() {
     });
     // eslint-disable-next-line
   }, [location.pathname]);
-  console.log(`🚀 ~ isLocation:`, isLocation);
 
   return (
     <div

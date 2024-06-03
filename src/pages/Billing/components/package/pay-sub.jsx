@@ -92,13 +92,13 @@ const PaySubscription = ({ handleClose, open, organisation }) => {
     );
   }, [employeeToAdd, packageInfo, promoCode, paymentType, cycleCount]);
 
+  console.log("watch", watch("paymentType"));
+
   const { errors } = formState;
 
   async function onSubmit(data) {
     if (organisation?.upcomingPackageInfo?.packageName) {
-      // You already have a package waiting to be activated from January 06, 2024 to January 06, 2024. Please wait for it to happen.
-      // January 06
-      // moment(organisation?.upcomingPackageInfo?.endDate).format("")
+      // You already have a package waiting to be activated from January 06, 2024 to January 06,
       handleAlert(
         true,
         "warning",
@@ -145,8 +145,8 @@ const PaySubscription = ({ handleClose, open, organisation }) => {
             icon={Numbers}
             control={control}
             type="number"
-            placeholder="Employee To Add "
-            label="Employee To Add *"
+            placeholder="Employee to add "
+            label="Employee to add *"
             errors={errors}
             error={errors.memberCount}
           />
@@ -155,8 +155,8 @@ const PaySubscription = ({ handleClose, open, organisation }) => {
             icon={Numbers}
             control={control}
             type="select"
-            placeholder="Package Name "
-            label="Package Name *"
+            placeholder="Package name "
+            label="Package name *"
             errors={errors}
             error={errors.packageInfo}
             options={[
@@ -186,14 +186,18 @@ const PaySubscription = ({ handleClose, open, organisation }) => {
             control={control}
             type="naresh-select"
             placeholder="Select your Merchant"
-            label="Payment Gateway *"
+            label="Payment gateway *"
             errors={errors}
             error={errors.paymentType}
             options={[
               { value: "Phone_Pay", label: "Phone_Pay" },
               { value: "RazorPay", label: "RazorPay" },
             ]}
-            descriptionText={"Additional 2% charges on razorpay transaction"}
+            descriptionText={
+              watch("paymentType") === "RazorPay"
+                ? "Additional 2% charges on razor-pay transaction"
+                : "No additional charges on phone-pay transaction"
+            }
           />
 
           <AuthInputFiled
