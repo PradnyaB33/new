@@ -574,7 +574,8 @@ const TestNavItems = ({ toggleDrawer }) => {
             "Manager",
             "Super-Admin",
             "Delegate-Super-Admin",
-          ].includes(role) && emp?.packageInfo === "Intermediate Plan",
+          ].includes(role) &&
+          data?.organisation?.packageInfo === "Intermediate Plan",
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
@@ -610,6 +611,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
+
       Records: {
         open: false,
         isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
