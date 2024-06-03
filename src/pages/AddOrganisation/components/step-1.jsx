@@ -27,13 +27,22 @@ const organizationSchema = z.object({
   industry_type: z.enum(["Technology", "Finance", "Healthcare", "Education"]),
   email: z.string().email(),
   organization_linkedin_url: z.string(),
-  location: z.any({
-    address: z.string(),
-    position: z.object({
-      lat: z.number(),
-      lng: z.number(),
-    }),
-  }),
+  location: z
+    .any({
+      address: z.string(),
+      position: z.object({
+        lat: z.number(),
+        lng: z.number(),
+      }),
+    })
+    .refine(
+      (val) => {
+        return (
+          val.address !== "" && val.position.lat !== 0 && val.position.lng !== 0
+        );
+      },
+      { message: "Location is required" }
+    ),
   contact_number: z
     .string()
     .max(10, { message: "contact number must be 10 digits" })
