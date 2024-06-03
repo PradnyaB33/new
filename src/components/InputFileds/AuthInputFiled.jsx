@@ -211,7 +211,7 @@ const AuthInputFiled = ({
                     readOnly && "bg-[ghostwhite]"
                   } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
                 >
-                  <Icon className="text-gray-700 text-sm" />
+                  <Icon className="text-gray-700 text-xs" />
                   <Select
                     aria-errormessage=""
                     placeholder={placeholder}
@@ -464,7 +464,7 @@ const AuthInputFiled = ({
       </>
     );
   }
- 
+
   if (type === "location-picker") {
     return (
       <PlaceAutoComplete

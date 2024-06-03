@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   FactoryOutlined,
+  Inventory,
   Numbers,
   RecyclingRounded,
 } from "@mui/icons-material";
@@ -129,7 +130,7 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
 
   return (
     <ReusableModal
-      heading={"Renew or Pre-Pay Subscription"}
+      heading={"Renew Subscription"}
       open={open}
       onClose={handleClose}
     >
@@ -143,14 +144,14 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
             icon={Numbers}
             control={control}
             type="number"
-            placeholder="Employee To Add "
-            label="Employee To Add *"
+            placeholder="Employee Count"
+            label="Employee Count*"
             errors={errors}
             error={errors.memberCount}
           />
           <AuthInputFiled
             name="packageInfo"
-            icon={Numbers}
+            icon={Inventory}
             control={control}
             type="select"
             placeholder="Package Name "
@@ -175,7 +176,7 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
             errors={errors}
             error={errors.cycleCount}
             descriptionText={
-              "if you select 2 then you will be charged every 3 months subscription with 2 cycle it mean it will be 6 months subscription just amount will be charged one time."
+              "Selecting 2 means you'll be charged once for a 6-month subscription, covering two 3-month cycles."
             }
           />
           <AuthInputFiled
