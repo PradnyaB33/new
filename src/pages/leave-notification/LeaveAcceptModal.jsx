@@ -3,7 +3,7 @@ import { Avatar, CircularProgress } from "@mui/material";
 import axios from "axios";
 import React from "react";
 import { useQuery } from "react-query";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import LeaveRejectmodal from "../../components/Modal/LeaveModal/LeaveRejectmodal";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import useAuthToken from "../../hooks/Token/useAuth";
@@ -33,13 +33,14 @@ const LeaveAcceptModal = () => {
     enabled: employeeId !== undefined,
   });
 
+  const navigate = useNavigate();
   return (
     <div>
       <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
-        <Link to={"/income-tax"}>
+        <span className="cursor-pointer" onClick={() => navigate(-1)}>
           <West className="mx-4 !text-xl" />
-        </Link>
-        Employee Leave Request
+        </span>
+        Employee Attendance and Leave Request
       </header>
       <section className="min-h-[90vh] flex  ">
         <article className="md:w-[25%] w-[200px] overflow-auto max-h-[90vh] h-full bg-white  border-gray-200">
@@ -106,10 +107,12 @@ const LeaveAcceptModal = () => {
                     <RequestQuote />
                   </Avatar>
                   <div>
-                    <h1 className=" md:text-xl text-lg ">Leave Requests</h1>
+                    <h1 className=" md:text-xl text-lg ">
+                      Attendance & Leave Requests
+                    </h1>
                     <p className="text-sm">
-                      Here you will be able to approve or reject the leave
-                      notifications
+                      Here you will be able to approve or reject the attendance
+                      & leave notifications
                     </p>
                   </div>
                 </div>

@@ -143,13 +143,13 @@ const LeaveRequisition = () => {
               </>
             ) : (
               <>
-                <div className="w-full h-max grid justify-center relative gap-4 !mt-4 space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg">
+                <div className="w-full h-max grid justify-center relative gap-4 !mt-4 space-y-2 py-3 px-8">
                   <Button
                     disabled={isLoading}
                     onClick={() => setCalendarOpen(true)}
-                    variant="text"
+                    variant="contained"
                     size="large"
-                    className="text-center w-fit !m-auto !capitalize !underline "
+                    className="text-center w-fit !m-auto"
                   >
                     {" "}
                     {!isLoading ? "Apply" : "Wait Calendar is Loading"}

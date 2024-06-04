@@ -53,7 +53,7 @@ export default function PerformanceTab() {
   return (
     <>
       <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
-        <Link to={"/income-tax"}>
+        <Link to={-1}>
           <West className="mx-4 !text-xl" />
         </Link>
         Performance Management

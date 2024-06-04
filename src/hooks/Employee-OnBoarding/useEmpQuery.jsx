@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useQuery } from "react-query";
+import { useParams } from "react-router";
 import useAuthToken from "../Token/useAuth";
 
-const useEmpQuery = ({  organisationId }) => {
+const useEmpQuery = ({ organisationId }) => {
   const authToken = useAuthToken();
-
-  console.log("ids" , organisationId);
+  const { employeeId } = useParams();
 
   const getEmployeeDataApi = async (api) => {
     try {
@@ -37,7 +37,7 @@ const useEmpQuery = ({  organisationId }) => {
       queryKey: ["managersList"],
       queryFn: () =>
         getEmployeeDataApi(
-          `${process.env.REACT_APP_API}/route/employee/getAllManager/${organisationId}`,
+          `${process.env.REACT_APP_API}/route/employee/getAllManager/${organisationId}/${employeeId}`,
           {
             headers: {
               Authorization: authToken,

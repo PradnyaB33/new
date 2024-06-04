@@ -7,7 +7,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   IconButton,
   TextField,
@@ -577,12 +576,36 @@ const OrganizationLocations = () => {
               </Dialog>
               <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
                 <DialogTitle>Confirm Deletion</DialogTitle>
-                <DialogContent>
+                {/* <DialogContent>
                   <DialogContentText>
                     Are you sure you want to delete this location?
                   </DialogContentText>
+                </DialogContent> */}
+                <DialogContent>
+                  <p>
+                    Please confirm your decision to delete this location, as
+                    this action cannot be undone.
+                  </p>
                 </DialogContent>
                 <DialogActions>
+                  <Button
+                    onClick={() => setConfirmOpen(false)}
+                    variant="outlined"
+                    color="primary"
+                    size="small"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={() => handleDeleteLocation(deleteIndex)}
+                    color="error"
+                  >
+                    Delete
+                  </Button>
+                </DialogActions>
+                {/* <DialogActions>
                   <Button onClick={() => setConfirmOpen(false)} color="primary">
                     Cancel
                   </Button>
@@ -592,7 +615,7 @@ const OrganizationLocations = () => {
                   >
                     Delete
                   </Button>
-                </DialogActions>
+                </DialogActions> */}
               </Dialog>
             </form>
           </IntlProvider>

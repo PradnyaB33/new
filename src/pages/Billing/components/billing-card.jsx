@@ -1,9 +1,9 @@
 import {
   AttachMoney,
+  Autorenew,
   Circle,
   ControlPoint,
   Discount,
-  FilterNone,
   KeyboardArrowDown,
   KeyboardArrowUp,
   Loop,
@@ -12,14 +12,14 @@ import {
   Repeat,
   ShoppingBag,
   Subscriptions,
+  TrendingUp,
 } from "@mui/icons-material";
 import { Button, Menu, MenuItem, alpha, styled } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
 import DescriptionBox from "./descripton-box";
-import PackageForm from "./package/memberCount";
-import ManageSubscription from "./package/package";
-import PrepaidCard from "./package/prePay";
+import PaySubscription from "./package/pay-sub";
+import RenewPackage from "./package/renew";
 import UpgradePackage from "./package/upgrade";
 const StyledMenu = styled((props) => (
   <Menu
@@ -68,11 +68,39 @@ const StyledMenu = styled((props) => (
 const BillingCard = ({ doc }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmOpen1, setConfirmOpen1] = useState(false);
   const [confirmOpen2, setConfirmOpen2] = useState(false);
   const [confirmOpen3, setConfirmOpen3] = useState(false);
-  const [confirmOpen4, setConfirmOpen4] = useState(false);
 
+  const checkHasOrgDisabled = () => {
+    // if organization subscriptionDetails.status is pending and the difference between the current date and the expiration date is greater than 0 then return true else return false
+    if (doc?.subscriptionDetails?.status === "Active") {
+      // check if expired by checking subscriptionDetails.expirationDate
+      if (
+        moment(doc?.subscriptionDetails?.expirationDate).diff(
+          moment(),
+          "days"
+        ) > 0
+      ) {
+        return false;
+      } else {
+        console.log("i think i am expired");
+        console.log(`🚀 ~ file: billing-card.jsx:89 ~ doc:`, doc);
+        if (doc?.upcomingPackageInfo?.packageName) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    } else if (doc?.subscriptionDetails?.status === "Pending") {
+      if (moment(doc?.createdAt).add(7, "days").diff(moment(), "days") > 0) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return true;
+  };
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -114,48 +142,21 @@ const BillingCard = ({ doc }) => {
           >
             <MenuItem
               onClick={() => {
-                setConfirmOpen(true);
+                setConfirmOpen1(true);
               }}
               disableRipple
             >
-              <FilterNone />
-              Manage Member
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                setConfirmOpen2(true);
-              }}
-              disableRipple
-            >
-              <FilterNone />
-              Change Package
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                setConfirmOpen3(true);
-              }}
-              disableRipple
-            >
-              <FilterNone />
-              Prepay
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                setConfirmOpen3(true);
-              }}
-              disableRipple
-            >
-              <FilterNone />
+              <Autorenew />
               Renew
             </MenuItem>
             <MenuItem
               onClick={() => {
-                setConfirmOpen4(true);
+                setConfirmOpen2(true);
                 handleClose();
               }}
               disableRipple
             >
-              <FilterNone />
+              <TrendingUp />
               Upgrade
             </MenuItem>
           </StyledMenu>
@@ -197,21 +198,29 @@ const BillingCard = ({ doc }) => {
             descriptionText={"Subscription status"}
             mainText={doc?.subscriptionDetails?.status}
           />
-
-          <DescriptionBox
-            Icon={Loop}
-            descriptionText={"Your next renewal is after"}
-            mainText={`${moment(doc?.subscriptionDetails?.expirationDate).diff(
-              moment(new Date()),
-              "days"
-            )} days`}
-          />
+          {moment(doc?.subscriptionDetails?.expirationDate).diff(
+            moment(new Date()),
+            "days"
+          ) > 0 && (
+            <DescriptionBox
+              Icon={Loop}
+              descriptionText={"Your next renewal is after"}
+              mainText={`${moment(
+                doc?.subscriptionDetails?.expirationDate
+              ).diff(moment(new Date()), "days")} days`}
+            />
+          )}
           <DescriptionBox
             Icon={Discount}
             descriptionText={"Organisation discount for next subscription"}
             mainText={`${Math.round(doc?.remainingBalance)}`}
           />
         </div>
+        {checkHasOrgDisabled() && (
+          <Button onClick={() => setConfirmOpen3(true)} variant="contained">
+            Pay
+          </Button>
+        )}
       </div>
       <div className=" col-span-1 flex justify-center items-center">
         {doc?.subscriptionDetails?.status === "Active" ? (
@@ -229,15 +238,16 @@ const BillingCard = ({ doc }) => {
         ) : null}
       </div>
 
-      <PackageForm
-        open={confirmOpen}
+      <RenewPackage
+        open={confirmOpen1}
         handleClose={() => {
-          setConfirmOpen(false);
+          setConfirmOpen1(false);
           handleClose();
         }}
         organisation={doc}
       />
-      <ManageSubscription
+
+      <UpgradePackage
         open={confirmOpen2}
         handleClose={() => {
           setConfirmOpen2(false);
@@ -245,18 +255,10 @@ const BillingCard = ({ doc }) => {
         }}
         organisation={doc}
       />
-      <PrepaidCard
+      <PaySubscription
         open={confirmOpen3}
         handleClose={() => {
           setConfirmOpen3(false);
-          handleClose();
-        }}
-        organisation={doc}
-      />
-      <UpgradePackage
-        open={confirmOpen4}
-        handleClose={() => {
-          setConfirmOpen4(false);
           handleClose();
         }}
         organisation={doc}

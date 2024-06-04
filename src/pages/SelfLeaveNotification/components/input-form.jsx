@@ -25,10 +25,7 @@ const InputForm = () => {
   const { data: leaveMain2 } = useLeaveData();
   const { data: leaveMain } = useLeaveRequesationHook();
   const [month, setMonth] = useState(moment().format("MMMM"));
-  console.log(
-    `🚀 ~ file: input-form.jsx:126 ~ data?.leaveRequests?.length:`,
-    data?.leaveRequests?.length
-  );
+
   return (
     <>
       {" "}
@@ -36,7 +33,6 @@ const InputForm = () => {
         <div className="w-full py-4 flex flex-wrap gap-4 justify-between">
           <Select
             value={{ label: month, value: month }}
-            // inputValue={month}
             isClearable
             aria-errormessage=""
             placeholder={"Select Months"}
@@ -73,12 +69,7 @@ const InputForm = () => {
               components={{
                 IndicatorSeparator: () => null,
               }}
-              options={[
-                ...leaveMain2?.LeaveTypedEdited?.filter(
-                  (item) => item.count < 0
-                ),
-                ...leaveMain?.leaveTypes.filter((item) => item.count > 0),
-              ].map((month) => ({
+              options={[...leaveMain2?.LeaveTypedEdited].map((month) => ({
                 label: month?.leaveName,
                 value: month?._id,
               }))}
@@ -100,11 +91,9 @@ const InputForm = () => {
               IndicatorSeparator: () => null,
             }}
             options={[
-              { label: "Accepted", value: "Accepted" },
-              {
-                label: "Rejected",
-                value: "Rejected",
-              },
+              { label: "Approved", value: "Approved" },
+              { label: "Rejected", value: "Rejected" },
+              { label: "Pending", value: "Pending" },
             ].map((month) => ({
               label: month?.label,
               value: month?.value,

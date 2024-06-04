@@ -1,33 +1,34 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FactoryOutlined, Numbers } from "@mui/icons-material";
-import { Box, Button, Modal } from "@mui/material";
-import React from "react";
+import { Button } from "@mui/material";
+import moment from "moment";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
+import ReusableModal from "../../../../components/Modal/component";
 import useManageSubscriptionMutation from "./subscription-mutaiton";
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  bgcolor: "background.paper",
-  width: 400,
-  height: 500,
-  overflow: "hidden",
-};
+
 const UpgradePackage = ({ handleClose, open, organisation }) => {
   const [amount, setAmount] = React.useState(0);
-  const { verifyPromoCodeMutation, handleUpgradeFunction } =
-    useManageSubscriptionMutation();
+  const { verifyPromoCodeMutation, mutate } = useManageSubscriptionMutation();
 
   const packageSchema = z.object({
-    memberCount: z
+    employeeToAdd: z
       .string()
-      .refine((doc) => Number(doc) >= organisation?.memberCount, {
-        message:
-          "You can't decrease your member count while subscription is active but you can increase it.",
-      }),
+      .min(0)
+      .refine(
+        (value) => {
+          // spaces not aloud
+          value = value.replace(/\s/g, "");
+          // check if value is not empty
+          return (
+            value.length > 0 && !isNaN(Number(value)) && Number(value) >= 0
+          );
+        },
+        { message: "Employee to add should be a greater than 0" }
+      ),
+
     packageInfo: z.object({
       value: z.string(),
       label: z.string(),
@@ -38,192 +39,171 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
     discount: z.number().optional(),
   });
 
-  const { control, formState, handleSubmit, watch, setValue, getValues } =
-    useForm({
-      defaultValues: {
-        memberCount: `${organisation?.memberCount}` || "",
-        packageInfo: {
-          value: organisation?.packageInfo,
-          label: organisation?.packageInfo,
-          isDisabled: false,
-        },
-        paymentType: "RazorPay",
-        discount: 0,
+  const { control, formState, handleSubmit, watch, setValue } = useForm({
+    defaultValues: {
+      employeeToAdd: "0",
+      packageInfo: {
+        value: organisation?.packageInfo,
+        label: organisation?.packageInfo,
+        isDisabled: false,
       },
-      resolver: zodResolver(packageSchema),
-    });
-  console.log(getValues, setAmount);
-  const { errors, dirtyFields } = formState;
+      paymentType: undefined,
+      discount: 0,
+    },
+    resolver: zodResolver(packageSchema),
+  });
 
-  // const total = useMemo(async () => {
-  //   let tmAmount = await handleUpgradeFunction({
-  //     data: getValues(),
-  //     organisation,
-  //   });
-
-  //   tmAmount -= tmAmount * (watch("discount") / 100);
-  //   tmAmount = Math.round(tmAmount);
-  //   setAmount(() => tmAmount);
-  //   return tmAmount;
-  //   // eslint-disable-next-line
-  // }, [
-  //   watch("memberCount"),
-  //   watch("packageInfo.value"),
-  //   organisation,
-  //   getValues,
-  //   watch("discount"),
-  //   watch,
-  //   setAmount,
-  //   handleUpgradeFunction,
-  // ]);
+  const { errors } = formState;
 
   async function onSubmit(data) {
-    data.totalAmount = amount;
-    handleUpgradeFunction(data, organisation);
+    mutate({
+      count: data?.employeeToAdd,
+      packageName: data?.packageInfo?.value,
+      totalPrice: amount,
+      paymentType: data?.paymentType,
+      organisationId: organisation?._id,
+    });
   }
 
-  const checkDisability = () => {
-    if (Object.keys(dirtyFields).length <= 1) {
-      if (Object.keys(dirtyFields).includes("promoCode")) {
-        return true;
-      } else {
-        if (Object.keys(dirtyFields).length === 0) {
-          return true;
-        }
-        return false;
-      }
+  const packageInfo = watch("packageInfo").value;
+  const employeeToAdd = Number(watch("employeeToAdd"));
+  const expirationDate = organisation?.subscriptionDetails?.expirationDate;
+  const paymentType = watch("paymentType");
+
+  const promoCode = watch("discount");
+
+  useEffect(() => {
+    let perDayValue = 0;
+    let remainingDays = moment(expirationDate).diff(moment(), "days");
+    if (packageInfo === "Basic Plan") {
+      perDayValue = 0.611;
+    } else if (packageInfo === "Intermediate Plan") {
+      perDayValue = 0.944;
     } else {
-      return false;
+      perDayValue = 1.277;
     }
-  };
+    // apply discount if promo code is valid
+    let discountedToMinus =
+      perDayValue * employeeToAdd * remainingDays * (promoCode / 100);
+
+    let addedAmountIfRazorPay =
+      perDayValue *
+      employeeToAdd *
+      remainingDays *
+      (paymentType === "RazorPay" ? 0.02 : 0);
+    setAmount(
+      Math.round(
+        perDayValue * employeeToAdd * remainingDays -
+          discountedToMinus +
+          addedAmountIfRazorPay
+      )
+    );
+  }, [employeeToAdd, packageInfo, expirationDate, promoCode, paymentType]);
+
   return (
-    <Modal
-      keepMounted={false}
+    <ReusableModal
+      heading={"Upgrade Subscription"}
       open={open}
       onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
     >
-      <Box
-        sx={style}
-        className="border-none !z-10 shadow-md outline-none rounded-md flex flex-col relative"
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="overflow-auto h-full gap-4 flex-col flex"
       >
-        <h1 className="p-4 text-xl font-semibold font-sans sticky top-0 bg-white z-10 shadow-inner border-b">
-          Upgrade subscription
-        </h1>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="overflow-auto h-full"
-          noValidate
-        >
-          <div className="flex flex-col gap-4 p-4 ">
-            <AuthInputFiled
-              name="memberCount"
-              icon={Numbers}
-              control={control}
-              type="number"
-              placeholder="Member Count "
-              label="Member Count *"
-              errors={errors}
-              error={errors.memberCount}
-            />
-            <AuthInputFiled
-              name="packageInfo"
-              icon={Numbers}
-              control={control}
-              type="select"
-              placeholder="Package Name "
-              label="Package Name *"
-              errors={errors}
-              error={errors.packageInfo}
-              options={[
-                { value: "Intermediate Plan", label: "Intermediate Plan" },
-                {
-                  value: "Basic Plan",
-                  label: "Basic Plan",
-                  isDisabled:
-                    organisation?.packageInfo === "Intermediate Plan"
-                      ? true
-                      : false,
-                },
-              ]}
-            />
+        <div className="flex flex-col">
+          <AuthInputFiled
+            name="employeeToAdd"
+            icon={Numbers}
+            control={control}
+            type="number"
+            placeholder="Employee To Add "
+            label="Employee To Add *"
+            errors={errors}
+            error={errors.employeeToAdd}
+            descriptionText={"Here u can add number of employee to add"}
+          />
+          <AuthInputFiled
+            name="packageInfo"
+            icon={Numbers}
+            control={control}
+            type="select"
+            placeholder="Package Name "
+            label="Package Name *"
+            errors={errors}
+            error={errors.packageInfo}
+            options={[
+              { value: "Intermediate Plan", label: "Intermediate Plan" },
+              {
+                value: "Basic Plan",
+                label: "Basic Plan",
+                isDisabled:
+                  organisation?.packageInfo === "Intermediate Plan"
+                    ? true
+                    : false,
+              },
+            ]}
+            descriptionText={"Select your package to upgrade"}
+          />
 
-            <AuthInputFiled
-              name="paymentType"
-              icon={FactoryOutlined}
-              control={control}
-              type="naresh-select"
-              placeholder="Select your Merchant"
-              label="Payment Gateway *"
-              errors={errors}
-              error={errors.paymentType}
-              options={[
-                { value: "Phone_Pay", label: "Phone_Pay" },
-                { value: "RazorPay", label: "RazorPay" },
-              ]}
-              descriptionText={"Additional 2% charges on razorpay transaction"}
-            />
-            <AuthInputFiled
-              name="promoCode"
-              icon={Numbers}
-              control={control}
-              type="input-action"
-              placeholder="#summer2021"
-              label="Promo Code"
-              errors={errors}
-              readOnly={watch("discount") > 0}
-              error={errors.promoCode}
-              descriptionText={
-                watch("discount")
-                  ? `You will get ${watch(
-                      "discount"
-                    )}% discount on your total amount.`
-                  : ""
-              }
-              onInputActionClick={(value) => {
-                verifyPromoCodeMutation({ promoCode: value, setValue });
-              }}
-              onInputActionClear={() => {
-                setValue("discount", 0);
-                setValue("promoCode", "");
-              }}
-            />
-          </div>
-          <div className="p-4 text-xl font-semibold font-sans sticky bottom-[-2px] bg-white z-10 shadow-inner border-b flex justify-between">
-            <Button variant="outlined" type="button" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              disabled={checkDisability()}
-              type="submit"
-            >
-              Pay {amount} Rs
-            </Button>
-          </div>
-        </form>
-      </Box>
-    </Modal>
+          <AuthInputFiled
+            name="paymentType"
+            icon={FactoryOutlined}
+            className={"mb-4"}
+            control={control}
+            type="naresh-select"
+            placeholder="Select your Merchant"
+            label="Payment Gateway *"
+            errors={errors}
+            error={errors.paymentType}
+            options={[
+              { value: "Phone_Pay", label: "Phone_Pay" },
+              { value: "RazorPay", label: "RazorPay" },
+            ]}
+            descriptionText={
+              watch("paymentType") === "RazorPay"
+                ? "Additional 2% charges on razor-pay transaction"
+                : "No additional charges on phone-pay transaction"
+            }
+          />
+          <AuthInputFiled
+            name="promoCode"
+            icon={Numbers}
+            control={control}
+            type="input-action"
+            placeholder="#summer2021"
+            label="Promo Code"
+            errors={errors}
+            readOnly={watch("discount") > 0}
+            error={errors.promoCode}
+            descriptionText={
+              watch("discount")
+                ? `You will get ${watch(
+                    "discount"
+                  )}% discount on your total amount.`
+                : ""
+            }
+            onInputActionClick={(value) => {
+              verifyPromoCodeMutation({ promoCode: value, setValue });
+            }}
+            onInputActionClear={() => {
+              setValue("discount", 0);
+              setValue("promoCode", "");
+            }}
+          />
+        </div>
+        <div className="gap-4 flex w-full">
+          <Button
+            variant="contained"
+            disabled={amount === 0}
+            type="submit"
+            className="!w-full"
+          >
+            Pay {amount} Rs
+          </Button>
+        </div>
+      </form>
+    </ReusableModal>
   );
 };
 
 export default UpgradePackage;
-// const getPrice = (plan, daysToEnd = 90) => {
-//   if (plan === "Basic Plan") {
-//     return Math.round(0.611 * daysToEnd);
-//   } else if (plan === "Intermediate Plan") {
-//     return Math.round(0.944 * daysToEnd);
-//   } else {
-//     return 115;
-//   }
-// };
-// const getPlanPrice = (plan) => {
-//   if (plan === "Basic Plan") {
-//     return Math.round(0.611 * 90);
-//   } else if (plan === "Intermediate Plan") {
-//     return Math.round(0.944 * 90);
-//   } else {
-//     return Math.round(115 * 90);
-//   }
-// };

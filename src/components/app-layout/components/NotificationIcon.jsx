@@ -1,23 +1,18 @@
-import { Download, Notifications } from "@mui/icons-material";
+import { Notifications } from "@mui/icons-material";
 import { Badge } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
-import useLeaveNotificationHook from "../../../hooks/QueryHook/notification/leave-notification/hook";
+import useNotificationCount from "../notification-zustand";
 
 const NotificationIcon = () => {
-  const { data, isFetching } = useLeaveNotificationHook();
+  const { notificationCount } = useNotificationCount();
+
   return (
     <Link to={"/notification"}>
       <Badge
         variant={"standard"}
-        color={isFetching ? "secondary" : "error"}
-        badgeContent={
-          isFetching ? (
-            <Download className="!text-[10px] text-white" />
-          ) : (
-            data?.leaveRequests?.length
-          )
-        }
+        color={"error"}
+        badgeContent={notificationCount}
       >
         <Notifications className="text-white" />
       </Badge>

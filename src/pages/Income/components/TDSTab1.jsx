@@ -5,7 +5,7 @@ import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Tab0 from "./Tab0";
 import Tab1 from "./Tab1";
 import Tab2 from "./Tab2";
@@ -48,6 +48,8 @@ function a11yProps(index) {
 export default function TDSTab1() {
   const [value, setValue] = React.useState(0);
 
+  const { organisationId } = useParams();
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -55,7 +57,7 @@ export default function TDSTab1() {
   return (
     <>
       <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
-        <Link to={"/income-tax"}>
+        <Link to={`/organisation/${organisationId}/income-tax`}>
           <West className="mx-4 !text-xl" />
         </Link>
         TDS Declarations

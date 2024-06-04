@@ -13,6 +13,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import axios from "axios";
+import moment from "moment";
 import randomColor from "randomcolor";
 import React, { useContext, useState } from "react";
 import { FaArrowCircleRight } from "react-icons/fa";
@@ -78,6 +79,29 @@ const Organisation = ({ item }) => {
     return randomColor();
   };
 
+  const checkHasOrgDisabled = () => {
+    // if organization subscriptionDetails.status is pending and the difference between the current date and the expiration date is greater than 0 then return true else return false
+    if (item?.subscriptionDetails?.status === "Active") {
+      // check if expired by checking subscriptionDetails.expirationDate
+      if (
+        moment(item?.subscriptionDetails?.expirationDate).diff(
+          moment(),
+          "days"
+        ) > 0
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    } else if (item?.subscriptionDetails?.status === "Pending") {
+      if (moment(item?.createdAt).add(7, "days").diff(moment(), "days") > 0) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return true;
+  };
   return (
     <>
       <div
@@ -131,10 +155,7 @@ const Organisation = ({ item }) => {
         </div>
         <div className="p-6 py-4  flex gap-4">
           <button
-            disabled={
-              item?.subscriptionDetails?.status !== "Active" ||
-              item?.subscriptionDetails?.expirationDate < new Date()
-            }
+            disabled={checkHasOrgDisabled()}
             onClick={() => {
               let link;
               if (window.innerWidth <= 768) {
@@ -149,8 +170,7 @@ const Organisation = ({ item }) => {
             Setup
           </button>
 
-          {item?.subscriptionDetails?.status === "Active" ||
-          item?.subscriptionDetails?.expirationDate < new Date() ? (
+          {!checkHasOrgDisabled() ? (
             // Display "Go to Dashboard" button if the status is "active"
             <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
               <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">

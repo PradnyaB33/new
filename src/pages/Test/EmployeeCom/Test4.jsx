@@ -41,6 +41,9 @@ const Test4 = ({ prevStep }) => {
     data,
     profile,
     emptyState,
+    pwd,
+    uanNo,
+    esicNo,
   } = useEmpState();
 
   const navigate = useNavigate("");
@@ -75,6 +78,9 @@ const Test4 = ({ prevStep }) => {
         empId,
         companyemail,
         joining_date,
+        pwd,
+        uanNo,
+        esicNo,
         //TODO This is additonal field data
         ...filteredData,
         designation: designation.value,

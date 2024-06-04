@@ -57,8 +57,10 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     interestPerMonths,
   } = useCalculation();
 
-  const { getEmployeeLoanType, getTotalSalaryEmployee } =
+  const { getEmployeeLoanType, getTotalSalaryEmployee  , getDeductionOfLoanData } =
     useLoanQuery(organisationId);
+    console.log("getDeductionOfLoanData" , getDeductionOfLoanData);
+    
 
   useEffect(() => {
     if (loanType) {
@@ -116,7 +118,6 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
       setErrorMessage("");
     }
   };
-  console.log(file);
 
   const queryClient = useQueryClient();
   const AddLoanData = useMutation(
@@ -140,7 +141,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
           "Your loan application has been submitted successfully. It is now awaiting approval from HR"
         );
         handleClose();
-        window.location.reload();
+        // window.location.reload();
       },
       onError: () => {
         setErrors("An Error occurred while creating a loan data.");
@@ -148,20 +149,54 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     }
   );
 
+  // const createLoanData = async (loanData) => {
+  //   const totalSalary = getTotalSalaryEmployee;
+  //   const fiftyPercentOfSalary = totalSalary * 0.5;
+  //   console.log("fiftyPercentOfSalary", fiftyPercentOfSalary);
+
+  //   if (loanData?.totalDeduction > fiftyPercentOfSalary) {
+  //     handleAlert(
+  //       true,
+  //       "error",
+  //       "Total deduction amount should be 50% of your total monthly salary"
+  //     );
+  //     return;
+  //   }
+
+  //   try {
+  //     await AddLoanData.mutateAsync(loanData);
+  //   } catch (error) {
+  //     console.error("An error occurred while creating a loan data", error);
+  //     setErrors("An Error occurred while creating a loan data.");
+  //   }
+  // };
   const createLoanData = async (loanData) => {
     const totalSalary = getTotalSalaryEmployee;
     const fiftyPercentOfSalary = totalSalary * 0.5;
+    
+    console.log("totalSalary", totalSalary);
     console.log("fiftyPercentOfSalary", fiftyPercentOfSalary);
-
-    if (loanData?.totalDeduction > fiftyPercentOfSalary) {
+    
+    const totalExistingDeductions = getDeductionOfLoanData?.reduce((acc, loans) => acc + loans.totalDeduction, 0) || 0;
+    console.log("totalExistingDeductions", totalExistingDeductions);
+    
+    const newLoanDeduction = totalDeductionPerMonth || 0;
+    console.log("newLoanDeduction", newLoanDeduction);
+    
+    const totalDeduction = parseInt(totalExistingDeductions) + parseInt(newLoanDeduction);
+    console.log("totalDeduction", totalDeduction);
+    
+    console.log("Comparison:", totalDeduction, ">", fiftyPercentOfSalary);
+    
+    if (totalDeduction > fiftyPercentOfSalary) {
       handleAlert(
         true,
         "error",
-        "Total deduction amount should be 50% of your total monthly salary"
+        "Total deduction amount should not exceed 50% of your total monthly salary"
       );
       return;
     }
-
+    
     try {
       await AddLoanData.mutateAsync(loanData);
     } catch (error) {
@@ -169,47 +204,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
       setErrors("An Error occurred while creating a loan data.");
     }
   };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const data = {
-  //       loanType: loanType,
-  //       rateOfIntereset: rateOfIntereset,
-  //       loanAmount: loanAmount,
-  //       loanDisbursementDate: loanDisbursementDate,
-  //       loanCompletedDate: loanCompletedDate,
-  //       noOfEmi: noOfEmi,
-  //       loanPrincipalAmount: principalPerMonth,
-  //       loanInteresetAmount: interestPerMonths,
-  //       totalDeduction: totalDeductionPerMonth,
-  //       totalDeductionWithSi: totalAmountWithSimpleInterest,
-  //       totalSalary: getTotalSalaryEmployee,
-  //       file : file
-  //     };
-
-  //     const requiredFields = [
-  //       "loanType",
-  //       "loanAmount",
-  //       "loanDisbursementDate",
-  //       "noOfEmi",
-  //     ];
-  //     const missingFields = requiredFields.filter((field) => !data[field]);
-
-  //     if (missingFields.length > 0) {
-  //       const errors = {};
-  //       missingFields.forEach((field) => {
-  //         errors[field] = "All fields are required";
-  //       });
-  //       setFormErrors(errors);
-  //       return;
-  //     }
-  //     await createLoanData(data);
-  //   } catch (error) {
-  //     console.error(error);
-  //     setErrors("An error occurred while creating a loan data");
-  //   }
-  // };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -267,7 +262,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
 
   console.log(errors);
   console.log(loanValue);
-  console.log("total salary ", getTotalSalaryEmployee);
+
 
   return (
     <Dialog
@@ -401,12 +396,12 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
               </FormControl>
               {noofemiError && <p className="text-red-500">*{noofemiError}</p>}
             </div>
-
             <div className="space-y-2">
               <FormControl>
                 <FormLabel htmlFor="file-upload" className="text-md mb-2">
                   Upload Document
                 </FormLabel>
+                <div style={{ display: "flex", alignItems: "center" }}>
                 <label htmlFor="file-upload">
                   <input
                     style={{ display: "none" }}
@@ -417,14 +412,17 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   />
 
                   <Button variant="contained" component="span">
-                    Upload File
+                    Upload Document
                   </Button>
                 </label>
+                {file && <p className="text-green-500 ml-2 mt-2">{file.name}</p>}
+                </div>
                 {errorMessage && (
                   <p className="text-red-500 mt-2">{errorMessage}</p>
                 )}
               </FormControl>
             </div>
+
             <div>Rate of Interest : {rateOfIntereset || ""}</div>
             <div>Min loan value : {loanValue ?? "0"}</div>
             <div>Max loan value : {maxLoanValue ?? "0"}</div>

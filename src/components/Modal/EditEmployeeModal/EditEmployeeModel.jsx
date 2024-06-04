@@ -7,12 +7,12 @@ import {
   DialogContent,
   Divider,
   FormControl,
+  FormControlLabel,
   IconButton,
   InputLabel,
   OutlinedInput,
   Radio,
   RadioGroup,
-  FormControlLabel,
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -227,6 +227,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
     fetchManagerData();
     // eslint-disable-next-line
   }, []);
+  console.log("manager data ", managerData);
 
   // pull the profile
   const [availableProfiles, setAvailableProfiles] = useState([]);
@@ -476,7 +477,6 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
         queryClient.invalidateQueries({ queryKey: ["employeeId"] });
         handleClose();
         handleAlert(true, "success", "Employee updated successfully");
-        window.location.reload();
       },
       onError: () => {
         handleAlert("Failed to update employee. Please try again.");

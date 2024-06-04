@@ -10,13 +10,15 @@ import {
   SupervisorAccount,
 } from "@mui/icons-material";
 import { IconButton, Popover } from "@mui/material";
+import axios from "axios";
 import { default as React, useEffect } from "react";
-import { useQueryClient } from "react-query";
-import { useLocation } from "react-router-dom/dist";
+import { useQuery, useQueryClient } from "react-query";
+import { useLocation, useParams } from "react-router-dom/dist";
 import Select from "react-select";
 import useDashGlobal from "../../hooks/Dashboard/useDashGlobal";
 import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
 import useEmployee from "../../hooks/Dashboard/useEmployee";
+import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
 import LineGraph from "./Components/Bar/LineGraph";
 import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
@@ -29,6 +31,8 @@ const DashBoardHR = () => {
   const { employee, employeeLoading } = useEmployee(user.organizationId);
   const { setSelectedSalaryYear, selectedSalaryYear } = useDashGlobal();
   const location = useLocation("");
+  const authToken = useAuthToken();
+  const { organisationId } = useParams();
 
   const queryClient = useQueryClient();
 
@@ -69,6 +73,27 @@ const DashBoardHR = () => {
     getAttendenceData,
   } = useDashboardFilter(user.organizationId);
 
+  const getRemoteEmployeeCount = async () => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/route/punch/getTodayRemoteEmp/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return data;
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  const { data: remoteEmployeeCount } = useQuery({
+    queryKey: ["remoteEmployee"],
+    queryFn: getRemoteEmployeeCount,
+  });
+
   useEffect(() => {
     if (location.pathname?.includes("/DH-dashboard")) {
       getAttendenceData();
@@ -76,6 +101,7 @@ const DashBoardHR = () => {
     // eslint-disable-next-line
   }, []);
 
+  console.log(`🚀 ~ remoteEmployeeCount:`, remoteEmployeeCount);
   return (
     <section className=" bg-gray-50  min-h-screen w-full ">
       <header className="text-xl font-bold w-full px-8 pt-6 bg-white !text-[#67748E] shadow-md  p-4">
@@ -131,7 +157,7 @@ const DashBoardHR = () => {
             color={"!bg-indigo-500"}
             isLoading={false}
             icon={NearMe}
-            data={loc?.locationCount}
+            data={remoteEmployeeCount}
             title={"Remote Employees"}
           />
         </div>
