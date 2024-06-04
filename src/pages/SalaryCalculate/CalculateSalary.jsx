@@ -22,7 +22,7 @@ function CalculateSalary() {
   const [paidLeaveDays, setPaidLeaveDays] = useState(0);
   const [unPaidLeaveDays, setUnPaidLeaveDays] = useState(0);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
-  console.log(isSubmitDisabled);
+  console.log(setIsSubmitDisabled);
 
   // get the alreday salary data created
   const [salaryInfo, setSalaryInfo] = useState([]);
@@ -46,7 +46,7 @@ function CalculateSalary() {
     fetchEmployeeData();
     // eslint-disable-next-line
   }, []);
-  
+
   // for date change function
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -57,8 +57,8 @@ function CalculateSalary() {
         String(salary.month) === monthFromSelectedDate &&
         String(salary.year) === yearFromSelectedDate
     );
-    setIsSubmitDisabled(salaryExists);
 
+    console.log(salaryExists);
     const daysInMonth = date.daysInMonth();
     setNumDaysInMonth(daysInMonth);
     setPaidLeaveDays(0);
@@ -83,12 +83,10 @@ function CalculateSalary() {
       handleAlert(true, "error", "Failed to fetch User Profile Data");
     }
   };
-
   useEffect(() => {
     fetchAvailableEmployee();
     // eslint-disable-next-line
   }, []);
-  console.log(availableEmployee);
 
   //  to get holiday
   const fetchHoliday = async () => {
@@ -107,7 +105,6 @@ function CalculateSalary() {
       handleAlert(true, "error", "Failed to fetch Holiday");
     }
   };
-
   useEffect(() => {
     fetchHoliday();
     // eslint-disable-next-line
@@ -150,9 +147,9 @@ function CalculateSalary() {
     fetchDataAndFilter();
     // eslint-disable-next-line
   }, []);
+
   const selectedMonth = selectedDate.format("M");
   const selectedYear = selectedDate.format("YYYY");
-
   const filterDataByMonthYear = (data, selectedMonth, selectedYear) => {
     const numericMonth = parseInt(selectedMonth, 10);
     const numericYear = parseInt(selectedYear, 10);
@@ -163,7 +160,6 @@ function CalculateSalary() {
       );
     });
   };
-
   useEffect(() => {
     const filteredData = filterDataByMonthYear(
       employeeSummary,
@@ -192,12 +188,15 @@ function CalculateSalary() {
       return response.data.data;
     }
   );
+
   // calculate the no fo days employee present
   const calculateDaysEmployeePresent = () => {
     const daysPresent = numDaysInMonth - unPaidLeaveDays;
     return daysPresent;
   };
   let noOfDaysEmployeePresent = calculateDaysEmployeePresent();
+  
+
 
   // calculate the salary component
   const calculateSalaryComponent = (componentValue) => {
@@ -235,7 +234,24 @@ function CalculateSalary() {
   );
   let variableAllowance = calculateSalaryComponent(
     availableEmployee?.salaryComponent?.["Variable allowance"] || ""
+  ); 
+
+  // get the shift allowance data
+   const { data: getShiftAllowance } = useQuery(
+    ["shiftAllowance", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/shiftApply/postallowance/${organisationId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return response;
+    }
   );
+  console.log("getShiftAllowance" , getShiftAllowance);
 
   // calculate the total gross salary
   let totalSalary =
@@ -270,7 +286,6 @@ function CalculateSalary() {
       return total + parseFloat(application.totalDeduction || 0);
     }, 0);
   }
-
   deduction = isNaN(deduction) ? 0 : deduction.toFixed(2);
   employee_pf = isNaN(employee_pf) ? 0 : employee_pf.toFixed(2);
   esic = isNaN(esic) ? 0 : esic.toFixed(2);
@@ -281,8 +296,10 @@ function CalculateSalary() {
     parseFloat(esic) +
     parseFloat(loanDeduction);
   let totalDeduction = totalDeductions.toFixed(2);
+
   // calculate Total Net Salary
   let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
+
   // submit the data
   const saveSalaryDetail = async () => {
     try {
@@ -298,7 +315,7 @@ function CalculateSalary() {
       ).format("MM");
       const nextMonth =
         parseInt(currentMonth) === 12 ? 1 : parseInt(currentMonth) + 1;
-     
+
       if (
         parseInt(selectedYear) > parseInt(currentYear) ||
         (parseInt(selectedYear) === parseInt(currentYear) &&
@@ -571,6 +588,18 @@ function CalculateSalary() {
             <tr>
               <td class="px-4 py-2 border">Variable Pay Allowance:</td>
               <td class="px-4 py-2 border">{variableAllowance}</td>
+              <td class="px-4 py-2 border"></td>
+              <td class="px-4 py-2 border"></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 border">Shift Allowance:</td>
+              <td class="px-4 py-2 border"></td>
+              <td class="px-4 py-2 border"></td>
+              <td class="px-4 py-2 border"></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 border">Remote Punching Allowance:</td>
+              <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>
             </tr>
