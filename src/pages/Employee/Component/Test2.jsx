@@ -255,9 +255,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             value: data.employee.shift_allocation || "",
           });
 
-          let managerOption;
           if (data.employee.mgrempid) {
-            managerOption = Manageroptions.find(
+            Manageroptions.find(
               (option) => option.value === data.employee.mgrempid
             );
           }
