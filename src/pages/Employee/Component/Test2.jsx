@@ -12,16 +12,16 @@ import {
   TodayOutlined,
   Work,
 } from "@mui/icons-material";
+import axios from "axios";
 import moment from "moment";
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { z } from "zod";
-import useEmpOption from "../../../hooks/Employee-OnBoarding/useEmpOption";
-import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import { useQuery } from "react-query";
-import axios from "axios";
 import { UseContext } from "../../../State/UseState/UseContext";
+import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
+import useEmpOption from "../../../hooks/Employee-OnBoarding/useEmpOption";
 import useEmployeeState from "../../../hooks/Employee-OnBoarding/useEmployeeState";
 
 const Test2 = ({ isLastStep, nextStep, prevStep }) => {
@@ -91,8 +91,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         .max(25, { message: "Employee code is not greater than 25 character" }),
       mgrempid: z
         .object({
-          label: z.string(),
-          value: z.string(),
+          label: z.string().optional(),
+          value: z.string().optional(),
         })
         .optional(),
       joining_date: z
@@ -254,16 +254,20 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             value: data.employee.shift_allocation || "",
           });
 
-          let managerOption = null;
+          let managerOption;
           if (data.employee.mgrempid) {
             managerOption = Manageroptions.find(
-              (option) => option.value === data.employee.mgrempid._id
+              (option) => option.value === data.employee.mgrempid
             );
           }
 
+          const checkManager = Manageroptions.find(
+            (opt) => opt.value === data.employee.mgrempid
+          );
+
           setValue("mgrempid", {
-            label: managerOption ? managerOption.label : "",
-            value: data.employee.mgrempid ? data.employee.mgrempid._id : "",
+            label: checkManager?.label,
+            value: data.employee.mgrempid ? data.employee.mgrempid : "",
           });
 
           console.log("Rolesoption", RolesOptions);
@@ -346,7 +350,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             errors={errors}
             error={errors.profile}
             options={RolesOptions}
-
           />
         </div>
 
