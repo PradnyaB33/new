@@ -51,11 +51,10 @@ const useEmpOption = (organisationId) => {
       .filter(([key, other], index) => other?.isActive)
       .map(([key, other], index) => {
         return {
-          value: key, 
-          label: key, 
+          value: key,
+          label: key,
         };
       });
-  
 
   const Shiftoptions = shiftList?.shifts?.map((item) => {
     return {

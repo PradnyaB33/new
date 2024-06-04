@@ -40,7 +40,7 @@ const LeaveAcceptModal = () => {
         <span className="cursor-pointer" onClick={() => navigate(-1)}>
           <West className="mx-4 !text-xl" />
         </span>
-        Employee Leave Request
+        Employee Attendance and Leave Request
       </header>
       <section className="min-h-[90vh] flex  ">
         <article className="md:w-[25%] w-[200px] overflow-auto max-h-[90vh] h-full bg-white  border-gray-200">
@@ -107,10 +107,12 @@ const LeaveAcceptModal = () => {
                     <RequestQuote />
                   </Avatar>
                   <div>
-                    <h1 className=" md:text-xl text-lg ">Leave Requests</h1>
+                    <h1 className=" md:text-xl text-lg ">
+                      Attendance & Leave Requests
+                    </h1>
                     <p className="text-sm">
-                      Here you will be able to approve or reject the leave
-                      notifications
+                      Here you will be able to approve or reject the attendance
+                      & leave notifications
                     </p>
                   </div>
                 </div>

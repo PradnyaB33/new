@@ -14,9 +14,9 @@ import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
 import ReusableModal from "../../../../components/Modal/component";
 import useManageSubscriptionMutation from "./subscription-mutaiton";
 
-const RenewPackage = ({ handleClose, open, organisation }) => {
+const PaySubscription = ({ handleClose, open, organisation }) => {
   const [amount, setAmount] = React.useState(0);
-  const { verifyPromoCodeMutation, renewMutate } =
+  const { verifyPromoCodeMutation, payMutate } =
     useManageSubscriptionMutation();
   const { handleAlert } = useContext(TestContext);
 
@@ -92,13 +92,13 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
     );
   }, [employeeToAdd, packageInfo, promoCode, paymentType, cycleCount]);
 
+  console.log("watch", watch("paymentType"));
+
   const { errors } = formState;
 
   async function onSubmit(data) {
     if (organisation?.upcomingPackageInfo?.packageName) {
-      // You already have a package waiting to be activated from January 06, 2024 to January 06, 2024. Please wait for it to happen.
-      // January 06
-      // moment(organisation?.upcomingPackageInfo?.endDate).format("")
+      // You already have a package waiting to be activated from January 06, 2024 to January 06,
       handleAlert(
         true,
         "warning",
@@ -109,13 +109,19 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
         ).format("MMMM DD, YYYY")} please wait for it to be activated.`
       );
     } else {
-      let packageStartDate = moment(
-        organisation?.subscriptionDetails?.expirationDate
-      );
+      let packageStartDate = moment();
 
       let packageEndDate = packageStartDate.clone().add(3, "months");
+      console.log(
+        `🚀 ~ file: pay-sub.jsx:119 ~ packageStartDate:`,
+        packageStartDate
+      );
+      console.log(
+        `🚀 ~ file: pay-sub.jsx:117 ~ packageEndDate:`,
+        packageEndDate
+      );
 
-      renewMutate({
+      payMutate({
         memberCount: data?.memberCount,
         packageName: data?.packageInfo?.value,
         totalPrice: amount,
@@ -128,11 +134,7 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
   }
 
   return (
-    <ReusableModal
-      heading={"Renew or Pre-Pay Subscription"}
-      open={open}
-      onClose={handleClose}
-    >
+    <ReusableModal heading={"Payment Page"} open={open} onClose={handleClose}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="overflow-auto h-full gap-4 flex-col flex"
@@ -143,8 +145,8 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
             icon={Numbers}
             control={control}
             type="number"
-            placeholder="Employee To Add "
-            label="Employee To Add *"
+            placeholder="Employee to add "
+            label="Employee to add *"
             errors={errors}
             error={errors.memberCount}
           />
@@ -153,8 +155,8 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
             icon={Numbers}
             control={control}
             type="select"
-            placeholder="Package Name "
-            label="Package Name *"
+            placeholder="Package name "
+            label="Package name *"
             errors={errors}
             error={errors.packageInfo}
             options={[
@@ -184,14 +186,18 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
             control={control}
             type="naresh-select"
             placeholder="Select your Merchant"
-            label="Payment Gateway *"
+            label="Payment gateway *"
             errors={errors}
             error={errors.paymentType}
             options={[
               { value: "Phone_Pay", label: "Phone_Pay" },
               { value: "RazorPay", label: "RazorPay" },
             ]}
-            descriptionText={"Additional 2% charges on razorpay transaction"}
+            descriptionText={
+              watch("paymentType") === "RazorPay"
+                ? "Additional 2% charges on razor-pay transaction"
+                : "No additional charges on phone-pay transaction"
+            }
           />
 
           <AuthInputFiled
@@ -235,4 +241,4 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
   );
 };
 
-export default RenewPackage;
+export default PaySubscription;

@@ -57,8 +57,10 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     interestPerMonths,
   } = useCalculation();
 
-  const { getEmployeeLoanType, getTotalSalaryEmployee } =
+  const { getEmployeeLoanType, getTotalSalaryEmployee  , getDeductionOfLoanData } =
     useLoanQuery(organisationId);
+    console.log("getDeductionOfLoanData" , getDeductionOfLoanData);
+    
 
   useEffect(() => {
     if (loanType) {
@@ -139,7 +141,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
           "Your loan application has been submitted successfully. It is now awaiting approval from HR"
         );
         handleClose();
-        window.location.reload();
+        // window.location.reload();
       },
       onError: () => {
         setErrors("An Error occurred while creating a loan data.");
@@ -147,20 +149,54 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     }
   );
 
+  // const createLoanData = async (loanData) => {
+  //   const totalSalary = getTotalSalaryEmployee;
+  //   const fiftyPercentOfSalary = totalSalary * 0.5;
+  //   console.log("fiftyPercentOfSalary", fiftyPercentOfSalary);
+
+  //   if (loanData?.totalDeduction > fiftyPercentOfSalary) {
+  //     handleAlert(
+  //       true,
+  //       "error",
+  //       "Total deduction amount should be 50% of your total monthly salary"
+  //     );
+  //     return;
+  //   }
+
+  //   try {
+  //     await AddLoanData.mutateAsync(loanData);
+  //   } catch (error) {
+  //     console.error("An error occurred while creating a loan data", error);
+  //     setErrors("An Error occurred while creating a loan data.");
+  //   }
+  // };
   const createLoanData = async (loanData) => {
     const totalSalary = getTotalSalaryEmployee;
     const fiftyPercentOfSalary = totalSalary * 0.5;
+    
+    console.log("totalSalary", totalSalary);
     console.log("fiftyPercentOfSalary", fiftyPercentOfSalary);
-
-    if (loanData?.totalDeduction > fiftyPercentOfSalary) {
+    
+    const totalExistingDeductions = getDeductionOfLoanData?.reduce((acc, loans) => acc + loans.totalDeduction, 0) || 0;
+    console.log("totalExistingDeductions", totalExistingDeductions);
+    
+    const newLoanDeduction = totalDeductionPerMonth || 0;
+    console.log("newLoanDeduction", newLoanDeduction);
+    
+    const totalDeduction = parseInt(totalExistingDeductions) + parseInt(newLoanDeduction);
+    console.log("totalDeduction", totalDeduction);
+    
+    console.log("Comparison:", totalDeduction, ">", fiftyPercentOfSalary);
+    
+    if (totalDeduction > fiftyPercentOfSalary) {
       handleAlert(
         true,
         "error",
-        "Total deduction amount should be 50% of your total monthly salary"
+        "Total deduction amount should not exceed 50% of your total monthly salary"
       );
       return;
     }
-
+    
     try {
       await AddLoanData.mutateAsync(loanData);
     } catch (error) {
@@ -168,7 +204,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
       setErrors("An Error occurred while creating a loan data.");
     }
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -226,7 +262,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
 
   console.log(errors);
   console.log(loanValue);
-  console.log("total salary ", getTotalSalaryEmployee);
+
 
   return (
     <Dialog

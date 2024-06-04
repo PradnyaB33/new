@@ -12,6 +12,7 @@ import {
   TodayOutlined,
   Work,
 } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
 import React, { useContext } from "react";
@@ -149,7 +150,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     resolver: zodResolver(EmployeeSchema),
   });
 
-  const { isFetching } = useQuery(
+  const { isLoading } = useQuery(
     ["employeeId", employeeId],
     async () => {
       if (employeeId !== null && employeeId !== undefined) {
@@ -269,22 +270,20 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             label: checkManager?.label,
             value: data.employee.mgrempid ? data.employee.mgrempid : "",
           });
-
-          console.log("Rolesoption", RolesOptions);
-          const profileLabel = data?.employee?.profile?.map((ev) => ({
-            label: ev,
-            value: ev,
-          }));
-          setValue("profile", profileLabel);
-          console.log("profile lable", profileLabel);
-          console.log(data.employee.profile);
-          console.log(profile, " profile");
+          if (data.employee.profile) {
+            const profileLabel = data.employee.profile
+              .filter((role) => role !== "Employee")
+              .map((ev) => ({
+                label: ev,
+                value: ev,
+              }));
+            setValue("profile", profileLabel);
+          }
         }
       },
     }
   );
-
-  console.log(isFetching);
+  console.log("employee", employeeId);
 
   const { errors } = formState;
   console.log(`🚀 ~ errors:`, errors);
@@ -297,209 +296,189 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   return (
     <div className="w-full mt-4">
       <h1 className="text-2xl mb-4 font-bold">Company Info</h1>
-
-      <form
-        onSubmit={handleSubmit(onsubmit)}
-        className="w-full flex space-y-2  flex-1 flex-col"
-      >
-        <div className="md:flex block w-full ">
-          <AuthInputFiled
-            name="empId"
-            icon={Work}
-            control={control}
-            type="text"
-            placeholder="Employee Code"
-            label="Employee Code *"
-            errors={errors}
-            error={errors.empId}
-          />
-        </div>
-        <div className="grid grid-cols-1  md:grid-cols-3 w-full gap-3">
-          <AuthInputFiled
-            name="deptname"
-            value={deptname}
-            icon={AddBusiness}
-            control={control}
-            type="select"
-            placeholder="Department"
-            label="Select Department  *"
-            errors={errors}
-            error={errors.deptname}
-            options={Departmentoptions}
-          />
-          <AuthInputFiled
-            name="mgrempid"
-            value={mgrempid}
-            icon={PersonAddAlt}
-            control={control}
-            type="select"
-            placeholder="Manager"
-            label="Select Manager *"
-            errors={errors}
-            error={errors.mgrempid}
-            options={Manageroptions}
-          />
-          <AuthInputFiled
-            name="profile"
-            icon={PersonPin}
-            control={control}
-            type="multiselect"
-            value={profile}
-            placeholder="Role"
-            label="Select Role "
-            errors={errors}
-            error={errors.profile}
-            options={RolesOptions}
-          />
-        </div>
-
-        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
-          <AuthInputFiled
-            name="companyemail"
-            icon={ContactMail}
-            control={control}
-            type="text"
-            placeholder="Email"
-            label="Company Email *"
-            errors={errors}
-            error={errors.companyemail}
-            wrapperMessage={"Note this email is used for login credentails"}
-          />
-          <AuthInputFiled
-            name="joining_date"
-            icon={TodayOutlined}
-            control={control}
-            type="date"
-            placeholder="dd-mm-yyyy"
-            label="Date of Joining *"
-            errors={errors}
-            error={errors.joining_date}
-          />
-        </div>
-        {/* <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
-          <AuthInputFiled
-            name="password"
-            visible={visiblePassword}
-            setVisible={setVisiblePassword}
-            icon={Key}
-            control={control}
-            type="password"
-            placeholder=""
-            label="Password *"
-            errors={errors}
-            error={errors.password}
-          />
-          <AuthInputFiled
-            name="confirmPassword"
-            visible={visibleCPassword}
-            setVisible={setVisibleCPassword}
-            icon={KeyOff}
-            control={control}
-            type="password"
-            placeholder=""
-            label="Confirm Password *"
-            errors={errors}
-            error={errors.confirmPassword}
-          />
-        </div> */}
-        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
-          <AuthInputFiled
-            name="designation"
-            icon={Work}
-            control={control}
-            value={designation}
-            placeholder="Designation"
-            label="Select Designation *"
-            type="select"
-            options={Designationoption}
-            errors={errors}
-            error={errors.designation}
-          />
-          <AuthInputFiled
-            name="shift_allocation"
-            value={shift_allocation}
-            icon={Today}
-            control={control}
-            type="select"
-            options={Shiftoptions}
-            placeholder="Shift"
-            label="Select Shift *"
-            errors={errors}
-            error={errors.shift_allocation}
-          />
-        </div>
-        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
-          <AuthInputFiled
-            name="dept_cost_center_no"
-            value={dept_cost_center_no}
-            icon={ClosedCaption}
-            control={control}
-            options={cosnotoptions}
-            type="select"
-            placeholder="Department Cost No"
-            label="Select Department Cost No*"
-            errors={errors}
-            error={errors.dept_cost_center_no}
-          />
-          <AuthInputFiled
-            name="worklocation"
-            value={worklocation}
-            icon={LocationCity}
-            control={control}
-            type="select"
-            placeholder="Location"
-            label="Select Location *"
-            options={locationoption}
-            errors={errors}
-            error={errors.worklocation}
-          />
-        </div>
-        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
-          <AuthInputFiled
-            value={employmentType}
-            name="employmentType"
-            icon={Badge}
-            control={control}
-            type="select"
-            placeholder="Employment Type "
-            label="Select Employment Type *"
-            options={empTypesoption}
-            errors={errors}
-            error={errors.employmentType}
-          />
-          <AuthInputFiled
-            name="salarystructure"
-            value={salarystructure}
-            icon={MonetizationOn}
-            control={control}
-            type="select"
-            placeholder="Salary Temp"
-            label="Select Salary Template *"
-            options={salaryTemplateoption}
-            errors={errors}
-            error={errors.salarystructure}
-          />
-        </div>
-
-        <div className="flex items-end w-full justify-between">
-          <button
-            type="button"
-            onClick={() => {
-              prevStep();
-            }}
-            className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <form
+            onSubmit={handleSubmit(onsubmit)}
+            className="w-full flex space-y-2  flex-1 flex-col"
           >
-            Prev
-          </button>
-          <button
-            type="submit"
-            disabled={isLastStep}
-            className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-          >
-            Next
-          </button>
-        </div>
-      </form>
+            <div className="md:flex block w-full ">
+              <AuthInputFiled
+                name="empId"
+                icon={Work}
+                control={control}
+                type="text"
+                placeholder="Employee Code"
+                label="Employee Code *"
+                errors={errors}
+                error={errors.empId}
+              />
+            </div>
+            <div className="grid grid-cols-1  md:grid-cols-3 w-full gap-3">
+              <AuthInputFiled
+                name="deptname"
+                value={deptname}
+                icon={AddBusiness}
+                control={control}
+                type="select"
+                placeholder="Department"
+                label="Select Department  *"
+                errors={errors}
+                error={errors.deptname}
+                options={Departmentoptions}
+              />
+              <AuthInputFiled
+                name="mgrempid"
+                value={mgrempid}
+                icon={PersonAddAlt}
+                control={control}
+                type="select"
+                placeholder="Manager"
+                label="Select Manager"
+                errors={errors}
+                error={errors.mgrempid}
+                options={Manageroptions}
+              />
+              <AuthInputFiled
+                name="profile"
+                icon={PersonPin}
+                control={control}
+                type="multiselect"
+                value={profile}
+                placeholder="Role"
+                label="Select Role "
+                errors={errors}
+                error={errors.profile}
+                options={RolesOptions}
+              />
+            </div>
+
+            <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
+              <AuthInputFiled
+                name="companyemail"
+                icon={ContactMail}
+                control={control}
+                type="text"
+                placeholder="Email"
+                label="Company Email *"
+                errors={errors}
+                error={errors.companyemail}
+                wrapperMessage={"Note this email is used for login credentails"}
+              />
+              <AuthInputFiled
+                name="joining_date"
+                icon={TodayOutlined}
+                control={control}
+                type="date"
+                placeholder="dd-mm-yyyy"
+                label="Date of Joining *"
+                errors={errors}
+                error={errors.joining_date}
+              />
+            </div>
+
+            <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
+              <AuthInputFiled
+                name="designation"
+                icon={Work}
+                control={control}
+                value={designation}
+                placeholder="Designation"
+                label="Select Designation *"
+                type="select"
+                options={Designationoption}
+                errors={errors}
+                error={errors.designation}
+              />
+              <AuthInputFiled
+                name="shift_allocation"
+                value={shift_allocation}
+                icon={Today}
+                control={control}
+                type="select"
+                options={Shiftoptions}
+                placeholder="Shift"
+                label="Select Shift *"
+                errors={errors}
+                error={errors.shift_allocation}
+              />
+            </div>
+            <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
+              <AuthInputFiled
+                name="dept_cost_center_no"
+                value={dept_cost_center_no}
+                icon={ClosedCaption}
+                control={control}
+                options={cosnotoptions}
+                type="select"
+                placeholder="Department Cost No"
+                label="Select Department Cost No*"
+                errors={errors}
+                error={errors.dept_cost_center_no}
+              />
+              <AuthInputFiled
+                name="worklocation"
+                value={worklocation}
+                icon={LocationCity}
+                control={control}
+                type="select"
+                placeholder="Location"
+                label="Select Location *"
+                options={locationoption}
+                errors={errors}
+                error={errors.worklocation}
+              />
+            </div>
+            <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-3">
+              <AuthInputFiled
+                value={employmentType}
+                name="employmentType"
+                icon={Badge}
+                control={control}
+                type="select"
+                placeholder="Employment Type "
+                label="Select Employment Type *"
+                options={empTypesoption}
+                errors={errors}
+                error={errors.employmentType}
+              />
+              <AuthInputFiled
+                name="salarystructure"
+                value={salarystructure}
+                icon={MonetizationOn}
+                control={control}
+                type="select"
+                placeholder="Salary Temp"
+                label="Select Salary Template *"
+                options={salaryTemplateoption}
+                errors={errors}
+                error={errors.salarystructure}
+              />
+            </div>
+
+            <div className="flex items-end w-full justify-between">
+              <button
+                type="button"
+                onClick={() => {
+                  prevStep();
+                }}
+                className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+              >
+                Prev
+              </button>
+              <button
+                type="submit"
+                disabled={isLastStep}
+                className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+              >
+                Next
+              </button>
+            </div>
+          </form>
+        </>
+      )}
     </div>
   );
 };

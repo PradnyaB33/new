@@ -3,10 +3,13 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
 import useLaonState from "./useLaonState";
+import UserProfile from "../UserData/useUser";
 const useLoanQuery = (organisationId) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
+  const userId = user._id;
   const { loanType, setRateOfInterest } = useLaonState(); 
 
   const getEmployeeLoanapi = async (api) => {
@@ -94,8 +97,24 @@ const useLoanQuery = (organisationId) => {
     }
   );
 
+   //for get loan data
+   const { data: getDeductionOfLoanData } = useQuery(
+    ["loaninfo", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/${userId}/get-ongoing-loan-data`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
   return {
     getEmployeeLoanType,
+    getDeductionOfLoanData ,
     getTotalSalaryEmployee,
     getEmployeeRequestLoanApltn,
     LoanTypeListCall

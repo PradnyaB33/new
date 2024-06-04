@@ -21,7 +21,6 @@ import Loader from "../../../pages/Notification/Loader";
 import useLeaveData from "./useLeaveData";
 
 const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
-  console.log(`🚀 ~ file: LeaveRejectmodal.jsx:24 ~ items:`, items);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [open, setOpen] = useState(false);
@@ -120,7 +119,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
               {items?.status === "Deleted" ? (
                 <Chip label={"Delete Request"} size="small" />
               ) : (
-                <Chip label={"Leave Request"} size="small" />
+                <Chip label={"Request"} size="small" />
               )}
             </div>
 
