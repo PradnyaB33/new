@@ -152,9 +152,7 @@ const LeaveRequisition = () => {
                     className="text-center w-fit !m-auto"
                   >
                     {" "}
-                    {!isLoading
-                      ? "Apply for leave"
-                      : "Wait Calendar is Loading"}
+                    {!isLoading ? "Apply" : "Wait Calendar is Loading"}
                   </Button>
                 </div>
               </>

@@ -84,7 +84,13 @@ const BillingCard = ({ doc }) => {
       ) {
         return false;
       } else {
-        return true;
+        console.log("i think i am expired");
+        console.log(`🚀 ~ file: billing-card.jsx:89 ~ doc:`, doc);
+        if (doc?.upcomingPackageInfo?.packageName) {
+          return false;
+        } else {
+          return true;
+        }
       }
     } else if (doc?.subscriptionDetails?.status === "Pending") {
       if (moment(doc?.createdAt).add(7, "days").diff(moment(), "days") > 0) {
@@ -210,7 +216,7 @@ const BillingCard = ({ doc }) => {
             mainText={`${Math.round(doc?.remainingBalance)}`}
           />
         </div>
-        {!checkHasOrgDisabled() && (
+        {checkHasOrgDisabled() && (
           <Button onClick={() => setConfirmOpen3(true)} variant="contained">
             Pay
           </Button>
