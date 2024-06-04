@@ -12,18 +12,18 @@ import {
   TodayOutlined,
   Work,
 } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
+import axios from "axios";
 import moment from "moment";
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { z } from "zod";
-import useEmpOption from "../../../hooks/Employee-OnBoarding/useEmpOption";
-import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import { useQuery } from "react-query";
-import axios from "axios";
 import { UseContext } from "../../../State/UseState/UseContext";
+import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
+import useEmpOption from "../../../hooks/Employee-OnBoarding/useEmpOption";
 import useEmployeeState from "../../../hooks/Employee-OnBoarding/useEmployeeState";
-import { CircularProgress } from "@mui/material";
 
 const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   const organisationId = useParams("");
@@ -255,20 +255,24 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             value: data.employee.shift_allocation || "",
           });
 
-          let managerOption = null;
+          let managerOption;
           if (data.employee.mgrempid) {
             managerOption = Manageroptions.find(
-              (option) => option.value === data.employee.mgrempid._id
+              (option) => option.value === data.employee.mgrempid
             );
           }
 
+          const checkManager = Manageroptions.find(
+            (opt) => opt.value === data.employee.mgrempid
+          );
+
           setValue("mgrempid", {
-            label: managerOption ? managerOption.label : "",
-            value: data.employee.mgrempid ? data.employee.mgrempid._id : "",
+            label: checkManager?.label,
+            value: data.employee.mgrempid ? data.employee.mgrempid : "",
           });
           if (data.employee.profile) {
             const profileLabel = data.employee.profile
-              .filter((role) => role !== "Employee") 
+              .filter((role) => role !== "Employee")
               .map((ev) => ({
                 label: ev,
                 value: ev,
@@ -280,7 +284,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     }
   );
   console.log("employee", employeeId);
- 
 
   const { errors } = formState;
   console.log(`🚀 ~ errors:`, errors);
@@ -293,9 +296,10 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   return (
     <div className="w-full mt-4">
       <h1 className="text-2xl mb-4 font-bold">Company Info</h1>
-      {
-          isLoading ? <CircularProgress/> : <>
-        
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <>
           <form
             onSubmit={handleSubmit(onsubmit)}
             className="w-full flex space-y-2  flex-1 flex-col"
@@ -473,8 +477,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
               </button>
             </div>
           </form>
-          </>
-        }
+        </>
+      )}
     </div>
   );
 };
