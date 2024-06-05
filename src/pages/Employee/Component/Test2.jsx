@@ -150,7 +150,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     resolver: zodResolver(EmployeeSchema),
   });
 
-  const { isLoading } = useQuery(
+  const { isFetching } = useQuery(
     ["employeeId", employeeId],
     async () => {
       if (employeeId !== null && employeeId !== undefined) {
@@ -295,7 +295,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   return (
     <div className="w-full mt-4">
       <h1 className="text-2xl mb-4 font-bold">Company Info</h1>
-      {isLoading ? (
+      {isFetching ? (
         <CircularProgress />
       ) : (
         <>
