@@ -27,7 +27,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   const organisationId = useParams("");
   const {
     Departmentoptions,
-    Manageroptions,
+    onBoardManageroptions,
     RolesOptions,
     Shiftoptions,
     locationoption,
@@ -229,7 +229,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             label="Select Manager "
             errors={errors}
             error={errors.mgrempid}
-            options={Manageroptions}
+            options={onBoardManageroptions}
           />
           <AuthInputFiled
             name="profile"
