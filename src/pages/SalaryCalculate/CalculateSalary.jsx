@@ -14,7 +14,8 @@ function CalculateSalary() {
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
   const { userId, organisationId } = useParams();
-  const [selectedDate, setSelectedDate] = useState(dayjs("2022-04-17"));
+  const currentDate = dayjs();
+  const [selectedDate, setSelectedDate] = useState(currentDate);
   const [numDaysInMonth, setNumDaysInMonth] = useState(0);
   const [availableEmployee, setAvailableEmployee] = useState();
   const [publicHolidays, setPublicHoliDays] = useState([]);
@@ -314,7 +315,7 @@ function CalculateSalary() {
         availableEmployee?.joining_date
       ).format("MM");
       const nextMonth =
-        parseInt(currentMonth) === 12 ? 1 : parseInt(currentMonth) + 1;
+        parseInt(currentMonth) === 12 ? 1 : parseInt(currentMonth);
 
       if (
         parseInt(selectedYear) > parseInt(currentYear) ||

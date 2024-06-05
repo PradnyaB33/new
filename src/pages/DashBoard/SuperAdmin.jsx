@@ -97,7 +97,7 @@ const SuperAdmin = () => {
               icon={EventBusy}
               color={"!bg-red-500"}
               data={absentEmployee}
-              isLoading={false}
+              isLoading={employeeLoading}
             />
 
             <SuperAdminCard
