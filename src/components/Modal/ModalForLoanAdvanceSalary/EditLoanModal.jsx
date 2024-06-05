@@ -27,7 +27,6 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import { TestContext } from "../../../State/Function/Main";
 
 const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
-  console.log("loan ", loan);
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
@@ -135,7 +134,7 @@ const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
       setErrorMessage("");
     }
   };
-  console.log("file" , file);
+  
 
   const getFileNameFromURL = (url) => {
     const parts = url.split("/");

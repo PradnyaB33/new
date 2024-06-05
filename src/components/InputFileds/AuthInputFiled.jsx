@@ -58,6 +58,7 @@ const AuthInputFiled = ({
   onInputActionClick,
   InputFiledActionIcon,
   onInputActionClear,
+  isClearable = false,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -213,6 +214,7 @@ const AuthInputFiled = ({
                 >
                   <Icon className="text-gray-700 text-xs" />
                   <Select
+                    isClearable={isClearable}
                     aria-errormessage=""
                     placeholder={placeholder}
                     styles={{

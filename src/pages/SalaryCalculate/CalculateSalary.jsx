@@ -14,7 +14,8 @@ function CalculateSalary() {
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
   const { userId, organisationId } = useParams();
-  const [selectedDate, setSelectedDate] = useState(dayjs("2022-04-17"));
+  const currentDate = dayjs();
+  const [selectedDate, setSelectedDate] = useState(currentDate);
   const [numDaysInMonth, setNumDaysInMonth] = useState(0);
   const [availableEmployee, setAvailableEmployee] = useState();
   const [publicHolidays, setPublicHoliDays] = useState([]);
@@ -22,7 +23,7 @@ function CalculateSalary() {
   const [paidLeaveDays, setPaidLeaveDays] = useState(0);
   const [unPaidLeaveDays, setUnPaidLeaveDays] = useState(0);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
-  console.log(isSubmitDisabled);
+  console.log(setIsSubmitDisabled);
 
   // get the alreday salary data created
   const [salaryInfo, setSalaryInfo] = useState([]);
@@ -47,30 +48,23 @@ function CalculateSalary() {
     // eslint-disable-next-line
   }, []);
 
-  console.log("salary info", salaryInfo);
-
   // for date change function
   const handleDateChange = (date) => {
     setSelectedDate(date);
     const monthFromSelectedDate = date.format("M");
     const yearFromSelectedDate = date.format("YYYY");
-    console.log("month", monthFromSelectedDate);
-    console.log("year", yearFromSelectedDate);
     const salaryExists = salaryInfo.some(
       (salary) =>
         String(salary.month) === monthFromSelectedDate &&
         String(salary.year) === yearFromSelectedDate
     );
-    console.log("salary eixst", salaryExists);
-    setIsSubmitDisabled(salaryExists);
 
+    console.log(salaryExists);
     const daysInMonth = date.daysInMonth();
     setNumDaysInMonth(daysInMonth);
     setPaidLeaveDays(0);
     setUnPaidLeaveDays(0);
   };
-
-  console.log("salary info ", salaryInfo);
   const formattedDate = dayjs(selectedDate).format("MMM-YY");
 
   //  to get the employee
@@ -90,12 +84,10 @@ function CalculateSalary() {
       handleAlert(true, "error", "Failed to fetch User Profile Data");
     }
   };
-
   useEffect(() => {
     fetchAvailableEmployee();
     // eslint-disable-next-line
   }, []);
-  console.log(availableEmployee);
 
   //  to get holiday
   const fetchHoliday = async () => {
@@ -114,7 +106,6 @@ function CalculateSalary() {
       handleAlert(true, "error", "Failed to fetch Holiday");
     }
   };
-
   useEffect(() => {
     fetchHoliday();
     // eslint-disable-next-line
@@ -153,7 +144,6 @@ function CalculateSalary() {
       handleAlert(true, "error", "Failed to fetch Employee Attendance Summary");
     }
   };
-
   useEffect(() => {
     fetchDataAndFilter();
     // eslint-disable-next-line
@@ -161,7 +151,6 @@ function CalculateSalary() {
 
   const selectedMonth = selectedDate.format("M");
   const selectedYear = selectedDate.format("YYYY");
-
   const filterDataByMonthYear = (data, selectedMonth, selectedYear) => {
     const numericMonth = parseInt(selectedMonth, 10);
     const numericYear = parseInt(selectedYear, 10);
@@ -172,7 +161,6 @@ function CalculateSalary() {
       );
     });
   };
-
   useEffect(() => {
     const filteredData = filterDataByMonthYear(
       employeeSummary,
@@ -201,7 +189,6 @@ function CalculateSalary() {
       return response.data.data;
     }
   );
-  console.log(" emp loan", empLoanAplicationInfo);
 
   // calculate the no fo days employee present
   const calculateDaysEmployeePresent = () => {
@@ -209,6 +196,8 @@ function CalculateSalary() {
     return daysPresent;
   };
   let noOfDaysEmployeePresent = calculateDaysEmployeePresent();
+  
+
 
   // calculate the salary component
   const calculateSalaryComponent = (componentValue) => {
@@ -246,7 +235,24 @@ function CalculateSalary() {
   );
   let variableAllowance = calculateSalaryComponent(
     availableEmployee?.salaryComponent?.["Variable allowance"] || ""
+  ); 
+
+  // get the shift allowance data
+   const { data: getShiftAllowance } = useQuery(
+    ["shiftAllowance", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/shiftApply/postallowance/${organisationId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return response;
+    }
   );
+  console.log("getShiftAllowance" , getShiftAllowance);
 
   // calculate the total gross salary
   let totalSalary =
@@ -258,7 +264,6 @@ function CalculateSalary() {
     parseFloat(specialAllowance) +
     parseFloat(travelAllowance) +
     parseFloat(variableAllowance);
-
   let totalGrossSalary = totalSalary.toFixed(2);
 
   // Calculate the total deduction
@@ -266,8 +271,6 @@ function CalculateSalary() {
   let employee_pf = parseFloat(availableEmployee?.employee_pf ?? 0);
   let esic = parseFloat(availableEmployee?.esic ?? 0);
   let loanDeduction = 0;
-
-  // Filter loan applications based on loan disbursement and completion dates
   if (Array.isArray(empLoanAplicationInfo)) {
     const currentDate = new Date();
     const loanDeductionApplications = empLoanAplicationInfo.filter(
@@ -280,63 +283,27 @@ function CalculateSalary() {
         );
       }
     );
-
-    // Calculate total loan deduction from filtered loan applications
     loanDeduction = loanDeductionApplications.reduce((total, application) => {
       return total + parseFloat(application.totalDeduction || 0);
     }, 0);
   }
-
-  // Convert each individual deduction to have two decimal places
   deduction = isNaN(deduction) ? 0 : deduction.toFixed(2);
   employee_pf = isNaN(employee_pf) ? 0 : employee_pf.toFixed(2);
   esic = isNaN(esic) ? 0 : esic.toFixed(2);
-  loanDeduction = loanDeduction.toFixed(2);
-
-  // Calculate total deduction by adding all deductions
-  // Calculate total deductions
+  loanDeduction = isNaN(loanDeduction) ? 0 : loanDeduction.toFixed(2);
   let totalDeductions =
     parseFloat(deduction) +
     parseFloat(employee_pf) +
     parseFloat(esic) +
-    parseFloat(loanDeduction); // Assuming loanDeduction is defined elsewhere
+    parseFloat(loanDeduction);
   let totalDeduction = totalDeductions.toFixed(2);
 
-  console.log("total deduction", totalDeduction);
-  console.log(" deduction", deduction);
-  console.log("pf", employee_pf);
-  console.log("esic", esic);
-
-  // Calculate total net salary
+  // calculate Total Net Salary
   let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
-  // get the alreday salary data created
-  const [salaryCalDay, setSalaryCalDay] = useState([]);
-  const fetchSalaryCalDay = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee-salary-cal-day/get/${organisationId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      console.log(response.data);
-      setSalaryCalDay(response.data.empSalaryCalDayData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  useEffect(() => {
-    fetchSalaryCalDay();
-    // eslint-disable-next-line
-  }, []);
-  console.log("salary cal day", salaryCalDay);
 
+  // submit the data
   const saveSalaryDetail = async () => {
     try {
-      // Check if the selected year is in the future
-
       const currentYear = dayjs().format("YYYY");
       const currentMonth = dayjs().format("MM");
       const selectedYear = selectedDate.format("YYYY");
@@ -347,18 +314,9 @@ function CalculateSalary() {
       const employeeJoiningMonth = dayjs(
         availableEmployee?.joining_date
       ).format("MM");
-      const day = dayjs();
-      console.log(day);
-      console.log({ currentMonth, currentYear, selectedMonth, selectedYear });
-
-      // Calculate the next month
       const nextMonth =
-        parseInt(currentMonth) === 12 ? 1 : parseInt(currentMonth) + 1;
-      const nextYear =
-        parseInt(currentMonth) === 12
-          ? parseInt(currentYear) + 1
-          : parseInt(currentYear);
-      console.log(nextYear);
+        parseInt(currentMonth) === 12 ? 1 : parseInt(currentMonth);
+
       if (
         parseInt(selectedYear) > parseInt(currentYear) ||
         (parseInt(selectedYear) === parseInt(currentYear) &&
@@ -371,7 +329,6 @@ function CalculateSalary() {
         );
         return;
       }
-
       if (
         parseInt(selectedYear) < parseInt(employeeJoiningYear) ||
         (parseInt(selectedYear) === parseInt(employeeJoiningYear) &&
@@ -384,7 +341,6 @@ function CalculateSalary() {
         );
         return;
       }
-
       const data = {
         employeeId: userId,
         basicSalary,
@@ -410,7 +366,6 @@ function CalculateSalary() {
         organizationId: organisationId,
       };
       console.log(data);
-
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employeeSalary/add-salary/${userId}/${organisationId}`,
         data,
@@ -420,7 +375,6 @@ function CalculateSalary() {
           },
         }
       );
-
       if (response.data.success) {
         handleAlert(
           true,
@@ -437,7 +391,6 @@ function CalculateSalary() {
           "Salary for this month and year already exists"
         );
       } else {
-        // For other errors
         console.error("Error adding salary details:", error);
         handleAlert(true, "error", "Failed to add salary details");
       }
@@ -636,6 +589,18 @@ function CalculateSalary() {
             <tr>
               <td class="px-4 py-2 border">Variable Pay Allowance:</td>
               <td class="px-4 py-2 border">{variableAllowance}</td>
+              <td class="px-4 py-2 border"></td>
+              <td class="px-4 py-2 border"></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 border">Shift Allowance:</td>
+              <td class="px-4 py-2 border"></td>
+              <td class="px-4 py-2 border"></td>
+              <td class="px-4 py-2 border"></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 border">Remote Punching Allowance:</td>
+              <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>
             </tr>
