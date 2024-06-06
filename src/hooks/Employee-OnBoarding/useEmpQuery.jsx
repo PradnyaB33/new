@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useQuery } from "react-query";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import useAuthToken from "../Token/useAuth";
 
 const useEmpQuery = ({ organisationId }) => {
@@ -47,6 +47,23 @@ const useEmpQuery = ({ organisationId }) => {
     });
 
     return ManagerList;
+  };
+
+  const OnBoardManagerListCall = () => {
+    const { data: managerlist } = useQuery({
+      queryKey: ["managersListed"],
+      queryFn: () =>
+        getEmployeeDataApi(
+          `${process.env.REACT_APP_API}/route/employee/getAllManager/${organisationId}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        ),
+    });
+
+    return managerlist;
   };
 
   const EmpCodeCall = () => {
@@ -180,6 +197,7 @@ const useEmpQuery = ({ organisationId }) => {
     AdditionalListCall,
     LocationListCall,
     EmpCodeCall,
+    OnBoardManagerListCall,
   };
 };
 

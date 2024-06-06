@@ -12,9 +12,11 @@ const useEmpOption = (organisationId) => {
     EmpRoleListCall,
     LocationListCall,
     EmpCodeCall,
+    OnBoardManagerListCall,
   } = useEmpQuery(organisationId);
   const DepartmentList = DepartmentListCall();
   const ManagerList = ManagerListCall();
+  const onBoardManagerList = OnBoardManagerListCall();
   const empCode = EmpCodeCall();
   const empRolesList = EmpRoleListCall();
   const shiftList = ShiftCall();
@@ -37,6 +39,16 @@ const useEmpOption = (organisationId) => {
       label: `${item?.managerId?.first_name} ${item?.managerId?.last_name}`,
     };
   });
+
+  const onBoardManageroptions = onBoardManagerList?.manager?.map((item) => {
+    return {
+      value: item?._id,
+      label: `${item?.first_name} ${item?.last_name}`,
+    };
+  });
+
+  console.log(onBoardManagerList?.manager, "onboard");
+  console.log(`🚀 ~ onBoardManageroptions:`, onBoardManageroptions);
 
   const EmpCodeoptions = empCode?.EmpCodeoptions?.map((item) => {
     return {
@@ -100,6 +112,7 @@ const useEmpOption = (organisationId) => {
   return {
     Departmentoptions,
     Manageroptions,
+    onBoardManageroptions,
     EmpCodeoptions,
     RolesOptions,
     Shiftoptions,

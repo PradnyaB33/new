@@ -27,7 +27,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   const organisationId = useParams("");
   const {
     Departmentoptions,
-    Manageroptions,
+    onBoardManageroptions,
     RolesOptions,
     Shiftoptions,
     locationoption,
@@ -115,10 +115,11 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         .max(25, { message: "Employee code is not greater than 25 character" }),
       mgrempid: z
         .object({
-          label: z.string(),
-          value: z.string(),
+          label: z.string().optional(),
+          value: z.string().optional(),
         })
-        .optional(),
+        .optional()
+        .nullable(),
       joining_date: z
         .string()
         .refine(isAtLeastNineteenYearsOld, {
@@ -222,12 +223,13 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             value={mgrempid}
             icon={PersonAddAlt}
             control={control}
+            isClearable={true}
             type="select"
             placeholder="Manager"
-            label="Select Manager *"
+            label="Select Manager "
             errors={errors}
             error={errors.mgrempid}
-            options={Manageroptions}
+            options={onBoardManageroptions}
           />
           <AuthInputFiled
             name="profile"
