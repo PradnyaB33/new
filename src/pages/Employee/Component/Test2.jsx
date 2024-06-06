@@ -261,7 +261,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             );
           }
 
-          const checkManager = Manageroptions.find(
+          const checkManager = Manageroptions?.find(
             (opt) => opt.value === data.employee.mgrempid
           );
 
@@ -270,8 +270,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             value: data.employee.mgrempid ? data.employee.mgrempid : "",
           });
           if (data.employee.profile) {
-            const profileLabel = data.employee.profile
-              .filter((role) => role !== "Employee")
+            const profileLabel = data?.employee?.profile
+              ?.filter((role) => role !== "Employee")
               .map((ev) => ({
                 label: ev,
                 value: ev,
@@ -339,6 +339,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
                 errors={errors}
                 error={errors.mgrempid}
                 options={Manageroptions}
+                isClearable={true}
               />
               <AuthInputFiled
                 name="profile"

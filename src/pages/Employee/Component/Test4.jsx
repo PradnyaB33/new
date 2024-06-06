@@ -155,7 +155,7 @@ const Test4 = ({ prevStep }) => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-              <div className=" p-2 w-[30%] rounded-sm w-full">
+              <div className=" p-2 w-[30%] rounded-sm w">
                 <h1 className="text-gray-500 text-sm">Gender</h1>
                 <p className="">{gender}</p>
               </div>
@@ -180,7 +180,7 @@ const Test4 = ({ prevStep }) => {
                 <h1 className="text-gray-500 text-sm w-full">PAN card</h1>
                 <p className="">{pan_card_number}</p>
               </div>
-              <div className="p-2 w-[30%] rounded-sm w-full">
+              <div className="p-2 w-[30%] rounded-sm">
                 <h1 className="text-gray-500 text-sm">Citizenship Status</h1>
                 <p className="">{citizenship}</p>
               </div>
