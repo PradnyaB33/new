@@ -23,6 +23,8 @@ const useLeaveNotificationHook = () => {
         console.log(`🚀 ~ file: hook.jsx:33 ~ data:`, data);
         setNotificationCount(data.leaveRequests?.length);
       },
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
   );
   return {
