@@ -255,11 +255,8 @@ function CalculateSalary() {
       return response.data.shiftRequests;
     }
   );
-  console.log("shift data", getShifts);
-
   const countShifts = (shifts) => {
     const shiftCount = {};
-
     shifts.forEach((shift) => {
       const title = shift.title;
       if (shiftCount[title]) {
@@ -272,7 +269,6 @@ function CalculateSalary() {
     return shiftCount;
   };
   const shiftCounts = getShifts ? countShifts(getShifts) : {};
-  console.log("Shift counts:", shiftCounts);
 
   const [shiftTotalAllowance, setShiftTotalAllowance] = useState(0);
   useEffect(() => {
@@ -289,7 +285,6 @@ function CalculateSalary() {
     }
     setShiftTotalAllowance(total);
   }, [shiftCounts]);
-  console.log("Shift Total Allowance:", shiftTotalAllowance);
 
   const { setValue } = useForm();
   const { data } = useQuery("get-shift-allowance", async () => {
@@ -301,7 +296,6 @@ function CalculateSalary() {
     );
     return response.data;
   });
-  console.log("data", data);
   useEffect(() => {
     if (data?.existingAllowance) {
       setValue("dualWorkflow", data.existingAllowance.check);
@@ -317,7 +311,8 @@ function CalculateSalary() {
     parseFloat(salesAllowance) +
     parseFloat(specialAllowance) +
     parseFloat(travelAllowance) +
-    parseFloat(variableAllowance);
+    parseFloat(variableAllowance) +
+    parseFloat(shiftTotalAllowance);
   let totalGrossSalary = totalSalary.toFixed(2);
 
   // Calculate the total deduction
@@ -406,6 +401,7 @@ function CalculateSalary() {
         specialAllowance,
         travelAllowance,
         variableAllowance,
+        shiftTotalAllowance,
         totalGrossSalary,
         totalDeduction,
         totalNetSalary,
