@@ -339,6 +339,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
                 errors={errors}
                 error={errors.mgrempid}
                 options={Manageroptions}
+                isClearable={true}
               />
               <AuthInputFiled
                 name="profile"

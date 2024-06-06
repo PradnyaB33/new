@@ -1,16 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ContactMail } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
+import axios from "axios";
 import { React, useContext } from "react";
 import { useForm } from "react-hook-form";
+import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { z } from "zod";
+import { UseContext } from "../../../State/UseState/UseContext";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useEmpQuery from "../../../hooks/Employee-OnBoarding/useEmpQuery";
-import { UseContext } from "../../../State/UseState/UseContext";
 import useEmployeeState from "../../../hooks/Employee-OnBoarding/useEmployeeState";
-import { useQuery } from "react-query";
-import axios from "axios";
 
 const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
   const organisationId = useParams("");
@@ -63,6 +63,8 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
   };
 
   const { errors } = formState;
+
+  console.log(`🚀 ~ file: Test3.jsx:66 ~ errors:`, errors);
 
   if (addtionalLoading) {
     return (
