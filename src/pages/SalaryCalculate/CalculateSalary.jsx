@@ -4,7 +4,7 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import axios from "axios";
 import dayjs from "dayjs";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
@@ -150,6 +150,8 @@ function CalculateSalary() {
     // eslint-disable-next-line
   }, []);
 
+  console.log("employee summary", employeeSummary);
+
   const selectedMonth = selectedDate.format("M");
   const selectedYear = selectedDate.format("YYYY");
   const filterDataByMonthYear = (data, selectedMonth, selectedYear) => {
@@ -162,6 +164,7 @@ function CalculateSalary() {
       );
     });
   };
+
   useEffect(() => {
     const filteredData = filterDataByMonthYear(
       employeeSummary,
@@ -174,6 +177,9 @@ function CalculateSalary() {
       setUnPaidLeaveDays(unpaidleaveDays);
     }
   }, [employeeSummary, selectedMonth, selectedYear]);
+
+  console.log("paid leave", paidLeaveDays);
+  console.log("unpaid", unPaidLeaveDays);
 
   // pull the total deduction of loan of employee if he/she apply the loan
   const { data: empLoanAplicationInfo } = useQuery(
@@ -236,7 +242,6 @@ function CalculateSalary() {
     availableEmployee?.salaryComponent?.["Variable allowance"] || ""
   );
 
-  // Fetch shift allowance of user
   const { data: getShifts } = useQuery(
     ["shiftAllowance", userId, selectedMonth, selectedYear],
     async () => {
@@ -255,8 +260,9 @@ function CalculateSalary() {
       return response.data.shiftRequests;
     }
   );
-  console.log("shift data", getShifts);
+  console.log("getshift", getShifts);
 
+  // to get shift count of employee
   const countShifts = (shifts) => {
     const shiftCount = {};
 
@@ -271,10 +277,16 @@ function CalculateSalary() {
 
     return shiftCount;
   };
-  const shiftCounts = getShifts ? countShifts(getShifts) : {};
-  console.log("Shift counts:", shiftCounts);
 
+  const shiftCounts = useMemo(
+    () => (getShifts ? countShifts(getShifts) : {}),
+    [getShifts]
+  );
+  console.log("shiftcount", shiftCounts);
+
+  // calculate the amount of shift allowance
   const [shiftTotalAllowance, setShiftTotalAllowance] = useState(0);
+
   useEffect(() => {
     const allowances = {
       "Evening shift": 200,
@@ -288,10 +300,11 @@ function CalculateSalary() {
       }
     }
     setShiftTotalAllowance(total);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  console.log("Shift Total Allowance:", shiftTotalAllowance);
+  }, [shiftCounts]);
 
+  console.log("shift allowance", shiftTotalAllowance);
+
+  // to get shift allowance amount
   const { setValue } = useForm();
   const { data } = useQuery("get-shift-allowance", async () => {
     const response = await axios.get(
@@ -309,16 +322,51 @@ function CalculateSalary() {
     }
   }, [data, setValue]);
 
+  // calculate the remote punching allowance
+  const remotePunchingCounts = 5;
+  const { data: getremotePuncingAmount } = useQuery(
+    ["remote-punching"],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/remote-punch/${organisationId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return response.data.remotePunchingObject.allowanceQuantity;
+    }
+  );
+  const isValidAmount =
+    !isNaN(getremotePuncingAmount) &&
+    getremotePuncingAmount !== null &&
+    getremotePuncingAmount !== undefined;
+
+  const isValidCount =
+    !isNaN(remotePunchingCounts) &&
+    remotePunchingCounts !== null &&
+    remotePunchingCounts !== undefined;
+
+  const remotePunchAllowance =
+    isValidAmount && isValidCount
+      ? remotePunchingCounts * getremotePuncingAmount
+      : 0;
+  console.log("Remote Punching Amount:", getremotePuncingAmount);
+  console.log("Remote Punching  Allowance:", remotePunchAllowance);
+
   // calculate the total gross salary
   let totalSalary =
-    parseFloat(basicSalary) +
-    parseFloat(hraSalary) +
-    parseFloat(daSalary) +
-    parseFloat(foodAllowance) +
-    parseFloat(salesAllowance) +
-    parseFloat(specialAllowance) +
-    parseFloat(travelAllowance) +
-    parseFloat(variableAllowance);
+    parseFloat(basicSalary || 0) +
+    parseFloat(hraSalary || 0) +
+    parseFloat(daSalary || 0) +
+    parseFloat(foodAllowance || 0) +
+    parseFloat(salesAllowance || 0) +
+    parseFloat(specialAllowance || 0) +
+    parseFloat(travelAllowance || 0) +
+    parseFloat(variableAllowance || 0) +
+    parseFloat(shiftTotalAllowance || 0) +
+    parseFloat(remotePunchAllowance || 0);
   let totalGrossSalary = totalSalary.toFixed(2);
 
   // Calculate the total deduction
@@ -407,6 +455,8 @@ function CalculateSalary() {
         specialAllowance,
         travelAllowance,
         variableAllowance,
+        shiftTotalAllowance,
+        remotePunchAllowance,
         totalGrossSalary,
         totalDeduction,
         totalNetSalary,
@@ -648,18 +698,22 @@ function CalculateSalary() {
               <td class="px-4 py-2 border"></td>
               <td class="px-4 py-2 border"></td>
             </tr>
-            <tr>
-              <td class="px-4 py-2 border">Shift Allowance:</td>
-              <td class="px-4 py-2 border">{shiftTotalAllowance}</td>
-              <td class="px-4 py-2 border"></td>
-              <td class="px-4 py-2 border"></td>
-            </tr>
-            <tr>
-              <td class="px-4 py-2 border">Remote Punching Allowance:</td>
-              <td class="px-4 py-2 border"></td>
-              <td class="px-4 py-2 border"></td>
-              <td class="px-4 py-2 border"></td>
-            </tr>
+            {shiftTotalAllowance > 0 && (
+              <tr>
+                <td class="px-4 py-2 border">Shift Allowance:</td>
+                <td class="px-4 py-2 border">{shiftTotalAllowance}</td>
+                <td class="px-4 py-2 border"></td>
+                <td class="px-4 py-2 border"></td>
+              </tr>
+            )}
+            {remotePunchAllowance > 0 && (
+              <tr>
+                <td class="px-4 py-2 border">Remote Punching Allowance:</td>
+                <td class="px-4 py-2 border">{remotePunchAllowance ?? 0}</td>
+                <td class="px-4 py-2 border"></td>
+                <td class="px-4 py-2 border"></td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
