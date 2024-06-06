@@ -9,9 +9,7 @@ import MiniForm from "./components/mini-form";
 
 const RemoteSetup = () => {
   const { organisationId } = useParams();
-
   const { data, isLoading, mutate } = useSetupRemotePunching(organisationId);
-
   return (
     <>
       <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
