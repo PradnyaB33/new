@@ -288,7 +288,8 @@ function CalculateSalary() {
       }
     }
     setShiftTotalAllowance(total);
-  }, [shiftCounts]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   console.log("Shift Total Allowance:", shiftTotalAllowance);
 
   const { setValue } = useForm();
