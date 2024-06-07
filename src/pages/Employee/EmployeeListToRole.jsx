@@ -72,7 +72,7 @@ const EmployeeListToRole = () => {
   const changePage = (id) => {
     fetchAvailableEmployee(id);
   };
-  
+
   const handleEditClick = (empId) => {
     navigate(`/organisation/${organisationId}/edit-employee/${empId}`);
   };

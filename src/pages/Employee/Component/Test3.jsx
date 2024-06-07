@@ -21,15 +21,16 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
   const { addtionalFields, addtionalLoading } = AdditionalListCall();
   const { setStep3Data, data } = useEmployeeState();
 
-  const EmployeeSchema = z.object({}).catchall(z.string().optional());
+  const EmployeeSchema = z.object({}).catchall(z.any().optional());
 
-  const { control, formState, handleSubmit, setValue } = useForm({
+  const { control, formState, handleSubmit, setValue, getValues } = useForm({
     defaultValues: {
       ...data,
     },
     resolver: zodResolver(EmployeeSchema),
   });
 
+  console.log(`🚀 ~ file: Test3.jsx:34 ~ getValues:`, getValues());
   const { isLoading } = useQuery(
     ["employeeId", employeeId],
     async () => {
@@ -86,7 +87,7 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
           >
             <div className="grid grid-cols-2 w-full gap-3">
               {addtionalFields?.inputField?.inputDetail?.map((input, id) => (
-                <>
+                <div key={id}>
                   {input.isActive && (
                     <AuthInputFiled
                       name={input.label}
@@ -99,7 +100,7 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
                       error={errors.label}
                     />
                   )}
-                </>
+                </div>
               ))}
             </div>
 

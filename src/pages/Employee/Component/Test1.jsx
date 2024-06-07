@@ -9,15 +9,20 @@ import {
   Person,
   TodayOutlined,
 } from "@mui/icons-material";
-import { CircularProgress, FormControlLabel, Radio, RadioGroup } from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
-import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import { useQuery } from "react-query";
-import { useParams } from "react-router";
+import {
+  CircularProgress,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
 import axios from "axios";
 import { useContext } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useQuery } from "react-query";
+import { useParams } from "react-router";
+import { z } from "zod";
 import { UseContext } from "../../../State/UseState/UseContext";
+import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useEmployeeState from "../../../hooks/Employee-OnBoarding/useEmployeeState";
 
 const isAtLeastNineteenYearsOld = (value) => {
@@ -200,14 +205,12 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
               : ""
           );
           setValue("uanNo", data.employee.uanNo || undefined);
-          setValue("uanNo", data.employee.uanNo || undefined);
+          setValue("esicNo", data.employee.esicNo || undefined);
           setValue("pwd", data.employee.pwd || undefined);
         }
       },
     }
   );
-
-  
 
   const { errors } = formState;
   const onSubmit = async (data) => {
@@ -219,229 +222,230 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
   return (
     <div className="w-full mt-4">
       <h1 className="text-2xl mb-4 font-bold">Personal Details</h1>
-        {
-          isLoading ? <CircularProgress/> : <>
-       
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="w-full flex  flex-1 space-y-2 flex-col"
-      >
-        <div className="grid md:grid-cols-3 grid-cols-1 w-full gap-3">
-          <AuthInputFiled
-            name="first_name"
-            icon={Person}
-            control={control}
-            type="text"
-            placeholder="John"
-            label="Employee First Name *"
-            errors={errors}
-            error={errors.first_name}
-          />
-
-          <AuthInputFiled
-            name="last_name"
-            icon={Person}
-            control={control}
-            type="text"
-            placeholder="Doe"
-            label="Employee Last Name *"
-            errors={errors}
-            error={errors.last_name}
-          />
-
-          <AuthInputFiled
-            name="date_of_birth"
-            icon={TodayOutlined}
-            control={control}
-            type="date"
-            placeholder="dd-mm-yyyy"
-            label="Date Of Birth *"
-            errors={errors}
-            error={errors.date_of_birth}
-          />
-        </div>
-
-        <AuthInputFiled
-          name="email"
-          icon={Email}
-          control={control}
-          type="text"
-          placeholder="Employee Email"
-          label="Employee Email *"
-          errors={errors}
-          error={errors.email}
-        />
-
-        <AuthInputFiled
-          name="phone_number"
-          icon={ContactEmergency}
-          control={control}
-          value={phone_number}
-          type="text"
-          placeholder="1234567890"
-          label="Contact *"
-          errors={errors}
-          error={errors.phone_number}
-        />
-
-        <AuthInputFiled
-          name="address"
-          icon={Person}
-          control={control}
-          type="textarea"
-          placeholder="Address"
-          label="Current Address *"
-          errors={errors}
-          error={errors.address}
-        />
-
-        <AuthInputFiled
-          name={"pwd"}
-          placeholder={"Person with disability"}
-          label={"Person with disability"}
-          control={control}
-          type="checkbox"
-          errors={errors}
-          error={errors.pwd}
-        />
-
-        <div className="space-y-1">
-          <label
-            htmlFor={"gender"}
-            className={`${
-              errors.gender && "text-red-500"
-            } text-gray-500 font-bold text-sm md:text-md`}
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="w-full flex  flex-1 space-y-2 flex-col"
           >
-            Gender *
-          </label>
-          <Controller
-            control={control}
-            name={"gender"}
-            id={"gender"}
-            render={({ field }) => (
-              <div
-                className={`flex items-center gap-5 rounded-md px-2 bg-white py-1 md:py-[6px]`}
-              >
-                <RadioGroup
-                  row
-                  aria-labelledby="demo-row-radio-buttons-group-label"
-                  {...field}
-                >
-                  <FormControlLabel
-                    value="female"
-                    control={<Radio />}
-                    label="Female"
-                  />
-                  <FormControlLabel
-                    value="male"
-                    control={<Radio />}
-                    label="Male"
-                  />
-                  <FormControlLabel
-                    value="transgender"
-                    control={<Radio />}
-                    label="Transgender"
-                  />
-                </RadioGroup>
-              </div>
-            )}
-          />
-          <div className="h-4 w-[200px] !z-50 !mb-1">
-            <ErrorMessage
+            <div className="grid md:grid-cols-3 grid-cols-1 w-full gap-3">
+              <AuthInputFiled
+                name="first_name"
+                icon={Person}
+                control={control}
+                type="text"
+                placeholder="John"
+                label="Employee First Name *"
+                errors={errors}
+                error={errors.first_name}
+              />
+
+              <AuthInputFiled
+                name="last_name"
+                icon={Person}
+                control={control}
+                type="text"
+                placeholder="Doe"
+                label="Employee Last Name *"
+                errors={errors}
+                error={errors.last_name}
+              />
+
+              <AuthInputFiled
+                name="date_of_birth"
+                icon={TodayOutlined}
+                control={control}
+                type="date"
+                placeholder="dd-mm-yyyy"
+                label="Date Of Birth *"
+                errors={errors}
+                error={errors.date_of_birth}
+              />
+            </div>
+
+            <AuthInputFiled
+              name="email"
+              icon={Email}
+              control={control}
+              type="text"
+              placeholder="Employee Email"
+              label="Employee Email *"
               errors={errors}
-              name={"gender"}
-              render={({ message }) => (
-                <p className="text-sm mb-4 relative !bg-white text-red-500">
-                  {message}
-                </p>
-              )}
+              error={errors.email}
             />
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2">
-          <AuthInputFiled
-            name="adhar_card_number"
-            icon={AccountBox}
-            control={control}
-            type="number"
-            placeholder="Aadhar No"
-            label="Employee Aadhar No *"
-            errors={errors}
-            error={errors.adhar_card_number}
-          />
-          <AuthInputFiled
-            name="pan_card_number"
-            icon={AccountBox}
-            control={control}
-            type="text"
-            placeholder="Employee PAN No"
-            label="Employee PAN No *"
-            errors={errors}
-            error={errors.pan_card_number}
-          />
-        </div>
+            <AuthInputFiled
+              name="phone_number"
+              icon={ContactEmergency}
+              control={control}
+              value={phone_number}
+              type="text"
+              placeholder="1234567890"
+              label="Contact *"
+              errors={errors}
+              error={errors.phone_number}
+            />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2">
-          <AuthInputFiled
-            name="bank_account_no"
-            icon={AccountBalance}
-            control={control}
-            type="number"
-            placeholder="Bank Account No"
-            label="Bank Account No*"
-            errors={errors}
-            error={errors.bank_account_no}
-          />
-          <AuthInputFiled
-            name="citizenship"
-            icon={LocationOn}
-            control={control}
-            type="text"
-            placeholder="Citizenship Status"
-            label="Citizenship Status *"
-            errors={errors}
-            error={errors.citizenship}
-            pattern="[A-Za-z\s]+"
-          />
-        </div>
+            <AuthInputFiled
+              name="address"
+              icon={Person}
+              control={control}
+              type="textarea"
+              placeholder="Address"
+              label="Current Address *"
+              errors={errors}
+              error={errors.address}
+            />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2">
-          <AuthInputFiled
-            name="uanNo"
-            icon={AccountBalance}
-            control={control}
-            type="number"
-            placeholder="UAN No"
-            label="Employee UAN No"
-            errors={errors}
-            error={errors.uanNo}
-          />
-          <AuthInputFiled
-            name="esicNo"
-            icon={AccountBalance}
-            control={control}
-            type="text"
-            placeholder="ESIC No"
-            label="Employee ESIC No"
-            errors={errors}
-            error={errors.esicNo}
-            pattern="[A-Za-z\s]+"
-          />
-        </div>
+            <AuthInputFiled
+              name={"pwd"}
+              placeholder={"Person with disability"}
+              label={"Person with disability"}
+              control={control}
+              type="checkbox"
+              errors={errors}
+              error={errors.pwd}
+            />
 
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            disabled={isLastStep}
-            className="!w-max flex group justify-center px-6 gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-          >
-            Next
-          </button>
-        </div>
-      </form>
-      </>
-        }
+            <div className="space-y-1">
+              <label
+                htmlFor={"gender"}
+                className={`${
+                  errors.gender && "text-red-500"
+                } text-gray-500 font-bold text-sm md:text-md`}
+              >
+                Gender *
+              </label>
+              <Controller
+                control={control}
+                name={"gender"}
+                id={"gender"}
+                render={({ field }) => (
+                  <div
+                    className={`flex items-center gap-5 rounded-md px-2 bg-white py-1 md:py-[6px]`}
+                  >
+                    <RadioGroup
+                      row
+                      aria-labelledby="demo-row-radio-buttons-group-label"
+                      {...field}
+                    >
+                      <FormControlLabel
+                        value="female"
+                        control={<Radio />}
+                        label="Female"
+                      />
+                      <FormControlLabel
+                        value="male"
+                        control={<Radio />}
+                        label="Male"
+                      />
+                      <FormControlLabel
+                        value="transgender"
+                        control={<Radio />}
+                        label="Transgender"
+                      />
+                    </RadioGroup>
+                  </div>
+                )}
+              />
+              <div className="h-4 w-[200px] !z-50 !mb-1">
+                <ErrorMessage
+                  errors={errors}
+                  name={"gender"}
+                  render={({ message }) => (
+                    <p className="text-sm mb-4 relative !bg-white text-red-500">
+                      {message}
+                    </p>
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2">
+              <AuthInputFiled
+                name="adhar_card_number"
+                icon={AccountBox}
+                control={control}
+                type="number"
+                placeholder="Aadhar No"
+                label="Employee Aadhar No *"
+                errors={errors}
+                error={errors.adhar_card_number}
+              />
+              <AuthInputFiled
+                name="pan_card_number"
+                icon={AccountBox}
+                control={control}
+                type="text"
+                placeholder="Employee PAN No"
+                label="Employee PAN No *"
+                errors={errors}
+                error={errors.pan_card_number}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2">
+              <AuthInputFiled
+                name="bank_account_no"
+                icon={AccountBalance}
+                control={control}
+                type="number"
+                placeholder="Bank Account No"
+                label="Bank Account No*"
+                errors={errors}
+                error={errors.bank_account_no}
+              />
+              <AuthInputFiled
+                name="citizenship"
+                icon={LocationOn}
+                control={control}
+                type="text"
+                placeholder="Citizenship Status"
+                label="Citizenship Status *"
+                errors={errors}
+                error={errors.citizenship}
+                pattern="[A-Za-z\s]+"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2">
+              <AuthInputFiled
+                name="uanNo"
+                icon={AccountBalance}
+                control={control}
+                type="number"
+                placeholder="UAN No"
+                label="Employee UAN No"
+                errors={errors}
+                error={errors.uanNo}
+              />
+              <AuthInputFiled
+                name="esicNo"
+                icon={AccountBalance}
+                control={control}
+                type="text"
+                placeholder="ESIC No"
+                label="Employee ESIC No"
+                errors={errors}
+                error={errors.esicNo}
+                pattern="[A-Za-z\s]+"
+              />
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                disabled={isLastStep}
+                className="!w-max flex group justify-center px-6 gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+              >
+                Next
+              </button>
+            </div>
+          </form>
+        </>
+      )}
     </div>
   );
 };
