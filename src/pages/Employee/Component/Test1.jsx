@@ -205,7 +205,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
               : ""
           );
           setValue("uanNo", data.employee.uanNo || undefined);
-          setValue("uanNo", data.employee.uanNo || undefined);
+          setValue("esicNo", data.employee.esicNo || undefined);
           setValue("pwd", data.employee.pwd || undefined);
         }
       },
