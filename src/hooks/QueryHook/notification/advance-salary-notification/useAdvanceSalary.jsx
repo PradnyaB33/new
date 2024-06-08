@@ -35,8 +35,9 @@ const useAdvanceSalaryData = () => {
       );
       return response.data.data;
     }
-  );
+  ); 
 
+   
 
   return {
     getAdvanceSalaryData,
