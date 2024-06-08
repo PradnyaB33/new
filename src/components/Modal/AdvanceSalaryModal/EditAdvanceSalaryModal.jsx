@@ -40,7 +40,6 @@ const EditAdvanceSalaryModal = ({
   const [advanceSalaryId, setAdvanceSalaryId] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const {
-    employeeId,
     noOfMonth,
     advanceSalaryStartingDate,
     advanceSalaryEndingDate,
@@ -51,7 +50,6 @@ const EditAdvanceSalaryModal = ({
   } = useAdvanceSalaryState();
   useEffect(() => {
     if (advanceSalary) {
-      setEmployeeId(advanceSalary?.employeeId);
       setAdvanceSalaryStartingDate(
         dayjs(advanceSalary?.advanceSalaryStartingDate)
       );
@@ -148,7 +146,6 @@ const EditAdvanceSalaryModal = ({
     try {
       const requiredFields = ["advanceSalaryStartingDate", "noOfMonth"];
       const data = {
-        employeeId: employeeId,
         advanceSalaryStartingDate: advanceSalaryStartingDate,
         advanceSalaryEndingDate: advanceSalaryEndingDate,
         noOfMonth: noOfMonth,
@@ -167,7 +164,6 @@ const EditAdvanceSalaryModal = ({
       }
 
       const formData = new FormData();
-      formData.append("employeeId", employeeId);
       formData.append("advanceSalaryStartingDate", advanceSalaryStartingDate);
       formData.append("advanceSalaryEndingDate", advanceSalaryEndingDate);
       formData.append("noOfMonth", noOfMonth);
@@ -209,20 +205,6 @@ const EditAdvanceSalaryModal = ({
           {formErrors.noOfMonth && (
             <p className="text-red-500">*{formErrors.noOfMonth}</p>
           )}
-        </div>
-        <div className="space-y-2">
-          <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-            <InputLabel>Employee Id</InputLabel>
-            <OutlinedInput
-              value={employeeId}
-              onChange={(e) => {
-                setEmployeeId(e.target.value);
-              }}
-              id="outlined-adornment-password"
-              label="Employee id"
-              type="text"
-            />
-          </FormControl>
         </div>
         <div className="space-y-2 ">
           <FormControl fullWidth sx={{ marginBottom: "1rem" }}>

@@ -169,9 +169,6 @@ const AdvanceSalary = () => {
                       Status
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      Employee Id
-                    </th>
-                    <th scope="col" className="px-6 py-3">
                       Total Salary
                     </th>
                     <th scope="col" className="px-6 py-3">
@@ -221,9 +218,6 @@ const AdvanceSalary = () => {
                               </span>
                             </div>
                           )}
-                        </td>
-                        <td className="!text-left  pl-7 py-3 ">
-                          {advanceSalary?.employeeId || ""}
                         </td>
                         <td className="!text-left  pl-7 py-3 ">
                           {advanceSalary?.totalSalary || ""}
