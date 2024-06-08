@@ -22,10 +22,27 @@ const useLoanNotification = () => {
       }
     );
     return response.data.data;
-  });
+  }); 
+
+  //for get loan data
+  const { data: getApprovedRejectLoanDataByApprover } = useQuery(
+    ["getApprovedRejectedData"],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/get-approved-reject-loan-to-employee`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
 
   return {
     getEmployeeRequestLoanApplication,
+    getApprovedRejectLoanDataByApprover ,
     isLoading,
     isFetching,
   };
