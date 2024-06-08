@@ -41,13 +41,13 @@ const useLeaveNotification = () => {
     ],
     queryFn: getLeaveNotification,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
     onSuccess: async (data) => {
       if (!firstTime) {
         setFirstTime(true);
         setNotificationCount(data.leaveRequests?.length);
       }
     },
-    refetchOnMount: false,
   });
 
   return {

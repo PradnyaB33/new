@@ -17,16 +17,11 @@ import Card from "./components/card";
 
 const ParentNotification = () => {
   const { data } = useLeaveNotificationHook();
-
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const { data: selfLeaveNotification } = useLeaveNotification();
-  console.log(
-    `🚀 ~ file: page.jsx:18 ~ selfLeaveNotification:`,
-    selfLeaveNotification
-  );
   const { data: data2 } = useShiftNotification();
   const [emp, setEmp] = useState();
   const { data: data3 } = usePunchNotification();

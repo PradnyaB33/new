@@ -22,7 +22,7 @@ const packageCountSchema = z.object({
 });
 const Step3 = ({ nextStep }) => {
   const { count, setStep3Data, cycleCount, paymentType } = useOrg();
-  const { control, handleSubmit, formState } = useForm({
+  const { control, handleSubmit, formState, watch } = useForm({
     defaultValues: {
       count,
       cycleCount,
@@ -79,7 +79,10 @@ const Step3 = ({ nextStep }) => {
             { value: "Phone_Pay", label: "Phone_Pay" },
             { value: "RazorPay", label: "RazorPay" },
           ]}
-          descriptionText={"Additional 2% charges on razorpay transaction"}
+          descriptionText={
+            watch("paymentType") === "Phone_Pay" &&
+            "Additional 2% charges on razorpay transaction"
+          }
         />
         <Button type="submit" variant="contained" className="!w-max !mx-auto">
           Confirm & Pay
