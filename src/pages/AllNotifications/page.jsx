@@ -34,9 +34,13 @@ const ParentNotification = () => {
   const { data: tds } = useTDSNotificationHook();
   const { missPunchData } = useMissedPunchNotificationCount();
   const { Form16Notification } = useForm16NotificationHook();
-  const { getEmployeeRequestLoanApplication  , getApprovedRejectLoanDataByApprover } = useLoanNotification();
+  const {
+    getEmployeeRequestLoanApplication,
+    getApprovedRejectLoanDataByApprover,
+  } = useLoanNotification();
   const { PayslipNotification } = usePayslipNotificationHook();
-  const { getAdvanceSalaryData } = useAdvanceSalaryData();
+  const { getAdvanceSalaryData, advanceSalaryNotification } =
+    useAdvanceSalaryData();
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
   const tdsRoute = useMemo(() => {
@@ -54,6 +58,7 @@ const ParentNotification = () => {
     data?.leaveRequests?.length
   );
   console.log(getAdvanceSalaryData);
+
   useEffect(() => {
     (async () => {
       if (user?._id) {
@@ -109,9 +114,9 @@ const ParentNotification = () => {
     {
       name: "Loan Notification",
       count:
-      getEmployeeRequestLoanApplication?.length ??
-      getApprovedRejectLoanDataByApprover?.length ??
-      0,
+        getEmployeeRequestLoanApplication?.length ??
+        getApprovedRejectLoanDataByApprover?.length ??
+        0,
       color: "#51E8FD",
       url: "/loan-notification",
       url2: "/loan-notification-to-emp",
@@ -141,7 +146,8 @@ const ParentNotification = () => {
     },
     {
       name: "Advance Salary Notification",
-      count: getAdvanceSalaryData?.length ?? 0,
+      count:
+        getAdvanceSalaryData?.length ?? advanceSalaryNotification?.length ?? 0,
       color: "#FF7373",
       url: "/advance-salary-notification",
       url2: "/advance-salary-notification-to-emp",

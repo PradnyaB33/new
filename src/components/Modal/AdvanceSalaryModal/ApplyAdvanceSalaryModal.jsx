@@ -34,13 +34,9 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
   const [errors, setErrors] = useState("");
   const [formErrors, setFormErrors] = useState({});
   const {
-    employee_name,
-    employeeId,
     noOfMonth,
     advanceSalaryStartingDate,
     advanceSalaryEndingDate,
-    setEmployeeName,
-    setEmployeeId,
     setNoOfMonth,
     setAdvanceSalaryStartingDate,
     setAdvanceSalaryEndingDate,
@@ -147,8 +143,6 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
     try {
       const requiredFields = ["advanceSalaryStartingDate", "noOfMonth"];
       const data = {
-        employee_name: employee_name,
-        employeeId: employeeId,
         advanceSalaryStartingDate: advanceSalaryStartingDate,
         advanceSalaryEndingDate: advanceSalaryEndingDate,
         noOfMonth: noOfMonth,
@@ -175,8 +169,6 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
       }
 
       const formData = new FormData();
-      formData.append("ememployee_name", employee_name);
-      formData.append("employeeId", employeeId);
       formData.append("advanceSalaryStartingDate", advanceSalaryStartingDate);
       formData.append("advanceSalaryEndingDate", advanceSalaryEndingDate);
       formData.append("noOfMonth", noOfMonth);
@@ -219,34 +211,7 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
             <p className="text-red-500">*{formErrors.noOfMonth}</p>
           )}
         </div>
-        <div className="space-y-2">
-          <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-            <InputLabel>Employee Name</InputLabel>
-            <OutlinedInput
-              value={employee_name}
-              onChange={(e) => {
-                setEmployeeName(e.target.value);
-              }}
-              id="outlined-adornment-password"
-              label="Employee name"
-              type="text"
-            />
-          </FormControl>
-        </div>
-        <div className="space-y-2">
-          <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-            <InputLabel>Employee Id</InputLabel>
-            <OutlinedInput
-              value={employeeId}
-              onChange={(e) => {
-                setEmployeeId(e.target.value);
-              }}
-              id="outlined-adornment-password"
-              label="Employee id"
-              type="text"
-            />
-          </FormControl>
-        </div>
+
         <div className="space-y-2 ">
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer
