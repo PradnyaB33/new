@@ -64,7 +64,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     const birth = moment(date_of_birth, "YYYY-MM-DD");
     const currentValue = moment(dob, "YYYY-MM-DD");
     const differenceInDOB = currentValue.diff(birth, "years");
-    console.log(`🚀 ~ differenceInDOB:`, differenceInDOB);
     return differenceInDOB >= 19;
   };
 
@@ -150,6 +149,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     resolver: zodResolver(EmployeeSchema),
   });
 
+  console.log(`🚀 ~ file: Test2.jsx:153 ~ getValues:`, getValues());
   const { isFetching } = useQuery(
     ["employeeId", employeeId],
     async () => {
@@ -168,7 +168,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     },
     {
       onSuccess: (data) => {
-        console.log(data);
         if (data) {
           setValue("empId", data.employee.empId || "");
           setValue("companyemail", data.employee.companyemail || "");
@@ -223,7 +222,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
           }
 
           const salaryTemplate = data.employee?.salarystructure;
-          console.log("salary template", salaryTemplate);
           if (salaryTemplate) {
             setValue("salarystructure", {
               label: salaryTemplate.name,
@@ -265,10 +263,15 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             (opt) => opt.value === data.employee.mgrempid
           );
 
-          setValue("mgrempid", {
-            label: checkManager?.label,
-            value: data.employee.mgrempid ? data.employee.mgrempid : "",
-          });
+          if (checkManager?.label && data.employee.mgrempid) {
+            setValue("mgrempid", {
+              label: checkManager?.label ? checkManager?.label : "",
+              value: data.employee.mgrempid ? data.employee.mgrempid : "",
+            });
+          } else {
+            setValue("mgrempid", undefined);
+          }
+
           if (data.employee.profile) {
             const profileLabel = data?.employee?.profile
               ?.filter((role) => role !== "Employee")
@@ -282,12 +285,9 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       },
     }
   );
-  console.log("employee", employeeId);
 
   const { errors } = formState;
-  console.log(`🚀 ~ errors:`, errors);
   const onsubmit = (data) => {
-    console.log(getValues());
     setStep2Data(data);
     nextStep();
   };

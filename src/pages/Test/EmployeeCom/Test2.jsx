@@ -72,7 +72,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     const birth = moment(date_of_birth, "YYYY-MM-DD");
     const currentValue = moment(dob, "YYYY-MM-DD");
     const differenceInDOB = currentValue.diff(birth, "years");
-    console.log(`🚀 ~ differenceInDOB:`, differenceInDOB);
 
     return differenceInDOB >= 19;
   };
@@ -155,7 +154,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       path: ["confirmPassword"],
     });
 
-  const { control, formState, handleSubmit, getValues } = useForm({
+  const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       confirmPassword: confirmPassword,
       password: password,
@@ -175,12 +174,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     resolver: zodResolver(EmployeeSchema),
   });
 
-  console.log(shift_allocation);
-
   const { errors } = formState;
-  console.log(`🚀 ~ errors:`, errors);
   const onsubmit = (data) => {
-    console.log(getValues());
     setStep2Data(data);
     nextStep();
   };
