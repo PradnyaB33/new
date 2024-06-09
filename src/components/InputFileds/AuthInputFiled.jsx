@@ -233,8 +233,18 @@ const AuthInputFiled = ({
                     options={options}
                     value={field?.value}
                     onChange={(value) => {
-                      updateField(name, value);
-                      field.onChange(value);
+                      console.log(
+                        `🚀 ~ file: AuthInputFiled.jsx:265 ~ name, value:`,
+                        name,
+                        value
+                      );
+                      if (value === null) {
+                        updateField(name, undefined);
+                        field.onChange({});
+                      } else {
+                        updateField(name, value);
+                        field.onChange(value);
+                      }
                     }}
                   />
                 </div>
