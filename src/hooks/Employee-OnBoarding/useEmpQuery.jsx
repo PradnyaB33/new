@@ -44,6 +44,9 @@ const useEmpQuery = ({ organisationId }) => {
             },
           }
         ),
+      onSuccess: (data) => {
+        console.log(data);
+      },
     });
 
     return ManagerList;
