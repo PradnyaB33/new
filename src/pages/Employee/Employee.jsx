@@ -10,8 +10,6 @@ const Employee = () => {
   const { useGetCurrentRole, getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
-  console.log("role", role);
-  console.log("user", user.organizationId);
 
   // Determine which component to render based on the role
   const renderEmployeeComponent = () => {

@@ -3,14 +3,13 @@ import {
   Container,
   IconButton,
   TextField,
-  Typography,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
-import UserProfile from "../../hooks/UserData/useUser";
 const EmployeeListToRole = () => {
   const navigate = useNavigate();
   const { cookies } = useContext(UseContext);
@@ -23,10 +22,6 @@ const EmployeeListToRole = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
-  const { useGetCurrentRole } = UserProfile();
-  const role = useGetCurrentRole();
-  console.log("role", role);
-  console.log(availableEmployee, "avialabel days");
 
   const fetchAvailableEmployee = async (page) => {
     try {
@@ -54,8 +49,6 @@ const EmployeeListToRole = () => {
     fetchAvailableEmployee(currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
-
-  console.log(availableEmployee);
 
   const prePage = () => {
     if (currentPage !== 1) {
