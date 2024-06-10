@@ -94,11 +94,11 @@ const Organisation = ({ item }) => {
         return true;
       }
     } else if (item?.subscriptionDetails?.status === "Pending") {
-      if (moment(item?.createdAt).add(7, "days").diff(moment(), "days") > 0) {
-        return false;
-      } else {
-        return true;
-      }
+      // if (moment(item?.createdAt).add(7, "days").diff(moment(), "days") > 0) {
+      return true;
+      // } else {
+      //   return true;
+      // }
     }
     return true;
   };

@@ -9,6 +9,7 @@ import {
   Loop,
   People,
   PriorityHigh,
+  RecyclingRounded,
   Repeat,
   ShoppingBag,
   Subscriptions,
@@ -93,11 +94,11 @@ const BillingCard = ({ doc }) => {
         }
       }
     } else if (doc?.subscriptionDetails?.status === "Pending") {
-      if (moment(doc?.createdAt).add(7, "days").diff(moment(), "days") > 0) {
-        return false;
-      } else {
-        return true;
-      }
+      // if (moment(doc?.createdAt).add(7, "days").diff(moment(), "days") > 0) {
+      return true;
+      // } else {
+      //   return true;
+      // }
     }
     return true;
   };
@@ -107,6 +108,11 @@ const BillingCard = ({ doc }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  console.log(
+    `🚀 ~ file: billing-card.jsx:112`,
+    doc,
+    moment(doc?.createdAt).add(7, "days").diff(moment(), "days") > 0
+  );
   return (
     <div className="shadow-twe-inner bg-Brand-Purple/brand-purple-1 rounded-md grid grid-cols-6">
       <div className=" col-span-5 pl-4 pt-4 pb-4 gap-4 flex flex-col">
@@ -163,20 +169,42 @@ const BillingCard = ({ doc }) => {
         </div>
 
         <div className="bg-brand/wahsed-blue rounded-md flex flex-wrap gap-2 p-2 items-center">
-          <DescriptionBox
-            Icon={Subscriptions}
-            descriptionText={"Subscription charge date"}
-            mainText={moment(doc?.subscriptionDetails?.paymentDate).format(
-              "DD MMM YYYY"
-            )}
-          />
-          <DescriptionBox
-            Icon={Subscriptions}
-            descriptionText={"Subscription end date"}
-            mainText={moment(doc?.subscriptionDetails?.expirationDate).format(
-              "DD MMM YYYY"
-            )}
-          />
+          {!checkHasOrgDisabled() ? (
+            <>
+              {" "}
+              <DescriptionBox
+                Icon={Subscriptions}
+                descriptionText={"Subscription charge date"}
+                mainText={moment(doc?.subscriptionDetails?.paymentDate).format(
+                  "DD MMM YYYY"
+                )}
+              />
+              <DescriptionBox
+                Icon={Subscriptions}
+                descriptionText={"Subscription end date"}
+                mainText={moment(
+                  doc?.subscriptionDetails?.expirationDate ?? moment()
+                ).format("DD MMM YYYY")}
+              />
+            </>
+          ) : (
+            <>
+              {" "}
+              <DescriptionBox
+                Icon={RecyclingRounded}
+                descriptionText={"Your subscription is on trial"}
+                mainText={
+                  moment(doc?.createdAt)
+                    .add(7, "days")
+                    .diff(moment(), "days") === 0
+                    ? `Only ${moment(doc?.createdAt)
+                        .add(7, "days")
+                        .diff(moment(), "days")} days left`
+                    : "But trial has expired"
+                }
+              />
+            </>
+          )}
           <DescriptionBox
             Icon={AttachMoney}
             descriptionText={"Billing frequency"}

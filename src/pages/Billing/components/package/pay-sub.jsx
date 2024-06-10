@@ -92,8 +92,6 @@ const PaySubscription = ({ handleClose, open, organisation }) => {
     );
   }, [employeeToAdd, packageInfo, promoCode, paymentType, cycleCount]);
 
-  console.log("watch", watch("paymentType"));
-
   const { errors } = formState;
 
   async function onSubmit(data) {
