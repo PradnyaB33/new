@@ -1,9 +1,10 @@
 import { Button } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
-import React, { useMemo, useState } from "react";
-import toast from "react-hot-toast";
+import React, { useContext, useMemo, useState } from "react";
 import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
+import { TestContext } from "../../../State/Function/Main";
 import useOrg from "../../../State/Org/Org";
 import PackageInfo from "../../../components/Modal/PackagesModal/package-info";
 import Loader from "../../../components/app-loader/page";
@@ -14,6 +15,8 @@ import PricingCard from "./step-2-components/pricing-card";
 const Step4 = () => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const data = useOrg();
+  const { handleAlert } = useContext(TestContext);
+  const navigate = useNavigate();
   console.log(`🚀 ~ file: step-4.jsx:15 ~ data:`, data);
   const { authToken, decodedToken } = useGetUser();
   const config = {
@@ -62,7 +65,7 @@ const Step4 = () => {
       console.log(`🚀 ~ file: step-4.jsx:87 ~ data:`, data);
       if (data?.paymentType === "Phone_Pay") {
         window.location.href = data?.redirectUrl;
-      } else {
+      } else if (data?.paymentType === "RazorPay") {
         const options = {
           key: data?.key,
           amount: data?.order?.amount,
@@ -86,18 +89,24 @@ const Step4 = () => {
           },
           modal: {
             ondismiss: function () {
-              mutate2(data.organization._id);
+              // mutate2(data.organization._id);
               console.log("Checkout form closed by the user");
             },
           },
         };
         const razor = new window.Razorpay(options);
         razor.open();
+      } else {
+        handleAlert(true, "success", data?.message);
+        navigate("/organizationList");
       }
     },
     onError: async (data) => {
       console.error(`🚀 ~ file: mini-form.jsx:48 ~ data:`, data);
-      toast.error(
+
+      handleAlert(
+        true,
+        "error",
         data?.response?.data?.message || "Please fill all mandatory field"
       );
     },
