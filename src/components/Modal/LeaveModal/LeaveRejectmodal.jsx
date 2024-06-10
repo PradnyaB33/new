@@ -160,14 +160,18 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
                 </h1>
               )}
 
-              <Chip
-                label={items?.description}
-                size="small"
-                sx={{
-                  backgroundColor: items?.color,
-                  color: "#ffffff",
-                }}
-              />
+              {items?.status === "Deleted" ? (
+                <Chip label={`Reason: ${items?.message}`} size="small" />
+              ) : (
+                <Chip
+                  label={items?.description}
+                  size="small"
+                  sx={{
+                    backgroundColor: items?.color,
+                    color: "#ffffff",
+                  }}
+                />
+              )}
 
               {items.status === "Pending" ? (
                 <Box sx={{ mt: 3, mb: 3 }}>
