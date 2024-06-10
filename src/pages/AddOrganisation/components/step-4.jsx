@@ -24,14 +24,14 @@ const Step4 = () => {
       Authorization: authToken,
     },
   };
-  const handleDismiss = async (id) => {
-    const response = await axios.delete(
-      `${process.env.REACT_APP_API}/route/organization/delete/${id}`,
-      config
-    );
-    console.log(`🚀 ~ file: step-4.jsx:77 ~ response:`, response);
-    return response.data;
-  };
+  // const handleDismiss = async (id) => {
+  //   const response = await axios.delete(
+  //     `${process.env.REACT_APP_API}/route/organization/delete/${id}`,
+  //     config
+  //   );
+  //   console.log(`🚀 ~ file: step-4.jsx:77 ~ response:`, response);
+  //   return response.data;
+  // };
   const handleForm = async () => {
     console.log(`🚀 ~ file: step-4.jsx:45 ~ data:`, data);
     console.log(
