@@ -18,9 +18,10 @@ import React, { useContext, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Loader from "../../../pages/Notification/Loader";
+import useNotificationCount from "../../app-layout/notification-zustand";
 import useLeaveData from "./useLeaveData";
 
-const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
+const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [open, setOpen] = useState(false);
@@ -28,13 +29,14 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
   const queryClient = useQueryClient();
   const { acceptDeleteLeaveMutation, rejectDeleteLeaveMutation } =
     useLeaveData();
+  const { reduceNotificationCount } = useNotificationCount();
 
   const handleClose = () => {
     setOpen(false);
   };
 
   const rejectRequestMutation = useMutation(
-    async () => {
+    async (length) => {
       await axios.post(
         `${process.env.REACT_APP_API}/route/leave/reject/${items._id}`,
         { message },
@@ -44,6 +46,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
           },
         }
       );
+      reduceNotificationCount(length);
     },
     {
       onSuccess: () => {
@@ -54,7 +57,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
     }
   );
   const { mutate: acceptLeaveMutation, isLoading: mutateLoading } = useMutation(
-    ({ id }) =>
+    ({ id, length }) => {
       axios.post(
         `${process.env.REACT_APP_API}/route/leave/accept/${id}`,
         { message: "Your Request is successfully approved" },
@@ -63,7 +66,9 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
             Authorization: authToken,
           },
         }
-      ),
+      );
+      reduceNotificationCount(length);
+    },
     {
       onSuccess: () => {
         queryClient.invalidateQueries("employee-leave");
@@ -76,7 +81,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    rejectRequestMutation.mutate(); // Trigger the mutation
+    rejectRequestMutation.mutate(length); // Trigger the mutation
   };
 
   return (
@@ -179,7 +184,9 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
                     <Button
                       disabled={isLoading || isFetching}
                       variant="contained"
-                      onClick={() => acceptLeaveMutation({ id: items._id })}
+                      onClick={() =>
+                        acceptLeaveMutation({ id: items._id, length })
+                      }
                       color="primary"
                       sx={{
                         fontSize: "12px",
