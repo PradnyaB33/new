@@ -102,6 +102,10 @@ const Organisation = ({ item }) => {
     }
     return true;
   };
+  console.log(
+    "moment(item?.createdAt).diff(moment())",
+    moment(item?.createdAt).diff(moment(), "days")
+  );
   return (
     <>
       <div
@@ -152,6 +156,15 @@ const Organisation = ({ item }) => {
             color="primary"
             variant="contained"
           />
+          {!checkHasOrgDisabled() && (
+            <p>
+              You are on{" "}
+              {Math.abs(
+                moment().diff(moment(item?.createdAt).add(7, "days"), "days")
+              )}{" "}
+              day trial
+            </p>
+          )}
         </div>
         <div className="p-6 py-4  flex gap-4">
           <button
