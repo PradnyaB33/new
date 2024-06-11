@@ -202,7 +202,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           icon={ContactEmergency}
           control={control}
           value={phone_number}
-          type="contact"
+          type="number"
           placeholder="1234567890"
           label="Contact *"
           errors={errors}
