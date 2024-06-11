@@ -9,7 +9,7 @@ const usePayslipNotificationHook = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
-  const { setNotificationCount, notificationCount } = useNotificationCount();
+  const { setNotificationCount } = useNotificationCount();
   const user = getCurrentUser();
   const organisationId = user.organizationId;
   const userId = user._id;

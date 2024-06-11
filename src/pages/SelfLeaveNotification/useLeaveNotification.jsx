@@ -12,7 +12,7 @@ const useLeaveNotification = () => {
   const [maxDate, setMaxDate] = useState(moment().endOf("month"));
   const [firstTime, setFirstTime] = useState(false);
   const [skip, setSkip] = useState(0);
-  const { setNotificationCount, notificationCount } = useNotificationCount();
+  const { setNotificationCount } = useNotificationCount();
 
   const { authToken, decodedToken } = useGetUser();
   const getLeaveNotification = async () => {
