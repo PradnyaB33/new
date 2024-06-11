@@ -94,11 +94,11 @@ const Organisation = ({ item }) => {
         return true;
       }
     } else if (item?.subscriptionDetails?.status === "Pending") {
-      // if (moment(item?.createdAt).add(7, "days").diff(moment(), "days") > 0) {
-      return true;
-      // } else {
-      //   return true;
-      // }
+      if (moment(item?.createdAt).add(7, "days").diff(moment(), "days") > 0) {
+        return false;
+      } else {
+        return true;
+      }
     }
     return true;
   };
@@ -171,7 +171,6 @@ const Organisation = ({ item }) => {
           </button>
 
           {!checkHasOrgDisabled() ? (
-            // Display "Go to Dashboard" button if the status is "active"
             <Link to={`/organisation/${item._id}/dashboard/super-admin`}>
               <button className="flex group justify-center gap-2 items-center rounded-md px-6 py-2 text-md font-semibold text-blue-500 transition-all bg-white hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
                 Go to Dashboard
