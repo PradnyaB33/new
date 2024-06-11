@@ -23,7 +23,7 @@ const BackComponent = () => {
     "employeeTest",
     "/DH-dashboard",
     "/income-tax",
-    "/performance",
+    "/organisation/:organisationId/performance",
     "/organizationList",
     "/assingOrganizationToSelf",
     // "/billing",

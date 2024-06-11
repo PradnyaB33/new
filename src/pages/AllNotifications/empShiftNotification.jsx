@@ -42,7 +42,7 @@ const EmpShiftNotification = () => {
   return (
     <div>
       <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
-        <Link to={"/income-tax"}>
+        <Link to={"/organisation/:organisationId/income-tax"}>
           <West className="mx-4 !text-xl" />
         </Link>
         Employee Shift Status

@@ -47,7 +47,7 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
         label: organisation?.packageInfo,
         isDisabled: false,
       },
-      paymentType: "RazorPay",
+      paymentType: undefined,
       discount: 0,
     },
     resolver: zodResolver(packageSchema),
@@ -56,10 +56,6 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
   const { errors } = formState;
 
   async function onSubmit(data) {
-    console.log(
-      `🚀 ~ file: upgrade.jsx:69 ~ organisation?._id:`,
-      organisation?._id
-    );
     mutate({
       count: data?.employeeToAdd,
       packageName: data?.packageInfo?.value,
@@ -72,6 +68,7 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
   const packageInfo = watch("packageInfo").value;
   const employeeToAdd = Number(watch("employeeToAdd"));
   const expirationDate = organisation?.subscriptionDetails?.expirationDate;
+  const paymentType = watch("paymentType");
 
   const promoCode = watch("discount");
 
@@ -89,16 +86,23 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
     let discountedToMinus =
       perDayValue * employeeToAdd * remainingDays * (promoCode / 100);
 
+    let addedAmountIfRazorPay =
+      perDayValue *
+      employeeToAdd *
+      remainingDays *
+      (paymentType === "RazorPay" ? 0.02 : 0);
     setAmount(
       Math.round(
-        perDayValue * employeeToAdd * remainingDays - discountedToMinus
+        perDayValue * employeeToAdd * remainingDays -
+          discountedToMinus +
+          addedAmountIfRazorPay
       )
     );
-  }, [employeeToAdd, packageInfo, expirationDate, promoCode]);
+  }, [employeeToAdd, packageInfo, expirationDate, promoCode, paymentType]);
 
   return (
     <ReusableModal
-      heading={"Upgrade subscription"}
+      heading={"Upgrade Subscription"}
       open={open}
       onClose={handleClose}
     >
@@ -116,6 +120,7 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
             label="Employee To Add *"
             errors={errors}
             error={errors.employeeToAdd}
+            descriptionText={"Here u can add number of employee to add"}
           />
           <AuthInputFiled
             name="packageInfo"
@@ -137,11 +142,13 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
                     : false,
               },
             ]}
+            descriptionText={"Select your package to upgrade"}
           />
 
           <AuthInputFiled
             name="paymentType"
             icon={FactoryOutlined}
+            className={"mb-4"}
             control={control}
             type="naresh-select"
             placeholder="Select your Merchant"
@@ -152,7 +159,11 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
               { value: "Phone_Pay", label: "Phone_Pay" },
               { value: "RazorPay", label: "RazorPay" },
             ]}
-            descriptionText={"Additional 2% charges on razorpay transaction"}
+            descriptionText={
+              watch("paymentType") === "RazorPay"
+                ? "Additional 2% charges on razor-pay transaction"
+                : "No additional charges on phone-pay transaction"
+            }
           />
           <AuthInputFiled
             name="promoCode"

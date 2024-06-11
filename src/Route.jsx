@@ -77,6 +77,10 @@ import OrgChart from "./Test/OrgChart";
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
+import AdvanceSalary from "./pages/AdvanceSalary/AdvanceSalary";
+import AdvanceSalaryApproval from "./pages/AdvanceSalaryNotification/AdvanceSalaryApproval";
+import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotification";
+import AdvanceSalaryNotificationToEmp from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotificationToEmp";
 import ParentNotification from "./pages/AllNotifications/page";
 import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
@@ -84,7 +88,7 @@ import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
 import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 import EmployeeNotification from "./pages/Employee-Notification/page";
-import Form16Notification from "./pages/Form16NotificationToEmp/Form16Notification";
+import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LetterSetup from "./pages/LetterTypes/LetterSetup";
@@ -114,6 +118,7 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import EditEmployee from "./pages/Employee/EditEmployee";
 
 const App = () => {
   return (
@@ -140,10 +145,16 @@ const App = () => {
           }
         />
         <Route
-          path="/performance"
+          path="/organisation/:organisationId/performance"
           element={
             <RequireAuth
-              permission={["Super-Admin", "Employee", "Manager", "HR"]}
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Employee",
+                "Manager",
+                "HR",
+              ]}
             >
               <Performance />
             </RequireAuth>
@@ -233,7 +244,7 @@ const App = () => {
           element={<MissedPunchNotification />}
         />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+
         <Route
           path="/waiting"
           element={
@@ -426,6 +437,16 @@ const App = () => {
             </RequireAuth>
           }
         />
+         <Route
+          path="/organisation/:organisationId/edit-employee/:employeeId"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <EditEmployee />
+            </RequireAuth>
+          }
+        />
         <Route
           path="/organisation/:organisationId/emo-info-punch-status"
           element={
@@ -599,6 +620,28 @@ const App = () => {
               ]}
             >
               <LoanManagement />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/advance-salary"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <AdvanceSalary />
             </RequireAuth>
           }
         />
@@ -964,9 +1007,18 @@ const App = () => {
             </RequireAuth>
           }
         />
-        <Route path="/income-tax" element={<IncomeTax />} />
-        <Route path="/income-tax/declarations" element={<TDSTab1 />} />
-        <Route path="/income-tax/calculation" element={<TDSCalculation />} />
+        <Route
+          path="/organisation/:organisationId/income-tax"
+          element={<IncomeTax />}
+        />
+        <Route
+          path="/organisation/:organisationId/income-tax/declarations"
+          element={<TDSTab1 />}
+        />
+        <Route
+          path="/organisation/:organisationId/income-tax/calculation"
+          element={<TDSCalculation />}
+        />
         <Route path="/notification/income-tax" element={<DeclarationPage />} />
         <Route
           path="/notification/income-tax-details"
@@ -1075,7 +1127,19 @@ const App = () => {
         />
         <Route
           path="/form16-notification-to-emp"
-          element={<Form16Notification />}
+          element={<Form16NotificationToEmp />}
+        />
+        <Route
+          path="/advance-salary-notification"
+          element={<AdvanceSalaryNotification />}
+        />
+        <Route
+          path="/advance-salary-approval/:advanceSalaryId"
+          element={<AdvanceSalaryApproval />}
+        />
+        <Route
+          path="/advance-salary-notification-to-emp"
+          element={<AdvanceSalaryNotificationToEmp />}
         />
       </Routes>
     </AuthProvider>

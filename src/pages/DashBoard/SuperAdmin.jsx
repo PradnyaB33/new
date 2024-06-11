@@ -16,6 +16,7 @@ import Select from "react-select";
 import useDashGlobal from "../../hooks/Dashboard/useDashGlobal";
 import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
 import useEmployee from "../../hooks/Dashboard/useEmployee";
+import useSubscriptionGet from "../../hooks/QueryHook/Subscription/hook";
 import LineGraph from "./Components/Bar/LineGraph";
 import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
@@ -26,15 +27,17 @@ const SuperAdmin = () => {
   const queryClient = useQueryClient();
   // custom hooks
   const { employee, employeeLoading } = useEmployee(organisationId);
+  const { data: mainD } = useSubscriptionGet({ organisationId });
+  console.log(
+    `🚀 ~ file: SuperAdmin.jsx:31 ~ data:`,
+    mainD?.organisation?.packageInfo === "Intermediate Plan"
+  );
   const {
-    // Department,
-    // departmentLoading,
     Managers,
     managerLoading,
     location: loc,
     oraganizationLoading,
     absentEmployee,
-    // locationLoading,
     locationOptions,
     managerOptions,
     Departmentoptions,
@@ -57,20 +60,11 @@ const SuperAdmin = () => {
     <>
       <section className=" bg-gray-50  min-h-screen w-full ">
         <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
-          {/* <BackComponent /> */}
           <Link to={"/organizationList"}>
             <West className="mx-4 !text-xl" />
           </Link>
           Organisation Dashboard
         </header>
-        {/* <Link to={"/organizationList"} className="my-4 px-8 flex gap-1">
-        <KeyboardBackspace />
-        <h1>Go back</h1>
-      </Link> */}
-        {/* <div className="bg-white pt-10 pb-4 border-b-[.5px] border-gray-300">
-        <div className="flex  px-8    items-center !text-[#152745] gap-1"></div>
-      </div> */}
-
         <div className="md:px-8 px-2 w-full">
           <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1  mt-6  w-full   gap-2 md:gap-5 ">
             <SuperAdminCard
@@ -97,7 +91,7 @@ const SuperAdmin = () => {
               icon={EventBusy}
               color={"!bg-red-500"}
               data={absentEmployee}
-              isLoading={false}
+              isLoading={employeeLoading}
             />
 
             <SuperAdminCard
@@ -114,14 +108,15 @@ const SuperAdmin = () => {
               data={loc?.locationCount}
               title={"Locations"}
             />
-
-            <SuperAdminCard
-              color={"!bg-indigo-500"}
-              isLoading={false}
-              icon={NearMe}
-              data={loc?.locationCount}
-              title={"Remote Employees"}
-            />
+            {mainD?.organisation?.packageInfo === "Intermediate Plan" && (
+              <SuperAdminCard
+                color={"!bg-indigo-500"}
+                isLoading={false}
+                icon={NearMe}
+                data={loc?.locationCount}
+                title={"Remote Employees"}
+              />
+            )}
           </div>
 
           {oraganizationLoading ? (

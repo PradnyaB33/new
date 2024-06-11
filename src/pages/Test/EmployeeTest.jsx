@@ -22,10 +22,23 @@ import Test4 from "./EmployeeCom/Test4";
 
 // Helper function to convert date format
 const convertToISOFormat = (dateStr) => {
-  const [day, month, year] = dateStr.split("-").map(Number);
+  let day, month, year;
+
+  if (dateStr.includes("-")) {
+    [day, month, year] = dateStr.split("-").map(Number);
+  } else if (dateStr.includes("/")) {
+    [day, month, year] = dateStr.split("/").map(Number);
+  } else {
+    throw new Error("Invalid date format");
+  }
+
   const date = new Date(Date.UTC(year, month - 1, day));
   return date.toISOString();
 };
+
+// Validation functions
+const isValidPanCard = (panCard) => /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(panCard);
+const isValidAadharCard = (aadharCard) => /^\d{12}$/.test(aadharCard);
 
 const EmployeeTest = () => {
   const { authToken } = useGetUser();
@@ -61,6 +74,17 @@ const EmployeeTest = () => {
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
+    const fileExtension = file.name.split(".").pop().toLowerCase();
+
+    if (!["xlsx", "xls", "csv"].includes(fileExtension)) {
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: "Only Excel files are allowed",
+      });
+      return;
+    }
+
     setUploadedFileName(file.name);
     const reader = new FileReader();
 
@@ -100,6 +124,25 @@ const EmployeeTest = () => {
       console.log("Final Data", finalData);
 
       finalData.forEach(async (employee) => {
+        // Validation for PAN and Aadhar card
+        if (!isValidPanCard(employee.pan_card_number)) {
+          setAppAlert({
+            alert: true,
+            type: "error",
+            msg: `Invalid PAN card format for employee no ${employee.empId}`,
+          });
+          return;
+        }
+
+        if (!isValidAadharCard(employee.adhar_card_number)) {
+          setAppAlert({
+            alert: true,
+            type: "error",
+            msg: `Invalid Aadhar card format for employee no ${employee.empId}`,
+          });
+          return;
+        }
+
         try {
           await axios.post(
             `${process.env.REACT_APP_API}/route/employee/add-employee`,
@@ -209,6 +252,7 @@ const EmployeeTest = () => {
         <IconButton onClick={() => navigate(-1)}>
           <West className=" !text-xl" />
         </IconButton>
+
         <div className="flex justify-between w-full">
           <div>
             Employee Onboarding
@@ -216,7 +260,22 @@ const EmployeeTest = () => {
               Welcome your employees by creating their profiles here.
             </p>
           </div>
-          <div>
+          <div className="flex items-center gap-4">
+            <div>
+              <h1 className="w-full text-sm">
+                Onboarding Limit : {org?.memberCount}
+              </h1>
+            </div>
+            <div>
+              <h1 className="w-full text-sm">
+                Current Employee Count : {members?.length}
+              </h1>
+            </div>
+            <div>
+              <h1 className="w-full text-sm">
+                Vacancy Count : {org?.memberCount - members?.length}
+              </h1>
+            </div>
             <FormControlLabel
               control={
                 <Checkbox
@@ -232,16 +291,9 @@ const EmployeeTest = () => {
 
       {showExcelOnboarding && (
         <div className="w-full flex justify-center items-center mt-6">
-          <div className="flex flex-col gap-5 py-4 bg-white shadow-md">
+          <div className="flex flex-col gap-4 py-4 bg-white shadow-md">
             <h1 className="text-xl text-center">Excel Onboarding</h1>
-            <div className="w-full flex flex-col">
-              <h1 className="w-full text-center text-sm">
-                Onboarding Limit : {org?.memberCount}
-              </h1>
-              <h1 className="w-full text-center text-sm">
-                Current Employee Count : {members?.length}
-              </h1>
-            </div>
+            <div className="w-full flex flex-col"></div>
             <h1 className="text-xs text-gray-600 w-[80%] m-auto text-center">
               You can onboard employees efficiently by downloading the template,
               filling in the employee data, and uploading the completed Excel

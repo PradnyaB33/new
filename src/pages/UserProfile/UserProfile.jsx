@@ -1,19 +1,18 @@
-import { Button, Divider, Paper } from "@mui/material";
-import axios from "axios";
-import React, { useContext, useState, useRef } from "react";
-import { TestContext } from "../../State/Function/Main";
-import { UseContext } from "../../State/UseState/UseContext";
-import UserProfile from "../../hooks/UserData/useUser";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "react-query";
-import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import { ContactEmergency } from "@mui/icons-material";
 import ChatIcon from "@mui/icons-material/Chat";
 import InfoIcon from "@mui/icons-material/Info";
+import { Button, Divider, Paper, Skeleton } from "@mui/material";
+import axios from "axios";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "react-query";
+import { z } from "zod";
+import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
+import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
+import UserProfile from "../../hooks/UserData/useUser";
 import useHook from "../../hooks/UserProfile/useHook";
-import { Skeleton } from "@mui/material";
 import { getSignedUrl, uploadFile } from "../../services/api";
 
 const EmployeeProfile = () => {
@@ -29,6 +28,7 @@ const EmployeeProfile = () => {
   const [url, setUrl] = useState();
   const fileInputRef = useRef();
   const [file, setFile] = useState();
+
   const UserProfileSchema = z.object({
     additional_phone_number: z
       .string()
@@ -46,6 +46,7 @@ const EmployeeProfile = () => {
     formState: { errors },
     handleSubmit,
     reset,
+    setValue,
   } = useForm({
     defaultValues: {
       additional_phone_number: "",
@@ -53,6 +54,25 @@ const EmployeeProfile = () => {
       status_message: "",
     },
     resolver: zodResolver(UserProfileSchema),
+  });
+
+  useEffect(() => {
+    (async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/get/profile/${userId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setValue("chat_id", response?.data?.employee?.chat_id);
+      setValue(
+        "additional_phone_number",
+        String(response?.data?.employee?.additional_phone_number)
+      );
+      setValue("status_message", response?.data?.employee?.status_message);
+    })();
   });
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];

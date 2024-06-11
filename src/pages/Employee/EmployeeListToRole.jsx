@@ -1,12 +1,17 @@
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { Container, IconButton, TextField, Typography , Tooltip } from "@mui/material";
+import {
+  Container,
+  IconButton,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
-import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
-import UserProfile from "../../hooks/UserData/useUser";
 const EmployeeListToRole = () => {
+  const navigate = useNavigate();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [nameSearch, setNameSearch] = useState("");
@@ -17,10 +22,6 @@ const EmployeeListToRole = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
-  const { useGetCurrentRole } = UserProfile();
-  const role = useGetCurrentRole();
-  console.log("role", role);
-  console.log(availableEmployee, "avialabel days");
 
   const fetchAvailableEmployee = async (page) => {
     try {
@@ -49,10 +50,6 @@ const EmployeeListToRole = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
-  
-
-  console.log(availableEmployee);
-
   const prePage = () => {
     if (currentPage !== 1) {
       fetchAvailableEmployee(currentPage - 1);
@@ -68,19 +65,9 @@ const EmployeeListToRole = () => {
   const changePage = (id) => {
     fetchAvailableEmployee(id);
   };
-  // Modal states and function
 
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [employeeId, setemployeeId] = useState(null);
-
-  const handleEditModalOpen = (employeeId) => {
-    setEditModalOpen(true);
-    setemployeeId(employeeId);
-  };
-
-  const handleClose = () => {
-    setemployeeId(null);
-    setEditModalOpen(false);
+  const handleEditClick = (empId) => {
+    navigate(`/organisation/${organisationId}/edit-employee/${empId}`);
   };
 
   return (
@@ -88,23 +75,27 @@ const EmployeeListToRole = () => {
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
-          Employee List
+            Employee List
           </Typography>
           <p className="text-xs text-gray-600 pl-10 text-center">
-            Edit employee data here by using edit button.      
+            Edit employee data here by using edit button.
           </p>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center gap-3 mb-3 md:mb-0">
-            <Tooltip title="No employees found" placement="top" open={availableEmployee.length < 1 && nameSearch !== ''}>
-            <TextField
-            onChange={(e) => setNameSearch(e.target.value)}
-            placeholder="Search Employee Name...."
-            variant="outlined"
-            size="small"
-            sx={{ width: 300 }}
-           />
-          </Tooltip>
+              <Tooltip
+                title="No employees found"
+                placement="top"
+                open={availableEmployee.length < 1 && nameSearch !== ""}
+              >
+                <TextField
+                  onChange={(e) => setNameSearch(e.target.value)}
+                  placeholder="Search Employee Name...."
+                  variant="outlined"
+                  size="small"
+                  sx={{ width: 300 }}
+                />
+              </Tooltip>
             </div>
             <div className="flex items-center gap-3 mb-3 md:mb-0">
               <TextField
@@ -151,7 +142,7 @@ const EmployeeListToRole = () => {
                   <th scope="col" className="!text-left pl-8 py-3">
                     Department
                   </th>
-                 
+
                   <th scope="col" className="px-6 py-3">
                     Actions
                   </th>
@@ -211,7 +202,7 @@ const EmployeeListToRole = () => {
                           <IconButton
                             color="primary"
                             aria-label="edit"
-                            onClick={() => handleEditModalOpen(item._id)}
+                            onClick={() => handleEditClick(item._id)}
                           >
                             <EditOutlinedIcon />
                           </IconButton>
@@ -302,15 +293,6 @@ const EmployeeListToRole = () => {
           </div>
         </article>
       </Container>
-
-      {/* edit model */}
-      <EditModelOpen
-        role={role}
-        handleClose={handleClose}
-        open={editModalOpen}
-        employeeId={employeeId}
-        organisationId={organisationId}
-      />
     </>
   );
 };

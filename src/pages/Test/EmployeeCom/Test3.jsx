@@ -17,9 +17,9 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
   const { setStep3Data, data, profile } = useEmpState();
   console.log(`🚀 ~ file: Test3.jsx:18 ~ data:`, profile);
 
-  const EmployeeSchema = z.object({}).catchall(z.string().optional());
+  const EmployeeSchema = z.object({}).catchall(z.any().optional());
 
-  const { control, formState, handleSubmit } = useForm({
+  const { control, formState, handleSubmit, getValues } = useForm({
     defaultValues: {
       ...data,
     },
@@ -32,7 +32,9 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
   };
 
   const { errors } = formState;
+  console.log(`🚀 ~ file: Test3.jsx:35 ~ errors:`, errors);
 
+  console.log(`🚀 ~ file: Test3.jsx:38 ~ getValues():`, getValues());
   if (addtionalLoading) {
     return (
       <div className="flex h-[40vh] items-center justify-center">

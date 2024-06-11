@@ -104,7 +104,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
     uanNo: z
       .string()
       .refine((value) => value === "" || /^\d{12}$/.test(value), {
-        message: "UAN number must be a 17-digit number",
+        message: "UAN number must be a 12-digit number",
       })
       .optional(),
     esicNo: z

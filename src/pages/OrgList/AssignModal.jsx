@@ -15,8 +15,8 @@ const AssignModal = ({ open, openDialog, closeDialog, mutation }) => {
         <DialogContent>
           <p>
             Please confirm your decision to change your employment in the
-            organization. Be aware that changing your organization will also
-            switch your leaves and other data to the new organization.
+            organisation. Be aware that changing your organisation will also
+            switch your leaves and other data to the new organisation.
           </p>
         </DialogContent>
         <DialogActions>

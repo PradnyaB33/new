@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 import useAuthToken from "../Token/useAuth";
 
-const useEmpQuery = ({  organisationId }) => {
+const useEmpQuery = ({ organisationId }) => {
   const authToken = useAuthToken();
-
-  console.log("ids" , organisationId);
+  const { employeeId } = useParams();
 
   const getEmployeeDataApi = async (api) => {
     try {
@@ -37,6 +37,26 @@ const useEmpQuery = ({  organisationId }) => {
       queryKey: ["managersList"],
       queryFn: () =>
         getEmployeeDataApi(
+          `${process.env.REACT_APP_API}/route/employee/getAllManager/${organisationId}/${employeeId}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        ),
+      onSuccess: (data) => {
+        console.log(data);
+      },
+    });
+
+    return ManagerList;
+  };
+
+  const OnBoardManagerListCall = () => {
+    const { data: managerlist } = useQuery({
+      queryKey: ["managersListed"],
+      queryFn: () =>
+        getEmployeeDataApi(
           `${process.env.REACT_APP_API}/route/employee/getAllManager/${organisationId}`,
           {
             headers: {
@@ -46,7 +66,7 @@ const useEmpQuery = ({  organisationId }) => {
         ),
     });
 
-    return ManagerList;
+    return managerlist;
   };
 
   const EmpCodeCall = () => {
@@ -180,6 +200,7 @@ const useEmpQuery = ({  organisationId }) => {
     AdditionalListCall,
     LocationListCall,
     EmpCodeCall,
+    OnBoardManagerListCall,
   };
 };
 
