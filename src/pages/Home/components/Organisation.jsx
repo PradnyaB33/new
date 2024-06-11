@@ -83,6 +83,7 @@ const Organisation = ({ item }) => {
     // if organization subscriptionDetails.status is pending and the difference between the current date and the expiration date is greater than 0 then return true else return false
     if (item?.subscriptionDetails?.status === "Active") {
       // check if expired by checking subscriptionDetails.expirationDate
+
       if (
         moment(item?.subscriptionDetails?.expirationDate).diff(
           moment(),
@@ -156,15 +157,21 @@ const Organisation = ({ item }) => {
             color="primary"
             variant="contained"
           />
-          {!checkHasOrgDisabled() && (
-            <p>
-              You are on{" "}
-              {Math.abs(
-                moment().diff(moment(item?.createdAt).add(7, "days"), "days")
-              )}{" "}
-              day trial
-            </p>
-          )}
+          <p className="h-4">
+            {item?.subscriptionDetails?.status === "Pending" &&
+              moment(item?.createdAt).add(7, "days").diff(moment(), "days") >
+                0 &&
+              moment(item?.createdAt).add(7, "days").diff(moment(), "days") <
+                7 && (
+                <p>
+                  Your{" "}
+                  {moment(item?.createdAt)
+                    .add(7, "days")
+                    .diff(moment(), "days")}{" "}
+                  day trial left
+                </p>
+              )}
+          </p>
         </div>
         <div className="p-6 py-4  flex gap-4">
           <button

@@ -194,14 +194,18 @@ const BillingCard = ({ doc }) => {
                 Icon={RecyclingRounded}
                 descriptionText={"Your subscription is on trial"}
                 mainText={
-                  moment(doc?.createdAt)
-                    .add(7, "days")
-                    .diff(moment(), "days") === 0
+                  moment(doc?.createdAt).add(7, "days").diff(moment(), "days") >
+                  0
                     ? `Only ${moment(doc?.createdAt)
                         .add(7, "days")
                         .diff(moment(), "days")} days left`
                     : "But trial has expired"
                 }
+              />
+              <DescriptionBox
+                Icon={RecyclingRounded}
+                descriptionText={"Your subscription trial start Date"}
+                mainText={moment(doc?.createdAt).format("DD MMM YYYY")}
               />
             </>
           )}
