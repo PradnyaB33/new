@@ -119,7 +119,7 @@ const InputForm = () => {
         <div className="flex justify-between">
           <Button
             variant="contained"
-            disabled={skip >= 0 ? true : false}
+            disabled={skip > 0 ? false : true}
             onClick={() => {
               setSkip((prev) => prev - 1);
             }}

@@ -13,11 +13,6 @@ const useLeaveNotification = () => {
   const [firstTime, setFirstTime] = useState(false);
   const [skip, setSkip] = useState(0);
   const { setNotificationCount, notificationCount } = useNotificationCount();
-  console.log(
-    `🚀 ~ file: useLeaveNotification.jsx:15 ~ notificationCount:`,
-    notificationCount,
-    setNotificationCount
-  );
 
   const { authToken, decodedToken } = useGetUser();
   const getLeaveNotification = async () => {
