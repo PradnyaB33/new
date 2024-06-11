@@ -40,7 +40,7 @@ const useLeaveNotification = () => {
     onSuccess: async (data) => {
       if (!firstTime) {
         setFirstTime(true);
-        setNotificationCount(data.leaveRequests?.length);
+        setNotificationCount(data.leaveRequests?.length ?? 0);
       }
     },
   });

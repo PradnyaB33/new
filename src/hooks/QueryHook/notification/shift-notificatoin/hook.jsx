@@ -53,7 +53,7 @@ const useShiftNotification = () => {
       refetchOnMount: false,
       onSuccess: async (data) => {
         console.log(`🚀 ~ file: hook.jsx:33 ~ data:`, data);
-        setNotificationCount(data?.length);
+        setNotificationCount(data?.length ?? 0);
       },
     }
   );
