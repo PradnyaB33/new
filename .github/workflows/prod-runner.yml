@@ -6,7 +6,7 @@ on:
       - prod-branch
   workflow_dispatch:
   workflow_run:
-    workflows: ["🚀 QA to PROD Branch"]
+    workflows: ["🚀 QA to PROD Branch","🚀 Main to ALL Branches"]
     types:
       - completed  
 

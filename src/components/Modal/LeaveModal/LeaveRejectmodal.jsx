@@ -98,7 +98,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
       >
         <Grid item className="gap-1  py-4 w-full  h-max space-y-4">
           <Box className="flex md:flex-row items-center  justify-center flex-col gap-8  md:gap-16">
-            <div className="w-max">
+            <div className="w-max gap-4 flex flex-col items-center">
               <Badge
                 badgeContent={`${dayjs(items.end).diff(
                   dayjs(items.start),
@@ -116,6 +116,11 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
                   <CalendarMonth className="!text-4xl text-gr" />
                 </Button>
               </Badge>
+              {items?.status === "Deleted" ? (
+                <Chip label={"Delete Request"} size="small" />
+              ) : (
+                <Chip label={"Request"} size="small" />
+              )}
             </div>
 
             <div className="space-y-4 w-full flex flex-col items-center md:items-start justify-center">
@@ -124,7 +129,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
                 items?.status === "Deleted" ? (
                   <h1 className="text-xl px-4 md:!px-0 font-semibold ">
                     {items?.employeeId?.first_name}{" "}
-                    {items?.employeeId?.last_name} has raised reject request of{" "}
+                    {items?.employeeId?.last_name} has raised filed a request of{" "}
                     {items?.leaveTypeDetailsId?.leaveName} on{" "}
                     {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
                     {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
@@ -132,8 +137,8 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
                 ) : (
                   <h1 className="text-xl px-4 md:!px-0 font-semibold ">
                     {items?.employeeId?.first_name}{" "}
-                    {items?.employeeId?.last_name} has raised a{" "}
-                    {items?.leaveTypeDetailsId?.leaveName} request on{" "}
+                    {items?.employeeId?.last_name} has requested{" "}
+                    {items?.leaveTypeDetailsId?.leaveName} from{" "}
                     {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
                     {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
                   </h1>
@@ -142,7 +147,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
                 <h1 className="text-xl px-4 md:!px-0 font-semibold ">
                   {" "}
                   {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
-                  has raised reject request of{" "}
+                  has filed a request to refuse{" "}
                   {items?.leaveTypeDetailsId?.leaveName} on{" "}
                   {format(new Date(items.start), "dd-MM-yyyy")}
                 </h1>
@@ -155,14 +160,18 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching }) => {
                 </h1>
               )}
 
-              <Chip
-                label={items?.description}
-                size="small"
-                sx={{
-                  backgroundColor: items?.color,
-                  color: "#ffffff",
-                }}
-              />
+              {items?.status === "Deleted" ? (
+                <Chip label={`Reason: ${items?.message}`} size="small" />
+              ) : (
+                <Chip
+                  label={items?.description}
+                  size="small"
+                  sx={{
+                    backgroundColor: items?.color,
+                    color: "#ffffff",
+                  }}
+                />
+              )}
 
               {items.status === "Pending" ? (
                 <Box sx={{ mt: 3, mb: 3 }}>

@@ -1,7 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FactoryOutlined, Numbers } from "@mui/icons-material";
 import { Button } from "@mui/material";
-import React from "react";
+import moment from "moment";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
@@ -9,19 +10,25 @@ import ReusableModal from "../../../../components/Modal/component";
 import useManageSubscriptionMutation from "./subscription-mutaiton";
 
 const UpgradePackage = ({ handleClose, open, organisation }) => {
-  console.log(`🚀 ~ file: upgrade.jsx:22 ~ organisation:`, organisation);
   const [amount, setAmount] = React.useState(0);
-  console.log(`🚀 ~ file: upgrade.jsx:15 ~ setAmount:`, setAmount);
-  const { verifyPromoCodeMutation, handleUpgradeFunction } =
-    useManageSubscriptionMutation();
+  const { verifyPromoCodeMutation, mutate } = useManageSubscriptionMutation();
 
   const packageSchema = z.object({
-    memberCount: z
+    employeeToAdd: z
       .string()
-      .refine((doc) => Number(doc) >= organisation?.memberCount, {
-        message:
-          "You can't decrease your member count while subscription is active but you can increase it.",
-      }),
+      .min(0)
+      .refine(
+        (value) => {
+          // spaces not aloud
+          value = value.replace(/\s/g, "");
+          // check if value is not empty
+          return (
+            value.length > 0 && !isNaN(Number(value)) && Number(value) >= 0
+          );
+        },
+        { message: "Employee to add should be a greater than 0" }
+      ),
+
     packageInfo: z.object({
       value: z.string(),
       label: z.string(),
@@ -34,89 +41,86 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
 
   const { control, formState, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
-      memberCount: `${organisation?.memberCount}` || "",
+      employeeToAdd: "0",
       packageInfo: {
         value: organisation?.packageInfo,
         label: organisation?.packageInfo,
         isDisabled: false,
       },
-      paymentType: "RazorPay",
+      paymentType: undefined,
       discount: 0,
     },
     resolver: zodResolver(packageSchema),
   });
-  const { errors, dirtyFields } = formState;
+
+  const { errors } = formState;
 
   async function onSubmit(data) {
-    data.totalAmount = amount;
-    handleUpgradeFunction(data, organisation);
+    mutate({
+      count: data?.employeeToAdd,
+      packageName: data?.packageInfo?.value,
+      totalPrice: amount,
+      paymentType: data?.paymentType,
+      organisationId: organisation?._id,
+    });
   }
 
-  // const checkCallback = useCallback(() => {
-  //   // on package change update the per day value
-  //   let perDayValue = 0;
-  //   if (watch("packageInfo").value === "Basic Plan") {
-  //     perDayValue =
-  //       Number(process.env.REACT_APP_BASIC_PACKAGE_COST_DAY) /
-  //       moment().daysInMonth();
-  //   } else if (watch("packageInfo").value === "Intermediate Plan") {
-  //     perDayValue =
-  //       Number(process.env.REACT_APP_INTERMEDIATE_PACKAGE_COST_DAY) /
-  //       moment().daysInMonth();
-  //   } else {
-  //     perDayValue =
-  //       Number(process.env.REACT_APP_ENTERPRIZE_PACKAGE_COST_DAY) /
-  //       moment().daysInMonth();
-  //   }
-  //   return (
-  //     perDayValue *
-  //     moment(organisation?.subscriptionDetails?.expirationDate).diff(
-  //       moment(),
-  //       "days"
-  //     )
-  //   );
-  // }, [
-  //   watch("packageInfo"),
-  //   watch("memberCount"),
-  //   watch("promoCode"),
-  //   watch("paymentType"),
-  //   watch,
-  // ]);
-  const checkDisability = () => {
-    if (Object.keys(dirtyFields).length <= 1) {
-      if (Object.keys(dirtyFields).includes("promoCode")) {
-        return true;
-      } else {
-        if (Object.keys(dirtyFields).length === 0) {
-          return true;
-        }
-        return false;
-      }
+  const packageInfo = watch("packageInfo").value;
+  const employeeToAdd = Number(watch("employeeToAdd"));
+  const expirationDate = organisation?.subscriptionDetails?.expirationDate;
+  const paymentType = watch("paymentType");
+
+  const promoCode = watch("discount");
+
+  useEffect(() => {
+    let perDayValue = 0;
+    let remainingDays = moment(expirationDate).diff(moment(), "days");
+    if (packageInfo === "Basic Plan") {
+      perDayValue = 0.611;
+    } else if (packageInfo === "Intermediate Plan") {
+      perDayValue = 0.944;
     } else {
-      return false;
+      perDayValue = 1.277;
     }
-  };
+    // apply discount if promo code is valid
+    let discountedToMinus =
+      perDayValue * employeeToAdd * remainingDays * (promoCode / 100);
+
+    let addedAmountIfRazorPay =
+      perDayValue *
+      employeeToAdd *
+      remainingDays *
+      (paymentType === "RazorPay" ? 0.02 : 0);
+    setAmount(
+      Math.round(
+        perDayValue * employeeToAdd * remainingDays -
+          discountedToMinus +
+          addedAmountIfRazorPay
+      )
+    );
+  }, [employeeToAdd, packageInfo, expirationDate, promoCode, paymentType]);
+
   return (
     <ReusableModal
-      heading={"Upgrade subscription"}
+      heading={"Upgrade Subscription"}
       open={open}
       onClose={handleClose}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="overflow-auto h-full gap-4 flex-col flex"
-        noValidate
       >
         <div className="flex flex-col">
           <AuthInputFiled
-            name="memberCount"
+            name="employeeToAdd"
             icon={Numbers}
             control={control}
             type="number"
-            placeholder="Member Count "
-            label="Member Count *"
+            placeholder="Employee To Add "
+            label="Employee To Add *"
             errors={errors}
-            error={errors.memberCount}
+            error={errors.employeeToAdd}
+            descriptionText={"Here u can add number of employee to add"}
           />
           <AuthInputFiled
             name="packageInfo"
@@ -138,11 +142,13 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
                     : false,
               },
             ]}
+            descriptionText={"Select your package to upgrade"}
           />
 
           <AuthInputFiled
             name="paymentType"
             icon={FactoryOutlined}
+            className={"mb-4"}
             control={control}
             type="naresh-select"
             placeholder="Select your Merchant"
@@ -153,7 +159,11 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
               { value: "Phone_Pay", label: "Phone_Pay" },
               { value: "RazorPay", label: "RazorPay" },
             ]}
-            descriptionText={"Additional 2% charges on razorpay transaction"}
+            descriptionText={
+              watch("paymentType") === "RazorPay"
+                ? "Additional 2% charges on razor-pay transaction"
+                : "No additional charges on phone-pay transaction"
+            }
           />
           <AuthInputFiled
             name="promoCode"
@@ -181,30 +191,19 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
             }}
           />
         </div>
-        <Button variant="contained" disabled={checkDisability()} type="submit">
-          Pay {Math.round(0)} Rs
-        </Button>
+        <div className="gap-4 flex w-full">
+          <Button
+            variant="contained"
+            disabled={amount === 0}
+            type="submit"
+            className="!w-full"
+          >
+            Pay {amount} Rs
+          </Button>
+        </div>
       </form>
     </ReusableModal>
   );
 };
 
 export default UpgradePackage;
-// const getPrice = (plan, daysToEnd = 90) => {
-//   if (plan === "Basic Plan") {
-//     return Math.round(0.611 * daysToEnd);
-//   } else if (plan === "Intermediate Plan") {
-//     return Math.round(0.944 * daysToEnd);
-//   } else {
-//     return 115;
-//   }
-// };
-// const getPlanPrice = (plan) => {
-//   if (plan === "Basic Plan") {
-//     return Math.round(0.611 * 90);
-//   } else if (plan === "Intermediate Plan") {
-//     return Math.round(0.944 * 90);
-//   } else {
-//     return Math.round(115 * 90);
-//   }
-// };

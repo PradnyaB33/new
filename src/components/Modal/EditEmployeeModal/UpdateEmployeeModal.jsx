@@ -205,8 +205,9 @@ const UpdateEmployeeModal = ({
       value: z.string(),
     }),
   });
+  console.log("watch", watch("mgrempid"));
 
-  const { control, formState, handleSubmit, setValue } = useForm({
+  const { control, formState, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
       first_name: first_name,
       last_name: last_name,

@@ -13,8 +13,8 @@ const ViewPayslip = () => {
   const user = getCurrentUser();
   const employeeId = user._id;
   const organisationId = user.organizationId;
-
-  const [selectedDate, setSelectedDate] = useState(dayjs("2022-04-17"));
+  const currentDate = dayjs();
+  const [selectedDate, setSelectedDate] = useState(currentDate);
 
   const handleDateChange = (event) => {
     // Convert the selected date string to a Day.js object

@@ -64,6 +64,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-cookie": "^4.1.1",
     "react-countdown": "^2.3.5",
+    "react-csv": "^2.2.2",
     "react-datepicker": "^4.21.0",
     "react-dom": "^18.2.0",
     "react-google-autocomplete": "^2.7.3",

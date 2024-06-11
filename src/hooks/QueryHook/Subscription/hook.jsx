@@ -19,7 +19,6 @@ const useSubscriptionGet = ({ organisationId }) => {
   const { data, isLoading } = useQuery({
     queryKey: [`subscription-${organisationId}`],
     queryFn: getSubscription,
-
     onError: (error) => {
       // toast.error("Something went wrong");
     },
