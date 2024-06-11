@@ -103,10 +103,7 @@ const Organisation = ({ item }) => {
     }
     return true;
   };
-  console.log(
-    "moment(item?.createdAt).diff(moment())",
-    moment(item?.createdAt).diff(moment(), "days")
-  );
+
   return (
     <>
       <div

@@ -94,11 +94,8 @@ const BillingCard = ({ doc }) => {
         }
       }
     } else if (doc?.subscriptionDetails?.status === "Pending") {
-      // if (moment(doc?.createdAt).add(7, "days").diff(moment(), "days") > 0) {
       return true;
-      // } else {
-      //   return true;
-      // }
+      //
     }
     return true;
   };
@@ -125,18 +122,25 @@ const BillingCard = ({ doc }) => {
             />
             <div className="text-2xl font-bold">{doc?.orgName}</div>
           </div>
-          <Button
-            id="demo-customized-button"
-            aria-controls={open ? "demo-customized-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            variant="outlined"
-            disableElevation
-            onClick={handleClick}
-            endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-          >
-            Options
-          </Button>
+          <div className="flex gap-4">
+            {checkHasOrgDisabled() && (
+              <Button onClick={() => setConfirmOpen3(true)} variant="contained">
+                Pay
+              </Button>
+            )}
+            <Button
+              id="demo-customized-button"
+              aria-controls={open ? "demo-customized-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              variant="outlined"
+              disableElevation
+              onClick={handleClick}
+              endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+            >
+              Options
+            </Button>
+          </div>
           <StyledMenu
             id="demo-customized-menu"
             MenuListProps={{
@@ -248,11 +252,6 @@ const BillingCard = ({ doc }) => {
             mainText={`${Math.round(doc?.remainingBalance)}`}
           />
         </div>
-        {checkHasOrgDisabled() && (
-          <Button onClick={() => setConfirmOpen3(true)} variant="contained">
-            Pay
-          </Button>
-        )}
       </div>
       <div className=" col-span-1 flex justify-center items-center">
         {doc?.subscriptionDetails?.status === "Active" ? (
