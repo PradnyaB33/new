@@ -563,6 +563,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Organisation List",
           },
+          {
+            key: "organisationList",
+            isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role),
+            link: `/organisation/${orgId}/organisation-hierarchy`,
+            icon: (
+              <AccountTreeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Organisation Hierarchy",
+          },
         ],
       },
 

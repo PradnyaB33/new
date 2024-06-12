@@ -88,6 +88,7 @@ import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
 import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 import EmployeeNotification from "./pages/Employee-Notification/page";
+import EditEmployee from "./pages/Employee/EditEmployee";
 import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
@@ -118,7 +119,6 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import EditEmployee from "./pages/Employee/EditEmployee";
 
 const App = () => {
   return (
@@ -437,7 +437,7 @@ const App = () => {
             </RequireAuth>
           }
         />
-         <Route
+        <Route
           path="/organisation/:organisationId/edit-employee/:employeeId"
           element={
             <RequireAuth
@@ -879,7 +879,10 @@ const App = () => {
             </RequireAuth>
           }
         />
-        <Route path="/testorg1/:organizationId" element={<OrgChart />} />
+        <Route
+          path="/organisation/:organizationId/organisation-hierarchy"
+          element={<OrgChart />}
+        />
         <Route
           path="/organisation/:organisationId/setup/remote-punching"
           element={
