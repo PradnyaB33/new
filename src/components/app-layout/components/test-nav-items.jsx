@@ -151,7 +151,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Attendance & Leave Management",
           },
-
           {
             key: "accountSettings",
             isVisible: true,
@@ -170,9 +169,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "add-delegate-super-admin",
-            isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role)
-              ? true
-              : false,
+            isVisible: ["Super-Admin"].includes(role) ? true : false,
             link: `/add-delegate`,
             icon: <SupervisorAccount className="text-[#67748E]" />,
             text: "Add Delegate Super Admin",
@@ -196,7 +193,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "listNotification",
             isVisible: true,
-            link: "/notification",
+            link: `organisation/${orgId}/notification`,
             icon: (
               <CircleNotifications className=" !text-[1.2em] text-[#67748E]" />
             ),
