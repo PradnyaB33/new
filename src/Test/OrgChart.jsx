@@ -10,7 +10,7 @@ export default function OrgChart() {
   const authToken = useAuthToken();
   const { data: orgChart, isLoading } = useQuery("orgChart", async () => {
     const { data } = await axios.get(
-      `${process.env.REACT_APP_API}/route/performance/getOrgHierarchy/${organizationId}`,
+      `${process.env.REACT_APP_API}/route/employee/getOrgTree/${organizationId}`,
       {
         headers: {
           Authorization: authToken,
@@ -21,7 +21,7 @@ export default function OrgChart() {
     return data;
   });
 
-  const data = !isLoading ? orgChart[0] : [];
+  const data = !isLoading ? orgChart : [];
 
   // ${
   //                    data.name === "HR"
@@ -37,7 +37,7 @@ export default function OrgChart() {
         {isLoading ? (
           <CircularProgress />
         ) : (
-          <>
+          <div>
             <OrgTree
               expandAll={true}
               data={data}
@@ -47,10 +47,9 @@ export default function OrgChart() {
               renderContent={(data) => {
                 return (
                   <div
-                    className={` border !text-gray-900 rounded-md !p-4  w-[170px]
-                        `}
+                    className={` border !text-gray-900 rounded-md !p-4  !px-10`}
                   >
-                    <div className="flex flex-col items-center gap-2">
+                    <div className="flex justify-center  items-center gap-2">
                       <Avatar src={data.image} sx={{ width: 40, height: 40 }} />
                       <div>
                         <h1 className=" flex text-lg font-medium gap-2">
@@ -63,7 +62,7 @@ export default function OrgChart() {
                 );
               }}
             />
-          </>
+          </div>
         )}
       </div>
     </div>
