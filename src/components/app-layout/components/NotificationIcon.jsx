@@ -2,7 +2,7 @@ import { Notifications } from "@mui/icons-material";
 import { Badge } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useForm16NotificationHook from "../../../hooks/QueryHook/notification/Form16Notification/useForm16NotificationHook";
 import useMissedPunchNotificationCount from "../../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
@@ -14,10 +14,14 @@ import useLoanNotification from "../../../hooks/QueryHook/notification/loan-noti
 import usePunchNotification from "../../../hooks/QueryHook/notification/punch-notification/hook";
 import useShiftNotification from "../../../hooks/QueryHook/notification/shift-notificatoin/hook";
 import useTDSNotificationHook from "../../../hooks/QueryHook/notification/tds-notification/hook";
+import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 import useLeaveNotification from "../../../pages/SelfLeaveNotification/useLeaveNotification";
 
 const NotificationIcon = () => {
+  const [orgId, setOrgId] = useState(null);
+  const { decodedToken: decoded } = useGetUser();
+  const location = useLocation();
   const { data } = useLeaveNotificationHook();
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
@@ -49,11 +53,30 @@ const NotificationIcon = () => {
     }
     return "/";
   }, [role]);
-  console.log(
-    `🚀 ~ file: page.jsx:49 ~ data?.leaveRequests?.length:`,
-    data?.leaveRequests?.length
-  );
-  console.log(getAdvanceSalaryData);
+  useEffect(() => {
+    if ((role === "Super-Admin", "Delegate-Super-Admin")) {
+      getOrganizationIdFromPathname(location.pathname);
+    } else {
+      setOrgId(user?.organizationId);
+    }
+    // eslint-disable-next-line
+  }, [location.pathname, orgId]);
+  const getOrganizationIdFromPathname = (pathname) => {
+    const parts = pathname.split("/");
+    const orgIndex = parts.indexOf("organisation");
+    let orgId;
+
+    if (orgIndex !== -1 && parts.length > orgIndex + 1) {
+      if (parts[orgIndex + 1] === null || undefined) {
+        orgId = decoded?.user?.organizationId;
+      } else {
+        orgId = parts[orgIndex + 1];
+      }
+    } else {
+      orgId = decoded?.user?.organizationId;
+    }
+    setOrgId(orgId);
+  };
 
   useEffect(() => {
     (async () => {
@@ -160,7 +183,7 @@ const NotificationIcon = () => {
   ];
   const totalCount = dummyData.reduce((acc, item) => acc + item.count, 0);
   return (
-    <Link to={"/notification"}>
+    <Link to={`/organisation/${orgId}/notification`}>
       <Badge
         variant={"standard"}
         color={"error"}
