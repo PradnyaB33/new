@@ -27,7 +27,6 @@ import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalance
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import ArticleIcon from "@mui/icons-material/Article";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CallMissedIcon from "@mui/icons-material/CallMissed";
@@ -600,15 +599,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <PanToolAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Apply Miss For Punch",
           },
-          {
-            key: "empNotification",
-            isVisible: ["Employee"].includes(role),
-            link: "/emp-notification",
-            icon: (
-              <AssignmentTurnedInIcon className=" !text-[1.2em] text-[#67748E]" />
-            ),
-            text: "Remote Punching Status",
-          },
+          // {
+          //   key: "empNotification",
+          //   isVisible: ["Employee"].includes(role),
+          //   link: "/emp-notification",
+          //   icon: (
+          //     <AssignmentTurnedInIcon className=" !text-[1.2em] text-[#67748E]" />
+          //   ),
+          //   text: "Remote Punching Status",
+          // },
         ],
       },
 
