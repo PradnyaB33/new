@@ -22,7 +22,7 @@ const packageCountSchema = z.object({
 });
 const Step3 = ({ nextStep }) => {
   const { count, setStep3Data, cycleCount, paymentType } = useOrg();
-  const { control, handleSubmit, formState, watch } = useForm({
+  const { control, handleSubmit, formState } = useForm({
     defaultValues: {
       count,
       cycleCount,
