@@ -50,7 +50,7 @@ const AssignOrg = () => {
       console.log(data.data.token, "token");
       Cookies.set("aegis", data.data.token, { expires: 4 / 24 });
       handleAlert(true, "success", "Organisation assigned successful");
-      window.location.reload();
+     window.location.reload();
       console.log(data);
     } catch (error) {
       console.log(error);

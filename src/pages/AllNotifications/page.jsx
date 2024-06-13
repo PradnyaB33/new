@@ -15,6 +15,7 @@ import UserProfile from "../../hooks/UserData/useUser";
 import useLeaveNotification from "../SelfLeaveNotification/useLeaveNotification";
 import Card from "./components/card";
 
+
 const ParentNotification = () => {
   const { data } = useLeaveNotificationHook();
   const { cookies } = useContext(UseContext);
@@ -27,7 +28,8 @@ const ParentNotification = () => {
   const { data: data3 } = usePunchNotification();
   const { data: data4 } = useDocNotification();
   const { data: tds } = useTDSNotificationHook();
-  const { missPunchData } = useMissedPunchNotificationCount();
+  const { missPunchData, getMissedPunchData } =
+    useMissedPunchNotificationCount();
   const { Form16Notification } = useForm16NotificationHook();
   const {
     getEmployeeRequestLoanApplication,
@@ -52,7 +54,44 @@ const ParentNotification = () => {
     `🚀 ~ file: page.jsx:49 ~ data?.leaveRequests?.length:`,
     data?.leaveRequests?.length
   );
-  console.log(getAdvanceSalaryData);
+
+  
+  // for loan notification count
+  let count;
+  if (
+    role === "HR" ||
+    role === "Super-Admin" ||
+    role === "Delegate-Super-Admin"
+  ) {
+    count = getEmployeeRequestLoanApplication?.length ?? 0;
+  } else {
+    count = getApprovedRejectLoanDataByApprover?.length ?? 0;
+  }
+  
+  // for advance salary notification count
+  let count1;
+  if (
+    role === "HR" ||
+    role === "Super-Admin" ||
+    role === "Delegate-Super-Admin"
+  ) {
+    count1 = getAdvanceSalaryData?.length ?? 0;
+  } else {
+    count1 = advanceSalaryNotification?.length ?? 0;
+  }
+
+  // for missed punch notification count
+  let count2;
+  if (
+    role === "HR" ||
+    role === "Super-Admin" ||
+    role === "Delegate-Super-Admin" || 
+    role === "Manager"
+  ) {
+    count1 = missPunchData?.length ?? 0;
+  } else {
+    count1 = getMissedPunchData?.length ?? 0;
+  }
 
   useEffect(() => {
     (async () => {
@@ -108,10 +147,7 @@ const ParentNotification = () => {
     },
     {
       name: "Loan Notification",
-      count:
-        getEmployeeRequestLoanApplication?.length ??
-        getApprovedRejectLoanDataByApprover?.length ??
-        0,
+      count: count,
       color: "#51E8FD",
       url: "/loan-notification",
       url2: "/loan-notification-to-emp",
@@ -119,7 +155,7 @@ const ParentNotification = () => {
     },
     {
       name: "Missed Punch Notification",
-      count: missPunchData?.length ?? 0,
+      count: count2,
       color: "#51E8FD",
       url: "/missedPunch-notification",
       url2: "/missed-punch-notification-to-emp",
@@ -133,7 +169,7 @@ const ParentNotification = () => {
       visible: true,
     },
     {
-      name: "Form 16 Notification",
+      name: "Form-16 Notification",
       count: Form16Notification?.length ?? 0,
       color: "#FF7373",
       url2: "/form16-notification-to-emp",
@@ -141,8 +177,7 @@ const ParentNotification = () => {
     },
     {
       name: "Advance Salary Notification",
-      count:
-        getAdvanceSalaryData?.length ?? advanceSalaryNotification?.length ?? 0,
+      count: count1,
       color: "#FF7373",
       url: "/advance-salary-notification",
       url2: "/advance-salary-notification-to-emp",

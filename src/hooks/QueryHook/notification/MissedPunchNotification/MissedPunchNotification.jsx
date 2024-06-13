@@ -21,13 +21,31 @@ const useMissedPunchNotificationCount = () => {
     return response.data.data;
   };
 
-  const { data: missPunchData, isLoading, isFetching } = useQuery(
-    "employee-missed-punch",
-    getMissedPunchNotification
+  const {
+    data: missPunchData,
+    isLoading,
+    isFetching,
+  } = useQuery("employee-missed-punch", getMissedPunchNotification);
+
+  //for get loan data
+  const { data: getMissedPunchData } = useQuery(
+    ["getMissedPunchData"],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/missed-punch-notification-to-employee`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.data;
+    }
   );
-  
+
   return {
     missPunchData,
+    getMissedPunchData,
     isLoading,
     isFetching,
   };
