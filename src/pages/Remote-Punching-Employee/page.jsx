@@ -1,5 +1,6 @@
 import { Chip } from "@mui/material";
 import { useJsApiLoader } from "@react-google-maps/api";
+import moment from "moment";
 import React, { useEffect } from "react";
 import SelfieForm from "../../components/Modal/Selfi-Image/Selfie";
 import useLocationMutation from "../../hooks/QueryHook/Location/mutation";
@@ -15,7 +16,8 @@ const EmployeeRemotePunch = () => {
     mutate();
   }, [mutate]);
 
-  const { locationArray } = useSelfieStore();
+  const { locationArray, startTime, endTime } = useSelfieStore();
+  console.log(`🚀 ~ file: page.jsx:19 ~ locationArray:`, locationArray);
 
   const { isLoaded } = useJsApiLoader({
     id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -44,6 +46,22 @@ const EmployeeRemotePunch = () => {
             onClick={(e) => console.log(e)}
             variant="filled"
           />
+          {startTime && (
+            <>
+              <Chip
+                label={`Started at ${moment(startTime).format("hh:mm:ss")}`}
+                className="!bg-white !text-md"
+                onClick={(e) => console.log(e)}
+                variant="filled"
+              />
+              <Chip
+                label={`Ended at ${endTime?moment(endTime).format("hh:mm:ss"):moment().format("hh:mm:ss")}`}
+                className="!bg-white !text-md"
+                onClick={(e) => console.log(e)}
+                variant="filled"
+              />
+            </>
+          )}
           <Chip
             label={`Longitude is ${data?.longitude}`}
             className="!bg-white !text-md"
