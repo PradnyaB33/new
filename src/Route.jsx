@@ -971,6 +971,28 @@ const App = () => {
           }
         />
         <Route
+          path="/organisation/:organisationId/notification"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <ParentNotification />
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/self-notification"
           element={
             <RequireAuth

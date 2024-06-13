@@ -27,7 +27,6 @@ import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalance
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import ArticleIcon from "@mui/icons-material/Article";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CallMissedIcon from "@mui/icons-material/CallMissed";
@@ -152,7 +151,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Attendance & Leave Management",
           },
-
           {
             key: "accountSettings",
             isVisible: true,
@@ -171,9 +169,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "add-delegate-super-admin",
-            isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role)
-              ? true
-              : false,
+            isVisible: ["Super-Admin"].includes(role) ? true : false,
             link: `/add-delegate`,
             icon: <SupervisorAccount className="text-[#67748E]" />,
             text: "Add Delegate Super Admin",
@@ -197,7 +193,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "listNotification",
             isVisible: true,
-            link: "/notification",
+            link: `organisation/${orgId}/notification`,
             icon: (
               <CircleNotifications className=" !text-[1.2em] text-[#67748E]" />
             ),
@@ -609,15 +605,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <PanToolAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Apply Miss For Punch",
           },
-          {
-            key: "empNotification",
-            isVisible: ["Employee"].includes(role),
-            link: "/emp-notification",
-            icon: (
-              <AssignmentTurnedInIcon className=" !text-[1.2em] text-[#67748E]" />
-            ),
-            text: "Remote Punching Status",
-          },
+          // {
+          //   key: "empNotification",
+          //   isVisible: ["Employee"].includes(role),
+          //   link: "/emp-notification",
+          //   icon: (
+          //     <AssignmentTurnedInIcon className=" !text-[1.2em] text-[#67748E]" />
+          //   ),
+          //   text: "Remote Punching Status",
+          // },
         ],
       },
 

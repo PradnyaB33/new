@@ -7,12 +7,13 @@ import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
 import StopRemotePunch from "./stop-remote-punching";
 
 export default function FabIcons() {
-  const { start, setStart } = useSelfieStore();
+  const { start, setStart, clearLocation } = useSelfieStore();
   const [open, setOpen] = useState(false);
   const { getUserImage } = useLocationMutation();
   const handleOperate = () => {
     setOpen(false);
     getUserImage.mutate();
+    clearLocation();
   };
   return (
     <>

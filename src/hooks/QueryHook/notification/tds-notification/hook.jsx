@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useQuery } from "react-query";
+import useNotificationCount from "../../../../components/app-layout/notification-zustand";
 import useIncomeTax from "../../../IncomeTax/useIncomeTax";
 import useGetUser from "../../../Token/useUser";
 import UserProfile from "../../../UserData/useUser";
@@ -8,6 +9,7 @@ const useTDSNotificationHook = () => {
   const { authToken } = useGetUser();
   const { useGetCurrentRole } = UserProfile();
   const { financialYear } = useIncomeTax();
+  const { setNotificationCount } = useNotificationCount();
   const role = useGetCurrentRole();
   const getUserNotification = async () => {
     const response = await axios.get(
@@ -20,7 +22,14 @@ const useTDSNotificationHook = () => {
   };
   const { data, isLoading, isFetching } = useQuery(
     "tds-notification",
-    getUserNotification
+    getUserNotification,
+    {
+      onSuccess: async (data) => {
+        setNotificationCount(data ?? 0);
+      },
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    }
   );
   return {
     data,

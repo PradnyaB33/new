@@ -119,7 +119,11 @@ const LeaveAcceptModal = () => {
 
                 <div className=" md:px-4 px-0 ">
                   {EmpNotification?.leaveRequests?.map((items, itemIndex) => (
-                    <LeaveRejectmodal items={items} idx={itemIndex} />
+                    <LeaveRejectmodal
+                      items={items}
+                      idx={itemIndex}
+                      length={EmpNotification?.leaveRequests?.length}
+                    />
                   ))}
                 </div>
               </>

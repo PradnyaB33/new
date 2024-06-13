@@ -29,6 +29,9 @@ const useSelfieStore = create((set) => ({
       locationArray: [...state.locationArray, locationObject],
     }));
   },
+  clearLocation: () => {
+    set({ locationArray: [] });
+  },
   setTemporaryArray: ({ latitude, longitude }) => {
     set((state) => ({
       temporaryArray: [

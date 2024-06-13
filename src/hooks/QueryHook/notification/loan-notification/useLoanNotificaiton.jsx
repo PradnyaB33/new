@@ -32,7 +32,7 @@ const useLoanNotification = () => {
       refetchOnMount: false,
       onSuccess: (data) => {
         console.log(data);
-        setNotificationCount(data?.length);
+        setNotificationCount(data?.length ?? 0);
       },
     }
   );

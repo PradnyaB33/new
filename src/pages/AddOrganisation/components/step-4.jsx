@@ -111,13 +111,7 @@ const Step4 = () => {
       );
     },
   });
-  // const { mutate: mutate2, isLoading: isLoading2 } = useMutation({
-  //   mutationFn: handleDismiss,
-  // });
-  console.log(
-    `🚀 ~ file: step-4.jsx:124 ~ data?.packageInfo:`,
-    data?.packageInfo
-  );
+
   const getPriceMain = useMemo(() => {
     const expirationDate = moment().add(3 * data?.cycleCount, "months");
     const dateDifference = expirationDate.diff(moment(), "days");
@@ -138,9 +132,6 @@ const Step4 = () => {
   if (isLoading) {
     return <Loader />;
   }
-  // if (isLoading2) {
-  //   return <Loader />;
-  // }
 
   return (
     <div className="px-4 grid bg-[#f8fafb] p-4 rounded-md items-center">
