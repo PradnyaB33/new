@@ -79,10 +79,7 @@ const Step3 = ({ nextStep }) => {
             { value: "Phone_Pay", label: "Phone_Pay" },
             { value: "RazorPay", label: "RazorPay" },
           ]}
-          descriptionText={
-            watch("paymentType") === "Phone_Pay" &&
-            "Additional 2% charges on razorpay transaction"
-          }
+          descriptionText={"Additional 2% charges on every transaction"}
         />
         <Button type="submit" variant="contained" className="!w-max !mx-auto">
           Confirm & Pay
