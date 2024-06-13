@@ -73,7 +73,7 @@ export default function OrgChart() {
                           </h1>
                           <p className="text-sm text-gray-600 ">{data.name}</p>
                           <p className="text-sm text-gray-600 ">{data?.desg}</p>
-                        </div>
+                          </div>
                       </div>
                     </div>
                   );
