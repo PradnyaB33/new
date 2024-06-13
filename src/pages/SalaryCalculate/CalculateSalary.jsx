@@ -25,8 +25,8 @@ function CalculateSalary() {
   const [paidLeaveDays, setPaidLeaveDays] = useState(0);
   const [unPaidLeaveDays, setUnPaidLeaveDays] = useState(0);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
-   console.log(setIsSubmitDisabled);
-   
+  console.log(setIsSubmitDisabled);
+
   // get the alreday salary data created
   const [salaryInfo, setSalaryInfo] = useState([]);
   const fetchEmployeeData = async () => {
@@ -314,10 +314,11 @@ function CalculateSalary() {
       return response.data.remotePunchingObject.allowanceQuantity;
     }
   );
-  const isValidAmount = !isNaN(getremotePuncingAmount) &&
+  const isValidAmount =
+    !isNaN(getremotePuncingAmount) &&
     getremotePuncingAmount !== null &&
     getremotePuncingAmount !== undefined;
-    
+
   const isValidCount =
     !isNaN(remotePunchingCounts) &&
     remotePunchingCounts !== null &&
@@ -327,7 +328,6 @@ function CalculateSalary() {
     isValidAmount && isValidCount
       ? remotePunchingCounts * getremotePuncingAmount
       : 0;
-  
 
   // calculate the total gross salary
   let totalSalary =
@@ -348,36 +348,41 @@ function CalculateSalary() {
   let employee_pf = parseFloat(availableEmployee?.employee_pf ?? 0);
   let esic = parseFloat(availableEmployee?.esic ?? 0);
   let loanDeduction = 0;
-  
+
   if (Array.isArray(empLoanAplicationInfo)) {
     const currentDate = new Date();
     // Filter loan applications that are currently active
-    const loanDeductionApplications = empLoanAplicationInfo.filter((application) => {
-      const loanDisbursementDate = new Date(application.loanDisbursementDate);
-      const loanCompletionDate = new Date(application.loanCompletedDate);
-      console.log("current date", currentDate);
-      console.log("starting date", loanDisbursementDate);
-      console.log("completed date", loanCompletionDate);
-      return (
-        loanDisbursementDate <= currentDate &&
-        currentDate <= loanCompletionDate
-      );
-    });
+    const loanDeductionApplications = empLoanAplicationInfo.filter(
+      (application) => {
+        const loanDisbursementDate = new Date(application.loanDisbursementDate);
+        const loanCompletionDate = new Date(application.loanCompletedDate);
+        console.log("current date", currentDate);
+        console.log("starting date", loanDisbursementDate);
+        console.log("completed date", loanCompletionDate);
+        return (
+          loanDisbursementDate <= currentDate &&
+          currentDate <= loanCompletionDate
+        );
+      }
+    );
 
     console.log("loan deduction applications", loanDeductionApplications);
-  
+
     // Calculate the total loan deduction for active loans
     loanDeduction = loanDeductionApplications.reduce((total, application) => {
       // Check if the current application is within the loan disbursement and completion dates
       const loanDisbursementDate = new Date(application.loanDisbursementDate);
       const loanCompletionDate = new Date(application.loanCompletedDate);
-      if (loanDisbursementDate <= currentDate && currentDate <= loanCompletionDate) {
+      if (
+        loanDisbursementDate <= currentDate &&
+        currentDate <= loanCompletionDate
+      ) {
         return total + parseFloat(application.totalDeduction || 0);
       }
       return total;
     }, 0);
   }
-    
+
   deduction = isNaN(deduction) ? 0 : deduction.toFixed(2);
   employee_pf = isNaN(employee_pf) ? 0 : employee_pf.toFixed(2);
   esic = isNaN(esic) ? 0 : esic.toFixed(2);
