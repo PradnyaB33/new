@@ -11,6 +11,7 @@ const usePunchNotification = () => {
         headers: { Authorization: authToken },
       }
     );
+    console.log(`🚀 ~ file: hook.jsx:14 ~ response:`, response);
     return response.data;
   };
 
