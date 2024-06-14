@@ -46,6 +46,9 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
     pan_card_number,
     bank_account_no,
     date_of_birth,
+    pwd,
+    uanNo,
+    esicNo,
   } = useEmpState();
 
   console.log("test");
@@ -91,9 +94,25 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
       .regex(/^[^*@]+$/, {
         message: "A PAN No cannot contain a special character, e.g., *,#.",
       }),
-    bank_account_no: z.string().regex(/^(?:0|[1-9]\d*)$/, {
-      message: "Bank number cannot be negative.",
-    }),
+    bank_account_no: z
+      .string()
+      .max(35, { message: "Only 35 numbers allowed" })
+      .regex(/^\d*$/, {
+        message: "Bank number cannot be negative.",
+      }),
+    pwd: z.boolean().optional(),
+    uanNo: z
+      .string()
+      .refine((value) => value === "" || /^\d{12}$/.test(value), {
+        message: "UAN number must be a 12-digit number",
+      })
+      .optional(),
+    esicNo: z
+      .string()
+      .refine((value) => value === "" || /^\d{17}$/.test(value), {
+        message: "ESIC number must be a 17-digit number",
+      })
+      .optional(),
   });
 
   const { control, formState, handleSubmit } = useForm({
@@ -109,6 +128,9 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
       adhar_card_number: adhar_card_number,
       pan_card_number: pan_card_number,
       bank_account_no: bank_account_no,
+      pwd,
+      uanNo: uanNo ? uanNo : undefined,
+      esicNo: esicNo ? esicNo : undefined,
     },
     resolver: zodResolver(EmployeeSchema),
   });
@@ -116,6 +138,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
   const { errors } = formState;
 
   const onSubmit = async (data) => {
+    console.log(`🚀 ~ data:`, data);
     setStep1Data(data);
     nextStep();
   };
@@ -178,7 +201,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           name="phone_number"
           icon={ContactEmergency}
           control={control}
-          type="contact"
+          value={phone_number}
+          type="number"
           placeholder="1234567890"
           label="Contact *"
           errors={errors}
@@ -194,6 +218,16 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
           label="Current Address *"
           errors={errors}
           error={errors.address}
+        />
+
+        <AuthInputFiled
+          name={"pwd"}
+          placeholder={"Person with disability"}
+          label={"Person with disability"}
+          control={control}
+          type="checkbox"
+          errors={errors}
+          error={errors.pwd}
         />
 
         <div className="space-y-1 ">
@@ -295,6 +329,30 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
             label="Citizenship Status. *"
             errors={errors}
             error={errors.citizenship}
+            pattern="[A-Za-z\s]+"
+          />
+        </div>
+
+        <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-2">
+          <AuthInputFiled
+            name="uanNo"
+            icon={AccountBalance}
+            control={control}
+            type="number"
+            placeholder="UAN No"
+            label="Employee UAN No"
+            errors={errors}
+            error={errors.uanNo}
+          />
+          <AuthInputFiled
+            name="esicNo"
+            icon={AccountBalance}
+            control={control}
+            type="text"
+            placeholder="ESIC No"
+            label="Employee ESIC No"
+            errors={errors}
+            error={errors.esicNo}
             pattern="[A-Za-z\s]+"
           />
         </div>

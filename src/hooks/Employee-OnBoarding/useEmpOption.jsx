@@ -6,20 +6,17 @@ const useEmpOption = (organisationId) => {
     DesignationCall,
     SalaryTempCall,
     EmpTypesCall,
-    // InputFieldCall,
     ManagerListCall,
     ShiftCall,
     CostNumberCall,
     EmpRoleListCall,
-    // AdditionalListCall,
     LocationListCall,
     EmpCodeCall,
+    OnBoardManagerListCall,
   } = useEmpQuery(organisationId);
-
-  console.log("id", organisationId);
-
   const DepartmentList = DepartmentListCall();
   const ManagerList = ManagerListCall();
+  const onBoardManagerList = OnBoardManagerListCall();
   const empCode = EmpCodeCall();
   const empRolesList = EmpRoleListCall();
   const shiftList = ShiftCall();
@@ -36,14 +33,23 @@ const useEmpOption = (organisationId) => {
     };
   });
 
-  const Manageroptions = ManagerList?.data?.map((item) => {
+  const Manageroptions = ManagerList?.manager?.map((item) => {
+    return {
+      value: item?._id,
+      label: `${item?.managerId?.first_name} ${item?.managerId?.last_name}`,
+    };
+  });
+
+  const onBoardManageroptions = onBoardManagerList?.manager?.map((item) => {
     return {
       value: item?._id,
       label: `${item?.first_name} ${item?.last_name}`,
     };
   });
 
-  console.log(`🚀 ~ Manageroptions:`, Manageroptions);
+  console.log(onBoardManagerList?.manager, "onboard");
+  console.log(`🚀 ~ onBoardManageroptions:`, onBoardManageroptions);
+
   const EmpCodeoptions = empCode?.EmpCodeoptions?.map((item) => {
     return {
       value: item?._id,
@@ -57,29 +63,11 @@ const useEmpOption = (organisationId) => {
       .filter(([key, other], index) => other?.isActive)
       .map(([key, other], index) => {
         return {
-          value: key, // Extract the _id property from the role object
-          label: key, // Use the role name as the label
+          value: key,
+          label: key,
         };
       });
-  // const RolesOptions =
-  //   empRolesList?.roles &&
-  //   Object.entries(empRolesList?.roles).map(([key, other], index) => {
-  //     console.log(`🚀 ~ file: useEmpOption.jsx:54 ~ other:`, other);
-  //     console.log(`🚀 ~ file: useEmpOption.jsx:54 ~ key:`, key);
-  //     console.log(
-  //       `🚀 ~ file: useEmpOption.jsx:57 ~ other?.isActive :`,
-  //       other?.isActive
-  //     );
-  //     if (other?.isActive === true) {
-  //       return {
-  //         value: key, // Extract the _id property from the role object
-  //         label: key, // Use the role name as the label
-  //       };
-  //     } else {
-  //       return null;
-  //     }
-  //   });
-  console.log(`🚀 ~ file: useEmpOption.jsx:52 ~ RolesOptions:`, RolesOptions);
+
   const Shiftoptions = shiftList?.shifts?.map((item) => {
     return {
       value: item?._id,
@@ -124,6 +112,7 @@ const useEmpOption = (organisationId) => {
   return {
     Departmentoptions,
     Manageroptions,
+    onBoardManageroptions,
     EmpCodeoptions,
     RolesOptions,
     Shiftoptions,

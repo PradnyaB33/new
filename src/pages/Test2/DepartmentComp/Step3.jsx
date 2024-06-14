@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import { Error } from "@mui/icons-material";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 const Step3 = ({ prevStep }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -27,6 +27,24 @@ const Step3 = ({ prevStep }) => {
   } = useDepartmentState();
   const data = useDepartmentState();
   console.log(data);
+
+  //for  Get Query
+  const { data: department } = useQuery(
+    ["department", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/department/get/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.department;
+    }
+  );
+  console.log("department", department);
+
   const handleSubmit = useMutation(
     () => {
       const deptData = {
@@ -43,6 +61,7 @@ const Step3 = ({ prevStep }) => {
       };
 
       console.log("deptdata", deptData);
+
       const response = axios.post(
         `${process.env.REACT_APP_API}/route/department/create/${organisationId}`,
         deptData,
@@ -65,7 +84,10 @@ const Step3 = ({ prevStep }) => {
         emptyState();
         navigate(`/organisation/${organisationId}/department-list`);
       },
-      onError: (error) => {},
+      onError: (error) => {
+        console.log(error);
+        handleAlert(true, "error", "Department name must be unique");
+      },
     }
   );
 

@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { useQuery } from "react-query";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
-import GoalsTable from "../components/GoalsTable";
+import GoalsTable from "../components/GoalTable/GoalsTable";
 
 const GoalSettingTab = () => {
   const authToken = useAuthToken();
@@ -130,6 +130,20 @@ const GoalSettingTab = () => {
           <div className=" px-4 py-3 bg-white  rounded-lg leading-none flex items-top justify-start space-x-6">
             <div className="space-y-1">
               <h1 className="text-xl ">Performance Period</h1>
+              <p className="text-sm text-slate-800 ">
+                {performance?.appraisalStartDate &&
+                  format(new Date(performance?.appraisalStartDate), "PP")}{" "}
+                -{" "}
+                {performance?.appraisalEndDate &&
+                  format(new Date(performance?.appraisalEndDate), "PP")}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="min-w-[250px] border rounded-md">
+          <div className=" px-4 py-3 bg-white  rounded-lg leading-none flex items-top justify-start space-x-6">
+            <div className="space-y-1">
+              <h1 className="text-xl ">Current Cycle Period</h1>
               <p className="text-sm text-slate-800 ">
                 {performance?.startdate &&
                   format(new Date(performance?.startdate), "PP")}{" "}

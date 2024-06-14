@@ -8,13 +8,13 @@ import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
 import PdfInput from "../../../AddOrganisation/components/pdf-input";
 
-const MiniForm = ({ mutate }) => {
+const MiniForm = ({ mutate, doc }) => {
   const formSchema = z.object({
     proofOfSubmissionUrl: z.any().refine(
       (file) => {
         return !!file && file.size >= 5 * 1024 && file.size <= 50 * 1024;
       },
-      { message: "Image size maximum 50kb and minimum 5kb" }
+      { message: "Image size must be 5kb to 50kb" }
     ),
     rating: z.number(),
     feedback: z.string().min(10),

@@ -35,10 +35,12 @@ const PunchAcceptModal = () => {
     enabled: employeeId !== undefined,
   });
 
+  console.log("empnotifiactions", EmpNotification);
+
   return (
     <div>
       <header className="text-xl w-full pt-6 border bg-white shadow-md   p-4">
-        <Link to={"/income-tax"}>
+        <Link to={"/organisation/:organisationId/income-tax"}>
           <West className="mx-4 !text-xl" />
         </Link>
         Employee Punch Request
@@ -107,7 +109,7 @@ const PunchAcceptModal = () => {
               <CircularProgress />
             </div>
           ) : employeeId ? (
-            EmpNotification?.length <= 0 ? (
+            EmpNotification?.punchNotification?.length <= 0 ? (
               <div className="flex px-4 w-full items-center my-4">
                 <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
                   <Info /> No Punch Request Found
@@ -122,7 +124,7 @@ const PunchAcceptModal = () => {
                   <div>
                     <h1 className=" text-xl">Punch Requests</h1>
                     <p className="text-sm">
-                      Here manager would be able to approve or reject the punch
+                      Here you will be able to approve or reject the punch
                       notifications
                     </p>
                   </div>

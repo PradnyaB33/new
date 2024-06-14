@@ -1,25 +1,27 @@
 import {
   AttachMoney,
+  Autorenew,
   Circle,
   ControlPoint,
   Discount,
-  FilterNone,
   KeyboardArrowDown,
   KeyboardArrowUp,
   Loop,
   People,
   PriorityHigh,
+  RecyclingRounded,
   Repeat,
   ShoppingBag,
   Subscriptions,
+  TrendingUp,
 } from "@mui/icons-material";
 import { Button, Menu, MenuItem, alpha, styled } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
 import DescriptionBox from "./descripton-box";
-import PackageForm from "./package/memberCount";
-import ManageSubscription from "./package/package";
-import PrepaidCard from "./package/prePay";
+import PaySubscription from "./package/pay-sub";
+import RenewPackage from "./package/renew";
+import UpgradePackage from "./package/upgrade";
 const StyledMenu = styled((props) => (
   <Menu
     style={{ background: "rgb(244 247 254 / var(--tw-bg-opacity))" }}
@@ -67,16 +69,47 @@ const StyledMenu = styled((props) => (
 const BillingCard = ({ doc }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmOpen1, setConfirmOpen1] = useState(false);
   const [confirmOpen2, setConfirmOpen2] = useState(false);
   const [confirmOpen3, setConfirmOpen3] = useState(false);
 
+  const checkHasOrgDisabled = () => {
+    // if organization subscriptionDetails.status is pending and the difference between the current date and the expiration date is greater than 0 then return true else return false
+    if (doc?.subscriptionDetails?.status === "Active") {
+      // check if expired by checking subscriptionDetails.expirationDate
+      if (
+        moment(doc?.subscriptionDetails?.expirationDate).diff(
+          moment(),
+          "days"
+        ) > 0
+      ) {
+        return false;
+      } else {
+        console.log("i think i am expired");
+        console.log(`🚀 ~ file: billing-card.jsx:89 ~ doc:`, doc);
+        if (doc?.upcomingPackageInfo?.packageName) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    } else if (doc?.subscriptionDetails?.status === "Pending") {
+      return true;
+      //
+    }
+    return true;
+  };
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+  console.log(
+    `🚀 ~ file: billing-card.jsx:112`,
+    doc,
+    moment(doc?.createdAt).add(7, "days").diff(moment(), "days") > 0
+  );
   return (
     <div className="shadow-twe-inner bg-Brand-Purple/brand-purple-1 rounded-md grid grid-cols-6">
       <div className=" col-span-5 pl-4 pt-4 pb-4 gap-4 flex flex-col">
@@ -89,18 +122,25 @@ const BillingCard = ({ doc }) => {
             />
             <div className="text-2xl font-bold">{doc?.orgName}</div>
           </div>
-          <Button
-            id="demo-customized-button"
-            aria-controls={open ? "demo-customized-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            variant="outlined"
-            disableElevation
-            onClick={handleClick}
-            endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-          >
-            Options
-          </Button>
+          <div className="flex gap-4">
+            {checkHasOrgDisabled() && (
+              <Button onClick={() => setConfirmOpen3(true)} variant="contained">
+                Pay
+              </Button>
+            )}
+            <Button
+              id="demo-customized-button"
+              aria-controls={open ? "demo-customized-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              variant="outlined"
+              disableElevation
+              onClick={handleClick}
+              endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+            >
+              Options
+            </Button>
+          </div>
           <StyledMenu
             id="demo-customized-menu"
             MenuListProps={{
@@ -112,42 +152,67 @@ const BillingCard = ({ doc }) => {
           >
             <MenuItem
               onClick={() => {
-                setConfirmOpen(true);
+                setConfirmOpen1(true);
               }}
               disableRipple
             >
-              <FilterNone />
-              Manage Member
+              <Autorenew />
+              Renew
             </MenuItem>
             <MenuItem
               onClick={() => {
                 setConfirmOpen2(true);
+                handleClose();
               }}
               disableRipple
             >
-              <FilterNone />
-              Change Package
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                setConfirmOpen3(true);
-              }}
-              disableRipple
-            >
-              <FilterNone />
-              Prepay
+              <TrendingUp />
+              Upgrade
             </MenuItem>
           </StyledMenu>
         </div>
 
         <div className="bg-brand/wahsed-blue rounded-md flex flex-wrap gap-2 p-2 items-center">
-          <DescriptionBox
-            Icon={Subscriptions}
-            descriptionText={"Subscription charge date"}
-            mainText={moment(doc?.subscriptionDetails?.paymentDate).format(
-              "DD MMM YYYY"
-            )}
-          />
+          {!checkHasOrgDisabled() ? (
+            <>
+              {" "}
+              <DescriptionBox
+                Icon={Subscriptions}
+                descriptionText={"Subscription charge date"}
+                mainText={moment(doc?.subscriptionDetails?.paymentDate).format(
+                  "DD MMM YYYY"
+                )}
+              />
+              <DescriptionBox
+                Icon={Subscriptions}
+                descriptionText={"Subscription end date"}
+                mainText={moment(
+                  doc?.subscriptionDetails?.expirationDate ?? moment()
+                ).format("DD MMM YYYY")}
+              />
+            </>
+          ) : (
+            <>
+              {" "}
+              <DescriptionBox
+                Icon={RecyclingRounded}
+                descriptionText={"Your subscription is on trial"}
+                mainText={
+                  moment(doc?.createdAt).add(7, "days").diff(moment(), "days") >
+                  0
+                    ? `Only ${moment(doc?.createdAt)
+                        .add(7, "days")
+                        .diff(moment(), "days")} days left`
+                    : "But trial has expired"
+                }
+              />
+              <DescriptionBox
+                Icon={RecyclingRounded}
+                descriptionText={"Your subscription trial start Date"}
+                mainText={moment(doc?.createdAt).format("DD MMM YYYY")}
+              />
+            </>
+          )}
           <DescriptionBox
             Icon={AttachMoney}
             descriptionText={"Billing frequency"}
@@ -169,15 +234,18 @@ const BillingCard = ({ doc }) => {
             descriptionText={"Subscription status"}
             mainText={doc?.subscriptionDetails?.status}
           />
-
-          <DescriptionBox
-            Icon={Loop}
-            descriptionText={"Your next renewal is after"}
-            mainText={`${moment(doc?.subscriptionDetails?.expirationDate).diff(
-              moment(new Date()),
-              "days"
-            )} days`}
-          />
+          {moment(doc?.subscriptionDetails?.expirationDate).diff(
+            moment(new Date()),
+            "days"
+          ) > 0 && (
+            <DescriptionBox
+              Icon={Loop}
+              descriptionText={"Your next renewal is after"}
+              mainText={`${moment(
+                doc?.subscriptionDetails?.expirationDate
+              ).diff(moment(new Date()), "days")} days`}
+            />
+          )}
           <DescriptionBox
             Icon={Discount}
             descriptionText={"Organisation discount for next subscription"}
@@ -201,15 +269,16 @@ const BillingCard = ({ doc }) => {
         ) : null}
       </div>
 
-      <PackageForm
-        open={confirmOpen}
+      <RenewPackage
+        open={confirmOpen1}
         handleClose={() => {
-          setConfirmOpen(false);
+          setConfirmOpen1(false);
           handleClose();
         }}
         organisation={doc}
       />
-      <ManageSubscription
+
+      <UpgradePackage
         open={confirmOpen2}
         handleClose={() => {
           setConfirmOpen2(false);
@@ -217,7 +286,7 @@ const BillingCard = ({ doc }) => {
         }}
         organisation={doc}
       />
-      <PrepaidCard
+      <PaySubscription
         open={confirmOpen3}
         handleClose={() => {
           setConfirmOpen3(false);

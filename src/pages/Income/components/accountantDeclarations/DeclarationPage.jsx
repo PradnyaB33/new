@@ -25,6 +25,7 @@ import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import useIncomeTax from "../../../../hooks/IncomeTax/useIncomeTax";
 import useAuthToken from "../../../../hooks/Token/useAuth";
+import UserProfile from "../../../../hooks/UserData/useUser";
 import TDSDeclarationModel from "./components/TDSDeclarationModel";
 
 const DeclarationPage = () => {
@@ -34,6 +35,9 @@ const DeclarationPage = () => {
   const [isReject, setIsReject] = useState(false);
   const [pdf, setPdf] = useState(null);
   const { financialYear } = useIncomeTax();
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
+  console.log(`🚀 ~ role:`, role);
 
   const handlePDF = (id) => {
     setPdf(id);
@@ -56,7 +60,7 @@ const DeclarationPage = () => {
     queryFn: async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API}/route/tds/getAllEmployeesUnderAccoutant`,
+          `${process.env.REACT_APP_API}/route/tds/getAllEmployeesUnderAccoutant/${role}`,
           {
             headers: {
               Authorization: authToken,
@@ -69,6 +73,7 @@ const DeclarationPage = () => {
         console.log(error);
       }
     },
+    enabled: !!role,
   });
 
   const { data: empTDSData, isLoading: empDataLoading } = useQuery({
@@ -97,7 +102,7 @@ const DeclarationPage = () => {
   return (
     <div>
       <header className="text-xl w-full pt-6 border bg-white shadow-md   p-4">
-        <Link to={"/income-tax"}>
+        <Link to={-1}>
           <West className="mx-4 !text-xl" />
         </Link>
         Employee TDS Request
@@ -154,7 +159,7 @@ const DeclarationPage = () => {
               })
               .map((ele) => (
                 <Link
-                  to={`/income-tax/accountant-declarations/${ele.empId._id}`}
+                  to={`/notification/income-tax/${ele.empId._id}`}
                   className={` px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50
                 ${
                   ele.empId._id === id &&

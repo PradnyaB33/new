@@ -1,8 +1,10 @@
 import { Button } from "@mui/material";
 import axios from "axios";
-import React, { useState } from "react";
-import toast from "react-hot-toast";
+import moment from "moment";
+import React, { useContext, useMemo, useState } from "react";
 import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
+import { TestContext } from "../../../State/Function/Main";
 import useOrg from "../../../State/Org/Org";
 import PackageInfo from "../../../components/Modal/PackagesModal/package-info";
 import Loader from "../../../components/app-loader/page";
@@ -13,6 +15,8 @@ import PricingCard from "./step-2-components/pricing-card";
 const Step4 = () => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const data = useOrg();
+  const { handleAlert } = useContext(TestContext);
+  const navigate = useNavigate();
   console.log(`🚀 ~ file: step-4.jsx:15 ~ data:`, data);
   const { authToken, decodedToken } = useGetUser();
   const config = {
@@ -20,14 +24,14 @@ const Step4 = () => {
       Authorization: authToken,
     },
   };
-  const handleDismiss = async (id) => {
-    const response = await axios.delete(
-      `${process.env.REACT_APP_API}/route/organization/delete/${id}`,
-      config
-    );
-    console.log(`🚀 ~ file: step-4.jsx:77 ~ response:`, response);
-    return response.data;
-  };
+  // const handleDismiss = async (id) => {
+  //   const response = await axios.delete(
+  //     `${process.env.REACT_APP_API}/route/organization/delete/${id}`,
+  //     config
+  //   );
+  //   console.log(`🚀 ~ file: step-4.jsx:77 ~ response:`, response);
+  //   return response.data;
+  // };
   const handleForm = async () => {
     console.log(`🚀 ~ file: step-4.jsx:45 ~ data:`, data);
     console.log(
@@ -38,38 +42,11 @@ const Step4 = () => {
       return "Please Select Plan And Package";
     }
 
-    // const formData = new FormData();
-
-    // // Append file to FormData
-    // formData.append("orgName", data.orgName);
-    // formData.append("foundation_date", data.foundation_date);
-    // formData.append("web_url", data.web_url);
-    // formData.append("industry_type", data.industry_type);
-    // formData.append("email", data.email);
-    // formData.append("isTrial", data.isTrial);
-    // formData.append(
-    //   "organization_linkedin_url",
-    //   data.organization_linkedin_url
-    // );
-    // formData.append("location", JSON.stringify(data.location));
-    // formData.append("contact_number", data.contact_number);
-    // formData.append("description", data.description);
-    // formData.append("creator", data.creator);
-    // formData.append("packageInfo", data?.packageInfo?.packageName);
-    // formData.append("count", data.count);
-    // formData.append("cycleCount", data.cycleCount);
-    // formData.append(
-    //   "totalPrice",
-    //   getPrice(data?.packageInfo?.packageName) * data?.count * data?.cycleCount
-    // );
-    // formData.append("paymentType", data?.paymentType);
+    let totalPrice = getPriceMain * data?.count;
     const mainData = {
       ...data,
       packageInfo: data?.packageInfo?.packageName,
-      totalPrice:
-        getPrice(data?.packageInfo?.packageName) *
-        data?.count *
-        data?.cycleCount,
+      totalPrice: totalPrice + totalPrice * 0.02,
     };
 
     console.log(`🚀 ~ file: step-4.jsx:67 ~ mainData:`, mainData);
@@ -88,7 +65,7 @@ const Step4 = () => {
       console.log(`🚀 ~ file: step-4.jsx:87 ~ data:`, data);
       if (data?.paymentType === "Phone_Pay") {
         window.location.href = data?.redirectUrl;
-      } else {
+      } else if (data?.paymentType === "RazorPay") {
         const options = {
           key: data?.key,
           amount: data?.order?.amount,
@@ -112,36 +89,47 @@ const Step4 = () => {
           },
           modal: {
             ondismiss: function () {
-              mutate2(data.organization._id);
+              // mutate2(data.organization._id);
               console.log("Checkout form closed by the user");
             },
           },
         };
         const razor = new window.Razorpay(options);
         razor.open();
+      } else {
+        handleAlert(true, "success", data?.message);
+        navigate("/organizationList");
       }
     },
     onError: async (data) => {
       console.error(`🚀 ~ file: mini-form.jsx:48 ~ data:`, data);
-      toast.error(
+
+      handleAlert(
+        true,
+        "error",
         data?.response?.data?.message || "Please fill all mandatory field"
       );
     },
   });
-  const { mutate: mutate2, isLoading: isLoading2 } = useMutation({
-    mutationFn: handleDismiss,
-  });
-  console.log(
-    `🚀 ~ file: step-4.jsx:124 ~ data?.packageInfo:`,
-    data?.packageInfo
-  );
+
+  const getPriceMain = useMemo(() => {
+    const expirationDate = moment().add(3 * data?.cycleCount, "months");
+    const dateDifference = expirationDate.diff(moment(), "days");
+    if (data?.packageInfo?.packageName === "Basic Plan") {
+      const perDayPrice = 55 / dateDifference;
+      return Math.round(perDayPrice * dateDifference);
+    } else if (data?.packageInfo?.packageName === "Intermediate Plan") {
+      const perDayPrice = 85 / dateDifference;
+      return Math.round(perDayPrice * dateDifference);
+    } else {
+      return 115;
+    }
+  }, [data?.cycleCount, data?.packageInfo?.packageName]);
   if (data?.packageInfo === undefined) {
     return "Please Select Plan And Package";
   }
+
   if (isLoading) {
-    return <Loader />;
-  }
-  if (isLoading2) {
     return <Loader />;
   }
 
@@ -152,10 +140,7 @@ const Step4 = () => {
           <h2 className="text-2xl font-bold ">Your Package Pricing</h2>
           <p className=" text-gray-500">
             You have selected {data?.packageInfo?.packageName} Total price will
-            be{" "}
-            {getPrice(data?.packageInfo?.packageName) *
-              data?.count *
-              data?.cycleCount}
+            be {getPriceMain * data?.count}
             {" Rs"}
           </p>
         </div>
@@ -165,7 +150,7 @@ const Step4 = () => {
             h1={data?.packageInfo?.packageName}
             packageId={process.env.REACT_APP_BASICPLAN || "plan_NgWEcv4vEvrZFc"}
             value={data?.packageId}
-            price={getPrice(data?.packageInfo?.packageName)}
+            price={getPriceMain}
             mapArray={returnArray(data?.packageInfo?.packageName)}
             button={false}
           />
@@ -200,14 +185,5 @@ const returnArray = (plan = "Basic Plan") => {
       .filter((doc, index) => doc.Enterprise === "✓")
       .reverse()
       .filter((doc, index) => index <= 5);
-  }
-};
-const getPrice = (plan) => {
-  if (plan === "Basic Plan") {
-    return Math.round(0.611 * 90);
-  } else if (plan === "Intermediate Plan") {
-    return Math.round(0.944 * 90);
-  } else {
-    return 115;
   }
 };

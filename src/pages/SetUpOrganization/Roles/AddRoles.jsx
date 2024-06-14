@@ -1,5 +1,5 @@
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
-import { Checkbox, FormControlLabel, Skeleton, Switch } from "@mui/material";
+import { Checkbox, FormControlLabel, Skeleton } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -72,15 +72,15 @@ const AddRoles = () => {
     }));
   };
 
-  const handleIsApproverChange = (event, role) => {
-    setRoleState((prevRoles) => ({
-      ...prevRoles,
-      [role]: {
-        ...prevRoles[role],
-        isApprover: event.target.checked,
-      },
-    }));
-  };
+  // const handleIsApproverChange = (event, role) => {
+  //   setRoleState((prevRoles) => ({
+  //     ...prevRoles,
+  //     [role]: {
+  //       ...prevRoles[role],
+  //       isApprover: event.target.checked,
+  //     },
+  //   }));
+  // };
 
   const handleSubmit = async () => {
     await AddProfiles.mutateAsync(roleState);
@@ -134,7 +134,7 @@ const AddRoles = () => {
                       }
                       label={role}
                     />
-                    {obj.isActive && (
+                    {/* {obj.isActive && (
                       <FormControlLabel
                         control={
                           <Switch
@@ -146,7 +146,7 @@ const AddRoles = () => {
                         }
                         label="Is Approver"
                       />
-                    )}
+                    )} */}
                   </div>
                 ))}
                 <div className="px-6 py-2 w-full">

@@ -22,12 +22,13 @@ import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useEmpOption from "../../../hooks/Employee-OnBoarding/useEmpOption";
 import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
+import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 
 const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   const organisationId = useParams("");
   const {
     Departmentoptions,
-    Manageroptions,
+    onBoardManageroptions,
     RolesOptions,
     Shiftoptions,
     locationoption,
@@ -72,7 +73,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     const birth = moment(date_of_birth, "YYYY-MM-DD");
     const currentValue = moment(dob, "YYYY-MM-DD");
     const differenceInDOB = currentValue.diff(birth, "years");
-    console.log(`🚀 ~ differenceInDOB:`, differenceInDOB);
 
     return differenceInDOB >= 19;
   };
@@ -83,6 +83,9 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [visibleCPassword, setVisibleCPassword] = useState(false);
 
+  const { data } = useSubscriptionGet(organisationId);
+  console.log(`🚀 ~ organisationId:`, Object.values(organisationId)[0]);
+  console.log(`🚀 ~ subscriptionDetails:`, data?.organisation?.foundation_date);
   const EmployeeSchema = z
     .object({
       password: z
@@ -109,18 +112,36 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         label: z.string(),
         value: z.string(),
       }),
-      empId: z.string().min(3, { message: "EmpId is required" }),
+      empId: z
+        .string()
+        .min(1, { message: "Employee code is required" })
+        .max(25, { message: "Employee code is not greater than 25 character" }),
       mgrempid: z
         .object({
-          label: z.string(),
-          value: z.string(),
+          label: z.string().optional(),
+          value: z.string().optional(),
         })
-        .optional(),
+        .optional()
+        .nullable(),
       joining_date: z
         .string()
         .refine(isAtLeastNineteenYearsOld, {
           message: "Employee must be at least 19 years old",
         })
+        .refine(
+          (value) => {
+            const joiningDate = moment(value, "YYYY-MM-DD");
+            const orgDate = moment(
+              data?.organisation?.foundation_date,
+              "YYYY-MM-DD"
+            );
+            return orgDate.isBefore(joiningDate);
+          },
+          {
+            message:
+              "Joining date cannot be before the organisation's foundation date",
+          }
+        )
         .refine(
           (value) => {
             const joiningDate = moment(value, "YYYY-MM-DD"); // replace 'YYYY-MM-DD' with your date format
@@ -151,7 +172,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       path: ["confirmPassword"],
     });
 
-  const { control, formState, handleSubmit, getValues } = useForm({
+  const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       confirmPassword: confirmPassword,
       password: password,
@@ -171,12 +192,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     resolver: zodResolver(EmployeeSchema),
   });
 
-  console.log(shift_allocation);
-
   const { errors } = formState;
-  console.log(`🚀 ~ errors:`, errors);
   const onsubmit = (data) => {
-    console.log(getValues());
     setStep2Data(data);
     nextStep();
   };
@@ -219,12 +236,13 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             value={mgrempid}
             icon={PersonAddAlt}
             control={control}
+            isClearable={true}
             type="select"
             placeholder="Manager"
-            label="Select Manager *"
+            label="Select Manager "
             errors={errors}
             error={errors.mgrempid}
-            options={Manageroptions}
+            options={onBoardManageroptions}
           />
           <AuthInputFiled
             name="profile"

@@ -1,18 +1,22 @@
 import {
-  AccessTimeSharp,
-  Business,
   Dashboard,
+  EventAvailable,
+  EventBusy,
   FilterAltOff,
   Groups,
   LocationOn,
+  NearMe,
+  SupervisorAccount,
   West,
 } from "@mui/icons-material";
 import React from "react";
 import { useQueryClient } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import Select from "react-select";
+import useDashGlobal from "../../hooks/Dashboard/useDashGlobal";
 import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
 import useEmployee from "../../hooks/Dashboard/useEmployee";
+import useSubscriptionGet from "../../hooks/QueryHook/Subscription/hook";
 import LineGraph from "./Components/Bar/LineGraph";
 import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
@@ -23,14 +27,17 @@ const SuperAdmin = () => {
   const queryClient = useQueryClient();
   // custom hooks
   const { employee, employeeLoading } = useEmployee(organisationId);
+  const { data: mainD } = useSubscriptionGet({ organisationId });
+  console.log(
+    `🚀 ~ file: SuperAdmin.jsx:31 ~ data:`,
+    mainD?.organisation?.packageInfo === "Intermediate Plan"
+  );
   const {
-    Department,
-    departmentLoading,
     Managers,
     managerLoading,
-    location,
+    location: loc,
     oraganizationLoading,
-    locationLoading,
+    absentEmployee,
     locationOptions,
     managerOptions,
     Departmentoptions,
@@ -45,68 +52,80 @@ const SuperAdmin = () => {
     salaryData,
   } = useDashboardFilter(organisationId);
 
+  const { setSelectedSalaryYear, selectedSalaryYear } = useDashGlobal();
+
   //? Salary Graph Data
 
   return (
     <>
       <section className=" bg-gray-50  min-h-screen w-full ">
         <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
-          {/* <BackComponent /> */}
           <Link to={"/organizationList"}>
             <West className="mx-4 !text-xl" />
           </Link>
-          Organisation Overview
+          Organisation Dashboard
         </header>
-        {/* <Link to={"/organizationList"} className="my-4 px-8 flex gap-1">
-        <KeyboardBackspace />
-        <h1>Go back</h1>
-      </Link> */}
-        {/* <div className="bg-white pt-10 pb-4 border-b-[.5px] border-gray-300">
-        <div className="flex  px-8    items-center !text-[#152745] gap-1"></div>
-      </div> */}
-
         <div className="md:px-8 px-2 w-full">
-          <div className="flex flex-1 mt-6 flex-wrap w-full justify-between gap-2 md:gap-5 ">
-            <SuperAdminCard
-              icon={Business}
-              color={"!bg-red-500"}
-              data={Department?.departmentCount}
-              isLoading={departmentLoading}
-              title={"Departments"}
-            />
+          <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1  mt-6  w-full   gap-2 md:gap-5 ">
             <SuperAdminCard
               icon={Groups}
-              data={employee?.totalEmployees}
               color={"!bg-blue-500"}
+              data={employee?.totalEmployees}
               isLoading={employeeLoading}
               title={"Overall Employees"}
             />
+
             <SuperAdminCard
               color={"!bg-green-500"}
-              icon={AccessTimeSharp}
+              isLoading={employeeLoading}
+              icon={EventAvailable}
+              data={
+                !isNaN(employee?.totalEmployees)
+                  ? employee?.totalEmployees - absentEmployee
+                  : 0
+              }
+              title={"Present Today"}
+            />
+            <SuperAdminCard
+              title={"Today's Leave"}
+              icon={EventBusy}
+              color={"!bg-red-500"}
+              data={absentEmployee}
+              isLoading={employeeLoading}
+            />
+
+            <SuperAdminCard
+              color={"!bg-amber-500"}
+              icon={SupervisorAccount}
               data={Managers?.length}
               isLoading={managerLoading}
               title={"People's Manager"}
             />
             <SuperAdminCard
               color={"!bg-orange-500"}
-              isLoading={locationLoading}
+              isLoading={false}
               icon={LocationOn}
-              data={location?.locationCount}
+              data={loc?.locationCount}
               title={"Locations"}
             />
+            {mainD?.organisation?.packageInfo === "Intermediate Plan" && (
+              <SuperAdminCard
+                color={"!bg-indigo-500"}
+                isLoading={false}
+                icon={NearMe}
+                data={loc?.locationCount}
+                title={"Remote Employees"}
+              />
+            )}
           </div>
 
           {oraganizationLoading ? (
             <SkeletonFilterSection />
           ) : (
-            <div className="mt-4 w-full  bg-white shadow-md rounded-md  ">
-              <div className="border-b-[.5px] items-center justify-between flex gap-2 py-2 px-4 border-gray-300">
+            <div className="mt-4 w-full  bg-white border rounded-md  ">
+              <div className="items-center justify-between flex gap-2 py-2 px-4 ">
                 <div className="flex items-center gap-2">
                   <Dashboard className="!text-[#67748E]" />
-                  <h1 className="text-md font-bold text-[#67748E]">
-                    Dashboard
-                  </h1>
                 </div>
                 <div className="flex w-[80%] gap-6 items-center justify-end">
                   <button
@@ -115,6 +134,7 @@ const SuperAdmin = () => {
                       setDepartment("");
                       setManager("");
                       queryClient.invalidateQueries("organization-attenedence");
+                      queryClient.invalidateQueries("Org-Salary-overview");
                     }}
                     className="!w-max flex justify-center h-[25px]  gap-2 items-center rounded-md px-1 text-sm font-semibold text-[#152745]  hover:bg-gray-50 focus-visible:outline-gray-100"
                   >
@@ -192,7 +212,11 @@ const SuperAdmin = () => {
 
           <div className="w-full md:gap-4 md:space-y-0 space-y-3 mt-4 flex md:flex-row flex-col items-center">
             <div className="w-[100%] md:w-[50%]">
-              <LineGraph salarydata={salaryData} />
+              <LineGraph
+                salarydata={salaryData}
+                selectedyear={selectedSalaryYear}
+                setSelectedYear={setSelectedSalaryYear}
+              />
             </div>
             <div className="w-[100%] md:w-[50%]">
               <AttendenceBar

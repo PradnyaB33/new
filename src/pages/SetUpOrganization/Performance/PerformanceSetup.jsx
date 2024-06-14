@@ -23,6 +23,14 @@ const PerformanceSetup = () => {
   const authToken = useAuthToken();
   const { handleAlert } = useContext(TestContext);
   const PerformanceSchema = z.object({
+    appraisalStartDate: z.object({
+      startDate: z.string(),
+      endDate: z.string(),
+    }),
+    appraisalEndDate: z.object({
+      startDate: z.string(),
+      endDate: z.string(),
+    }),
     startdate: z.object({
       startDate: z.string(),
       endDate: z.string(),
@@ -35,10 +43,12 @@ const PerformanceSetup = () => {
       label: z.string(),
       value: z.string(),
     }),
-    // goals: z.object({
-    //   label: z.string(),
-    //   value: z.string(),
-    // }),
+    goals: z.array(
+      z.object({
+        label: z.string(),
+        value: z.string(),
+      })
+    ),
     ratings: z.array(
       z.object({
         label: z.string(),
@@ -82,7 +92,6 @@ const PerformanceSetup = () => {
     resolver: zodResolver(PerformanceSchema),
     defaultValues: {
       stages: undefined,
-      // goals: undefined,
       isDownCast: false,
       isFeedback: false,
       isNonMeasurableAllowed: false,
@@ -94,6 +103,8 @@ const PerformanceSetup = () => {
       isSelfGoal: false,
     },
   });
+
+  console.log(`🚀 ~ errors:`, errors);
 
   useEffect(() => {
     if (performance) {
@@ -109,7 +120,21 @@ const PerformanceSetup = () => {
         startDate: performance.startdate,
         endDate: performance.startdate,
       });
-      // setValue("goals", performance.goals);
+      setValue("appraisalStartDate", {
+        startDate: performance.appraisalStartDate,
+        endDate: performance.appraisalStartDate,
+      });
+      setValue("appraisalEndDate", {
+        startDate: performance.appraisalEndDate,
+        endDate: performance.appraisalEndDate,
+      });
+      setValue(
+        "goals",
+        performance.goals.map((goalType) => ({
+          label: goalType,
+          value: goalType,
+        }))
+      );
       setValue("isDownCast", performance.isDownCast);
       setValue("isFeedback", performance.isFeedback);
       setValue("isKRA", performance.isKRA);
@@ -203,7 +228,9 @@ const PerformanceSetup = () => {
         ...data,
         startdate: data.startdate.startDate,
         enddate: data.enddate.endDate,
-        // goals: data.goals.value,
+        appraisalStartDate: data.appraisalStartDate.startDate,
+        appraisalEndDate: data.appraisalEndDate.startDate,
+        goals: data.goals.map((goalType) => goalType.value),
         stages: data.stages.value,
         ratings: data.ratings.map((rating) => rating.value),
       };
@@ -250,6 +277,41 @@ const PerformanceSetup = () => {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
                 <div className="grid grid-cols-2 gap-4">
                   <AuthInputFiled
+                    name="appraisalStartDate"
+                    icon={AccessTime}
+                    control={control}
+                    type="calender"
+                    label="Enter Appraisal Cycle Start Date *"
+                    errors={errors}
+                    error={errors.appraisalStartDate}
+                  />
+                  <AuthInputFiled
+                    name="appraisalEndDate"
+                    min={watch("appraisalStartDate")?.startDate}
+                    icon={AccessTime}
+                    control={control}
+                    type="calender"
+                    label="Enter Appraisal Cycle End Date *"
+                    errors={errors}
+                    error={errors.appraisalEndDate}
+                  />
+                </div>
+
+                <AuthInputFiled
+                  name="goals"
+                  icon={TrendingUp}
+                  control={control}
+                  type="autocomplete"
+                  options={goalsOptions}
+                  optionlist={goalsOptions}
+                  placeholder="Goals"
+                  label="Select Goal Type *"
+                  errors={errors}
+                  error={errors.goals}
+                />
+
+                <div className="grid grid-cols-2 gap-4">
+                  <AuthInputFiled
                     name="startdate"
                     icon={AccessTime}
                     control={control}
@@ -281,17 +343,7 @@ const PerformanceSetup = () => {
                   errors={errors}
                   error={errors.stages}
                 />
-                {/* <AuthInputFiled
-                  name="goals"
-                  icon={TrendingUp}
-                  control={control}
-                  type="mutltiselect"
-                  options={goalsOptions}
-                  placeholder="Goals"
-                  label="Select Goal Type *"
-                  errors={errors}
-                  error={errors.goals}
-                /> */}
+
                 <AuthInputFiled
                   name="ratings"
                   icon={Star}

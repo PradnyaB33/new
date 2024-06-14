@@ -2,6 +2,7 @@ import {
   Article,
   Cancel,
   CheckCircle,
+  Close,
   DeleteOutlined,
   EditOutlined,
   Error,
@@ -27,7 +28,8 @@ const DeclarationTable = ({
   salaryFetching,
 }) => {
   const { handleAlert } = useContext(TestContext);
-  const { setEditStatus, isLoading } = useIncomeTax();
+
+  const { setEditStatus, isLoading, setProofEmpty } = useIncomeTax();
 
   useEffect(() => {
     setEditStatus({});
@@ -181,22 +183,28 @@ const DeclarationTable = ({
                   ) : editStatus[itemIndex] && editStatus[itemIndex] ? (
                     <>
                       {declarationData?.proof ? (
-                        <div
-                          onClick={() =>
-                            handlePDF(
-                              URL.createObjectURL(declarationData?.proof)
-                            )
-                          }
-                          className="px-2 flex gap-2 items-center h-max w-max"
-                        >
-                          <Article className="text-blue-500 " />
-                          <h1 className="truncate w-[150px]">
-                            {declarationData?.proof?.name}
-                          </h1>
+                        <div className="px-2 flex gap-2 items-center h-max w-max">
+                          <div
+                            onClick={() =>
+                              handlePDF(
+                                URL.createObjectURL(declarationData?.proof)
+                              )
+                            }
+                            className="px-2 flex gap-2 items-center h-max w-max"
+                          >
+                            <Article className="text-blue-500 " />
+                            <h1 className="truncate w-[125px]">
+                              {declarationData?.proof?.name}
+                            </h1>
+                          </div>
+                          <Close
+                            onClick={() => setProofEmpty(itemIndex)}
+                            className="!text-sm text-gray-700 cursor-pointer"
+                          />
                         </div>
                       ) : (
                         <div className="px-2  md:w-full w-max">
-                          <label className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+                          <label className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 text-sm rounded cursor-pointer">
                             Upload File
                             <input
                               type="file"
@@ -219,14 +227,18 @@ const DeclarationTable = ({
                         <h1>View Proof </h1>
                       </div>
                     ) : (
-                      <div
-                        onClick={() =>
-                          handlePDF(URL.createObjectURL(declarationData.proof))
-                        }
-                        className="px-2 flex gap-2 items-center h-max w-max"
-                      >
-                        <Article className="text-blue-500" />
-                        <h1>{item.proof.name}</h1>
+                      <div className="px-2 flex gap-2 items-center h-max w-max">
+                        <div
+                          onClick={() =>
+                            handlePDF(
+                              URL.createObjectURL(declarationData.proof)
+                            )
+                          }
+                          className="px-2 flex gap-2 items-center h-max w-max"
+                        >
+                          <Article className="text-blue-500" />
+                          <h1>{item.proof.name}</h1>
+                        </div>
                       </div>
                     )
                   ) : (

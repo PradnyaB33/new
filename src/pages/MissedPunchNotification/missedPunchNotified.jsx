@@ -4,8 +4,9 @@ import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
 import { Container, Typography } from "@mui/material";
-import { Info } from "@mui/icons-material";
+import { Info, RequestQuote } from "@mui/icons-material";
 import { TestContext } from "../../State/Function/Main";
+import { Avatar } from "@mui/material";
 
 const MissedPunchNotified = ({ employeeId }) => {
   const { handleAlert } = useContext(TestContext);
@@ -49,9 +50,8 @@ const MissedPunchNotified = ({ employeeId }) => {
         }
       );
       console.log(response);
-      await queryClient.refetchQueries(["unavailableRecords", organisationId]);
+      await queryClient.invalidateQueries(["unavailableRecords", organisationId]);
       handleAlert(true, "success", "Approval updated successfully.");
-     
     } catch (error) {
       console.error("Error updating approval:", error);
       handleAlert(true, "error", "Failed to update approval.");
@@ -80,7 +80,7 @@ const MissedPunchNotified = ({ employeeId }) => {
     }
   };
 
-  //  for hr 
+  //  for hr
   const handleApprovalUnavailableRecord = async (recordId) => {
     try {
       console.log("record id", recordId);
@@ -124,12 +124,18 @@ const MissedPunchNotified = ({ employeeId }) => {
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen py-8 px-4 ">
-        <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
-          Employee Missed Punch
-        </Typography>
-        <p className="text-xs text-gray-600 pl-10 text-center mb-2">
-          Unavailable records of employee
-        </p>
+        <div className="space-y-1 flex items-center gap-3 mb-4">
+          <Avatar className="text-white !bg-blue-500">
+            <RequestQuote />
+          </Avatar>
+          <div>
+            <h1 className=" md:text-xl text-lg ">Missed Punch Requests</h1>
+            <p className="text-sm">
+              Here you will be able to approve or reject the missed punch
+              notifications
+            </p>
+          </div>
+        </div>
         {unavailableRecord && unavailableRecord.length > 0 ? (
           unavailableRecord.map((record, index) => (
             <article
@@ -269,8 +275,6 @@ const MissedPunchNotified = ({ employeeId }) => {
                                     >
                                       Approved as leave
                                     </button>
-
-                                  
                                   </>
                                 ) : null}
                               </td>

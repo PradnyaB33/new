@@ -1,11 +1,13 @@
 import axios from "axios";
 import { useQuery } from "react-query";
+import useNotificationCount from "../../../../components/app-layout/notification-zustand";
 import useGetUser from "../../../Token/useUser";
 import UserProfile from "../../../UserData/useUser";
 
 const useShiftNotification = () => {
   const { authToken } = useGetUser();
   const { getCurrentUser } = UserProfile();
+  const { setNotificationCount } = useNotificationCount();
   let isAcc = false;
   const user = getCurrentUser();
   const profileArr = user.profile;
@@ -33,13 +35,33 @@ const useShiftNotification = () => {
       return data;
     }
   };
+  const getCount = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/shiftApply/getCount`,
+      {
+        headers: { Authorization: authToken },
+      }
+    );
+    return response.data.newReq;
+  };
 
   const { data, isLoading, isFetching } = useQuery(
     "shift-request",
-    getShiftNotification
+    getShiftNotification,
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      onSuccess: async (data) => {
+        console.log(`🚀 ~ file: hook.jsx:33 ~ data:`, data);
+        setNotificationCount(data?.length ?? 0);
+      },
+    }
   );
+  const { data: count } = useQuery("shift-count", getCount);
+  console.log("count", count);
   return {
     data,
+    count,
     isLoading,
     isFetching,
   };

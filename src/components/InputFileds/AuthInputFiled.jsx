@@ -1,7 +1,8 @@
 import { ErrorMessage } from "@hookform/error-message";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { Avatar } from "@mui/material";
-import { default as React, useMemo } from "react";
+import { Close, Send, Visibility, VisibilityOff } from "@mui/icons-material";
+import { Avatar, Button } from "@mui/material";
+import moment from "moment";
+import { default as React } from "react";
 import Autocomplete, { usePlacesWidget } from "react-google-autocomplete";
 import { Controller } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
@@ -54,6 +55,10 @@ const AuthInputFiled = ({
   descriptionText,
   value,
   autoComplete,
+  onInputActionClick,
+  InputFiledActionIcon,
+  onInputActionClear,
+  isClearable = false,
 }) => {
   // specify modules to be included
   const modules = useMemo(
@@ -236,8 +241,9 @@ const AuthInputFiled = ({
                     readOnly && "bg-[ghostwhite]"
                   } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
                 >
-                  <Icon className="text-gray-700 text-sm" />
+                  <Icon className="text-gray-700 text-xs" />
                   <Select
+                    isClearable={isClearable}
                     aria-errormessage=""
                     placeholder={placeholder}
                     styles={{
@@ -256,8 +262,17 @@ const AuthInputFiled = ({
                     options={options}
                     value={field?.value}
                     onChange={(value) => {
-                      updateField(name, value);
-                      field.onChange(value);
+                      console.log(
+                        `🚀 ~ file: AuthInputFiled.jsx:236 ~ value:`,
+                        value
+                      );
+                      if (value === null) {
+                        updateField(name, value);
+                        field.onChange({ value: undefined, label: undefined });
+                      } else {
+                        updateField(name, undefined);
+                        field.onChange(value);
+                      }
                     }}
                   />
                 </div>
@@ -319,7 +334,12 @@ const AuthInputFiled = ({
                     components={{
                       IndicatorSeparator: () => null,
                     }}
-                    options={options}
+                    options={
+                      options ||
+                      moment
+                        .months()
+                        .map((month, index) => ({ label: month, value: month }))
+                    }
                     onChange={(value) => {
                       field.onChange(value.value);
                     }}
@@ -409,6 +429,82 @@ const AuthInputFiled = ({
       </>
     );
   }
+  if (type === "multiselect") {
+    return (
+      <>
+        <div className={`space-y-1 w-full  ${className}`}>
+          <label
+            htmlFor={name}
+            className={`${
+              error && "text-red-500"
+            } font-semibold text-gray-500 text-md`}
+          >
+            {label}
+          </label>
+          <Controller
+            control={control}
+            name={name}
+            id={name}
+            render={({ field }) => (
+              <>
+                <div
+                  className={`${
+                    readOnly && "bg-[ghostwhite]"
+                  } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+                >
+                  <Icon className="text-gray-700" />
+                  <Select
+                    aria-errormessage="error"
+                    placeholder={placeholder}
+                    isMulti
+                    styles={{
+                      control: (styles) => ({
+                        ...styles,
+                        borderWidth: "0px",
+                        boxShadow: "none",
+                      }),
+                    }}
+                    className={`${
+                      readOnly && "bg-[ghostwhite]"
+                    } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                    components={{
+                      IndicatorSeparator: () => null,
+                    }}
+                    options={options}
+                    // value={field.value}
+                    // onChange={(value) => {
+                    //   field.onChange(
+                    //     value.map((item) => {
+                    //       return {
+                    //         label: item.value,
+                    //         value: item.value
+                    //       }
+                    //     })
+                    //   );
+                    // }}
+                    value={field?.value}
+                    onChange={(value) => {
+                      field.onChange(value);
+                    }}
+                  />
+                </div>
+              </>
+            )}
+          />
+          <div className="h-4 !mb-1">
+            <ErrorMessage
+              errors={errors}
+              name={name}
+              render={({ message }) => (
+                <p className="text-sm text-red-500">{message}</p>
+              )}
+            />
+          </div>
+        </div>
+      </>
+    );
+  }
+
   if (type === "location-picker") {
     return (
       <PlaceAutoComplete
@@ -706,6 +802,7 @@ const AuthInputFiled = ({
                 <textarea
                   type={type}
                   rows={3}
+                  maxLength={maxLimit && maxLimit}
                   readOnly={readOnly}
                   placeholder={placeholder}
                   className={`${
@@ -896,7 +993,7 @@ const AuthInputFiled = ({
             errors={errors}
             name={name}
             render={({ message }) => (
-              <p className="text-sm mb-4 relative !bg-white  text-red-500">
+              <p className="text-sm mb-4 absolute !bg-white  text-red-500">
                 {message}
               </p>
             )}
@@ -939,6 +1036,7 @@ const AuthInputFiled = ({
                   onChange={(value, data, event, formattedValue) => {
                     field.onChange(value.slice(data.dialCode.length));
                   }}
+                  value={value}
                   containerStyle={{
                     height: "100%",
                     width: "auto",
@@ -1038,7 +1136,187 @@ const AuthInputFiled = ({
       </div>
     );
   }
+  if (type === "input-action") {
+    return (
+      <div className={`space-y-1 min-w-11 ${className}`}>
+        <label
+          htmlFor={name}
+          className={`${
+            error && "text-red-500"
+          } font-semibold text-gray-500 text-md`}
+        >
+          {label}
+        </label>
+        <Controller
+          control={control}
+          name={name}
+          id={name}
+          render={({ field }) => {
+            return (
+              <div
+                onFocus={() => {
+                  handleFocus(name);
+                }}
+                onBlur={() => setFocusedInput(null)}
+                className={` ${
+                  focusedInput === name
+                    ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
+                    : "outline-none border-gray-200 border-[.5px]"
+                } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px] ${
+                  readOnly && "!bg-gray-200"
+                }`}
+              >
+                {Icon && (
+                  <Icon className=" text-gray-700 md:text-lg !text-[1em]" />
+                )}
+                <input
+                  type={
+                    type === "password" ? (visible ? "text" : "password") : type
+                  }
+                  min={min}
+                  max={max}
+                  maxLength={maxLimit && maxLimit}
+                  readOnly={readOnly}
+                  value={field.value}
+                  placeholder={placeholder}
+                  className={`!flex-3 border-none bg-white w-full outline-none px-2  ${
+                    readOnly && "!bg-gray-200"
+                  }`}
+                  autoComplete={autoComplete ?? "on"}
+                  {...field}
+                  formNoValidate
+                />
+                <div className="!w-fit !flex-1">
+                  {!readOnly ? (
+                    <Button
+                      variant="contained"
+                      type="button"
+                      onClick={onInputActionClick.bind(this, field.value)}
+                      className="!min-w-9 !text-white"
+                      disabled={
+                        field?.value?.trim().length !== 0 ? readOnly : true
+                      }
+                    >
+                      <Send className="md:text-lg !text-[1em]" />
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="error"
+                      type="button"
+                      onClick={onInputActionClear}
+                      className="!min-w-9 !text-white"
+                    >
+                      <Close className="md:text-lg !text-[1em]" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            );
+          }}
+        />
+        <p className="text-xs w-full h-fit">{descriptionText}</p>
+        <ErrorMessage
+          errors={errors}
+          name={name}
+          render={({ message }) => (
+            <p className="text-sm mb-4 w-full h-full !bg-white  text-red-500">
+              {message}
+            </p>
+          )}
+        />
+        {/* </div> */}
+      </div>
+    );
+  }
+  if (type === "month") {
+    return (
+      <div className={`space-y-1 min-w-11 ${className}`}>
+        <label
+          htmlFor={name}
+          className={`${
+            error && "text-red-500"
+          } font-semibold text-gray-500 text-md`}
+        >
+          {label}
+        </label>
+        <Controller
+          control={control}
+          name={name}
+          id={name}
+          render={({ field }) => {
+            return (
+              <div
+                onFocus={() => {
+                  handleFocus(name);
+                }}
+                onBlur={() => setFocusedInput(null)}
+                className={` ${
+                  focusedInput === name
+                    ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
+                    : "outline-none border-gray-200 border-[.5px]"
+                } flex  rounded-md items-center px-2   bg-white py-1 md:py-[6px] ${
+                  readOnly && "!bg-gray-200"
+                }`}
+              >
+                {Icon && (
+                  <Icon className="text-gray-700 md:text-lg !text-[1em]" />
+                )}
+                <input
+                  type={
+                    type === "password" ? (visible ? "text" : "password") : type
+                  }
+                  min={min}
+                  max={max}
+                  onKeyDown={(evt) => {
+                    if (type === "number") {
+                      evt.key === "e" && evt.preventDefault();
+                    }
+                  }}
+                  maxLength={`${maxLimit}`}
+                  readOnly={readOnly}
+                  value={field.value}
+                  placeholder={placeholder}
+                  className={` border-none bg-white w-full outline-none px-2  ${
+                    readOnly && "!bg-gray-200"
+                  }`}
+                  autoComplete={autoComplete ?? "on"}
+                  {...field}
+                  formNoValidate
+                />
+                {type === "password" && (
+                  <button
+                    type="button"
+                    onClick={() => setVisible(visible === true ? false : true)}
+                  >
+                    {visible ? (
+                      <VisibilityOff className="text-gray-700" />
+                    ) : (
+                      <Visibility className="text-gray-700" />
+                    )}
+                  </button>
+                )}
+              </div>
+            );
+          }}
+        />
+        <p className="text-xs w-full h-fit">{descriptionText}</p>
+        <div className="h-4 !mb-1">
+          <ErrorMessage
+            errors={errors}
+            name={name}
+            render={({ message }) => (
+              <p className="!absolute text-sm mb-4 h-max  !bg-white  text-red-500">
+                {message}
+              </p>
+            )}
+          />
+        </div>
 
+        {/* </div> */}
+      </div>
+    );
+  }
   return (
     <div className={`space-y-1 min-w-11 ${className}`}>
       <label
@@ -1077,7 +1355,12 @@ const AuthInputFiled = ({
                 }
                 min={min}
                 max={max}
-                maxLength={maxLimit && maxLimit}
+                onKeyDown={(evt) => {
+                  if (type === "number") {
+                    evt.key === "e" && evt.preventDefault();
+                  }
+                }}
+                maxLength={`${maxLimit}`}
                 readOnly={readOnly}
                 value={field.value}
                 placeholder={placeholder}
@@ -1105,15 +1388,18 @@ const AuthInputFiled = ({
         }}
       />
       <p className="text-xs w-full h-fit">{descriptionText}</p>
-      <ErrorMessage
-        errors={errors}
-        name={name}
-        render={({ message }) => (
-          <p className="text-sm mb-4 w-full h-full !bg-white  text-red-500">
-            {message}
-          </p>
-        )}
-      />
+      <div className="h-4 !mb-1">
+        <ErrorMessage
+          errors={errors}
+          name={name}
+          render={({ message }) => (
+            <p className="!absolute text-sm mb-4 h-max  !bg-white  text-red-500">
+              {message}
+            </p>
+          )}
+        />
+      </div>
+
       {/* </div> */}
     </div>
   );

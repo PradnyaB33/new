@@ -37,7 +37,7 @@ const TDSDeclarationModel = ({
       .refine((value) => Number(value) <= Number(investment?.declaration), {
         message: "Value must be less than declaration",
       }),
-    messsage: z.string().optional(),
+    message: z.string().optional(),
   });
 
   const {
@@ -45,6 +45,7 @@ const TDSDeclarationModel = ({
     control,
     formState: { errors },
     setValue,
+    reset,
   } = useForm({
     defaultValues: {
       declaration: undefined,
@@ -62,7 +63,17 @@ const TDSDeclarationModel = ({
     [investment]
   );
 
-  console.log(investment);
+  useEffect(
+    () => {
+      if (!open) {
+        reset({
+          message: undefined,
+        });
+      }
+    },
+    // eslint-disable-next-line
+    [open]
+  );
 
   const queryClient = useQueryClient();
 
@@ -88,7 +99,15 @@ const TDSDeclarationModel = ({
         }
       );
 
-      handleAlert(true, "success", `Data uploaded successfully`);
+      handleAlert(
+        true,
+        "success",
+        `${
+          isReject
+            ? "Declaration rejected successfully"
+            : "Declaration approved successfully"
+        } `
+      );
       queryClient.invalidateQueries(["EmpData"]);
       queryClient.invalidateQueries(["AccoutantEmp"]);
       handleClose();

@@ -2,6 +2,7 @@ import {
   Article,
   Cancel,
   CheckCircle,
+  Close,
   DeleteOutlined,
   EditOutlined,
   Error,
@@ -228,7 +229,6 @@ const TDSTable2 = () => {
   const { handleAlert } = useContext(TestContext);
   const [editStatus, setEditStatus] = useState({});
   const [declarationData, setDeclarationData] = useState({});
-  console.log(`🚀 ~ declarationData:`, declarationData);
 
   const handleEditClick = (itemIndex, fieldIndex) => {
     const newData = [...tableData];
@@ -323,7 +323,7 @@ const TDSTable2 = () => {
         }
       );
 
-      handleAlert(true, "success", `Data deleted successfully`);
+      handleAlert(true, "success", `Declarations deleted successfully`);
       queryClient.invalidateQueries({ queryKey: ["incomeHouse"] });
     } catch (error) {
       console.log(error);
@@ -433,7 +433,7 @@ const TDSTable2 = () => {
         }
       );
 
-      handleAlert(true, "success", `Data uploaded successfully`);
+      handleAlert(true, "success", `Declarations submitted successfully`);
       queryClient.invalidateQueries({ queryKey: ["incomeHouse"] });
     } catch (error) {
       console.log(error);
@@ -592,20 +592,31 @@ const TDSTable2 = () => {
                               {editStatus[itemIndex] === id ? (
                                 <>
                                   {declarationData.proof ? (
-                                    <div
-                                      onClick={() =>
-                                        handlePDF(
-                                          URL.createObjectURL(
-                                            declarationData?.proof
+                                    <div className="px-2 flex gap-2 items-center h-max w-max">
+                                      <div
+                                        onClick={() =>
+                                          handlePDF(
+                                            URL.createObjectURL(
+                                              declarationData?.proof
+                                            )
                                           )
-                                        )
-                                      }
-                                      className="px-2 flex gap-2 items-center h-max w-max"
-                                    >
-                                      <Article className="text-blue-500 " />
-                                      <h1 className="truncate w-[150px]">
-                                        {declarationData?.proof?.name}
-                                      </h1>
+                                        }
+                                        className="px-2 flex gap-2 items-center h-max w-max"
+                                      >
+                                        <Article className="text-blue-500 " />
+                                        <h1 className="truncate w-[125px]">
+                                          {declarationData?.proof?.name}
+                                        </h1>
+                                      </div>
+                                      <Close
+                                        onClick={() =>
+                                          setDeclarationData((prev) => ({
+                                            ...prev,
+                                            proof: undefined,
+                                          }))
+                                        }
+                                        className="!text-sm text-gray-700 cursor-pointer"
+                                      />
                                     </div>
                                   ) : (
                                     <div className="px-2 w-[150px]">

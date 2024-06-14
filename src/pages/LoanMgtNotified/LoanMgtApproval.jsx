@@ -1,6 +1,4 @@
-import React, { useContext } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "react-query";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
 import Card from "@mui/material/Card";
@@ -9,12 +7,17 @@ import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { TestContext } from "../../State/Function/Main";
-const LoanMgtApproval = () => {
+import { useQuery, useQueryClient } from "react-query";
+import ViewDocumentModal from "./ViewDocumentModal";
+import Button from "@mui/material/Button";
+const LoanMgtApproval = ({ employee }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-  const { loanId } = useParams();
   const { handleAlert } = useContext(TestContext);
-  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  console.log("employee", employee);
+  let loanId = employee?._id;
+  console.log("loan id", loanId);
 
   //for get loan data
   const { data: getEmployeeLoanInfo } = useQuery(
@@ -53,7 +56,8 @@ const LoanMgtApproval = () => {
         }
       );
       console.log(response);
-
+      // Invalidate the query to force refetch
+      queryClient.invalidateQueries(["empLoanInfo", loanId]);
       // Display appropriate alert message based on action
       if (status === "ongoing") {
         handleAlert(
@@ -68,21 +72,33 @@ const LoanMgtApproval = () => {
           `Rejected the request for loan application of ${getEmployeeLoanInfo?.userId?.first_name}`
         );
       }
-      navigate("/pendingLoan");
+      window.location.reload();
     } catch (error) {
       console.error("Error adding salary data:", error);
       handleAlert(true, "error", "Something went wrong");
     }
   };
+  // for view the loan data
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [userUploadDocumnet, setUserUploadDocumnet] = useState(null);
+  const handleViewModalOpen = () => {
+    setViewModalOpen(true);
+    setUserUploadDocumnet(getEmployeeLoanInfo);
+  };
+  const handleViewModalClose = () => {
+    setViewModalOpen(false);
+    setUserUploadDocumnet(null);
+  };
+
   return (
     <>
-      <div className="mx-auto mt-20">
+      <div>
         <Card
           variant="outlined"
-          sx={{ width: "100%", maxWidth: "50%", marginLeft: "25%" }}
+          sx={{ width: "100%", maxWidth: "95%", marginTop: "50px" }}
         >
           <Box sx={{ p: 2 }}>
-            <Typography gutterBottom variant="h5" component="div">
+            <Typography gutterBottom variant="h4" component="div">
               {getEmployeeLoanInfo?.userId?.first_name || ""}
             </Typography>
             <Typography color="text.secondary" variant="body2">
@@ -92,7 +108,7 @@ const LoanMgtApproval = () => {
           </Box>
           <Divider />
           <Box sx={{ p: 2 }}>
-          <Stack
+            <Stack
               direction="row"
               justifyContent="space-between"
               alignItems="center"
@@ -170,14 +186,41 @@ const LoanMgtApproval = () => {
               alignItems="center"
             >
               <Typography gutterBottom variant="h6" component="div">
-              Total Deduction
+                Total Deduction
               </Typography>
               <Typography gutterBottom component="div">
                 {getEmployeeLoanInfo?.totalDeduction || ""}
               </Typography>
             </Stack>
-
-          
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography gutterBottom variant="h6" component="div">
+                Total Deduction With Simple Interest
+              </Typography>
+              <Typography gutterBottom component="div">
+                {getEmployeeLoanInfo?.totalDeductionWithSi || ""}
+              </Typography>
+            </Stack>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography gutterBottom variant="h6" component="div">
+                Document
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleViewModalOpen}
+                sx={{ textTransform: "none" }}
+              >
+                View
+              </Button>
+            </Stack>
           </Box>
           <Divider />
           <Box sx={{ p: 2 }}>
@@ -199,6 +242,12 @@ const LoanMgtApproval = () => {
             </div>
           </Box>
         </Card>
+        {/* for view */}
+        <ViewDocumentModal
+          handleClose={handleViewModalClose}
+          open={viewModalOpen}
+          userUploadDocumnet={userUploadDocumnet}
+        />
       </div>
     </>
   );

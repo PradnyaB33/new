@@ -22,7 +22,7 @@ export default function AppAlert() {
     <>
       <Snackbar
         open={appAlert.alert}
-        autoHideDuration={1000}
+        autoHideDuration={3000}
         onClose={handleClose}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >

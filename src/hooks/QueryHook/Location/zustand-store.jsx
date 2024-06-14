@@ -9,11 +9,19 @@ const useSelfieStore = create((set) => ({
   locationArray: [],
   temporaryArray: [],
   id: null,
+  startTime: null,
+  endTime: null,
   setOpen: (open) => {
     set({ open });
   },
   setMedia: (media) => {
     set({ media });
+  },
+  setStartTime: () => {
+    set({ startTime: new Date() });
+  },
+  setEndTime: () => {
+    set({ endTime: new Date() });
   },
   setPunchObjectId: (punchObjectId) => {
     set({ punchObjectId });
@@ -28,6 +36,9 @@ const useSelfieStore = create((set) => ({
     set((state) => ({
       locationArray: [...state.locationArray, locationObject],
     }));
+  },
+  clearLocation: () => {
+    set({ locationArray: [] });
   },
   setTemporaryArray: ({ latitude, longitude }) => {
     set((state) => ({

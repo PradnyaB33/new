@@ -13,7 +13,6 @@ import { getSignedUrlForOrgDocs, uploadFile } from "../../services/docManageS3";
 import DataTable from "./components/DataTable";
 import DocList from "./components/DocList";
 import Options from "./components/Options";
-
 const DocManageAuth = () => {
   const { authToken } = useGetUser();
   const [option, setOption] = useState("");
@@ -205,7 +204,16 @@ const DocManageAuth = () => {
             data={data2}
           />
         )}
-        {option === "" && <Options setOption={setOption} />}
+        {option === "" && (
+          <>
+            {" "}
+            <p className="font-semibold">
+              Manage Organizational Records, Used For Generation And
+              Distribution of Information To The Employees.
+            </p>{" "}
+            <Options setOption={setOption} />{" "}
+          </>
+        )}
       </Container>
 
       <Container className="w-[600px] h-[80vh] border-2 mt-5">
