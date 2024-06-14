@@ -222,11 +222,11 @@ const SignIn = () => {
           <div className="space-y-2 mb-8 flex-col flex items-center justify-center"></div>
         </div>
 
-        <article className="lg:w-[60%] sm:h-screen h-[90vh]  !bg-white w-full flex lg:justify-start justify-center  items-center lg:items-start flex-col ">
+        <article className="lg:w-[60%] h-screen  !bg-white w-full flex lg:justify-start justify-center  items-center lg:items-start flex-col ">
           <form
             onSubmit={onSubmit}
             autoComplete="off"
-            className="flex  lg:px-20  sm:w-[600px]  w-[90%]  justify-center flex-col  lg:h-[80vh]"
+            className="flex  lg:px-20   w-max  justify-center flex-col  lg:h-[80vh]"
           >
             <div className="flex flex-col space-x-4 lg:items-start items-center">
               <div className="flex flex-col gap-1  w-full items-center justify-center space-y-1">
@@ -237,7 +237,7 @@ const SignIn = () => {
               </div>
             </div>
 
-            <div className="mt-6 !w-full sm:w-[400px] space-y-2 ">
+            <div className="mt-6 w-[400px] space-y-2 ">
               <label
                 htmlFor={email}
                 className={" font-semibold text-gray-500 text-md"}
