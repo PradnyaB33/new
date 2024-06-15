@@ -21,7 +21,8 @@ const useNotification = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const { data: selfLeaveNotification } = useLeaveNotification();
-  const { notificationCount } = useShiftNotification();
+  const { data: shiftNotification } = useShiftNotification();
+
   const [emp, setEmp] = useState();
   const { data: data3 } = usePunchNotification();
   const { data: data4 } = useDocNotification();
@@ -69,10 +70,10 @@ const useNotification = () => {
     role === "Delegate-Super-Admin"
   ) {
     count1 = getAdvanceSalaryData?.length ?? 0;
-    console.log(`🚀 ~ file: page.jsx:73 ~ count1:`, count1);
+    console.log(`🚀 ~ file: useNotification.jsx:73 ~ count1:`, count1);
   } else {
     count1 = advanceSalaryNotification?.length ?? 0;
-    console.log(`🚀 ~ file: page.jsx:76 ~ count1:`, count1);
+    console.log(`🚀 ~ file: useNotification.jsx:76 ~ count1:`, count1);
   }
 
   // for missed punch notification count
@@ -119,7 +120,7 @@ const useNotification = () => {
 
     {
       name: "Shift Notification",
-      count: notificationCount,
+      count: shiftNotification?.length ?? 0,
       color: "#3668ff",
       url: "/shift-notification",
       url2: "/self/shift-notification",
@@ -187,7 +188,6 @@ const useNotification = () => {
       visible: true,
     },
   ];
-  console.log(`🚀 ~ file: useNotification.jsx:190 ~ dummyData:`, dummyData);
   return { dummyData };
 };
 

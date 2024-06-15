@@ -20,7 +20,6 @@ const useAdvanceSalaryData = () => {
         },
       }
     );
-    console.log(`🚀 ~ file: useAdvanceSalary.jsx:21 ~ response:`, response);
     return response.data.data;
   });
 
@@ -35,7 +34,6 @@ const useAdvanceSalaryData = () => {
           },
         }
       );
-      console.log(`🚀 ~ file: useAdvanceSalary.jsx:38 ~ response:`, response);
       return response.data.data;
     }
   );
