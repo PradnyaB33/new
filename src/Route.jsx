@@ -119,6 +119,8 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import EmpCommunication from "./pages/SetUpOrganization/EmpCommunication/EmpCommunication";
+import Communication from "./pages/Communication/Communication";
 
 const App = () => {
   return (
@@ -434,6 +436,16 @@ const App = () => {
             >
               {/* <EmployeeAdd /> */}
               <EmployeeTest />
+            </RequireAuth>
+          }
+        />
+         <Route
+          path="/organisation/:organisationId/create-communication"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <Communication />
             </RequireAuth>
           }
         />
@@ -860,6 +872,14 @@ const App = () => {
           element={
             <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
               <EmployeeCodeGenerator />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/setup/email-communicaiton"
+          element={
+            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+              <EmpCommunication />
             </RequireAuth>
           }
         />
