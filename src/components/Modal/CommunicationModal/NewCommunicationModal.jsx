@@ -75,7 +75,8 @@ const NewCommunication = ({ handleClose, open, organisationId }) => {
       return response.data.employees;
     }
   );
-
+  
+  console.log("employee" , employee);
   const employeeEmail = employee
     ? employee.map((emp) => ({
         label: emp.email,

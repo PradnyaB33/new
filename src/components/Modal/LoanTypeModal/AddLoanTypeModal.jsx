@@ -26,7 +26,6 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
   const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
   const [error, setError] = useState(null);
-  console.log(organisationId);
 
   const EmpLoanMgtSchema = z.object({
     loanName: z
@@ -154,7 +153,8 @@ const AddLoanTypeModal = ({ handleClose, open, organisationId }) => {
       return response.data.data;
     }
   );
-  console.log(getEmployeeLoans);
+
+  console.log("emp loan", getEmployeeLoans);
 
   const onSubmit = async (data) => {
     try {

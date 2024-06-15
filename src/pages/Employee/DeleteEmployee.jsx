@@ -348,38 +348,38 @@ const DeleteEmployee = () => {
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className="text-center mb-6 mt-2">
-          Employee Offboarding
+            Employee Offboarding
           </Typography>
           <p className="text-xs text-gray-600 text-center">
             Delete employee data here by using delete button.
           </p>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
-            <div className="flex items-center  gap-3 ">
+            <div className="flex items-center gap-3 mb-3 md:mb-0 w-full md:w-auto">
               <TextField
                 onChange={(e) => setNameSearch(e.target.value)}
                 placeholder="Search Employee Name...."
                 variant="outlined"
                 size="small"
-                sx={{ width: 300 }}
+                sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
               />
             </div>
-            <div className="flex items-center  gap-3 ">
+            <div className="flex items-center gap-3 mb-3 md:mb-0 w-full md:w-auto">
               <TextField
                 onChange={(e) => setDeptSearch(e.target.value)}
                 placeholder="Search Department Name...."
                 variant="outlined"
                 size="small"
-                sx={{ width: 300 }}
+                sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
               />
             </div>
-            <div className="flex items-center  gap-3 ">
+            <div className="flex items-center gap-3 w-full md:w-auto">
               <TextField
                 onChange={(e) => setLocationSearch(e.target.value)}
                 placeholder="Search Location ...."
                 variant="outlined"
                 size="small"
-                sx={{ width: 300 }}
+                sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
               />
             </div>
             <div className="flex items-center gap-3 mb-3 md:mb-0">
@@ -439,7 +439,6 @@ const DeleteEmployee = () => {
                     />
                   </label>
                 </MenuItem>
-
                 <MenuItem onClick={() => setShowConfirmationExcel(true)}>
                   <Delete style={{ color: "red", marginRight: "25px" }} />
                   <span>Delete</span>
@@ -447,7 +446,7 @@ const DeleteEmployee = () => {
               </Menu>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 w-full md:w-auto">
               <Tooltip title="Check at least one checkbox to delete" arrow>
                 <div>
                   <Button
