@@ -4,9 +4,9 @@ import ChatIcon from "@mui/icons-material/Chat";
 import InfoIcon from "@mui/icons-material/Info";
 import { Button, Divider, Paper, Skeleton } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
@@ -49,15 +49,17 @@ const EmployeeProfile = () => {
     setValue,
   } = useForm({
     defaultValues: {
-      additional_phone_number: "",
-      chat_id: "",
-      status_message: "",
+      additional_phone_number: undefined,
+      chat_id: undefined,
+      status_message: undefined,
     },
     resolver: zodResolver(UserProfileSchema),
   });
 
-  useEffect(() => {
-    (async () => {
+  // Fetch user profile data using useQuery
+  const { data: profileData, isLoading } = useQuery(
+    ["employeeProfile", userId],
+    async () => {
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/employee/get/profile/${userId}`,
         {
@@ -66,14 +68,24 @@ const EmployeeProfile = () => {
           },
         }
       );
-      setValue("chat_id", response?.data?.employee?.chat_id);
-      setValue(
-        "additional_phone_number",
-        String(response?.data?.employee?.additional_phone_number)
-      );
-      setValue("status_message", response?.data?.employee?.status_message);
-    })();
-  });
+      return response.data;
+    },
+    {
+      onSuccess: (data) => {
+        setValue("chat_id", data?.employee?.chat_id);
+        setValue(
+          "additional_phone_number",
+          String(data?.employee?.additional_phone_number)
+        );
+        setValue("status_message", data?.employee?.status_message);
+      },
+      onError: () => {
+        setError("Error fetching profile data.");
+      },
+    }
+  );
+  console.log({profileData , isLoading});
+
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type.startsWith("image/")) {
@@ -99,7 +111,6 @@ const EmployeeProfile = () => {
           },
         }
       ),
-
     {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["additionalField"] });

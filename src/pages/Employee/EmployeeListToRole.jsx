@@ -82,7 +82,7 @@ const EmployeeListToRole = () => {
           </p>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
-            <div className="flex items-center gap-3 mb-3 md:mb-0">
+            <div className="flex items-center gap-3 mb-3 md:mb-0 w-full md:w-auto">
               <Tooltip
                 title="No employees found"
                 placement="top"
@@ -93,26 +93,26 @@ const EmployeeListToRole = () => {
                   placeholder="Search Employee Name...."
                   variant="outlined"
                   size="small"
-                  sx={{ width: 300 }}
+                  sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
                 />
               </Tooltip>
             </div>
-            <div className="flex items-center gap-3 mb-3 md:mb-0">
+            <div className="flex items-center gap-3 mb-3 md:mb-0 w-full md:w-auto">
               <TextField
                 onChange={(e) => setDeptSearch(e.target.value)}
                 placeholder="Search Department Name...."
                 variant="outlined"
                 size="small"
-                sx={{ width: 300 }}
+                sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
               />
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 w-full md:w-auto">
               <TextField
                 onChange={(e) => setLocationSearch(e.target.value)}
                 placeholder="Search Location ...."
                 variant="outlined"
                 size="small"
-                sx={{ width: 300 }}
+                sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
               />
             </div>
           </div>

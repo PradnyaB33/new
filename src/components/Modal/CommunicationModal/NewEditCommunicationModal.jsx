@@ -218,6 +218,7 @@ const NewEditCommunication = ({
       onError: () => {},
     }
   );
+  
   const onSubmit = async (data) => {
     try {
       console.log(data);

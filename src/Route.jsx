@@ -500,7 +500,7 @@ const App = () => {
           }
         />
         <Route
-          path="/missed-justify"
+          path="/organisation/:organisationId/missed-justify"
           element={
             <RequireAuth
               permission={[
@@ -614,7 +614,7 @@ const App = () => {
           }
         />
         <Route
-          path="/add-loan"
+          path="/organisation/:organisationId/add-loan"
           element={
             <RequireAuth
               permission={[
@@ -636,7 +636,7 @@ const App = () => {
           }
         />
         <Route
-          path="/advance-salary"
+          path="/organisation/:organisationId/advance-salary"
           element={
             <RequireAuth
               permission={[
@@ -669,7 +669,7 @@ const App = () => {
         />
 
         <Route
-          path="/view-payslip"
+          path="/organisation/:organisationId/view-payslip"
           element={
             <RequireAuth
               permission={[
