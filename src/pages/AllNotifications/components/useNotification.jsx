@@ -70,10 +70,8 @@ const useNotification = () => {
     role === "Delegate-Super-Admin"
   ) {
     count1 = getAdvanceSalaryData?.length ?? 0;
-    console.log(`🚀 ~ file: useNotification.jsx:73 ~ count1:`, count1);
   } else {
     count1 = advanceSalaryNotification?.length ?? 0;
-    console.log(`🚀 ~ file: useNotification.jsx:76 ~ count1:`, count1);
   }
 
   // for missed punch notification count
