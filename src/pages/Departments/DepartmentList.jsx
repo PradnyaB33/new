@@ -237,7 +237,7 @@ const DepartmentList = () => {
   return (
     <>
       {isLoading && (
-        <div className="flex h-[80vh] w-full items-center justify-center">
+        <div className="flex h-screen w-full items-center justify-center">
           <CircularProgress />
         </div>
       )}
@@ -252,7 +252,7 @@ const DepartmentList = () => {
           </Typography>
         </div>
       ) : (
-        <div className="w-[75vw] m-auto h-full">
+        <div className="w-full m-auto h-full">
           <div className="p-4 ">
             <Typography variant="h4" className="text-center mb-6">
               Manage Department
