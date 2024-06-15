@@ -164,7 +164,7 @@ const SetupShift = () => {
     <div>
       <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
         <Setup>
-          <article className="SetupSection bg-white w-[80%] h-max shadow-md rounded-sm border items-center">
+          <article className="SetupSection bg-white lg:w-[80%] w-full h-max shadow-md rounded-sm border items-center">
             <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
               <div className="flex gap-3 ">
                 <div className="mt-1">
@@ -240,7 +240,7 @@ const SetupShift = () => {
                   </div>
                 )}
 
-                <div className="py-2">
+                <div className="py-2 mt-6">
                   <Button
                     className="mt-4"
                     size="small"

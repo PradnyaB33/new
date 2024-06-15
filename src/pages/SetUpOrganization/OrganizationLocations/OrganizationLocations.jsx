@@ -307,7 +307,7 @@ const OrganizationLocations = () => {
   return (
     <section className="bg-gray-50 min-h-screen w-full">
       <Setup>
-        <div className="SetupSection w-[80%] h-full bg-white   shadow-xl  rounded-sm">
+        <div className="SetupSection lg:w-[80%] w-full h-full bg-white   shadow-xl  rounded-sm">
           <IntlProvider locale="en">
             <div className="p-4  border-b-[.5px] border-gray-300 flex  justify-between gap-3 w-full">
               <div className="flex  gap-3 ">
@@ -340,73 +340,75 @@ const OrganizationLocations = () => {
                 <p>No location found. Please add a location.</p>
               </section>
             ) : (
-              <table className="min-w-full bg-white text-left text-sm font-light">
-                <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-                  <tr className="!font-medium">
-                    <th scope="col" className="px-3 py-3 whitespace-nowrap">
-                      Sr. No
-                    </th>
-                    <th scope="col" className="px-3 py-3 ">
-                      Continent
-                    </th>
-                    <th scope="col" className="px-3 py-3 ">
-                      Country
-                    </th>
-                    <th scope="col" className="px-3 py-3 ">
-                      State
-                    </th>
-                    <th scope="col" className="px-3 py-3 ">
-                      City
-                    </th>
-                    <th scope="col" className="px-3 py-3 ">
-                      Short Name
-                    </th>
-                    <th scope="col" className="px-3 py-3 ">
-                      Address
-                    </th>
-                    <th scope="col" className="px-3 py-3 ">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {locationList?.map((location, index) => (
-                    <tr
-                      key={index}
-                      className={` bg-white border-b dark:border-neutral-500 !font-medium`}
-                    >
-                      <td className="py-2 px-3">{index + 1}</td>
-                      <td className="py-2 px-3">{location.continent}</td>
-                      <td className="py-2 px-3">{location.country}</td>
-                      <td className="py-2 px-3">{location.state}</td>
-                      <td className="py-2 px-3">{location.city}</td>
-                      <td className="py-2 px-3">{location.shortName}</td>
-                      <td className="py-2 px-3">
-                        {`${location.addressLine1} ${location.addressLine2} ${location.pinCode}`}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-2">
-                        <IconButton
-                          color="primary"
-                          aria-label="edit"
-                          onClick={() => handleEditLocation(index)}
-                        >
-                          <EditOutlinedIcon />
-                        </IconButton>
-                        <IconButton
-                          onClick={() => {
-                            handleDeleteLocationConfirmation(index);
-                            setDeleteIndex(index);
-                          }}
-                          color="error"
-                          aria-label="delete"
-                        >
-                          <DeleteOutlineIcon />
-                        </IconButton>
-                      </td>
+              <div className="overflow-scroll">
+                <table className="min-w-full bg-white text-left text-sm font-light">
+                  <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+                    <tr className="!font-medium">
+                      <th scope="col" className="px-3 py-3 whitespace-nowrap">
+                        Sr. No
+                      </th>
+                      <th scope="col" className="px-3 py-3 ">
+                        Continent
+                      </th>
+                      <th scope="col" className="px-3 py-3 ">
+                        Country
+                      </th>
+                      <th scope="col" className="px-3 py-3 ">
+                        State
+                      </th>
+                      <th scope="col" className="px-3 py-3 ">
+                        City
+                      </th>
+                      <th scope="col" className="px-3 py-3 ">
+                        Short Name
+                      </th>
+                      <th scope="col" className="px-3 py-3 ">
+                        Address
+                      </th>
+                      <th scope="col" className="px-3 py-3 ">
+                        Actions
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {locationList?.map((location, index) => (
+                      <tr
+                        key={index}
+                        className={` bg-white border-b dark:border-neutral-500 !font-medium`}
+                      >
+                        <td className="py-2 px-3">{index + 1}</td>
+                        <td className="py-2 px-3">{location.continent}</td>
+                        <td className="py-2 px-3">{location.country}</td>
+                        <td className="py-2 px-3">{location.state}</td>
+                        <td className="py-2 px-3">{location.city}</td>
+                        <td className="py-2 px-3">{location.shortName}</td>
+                        <td className="py-2 px-3">
+                          {`${location.addressLine1} ${location.addressLine2} ${location.pinCode}`}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-2">
+                          <IconButton
+                            color="primary"
+                            aria-label="edit"
+                            onClick={() => handleEditLocation(index)}
+                          >
+                            <EditOutlinedIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => {
+                              handleDeleteLocationConfirmation(index);
+                              setDeleteIndex(index);
+                            }}
+                            color="error"
+                            aria-label="delete"
+                          >
+                            <DeleteOutlineIcon />
+                          </IconButton>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
             <form>
               <Dialog
