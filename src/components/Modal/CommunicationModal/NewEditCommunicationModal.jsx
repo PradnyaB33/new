@@ -14,7 +14,6 @@ import SubjectIcon from "@mui/icons-material/Subject";
 import MessageIcon from "@mui/icons-material/Message";
 import EditIcon from "@mui/icons-material/Edit";
 import GroupIcon from "@mui/icons-material/Group";
-import PreviewCommunicationModal from "./PreviewCommuncationModal";
 
 const style = {
   position: "absolute",
@@ -28,7 +27,13 @@ const style = {
   maxHeight: "80vh",
 };
 
-const NewCommunication = ({ handleClose, open, organisationId }) => {
+const NewEditCommunication = ({
+  handleClose,
+  open,
+  organisationId,
+  emailCommuncationData,
+  emailCommunicationId,
+}) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -50,8 +55,6 @@ const NewCommunication = ({ handleClose, open, organisationId }) => {
       return response.data.data;
     }
   );
-
-  console.log("communicationType", communicationType);
   const communicationTypes = communicationType
     ? communicationType.map((type) => ({
         label: type.communication[0],
@@ -75,7 +78,6 @@ const NewCommunication = ({ handleClose, open, organisationId }) => {
       return response.data.employees;
     }
   );
-
   const employeeEmail = employee
     ? employee.map((emp) => ({
         label: emp.email,
@@ -88,13 +90,13 @@ const NewCommunication = ({ handleClose, open, organisationId }) => {
   };
 
   const EmpCommunicationSchema = z.object({
+    from: z.string().email().optional(),
     communication: z.array(
       z.object({
         label: z.string(),
         value: z.string(),
       })
     ),
-    from: z.string().email(),
     to: z.array(
       z.object({
         label: z.string(),
@@ -124,7 +126,6 @@ const NewCommunication = ({ handleClose, open, organisationId }) => {
     formState: { errors },
     handleSubmit,
     reset,
-    getValues,
     setValue,
   } = useForm({
     defaultValues: {
@@ -156,11 +157,49 @@ const NewCommunication = ({ handleClose, open, organisationId }) => {
     }
   }, [showSelectAll, setValue]);
 
-  // for send
-  const SendEmailCommunication = useMutation(
+  useEffect(() => {
+    if (emailCommuncationData) {
+      setValue("signature", emailCommuncationData.signature);
+      setValue("valediction", emailCommuncationData.valediction);
+      setValue("body", emailCommuncationData.body);
+      setValue("subject", emailCommuncationData.subject);
+      setValue("from", emailCommuncationData.from);
+      const communicationValue = emailCommuncationData.communication.map(
+        (item) => ({
+          label: item.label,
+          value: item.value,
+        })
+      );
+      setValue("communication", communicationValue);
+      setValue(
+        "to",
+        emailCommuncationData.to.map((item) => ({
+          label: item.label,
+          value: item.value,
+        }))
+      );
+      setValue(
+        "cc",
+        emailCommuncationData.cc.map((item) => ({
+          label: item.label,
+          value: item.value,
+        }))
+      );
+      setValue(
+        "bcc",
+        emailCommuncationData.bcc.map((item) => ({
+          label: item.label,
+          value: item.value,
+        }))
+      );
+    }
+  }, [emailCommuncationData, setValue]);
+
+  // for edit email
+  const EditEmail = useMutation(
     (data) =>
-      axios.post(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/sendEmail-communication`,
+      axios.put(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/updateEmail-communication/${emailCommunicationId}`,
         data,
         {
           headers: {
@@ -173,7 +212,7 @@ const NewCommunication = ({ handleClose, open, organisationId }) => {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["getEmailCommunication"] });
         handleClose();
-        handleAlert(true, "success", " Send communication  successfully");
+        handleAlert(true, "success", "Edit email successfully");
         reset();
       },
       onError: () => {},
@@ -181,55 +220,11 @@ const NewCommunication = ({ handleClose, open, organisationId }) => {
   );
   const onSubmit = async (data) => {
     try {
-      await SendEmailCommunication.mutateAsync(data);
-    } catch (error) {
-      console.error(error);
-      handleAlert(true, "error", "An Error occurred send the communication");
-    }
-  };
-
-  // for preview data
-  const [previewCommunicationModal, setPreviewCommunicationModal] =
-    useState(false);
-  const [previewData, setPreviewData] = useState(null);
-  const handleOpenPreviewCommunicationModal = (data) => {
-    setPreviewCommunicationModal(true);
-    setPreviewData(data);
-  };
-  const handleClosePreviewCommunicationModal = () => {
-    setPreviewCommunicationModal(false);
-  };
-
-  // for save for latter
-  const SaveForLatter = useMutation(
-    (data) =>
-      axios.post(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/saveEmail-communication`,
-        data,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      ),
-
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["getEmailCommunication"] });
-        handleClose();
-        handleAlert(true, "success", "Saved communication successfully");
-        reset();
-      },
-      onError: () => {},
-    }
-  );
-  const handleSaveForLater = async (data) => {
-    try {
       console.log(data);
-      await SaveForLatter.mutateAsync(data);
+      await EditEmail.mutateAsync(data);
     } catch (error) {
       console.error(error);
-      handleAlert(true, "error", "An Error occurred  to save communication");
+      handleAlert(true, "error", "An Error occurred update communication");
     }
   };
 
@@ -247,7 +242,7 @@ const NewCommunication = ({ handleClose, open, organisationId }) => {
         >
           <div className="flex justify-between py-4 items-center  px-4">
             <h1 className="text-xl pl-2 font-semibold font-sans">
-              New Communication
+              Edit Communication
             </h1>
             <CloseIcon onClick={handleClose} />
           </div>
@@ -401,35 +396,20 @@ const NewCommunication = ({ handleClose, open, organisationId }) => {
                 <Button
                   color="primary"
                   variant="outlined"
-                  onClick={() =>
-                    handleOpenPreviewCommunicationModal(getValues())
-                  }
+                  onClick={handleClose}
                 >
-                  Preview
-                </Button>
-                <Button
-                  color="primary"
-                  variant="outlined"
-                  onClick={() => handleSaveForLater(getValues())}
-                >
-                  Save for later
+                  Cancel
                 </Button>
                 <Button type="submit" variant="contained" color="primary">
-                  Send
+                  Apply
                 </Button>
               </div>
             </div>
           </form>
         </Box>
       </Modal>
-
-      <PreviewCommunicationModal
-        handleClose={handleClosePreviewCommunicationModal}
-        open={previewCommunicationModal}
-        data={previewData}
-      />
     </>
   );
 };
 
-export default NewCommunication;
+export default NewEditCommunication;

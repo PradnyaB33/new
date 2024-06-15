@@ -3,7 +3,6 @@ import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button } from "@mui/material";
 import { Add, Info } from "@mui/icons-material";
-import NewCommunication from "../../components/Modal/CommunicationModal/NewCommunicationModal";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
 import axios from "axios";
@@ -21,6 +20,8 @@ import {
   DialogTitle,
 } from "@mui/material";
 import CommunicationScheleton from "../../components/Modal/CommunicationModal/CommunicationScheleton";
+import NewCommunication from "../../components/Modal/CommunicationModal/NewCommunicationModal";
+import NewEditCommunication from "../../components/Modal/CommunicationModal/NewEditCommunicationModal";
 
 const Communication = () => {
   const { cookies } = useContext(UseContext);
@@ -45,6 +46,19 @@ const Communication = () => {
   );
   console.log("getEmailCommunication", getEmailCommunication);
 
+  // for morevert icon
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [emailCommunicationId, setEmailCommunicationId] = useState(null);
+  const handleClick = (e, id) => {
+    setAnchorEl(e.currentTarget);
+    setEmailCommunicationId(id);
+  };
+  const handleCloseIcon = () => {
+    setAnchorEl(null);
+    setEmailCommunicationId(null);
+
+  };
+
   // for add
   const [openCommunciationModal, setOpenCommunicationModal] = useState(false);
   const handleOpenCommunicationModal = () => {
@@ -52,20 +66,20 @@ const Communication = () => {
   };
   const handleCloseCommunicationModal = () => {
     setOpenCommunicationModal(false);
-  };
-
-  // for morevert icon
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [emailCommunicationId, setEmailCommunicationId] = useState(null);
-
-  const handleClick = (e, id) => {
-    setAnchorEl(e.currentTarget);
-    setEmailCommunicationId(id);
-  };
-  const handleCloseIcon = () => {
     setAnchorEl(null);
   };
-  console.log("emailCommunicaitonId", emailCommunicationId);
+
+  // for edit
+  const [editCommunciationModal, setEditCommunicationModal] = useState(false);
+  const [emailCommuncationData, setEmailCommunicationData] = useState(null);
+  const handleOpenEditCommunicationModal = (communication) => {
+    setEditCommunicationModal(true);
+    setEmailCommunicationData(communication);
+  };
+  const handleCloseEditCommunicationModal = () => {
+    setEditCommunicationModal(false);
+    setAnchorEl(null);
+  };
 
   // for delete
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
@@ -126,7 +140,7 @@ const Communication = () => {
 
           {isLoading ? (
             <CommunicationScheleton />
-          ) : getEmailCommunication?.length > 0 ? (
+          ) : getEmailCommunication && getEmailCommunication?.length > 0 ? (
             <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
               <table className="min-w-full bg-white  text-left !text-sm font-light">
                 <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
@@ -198,7 +212,7 @@ const Communication = () => {
                             />
                           ))}
                         </td>
-                        <td className="!text-left pl-9 py-3"> 
+                        <td className="!text-left pl-9 py-3">
                           <MoreVert
                             onClick={(e) => handleClick(e, communciation._id)}
                             className="cursor-pointer"
@@ -211,7 +225,13 @@ const Communication = () => {
                             onClose={handleCloseIcon}
                           >
                             <Tooltip title="Button for editing email communication">
-                              <MenuItem>
+                              <MenuItem
+                                onClick={() =>
+                                  handleOpenEditCommunicationModal(
+                                    communciation
+                                  )
+                                }
+                              >
                                 <EditIcon
                                   color="primary"
                                   aria-label="edit"
@@ -223,7 +243,11 @@ const Communication = () => {
                               </MenuItem>
                             </Tooltip>
                             <Tooltip title="Button for deleting email communication">
-                              <MenuItem  onClick={() => handleDeleteConfirmation( communciation._id)}>
+                              <MenuItem
+                                onClick={() =>
+                                  handleDeleteConfirmation(communciation._id)
+                                }
+                              >
                                 <DeleteOutlineIcon
                                   color="primary"
                                   aria-label="edit"
@@ -265,6 +289,15 @@ const Communication = () => {
         organisationId={organisationId}
       />
 
+      {/* for edit */}
+      <NewEditCommunication
+        handleClose={handleCloseEditCommunicationModal}
+        open={editCommunciationModal}
+        organisationId={organisationId}
+        emailCommuncationData={emailCommuncationData}
+        emailCommunicationId={emailCommunicationId}
+      />
+
       {/* for delete */}
       <Dialog
         open={deleteConfirmation !== null}
@@ -273,8 +306,8 @@ const Communication = () => {
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <p>
-            Please confirm your decision to delete this email communication, as this action
-            cannot be undone.
+            Please confirm your decision to delete this email communication, as
+            this action cannot be undone.
           </p>
         </DialogContent>
         <DialogActions>
