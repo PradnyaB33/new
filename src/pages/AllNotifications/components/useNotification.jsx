@@ -22,7 +22,6 @@ const useNotification = () => {
   const user = getCurrentUser();
   const { data: selfLeaveNotification } = useLeaveNotification();
   const { data: shiftNotification } = useShiftNotification();
-
   const [emp, setEmp] = useState();
   const { data: data3 } = usePunchNotification();
   const { data: data4 } = useDocNotification();
@@ -50,41 +49,43 @@ const useNotification = () => {
     return "/";
   }, [role]);
 
+  console.log("role", role);
   // for loan notification count
-  let count;
+  let loanNotificationCount;
   if (
     role === "HR" ||
     role === "Super-Admin" ||
     role === "Delegate-Super-Admin"
   ) {
-    count = getEmployeeRequestLoanApplication?.length ?? 0;
+    loanNotificationCount = getEmployeeRequestLoanApplication?.length ?? 0;
   } else {
-    count = getApprovedRejectLoanDataByApprover?.length ?? 0;
+    loanNotificationCount = getApprovedRejectLoanDataByApprover?.length ?? 0;
   }
+  console.log("loan count" , loanNotificationCount);
 
   // for advance salary notification count
-  let count1;
+  let advanceSalaryNotifyCount;
   if (
     role === "HR" ||
     role === "Super-Admin" ||
     role === "Delegate-Super-Admin"
   ) {
-    count1 = getAdvanceSalaryData?.length ?? 0;
+    loanNotificationCount = getAdvanceSalaryData?.length ?? 0;
   } else {
-    count1 = advanceSalaryNotification?.length ?? 0;
+    loanNotificationCount = advanceSalaryNotification?.length ?? 0;
   }
 
   // for missed punch notification count
-  let count2;
+  let missedPunchNotificationCount;
   if (
     role === "HR" ||
     role === "Super-Admin" ||
     role === "Delegate-Super-Admin" ||
     role === "Manager"
   ) {
-    count1 = missPunchData?.length ?? 0;
+    missedPunchNotificationCount = missPunchData?.length ?? 0;
   } else {
-    count1 = getMissedPunchData?.length ?? 0;
+    missedPunchNotificationCount = getMissedPunchData?.length ?? 0;
   }
 
   useEffect(() => {
@@ -141,15 +142,23 @@ const useNotification = () => {
     },
     {
       name: "Loan Notification",
-      count: count,
+      count: loanNotificationCount,
       color: "#51E8FD",
       url: "/loan-notification",
       url2: "/loan-notification-to-emp",
       visible: true,
     },
     {
+      name: "Advance Salary Notification",
+      count: advanceSalaryNotifyCount ?? 0,
+      color: "#FF7373",
+      url: "/advance-salary-notification",
+      url2: "/advance-salary-notification-to-emp",
+      visible: true,
+    },
+    {
       name: "Missed Punch Notification",
-      count: count2 ?? 0,
+      count: missedPunchNotificationCount ?? 0,
       color: "#51E8FD",
       url: "/missedPunch-notification",
       url2: "/missed-punch-notification-to-emp",
@@ -169,14 +178,7 @@ const useNotification = () => {
       url2: "/form16-notification-to-emp",
       visible: true,
     },
-    {
-      name: "Advance Salary Notification",
-      count: count1 ?? 0,
-      color: "#FF7373",
-      url: "/advance-salary-notification",
-      url2: "/advance-salary-notification-to-emp",
-      visible: true,
-    },
+
     {
       name: "TDS Notification",
       count: tds ?? 0,

@@ -382,82 +382,88 @@ const DeleteEmployee = () => {
                 sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
               />
             </div>
-            <div className="flex items-center gap-3 mb-3 md:mb-0">
-              <Tooltip
-                title={
-                  <span>
-                    To perform bulk deletion:
-                    <ol>
-                      <li>Generate an Excel file with employee data.</li>
-                      <li>
-                        Write "delete" in front of user IDs in the Excel sheet.
-                      </li>
-                      <li>Save the file and upload it.</li>
-                      <li>
-                        Click on the delete button to execute bulk deletion.
-                      </li>
-                    </ol>
-                  </span>
-                }
-                arrow
-              >
-                <div>
-                  <Button
-                    className="!font-semibold !bg-sky-500 flex items-center gap-2"
-                    variant="contained"
-                    onClick={handleMenuClick}
-                  >
-                    Bulk Delete
-                  </Button>
-                </div>
-              </Tooltip>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={generateExcel}>
-                  <GetApp style={{ color: "blue", marginRight: "20px" }} />{" "}
-                  Generate Excel
-                </MenuItem>
-                <MenuItem>
-                  <label
-                    htmlFor="fileInput"
-                    className="flex items-center gap-2"
-                  >
-                    <Publish style={{ color: "green", marginRight: "15px" }} />
+            <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 mb-3 md:mb-0">
+              <div className="flex-grow flex-shrink-0">
+                <Tooltip
+                  title={
                     <span>
-                      {selectedFile ? selectedFile.name : "Choose File"}
+                      To perform bulk deletion:
+                      <ol>
+                        <li>Generate an Excel file with employee data.</li>
+                        <li>
+                          Write "delete" in front of user IDs in the Excel
+                          sheet.
+                        </li>
+                        <li>Save the file and upload it.</li>
+                        <li>
+                          Click on the delete button to execute bulk deletion.
+                        </li>
+                      </ol>
                     </span>
-                    <input
-                      type="file"
-                      accept=".xlsx, .xls"
-                      id="fileInput"
-                      className="w-full rounded opacity-0 absolute inset-0"
-                      style={{ zIndex: -1 }}
-                      onChange={handleFileInputChange}
-                    />
-                  </label>
-                </MenuItem>
-                <MenuItem onClick={() => setShowConfirmationExcel(true)}>
-                  <Delete style={{ color: "red", marginRight: "25px" }} />
-                  <span>Delete</span>
-                </MenuItem>
-              </Menu>
-            </div>
-
-            <div className="flex items-center gap-3 w-full md:w-auto">
-              <Tooltip title="Check at least one checkbox to delete" arrow>
-                <div>
-                  <Button
-                    className="!font-semibold !bg-sky-500 flex items-center gap-2"
-                    variant="contained"
-                    onClick={handleDeleteMultiple}
-                  >
+                  }
+                  arrow
+                >
+                  <div>
+                    <Button
+                      className="w-full !font-semibold !bg-sky-500 flex items-center gap-2"
+                      variant="contained"
+                      onClick={handleMenuClick}
+                    >
+                      Bulk Delete
+                    </Button>
+                  </div>
+                </Tooltip>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={generateExcel}>
+                    <GetApp style={{ color: "blue", marginRight: "10px" }} />{" "}
+                    Generate Excel
+                  </MenuItem>
+                  <MenuItem>
+                    <label
+                      htmlFor="fileInput"
+                      className="flex items-center gap-2"
+                    >
+                      <Publish
+                        style={{ color: "green", marginRight: "10px" }}
+                      />{" "}
+                      <span>
+                        {selectedFile ? selectedFile.name : "Choose File"}
+                      </span>
+                      <input
+                        type="file"
+                        accept=".xlsx, .xls"
+                        id="fileInput"
+                        className="w-full rounded opacity-0 absolute inset-0"
+                        style={{ zIndex: -1 }}
+                        onChange={handleFileInputChange}
+                      />
+                    </label>
+                  </MenuItem>
+                  <MenuItem onClick={() => setShowConfirmationExcel(true)}>
+                    <Delete style={{ color: "red", marginRight: "10px" }} />{" "}
                     Delete
-                  </Button>
-                </div>
-              </Tooltip>
+                  </MenuItem>
+                </Menu>
+              </div>
+
+              {/* Delete Button */}
+              <div className="flex-grow-0 flex-shrink-0">
+                <Tooltip title="Check at least one checkbox to delete" arrow>
+                  <div>
+                    <Button
+                      className="w-full !font-semibold !bg-sky-500 flex items-center gap-2"
+                      variant="contained"
+                      onClick={handleDeleteMultiple}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </Tooltip>
+              </div>
             </div>
           </div>
 

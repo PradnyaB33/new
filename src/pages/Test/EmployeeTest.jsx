@@ -248,46 +248,50 @@ const EmployeeTest = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen h-auto">
-      <header className="text-xl w-full pt-6 flex items-start gap-2 bg-white shadow-md p-4">
+     <header className="text-xl w-full pt-6 flex flex-col md:flex-row items-start md:items-center gap-2 bg-white shadow-md p-4">
+      {/* Back Button */}
+      <div className="flex-shrink-0">
         <IconButton onClick={() => navigate(-1)}>
-          <West className=" !text-xl" />
+          <West className="text-xl" />
         </IconButton>
+      </div>
 
-        <div className="flex justify-between w-full">
-          <div>
-            Employee Onboarding
-            <p className="text-xs text-gray-600">
-              Welcome your employees by creating their profiles here.
-            </p>
-          </div>
-          <div className="flex items-center gap-4">
-            <div>
-              <h1 className="w-full text-sm">
-                Onboarding Limit : {org?.memberCount}
-              </h1>
-            </div>
-            <div>
-              <h1 className="w-full text-sm">
-                Current Employee Count : {members?.length}
-              </h1>
-            </div>
-            <div>
-              <h1 className="w-full text-sm">
-                Vacancy Count : {org?.memberCount - members?.length}
-              </h1>
-            </div>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={showExcelOnboarding}
-                  onChange={() => setShowExcelOnboarding(!showExcelOnboarding)}
-                />
-              }
-              label="Excel Onboarding"
-            />
-          </div>
+      {/* Main Header Content */}
+      <div className="flex flex-col md:flex-row justify-between w-full md:ml-4">
+        <div className="mb-2 md:mb-0 md:mr-4">
+          <h1 className="text-xl font-bold">Employee Onboarding</h1>
+          <p className="text-sm text-gray-600">
+            Welcome your employees by creating their profiles here.
+          </p>
         </div>
-      </header>
+        <div className="flex flex-wrap items-center gap-2 md:gap-4">
+          <div className="w-full md:w-auto">
+            <h1 className="text-sm">
+              Onboarding Limit: {org?.memberCount}
+            </h1>
+          </div>
+          <div className="w-full md:w-auto">
+            <h1 className="text-sm">
+              Current Employee Count: {members?.length}
+            </h1>
+          </div>
+          <div className="w-full md:w-auto">
+            <h1 className="text-sm">
+              Vacancy Count: {org?.memberCount - (members?.length || 0)}
+            </h1>
+          </div>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={showExcelOnboarding}
+                onChange={() => setShowExcelOnboarding(!showExcelOnboarding)}
+              />
+            }
+            label="Excel Onboarding"
+          />
+        </div>
+      </div>
+    </header>
 
       {showExcelOnboarding && (
         <div className="w-full flex justify-center items-center mt-6">
