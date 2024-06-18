@@ -74,27 +74,7 @@ const LeaveTypeModal = ({ handleClose, open, id, leaveType }) => {
     }
   };
 
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    bgcolor: "background.paper",
-    p: 4,
-  };
-
   return (
-    // <Modal
-    //   open={open}
-    //   onClose={handleClose}
-    //   aria-labelledby="modal-modal-title"
-    //   aria-describedby="modal-modal-description"
-    // >
-    //   <Box
-    //     sx={style}
-    //     className="border-none !z-10 shadow-md outline-none rounded-md gap-2 flex flex-col"
-    //   >
-    //     <h1 className="text-xl font-semibold font-sans">Edit Leave Type</h1>
     <ReusableModal
       heading={"Edit Leave Type"}
       open={open}

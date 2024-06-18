@@ -93,15 +93,6 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
     }
   };
 
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    bgcolor: "background.paper",
-    p: 3,
-  };
-
   return (
     <ReusableModal heading={"Add leave type"} open={open} onClose={handleClose}>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
