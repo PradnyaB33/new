@@ -1,3 +1,4 @@
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
@@ -5,7 +6,6 @@ import { useParams } from "react-router";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 const Inputfield = () => {
   const { organisationId } = useParams("");
   const { cookies } = useContext(UseContext);
@@ -75,7 +75,7 @@ const Inputfield = () => {
     <>
       <section className="bg-gray-50 min-h-screen w-full">
         <Setup>
-          <div className="SetupSection bg-white lg:w-4/5 md:w-3/4 w-full shadow-md rounded-sm border items-center mx-auto">
+          <div>
             <div className="p-4  border-b-[.5px] flex   gap-3 w-full border-gray-300">
               <div className="flex gap-3 ">
                 <div className="mt-1">

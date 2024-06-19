@@ -46,7 +46,7 @@ const Setup = ({ children }) => {
           </aside>
 
           <div className="SetupSection bg-white w-[100%] lg:!w-[80%] md:!w-[70%] shadow-md rounded-sm border  items-center">
-            <header className="block sm:hidden text-xl w-full pt-2 bg-white shadow-md p-2 my-2">
+            <header className="block md:hidden text-xl w-full pt-2 bg-white shadow-md p-2 my-2">
               <BackComponent />
               <div className="inline" onClick={() => navigate(-1)}>
                 <West className="mx-4 !text-xl" />

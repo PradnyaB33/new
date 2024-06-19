@@ -1,25 +1,25 @@
 import { Add, Info } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import {
   Button,
-  IconButton,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
 } from "@mui/material";
+import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import Setup from "../Setup";
 import AddCommunicationModal from "../../../components/Modal/CommunicationModal/AddCommunicationModal";
 import EditCommunicationModal from "../../../components/Modal/CommunicationModal/EditCommunicationModal";
+import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import axios from "axios";
 
 const EmpCommunication = () => {
   const { handleAlert } = useContext(TestContext);
@@ -108,7 +108,7 @@ const EmpCommunication = () => {
     <>
       <section className="bg-gray-50 min-h-screen w-full">
         <Setup>
-          <article className="SetupSection bg-white w-[100%] md:w-[80%]  h-max shadow-md rounded-sm border  items-center">
+          <article>
             <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
               <div className="flex gap-3 ">
                 <div className="mt-1">
@@ -117,7 +117,7 @@ const EmpCommunication = () => {
                 <div>
                   <h1 className="!text-lg">Add Email</h1>
                   <p className="text-xs text-gray-600">
-                   Add the required email for communication.
+                    Add the required email for communication.
                   </p>
                 </div>
               </div>
@@ -226,8 +226,8 @@ const EmpCommunication = () => {
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <p>
-            Please confirm your decision to delete this email, as this
-            action cannot be undone.
+            Please confirm your decision to delete this email, as this action
+            cannot be undone.
           </p>
         </DialogContent>
         <DialogActions>
