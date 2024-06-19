@@ -61,7 +61,9 @@ const useNotification = () => {
   } else {
     loanNotificationCount = getApprovedRejectLoanDataByApprover?.length ?? 0;
   }
-  console.log("loan count" , loanNotificationCount);
+  console.log("for hr", getEmployeeRequestLoanApplication);
+  console.log("for employee", getApprovedRejectLoanDataByApprover);
+  console.log("loan count", loanNotificationCount);
 
   // for advance salary notification count
   let advanceSalaryNotifyCount;
@@ -70,9 +72,9 @@ const useNotification = () => {
     role === "Super-Admin" ||
     role === "Delegate-Super-Admin"
   ) {
-    loanNotificationCount = getAdvanceSalaryData?.length ?? 0;
+    advanceSalaryNotifyCount = getAdvanceSalaryData?.length ?? 0;
   } else {
-    loanNotificationCount = advanceSalaryNotification?.length ?? 0;
+    advanceSalaryNotifyCount = advanceSalaryNotification?.length ?? 0;
   }
 
   // for missed punch notification count
@@ -86,6 +88,22 @@ const useNotification = () => {
     missedPunchNotificationCount = missPunchData?.length ?? 0;
   } else {
     missedPunchNotificationCount = getMissedPunchData?.length ?? 0;
+  }
+
+  // for form 16 notification count
+  let form16NotificationCount;
+  if (role === "Employee") {
+    form16NotificationCount = Form16Notification?.length ?? 0;
+  } else {
+    form16NotificationCount = 0;
+  }
+
+  // for form 16 notification count
+  let payslipNotificationCount;
+  if (role === "Employee") {
+    payslipNotificationCount = PayslipNotification?.length ?? 0;
+  } else {
+    payslipNotificationCount = 0;
   }
 
   useEffect(() => {
@@ -166,14 +184,14 @@ const useNotification = () => {
     },
     {
       name: "Payslip Notification",
-      count: PayslipNotification?.length ?? 0,
+      count: payslipNotificationCount,
       color: "#51E8FD",
       url2: "/payslip-notification-to-emp",
       visible: true,
     },
     {
       name: "Form-16 Notification",
-      count: Form16Notification?.length ?? 0,
+      count: form16NotificationCount,
       color: "#FF7373",
       url2: "/form16-notification-to-emp",
       visible: true,
