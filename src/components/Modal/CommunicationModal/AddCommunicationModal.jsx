@@ -46,6 +46,8 @@ const AddCommunicationModal = ({ handleClose, open, organisationId }) => {
     ),
   });
 
+  
+
   const {
     control,
     formState: { errors },
@@ -83,9 +85,10 @@ const AddCommunicationModal = ({ handleClose, open, organisationId }) => {
       },
     }
   );
-
+  
   const onSubmit = async (data) => {
     try {
+      console.log("data" , data);
       const communicationValue = data.communication.map((item) => item.label);
       const formData = { email: data.email, communication: communicationValue };
       console.log(formData);

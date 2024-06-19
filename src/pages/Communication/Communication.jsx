@@ -56,7 +56,6 @@ const Communication = () => {
   const handleCloseIcon = () => {
     setAnchorEl(null);
     setEmailCommunicationId(null);
-
   };
 
   // for add
@@ -126,8 +125,7 @@ const Communication = () => {
           <p className="text-xs text-gray-600 pl-10 text-center mb-6">
             Here you can send email to employee.
           </p>
-          <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
-            <div className="flex gap-3"></div>
+          <div className="p-4 border-b-[.5px] flex justify-center gap-3 w-full border-gray-300">
             <Button
               className="!font-semibold !bg-sky-500 flex items-center gap-2"
               variant="contained"
