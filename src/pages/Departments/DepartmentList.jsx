@@ -1,4 +1,4 @@
-import { Warning } from "@mui/icons-material";
+import { Clear, Warning } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
@@ -12,6 +12,7 @@ import {
   FormControl,
   FormControlLabel,
   IconButton,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
@@ -373,9 +374,6 @@ const DepartmentList = () => {
                 maxLength: 40,
                 value: departmentName,
               }}
-              helperText={
-                "Department Name cannot repeat. No special characters, Max 5 words."
-              }
               size="small"
               fullWidth
               style={{ margin: "10px 0" }}
@@ -426,6 +424,7 @@ const DepartmentList = () => {
                 id="demo-simple-select"
                 value={departmentLocation}
                 label="Select Location"
+
                 // Add label prop for better alignment
               >
                 {locations?.map((data, index) => (
@@ -567,6 +566,15 @@ const DepartmentList = () => {
                 id="demo-simple-select"
                 value={departmentHeadName}
                 label="department Head Name"
+                endAdornment={
+                  <InputAdornment position="end">
+                    {departmentHeadName.length > 0 && (
+                      <IconButton onClick={() => setDepartmentHeadName("")}>
+                        <Clear />
+                      </IconButton>
+                    )}
+                  </InputAdornment>
+                }
                 onChange={(e) => handleDataChange(e, "head")}
                 // Add label prop for better alignment
               >
@@ -604,6 +612,17 @@ const DepartmentList = () => {
                 id="demo-simple-select"
                 value={departmentHeadDelegateName}
                 label="Delegate Department Head Name"
+                endAdornment={
+                  <InputAdornment position="end">
+                    {departmentHeadDelegateName && (
+                      <IconButton
+                        onClick={() => setDepartmentHeadDelegateName("")}
+                      >
+                        <Clear />
+                      </IconButton>
+                    )}
+                  </InputAdornment>
+                }
                 onChange={(e) => handleDataChange(e, "delegate")}
                 // Add label prop for better alignment
               >

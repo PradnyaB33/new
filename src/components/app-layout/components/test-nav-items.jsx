@@ -30,6 +30,7 @@ import ArticleIcon from "@mui/icons-material/Article";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CallMissedIcon from "@mui/icons-material/CallMissed";
+import ChatIcon from "@mui/icons-material/Chat";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import FolderIcon from "@mui/icons-material/Folder";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
@@ -39,13 +40,14 @@ import ReceiptIcon from "@mui/icons-material/Receipt";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
+import { SiMicrosoftexcel } from "react-icons/si";
 import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
-import ChatIcon from "@mui/icons-material/Chat";
+
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
@@ -182,6 +184,23 @@ const TestNavItems = ({ toggleDrawer }) => {
               <HomeRepairServiceOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
             text: "Shift Management",
+          },
+        ],
+      },
+
+      "Reporting Mis": {
+        open: false,
+        isVisible: true,
+        icon: <NotificationsActive className=" !text-[1.2em] text-[#67748E]" />,
+        routes: [
+          {
+            key: "reportingMIS",
+            isVisible: true,
+            link: `/organisation/${orgId}/mis-report`,
+            icon: (
+              <SiMicrosoftexcel className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Reporting MIS",
           },
         ],
       },
