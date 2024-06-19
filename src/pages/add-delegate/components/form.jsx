@@ -16,7 +16,6 @@ import { Button } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useDelegateSuperAdmin from "../../../hooks/QueryHook/Delegate-Super-Admin/mutation";
@@ -99,32 +98,30 @@ const MiniForm = ({ data }) => {
   const { addDelegateMutation, deleteDelegateMutation } =
     useDelegateSuperAdmin();
   const [visible, setVisible] = useState(false);
-  const navigate = useNavigate();
 
-  const { control, formState, handleSubmit, watch, setValue, getValues } =
-    useForm({
-      defaultValues: {
-        first_name: data?.delegateSuperAdmin?.first_name,
-        last_name: data?.delegateSuperAdmin?.last_name,
-        middle_name: data?.delegateSuperAdmin?.middle_name || "",
-        joining_date: moment(data?.delegateSuperAdmin?.joining_date).format(
-          "yyyy-MM-DD"
-        ),
-        email: data?.delegateSuperAdmin?.email,
-        phone_number: data?.delegateSuperAdmin?.phone_number,
-        password: undefined,
-        date_of_birth: moment(data?.delegateSuperAdmin?.date_of_birth).format(
-          "yyyy-MM-DD"
-        ),
-        gender: data?.delegateSuperAdmin?.gender,
-        profile: ["Delegate-Super-Admin", "Employee"],
-        citizenship: data?.delegateSuperAdmin?.citizenship,
-        _id: data?.delegateSuperAdmin?._id || undefined,
-        confirmPassword: undefined,
-        empId: data?.delegateSuperAdmin?.empId || "",
-      },
-      resolver: zodResolver(packageSchema),
-    });
+  const { control, formState, handleSubmit, watch, setValue } = useForm({
+    defaultValues: {
+      first_name: data?.delegateSuperAdmin?.first_name,
+      last_name: data?.delegateSuperAdmin?.last_name,
+      middle_name: data?.delegateSuperAdmin?.middle_name || "",
+      joining_date: moment(data?.delegateSuperAdmin?.joining_date).format(
+        "yyyy-MM-DD"
+      ),
+      email: data?.delegateSuperAdmin?.email,
+      phone_number: data?.delegateSuperAdmin?.phone_number,
+      password: undefined,
+      date_of_birth: moment(data?.delegateSuperAdmin?.date_of_birth).format(
+        "yyyy-MM-DD"
+      ),
+      gender: data?.delegateSuperAdmin?.gender,
+      profile: ["Delegate-Super-Admin", "Employee"],
+      citizenship: data?.delegateSuperAdmin?.citizenship,
+      _id: data?.delegateSuperAdmin?._id || undefined,
+      confirmPassword: undefined,
+      empId: data?.delegateSuperAdmin?.empId || "",
+    },
+    resolver: zodResolver(packageSchema),
+  });
   joinDate = watch("joining_date");
   const { errors, isDirty } = formState;
   console.log(`🚀 ~ file: form.jsx:62 ~ errors:`, errors);
