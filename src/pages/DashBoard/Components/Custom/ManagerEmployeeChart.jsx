@@ -121,11 +121,13 @@ const ManagerEmployeeChart = ({
         tension: 0.5,
       },
     },
+    barThickness: 30,
 
     scales: {
       x: {
         grid: {
           display: false,
+          barPercentage: 0.4,
         },
       },
       y: {

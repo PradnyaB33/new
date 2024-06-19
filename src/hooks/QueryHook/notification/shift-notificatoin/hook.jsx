@@ -1,28 +1,23 @@
 import axios from "axios";
+import { useState } from "react";
 import { useQuery } from "react-query";
-import useNotificationCount from "../../../../components/app-layout/notification-zustand";
 import useGetUser from "../../../Token/useUser";
 import UserProfile from "../../../UserData/useUser";
 
 const useShiftNotification = () => {
   const { authToken } = useGetUser();
-  const { getCurrentUser } = UserProfile();
-  const { setNotificationCount } = useNotificationCount();
-  let isAcc = false;
-  const user = getCurrentUser();
-  const profileArr = user.profile;
-  profileArr.forEach((element) => {
-    if (element === "Accountant") {
-      isAcc = true;
-    }
-  });
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
+  const [notificationCount, setNotificationCount] = useState(0);
+
   const getShiftNotification = async () => {
     let url;
-    if (isAcc) {
+    if (role === "Accountant") {
       url = `${process.env.REACT_APP_API}/route/shiftApply/getForAccountant`;
       const response = await axios.get(url, {
         headers: { Authorization: authToken },
       });
+
       return response.data.requests;
     } else {
       url = `${process.env.REACT_APP_API}/route/shiftApply/getForManager`;
@@ -46,24 +41,25 @@ const useShiftNotification = () => {
   };
 
   const { data, isLoading, isFetching } = useQuery(
-    "shift-request",
+    ["shift-request", role],
     getShiftNotification,
     {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       onSuccess: async (data) => {
-        console.log(`🚀 ~ file: hook.jsx:33 ~ data:`, data);
         setNotificationCount(data?.length ?? 0);
       },
     }
   );
+
   const { data: count } = useQuery("shift-count", getCount);
-  console.log("count", count);
+
   return {
     data,
     count,
     isLoading,
     isFetching,
+    notificationCount,
   };
 };
 

@@ -24,7 +24,7 @@ const EmpInfoPunchStatus = () => {
   const [fileName, setFileName] = useState("");
   const itemsPerPage = 10;
   console.log(setTotalPages);
-  
+
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     setFileName(file.name);
@@ -163,37 +163,37 @@ const EmpInfoPunchStatus = () => {
           </div>
 
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
-            <div className="flex items-center gap-3 mb-3 md:mb-0">
+            <div className="flex items-center gap-3 mb-3 md:mb-0 w-full md:w-auto">
               <Tooltip title={"Search employee by employee name"} arrow>
                 <TextField
                   placeholder="Search Employee Name...."
                   variant="outlined"
                   size="small"
-                  sx={{ width: 300 }}
+                  sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
                   value={searchName}
                   onChange={handleSearchName}
                 />
               </Tooltip>
             </div>
-            <div className="flex items-center gap-3 mb-3 md:mb-0">
+            <div className="flex items-center gap-3 mb-3 md:mb-0 w-full md:w-auto">
               <Tooltip title={"Search employee by employee id"} arrow>
                 <TextField
                   placeholder="Search Employee ID...."
                   variant="outlined"
                   size="small"
-                  sx={{ width: 300 }}
+                  sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
                   value={searchId}
                   onChange={handleSearchId}
                 />
               </Tooltip>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 w-full md:w-auto">
               <Tooltip title={"Search employee by employee department"} arrow>
                 <TextField
                   placeholder="Search Department...."
                   variant="outlined"
                   size="small"
-                  sx={{ width: 300 }}
+                  sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
                   value={searchDepartment}
                   onChange={handleSearchDepartment}
                 />
@@ -312,6 +312,7 @@ const EmpInfoPunchStatus = () => {
           </nav>
         </article>
       </Container>
+
       <AttendanceBioModal
         handleClose={handleEmpModalClose}
         open={empModalOpen}

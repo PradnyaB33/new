@@ -257,7 +257,7 @@ const DepartmentList = () => {
             <Typography variant="h4" className="text-center mb-6">
               Manage Department
             </Typography>
-            <p className="text-xs text-gray-600  text-center">
+            <p className="text-xs text-gray-600 text-center">
               Manage your departments here.
             </p>
             <table
@@ -330,7 +330,6 @@ const DepartmentList = () => {
           </div>
         </div>
       )}
-
       {/* this dialogue for deleting single department*/}
       <Dialog
         open={deleteConfirmation !== null}

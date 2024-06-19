@@ -1,13 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Add, ToggleOn, WorkOffOutlined } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Modal,
-  Stack,
-} from "@mui/material";
+import { Button, FormControl, FormLabel, Stack } from "@mui/material";
 import axios from "axios";
 import React, { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -16,6 +9,7 @@ import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
+import ReusableModal from "../component";
 const leaveTypeSchema = z.object({
   leaveName: z
     .string()
@@ -80,102 +74,86 @@ const LeaveTypeModal = ({ handleClose, open, id, leaveType }) => {
     }
   };
 
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    bgcolor: "background.paper",
-    p: 4,
-  };
-
   return (
-    <Modal
+    <ReusableModal
+      heading={"Edit Leave Type"}
       open={open}
       onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
     >
-      <Box
-        sx={style}
-        className="border-none !z-10 shadow-md outline-none rounded-md gap-2 flex flex-col"
-      >
-        <h1 className="text-xl font-semibold font-sans">Edit Leave Type</h1>
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          <Stack spacing={2} width={400}>
-            <AuthInputFiled
-              name="leaveName"
-              icon={WorkOffOutlined}
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <Stack spacing={2} width={400}>
+          <AuthInputFiled
+            name="leaveName"
+            icon={WorkOffOutlined}
+            control={control}
+            type="text"
+            placeholder="eg. Sick leave"
+            label="Leave Type Name *"
+            errors={errors}
+            error={errors.leaveName}
+          />
+          <AuthInputFiled
+            name="count"
+            icon={Add}
+            control={control}
+            type="number"
+            placeholder="eg. 4"
+            label="Enter Count *"
+            errors={errors}
+            error={errors.count}
+          />
+          <FormControl component="fieldset">
+            <FormLabel component="legend">Color</FormLabel>
+            <Controller
+              name="color"
               control={control}
-              type="text"
-              placeholder="eg. Sick leave"
-              label="Leave Type Name *"
-              errors={errors}
-              error={errors.leaveName}
-            />
-            <AuthInputFiled
-              name="count"
-              icon={Add}
-              control={control}
-              type="number"
-              placeholder="eg. 4"
-              label="Enter Count *"
-              errors={errors}
-              error={errors.count}
-            />
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Color</FormLabel>
-              <Controller
-                name="color"
-                control={control}
-                render={({ field }) => (
-                  <div
-                    className="rounded-full overflow-hidden relative"
+              render={({ field }) => (
+                <div
+                  className="rounded-full overflow-hidden relative"
+                  style={{
+                    height: "40px",
+                    width: "40px",
+                  }}
+                >
+                  <input
+                    required
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     style={{
-                      height: "40px",
-                      width: "40px",
+                      height: "60px",
+                      width: "60px",
+                      padding: "0",
+                      border: "none",
                     }}
-                  >
-                    <input
-                      required
-                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                      style={{
-                        height: "60px",
-                        width: "60px",
-                        padding: "0",
-                        border: "none",
-                      }}
-                      type="color"
-                      id="favcolor"
-                      value={field.value}
-                      onChange={(e) => field.onChange(e.target.value)}
-                    />
-                  </div>
-                )}
-              />
-            </FormControl>
-            <AuthInputFiled
-              name="isActive"
-              icon={ToggleOn}
-              control={control}
-              type="checkbox"
-              placeholder="eg. 4"
-              label="Is Active *"
-              errors={errors}
-              error={errors.count}
+                    type="color"
+                    id="favcolor"
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
+                  />
+                </div>
+              )}
             />
-            <div className="flex gap-4 mt-4  justify-end mr-4">
-              <Button onClick={handleClose} color="error" variant="outlined">
-                Cancel
-              </Button>
-              <Button disabled={isFormClean} type="submit" variant="contained">
-                Apply
-              </Button>
-            </div>
-          </Stack>
-        </form>
-      </Box>
-    </Modal>
+          </FormControl>
+          <AuthInputFiled
+            name="isActive"
+            icon={ToggleOn}
+            control={control}
+            type="checkbox"
+            placeholder="eg. 4"
+            label="Is Active *"
+            errors={errors}
+            error={errors.count}
+          />
+          <div className="flex gap-4 mt-4  justify-end mr-4">
+            <Button onClick={handleClose} color="error" variant="outlined">
+              Cancel
+            </Button>
+            <Button disabled={isFormClean} type="submit" variant="contained">
+              Apply
+            </Button>
+          </div>
+        </Stack>
+      </form>
+    </ReusableModal>
   );
 };
 

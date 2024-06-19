@@ -45,7 +45,7 @@ import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
-
+import ChatIcon from "@mui/icons-material/Chat";
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
@@ -246,7 +246,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "payslip",
             isVisible: true,
-            link: `/view-payslip`,
+            link: `/organisation/${orgId}/view-payslip`,
             icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Pay Slip",
           },
@@ -285,7 +285,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "loanmanagement",
             isVisible: true,
-            link: `/add-loan`,
+            link: `/organisation/${orgId}/add-loan`,
             icon: (
               <MonetizationOnOutlined className=" !text-[1.2em] text-[#67748E]" />
             ),
@@ -294,11 +294,50 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "advanceSalary",
             isVisible: true,
-            link: `/advance-salary`,
+            link: `/organisation/${orgId}/advance-salary`,
             icon: (
               <MonetizationOnOutlined className=" !text-[1.2em] text-[#67748E]" />
             ),
             text: "Advance Salary",
+          },
+        ],
+      },
+      Communication: {
+        open: false,
+        isVisible:
+          window.location.pathname.includes("organisation") &&
+          [
+            "Super-Admin",
+            "Delegate-Super-Admin",
+            "Department-Head",
+            "Delegate-Department-Head",
+            "Department-Admin",
+            "Delegate-Department-Admin",
+            "Accountant",
+            "Delegate-Accountant",
+            "HR",
+            "Manager",
+          ].includes(role),
+        // : false
+        icon: <Business className=" !text-[1.2em] text-[#67748E]" />,
+        routes: [
+          {
+            key: "createCommunication",
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+            ].includes(role),
+            link: `/organisation/${orgId}/create-communication`,
+            icon: <ChatIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Communication",
           },
         ],
       },
@@ -455,7 +494,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               "Manager",
               "Employee",
             ].includes(role),
-            link: `/missed-justify`,
+            link: `organisation/${orgId}/missed-justify`,
             icon: <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Missed Justify",
           },

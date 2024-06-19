@@ -31,7 +31,6 @@ const useLoanNotification = () => {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       onSuccess: (data) => {
-        console.log(data);
         setNotificationCount(data?.length ?? 0);
       },
     }

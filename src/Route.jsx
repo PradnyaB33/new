@@ -120,6 +120,8 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import EmpCommunication from "./pages/SetUpOrganization/EmpCommunication/EmpCommunication";
+import Communication from "./pages/Communication/Communication";
 
 const App = () => {
   return (
@@ -438,6 +440,16 @@ const App = () => {
             </RequireAuth>
           }
         />
+         <Route
+          path="/organisation/:organisationId/create-communication"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <Communication />
+            </RequireAuth>
+          }
+        />
         <Route
           path="/organisation/:organisationId/edit-employee/:employeeId"
           element={
@@ -489,7 +501,7 @@ const App = () => {
           }
         />
         <Route
-          path="/missed-justify"
+          path="/organisation/:organisationId/missed-justify"
           element={
             <RequireAuth
               permission={[
@@ -603,7 +615,7 @@ const App = () => {
           }
         />
         <Route
-          path="/add-loan"
+          path="/organisation/:organisationId/add-loan"
           element={
             <RequireAuth
               permission={[
@@ -625,7 +637,7 @@ const App = () => {
           }
         />
         <Route
-          path="/advance-salary"
+          path="/organisation/:organisationId/advance-salary"
           element={
             <RequireAuth
               permission={[
@@ -658,7 +670,7 @@ const App = () => {
         />
 
         <Route
-          path="/view-payslip"
+          path="/organisation/:organisationId/view-payslip"
           element={
             <RequireAuth
               permission={[
@@ -861,6 +873,14 @@ const App = () => {
           element={
             <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
               <EmployeeCodeGenerator />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/setup/email-communicaiton"
+          element={
+            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+              <EmpCommunication />
             </RequireAuth>
           }
         />

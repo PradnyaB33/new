@@ -153,7 +153,7 @@ const EmployeeSalaryCalculateDay = () => {
                 onClick={handleCreateModalOpen}
               >
                 <Add />
-                Add Salary Computation Day
+                Add Compute Day
               </Button>
             </div>
 
