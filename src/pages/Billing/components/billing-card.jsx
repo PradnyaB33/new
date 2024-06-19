@@ -65,6 +65,10 @@ const StyledMenu = styled((props) => (
     },
   },
 }));
+console.log(
+  `🚀 ~ file: billing-card.jsx:69 ~ window.innerWidth:`,
+  window.innerWidth
+);
 
 const BillingCard = ({ doc }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -112,7 +116,7 @@ const BillingCard = ({ doc }) => {
   );
   return (
     <div className="shadow-twe-inner bg-Brand-Purple/brand-purple-1 rounded-md grid grid-cols-6">
-      <div className=" col-span-5 pl-4 pt-4 pb-4 gap-4 flex flex-col">
+      <div className="col-span-6 md:col-span-5 pl-4 pt-4 pb-4 gap-4 flex flex-col">
         <div className="flex justify-between">
           <div className="flex gap-4 items-end">
             <img
@@ -123,7 +127,7 @@ const BillingCard = ({ doc }) => {
             <div className="text-2xl font-bold">{doc?.orgName}</div>
           </div>
           <div className="flex gap-4">
-            {checkHasOrgDisabled() && (
+            {window.innerWidth > 300 && checkHasOrgDisabled() && (
               <Button onClick={() => setConfirmOpen3(true)} variant="contained">
                 Pay
               </Button>
@@ -169,6 +173,18 @@ const BillingCard = ({ doc }) => {
               <TrendingUp />
               Upgrade
             </MenuItem>
+            {window.innerWidth < 300 && checkHasOrgDisabled() && (
+              <MenuItem
+                onClick={() => {
+                  setConfirmOpen2(true);
+                  handleClose();
+                }}
+                disableRipple
+              >
+                <TrendingUp />
+                Pay
+              </MenuItem>
+            )}
           </StyledMenu>
         </div>
 
@@ -253,7 +269,7 @@ const BillingCard = ({ doc }) => {
           />
         </div>
       </div>
-      <div className=" col-span-1 flex justify-center items-center">
+      <div className=" col-span-1 justify-center items-center hidden md:flex">
         {doc?.subscriptionDetails?.status === "Active" ? (
           <div className="bg-[#5FF062] flex justify-center items-start p-8 rounded-full animate-pulse">
             <Repeat className="text-white " fontSize="large" />
