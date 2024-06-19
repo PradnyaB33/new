@@ -1,61 +1,51 @@
-import { Box, Modal } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import ReusableModal from "../../components/Modal/component";
 import useGetDelegateSuperAdmin from "../../hooks/QueryHook/Delegate-Super-Admin/hook";
 import MiniForm from "./components/form";
 
 const AddDelegate = () => {
   const navigate = useNavigate();
   const { data, isLoading, isFetching } = useGetDelegateSuperAdmin();
+  const handleClose = () => {
+    navigate(-1);
+  };
   if (isLoading) {
     return (
-      <Modal
-        keepMounted={false}
+      <ReusableModal
+        heading={"Add Delegate Super Admin"}
         open={true}
-        onClose={() => {
-          navigate(-1);
-        }}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        onClose={handleClose}
       >
         <Box className="border-none !z-10 shadow-md outline-none rounded-md gap-2 flex flex-col absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] bg-white p-4 overflow-auto w-fit items-center h-min">
           Loading
         </Box>
-      </Modal>
+      </ReusableModal>
     );
   }
   if (isFetching) {
     return (
-      <Modal
-        keepMounted={false}
+      <ReusableModal
+        heading={"Add Delegate Super Admin"}
         open={true}
-        onClose={() => {
-          navigate(-1);
-        }}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        onClose={handleClose}
       >
         <Box className="border-none !z-10 shadow-md outline-none rounded-md gap-2 flex flex-col absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] bg-white p-4 overflow-auto w-fit items-center h-min">
           Loading
         </Box>
-      </Modal>
+      </ReusableModal>
     );
   }
 
   return (
-    <Modal
-      keepMounted={false}
+    <ReusableModal
+      heading={"Add Delegate Super Admin"}
       open={true}
-      onClose={() => {
-        navigate(-1);
-      }}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+      onClose={handleClose}
     >
-      <Box className="border-none !z-10 shadow-md outline-none rounded-md gap-2 flex flex-col absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] bg-white p-4 overflow-auto w-fit items-center h-min">
-        <MiniForm data={data} />
-      </Box>
-    </Modal>
+      {isLoading || isFetching ? "Loading" : <MiniForm data={data} />}
+    </ReusableModal>
   );
 };
 

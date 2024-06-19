@@ -3,7 +3,6 @@ import {
   Adjust,
   CalendarMonth,
   Celebration,
-  Close,
   ContactEmergency,
   Email,
   Flag,
@@ -13,7 +12,7 @@ import {
   Person3,
   Work,
 } from "@mui/icons-material";
-import { Button, IconButton } from "@mui/material";
+import { Button } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -149,201 +148,173 @@ const MiniForm = ({ data }) => {
     setValue("empId", undefined);
   };
   pass = watch;
-
-  console.log(`🚀 ~ file: form.jsx:153 ~ getValues:`, getValues());
   return (
-    <div className="relative">
-      <IconButton
-        className="!absolute !right-0 !top-0"
-        onClick={() => navigate(-1)}
-      >
-        <Close />
-      </IconButton>
-      <h1 className="text-xl font-semibold font-sans mb-6">
-        Add Delegate Super Admin
-      </h1>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-4 w-full"
-        noValidate
-        autoComplete="off"
-      >
-        <div className="grid grid-cols-2 gap-4 w-max">
-          <AuthInputFiled
-            name={"first_name"}
-            icon={Person}
-            control={control}
-            type="text"
-            placeholder={"eg. Sahil"}
-            label={`First Name *`}
-            errors={errors}
-            error={errors?.first_name}
-            className={"!min-w-80 !max-w-64"}
-            autoComplete={"off"}
-          />
-          <AuthInputFiled
-            className={"!min-w-80 !max-w-64"}
-            name={"middle_name"}
-            icon={Person2}
-            control={control}
-            type="text"
-            placeholder={"eg. Hanmant"}
-            label={`Middle Name `}
-            errors={errors}
-            error={errors?.middle_name}
-            autoComplete={"off"}
-          />
-          <AuthInputFiled
-            className={"!min-w-80 !max-w-64"}
-            name={"last_name"}
-            icon={Person3}
-            control={control}
-            type="text"
-            placeholder={"eg. Barge"}
-            label={`Last Name *`}
-            errors={errors}
-            error={errors?.last_name}
-            autoComplete={"off"}
-          />
-          <AuthInputFiled
-            className={"!min-w-80 !max-w-64"}
-            name={"date_of_birth"}
-            icon={Celebration}
-            control={control}
-            type="date"
-            placeholder={"date_of_birth here"}
-            label={`Date Of Birth *`}
-            errors={errors}
-            error={errors?.date_of_birth}
-          />
-          <AuthInputFiled
-            className={"!min-w-80 !max-w-64"}
-            name={"joining_date"}
-            icon={CalendarMonth}
-            control={control}
-            type="date"
-            placeholder={"eg. Barge"}
-            label={`Date Of Joining *`}
-            errors={errors}
-            error={errors?.joining_date}
-          />
-          <AuthInputFiled
-            className={"!min-w-80 !max-w-64"}
-            name={"email"}
-            icon={Email}
-            control={control}
-            type="email"
-            placeholder={"eg. sahilbarge@gmail.com"}
-            label={`Email *`}
-            errors={errors}
-            autoComplete={"off"}
-            error={errors?.email}
-          />
-          <AuthInputFiled
-            className={"!min-w-80 !max-w-64"}
-            name={"phone_number"}
-            icon={ContactEmergency}
-            control={control}
-            type="number"
-            placeholder={"eg. 33333-44444"}
-            label={`Phone Number *`}
-            errors={errors}
-            error={errors?.phone_number}
-            autoComplete={"off"}
-          />
-          <AuthInputFiled
-            className={"!min-w-80 !max-w-64"}
-            name={"gender"}
-            icon={Adjust}
-            control={control}
-            type="naresh-select"
-            placeholder={"eg. Male"}
-            label={`Gender *`}
-            errors={errors}
-            error={errors?.gender}
-            options={[
-              { value: "Male", label: "Male" },
-              { value: "Female", label: "Female" },
-              { value: "Other", label: "Other" },
-            ]}
-          />
-          <AuthInputFiled
-            className={"!min-w-80 !max-w-64"}
-            name={"password"}
-            icon={Password}
-            control={control}
-            type={"password"}
-            placeholder={"**********"}
-            label={`Password *`}
-            errors={errors}
-            error={errors?.password}
-            visible={visible}
-            setVisible={setVisible}
-            autoComplete={"off"}
-          />
-          <AuthInputFiled
-            className={"!min-w-80 !max-w-64"}
-            name={"confirmPassword"}
-            icon={Password}
-            control={control}
-            type={"password"}
-            placeholder={"**********"}
-            label={`Confirm Password *`}
-            errors={errors}
-            error={errors?.confirmPassword}
-            visible={visible}
-            setVisible={setVisible}
-            autoComplete={"off"}
-          />
-          <AuthInputFiled
-            className={"!min-w-80 !max-w-80"}
-            name={"citizenship"}
-            icon={Flag}
-            control={control}
-            type="text"
-            placeholder={"eg. Indian"}
-            label={`Citizenship *`}
-            errors={errors}
-            error={errors?.citizenship}
-          />
-          <AuthInputFiled
-            name="empId"
-            icon={Work}
-            control={control}
-            type="text"
-            placeholder="Employee Code"
-            label="Employee Code *"
-            errors={errors}
-            error={errors.empId}
-          />
-        </div>
-        <div className="flex gap-6 w-full">
-          <Button
-            fullWidth
-            variant="contained"
-            color="error"
-            disabled={!data?.delegateSuperAdmin?._id}
-            onClick={async () => {
-              deleteDelegateMutation.mutate({
-                id: data?.delegateSuperAdmin?._id,
-                reset,
-              });
-            }}
-            type="button"
-          >
-            Delete
-          </Button>
-          <Button
-            fullWidth
-            variant="contained"
-            disabled={!isDirty}
-            type="submit"
-          >
-            Submit
-          </Button>
-        </div>
-      </form>
-    </div>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col gap-4 w-full h-[75vh] overflow-auto"
+      noValidate
+      autoComplete="off"
+    >
+      <div className="grid md:grid-cols-2 gap-4 grid-cols-1">
+        <AuthInputFiled
+          name={"first_name"}
+          icon={Person}
+          control={control}
+          type="text"
+          placeholder={"eg. Sahil"}
+          label={`First Name *`}
+          errors={errors}
+          error={errors?.first_name}
+          autoComplete={"off"}
+        />
+        <AuthInputFiled
+          name={"middle_name"}
+          icon={Person2}
+          control={control}
+          type="text"
+          placeholder={"eg. Hanmant"}
+          label={`Middle Name `}
+          errors={errors}
+          error={errors?.middle_name}
+          autoComplete={"off"}
+        />
+        <AuthInputFiled
+          name={"last_name"}
+          icon={Person3}
+          control={control}
+          type="text"
+          placeholder={"eg. Barge"}
+          label={`Last Name *`}
+          errors={errors}
+          error={errors?.last_name}
+          autoComplete={"off"}
+        />
+        <AuthInputFiled
+          name={"date_of_birth"}
+          icon={Celebration}
+          control={control}
+          type="date"
+          placeholder={"date_of_birth here"}
+          label={`Date Of Birth *`}
+          errors={errors}
+          error={errors?.date_of_birth}
+        />
+        <AuthInputFiled
+          name={"joining_date"}
+          icon={CalendarMonth}
+          control={control}
+          type="date"
+          placeholder={"eg. Barge"}
+          label={`Date Of Joining *`}
+          errors={errors}
+          error={errors?.joining_date}
+        />
+        <AuthInputFiled
+          name={"email"}
+          icon={Email}
+          control={control}
+          type="email"
+          placeholder={"eg. sahilbarge@gmail.com"}
+          label={`Email *`}
+          errors={errors}
+          autoComplete={"off"}
+          error={errors?.email}
+        />
+        <AuthInputFiled
+          name={"phone_number"}
+          icon={ContactEmergency}
+          control={control}
+          type="number"
+          placeholder={"eg. 33333-44444"}
+          label={`Phone Number *`}
+          errors={errors}
+          error={errors?.phone_number}
+          autoComplete={"off"}
+        />
+        <AuthInputFiled
+          name={"gender"}
+          icon={Adjust}
+          control={control}
+          type="naresh-select"
+          placeholder={"eg. Male"}
+          label={`Gender *`}
+          errors={errors}
+          error={errors?.gender}
+          options={[
+            { value: "Male", label: "Male" },
+            { value: "Female", label: "Female" },
+            { value: "Other", label: "Other" },
+          ]}
+        />
+        <AuthInputFiled
+          name={"password"}
+          icon={Password}
+          control={control}
+          type={"password"}
+          placeholder={"**********"}
+          label={`Password *`}
+          errors={errors}
+          error={errors?.password}
+          visible={visible}
+          setVisible={setVisible}
+          autoComplete={"off"}
+        />
+        <AuthInputFiled
+          name={"confirmPassword"}
+          icon={Password}
+          control={control}
+          type={"password"}
+          placeholder={"**********"}
+          label={`Confirm Password *`}
+          errors={errors}
+          error={errors?.confirmPassword}
+          visible={visible}
+          setVisible={setVisible}
+          autoComplete={"off"}
+        />
+        <AuthInputFiled
+          className={"!min-w-80 !max-w-80"}
+          name={"citizenship"}
+          icon={Flag}
+          control={control}
+          type="text"
+          placeholder={"eg. Indian"}
+          label={`Citizenship *`}
+          errors={errors}
+          error={errors?.citizenship}
+        />
+        <AuthInputFiled
+          name="empId"
+          icon={Work}
+          control={control}
+          type="text"
+          placeholder="Employee Code"
+          label="Employee Code *"
+          errors={errors}
+          error={errors.empId}
+        />
+      </div>
+      <div className="flex gap-6 w-full">
+        <Button
+          fullWidth
+          variant="contained"
+          color="error"
+          disabled={!data?.delegateSuperAdmin?._id}
+          onClick={async () => {
+            deleteDelegateMutation.mutate({
+              id: data?.delegateSuperAdmin?._id,
+              reset,
+            });
+          }}
+          type="button"
+        >
+          Delete
+        </Button>
+        <Button fullWidth variant="contained" disabled={!isDirty} type="submit">
+          Submit
+        </Button>
+      </div>
+    </form>
   );
 };
 
