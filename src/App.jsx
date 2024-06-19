@@ -28,7 +28,7 @@ function App() {
               className={`h-full ${
                 !isNavEnabled.some((value) => {
                   return location.pathname.includes(value);
-                }) && "mt-[60px]"
+                }) && "mt-[55px]"
               } `}
             >
               <SwipeableTemporaryDrawer />
