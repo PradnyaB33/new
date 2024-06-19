@@ -30,6 +30,7 @@ import ArticleIcon from "@mui/icons-material/Article";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CallMissedIcon from "@mui/icons-material/CallMissed";
+import ChatIcon from "@mui/icons-material/Chat";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import FolderIcon from "@mui/icons-material/Folder";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
@@ -45,7 +46,6 @@ import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
-import ChatIcon from "@mui/icons-material/Chat";
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
@@ -170,7 +170,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "add-delegate-super-admin",
             isVisible: ["Super-Admin"].includes(role) ? true : false,
-            link: `/add-delegate`,
+            link: `/organisation/${orgId}/add-delegate`,
             icon: <SupervisorAccount className="text-[#67748E]" />,
             text: "Add Delegate Super Admin",
           },
@@ -629,7 +629,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               "Super-Admin",
               "Delegate-Super-Admin",
             ].includes(role),
-            link: "/employee-remote-punching",
+            link: `/organisation/${orgId}/employee-remote-punching`,
             icon: <Fingerprint className=" !text-[1.2em] text-[#67748E]" />,
             text: "Remote Punch-in-out",
           },
@@ -640,7 +640,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               "Super-Admin",
               "Delegate-Super-Admin",
             ].includes(role),
-            link: "/remotePunching",
+            link: `/organisation/${orgId}/remotePunching`,
             icon: <PanToolAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Apply Miss For Punch",
           },
@@ -664,7 +664,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "empDocs",
             isVisible: true,
-            link: "/emp/docs",
+            link: `/organisation/${orgId}/emp/docs`,
             icon: <ArticleIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "My Records",
           },
@@ -680,7 +680,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible: ["HR", "Super-Admin", "Delegate-Super-Admin"].includes(
               role
             ),
-            link: "/org/docs/auth",
+            link: `/organisation/${orgId}/org/docs/auth`,
             icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Organisation Records",
           },

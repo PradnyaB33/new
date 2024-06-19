@@ -82,6 +82,7 @@ import AdvanceSalaryApproval from "./pages/AdvanceSalaryNotification/AdvanceSala
 import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotification";
 import AdvanceSalaryNotificationToEmp from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotificationToEmp";
 import ParentNotification from "./pages/AllNotifications/page";
+import Communication from "./pages/Communication/Communication";
 import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
@@ -105,6 +106,7 @@ import AssignOrg from "./pages/OrgList/AssignOrg";
 import PayslipNotification from "./pages/PayslipNotification/PayslipNotification";
 import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
 import SelfShiftNotification from "./pages/SelfShiftNotification/page";
+import EmpCommunication from "./pages/SetUpOrganization/EmpCommunication/EmpCommunication";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
@@ -119,8 +121,6 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import EmpCommunication from "./pages/SetUpOrganization/EmpCommunication/EmpCommunication";
-import Communication from "./pages/Communication/Communication";
 
 const App = () => {
   return (
@@ -163,7 +163,7 @@ const App = () => {
           }
         />
         <Route
-          path="/add-delegate/"
+          path="/organisation/:organisationId/add-delegate/"
           element={
             <RequireAuth permission={["Super-Admin"]}>
               <AddDelegate />
@@ -177,10 +177,18 @@ const App = () => {
         <Route path="/my-training" element={<MyTraining />} />
         <Route path="/testOrg" element={<NewOranisationForm />} />
         <Route path="/remotePunching" element={<RemoteEmployee />} />
+        <Route
+          path="/organisation/:organisationId/remotePunching"
+          element={<RemoteEmployee />}
+        />
         {/* Login Routes */}
         <Route path="/test3" element={<TestYash />} />
         <Route
           path="/employee-remote-punching"
+          element={<EmployeeRemotePunch />}
+        />
+        <Route
+          path="/organisation/:organisationId/employee-remote-punching"
           element={<EmployeeRemotePunch />}
         />
         <Route path="/missedPunch" element={<MissedPunch />} />
@@ -200,8 +208,16 @@ const App = () => {
         <Route path="/remote/notification" element={<RemoteNotification />} />
         <Route path="/doc-notification" element={<DocNotification />} />
         <Route path="/emp/docs" element={<DocManage />} />
+        <Route
+          path="/organisation/:organisationId/emp/docs"
+          element={<DocManage />}
+        />
         <Route path="/org/docs" element={<OrgDocManage />} />
         <Route path="/org/docs/auth" element={<DocManageAuth />} />
+        <Route
+          path="/organisation/:organisationId/org/docs/auth"
+          element={<DocManageAuth />}
+        />
         <Route path="/sign-in" element={<SignIn />} />
         <Route
           path="/billing"
