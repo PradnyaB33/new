@@ -6,6 +6,7 @@ import useGetUser from "../Token/useUser";
 
 const useSubscription = (organizationId) => {
   const { authToken } = useGetUser();
+
   const {
     data: subscriptionDetails,
     isFetching: subscriptionLoading,
@@ -22,13 +23,15 @@ const useSubscription = (organizationId) => {
       );
       return response.data;
     },
-    queryKey: [`${organizationId}-subscription`],
+    queryKey: [`subscription`, organizationId],
     onSuccess: async (data) => {
       //   console.log(`🚀 ~ file: Organisation.jsx:144 ~ data:`, data);
     },
     onError: async (data) => {
       //   console.error(`🚀 ~ file: Organisation.jsx:144 ~ data:`, data);
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
   return { subscriptionDetails, subscriptionLoading, subscriptionFetching };
 };

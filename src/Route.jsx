@@ -10,7 +10,6 @@ import AnimationComponent from "./components/emailverify/verification-animation"
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import RequireAuth, { AuthProvider } from "./context/AuthProvider";
-import useSubscription from "./hooks/Subscription/subscription";
 import NewOranisationForm from "./pages/AddOrganisation/OrgFrom";
 import Application from "./pages/Application/Application";
 import Billing from "./pages/Billing/page";
@@ -77,6 +76,7 @@ import OrgChart from "./Test/OrgChart";
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
+import useSubscriptionGet from "./hooks/QueryHook/Subscription/hook";
 import AdvanceSalary from "./pages/AdvanceSalary/AdvanceSalary";
 import AdvanceSalaryApproval from "./pages/AdvanceSalaryNotification/AdvanceSalaryApproval";
 import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotification";
@@ -1232,15 +1232,10 @@ export default App;
 
 function RequireSubscription({ children }) {
   const { organisationId } = useParams();
-  const { subscriptionDetails } = useSubscription(organisationId);
+  const { data } = useSubscriptionGet({ organisationId });
 
-  if (
-    subscriptionDetails?.subscription?.status ===
-    ("pending" || "halted" || "paused")
-  ) {
-    return (
-      <PaymentNotReceived link={subscriptionDetails?.subscription?.short_url} />
-    );
+  if (data?.subscription?.status === ("pending" || "halted" || "paused")) {
+    return <PaymentNotReceived link={data?.subscription?.short_url} />;
   }
 
   return children;

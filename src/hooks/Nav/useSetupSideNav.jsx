@@ -19,17 +19,14 @@ import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
 import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
 import WorkOffOutlinedIcon from "@mui/icons-material/WorkOffOutlined";
 import { useLocation } from "react-router-dom";
-import useSubscriptionGet from "../QueryHook/Subscription/hook";
 
+import useSubscriptionGet from "../QueryHook/Subscription/hook";
 import UserProfile from "../UserData/useUser";
 const useSetupSideNav = (organisationId) => {
   const location = useLocation();
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  const { data } = useSubscriptionGet({
-    organisationId: organisationId,
-  });
-  console.log(`🚀 ~ file: useSetupSideNav.jsx:103 ~ data:`, data);
+  const { data } = useSubscriptionGet({ organisationId });
 
   const linkData = [
     {

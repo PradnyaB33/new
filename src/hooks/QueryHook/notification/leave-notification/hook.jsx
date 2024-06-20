@@ -20,7 +20,6 @@ const useLeaveNotificationHook = () => {
     getUserNotification,
     {
       onSuccess: async (data) => {
-        console.log(`🚀 ~ file: hook.jsx:33 ~ data:`, data);
         setNotificationCount(data.leaveRequests?.length ?? 0);
       },
       refetchOnWindowFocus: false,

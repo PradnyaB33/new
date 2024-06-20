@@ -83,7 +83,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [visibleCPassword, setVisibleCPassword] = useState(false);
 
-  const { data } = useSubscriptionGet(organisationId);
+  const { data } = useSubscriptionGet({ organisationId });
   console.log(`🚀 ~ organisationId:`, Object.values(organisationId)[0]);
   console.log(`🚀 ~ subscriptionDetails:`, data?.organisation?.foundation_date);
   const EmployeeSchema = z

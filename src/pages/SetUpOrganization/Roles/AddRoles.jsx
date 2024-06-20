@@ -31,7 +31,6 @@ const AddRoles = () => {
   };
 
   const { data, isLoading } = useQuery("profiles", fetchProfiles);
-  console.log(`🚀 ~ file: AddRoles.jsx:37 ~ data:`, data);
 
   const AddProfiles = useMutation(
     (data) =>
@@ -71,16 +70,6 @@ const AddRoles = () => {
       },
     }));
   };
-
-  // const handleIsApproverChange = (event, role) => {
-  //   setRoleState((prevRoles) => ({
-  //     ...prevRoles,
-  //     [role]: {
-  //       ...prevRoles[role],
-  //       isApprover: event.target.checked,
-  //     },
-  //   }));
-  // };
 
   const handleSubmit = async () => {
     await AddProfiles.mutateAsync(roleState);

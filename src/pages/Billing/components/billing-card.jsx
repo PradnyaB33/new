@@ -65,10 +65,6 @@ const StyledMenu = styled((props) => (
     },
   },
 }));
-console.log(
-  `🚀 ~ file: billing-card.jsx:69 ~ window.innerWidth:`,
-  window.innerWidth
-);
 
 const BillingCard = ({ doc }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);

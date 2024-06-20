@@ -49,7 +49,6 @@ const useNotification = () => {
     return "/";
   }, [role]);
 
-  console.log("role", role);
   // for loan notification count
   let loanNotificationCount;
   if (
@@ -61,9 +60,6 @@ const useNotification = () => {
   } else {
     loanNotificationCount = getApprovedRejectLoanDataByApprover?.length ?? 0;
   }
-  console.log("for hr", getEmployeeRequestLoanApplication);
-  console.log("for employee", getApprovedRejectLoanDataByApprover);
-  console.log("loan count", loanNotificationCount);
 
   // for advance salary notification count
   let advanceSalaryNotifyCount;
