@@ -83,8 +83,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [visibleCPassword, setVisibleCPassword] = useState(false);
 
-  const { data } = useSubscriptionGet({ organisationId });
-  console.log(`🚀 ~ organisationId:`, Object.values(organisationId)[0]);
+  const { data } = useSubscriptionGet(organisationId);
   console.log(`🚀 ~ subscriptionDetails:`, data?.organisation?.foundation_date);
   const EmployeeSchema = z
     .object({
@@ -131,10 +130,12 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         .refine(
           (value) => {
             const joiningDate = moment(value, "YYYY-MM-DD");
+            console.log(`🚀 ~ joiningDate:`, joiningDate);
             const orgDate = moment(
               data?.organisation?.foundation_date,
               "YYYY-MM-DD"
             );
+            console.log(`🚀 ~ orgDate:`, orgDate, joiningDate);
             return orgDate.isBefore(joiningDate);
           },
           {

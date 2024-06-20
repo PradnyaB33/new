@@ -6,6 +6,7 @@ import { TestContext } from "../../../State/Function/Main";
 import useGetUser from "../../Token/useUser";
 
 const useSubscriptionGet = ({ organisationId }) => {
+  console.log(`🚀 ~ organisationId:`, organisationId);
   const { authToken } = useGetUser();
   const { handleAlert } = useContext(TestContext);
 
