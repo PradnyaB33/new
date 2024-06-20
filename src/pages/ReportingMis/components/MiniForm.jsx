@@ -195,7 +195,7 @@ const ReportForm = () => {
     {
       onSuccess: (data) => {
         if (getValues("reportType")?.value === "Attendence") {
-          // GenerateAttendence(data);
+          GenerateAttendence(data);
         }
         if (getValues("reportType")?.value === "salary") {
           GenerateSalary(data);
