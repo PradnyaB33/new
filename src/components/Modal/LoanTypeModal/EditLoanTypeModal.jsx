@@ -119,7 +119,7 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
       return response.data.data;
     }
   );
-  console.log("getLoanTypeById", getLoanTypeById);
+
   useEffect(() => {
     if (getLoanTypeById) {
       setValue("loanName", getLoanTypeById.loanName);
@@ -188,11 +188,6 @@ const EditLoanTypeModal = ({ handleClose, open, organisationId, loanId }) => {
         return;
       }
 
-      const existingLoanNames = getEmployeeLoans.map((data) => data.loanName);
-      if (existingLoanNames.includes(data.loanName)) {
-        setError("Loan name must be unique.");
-        return;
-      }
       await EditLoanType.mutateAsync(data);
       setError(null);
     } catch (error) {

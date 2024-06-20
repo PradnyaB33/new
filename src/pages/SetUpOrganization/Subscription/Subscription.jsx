@@ -16,7 +16,7 @@ const Subscription = () => {
     <>
       <section className="bg-gray-50 min-h-screen w-full">
         <Setup>
-          <article className="SetupSection bg-white w-full md:w-[80%]  h-max shadow-md rounded-sm border  items-center">
+          <article>
             <div className="p-[30px] border-b-[.1px] flex items-center justify-between gap-3 w-full border-gray-300">
               <div className="flex items-center  gap-3">
                 <div className="rounded-full bg-brand/purple h-[30px] w-[30px] flex items-center justify-center"></div>

@@ -9,8 +9,9 @@ import useDeptOption from "../../../hooks/DepartmentHook/useDeptOption";
 import { useParams } from "react-router-dom";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import NotesIcon from "@mui/icons-material/Notes";
+
 const Step1 = ({ nextStep, isLastStep }) => {
-  const organisationId = useParams("");
+  const organisationId = useParams();
   const {
     DepartmentLocationOptions,
     DepartmentHeadOptions,
@@ -27,7 +28,7 @@ const Step1 = ({ nextStep, isLastStep }) => {
   } = useDepartmentState();
 
   const DepartmentSchema = z.object({
-    dept_name: z.string().min(2, { message: "Minimum two character required" }),
+    dept_name: z.string().min(2, { message: "Minimum two characters required" }),
     dept_description: z.string().optional(),
     dept_location: z.object({
       label: z.string(),
@@ -68,14 +69,14 @@ const Step1 = ({ nextStep, isLastStep }) => {
   };
 
   return (
-    <div className="w-full mt-4">
-      <h1 className="text-2xl mb-4 font-bold">Department Details</h1>
+    <div className="w-full mt-4 px-2 sm:px-4 lg:px-6">
+      <h1 className="text-xl mb-4 font-bold">Department Details</h1>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full flex  flex-1 space-y-2 flex-col"
+        className="w-full flex flex-col space-y-4"
       >
-        <div className="grid grid-cols-2 w-full gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <AuthInputFiled
             name="dept_name"
             icon={Business}
@@ -111,7 +112,7 @@ const Step1 = ({ nextStep, isLastStep }) => {
           error={errors.dept_description}
         />
 
-        <div className="grid grid-cols-2 w-full gap-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <AuthInputFiled
             name="dept_head_name"
             value={dept_head_name}
@@ -138,11 +139,11 @@ const Step1 = ({ nextStep, isLastStep }) => {
           />
         </div>
 
-        <div className="flex items-end w-full justify-end">
+        <div className="flex justify-end">
           <button
             type="submit"
             disabled={isLastStep}
-            className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+            className="w-full sm:w-auto flex justify-center px-4 py-2 rounded-md text-md font-semibold text-white bg-blue-500 hover:bg-blue-700 focus:outline-none"
           >
             Next
           </button>

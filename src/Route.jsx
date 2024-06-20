@@ -10,7 +10,6 @@ import AnimationComponent from "./components/emailverify/verification-animation"
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import RequireAuth, { AuthProvider } from "./context/AuthProvider";
-import useSubscription from "./hooks/Subscription/subscription";
 import NewOranisationForm from "./pages/AddOrganisation/OrgFrom";
 import Application from "./pages/Application/Application";
 import Billing from "./pages/Billing/page";
@@ -77,11 +76,13 @@ import OrgChart from "./Test/OrgChart";
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
+import useSubscriptionGet from "./hooks/QueryHook/Subscription/hook";
 import AdvanceSalary from "./pages/AdvanceSalary/AdvanceSalary";
 import AdvanceSalaryApproval from "./pages/AdvanceSalaryNotification/AdvanceSalaryApproval";
 import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotification";
 import AdvanceSalaryNotificationToEmp from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotificationToEmp";
 import ParentNotification from "./pages/AllNotifications/page";
+import Communication from "./pages/Communication/Communication";
 import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
@@ -103,8 +104,10 @@ import MissedPunchNotificationToEmp from "./pages/MissedPunchNotification/Missed
 import MyTraining from "./pages/My-Training/page";
 import AssignOrg from "./pages/OrgList/AssignOrg";
 import PayslipNotification from "./pages/PayslipNotification/PayslipNotification";
+import ReportingMis from "./pages/ReportingMis/page";
 import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
 import SelfShiftNotification from "./pages/SelfShiftNotification/page";
+import EmpCommunication from "./pages/SetUpOrganization/EmpCommunication/EmpCommunication";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
@@ -161,7 +164,7 @@ const App = () => {
           }
         />
         <Route
-          path="/add-delegate/"
+          path="/organisation/:organisationId/add-delegate/"
           element={
             <RequireAuth permission={["Super-Admin"]}>
               <AddDelegate />
@@ -175,10 +178,18 @@ const App = () => {
         <Route path="/my-training" element={<MyTraining />} />
         <Route path="/testOrg" element={<NewOranisationForm />} />
         <Route path="/remotePunching" element={<RemoteEmployee />} />
+        <Route
+          path="/organisation/:organisationId/remotePunching"
+          element={<RemoteEmployee />}
+        />
         {/* Login Routes */}
         <Route path="/test3" element={<TestYash />} />
         <Route
           path="/employee-remote-punching"
+          element={<EmployeeRemotePunch />}
+        />
+        <Route
+          path="/organisation/:organisationId/employee-remote-punching"
           element={<EmployeeRemotePunch />}
         />
         <Route path="/missedPunch" element={<MissedPunch />} />
@@ -198,8 +209,16 @@ const App = () => {
         <Route path="/remote/notification" element={<RemoteNotification />} />
         <Route path="/doc-notification" element={<DocNotification />} />
         <Route path="/emp/docs" element={<DocManage />} />
+        <Route
+          path="/organisation/:organisationId/emp/docs"
+          element={<DocManage />}
+        />
         <Route path="/org/docs" element={<OrgDocManage />} />
         <Route path="/org/docs/auth" element={<DocManageAuth />} />
+        <Route
+          path="/organisation/:organisationId/org/docs/auth"
+          element={<DocManageAuth />}
+        />
         <Route path="/sign-in" element={<SignIn />} />
         <Route
           path="/billing"
@@ -438,6 +457,16 @@ const App = () => {
           }
         />
         <Route
+          path="/organisation/:organisationId/create-communication"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <Communication />
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/organisation/:organisationId/edit-employee/:employeeId"
           element={
             <RequireAuth
@@ -488,7 +517,7 @@ const App = () => {
           }
         />
         <Route
-          path="/missed-justify"
+          path="/organisation/:organisationId/missed-justify"
           element={
             <RequireAuth
               permission={[
@@ -602,7 +631,7 @@ const App = () => {
           }
         />
         <Route
-          path="/add-loan"
+          path="/organisation/:organisationId/add-loan"
           element={
             <RequireAuth
               permission={[
@@ -624,7 +653,7 @@ const App = () => {
           }
         />
         <Route
-          path="/advance-salary"
+          path="/organisation/:organisationId/advance-salary"
           element={
             <RequireAuth
               permission={[
@@ -657,7 +686,7 @@ const App = () => {
         />
 
         <Route
-          path="/view-payslip"
+          path="/organisation/:organisationId/view-payslip"
           element={
             <RequireAuth
               permission={[
@@ -864,6 +893,14 @@ const App = () => {
           }
         />
         <Route
+          path="/organisation/:organisationId/setup/email-communicaiton"
+          element={
+            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+              <EmpCommunication />
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/organisation/:organisationId/setup/add-organization-locations"
           element={
             <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
@@ -879,7 +916,22 @@ const App = () => {
             </RequireAuth>
           }
         />
-        <Route path="/testorg1/:organizationId" element={<OrgChart />} />
+        <Route
+          path="/organisation/:organizationId/organisation-hierarchy"
+          element={<OrgChart />}
+        />
+
+        <Route
+          path="/organisation/:organisationId/mis-report"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <ReportingMis />
+            </RequireAuth>
+          }
+        />
+
         <Route
           path="/organisation/:organisationId/setup/remote-punching"
           element={
@@ -947,6 +999,28 @@ const App = () => {
         />
         <Route
           path="/notification"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <ParentNotification />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/notification"
           element={
             <RequireAuth
               permission={[
@@ -1171,15 +1245,10 @@ export default App;
 
 function RequireSubscription({ children }) {
   const { organisationId } = useParams();
-  const { subscriptionDetails } = useSubscription(organisationId);
+  const { data } = useSubscriptionGet({ organisationId });
 
-  if (
-    subscriptionDetails?.subscription?.status ===
-    ("pending" || "halted" || "paused")
-  ) {
-    return (
-      <PaymentNotReceived link={subscriptionDetails?.subscription?.short_url} />
-    );
+  if (data?.subscription?.status === ("pending" || "halted" || "paused")) {
+    return <PaymentNotReceived link={data?.subscription?.short_url} />;
   }
 
   return children;

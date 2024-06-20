@@ -1030,7 +1030,7 @@ const EditModelOpen = ({ handleClose, open, employeeId, organisationId }) => {
               htmlFor="workLocation"
               style={{ display: "block", color: "#000000" }}
             >
-              Department Cost Center No:
+              Department Cost No:
             </label>
             <select
               value={dept_cost_center_no}

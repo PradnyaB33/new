@@ -34,7 +34,7 @@ const LeaveRequisition = () => {
     <>
       <section className="">
         <HeaderBackComponent
-          heading={"Attendance & Leave Management2"}
+          heading={"Attendance & Leave Management"}
           oneLineInfo={
             "Track your attendance and submit your leave requests here for timely approval and efficient management "
           }

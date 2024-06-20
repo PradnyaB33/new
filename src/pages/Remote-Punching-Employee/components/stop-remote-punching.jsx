@@ -7,13 +7,18 @@ import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
 const StopRemotePunch = ({ setStart }) => {
   const { refetch } = useStartPunch();
   const [open, setOpen] = useState(false);
-  const { id } = useSelfieStore();
+  const { id, setEndTime } = useSelfieStore();
   useEffect(() => {
     refetch();
   }, [refetch]);
   const stopRemotePunching = () => {
     setStart(false);
     navigator.geolocation.clearWatch(id);
+    setEndTime();
+    // clear location after 5 seconds
+    setTimeout(() => {
+      window.location.reload();
+    }, 5000);
   };
 
   return (

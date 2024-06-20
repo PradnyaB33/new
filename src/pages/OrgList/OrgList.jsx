@@ -19,8 +19,8 @@ const OrgList = () => {
           </Link>
           Organisation list
         </header>
-        <div className="md:px-8 mt-6 mb-4 w-full">
-          <div className="flex justify-between items-center">
+        <div className="px-8 mt-6 mb-4 w-full">
+          <div className="flex justify-between flex-col md:flex-row">
             <div>
               <h1 className="md:text-2xl text-xl font-semibold">
                 Organisations List

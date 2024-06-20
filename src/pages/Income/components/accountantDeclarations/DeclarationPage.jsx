@@ -108,7 +108,11 @@ const DeclarationPage = () => {
         Employee TDS Request
       </header>
       <section className="min-h-[90vh] flex  ">
-        <article className="w-[25%] overflow-auto max-h-[90vh] h-full bg-white  border-gray-200">
+        <article
+          className={`md:w-[35%] lg:w-[25%] w-full overflow-auto max-h-[90vh] h-full bg-white  border-gray-200 
+          ${id && "md:flex flex-col hidden "}
+          `}
+        >
           <div className="p-6 !py-2  ">
             <div className="space-y-2">
               <div
@@ -185,7 +189,11 @@ const DeclarationPage = () => {
           )}
         </article>
 
-        <article className="w-[75%] min-h-[90vh] border-l-[.5px]  bg-gray-50">
+        <article
+          className={`md:w-[75%] w-full flex flex-col min-h-[90vh] border-l-[.5px]  bg-gray-50 ${
+            !id && "md:!flex !hidden"
+          }`}
+        >
           {empDataLoading ? (
             <div className="flex items-center justify-center my-2">
               <CircularProgress />
@@ -212,7 +220,7 @@ const DeclarationPage = () => {
                   </div>
                 </div>
 
-                <div className=" px-4 ">
+                <div className="px-4 overflow-x-auto">
                   <table className=" table-auto border  border-collapse min-w-full bg-white  text-left  !text-sm font-light">
                     <thead className="border-b bg-gray-100  font-bold">
                       <tr className="!font-semibold ">
@@ -324,7 +332,7 @@ const DeclarationPage = () => {
               </>
             )
           ) : (
-            <div className="flex px-4 w-full items-center my-4">
+            <div className="md:flex hidden  px-4 w-full items-center my-4">
               <h1 className="text-lg w-full  text-gray-700 border bg-blue-200 p-4 rounded-md">
                 <Info /> Select employee to see their declarations
               </h1>

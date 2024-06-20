@@ -262,9 +262,12 @@ const DocManage = () => {
           >
             <div
               style={{ borderBottom: "2px solid #b8b8b8" }}
-              className="text-center md:text-3xl text-2xl mb-5 pb-3 w-full"
+              className="text-center mb-5 pb-3 w-full"
             >
-              Document Management
+              <h1 className="text-center md:text-3xl text-2xl">
+                Document Management
+              </h1>
+              <p>Here you can manage your documents</p>
             </div>
             {documentFields.map((field, index) => (
               <div

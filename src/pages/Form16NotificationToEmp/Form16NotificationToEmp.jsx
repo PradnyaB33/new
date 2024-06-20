@@ -6,9 +6,9 @@ const Form16NotificationToEmp = () => {
   return (
     <div className="flex w-full flex-col gap-6">
       <h1 className="w-full pt-5 text-xl font-bold px-14 py-3 shadow-md bg-white border-b border-gray-300">
-        Form16  Notifications
+        Form-16  Notifications
         <p className="text-sm font-extralight">
-          Here employee's would be able to check the status of their form16  
+          Here employee's would be able to check the status of their form-16  
           requests
         </p>
       </h1>

@@ -59,6 +59,8 @@ const AuthInputFiled = ({
   InputFiledActionIcon,
   onInputActionClear,
   isClearable = false,
+  useRange = false,
+  asSingle = true,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -146,8 +148,8 @@ const AuthInputFiled = ({
                 {Icon && <Icon className="text-gray-700 mr-2 text-sm" />}
                 <Datepicker
                   inputClassName={"border-none w-full outline-none"}
-                  useRange={false}
-                  asSingle={true}
+                  useRange={useRange}
+                  asSingle={asSingle}
                   popoverDirection="down"
                   readOnly={true}
                   onChange={(value) => {

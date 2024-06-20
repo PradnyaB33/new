@@ -102,19 +102,7 @@ const ShiftAcceptModal = ({ data }) => {
           <div className="p-6 !py-2  ">
             <div className="space-y-2">
               <div
-                // onFocus={() => {
-                //   handleFocus(name);
-                // }}
-                // onBlur={() => setFocusedInput(null)}
-                className={
-                  //  ${
-                  //   focusedInput === name
-                  //     ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
-                  //     : "outline-none border-gray-200 border-[.5px]"
-                  //                   }
-                  `
-                  flex  rounded-md items-center px-2 outline-none border-gray-200 border-[.5px]  bg-white py-1 md:py-[6px]`
-                }
+                className={`flex  rounded-md items-center px-2 outline-none border-gray-200 border-[.5px]  bg-white py-1 md:py-[6px]`}
               >
                 <Search className="text-gray-700 md:text-lg !text-[1em]" />
 

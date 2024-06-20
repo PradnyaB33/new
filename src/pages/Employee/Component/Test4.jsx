@@ -14,7 +14,7 @@ const Test4 = ({ prevStep }) => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const creatorId = user._id;
-  console.log(creatorId);
+
   const {
     first_name,
     last_name,
@@ -59,6 +59,7 @@ const Test4 = ({ prevStep }) => {
       const filteredData = Object.fromEntries(
         Object.entries(data).filter(([key, value]) => value !== null)
       );
+      console.log("filter data" , filteredData);
 
       // Use filteredData in your component or wherever you need the data
       const userData = {
@@ -268,16 +269,18 @@ const Test4 = ({ prevStep }) => {
               typeof data === "object" &&
               Object.entries(data).length > 0 && (
                 <>
-                  <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
+                  <h1 className="text-lg bg-gray-200 px-4 py-2 w-full my-2">
                     Additional Details
                   </h1>
                   <div className="grid grid-cols-3 justify-between">
-                    {Object.entries(data)?.map(([key, value]) => (
-                      <div className="p-2 rounded-sm ">
-                        <h1 className="text-gray-500 text-sm">{key}</h1>
-                        <p className="">{value ? value : "-"}</p>
-                      </div>
-                    ))}
+                    {Object.entries(data)
+                      .filter(([key]) => key !== "organizationId")
+                      .map(([key, value]) => (
+                        <div className="p-2 rounded-sm" key={key}>
+                          <h1 className="text-gray-500 text-sm">{key}</h1>
+                          <p className="">{value ? value : "-"}</p>
+                        </div>
+                      ))}
                   </div>
                 </>
               )}

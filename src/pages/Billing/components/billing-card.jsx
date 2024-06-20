@@ -94,11 +94,8 @@ const BillingCard = ({ doc }) => {
         }
       }
     } else if (doc?.subscriptionDetails?.status === "Pending") {
-      // if (moment(doc?.createdAt).add(7, "days").diff(moment(), "days") > 0) {
       return true;
-      // } else {
-      //   return true;
-      // }
+      //
     }
     return true;
   };
@@ -115,7 +112,7 @@ const BillingCard = ({ doc }) => {
   );
   return (
     <div className="shadow-twe-inner bg-Brand-Purple/brand-purple-1 rounded-md grid grid-cols-6">
-      <div className=" col-span-5 pl-4 pt-4 pb-4 gap-4 flex flex-col">
+      <div className="col-span-6 md:col-span-5 pl-4 pt-4 pb-4 gap-4 flex flex-col">
         <div className="flex justify-between">
           <div className="flex gap-4 items-end">
             <img
@@ -125,18 +122,25 @@ const BillingCard = ({ doc }) => {
             />
             <div className="text-2xl font-bold">{doc?.orgName}</div>
           </div>
-          <Button
-            id="demo-customized-button"
-            aria-controls={open ? "demo-customized-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            variant="outlined"
-            disableElevation
-            onClick={handleClick}
-            endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-          >
-            Options
-          </Button>
+          <div className="flex gap-4">
+            {window.innerWidth > 300 && checkHasOrgDisabled() && (
+              <Button onClick={() => setConfirmOpen3(true)} variant="contained">
+                Pay
+              </Button>
+            )}
+            <Button
+              id="demo-customized-button"
+              aria-controls={open ? "demo-customized-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              variant="outlined"
+              disableElevation
+              onClick={handleClick}
+              endIcon={open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+            >
+              Options
+            </Button>
+          </div>
           <StyledMenu
             id="demo-customized-menu"
             MenuListProps={{
@@ -165,6 +169,18 @@ const BillingCard = ({ doc }) => {
               <TrendingUp />
               Upgrade
             </MenuItem>
+            {window.innerWidth < 300 && checkHasOrgDisabled() && (
+              <MenuItem
+                onClick={() => {
+                  setConfirmOpen2(true);
+                  handleClose();
+                }}
+                disableRipple
+              >
+                <TrendingUp />
+                Pay
+              </MenuItem>
+            )}
           </StyledMenu>
         </div>
 
@@ -194,14 +210,18 @@ const BillingCard = ({ doc }) => {
                 Icon={RecyclingRounded}
                 descriptionText={"Your subscription is on trial"}
                 mainText={
-                  moment(doc?.createdAt)
-                    .add(7, "days")
-                    .diff(moment(), "days") === 0
+                  moment(doc?.createdAt).add(7, "days").diff(moment(), "days") >
+                  0
                     ? `Only ${moment(doc?.createdAt)
                         .add(7, "days")
                         .diff(moment(), "days")} days left`
                     : "But trial has expired"
                 }
+              />
+              <DescriptionBox
+                Icon={RecyclingRounded}
+                descriptionText={"Your subscription trial start Date"}
+                mainText={moment(doc?.createdAt).format("DD MMM YYYY")}
               />
             </>
           )}
@@ -244,13 +264,8 @@ const BillingCard = ({ doc }) => {
             mainText={`${Math.round(doc?.remainingBalance)}`}
           />
         </div>
-        {checkHasOrgDisabled() && (
-          <Button onClick={() => setConfirmOpen3(true)} variant="contained">
-            Pay
-          </Button>
-        )}
       </div>
-      <div className=" col-span-1 flex justify-center items-center">
+      <div className=" col-span-1 justify-center items-center hidden md:flex">
         {doc?.subscriptionDetails?.status === "Active" ? (
           <div className="bg-[#5FF062] flex justify-center items-start p-8 rounded-full animate-pulse">
             <Repeat className="text-white " fontSize="large" />

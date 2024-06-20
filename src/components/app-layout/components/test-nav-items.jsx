@@ -27,10 +27,10 @@ import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalance
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import ArticleIcon from "@mui/icons-material/Article";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CallMissedIcon from "@mui/icons-material/CallMissed";
+import ChatIcon from "@mui/icons-material/Chat";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import FolderIcon from "@mui/icons-material/Folder";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
@@ -40,6 +40,7 @@ import ReceiptIcon from "@mui/icons-material/Receipt";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
+import { SiMicrosoftexcel } from "react-icons/si";
 import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
@@ -152,7 +153,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Attendance & Leave Management",
           },
-
           {
             key: "accountSettings",
             isVisible: true,
@@ -171,10 +171,8 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "add-delegate-super-admin",
-            isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role)
-              ? true
-              : false,
-            link: `/add-delegate`,
+            isVisible: ["Super-Admin"].includes(role) ? true : false,
+            link: `/organisation/${orgId}/add-delegate`,
             icon: <SupervisorAccount className="text-[#67748E]" />,
             text: "Add Delegate Super Admin",
           },
@@ -189,6 +187,23 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
+
+      "Reporting Mis": {
+        open: false,
+        isVisible: true,
+        icon: <NotificationsActive className=" !text-[1.2em] text-[#67748E]" />,
+        routes: [
+          {
+            key: "reportingMIS",
+            isVisible: true,
+            link: `/organisation/${orgId}/mis-report`,
+            icon: (
+              <SiMicrosoftexcel className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Reporting MIS",
+          },
+        ],
+      },
       Notification: {
         open: false,
         isVisible: true,
@@ -197,7 +212,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "listNotification",
             isVisible: true,
-            link: "/notification",
+            link: `organisation/${orgId}/notification`,
             icon: (
               <CircleNotifications className=" !text-[1.2em] text-[#67748E]" />
             ),
@@ -250,7 +265,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "payslip",
             isVisible: true,
-            link: `/view-payslip`,
+            link: `/organisation/${orgId}/view-payslip`,
             icon: <ListAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Pay Slip",
           },
@@ -289,7 +304,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "loanmanagement",
             isVisible: true,
-            link: `/add-loan`,
+            link: `/organisation/${orgId}/add-loan`,
             icon: (
               <MonetizationOnOutlined className=" !text-[1.2em] text-[#67748E]" />
             ),
@@ -298,11 +313,50 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "advanceSalary",
             isVisible: true,
-            link: `/advance-salary`,
+            link: `/organisation/${orgId}/advance-salary`,
             icon: (
               <MonetizationOnOutlined className=" !text-[1.2em] text-[#67748E]" />
             ),
             text: "Advance Salary",
+          },
+        ],
+      },
+      Communication: {
+        open: false,
+        isVisible:
+          window.location.pathname.includes("organisation") &&
+          [
+            "Super-Admin",
+            "Delegate-Super-Admin",
+            "Department-Head",
+            "Delegate-Department-Head",
+            "Department-Admin",
+            "Delegate-Department-Admin",
+            "Accountant",
+            "Delegate-Accountant",
+            "HR",
+            "Manager",
+          ].includes(role),
+        // : false
+        icon: <Business className=" !text-[1.2em] text-[#67748E]" />,
+        routes: [
+          {
+            key: "createCommunication",
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+            ].includes(role),
+            link: `/organisation/${orgId}/create-communication`,
+            icon: <ChatIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Communication",
           },
         ],
       },
@@ -459,7 +513,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               "Manager",
               "Employee",
             ].includes(role),
-            link: `/missed-justify`,
+            link: `organisation/${orgId}/missed-justify`,
             icon: <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Missed Justify",
           },
@@ -563,6 +617,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Organisation List",
           },
+          {
+            key: "organisationList",
+            isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role),
+            link: `/organisation/${orgId}/organisation-hierarchy`,
+            icon: (
+              <AccountTreeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Organisation Hierarchy",
+          },
         ],
       },
 
@@ -585,7 +648,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               "Super-Admin",
               "Delegate-Super-Admin",
             ].includes(role),
-            link: "/employee-remote-punching",
+            link: `/organisation/${orgId}/employee-remote-punching`,
             icon: <Fingerprint className=" !text-[1.2em] text-[#67748E]" />,
             text: "Remote Punch-in-out",
           },
@@ -596,19 +659,19 @@ const TestNavItems = ({ toggleDrawer }) => {
               "Super-Admin",
               "Delegate-Super-Admin",
             ].includes(role),
-            link: "/remotePunching",
+            link: `/organisation/${orgId}/remotePunching`,
             icon: <PanToolAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Apply Miss For Punch",
           },
-          {
-            key: "empNotification",
-            isVisible: ["Employee"].includes(role),
-            link: "/emp-notification",
-            icon: (
-              <AssignmentTurnedInIcon className=" !text-[1.2em] text-[#67748E]" />
-            ),
-            text: "Remote Punching Status",
-          },
+          // {
+          //   key: "empNotification",
+          //   isVisible: ["Employee"].includes(role),
+          //   link: "/emp-notification",
+          //   icon: (
+          //     <AssignmentTurnedInIcon className=" !text-[1.2em] text-[#67748E]" />
+          //   ),
+          //   text: "Remote Punching Status",
+          // },
         ],
       },
 
@@ -620,7 +683,7 @@ const TestNavItems = ({ toggleDrawer }) => {
           {
             key: "empDocs",
             isVisible: true,
-            link: "/emp/docs",
+            link: `/organisation/${orgId}/emp/docs`,
             icon: <ArticleIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "My Records",
           },
@@ -636,7 +699,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible: ["HR", "Super-Admin", "Delegate-Super-Admin"].includes(
               role
             ),
-            link: "/org/docs/auth",
+            link: `/organisation/${orgId}/org/docs/auth`,
             icon: <FolderIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Organisation Records",
           },

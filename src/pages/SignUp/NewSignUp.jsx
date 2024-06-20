@@ -220,7 +220,7 @@ const SignIn = () => {
           <form
             onSubmit={handleSubmit(onSubmit)}
             autoComplete="off"
-            className="flex   my-16 !px-20 lg:w-[80%] w-full bg-white flex-col h-fit gap-1"
+            className="flex   my-16 sm:!px-20 px-6 lg:w-[80%] w-full bg-white flex-col h-fit gap-1"
           >
             <div className="flex flex-col space-x-4 lg:items-start items-center">
               <div className="flex flex-col gap-1  w-full items-center justify-center space-y-1">
@@ -276,7 +276,7 @@ const SignIn = () => {
               error={errors.last_name}
             />
             {/* Phone Number */}
-            <div className="flex w-full items-center gap-2">
+            <div className="flex sm:flex-row flex-col w-full sm:items-center items-start gap-0 sm:gap-2 sm:mb-0 mb-3">
               <div className="w-full">
                 <AuthInputFiled
                   name="phone"

@@ -5,9 +5,12 @@ import { Card, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { CategoryScale, Chart } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import Select from "react-select";
+import * as XLSX from "xlsx";
+import { TestContext } from "../../../../State/Function/Main";
 import { UseContext } from "../../../../State/UseState/UseContext";
+import UserProfile from "../../../../hooks/UserData/useUser";
 Chart.register(CategoryScale);
 
 const ManagerEmployeeChart = ({
@@ -17,7 +20,7 @@ const ManagerEmployeeChart = ({
 }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-  // const { getCurrentUser } = UserProfile();
+  const user = UserProfile().getCurrentUser();
   const monthOptions = [
     {
       value: 1,
@@ -68,6 +71,8 @@ const ManagerEmployeeChart = ({
       label: "December",
     },
   ];
+
+  const { handleAlert } = useContext(TestContext);
   const [selectMonth, setSelectMonth] = useState({
     label: monthOptions.find((item) => item.value === new Date().getMonth() + 1)
       .label,
@@ -116,11 +121,13 @@ const ManagerEmployeeChart = ({
         tension: 0.5,
       },
     },
+    barThickness: 30,
 
     scales: {
       x: {
         grid: {
           display: false,
+          barPercentage: 0.4,
         },
       },
       y: {
@@ -157,22 +164,20 @@ const ManagerEmployeeChart = ({
     getYearLeaves
   );
 
-  console.log(`🚀 ~ LeaveYearData:`, LeaveYearData);
-
-  // const monthNames = [
-  //   "January",
-  //   "February",
-  //   "March",
-  //   "April",
-  //   "May",
-  //   "June",
-  //   "July",
-  //   "August",
-  //   "September",
-  //   "October",
-  //   "November",
-  //   "December",
-  // ];
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
   // const allMonths = monthNames;
 
@@ -232,13 +237,57 @@ const ManagerEmployeeChart = ({
     ],
   };
 
-  // const handleSelect = (event, newValue) => {
-  //   if (newValue) {
-  //     setuserId(newValue?._id);
-  //   } else {
-  //     setuserId(user._id);
-  //   }
-  // };
+  const generateReport = () => {
+    try {
+      // console.log("Report Generated Successfully", attendenceData);
+      const employeeLeaveData = LeaveYearData?.map(({ _id, ...item }) => ({
+        // month: monthNames[item.month - 1],
+        // year: item.year,
+
+        "Employee ID": `${item?.employeeId}`,
+        "Employee Name": `${item?.empName}`,
+        "Employee email": `${item?.email}`,
+        "present days": `${item?.availableDays}`,
+        "Paid leave days": `${item.paidleaveDays}`,
+        "unpaid leave days": `${item.unpaidleaveDays}`,
+      }));
+      let employeeInfo = [
+        ["", "Manager Name", `${user?.first_name} ${user?.last_name}`],
+        ["", "Month", monthNames[selectMonth.value - 1]],
+        ["", "year", LeaveYearData?.map((item) => `${item?.year}`)],
+      ];
+
+      const wb = XLSX.utils.book_new();
+      const wsData = employeeLeaveData.map(Object.values);
+      wsData.unshift(Object.keys(employeeLeaveData[0]));
+      const padding = [["", "", "", ""]];
+      const finalData = padding.concat(employeeInfo, padding, wsData);
+      const ws = XLSX.utils.aoa_to_sheet(finalData);
+
+      XLSX.utils.book_append_sheet(wb, ws, "Salary Data");
+      XLSX.writeFile(wb, "LeaveData.xlsx");
+    } catch (error) {
+      handleAlert(
+        true,
+        "error",
+        "There is a issue in server please try again later"
+      );
+    }
+  };
+
+  const mutation = useMutation(generateReport, {
+    onSuccess: () => {
+      handleAlert(true, "success", "Report Generated Successfully");
+    },
+    onError: (error) => {
+      // Handle error
+      handleAlert(
+        true,
+        "error",
+        "There is a issue in server please try again later"
+      );
+    },
+  });
 
   return (
     <>
@@ -254,7 +303,19 @@ const ManagerEmployeeChart = ({
             <h1 className="text-xl my-4 font-bold text-[#67748E]">
               Attendance Overview
             </h1>
-            <div className="flex gap-4 w-max">
+            <div className="flex items-end gap-4 w-max">
+              <button
+                onClick={() => mutation.mutate()}
+                disabled={mutation.isLoading}
+                className={` flex group justify-center w-max gap-2 items-center rounded-sm h-[30px] mb-1 px-4 py-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500
+                  ${
+                    mutation.isLoading &&
+                    "cursor-not-allowed bg-gray-400 text-gray-700"
+                  }
+                  `}
+              >
+                Generate Report
+              </button>
               <div className="w-[150px] ">
                 <label className="text-sm my-4 font-bold text-[#67748E]">
                   Select Year

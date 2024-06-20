@@ -48,7 +48,7 @@ const LeaveTypes = ({ open, handleClose, id }) => {
   return (
     <section className="bg-gray-50 min-h-screen w-full">
       <Setup>
-        <div className="SetupSection w-[80%] h-full bg-white   shadow-xl  rounded-sm">
+        <div className="SetupSection lg:w-[80%] w-full h-full bg-white   shadow-xl  rounded-sm">
           <div className="p-4  border-b-[.5px] flex   gap-3 w-full border-gray-300 justify-between">
             <div className="flex gap-3">
               <div className="mt-1">
@@ -72,46 +72,48 @@ const LeaveTypes = ({ open, handleClose, id }) => {
             </Button>
           </div>
           {data && data.length > 0 ? (
-            <table className="min-w-full bg-white text-left text-sm font-light">
-              <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-                <tr className="!font-medium shadow-lg">
-                  <th scope="col" className="px-6 py-3 ">
-                    Sr. No
-                  </th>
-                  <th scope="col" className="px-6 py-3 ">
-                    Leave Name
-                  </th>
-                  <th scope="col" className="px-6 py-3 ">
-                    Status
-                  </th>
-                  <th scope="col" className="px-6 py-3 ">
-                    Color
-                  </th>
-                  <th scope="col" className="px-6 py-3 ">
-                    Count
-                  </th>
-                  <th scope="col" className="px-6 py-3 ">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {isLoading ? (
-                  <SkeletonForLeaveTypes />
-                ) : (
-                  <>
-                    {data &&
-                      data.map((leaveType, index) => (
-                        <LeaveTypeEditBox
-                          key={index}
-                          leaveType={leaveType}
-                          index={index}
-                        />
-                      ))}
-                  </>
-                )}
-              </tbody>
-            </table>
+            <div className="overflow-y-scroll">
+              <table className="min-w-full bg-white text-left text-sm font-light">
+                <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+                  <tr className="!font-medium shadow-lg">
+                    <th scope="col" className="px-6 py-3 ">
+                      Sr. No
+                    </th>
+                    <th scope="col" className="px-6 py-3 ">
+                      Leave Name
+                    </th>
+                    <th scope="col" className="px-6 py-3 ">
+                      Status
+                    </th>
+                    <th scope="col" className="px-6 py-3 ">
+                      Color
+                    </th>
+                    <th scope="col" className="px-6 py-3 ">
+                      Count
+                    </th>
+                    <th scope="col" className="px-6 py-3 ">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {isLoading ? (
+                    <SkeletonForLeaveTypes />
+                  ) : (
+                    <>
+                      {data &&
+                        data.map((leaveType, index) => (
+                          <LeaveTypeEditBox
+                            key={index}
+                            leaveType={leaveType}
+                            index={index}
+                          />
+                        ))}
+                    </>
+                  )}
+                </tbody>
+              </table>
+            </div>
           ) : (
             <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
               <article className="flex items-center mb-1 text-red-500 gap-2">

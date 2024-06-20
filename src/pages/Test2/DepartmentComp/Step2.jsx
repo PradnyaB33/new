@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useDepartmentState from "../../../hooks/DepartmentHook/useDepartmentState";
+
 const Step2 = ({ isLastStep, nextStep, prevStep }) => {
   const {
     dept_cost_center_name,
@@ -41,14 +42,14 @@ const Step2 = ({ isLastStep, nextStep, prevStep }) => {
   };
 
   return (
-    <div className="w-full mt-4">
-      <h1 className="text-2xl mb-4 font-bold">Cost Center Info</h1>
+    <div className="w-full mt-4 px-2 sm:px-4 lg:px-6">
+      <h1 className="text-xl mb-4 font-bold">Cost Center Info</h1>
 
       <form
         onSubmit={handleSubmit(onsubmit)}
-        className="w-full flex space-y-2  flex-1 flex-col"
+        className="w-full flex flex-col space-y-4"
       >
-        <div className="grid grid-cols-2 w-full gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <AuthInputFiled
             name="dept_cost_center_name"
             icon={MonetizationOnIcon}
@@ -71,7 +72,7 @@ const Step2 = ({ isLastStep, nextStep, prevStep }) => {
           />
         </div>
 
-        <div className="grid grid-cols-2 w-full gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <AuthInputFiled
             name="dept_id"
             icon={FormatListNumberedIcon}
@@ -94,20 +95,20 @@ const Step2 = ({ isLastStep, nextStep, prevStep }) => {
           />
         </div>
 
-        <div className="flex items-end w-full justify-between">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
           <button
             type="button"
             onClick={() => {
               prevStep();
             }}
-            className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+            className="w-full sm:w-auto flex justify-center px-4 py-2 rounded-md text-md font-semibold text-white bg-blue-500 hover:bg-blue-700 focus:outline-none"
           >
             Prev
           </button>
           <button
             type="submit"
             disabled={isLastStep}
-            className="!w-max flex group justify-center px-6  gap-2 items-center rounded-md py-1 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+            className="w-full sm:w-auto flex justify-center px-4 py-2 rounded-md text-md font-semibold text-white bg-blue-500 hover:bg-blue-700 focus:outline-none"
           >
             Next
           </button>

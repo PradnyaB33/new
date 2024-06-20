@@ -194,11 +194,7 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
               { value: "Phone_Pay", label: "Phone_Pay" },
               { value: "RazorPay", label: "RazorPay" },
             ]}
-            descriptionText={
-              watch("paymentType") === "RazorPay"
-                ? "Additional 2% charges on razor-pay transaction"
-                : "No additional charges on phone-pay transaction"
-            }
+            descriptionText={"Additional 2% charges on every transaction"}
           />
 
           <AuthInputFiled

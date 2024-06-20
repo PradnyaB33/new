@@ -22,6 +22,7 @@ import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useEmpOption from "../../../hooks/Employee-OnBoarding/useEmpOption";
 import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
+import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 
 const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   const organisationId = useParams("");
@@ -82,6 +83,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [visibleCPassword, setVisibleCPassword] = useState(false);
 
+  const { data } = useSubscriptionGet(organisationId);
+  console.log(`🚀 ~ subscriptionDetails:`, data?.organisation?.foundation_date);
   const EmployeeSchema = z
     .object({
       password: z
@@ -126,6 +129,22 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
         })
         .refine(
           (value) => {
+            const joiningDate = moment(value, "YYYY-MM-DD");
+            console.log(`🚀 ~ joiningDate:`, joiningDate);
+            const orgDate = moment(
+              data?.organisation?.foundation_date,
+              "YYYY-MM-DD"
+            );
+            console.log(`🚀 ~ orgDate:`, orgDate, joiningDate);
+            return orgDate.isBefore(joiningDate);
+          },
+          {
+            message:
+              "Joining date cannot be before the organisation's foundation date",
+          }
+        )
+        .refine(
+          (value) => {
             const joiningDate = moment(value, "YYYY-MM-DD"); // replace 'YYYY-MM-DD' with your date format
             const currentDate = moment();
             return joiningDate.isSameOrBefore(currentDate);
@@ -140,6 +159,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       }),
       dept_cost_center_no: z.object({
         label: z.string(),
+        value: z.string(),
       }),
 
       companyemail: z.string().email(),

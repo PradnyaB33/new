@@ -31,7 +31,6 @@ const AddRoles = () => {
   };
 
   const { data, isLoading } = useQuery("profiles", fetchProfiles);
-  console.log(`🚀 ~ file: AddRoles.jsx:37 ~ data:`, data);
 
   const AddProfiles = useMutation(
     (data) =>
@@ -72,16 +71,6 @@ const AddRoles = () => {
     }));
   };
 
-  // const handleIsApproverChange = (event, role) => {
-  //   setRoleState((prevRoles) => ({
-  //     ...prevRoles,
-  //     [role]: {
-  //       ...prevRoles[role],
-  //       isApprover: event.target.checked,
-  //     },
-  //   }));
-  // };
-
   const handleSubmit = async () => {
     await AddProfiles.mutateAsync(roleState);
   };
@@ -90,7 +79,7 @@ const AddRoles = () => {
     <>
       <section className="bg-gray-50 min-h-screen w-full">
         <Setup>
-          <div className="SetupSection bg-white w-[100%] lg:!w-[80%] md:!w-[70%]   shadow-md rounded-sm border  items-center">
+          <div>
             <div className="p-4 border-b-[.5px] flex   gap-4 w-full border-gray-300">
               <div className="mt-1">
                 <GroupOutlinedIcon />
