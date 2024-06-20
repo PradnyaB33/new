@@ -164,6 +164,9 @@ const Communication = () => {
                     <th scope="col" className=" px-9 py-3 ">
                       Subject
                     </th>
+                    <th scope="col" className=" px-6 py-3 ">
+                      Status
+                    </th>
                     <th scope="col" className=" px-9 py-3 ">
                       Action
                     </th>
@@ -209,6 +212,9 @@ const Communication = () => {
                               }}
                             />
                           ))}
+                        </td>
+                        <td className="!text-left pl-8 py-3">
+                          {communciation?.status}
                         </td>
                         <td className="!text-left pl-9 py-3">
                           <MoreVert
