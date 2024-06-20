@@ -38,7 +38,9 @@ const organizationSchema = z.object({
     .refine(
       (val) => {
         return (
-          val.address !== "" && val.position.lat !== 0 && val.position.lng !== 0
+          val.address !== ("" || undefined) &&
+          val.position.lat !== 0 &&
+          val.position.lng !== 0
         );
       },
       { message: "Location is required" }
@@ -68,6 +70,8 @@ const Step1 = ({ nextStep }) => {
     setStep1Data,
     isTrial,
   } = useOrg();
+
+  console.log(`🚀 ~ file: step-1.jsx:71 ~ location:`, location);
 
   const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
