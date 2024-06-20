@@ -248,6 +248,7 @@ function CalculateSalary() {
       return response.data.shiftRequests;
     }
   );
+  console.log("get shift" , getShifts);
   // to get shift count of employee
   const countShifts = (shifts) => {
     const shiftCount = {};
@@ -265,6 +266,8 @@ function CalculateSalary() {
     () => (getShifts ? countShifts(getShifts) : {}),
     [getShifts]
   );
+  console.log("shift count" , shiftCounts);
+
   // calculate the amount of shift allowance
   const [shiftTotalAllowance, setShiftTotalAllowance] = useState(0);
   useEffect(() => {
@@ -281,6 +284,7 @@ function CalculateSalary() {
     }
     setShiftTotalAllowance(total);
   }, [shiftCounts]);
+  
   // to get shift allowance amount
   const { setValue } = useForm();
   const { data } = useQuery("get-shift-allowance", async () => {
@@ -297,6 +301,9 @@ function CalculateSalary() {
       setValue("dualWorkflow", data.existingAllowance.check);
     }
   }, [data, setValue]);
+
+
+
   // calculate the remote punching allowance of employee
   const remotePunchingCounts = 5;
   // to get remote punching amount
