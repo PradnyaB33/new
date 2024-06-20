@@ -104,6 +104,7 @@ import MissedPunchNotificationToEmp from "./pages/MissedPunchNotification/Missed
 import MyTraining from "./pages/My-Training/page";
 import AssignOrg from "./pages/OrgList/AssignOrg";
 import PayslipNotification from "./pages/PayslipNotification/PayslipNotification";
+import ReportingMis from "./pages/ReportingMis/page";
 import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
 import SelfShiftNotification from "./pages/SelfShiftNotification/page";
 import EmpCommunication from "./pages/SetUpOrganization/EmpCommunication/EmpCommunication";
@@ -919,6 +920,18 @@ const App = () => {
           path="/organisation/:organizationId/organisation-hierarchy"
           element={<OrgChart />}
         />
+
+        <Route
+          path="/organisation/:organisationId/mis-report"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <ReportingMis />
+            </RequireAuth>
+          }
+        />
+
         <Route
           path="/organisation/:organisationId/setup/remote-punching"
           element={

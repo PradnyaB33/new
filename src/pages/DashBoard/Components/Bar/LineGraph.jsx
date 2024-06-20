@@ -5,6 +5,7 @@ import { useMutation } from "react-query";
 import Select from "react-select";
 import * as XLSX from "xlsx";
 import { TestContext } from "../../../../State/Function/Main";
+import UserProfile from "../../../../hooks/UserData/useUser";
 
 const LineGraph = ({
   salarydata,
@@ -14,6 +15,7 @@ const LineGraph = ({
   isLoading,
 }) => {
   const { handleAlert } = useContext(TestContext);
+  const role = UserProfile().useGetCurrentRole();
 
   const option = {
     elements: {
@@ -65,21 +67,31 @@ const LineGraph = ({
 
   const generateReport = () => {
     try {
-      const salaryDataWithoutId = salarydata?.map(({ _id, ...item }) => ({
+      const salaryDataWithoutId = salarydata?.data?.map(({ _id, ...item }) => ({
         ...item,
         month: monthNames[item.month - 1],
       }));
       console.log(`🚀 ~ salaryDataWithoutId:`, salaryDataWithoutId);
 
       // Employee information
-      const employeeInfo = [
-        ["", "Employee Id", `${employee?.empId}`],
-        ["", "Name", `${employee?.first_name} ${employee?.last_name}`],
-        ["", "Email", employee?.email],
-        ["", "Pan Card", employee?.pan_card_number],
-        ["", "Bank Account No", `${employee?.bank_account_no}`],
-        // Add more employee information here
-      ];
+      let employeeInfo;
+
+      if (role === "Employee") {
+        employeeInfo = [
+          ["", "Employee Id", `${employee?.empId}`],
+          ["", "Name", `${employee?.first_name} ${employee?.last_name}`],
+          ["", "Email", employee?.email],
+          ["", "Pan Card", employee?.pan_card_number],
+          ["", "Bank Account No", `${employee?.bank_account_no}`],
+          // Add more employee information here
+        ];
+      }
+
+      if (role === "HR") {
+        employeeInfo = [
+          ["Organization Name", `${salarydata?.header?.orgName}`],
+        ];
+      }
 
       // Create a new workbook
       const wb = XLSX.utils.book_new();
@@ -184,7 +196,7 @@ const LineGraph = ({
     return organizedData;
   };
 
-  const EmployeeleaveData = organizeDataByMonth(salarydata);
+  const EmployeeleaveData = organizeDataByMonth(salarydata?.data);
   const MonthArray = allMonths.map((month) => month);
 
   const data = {
@@ -238,20 +250,20 @@ const LineGraph = ({
             </h1>
 
             <div className="flex gap-2 items-center">
-              {window.location.pathname.includes("/employee-dashboard") && (
-                <button
-                  onClick={() => mutation.mutate()}
-                  disabled={mutation.isLoading}
-                  className={` flex group justify-center w-max gap-2 items-center rounded-sm h-[30px] px-4 py-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500
+              {/* {window.location.pathname.includes("/employee-dashboard") && ( */}
+              <button
+                onClick={() => mutation.mutate()}
+                disabled={mutation.isLoading}
+                className={` flex group justify-center w-max gap-2 items-center rounded-sm h-[30px] px-4 py-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500
                   ${
                     mutation.isLoading &&
                     "cursor-not-allowed bg-gray-400 text-gray-700"
                   }
                   `}
-                >
-                  Generate Report
-                </button>
-              )}
+              >
+                Generate Report
+              </button>
+              {/* )} */}
               {/* {window.location.pathname.includes("/employee-dashboard") && ( */}
               <Select
                 placeholder={"Select year"}

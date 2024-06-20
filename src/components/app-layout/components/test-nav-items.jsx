@@ -40,12 +40,14 @@ import ReceiptIcon from "@mui/icons-material/Receipt";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
+import { SiMicrosoftexcel } from "react-icons/si";
 import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
+
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
@@ -182,6 +184,23 @@ const TestNavItems = ({ toggleDrawer }) => {
               <HomeRepairServiceOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
             ),
             text: "Shift Management",
+          },
+        ],
+      },
+
+      "Reporting Mis": {
+        open: false,
+        isVisible: true,
+        icon: <NotificationsActive className=" !text-[1.2em] text-[#67748E]" />,
+        routes: [
+          {
+            key: "reportingMIS",
+            isVisible: true,
+            link: `/organisation/${orgId}/mis-report`,
+            icon: (
+              <SiMicrosoftexcel className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Reporting MIS",
           },
         ],
       },

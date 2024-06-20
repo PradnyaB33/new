@@ -1,9 +1,10 @@
-import { Warning } from "@mui/icons-material";
+import { Clear, Warning } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Button,
   Checkbox,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -11,6 +12,7 @@ import {
   FormControl,
   FormControlLabel,
   IconButton,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
@@ -19,7 +21,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
@@ -48,7 +50,7 @@ const DepartmentList = () => {
   const queryClient = useQueryClient();
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [open, setOpen] = useState(false);
-  const [departmentList, setDepartmentList] = useState([]);
+  // const [deptList, setDepartmentList] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -94,16 +96,19 @@ const DepartmentList = () => {
         }
       );
 
-      setDepartmentList(response.data.department);
+      return response.data.department;
+      // setDepartmentList(response.data.department);
     } catch (error) {
       console.error(error);
     }
   };
-  useEffect(() => {
-    fetchDepartmentList();
-    // eslint-disable-next-line
-  }, [deptID, locationID]);
-  console.log(departmentList);
+
+  const { data: deptList, isLoading } = useQuery(
+    "department",
+    fetchDepartmentList
+  );
+
+  console.log(deptList);
   // Delete Query for deleting Single Department
   const handleDeleteConfirmation = (id) => {
     setDeleteConfirmation(id);
@@ -127,9 +132,11 @@ const DepartmentList = () => {
   };
   const handleDelete = (id) => {
     deleteMutation.mutate(id);
-    setDepartmentList((department) =>
-      department.filter((department) => department._id !== id)
-    );
+    // setDepartmentList((department) =>
+    //   department.filter((department) => department._id !== id)
+    // );
+    queryClient.invalidateQueries("department");
+
     setDeleteConfirmation(null);
   };
 
@@ -172,7 +179,7 @@ const DepartmentList = () => {
 
   const handleUpdate = async (idx) => {
     setOpen(true);
-    const selectedDept = departmentList[idx];
+    const selectedDept = deptList[idx];
     console.log(selectedDept);
     setDepartmentName(selectedDept.departmentName);
     setLocationID(selectedDept.departmentLocation._id);
@@ -230,7 +237,12 @@ const DepartmentList = () => {
 
   return (
     <>
-     {departmentList?.length === 0 ? (
+      {isLoading && (
+        <div className="flex h-screen w-full items-center justify-center">
+          <CircularProgress />
+        </div>
+      )}
+      {!isLoading && deptList?.length === 0 ? (
         <div className="w-full h-full">
           <Typography variant="h5" className="text-center !mt-5 text-red-600">
             <Warning />{" "}
@@ -241,7 +253,7 @@ const DepartmentList = () => {
           </Typography>
         </div>
       ) : (
-        <div className="w-full md:w-[75vw] m-auto h-full">
+        <div className="w-full m-auto h-full">
           <div className="p-4 ">
             <Typography variant="h4" className="text-center mb-6">
               Manage Department
@@ -249,75 +261,73 @@ const DepartmentList = () => {
             <p className="text-xs text-gray-600 text-center">
               Manage your departments here.
             </p>
-            <div className="overflow-x-auto">
-              <table
-                style={{ borderRadius: "20px" }}
-                className="min-w-full bg-white text-left text-sm font-light shadow-md"
-              >
-                <thead className="border-b bg-gray-300 font-medium dark:border-neutral-500">
-                  <tr className="!font-medium">
-                    <th scope="col" className="px-3 py-3 whitespace-nowrap">
-                      Sr. No
-                    </th>
-                    <th scope="col" className="px-3 py-3">
-                      Department Name
-                    </th>
-                    <th scope="col" className="px-3 py-3">
-                      Department Head
-                    </th>
-                    <th scope="col" className="px-3 py-3">
-                      Delegate Department Head
-                    </th>
-                    <th scope="col" className="px-3 py-3">
-                      Department Location
-                    </th>
-                    <th scope="col" className="px-3 py-3">
-                      Actions
-                    </th>
+            <table
+              style={{ borderRadius: "20px" }}
+              className="min-w-full bg-white text-left text-sm font-light  shadow-md"
+            >
+              <thead className="border-b bg-gray-300 font-medium dark:border-neutral-500">
+                <tr className="!font-medium">
+                  <th scope="col" className="px-3 py-3 whitespace-nowrap">
+                    Sr. No
+                  </th>
+                  <th scope="col" className="px-3 py-3 ">
+                    Department Name
+                  </th>
+                  <th scope="col" className="px-3 py-3 ">
+                    Department Head
+                  </th>
+                  <th scope="col" className="px-3 py-3 ">
+                    Delegate Department Head
+                  </th>
+                  <th scope="col" className="px-3 py-3 ">
+                    Department Location
+                  </th>
+                  <th scope="col" className="px-3 py-3 ">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {deptList?.map((department, id) => (
+                  <tr key={id} className="bg-white border-b">
+                    <td className="py-2 px-3">{id + 1}</td>
+                    <td className="py-2 px-3">
+                      {department?.departmentName || ""}
+                    </td>
+                    <td className="py-2 px-3">
+                      {department?.departmentHeadName?.first_name || ""}
+                    </td>
+                    <td className="py-2 px-3">
+                      {department?.departmentHeadDelegateName?.first_name || ""}
+                    </td>
+
+                    <td className="py-2 px-3">
+                      {department?.departmentLocation
+                        ? department?.departmentLocation?.city
+                        : ""}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-2">
+                      <IconButton
+                        onClick={() => handleUpdate(id)}
+                        color="primary"
+                        aria-label="edit"
+                      >
+                        <EditOutlinedIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={() =>
+                          handleDeleteConfirmation(department?._id)
+                        }
+                        color="error"
+                        aria-label="delete"
+                      >
+                        <DeleteOutlineIcon />
+                      </IconButton>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {departmentList?.map((department, id) => (
-                    <tr key={id} className="bg-white border-b">
-                      <td className="py-2 px-3">{id + 1}</td>
-                      <td className="py-2 px-3">
-                        {department?.departmentName || ""}
-                      </td>
-                      <td className="py-2 px-3">
-                        {department?.departmentHeadName?.first_name || ""}
-                      </td>
-                      <td className="py-2 px-3">
-                        {department?.departmentHeadDelegateName?.first_name ||
-                          ""}
-                      </td>
-                      <td className="py-2 px-3">
-                        {department?.departmentLocation
-                          ? department?.departmentLocation?.city
-                          : ""}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-2">
-                        <IconButton
-                          onClick={() => handleUpdate(id)}
-                          color="primary"
-                          aria-label="edit"
-                        >
-                          <EditOutlinedIcon />
-                        </IconButton>
-                        <IconButton
-                          onClick={() =>
-                            handleDeleteConfirmation(department?._id)
-                          }
-                          color="error"
-                          aria-label="delete"
-                        >
-                          <DeleteOutlineIcon />
-                        </IconButton>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
@@ -364,9 +374,6 @@ const DepartmentList = () => {
                 maxLength: 40,
                 value: departmentName,
               }}
-              helperText={
-                "Department Name cannot repeat. No special characters, Max 5 words."
-              }
               size="small"
               fullWidth
               style={{ margin: "10px 0" }}
@@ -417,6 +424,7 @@ const DepartmentList = () => {
                 id="demo-simple-select"
                 value={departmentLocation}
                 label="Select Location"
+
                 // Add label prop for better alignment
               >
                 {locations?.map((data, index) => (
@@ -558,6 +566,15 @@ const DepartmentList = () => {
                 id="demo-simple-select"
                 value={departmentHeadName}
                 label="department Head Name"
+                endAdornment={
+                  <InputAdornment position="end">
+                    {departmentHeadName.length > 0 && (
+                      <IconButton onClick={() => setDepartmentHeadName("")}>
+                        <Clear />
+                      </IconButton>
+                    )}
+                  </InputAdornment>
+                }
                 onChange={(e) => handleDataChange(e, "head")}
                 // Add label prop for better alignment
               >
@@ -595,6 +612,17 @@ const DepartmentList = () => {
                 id="demo-simple-select"
                 value={departmentHeadDelegateName}
                 label="Delegate Department Head Name"
+                endAdornment={
+                  <InputAdornment position="end">
+                    {departmentHeadDelegateName && (
+                      <IconButton
+                        onClick={() => setDepartmentHeadDelegateName("")}
+                      >
+                        <Clear />
+                      </IconButton>
+                    )}
+                  </InputAdornment>
+                }
                 onChange={(e) => handleDataChange(e, "delegate")}
                 // Add label prop for better alignment
               >
