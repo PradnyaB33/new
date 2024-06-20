@@ -16,7 +16,7 @@ const TestTab = () => {
   }
 
   const user = UserProfile().getCurrentUser();
-  const role = UserProfile().useGetCurrentRole();
+  // const role = UserProfile().useGetCurrentRole();
   const authToken = useAuthToken();
   const { fetchPerformanceSetup } = usePerformanceApi();
   const { data: performance } = useQuery(["performancePeriod"], () =>

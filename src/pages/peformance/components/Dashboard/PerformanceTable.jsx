@@ -1,8 +1,4 @@
 import { Avatar, Pagination, Stack, Tooltip } from "@mui/material";
-import LinearProgress, {
-  linearProgressClasses,
-} from "@mui/material/LinearProgress";
-import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
 import TabelSkeleton from "../GoalTable/Skelton/TabelSkeleton";
 import RightSideTable from "./RightSideTable";
@@ -13,22 +9,23 @@ const PerformanceTable = ({ tableData, isLoading, performance }) => {
   console.log(`🚀 ~ isOpen:`, isOpen);
   const itemsPerPage = 10;
 
-  const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-    height: 10,
-    borderRadius: 5,
-    [`&.${linearProgressClasses.colorPrimary}`]: {
-      backgroundColor:
-        theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
-    },
-    [`& .${linearProgressClasses.bar}`]: {
-      borderRadius: 5,
-      backgroundColor: theme.palette.mode === "light" ? "#1a90ff" : "#308fe8",
-    },
-  }));
+  // const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+  //   height: 10,
+  //   borderRadius: 5,
+  //   [`&.${linearProgressClasses.colorPrimary}`]: {
+  //     backgroundColor:
+  //       theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
+  //   },
+  //   [`& .${linearProgressClasses.bar}`]: {
+  //     borderRadius: 5,
+  //     backgroundColor: theme.palette.mode === "light" ? "#1a90ff" : "#308fe8",
+  //   },
+  // }));
 
   const handleChange = (event, value) => {
     setPage(value);
   };
+  console.log(`🚀 ~ handleChange:`, handleChange());
 
   const paginatedData = tableData?.slice(
     (page - 1) * itemsPerPage,

@@ -107,7 +107,8 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
 
   const onSubmit = async (data) => {
     if (data.attachment) {
-      const file = data.attachment;
+      // const file = data.attachment;
+      return false;
     }
     const goals = {
       assignee: { label: id.empId._id, value: id.empId._id },

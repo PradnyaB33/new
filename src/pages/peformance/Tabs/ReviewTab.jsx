@@ -10,6 +10,7 @@ import ReviewTable from "../components/Review/ReviewTable";
 const ReviewTab = () => {
   const authToken = useAuthToken();
   const [message, setMessage] = useState("Welcome to Goal Settings");
+  console.log(`🚀 ~ message:`, message);
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
@@ -17,7 +18,7 @@ const ReviewTab = () => {
   const { fetchPerformanceSetup, getPerformanceDashboardTable } =
     usePerformanceApi();
 
-  const { data: tableData, isFetching } = useQuery(["dashboardTable"], () =>
+  const { data: tableData } = useQuery(["dashboardTable"], () =>
     getPerformanceDashboardTable({ role, authToken })
   );
 

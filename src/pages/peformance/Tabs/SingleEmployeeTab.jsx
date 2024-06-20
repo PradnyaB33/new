@@ -1,9 +1,5 @@
 import { Tab } from "@headlessui/react";
 import React from "react";
-import { useQuery } from "react-query";
-import usePerformanceApi from "../../../hooks/Performance/usePerformanceApi";
-import useAuthToken from "../../../hooks/Token/useAuth";
-import UserProfile from "../../../hooks/UserData/useUser";
 import RightSideTable from "../components/Dashboard/RightSideTable";
 import TabelSkeleton from "../components/GoalTable/Skelton/TabelSkeleton";
 
@@ -12,13 +8,13 @@ const SingleEmployeeTab = () => {
     return classes.filter(Boolean).join(" ");
   }
 
-  const user = UserProfile().getCurrentUser();
-  const role = UserProfile().useGetCurrentRole();
-  const authToken = useAuthToken();
-  const { fetchPerformanceSetup } = usePerformanceApi();
-  const { data: performance } = useQuery(["performancePeriod"], () =>
-    fetchPerformanceSetup({ user, authToken })
-  );
+  // const user = UserProfile().getCurrentUser();
+  // const role = UserProfile().useGetCurrentRole();
+  // const authToken = useAuthToken();
+  // const { fetchPerformanceSetup } = usePerformanceApi();
+  // const { data: performance } = useQuery(["performancePeriod"], () =>
+  //   fetchPerformanceSetup({ user, authToken })
+  // );
 
   const tabArray = [
     {

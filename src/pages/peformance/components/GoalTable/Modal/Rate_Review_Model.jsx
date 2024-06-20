@@ -42,6 +42,7 @@ const Rate_Review_Model = ({ handleClose, open, options, id, performance }) => {
 
   useEffect(() => {
     setValue("assignee", `${id?.empId?.first_name} ${id?.empId?.last_name}`);
+    // eslint-disable-next-line
   }, [open, id]);
 
   const queryClient = useQueryClient();

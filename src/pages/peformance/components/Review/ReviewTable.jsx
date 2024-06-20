@@ -5,11 +5,12 @@ import { useQuery } from "react-query";
 import usePerformanceApi from "../../../../hooks/Performance/usePerformanceApi";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
-import Rate_Review_Model from "../GoalTable/Modal/Rate_Review_Model";
+import RateReviewModel from "../GoalTable/Modal/Rate_Review_Model";
 
 const ReviewTable = ({ tableData }) => {
   const [page, setPage] = useState(1);
   const [isOpen, setIsOpen] = useState(null);
+  console.log(`🚀 ~ isOpen:`, isOpen);
   const [openEdit, setOpenEdit] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
 
@@ -35,6 +36,7 @@ const ReviewTable = ({ tableData }) => {
   const handleChange = (event, value) => {
     setPage(value);
   };
+  console.log(`🚀 ~ handleChange:`, handleChange());
 
   const paginatedData = tableData?.slice(
     (page - 1) * itemsPerPage,
@@ -123,7 +125,7 @@ const ReviewTable = ({ tableData }) => {
         </tbody>
       </table>
 
-      <Rate_Review_Model
+      <RateReviewModel
         open={openEdit}
         id={openMenu}
         performance={performance}

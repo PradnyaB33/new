@@ -11,6 +11,7 @@ import Message from "../components/Message";
 const GoalSettingTab = () => {
   const authToken = useAuthToken();
   const [message, setMessage] = useState("Welcome to Goal Settings");
+  console.log(`🚀 ~ message:`, message);
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
 
