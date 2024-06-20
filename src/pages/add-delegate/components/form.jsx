@@ -148,7 +148,7 @@ const MiniForm = ({ data }) => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-4 w-full h-[75vh] overflow-auto"
+      className="flex min-h-[680px] max-h-[300px] flex-col gap-4 w-full overflow-auto"
       noValidate
       autoComplete="off"
     >
