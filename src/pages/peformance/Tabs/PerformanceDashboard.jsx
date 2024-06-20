@@ -5,7 +5,6 @@ import usePerformanceApi from "../../../hooks/Performance/usePerformanceApi";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 import Card from "../components/Card";
-import PerformanceTable from "../components/Dashboard/PerformanceTable";
 import Message from "../components/Message";
 
 const PerformanceDashboard = () => {
@@ -18,9 +17,10 @@ const PerformanceDashboard = () => {
     fetchPerformanceSetup({ user, authToken })
   );
 
-  const { data: tableData, isFetching } = useQuery(["dashboardTable"], () =>
+  const { data: tableData } = useQuery(["dashboardTable"], () =>
     getPerformanceDashboardTable({ role, authToken })
   );
+  console.log(`🚀 ~ tableData:`, tableData, performance);
 
   return (
     <div
@@ -61,11 +61,11 @@ const PerformanceDashboard = () => {
         />
       </div>
 
-      <PerformanceTable
+      {/* <PerformanceTable
         tableData={tableData}
         isLoading={isFetching}
         performance={performance}
-      />
+      /> */}
     </div>
   );
 };
