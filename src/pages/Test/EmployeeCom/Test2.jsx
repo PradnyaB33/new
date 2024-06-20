@@ -158,6 +158,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       }),
       dept_cost_center_no: z.object({
         label: z.string(),
+        value: z.string(),
       }),
 
       companyemail: z.string().email(),
