@@ -122,7 +122,7 @@ const Communication = () => {
           <Typography variant="h4" className=" text-center pl-10  mb-6 mt-6">
             Communication
           </Typography>
-          <p className="text-xs text-gray-600 pl-10 text-center mb-6">
+          <p className="text-xs text-gray-600 pl-10 text-center mb-2">
             Here you can send email to employee.
           </p>
           <div className="p-4 border-b-[.5px] flex justify-center gap-3 w-full border-gray-300">
