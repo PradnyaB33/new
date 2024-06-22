@@ -34,13 +34,13 @@ const Training = () => {
                 <Skeleton variant="rectangular" height={32} />
               </div>
             ) : (
-              data?.data && (
-                <MiniForm
-                  data={data?.data}
-                  mutate={mutate}
-                  organisationId={organisationId}
-                />
-              )
+              // data?.data && (
+              <MiniForm
+                data={data?.data}
+                mutate={mutate}
+                organisationId={organisationId}
+              />
+              // )
             )}
           </article>
         </Setup>

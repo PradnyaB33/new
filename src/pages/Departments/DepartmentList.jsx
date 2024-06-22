@@ -122,7 +122,7 @@ const DepartmentList = () => {
     const input = e.target.value;
     const charactersOnly = input.replace(/\d/g, "");
 
-    if (charactersOnly.length <= numCharacters) {
+    if (charactersOnly?.length <= numCharacters) {
       setDepartmentId(input);
     }
   };
@@ -568,7 +568,7 @@ const DepartmentList = () => {
                 label="department Head Name"
                 endAdornment={
                   <InputAdornment position="end">
-                    {departmentHeadName.length > 0 && (
+                    {departmentHeadName?.length > 0 && (
                       <IconButton onClick={() => setDepartmentHeadName("")}>
                         <Clear />
                       </IconButton>

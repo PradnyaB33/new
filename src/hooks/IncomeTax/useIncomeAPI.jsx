@@ -21,6 +21,27 @@ const useIncomeAPI = (
     setIsLoading,
   } = useIncomeTax();
 
+  function getCurrentFinancialYear() {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth() + 1; // January is 0!
+    let financialYearStart, financialYearEnd;
+
+    if (currentMonth >= 4) {
+      // Financial year starts in April
+      financialYearStart = currentYear;
+      financialYearEnd = currentYear + 1;
+    } else {
+      financialYearStart = currentYear - 1;
+      financialYearEnd = currentYear;
+    }
+
+    return `${financialYearStart}-${financialYearEnd}`;
+  }
+
+  const financialYear = getCurrentFinancialYear();
+  console.log(`🚀 ~ financialYear:`, financialYear);
+
   useEffect(() => {
     if (isLoading) {
       // The state has been updated to true, perform your side effects here
@@ -117,7 +138,7 @@ const useIncomeAPI = (
 
     let requestData = {
       empId: user._id,
-      financialYear: "2023-2024",
+      financialYear: financialYear,
       usersalary: usersalary?.TotalInvestInvestment,
       requestData: {
         name: declarationData.name,
@@ -131,7 +152,7 @@ const useIncomeAPI = (
       requestData = {
         empId: user._id,
         usersalary: usersalary?.TotalInvestInvestment,
-        financialYear: "2023-2024",
+        financialYear: financialYear,
         requestData: {
           name: declarationData.name,
           sectionname: sectionname,
@@ -157,7 +178,7 @@ const useIncomeAPI = (
     const requestData = {
       empId: user._id,
       usersalary: usersalary?.TotalInvestInvestment,
-      financialYear: "2023-2024",
+      financialYear: financialYear,
       requestData: {
         name: value.name,
         sectionname,
@@ -195,6 +216,7 @@ const useIncomeAPI = (
     declarationData,
     isLoading,
     mutation,
+    financialYear,
   };
 };
 

@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
-import { reportTypeOptions } from "./data";
+import { getTDSYearsOptions, reportTypeOptions } from "./data";
 
 import * as XLSX from "xlsx";
 import { TestContext } from "../../../State/Function/Main";
@@ -16,6 +16,7 @@ import useGetAllManager from "../../../hooks/Employee/useGetAllManager";
 
 const ReportForm = () => {
   const { handleAlert } = useContext(TestContext);
+  const tdsYearOptions = getTDSYearsOptions();
   const formSchema = z
     .object({
       reportType: z.object({
@@ -31,6 +32,12 @@ const ReportForm = () => {
       start: z.string().optional(),
       end: z.string().optional(),
       manager: z
+        .object({
+          label: z.string().optional(),
+          value: z.string().optional(),
+        })
+        .optional(),
+      financialYear: z
         .object({
           label: z.string().optional(),
           value: z.string().optional(),
@@ -156,6 +163,51 @@ const ReportForm = () => {
     XLSX.writeFile(wb, "Salary.xlsx");
   };
 
+  const GenerateTDS = (data) => {
+    const headers = [
+      "",
+      "Employee Id",
+      "Employee Name",
+      "Regime",
+      "Salary",
+      "Other Declaration",
+      "Salary Declaration",
+      "Section Declaration",
+      "Before Cess",
+      "After Standard Deduction Taxable Income",
+      "Cess",
+      "Taxable Income",
+    ];
+
+    const employeeInfo = data?.map((item) => [
+      "",
+      item?.empId,
+      item?.employeeName,
+      item?.regime,
+      item?.salary,
+      item?.afterStandardDeduction,
+      item?.otherDeclaration,
+      item?.salaryDeclaration,
+      item?.sectionDeclaration,
+      item?.beforeCess,
+      item?.cess,
+      item?.taxableIncome,
+    ]);
+    const title = ["", "TDS Challan Report"];
+    const year = ["", getValues("financialYear")?.label];
+    const ws = XLSX.utils.aoa_to_sheet([
+      "",
+      title,
+      year,
+      "",
+      headers,
+      ...employeeInfo,
+    ]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, "TDSReport.xlsx");
+  };
+
   const OnSubmit = useMutation(
     async (data) => {
       console.log(getValues("start"), getValues("end"));
@@ -181,6 +233,13 @@ const ReportForm = () => {
         };
       }
 
+      if (data.reportType.value === "tds") {
+        queryData = {
+          reportType: data.reportType.value,
+          financialYear: data.financialYear.value,
+        };
+      }
+
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/mis/generateReport/${organisationId}`,
         {
@@ -199,6 +258,9 @@ const ReportForm = () => {
         }
         if (getValues("reportType")?.value === "salary") {
           GenerateSalary(data);
+        }
+        if (getValues("reportType")?.value === "tds") {
+          GenerateTDS(data);
         }
       },
       onError: (error) => {
@@ -265,6 +327,24 @@ const ReportForm = () => {
             //   options={reportTypeOptions}
             errors={errors}
             error={errors.timeRange}
+          />
+        </div>
+      )}
+
+      {watch("reportType")?.value === "tds" && (
+        <div className="grid gap-2 grid-cols-2">
+          <AuthInputFiled
+            name="financialYear"
+            control={control}
+            type="select"
+            // icon={Work}
+            placeholder="Ex : 2024-2025"
+            label="Select year *"
+            readOnly={false}
+            maxLimit={15}
+            options={tdsYearOptions}
+            errors={errors}
+            error={errors.financialYear}
           />
         </div>
       )}

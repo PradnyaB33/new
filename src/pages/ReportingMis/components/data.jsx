@@ -28,6 +28,18 @@ const monthNames = [
   "December",
 ];
 
+export const getTDSYearsOptions = () => {
+  const currentYear = new Date().getFullYear();
+  const optionList = [];
+
+  for (let year = currentYear; year >= currentYear - 5; year--) {
+    const label = `${year}-${year + 1}`;
+    optionList.push({ label, value: label });
+  }
+
+  return optionList;
+};
+
 const getOptions = () => {
   const options = [];
   const currentYear = new Date().getFullYear();
