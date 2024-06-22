@@ -1,11 +1,15 @@
 export const reportTypeOptions = [
   {
-    label: "Attendence Data",
+    label: "Attendance Data",
     value: "Attendence",
   },
   {
     label: "Salary Data",
     value: "salary",
+  },
+  {
+    label: "TDS Challan",
+    value: "tds",
   },
 ];
 

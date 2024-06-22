@@ -313,20 +313,22 @@ const ReportForm = () => {
           errors={errors}
           error={errors.department}
         /> */}
-        <AuthInputFiled
-          name="manager"
-          control={control}
-          type="select"
-          // icon={Work}
-          placeholder="ex: Manager1"
-          label="Select Manager "
-          readOnly={false}
-          maxLimit={15}
-          options={Manageroptions}
-          isClearable={true}
-          errors={errors}
-          error={errors.manager}
-        />
+        {watch("reportType")?.value !== "tds" && (
+          <AuthInputFiled
+            name="manager"
+            control={control}
+            type="select"
+            // icon={Work}
+            placeholder="ex: Manager1"
+            label="Select Manager "
+            readOnly={false}
+            maxLimit={15}
+            options={Manageroptions}
+            isClearable={true}
+            errors={errors}
+            error={errors.manager}
+          />
+        )}
       </div>
 
       <button

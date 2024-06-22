@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import useIncomeTax from "./useIncomeTax";
 
 const useIncomeAPI = (
@@ -46,6 +46,25 @@ const useIncomeAPI = (
 
     return data?.data?.url?.split("?")[0];
   };
+
+  const { data: usersalary } = useQuery({
+    queryKey: ["finacialYearData"],
+    queryFn: async () => {
+      try {
+        const salaryData = await axios.get(
+          `${process.env.REACT_APP_API}/route/employeeSalary/getEmployeeSalaryPerFinancialYear?fromDate=5-2023&toDate=3-2024`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        return salaryData.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
 
   const mutation = useMutation(
     (requestData) =>
@@ -99,6 +118,7 @@ const useIncomeAPI = (
     let requestData = {
       empId: user._id,
       financialYear: "2023-2024",
+      usersalary: usersalary?.TotalInvestInvestment,
       requestData: {
         name: declarationData.name,
         sectionname: sectionname,
@@ -110,6 +130,7 @@ const useIncomeAPI = (
     if (uploadProof) {
       requestData = {
         empId: user._id,
+        usersalary: usersalary?.TotalInvestInvestment,
         financialYear: "2023-2024",
         requestData: {
           name: declarationData.name,
@@ -135,6 +156,7 @@ const useIncomeAPI = (
     const value = newData[index];
     const requestData = {
       empId: user._id,
+      usersalary: usersalary?.TotalInvestInvestment,
       financialYear: "2023-2024",
       requestData: {
         name: value.name,

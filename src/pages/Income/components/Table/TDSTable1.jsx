@@ -166,8 +166,6 @@ const TDSTable1 = () => {
       }
     },
     onSuccess: (res) => {
-      console.log(res);
-
       setGrossTotal(res?.TotalInvestInvestment);
     },
   });
