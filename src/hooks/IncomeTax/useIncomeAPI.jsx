@@ -217,6 +217,7 @@ const useIncomeAPI = (
     isLoading,
     mutation,
     financialYear,
+    usersalary,
   };
 };
 

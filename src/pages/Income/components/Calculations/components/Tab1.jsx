@@ -92,14 +92,14 @@ const Tab1 = () => {
         }
       }
       if (res.salary > 1200000) {
-        if (res.salary > 900001 && res.salary > 1200000) {
-          let currentTax = 60000;
-          console.log(`🚀 ~ currentTax:`, currentTax);
-          taxAmount += currentTax;
-        } else {
-          let currentTax = (res.salary - 1200000) * 0.2;
-          taxAmount += currentTax;
-        }
+        // if (res.salary > 1200000) {
+        //   let currentTax = 60000;
+        //   console.log(`🚀 ~ currentTax:`, currentTax);
+        //   taxAmount += currentTax;
+        // } else {
+        let currentTax = (res.salary - 1200000) * 0.2;
+        taxAmount += currentTax;
+        // }
       }
 
       let getRebate = res.salary - 700000;

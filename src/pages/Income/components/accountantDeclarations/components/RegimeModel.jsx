@@ -80,7 +80,7 @@ const RegimeModel = ({ open, handleClose }) => {
             <Divider variant="fullWidth" orientation="horizontal" />
           </div>
 
-          <div className="w-full py-4 px-8">
+          <div className="w-full  px-4">
             {/* <h1 className="text-lg font-bold mb-1">Choose your Profile</h1>
             <p className="text-sm text-gray-700">
               By choosing a profile, you'll be able to access different profiles

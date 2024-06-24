@@ -13,6 +13,7 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
+import useIncomeAPI from "../../../../hooks/IncomeTax/useIncomeAPI";
 import useTDS from "../../../../hooks/IncomeTax/useTDS";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
@@ -32,7 +33,7 @@ const TDSTable2 = () => {
   const handleClosePDF = () => {
     setPdf(null);
   };
-  // const { setTotalHeads } = useIncomeHouse();
+  const { handleAlert } = useContext(TestContext);
 
   const [tableData, setTableData] = useState([
     {
@@ -134,6 +135,15 @@ const TDSTable2 = () => {
     },
   ]);
 
+  const { usersalary } = useIncomeAPI(
+    tableData,
+    user,
+    authToken,
+    handleAlert,
+    queryClient
+  );
+  console.log(`🚀 ~ usersalary:`, usersalary?.TotalInvestInvestment);
+
   const { isFetching } = useQuery({
     queryKey: ["incomeHouse"],
     queryFn: async () => {
@@ -226,7 +236,6 @@ const TDSTable2 = () => {
     },
   });
 
-  const { handleAlert } = useContext(TestContext);
   const [editStatus, setEditStatus] = useState({});
   const [declarationData, setDeclarationData] = useState({});
 
@@ -239,15 +248,10 @@ const TDSTable2 = () => {
   };
 
   const handleAmountChange = (e, itemIndex, id) => {
-    // const newData = [...tableData];
-    // newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].declaration =
-    //   e.target.value;
     setDeclarationData((prev) => ({
       ...prev,
       declaration: e.target.value,
     }));
-
-    // setTableData(newData);
   };
 
   const handleProofChange = (e, itemIndex, id) => {
@@ -272,9 +276,6 @@ const TDSTable2 = () => {
   };
 
   const handleProperty1 = (e, itemIndex, id) => {
-    // const newData = [...tableData];
-    // newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property1 =
-    //   e.target.value;
     setDeclarationData((prev) => ({
       ...prev,
       property1: e.target.value,
@@ -283,9 +284,6 @@ const TDSTable2 = () => {
   };
 
   const handleProperty2 = (e, itemIndex, id) => {
-    // const newData = [...tableData];
-    // newData[itemIndex][Object.keys(newData[itemIndex])[0]][id].property2 =
-    //   e.target.value;
     setDeclarationData((prev) => ({
       ...prev,
       property2: e.target.value,
@@ -299,6 +297,7 @@ const TDSTable2 = () => {
     const requestData = {
       empId: user._id,
       financialYear: "2023-2024",
+      usersalary: usersalary?.TotalInvestInvestment,
       requestData: {
         sectionname: "House",
         subsectionname: Object.keys(newData[index])[0],
@@ -376,6 +375,7 @@ const TDSTable2 = () => {
     let requestData = {
       empId: user._id,
       financialYear: "2023-2024",
+      usersalary: usersalary?.TotalInvestInvestment,
       requestData: {
         sectionname: "House",
         subsectionname: Object.keys(newData[index])[0],
@@ -400,6 +400,7 @@ const TDSTable2 = () => {
       requestData = {
         empId: user._id,
         financialYear: "2023-2024",
+        usersalary: usersalary?.TotalInvestInvestment,
         requestData: {
           sectionname: "House",
           subsectionname: Object.keys(newData[index])[0],

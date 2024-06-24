@@ -22,12 +22,10 @@ const OrgList = () => {
         <div className="px-8 mt-6 mb-4 w-full">
           <div className="flex justify-between flex-col md:flex-row">
             <div>
-              <h1 className="md:text-2xl text-xl font-semibold">
+              <h1 className="md:text-2xl tracking-tight text-xl">
                 Organisations List
               </h1>
-              <p className="md:text-lg text-sm ">
-                Select and Manage Your Organisation
-              </p>
+              <p>Select and Manage Your Organisation</p>
             </div>
             <div className="flex items-center gap-2 justify-end">
               <Link to={"/assingOrganizationToSelf"}>
