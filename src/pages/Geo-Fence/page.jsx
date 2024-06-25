@@ -1,10 +1,13 @@
 import { Add } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
-import React from "react";
+import { Button } from "@mui/material";
+import React, { useState } from "react";
+import ReusableModal from "../../components/Modal/component";
 import HeaderBackComponent from "../../components/header/component";
+import AddGeoFencing from "./components/AddGeoFencing";
 import GeoFencingCard from "./components/GeoFenceCard";
 
 const GeoFencing = () => {
+  const [open, setOpen] = useState(false);
   return (
     <>
       <HeaderBackComponent
@@ -12,19 +15,33 @@ const GeoFencing = () => {
         oneLineInfo={`You can activate geofencing for a specific zone`}
       />
       <div className="px-6 text-Brand-washed-blue/brand-washed-blue-10">
-        <div className="py-4">Added Geo-Fenced Zones</div>
-        <div className="grid grid-cols-12">
-          <div className="flex col-span-11 gap-4">
-            {[1, 2, 3].map((item) => (
-              <GeoFencingCard key={item} />
-            ))}
-          </div>
-          <div className="col-span-1 flex items-center justify-center">
-            <IconButton size="large">
-              <Add />
-            </IconButton>
-          </div>
+        <div className="flex justify-between items-center">
+          {" "}
+          <div className="py-4">Added Geo-Fenced Zones</div>
+          <Button
+            className="!h-fit gap-2 !w-fit"
+            variant="contained"
+            size="medium"
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            <Add /> Add
+          </Button>
         </div>
+        <div className="flex gap-4 overflow-auto">
+          {[1, 2, 3].map((item) => (
+            <GeoFencingCard key={item} />
+          ))}
+        </div>
+        <ReusableModal
+          open={open}
+          heading={"Add Geo Fencing"}
+          subHeading={"You can activate geofencing for a specific zone"}
+          onClose={() => setOpen(false)}
+        >
+          <AddGeoFencing />
+        </ReusableModal>
       </div>
     </>
   );

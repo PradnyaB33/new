@@ -187,6 +187,7 @@ const App = () => {
           path="/organisation/:organisationId/remotePunching/geo-fencing"
           element={<GeoFencing />}
         />
+
         {/* Login Routes */}
         <Route path="/test3" element={<TestYash />} />
         <Route

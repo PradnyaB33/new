@@ -2,7 +2,7 @@ import { MoreVert, MyLocation } from "@mui/icons-material";
 import { Button, IconButton, Menu, MenuItem } from "@mui/material";
 import React from "react";
 import ReusableModal from "../../../components/Modal/component";
-import SearchAdd from "./SearchAdd";
+import SearchAdd from "../utils/SearchAdd";
 import ViewDelete from "./ViewDelete";
 
 const GeoFenceCard = () => {

@@ -1,5 +1,5 @@
 import React from "react";
-import SmallInputForm from "./SmallInputForm";
+import SmallInputForm from "../utils/SmallInputForm";
 
 const ViewDelete = ({ open, setOpen }) => {
   return (

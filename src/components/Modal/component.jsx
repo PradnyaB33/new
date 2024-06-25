@@ -15,9 +15,7 @@ const ReusableModal = ({ open, onClose, children, heading, subHeading }) => {
         {heading && (
           <div className="pb-2 border-b-2 flex justify-between items-center">
             <div>
-              <h1 className="text-xl font-semibold font-sans text-center">
-                {heading}
-              </h1>
+              <h1 className="text-xl font-semibold font-sans">{heading}</h1>
               {subHeading && (
                 <p className="text-xs text-gray-500">{subHeading}</p>
               )}
