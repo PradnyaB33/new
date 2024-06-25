@@ -6,7 +6,7 @@ import Setup from "../../pages/SetUpOrganization/Setup";
 
 const SetupSideNav = () => {
   const { organisationId } = useParams();
-  const { linkData } = useSetupSideNav(organisationId);
+  const { linkData } = useSetupSideNav({ organisationId });
 
   return (
     <>

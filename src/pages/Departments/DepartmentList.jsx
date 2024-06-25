@@ -39,6 +39,7 @@ const DepartmentList = () => {
   const [costCenterDescription, setCostCenterDescription] = useState("");
   const [departmentId, setDepartmentId] = useState("");
   const [departmentHeadName, setDepartmentHeadName] = useState("");
+  console.log(`🚀 ~ departmentHeadName:`, departmentHeadName);
   const [departmentHeadDelegateName, setDepartmentHeadDelegateName] =
     useState("");
   const [locations, setLocations] = useState([]);
@@ -570,7 +571,7 @@ const DepartmentList = () => {
                   <InputAdornment position="end">
                     {departmentHeadName?.length > 0 && (
                       <IconButton onClick={() => setDepartmentHeadName("")}>
-                        <Clear />
+                        <Clear onClick={() => setDepartmentHeadName("")} />
                       </IconButton>
                     )}
                   </InputAdornment>
