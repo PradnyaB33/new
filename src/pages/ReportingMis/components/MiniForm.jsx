@@ -25,8 +25,8 @@ const ReportForm = () => {
       }),
       timeRange: z
         .object({
-          startDate: z.string(),
-          endDate: z.string(),
+          startDate: z.string().optional(),
+          endDate: z.string().optional(),
         })
         .optional(),
       start: z.string().optional(),
@@ -44,23 +44,40 @@ const ReportForm = () => {
         })
         .optional(),
     })
-    .refine(
-      (data) => {
-        // If reportType is 'Attendance', timeRange is required
-        if (data.reportType.value === "Attendance" && !data.timeRange) {
-          return false;
+    .superRefine((data, ctx) => {
+      // If reportType is 'Attendance', then timeRange is required
+      if (data.reportType.value === "Attendance") {
+        if (
+          !data.timeRange ||
+          !data.timeRange.startDate ||
+          !data.timeRange.endDate
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Time range is required for Attendance reports",
+          });
         }
-        // If reportType is 'Salary', start and end are required
-        if (data.reportType.value === "Salary" && (!data.start || !data.end)) {
-          return false;
-        }
-        return true;
-      },
-      {
-        // Custom error message
-        message: "Invalid data",
       }
-    );
+
+      // If reportType is 'Salary', then start and end are required
+      if (data.reportType.value === "Salary") {
+        if (!data.start) {
+          ctx.addIssue({
+            path: ["start"],
+            message: "Start date is required for Salary reports",
+            code: z.ZodIssueCode.custom,
+          });
+        }
+        if (!data.end) {
+          ctx.addIssue({
+            path: ["end"],
+            message: "End date is required for Salary reports",
+            code: z.ZodIssueCode.custom,
+          });
+        }
+      }
+    });
+
   const {
     handleSubmit,
     control,
@@ -72,6 +89,7 @@ const ReportForm = () => {
     resolver: zodResolver(formSchema),
   });
 
+  console.log(errors);
   const { organisationId } = useParams();
   const authToken = useAuthToken();
 
