@@ -24,7 +24,7 @@ const Form16Card = ({ items }) => {
             <div className="space-y-4 w-full flex flex-col items-center md:items-start justify-center">
               {items ? (
                 <h1 className="text-xl px-4 md:!px-0 font-semibold">
-                  Form 16 is uploaded for {items.year} year.
+                  Form-16 is uploaded for {items.year} year.
                 </h1>
               ) : (
                 <h1 className="text-xl px-4 md:!px-0 font-semibold">
