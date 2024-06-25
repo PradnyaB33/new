@@ -80,14 +80,14 @@ const TDSTable1 = () => {
 
       amountAccepted: 0,
     },
-    {
-      name: "Taxable salary",
-      amount: 0,
-      proof: "",
-      status: "Not Submitted",
+    // {
+    //   name: "Taxable salary",
+    //   amount: 0,
+    //   proof: "",
+    //   status: "Not Submitted",
 
-      amountAccepted: 0,
-    },
+    //   amountAccepted: 0,
+    // },
     // {
     //   name: "Less : Professional Tax",
     //   amount: 0,

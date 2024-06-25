@@ -11,7 +11,8 @@ const useIncomeAPI = (
   queryClient,
   sectionname,
   queryKey,
-  subsectionname
+  subsectionname,
+  empId
 ) => {
   const {
     setEditStatus,
@@ -85,6 +86,26 @@ const useIncomeAPI = (
         console.log(error);
       }
     },
+  });
+
+  const { data: empSalary } = useQuery({
+    queryKey: ["finacialYearData"],
+    queryFn: async () => {
+      try {
+        const salaryData = await axios.get(
+          `${process.env.REACT_APP_API}/route/employeeSalary/getEmployeeSalaryPerFinancialYear/?fromDate=5-2023&toDate=3-2024&empId=${empId}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        return salaryData.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    enabled: !!empId,
   });
 
   const mutation = useMutation(
@@ -218,6 +239,7 @@ const useIncomeAPI = (
     mutation,
     financialYear,
     usersalary,
+    empSalary,
   };
 };
 
