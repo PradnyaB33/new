@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FactoryOutlined, LocationOn } from "@mui/icons-material";
-import { GoogleMap, LoadScript } from "@react-google-maps/api";
-import React from "react";
+import { GoogleMap, MarkerF } from "@react-google-maps/api";
+import React, { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
@@ -11,7 +11,7 @@ const AddGeoFencing = () => {
   const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   const { getUserLocation } = useLocationMutation();
   const { data } = getUserLocation;
-  console.log(`🚀 ~ file: AddGeoFencing.jsx:14 ~ data:`, data);
+  const mapRef = useRef();
   const formSchema = z.object({
     geoFencingType: z.enum(["PointPicker", "DrawCircle"]),
     location: z
@@ -42,6 +42,16 @@ const AddGeoFencing = () => {
   const onSubmit = (data) => {
     console.log(data);
   };
+  console.log(watch("location"));
+  const centerLocation = watch("location")?.position;
+  useEffect(() => {
+    console.log(
+      `🚀 ~ file: AddGeoFencing.jsx:50 ~ centerLocation:`,
+      centerLocation
+    );
+    mapRef.current.setCenter(centerLocation);
+  }, [centerLocation]);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4">
       <AuthInputFiled
@@ -82,21 +92,30 @@ const AddGeoFencing = () => {
           error={errors.radius}
         />
       )}
-      <LoadScript
+      {/* <LoadScript
         googleMapsApiKey={apiKey}
         libraries={["drawing"]}
         language="en"
         region="us"
+        loadingElement={<div style={{ height: `100%` }}>I am loading</div>}
+      > */}
+      <GoogleMap
+        mapContainerClassName="cols-span-4 h-20"
+        center={{
+          lat: 18.5248706,
+          lng: 73.6981502,
+        }}
+        onLoad={(map) => {
+          mapRef.current = map;
+        }}
+        zoom={12}
       >
-        <GoogleMap
-          mapContainerClassName="!w-[500px] !h-[500px]"
-          center={{
-            lat: data?.latitude,
-            lng: data?.longitude,
-          }}
-          zoom={12}
-        ></GoogleMap>
-      </LoadScript>
+        {watch("location") !== undefined &&
+          watch("location")?.position !== undefined && (
+            <MarkerF position={watch("location")?.position} />
+          )}
+      </GoogleMap>
+      {/* </LoadScript> */}
     </form>
   );
 };

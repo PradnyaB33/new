@@ -31,6 +31,7 @@ const useLocationMutation = () => {
   const getUserLocation = useMutation({
     mutationFn: fetchLocationData,
     onSuccess: (data) => {
+      console.log(`🚀 ~ file: mutation.jsx:34 ~ data:`, data);
       handleAlert(true, "success", "Geolocation decoded");
       // if (window.google.maps) {
       //   // Initialize the map
