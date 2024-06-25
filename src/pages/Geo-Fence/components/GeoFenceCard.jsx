@@ -1,9 +1,22 @@
 import { MoreVert, MyLocation } from "@mui/icons-material";
 import { Button, IconButton, Menu, MenuItem } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
+import ReusableModal from "../../../components/Modal/component";
+import SearchAdd from "./SearchAdd";
+import ViewDelete from "./ViewDelete";
 
 const GeoFenceCard = () => {
-  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [open1, setOpen1] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
+
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <div className="bg-white rounded-lg shadow-lg">
       <div className="flex flex-col justify-start items-center">
@@ -12,11 +25,19 @@ const GeoFenceCard = () => {
             <MyLocation className="text-Brand-washed-blue/brand-washed-blue-10" />
             <h4 className="text-xl underline text-black">Mumbai,Pune</h4>
           </div>
-          <IconButton onClick={() => setOpen(true)}>
+          <IconButton onClick={handleClick}>
             <MoreVert />
           </IconButton>
-          <Menu open={open}>
-            <MenuItem>Delete</MenuItem>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+          >
+            <MenuItem onClick={handleClose}>Delete</MenuItem>
           </Menu>
         </div>
         <div className="p-4 w-full flex flex-col gap-4">
@@ -28,11 +49,30 @@ const GeoFenceCard = () => {
             <Button variant="contained" size="small">
               Add Employee
             </Button>
-            <Button color="error" variant="contained" size="small">
+            <Button
+              onClick={() => setOpen1(true)}
+              color="error"
+              variant="contained"
+              size="small"
+            >
               Remove Employee
             </Button>
           </div>
         </div>
+        <ReusableModal
+          open={open1}
+          heading={"View And Delete"}
+          onClose={() => setOpen1(false)}
+        >
+          <ViewDelete />
+        </ReusableModal>
+        <ReusableModal
+          open={open2}
+          heading={"View And Delete"}
+          onClose={() => setOpen2(false)}
+        >
+          <SearchAdd />
+        </ReusableModal>
       </div>
     </div>
   );
