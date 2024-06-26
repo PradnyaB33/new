@@ -1,8 +1,7 @@
-import { Calculate, Check, DoneAll, Settings, West } from "@mui/icons-material";
+import { Calculate, Check, Settings, West } from "@mui/icons-material";
 import { Avatar, IconButton } from "@mui/material";
 import React, { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import UserProfile from "../../hooks/UserData/useUser";
 import RegimeModel from "./components/accountantDeclarations/components/RegimeModel";
 
 const IncomeTax = () => {
@@ -11,9 +10,9 @@ const IncomeTax = () => {
     setOpen(true);
   };
 
-  const { useGetCurrentRole } = UserProfile();
-  // const user = getCurrentUser();
-  const role = useGetCurrentRole();
+  // const { useGetCurrentRole } = UserProfile();
+  // // const user = getCurrentUser();
+  // const role = useGetCurrentRole();
 
   const redirect = useNavigate();
 
@@ -99,7 +98,7 @@ const IncomeTax = () => {
             </article>
           </div>
 
-          <div className="bg-white border-[.5px] border-gray-200 p-4">
+          {/* <div className="bg-white border-[.5px] border-gray-200 p-4">
             <div className="mb-4   w-full space-y-3">
               <h1 className="text-[1.2em] text-gray-500">TDS Requests</h1>
             </div>
@@ -121,7 +120,7 @@ const IncomeTax = () => {
                 </div>
               </Link>
             </article>
-          </div>
+          </div> */}
         </div>
         <RegimeModel handleClose={handleClose} open={open} />
       </section>

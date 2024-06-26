@@ -39,6 +39,7 @@ const DepartmentList = () => {
   const [costCenterDescription, setCostCenterDescription] = useState("");
   const [departmentId, setDepartmentId] = useState("");
   const [departmentHeadName, setDepartmentHeadName] = useState("");
+  console.log(`🚀 ~ departmentHeadName:`, departmentHeadName);
   const [departmentHeadDelegateName, setDepartmentHeadDelegateName] =
     useState("");
   const [locations, setLocations] = useState([]);
@@ -122,7 +123,7 @@ const DepartmentList = () => {
     const input = e.target.value;
     const charactersOnly = input.replace(/\d/g, "");
 
-    if (charactersOnly.length <= numCharacters) {
+    if (charactersOnly?.length <= numCharacters) {
       setDepartmentId(input);
     }
   };
@@ -568,9 +569,9 @@ const DepartmentList = () => {
                 label="department Head Name"
                 endAdornment={
                   <InputAdornment position="end">
-                    {departmentHeadName.length > 0 && (
+                    {departmentHeadName?.length > 0 && (
                       <IconButton onClick={() => setDepartmentHeadName("")}>
-                        <Clear />
+                        <Clear onClick={() => setDepartmentHeadName("")} />
                       </IconButton>
                     )}
                   </InputAdornment>

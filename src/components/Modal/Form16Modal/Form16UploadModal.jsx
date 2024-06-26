@@ -133,11 +133,11 @@ const Form16UploadModal = ({
         >
           <div className="flex justify-between py-4 items-center  px-4">
             <h1 className="text-xl pl-2 font-semibold font-sans">
-              Upload Form 16
+              Upload Form-16
             </h1>
           </div>
           <div className=" ml-6">
-            <p>Which year form16 do you want to upload?</p>
+            <p>Which year form-16 do you want to upload?</p>
             <FormControl component="fieldset">
               <RadioGroup
                 aria-label="year"

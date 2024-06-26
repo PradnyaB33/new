@@ -126,7 +126,7 @@ const DeclarationTable = ({
                       </h1>
                       <input
                         type="number"
-                        defaultValue={parseFloat(item.amount)}
+                        defaultValue={item.amount}
                         className="border-none w-[90px] h-auto outline-none  "
                         onChange={(e) => handleAmountChange(e, itemIndex)}
                       />
@@ -141,7 +141,7 @@ const DeclarationTable = ({
                         } 
                         px-2 md:w-full w-max leading-7 text-[16px]`}
                     >
-                      INR {parseFloat(item.amount).toFixed(2)}
+                      INR {item.amount}
                     </p>
                   )}
                 </td>
@@ -156,10 +156,7 @@ const DeclarationTable = ({
                         } 
                         px-2 leading-7 text-[16px]`}
                     >
-                      INR{" "}
-                      {item.amountAccepted
-                        ? parseFloat(item.amountAccepted).toFixed(2)
-                        : 0}
+                      INR {item.amountAccepted ? item.amountAccepted : 0}
                     </p>
                   </td>
                 ) : (

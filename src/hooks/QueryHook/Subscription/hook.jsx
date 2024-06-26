@@ -10,7 +10,6 @@ const useSubscriptionGet = ({ organisationId }) => {
   const { handleAlert } = useContext(TestContext);
 
   const getSubscription = async () => {
-    console.log(`🚀 ~ file: hook.jsx:6 ~ organisationId:`, organisationId);
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/organization/subscription/${organisationId}`,
       {

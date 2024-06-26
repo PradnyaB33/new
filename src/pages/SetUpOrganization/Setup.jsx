@@ -9,7 +9,7 @@ import useSubscriptionGet from "../../hooks/QueryHook/Subscription/hook";
 const Setup = ({ children }) => {
   const { organisationId } = useParams("");
   const { data: item } = useSubscriptionGet({ organisationId });
-  console.log(`🚀 ~ file: Setup.jsx:13 ~ item:`, item);
+  console.log(`🚀 ~ item:`, item);
 
   const { linkData } = useSetupSideNav({ organisationId });
   const navigate = useNavigate();
@@ -33,20 +33,22 @@ const Setup = ({ children }) => {
               <h1 className="!text-lg tracking-wide">Setup </h1>
             </div>
 
-            {linkData?.map((item, id) => (
-              <Link
-                to={item?.href}
-                key={id}
-                className={`group  ${
-                  item.active && "bg-sky-100 !text-blue-500"
-                } ${
-                  item.isVisible !== true && "!hidden"
-                } hover:bg-sky-100 transition-all  flex w-full items-center text-gray-700   gap-4 px-4 py-3 cursor-pointer `}
-              >
-                <item.icon className="!text-2xl  group-hover:!text-blue-500 !font-thin " />
-                <h1 className="group-hover:!text-blue-500 ">{item?.label}</h1>
-              </Link>
-            ))}
+            {linkData?.map((item, id) => {
+              return (
+                <Link
+                  to={item?.href}
+                  key={id}
+                  className={`group  ${
+                    item.active && "bg-sky-100 !text-blue-500"
+                  } ${
+                    item.isVisible !== true && "!hidden"
+                  } hover:bg-sky-100 transition-all  flex w-full items-center text-gray-700   gap-4 px-4 py-3 cursor-pointer `}
+                >
+                  <item.icon className="!text-2xl  group-hover:!text-blue-500 !font-thin " />
+                  <h1 className="group-hover:!text-blue-500 ">{item?.label}</h1>
+                </Link>
+              );
+            })}
           </aside>
 
           <div className="SetupSection bg-white w-[100%] lg:!w-[80%] md:!w-[70%] shadow-md rounded-sm border  items-center">
