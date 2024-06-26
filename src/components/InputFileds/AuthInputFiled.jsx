@@ -428,6 +428,10 @@ const AuthInputFiled = ({
                     }}
                     options={options}
                     onChange={(value) => {
+                      console.log(
+                        `🚀 ~ file: AuthInputFiled.jsx:431 ~ value:`,
+                        value
+                      );
                       field.onChange(
                         value.map((item) => {
                           return item.value;
