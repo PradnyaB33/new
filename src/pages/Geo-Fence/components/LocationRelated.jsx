@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import {
   CircleF,
   DrawingManagerF,
@@ -7,18 +8,21 @@ import {
 import React from "react";
 import useGeoFencingMap from "./useGeoFencingMap";
 const LocationRelated = ({ watch, data }) => {
-  const { circleRef, circleComplete, mapRef, drawingRef, circle } =
-    useGeoFencingMap({
-      watch,
-    });
-  console.log(
-    `🚀 ~ file: LocationRelated.jsx:31 ~ circleRef?.current === undefined:`,
-    circleRef?.current
-  );
+  const {
+    circleRef,
+    circleComplete,
+    mapRef,
+    drawingRef,
+    circle,
+    addCircleMutate,
+  } = useGeoFencingMap({
+    watch,
+  });
+
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full flex flex-col items-center">
       <GoogleMap
-        mapContainerClassName="h-[400px] rounded-lg shadow-lg relative"
+        mapContainerClassName="h-[400px] w-full rounded-lg shadow-lg relative"
         center={data}
         options={{
           disableDefaultUI: true,
@@ -34,7 +38,7 @@ const LocationRelated = ({ watch, data }) => {
           )}
         {circle === null && (
           <DrawingManagerF
-            drawingMode={"circle"}
+            drawingMode={null}
             onCircleComplete={circleComplete}
             options={{
               drawingControlOptions: {
@@ -78,12 +82,39 @@ const LocationRelated = ({ watch, data }) => {
               zIndex: 1,
               draggable: true,
             }}
+            onCenterChanged={(center) => {
+              console.log(
+                "center",
+                circleRef.current?.center?.lat(),
+                circleRef.current?.center?.lng(),
+                circleRef.current?.radius
+              );
+              console.log(
+                "getCenter",
+                circle?.center?.center?.lat(),
+                circle?.center?.center?.lng()
+              );
+            }}
+            onRadiusChanged={(radius) => {
+              console.log("radius", radius);
+            }}
             onLoad={(circle) => {
+              console.log(
+                `🚀 ~ file: LocationRelated.jsx:86 ~ circle:`,
+                circle
+              );
               circleRef.current = circle;
             }}
           />
         )}
       </GoogleMap>
+      <Button
+        onClick={addCircleMutate}
+        disabled={circle?.center?.lat === undefined}
+        variant="contained"
+      >
+        ADD
+      </Button>
     </div>
   );
 };

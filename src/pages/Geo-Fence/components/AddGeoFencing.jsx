@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LocationOn } from "@mui/icons-material";
-import { Button } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -50,9 +49,9 @@ const AddGeoFencing = () => {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col items-center"
+        className="flex flex-col items-center gap-4"
       >
-        <div className="grid grid-cols-2 gap-4">
+        <div className="">
           <AuthInputFiled
             className="w-full"
             name="location"
@@ -67,9 +66,6 @@ const AddGeoFencing = () => {
           />
         </div>
         <LocationRelated watch={watch} data={data} />
-        <Button type="submit" variant="contained">
-          ADD
-        </Button>
       </form>
     </>
   );
