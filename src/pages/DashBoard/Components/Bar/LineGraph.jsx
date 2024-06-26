@@ -244,13 +244,12 @@ const LineGraph = ({
           className="w-full 
       px-4 pb-4  flex flex-col border rounded-sm bg-white  justify-center"
         >
-          <div className="flex my-4 justify-between items-center">
+          <div className="flex my-4 sm:flex-row flex-col sm:justify-between gap-2 sm:items-center">
             <h1 className="text-lg  font-bold text-[#67748E]">
               Salary Overview
             </h1>
 
-            <div className="flex gap-2 items-center">
-              {/* {window.location.pathname.includes("/employee-dashboard") && ( */}
+            <div className="flex  gap-2 items-center">
               <button
                 onClick={() => mutation.mutate()}
                 disabled={mutation.isLoading}
@@ -263,8 +262,7 @@ const LineGraph = ({
               >
                 Generate Report
               </button>
-              {/* )} */}
-              {/* {window.location.pathname.includes("/employee-dashboard") && ( */}
+
               <Select
                 placeholder={"Select year"}
                 onChange={(year) => {

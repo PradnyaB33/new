@@ -2,14 +2,14 @@ import {
   Button,
   Container,
   TextField,
-  Typography,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
-import AttendanceBioModal from "../../components/Modal/AttedanceBioModal/AttendanceBioModal";
 import { TestContext } from "../../State/Function/Main";
+import AttendanceBioModal from "../../components/Modal/AttedanceBioModal/AttendanceBioModal";
 
 const EmpInfoPunchStatus = () => {
   const { organisationId } = useParams();
@@ -128,7 +128,7 @@ const EmpInfoPunchStatus = () => {
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
-        <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
+        <article className=" bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
             Employee’s Punch Sync
           </Typography>

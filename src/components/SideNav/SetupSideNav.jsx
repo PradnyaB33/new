@@ -10,7 +10,7 @@ const SetupSideNav = () => {
 
   return (
     <>
-      <aside className="flex md:hidden   h-max  flex-col items-center shadow-lg justify-center bg-white">
+      <aside className="flex md:hidden   h-max  flex-col items-center border-b justify-center bg-white">
         <div className="px-4 py-3 gap-4 border-b-[.5px] flex w-full items-center border-gray-300">
           <div className="rounded-full h-[30px] w-[30px] flex items-center justify-center">
             <SettingsOutlined className="!text-md text-sky-400 hover:!rotate-180  cursor-pointer" />

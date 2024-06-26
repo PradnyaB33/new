@@ -56,7 +56,7 @@ export default function TDSTab1() {
 
   return (
     <>
-      <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
+      <header className="text-xl w-full pt-6 bg-white border-b   p-4">
         <Link to={`/organisation/${organisationId}/income-tax`}>
           <West className="mx-4 !text-xl" />
         </Link>

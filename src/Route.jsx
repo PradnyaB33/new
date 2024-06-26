@@ -1083,24 +1083,136 @@ const App = () => {
         />
         <Route
           path="/organisation/:organisationId/income-tax"
-          element={<IncomeTax />}
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <IncomeTax />
+            </RequireAuth>
+          }
         />
         <Route
           path="/organisation/:organisationId/income-tax/declarations"
-          element={<TDSTab1 />}
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <TDSTab1 />
+            </RequireAuth>
+          }
         />
         <Route
           path="/organisation/:organisationId/income-tax/calculation"
-          element={<TDSCalculation />}
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <TDSCalculation />
+            </RequireAuth>
+          }
         />
-        <Route path="/notification/income-tax" element={<DeclarationPage />} />
+        <Route
+          path="/notification/income-tax"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <DeclarationPage />
+            </RequireAuth>
+          }
+        />
         <Route
           path="/notification/income-tax-details"
-          element={<IncomeTaxNotification />}
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              {" "}
+              <IncomeTaxNotification />
+            </RequireAuth>
+          }
         />
         <Route
           path="/notification/income-tax/:id"
-          element={<DeclarationPage />}
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <DeclarationPage />
+            </RequireAuth>
+          }
         />
         <Route path="/application" element={<Application />} />
         <Route

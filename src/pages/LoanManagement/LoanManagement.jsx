@@ -1,32 +1,32 @@
-import React, { useContext, useState, useEffect } from "react";
-import { Button } from "@mui/material";
-import axios from "axios";
-import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import {
   Add,
   Cancel,
   CheckCircle,
   Error,
-  Pending,
   Info,
+  Pending,
 } from "@mui/icons-material";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { UseContext } from "../../State/UseState/UseContext";
-import UserProfile from "../../hooks/UserData/useUser";
-import LoanManagementSkeleton from "./LoanManagementSkeleton";
-import LoanManagementPieChart from "./LoanManagementPieChart";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { IconButton } from "@mui/material";
-import CreateLoanMgtModal from "../../components/Modal/ModalForLoanAdvanceSalary/CreateLoanMgtModal";
-import EditLoanModal from "../../components/Modal/ModalForLoanAdvanceSalary/EditLoanModal";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { TestContext } from "../../State/Function/Main";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import {
+  Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
 } from "@mui/material";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
+import CreateLoanMgtModal from "../../components/Modal/ModalForLoanAdvanceSalary/CreateLoanMgtModal";
+import EditLoanModal from "../../components/Modal/ModalForLoanAdvanceSalary/EditLoanModal";
+import UserProfile from "../../hooks/UserData/useUser";
+import LoanManagementPieChart from "./LoanManagementPieChart";
+import LoanManagementSkeleton from "./LoanManagementSkeleton";
 
 const LoanManagement = () => {
   const { cookies } = useContext(UseContext);
@@ -157,47 +157,43 @@ const LoanManagement = () => {
     setLoan(null);
   };
 
-   // for delete
-   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
-   const handleDeleteConfirmation = (id) => {
-     setDeleteConfirmation(id);
-   };
- 
-   const handleCloseConfirmation = () => {
-     setDeleteConfirmation(null);
-   };
- 
-   const handleDelete = (id) => {
-     deleteMutation.mutate(id);
-     handleCloseConfirmation();
-   };
- 
-   const deleteMutation = useMutation(
-     (id) =>
-       axios.delete(
-         `${process.env.REACT_APP_API}/route/delete-loan-data/${id}`,
-         {
-           headers: {
-             Authorization: authToken,
-           },
-         }
-       ),
-     {
-       onSuccess: () => {
-         queryClient.invalidateQueries("loanDatas");
-         handleAlert(
-           true,
-           "success",
-           "Loan data deleted successfully"
-         );
-       },
-     }
-   );
+  // for delete
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  const handleDeleteConfirmation = (id) => {
+    setDeleteConfirmation(id);
+  };
+
+  const handleCloseConfirmation = () => {
+    setDeleteConfirmation(null);
+  };
+
+  const handleDelete = (id) => {
+    deleteMutation.mutate(id);
+    handleCloseConfirmation();
+  };
+
+  const deleteMutation = useMutation(
+    (id) =>
+      axios.delete(
+        `${process.env.REACT_APP_API}/route/delete-loan-data/${id}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      ),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("loanDatas");
+        handleAlert(true, "success", "Loan data deleted successfully");
+      },
+    }
+  );
 
   return (
     <>
       <section className="bg-gray-50 min-h-screen w-full">
-        <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center flex flex-col">
+        <article className=" bg-white w-full h-max shadow-md rounded-sm border items-center flex flex-col">
           <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
             <div className="flex  gap-3 ">
               <div className="mt-1">
@@ -365,9 +361,7 @@ const LoanManagement = () => {
                                     color="error"
                                     aria-label="delete"
                                     onClick={() =>
-                                      handleDeleteConfirmation(
-                                        loanMgtData?._id
-                                      )
+                                      handleDeleteConfirmation(loanMgtData?._id)
                                     }
                                   >
                                     <DeleteOutlineIcon />
@@ -417,16 +411,16 @@ const LoanManagement = () => {
         loan={loan}
       />
 
-        {/* for delete */}
-        <Dialog
+      {/* for delete */}
+      <Dialog
         open={deleteConfirmation !== null}
         onClose={handleCloseConfirmation}
       >
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <p>
-            Please confirm your decision to delete this loan  data, as
-            this action cannot be undone.
+            Please confirm your decision to delete this loan data, as this
+            action cannot be undone.
           </p>
         </DialogContent>
         <DialogActions>
