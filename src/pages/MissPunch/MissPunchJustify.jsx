@@ -1,11 +1,11 @@
+import { Assignment, Info } from "@mui/icons-material";
+import { Container, IconButton, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
-import { UseContext } from "../../State/UseState/UseContext";
 import { useQuery } from "react-query";
-import { Container, Typography, IconButton } from "@mui/material";
-import { Info, Assignment } from "@mui/icons-material";
-import UserProfile from "../../hooks/UserData/useUser";
+import { UseContext } from "../../State/UseState/UseContext";
 import MissPunchJustifyModal from "../../components/Modal/MissPunchJustifyModal/MissPunchJustifyModal";
+import UserProfile from "../../hooks/UserData/useUser";
 
 const MissPunchJustify = () => {
   const { cookies } = useContext(UseContext);
@@ -59,7 +59,7 @@ const MissPunchJustify = () => {
           unavailableRecord.map((record, index) => (
             <article
               key={index}
-              className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center mb-4"
+              className=" bg-white w-full h-max shadow-md rounded-sm border items-center mb-4"
             >
               <Typography variant="h7" className=" pl-2 mb-6 mt-2">
                 {record.employeeId.first_name} {record.employeeId.last_name}

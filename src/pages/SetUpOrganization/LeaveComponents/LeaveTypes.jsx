@@ -48,7 +48,7 @@ const LeaveTypes = ({ open, handleClose, id }) => {
   return (
     <section className="bg-gray-50 min-h-screen w-full">
       <Setup>
-        <div className="SetupSection lg:w-[80%] w-full h-full bg-white   shadow-xl  rounded-sm">
+        <div className=" lg:w-[80%] w-full h-full bg-white   shadow-xl  rounded-sm">
           <div className="p-4  border-b-[.5px] flex   gap-3 w-full border-gray-300 justify-between">
             <div className="flex gap-3">
               <div className="mt-1">

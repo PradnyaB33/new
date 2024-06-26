@@ -68,7 +68,7 @@ const AssignOrg = () => {
           <CircularProgress />
         </div>
       )}
-      <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
+      <header className="text-xl w-full pt-6 bg-white border-b   p-4">
         {/* <BackComponent /> */}
         <Link to={"/organizationList"}>
           <West className="mx-4 !text-xl" />
@@ -78,8 +78,8 @@ const AssignOrg = () => {
 
       <section className="md:px-8 flex space-x-2 md:py-6">
         <article className="w-full rounded-md ">
-          <div className=" w-full md:px-5 px-1 ">
-            <div className="w-full mt-4">
+          <div>
+            <div className="w-full ">
               <h1 className="text-2xl tracking-tight">
                 Assign organisation to self
               </h1>
@@ -91,8 +91,8 @@ const AssignOrg = () => {
                 {orgList?.map((item, index) => (
                   <label
                     key={index}
-                    className={` inline-flex items-center space-x-2 cursor-pointer sm:w-[80%] w-full border-[.5px] border-gray-300 p-4 py-3  rounded-lg ${
-                      organizationId === item._id && "bg-blue-400 "
+                    className={` inline-flex bg-white items-center space-x-2 cursor-pointer sm:w-[80%] w-full border-[.5px] border-gray-300 p-4 py-3  rounded-sm ${
+                      organizationId === item._id && "!bg-blue-400 "
                     }`}
                   >
                     <input

@@ -1,32 +1,32 @@
-import React, { useContext, useState } from "react";
-import { Button } from "@mui/material";
 import {
   Add,
   Cancel,
   CheckCircle,
   Error,
-  Pending,
   Info,
+  Pending,
 } from "@mui/icons-material";
-import LoanManagementSkeleton from "../LoanManagement/LoanManagementSkeleton";
-import ApplyAdvanceSalaryModal from "../../components/Modal/AdvanceSalaryModal/ApplyAdvanceSalaryModal";
-import UserProfile from "../../hooks/UserData/useUser";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import axios from "axios";
-import { UseContext } from "../../State/UseState/UseContext";
-import { IconButton } from "@mui/material";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { Container } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import EditAdvanceSalaryModal from "../../components/Modal/AdvanceSalaryModal/EditAdvanceSalaryModal";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { TestContext } from "../../State/Function/Main";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
+  Button,
+  Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
 } from "@mui/material";
+import axios from "axios";
+import React, { useContext, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
+import ApplyAdvanceSalaryModal from "../../components/Modal/AdvanceSalaryModal/ApplyAdvanceSalaryModal";
+import EditAdvanceSalaryModal from "../../components/Modal/AdvanceSalaryModal/EditAdvanceSalaryModal";
+import UserProfile from "../../hooks/UserData/useUser";
+import LoanManagementSkeleton from "../LoanManagement/LoanManagementSkeleton";
 const AdvanceSalary = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -123,7 +123,7 @@ const AdvanceSalary = () => {
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
-        <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
+        <article className=" bg-white w-full h-max shadow-md rounded-sm border items-center">
           <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
             <div className="flex  gap-2">
               <div className="mt-1 pl-2">

@@ -1,13 +1,12 @@
-import { CheckCircle, West } from "@mui/icons-material";
+import { CheckCircle, West, Work } from "@mui/icons-material";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import React from "react";
+import { Link } from "react-router-dom";
 import StepFormWrapper from "../../components/step-form/wrapper";
 import useMultiStepForm from "../../hooks/useStepForm";
 import Step1 from "./DepartmentComp/Step1";
 import Step2 from "./DepartmentComp/Step2";
 import Step3 from "./DepartmentComp/Step3";
-import { Work } from "@mui/icons-material";
-import { Link } from "react-router-dom";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 const DepartmentTest = () => {
   const {
     step,
@@ -50,7 +49,7 @@ const DepartmentTest = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen h-auto">
-      <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
+      <header className="text-xl w-full pt-6 bg-white border-b   p-4">
         <Link to={"/organizationList"}>
           <West className="mx-4 !text-xl" />
         </Link>

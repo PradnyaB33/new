@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { SiMicrosoftexcel } from "react-icons/si";
 import { useMutation } from "react-query";
@@ -45,7 +45,6 @@ const ReportForm = () => {
         .optional(),
     })
     .superRefine((data, ctx) => {
-      // If reportType is 'Attendance', then timeRange is required
       if (data.reportType.value === "Attendance") {
         if (
           !data.timeRange ||
@@ -84,12 +83,21 @@ const ReportForm = () => {
     formState: { errors },
     watch,
     getValues,
+    setError,
+    setValue,
   } = useForm({
     defaultValues: {},
     resolver: zodResolver(formSchema),
   });
 
-  console.log(errors);
+  const startValue = watch("start");
+  useEffect(() => {
+    if (startValue && watch("end") && startValue > watch("end")) {
+      // If the start date is greater than the end date, reset the end date
+      setValue("end", "");
+    }
+    //eslint-disabled-next-line
+  }, [startValue, setValue, watch]);
   const { organisationId } = useParams();
   const authToken = useAuthToken();
 
@@ -123,7 +131,17 @@ const ReportForm = () => {
   };
 
   const GenerateSalary = (employees) => {
+    console.log(`🚀 ~ employees:`, employees);
     // Create a new workbook
+
+    const isSalaryExists = employees.every(
+      (employee) => employee.salary.length === 0
+    );
+
+    if (isSalaryExists) {
+      handleAlert(true, "error", "No data to generate salary report");
+      return false;
+    }
     const wb = XLSX.utils.book_new();
 
     // Array of month names for conversion
@@ -142,7 +160,7 @@ const ReportForm = () => {
       "December",
     ];
 
-    employees.forEach((employee, index) => {
+    employees?.forEach((employee, index) => {
       // Create a new worksheet
       let ws_data = [
         ["Serial No", "Employee Name", "Emp ID"],
@@ -150,10 +168,10 @@ const ReportForm = () => {
       ];
 
       // Get the keys from the first salary object (assuming all salary objects have the same structure)
-      const salaryKeys = Object.keys(employee.salary[0]);
+      const salaryKeys = Object.keys(employee?.salary[0]);
       ws_data[0] = ws_data[0].concat(salaryKeys);
 
-      employee.salary.forEach((salary, salaryIndex) => {
+      employee?.salary?.forEach((salary, salaryIndex) => {
         let salaryValues = Object.values(salary);
 
         // Convert month number to name
@@ -182,6 +200,10 @@ const ReportForm = () => {
   };
 
   const GenerateTDS = (data) => {
+    if (data.length <= 0) {
+      handleAlert(true, "error", "No data to generate TDS report");
+      return false;
+    }
     const headers = [
       "",
       "Employee Id",
@@ -228,8 +250,6 @@ const ReportForm = () => {
 
   const OnSubmit = useMutation(
     async (data) => {
-      console.log(getValues("start"), getValues("end"));
-
       let queryData = {
         reportType: data.reportType.value,
         startDate: data?.timeRange?.startDate,
@@ -287,6 +307,8 @@ const ReportForm = () => {
     }
   );
 
+  console.log(errors);
+
   const ManagerList = useGetAllManager(organisationId);
 
   const Manageroptions = ManagerList?.manager?.map((item) => {
@@ -297,7 +319,51 @@ const ReportForm = () => {
   });
 
   return (
-    <form onSubmit={handleSubmit((data) => OnSubmit.mutate(data))}>
+    <form
+      onSubmit={handleSubmit((data, event) => {
+        console.log("before condition runs ", data);
+        if (watch("reportType").value === "Attendence") {
+          console.log("this runs ", data);
+          if (
+            !data.timeRange ||
+            !data.timeRange.startDate ||
+            !data.timeRange.endDate
+          ) {
+            setError("timeRange", {
+              type: "custom",
+              message: "Time range is required for Attendance reports",
+            });
+          }
+        }
+
+        if (watch("reportType").value === "salary") {
+          if (!data.start) {
+            setError("start", {
+              type: "custom",
+              message: "Start date is required for Salary reports",
+            });
+          }
+          if (!data.end) {
+            setError("end", {
+              type: "custom",
+              message: "End date is required for Salary reports",
+            });
+          }
+        }
+
+        if (
+          watch("reportType").value === "tds" &&
+          !watch("financialYear").value
+        ) {
+          setError("financialYear", {
+            type: "custom",
+            message: "Select year is required for tds reports",
+          });
+        }
+
+        OnSubmit.mutate(data);
+      })}
+    >
       <div className="grid gap-2 grid-cols-2">
         <AuthInputFiled
           name="reportType"
@@ -386,10 +452,12 @@ const ReportForm = () => {
             name="end"
             control={control}
             type="month"
+            min={startValue}
+            disabled={!startValue}
+            readOnly={!startValue}
             // icon={Work}
             placeholder="Ex : March-2022"
             label="Select End Month *"
-            readOnly={false}
             maxLimit={15}
             // options={ReportYearsOptions}
             errors={errors}
@@ -430,7 +498,7 @@ const ReportForm = () => {
       </div>
 
       <button
-        className={` flex group justify-center w-max gap-2 items-center rounded-sm h-[30px] px-4 py-4 text-md font-semibold text-white bg-green-500 hover:bg-green-500 focus-visible:outline-green-500`}
+        className={` flex group justify-center w-max gap-2 items-center rounded-sm h-[30px] px-4 py-4 text-md font-semibold text-white bg-green-500 hover:bg-green-500 focus-visible:outline-green-500 mt-4`}
       >
         <SiMicrosoftexcel /> Generate Report
       </button>

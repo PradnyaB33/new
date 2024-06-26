@@ -114,7 +114,7 @@ const SalaryManagement = () => {
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
-        <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
+        <article className=" bg-white w-full h-max shadow-md rounded-sm border items-center">
           <h1 className="text-lg pl-2 font-semibold text-center modal-title py-2">
             Salary Management
           </h1>

@@ -68,9 +68,12 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
     email: z.string().email(),
     phone_number: z
       .string()
-      .max(10, { message: "Phone Number must be 10 digits" })
-      .refine((value) => value.length === 10, {
-        message: "Phone Number must be exactly 10 digits",
+      // .max(10, { message: "Phone Number must be 10 digits" })
+      .regex(/^\d*$/, {
+        message: "Phone Number must be non-negative and contain only digits",
+      })
+      .refine((value) => value.length === 10 || value.length === 0, {
+        message: "Phone Number must be exactly 10 digits or empty",
       }),
     address: z.string(),
     date_of_birth: z.string().refine(isAtLeastNineteenYearsOld, {

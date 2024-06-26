@@ -1,7 +1,7 @@
+import { Box, Container, Grid } from "@mui/material";
+import dayjs from "dayjs";
 import React, { useState } from "react";
 import usePayslipNotificationHook from "../../hooks/QueryHook/notification/PayslipNotification/usePayslipNotificaitonHook";
-import dayjs from "dayjs";
-import { Container, Grid, Box } from "@mui/material";
 const PayslipNotification = () => {
   const { PayslipNotification } = usePayslipNotificationHook();
 
@@ -12,7 +12,9 @@ const PayslipNotification = () => {
   };
 
   const monthFromSelectedDate = selectedDate ? selectedDate.format("M") : null;
-  const yearFromSelectedDate = selectedDate ? selectedDate.format("YYYY") : null;
+  const yearFromSelectedDate = selectedDate
+    ? selectedDate.format("YYYY")
+    : null;
   console.log({ monthFromSelectedDate, yearFromSelectedDate });
 
   const filteredPayslip = selectedDate
@@ -33,7 +35,7 @@ const PayslipNotification = () => {
     <>
       <div style={{ marginTop: "5%" }}>
         <Container maxWidth="xl" className="bg-gray-50 min-h-screen mt-4">
-          <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
+          <article className=" bg-white w-full h-max shadow-md rounded-sm border items-center">
             <h1 className="w-full pt-5 text-xl font-bold px-14 py-3 shadow-md bg-white border-b border-gray-300">
               Payslip Notifications
               <p className="text-sm font-extralight">
@@ -97,8 +99,8 @@ const PayslipNotification = () => {
                   ))
                 ) : (
                   <div className="p-4 px-12">
-                  <h1>Sorry, no request found</h1>
-                </div>
+                    <h1>Sorry, no request found</h1>
+                  </div>
                 )}
               </div>
             )}
