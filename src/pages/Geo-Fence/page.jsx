@@ -32,7 +32,7 @@ const GeoFencing = () => {
             <Add /> Add
           </Button>
         </div>
-        <div className="flex gap-4 overflow-auto">
+        <div className="flex gap-4 overflow-auto py-4">
           {data?.area?.map((item) => (
             <GeoFencingCard key={item} item={item} />
           ))}

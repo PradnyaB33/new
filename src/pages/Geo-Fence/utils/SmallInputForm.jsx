@@ -5,15 +5,19 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
+import useSearchEmployee from "../Mutation/useSearchEmployee";
 
 const SmallInputForm = () => {
   const formSchema = z.object({
     firstName: z.string().optional(),
     email: z.string().email().optional(),
   });
-  const { control, handleSubmit, formState } = useForm({
+  const { control, handleSubmit, formState, watch } = useForm({
     resolver: zodResolver(formSchema),
   });
+  const { data } = useSearchEmployee({ watch });
+  console.log(`🚀 ~ file: SmallInputForm.jsx:19 ~ data:`, data);
+
   const { errors } = formState;
   const onSubmit = (data) => {
     console.log(data);

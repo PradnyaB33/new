@@ -2,6 +2,7 @@ import { MoreVert, MyLocation } from "@mui/icons-material";
 import { Button, IconButton, Menu, MenuItem } from "@mui/material";
 import React from "react";
 import ReusableModal from "../../../components/Modal/component";
+import useGeoMutation from "../Mutation/useGeoCard";
 import useGetRevGeo from "../useGetRevGeo";
 import SearchAdd from "../utils/SearchAdd";
 import ViewDelete from "./ViewDelete";
@@ -14,12 +15,15 @@ const GeoFenceCard = ({ item }) => {
     lat: item?.center?.lat,
     lng: item?.center?.lng,
   });
-  console.log(`🚀 ~ file: GeoFenceCard.jsx:26 ~ data:`, data);
+
+  const { mutate } = useGeoMutation();
 
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -47,7 +51,14 @@ const GeoFenceCard = ({ item }) => {
               "aria-labelledby": "basic-button",
             }}
           >
-            <MenuItem onClick={handleClose}>Delete</MenuItem>
+            <MenuItem
+              onClick={() => {
+                mutate({ id: item?._id });
+                handleClose();
+              }}
+            >
+              Delete
+            </MenuItem>
           </Menu>
         </div>
         <div className="p-4 w-full flex flex-col gap-4">
@@ -60,7 +71,11 @@ const GeoFenceCard = ({ item }) => {
             </p>
           </div>
           <div className="flex gap-6 justify-between">
-            <Button variant="contained" size="small">
+            <Button
+              onClick={() => setOpen1(true)}
+              variant="contained"
+              size="small"
+            >
               Add Employee
             </Button>
             <Button
