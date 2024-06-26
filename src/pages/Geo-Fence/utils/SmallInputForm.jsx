@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Email, People, Search } from "@mui/icons-material";
-import { Button } from "@mui/material";
+import { Email, People } from "@mui/icons-material";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -47,9 +46,6 @@ const SmallInputForm = ({ circleId }) => {
         error={errors.email}
         icon={Email}
       />
-      <Button className="!h-fit" type="submit" variant="contained">
-        <Search />
-      </Button>
     </form>
   );
 };

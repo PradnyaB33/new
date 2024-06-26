@@ -10,6 +10,7 @@ import useOrgGeo from "./useOrgGeo";
 const GeoFencing = () => {
   const [open, setOpen] = useState(false);
   const { data } = useOrgGeo();
+  console.log(`🚀 ~ file: page.jsx:13 ~ data:`, data);
   return (
     <>
       <HeaderBackComponent
@@ -24,6 +25,7 @@ const GeoFencing = () => {
             className="!h-fit gap-2 !w-fit"
             variant="contained"
             size="medium"
+            disabled={!!!data}
             onClick={() => {
               setOpen(true);
             }}
@@ -32,9 +34,11 @@ const GeoFencing = () => {
           </Button>
         </div>
         <div className="flex gap-4 overflow-auto py-4">
-          {data?.area?.map((item) => (
-            <GeoFencingCard key={item} item={item} />
-          ))}
+          {data
+            ? data?.area?.map((item) => (
+                <GeoFencingCard key={item} item={item} />
+              ))
+            : "Sorry but you have enable geo fencing from setup page."}
         </div>
         <ReusableModal
           open={open}

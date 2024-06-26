@@ -79,7 +79,7 @@ const GeoFenceCard = ({ item }) => {
               Add Employee
             </Button>
             <Button
-              onClick={() => setOpen1(true)}
+              onClick={() => setOpen2(true)}
               color="error"
               variant="contained"
               size="small"
@@ -93,14 +93,14 @@ const GeoFenceCard = ({ item }) => {
           heading={"View And Delete"}
           onClose={() => setOpen1(false)}
         >
-          <ViewDelete circleId={item?._id} />
+          <ViewDelete circleId={item?._id} onClose={() => setOpen1(false)} />
         </ReusableModal>
         <ReusableModal
           open={open2}
           heading={"Search And Add"}
           onClose={() => setOpen2(false)}
         >
-          <SearchAdd circleId={item?._id} />
+          <SearchAdd circleId={item?._id} onClose={() => setOpen2(false)} />
         </ReusableModal>
       </div>
     </div>

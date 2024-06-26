@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import useDebounce from "../../../hooks/QueryHook/Training/hook/useDebounce";
@@ -8,8 +7,8 @@ import useEmployeeListStore from "./employeeListStore";
 
 const useSearchEmployee = ({ watch, circleId }) => {
   const { authToken } = useGetUser();
-  const { setEmployeeList } = useEmployeeListStore();
-  const [page, setPage] = useState(0);
+  const { setEmployeeList, setAddedEmployeeList, page } =
+    useEmployeeListStore();
   const debouncedFirstName = useDebounce(watch("firstName"), 500);
   const debouncedEmail = useDebounce(watch("email"), 500);
 
@@ -17,7 +16,7 @@ const useSearchEmployee = ({ watch, circleId }) => {
 
   const fetchEmployee = async () => {
     const response = await axios.put(
-      `${process.env.REACT_APP_API}/route/geo-fence/${organisationId}?name=${debouncedFirstName}&page=${page}&email=${debouncedEmail}&circleId=${circleId}`,
+      `${process.env.REACT_APP_API}/route/geo-fence/${organisationId}?firstName=${debouncedFirstName}&page=${page}&email=${debouncedEmail}&circleId=${circleId}`,
       {
         headers: {
           Authorization: authToken,
@@ -40,9 +39,10 @@ const useSearchEmployee = ({ watch, circleId }) => {
     onSuccess: (data) => {
       console.log("onSuccess", data?.employees);
       setEmployeeList(data?.employees);
+      setAddedEmployeeList(data?.addedEmployee?.employee);
     },
   });
-  return { data, isLoading, error, setPage };
+  return { data, isLoading, error };
 };
 
 export default useSearchEmployee;
