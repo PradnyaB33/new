@@ -10,7 +10,6 @@ import useOrgGeo from "./useOrgGeo";
 const GeoFencing = () => {
   const [open, setOpen] = useState(false);
   const { data } = useOrgGeo();
-  console.log(`🚀 ~ file: page.jsx:13 ~ data:`, data);
   return (
     <>
       <HeaderBackComponent

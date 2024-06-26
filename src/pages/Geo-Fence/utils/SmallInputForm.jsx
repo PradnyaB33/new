@@ -7,7 +7,7 @@ import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useSearchEmployee from "../Mutation/useSearchEmployee";
 
-const SmallInputForm = () => {
+const SmallInputForm = ({ circleId }) => {
   const formSchema = z.object({
     firstName: z.string().optional(),
     email: z.string().email().optional(),
@@ -15,7 +15,7 @@ const SmallInputForm = () => {
   const { control, handleSubmit, formState, watch } = useForm({
     resolver: zodResolver(formSchema),
   });
-  const { data } = useSearchEmployee({ watch });
+  const { data } = useSearchEmployee({ watch, circleId });
   console.log(`🚀 ~ file: SmallInputForm.jsx:19 ~ data:`, data);
 
   const { errors } = formState;

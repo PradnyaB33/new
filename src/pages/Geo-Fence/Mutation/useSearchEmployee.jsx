@@ -6,7 +6,7 @@ import useDebounce from "../../../hooks/QueryHook/Training/hook/useDebounce";
 import useGetUser from "../../../hooks/Token/useUser";
 import useEmployeeListStore from "./employeeListStore";
 
-const useSearchEmployee = ({ watch }) => {
+const useSearchEmployee = ({ watch, circleId }) => {
   const { authToken } = useGetUser();
   const { setEmployeeList } = useEmployeeListStore();
   const [page, setPage] = useState(0);
@@ -17,7 +17,7 @@ const useSearchEmployee = ({ watch }) => {
 
   const fetchEmployee = async () => {
     const response = await axios.put(
-      `${process.env.REACT_APP_API}/route/geo-fence/${organisationId}?name=${debouncedFirstName}&page=${page}&email=${debouncedEmail}`,
+      `${process.env.REACT_APP_API}/route/geo-fence/${organisationId}?name=${debouncedFirstName}&page=${page}&email=${debouncedEmail}&circleId=${circleId}`,
       {
         headers: {
           Authorization: authToken,
@@ -38,7 +38,7 @@ const useSearchEmployee = ({ watch }) => {
     ],
     queryFn: fetchEmployee,
     onSuccess: (data) => {
-      console.log("onSuccess", data);
+      console.log("onSuccess", data?.employees);
       setEmployeeList(data?.employees);
     },
   });

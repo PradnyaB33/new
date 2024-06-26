@@ -10,7 +10,6 @@ const Step3 = () => {
   const { mutate, isLoading, isCreateTrainingLoading, updateTraining } =
     useTrainingCreationMutation();
   const info = useTrainingStore();
-  console.log(`🚀 ~ file: page.jsx:13 ~ info:`, info);
   const {
     trainingName,
     trainingType,

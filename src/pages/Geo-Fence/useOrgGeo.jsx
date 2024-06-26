@@ -15,12 +15,6 @@ const useOrgGeo = () => {
     queryKey: ["geo-fenced-areas", organisationId],
     queryFn: getOrgCircle,
     enabled: organisationId !== undefined,
-    onSuccess: (data) => {
-      console.log(`🚀 ~ file: useGeoFencingMap.jsx:64 ~ data`, data);
-    },
-    onError: (data) => {
-      console.error(`🚀 ~ file: useGeoFencingMap.jsx:64 ~ data`, data);
-    },
   });
   return { data };
 };

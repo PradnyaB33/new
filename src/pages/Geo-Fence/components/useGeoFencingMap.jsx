@@ -46,7 +46,6 @@ const useGeoFencingMap = ({ watch, onClose }) => {
 
   const { mutate: addCircleMutate } = useMutation(addCircle, {
     onSuccess: (data) => {
-      console.log(`🚀 ~ file: useGeoFencingMap.jsx:64 ~ data`, data);
       queryClient.invalidateQueries(["geo-fenced-areas", organisationId]);
       handleAlert(
         true,

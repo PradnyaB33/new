@@ -93,14 +93,14 @@ const GeoFenceCard = ({ item }) => {
           heading={"View And Delete"}
           onClose={() => setOpen1(false)}
         >
-          <ViewDelete />
+          <ViewDelete circleId={item?._id} />
         </ReusableModal>
         <ReusableModal
           open={open2}
-          heading={"View And Delete"}
+          heading={"Search And Add"}
           onClose={() => setOpen2(false)}
         >
-          <SearchAdd />
+          <SearchAdd circleId={item?._id} />
         </ReusableModal>
       </div>
     </div>
