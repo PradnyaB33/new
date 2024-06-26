@@ -189,7 +189,7 @@ const TestNavItems = ({ toggleDrawer }) => {
         ],
       },
 
-      "Reporting Mis": {
+      Report: {
         open: false,
         isVisible:
           data?.organisation?.packageInfo === "Intermediate Plan" &&

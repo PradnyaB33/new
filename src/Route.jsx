@@ -987,6 +987,7 @@ const App = () => {
             </RequireAuth>
           }
         />
+
         <Route
           path="/organisation/:organisationId/setup/email"
           element={
