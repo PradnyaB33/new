@@ -2,13 +2,19 @@ import { MoreVert, MyLocation } from "@mui/icons-material";
 import { Button, IconButton, Menu, MenuItem } from "@mui/material";
 import React from "react";
 import ReusableModal from "../../../components/Modal/component";
+import useGetRevGeo from "../useGetRevGeo";
 import SearchAdd from "../utils/SearchAdd";
 import ViewDelete from "./ViewDelete";
 
-const GeoFenceCard = () => {
+const GeoFenceCard = ({ item }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
+  const { data } = useGetRevGeo({
+    lat: item?.center?.lat,
+    lng: item?.center?.lng,
+  });
+  console.log(`🚀 ~ file: GeoFenceCard.jsx:26 ~ data:`, data);
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -23,7 +29,11 @@ const GeoFenceCard = () => {
         <div className="flex p-4 justify-between gap-8 border-b w-full">
           <div className="flex gap-2 items-center">
             <MyLocation className="text-Brand-washed-blue/brand-washed-blue-10" />
-            <h4 className="text-xl underline text-black">Mumbai,Pune</h4>
+            <abbr title={data ? data[0]?.formatted_address : "Loading..."}>
+              <h4 className="text-xl underline text-black truncate w-48">
+                {data ? data[0]?.formatted_address : "Loading..."}
+              </h4>
+            </abbr>
           </div>
           <IconButton onClick={handleClick}>
             <MoreVert />
@@ -42,8 +52,12 @@ const GeoFenceCard = () => {
         </div>
         <div className="p-4 w-full flex flex-col gap-4">
           <div className="">
-            <p className="text-xl w-full text-black">Employee Count: 08</p>
-            <p className="text-sm w-full">Employee Count: 08</p>
+            <p className="text-xl w-full text-black">
+              Employee Count: {item?.employee?.length || 0}
+            </p>
+            <p className="text-sm w-full">
+              Employee Count: {item?.employee?.length || 0}
+            </p>
           </div>
           <div className="flex gap-6 justify-between">
             <Button variant="contained" size="small">

@@ -33,8 +33,8 @@ const GeoFencing = () => {
           </Button>
         </div>
         <div className="flex gap-4 overflow-auto">
-          {[1, 2, 3].map((item) => (
-            <GeoFencingCard key={item} />
+          {data?.area?.map((item) => (
+            <GeoFencingCard key={item} item={item} />
           ))}
         </div>
         <ReusableModal
