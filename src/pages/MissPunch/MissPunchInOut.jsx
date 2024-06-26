@@ -1,10 +1,10 @@
+import { Info } from "@mui/icons-material";
+import { Container, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useContext } from "react";
+import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
-import { useQuery } from "react-query";
-import { Container, Typography } from "@mui/material";
-import { Info } from "@mui/icons-material";
 const MissPunchInOut = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -30,7 +30,6 @@ const MissPunchInOut = () => {
 
   return (
     <>
-   
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen py-8 px-4">
         <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
           Employee Missed Punch
@@ -42,7 +41,7 @@ const MissPunchInOut = () => {
           unavailableRecord.map((record, index) => (
             <article
               key={index}
-              className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center mb-4"
+              className=" bg-white w-full h-max shadow-md rounded-sm border items-center mb-4"
             >
               <Typography variant="h7" className="pl-2 mb-20 mt-20">
                 {record.employeeId.first_name} {record.employeeId.last_name}

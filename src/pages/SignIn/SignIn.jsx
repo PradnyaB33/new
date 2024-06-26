@@ -226,7 +226,7 @@ const SignIn = () => {
           <form
             onSubmit={onSubmit}
             autoComplete="off"
-            className="flex  lg:px-20   w-max  justify-center flex-col  lg:h-[80vh]"
+            className="flex  lg:px-20  sm:w-max w-[90%]  justify-center flex-col  lg:h-[80vh]"
           >
             <div className="flex flex-col space-x-4 lg:items-start items-center">
               <div className="flex flex-col gap-1  w-full items-center justify-center space-y-1">
@@ -237,7 +237,7 @@ const SignIn = () => {
               </div>
             </div>
 
-            <div className="mt-6 w-[400px] space-y-2 ">
+            <div className="mt-6 sm:w-[400px] w-full space-y-2 ">
               <label
                 htmlFor={email}
                 className={" font-semibold text-gray-500 text-md"}
@@ -283,7 +283,7 @@ const SignIn = () => {
 
                 <div
                   className={`
-                flex  rounded-md px-2  bg-white py-[6px]
+                flex  rounded-md px-2 sm:w-[400px] w-full  bg-white py-[6px]
                 ${
                   focusedInput === "password"
                     ? "outline-blue-500 outline-3 !border-blue-500 border-[2px]"

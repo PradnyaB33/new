@@ -45,7 +45,6 @@ const ReportForm = () => {
         .optional(),
     })
     .superRefine((data, ctx) => {
-      // If reportType is 'Attendance', then timeRange is required
       if (data.reportType.value === "Attendance") {
         if (
           !data.timeRange ||
@@ -84,6 +83,7 @@ const ReportForm = () => {
     formState: { errors },
     watch,
     getValues,
+    setError,
   } = useForm({
     defaultValues: {},
     resolver: zodResolver(formSchema),
@@ -228,8 +228,6 @@ const ReportForm = () => {
 
   const OnSubmit = useMutation(
     async (data) => {
-      console.log(getValues("start"), getValues("end"));
-
       let queryData = {
         reportType: data.reportType.value,
         startDate: data?.timeRange?.startDate,
@@ -287,6 +285,8 @@ const ReportForm = () => {
     }
   );
 
+  console.log(errors);
+
   const ManagerList = useGetAllManager(organisationId);
 
   const Manageroptions = ManagerList?.manager?.map((item) => {
@@ -297,7 +297,48 @@ const ReportForm = () => {
   });
 
   return (
-    <form onSubmit={handleSubmit((data) => OnSubmit.mutate(data))}>
+    <form
+      onSubmit={handleSubmit((data, event) => {
+        console.log("before condition runs ", data);
+        if (watch("reportType").value === "Attendence") {
+          console.log("this runs ", data);
+          if (
+            !data.timeRange ||
+            !data.timeRange.startDate ||
+            !data.timeRange.endDate
+          ) {
+            setError("timeRange", {
+              type: "custom",
+              message: "Time range is required for Attendance reports",
+            });
+          }
+        }
+
+        if (watch("reportType").value === "salary") {
+          if (!data.start) {
+            setError("start", {
+              type: "custom",
+              message: "Start date is required for Salary reports",
+            });
+          }
+          if (!data.end) {
+            setError("end", {
+              type: "custom",
+              message: "End date is required for Salary reports",
+            });
+          }
+        }
+
+        if (watch("reportType").value === "tds") {
+          setError("financialYear", {
+            type: "custom",
+            message: "Select year is required for tds reports",
+          });
+        }
+
+        OnSubmit.mutate(data);
+      })}
+    >
       <div className="grid gap-2 grid-cols-2">
         <AuthInputFiled
           name="reportType"
@@ -430,7 +471,7 @@ const ReportForm = () => {
       </div>
 
       <button
-        className={` flex group justify-center w-max gap-2 items-center rounded-sm h-[30px] px-4 py-4 text-md font-semibold text-white bg-green-500 hover:bg-green-500 focus-visible:outline-green-500`}
+        className={` flex group justify-center w-max gap-2 items-center rounded-sm h-[30px] px-4 py-4 text-md font-semibold text-white bg-green-500 hover:bg-green-500 focus-visible:outline-green-500 mt-4`}
       >
         <SiMicrosoftexcel /> Generate Report
       </button>

@@ -37,7 +37,10 @@ const BackComponent = () => {
     "/geo-fencing",
   ];
 
-  if (backFalseRoutes.some((value) => location.pathname.includes(value))) {
+  if (
+    location.pathname === "/" ||
+    backFalseRoutes.some((value) => location.pathname.includes(value))
+  ) {
     return <></>;
   }
 

@@ -1,12 +1,11 @@
+import { Info, RequestQuote } from "@mui/icons-material";
+import { Avatar, Container, Typography } from "@mui/material";
+import axios from "axios";
 import React, { useContext } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import axios from "axios";
+import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
-import { Container, Typography } from "@mui/material";
-import { Info, RequestQuote } from "@mui/icons-material";
-import { TestContext } from "../../State/Function/Main";
-import { Avatar } from "@mui/material";
 
 const MissedPunchNotified = ({ employeeId }) => {
   const { handleAlert } = useContext(TestContext);
@@ -50,7 +49,10 @@ const MissedPunchNotified = ({ employeeId }) => {
         }
       );
       console.log(response);
-      await queryClient.invalidateQueries(["unavailableRecords", organisationId]);
+      await queryClient.invalidateQueries([
+        "unavailableRecords",
+        organisationId,
+      ]);
       handleAlert(true, "success", "Approval updated successfully.");
     } catch (error) {
       console.error("Error updating approval:", error);
@@ -140,7 +142,7 @@ const MissedPunchNotified = ({ employeeId }) => {
           unavailableRecord.map((record, index) => (
             <article
               key={index}
-              className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center mb-4"
+              className=" bg-white w-full h-max shadow-md rounded-sm border items-center mb-4"
             >
               <Typography variant="h7" className=" pl-2 mb-20 mt-20">
                 {record?.employeeId?.first_name} {record?.employeeId?.last_name}
