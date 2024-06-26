@@ -1,14 +1,15 @@
 import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
-const useGeoFencingMap = ({ watch }) => {
+const useGeoFencingMap = ({ watch, onClose }) => {
   const mapRef = useRef();
   const circleRef = useRef();
   const [circle, setCircle] = useState(null);
   const { organisationId } = useParams();
   const { handleAlert } = useContext(TestContext);
+  const queryClient = useQueryClient();
   console.log(
     `🚀 ~ file: useGeoFencingMap.jsx:8 ~ organisationId:`,
     organisationId
@@ -46,11 +47,13 @@ const useGeoFencingMap = ({ watch }) => {
   const { mutate: addCircleMutate } = useMutation(addCircle, {
     onSuccess: (data) => {
       console.log(`🚀 ~ file: useGeoFencingMap.jsx:64 ~ data`, data);
+      queryClient.invalidateQueries(["geo-fenced-areas", organisationId]);
       handleAlert(
         true,
         "success",
         data?.message || "Circle added successfully"
       );
+      onClose();
     },
     onError: (error) => {
       console.log(`🚀 ~ file: useGeoFencingMap.jsx:67 ~ error`, error);

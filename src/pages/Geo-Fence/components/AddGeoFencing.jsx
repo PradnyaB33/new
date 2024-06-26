@@ -7,7 +7,7 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useGetCurrentLocation from "../../../hooks/Location/useGetCurrentLocation";
 import LocationRelated from "./LocationRelated";
 
-const AddGeoFencing = () => {
+const AddGeoFencing = ({ onClose }) => {
   const { data } = useGetCurrentLocation();
 
   const formSchema = z.object({
@@ -65,7 +65,7 @@ const AddGeoFencing = () => {
             value={watch("location")}
           />
         </div>
-        <LocationRelated watch={watch} data={data} />
+        <LocationRelated watch={watch} data={data} onClose={onClose} />
       </form>
     </>
   );

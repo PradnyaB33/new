@@ -7,7 +7,7 @@ import {
 } from "@react-google-maps/api";
 import React from "react";
 import useGeoFencingMap from "./useGeoFencingMap";
-const LocationRelated = ({ watch, data }) => {
+const LocationRelated = ({ watch, data, onClose }) => {
   const {
     circleRef,
     circleComplete,
@@ -17,6 +17,7 @@ const LocationRelated = ({ watch, data }) => {
     addCircleMutate,
   } = useGeoFencingMap({
     watch,
+    onClose,
   });
 
   return (

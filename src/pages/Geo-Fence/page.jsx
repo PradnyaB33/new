@@ -5,9 +5,12 @@ import ReusableModal from "../../components/Modal/component";
 import HeaderBackComponent from "../../components/header/component";
 import AddGeoFencing from "./components/AddGeoFencing";
 import GeoFencingCard from "./components/GeoFenceCard";
+import useOrgGeo from "./useOrgGeo";
 
 const GeoFencing = () => {
   const [open, setOpen] = useState(false);
+  const { data } = useOrgGeo();
+  console.log(`🚀 ~ file: page.jsx:13 ~ data:`, data);
   return (
     <>
       <HeaderBackComponent
@@ -40,7 +43,7 @@ const GeoFencing = () => {
           subHeading={"You can activate geofencing for a specific zone"}
           onClose={() => setOpen(false)}
         >
-          <AddGeoFencing />
+          <AddGeoFencing onClose={() => setOpen(false)} />
         </ReusableModal>
       </div>
     </>
