@@ -1,7 +1,7 @@
-import { Grid, Box } from "@mui/material";
-import React, { useState } from "react";
-import moment from "moment";
 import Info from "@mui/icons-material/Info";
+import { Box, Grid } from "@mui/material";
+import moment from "moment";
+import React, { useState } from "react";
 
 const MissedPunchCard = ({ items }) => {
   console.log("items", items);
@@ -60,7 +60,7 @@ const MissedPunchCard = ({ items }) => {
           borderRadius: "5px",
         }}
       >
-        <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
+        <article className=" bg-white w-full h-max shadow-md rounded-sm border items-center">
           <div className="p-4 border-b-[.5px] flex flex-col md:flex-row items-center justify-between gap-3 w-full border-gray-300">
             <div className="flex items-center gap-3 mb-3 md:mb-0">
               <label htmlFor="statusDropdown">Select Status: </label>
@@ -84,7 +84,7 @@ const MissedPunchCard = ({ items }) => {
                 className="flex justify-between items-center p-4 shadow-md mt-4"
               >
                 <div className="flex justify-between items-center w-full">
-                <h1 className="text-xl px-4 md:px-0 font-semibold order-1 md:order-1">
+                  <h1 className="text-xl px-4 md:px-0 font-semibold order-1 md:order-1">
                     {record.status === "Available"
                       ? `${moment(record.recordDate).format(
                           "YYYY-MM-DD"
@@ -92,8 +92,8 @@ const MissedPunchCard = ({ items }) => {
                       : `${moment(record.recordDate).format(
                           "YYYY-MM-DD"
                         )} This unavailable record is approved as a leave.`}
-                   </h1>
-                   <p className="text-md px-4 md:px-0 order-2 md:order-2 mr-2">
+                  </h1>
+                  <p className="text-md px-4 md:px-0 order-2 md:order-2 mr-2">
                     Updated {getTimeAgo(record.updatedAt)}
                   </p>
                 </div>

@@ -132,6 +132,7 @@ export default function useDashboardFilter(organisationId) {
       width: "max-content",
       minWidth: "100%",
       right: 0,
+      zindex: 9999,
     }),
     placeholder: (defaultStyles) => {
       return {

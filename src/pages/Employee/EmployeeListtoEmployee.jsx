@@ -61,7 +61,7 @@ const EmployeeListToEmployee = ({ organisationId }) => {
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
-        <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
+        <article className=" bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
             Employee List
           </Typography>
