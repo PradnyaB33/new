@@ -1261,6 +1261,7 @@ const AuthInputFiled = ({
                 }}
                 maxLength={`${maxLimit}`}
                 readOnly={readOnly}
+                disabled={disabled}
                 value={field.value}
                 placeholder={placeholder}
                 className={` border-none bg-white w-full outline-none px-2  ${

@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { SiMicrosoftexcel } from "react-icons/si";
 import { useMutation } from "react-query";
@@ -84,12 +84,20 @@ const ReportForm = () => {
     watch,
     getValues,
     setError,
+    setValue,
   } = useForm({
     defaultValues: {},
     resolver: zodResolver(formSchema),
   });
 
-  console.log(errors);
+  const startValue = watch("start");
+  useEffect(() => {
+    if (startValue && watch("end") && startValue > watch("end")) {
+      // If the start date is greater than the end date, reset the end date
+      setValue("end", "");
+    }
+    //eslint-disabled-next-line
+  }, [startValue, setValue, watch]);
   const { organisationId } = useParams();
   const authToken = useAuthToken();
 
@@ -192,6 +200,10 @@ const ReportForm = () => {
   };
 
   const GenerateTDS = (data) => {
+    if (data.length <= 0) {
+      handleAlert(true, "error", "No data to generate TDS report");
+      return false;
+    }
     const headers = [
       "",
       "Employee Id",
@@ -339,7 +351,10 @@ const ReportForm = () => {
           }
         }
 
-        if (watch("reportType").value === "tds") {
+        if (
+          watch("reportType").value === "tds" &&
+          !watch("financialYear").value
+        ) {
           setError("financialYear", {
             type: "custom",
             message: "Select year is required for tds reports",
@@ -437,10 +452,12 @@ const ReportForm = () => {
             name="end"
             control={control}
             type="month"
+            min={startValue}
+            disabled={!startValue}
+            readOnly={!startValue}
             // icon={Work}
             placeholder="Ex : March-2022"
             label="Select End Month *"
-            readOnly={false}
             maxLimit={15}
             // options={ReportYearsOptions}
             errors={errors}
