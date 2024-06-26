@@ -237,7 +237,7 @@ const SuperAdmin = () => {
                   </div>
                 </Popover>
 
-                {location.pathname?.includes("/HR-dashboard") && (
+                {location.pathname?.includes("/super-admin") && (
                   <div className=" w-[80%] hidden md:flex gap-6 items-center justify-end">
                     <button
                       onClick={() => {

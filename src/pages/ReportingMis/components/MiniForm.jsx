@@ -123,7 +123,17 @@ const ReportForm = () => {
   };
 
   const GenerateSalary = (employees) => {
+    console.log(`🚀 ~ employees:`, employees);
     // Create a new workbook
+
+    const isSalaryExists = employees.every(
+      (employee) => employee.salary.length === 0
+    );
+
+    if (isSalaryExists) {
+      handleAlert(true, "error", "No data to generate salary report");
+      return false;
+    }
     const wb = XLSX.utils.book_new();
 
     // Array of month names for conversion
@@ -142,7 +152,7 @@ const ReportForm = () => {
       "December",
     ];
 
-    employees.forEach((employee, index) => {
+    employees?.forEach((employee, index) => {
       // Create a new worksheet
       let ws_data = [
         ["Serial No", "Employee Name", "Emp ID"],
@@ -150,10 +160,10 @@ const ReportForm = () => {
       ];
 
       // Get the keys from the first salary object (assuming all salary objects have the same structure)
-      const salaryKeys = Object.keys(employee.salary[0]);
+      const salaryKeys = Object.keys(employee?.salary[0]);
       ws_data[0] = ws_data[0].concat(salaryKeys);
 
-      employee.salary.forEach((salary, salaryIndex) => {
+      employee?.salary?.forEach((salary, salaryIndex) => {
         let salaryValues = Object.values(salary);
 
         // Convert month number to name
