@@ -31,6 +31,7 @@ import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CallMissedIcon from "@mui/icons-material/CallMissed";
 import ChatIcon from "@mui/icons-material/Chat";
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import FolderIcon from "@mui/icons-material/Folder";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
@@ -357,6 +358,25 @@ const TestNavItems = ({ toggleDrawer }) => {
             link: `/organisation/${orgId}/create-communication`,
             icon: <ChatIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Communication",
+          },
+          {
+            key: "EmployeeSurvey",
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+              "Employee",
+            ].includes(role),
+            link: `/employee-survey`,
+            icon: <AssignmentIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Employee Survey",
           },
         ],
       },

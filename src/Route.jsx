@@ -122,6 +122,10 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import EmployeeSurvey from "./pages/EmployeeSurvey/EmployeeSurvey";
+import CreateNewSurvey from "./pages/EmployeeSurvey/components/CreateNewSurvey";
+import EmployeeSurveyForm from "./pages/EmployeeSurvey/components/EmployeeSurveyForm";
+import SurveyDetails from "./pages/EmployeeSurvey/components/SurveyDetails";
 
 const App = () => {
   return (
@@ -1215,6 +1219,19 @@ const App = () => {
           path="/advance-salary-notification-to-emp"
           element={<AdvanceSalaryNotificationToEmp />}
         />
+        <Route
+          path="/employee-survey"
+          element={<EmployeeSurvey />}
+        />
+        <Route
+          path="/create-new-survey"
+          element={<CreateNewSurvey />} />
+        <Route
+          path="/survey-form"
+          element={<EmployeeSurveyForm />} />
+        <Route
+          path="/survey-details"
+          element={<SurveyDetails />} />
       </Routes>
     </AuthProvider>
   );

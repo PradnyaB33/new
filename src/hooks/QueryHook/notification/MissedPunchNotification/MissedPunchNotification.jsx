@@ -9,7 +9,7 @@ const useMissedPunchNotificationCount = () => {
   const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  const organisationId = user.organizationId;
+  const organisationId = user?.organizationId;
 
   const getMissedPunchNotification = async () => {
     const response = await axios.get(
