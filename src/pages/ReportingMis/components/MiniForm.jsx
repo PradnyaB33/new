@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { SiMicrosoftexcel } from "react-icons/si";
 import { useMutation } from "react-query";
@@ -84,12 +84,20 @@ const ReportForm = () => {
     watch,
     getValues,
     setError,
+    setValue,
   } = useForm({
     defaultValues: {},
     resolver: zodResolver(formSchema),
   });
 
-  console.log(errors);
+  const startValue = watch("start");
+  useEffect(() => {
+    if (startValue && watch("end") && startValue > watch("end")) {
+      // If the start date is greater than the end date, reset the end date
+      setValue("end", "");
+    }
+    //eslint-disabled-next-line
+  }, [startValue, setValue, watch]);
   const { organisationId } = useParams();
   const authToken = useAuthToken();
 
@@ -123,7 +131,17 @@ const ReportForm = () => {
   };
 
   const GenerateSalary = (employees) => {
+    console.log(`🚀 ~ employees:`, employees);
     // Create a new workbook
+
+    const isSalaryExists = employees.every(
+      (employee) => employee.salary.length === 0
+    );
+
+    if (isSalaryExists) {
+      handleAlert(true, "error", "No data to generate salary report");
+      return false;
+    }
     const wb = XLSX.utils.book_new();
 
     // Array of month names for conversion
@@ -142,7 +160,7 @@ const ReportForm = () => {
       "December",
     ];
 
-    employees.forEach((employee, index) => {
+    employees?.forEach((employee, index) => {
       // Create a new worksheet
       let ws_data = [
         ["Serial No", "Employee Name", "Emp ID"],
@@ -150,10 +168,10 @@ const ReportForm = () => {
       ];
 
       // Get the keys from the first salary object (assuming all salary objects have the same structure)
-      const salaryKeys = Object.keys(employee.salary[0]);
+      const salaryKeys = Object.keys(employee?.salary[0]);
       ws_data[0] = ws_data[0].concat(salaryKeys);
 
-      employee.salary.forEach((salary, salaryIndex) => {
+      employee?.salary?.forEach((salary, salaryIndex) => {
         let salaryValues = Object.values(salary);
 
         // Convert month number to name
@@ -182,6 +200,10 @@ const ReportForm = () => {
   };
 
   const GenerateTDS = (data) => {
+    if (data.length <= 0) {
+      handleAlert(true, "error", "No data to generate TDS report");
+      return false;
+    }
     const headers = [
       "",
       "Employee Id",
@@ -329,7 +351,10 @@ const ReportForm = () => {
           }
         }
 
-        if (watch("reportType").value === "tds") {
+        if (
+          watch("reportType").value === "tds" &&
+          !watch("financialYear").value
+        ) {
           setError("financialYear", {
             type: "custom",
             message: "Select year is required for tds reports",
@@ -427,10 +452,12 @@ const ReportForm = () => {
             name="end"
             control={control}
             type="month"
+            min={startValue}
+            disabled={!startValue}
+            readOnly={!startValue}
             // icon={Work}
             placeholder="Ex : March-2022"
             label="Select End Month *"
-            readOnly={false}
             maxLimit={15}
             // options={ReportYearsOptions}
             errors={errors}
