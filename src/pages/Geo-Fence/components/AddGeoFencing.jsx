@@ -9,6 +9,7 @@ import LocationRelated from "./LocationRelated";
 
 const AddGeoFencing = ({ onClose }) => {
   const { data } = useGetCurrentLocation();
+  console.log(`🚀 ~ file: AddGeoFencing.jsx:12 ~ data:`, data);
 
   const formSchema = z.object({
     location: z
@@ -36,7 +37,10 @@ const AddGeoFencing = ({ onClose }) => {
     defaultValues: {
       location: {
         address: "",
-        position: data,
+        position: {
+          lat: data?.lat || 0,
+          lng: data?.lng || 0,
+        },
       },
     },
   });
