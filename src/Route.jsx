@@ -122,6 +122,7 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import CreateJobPosition from "./pages/Recruitment/CreateJobPosition";
 
 const App = () => {
   return (
@@ -463,6 +464,16 @@ const App = () => {
               permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
             >
               <Communication />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/create-job-position"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <CreateJobPosition />
             </RequireAuth>
           }
         />
