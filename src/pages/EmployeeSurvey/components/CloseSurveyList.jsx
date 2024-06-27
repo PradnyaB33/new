@@ -6,7 +6,7 @@ const CloseSurveyList = () => {
     const navigate = useNavigate();
 
     const handleSurveyDetails = () => {
-        navigate("/survey-details");
+        navigate("/organisation/:organisationId/survey-details");
     }
 
     return (

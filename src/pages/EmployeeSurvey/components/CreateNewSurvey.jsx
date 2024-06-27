@@ -234,9 +234,9 @@ const CreateNewSurvey = () => {
                     />
                 </div>
                 {questions.map((q, index) => (
-                    <div key={index} style={{ marginTop: '20px' }}>
+                    <div key={index} style={{ marginTop: '20px',marginBottom:"40px" }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Typography variant="h6">Question {index + 1}</Typography>
+                            <Typography variant="p">Question {index + 1}</Typography>
                             <div>
                                 <IconButton onClick={() => handleCopyQuestion(index)} aria-label="copy question">
                                     <FileCopyIcon />

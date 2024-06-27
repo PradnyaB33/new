@@ -13,7 +13,7 @@ const EmployeeSurvey = () => {
     const [closeSurvey, setCloseSurvey] = useState(false)
 
     const handleCreateNewSurvey = () => {
-        navigate("/create-new-survey");
+        navigate("/organisation/:organisationId/create-new-survey");
     }
 
     const handleOpenSurvey = () => {

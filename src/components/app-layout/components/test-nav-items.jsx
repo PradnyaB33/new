@@ -390,7 +390,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               "Manager",
               "Employee",
             ].includes(role),
-            link: `/employee-survey`,
+            link: `/organisation/${orgId}/employee-survey`,
             icon: <AssignmentIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Employee Survey",
           },

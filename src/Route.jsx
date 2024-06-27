@@ -1333,17 +1333,17 @@ const App = () => {
           element={<AdvanceSalaryNotificationToEmp />}
         />
         <Route
-          path="/employee-survey"
+          path="/organisation/:organisationId/employee-survey"
           element={<EmployeeSurvey />}
         />
         <Route
-          path="/create-new-survey"
+          path="/organisation/:organisationId/create-new-survey"
           element={<CreateNewSurvey />} />
         <Route
-          path="/survey-form"
+          path="/organisation/:organisationId/survey-form"
           element={<EmployeeSurveyForm />} />
         <Route
-          path="/survey-details"
+          path="/organisation/:organisationId/survey-details"
           element={<SurveyDetails />} />
       </Routes>
     </AuthProvider>
