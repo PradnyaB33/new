@@ -32,7 +32,7 @@ const useLocationMutation = () => {
     mutationFn: fetchLocationData,
     onSuccess: (data) => {
       console.log(`🚀 ~ file: mutation.jsx:34 ~ data:`, data);
-      handleAlert(true, "success", "Geolocation decoded");
+      // handleAlert(true, "success", "Geolocation decoded");
       // if (window.google.maps) {
       //   // Initialize the map
       //   const mapOptions = {
@@ -96,8 +96,10 @@ const useLocationMutation = () => {
     },
   });
   const fetchUrl = async () => {
+    const data1 = await getUserLocation?.mutateAsync();
+    console.log(`🚀 ~ file: mutation.jsx:100 ~ data1:`, data1);
     const data = await axios.get(
-      `${process.env.REACT_APP_API}/route/punch-main/create-image-url`,
+      `${process.env.REACT_APP_API}/route/punch-main/create-image-url?lat=${data1?.latitude}&lng=${data1?.longitude}`,
       {
         headers: {
           "Content-Type": "application/json",
