@@ -1,11 +1,15 @@
 export const reportTypeOptions = [
   {
-    label: "Attendence Data",
+    label: "Attendance Data",
     value: "Attendence",
   },
   {
     label: "Salary Data",
     value: "salary",
+  },
+  {
+    label: "TDS Challan",
+    value: "tds",
   },
 ];
 
@@ -23,6 +27,18 @@ const monthNames = [
   "November",
   "December",
 ];
+
+export const getTDSYearsOptions = () => {
+  const currentYear = new Date().getFullYear();
+  const optionList = [];
+
+  for (let year = currentYear; year >= currentYear - 5; year--) {
+    const label = `${year}-${year + 1}`;
+    optionList.push({ label, value: label });
+  }
+
+  return optionList;
+};
 
 const getOptions = () => {
   const options = [];

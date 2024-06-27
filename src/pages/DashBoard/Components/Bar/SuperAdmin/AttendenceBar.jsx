@@ -160,7 +160,7 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
         </div>
       ) : (
         <div className="w-full px-4 pb-4  flex flex-col border rounded-sm bg-white  justify-center">
-          <div className="flex my-4 justify-between items-center">
+          <div className="flex my-4 sm:flex-row flex-col sm:justify-between gap-2 sm:items-center">
             <h1 className="text-lg font-bold text-[#67748E]">
               Attendance Overview
             </h1>

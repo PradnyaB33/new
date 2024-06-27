@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { SiMicrosoftexcel } from "react-icons/si";
 import { useMutation } from "react-query";
@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useAuthToken from "../../../hooks/Token/useAuth";
-import { reportTypeOptions } from "./data";
+import { getTDSYearsOptions, reportTypeOptions } from "./data";
 
 import * as XLSX from "xlsx";
 import { TestContext } from "../../../State/Function/Main";
@@ -16,6 +16,7 @@ import useGetAllManager from "../../../hooks/Employee/useGetAllManager";
 
 const ReportForm = () => {
   const { handleAlert } = useContext(TestContext);
+  const tdsYearOptions = getTDSYearsOptions();
   const formSchema = z
     .object({
       reportType: z.object({
@@ -24,8 +25,8 @@ const ReportForm = () => {
       }),
       timeRange: z
         .object({
-          startDate: z.string(),
-          endDate: z.string(),
+          startDate: z.string().optional(),
+          endDate: z.string().optional(),
         })
         .optional(),
       start: z.string().optional(),
@@ -36,35 +37,67 @@ const ReportForm = () => {
           value: z.string().optional(),
         })
         .optional(),
+      financialYear: z
+        .object({
+          label: z.string().optional(),
+          value: z.string().optional(),
+        })
+        .optional(),
     })
-    .refine(
-      (data) => {
-        // If reportType is 'Attendance', timeRange is required
-        if (data.reportType.value === "Attendance" && !data.timeRange) {
-          return false;
+    .superRefine((data, ctx) => {
+      if (data.reportType.value === "Attendance") {
+        if (
+          !data.timeRange ||
+          !data.timeRange.startDate ||
+          !data.timeRange.endDate
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Time range is required for Attendance reports",
+          });
         }
-        // If reportType is 'Salary', start and end are required
-        if (data.reportType.value === "Salary" && (!data.start || !data.end)) {
-          return false;
-        }
-        return true;
-      },
-      {
-        // Custom error message
-        message: "Invalid data",
       }
-    );
+
+      // If reportType is 'Salary', then start and end are required
+      if (data.reportType.value === "Salary") {
+        if (!data.start) {
+          ctx.addIssue({
+            path: ["start"],
+            message: "Start date is required for Salary reports",
+            code: z.ZodIssueCode.custom,
+          });
+        }
+        if (!data.end) {
+          ctx.addIssue({
+            path: ["end"],
+            message: "End date is required for Salary reports",
+            code: z.ZodIssueCode.custom,
+          });
+        }
+      }
+    });
+
   const {
     handleSubmit,
     control,
     formState: { errors },
     watch,
     getValues,
+    setError,
+    setValue,
   } = useForm({
     defaultValues: {},
     resolver: zodResolver(formSchema),
   });
 
+  const startValue = watch("start");
+  useEffect(() => {
+    if (startValue && watch("end") && startValue > watch("end")) {
+      // If the start date is greater than the end date, reset the end date
+      setValue("end", "");
+    }
+    //eslint-disabled-next-line
+  }, [startValue, setValue, watch]);
   const { organisationId } = useParams();
   const authToken = useAuthToken();
 
@@ -98,7 +131,17 @@ const ReportForm = () => {
   };
 
   const GenerateSalary = (employees) => {
+    console.log(`🚀 ~ employees:`, employees);
     // Create a new workbook
+
+    const isSalaryExists = employees.every(
+      (employee) => employee.salary.length === 0
+    );
+
+    if (isSalaryExists) {
+      handleAlert(true, "error", "No data to generate salary report");
+      return false;
+    }
     const wb = XLSX.utils.book_new();
 
     // Array of month names for conversion
@@ -117,7 +160,7 @@ const ReportForm = () => {
       "December",
     ];
 
-    employees.forEach((employee, index) => {
+    employees?.forEach((employee, index) => {
       // Create a new worksheet
       let ws_data = [
         ["Serial No", "Employee Name", "Emp ID"],
@@ -125,10 +168,10 @@ const ReportForm = () => {
       ];
 
       // Get the keys from the first salary object (assuming all salary objects have the same structure)
-      const salaryKeys = Object.keys(employee.salary[0]);
+      const salaryKeys = Object.keys(employee?.salary[0]);
       ws_data[0] = ws_data[0].concat(salaryKeys);
 
-      employee.salary.forEach((salary, salaryIndex) => {
+      employee?.salary?.forEach((salary, salaryIndex) => {
         let salaryValues = Object.values(salary);
 
         // Convert month number to name
@@ -156,10 +199,57 @@ const ReportForm = () => {
     XLSX.writeFile(wb, "Salary.xlsx");
   };
 
+  const GenerateTDS = (data) => {
+    if (data.length <= 0) {
+      handleAlert(true, "error", "No data to generate TDS report");
+      return false;
+    }
+    const headers = [
+      "",
+      "Employee Id",
+      "Employee Name",
+      "Regime",
+      "Salary",
+      "Other Declaration",
+      "Salary Declaration",
+      "Section Declaration",
+      "Before Cess",
+      "After Standard Deduction Taxable Income",
+      "Cess",
+      "Taxable Income",
+    ];
+
+    const employeeInfo = data?.map((item) => [
+      "",
+      item?.empId,
+      item?.employeeName,
+      item?.regime,
+      item?.salary,
+      item?.afterStandardDeduction,
+      item?.otherDeclaration,
+      item?.salaryDeclaration,
+      item?.sectionDeclaration,
+      item?.beforeCess,
+      item?.cess,
+      item?.taxableIncome,
+    ]);
+    const title = ["", "TDS Challan Report"];
+    const year = ["", getValues("financialYear")?.label];
+    const ws = XLSX.utils.aoa_to_sheet([
+      "",
+      title,
+      year,
+      "",
+      headers,
+      ...employeeInfo,
+    ]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, "TDSReport.xlsx");
+  };
+
   const OnSubmit = useMutation(
     async (data) => {
-      console.log(getValues("start"), getValues("end"));
-
       let queryData = {
         reportType: data.reportType.value,
         startDate: data?.timeRange?.startDate,
@@ -178,6 +268,13 @@ const ReportForm = () => {
           endMonth: endMonth,
           startYear: startYear,
           endYear: endYear,
+        };
+      }
+
+      if (data.reportType.value === "tds") {
+        queryData = {
+          reportType: data.reportType.value,
+          financialYear: data.financialYear.value,
         };
       }
 
@@ -200,12 +297,17 @@ const ReportForm = () => {
         if (getValues("reportType")?.value === "salary") {
           GenerateSalary(data);
         }
+        if (getValues("reportType")?.value === "tds") {
+          GenerateTDS(data);
+        }
       },
       onError: (error) => {
         console.log(error);
       },
     }
   );
+
+  console.log(errors);
 
   const ManagerList = useGetAllManager(organisationId);
 
@@ -217,7 +319,51 @@ const ReportForm = () => {
   });
 
   return (
-    <form onSubmit={handleSubmit((data) => OnSubmit.mutate(data))}>
+    <form
+      onSubmit={handleSubmit((data, event) => {
+        console.log("before condition runs ", data);
+        if (watch("reportType").value === "Attendence") {
+          console.log("this runs ", data);
+          if (
+            !data.timeRange ||
+            !data.timeRange.startDate ||
+            !data.timeRange.endDate
+          ) {
+            setError("timeRange", {
+              type: "custom",
+              message: "Time range is required for Attendance reports",
+            });
+          }
+        }
+
+        if (watch("reportType").value === "salary") {
+          if (!data.start) {
+            setError("start", {
+              type: "custom",
+              message: "Start date is required for Salary reports",
+            });
+          }
+          if (!data.end) {
+            setError("end", {
+              type: "custom",
+              message: "End date is required for Salary reports",
+            });
+          }
+        }
+
+        if (
+          watch("reportType").value === "tds" &&
+          !watch("financialYear").value
+        ) {
+          setError("financialYear", {
+            type: "custom",
+            message: "Select year is required for tds reports",
+          });
+        }
+
+        OnSubmit.mutate(data);
+      })}
+    >
       <div className="grid gap-2 grid-cols-2">
         <AuthInputFiled
           name="reportType"
@@ -269,6 +415,24 @@ const ReportForm = () => {
         </div>
       )}
 
+      {watch("reportType")?.value === "tds" && (
+        <div className="grid gap-2 grid-cols-2">
+          <AuthInputFiled
+            name="financialYear"
+            control={control}
+            type="select"
+            // icon={Work}
+            placeholder="Ex : 2024-2025"
+            label="Select year *"
+            readOnly={false}
+            maxLimit={15}
+            options={tdsYearOptions}
+            errors={errors}
+            error={errors.financialYear}
+          />
+        </div>
+      )}
+
       {watch("reportType")?.value === "salary" && (
         <div className="grid gap-2 grid-cols-2">
           <AuthInputFiled
@@ -288,10 +452,12 @@ const ReportForm = () => {
             name="end"
             control={control}
             type="month"
+            min={startValue}
+            disabled={!startValue}
+            readOnly={!startValue}
             // icon={Work}
             placeholder="Ex : March-2022"
             label="Select End Month *"
-            readOnly={false}
             maxLimit={15}
             // options={ReportYearsOptions}
             errors={errors}
@@ -313,24 +479,26 @@ const ReportForm = () => {
           errors={errors}
           error={errors.department}
         /> */}
-        <AuthInputFiled
-          name="manager"
-          control={control}
-          type="select"
-          // icon={Work}
-          placeholder="ex: Manager1"
-          label="Select Manager "
-          readOnly={false}
-          maxLimit={15}
-          options={Manageroptions}
-          isClearable={true}
-          errors={errors}
-          error={errors.manager}
-        />
+        {watch("reportType")?.value !== "tds" && (
+          <AuthInputFiled
+            name="manager"
+            control={control}
+            type="select"
+            // icon={Work}
+            placeholder="ex: Manager1"
+            label="Select Manager "
+            readOnly={false}
+            maxLimit={15}
+            options={Manageroptions}
+            isClearable={true}
+            errors={errors}
+            error={errors.manager}
+          />
+        )}
       </div>
 
       <button
-        className={` flex group justify-center w-max gap-2 items-center rounded-sm h-[30px] px-4 py-4 text-md font-semibold text-white bg-green-500 hover:bg-green-500 focus-visible:outline-green-500`}
+        className={` flex group justify-center w-max gap-2 items-center rounded-sm h-[30px] px-4 py-4 text-md font-semibold text-white bg-green-500 hover:bg-green-500 focus-visible:outline-green-500 mt-4`}
       >
         <SiMicrosoftexcel /> Generate Report
       </button>

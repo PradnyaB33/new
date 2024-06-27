@@ -35,7 +35,7 @@ const Tab0 = () => {
 
   async function GetOldTax() {
     const data = await axios.get(
-      `${process.env.REACT_APP_API}/route/tds/getMyDeclaration/2023-2024/${salaryAmount?.TotalInvestInvestment}`,
+      `${process.env.REACT_APP_API}/route/tds/getMyDeclaration/2024-2025/${salaryAmount?.TotalInvestInvestment}`,
       {
         headers: {
           Authorization: authToken,

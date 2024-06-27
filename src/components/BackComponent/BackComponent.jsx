@@ -23,7 +23,7 @@ const BackComponent = () => {
     "employeeTest",
     "/DH-dashboard",
     "/income-tax",
-    "/organisation/:organisationId/performance",
+    "/performance",
     "/organisation-hierarchy",
     "/organizationList",
     "/assingOrganizationToSelf",
@@ -36,7 +36,10 @@ const BackComponent = () => {
     "/leave",
   ];
 
-  if (backFalseRoutes.some((value) => location.pathname.includes(value))) {
+  if (
+    location.pathname === "/" ||
+    backFalseRoutes.some((value) => location.pathname.includes(value))
+  ) {
     return <></>;
   }
 

@@ -1,24 +1,25 @@
-import { Container, Typography } from "@mui/material";
-import React, { useContext, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Button } from "@mui/material";
-import { Add, Info } from "@mui/icons-material";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { UseContext } from "../../State/UseState/UseContext";
-import axios from "axios";
-import DOMPurify from "dompurify";
-import { MoreVert } from "@mui/icons-material";
-import { Menu, MenuItem } from "@mui/material";
-import Tooltip from "@mui/material/Tooltip";
+import { Add, Info, MoreVert } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
-import { TestContext } from "../../State/Function/Main";
 import {
+  Button,
+  Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Menu,
+  MenuItem,
+  Typography,
 } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
+import axios from "axios";
+import DOMPurify from "dompurify";
+import React, { useContext, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
+import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
 import CommunicationScheleton from "../../components/Modal/CommunicationModal/CommunicationScheleton";
 import NewCommunication from "../../components/Modal/CommunicationModal/NewCommunicationModal";
 import NewEditCommunication from "../../components/Modal/CommunicationModal/NewEditCommunicationModal";
@@ -118,7 +119,7 @@ const Communication = () => {
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
-        <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center">
+        <article className=" bg-white w-full h-max shadow-md rounded-sm border items-center">
           <Typography variant="h4" className=" text-center pl-10  mb-6 mt-6">
             Communication
           </Typography>

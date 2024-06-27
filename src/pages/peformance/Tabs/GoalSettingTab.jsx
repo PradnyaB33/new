@@ -16,7 +16,11 @@ const GoalSettingTab = () => {
   const user = getCurrentUser();
 
   const { fetchPerformanceSetup } = usePerformanceApi();
-  const { data: performance } = useQuery(
+  const {
+    data: performance,
+    error,
+    isError,
+  } = useQuery(
     ["performancePeriod"],
     () => fetchPerformanceSetup({ user, authToken }),
     {
@@ -24,7 +28,6 @@ const GoalSettingTab = () => {
         const endDate = moment(data.enddate); // replace with your actual endDate field
         const currentDate = moment();
 
-        console.log("enddate", endDate.diff(currentDate, "days"));
         if (data?.stages === "Send form to employee") {
           if (endDate.diff(currentDate, "days") <= 2) {
             setMessage(
@@ -106,6 +109,8 @@ const GoalSettingTab = () => {
       },
     }
   );
+
+  console.log("error state", error, isError);
   // const { data: performance } = useQuery(
   //   "performancePeriod",
   //   async () => {
@@ -183,7 +188,7 @@ const GoalSettingTab = () => {
         </div>
       </div>
 
-      <GoalsTable performance={performance} />
+      <GoalsTable performance={performance} isError={isError} />
     </div>
   );
 };

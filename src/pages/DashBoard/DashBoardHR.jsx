@@ -101,7 +101,6 @@ const DashBoardHR = () => {
     // eslint-disable-next-line
   }, []);
 
-  console.log(`🚀 ~ remoteEmployeeCount:`, remoteEmployeeCount);
   return (
     <section className=" bg-gray-50  min-h-screen w-full ">
       <header className="text-xl font-bold w-full px-8 pt-6 bg-white !text-[#67748E] shadow-md  p-4">
@@ -181,15 +180,12 @@ const DashBoardHR = () => {
                 open={open}
                 anchorEl={anchorEl}
                 onClose={handleClose}
-                sx={{
-                  height: "150px",
-                }}
                 anchorOrigin={{
                   vertical: "bottom",
                   horizontal: "left",
                 }}
               >
-                <div className="w-full  items-center    p-2 flex gap-2 ">
+                <div className="w-full  flex-col   h-auto pr-10  p-4 flex gap-4 ">
                   <button
                     onClick={() => {
                       setLocations("");

@@ -12,7 +12,7 @@ const OrgList = () => {
   return (
     <>
       <div className="bg-gray-50 h-screen">
-        <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
+        <header className="text-xl w-full pt-6 bg-white border-b   p-4">
           {/* <BackComponent /> */}
           <Link to={"/"}>
             <West className="mx-4 !text-xl" />
@@ -20,23 +20,21 @@ const OrgList = () => {
           Organisation list
         </header>
         <div className="px-8 mt-6 mb-4 w-full">
-          <div className="flex justify-between flex-col md:flex-row">
+          <div className="flex md:justify-between items-start  gap-2  flex-col md:flex-row">
             <div>
-              <h1 className="md:text-2xl text-xl font-semibold">
+              <h1 className="md:text-2xl tracking-tight text-xl">
                 Organisations List
               </h1>
-              <p className="md:text-lg text-sm ">
-                Select and Manage Your Organisation
-              </p>
+              <p>Select and Manage Your Organisation</p>
             </div>
             <div className="flex items-center gap-2 justify-end">
               <Link to={"/assingOrganizationToSelf"}>
-                <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
+                <button className=" flex bg-white  group justify-center gap-2 items-center rounded-sm px-6 py-2 md:text-md xs:text-sm  text-xs  text-blue-500 border border-gray-300 hover:bg-blue-500 hover:text-white focus-visible:outline-blue-500">
                   Assign Organisation
                 </button>
               </Link>
               <Link to={"/add-organisation"}>
-                <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-2 text-md  text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
+                <button className=" flex  group justify-center gap-2 items-center rounded-sm px-6 py-2 md:text-md xs:text-sm text-xs    text-white bg-blue-500 hover:bg-blue-300 focus-visible:outline-blue-500">
                   Add Organisation
                 </button>
               </Link>

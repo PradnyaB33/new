@@ -1,15 +1,19 @@
 import { CheckCircle, Close, Person } from "@mui/icons-material";
 import { Dialog, DialogContent, Divider, IconButton } from "@mui/material";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
+import { TestContext } from "../../../../../State/Function/Main";
+import useIncomeAPI from "../../../../../hooks/IncomeTax/useIncomeAPI";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
 
 const RegimeModel = ({ open, handleClose }) => {
   const [selected, setSelected] = useState(null);
   const { handleSubmit, setValue } = useForm();
+  const { handleAlert } = useContext(TestContext);
   const authToken = useAuthToken();
+  const { financialYear } = useIncomeAPI();
 
   const handleRadioChange = (index, item) => {
     setSelected(index);
@@ -19,7 +23,7 @@ const RegimeModel = ({ open, handleClose }) => {
   const changeRegimeMutation = useMutation(
     (data) => {
       axios.put(
-        `${process.env.REACT_APP_API}/route/tds/changeRegime/2023-2024`,
+        `${process.env.REACT_APP_API}/route/tds/changeRegime/${financialYear}`,
         data,
         {
           headers: {
@@ -30,10 +34,12 @@ const RegimeModel = ({ open, handleClose }) => {
     },
     {
       onSuccess: () => {
+        handleAlert(true, "success", `Regime changed successfully`);
         handleClose();
       },
       onError: (error) => {
         console.log(error);
+        handleAlert(true, "success", `There was an error please try later`);
         handleClose();
       },
     }
@@ -74,7 +80,7 @@ const RegimeModel = ({ open, handleClose }) => {
             <Divider variant="fullWidth" orientation="horizontal" />
           </div>
 
-          <div className="w-full py-4 px-8">
+          <div className="w-full  px-4">
             {/* <h1 className="text-lg font-bold mb-1">Choose your Profile</h1>
             <p className="text-sm text-gray-700">
               By choosing a profile, you'll be able to access different profiles

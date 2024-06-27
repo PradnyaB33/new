@@ -189,9 +189,25 @@ const TestNavItems = ({ toggleDrawer }) => {
         ],
       },
 
-      "Reporting Mis": {
+      Report: {
         open: false,
-        isVisible: true,
+        isVisible:
+          data?.organisation?.packageInfo === "Intermediate Plan" &&
+          window.location.pathname?.includes("organisation") &&
+          [
+            "Super-Admin",
+            "Delegate-Super-Admin",
+            // "Delegate-Super-Admin",
+            // "Department-Head",
+            // "Delegate-Department-Head",
+            // "Department-Admin",
+            // "Delegate-Department-Admin",
+            "Accountant",
+            // "Delegate-Accountant",
+            "HR",
+            // "Manager",
+            // "Employee",
+          ]?.includes(role),
         icon: <NotificationsActive className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {

@@ -4,7 +4,7 @@ import { Box, Button, IconButton, Modal } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
 import { TestContext } from "../../../../../State/Function/Main";
 import AuthInputFiled from "../../../../../components/InputFileds/AuthInputFiled";
@@ -18,9 +18,44 @@ const TDSDeclarationModel = ({
   empId,
 }) => {
   const authToken = useAuthToken();
-  // const { getCurrentUser } = UserProfile();
-  // const user = getCurrentUser();
+
   const { handleAlert } = useContext(TestContext);
+  const queryClient = useQueryClient();
+
+  // const { empSalary } = useIncomeAPI(
+  //   [],
+  //   user,
+  //   authToken,
+  //   handleAlert,
+  //   queryClient,
+  //   sectionname,
+  //   "",
+  //   "",
+  //   empId
+  // );
+
+  // console.log(empSalary, "Emp");
+
+  const { data: empSalary } = useQuery({
+    queryKey: ["finacialYearData"],
+    queryFn: async () => {
+      try {
+        const salaryData = await axios.get(
+          `${process.env.REACT_APP_API}/route/employeeSalary/getEmployeeSalaryPerFinancialYear/?fromDate=5-2023&toDate=3-2024&empId=${empId}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        return salaryData.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    enabled: !!open,
+  });
+
   const { financialYear } = useIncomeTax();
   const style = {
     position: "absolute",
@@ -31,6 +66,7 @@ const TDSDeclarationModel = ({
     p: 4,
   };
 
+  console.log(`🚀 ~ empSalary:`, empSalary);
   const zodSchema = z.object({
     declaration: z
       .string()
@@ -75,11 +111,11 @@ const TDSDeclarationModel = ({
     [open]
   );
 
-  const queryClient = useQueryClient();
-
   const onSubmit = async (data) => {
+    console.log(empSalary, empId);
     const requestData = {
       empId,
+      usersalary: empSalary?.TotalInvestInvestment,
       requestData: {
         name: investment.name,
         sectionname: investment.sectionname,

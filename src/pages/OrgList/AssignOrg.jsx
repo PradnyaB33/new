@@ -50,7 +50,7 @@ const AssignOrg = () => {
       console.log(data.data.token, "token");
       Cookies.set("aegis", data.data.token, { expires: 4 / 24 });
       handleAlert(true, "success", "Organisation assigned successful");
-     window.location.reload();
+      window.location.reload();
       console.log(data);
     } catch (error) {
       console.log(error);
@@ -68,18 +68,18 @@ const AssignOrg = () => {
           <CircularProgress />
         </div>
       )}
-      <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
+      <header className="text-xl w-full pt-6 bg-white border-b   p-4">
         {/* <BackComponent /> */}
         <Link to={"/organizationList"}>
           <West className="mx-4 !text-xl" />
         </Link>
-        Assign organisation to self
+        Assign organisation
       </header>
 
       <section className="md:px-8 flex space-x-2 md:py-6">
-        <article className="w-full rounded-md bg-white border">
-          <div className=" w-full md:px-5 px-1 ">
-            <div className="w-full mt-4">
+        <article className="w-full rounded-md ">
+          <div>
+            <div className="w-full ">
               <h1 className="text-2xl tracking-tight">
                 Assign organisation to self
               </h1>
@@ -87,12 +87,12 @@ const AssignOrg = () => {
                 This will helps an allows you to perform task related to
                 employee fields such as leaves , shifts , payroll related task
               </p>
-              <form className="flex-col gap-4 mt-6 flex items-center">
+              <form className="flex-col gap-4 mt-4 mb-6  flex ">
                 {orgList?.map((item, index) => (
                   <label
                     key={index}
-                    className={`inline-flex items-center space-x-2 cursor-pointer w-full border-[.5px] border-gray-300 p-4 py-3  rounded-lg ${
-                      organizationId === item._id && "bg-blue-400 "
+                    className={` inline-flex bg-white items-center space-x-2 cursor-pointer sm:w-[80%] w-full border-[.5px] border-gray-300 p-4 py-3  rounded-sm ${
+                      organizationId === item._id && "!bg-blue-400 "
                     }`}
                   >
                     <input
@@ -116,12 +116,12 @@ const AssignOrg = () => {
                   </label>
                 ))}
               </form>
-              <div className="flex justify-end w-full">
+              <div className="flex w-full">
                 <button
                   type="button"
                   onClick={openDialog}
                   disabled={user.organizationId === organizationId}
-                  className={`bg-blue-500 text-end my-4 text-white p-2 px-4 rounded-md
+                  className={`bg-blue-500 text-end  text-white p-2 px-4 rounded-md
                  ${
                    user.organizationId === organizationId &&
                    "!bg-gray-200 !text-gray-500"
