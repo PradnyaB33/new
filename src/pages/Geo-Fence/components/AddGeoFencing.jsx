@@ -51,7 +51,7 @@ const AddGeoFencing = ({ onClose }) => {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col items-center gap-4"
       >
-        <div className="">
+        <div className="w-full">
           <AuthInputFiled
             className="w-full"
             name="location"
