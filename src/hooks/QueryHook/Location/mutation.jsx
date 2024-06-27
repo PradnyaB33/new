@@ -31,39 +31,7 @@ const useLocationMutation = () => {
   const getUserLocation = useMutation({
     mutationFn: fetchLocationData,
     onSuccess: (data) => {
-      handleAlert(true, "success", "Geolocation decoded");
-      // if (window.google.maps) {
-      //   // Initialize the map
-      //   const mapOptions = {
-      //     center: { lat: data?.latitude, lng: data?.longitude },
-      //     zoom: 18,
-      //     mapTypeControl: false,
-      //   };
-
-      //   // Create the map
-      //   // if (map !== null) {
-      //   map = new window.google.maps.Map(
-      //     document.getElementById("map"),
-      //     mapOptions
-      //   );
-      //   // }
-
-      //   // Add a marker
-      //   new window.google.maps.Marker({
-      //     position: { lat: data?.latitude, lng: data?.longitude },
-      //     map: map,
-      //     title: "Your Location!",
-      //   });
-      //   const polyline = new window.google.maps.Polyline({
-      //     path: locationArray,
-      //     geodesic: true,
-      //     strokeColor: "#FF0000", // Color of the polyline
-      //     strokeOpacity: 1.0,
-      //     strokeWeight: 4,
-      //   });
-      //   console.log(`🚀 ~ file: mutation.jsx:71 ~ polyline:`, polyline);
-      //   polyline.setMap(map);
-      // }
+      console.log(`🚀 ~ file: mutation.jsx:34 ~ data:`, data);
     },
     onError: (data) => {
       console.error(data);
@@ -95,8 +63,10 @@ const useLocationMutation = () => {
     },
   });
   const fetchUrl = async () => {
+    const data1 = await getUserLocation?.mutateAsync();
+    console.log(`🚀 ~ file: mutation.jsx:100 ~ data1:`, data1);
     const data = await axios.get(
-      `${process.env.REACT_APP_API}/route/punch-main/create-image-url`,
+      `${process.env.REACT_APP_API}/route/punch-main/create-image-url?lat=${data1?.latitude}&lng=${data1?.longitude}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -128,8 +98,7 @@ const useLocationMutation = () => {
       }
     },
     onError: (data) => {
-      console.error(data);
-      handleAlert(true, "error", data.message);
+      handleAlert(true, "error", data?.response?.data?.message);
     },
   });
   const fetchPunchObject = async (image) => {

@@ -8,6 +8,7 @@ import {
   Fingerprint,
   Groups,
   ListAlt,
+  LocationOn,
   ModelTrainingOutlined,
   MonetizationOn,
   MonetizationOnOutlined,
@@ -678,6 +679,17 @@ const TestNavItems = ({ toggleDrawer }) => {
             link: `/organisation/${orgId}/remotePunching`,
             icon: <PanToolAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Apply Miss For Punch",
+          },
+          {
+            key: "geoFencing",
+            isVisible: [
+              "Super-Admin",
+              "Manager",
+              "Delegate-Super-Admin",
+            ].includes(role),
+            link: `/organisation/${orgId}/remotePunching/geo-fencing`,
+            icon: <LocationOn className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Geo Fencing",
           },
           // {
           //   key: "empNotification",

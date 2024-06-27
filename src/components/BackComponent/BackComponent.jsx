@@ -34,6 +34,7 @@ const BackComponent = () => {
     // "/organisation/employee-dashboard",
     // "/organisation",
     "/leave",
+    "/geo-fencing",
   ];
 
   if (

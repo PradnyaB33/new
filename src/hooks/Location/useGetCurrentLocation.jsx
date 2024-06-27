@@ -14,7 +14,7 @@ const useGetCurrentLocation = () => {
     });
 
     const { latitude, longitude } = position.coords;
-    return { lat: latitude, lng: longitude };
+    return { lat: longitude, lng: latitude };
   };
   const { data = { lat: 0, lng: 0 } } = useQuery({
     queryKey: ["location"],

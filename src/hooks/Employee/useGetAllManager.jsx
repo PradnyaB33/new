@@ -3,7 +3,6 @@ import { useQuery } from "react-query";
 import useAuthToken from "../Token/useAuth";
 
 const useGetAllManager = (organisationId) => {
-  console.log(`🚀 ~ organisationId:`, organisationId);
   const authToken = useAuthToken();
 
   const { data } = useQuery({

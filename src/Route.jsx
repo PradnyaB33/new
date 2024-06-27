@@ -91,6 +91,7 @@ import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 import EmployeeNotification from "./pages/Employee-Notification/page";
 import EditEmployee from "./pages/Employee/EditEmployee";
 import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
+import GeoFencing from "./pages/Geo-Fence/page";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LetterSetup from "./pages/LetterTypes/LetterSetup";
@@ -182,6 +183,11 @@ const App = () => {
           path="/organisation/:organisationId/remotePunching"
           element={<RemoteEmployee />}
         />
+        <Route
+          path="/organisation/:organisationId/remotePunching/geo-fencing"
+          element={<GeoFencing />}
+        />
+
         {/* Login Routes */}
         <Route path="/test3" element={<TestYash />} />
         <Route

@@ -20,7 +20,8 @@ const PlaceAutoComplete = ({
   apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   value,
 }) => {
-  const data = useGetCurrentLocation();
+  const { data } = useGetCurrentLocation();
+  console.log(`🚀 ~ file: places-autocomplete.jsx:24 ~ data:`, data);
   const [state, setState] = useState(value?.address || "");
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const handleSelect = async (option, onChange) => {
