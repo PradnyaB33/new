@@ -3,6 +3,7 @@ import { Button } from "@mui/material";
 import React, { useState } from "react";
 import ReusableModal from "../../components/Modal/component";
 import HeaderBackComponent from "../../components/header/component";
+import useGetCurrentLocation from "../../hooks/Location/useGetCurrentLocation";
 import AddGeoFencing from "./components/AddGeoFencing";
 import GeoFencingCard from "./components/GeoFenceCard";
 import useOrgGeo from "./useOrgGeo";
@@ -10,6 +11,7 @@ import useOrgGeo from "./useOrgGeo";
 const GeoFencing = () => {
   const [open, setOpen] = useState(false);
   const { data } = useOrgGeo();
+  const { data: locationData } = useGetCurrentLocation();
   console.log(`🚀 ~ file: page.jsx:13 ~ data:`, data);
   return (
     <>
@@ -46,7 +48,9 @@ const GeoFencing = () => {
           subHeading={"You can activate geofencing for a specific zone"}
           onClose={() => setOpen(false)}
         >
-          <AddGeoFencing onClose={() => setOpen(false)} />
+          {locationData?.lat && (
+            <AddGeoFencing onClose={() => setOpen(false)} data={locationData} />
+          )}
         </ReusableModal>
       </div>
     </>
