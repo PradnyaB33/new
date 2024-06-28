@@ -1,16 +1,18 @@
-import { Typography, Container, Button} from "@mui/material";
+import { Typography, Container, Button } from "@mui/material";
 import React, { useState } from "react";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { useNavigate } from "react-router-dom";
 import OpenSurveyList from "./components/OpenSurveyList";
 import CloseSurveyList from "./components/CloseSurveyList";
+import SaveAsDraft from "./components/SaveAsDraft";
 
 const EmployeeSurvey = () => {
     const navigate = useNavigate();
 
     const [openSurvey, setOpenSurvey] = useState(false)
     const [closeSurvey, setCloseSurvey] = useState(false)
+    const [draftSurvey, setDraftSurvey] = useState(false)
 
     const handleCreateNewSurvey = () => {
         navigate("/organisation/:organisationId/create-new-survey");
@@ -22,6 +24,10 @@ const EmployeeSurvey = () => {
 
     const handleCloseSurvey = () => {
         setCloseSurvey(!closeSurvey)
+    }
+
+    const handleDraftSurvey = () => {
+        setDraftSurvey(!draftSurvey)
     }
 
     return (
@@ -49,6 +55,20 @@ const EmployeeSurvey = () => {
                             </Button>
                         </div>
                     </div>
+                    <div className="p-4  flex  justify-between  gap-3 w-full border-gray-300">
+                        <div className="flex justify-start ">
+                            <Typography variant="h6" className="pl-10 mb-6 mt-2">
+                                Save As Draft Survey
+                            </Typography>
+                        </div>
+                        <div className="mt-1 flex justify-end">
+                            <AddCircleOutlineIcon style={{ width: "40px" }} onClick={handleDraftSurvey} />
+                            <Typography variant="p" className="pl-10 mb-6 mt-2 w-50">
+                                Count: 10
+                            </Typography>
+                        </div>
+                    </div>
+                    {draftSurvey ? <SaveAsDraft /> : null}
                     <div className="p-4  flex  justify-between  gap-3 w-full border-gray-300">
                         <div className="flex justify-start ">
                             <Typography variant="h6" className="pl-10 mb-6 mt-2">

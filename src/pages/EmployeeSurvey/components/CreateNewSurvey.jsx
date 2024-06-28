@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { Select, Paper, Typography, TextField, MenuItem, Checkbox, Button, IconButton, FormControlLabel, Switch } from '@mui/material';
 import AuthInputFiled from '../../../components/InputFileds/AuthInputFiled';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -13,23 +13,34 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import { Email } from "@mui/icons-material";
+import { useNavigate } from 'react-router-dom';
 
 dayjs.extend(isSameOrBefore);
 
 const CreateNewSurvey = () => {
+    //hook
+    const navigate = useNavigate();
+
+    //state
     const [questions, setQuestions] = useState([{ question: '', questionType: '', options: [], required: false }]);
     const [employeeSurveyStartingDate, setEmployeeSurveyStartingDate] = useState(null);
     const [employeeSurveyEndDate, setEmployeeSurveyEndDate] = useState(null);
+    const [showSelectAll, setShowSelectAll] = useState(false);
 
+    //get organizationId
     const { getCurrentUser } = UserProfile();
     const user = getCurrentUser();
     const organisationId = user?.organizationId;
 
+    //get cookies
     const { cookies } = useContext(UseContext);
     const authToken = cookies["aegis"];
 
-    const { control, formState: { errors }, handleSubmit } = useForm();
+    //useForm
+    const { control, formState: { errors }, handleSubmit, setValue } = useForm();
 
+    //Post Data
     const mutation = useMutation(async (formData) => {
         console.log("formData", formData);
         const response = await axios.post(`${process.env.REACT_APP_API}/route/organization/${organisationId}/add-employee-survey-form`, formData,
@@ -39,9 +50,10 @@ const CreateNewSurvey = () => {
                 },
             }
         );
-        return response.data;
+        return response?.data;
     });
 
+    //handleQuestionTypeChange function
     const handleQuestionTypeChange = (index, event) => {
         const selectedType = event.target.value;
         const newQuestions = [...questions];
@@ -50,12 +62,14 @@ const CreateNewSurvey = () => {
         setQuestions(newQuestions);
     };
 
+    //handleAddOption function
     const handleAddOption = (index) => {
         const newQuestions = [...questions];
         newQuestions[index].options.push({ title: '', checked: false });
         setQuestions(newQuestions);
     };
 
+    //handleOptionChange function
     const handleOptionChange = (qIndex, oIndex, key, value) => {
         const newQuestions = [...questions];
         if (key === 'title') {
@@ -66,12 +80,14 @@ const CreateNewSurvey = () => {
         setQuestions(newQuestions);
     };
 
+    //handleRequiredChange function
     const handleRequiredChange = (index) => {
         const newQuestions = [...questions];
         newQuestions[index].required = !newQuestions[index].required;
         setQuestions(newQuestions);
     };
 
+    //renderAnswerInput function
     const renderAnswerInput = (qIndex) => {
         const { questionType, options } = questions[qIndex];
         switch (questionType) {
@@ -148,21 +164,25 @@ const CreateNewSurvey = () => {
         }
     };
 
+    //handleAddQuestion function
     const handleAddQuestion = () => {
         setQuestions([...questions, { question: '', questionType: '', options: [], required: false }]);
     };
 
+    //handleRemoveQuestion function
     const handleRemoveQuestion = (index) => {
         const newQuestions = questions.filter((_, qIndex) => qIndex !== index);
         setQuestions(newQuestions);
     };
 
+    //handleQuestionChange function
     const handleQuestionChange = (index, event) => {
         const newQuestions = [...questions];
         newQuestions[index].question = event.target.value;
         setQuestions(newQuestions);
     };
 
+    //handleCopyQuestion function
     const handleCopyQuestion = (index) => {
         const newQuestions = [...questions];
         const copiedQuestion = { ...newQuestions[index] };
@@ -170,6 +190,7 @@ const CreateNewSurvey = () => {
         setQuestions(newQuestions);
     };
 
+    //handleSubmitForm function
     const handleSubmitForm = (data) => {
         const formData = {
             title: data.title,
@@ -181,7 +202,8 @@ const CreateNewSurvey = () => {
                 required: q.required,
             })),
             employeeSurveyStartingDate,
-            employeeSurveyEndDate
+            employeeSurveyEndDate,
+            to: data.to.map(option => option.value)
         };
 
         mutation.mutate(formData, {
@@ -192,6 +214,39 @@ const CreateNewSurvey = () => {
                 console.error('Error submitting form', error);
             },
         });
+    };
+
+    //get emails of employee
+    const { data: employee } = useQuery(
+        ["employee", organisationId],
+        async () => {
+            const response = await axios.get(
+                `${process.env.REACT_APP_API}/route/employee/${organisationId}/get-emloyee`,
+                {
+                    headers: {
+                        Authorization: authToken,
+                    },
+                }
+            );
+            return response.data.employees;
+        }
+    );
+
+    const employeeEmail = employee
+        ? employee?.map((emp) => ({
+            label: emp.email,
+            value: emp.email,
+        }))
+        : [];
+
+    //handleSelectAll function
+    const handleSelectAll = (fieldName) => {
+        setValue(fieldName, employeeEmail);
+    };
+
+    //handleClose function
+    const handleClose = () => {
+        navigate("/organisation/:organisationId/employee-survey")
     };
 
     return (
@@ -229,9 +284,9 @@ const CreateNewSurvey = () => {
                         rules={{ required: 'Description is required' }}
                     />
                 </div>
-                {questions.map((q, index) => (
-                    <div key={index} style={{ marginTop: '20px', marginBottom: "40px" }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                {questions?.map((q, index) => (
+                    <div key={index} className="space-y-2">
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: "30px" }}>
                             <Typography variant="p">Question {index + 1}</Typography>
                             <div>
                                 <IconButton onClick={() => handleCopyQuestion(index)} aria-label="copy question">
@@ -282,21 +337,26 @@ const CreateNewSurvey = () => {
                         {renderAnswerInput(index)}
                     </div>
                 ))}
-                <div className="grid grid-cols-2 w-full gap-2">
+                <div className="flex gap-4 mt-4 justify-end">
+                    <Button color="primary" variant="outlined" onClick={handleAddQuestion}>
+                        Add Question
+                    </Button>
+                </div>
+                <div className="grid grid-cols-2 w-full gap-2" style={{ marginTop: "30px" }}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
-                            label="Employee survey starting date"
+                            label="Starting date"
                             value={employeeSurveyStartingDate}
                             onChange={(newDate) => {
                                 setEmployeeSurveyStartingDate(newDate);
                             }}
                             renderInput={(params) => <TextField {...params} fullWidth />}
                             disablePast
-                            />
-                            </LocalizationProvider>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        />
+                    </LocalizationProvider>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
-                            label="Employee survey ending date"
+                            label="Ending date"
                             value={employeeSurveyEndDate}
                             onChange={(newDate) => {
                                 setEmployeeSurveyEndDate(newDate);
@@ -304,14 +364,56 @@ const CreateNewSurvey = () => {
                             renderInput={(params) => <TextField {...params} fullWidth />}
                             disablePast
                         />
-                        </LocalizationProvider>
+                    </LocalizationProvider>
+                </div>
+                <div className="space-y-2 " style={{ marginTop: "30px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={showSelectAll}
+                                onChange={(e) => setShowSelectAll(e.target.checked)}
+                            />
+                        }
+                        label="Do you want to select all employee emails?"
+                    />
+                </div>
+                <div>
+                    {showSelectAll && (
+                        <div className="space-y-2 ">
+                            <Button
+                                variant="outlined"
+                                onClick={() => handleSelectAll("to")}
+                            >
+                                Select All
+                            </Button>
+                        </div>
+                    )}
+
+                    <div className="space-y-2 " style={{ marginTop: "30px" }}>
+                        <AuthInputFiled
+                            name="to"
+                            icon={Email}
+                            control={control}
+                            type="autocomplete"
+                            placeholder="To"
+                            label="To"
+                            readOnly={false}
+                            maxLimit={15}
+                            errors={errors}
+                            error={errors.to}
+                            optionlist={employeeEmail ? employeeEmail : []}
+                        />
+                    </div>
                 </div>
                 <div className="flex gap-4 mt-4 justify-end">
-                    <Button color="primary" variant="outlined" onClick={handleAddQuestion}>
-                        Add Question
-                    </Button>
                     <Button type="submit" variant="contained" color="primary">
-                        Send
+                        Complete Survey
+                    </Button>
+                    <Button type="submit" variant="outlined" color="primary">
+                        Save For Now
+                    </Button>
+                    <Button onClick={handleClose} variant="outlined" color="error">
+                        Close
                     </Button>
                 </div>
             </form>
