@@ -130,7 +130,14 @@ const RemoteEmployee = () => {
 
           {array.map((item, index) => (
             <MappedForm
-              {...{ item, index, setArray, setOpenModal, setIndex }}
+              {...{
+                item,
+                index,
+                setArray,
+                setOpenModal,
+                setIndex,
+                today: watch("today"),
+              }}
             />
           ))}
           <Button
