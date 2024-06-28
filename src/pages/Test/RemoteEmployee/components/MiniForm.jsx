@@ -1,9 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FactoryOutlined } from "@mui/icons-material";
-import CloseIcon from "@mui/icons-material/Close";
 import { Button } from "@mui/material";
 import moment from "moment";
-import React, { useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
@@ -17,8 +16,6 @@ const MiniForm = ({
   array,
   index,
 }) => {
-  console.log(`🚀 ~ file: MiniForm.jsx:20 ~ index:`, index);
-  console.log(`🚀 ~ file: MiniForm.jsx:20 ~ array[index]:`, array[index]);
   const formSchema = z.object({
     startLocation: z.any({
       address: z.string(),
@@ -39,7 +36,7 @@ const MiniForm = ({
     distance: z.string(),
   });
 
-  const { control, formState, handleSubmit, reset, watch, setValue } = useForm({
+  const { control, formState, handleSubmit, reset, watch } = useForm({
     defaultValues: {
       startLocation: {
         address: index ? array[index]?.address : "",
@@ -61,31 +58,6 @@ const MiniForm = ({
     },
     resolver: zodResolver(formSchema),
   });
-
-  useEffect(() => {
-    console.log(
-      `🚀 ~ file: MiniForm.jsx:79 ~ array[index]?.endLocation?.address:`,
-      array[index]?.endLocation?.address
-    );
-    setValue("startLocation", {
-      address: array[index]?.startLocation?.address,
-      position: {
-        lat: array[index]?.startLocation?.position?.lat,
-        lng: array[index]?.startLocation?.position?.lng,
-      },
-    });
-    setValue("endLocation", {
-      address: array[index]?.endLocation?.address,
-      position: {
-        lat: array[index]?.endLocation?.position?.lat,
-        lng: array[index]?.endLocation?.position?.lng,
-      },
-    });
-
-    setValue("start", array[index]?.start?.format("HH:mm:ss"));
-    setValue("end", array[index]?.end?.format("HH:mm:ss"));
-    setValue("distance", array[index]?.distance);
-  }, [index]);
 
   console.log("all startLocation", watch("startLocation")?.address?.length);
 
@@ -112,17 +84,6 @@ const MiniForm = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="relative">
-      <div
-        onClick={() => setOpenModal(false)}
-        className="absolute top-0 right-0 w-[30px] h-[30px] flex justify-center items-center bg-red-600 text-white rounded-full"
-      >
-        <CloseIcon />
-      </div>
-      <div>
-        <h1 className="text-center sm:text-[2vw] text-[6vw]">
-          Apply For Miss Punch
-        </h1>
-      </div>
       <div className="flex w-full justify-between mt-4 items-center flex-wrap gap-4">
         <AuthInputFiled
           className="w-full"
