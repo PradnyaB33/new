@@ -2,7 +2,7 @@ import { MoreVert } from "@mui/icons-material";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import React, { useState } from "react";
 
-const MappedForm = ({ item, index, setArray, setOpenModal }) => {
+const MappedForm = ({ item, index, setArray, setOpenModal, setIndex }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -58,7 +58,13 @@ const MappedForm = ({ item, index, setArray, setOpenModal }) => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem id="edit" onClick={() => setOpenModal(true)}>
+              <MenuItem
+                id="edit"
+                onClick={() => {
+                  setIndex(index);
+                  setOpenModal(true);
+                }}
+              >
                 Edit
               </MenuItem>
               <MenuItem id="delete" onClick={handleDelete}>

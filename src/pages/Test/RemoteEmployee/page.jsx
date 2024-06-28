@@ -52,11 +52,6 @@ const RemoteEmployee = () => {
 
       return result.data;
     },
-    // axios.delete(`${process.env.REACT_APP_API}/route`, {
-    //   headers: {
-    //     Authorization: authToken,
-    //   },
-    // }),
     {
       onSuccess: (data) => {
         console.info(`🚀 ~ file: page.jsx:40 ~ data:`, data);
@@ -84,16 +79,15 @@ const RemoteEmployee = () => {
     });
   }, []);
   const onSubmit = (optData) => {
-    console.log(`🚀 ~ file: page.jsx:89 ~ optData:`, optData);
     const body = {
       today: moment(optData?.today),
       arrayOfLocations: array,
     };
-    console.log(`🚀 ~ file: page.jsx:90 ~ body:`, body);
     applyMutation.mutate(body);
   };
   const [center, setcenter] = useState({ lat: 19.076, lng: 72.8777 });
   const [array, setArray] = useState([]);
+  const [index1, setIndex] = useState(0);
   const { isLoaded } = useJsApiLoader({
     id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -135,7 +129,9 @@ const RemoteEmployee = () => {
           </div>
 
           {array.map((item, index) => (
-            <MappedForm {...{ item, index, setArray, setOpenModal }} />
+            <MappedForm
+              {...{ item, index, setArray, setOpenModal, setIndex }}
+            />
           ))}
           <Button
             type="submit"
@@ -173,6 +169,7 @@ const RemoteEmployee = () => {
                 center,
                 setcenter,
                 today: watch("today"),
+                index: index1,
               }}
             />
           </DialogContent>

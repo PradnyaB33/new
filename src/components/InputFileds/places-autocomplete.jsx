@@ -19,6 +19,7 @@ const PlaceAutoComplete = ({
   errors,
   apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   value,
+  descriptionText,
 }) => {
   const { data } = useGetCurrentLocation();
   const [state, setState] = useState(value?.address || "");
@@ -131,6 +132,7 @@ const PlaceAutoComplete = ({
           );
         }}
       />
+      <p className="text-xs w-full h-fit">{descriptionText}</p>
       <div className="h-4 !mb-1">
         <ErrorMessage
           errors={errors}
