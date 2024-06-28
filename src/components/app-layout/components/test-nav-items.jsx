@@ -48,7 +48,7 @@ import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
-
+import WorkIcon from '@mui/icons-material/Work';
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
@@ -608,6 +608,42 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Manage Department",
           },
+        ],
+      },
+      Recruitment: {
+        open: false,
+        icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
+        isVisible:
+          window.location.pathname?.includes("organisation") &&
+          [
+            "Super-Admin",
+            "Delegate-Super-Admin",
+            "HR",
+          ]?.includes(role),
+        routes: [
+          {
+            key: "createjobposition",
+            isVisible: [
+              "Super-Admin",
+              "HR",
+              "Delegate-Super-Admin",
+            ].includes(role),
+            link: `organisation/${orgId}/create-job-position`,
+            icon: <WorkIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Create Job Position",
+          },
+          {
+            key: "viewjobposition",
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "HR",
+            ].includes(role),
+            link: `organisation/${orgId}/view-job-position`,
+            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            text: "View Job Position",
+          },
+        
         ],
       },
       Organisation: {

@@ -69,6 +69,23 @@ const useEmpQuery = ({ organisationId }) => {
     return managerlist;
   };
 
+  const GetHrListCall = () => {
+    const { data: hrLists } = useQuery({
+      queryKey: ["hrList"],
+      queryFn: () =>
+        getEmployeeDataApi(
+          `${process.env.REACT_APP_API}/route/employee/get-hr/${organisationId}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        ),
+    });
+
+    return hrLists;
+  };
+
   const EmpCodeCall = () => {
     const { data: empCode } = useQuery({
       queryKey: ["empCode"],
@@ -201,6 +218,7 @@ const useEmpQuery = ({ organisationId }) => {
     LocationListCall,
     EmpCodeCall,
     OnBoardManagerListCall,
+    GetHrListCall,
   };
 };
 
