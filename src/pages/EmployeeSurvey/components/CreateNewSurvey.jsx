@@ -1,23 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 import { Select, Paper, Typography, TextField, MenuItem, Checkbox, Button, IconButton, FormControlLabel, Switch } from '@mui/material';
 import AuthInputFiled from '../../../components/InputFileds/AuthInputFiled';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
+import axios from 'axios';
+import UserProfile from '../../../hooks/UserData/useUser';
+import { UseContext } from "../../../State/UseState/UseContext";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+
+dayjs.extend(isSameOrBefore);
 
 const CreateNewSurvey = () => {
-    /**
-     * useState for question
-     */
-    const [questions, setQuestions] = useState([
-        { question: '', questionType: '', options: [], required: false }
-    ]);
+    const [questions, setQuestions] = useState([{ question: '', questionType: '', options: [], required: false }]);
+    const [employeeSurveyStartingDate, setEmployeeSurveyStartingDate] = useState(null);
+    const [employeeSurveyEndDate, setEmployeeSurveyEndDate] = useState(null);
 
-    /**
-     * handleQuestionTypeChange function
-     * @param {*} index 
-     * @param {*} event 
-     */
+    const { getCurrentUser } = UserProfile();
+    const user = getCurrentUser();
+    const organisationId = user?.organizationId;
+
+    const { cookies } = useContext(UseContext);
+    const authToken = cookies["aegis"];
+
+    const { control, formState: { errors }, handleSubmit } = useForm();
+
+    const mutation = useMutation(async (formData) => {
+        console.log("formData", formData);
+        const response = await axios.post(`${process.env.REACT_APP_API}/route/organization/${organisationId}/add-employee-survey-form`, formData,
+            {
+                headers: {
+                    Authorization: authToken,
+                },
+            }
+        );
+        return response.data;
+    });
+
     const handleQuestionTypeChange = (index, event) => {
         const selectedType = event.target.value;
         const newQuestions = [...questions];
@@ -26,19 +50,12 @@ const CreateNewSurvey = () => {
         setQuestions(newQuestions);
     };
 
-    /**
-     * handleAddOption function
-     * @param {*} index 
-     */
     const handleAddOption = (index) => {
         const newQuestions = [...questions];
         newQuestions[index].options.push({ title: '', checked: false });
         setQuestions(newQuestions);
     };
 
-    /**
-     * handleOptionChange function
-     */
     const handleOptionChange = (qIndex, oIndex, key, value) => {
         const newQuestions = [...questions];
         if (key === 'title') {
@@ -49,20 +66,12 @@ const CreateNewSurvey = () => {
         setQuestions(newQuestions);
     };
 
-    /**
-     * handleRequiredChange function
-     */
     const handleRequiredChange = (index) => {
         const newQuestions = [...questions];
         newQuestions[index].required = !newQuestions[index].required;
         setQuestions(newQuestions);
     };
 
-    /**
-     * renderAnswerInput function
-     * @param {*} qIndex 
-     * @returns 
-     */
     const renderAnswerInput = (qIndex) => {
         const { questionType, options } = questions[qIndex];
         switch (questionType) {
@@ -139,33 +148,21 @@ const CreateNewSurvey = () => {
         }
     };
 
-    /**
-     * handleAddQuestion function
-     */
     const handleAddQuestion = () => {
         setQuestions([...questions, { question: '', questionType: '', options: [], required: false }]);
     };
 
-    /**
-     * handleRemoveQuestion function
-     */
     const handleRemoveQuestion = (index) => {
         const newQuestions = questions.filter((_, qIndex) => qIndex !== index);
         setQuestions(newQuestions);
     };
 
-    /**
-     * handleQuestionChange function
-     */
     const handleQuestionChange = (index, event) => {
         const newQuestions = [...questions];
         newQuestions[index].question = event.target.value;
         setQuestions(newQuestions);
     };
 
-    /**
-   * handleCopyQuestion function
-   */
     const handleCopyQuestion = (index) => {
         const newQuestions = [...questions];
         const copiedQuestion = { ...newQuestions[index] };
@@ -173,9 +170,6 @@ const CreateNewSurvey = () => {
         setQuestions(newQuestions);
     };
 
-    /**
-     * handleSubmitForm function
-     */
     const handleSubmitForm = (data) => {
         const formData = {
             title: data.title,
@@ -186,19 +180,19 @@ const CreateNewSurvey = () => {
                 options: q.options.map(opt => opt.title),
                 required: q.required,
             })),
+            employeeSurveyStartingDate,
+            employeeSurveyEndDate
         };
 
-        console.log('Form submitted', formData);
+        mutation.mutate(formData, {
+            onSuccess: (data) => {
+                console.log('Form successfully submitted', data);
+            },
+            onError: (error) => {
+                console.error('Error submitting form', error);
+            },
+        });
     };
-
-    /**
-     * useForm
-     */
-    const {
-        control,
-        formState: { errors },
-        handleSubmit,
-    } = useForm();
 
     return (
         <Paper
@@ -221,6 +215,7 @@ const CreateNewSurvey = () => {
                         placeholder="Title"
                         label="Title"
                         errors={errors}
+                        rules={{ required: 'Title is required' }}
                     />
                 </div>
                 <div className="space-y-2 ">
@@ -231,10 +226,11 @@ const CreateNewSurvey = () => {
                         placeholder="Description"
                         label="Description"
                         errors={errors}
+                        rules={{ required: 'Description is required' }}
                     />
                 </div>
                 {questions.map((q, index) => (
-                    <div key={index} style={{ marginTop: '20px',marginBottom:"40px" }}>
+                    <div key={index} style={{ marginTop: '20px', marginBottom: "40px" }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                             <Typography variant="p">Question {index + 1}</Typography>
                             <div>
@@ -280,22 +276,38 @@ const CreateNewSurvey = () => {
                                 <MenuItem value="Paragraph">Paragraph</MenuItem>
                                 <MenuItem value="Checkboxes">Checkboxes</MenuItem>
                                 <MenuItem value="Dropdown">Dropdown</MenuItem>
-                                <MenuItem value="File upload">File upload</MenuItem>
-                                <MenuItem value="Linear scale">Linear scale</MenuItem>
                                 <MenuItem value="Date">Date</MenuItem>
                             </Select>
-
                         </div>
                         {renderAnswerInput(index)}
                     </div>
                 ))}
-
+                <div className="grid grid-cols-2 w-full gap-2">
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                            label="Employee survey starting date"
+                            value={employeeSurveyStartingDate}
+                            onChange={(newDate) => {
+                                setEmployeeSurveyStartingDate(newDate);
+                            }}
+                            renderInput={(params) => <TextField {...params} fullWidth />}
+                            disablePast
+                            />
+                            </LocalizationProvider>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                            label="Employee survey ending date"
+                            value={employeeSurveyEndDate}
+                            onChange={(newDate) => {
+                                setEmployeeSurveyEndDate(newDate);
+                            }}
+                            renderInput={(params) => <TextField {...params} fullWidth />}
+                            disablePast
+                        />
+                        </LocalizationProvider>
+                </div>
                 <div className="flex gap-4 mt-4 justify-end">
-                    <Button
-                        color="primary"
-                        variant="outlined"
-                        onClick={handleAddQuestion}
-                    >
+                    <Button color="primary" variant="outlined" onClick={handleAddQuestion}>
                         Add Question
                     </Button>
                     <Button type="submit" variant="contained" color="primary">
