@@ -5,7 +5,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import WorkIcon from "@mui/icons-material/Work";
+import useEmpOption from "../../../hooks/Employee-OnBoarding/useEmpOption";
+import { useParams } from "react-router-dom";
 const Test2 = ({ isLastStep, nextStep, prevStep }) => {
+  const organisationId = useParams("");
   const {
     setStep2Data,
     required_skill,
@@ -16,18 +19,22 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     age_requirement,
     working_time,
   } = useCreateJobPositionState();
+  const { onBoardManageroptions, HrOptions } = useEmpOption(organisationId);
 
   const JobPositionSchema = z.object({
     required_skill: z.array(
       z.object({
-        label: z.string(),
+        label: z.string(), 
         value: z.string(),
       })
     ),
-    hiring_manager: z.object({
-      label: z.string(),
-      value: z.string(),
-    }),
+    hiring_manager: z
+      .object({
+        label: z.string().optional(),
+        value: z.string().optional(),
+      })
+      .optional()
+      .nullable(),
     hiring_hr: z.object({
       label: z.string(),
       value: z.string(),
@@ -40,8 +47,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       .string()
       .min(2, { message: "Minimum two characters required" })
       .max(1500),
-    age_requirement: z.string(),
-    working_time: z.string(),
+    age_requirement: z.string().optional(),
+    working_time: z.string().optional(),
   });
 
   const { control, formState, handleSubmit } = useForm({
@@ -80,9 +87,10 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             control={control}
             type="select"
             placeholder="Hiring Manager"
-            label="Hiring Manager*"
+            label="Hiring Manager"
             errors={errors}
             error={errors.hiring_manager}
+            options={onBoardManageroptions}
           />
           <AuthInputFiled
             name="hiring_hr"
@@ -94,6 +102,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             label="Hiring Hr*"
             errors={errors}
             error={errors.hiring_hr}
+            options={HrOptions}
           />
         </div>
 
@@ -104,7 +113,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             control={control}
             type="number"
             placeholder="Age Requirement"
-            label="Age Requirement*"
+            label="Age Requirement"
             errors={errors}
             error={errors.age_requirement}
           />
@@ -114,7 +123,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             control={control}
             type="number"
             placeholder="Working Time"
-            label="Working Time*"
+            label="Working Time"
             errors={errors}
             error={errors.working_time}
           />
@@ -140,6 +149,19 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
             label="Experience Level*"
             errors={errors}
             error={errors.experience_level}
+          />
+        </div>
+
+        <div className="w-full">
+          <AuthInputFiled
+            name="required_skill"
+            icon={WorkIcon}
+            control={control}
+            type="autocomplete"
+            placeholder="Required Skills"
+            label="Required Skills *"
+            errors={errors}
+            error={errors.required_skill}
           />
         </div>
 

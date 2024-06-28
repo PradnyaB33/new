@@ -85,22 +85,22 @@ const Test1 = ({ nextStep, isLastStep }) => {
 
   const { control, formState, handleSubmit, getValues } = useForm({
     defaultValues: {
-      position_name: position_name,
-      department_name: department_name,
-      location_name: location_name,
-      date: date,
-      mode_of_working: mode_of_working,
-      job_type: job_type,
-      job_level: job_level,
-      job_description: job_description,
-      role_and_responsibility: role_and_responsibility,
+      position_name,
+      department_name,
+      location_name,
+      date,
+      mode_of_working,
+      job_type,
+      job_level,
+      job_description,
+      role_and_responsibility,
     },
     resolver: zodResolver(JobPositionSchema),
   });
   const { errors } = formState;
 
   const onSubmit = async (data) => {
-    console.log(`🚀 ~ data:`, data);
+    console.log("🚀 ~ data:", data);
     console.log(getValues());
     setStep1Data(data);
     nextStep();
@@ -109,7 +109,6 @@ const Test1 = ({ nextStep, isLastStep }) => {
   return (
     <div className="w-full mt-4 px-2 sm:px-4 lg:px-6">
       <h1 className="text-xl mb-4 font-bold">Job Details</h1>
-
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full flex flex-col space-y-4"
@@ -127,19 +126,17 @@ const Test1 = ({ nextStep, isLastStep }) => {
           />
           <AuthInputFiled
             name="department_name"
-            value={department_name}
             icon={WorkIcon}
             control={control}
             type="select"
             placeholder="Select Department"
-            label="Select Department *"
+            label="Select Department*"
             errors={errors}
             error={errors.department_name}
             options={Departmentoptions}
           />
           <AuthInputFiled
             name="location_name"
-            value={location_name}
             icon={WorkIcon}
             control={control}
             type="select"
@@ -150,11 +147,9 @@ const Test1 = ({ nextStep, isLastStep }) => {
             options={locationoption}
           />
         </div>
-
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <AuthInputFiled
             name="job_level"
-            value={job_level}
             icon={WorkIcon}
             control={control}
             type="select"
@@ -175,11 +170,9 @@ const Test1 = ({ nextStep, isLastStep }) => {
             error={errors.date}
           />
         </div>
-
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <AuthInputFiled
             name="mode_of_working"
-            value={mode_of_working}
             icon={WorkIcon}
             control={control}
             type="select"
@@ -191,18 +184,16 @@ const Test1 = ({ nextStep, isLastStep }) => {
           />
           <AuthInputFiled
             name="job_type"
-            value={job_type}
             icon={WorkIcon}
             control={control}
             type="select"
             placeholder="Select Job Type"
-            label="Select Job Type *"
+            label="Select Job Type*"
             errors={errors}
             error={errors.job_type}
             options={jobTypeOptions}
           />
         </div>
-
         <div className="w-full">
           <AuthInputFiled
             name="job_description"
@@ -227,7 +218,6 @@ const Test1 = ({ nextStep, isLastStep }) => {
             error={errors.role_and_responsibility}
           />
         </div>
-
         <div className="flex justify-end">
           <button
             type="submit"
