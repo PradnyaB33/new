@@ -62,6 +62,7 @@ const AuthInputFiled = ({
   useRange = false,
   asSingle = true,
 }) => {
+  
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
 
@@ -548,6 +549,7 @@ const AuthInputFiled = ({
           errors,
           center,
           value,
+          descriptionText,
         }}
       />
     );
