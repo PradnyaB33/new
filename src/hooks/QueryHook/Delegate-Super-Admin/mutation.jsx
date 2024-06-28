@@ -10,7 +10,6 @@ const useDelegateSuperAdmin = () => {
   const { handleAlert } = useContext(TestContext);
 
   const createDelegate = async (data) => {
-    console.log(`🚀 ~ file: mutation.jsx:13 ~ data:`, data);
     const response = await axios.patch(
       `${process.env.REACT_APP_API}/route/employee/delegate`,
       data,
@@ -20,7 +19,6 @@ const useDelegateSuperAdmin = () => {
         },
       }
     );
-    console.log(`🚀 ~ file: mutation.jsx:23 ~ response:`, response);
     return response.data;
   };
 
