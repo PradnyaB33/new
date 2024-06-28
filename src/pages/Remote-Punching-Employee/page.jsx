@@ -11,7 +11,6 @@ import BasicSpeedDial from "./components/speed-dial";
 const EmployeeRemotePunch = () => {
   const { getUserLocation } = useLocationMutation();
   const { data, mutate } = getUserLocation;
-  console.log(`🚀 ~ file: page.jsx:13 ~ data:`, data);
   useEffect(() => {
     mutate();
   }, [mutate]);
@@ -55,7 +54,11 @@ const EmployeeRemotePunch = () => {
                 variant="filled"
               />
               <Chip
-                label={`Ended at ${endTime?moment(endTime).format("hh:mm:ss"):moment().format("hh:mm:ss")}`}
+                label={`Ended at ${
+                  endTime
+                    ? moment(endTime).format("hh:mm:ss")
+                    : moment().format("hh:mm:ss")
+                }`}
                 className="!bg-white !text-md"
                 onClick={(e) => console.log(e)}
                 variant="filled"

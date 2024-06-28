@@ -1,6 +1,6 @@
+import { CheckIcon } from "@heroicons/react/16/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TodayOutlined } from "@mui/icons-material";
-import CheckIcon from "@mui/icons-material/Check";
+import { Add, TodayOutlined } from "@mui/icons-material";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -30,8 +30,11 @@ const RemoteEmployee = () => {
   });
   const { formState, control, watch, handleSubmit, reset } = useForm({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      today: moment().format("yyyy-MM-DD"),
+    },
   });
-  const { errors, isDirty } = formState;
+  const { errors } = formState;
 
   const applyMutation = useMutation(
     async (body) => {
@@ -102,8 +105,11 @@ const RemoteEmployee = () => {
 
   return (
     <div className="w-screen flex relative">
-      <div className="z-50 p-6 flex flex-col mt-7 w-[400px] sm:text-base text-sm bg-white gap-4">
-        <form onSubmit={handleSubmit(onSubmit)} className="w-full bg-white">
+      <div className="z-50 p-6 flex flex-col mt-7 h-auto relative w-[400px] sm:text-base text-sm bg-white gap-4">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="w-full h-full bg-white"
+        >
           <AuthInputFiled
             name="today"
             icon={TodayOutlined}
@@ -114,6 +120,14 @@ const RemoteEmployee = () => {
             errors={errors}
             error={errors.today}
           />
+          <Button
+            type="button"
+            variant="contained"
+            onClick={() => setOpenModal(true)}
+            fullWidth
+          >
+            <Add />
+          </Button>
           <div>
             <p className=" z-[99999999]  mt-4 font-semibold  mb-3">
               Total Approximate Distance : Kilometers
@@ -123,26 +137,19 @@ const RemoteEmployee = () => {
           {array.map((item, index) => (
             <MappedForm {...{ item, index, setArray, setOpenModal }} />
           ))}
+          <Button
+            type="submit"
+            disabled={array.length > 0 ? false : true}
+            variant="contained"
+            fullWidth
+          >
+            <span className="mr-3">
+              <CheckIcon />
+            </span>{" "}
+            Apply for miss punch
+          </Button>
 
-          <div className="absolute bottom-3 w-[400px] flex flex-col items-end gap-10">
-            <button
-              type="button"
-              onClick={() => setOpenModal(true)}
-              className="bg-[#2463ea] w-[3vw] h-[3vw] text-white text-xl rounded-full"
-            >
-              +
-            </button>
-            <Button
-              type="submit"
-              disabled={isDirty && array.length > 0 ? false : true}
-              variant="contained"
-            >
-              <span className="mr-3">
-                <CheckIcon />
-              </span>{" "}
-              Apply for miss punch
-            </Button>
-          </div>
+          <div className="absolute bottom-0 w-full flex flex-col items-end gap-10"></div>
         </form>
       </div>
 

@@ -19,7 +19,7 @@ const Tab0 = () => {
     queryFn: async () => {
       try {
         const salaryData = await axios.get(
-          `${process.env.REACT_APP_API}/route/employeeSalary/getEmployeeSalaryPerFinancialYear?fromDate=5-2023&toDate=3-2024`,
+          `${process.env.REACT_APP_API}/route/employeeSalary/getEmployeeSalaryPerFinancialYear?fromDate=5-2024&toDate=3-2025`,
           {
             headers: {
               Authorization: authToken,

@@ -1,4 +1,4 @@
-import { GoogleMap } from "@react-google-maps/api";
+import { GoogleMap, MarkerF } from "@react-google-maps/api";
 import React from "react";
 
 const RightSide = ({ center }) => {
@@ -13,7 +13,9 @@ const RightSide = ({ center }) => {
         }}
         center={center}
         zoom={18}
-      ></GoogleMap>
+      >
+        <MarkerF position={center} />
+      </GoogleMap>
     </>
   );
 };

@@ -94,7 +94,6 @@ const packageSchema = z.object({
   _id: z.string().optional(),
 });
 const MiniForm = ({ data }) => {
-  console.log(`🚀 ~ file: form.jsx:99 ~ data:`, data);
   const { addDelegateMutation, deleteDelegateMutation } =
     useDelegateSuperAdmin();
   const [visible, setVisible] = useState(false);
@@ -124,9 +123,7 @@ const MiniForm = ({ data }) => {
   });
   joinDate = watch("joining_date");
   const { errors, isDirty } = formState;
-  console.log(`🚀 ~ file: form.jsx:62 ~ errors:`, errors);
   const onSubmit = async (data) => {
-    console.log(`🚀 ~ file: form.jsx:64 ~ data:`, data);
     addDelegateMutation.mutate(data);
   };
   const reset = async () => {

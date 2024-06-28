@@ -47,6 +47,14 @@ const useStartPunch = () => {
     onSuccess: (data) => {
       clearTemporaryArray();
     },
+    onError: (error) => {
+      console.error(error);
+      handleAlert(
+        true,
+        "error",
+        error?.data || "Error in fetching location data"
+      );
+    },
   });
   const getNavigatorData = async () => {
     const id = navigator.geolocation.watchPosition(

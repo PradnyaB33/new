@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Business, Money } from "@mui/icons-material";
+import { Business, LocationOn, Money } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
@@ -11,6 +11,7 @@ const organizationSchema = z.object({
   allowance: z.boolean(),
   allowanceQuantity: z.string(),
   dualWorkflow: z.boolean(),
+  geoFencing: z.boolean(),
 });
 
 const MiniForm = ({ data, mutate }) => {
@@ -21,6 +22,7 @@ const MiniForm = ({ data, mutate }) => {
         ? `${data?.remotePunchingObject?.allowanceQuantity}`
         : "0",
       dualWorkflow: data?.remotePunchingObject?.dualWorkflow || false,
+      geoFencing: data?.remotePunchingObject?.geoFencing || false,
     },
     resolver: zodResolver(organizationSchema),
   });
@@ -43,6 +45,19 @@ const MiniForm = ({ data, mutate }) => {
           error={errors.dualWorkflow}
           descriptionText={
             "Enabling workflow ensures account approval after manager's approval otherwise added directly as allowance."
+          }
+        />
+        <AuthInputFiled
+          name="geoFencing"
+          icon={LocationOn}
+          control={control}
+          type="checkbox"
+          placeholder="Geo Fencing"
+          label="Geo Fencing "
+          errors={errors}
+          error={errors.geoFencing}
+          descriptionText={
+            "Enabling Geo Fencing will allow the employee to punch in only from the allowed location."
           }
         />
         <AuthInputFiled

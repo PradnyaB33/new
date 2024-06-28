@@ -91,6 +91,7 @@ import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 import EmployeeNotification from "./pages/Employee-Notification/page";
 import EditEmployee from "./pages/Employee/EditEmployee";
 import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
+import GeoFencing from "./pages/Geo-Fence/page";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import LetterSetup from "./pages/LetterTypes/LetterSetup";
@@ -122,6 +123,8 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import CreateJobPosition from "./pages/Recruitment/CreateJobPosition";
+import ViewJobPosition from "./pages/Recruitment/ViewJobPosition";
 import EmployeeSurvey from "./pages/EmployeeSurvey/EmployeeSurvey";
 import CreateNewSurvey from "./pages/EmployeeSurvey/components/CreateNewSurvey";
 import EmployeeSurveyForm from "./pages/EmployeeSurvey/components/EmployeeSurveyForm";
@@ -186,6 +189,11 @@ const App = () => {
           path="/organisation/:organisationId/remotePunching"
           element={<RemoteEmployee />}
         />
+        <Route
+          path="/organisation/:organisationId/remotePunching/geo-fencing"
+          element={<GeoFencing />}
+        />
+
         {/* Login Routes */}
         <Route path="/test3" element={<TestYash />} />
         <Route
@@ -467,6 +475,26 @@ const App = () => {
               permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
             >
               <Communication />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/create-job-position"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <CreateJobPosition />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/view-job-position"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <ViewJobPosition />
             </RequireAuth>
           }
         />
