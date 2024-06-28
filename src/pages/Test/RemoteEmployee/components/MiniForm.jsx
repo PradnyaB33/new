@@ -106,7 +106,7 @@ const MiniForm = ({
     };
 
     setArray((prev) => [...prev, formattedData]);
-    // reset();
+    reset();
     setOpenModal(false);
   };
 

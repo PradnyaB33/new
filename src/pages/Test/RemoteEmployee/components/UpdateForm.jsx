@@ -56,10 +56,6 @@ const UpdateForm = ({ setArray, today, array, index, data, onClose }) => {
   const onSubmit = () => {
     const data = watch();
     console.log(`🚀 ~ file: UpdateForm.jsx:58 ~ data:`, data);
-    // const startDateTime = moment(`${today} ${data?.start}`, "YYYY-MM-DD HH:mm");
-    // const endDateTime = data.end
-    //   ? moment(`${today} ${data?.end}`, "YYYY-MM-DD HH:mm")
-    //   : null;
 
     const formattedData = {
       distance: data?.distance,
@@ -71,10 +67,10 @@ const UpdateForm = ({ setArray, today, array, index, data, onClose }) => {
 
     setArray((prev) => {
       const newArray = [...prev];
-      prev[index] = formattedData;
+      newArray[index] = formattedData;
       return newArray;
     });
-    // onClose();
+    onClose();
     reset();
   };
 
@@ -147,7 +143,7 @@ const UpdateForm = ({ setArray, today, array, index, data, onClose }) => {
         />
       </div>
       <div className="w-full flex justify-center mt-4">
-        <Button onClick={onSubmit} type="submit" variant="contained" fullWidth>
+        <Button onClick={onSubmit} type="button" variant="contained" fullWidth>
           Update
         </Button>
       </div>
