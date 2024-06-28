@@ -34,7 +34,7 @@ const RemoteEmployee = () => {
       today: moment().format("yyyy-MM-DD"),
     },
   });
-  const { errors, isDirty } = formState;
+  const { errors } = formState;
 
   const applyMutation = useMutation(
     async (body) => {
@@ -139,7 +139,7 @@ const RemoteEmployee = () => {
           ))}
           <Button
             type="submit"
-            disabled={isDirty && array.length > 0 ? false : true}
+            disabled={array.length > 0 ? false : true}
             variant="contained"
             fullWidth
           >
