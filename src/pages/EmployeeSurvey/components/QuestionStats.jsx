@@ -1,12 +1,7 @@
-import React, { useState } from 'react';
-import { TextField, Button } from '@mui/material';
-import { useNavigate } from "react-router-dom";
-import * as XLSX from "xlsx";
+import React from 'react';
+import { Button } from '@mui/material';
 
 const QuestionStats = () => {
-    // Hooks
-    const navigate = useNavigate();
-
     // Example JSON data
     const question = [
         { question: 'Do you enjoy our company’s culture?', count: 10 },
