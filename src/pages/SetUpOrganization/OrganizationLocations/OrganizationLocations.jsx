@@ -307,7 +307,7 @@ const OrganizationLocations = () => {
   return (
     <section className="bg-gray-50 min-h-screen w-full">
       <Setup>
-        <div className=" lg:w-[80%] w-full h-full bg-white   shadow-xl  rounded-sm">
+        <div className=" w-full h-full bg-white   shadow-xl  rounded-sm">
           <IntlProvider locale="en">
             <div className="p-4  border-b-[.5px] border-gray-300 flex  justify-between gap-3 w-full">
               <div className="flex  gap-3 ">
