@@ -173,7 +173,7 @@ const ReviewTab = () => {
         </div>
       </div>
 
-      <ReviewTable tableData={tableData} />
+      <ReviewTable tableData={tableData} performance={performance} />
     </div>
   );
 };

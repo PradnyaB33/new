@@ -107,6 +107,9 @@ const GoalSettingTab = () => {
           }
         }
       },
+      onError: (error) => {
+        console.log(error);
+      },
     }
   );
 
