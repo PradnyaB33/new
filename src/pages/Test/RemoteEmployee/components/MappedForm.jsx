@@ -1,9 +1,20 @@
 import { MoreVert } from "@mui/icons-material";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import React, { useState } from "react";
+import ReusableModal from "../../../../components/Modal/component";
+import UpdateForm from "./UpdateForm";
 
-const MappedForm = ({ item, index, setArray, setOpenModal, setIndex }) => {
+const MappedForm = ({
+  item,
+  index,
+  setArray,
+  setOpenModal,
+  setIndex,
+  array,
+  today,
+}) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -62,15 +73,32 @@ const MappedForm = ({ item, index, setArray, setOpenModal, setIndex }) => {
                 id="edit"
                 onClick={() => {
                   setIndex(index);
-                  setOpenModal(true);
+                  setOpen(true);
                 }}
+                type="button"
               >
                 Edit
               </MenuItem>
-              <MenuItem id="delete" onClick={handleDelete}>
+              <MenuItem id="delete" type="button" onClick={handleDelete}>
                 Delete
               </MenuItem>
             </Menu>
+            <ReusableModal
+              heading={"Update Miss Punch"}
+              open={open}
+              onClose={() => setOpen(false)}
+            >
+              <UpdateForm
+                {...{
+                  setArray: setArray,
+                  array: array,
+                  index,
+                  data: item,
+                  onClose: () => setOpen(false),
+                  today,
+                }}
+              />
+            </ReusableModal>
           </div>
         </div>
       </div>

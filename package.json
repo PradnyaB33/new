@@ -13,6 +13,7 @@
     "@hookform/resolvers": "^3.3.2",
     "@mdi/react": "^1.6.1",
     "@mui/icons-material": "^5.10.9",
+    "@mui/material": "^5.15.21",
     "@mui/x-data-grid": "^7.1.0",
     "@mui/x-date-pickers": "^6.18.5",
     "@progress/kendo-drawing": "^1.20.1",

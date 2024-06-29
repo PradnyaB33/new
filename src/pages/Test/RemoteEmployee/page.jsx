@@ -1,9 +1,7 @@
 import { CheckIcon } from "@heroicons/react/16/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Add, TodayOutlined } from "@mui/icons-material";
-import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import { Button } from "@mui/material";
 import { useJsApiLoader } from "@react-google-maps/api";
 import axios from "axios";
 import moment from "moment";
@@ -14,14 +12,13 @@ import { z } from "zod";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
+import ReusableModal from "../../../components/Modal/component";
 import MappedForm from "./components/MappedForm";
 import MiniForm from "./components/MiniForm";
 import RightSide from "./components/rightSide";
 
 const RemoteEmployee = () => {
   const [openModal, setOpenModal] = useState(false);
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -98,7 +95,7 @@ const RemoteEmployee = () => {
   }, [tag]);
 
   return (
-    <div className="w-screen flex relative">
+    <div className="w-screen flex relative justify-center">
       <div className="z-50 p-6 flex flex-col mt-7 h-auto relative w-[400px] sm:text-base text-sm bg-white gap-4">
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -130,7 +127,14 @@ const RemoteEmployee = () => {
 
           {array.map((item, index) => (
             <MappedForm
-              {...{ item, index, setArray, setOpenModal, setIndex }}
+              {...{
+                item,
+                index,
+                setArray,
+                setOpenModal,
+                setIndex,
+                today: watch("today"),
+              }}
             />
           ))}
           <Button
@@ -149,32 +153,24 @@ const RemoteEmployee = () => {
         </form>
       </div>
 
-      <Dialog
-        keepMounted={false}
+      <ReusableModal
         open={openModal}
         onClose={() => setOpenModal(false)}
-        fullWidth
-        maxWidth="xl"
-        maxHeight="sm"
-        className="!p-0"
-        fullScreen={fullScreen}
+        heading={"Apply For Miss Punch"}
       >
-        <DialogActions>
-          <DialogContent>
-            <MiniForm
-              {...{
-                setArray,
-                setOpenModal,
-                array,
-                center,
-                setcenter,
-                today: watch("today"),
-                index: index1,
-              }}
-            />
-          </DialogContent>
-        </DialogActions>
-      </Dialog>
+        <MiniForm
+          {...{
+            setArray,
+            setOpenModal,
+            array,
+            center,
+            setcenter,
+            today: watch("today"),
+            index: index1,
+          }}
+        />
+      </ReusableModal>
+
       {isLoaded && <RightSide {...{ center }} />}
     </div>
   );

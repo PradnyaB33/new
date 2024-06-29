@@ -3,7 +3,7 @@ import React from "react";
 
 const RightSide = ({ center }) => {
   return (
-    <>
+    <div className="hidden md:contents">
       {" "}
       <GoogleMap
         key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
@@ -16,7 +16,7 @@ const RightSide = ({ center }) => {
       >
         <MarkerF position={center} />
       </GoogleMap>
-    </>
+    </div>
   );
 };
 

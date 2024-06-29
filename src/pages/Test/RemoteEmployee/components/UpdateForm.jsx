@@ -7,15 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
 
-const MiniForm = ({
-  setArray,
-  setOpenModal,
-  center,
-  setCenter,
-  today,
-  array,
-  index,
-}) => {
+const UpdateForm = ({ setArray, today, array, index, data, onClose }) => {
   const formSchema = z.object({
     startLocation: z.any({
       address: z.string(),
@@ -36,54 +28,54 @@ const MiniForm = ({
     distance: z.string(),
   });
 
-  const { control, formState, handleSubmit, reset, watch } = useForm({
+  const { control, formState, reset, watch } = useForm({
     defaultValues: {
       startLocation: {
-        address: index ? array[index]?.address : "",
+        address: data?.startLocation?.address,
         position: {
-          lat: index ? array[index]?.position?.lat : center?.lat,
-          lng: index ? array[index]?.position?.lng : center?.lng,
+          lat: data?.startLocation?.position?.lat,
+          lng: data?.startLocation?.position?.lng,
         },
       },
       endLocation: {
-        address: index ? array[index]?.address : "",
+        address: data?.endLocation?.address,
         position: {
-          lat: index ? array[index]?.position?.lat : center?.lat,
-          lng: index ? array[index]?.position?.lng : center?.lng,
+          lat: data?.endLocation?.position?.lat,
+          lng: data?.endLocation?.position?.lng,
         },
       },
-      start: index ? array[index]?.start : undefined,
-      end: index ? array[index]?.end : undefined,
-      distance: index ? array[index]?.distance : undefined,
+      start: data?.start?.format("HH:mm:ss"),
+      end: data?.end?.format("HH:mm:ss"),
+      distance: data?.distance,
     },
     resolver: zodResolver(formSchema),
   });
 
-  console.log("all startLocation", watch("startLocation")?.address?.length);
-
   const { errors } = formState;
 
-  const onSubmit = (data) => {
-    const startDateTime = moment(`${today} ${data?.start}`, "YYYY-MM-DD HH:mm");
-    const endDateTime = data.end
-      ? moment(`${today} ${data?.end}`, "YYYY-MM-DD HH:mm")
-      : null;
-
-    console.log("this is  my data for misspunch", data);
+  const onSubmit = () => {
+    const data = watch();
+    console.log(`🚀 ~ file: UpdateForm.jsx:58 ~ data:`, data);
 
     const formattedData = {
-      ...data,
-      start: startDateTime,
-      end: endDateTime,
+      distance: data?.distance,
+      startLocation: data?.startLocation,
+      endLocation: data?.endLocation,
+      start: moment(`${today} ${data?.start}`, "YYYY-MM-DD HH:mm"),
+      end: moment(`${today} ${data?.end}`, "YYYY-MM-DD HH:mm"),
     };
 
-    setArray((prev) => [...prev, formattedData]);
+    setArray((prev) => {
+      const newArray = [...prev];
+      newArray[index] = formattedData;
+      return newArray;
+    });
+    onClose();
     reset();
-    setOpenModal(false);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="relative">
+    <form className="relative">
       <div className="flex w-full justify-between mt-4 items-center flex-wrap gap-4">
         <AuthInputFiled
           className="w-full"
@@ -94,7 +86,6 @@ const MiniForm = ({
           label="Start Location *"
           errors={errors}
           error={errors.startLocation}
-          center={center}
           descriptionText={
             watch("startLocation")?.address?.length > 0
               ? `You have selected ${
@@ -112,7 +103,6 @@ const MiniForm = ({
           label="End Location *"
           errors={errors}
           error={errors.endLocation}
-          center={center}
           descriptionText={
             watch("startLocation")?.address?.length > 0
               ? `You have selected ${
@@ -153,12 +143,12 @@ const MiniForm = ({
         />
       </div>
       <div className="w-full flex justify-center mt-4">
-        <Button type="submit" variant="contained" fullWidth>
-          Apply
+        <Button onClick={onSubmit} type="button" variant="contained" fullWidth>
+          Update
         </Button>
       </div>
     </form>
   );
 };
 
-export default MiniForm;
+export default UpdateForm;

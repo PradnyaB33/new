@@ -35,8 +35,6 @@ const PunchAcceptModal = () => {
     enabled: employeeId !== undefined,
   });
 
-  console.log("empnotifiactions", EmpNotification);
-
   return (
     <div>
       <header className="text-xl w-full pt-6 border bg-white shadow-md   p-4">
