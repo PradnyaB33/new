@@ -35,7 +35,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
     setOpen(false);
   };
 
-  const rejectRequestMutation = useMutation(
+  const { mutate: rejectMutate, isLoading: rejectLoading } = useMutation(
     async (length) => {
       await axios.post(
         `${process.env.REACT_APP_API}/route/leave/reject/${items._id}`,
@@ -76,12 +76,13 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
       },
     }
   );
+
   if (mutateLoading) {
     return <Loader />;
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    rejectRequestMutation.mutate(length); // Trigger the mutation
+    rejectMutate(length); // Trigger the mutation
   };
 
   return (
@@ -182,7 +183,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                 <Box sx={{ mt: 3, mb: 3 }}>
                   <Stack direction="row" spacing={3}>
                     <Button
-                      disabled={isLoading || isFetching}
+                      disabled={mutateLoading || isFetching}
                       variant="contained"
                       onClick={() =>
                         acceptLeaveMutation({ id: items._id, length })
@@ -208,6 +209,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                           backgroundColor: "#BB1F11",
                         },
                       }}
+                      disabled={rejectLoading || isFetching}
                     >
                       Reject
                     </Button>
@@ -307,11 +309,6 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                 type="button"
                 size="small"
                 onClick={async (e) => {
-                  console.log(
-                    `🚀 ~ file: LeaveRejectmodal.jsx:84 ~ e:`,
-                    handleClose
-                  );
-
                   handleClose();
                 }}
                 color="error"
@@ -324,6 +321,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                 size="small"
                 variant="contained"
                 color="primary"
+                disabled={rejectLoading}
               >
                 submit
               </Button>

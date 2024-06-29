@@ -1,4 +1,5 @@
 import {
+  AssignmentTurnedIn,
   Business,
   Category,
   CircleNotifications,
@@ -28,17 +29,18 @@ import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalance
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import ArticleIcon from "@mui/icons-material/Article";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CallMissedIcon from "@mui/icons-material/CallMissed";
 import ChatIcon from "@mui/icons-material/Chat";
-import AssignmentIcon from '@mui/icons-material/Assignment';
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import FolderIcon from "@mui/icons-material/Folder";
 import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
 import ReceiptIcon from "@mui/icons-material/Receipt";
+import WorkIcon from "@mui/icons-material/Work";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
@@ -49,7 +51,6 @@ import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
-import WorkIcon from '@mui/icons-material/Work';
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
@@ -635,35 +636,26 @@ const TestNavItems = ({ toggleDrawer }) => {
         icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
         isVisible:
           window.location.pathname?.includes("organisation") &&
-          [
-            "Super-Admin",
-            "Delegate-Super-Admin",
-            "HR",
-          ]?.includes(role),
+          ["Super-Admin", "Delegate-Super-Admin", "HR"]?.includes(role),
         routes: [
           {
             key: "createjobposition",
-            isVisible: [
-              "Super-Admin",
-              "HR",
-              "Delegate-Super-Admin",
-            ].includes(role),
+            isVisible: ["Super-Admin", "HR", "Delegate-Super-Admin"].includes(
+              role
+            ),
             link: `organisation/${orgId}/create-job-position`,
             icon: <WorkIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Create Job Position",
           },
           {
             key: "viewjobposition",
-            isVisible: [
-              "Super-Admin",
-              "Delegate-Super-Admin",
-              "HR",
-            ].includes(role),
+            isVisible: ["Super-Admin", "Delegate-Super-Admin", "HR"].includes(
+              role
+            ),
             link: `organisation/${orgId}/view-job-position`,
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
             text: "View Job Position",
           },
-        
         ],
       },
       Organisation: {
@@ -747,15 +739,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <LocationOn className=" !text-[1.2em] text-[#67748E]" />,
             text: "Geo Fencing",
           },
-          // {
-          //   key: "empNotification",
-          //   isVisible: ["Employee"].includes(role),
-          //   link: "/emp-notification",
-          //   icon: (
-          //     <AssignmentTurnedInIcon className=" !text-[1.2em] text-[#67748E]" />
-          //   ),
-          //   text: "Remote Punching Status",
-          // },
+          {
+            key: "empNotification",
+            isVisible: ["Employee"].includes(role),
+            link: "/emp-notification",
+            icon: (
+              <AssignmentTurnedIn className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Remote Punching Status",
+          },
         ],
       },
 
