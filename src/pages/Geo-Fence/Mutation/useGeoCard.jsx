@@ -1,8 +1,11 @@
 import axios from "axios";
+import { useContext } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import { TestContext } from "../../../State/Function/Main";
 
 const useGeoMutation = () => {
   const queryClient = useQueryClient();
+  const { handleAlert } = useContext(TestContext);
   const deleteGeoCard = async ({ id }) => {
     const response = await axios.delete(
       `${process.env.REACT_APP_API}/route/geo-fence/area/${id}`
@@ -12,6 +15,7 @@ const useGeoMutation = () => {
   const { mutate } = useMutation(deleteGeoCard, {
     onSuccess: (data) => {
       console.log(`🚀 ~ file: useGeoMutation.jsx:8 ~ data`, data);
+      handleAlert(true, "success", data?.message);
       queryClient.invalidateQueries("geo-fenced-areas");
     },
   });
@@ -31,13 +35,13 @@ const useGeoMutation = () => {
         console.log(`🚀 ~ file: useGeoMutation.jsx:25 ~ data`, data);
         queryClient.invalidateQueries(`employee-get-org`);
         queryClient.invalidateQueries(`geo-fenced-areas`);
-
+        handleAlert(true, "success", data?.message);
         onClose();
       },
     }
   );
 
-  const removeEmployeeToCircle = async ({ circleId, employeeId }) => {
+  const removeEmployeeToCircle = async ({ circleId, employeeId, onClose }) => {
     const response = await axios.put(
       `${process.env.REACT_APP_API}/route/geo-fence/${circleId}/employee/`,
       { employeeId }
@@ -48,10 +52,12 @@ const useGeoMutation = () => {
   const { mutate: removeEmployeeToCircleMutate } = useMutation(
     removeEmployeeToCircle,
     {
-      onSuccess: (data) => {
+      onSuccess: (data, { onClose }) => {
         console.log(`🚀 ~ file: useGeoMutation.jsx:25 ~ data`, data);
         queryClient.invalidateQueries(`employee-get-org`);
         queryClient.invalidateQueries(`geo-fenced-areas`);
+        handleAlert(true, "success", data?.message);
+        onClose();
       },
     }
   );

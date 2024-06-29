@@ -26,6 +26,14 @@ const ViewDelete = ({ onClose, circleId }) => {
     );
     addEmployeeToCircleMutate({ circleId, employeeId: selectedId, onClose });
   };
+  const selectedEmployee = Object.keys(
+    Object.entries(watch()).reduce((acc, [key, value]) => {
+      if (value !== false) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {})
+  ).filter((key) => key !== "selectAll");
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex gap-4 flex-col">
@@ -53,8 +61,12 @@ const ViewDelete = ({ onClose, circleId }) => {
           <ArrowBackIos className="!text-lg" />
         </Button>
       </div>
-      <Button type="submit" variant="contained">
-        Submit
+      <Button
+        disabled={!(selectedEmployee?.length > 0)}
+        type="submit"
+        variant="contained"
+      >
+        ADD
       </Button>
     </form>
   );

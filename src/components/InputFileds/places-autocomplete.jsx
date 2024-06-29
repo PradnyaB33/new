@@ -19,9 +19,9 @@ const PlaceAutoComplete = ({
   errors,
   apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   value,
+  descriptionText,
 }) => {
   const { data } = useGetCurrentLocation();
-  console.log(`🚀 ~ file: places-autocomplete.jsx:24 ~ data:`, data);
   const [state, setState] = useState(value?.address || "");
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const handleSelect = async (option, onChange) => {
@@ -132,6 +132,7 @@ const PlaceAutoComplete = ({
           );
         }}
       />
+      <p className="text-xs w-full h-fit">{descriptionText}</p>
       <div className="h-4 !mb-1">
         <ErrorMessage
           errors={errors}

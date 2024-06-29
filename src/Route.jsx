@@ -123,6 +123,12 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import CreateJobPosition from "./pages/Recruitment/CreateJobPosition";
+import ViewJobPosition from "./pages/Recruitment/ViewJobPosition";
+import EmployeeSurvey from "./pages/EmployeeSurvey/EmployeeSurvey";
+import CreateNewSurvey from "./pages/EmployeeSurvey/components/CreateNewSurvey";
+import EmployeeSurveyForm from "./pages/EmployeeSurvey/components/EmployeeSurveyForm";
+import SurveyDetails from "./pages/EmployeeSurvey/components/SurveyDetails";
 
 const App = () => {
   return (
@@ -469,6 +475,26 @@ const App = () => {
               permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
             >
               <Communication />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/create-job-position"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <CreateJobPosition />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/view-job-position"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <ViewJobPosition />
             </RequireAuth>
           }
         />
@@ -1334,6 +1360,19 @@ const App = () => {
           path="/advance-salary-notification-to-emp"
           element={<AdvanceSalaryNotificationToEmp />}
         />
+        <Route
+          path="/organisation/:organisationId/employee-survey"
+          element={<EmployeeSurvey />}
+        />
+        <Route
+          path="/organisation/:organisationId/create-new-survey"
+          element={<CreateNewSurvey />} />
+        <Route
+          path="/organisation/:organisationId/survey-form"
+          element={<EmployeeSurveyForm />} />
+        <Route
+          path="/organisation/:organisationId/survey-details"
+          element={<SurveyDetails />} />
       </Routes>
     </AuthProvider>
   );

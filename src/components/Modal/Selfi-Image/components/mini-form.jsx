@@ -16,8 +16,8 @@ const MiniForm = () => {
   }, [media]);
 
   const takePicture = () => {
-    let width = 500;
-    let height = width / (16 / 9);
+    let width = 640;
+    let height = 480;
     let photo = photoRef.current;
     let video = videoRef.current;
     photo.width = width;

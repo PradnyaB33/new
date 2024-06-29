@@ -19,6 +19,10 @@ const LocationRelated = ({ watch, data, onClose }) => {
     watch,
     onClose,
   });
+  console.log(
+    `🚀 ~ file: LocationRelated.jsx:37 ~ watch("location"):`,
+    watch("location")
+  );
 
   return (
     <div className="h-full w-full flex flex-col items-center">

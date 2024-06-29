@@ -1,9 +1,9 @@
-import { GoogleMap } from "@react-google-maps/api";
+import { GoogleMap, MarkerF } from "@react-google-maps/api";
 import React from "react";
 
 const RightSide = ({ center }) => {
   return (
-    <>
+    <div className="hidden md:contents">
       {" "}
       <GoogleMap
         key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
@@ -13,8 +13,10 @@ const RightSide = ({ center }) => {
         }}
         center={center}
         zoom={18}
-      ></GoogleMap>
-    </>
+      >
+        <MarkerF position={center} />
+      </GoogleMap>
+    </div>
   );
 };
 

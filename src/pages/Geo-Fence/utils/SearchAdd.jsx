@@ -22,6 +22,15 @@ const SearchAdd = ({ onClose, circleId }) => {
     removeEmployeeToCircleMutate({ circleId, employeeId: selectedId, onClose });
   };
 
+  const selectedEmployee = Object.keys(
+    Object.entries(watch()).reduce((acc, [key, value]) => {
+      if (value !== false) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {})
+  ).filter((key) => key !== "selectAll");
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex gap-4 flex-col">
       <SmallInputForm circleId={circleId} />
@@ -32,8 +41,12 @@ const SearchAdd = ({ onClose, circleId }) => {
           watch={watch}
         />
       </div>
-      <Button type="submit" variant="contained">
-        Submit
+      <Button
+        disabled={!(selectedEmployee?.length > 0)}
+        type="submit"
+        variant="contained"
+      >
+        Remove
       </Button>
     </form>
   );

@@ -12,7 +12,11 @@ const LeaveAcceptModal = () => {
   const { employeeId } = useParams();
   const { data } = useLeaveNotificationHook();
 
-  const { data: EmpNotification, isLoading: empDataLoading } = useQuery({
+  const {
+    data: EmpNotification,
+    isLoading: empDataLoading,
+    isFetching,
+  } = useQuery({
     queryKey: ["EmpDataLeave", employeeId],
     queryFn: async () => {
       try {
@@ -123,6 +127,7 @@ const LeaveAcceptModal = () => {
                       items={items}
                       idx={itemIndex}
                       length={EmpNotification?.leaveRequests?.length}
+                      isFetching={isFetching}
                     />
                   ))}
                 </div>

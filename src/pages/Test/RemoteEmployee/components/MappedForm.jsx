@@ -1,9 +1,20 @@
 import { MoreVert } from "@mui/icons-material";
-import { Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem } from "@mui/material";
 import React, { useState } from "react";
+import ReusableModal from "../../../../components/Modal/component";
+import UpdateForm from "./UpdateForm";
 
-const MappedForm = ({ item, index, setArray, setOpenModal }) => {
+const MappedForm = ({
+  item,
+  index,
+  setArray,
+  setOpenModal,
+  setIndex,
+  array,
+  today,
+}) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -24,22 +35,33 @@ const MappedForm = ({ item, index, setArray, setOpenModal }) => {
 
   return (
     <>
-      <div className="w-full h-auto bg-[#e2f1ff] mb-2 relative rounded-md">
-        <div className=" flex justify-between w-full h-full p-3 items-center">
-          <div className="flex flex-col">
-            <h1>
-              <span className="text-sm">Start Time</span> :{" "}
-              <span className="text-slate-600">
-                {item?.start?.format("HH:mm:ss")}
-              </span>
+      <div className="w-full h-auto bg-[#e2f1ff] mb-2  rounded-md">
+        <div className="grid grid-cols-12 justify-between w-full h-full p-3 items-start">
+          <div className="flex col-span-10 flex-col w-full">
+            <h1 className="w-full text-slate-600 truncate">
+              Start Time: {item?.start?.format("HH:mm:ss")}
             </h1>
-            <h1>
-              <span className="text-sm">Address</span> :{" "}
-              <span className="text-slate-600">{item?.location?.address}</span>
+            <h1 className="w-full text-slate-600 truncate">
+              Start Address:{" "}
+              <abbr title={item?.startLocation?.address}>
+                {item?.startLocation?.address}
+              </abbr>
+            </h1>
+            <h1 className="w-full text-slate-600 truncate">
+              End Time: {item?.end?.format("HH:mm:ss")}
+            </h1>
+            <h1 className="w-full text-slate-600 truncate">
+              End Address:{" "}
+              <abbr title={item?.endLocation?.address}>
+                {item?.endLocation?.address}
+              </abbr>
             </h1>
           </div>
-          <div className="">
-            <MoreVert onClick={handleClick} />
+
+          <div className="flex col-span-2 p-2">
+            <IconButton onClick={handleClick}>
+              <MoreVert />
+            </IconButton>
             <Menu
               id="simple-menu"
               anchorEl={anchorEl}
@@ -47,13 +69,36 @@ const MappedForm = ({ item, index, setArray, setOpenModal }) => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem id="edit" onClick={() => setOpenModal(true)}>
+              <MenuItem
+                id="edit"
+                onClick={() => {
+                  setIndex(index);
+                  setOpen(true);
+                }}
+                type="button"
+              >
                 Edit
               </MenuItem>
-              <MenuItem id="delete" onClick={handleDelete}>
+              <MenuItem id="delete" type="button" onClick={handleDelete}>
                 Delete
               </MenuItem>
             </Menu>
+            <ReusableModal
+              heading={"Update Miss Punch"}
+              open={open}
+              onClose={() => setOpen(false)}
+            >
+              <UpdateForm
+                {...{
+                  setArray: setArray,
+                  array: array,
+                  index,
+                  data: item,
+                  onClose: () => setOpen(false),
+                  today,
+                }}
+              />
+            </ReusableModal>
           </div>
         </div>
       </div>

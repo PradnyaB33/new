@@ -11,8 +11,8 @@ const usePayslipNotificationHook = () => {
   const { getCurrentUser } = UserProfile();
   const { setNotificationCount } = useNotificationCount();
   const user = getCurrentUser();
-  const organisationId = user.organizationId;
-  const userId = user._id;
+  const organisationId = user?.organizationId;
+  const userId = user?._id;
 
   const getPaySlipNotification = async () => {
     const response = await axios.get(

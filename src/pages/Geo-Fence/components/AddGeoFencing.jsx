@@ -4,11 +4,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
-import useGetCurrentLocation from "../../../hooks/Location/useGetCurrentLocation";
 import LocationRelated from "./LocationRelated";
 
-const AddGeoFencing = ({ onClose }) => {
-  const { data } = useGetCurrentLocation();
+const AddGeoFencing = ({ onClose, data }) => {
+  console.log(`🚀 ~ file: AddGeoFencing.jsx:12 ~ data:`, data);
 
   const formSchema = z.object({
     location: z
@@ -36,7 +35,10 @@ const AddGeoFencing = ({ onClose }) => {
     defaultValues: {
       location: {
         address: "",
-        position: data,
+        position: {
+          lat: data?.lat || 0,
+          lng: data?.lng || 0,
+        },
       },
     },
   });
@@ -65,7 +67,9 @@ const AddGeoFencing = ({ onClose }) => {
             value={watch("location")}
           />
         </div>
-        <LocationRelated watch={watch} data={data} onClose={onClose} />
+        {data?.lat && (
+          <LocationRelated watch={watch} data={data} onClose={onClose} />
+        )}
       </form>
     </>
   );

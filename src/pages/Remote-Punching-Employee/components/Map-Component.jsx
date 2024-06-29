@@ -3,12 +3,8 @@ import React from "react";
 import useGetGeoFencing from "../useGetGeoFencing";
 
 const MapComponent = ({ isLoaded, data, locationArray }) => {
-  console.log(`🚀 ~ file: Map-Component.jsx:5 ~ data:`, data);
   const { employeeGeoArea } = useGetGeoFencing();
-  console.log(
-    `🚀 ~ file: Map-Component.jsx:8 ~ employeeGeoArea:`,
-    employeeGeoArea
-  );
+
   return isLoaded ? (
     <GoogleMap
       key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
@@ -39,11 +35,6 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
         />
       )}
       {employeeGeoArea?.area?.map((area) => {
-        console.log(
-          `🚀 ~ file: Map-Component.jsx:42 ~ area:`,
-          area?.center?.coordinates[0],
-          area?.center?.coordinates[1]
-        );
         return (
           <CircleF
             center={{
