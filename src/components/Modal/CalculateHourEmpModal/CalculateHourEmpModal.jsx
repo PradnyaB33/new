@@ -144,21 +144,18 @@ const CalculateHourEmpModal = ({
             body: JSON.stringify(postData),
           }
         );
-
+    
         if (!response.ok) {
           throw new Error("Failed to calculate hours.");
         }
-
+    
         const responseData = await response.json();
         console.log(responseData);
+        handleClose();
         handleAlert(true, "success", "Hours calculated successfully.");
       } catch (error) {
         console.error("Error calculating hours:", error);
-        handleAlert(
-          false,
-          "error",
-          "Failed to calculate hours. Please try again."
-        );
+        handleAlert(false, "error", "Failed to calculate hours. Please try again.");
       }
     }
   };
