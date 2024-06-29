@@ -2,6 +2,7 @@ import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
+import useIncomeTax from "../../../../../hooks/IncomeTax/useIncomeTax";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
 
 const Tab0 = () => {
@@ -9,6 +10,7 @@ const Tab0 = () => {
   const [taxAmount, setTaxAmount] = useState(0);
   const [cess, setCess] = useState(0);
   const [tax, setTax] = useState(0);
+  const { getCurrentFinancialYear } = useIncomeTax();
   const {
     data: salaryAmount,
     // isFetched: salaryFetch,
@@ -18,8 +20,10 @@ const Tab0 = () => {
     queryKey: ["financialYearGross"],
     queryFn: async () => {
       try {
+        const { financialYearStart, financialYearEnd } =
+          getCurrentFinancialYear();
         const salaryData = await axios.get(
-          `${process.env.REACT_APP_API}/route/employeeSalary/getEmployeeSalaryPerFinancialYear?fromDate=5-2024&toDate=3-2025`,
+          `${process.env.REACT_APP_API}/route/employeeSalary/getEmployeeSalaryPerFinancialYear?fromDate=${financialYearStart}&toDate=${financialYearEnd}`,
           {
             headers: {
               Authorization: authToken,

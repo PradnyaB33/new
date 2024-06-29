@@ -132,6 +132,7 @@ const TDSTable1 = () => {
     handleSaveClick,
     handleDelete,
     setDeclarationData,
+    usersalary,
     // declarationData
   } = useIncomeAPI(
     data,
@@ -145,33 +146,13 @@ const TDSTable1 = () => {
 
   useEffect(() => {
     setTableData(data);
+    // setGrossTotal(usersalary?.TotalInvestInvestment);
+    // console.log(Number(grossTotal), "Gross Amount updated successfully");
     // eslint-disable-next-line
-  }, []);
+  }, [grossTotal]);
 
   const { isFetching: salaryFetching } = useQuery({
-    queryKey: ["finacialYearData"],
-    queryFn: async () => {
-      try {
-        const salaryData = await axios.get(
-          `${process.env.REACT_APP_API}/route/employeeSalary/getEmployeeSalaryPerFinancialYear?fromDate=5-2023&toDate=3-2024`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        );
-        return salaryData.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    onSuccess: (res) => {
-      setGrossTotal(res?.TotalInvestInvestment);
-    },
-  });
-
-  useQuery({
-    queryKey: ["Salary"],
+    queryKey: ["Salary", grossTotal],
     queryFn: async () => {
       try {
         const res = await axios.get(
@@ -190,7 +171,7 @@ const TDSTable1 = () => {
     onSuccess: (res) => {
       if (Array.isArray(res)) {
         queryClient.invalidateQueries({ queryKey: ["finacialYearData"] });
-
+        setGrossTotal(usersalary?.TotalInvestInvestment);
         const declaredAmount = res?.reduce((i, a) => {
           return (i += a.declaration);
         }, 0);
@@ -225,10 +206,13 @@ const TDSTable1 = () => {
             (investment) => investment.name === item.name
           );
 
-          if (item.name === "Gross Salary") {
+          if (item.name === "Gross salary") {
             return {
               ...item,
               amount: isNaN(Number(grossTotal)) ? 0 : Number(grossTotal),
+              amountAccepted: isNaN(Number(grossTotal))
+                ? 0
+                : Number(grossTotal),
               status: "Auto",
               proof: "",
             };

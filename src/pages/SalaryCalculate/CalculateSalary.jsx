@@ -9,7 +9,6 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import { useForm } from "react-hook-form";
 
 function CalculateSalary() {
   const { handleAlert } = useContext(TestContext);
@@ -229,7 +228,7 @@ function CalculateSalary() {
   let variableAllowance = calculateSalaryComponent(
     availableEmployee?.salaryComponent?.["Variable allowance"] || ""
   );
-  // to get shifts
+  // to get shifts of employee
   const { data: getShifts } = useQuery(
     ["shiftAllowance", userId, selectedMonth, selectedYear],
     async () => {
@@ -249,6 +248,7 @@ function CalculateSalary() {
     }
   );
   console.log("get shift", getShifts);
+
   // to get shift count of employee
   const countShifts = (shifts) => {
     const shiftCount = {};
@@ -268,40 +268,47 @@ function CalculateSalary() {
   );
   console.log("shift count", shiftCounts);
 
-  // calculate the amount of shift allowance
+  // get the amount of shift
+  const { data: shiftAllowanceAmount } = useQuery(
+    ["shift-allowance-amount"],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/shifts/${organisationId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return response.data.shifts;
+    }
+  );
+
+  const shiftAllowances = useMemo(() => {
+    if (shiftAllowanceAmount) {
+      return shiftAllowanceAmount.reduce((acc, shift) => {
+        acc[shift.shiftName.toLowerCase()] = shift.allowance;
+        return acc;
+      }, {});
+    }
+    return {};
+  }, [shiftAllowanceAmount]);
+  console.log("shift allowances", shiftAllowances);
+
   const [shiftTotalAllowance, setShiftTotalAllowance] = useState(0);
+
   useEffect(() => {
-    const allowances = {
-      "Evening shift": 200,
-      "General shift": 100,
-      rrr: 300,
-    };
     let total = 0;
     for (const [shiftTitle, count] of Object.entries(shiftCounts)) {
-      if (allowances[shiftTitle]) {
-        total += count * allowances[shiftTitle];
+      const shiftAllowance = shiftAllowances[shiftTitle.toLowerCase()];
+      if (shiftAllowance) {
+        total += count * shiftAllowance;
       }
     }
     setShiftTotalAllowance(total);
-  }, [shiftCounts]);
+  }, [shiftCounts, shiftAllowances]);
 
-  // to get shift allowance amount
-  const { setValue } = useForm();
-  const { data } = useQuery("get-shift-allowance", async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/shiftApply/getallowance/${organisationId}`,
-      {
-        headers: { Authorization: token },
-      }
-    );
-    return response.data;
-  });
-  useEffect(() => {
-    if (data?.existingAllowance) {
-      setValue("dualWorkflow", data.existingAllowance.check);
-    }
-  }, [data, setValue]);
-  console.log("setValue" , data);
+  console.log("shift total allowance", shiftTotalAllowance);
 
   // calculate the remote punching allowance of employee
   const remotePunchingCounts = 5;
@@ -333,7 +340,9 @@ function CalculateSalary() {
   const remotePunchAllowance =
     isValidAmount && isValidCount
       ? remotePunchingCounts * getremotePuncingAmount
-      : 0;
+      : 0; 
+    console.log("Remote Punching amount" , remotePunchAllowance);
+
 
   // calculate the total gross salary
   let totalSalary =
@@ -372,7 +381,7 @@ function CalculateSalary() {
       }
     );
 
-    console.log("loan deduction applications", loanDeductionApplications);
+    
 
     // Calculate the total loan deduction for active loans
     loanDeduction = loanDeductionApplications.reduce((total, application) => {

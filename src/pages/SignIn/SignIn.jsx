@@ -178,7 +178,7 @@ const SignIn = () => {
 
         handleAlert(
           true,
-          "error",
+          error?.response.status !== 401 ? "success" : "error",
           error?.response?.data?.message ||
             "Failed to sign in. Please try again."
         );

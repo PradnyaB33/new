@@ -73,8 +73,11 @@ const useIncomeAPI = (
     queryKey: ["finacialYearData"],
     queryFn: async () => {
       try {
+        const { financialYearStart, financialYearEnd } =
+          getCurrentFinancialYear();
+        console.log(`🚀 ~ financialYearStart:`, financialYearStart);
         const salaryData = await axios.get(
-          `${process.env.REACT_APP_API}/route/employeeSalary/getEmployeeSalaryPerFinancialYear?fromDate=5-2023&toDate=3-2024`,
+          `${process.env.REACT_APP_API}/route/employeeSalary/getEmployeeSalaryPerFinancialYear?fromDate=${financialYearStart}&toDate=${financialYearEnd}`,
           {
             headers: {
               Authorization: authToken,
@@ -240,6 +243,7 @@ const useIncomeAPI = (
     financialYear,
     usersalary,
     empSalary,
+    getCurrentFinancialYear,
   };
 };
 

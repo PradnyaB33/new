@@ -41,6 +41,27 @@ const useIncomeTax = create((set) => ({
         },
       };
     }),
+
+  getCurrentFinancialYear() {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1; // JavaScript months are 0-indexed
+    const currentYear = currentDate.getFullYear();
+
+    let financialYearStart, financialYearEnd;
+
+    if (currentMonth >= 4) {
+      // If current month is April or later, financial year starts this year
+      financialYearStart = `04-${currentYear}`;
+      financialYearEnd = `03-${currentYear + 1}`;
+    } else {
+      // If current month is March or earlier, financial year started last year
+      financialYearStart = `04-${currentYear - 1}`;
+      financialYearEnd = `03-${currentYear}`;
+    }
+
+    return { financialYearStart, financialYearEnd };
+  },
+
   handleAmountChange: (e, itemIndex, handleAlert) =>
     set((state) => {
       const newData = [...state.tableData];
