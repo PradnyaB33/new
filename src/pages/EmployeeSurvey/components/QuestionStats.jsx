@@ -27,7 +27,7 @@ const QuestionStats = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {question.map((survey, index) => (
+                        {question?.map((survey, index) => (
                             <tr key={index} className="!font-medium border-b">
                                 <td className="!text-left pl-8 py-3">{survey.question}</td>
                                 <td className="py-3 pl-8">

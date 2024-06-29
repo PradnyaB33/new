@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "react-query";
 import { Select, Paper, Typography, TextField, MenuItem, Checkbox, Button, IconButton, FormControlLabel, Switch } from '@mui/material';
@@ -14,46 +14,118 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { Email } from "@mui/icons-material";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { TestContext } from "../../../State/Function/Main";
 
 dayjs.extend(isSameOrBefore);
 
 const CreateNewSurvey = () => {
-    //hook
     const navigate = useNavigate();
+    const { handleAlert } = useContext(TestContext);
+    const { id } = useParams(); // Assuming you are using react-router-dom useParams hook
 
-    //state
     const [questions, setQuestions] = useState([{ question: '', questionType: '', options: [], required: false }]);
     const [employeeSurveyStartingDate, setEmployeeSurveyStartingDate] = useState(null);
     const [employeeSurveyEndDate, setEmployeeSurveyEndDate] = useState(null);
     const [showSelectAll, setShowSelectAll] = useState(false);
-
-    //get organizationId
     const { getCurrentUser } = UserProfile();
     const user = getCurrentUser();
     const organisationId = user?.organizationId;
 
-    //get cookies
     const { cookies } = useContext(UseContext);
     const authToken = cookies["aegis"];
-
-    //useForm
     const { control, formState: { errors }, handleSubmit, setValue } = useForm();
 
-    //Post Data
-    const mutation = useMutation(async (formData) => {
-        console.log("formData", formData);
-        const response = await axios.post(`${process.env.REACT_APP_API}/route/organization/${organisationId}/add-employee-survey-form`, formData,
-            {
+    // Fetch single survey data
+    const { data: surveyData, isLoading } = useQuery(
+        ["survey", id],
+        async () => {
+            const response = await axios.get(`${process.env.REACT_APP_API}/route/organization/${organisationId}/get-single-draft-survey/${id}`, {
                 headers: {
                     Authorization: authToken,
                 },
-            }
-        );
-        return response?.data;
+            });
+            return response.data;
+        },
+        {
+            enabled: !!id, // Only fetch data when id is available
+        }
+    );
+
+    useEffect(() => {
+        if (surveyData) {
+            setValue("title", surveyData.title);
+            setValue("description", surveyData.description);
+            // Set questions
+            setQuestions(surveyData.questions?.map(q => ({
+                question: q.question,
+                questionType: q.questionType,
+                options: q.options?.map(opt => ({ title: opt, checked: false })),
+                required: q.required,
+            })));
+            // Set dates
+            setEmployeeSurveyStartingDate(dayjs(surveyData.employeeSurveyStartingDate));
+            setEmployeeSurveyEndDate(dayjs(surveyData.employeeSurveyEndDate));
+            // Set 'to' field
+            setValue("to", surveyData.to?.map(option => ({ label: option, value: option })));
+            // Set other fields as needed
+        }
+    }, [surveyData, setValue]);
+
+    // const mutation = useMutation(async (formData) => {
+    //     const response = await axios.post(`${process.env.REACT_APP_API}/route/organization/${organisationId}/add-employee-survey-form`, formData,
+    //         {
+    //             headers: {
+    //                 Authorization: authToken,
+    //             },
+    //         }
+    //     );
+    //     return response;
+    // }, {
+    //     onSuccess: (response) => {
+    //         if (response.status === 201) {
+    //             navigate(`/organisation/${organisationId}/employee-survey`);
+    //         };
+    //         handleAlert(true, "success", "Saved employee survey successfully");
+    //     },
+    //     onError: (error) => {
+    //         console.error('Error submitting form', error);
+    //     },
+    // });
+    const mutation = useMutation(async (formData) => {
+        let response;
+        if (id) {
+            // Update survey
+            response = await axios.put(`${process.env.REACT_APP_API}/route/organization/${organisationId}/update-employee-survey/${id}`, formData,
+                {
+                    headers: {
+                        Authorization: authToken,
+                    },
+                }
+            );
+        } else {
+            // Add new survey
+            response = await axios.post(`${process.env.REACT_APP_API}/route/organization/${organisationId}/add-employee-survey-form`, formData,
+                {
+                    headers: {
+                        Authorization: authToken,
+                    },
+                }
+            );
+        }
+        return response;
+    }, {
+        onSuccess: (response) => {
+            if (response.status === 201 || response.status === 200) {
+                navigate(`/organisation/${organisationId}/employee-survey`);
+            };
+            handleAlert(true, "success", "Saved employee survey successfully");
+        },
+        onError: (error) => {
+            console.error('Error submitting form', error);
+        },
     });
 
-    //handleQuestionTypeChange function
     const handleQuestionTypeChange = (index, event) => {
         const selectedType = event.target.value;
         const newQuestions = [...questions];
@@ -62,14 +134,12 @@ const CreateNewSurvey = () => {
         setQuestions(newQuestions);
     };
 
-    //handleAddOption function
     const handleAddOption = (index) => {
         const newQuestions = [...questions];
         newQuestions[index].options.push({ title: '', checked: false });
         setQuestions(newQuestions);
     };
 
-    //handleOptionChange function
     const handleOptionChange = (qIndex, oIndex, key, value) => {
         const newQuestions = [...questions];
         if (key === 'title') {
@@ -80,14 +150,12 @@ const CreateNewSurvey = () => {
         setQuestions(newQuestions);
     };
 
-    //handleRequiredChange function
     const handleRequiredChange = (index) => {
         const newQuestions = [...questions];
         newQuestions[index].required = !newQuestions[index].required;
         setQuestions(newQuestions);
     };
 
-    //renderAnswerInput function
     const renderAnswerInput = (qIndex) => {
         const { questionType, options } = questions[qIndex];
         switch (questionType) {
@@ -116,7 +184,7 @@ const CreateNewSurvey = () => {
             case 'Checkboxes':
                 return (
                     <div>
-                        {options.map((option, index) => (
+                        {options?.map((option, index) => (
                             <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                 <Checkbox
                                     checked={option.checked}
@@ -164,25 +232,21 @@ const CreateNewSurvey = () => {
         }
     };
 
-    //handleAddQuestion function
     const handleAddQuestion = () => {
         setQuestions([...questions, { question: '', questionType: '', options: [], required: false }]);
     };
 
-    //handleRemoveQuestion function
     const handleRemoveQuestion = (index) => {
         const newQuestions = questions.filter((_, qIndex) => qIndex !== index);
         setQuestions(newQuestions);
     };
 
-    //handleQuestionChange function
     const handleQuestionChange = (index, event) => {
         const newQuestions = [...questions];
         newQuestions[index].question = event.target.value;
         setQuestions(newQuestions);
     };
 
-    //handleCopyQuestion function
     const handleCopyQuestion = (index) => {
         const newQuestions = [...questions];
         const copiedQuestion = { ...newQuestions[index] };
@@ -190,20 +254,20 @@ const CreateNewSurvey = () => {
         setQuestions(newQuestions);
     };
 
-    //handleSubmitForm function
-    const handleSubmitForm = (data) => {
+    const handleSubmitForm = (data, status) => {
         const formData = {
             title: data.title,
             description: data.description,
-            questions: questions.map(q => ({
+            questions: questions?.map(q => ({
                 question: q.question,
                 questionType: q.questionType,
-                options: q.options.map(opt => opt.title),
+                options: q.options?.map(opt => opt.title),
                 required: q.required,
             })),
             employeeSurveyStartingDate,
             employeeSurveyEndDate,
-            to: data.to.map(option => option.value)
+            to: data.to?.map(option => option.value),
+            status: status
         };
 
         mutation.mutate(formData, {
@@ -216,12 +280,11 @@ const CreateNewSurvey = () => {
         });
     };
 
-    //get emails of employee
     const { data: employee } = useQuery(
         ["employee", organisationId],
         async () => {
             const response = await axios.get(
-                `${process.env.REACT_APP_API}/route/employee/${organisationId}/get-emloyee`,
+                `${process.env.REACT_APP_API}/route/employee/${organisationId}/get-employee`,
                 {
                     headers: {
                         Authorization: authToken,
@@ -239,15 +302,15 @@ const CreateNewSurvey = () => {
         }))
         : [];
 
-    //handleSelectAll function
     const handleSelectAll = (fieldName) => {
         setValue(fieldName, employeeEmail);
     };
 
-    //handleClose function
     const handleClose = () => {
-        navigate("/organisation/:organisationId/employee-survey")
+        navigate(`/organisation/${organisationId}/employee-survey`);
     };
+
+    if (isLoading) return <div>Loading...</div>;
 
     return (
         <Paper
@@ -258,7 +321,7 @@ const CreateNewSurvey = () => {
                 padding: "20px 40px",
             }}
         >
-            <form onSubmit={handleSubmit(handleSubmitForm)}>
+            <form onSubmit={handleSubmit((data) => handleSubmitForm(data, true))}>
                 <h1 className="text-xl my-2 font-semibold font-sans">
                     Create New Form
                 </h1>
@@ -406,10 +469,10 @@ const CreateNewSurvey = () => {
                     </div>
                 </div>
                 <div className="flex gap-4 mt-4 justify-end">
-                    <Button type="submit" variant="contained" color="primary">
-                        Complete Survey
+                    <Button type="submit" variant="contained" color="primary" onClick={() => handleSubmit((data) => handleSubmitForm(data, true))}>
+                        {id ? "Update Survey" : "Complete Survey"}
                     </Button>
-                    <Button type="submit" variant="outlined" color="primary">
+                    <Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => handleSubmitForm(data, false))}>
                         Save For Now
                     </Button>
                     <Button onClick={handleClose} variant="outlined" color="error">
