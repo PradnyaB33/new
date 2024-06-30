@@ -15,14 +15,6 @@ const usePerformanceApi = create((set) => ({
       }
     );
 
-    if (!response.ok) {
-      const error = new Error("An error occurred while fetching the response.");
-      if (response.status === 404) {
-        error.status = 404;
-        error.message = "TDS details not found";
-      }
-      throw error;
-    }
     return response?.data;
   },
 

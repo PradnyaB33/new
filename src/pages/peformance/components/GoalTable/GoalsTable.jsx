@@ -318,10 +318,27 @@ const GoalsTable = ({ performance, isError }) => {
           // <CircularProgress />
           <TabelSkeleton />
         ) : orgGoals?.goals?.length <= 0 ? (
-          <EmptyAlertBox
-            title={"Goals Not Found"}
-            desc={"Add goals to goal settings."}
-          />
+          <div className="gap-2 flex flex-col w-full items-end">
+            {performance?.stages === "Goal setting" &&
+              isTimeFinish &&
+              (role !== "Employee"
+                ? true
+                : role === "Employee" && performance.isSelfGoal
+                ? true
+                : false) && (
+                <button
+                  type="button"
+                  onClick={() => setOpen(true)}
+                  className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                >
+                  Add Goal
+                </button>
+              )}
+            <EmptyAlertBox
+              title={"Goals Not Found"}
+              desc={"Add goals to goal settings."}
+            />
+          </div>
         ) : (
           <div className=" bg-white rounded-md ">
             {/* <div className=" py-2">
@@ -389,7 +406,6 @@ const GoalsTable = ({ performance, isError }) => {
                     </div>
                   </div>
                 )}
-
                 <div className={`space-y-1 min-w-[15vw] `}>
                   <div
                     className={`flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
@@ -418,22 +434,23 @@ const GoalsTable = ({ performance, isError }) => {
                     />
                   </div>
                 </div>
-              </div>
 
-              {performance?.stages === "Goal setting" &&
-                (isTimeFinish && role !== "Employee"
-                  ? true
-                  : role === "Employee" && performance.isSelfGoal
-                  ? true
-                  : false) && (
-                  <button
-                    type="button"
-                    onClick={() => setOpen(true)}
-                    className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-                  >
-                    Add Goal
-                  </button>
-                )}
+                {performance?.stages === "Goal setting" &&
+                  isTimeFinish &&
+                  (role !== "Employee"
+                    ? true
+                    : role === "Employee" && performance.isSelfGoal
+                    ? true
+                    : false) && (
+                    <button
+                      type="button"
+                      onClick={() => setOpen(true)}
+                      className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                    >
+                      Add Goal
+                    </button>
+                  )}
+              </div>
             </div>
             <div className="bg-white w-full overflow-x-auto">
               {/* <section className="bg-gray-50 border py-6 px-8 rounded-md w-full">
