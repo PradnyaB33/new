@@ -129,6 +129,7 @@ import EmployeeSurvey from "./pages/EmployeeSurvey/EmployeeSurvey";
 import CreateNewSurvey from "./pages/EmployeeSurvey/components/CreateNewSurvey";
 import EmployeeSurveyForm from "./pages/EmployeeSurvey/components/EmployeeSurveyForm";
 import SurveyDetails from "./pages/EmployeeSurvey/components/SurveyDetails";
+import EditJobPosition from "./pages/Recruitment/EditJobPosition";
 
 const App = () => {
   return (
@@ -495,6 +496,16 @@ const App = () => {
               permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
             >
               <ViewJobPosition />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/edit-job-position/:jobPositionId"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <EditJobPosition />
             </RequireAuth>
           }
         />
@@ -1366,13 +1377,16 @@ const App = () => {
         />
         <Route
           path="/organisation/:organisationId/create-new-survey"
-          element={<CreateNewSurvey />} />
+          element={<CreateNewSurvey />}
+        />
         <Route
           path="/organisation/:organisationId/survey-form"
-          element={<EmployeeSurveyForm />} />
+          element={<EmployeeSurveyForm />}
+        />
         <Route
           path="/organisation/:organisationId/survey-details"
-          element={<SurveyDetails />} />
+          element={<SurveyDetails />}
+        />
       </Routes>
     </AuthProvider>
   );
