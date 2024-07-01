@@ -5,16 +5,13 @@ import axios from "axios";
 import React from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import usePunchNotification from "../../hooks/QueryHook/notification/punch-notification/hook";
 import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
 const EmpNotification = () => {
   const authToken = useAuthToken();
-  const { data } = usePunchNotification();
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const employeeId = user._id;
-  console.log("my data", data?.arrayOfEmployee);
 
   const { data: EmpNotification, isLoading: empDataLoading } = useQuery({
     queryKey: ["EmpDataPunchNotification", employeeId],
@@ -98,23 +95,16 @@ const EmpNotification = () => {
                               Start Time
                             </span>{" "}
                             {new Date(
-                              item?.punchData[0]?.data[0]?.time
+                              item?.punchData[0]?.createdAt
                             ).toLocaleTimeString()}
                           </h2>
                           <h2>
                             <span className=" md:text-lg text-base font-semibold">
                               End Time
                             </span>{" "}
-                            {item.punchData[item.punchData.length - 1]?.data
-                              ? new Date(
-                                  item?.punchData[
-                                    item.punchData.length - 1
-                                  ]?.data[
-                                    item.punchData[item.punchData.length - 1]
-                                      ?.data.length - 1
-                                  ]?.time
-                                ).toLocaleTimeString()
-                              : "N/A"}
+                            {new Date(
+                              item?.punchData[0]?.updatedAt
+                            ).toLocaleTimeString()}
                           </h2>
                           <h2>
                             <span className=" md:text-lg text-base font-semibold">

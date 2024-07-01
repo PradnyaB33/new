@@ -144,6 +144,7 @@ const useNotification = () => {
       count: data3?.punchNotification?.length ?? 0,
       color: "#51FD96",
       url: "/punch-notification",
+      url2: "/self/emp-main-notification",
       visible: emp?.packageInfo === "Intermediate Plan",
     },
 
