@@ -6,6 +6,7 @@ import DOMPurify from "dompurify";
 import React, { useContext } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import "react-quill/dist/quill.snow.css";
+import Select from "react-select";
 import { TestContext } from "../../../../../State/Function/Main";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../../hooks/UserData/useUser";
@@ -25,6 +26,13 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
     maxHeight: "80vh",
     p: 4,
   };
+
+  const GoalStatus = [
+    { label: "Not Started", value: "Not Started" },
+    { label: "In Progress", value: "In Progress" },
+    { label: "Completed", value: "Completed" },
+    // { label: "Overdue", value: "Overdue" },
+  ];
 
   // const sanitizedMeasurment = DOMPurify.sanitize(getGoal?.measurement);
   const { useGetCurrentRole, getCurrentUser } = UserProfile();
@@ -56,7 +64,7 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
   );
   const sanitizedDescription = DOMPurify.sanitize(getSingleGoal?.description);
 
-  const SubmitGoal = async () => {
+  const SubmitGoal = async (goalStatus) => {
     try {
       const assignee = { label: user.name, value: user._id };
 
@@ -64,10 +72,13 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
         getSingleGoal?.creatorId === user._id
           ? "Goal Submitted"
           : "Goal Accepted";
+      let requestData = { assignee, status };
+      if (goalStatus)
+        requestData = { ...requestData, goalStatus: goalStatus.value };
 
       await axios.patch(
         `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${id}`,
-        { data: { status, assignee } },
+        { data: requestData },
         {
           headers: {
             Authorization: authToken,
@@ -127,6 +138,34 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
                       End Date : -{" "}
                       {getSingleGoal?.endDate &&
                         format(new Date(getSingleGoal?.endDate), "PP")}
+                    </div>
+
+                    <div
+                      className={`${"bg-[ghostwhite]"} flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+                    >
+                      {/* <Icon className="text-gray-700" /> */}
+                      <Select
+                        aria-errormessage=""
+                        placeholder={"Status"}
+                        styles={{
+                          control: (styles) => ({
+                            ...styles,
+                            borderWidth: "0px",
+                            boxShadow: "none",
+                          }),
+                        }}
+                        components={{
+                          IndicatorSeparator: () => null,
+                        }}
+                        value={GoalStatus?.find(
+                          (item) => item.label === getSingleGoal?.goalStatus
+                        )}
+                        className={`${"bg-[ghostwhite]"} bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                        options={GoalStatus}
+                        onChange={(value) => {
+                          SubmitGoal(value);
+                        }}
+                      />
                     </div>
                   </div>
 

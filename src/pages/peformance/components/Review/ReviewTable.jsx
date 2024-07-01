@@ -1,5 +1,6 @@
 import { Edit } from "@mui/icons-material";
 import { Avatar, IconButton } from "@mui/material";
+import DOMPurify from "dompurify";
 import { React, useState } from "react";
 import RateReviewModel from "../GoalTable/Modal/Rate_Review_Model";
 
@@ -38,6 +39,8 @@ const ReviewTable = ({ tableData, performance }) => {
     (page - 1) * itemsPerPage,
     page * itemsPerPage
   );
+
+  console.log(paginatedData, "review");
 
   return (
     <div>
@@ -92,11 +95,14 @@ const ReviewTable = ({ tableData, performance }) => {
                 onClick={() => setIsOpen(goal)}
                 className="text-sm cursor-pointer truncate text-left ml-auto   px-2"
               >
-                <p className="space-x-3 truncate">
-                  {goal?.others[0]?.managerFeedback
-                    ? goal?.others[0]?.managerFeedback
-                    : "-"}
-                </p>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: goal?.others[0]?.managerFeedback
+                      ? DOMPurify.sanitize(goal?.others[0]?.managerFeedback)
+                      : "-",
+                  }}
+                  className="space-x-3 truncate"
+                ></p>
               </td>
               <td
                 onClick={() => setIsOpen(goal)}

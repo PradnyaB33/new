@@ -1,6 +1,5 @@
 import {
   AssignmentTurnedIn,
-  Autorenew,
   Cancel,
   CheckCircle,
   Checklist,
@@ -50,17 +49,6 @@ const GoalStatus = ({ goal, status, performance, isTimeFinish }) => {
           <p className="text-orange-500">
             <WatchLater /> Goal not submitted in time
           </p>
-        ) : goal.isReviewCompleted ? (
-          <p
-            // style={{ textShadow: "0 0 0  1px #333" }}
-            className="text-[#ffd700] "
-          >
-            <Star /> Rating Completed
-          </p>
-        ) : goal.isMonitoringCompleted ? (
-          <p className="text-blue-500">
-            <RateReview /> Monitoring Completed
-          </p>
         ) : status === "Monitoring Completed" ? (
           <p className="text-blue-500">
             <RateReview /> Monitoring Completed
@@ -86,16 +74,8 @@ const GoalStatus = ({ goal, status, performance, isTimeFinish }) => {
             <Info /> Pending
           </p>
         ))}
-
       {performance?.stages === "Monitoring stage/Feedback collection stage" &&
-        (goal.isReviewCompleted ? (
-          <p
-            // style={{ textShadow: "0 0 0  1px #333" }}
-            className="text-[#ffd700] "
-          >
-            <Star /> Rating Completed
-          </p>
-        ) : !isTimeFinish ? (
+        (!isTimeFinish ? (
           <p
             // style={{ textShadow: "0 0 0  1px #333" }}
             className="text-orange-500"
@@ -120,37 +100,30 @@ const GoalStatus = ({ goal, status, performance, isTimeFinish }) => {
           >
             <WatchLater /> Monitoring Overdue
           </p>
-        ) : !goal.isReviewCompleted ? (
-          <p
-            // style={{ textShadow: "0 0 0  1px #333" }}
-            className="text-orange-500"
-          >
-            <WatchLater /> Rating & Review Overdue
-          </p>
-        ) : !isTimeFinish ? (
+        ) : !isTimeFinish && status === "pending" ? (
           <p
             // style={{ textShadow: "0 0 0  1px #333" }}
             className="text-orange-500"
           >
             <WatchLater /> Goal Acceptance Overdue
           </p>
-        ) : status === "Revaluation Requested" ? (
-          <p
-            // style={{ textShadow: "0 0 0  1px #333" }}
-            className="text-[#3f51b5]"
-          >
-            <Autorenew /> Revaluation Requested
-          </p>
-        ) : status === "Goal Completed" ? (
-          <p className="text-green-500">
-            <CheckCircle /> Goal Completed
-          </p>
         ) : (
           <p className="text-gray-500">
             <Info /> Goal Acceptance Pending
           </p>
         ))}
-
+      {/* : status === "Revaluation Requested" ? (
+      <p
+        // style={{ textShadow: "0 0 0  1px #333" }}
+        className="text-[#3f51b5]"
+      >
+        <Autorenew /> Revaluation Requested
+      </p>
+      ) : status === "Goal Completed" ? (
+      <p className="text-green-500">
+        <CheckCircle /> Goal Completed
+      </p>
+      ) */}
       {performance?.stages ===
         "KRA stage/Ratings Feedback/Manager review stage" &&
         (!goal.isMonitoringCompleted || !isTimeFinish ? (
@@ -477,9 +450,11 @@ const GoalsTable = ({ performance, isError }) => {
                         Goal Name
                       </th>
 
-                      <th scope="col" className="py-3 text-sm px-2 ">
-                        Assignee
-                      </th>
+                      {role !== "Employee" && (
+                        <th scope="col" className="py-3 text-sm px-2 ">
+                          Assignee
+                        </th>
+                      )}
                       <th scope="col" className="py-3 text-sm px-2 ">
                         Goal Type
                       </th>
@@ -529,22 +504,24 @@ const GoalsTable = ({ performance, isError }) => {
                         >
                           <p className="space-x-3 truncate">{goal.goal}</p>
                         </td>
-
-                        <td
-                          onClick={() => handleOpen(goal._id)}
-                          className="text-sm cursor-pointer  text-left   px-2"
-                        >
-                          <div className="flex items-center gap-4">
-                            <Tooltip
-                              title={`${goal?.empId?.first_name} ${goal?.empId?.last_name}`}
-                            >
-                              <Avatar src={goal?.empId?.user_logo_url} />
-                            </Tooltip>
-                            <p className="text-sm">
-                              {goal?.empId?.first_name} {goal?.empId?.last_name}
-                            </p>
-                          </div>
-                        </td>
+                        {role !== "Employee" && (
+                          <td
+                            onClick={() => handleOpen(goal._id)}
+                            className="text-sm cursor-pointer  text-left   px-2"
+                          >
+                            <div className="flex items-center gap-4">
+                              <Tooltip
+                                title={`${goal?.empId?.first_name} ${goal?.empId?.last_name}`}
+                              >
+                                <Avatar src={goal?.empId?.user_logo_url} />
+                              </Tooltip>
+                              <p className="text-sm">
+                                {goal?.empId?.first_name}{" "}
+                                {goal?.empId?.last_name}
+                              </p>
+                            </div>
+                          </td>
+                        )}
 
                         <td
                           onClick={() => handleOpen(goal?._id)}
@@ -732,12 +709,7 @@ const GoalsTable = ({ performance, isError }) => {
             }}
           >
             {openMenu?.status === "Revaluation Requested" &&
-            (performance.stages ===
-              "KRA stage/Ratings Feedback/Manager review stage" ||
-              performance.stages ===
-                "Employee acceptance/acknowledgement stage")
-              ? "Revaluate Employee"
-              : "Add review & rating"}
+              "Revaluate Employee"}
           </MenuItem>
         )}
 

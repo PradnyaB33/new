@@ -18,6 +18,18 @@ const usePerformanceApi = create((set) => ({
     return response?.data;
   },
 
+  getEmployeePerformance: async ({ id, authToken }) => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/performance/getEmployeeDashboard/${id}`,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+
+    return response?.data;
+  },
   getPerformanceDashboardTable: async ({ role, authToken }) => {
     const { data } = await axios.get(
       `${process.env.REACT_APP_API}/route/performance/getPerformanceDashboard/${role}`,
