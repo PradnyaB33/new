@@ -1,29 +1,27 @@
 import { Edit } from "@mui/icons-material";
 import { Avatar, IconButton } from "@mui/material";
+import DOMPurify from "dompurify";
 import { React, useState } from "react";
-import { useQuery } from "react-query";
-import usePerformanceApi from "../../../../hooks/Performance/usePerformanceApi";
-import useAuthToken from "../../../../hooks/Token/useAuth";
-import UserProfile from "../../../../hooks/UserData/useUser";
 import RateReviewModel from "../GoalTable/Modal/Rate_Review_Model";
 
-const ReviewTable = ({ tableData }) => {
+const ReviewTable = ({ tableData, performance }) => {
   const [page, setPage] = useState(1);
   const [isOpen, setIsOpen] = useState(null);
   console.log(`🚀 ~ isOpen:`, isOpen);
   const [openEdit, setOpenEdit] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
 
-  const { fetchPerformanceSetup } = usePerformanceApi();
-  const user = UserProfile().getCurrentUser();
+  // const { fetchPerformanceSetup } = usePerformanceApi();
+  // const user = UserProfile().getCurrentUser();
 
-  const authToken = useAuthToken();
-  const { data: performance } = useQuery(["performancePeriod"], () =>
-    fetchPerformanceSetup({ user, authToken })
-  );
+  // const authToken = useAuthToken();
+  // const { data: performance } = useQuery(["performancePeriod"], () =>
+  //   fetchPerformanceSetup({ user, authToken })
+  // );
 
   const handleClose = () => {
     setOpenEdit(false);
+    setPage(1);
   };
 
   const handleOpen = (id) => {
@@ -33,15 +31,16 @@ const ReviewTable = ({ tableData }) => {
 
   const itemsPerPage = 10;
 
-  const handleChange = (event, value) => {
-    setPage(value);
-  };
-  console.log(`🚀 ~ handleChange:`, handleChange());
+  // const handleChange = (event, value) => {
+  //   setPage(value);
+  // };
 
   const paginatedData = tableData?.slice(
     (page - 1) * itemsPerPage,
     page * itemsPerPage
   );
+
+  console.log(paginatedData, "review");
 
   return (
     <div>
@@ -96,11 +95,14 @@ const ReviewTable = ({ tableData }) => {
                 onClick={() => setIsOpen(goal)}
                 className="text-sm cursor-pointer truncate text-left ml-auto   px-2"
               >
-                <p className="space-x-3 truncate">
-                  {goal?.others[0]?.managerFeedback
-                    ? goal?.others[0]?.managerFeedback
-                    : "-"}
-                </p>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: goal?.others[0]?.managerFeedback
+                      ? DOMPurify.sanitize(goal?.others[0]?.managerFeedback)
+                      : "-",
+                  }}
+                  className="space-x-3 truncate"
+                ></p>
               </td>
               <td
                 onClick={() => setIsOpen(goal)}
