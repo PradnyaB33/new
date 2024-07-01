@@ -1,77 +1,81 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { TextField, Menu, MenuItem, Dialog, DialogTitle, Button, DialogActions, DialogContent } from "@mui/material";
+import {
+  TextField,
+  Menu,
+  MenuItem,
+  Dialog,
+  DialogTitle,
+  Button,
+  DialogActions,
+  DialogContent,
+  CircularProgress,
+  Tooltip,
+} from "@mui/material";
 import UserProfile from "../../../hooks/UserData/useUser";
 import { UseContext } from "../../../State/UseState/UseContext";
 import DOMPurify from "dompurify";
 import { MoreVert } from "@mui/icons-material";
-import Tooltip from "@mui/material/Tooltip";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 
 const SaveAsDraft = () => {
-  // Hooks
+  //hooks
   const navigate = useNavigate();
   const { handleAlert } = useContext(TestContext);
   const queryClient = useQueryClient();
-  // Get organizationId
+
+  //get organisationId
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const organisationId = user?.organizationId;
 
-  // Get cookies
+  //get authToken
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
 
-  // State for survey list
-  const [surveys, setSurveys] = useState([]);
-  console.log("surveys", surveys);
-
-  // Fetch surveys data
-  useEffect(() => {
-    const fetchSurveys = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-draft-survey`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        );
-
-        setSurveys(response.data);
-      } catch (error) {
-        console.error("Error fetching survey data:", error);
-      }
-    };
-
-    fetchSurveys();
-  }, [authToken, organisationId]);
-
+  //states
   const [anchorEl, setAnchorEl] = useState(null);
-  // const [selectedSurveyId, setSelectedSurveyId] = useState(null);
+  const [currentSurveyId, setCurrentSurveyId] = useState(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+
+  //get draft survey
+  const { data: surveys, isLoading, isError } = useQuery(
+    ["draftSurveys", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-draft-survey`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data;
+    },
+    {
+      enabled: !!organisationId && !!authToken,
+    }
+  );
 
   const handleClick = (e, id) => {
     setAnchorEl(e.currentTarget);
-    // setSelectedSurveyId(id);
+    setCurrentSurveyId(id);
   };
 
   const handleCloseIcon = () => {
     setAnchorEl(null);
-    // setSelectedSurveyId(null);
+    setCurrentSurveyId(null);
   };
 
-  const handleOpenEditCommunicationModal = (surveyId) => {
+  const handleEditSurvey = (surveyId) => {
     navigate(`/organisation/${organisationId}/create-new-survey/${surveyId}`);
   };
 
-  // for delete
-  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
-
+  //delete draft survey
   const deleteMutation = useMutation(
     (surveyId) =>
       axios.delete(
@@ -84,17 +88,12 @@ const SaveAsDraft = () => {
       ),
     {
       onSuccess: () => {
-        // Invalidate and refetch the data after successful deletion
-        queryClient.invalidateQueries("getEmailCommunication");
+        queryClient.invalidateQueries("draftSurveys");
         handleAlert(true, "success", "Employee survey deleted successfully");
-        // Update state after deletion
-        setSurveys((prevSurveys) =>
-          prevSurveys.filter((survey) => survey._id !== deleteConfirmation)
-        );
       },
-      onError: (error) => {
+      onError: () => {
         handleAlert(true, "error", "Failed to delete the survey");
-      }
+      },
     }
   );
 
@@ -123,8 +122,15 @@ const SaveAsDraft = () => {
           />
         </div>
       </div>
-
-      {surveys && surveys?.length > 0 ? (
+      {isLoading ? (
+        <div className="flex justify-center p-4">
+          <CircularProgress />
+        </div>
+      ) : isError ? (
+        <div className="flex justify-center p-4 text-red-500">
+          Error fetching data
+        </div>
+      ) : surveys && surveys.length > 0 ? (
         <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
           <table className="min-w-full bg-white text-left !text-sm font-light">
             <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
@@ -138,8 +144,8 @@ const SaveAsDraft = () => {
               </tr>
             </thead>
             <tbody>
-              {surveys?.map((survey, index) => (
-                <tr key={index} className="!font-medium border-b ">
+              {surveys.map((survey) => (
+                <tr key={survey._id} className="!font-medium border-b ">
                   <td className="!text-left pl-8 py-3">
                     {DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } })}
                   </td>
@@ -151,13 +157,11 @@ const SaveAsDraft = () => {
                     <Menu
                       elevation={2}
                       anchorEl={anchorEl}
-                      open={Boolean(anchorEl)}
+                      open={Boolean(anchorEl && currentSurveyId === survey._id)}
                       onClose={handleCloseIcon}
                     >
                       <Tooltip title="Edit Survey">
-                        <MenuItem
-                          onClick={() => handleOpenEditCommunicationModal(survey._id)}
-                        >
+                        <MenuItem onClick={() => handleEditSurvey(survey._id)}>
                           <EditIcon
                             color="primary"
                             aria-label="edit"
@@ -170,9 +174,7 @@ const SaveAsDraft = () => {
                         </MenuItem>
                       </Tooltip>
                       <Tooltip title="Delete Survey">
-                        <MenuItem
-                          onClick={() => handleDeleteConfirmation(survey._id)}
-                        >
+                        <MenuItem onClick={() => handleDeleteConfirmation(survey._id)}>
                           <DeleteOutlineIcon
                             color="primary"
                             aria-label="delete"
@@ -191,26 +193,19 @@ const SaveAsDraft = () => {
             </tbody>
           </table>
         </div>
-      )
-        : (
-          <section className="py-6 px-8 w-full">
-            <p>
-              Nothing to draft
-            </p>
-          </section>
-        )
-      }
+      ) : (
+        <section className="py-6 px-8 w-full">
+          <p>Nothing to draft</p>
+        </section>
+      )}
 
-      {/* for delete */}
       <Dialog
         open={deleteConfirmation !== null}
         onClose={handleCloseConfirmation}
       >
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
-          <p>
-            Please confirm your decision to delete this survey, as this action cannot be undone.
-          </p>
+          <p>Please confirm your decision to delete this survey, as this action cannot be undone.</p>
         </DialogContent>
         <DialogActions>
           <Button

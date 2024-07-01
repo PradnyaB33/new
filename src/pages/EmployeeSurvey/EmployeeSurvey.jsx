@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import OpenSurveyList from "./components/OpenSurveyList";
 import CloseSurveyList from "./components/CloseSurveyList";
 import SaveAsDraft from "./components/SaveAsDraft";
+import UserProfile from "../../hooks/UserData/useUser";
 
 const EmployeeSurvey = () => {
     const navigate = useNavigate();
@@ -14,8 +15,13 @@ const EmployeeSurvey = () => {
     const [closeSurvey, setCloseSurvey] = useState(false)
     const [draftSurvey, setDraftSurvey] = useState(false)
 
+    // Get organizationId
+    const { getCurrentUser } = UserProfile();
+    const user = getCurrentUser();
+    const organisationId = user?.organizationId;
+
     const handleCreateNewSurvey = () => {
-        navigate("/organisation/:organisationId/create-new-survey");
+        navigate(`/organisation/${organisationId}/create-new-survey`);
     }
 
     const handleOpenSurvey = () => {

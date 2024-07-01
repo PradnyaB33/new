@@ -1371,7 +1371,7 @@ const App = () => {
           path="/organisation/:organisationId/create-new-survey/:id"
           element={<CreateNewSurvey />} />
         <Route
-          path="/organisation/:organisationId/survey-form"
+          path="/organisation/:organisationId/survey-form/:surveyId"
           element={<EmployeeSurveyForm />} />
         <Route
           path="/organisation/:organisationId/survey-details"

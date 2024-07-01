@@ -22,7 +22,7 @@ dayjs.extend(isSameOrBefore);
 const CreateNewSurvey = () => {
     const navigate = useNavigate();
     const { handleAlert } = useContext(TestContext);
-    const { id } = useParams(); // Assuming you are using react-router-dom useParams hook
+    const { id } = useParams();
 
     const [questions, setQuestions] = useState([{ question: '', questionType: '', options: [], required: false }]);
     const [employeeSurveyStartingDate, setEmployeeSurveyStartingDate] = useState(null);
@@ -48,7 +48,7 @@ const CreateNewSurvey = () => {
             return response.data;
         },
         {
-            enabled: !!id, // Only fetch data when id is available
+            enabled: !!id, 
         }
     );
 
@@ -56,42 +56,19 @@ const CreateNewSurvey = () => {
         if (surveyData) {
             setValue("title", surveyData.title);
             setValue("description", surveyData.description);
-            // Set questions
+
             setQuestions(surveyData.questions?.map(q => ({
                 question: q.question,
                 questionType: q.questionType,
                 options: q.options?.map(opt => ({ title: opt, checked: false })),
                 required: q.required,
             })));
-            // Set dates
             setEmployeeSurveyStartingDate(dayjs(surveyData.employeeSurveyStartingDate));
             setEmployeeSurveyEndDate(dayjs(surveyData.employeeSurveyEndDate));
-            // Set 'to' field
             setValue("to", surveyData.to?.map(option => ({ label: option, value: option })));
-            // Set other fields as needed
         }
     }, [surveyData, setValue]);
 
-    // const mutation = useMutation(async (formData) => {
-    //     const response = await axios.post(`${process.env.REACT_APP_API}/route/organization/${organisationId}/add-employee-survey-form`, formData,
-    //         {
-    //             headers: {
-    //                 Authorization: authToken,
-    //             },
-    //         }
-    //     );
-    //     return response;
-    // }, {
-    //     onSuccess: (response) => {
-    //         if (response.status === 201) {
-    //             navigate(`/organisation/${organisationId}/employee-survey`);
-    //         };
-    //         handleAlert(true, "success", "Saved employee survey successfully");
-    //     },
-    //     onError: (error) => {
-    //         console.error('Error submitting form', error);
-    //     },
-    // });
     const mutation = useMutation(async (formData) => {
         let response;
         if (id) {
@@ -284,7 +261,7 @@ const CreateNewSurvey = () => {
         ["employee", organisationId],
         async () => {
             const response = await axios.get(
-                `${process.env.REACT_APP_API}/route/employee/${organisationId}/get-employee`,
+                `${process.env.REACT_APP_API}/route/employee/${organisationId}/get-emloyee`,
                 {
                     headers: {
                         Authorization: authToken,
@@ -301,7 +278,7 @@ const CreateNewSurvey = () => {
             value: emp.email,
         }))
         : [];
-
+    console.log("employee", employee);
     const handleSelectAll = (fieldName) => {
         setValue(fieldName, employeeEmail);
     };
@@ -429,7 +406,7 @@ const CreateNewSurvey = () => {
                         />
                     </LocalizationProvider>
                 </div>
-                <div className="space-y-2 " style={{ marginTop: "30px" }}>
+                <div className="space-y-2 ">
                     <FormControlLabel
                         control={
                             <Checkbox
@@ -440,34 +417,34 @@ const CreateNewSurvey = () => {
                         label="Do you want to select all employee emails?"
                     />
                 </div>
-                <div>
-                    {showSelectAll && (
-                        <div className="space-y-2 ">
-                            <Button
-                                variant="outlined"
-                                onClick={() => handleSelectAll("to")}
-                            >
-                                Select All
-                            </Button>
-                        </div>
-                    )}
 
-                    <div className="space-y-2 " style={{ marginTop: "30px" }}>
-                        <AuthInputFiled
-                            name="to"
-                            icon={Email}
-                            control={control}
-                            type="autocomplete"
-                            placeholder="To"
-                            label="To"
-                            readOnly={false}
-                            maxLimit={15}
-                            errors={errors}
-                            error={errors.to}
-                            optionlist={employeeEmail ? employeeEmail : []}
-                        />
+                {showSelectAll && (
+                    <div className="space-y-2 ">
+                        <Button
+                            variant="outlined"
+                            onClick={() => handleSelectAll("to")}
+                        >
+                            Select All
+                        </Button>
                     </div>
+                )}
+
+                <div className="space-y-2 ">
+                    <AuthInputFiled
+                        name="to"
+                        icon={Email}
+                        control={control}
+                        type="autocomplete"
+                        placeholder="To"
+                        label="To"
+                        readOnly={false}
+                        maxLimit={15}
+                        errors={errors}
+                        error={errors.to}
+                        optionlist={employeeEmail ? employeeEmail : []}
+                    />
                 </div>
+
                 <div className="flex gap-4 mt-4 justify-end">
                     <Button type="submit" variant="contained" color="primary" onClick={() => handleSubmit((data) => handleSubmitForm(data, true))}>
                         {id ? "Update Survey" : "Complete Survey"}
