@@ -117,20 +117,11 @@ const PunchMapModal = ({ items, idx }) => {
             </h1>
             <h1>
               Start Time :{" "}
-              {new Date(
-                items?.punchData[0]?.data[0]?.time
-              ).toLocaleTimeString()}
+              {new Date(items?.punchData[0]?.createdAt).toLocaleTimeString()}
             </h1>
             <h1>
               End Time:{" "}
-              {items.punchData[items.punchData.length - 1]?.data
-                ? new Date(
-                    items?.punchData[items.punchData.length - 1]?.data[
-                      items.punchData[items.punchData.length - 1]?.data.length -
-                        1
-                    ]?.time
-                  ).toLocaleTimeString()
-                : "N/A"}
+              {new Date(items?.punchData[0]?.updatedAt).toLocaleTimeString()}
             </h1>
 
             <h1>Total Estimated Distance : {distanceTraveled} Km </h1>
