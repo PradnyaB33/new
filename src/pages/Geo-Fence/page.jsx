@@ -40,7 +40,7 @@ const GeoFencing = () => {
             ? data?.area?.map((item) => (
                 <GeoFencingCard key={item} item={item} />
               ))
-            : "Sorry but you have enable geo fencing from setup page."}
+            : "Sorry but you have not enable geo fencing checkbox from setup page."}
         </div>
         <ReusableModal
           open={open}

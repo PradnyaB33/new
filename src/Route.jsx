@@ -90,6 +90,10 @@ import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
 import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
 import EmployeeNotification from "./pages/Employee-Notification/page";
 import EditEmployee from "./pages/Employee/EditEmployee";
+import EmployeeSurvey from "./pages/EmployeeSurvey/EmployeeSurvey";
+import CreateNewSurvey from "./pages/EmployeeSurvey/components/CreateNewSurvey";
+import EmployeeSurveyForm from "./pages/EmployeeSurvey/components/EmployeeSurveyForm";
+import SurveyDetails from "./pages/EmployeeSurvey/components/SurveyDetails";
 import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
 import GeoFencing from "./pages/Geo-Fence/page";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
@@ -105,6 +109,8 @@ import MissedPunchNotificationToEmp from "./pages/MissedPunchNotification/Missed
 import MyTraining from "./pages/My-Training/page";
 import AssignOrg from "./pages/OrgList/AssignOrg";
 import PayslipNotification from "./pages/PayslipNotification/PayslipNotification";
+import CreateJobPosition from "./pages/Recruitment/CreateJobPosition";
+import ViewJobPosition from "./pages/Recruitment/ViewJobPosition";
 import ReportingMis from "./pages/ReportingMis/page";
 import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
 import SelfShiftNotification from "./pages/SelfShiftNotification/page";
@@ -119,16 +125,11 @@ import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttenda
 import ViewCalculateAttendance from "./pages/ViewCalculateAttendance/ViewCalculateAttendance";
 import CustomCalander from "./pages/custom/Calendar";
 import DocNotification from "./pages/doc-notification/DocNotification";
+import EmpNotification from "./pages/emp-notifications/EmpNotification";
 import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import CreateJobPosition from "./pages/Recruitment/CreateJobPosition";
-import ViewJobPosition from "./pages/Recruitment/ViewJobPosition";
-import EmployeeSurvey from "./pages/EmployeeSurvey/EmployeeSurvey";
-import CreateNewSurvey from "./pages/EmployeeSurvey/components/CreateNewSurvey";
-import EmployeeSurveyForm from "./pages/EmployeeSurvey/components/EmployeeSurveyForm";
-import SurveyDetails from "./pages/EmployeeSurvey/components/SurveyDetails";
 
 const App = () => {
   return (
@@ -180,6 +181,10 @@ const App = () => {
         />
 
         <Route path="/paymentfailed" element={<PaymentFailed />} />
+        <Route
+          path="/self/emp-main-notification"
+          element={<EmpNotification />}
+        />
 
         <Route path="/loading" element={<Loader />} />
         <Route path="/my-training" element={<MyTraining />} />
@@ -1366,16 +1371,16 @@ const App = () => {
         />
         <Route
           path="/organisation/:organisationId/create-new-survey"
-          element={<CreateNewSurvey />} />
-            <Route
-          path="/organisation/:organisationId/create-new-survey/:id"
-          element={<CreateNewSurvey />} />
+          element={<CreateNewSurvey />}
+        />
         <Route
-          path="/organisation/:organisationId/survey-form/:surveyId"
-          element={<EmployeeSurveyForm />} />
+          path="/organisation/:organisationId/survey-form"
+          element={<EmployeeSurveyForm />}
+        />
         <Route
           path="/organisation/:organisationId/survey-details"
-          element={<SurveyDetails />} />
+          element={<SurveyDetails />}
+        />
       </Routes>
     </AuthProvider>
   );
