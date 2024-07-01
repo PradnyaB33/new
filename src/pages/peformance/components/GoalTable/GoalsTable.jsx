@@ -631,9 +631,10 @@ const GoalsTable = ({ performance, isError }) => {
         {role !== "Employee" &&
           performance?.stages === "Goal setting" &&
           openMenu?.status === "Goal Submitted" &&
-          (performance.isManagerApproval
-            ? openMenu?.creatorId === user._id
-            : role === "HR") && (
+          openMenu?.approverId === user._id && (
+            // (performance.isManagerApproval
+            //   ? openMenu?.creatorId === user._id
+            //   : role === "HR")
             <>
               <MenuItem
                 className="!p-0"

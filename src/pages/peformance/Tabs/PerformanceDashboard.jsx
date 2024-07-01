@@ -24,6 +24,7 @@ const PerformanceDashboard = () => {
   const { data: tableData } = useQuery(["dashboardTable"], () =>
     getPerformanceDashboardTable({ role, authToken })
   );
+  console.log(`🚀 ~ tableData:`, tableData);
   const { data: selfGoals } = useQuery(["selfData"], () =>
     getEmployeePerformance({ id: user._id, authToken })
   );
@@ -83,7 +84,7 @@ const PerformanceDashboard = () => {
             selfGoals?.goals?.length
           } completed`}
         />
-        <Card title={"In Due"} data={10} />
+        <Card title={"In Due"} data={statusCounts?.Overdue ?? 0} />
         <Card title={"Current Stage"} data={performance?.stages} />
         <Card
           title={"Timeline"}

@@ -20,8 +20,8 @@ const EmpGraph = ({ goalsData }) => {
         label: "Goals Count",
         data: [
           goalsData?.Completed ?? 0,
-          goalsData["Not Started"] ?? 0,
-          goalsData["In Progress"] ?? 0,
+          goalsData?.["Not Started"] ?? 0, // Adjusted line
+          goalsData?.["In Progress"] ?? 0,
           goalsData?.Overdue ?? 0,
         ],
         backgroundColor: ["#2ECC40", "#808080", "#0074D9", "#EC6B56"],
