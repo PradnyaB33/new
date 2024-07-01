@@ -7,20 +7,18 @@ import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 import UserProfile from "../../../hooks/UserData/useUser";
 import { CircularProgress } from "@mui/material";
-import { useForm } from "react-hook-form";
-import { Button } from "@mui/material";
+
 
 const EditTest3 = ({ prevStep }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { handleAlert } = useContext(TestContext);
-  const { organisationId } = useParams();
+  const { jobPositionId, organisationId } = useParams();
   const navigate = useNavigate("");
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const creatorId = user?._id;
   const queryClient = useQueryClient();
-  const {  getValues } = useForm();
 
   const {
     position_name,
@@ -42,7 +40,7 @@ const EditTest3 = ({ prevStep }) => {
     emptyState,
   } = useCreateJobPositionState();
 
-  // for send the data
+  // for send the data for update
   const handleSubmit = useMutation(
     () => {
       const JobPositionData = {
@@ -66,8 +64,8 @@ const EditTest3 = ({ prevStep }) => {
         creatorId,
       };
 
-      const response = axios.post(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/create-job-position`,
+      const response = axios.put(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/${jobPositionId}/update-job-position`,
         JobPositionData,
         {
           headers: {
@@ -94,58 +92,6 @@ const EditTest3 = ({ prevStep }) => {
       },
     }
   );
-
-  // for save the data
-  const SaveForLatter = useMutation(
-    (data) =>
-      axios.post(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/save-job-position`,
-        data,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      ),
-
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["job-position"] });
-        handleAlert(true, "success", "Job position save successfully");
-        emptyState();
-        navigate(`/organisation/${organisationId}/view-job-position`);
-      },
-      onError: () => {},
-    }
-  );
-  const handleSaveForLater = async () => {
-    const JobPositionDataSave = {
-      position_name,
-      department_name: department_name?.value,
-      location_name: location_name?.value,
-      date,
-      job_type: job_type,
-      mode_of_working: mode_of_working,
-      job_level: job_level,
-      job_description,
-      role_and_responsibility,
-      required_skill,
-      hiring_manager: hiring_manager?.value,
-      hiring_hr: hiring_hr?.value,
-      education,
-      experience_level,
-      age_requirement,
-      working_time,
-      organizationId: organisationId,
-      creatorId,
-    };
-
-    try {
-      await SaveForLatter.mutateAsync(JobPositionDataSave);
-    } catch (error) {
-      handleAlert(true, "error", "An Error occurred  to save the data");
-    }
-  };
 
   return (
     <>
@@ -260,13 +206,6 @@ const EditTest3 = ({ prevStep }) => {
               Prev
             </button>
             <div className="flex gap-6">
-              <Button
-                color="primary"
-                variant="outlined"
-                onClick={() => handleSaveForLater(getValues())}
-              >
-                Save for later
-              </Button>
               <button
                 type="submit"
                 variant="contained"
