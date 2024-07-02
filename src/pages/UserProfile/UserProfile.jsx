@@ -93,15 +93,16 @@ const EmployeeProfile = () => {
       const reader = new FileReader();
       reader.onloadend = async () => {
         console.log(`🚀 ~ file: UserProfile.jsx:94 ~ reader:`, reader);
-        setUrl(reader.result);
-        const canvas = document.getElementById("canvas-1");
-        const ctx = canvas.getContext("2d");
+        setUrl(() => reader.result);
         const img = document.getElementById("image-1");
-        ctx.drawImage(img, 0, 0, 300, 300);
         const faces = await detectFaceOnlyMutation({
           img,
-          canvasId: "canvas-1",
         });
+        if (faces.length !== 1) {
+          setUrl(UserInformation?.user_logo_url);
+        }
+        console.log(`🚀 ~ file: UserProfile.jsx:113 ~ faces:`, faces);
+
         console.log(`🚀 ~ file: UserProfile.jsx:102 ~ faces:`, faces);
       };
       reader.readAsDataURL(selectedFile);
@@ -193,13 +194,8 @@ const EmployeeProfile = () => {
                           width: "150px",
                           height: "150px",
                           borderRadius: "50%",
-                          display: "none",
                         }}
                         crossOrigin="anonymous"
-                      />
-                      <canvas
-                        id="canvas-1"
-                        className="bg-gray-50 w-[150px] h-[150px] rounded-full"
                       />
                     </div>
                   ) : (

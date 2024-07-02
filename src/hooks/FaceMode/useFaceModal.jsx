@@ -37,7 +37,8 @@ const useLoadModel = () => {
 
   const { mutateAsync: detectFacesMutation } = useMutation({
     mutationFn: detectFaces,
-    onSuccess: async (data, { canvasId }) => {
+    onSuccess: async (data) => {
+      console.log(`🚀 ~ file: useFaceModal.jsx:41 ~ data:`, data);
       if (data.length === 0) {
         handleAlert(true, "error", "No faces found in the image");
       } else if (data.length > 1) {
@@ -51,7 +52,8 @@ const useLoadModel = () => {
       handleAlert(true, "error", error?.message);
     },
   });
-  const detectFaceOnly = async ({ img, canvasId }) => {
+  const detectFaceOnly = async ({ img }) => {
+    console.log(img, "img");
     const faces = await faceApi
       .detectAllFaces(img, new faceApi.SsdMobilenetv1Options())
       .withFaceLandmarks()
@@ -59,19 +61,18 @@ const useLoadModel = () => {
       .withFaceExpressions()
       .withAgeAndGender();
 
-    if (faces.length === 0) {
-      throw new Error("No faces found in the image");
-    }
-    if (faces.length > 1) {
-      throw new Error("More than one face found in the image");
-    }
-
     return faces;
   };
 
   const { mutateAsync: detectFaceOnlyMutation } = useMutation({
     mutationFn: detectFaceOnly,
     onSuccess: async (data, { canvasId }) => {
+      if (data?.length === 0) {
+        handleAlert(true, "error", "No faces found in the image");
+      }
+      if (data?.length > 1) {
+        handleAlert(true, "warning", "More than one face found in the image");
+      }
       handleAlert(true, "success", "Face detected successfully");
     },
     onError: (error) => {
