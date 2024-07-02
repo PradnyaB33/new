@@ -23,6 +23,7 @@ function CalculateSalary() {
   const [employeeSummary, setEmployeeSummary] = useState([]);
   const [paidLeaveDays, setPaidLeaveDays] = useState(0);
   const [unPaidLeaveDays, setUnPaidLeaveDays] = useState(0);
+  const [remotePunchingCount, setRemotePunchingCount] = useState(0);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
   console.log(setIsSubmitDisabled);
 
@@ -123,7 +124,8 @@ function CalculateSalary() {
     return holidaysInCurrentMonth.length;
   };
   let publicHolidaysCount = countPublicHolidaysInCurrentMonth();
-  // to get the leave like unpaid  , paid etc
+
+  // to get the leave like unpaid  , paid  remote punching count etc
   const fetchDataAndFilter = async () => {
     try {
       const response = await axios.get(
@@ -164,11 +166,14 @@ function CalculateSalary() {
       selectedYear
     );
     if (filteredData.length > 0) {
-      const { paidleaveDays, unpaidleaveDays } = filteredData[0];
+      const { paidleaveDays, unpaidleaveDays, remotePunching } =
+        filteredData[0];
       setPaidLeaveDays(paidleaveDays);
       setUnPaidLeaveDays(unpaidleaveDays);
+      setRemotePunchingCount(remotePunching)
     }
   }, [employeeSummary, selectedMonth, selectedYear]);
+
   // pull the total deduction of loan of employee if he/she apply the loan
   const { data: empLoanAplicationInfo } = useQuery(
     ["empLoanAplication", organisationId],
@@ -304,8 +309,7 @@ function CalculateSalary() {
     setShiftTotalAllowance(total);
   }, [shiftCounts, shiftAllowances]);
 
-  // calculate the remote punching allowance of employee
-  const remotePunchingCounts = 5;
+  
   // to get remote punching amount
   const { data: getremotePuncingAmount } = useQuery(
     ["remote-punching"],
@@ -321,19 +325,20 @@ function CalculateSalary() {
       return response.data.remotePunchingObject.allowanceQuantity;
     }
   );
+
   const isValidAmount =
     !isNaN(getremotePuncingAmount) &&
     getremotePuncingAmount !== null &&
     getremotePuncingAmount !== undefined;
 
   const isValidCount =
-    !isNaN(remotePunchingCounts) &&
-    remotePunchingCounts !== null &&
-    remotePunchingCounts !== undefined;
+    !isNaN(remotePunchingCount) &&
+    remotePunchingCount !== null &&
+    remotePunchingCount !== undefined;
 
   const remotePunchAllowance =
     isValidAmount && isValidCount
-      ? remotePunchingCounts * getremotePuncingAmount
+      ? remotePunchingCount * getremotePuncingAmount
       : 0;
   // calculate the total gross salary
   let totalSalary =
@@ -385,9 +390,7 @@ function CalculateSalary() {
       }
       return total;
     }, 0);
-  }   
-  
-
+  }
 
   deduction = isNaN(deduction) ? 0 : deduction.toFixed(2);
   employee_pf = isNaN(employee_pf) ? 0 : employee_pf.toFixed(2);
