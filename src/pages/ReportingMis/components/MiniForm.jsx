@@ -369,7 +369,6 @@ const ReportForm = () => {
           name="reportType"
           control={control}
           type="select"
-          // icon={Work}
           placeholder="Report Type"
           label="Select Report Type *"
           readOnly={false}
@@ -378,22 +377,6 @@ const ReportForm = () => {
           errors={errors}
           error={errors.reportType}
         />
-
-        {/* <AuthInputFiled
-          name="timeRange"
-          control={control}
-          type="calender"
-          icon={Work}
-          asSingle={false}
-          placeholder="Report Type"
-          label="Select Time Range *"
-          readOnly={false}
-          maxLimit={15}
-          useRange={true}
-          //   options={reportTypeOptions}
-          errors={errors}
-          error={errors.timeRange}
-        /> */}
       </div>
       {watch("reportType")?.value === "Attendence" && (
         <div className="grid gap-2 grid-cols-2">
@@ -401,14 +384,12 @@ const ReportForm = () => {
             name="timeRange"
             control={control}
             type="calender"
-            // icon={Work}
             asSingle={false}
             placeholder="Report Type"
             label="Select Time Range *"
             readOnly={false}
             maxLimit={15}
             useRange={true}
-            //   options={reportTypeOptions}
             errors={errors}
             error={errors.timeRange}
           />

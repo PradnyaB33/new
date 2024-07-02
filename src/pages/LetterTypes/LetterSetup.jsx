@@ -87,7 +87,7 @@ const LetterSetup = () => {
     <div>
       <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
         <Setup>
-          <article className=" bg-white lg:w-[80%] w-full h-max shadow-md rounded-sm border items-center">
+          <article className=" bg-white  w-full h-max shadow-md rounded-sm border items-center">
             <div className="p-4 border-b-[.5px] flex items-center justify-between gap-3 w-full border-gray-300">
               <div className="flex gap-3 ">
                 <div className="mt-1">

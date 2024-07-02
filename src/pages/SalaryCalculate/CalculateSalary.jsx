@@ -9,7 +9,6 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import { useForm } from "react-hook-form";
 
 function CalculateSalary() {
   const { handleAlert } = useContext(TestContext);
@@ -24,6 +23,7 @@ function CalculateSalary() {
   const [employeeSummary, setEmployeeSummary] = useState([]);
   const [paidLeaveDays, setPaidLeaveDays] = useState(0);
   const [unPaidLeaveDays, setUnPaidLeaveDays] = useState(0);
+  const [remotePunchingCount, setRemotePunchingCount] = useState(0);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
   console.log(setIsSubmitDisabled);
 
@@ -124,7 +124,8 @@ function CalculateSalary() {
     return holidaysInCurrentMonth.length;
   };
   let publicHolidaysCount = countPublicHolidaysInCurrentMonth();
-  // to get the leave like unpaid  , paid etc
+
+  // to get the leave like unpaid  , paid  remote punching count etc
   const fetchDataAndFilter = async () => {
     try {
       const response = await axios.get(
@@ -165,11 +166,14 @@ function CalculateSalary() {
       selectedYear
     );
     if (filteredData.length > 0) {
-      const { paidleaveDays, unpaidleaveDays } = filteredData[0];
+      const { paidleaveDays, unpaidleaveDays, remotePunching } =
+        filteredData[0];
       setPaidLeaveDays(paidleaveDays);
       setUnPaidLeaveDays(unpaidleaveDays);
+      setRemotePunchingCount(remotePunching)
     }
   }, [employeeSummary, selectedMonth, selectedYear]);
+
   // pull the total deduction of loan of employee if he/she apply the loan
   const { data: empLoanAplicationInfo } = useQuery(
     ["empLoanAplication", organisationId],
@@ -229,7 +233,7 @@ function CalculateSalary() {
   let variableAllowance = calculateSalaryComponent(
     availableEmployee?.salaryComponent?.["Variable allowance"] || ""
   );
-  // to get shifts
+  // to get shifts of employee
   const { data: getShifts } = useQuery(
     ["shiftAllowance", userId, selectedMonth, selectedYear],
     async () => {
@@ -248,7 +252,7 @@ function CalculateSalary() {
       return response.data.shiftRequests;
     }
   );
-  console.log("get shift", getShifts);
+
   // to get shift count of employee
   const countShifts = (shifts) => {
     const shiftCount = {};
@@ -266,45 +270,46 @@ function CalculateSalary() {
     () => (getShifts ? countShifts(getShifts) : {}),
     [getShifts]
   );
-  console.log("shift count", shiftCounts);
 
-  // calculate the amount of shift allowance
+  // get the amount of shift
+  const { data: shiftAllowanceAmount } = useQuery(
+    ["shift-allowance-amount"],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/shifts/${organisationId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return response.data.shifts;
+    }
+  );
+
+  const shiftAllowances = useMemo(() => {
+    if (shiftAllowanceAmount) {
+      return shiftAllowanceAmount.reduce((acc, shift) => {
+        acc[shift.shiftName.toLowerCase()] = shift.allowance;
+        return acc;
+      }, {});
+    }
+    return {};
+  }, [shiftAllowanceAmount]);
+
   const [shiftTotalAllowance, setShiftTotalAllowance] = useState(0);
   useEffect(() => {
-    const allowances = {
-      "Evening shift": 200,
-      "General shift": 100,
-      rrr: 300,
-    };
     let total = 0;
     for (const [shiftTitle, count] of Object.entries(shiftCounts)) {
-      if (allowances[shiftTitle]) {
-        total += count * allowances[shiftTitle];
+      const shiftAllowance = shiftAllowances[shiftTitle.toLowerCase()];
+      if (shiftAllowance) {
+        total += count * shiftAllowance;
       }
     }
     setShiftTotalAllowance(total);
-  }, [shiftCounts]);
+  }, [shiftCounts, shiftAllowances]);
 
-  // to get shift allowance amount
-  const { setValue } = useForm();
-  const { data } = useQuery("get-shift-allowance", async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/shiftApply/getallowance/${organisationId}`,
-      {
-        headers: { Authorization: token },
-      }
-    );
-    return response.data;
-  });
-  useEffect(() => {
-    if (data?.existingAllowance) {
-      setValue("dualWorkflow", data.existingAllowance.check);
-    }
-  }, [data, setValue]);
-  console.log("setValue" , data);
-
-  // calculate the remote punching allowance of employee
-  const remotePunchingCounts = 5;
+  
   // to get remote punching amount
   const { data: getremotePuncingAmount } = useQuery(
     ["remote-punching"],
@@ -320,21 +325,21 @@ function CalculateSalary() {
       return response.data.remotePunchingObject.allowanceQuantity;
     }
   );
+
   const isValidAmount =
     !isNaN(getremotePuncingAmount) &&
     getremotePuncingAmount !== null &&
     getremotePuncingAmount !== undefined;
 
   const isValidCount =
-    !isNaN(remotePunchingCounts) &&
-    remotePunchingCounts !== null &&
-    remotePunchingCounts !== undefined;
+    !isNaN(remotePunchingCount) &&
+    remotePunchingCount !== null &&
+    remotePunchingCount !== undefined;
 
   const remotePunchAllowance =
     isValidAmount && isValidCount
-      ? remotePunchingCounts * getremotePuncingAmount
+      ? remotePunchingCount * getremotePuncingAmount
       : 0;
-
   // calculate the total gross salary
   let totalSalary =
     parseFloat(basicSalary || 0) +
@@ -371,8 +376,6 @@ function CalculateSalary() {
         );
       }
     );
-
-    console.log("loan deduction applications", loanDeductionApplications);
 
     // Calculate the total loan deduction for active loans
     loanDeduction = loanDeductionApplications.reduce((total, application) => {

@@ -6,7 +6,6 @@ import Tooltip from "@mui/material/Tooltip";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import CreateSalaryModel from "../../components/Modal/CreateSalaryModel/CreateSalaryModel";
