@@ -247,7 +247,6 @@ function CalculateSalary() {
       return response.data.shiftRequests;
     }
   );
-  console.log("get shift", getShifts);
 
   // to get shift count of employee
   const countShifts = (shifts) => {
@@ -266,7 +265,6 @@ function CalculateSalary() {
     () => (getShifts ? countShifts(getShifts) : {}),
     [getShifts]
   );
-  console.log("shift count", shiftCounts);
 
   // get the amount of shift
   const { data: shiftAllowanceAmount } = useQuery(
@@ -293,10 +291,8 @@ function CalculateSalary() {
     }
     return {};
   }, [shiftAllowanceAmount]);
-  console.log("shift allowances", shiftAllowances);
 
   const [shiftTotalAllowance, setShiftTotalAllowance] = useState(0);
-
   useEffect(() => {
     let total = 0;
     for (const [shiftTitle, count] of Object.entries(shiftCounts)) {
@@ -307,8 +303,6 @@ function CalculateSalary() {
     }
     setShiftTotalAllowance(total);
   }, [shiftCounts, shiftAllowances]);
-
-  console.log("shift total allowance", shiftTotalAllowance);
 
   // calculate the remote punching allowance of employee
   const remotePunchingCounts = 5;
@@ -340,10 +334,7 @@ function CalculateSalary() {
   const remotePunchAllowance =
     isValidAmount && isValidCount
       ? remotePunchingCounts * getremotePuncingAmount
-      : 0; 
-    console.log("Remote Punching amount" , remotePunchAllowance);
-
-
+      : 0;
   // calculate the total gross salary
   let totalSalary =
     parseFloat(basicSalary || 0) +
@@ -381,8 +372,6 @@ function CalculateSalary() {
       }
     );
 
-    
-
     // Calculate the total loan deduction for active loans
     loanDeduction = loanDeductionApplications.reduce((total, application) => {
       // Check if the current application is within the loan disbursement and completion dates
@@ -396,7 +385,9 @@ function CalculateSalary() {
       }
       return total;
     }, 0);
-  }
+  }   
+  
+
 
   deduction = isNaN(deduction) ? 0 : deduction.toFixed(2);
   employee_pf = isNaN(employee_pf) ? 0 : employee_pf.toFixed(2);
