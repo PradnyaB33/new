@@ -502,23 +502,27 @@ const GoalsTable = ({ performance, isError }) => {
                         onClick={() => handleOpen(goal._id)}
                         className="text-sm cursor-pointer truncate text-left   px-2"
                       >
-                        <p className="space-x-3 truncate">{goal.goal}</p>
+                        <Tooltip
+                          className="cursor-pointer"
+                          title="Click to view"
+                        >
+                          <p className="space-x-3 truncate">{goal.goal}</p>
+                        </Tooltip>
                       </td>
                       {role !== "Employee" && (
                         <td
                           onClick={() => handleOpen(goal._id)}
                           className="text-sm w-max cursor-pointer  text-left   px-2"
                         >
-                          <div className="flex w-max items-center gap-4">
-                            <Tooltip
-                              title={`${goal?.empId?.first_name} ${goal?.empId?.last_name}`}
-                            >
+                          <Tooltip title={`Click to view`}>
+                            <div className="flex w-max items-center gap-4">
                               <Avatar src={goal?.empId?.user_logo_url} />
-                            </Tooltip>
-                            <p className="text-sm">
-                              {goal?.empId?.first_name} {goal?.empId?.last_name}
-                            </p>
-                          </div>
+                              <p className="text-sm">
+                                {goal?.empId?.first_name}{" "}
+                                {goal?.empId?.last_name}
+                              </p>
+                            </div>
+                          </Tooltip>
                         </td>
                       )}
 
@@ -526,25 +530,29 @@ const GoalsTable = ({ performance, isError }) => {
                         onClick={() => handleOpen(goal?._id)}
                         className=" cursor-pointer text-left !p-0 !w-[250px]  "
                       >
-                        <p
-                          className={`
+                        <Tooltip title={`Click to view`}>
+                          <p
+                            className={`
                         px-2 md:w-full w-max text-sm`}
-                        >
-                          {goal?.goalType}
-                        </p>
+                          >
+                            {goal?.goalType}
+                          </p>
+                        </Tooltip>
                       </td>
 
                       <td
                         onClick={() => handleOpen(goal._id)}
                         className=" cursor-pointer text-left !p-0 !w-[250px]  "
                       >
-                        <p
-                          className={`
+                        <Tooltip title={`Click to view`}>
+                          <p
+                            className={`
                         px-2 md:w-full w-max text-sm`}
-                        >
-                          {format(new Date(goal.startDate), "PP")} -{" "}
-                          {format(new Date(goal.endDate), "PP")}
-                        </p>
+                          >
+                            {format(new Date(goal.startDate), "PP")} -{" "}
+                            {format(new Date(goal.endDate), "PP")}
+                          </p>
+                        </Tooltip>
                       </td>
 
                       <td

@@ -5,6 +5,23 @@ const usePerformanceApi = create((set) => ({
   isTimeFinish: undefined,
   setIsTimeFinish: (isTimeFinish) => set({ isTimeFinish }),
 
+  getPerformanceTable: async ({ role, authToken, organisationId }) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/performance/getPerformanceTable/${role}/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response?.data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  },
+
   fetchPerformanceSetup: async ({ user, authToken }) => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/performance/getSetup/${user.organizationId}`,

@@ -1,5 +1,5 @@
 import React from "react";
-import { Bar, Doughnut } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 
 const ManagerPerfromanceDashboard = () => {
   const data = {
@@ -96,8 +96,8 @@ const ManagerPerfromanceDashboard = () => {
   };
 
   return (
-    <section className="flex gap-4 my-4">
-      <aside className="w-[60%]">
+    <section className="flex gap-4 ">
+      {/* <aside className="w-[60%]">
         <div className="w-full px-4 pb-4  flex flex-col border rounded-sm bg-white  justify-center">
           <div className="flex my-4 sm:flex-row flex-col sm:justify-between gap-2 sm:items-center">
             <h1 className="text-lg font-bold text-[#67748E]">
@@ -108,22 +108,22 @@ const ManagerPerfromanceDashboard = () => {
             <Bar options={options} data={data} />
           </div>
         </div>
-      </aside>
+      </aside> */}
 
-      <aside className="w-[40%] grid gap-2">
-        <div className="w-full px-4 pb-4  flex flex-col border rounded-sm bg-white  justify-center">
+      <aside className="w-full flex h-max  gap-8">
+        {/* <div className="w-max px-4 pb-4  flex flex-col  rounded-sm bg-gray-50 border  justify-center">
           <div className="flex my-4 sm:flex-row flex-col sm:justify-between gap-2 sm:items-center">
             <h1 className="text-lg font-bold text-[#67748E]">Goals chart</h1>
           </div>
-          <div className="h-[200px] w-max ">
+          <div className="h-[125px] pr-10 w-max ">
             <Doughnut options={optionsDougnut} data={data2} />
           </div>
-        </div>
-        <div className="w-full px-4 pb-4  flex flex-col border rounded-sm bg-white  justify-center">
+        </div> */}
+        <div className="w-max px-4 pb-4  flex flex-col rounded-sm bg-gray-50 border  justify-center">
           <div className="flex my-4 sm:flex-row flex-col sm:justify-between gap-2 sm:items-center">
             <h1 className="text-lg font-bold text-[#67748E]">Rating Graph</h1>
           </div>
-          <div className="h-[200px] w-max ">
+          <div className="h-[125px] pr-10 w-max ">
             <Doughnut options={optionsDougnut} data={data} />
           </div>
         </div>

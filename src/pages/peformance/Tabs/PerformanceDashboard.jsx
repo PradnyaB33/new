@@ -1,41 +1,79 @@
 import { format } from "date-fns";
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 import usePerformanceApi from "../../../hooks/Performance/usePerformanceApi";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 import Card from "../components/Card";
+import DashboardTable from "../components/Dashboard/DashboardTable";
 import EmpGraph from "../components/Dashboard/EmpGraph";
-import ManagerPerfromanceDashboard from "../components/Dashboard/ManagerPerfromanceDashboard";
 import Message from "../components/Message";
 
 const PerformanceDashboard = () => {
   const user = UserProfile().getCurrentUser();
   const role = UserProfile().useGetCurrentRole();
+  const [employeeGoals, setEmployeeGoals] = useState();
+  const { organisationId } = useParams();
+  console.log(`🚀 ~ organisationId:`, organisationId);
   const authToken = useAuthToken();
   const {
     fetchPerformanceSetup,
-    getPerformanceDashboardTable,
+    // getPerformanceDashboardTable,
     getEmployeePerformance,
+    getPerformanceTable,
   } = usePerformanceApi();
   const { data: performance } = useQuery(["performancePeriod"], () =>
     fetchPerformanceSetup({ user, authToken })
   );
 
-  const { data: tableData } = useQuery(["dashboardTable"], () =>
-    getPerformanceDashboardTable({ role, authToken })
-  );
-  console.log(`🚀 ~ tableData:`, tableData);
-  const { data: selfGoals } = useQuery(["selfData"], () =>
-    getEmployeePerformance({ id: user._id, authToken })
+  const { data: tableData, isFetching: tableFetching } = useQuery(
+    {
+      queryKey: ["performanceDashTable"],
+      queryFn: () => getPerformanceTable({ authToken, role, organisationId }),
+    },
+    { enabled: role === "Manager" || role === "HR" }
   );
 
-  // const selfData = selfGoals?.goals?.forEach((goal) => {
-  //   // let completed = goal?.filter((goal) => goal.goalStatus === "Completed");
-  //   console.log(`🚀 ~ goal:`, goal);
-  //   // return completed;
-  // });
+  const goalStatusCounts = tableData?.reduce((acc, record) => {
+    if (record.goals && record.goals.length) {
+      record.goals.forEach((goal) => {
+        const today = new Date();
+        const endDate = new Date(goal.endDate);
 
+        if (!acc["total"]) {
+          acc["total"] = 0;
+        }
+        acc["total"]++;
+
+        if (endDate < today) {
+          // Count as overdue
+          if (!acc["overdue"]) {
+            acc["overdue"] = 0;
+          }
+          acc["overdue"]++;
+        } else {
+          // Count as per goalStatus
+          if (goal.goalStatus) {
+            if (!acc[goal.goalStatus]) {
+              acc[goal.goalStatus] = 0;
+            }
+            acc[goal.goalStatus]++;
+          }
+        }
+      });
+    }
+    return acc;
+  }, {});
+  // }, []);
+
+  console.log(goalStatusCounts);
+
+  const { data: selfGoals } = useQuery(
+    ["selfData"],
+    () => getEmployeePerformance({ id: user._id, authToken }),
+    { enabled: role === "Employee" }
+  );
   const statusCounts = selfGoals?.goals?.reduce((acc, goal) => {
     const { goalStatus, endDate } = goal;
     const today = new Date();
@@ -57,16 +95,7 @@ const PerformanceDashboard = () => {
   }, {}); // Initial accumulator is an empty object
 
   return (
-    <div
-    // className="px-8 "
-    >
-      {/* <div className="flex items-center justify-between ">
-        <div className="w-full py-4  ">
-          <h1 className="text-2xl ">Performance Dashboard</h1>
-          <p>Manage and organize goals setting</p>
-        </div>
-      </div> */}
-
+    <div>
       <div class="flex items-center justify-between ">
         <div class="space-y-1">
           <h2 class="text-2xl tracking-tight">Dashboard</h2>
@@ -81,11 +110,24 @@ const PerformanceDashboard = () => {
       <div className="flex flex-wrap gap-4">
         <Card
           title={"Total Goals"}
-          data={`${statusCounts?.Completed ?? 0} / ${
-            selfGoals?.goals?.length
-          } completed`}
+          data={
+            role === "Employee"
+              ? `${statusCounts?.Completed ?? 0} / ${
+                  selfGoals?.goals?.length
+                } completed`
+              : `${goalStatusCounts?.Completed ?? 0} / ${
+                  goalStatusCounts?.total
+                } completed`
+          }
         />
-        <Card title={"In Due"} data={statusCounts?.Overdue ?? 0} />
+        <Card
+          title={"In Due"}
+          data={
+            role === "Employee"
+              ? statusCounts?.Overdue ?? 0
+              : goalStatusCounts?.overdue ?? 0
+          }
+        />
         <Card title={"Current Stage"} data={performance?.stages} />
         <Card
           title={"Timeline"}
@@ -101,7 +143,14 @@ const PerformanceDashboard = () => {
       </div>
 
       {role === "Manager" && (
-        <ManagerPerfromanceDashboard performance={performance} />
+        <div className="my-4">
+          <DashboardTable
+            tableData={tableData}
+            tableFetching={tableFetching}
+            role={role}
+            performance={performance}
+          />
+        </div>
       )}
 
       {role === "Employee" && (
