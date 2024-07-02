@@ -98,18 +98,6 @@ const AdvanceSalaryApproval = ({ employee }) => {
               alignItems="center"
             >
               <Typography gutterBottom variant="h6" component="div">
-                Employee Id
-              </Typography>
-              <Typography gutterBottom component="div">
-                {employee?.employeeId || ""}
-              </Typography>
-            </Stack>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typography gutterBottom variant="h6" component="div">
                 Starting Date
               </Typography>
               <Typography gutterBottom component="div">
