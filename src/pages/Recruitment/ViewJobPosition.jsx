@@ -31,8 +31,7 @@ const ViewJobPosition = () => {
   const { getJobPosition } = useRecruitmentQuery(organisationId);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  console.log("get job position", getJobPosition);
-
+  console.log("job positon" , getJobPosition);
   // for morevert icon
   const [anchorEl, setAnchorEl] = useState(null);
 
