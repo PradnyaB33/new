@@ -238,9 +238,9 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
                   <p className="font-semibold text-[#67748E]">Attachments</p>
                   <p className="">No data</p>
                 </div>
-                {role === "Employee" && (
-                  <div className="hover:bg-gray-100 rounded-md ">
-                    <p className="px-2">Assigned to</p>
+                {role !== "Employee" && (
+                  <div className="hover:bg-gray-100 rounded-md  px-2">
+                    <p className="font-semibold text-[#67748E]">Assigned to</p>
                     <p className="">No data</p>
                   </div>
                 )}

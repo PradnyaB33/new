@@ -6,6 +6,7 @@ import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 import Card from "../components/Card";
 import EmpGraph from "../components/Dashboard/EmpGraph";
+import ManagerPerfromanceDashboard from "../components/Dashboard/ManagerPerfromanceDashboard";
 import Message from "../components/Message";
 
 const PerformanceDashboard = () => {
@@ -70,7 +71,7 @@ const PerformanceDashboard = () => {
         <div class="space-y-1">
           <h2 class="text-2xl tracking-tight">Dashboard</h2>
           <p class="text-sm text-muted-foreground">
-            Top picks for you. Updated daily.
+            Manage and organize goals setting
           </p>
         </div>
       </div>
@@ -99,13 +100,18 @@ const PerformanceDashboard = () => {
         />
       </div>
 
-      <aside className="flex my-4 ">
-        <div className="w-[35%] rounded-sm p-4">
-          <h1 className="text-lg  font-bold text-[#67748E]">Goals chart</h1>
-          <EmpGraph goalsData={statusCounts} />
-        </div>
-      </aside>
+      {role === "Manager" && (
+        <ManagerPerfromanceDashboard performance={performance} />
+      )}
 
+      {role === "Employee" && (
+        <aside className="flex my-4 ">
+          <div className="w-[35%] rounded-sm p-4">
+            <h1 className="text-lg  font-bold text-[#67748E]">Goals chart</h1>
+            <EmpGraph goalsData={statusCounts} />
+          </div>
+        </aside>
+      )}
       {/* <PerformanceTable
         tableData={tableData}
         isLoading={isFetching}

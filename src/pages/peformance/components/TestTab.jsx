@@ -67,7 +67,7 @@ const TestTab = () => {
   return (
     <>
       <header className="text-lg w-full pt-6 bg-white border  p-4">
-        <Link to={"/income-tax"}>
+        <Link to={-1}>
           <West className="mx-4 !text-xl" />
         </Link>
         Performance Management

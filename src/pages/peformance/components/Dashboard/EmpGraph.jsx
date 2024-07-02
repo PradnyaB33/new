@@ -1,5 +1,5 @@
 import React from "react";
-import { Pie } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 
 const EmpGraph = ({ goalsData }) => {
   const options = {
@@ -30,7 +30,7 @@ const EmpGraph = ({ goalsData }) => {
   };
   return (
     <div className="h-[250px]">
-      <Pie
+      <Doughnut
         options={options}
         data={data}
         style={{
