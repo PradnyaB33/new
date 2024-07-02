@@ -28,7 +28,7 @@ const EmployeeProfile = () => {
   const [url, setUrl] = useState();
   const fileInputRef = useRef();
   const [file, setFile] = useState();
-  const { data, detectFacesMutation } = useLoadModel();
+  const { data, detectFaceOnlyMutation } = useLoadModel();
   console.log(`🚀 ~ file: UserProfile.jsx:32 ~ data:`, data);
 
   const UserProfileSchema = z.object({
@@ -98,7 +98,10 @@ const EmployeeProfile = () => {
         const ctx = canvas.getContext("2d");
         const img = document.getElementById("image-1");
         ctx.drawImage(img, 0, 0, 300, 300);
-        const faces = await detectFacesMutation({ img, canvasId: "canvas-1" });
+        const faces = await detectFaceOnlyMutation({
+          img,
+          canvasId: "canvas-1",
+        });
         console.log(`🚀 ~ file: UserProfile.jsx:102 ~ faces:`, faces);
       };
       reader.readAsDataURL(selectedFile);
@@ -203,6 +206,7 @@ const EmployeeProfile = () => {
                     <Skeleton variant="circular" width="150px" height="150px" />
                   )}
                   <button
+                    type="button"
                     onClick={() => fileInputRef.current.click()}
                     className="flex justify-center h-full bg-[#1976d2] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
                   >

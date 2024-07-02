@@ -32,7 +32,6 @@ const useLoadModel = () => {
       .withFaceDescriptors()
       .withFaceExpressions()
       .withAgeAndGender();
-
     return faces;
   };
 
@@ -44,9 +43,36 @@ const useLoadModel = () => {
       } else if (data.length > 1) {
         handleAlert(true, "warning", "More than one face found in the image");
       } else {
-        const faces = faceApi.resizeResults(data, { height: 300, width: 300 });
-        faceApi.draw.drawDetections(document.getElementById(canvasId), faces);
+        handleAlert(true, "success", "Face detected successfully");
       }
+    },
+    onError: (error) => {
+      console.error("Error detecting faces", error);
+      handleAlert(true, "error", error?.message);
+    },
+  });
+  const detectFaceOnly = async ({ img, canvasId }) => {
+    const faces = await faceApi
+      .detectAllFaces(img, new faceApi.SsdMobilenetv1Options())
+      .withFaceLandmarks()
+      .withFaceDescriptors()
+      .withFaceExpressions()
+      .withAgeAndGender();
+
+    if (faces.length === 0) {
+      throw new Error("No faces found in the image");
+    }
+    if (faces.length > 1) {
+      throw new Error("More than one face found in the image");
+    }
+
+    return faces;
+  };
+
+  const { mutateAsync: detectFaceOnlyMutation } = useMutation({
+    mutationFn: detectFaceOnly,
+    onSuccess: async (data, { canvasId }) => {
+      handleAlert(true, "success", "Face detected successfully");
     },
     onError: (error) => {
       console.error("Error detecting faces", error);
@@ -151,6 +177,7 @@ const useLoadModel = () => {
     matchFacesMutation,
     uploadImageToBackendMutation,
     getImageAndVerifyMutation,
+    detectFaceOnlyMutation,
   };
 };
 
