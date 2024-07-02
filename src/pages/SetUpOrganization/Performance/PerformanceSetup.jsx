@@ -57,7 +57,7 @@ const PerformanceSetup = () => {
     ),
     isDownCast: z.boolean().optional(),
     isFeedback: z.boolean().optional(),
-    isNonMeasurableAllowed: z.boolean().optional(),
+    // isNonMeasurableAllowed: z.boolean().optional(),
     isManagerApproval: z.boolean().optional(),
     isMidGoal: z.boolean().optional(),
     isSendFormInMid: z.boolean().optional(),
@@ -381,7 +381,7 @@ const PerformanceSetup = () => {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <AuthInputFiled
+                  {/* <AuthInputFiled
                     name="isNonMeasurableAllowed"
                     icon={TrendingUp}
                     control={control}
@@ -390,7 +390,7 @@ const PerformanceSetup = () => {
                     label="Non-mesurable target can be added *"
                     errors={errors}
                     error={errors.isNonMeasurableAllowed}
-                  />
+                  /> */}
                   <AuthInputFiled
                     name="isManagerApproval"
                     icon={TrendingUp}
