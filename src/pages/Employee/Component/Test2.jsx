@@ -168,6 +168,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     },
     {
       onSuccess: (data) => {
+        console.log("data" , data);
         if (data) {
           setValue("empId", data.employee.empId || "");
           setValue("companyemail", data.employee.companyemail || "");
