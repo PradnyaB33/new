@@ -211,7 +211,7 @@ const SalaryManagement = () => {
                             item.first_name !== undefined &&
                             item.first_name
                               .toLowerCase()
-                              .includes(nameSearch))) &&
+                              .includes(nameSearch.toLowerCase()))) &&
                         (!deptSearch ||
                           (item.deptname !== null &&
                             item.deptname !== undefined &&

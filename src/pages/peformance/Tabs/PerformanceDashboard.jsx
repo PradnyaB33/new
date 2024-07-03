@@ -121,7 +121,7 @@ const PerformanceDashboard = () => {
           }
         />
         <Card
-          title={"In Due"}
+          title={"Total Overdue Goals"}
           data={
             role === "Employee"
               ? statusCounts?.Overdue ?? 0

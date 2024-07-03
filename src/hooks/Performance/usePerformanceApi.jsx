@@ -22,6 +22,23 @@ const usePerformanceApi = create((set) => ({
     }
   },
 
+  getEmployeePerformanceTable: async ({ authToken, empId }) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route//performance/getPerformanceTableForEmployee/${empId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response?.data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  },
+
   fetchPerformanceSetup: async ({ user, authToken }) => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/performance/getSetup/${user.organizationId}`,

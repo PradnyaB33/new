@@ -18,7 +18,7 @@ const ReviewTab = () => {
   const { fetchPerformanceSetup, getPerformanceDashboardTable } =
     usePerformanceApi();
 
-  const { data: tableData } = useQuery(["dashboardTable"], () =>
+  const { data: tableData, isFetching } = useQuery(["dashboardTable"], () =>
     getPerformanceDashboardTable({ role, authToken })
   );
 
@@ -173,7 +173,11 @@ const ReviewTab = () => {
         </div>
       </div>
 
-      <ReviewTable tableData={tableData} performance={performance} />
+      <ReviewTable
+        tableData={tableData}
+        performance={performance}
+        isFetching={isFetching}
+      />
     </div>
   );
 };

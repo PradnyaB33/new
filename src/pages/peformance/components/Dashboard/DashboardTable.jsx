@@ -1,7 +1,8 @@
 import { Checklist } from "@mui/icons-material";
 import { Avatar, Pagination } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import Select from "react-select";
+import DashboardModel from "../GoalTable/Modal/DashboardModel";
 import TabelSkeleton from "../GoalTable/Skelton/TabelSkeleton";
 import ManagerPerfromanceDashboard from "./ManagerPerfromanceDashboard";
 
@@ -17,7 +18,18 @@ const DashboardTable = ({ tableData, role, tableFetching, performance }) => {
     return acc;
   }, {});
 
-  console.log(counts);
+  const [previewModal, setPreviewModal] = useState(false);
+  const [previewId, setPreviewId] = useState(null);
+
+  const handleOpen = (id) => {
+    setPreviewModal(true);
+    setPreviewId(id);
+  };
+
+  const handleClose = () => {
+    setPreviewModal(false);
+    setPreviewId(null);
+  };
 
   return (
     <>
@@ -96,6 +108,7 @@ const DashboardTable = ({ tableData, role, tableFetching, performance }) => {
               <tbody>
                 {tableData?.map((item) => (
                   <tr
+                    onClick={() => handleOpen(item?.empId?._id)}
                     className={` hover:bg-gray-50 !font-medium  w-max border-b `}
                   >
                     <td className="!text-left  cursor-pointer py-4    px-2 text-sm w-max  ">
@@ -176,6 +189,12 @@ const DashboardTable = ({ tableData, role, tableFetching, performance }) => {
           </div>
         </div>
       )}
+
+      <DashboardModel
+        id={previewId}
+        open={previewModal}
+        handleClose={handleClose}
+      />
     </>
   );
 };
