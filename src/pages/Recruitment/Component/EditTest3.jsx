@@ -7,20 +7,18 @@ import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 import UserProfile from "../../../hooks/UserData/useUser";
 import { CircularProgress } from "@mui/material";
-import { useForm } from "react-hook-form";
-import { Button } from "@mui/material";
 
-const Test3 = ({ prevStep }) => {
+
+const EditTest3 = ({ prevStep }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { handleAlert } = useContext(TestContext);
-  const { organisationId } = useParams();
+  const { jobPositionId, organisationId } = useParams();
   const navigate = useNavigate("");
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const creatorId = user?._id;
   const queryClient = useQueryClient();
-  const { getValues, reset } = useForm();
 
   const {
     position_name,
@@ -42,7 +40,7 @@ const Test3 = ({ prevStep }) => {
     emptyState,
   } = useCreateJobPositionState();
 
-  // for send the data
+  // for send the data for update
   const handleSubmit = useMutation(
     () => {
       const JobPositionData = {
@@ -66,8 +64,8 @@ const Test3 = ({ prevStep }) => {
         creatorId,
       };
 
-      const response = axios.post(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/create-job-position`,
+      const response = axios.put(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/${jobPositionId}/update-job-position`,
         JobPositionData,
         {
           headers: {
@@ -83,7 +81,6 @@ const Test3 = ({ prevStep }) => {
         queryClient.invalidateQueries({ queryKey: ["job-position"] });
         handleAlert(true, "success", "Job position added successfully");
         emptyState();
-        reset();
         navigate(`/organisation/${organisationId}/view-job-position`);
       },
       onError: (error) => {
@@ -95,58 +92,6 @@ const Test3 = ({ prevStep }) => {
       },
     }
   );
-
-  // for save the data
-  const SaveForLatter = useMutation(
-    (data) =>
-      axios.post(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/save-job-position`,
-        data,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      ),
-
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["job-position"] });
-        handleAlert(true, "success", "Job position save successfully");
-        emptyState();
-        navigate(`/organisation/${organisationId}/view-job-position`);
-      },
-      onError: () => {},
-    }
-  );
-  const handleSaveForLater = async () => {
-    const JobPositionDataSave = {
-      position_name,
-      department_name: department_name?.value,
-      location_name: location_name?.value,
-      date,
-      job_type: job_type,
-      mode_of_working: mode_of_working,
-      job_level: job_level,
-      job_description,
-      role_and_responsibility,
-      required_skill,
-      hiring_manager: hiring_manager?.value,
-      hiring_hr: hiring_hr?.value,
-      education,
-      experience_level,
-      age_requirement,
-      working_time,
-      organizationId: organisationId,
-      creatorId,
-    };
-
-    try {
-      await SaveForLatter.mutateAsync(JobPositionDataSave);
-    } catch (error) {
-      handleAlert(true, "error", "An Error occurred  to save the data");
-    }
-  };
 
   return (
     <>
@@ -182,7 +127,7 @@ const Test3 = ({ prevStep }) => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-              <div className=" p-2 w-[30%] rounded-sm">
+              <div className=" p-2 w-[30%] rounded-sm ">
                 <h1 className="text-gray-500 text-sm">Date</h1>
                 <p className="">{date}</p>
               </div>
@@ -261,13 +206,6 @@ const Test3 = ({ prevStep }) => {
               Prev
             </button>
             <div className="flex gap-6">
-              <Button
-                color="primary"
-                variant="outlined"
-                onClick={() => handleSaveForLater(getValues())}
-              >
-                Save for later
-              </Button>
               <button
                 type="submit"
                 variant="contained"
@@ -285,4 +223,4 @@ const Test3 = ({ prevStep }) => {
   );
 };
 
-export default Test3;
+export default EditTest3;
