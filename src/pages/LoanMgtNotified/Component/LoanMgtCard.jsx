@@ -5,9 +5,12 @@ import dayjs from "dayjs"; // Import dayjs for date formatting
 const LoanMgtCards = ({ items }) => {
   console.log("items", items);
 
-  
-  const status = items && items !== null && items !== undefined ? items.status : "";
-  const updatedAt = items && items !== null && items !== undefined ? dayjs(items.updatedAt).format("MMMM D, YYYY h:mm A") : "";
+  const status =
+    items && items !== null && items !== undefined ? items.status : "";
+  const updatedAt =
+    items && items !== null && items !== undefined
+      ? dayjs(items.updatedAt).format("MMMM D, YYYY h:mm A")
+      : "";
 
   return (
     <Box
@@ -30,7 +33,8 @@ const LoanMgtCards = ({ items }) => {
             {items ? (
               <>
                 <h1 className="text-xl px-4 md:px-0 font-semibold order-1 md:order-1">
-                  Loan is {status === "Ongoing" ? "approved" : "rejected"}
+                  Your {items?.loanType?.loanName} is{" "}
+                  {status === "Ongoing" ? "approved" : "rejected"}
                 </h1>
                 <p className="text-md px-4 md:px-0 order-2 md:order-2 mr-2">
                   {updatedAt}
