@@ -84,26 +84,27 @@ const EmployeeProfile = () => {
       onError: () => {},
     }
   );
-  console.log({ profileData, isLoading });
-
+  console.log(
+    `🚀 ~ file: UserProfile.jsx:97 ~ profileData, isLoading:`,
+    profileData,
+    isLoading
+  );
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type.startsWith("image/")) {
       setFile(selectedFile);
       const reader = new FileReader();
       reader.onloadend = async () => {
-        console.log(`🚀 ~ file: UserProfile.jsx:94 ~ reader:`, reader);
-        setUrl(() => reader.result);
-        const img = document.getElementById("image-1");
+        const img = new Image();
+        img.src = reader.result;
         const faces = await detectFaceOnlyMutation({
           img,
         });
-        if (faces.length !== 1) {
+        if (faces.length === 1) {
+          setUrl(() => reader.result);
+        } else {
           setUrl(UserInformation?.user_logo_url);
         }
-        console.log(`🚀 ~ file: UserProfile.jsx:113 ~ faces:`, faces);
-
-        console.log(`🚀 ~ file: UserProfile.jsx:102 ~ faces:`, faces);
       };
       reader.readAsDataURL(selectedFile);
     } else {
@@ -145,7 +146,6 @@ const EmployeeProfile = () => {
         ...data,
         user_logo_url: imageUrl?.Location.split("?")[0],
       };
-      console.log(requestData);
       await AddAdditionalInformation.mutateAsync(requestData);
     } catch (error) {
       console.error(error);
@@ -185,19 +185,16 @@ const EmployeeProfile = () => {
                 />
                 <div className="w-full h-full flex flex-col justify-center items-center">
                   {url || UserInformation?.user_logo_url ? (
-                    <div className="relative">
-                      <img
-                        id="image-1"
-                        src={url || UserInformation?.user_logo_url}
-                        alt="Selected"
-                        style={{
-                          width: "150px",
-                          height: "150px",
-                          borderRadius: "50%",
-                        }}
-                        crossOrigin="anonymous"
-                      />
-                    </div>
+                    <img
+                      id="image-1"
+                      src={url || UserInformation?.user_logo_url}
+                      alt="profile-pic"
+                      style={{
+                        width: "150px",
+                        height: "150px",
+                        borderRadius: "50%",
+                      }}
+                    />
                   ) : (
                     <Skeleton variant="circular" width="150px" height="150px" />
                   )}

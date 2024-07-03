@@ -38,7 +38,6 @@ const useLoadModel = () => {
   const { mutateAsync: detectFacesMutation } = useMutation({
     mutationFn: detectFaces,
     onSuccess: async (data) => {
-      console.log(`🚀 ~ file: useFaceModal.jsx:41 ~ data:`, data);
       if (data.length === 0) {
         handleAlert(true, "error", "No faces found in the image");
       } else if (data.length > 1) {
@@ -53,7 +52,6 @@ const useLoadModel = () => {
     },
   });
   const detectFaceOnly = async ({ img }) => {
-    console.log(img, "img");
     const faces = await faceApi
       .detectAllFaces(img, new faceApi.SsdMobilenetv1Options())
       .withFaceLandmarks()
@@ -66,14 +64,14 @@ const useLoadModel = () => {
 
   const { mutateAsync: detectFaceOnlyMutation } = useMutation({
     mutationFn: detectFaceOnly,
-    onSuccess: async (data, { canvasId }) => {
+    onSuccess: async (data) => {
       if (data?.length === 0) {
         handleAlert(true, "error", "No faces found in the image");
-      }
-      if (data?.length > 1) {
+      } else if (data?.length > 1) {
         handleAlert(true, "warning", "More than one face found in the image");
+      } else {
+        handleAlert(true, "success", "Face detected successfully");
       }
-      handleAlert(true, "success", "Face detected successfully");
     },
     onError: (error) => {
       console.error("Error detecting faces", error);
@@ -124,9 +122,7 @@ const useLoadModel = () => {
 
   const { mutateAsync: uploadImageToBackendMutation } = useMutation({
     mutationFn: uploadImageToBackend,
-    onSuccess: (data) => {
-      console.log("Data uploaded successfully", data);
-    },
+    onSuccess: (data) => {},
     onError: (error) => {
       console.error("Error uploading image to backend", error);
     },
@@ -141,13 +137,9 @@ const useLoadModel = () => {
   const { mutateAsync: getImageAndVerifyMutation } = useMutation({
     mutationFn: getImageAndVerify,
     onSuccess: async (data) => {
-      console.log("Data fetched successfully", data);
       let matchScore = 0.63;
       let descriptorFloat32 = new Float32Array(data?.faceData?.descriptor);
-      console.log(
-        `🚀 ~ file: useLoadModel.jsx:128 ~ descriptorFloat32:`,
-        descriptorFloat32
-      );
+
       let secondImgElem = document.getElementById("second-img");
       let faces = await detectFacesMutation({
         img: secondImgElem,
@@ -158,7 +150,6 @@ const useLoadModel = () => {
       ]);
       let faceMatcher = new faceApi.FaceMatcher(labeledFace, matchScore);
       let results = faceMatcher.findBestMatch(faces[0].descriptor);
-      console.log(`🚀 ~ file: useLoadModel.jsx:128 ~ results:`, results);
       if (results._label === "Face") {
         handleAlert(true, "success", "Face match found");
       } else {
