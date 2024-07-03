@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CircularProgress, IconButton, Button } from "@mui/material";
@@ -8,52 +8,69 @@ import DOMPurify from "dompurify";
 import { West } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
+import { useQuery, useMutation } from 'react-query';
+import { TestContext } from "../../../State/Function/Main";
 
 const EmployeeSurveyForm = () => {
     const navigate = useNavigate();
+    const { handleAlert } = useContext(TestContext);
     const { surveyId } = useParams();
     const { cookies } = useContext(UseContext);
     const authToken = cookies["aegis"];
 
-    // State for loading and survey data
-    const [isLoading, setIsLoading] = useState(true);
-    const [surveyData, setSurveyData] = useState(null);
-    console.log("surveyData", surveyData);
     // Get organizationId
     const { getCurrentUser } = UserProfile();
     const user = getCurrentUser();
     const organisationId = user?.organizationId;
 
-    // Initialize useForm to get control and errors from react-hook-form
+    //useForm 
     const { control, handleSubmit, formState: { errors } } = useForm();
 
-    useEffect(() => {
-        const fetchSurvey = async () => {
-            try {
-                const response = await axios.get(
-                    `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-single-open-survey/${surveyId}`,
-                    {
-                        headers: {
-                            Authorization: authToken,
-                        },
-                    }
-                );
+    //Get Form
+    const { data: surveyData, error, isLoading } = useQuery(
+        ['survey', organisationId, surveyId, authToken],
+        async () => {
+            const response = await axios.get(
+                `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-single-open-survey/${surveyId}`,
+                {
+                    headers: {
+                        Authorization: authToken,
+                    },
+                }
+            );
+            return response.data;
+        }
+    );
 
-                const data = response.data;
-                setSurveyData(data);
-            } catch (error) {
-                console.error("Error fetching survey data:", error);
-            } finally {
-                setIsLoading(false);
+    //Post Data
+    const mutation = useMutation(
+        async (data) => {
+            await axios.post(
+                `${process.env.REACT_APP_API}/route/organization/${organisationId}/add-employee-survey-response-form`,
+                data,
+                {
+                    headers: {
+                        Authorization: authToken,
+                    },
+                }
+            );
+        },
+        {
+            onSuccess: (response) => {
+                if (response.status === 201 || response.status === 200) {
+                    navigate(`/organisation/${organisationId}/employee-survey`);
+                };
+                handleAlert(true, "success", "Saved survey response successfully");
+            },
+            onError: (error) => {
+                console.error("Error submitting survey responses:", error);
             }
-        };
+        }
+    );
 
-        fetchSurvey();
-    }, [authToken, surveyId, organisationId]);
-
-
-    const onSubmit = async (formData) => {
+    const onSubmit = (formData) => {
         const data = {
+            surveyId: surveyData._id,
             title: surveyData.title,
             description: surveyData.description,
             questions: surveyData.questions.map((q, index) => ({
@@ -62,26 +79,19 @@ const EmployeeSurveyForm = () => {
                     ? q.options.filter((_, optIndex) => formData[`question_${index}_option_${optIndex}`])
                     : formData[`answer_${index}`],
             })),
+            responseStatus: true,
+            employeeId: user._id,
         };
-        console.log("data...........", data);
-        try {
-            const response = await axios.post(
-                `${process.env.REACT_APP_API}/route/organization/${organisationId}/send-survey-responses`,
-                data,
-                {
-                    headers: {
-                        Authorization: authToken,
-                    },
-                }
-            );
-            return response;
-        } catch (error) {
-            console.error("Error", error);
-        }
+
+        mutation.mutate(data);
     };
 
     if (isLoading) {
         return <CircularProgress />;
+    }
+
+    if (error) {
+        return <div>Error fetching survey data</div>;
     }
 
     return (
@@ -137,11 +147,10 @@ const EmployeeSurveyForm = () => {
                                                                     control={control}
                                                                     type="checkbox"
                                                                     errors={errors}
-                                                                    error={errors.pwd}
-
-                                                                /></div>
+                                                                    error={errors[`question_${index}_option_${optIndex}`]}
+                                                                />
+                                                            </div>
                                                             <span className="flex justify-start">{option}</span>
-
                                                         </div>
                                                     ))
                                                 )}

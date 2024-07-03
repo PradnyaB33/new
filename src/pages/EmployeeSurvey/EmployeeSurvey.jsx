@@ -9,19 +9,26 @@ import SaveAsDraft from "./components/SaveAsDraft";
 import UserProfile from "../../hooks/UserData/useUser";
 
 const EmployeeSurvey = () => {
+    //hooks
     const navigate = useNavigate();
 
+    //states
     const [openSurvey, setOpenSurvey] = useState(false)
     const [closeSurvey, setCloseSurvey] = useState(false)
     const [draftSurvey, setDraftSurvey] = useState(false)
 
-    // Get organizationId
+    //get organizationId
     const { getCurrentUser } = UserProfile();
     const user = getCurrentUser();
     const organisationId = user?.organizationId;
 
+    //create new survey 
     const handleCreateNewSurvey = () => {
         navigate(`/organisation/${organisationId}/create-new-survey`);
+    }
+
+    const handleDraftSurvey = () => {
+        setDraftSurvey(!draftSurvey)
     }
 
     const handleOpenSurvey = () => {
@@ -30,10 +37,6 @@ const EmployeeSurvey = () => {
 
     const handleCloseSurvey = () => {
         setCloseSurvey(!closeSurvey)
-    }
-
-    const handleDraftSurvey = () => {
-        setDraftSurvey(!draftSurvey)
     }
 
     return (
@@ -50,34 +53,38 @@ const EmployeeSurvey = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
-                        <div className="flex justify-end w-full">
-                            <Button
-                                className="!font-semibold !bg-sky-500 flex gap-2"
-                                variant="contained"
-                                onClick={handleCreateNewSurvey}
-                            >
-                                Create New Survey
-                            </Button>
+                    {(user?.profile.includes('Super-Admin') || user?.profile.includes('HR')) && (
+                        <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
+                            <div className="flex justify-end w-full">
+                                <Button
+                                    className="!font-semibold !bg-sky-500 flex gap-2"
+                                    variant="contained"
+                                    onClick={handleCreateNewSurvey}
+                                >
+                                    Create New Survey
+                                </Button>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
                 <div>
-                    <div className="px-4 py-2 bg-white w-full h-max shadow-md rounded-2m border my-8">
-                        <div className="flex  justify-between  gap-3 w-full border-gray-300 my-2">
-                            <div className="flex justify-start ">
-                                <Typography variant="p">
-                                    Save As Draft Survey
-                                </Typography>
+                    {(user?.profile.includes('Super-Admin') || user?.profile.includes('HR')) && (
+                        <div className="px-4 py-2 bg-white w-full h-max shadow-md rounded-2m border my-8">
+                            <div className="flex  justify-between  gap-3 w-full border-gray-300 my-2">
+                                <div className="flex justify-start ">
+                                    <Typography variant="p">
+                                        Save As Draft Survey
+                                    </Typography>
+                                </div>
+                                <div className="flex justify-end">
+                                    <AddCircleOutlineIcon style={{ width: "40px" }} onClick={handleDraftSurvey} />
+                                    <Typography variant="p" className="">
+                                        Count: 10
+                                    </Typography>
+                                </div>
                             </div>
-                            <div className="flex justify-end">
-                                <AddCircleOutlineIcon style={{ width: "40px" }} onClick={handleDraftSurvey} />
-                                <Typography variant="p" className="">
-                                    Count: 10
-                                </Typography>
-                            </div>
-                        </div>
-                        {draftSurvey ? <SaveAsDraft /> : null}</div>
+                            {draftSurvey ? <SaveAsDraft /> : null}</div>
+                    )}
                     <div className="px-4 py-2 bg-white w-full h-max shadow-md rounded-2m border my-8">
                         <div className="flex  justify-between  gap-3 w-full border-gray-300 my-2">
                             <div className="flex justify-start ">
@@ -93,21 +100,24 @@ const EmployeeSurvey = () => {
                             </div>
                         </div>
                         {openSurvey ? <OpenSurveyList /> : null}</div>
-                    <div className="px-4 py-2 bg-white w-full h-max shadow-md rounded-2m border my-8">
-                        <div className="flex  justify-between  gap-3 w-full border-gray-300 my-2">
-                            <div className="flex justify-start ">
-                                <Typography variant="p">
-                                    Close Survey
-                                </Typography>
+                    {(user?.profile.includes('Super-Admin') || user?.profile.includes('HR')) && (
+                        <div className="px-4 py-2 bg-white w-full h-max shadow-md rounded-2m border my-8">
+                            <div className="flex  justify-between  gap-3 w-full border-gray-300 my-2">
+                                <div className="flex justify-start ">
+                                    <Typography variant="p">
+                                        Close Survey
+                                    </Typography>
+                                </div>
+                                <div className="flex justify-end">
+                                    <AddCircleOutlineIcon style={{ width: "40px" }} onClick={handleCloseSurvey} />
+                                    <Typography variant="p" className="">
+                                        Count: 10
+                                    </Typography>
+                                </div>
                             </div>
-                            <div className="flex justify-end">
-                                <AddCircleOutlineIcon style={{ width: "40px" }} onClick={handleCloseSurvey} />
-                                <Typography variant="p" className="">
-                                    Count: 10
-                                </Typography>
-                            </div>
+                            {closeSurvey ? <CloseSurveyList /> : null}
                         </div>
-                        {closeSurvey ? <CloseSurveyList /> : null}</div>
+                    )}
                 </div>
             </Container></>
     );

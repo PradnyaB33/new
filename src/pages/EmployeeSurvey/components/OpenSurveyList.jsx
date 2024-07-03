@@ -59,7 +59,7 @@ const OpenSurveyList = () => {
 
     XLSX.writeFile(wb, "survey_data.xlsx");
   };
-console.log("surveys.........",surveys?.length);
+
   return (
     <div>
       <div className="p-4 border-y-[.5px] border-gray-300">
@@ -70,9 +70,11 @@ console.log("surveys.........",surveys?.length);
             size="small"
             sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
           />
-          <Button variant="contained" color="warning" onClick={generateExcel}>
-            Generate Excel
-          </Button>
+          {(user?.profile.includes('Super-Admin') || user?.profile.includes('HR')) && (
+            <Button variant="contained" color="warning" onClick={generateExcel}>
+              Generate Excel
+            </Button>
+          )}
         </div>
       </div>
       {isLoading ? (
@@ -119,7 +121,7 @@ console.log("surveys.........",surveys?.length);
           </div>
         ) : (
           <section className="py-6 px-8 w-full">
-            <p>Nothing to draft</p>
+            <p>Nothing to open survey</p>
           </section>
         )}
     </div>

@@ -48,7 +48,7 @@ const CreateNewSurvey = () => {
             return response.data;
         },
         {
-            enabled: !!id, 
+            enabled: !!id,
         }
     );
 
@@ -244,7 +244,8 @@ const CreateNewSurvey = () => {
             employeeSurveyStartingDate,
             employeeSurveyEndDate,
             to: data.to?.map(option => option.value),
-            status: status
+            creatorId: user?._id,
+            status: status,
         };
 
         mutation.mutate(formData, {
@@ -278,7 +279,7 @@ const CreateNewSurvey = () => {
             value: emp.email,
         }))
         : [];
-    console.log("employee", employee);
+
     const handleSelectAll = (fieldName) => {
         setValue(fieldName, employeeEmail);
     };
@@ -402,7 +403,7 @@ const CreateNewSurvey = () => {
                                 setEmployeeSurveyEndDate(newDate);
                             }}
                             renderInput={(params) => <TextField {...params} fullWidth />}
-                            disablePast
+                            minDate={employeeSurveyStartingDate}
                         />
                     </LocalizationProvider>
                 </div>
