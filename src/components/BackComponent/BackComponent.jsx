@@ -28,6 +28,7 @@ const BackComponent = () => {
     "/organizationList",
     "/assingOrganizationToSelf",
     "/mis-report",
+    "/view-job-position",
     // "/billing",
     "employee-onboarding",
     // "/organizationList",
