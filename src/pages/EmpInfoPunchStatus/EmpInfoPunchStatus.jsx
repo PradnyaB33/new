@@ -107,7 +107,6 @@ const EmpInfoPunchStatus = () => {
       ]);
     }
   };
-
   console.log("selected employee", selectedEmployees);
 
   // for open the modal for display employee
