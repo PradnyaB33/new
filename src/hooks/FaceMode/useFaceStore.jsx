@@ -6,6 +6,11 @@ export const useFaceStore = create((set) => ({
     set({
       descriptor,
     }),
+  userDescriptor: null,
+  setUserDescriptor: (userDescriptor) =>
+    set({
+      userDescriptor,
+    }),
 }));
 
 export default useFaceStore;
