@@ -28,12 +28,8 @@ const EmployeeProfile = () => {
   const [url, setUrl] = useState();
   const fileInputRef = useRef();
   const [file, setFile] = useState();
-  const {
-    data,
-    detectFaceOnlyMutation,
-    descriptor,
-    uploadImageToBackendMutation,
-  } = useLoadModel();
+  const { detectFaceOnlyMutation, uploadImageToBackendMutation } =
+    useLoadModel();
 
   const UserProfileSchema = z.object({
     additional_phone_number: z
@@ -88,6 +84,11 @@ const EmployeeProfile = () => {
       onError: () => {},
     }
   );
+  console.log(
+    `🚀 ~ file: UserProfile.jsx:97 ~ profileData, isLoading:`,
+    profileData,
+    isLoading
+  );
 
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -100,6 +101,8 @@ const EmployeeProfile = () => {
         const faces = await detectFaceOnlyMutation({
           img,
         });
+        console.log(`🚀 ~ file: UserProfile.jsx:112 ~ faces:`, faces);
+
         if (faces.length === 1) {
           setUrl(() => reader.result);
         } else {

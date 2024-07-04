@@ -2,9 +2,9 @@ import axios from "axios";
 import * as faceApi from "face-api.js";
 import { useContext } from "react";
 import { useMutation, useQuery } from "react-query";
+import { TestContext } from "../../../State/Function/Main";
 import useFaceStore from "../../../hooks/FaceMode/useFaceStore";
 import useGetUser from "../../../hooks/Token/useUser";
-import { TestContext } from "../../../State/Function/Main";
 
 const useSelfieFaceDetect = () => {
   const { handleAlert } = useContext(TestContext);
@@ -69,14 +69,19 @@ const useSelfieFaceDetect = () => {
       [descriptor]
     );
     let faceMatcher = new faceApi.FaceMatcher(labeledFace, matchScore);
+    console.log(
+      `🚀 ~ file: useSelfieFaceDetect.jsx:72 ~ faceMatcher:`,
+      faceMatcher
+    );
     let results = faceMatcher.findBestMatch(currentDescriptor);
+    console.log(`🚀 ~ file: useSelfieFaceDetect.jsx:77 ~ results:`, results);
     return results;
   };
 
   const { mutateAsync: matchFacesMutation } = useMutation({
     mutationFn: matchFaces,
     onSuccess: (data) => {
-      if (data._label === "Face") {
+      if (data._label === decodedToken?.user?._id) {
         handleAlert(true, "success", "Face match found");
       } else {
         handleAlert(true, "error", "Face match not found");
