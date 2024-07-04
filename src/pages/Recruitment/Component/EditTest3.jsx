@@ -127,7 +127,7 @@ const EditTest3 = ({ prevStep }) => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-              <div className=" p-2 w-[30%] rounded-sm w-full">
+              <div className=" p-2 w-[30%] rounded-sm ">
                 <h1 className="text-gray-500 text-sm">Date</h1>
                 <p className="">{date}</p>
               </div>

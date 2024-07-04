@@ -20,7 +20,7 @@ const Test3 = ({ prevStep }) => {
   const user = getCurrentUser();
   const creatorId = user?._id;
   const queryClient = useQueryClient();
-  const {  getValues } = useForm();
+  const { getValues, reset } = useForm();
 
   const {
     position_name,
@@ -83,6 +83,7 @@ const Test3 = ({ prevStep }) => {
         queryClient.invalidateQueries({ queryKey: ["job-position"] });
         handleAlert(true, "success", "Job position added successfully");
         emptyState();
+        reset();
         navigate(`/organisation/${organisationId}/view-job-position`);
       },
       onError: (error) => {
@@ -181,7 +182,7 @@ const Test3 = ({ prevStep }) => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-              <div className=" p-2 w-[30%] rounded-sm w-full">
+              <div className=" p-2 w-[30%] rounded-sm">
                 <h1 className="text-gray-500 text-sm">Date</h1>
                 <p className="">{date}</p>
               </div>
