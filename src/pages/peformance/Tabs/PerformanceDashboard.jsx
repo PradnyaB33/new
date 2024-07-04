@@ -35,39 +35,37 @@ const PerformanceDashboard = () => {
     { enabled: role === "Manager" || role === "HR" }
   );
 
-  const goalStatusCounts = tableData?.reduce((acc, record) => {
-    if (record.goals && record.goals.length) {
-      record.goals.forEach((goal) => {
-        const today = new Date();
-        const endDate = new Date(goal.endDate);
-
-        if (!acc["total"]) {
-          acc["total"] = 0;
-        }
-        acc["total"]++;
-
-        if (endDate < today) {
-          // Count as overdue
-          if (!acc["overdue"]) {
-            acc["overdue"] = 0;
+  const goalStatusCounts =
+    role === "Employee"
+      ? []
+      : tableData?.reduce((acc, record) => {
+          if (record.goals && record.goals.length) {
+            record.goals.forEach((goal) => {
+              const today = new Date();
+              const endDate = new Date(goal.endDate);
+              if (!acc["total"]) {
+                acc["total"] = 0;
+              }
+              acc["total"]++;
+              if (endDate < today) {
+                // Count as overdue
+                if (!acc["overdue"]) {
+                  acc["overdue"] = 0;
+                }
+                acc["overdue"]++;
+              } else {
+                // Count as per goalStatus
+                if (goal.goalStatus) {
+                  if (!acc[goal.goalStatus]) {
+                    acc[goal.goalStatus] = 0;
+                  }
+                  acc[goal.goalStatus]++;
+                }
+              }
+            });
           }
-          acc["overdue"]++;
-        } else {
-          // Count as per goalStatus
-          if (goal.goalStatus) {
-            if (!acc[goal.goalStatus]) {
-              acc[goal.goalStatus] = 0;
-            }
-            acc[goal.goalStatus]++;
-          }
-        }
-      });
-    }
-    return acc;
-  }, {});
-  // }, []);
-
-  console.log(goalStatusCounts);
+          return acc;
+        }, {});
 
   const { data: selfGoals } = useQuery(
     ["selfData"],

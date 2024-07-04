@@ -2,6 +2,7 @@ import { Calculate, Check, Settings, West } from "@mui/icons-material";
 import { Avatar, IconButton } from "@mui/material";
 import React, { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import UserProfile from "../../hooks/UserData/useUser";
 import RegimeModel from "./components/accountantDeclarations/components/RegimeModel";
 
 const IncomeTax = () => {
@@ -10,9 +11,9 @@ const IncomeTax = () => {
     setOpen(true);
   };
 
-  // const { useGetCurrentRole } = UserProfile();
-  // // const user = getCurrentUser();
-  // const role = useGetCurrentRole();
+  const { useGetCurrentRole, getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
+  const role = useGetCurrentRole();
 
   const redirect = useNavigate();
 
@@ -22,27 +23,27 @@ const IncomeTax = () => {
 
   const { organisationId } = useParams();
   const goBack = () => {
-    redirect(-1);
-    // if (role === "Super-Admin" || role === "Delegate-Super-Admin")
-    //   return redirect("/");
-    // else if (role === "HR")
-    //   return redirect(
-    //     `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
-    //   );
-    // else if (role === "Delegate-Department-Head" || role === "Department-Head")
-    //   return redirect(
-    //     `/organisation/${user?.organizationId}/dashboard/DH-dashboard`
-    //   );
-    // else if (role === "Accountant")
-    //   return redirect(
-    //     `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
-    //   );
-    // else if (role === "Manager")
-    //   return redirect(`/organisation/${user?._id}/dashboard/manager-dashboard`);
-    // else if (role === "Employee")
-    //   return redirect(
-    //     `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
-    //   );
+    // redirect(-1);
+    if (role === "Super-Admin" || role === "Delegate-Super-Admin")
+      return redirect(`/organisation/${organisationId}/dashboard/super-admin`);
+    else if (role === "HR")
+      return redirect(
+        `/organisation/${user?.organizationId}/dashboard/HR-dashboard`
+      );
+    else if (role === "Delegate-Department-Head" || role === "Department-Head")
+      return redirect(
+        `/organisation/${user?.organizationId}/dashboard/DH-dashboard`
+      );
+    else if (role === "Accountant")
+      return redirect(
+        `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
+      );
+    else if (role === "Manager")
+      return redirect(`/organisation/${user?._id}/dashboard/manager-dashboard`);
+    else if (role === "Employee")
+      return redirect(
+        `/organisation/${user?.organizationId}/dashboard/employee-dashboard`
+      );
   };
   return (
     <>
