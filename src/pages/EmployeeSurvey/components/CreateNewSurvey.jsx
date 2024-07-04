@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "react-query";
-import { Select, Paper, Typography, TextField, MenuItem, Checkbox, Button, IconButton, FormControlLabel, Switch } from '@mui/material';
+import { Select, Typography, TextField, MenuItem, Checkbox, Button, IconButton, FormControlLabel, Switch } from '@mui/material';
 import AuthInputFiled from '../../../components/InputFileds/AuthInputFiled';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
@@ -13,7 +13,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import { Email } from "@mui/icons-material";
+import { Email, West } from "@mui/icons-material";
 import { useNavigate, useParams } from 'react-router-dom';
 import { TestContext } from "../../../State/Function/Main";
 
@@ -291,174 +291,193 @@ const CreateNewSurvey = () => {
     if (isLoading) return <div>Loading...</div>;
 
     return (
-        <Paper
-            sx={{
-                width: "100%",
-                maxWidth: "800px",
-                margin: "6% auto",
-                padding: "20px 40px",
-            }}
-        >
-            <form onSubmit={handleSubmit((data) => handleSubmitForm(data, true))}>
-                <h1 className="text-xl my-2 font-semibold font-sans">
-                    Create New Form
-                </h1>
-                <div className="space-y-2 ">
-                    <AuthInputFiled
-                        name="title"
-                        control={control}
-                        type="texteditor"
-                        placeholder="Title"
-                        label="Title"
-                        errors={errors}
-                        rules={{ required: 'Title is required' }}
-                    />
+        <div className="bg-gray-50 min-h-screen h-auto">
+            <header className="text-xl w-full pt-6 flex flex-col md:flex-row items-start md:items-center gap-2 bg-white shadow-md p-4">
+                {/* Back Button */}
+                <div className="flex-shrink-0">
+                    <IconButton onClick={() => navigate(-1)}>
+                        <West className="text-xl" />
+                    </IconButton>
                 </div>
-                <div className="space-y-2 ">
-                    <AuthInputFiled
-                        name="description"
-                        control={control}
-                        type="texteditor"
-                        placeholder="Description"
-                        label="Description"
-                        errors={errors}
-                        rules={{ required: 'Description is required' }}
-                    />
+
+                {/* Main Header Content */}
+                <div className="flex flex-col md:flex-row justify-between w-full md:ml-4">
+                    <div className="mb-2 md:mb-0 md:mr-4">
+                        <h1 className="text-xl font-bold">Create Employee Survey</h1>
+                        <p className="text-sm text-gray-600">
+                            Here you can create survey
+                        </p>
+                    </div>
                 </div>
-                {questions?.map((q, index) => (
-                    <div key={index} className="space-y-2">
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: "30px" }}>
-                            <Typography variant="p">Question {index + 1}</Typography>
-                            <div>
-                                <IconButton onClick={() => handleCopyQuestion(index)} aria-label="copy question">
-                                    <FileCopyIcon />
-                                </IconButton>
-                                <IconButton onClick={() => handleRemoveQuestion(index)} aria-label="remove question">
-                                    <DeleteIcon />
-                                </IconButton>
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={q.required}
-                                            onChange={() => handleRequiredChange(index)}
-                                            name={`required-${index}`}
-                                            color="primary"
+            </header>
+            <section className="md:px-8 flex space-x-2 md:py-6">
+                <article className="w-full rounded-lg bg-white">
+                    <div className="w-full md:px-5 px-1">
+                        <div className="w-full mt-4 p-4">
+                            <h1 className="text-2xl mb-4 font-bold">Create Survey</h1>
+                            <form onSubmit={handleSubmit((data) => handleSubmitForm(data, true))} className="w-full flex  flex-1 space-y-2 flex-col">
+                                <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-2" style={{ marginBottom: "120px" }}>
+                                    <AuthInputFiled
+                                        name="title"
+                                        control={control}
+                                        type="texteditor"
+                                        placeholder="Title"
+                                        label="Title"
+                                        errors={errors}
+                                        rules={{ required: 'Title is required' }}
+                                        className="!h-20"
+                                    />
+                                    <AuthInputFiled
+                                        name="description"
+                                        control={control}
+                                        type="texteditor"
+                                        placeholder="Description"
+                                        label="Description"
+                                        errors={errors}
+                                        rules={{ required: 'Description is required' }}
+                                        className="!h-20"
+                                    />
+                                </div>
+                                {questions?.map((q, index) => (
+                                    <div className="grid grid-cols-1 w-full">
+                                        <div key={index} >
+                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                <Typography variant="p">Question {index + 1}</Typography>
+                                                <div>
+                                                    <IconButton onClick={() => handleCopyQuestion(index)} aria-label="copy question">
+                                                        <FileCopyIcon />
+                                                    </IconButton>
+                                                    <IconButton onClick={() => handleRemoveQuestion(index)} aria-label="remove question">
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Switch
+                                                                checked={q.required}
+                                                                onChange={() => handleRequiredChange(index)}
+                                                                name={`required-${index}`}
+                                                                color="primary"
+                                                            />
+                                                        }
+                                                        label="Required"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className='flex gap-2 mb-2'>
+                                                <TextField
+                                                    placeholder="Enter Question"
+                                                    variant='standard'
+                                                    fullWidth
+                                                    value={q.question}
+                                                    onChange={(e) => handleQuestionChange(index, e)}
+                                                />
+                                                <Select
+                                                    style={{ width: "200px" }}
+                                                    labelId={`question-type-label-${index}`}
+                                                    id={`question-type-select-${index}`}
+                                                    value={q.questionType || ''}
+                                                    onChange={(e) => handleQuestionTypeChange(index, e)}
+                                                    displayEmpty
+                                                >
+                                                    <MenuItem value="" disabled>
+                                                        Select Question Type
+                                                    </MenuItem>
+                                                    <MenuItem value="Short Answer">Short Answer</MenuItem>
+                                                    <MenuItem value="Paragraph">Paragraph</MenuItem>
+                                                    <MenuItem value="Checkboxes">Checkboxes</MenuItem>
+                                                    <MenuItem value="Dropdown">Dropdown</MenuItem>
+                                                    <MenuItem value="Date">Date</MenuItem>
+                                                </Select>
+                                            </div>
+                                            {renderAnswerInput(index)}
+                                        </div>
+                                    </div>
+                                ))}
+                                <div className="flex gap-4 mt-4 justify-end">
+                                    <Button color="primary" variant="outlined" onClick={handleAddQuestion}>
+                                        Add Question
+                                    </Button>
+                                </div>
+                                <div className="grid grid-cols-2 w-full gap-2" style={{ marginTop: "30px" }}>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <DatePicker
+                                            label="Starting date"
+                                            value={employeeSurveyStartingDate}
+                                            onChange={(newDate) => {
+                                                setEmployeeSurveyStartingDate(newDate);
+                                            }}
+                                            renderInput={(params) => <TextField {...params} fullWidth />}
+                                            disablePast
                                         />
-                                    }
-                                    label="Required"
-                                />
-                            </div>
+                                    </LocalizationProvider>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <DatePicker
+                                            label="Ending date"
+                                            value={employeeSurveyEndDate}
+                                            onChange={(newDate) => {
+                                                setEmployeeSurveyEndDate(newDate);
+                                            }}
+                                            renderInput={(params) => <TextField {...params} fullWidth />}
+                                            minDate={employeeSurveyStartingDate}
+                                        />
+                                    </LocalizationProvider>
+                                </div>
+                                <div className="space-y-2 ">
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={showSelectAll}
+                                                onChange={(e) => setShowSelectAll(e.target.checked)}
+                                            />
+                                        }
+                                        label="Do you want to select all employee emails?"
+                                    />
+                                </div>
+
+                                {showSelectAll && (
+                                    <div className="space-y-2 ">
+                                        <Button
+                                            variant="outlined"
+                                            onClick={() => handleSelectAll("to")}
+                                        >
+                                            Select All
+                                        </Button>
+                                    </div>
+                                )}
+
+                                <div className="space-y-2 ">
+                                    <AuthInputFiled
+                                        name="to"
+                                        icon={Email}
+                                        control={control}
+                                        type="autocomplete"
+                                        placeholder="To"
+                                        label="To"
+                                        readOnly={false}
+                                        maxLimit={15}
+                                        errors={errors}
+                                        error={errors.to}
+                                        optionlist={employeeEmail ? employeeEmail : []}
+                                    />
+                                </div>
+
+                                <div className="flex gap-4 mt-4 justify-end">
+                                    <Button type="submit" variant="contained" color="primary" onClick={() => handleSubmit((data) => handleSubmitForm(data, true))}>
+                                        {id ? "Update Survey" : "Complete Survey"}
+                                    </Button>
+                                    <Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => handleSubmitForm(data, false))}>
+                                        Save For Now
+                                    </Button>
+                                    <Button onClick={handleClose} variant="outlined" color="error">
+                                        Close
+                                    </Button>
+                                </div>
+                            </form>
                         </div>
-                        <div className='flex gap-2 mb-2'>
-                            <TextField
-                                placeholder="Enter Question"
-                                variant='standard'
-                                fullWidth
-                                value={q.question}
-                                onChange={(e) => handleQuestionChange(index, e)}
-                            />
-                            <Select
-                                style={{ width: "200px" }}
-                                labelId={`question-type-label-${index}`}
-                                id={`question-type-select-${index}`}
-                                value={q.questionType || ''}
-                                onChange={(e) => handleQuestionTypeChange(index, e)}
-                                displayEmpty
-                            >
-                                <MenuItem value="" disabled>
-                                    Select Question Type
-                                </MenuItem>
-                                <MenuItem value="Short Answer">Short Answer</MenuItem>
-                                <MenuItem value="Paragraph">Paragraph</MenuItem>
-                                <MenuItem value="Checkboxes">Checkboxes</MenuItem>
-                                <MenuItem value="Dropdown">Dropdown</MenuItem>
-                                <MenuItem value="Date">Date</MenuItem>
-                            </Select>
-                        </div>
-                        {renderAnswerInput(index)}
                     </div>
-                ))}
-                <div className="flex gap-4 mt-4 justify-end">
-                    <Button color="primary" variant="outlined" onClick={handleAddQuestion}>
-                        Add Question
-                    </Button>
-                </div>
-                <div className="grid grid-cols-2 w-full gap-2" style={{ marginTop: "30px" }}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                            label="Starting date"
-                            value={employeeSurveyStartingDate}
-                            onChange={(newDate) => {
-                                setEmployeeSurveyStartingDate(newDate);
-                            }}
-                            renderInput={(params) => <TextField {...params} fullWidth />}
-                            disablePast
-                        />
-                    </LocalizationProvider>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                            label="Ending date"
-                            value={employeeSurveyEndDate}
-                            onChange={(newDate) => {
-                                setEmployeeSurveyEndDate(newDate);
-                            }}
-                            renderInput={(params) => <TextField {...params} fullWidth />}
-                            minDate={employeeSurveyStartingDate}
-                        />
-                    </LocalizationProvider>
-                </div>
-                <div className="space-y-2 ">
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={showSelectAll}
-                                onChange={(e) => setShowSelectAll(e.target.checked)}
-                            />
-                        }
-                        label="Do you want to select all employee emails?"
-                    />
-                </div>
-
-                {showSelectAll && (
-                    <div className="space-y-2 ">
-                        <Button
-                            variant="outlined"
-                            onClick={() => handleSelectAll("to")}
-                        >
-                            Select All
-                        </Button>
-                    </div>
-                )}
-
-                <div className="space-y-2 ">
-                    <AuthInputFiled
-                        name="to"
-                        icon={Email}
-                        control={control}
-                        type="autocomplete"
-                        placeholder="To"
-                        label="To"
-                        readOnly={false}
-                        maxLimit={15}
-                        errors={errors}
-                        error={errors.to}
-                        optionlist={employeeEmail ? employeeEmail : []}
-                    />
-                </div>
-
-                <div className="flex gap-4 mt-4 justify-end">
-                    <Button type="submit" variant="contained" color="primary" onClick={() => handleSubmit((data) => handleSubmitForm(data, true))}>
-                        {id ? "Update Survey" : "Complete Survey"}
-                    </Button>
-                    <Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => handleSubmitForm(data, false))}>
-                        Save For Now
-                    </Button>
-                    <Button onClick={handleClose} variant="outlined" color="error">
-                        Close
-                    </Button>
-                </div>
-            </form>
-        </Paper>
+                </article>
+            </section>
+        </div>
     );
 }
 

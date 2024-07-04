@@ -95,15 +95,22 @@ const EmployeeSurveyForm = () => {
     }
 
     return (
-        <div className="bg-gray-50 min-h-screen h-auto">
-            <header className="text-xl w-full pt-6 flex items-start gap-2 bg-white shadow-md p-4">
-                <IconButton onClick={() => navigate(-1)}>
-                    <West className=" !text-xl" />
-                </IconButton>
-                <div className="flex justify-between w-full">
-                    <div>
-                        Employee Survey
-                        <p className="text-xs text-gray-600">Fill employee survey form</p>
+        <div className="bg-gray-50 min-h-screen h-auto font-family">
+            <header className="text-xl w-full pt-6 flex flex-col md:flex-row items-start md:items-center gap-2 bg-white shadow-md p-4">
+                {/* Back Button */}
+                <div className="flex-shrink-0">
+                    <IconButton onClick={() => navigate(-1)}>
+                        <West className="text-xl" />
+                    </IconButton>
+                </div>
+
+                {/* Main Header Content */}
+                <div className="flex flex-col md:flex-row justify-between w-full md:ml-4">
+                    <div className="mb-2 md:mb-0 md:mr-4">
+                        <h1 className="text-xl font-bold">Fill Employee Survey</h1>
+                        <p className="text-sm text-gray-600">
+                            Here you can fill survey
+                        </p>
                     </div>
                 </div>
             </header>
@@ -111,11 +118,11 @@ const EmployeeSurveyForm = () => {
             <section className="md:px-8 flex space-x-2 md:py-6">
                 <article className="w-full rounded-lg bg-white">
                     <div className="w-full md:px-5 px-1">
-                        <div className="w-full mt-4">
+                        <div className="w-full mt-4 p-4">
                             <h1 className="text-2xl mb-4 font-bold">
                                 {DOMPurify.sanitize(surveyData.title, { USE_PROFILES: { html: false } })}
                             </h1>
-                            <p className="text-2xl mb-4">
+                            <p className="mb-5">
                                 {DOMPurify.sanitize(surveyData?.description, { USE_PROFILES: { html: false } })}
                             </p>
                             <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-1 space-y-2 flex-col">
@@ -123,7 +130,7 @@ const EmployeeSurveyForm = () => {
                                     {surveyData?.questions.map((q, index) => (
                                         <div key={q._id}>
                                             <div>
-                                                <p className="text-2xl mb-4 font-bold">{q.question}</p>
+                                                <p className="text-xl mb-4">{q.question}</p>
                                             </div>
                                             <div>
                                                 {q.questionType === "Short Answer" && (
@@ -158,9 +165,10 @@ const EmployeeSurveyForm = () => {
                                         </div>
                                     ))}
                                 </div>
-                                <Button type="submit" variant="contained" color="primary" className="mt-4">
-                                    Submit
-                                </Button>
+                                <div className="flex gap-4 mt-4 justify-end">
+                                    <Button type="submit" variant="contained" color="primary" className="mt-4">
+                                        Submit
+                                    </Button></div>
                             </form>
                         </div>
                     </div>

@@ -32,7 +32,7 @@ const SaveAsDraft = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const organisationId = user?.organizationId;
-
+  console.log("user//..", user);
   //get authToken
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -49,6 +49,9 @@ const SaveAsDraft = () => {
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-draft-survey`,
         {
+          params: {
+            creatorId: user?._id,
+          },
           headers: {
             Authorization: authToken,
           },

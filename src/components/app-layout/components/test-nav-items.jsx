@@ -133,10 +133,10 @@ const TestNavItems = ({ toggleDrawer }) => {
               role === "Manager"
                 ? `organisation/${orgId}/dashboard/manager-dashboard`
                 : role === "HR"
-                ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                : role === "Employee"
-                ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                : "/organizationList",
+                  ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                  : role === "Employee"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
             icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
             text: "Dashboard",
           },
@@ -326,64 +326,6 @@ const TestNavItems = ({ toggleDrawer }) => {
               <MonetizationOnOutlined className=" !text-[1.2em] text-[#67748E]" />
             ),
             text: "Advance Salary",
-          },
-        ],
-      },
-      Communication: {
-        open: false,
-        isVisible:
-          window.location.pathname.includes("organisation") &&
-          [
-            "Super-Admin",
-            "Delegate-Super-Admin",
-            "Department-Head",
-            "Delegate-Department-Head",
-            "Department-Admin",
-            "Delegate-Department-Admin",
-            "Accountant",
-            "Delegate-Accountant",
-            "HR",
-            "Manager",
-          ].includes(role),
-        // : false
-        icon: <Business className=" !text-[1.2em] text-[#67748E]" />,
-        routes: [
-          {
-            key: "createCommunication",
-            isVisible: [
-              "Super-Admin",
-              "Delegate-Super-Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "HR",
-              "Manager",
-            ].includes(role),
-            link: `/organisation/${orgId}/create-communication`,
-            icon: <ChatIcon className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Communication",
-          },
-          {
-            key: "EmployeeSurvey",
-            isVisible: [
-              "Super-Admin",
-              "Delegate-Super-Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "HR",
-              "Manager",
-              "Employee",
-            ].includes(role),
-            link: `/organisation/${orgId}/employee-survey`,
-            icon: <AssignmentIcon className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Employee Survey",
           },
         ],
       },
@@ -647,6 +589,57 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
+      Communication: {
+        open: false,
+        isVisible: ["Super-Admin", "Delegate-Super-Admin", "Department-Head",
+          "Delegate-Department-Head",
+          "Department-Admin",
+          "Delegate-Department-Admin",
+          "Accountant",
+          "Delegate-Accountant",
+          "HR",
+          "Manager", "Employee"].includes(role),
+        icon: <Business className=" !text-[1.2em] text-[#67748E]" />,
+        routes: [
+          {
+            key: "createCommunication",
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+            ].includes(role),
+            link: `/organisation/${orgId}/create-communication`,
+            icon: <ChatIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Communication",
+          },
+          {
+            key: "EmployeeSurvey",
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+              "Employee",
+            ].includes(role),
+            link: `/organisation/${orgId}/employee-survey`,
+            icon: <AssignmentIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Employee Survey",
+          },
+        ],
+      },
       Organisation: {
         open: false,
         isVisible: ["Super-Admin", "Delegate-Super-Admin"].includes(role),
@@ -682,7 +675,6 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
         ],
       },
-
       RemotePunch: {
         open: false,
         isVisible:
