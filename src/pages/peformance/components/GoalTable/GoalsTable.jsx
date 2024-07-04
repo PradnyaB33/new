@@ -499,23 +499,21 @@ const GoalsTable = ({ performance, isError }) => {
               </div>
             </div>
 
-            {performance?.isMidGoal
-              ? true
-              : performance?.stages === "Goal setting" &&
-                isTimeFinish &&
-                (role !== "Employee"
-                  ? true
-                  : role === "Employee" && performance.isSelfGoal
-                  ? true
-                  : false) && (
-                  <button
-                    type="button"
-                    onClick={() => setOpen(true)}
-                    className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-                  >
-                    Add Goal
-                  </button>
-                )}
+            {(performance?.isMidGoal && isTimeFinish) ||
+            (performance?.stages === "Goal setting" &&
+              isTimeFinish &&
+              (role !== "Employee" ||
+                (role === "Employee" && performance.isSelfGoal))) ? (
+              <button
+                type="button"
+                onClick={() => setOpen(true)}
+                className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+              >
+                Add Goal
+              </button>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
 
