@@ -1,11 +1,15 @@
 import axios from "axios";
 import * as faceApi from "face-api.js";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { TestContext } from "../../State/Function/Main";
+import useGetUser from "../Token/useUser";
 
 const useLoadModel = () => {
   const { handleAlert } = useContext(TestContext);
+  const [descriptor, setDescriptor] = useState(null);
+  const { decodedToken } = useGetUser();
+
   const loadModels = async () => {
     await faceApi.nets.faceExpressionNet.loadFromUri("/models");
     await faceApi.nets.faceRecognitionNet.loadFromUri("/models");
@@ -65,11 +69,13 @@ const useLoadModel = () => {
   const { mutateAsync: detectFaceOnlyMutation } = useMutation({
     mutationFn: detectFaceOnly,
     onSuccess: async (data) => {
+      console.log(`🚀 ~ file: useFaceModal.jsx:68 ~ data:`, data);
       if (data?.length === 0) {
         handleAlert(true, "error", "No faces found in the image");
       } else if (data?.length > 1) {
         handleAlert(true, "warning", "More than one face found in the image");
       } else {
+        setDescriptor(data[0].descriptor);
         handleAlert(true, "success", "Face detected successfully");
       }
     },
@@ -109,11 +115,11 @@ const useLoadModel = () => {
     },
   });
 
-  const uploadImageToBackend = async ({ descriptor, label }) => {
+  const uploadImageToBackend = async () => {
     const config = { headers: { "Content-Type": "application/json" } };
     const response = await axios.post(
-      `/face/upload-face`,
-      { descriptor, label },
+      `${process.env.REACT_APP_API_URL}/route/face-mode/face/${decodedToken?.user?._id}`,
+      { descriptor },
       config
     );
 
@@ -170,6 +176,8 @@ const useLoadModel = () => {
     uploadImageToBackendMutation,
     getImageAndVerifyMutation,
     detectFaceOnlyMutation,
+    descriptor,
+    setDescriptor,
   };
 };
 

@@ -28,7 +28,12 @@ const EmployeeProfile = () => {
   const [url, setUrl] = useState();
   const fileInputRef = useRef();
   const [file, setFile] = useState();
-  const { data, detectFaceOnlyMutation } = useLoadModel();
+  const {
+    data,
+    detectFaceOnlyMutation,
+    descriptor,
+    uploadImageToBackendMutation,
+  } = useLoadModel();
   console.log(`🚀 ~ file: UserProfile.jsx:32 ~ data:`, data);
 
   const UserProfileSchema = z.object({
@@ -140,6 +145,9 @@ const EmployeeProfile = () => {
         const signedUrlResponse = await getSignedUrl();
         const signedUrl = signedUrlResponse.url;
         imageUrl = await uploadFile(signedUrl, file);
+      }
+      if (descriptor !== null) {
+        await uploadImageToBackendMutation();
       }
 
       const requestData = {
