@@ -1,13 +1,15 @@
 import axios from "axios";
 import * as faceApi from "face-api.js";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { useMutation, useQuery } from "react-query";
 import { TestContext } from "../../State/Function/Main";
 import useGetUser from "../Token/useUser";
+import useFaceStore from "./useFaceStore";
 
 const useLoadModel = () => {
   const { handleAlert } = useContext(TestContext);
-  const [descriptor, setDescriptor] = useState(null);
+  const { descriptor, setDescriptor } = useFaceStore();
+  console.log(`🚀 ~ file: useFaceModal.jsx:12 ~ descriptor:`, descriptor);
   const { decodedToken } = useGetUser();
 
   const loadModels = async () => {
@@ -29,7 +31,7 @@ const useLoadModel = () => {
     refetchOnWindowFocus: false,
   });
 
-  const detectFaces = async ({ img, canvasId }) => {
+  const detectFaces = async ({ img }) => {
     const faces = await faceApi
       .detectAllFaces(img, new faceApi.SsdMobilenetv1Options())
       .withFaceLandmarks()
@@ -75,7 +77,7 @@ const useLoadModel = () => {
       } else if (data?.length > 1) {
         handleAlert(true, "warning", "More than one face found in the image");
       } else {
-        setDescriptor(data[0].descriptor);
+        setDescriptor(Object.values(data[0].descriptor));
         handleAlert(true, "success", "Face detected successfully");
       }
     },
@@ -116,9 +118,10 @@ const useLoadModel = () => {
   });
 
   const uploadImageToBackend = async () => {
+    console.log("descriptor", descriptor);
     const config = { headers: { "Content-Type": "application/json" } };
     const response = await axios.post(
-      `${process.env.REACT_APP_API_URL}/route/face-mode/face/${decodedToken?.user?._id}`,
+      `${process.env.REACT_APP_API}/route/face-model/face/${decodedToken?.user?._id}`,
       { descriptor },
       config
     );
@@ -128,7 +131,9 @@ const useLoadModel = () => {
 
   const { mutateAsync: uploadImageToBackendMutation } = useMutation({
     mutationFn: uploadImageToBackend,
-    onSuccess: (data) => {},
+    onSuccess: (data) => {
+      console.log(`🚀 ~ file: useFaceModal.jsx:132 ~ data:`, data);
+    },
     onError: (error) => {
       console.error("Error uploading image to backend", error);
     },

@@ -14,7 +14,6 @@ import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import useLoadModel from "../../hooks/FaceMode/useFaceModal";
 import UserProfile from "../../hooks/UserData/useUser";
 import useHook from "../../hooks/UserProfile/useHook";
-import { getSignedUrl, uploadFile } from "../../services/api";
 
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
@@ -28,6 +27,7 @@ const EmployeeProfile = () => {
   const [url, setUrl] = useState();
   const fileInputRef = useRef();
   const [file, setFile] = useState();
+  console.log(`🚀 ~ file: UserProfile.jsx:31 ~ file:`, file);
   const {
     data,
     detectFaceOnlyMutation,
@@ -89,11 +89,7 @@ const EmployeeProfile = () => {
       onError: () => {},
     }
   );
-  console.log(
-    `🚀 ~ file: UserProfile.jsx:97 ~ profileData, isLoading:`,
-    profileData,
-    isLoading
-  );
+
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type.startsWith("image/")) {
@@ -141,14 +137,13 @@ const EmployeeProfile = () => {
   const onSubmit = async (data) => {
     try {
       let imageUrl;
-      if (file) {
-        const signedUrlResponse = await getSignedUrl();
-        const signedUrl = signedUrlResponse.url;
-        imageUrl = await uploadFile(signedUrl, file);
-      }
-      if (descriptor !== null) {
-        await uploadImageToBackendMutation();
-      }
+      // if (file) {
+      //   const signedUrlResponse = await getSignedUrl();
+      //   const signedUrl = signedUrlResponse.url;
+      //   imageUrl = await uploadFile(signedUrl, file).then();
+      // }
+      console.log(`🚀 ~ file: UserProfile.jsx:150 ~ descriptor:`, descriptor);
+      await uploadImageToBackendMutation();
 
       const requestData = {
         ...data,
