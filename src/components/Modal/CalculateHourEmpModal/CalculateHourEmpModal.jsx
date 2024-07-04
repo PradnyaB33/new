@@ -33,6 +33,7 @@ const CalculateHourEmpModal = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 10;
+  console.log("punching record", empPunchingData);
   console.log({ setTotalPages });
 
   // Schema for calculate hour
@@ -57,6 +58,7 @@ const CalculateHourEmpModal = ({
     console.log("form data", data);
   }, [getValues]);
 
+  // calculate hours
   const handleCalculateHours = async () => {
     const data = getValues();
     const { hour, timeRange } = data;
@@ -69,33 +71,33 @@ const CalculateHourEmpModal = ({
     const startDate = new Date(timeRange.startDate);
     const endDate = new Date(timeRange.endDate);
     const punchingRecords = empPunchingData?.punchingRecords || [];
-    let totalHours = 0;
 
     for (
       let date = new Date(startDate);
       date <= endDate;
       date.setDate(date.getDate() + 1)
     ) {
-      const formattedDate = date.toISOString().split("T")[0];
+      
+      const formattedDate = new Date(date.toISOString().split("T")[0]);
       let punchInTime = null;
       let punchOutTime = null;
 
-      punchingRecords.forEach((record) => {
+      for (const record of punchingRecords) {
         const recordDate = new Date(record.date).toISOString().split("T")[0];
-        if (recordDate === formattedDate) {
-          if (record.punchingStatus === "Check In") {
-            if (!punchInTime) {
-              punchInTime = new Date(`1970-01-01T${record.punchingTime}`);
-            }
-          } else if (record.punchingStatus === "Check Out") {
-            punchOutTime = new Date(`1970-01-01T${record.punchingTime}`);
+        if (recordDate === formattedDate.toISOString().split("T")[0]) {
+          if (record?.punchingStatus === "Check In" && !punchInTime) {
+            punchInTime = new Date(`1970-01-01T${record?.punchingTime}`);
+          } else if (record?.punchingStatus === "Check Out" && !punchOutTime) {
+            punchOutTime = new Date(`1970-01-01T${record?.punchingTime}`);
           }
+          if (punchInTime && punchOutTime) break;
         }
-      });
+      }
 
+      let totalHours = 0;
       if (punchInTime && punchOutTime) {
         const timeDiff = punchOutTime - punchInTime;
-        totalHours += Math.max(0, timeDiff / (1000 * 60 * 60));
+        totalHours = Math.max(0, timeDiff / (1000 * 60 * 60));
       }
 
       const formattedTotalHours = Math.floor(totalHours);
@@ -122,9 +124,9 @@ const CalculateHourEmpModal = ({
       const postData = {
         EmployeeId: empPunchingData?.EmployeeId._id,
         organizationId: organisationId,
-        recordDate: date,
-        punchInTime: punchInTime,
-        punchOutTime: punchOutTime,
+        recordDate: date.toISOString(),
+        punchInTime: punchInTime ? punchInTime.toISOString() : null,
+        punchOutTime: punchOutTime ? punchOutTime.toISOString() : null,
         totalHours: totalHour,
         status: remarks,
         justify: justify,
@@ -144,18 +146,22 @@ const CalculateHourEmpModal = ({
             body: JSON.stringify(postData),
           }
         );
-    
+
         if (!response.ok) {
           throw new Error("Failed to calculate hours.");
         }
-    
+
         const responseData = await response.json();
         console.log(responseData);
         handleClose();
         handleAlert(true, "success", "Hours calculated successfully.");
       } catch (error) {
         console.error("Error calculating hours:", error);
-        handleAlert(false, "error", "Failed to calculate hours. Please try again.");
+        handleAlert(
+          false,
+          "error",
+          "Failed to calculate hours. Please try again."
+        );
       }
     }
   };
