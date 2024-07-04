@@ -77,7 +77,6 @@ const CalculateHourEmpModal = ({
       date <= endDate;
       date.setDate(date.getDate() + 1)
     ) {
-      
       const formattedDate = new Date(date.toISOString().split("T")[0]);
       let punchInTime = null;
       let punchOutTime = null;
@@ -160,7 +159,7 @@ const CalculateHourEmpModal = ({
         handleAlert(
           false,
           "error",
-          "Failed to calculate hours. Please try again."
+          `Failed to calculate hours. Please try again. ${error.message}`
         );
       }
     }
