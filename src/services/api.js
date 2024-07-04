@@ -17,6 +17,7 @@ export const getSignedUrl = async () => {
   }
 };
 export const uploadFile = async (url, file) => {
+  console.log(`🚀 ~ file: api.js:20 ~ file:`, file);
   try {
     if (!url) {
       throw new Error("Signed URL is undefined or null");

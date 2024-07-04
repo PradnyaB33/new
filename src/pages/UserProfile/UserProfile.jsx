@@ -14,6 +14,7 @@ import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import useLoadModel from "../../hooks/FaceMode/useFaceModal";
 import UserProfile from "../../hooks/UserData/useUser";
 import useHook from "../../hooks/UserProfile/useHook";
+import { getSignedUrl, uploadFile } from "../../services/api";
 
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
@@ -27,14 +28,12 @@ const EmployeeProfile = () => {
   const [url, setUrl] = useState();
   const fileInputRef = useRef();
   const [file, setFile] = useState();
-  console.log(`🚀 ~ file: UserProfile.jsx:31 ~ file:`, file);
   const {
     data,
     detectFaceOnlyMutation,
     descriptor,
     uploadImageToBackendMutation,
   } = useLoadModel();
-  console.log(`🚀 ~ file: UserProfile.jsx:32 ~ data:`, data);
 
   const UserProfileSchema = z.object({
     additional_phone_number: z
@@ -137,12 +136,11 @@ const EmployeeProfile = () => {
   const onSubmit = async (data) => {
     try {
       let imageUrl;
-      // if (file) {
-      //   const signedUrlResponse = await getSignedUrl();
-      //   const signedUrl = signedUrlResponse.url;
-      //   imageUrl = await uploadFile(signedUrl, file).then();
-      // }
-      console.log(`🚀 ~ file: UserProfile.jsx:150 ~ descriptor:`, descriptor);
+      if (file) {
+        const signedUrlResponse = await getSignedUrl();
+        const signedUrl = signedUrlResponse.url;
+        imageUrl = await uploadFile(signedUrl, file);
+      }
       await uploadImageToBackendMutation();
 
       const requestData = {

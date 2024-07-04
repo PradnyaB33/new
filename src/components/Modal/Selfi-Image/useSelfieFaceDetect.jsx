@@ -8,8 +8,7 @@ import { TestContext } from "../../../State/Function/Main";
 
 const useSelfieFaceDetect = () => {
   const { handleAlert } = useContext(TestContext);
-  const { descriptor, setDescriptor, userDescriptor, setUserDescriptor } =
-    useFaceStore();
+  const { descriptor, setDescriptor } = useFaceStore();
   const { decodedToken } = useGetUser();
 
   const loadModels = async () => {
@@ -41,7 +40,6 @@ const useSelfieFaceDetect = () => {
       .withFaceDescriptors()
       .withFaceExpressions()
       .withAgeAndGender();
-
     return faces;
   };
 
@@ -64,17 +62,14 @@ const useSelfieFaceDetect = () => {
     },
   });
 
-  const matchFaces = async (img) => {
+  const matchFaces = async ({ currentDescriptor, descriptor }) => {
     let matchScore = 0.63;
-    let secondImgElem = document.getElementById("second-img");
-    let faces = await detectFaceOnly({
-      img: secondImgElem,
-    });
-    let labeledFace = new faceApi.LabeledFaceDescriptors("Face", [
-      face.descriptor,
-    ]);
+    let labeledFace = new faceApi.LabeledFaceDescriptors(
+      decodedToken?.user?._id,
+      [descriptor]
+    );
     let faceMatcher = new faceApi.FaceMatcher(labeledFace, matchScore);
-    let results = faceMatcher.findBestMatch(faces[0].descriptor);
+    let results = faceMatcher.findBestMatch(currentDescriptor);
     return results;
   };
 
