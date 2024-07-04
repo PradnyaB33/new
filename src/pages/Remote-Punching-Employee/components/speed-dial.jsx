@@ -2,6 +2,7 @@ import { PlayArrow } from "@mui/icons-material";
 import { Button, Dialog, DialogContent, Fab } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
+import useSelfieFaceDetect from "../../../components/Modal/Selfi-Image/useSelfieFaceDetect";
 import useLocationMutation from "../../../hooks/QueryHook/Location/mutation";
 import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
 import StopRemotePunch from "./stop-remote-punching";
@@ -15,13 +16,20 @@ export default function FabIcons() {
     getUserImage.mutate();
     setStartTime();
   };
+  const { faceDetectedData } = useSelfieFaceDetect();
+  console.log(
+    `🚀 ~ file: speed-dial.jsx:20 ~ faceDetectedData:`,
+    faceDetectedData
+  );
   return (
     <>
       {!start ? (
         <Fab
+          disabled={true}
           onClick={() => setOpen(true)}
+          color="primary"
           variant="extended"
-          className="!absolute bottom-12 right-12 !bg-primary !text-white"
+          className="!absolute bottom-12 right-12 !text-white"
         >
           <PlayArrow sx={{ mr: 1 }} className={`animate-pulse text-white`} />
           Start Remote Punching

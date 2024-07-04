@@ -111,6 +111,7 @@ const useSelfieFaceDetect = () => {
     },
     onError: (error) => {
       console.error("Error fetching image from backend", error);
+      handleAlert(true, "error", error?.response?.data?.message);
     },
     refetchOnMount: false,
     refetchOnWindowFocus: false,
