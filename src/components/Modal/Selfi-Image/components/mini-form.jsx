@@ -44,7 +44,7 @@ const MiniForm = () => {
     if (faces?.length !== 1) {
       return setImageCaptured(false);
     }
-    const result = await matchFacesMutation({
+    await matchFacesMutation({
       currentDescriptor: faces[0]?.descriptor,
       descriptor,
     });

@@ -175,7 +175,7 @@ const useLeaveData = () => {
     setCalLoader(true);
     setselectEvent(true);
 
-    let array = data?.currentYearLeaves.filter((item) => {
+    data?.currentYearLeaves.filter((item) => {
       return item._id !== selectedLeave?._id;
     });
     await queryclient.setQueryData(
