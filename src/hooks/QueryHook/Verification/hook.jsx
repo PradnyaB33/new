@@ -32,7 +32,6 @@ const useVerifyUser = () => {
       // navigate("/sign-in");
     },
     onError: (error) => {
-      console.log(`🚀 ~ file: hook.jsx:17 ~ error:`, error);
       navigate("/sign-in");
       handleAlert(
         true,

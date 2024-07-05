@@ -30,7 +30,7 @@ const useLeaveData = () => {
     },
     {
       onSuccess: async (data) => {
-        console.log(`🚀 ~ file: useLeaveData.jsx:33 ~ data:`, data);
+        console.info(`🚀 ~ file: useLeaveData.jsx:33 ~ data:`, data);
         setCalLoader(false);
       },
       onError: async (error) => {
@@ -175,10 +175,9 @@ const useLeaveData = () => {
     setCalLoader(true);
     setselectEvent(true);
 
-    let array = data?.currentYearLeaves.filter((item) => {
+    data?.currentYearLeaves.filter((item) => {
       return item._id !== selectedLeave?._id;
     });
-    console.log(`🚀 ~ file: useLeaveData.jsx:82 ~ array:`, array);
     await queryclient.setQueryData(
       "employee-leave-table-without-default",
       (old) => {

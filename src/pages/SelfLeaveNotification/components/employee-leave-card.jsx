@@ -1,7 +1,6 @@
 import { CalendarMonth } from "@mui/icons-material";
 import { Badge, Box, Button, Grid } from "@mui/material";
 import { differenceInDays, format, parseISO } from "date-fns";
-import dayjs from "dayjs";
 import moment from "moment";
 import React from "react";
 
@@ -27,12 +26,14 @@ const LeaveRequestCard = ({ items }) => {
             <div className="w-max">
               <Badge
                 className="!z-0"
-                badgeContent={`${dayjs(items?.end).diff(
-                  dayjs(items?.start) ?? "",
-                  "day"
-                )} days`}
+                badgeContent={`${moment(items?.updatedAt).fromNow()}`}
                 color="info"
                 variant="standard"
+                sx={{
+                  "& .MuiBadge-badge": {
+                    width: "max-content",
+                  },
+                }}
               >
                 <Button
                   variant="contained"

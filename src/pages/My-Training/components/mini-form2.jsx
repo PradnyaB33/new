@@ -9,7 +9,6 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import PdfInput from "../../AddOrganisation/components/pdf-input";
 
 const CompleteTrainingMiniForm = ({ mutate, doc }) => {
-  console.log(`🚀 ~ file: mini-form.jsx:10 ~ doc:`, doc);
   const formSchema = z.object({
     proofOfSubmissionUrl: z.any().refine(
       (file) => {
@@ -22,7 +21,7 @@ const CompleteTrainingMiniForm = ({ mutate, doc }) => {
     employeeTrainingId: z.string(),
   });
 
-  const { control, formState, handleSubmit, getValues } = useForm({
+  const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       proofOfSubmissionUrl: undefined,
       rating: undefined,
@@ -33,12 +32,10 @@ const CompleteTrainingMiniForm = ({ mutate, doc }) => {
   });
   const { errors } = formState;
   const onSubmit = (data) => {
-    console.log(`🚀 ~ file: mini-form.jsx:36 ~ data:`, data);
     console.log(data);
     mutate(data);
   };
 
-  console.log(`🚀 ~ file: mini-form.jsx:33 ~ getValues:`, getValues());
   return (
     <form
       className="flex flex-col gap-4 items-center w-full"

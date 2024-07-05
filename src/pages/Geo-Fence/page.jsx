@@ -12,7 +12,6 @@ const GeoFencing = () => {
   const [open, setOpen] = useState(false);
   const { data } = useOrgGeo();
   const { data: locationData } = useGetCurrentLocation();
-  console.log(`🚀 ~ file: page.jsx:13 ~ data:`, data);
   return (
     <>
       <HeaderBackComponent

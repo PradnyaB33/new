@@ -18,7 +18,7 @@ const trainingAssign = z.object({
 });
 
 const AssignTraining = ({ open, setOpen, employees, doc }) => {
-  const { control, formState, handleSubmit, getValues, watch } = useForm({
+  const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
       employeeId: [],
     },
@@ -26,10 +26,7 @@ const AssignTraining = ({ open, setOpen, employees, doc }) => {
   });
   const { errors } = formState;
   const { assignEmployee } = useTrainingDetailsMutation();
-  console.log(`🚀 ~ file: assign-training.jsx:28 ~ errors:`, errors);
-  console.log(`🚀 ~ file: assign-training.jsx:30 ~ getValues:`, getValues());
   const onSubmit = (data) => {
-    console.log(`🚀 ~ file: assign-training.jsx:32 ~ data`, data);
     assignEmployee({ data, trainingId: doc?._id, close: () => setOpen(false) });
   };
   return (

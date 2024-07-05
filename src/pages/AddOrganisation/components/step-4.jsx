@@ -17,7 +17,6 @@ const Step4 = () => {
   const data = useOrg();
   const { handleAlert } = useContext(TestContext);
   const navigate = useNavigate();
-  console.log(`🚀 ~ file: step-4.jsx:15 ~ data:`, data);
   const { authToken, decodedToken } = useGetUser();
   const config = {
     headers: {
@@ -29,15 +28,9 @@ const Step4 = () => {
   //     `${process.env.REACT_APP_API}/route/organization/delete/${id}`,
   //     config
   //   );
-  //   console.log(`🚀 ~ file: step-4.jsx:77 ~ response:`, response);
   //   return response.data;
   // };
   const handleForm = async () => {
-    console.log(`🚀 ~ file: step-4.jsx:45 ~ data:`, data);
-    console.log(
-      `🚀 ~ file: step-4.jsx:61 ~  !data.industry_type:`,
-      !data.isTrial
-    );
     if (data.packageInfo === undefined) {
       return "Please Select Plan And Package";
     }
@@ -49,20 +42,17 @@ const Step4 = () => {
       totalPrice: totalPrice + totalPrice * 0.02,
     };
 
-    console.log(`🚀 ~ file: step-4.jsx:67 ~ mainData:`, mainData);
     const response = await axios.post(
       `${process.env.REACT_APP_API}/route/organization`,
       mainData,
       config
     );
-    console.log(`🚀 ~ file: step-4.jsx:96 ~ response:`, response);
     return response.data;
   };
 
   const { mutate, isLoading } = useMutation({
     mutationFn: handleForm,
     onSuccess: async (data) => {
-      console.log(`🚀 ~ file: step-4.jsx:87 ~ data:`, data);
       if (data?.paymentType === "Phone_Pay") {
         window.location.href = data?.redirectUrl;
       } else if (data?.paymentType === "RazorPay") {

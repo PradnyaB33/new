@@ -5,7 +5,6 @@ import useGetOngoingTrainings from "./use-query-page2";
 
 const Modal2 = () => {
   const { data, isLoading } = useGetOngoingTrainings();
-  console.log(`🚀 ~ file: page2.jsx:8 ~ data:`, data);
   if (isLoading)
     return (
       <div className="flex flex-col gap-4 ">

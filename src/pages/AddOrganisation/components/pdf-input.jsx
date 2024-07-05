@@ -16,7 +16,6 @@ const PdfInput = ({ field, caching = false, className }) => {
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    console.log(`🚀 ~ file: pdf-input.jsx:18 ~ file:`, file);
     setSelectedPdf(file);
 
     displayPdf(file);

@@ -32,12 +32,10 @@ const MiniForm = ({ mutate, doc }) => {
   });
   const { errors } = formState;
   const onSubmit = (data) => {
-    console.log(`🚀 ~ file: mini-form.jsx:36 ~ data:`, data);
     console.log(data);
     mutate(data);
   };
 
-  console.log(`🚀 ~ file: mini-form.jsx:33 ~ getValues:`, getValues());
   return (
     <form
       className="flex flex-col gap-4 items-center w-full"

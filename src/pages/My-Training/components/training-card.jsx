@@ -8,7 +8,6 @@ import useCardQuery from "./card-training/useQuery";
 import CompleteTrainingMiniForm from "./mini-form2";
 
 const MainTrainingCard = ({ doc }) => {
-  console.log(`🚀 ~ file: training-card.jsx:9 ~ doc:`, doc);
   const sanitizedDescription = DOMPurify.sanitize(
     doc?.trainingId?.trainingDescription
   );

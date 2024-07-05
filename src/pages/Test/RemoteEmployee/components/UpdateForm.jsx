@@ -55,7 +55,6 @@ const UpdateForm = ({ setArray, today, array, index, data, onClose }) => {
 
   const onSubmit = () => {
     const data = watch();
-    console.log(`🚀 ~ file: UpdateForm.jsx:58 ~ data:`, data);
 
     const formattedData = {
       distance: data?.distance,

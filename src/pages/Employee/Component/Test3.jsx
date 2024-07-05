@@ -23,14 +23,13 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
 
   const EmployeeSchema = z.object({}).catchall(z.any().optional());
 
-  const { control, formState, handleSubmit, setValue, getValues } = useForm({
+  const { control, formState, handleSubmit, setValue } = useForm({
     defaultValues: {
       ...data,
     },
     resolver: zodResolver(EmployeeSchema),
   });
 
-  console.log(`🚀 ~ file: Test3.jsx:34 ~ getValues:`, getValues());
   const { isLoading } = useQuery(
     ["employeeId", employeeId],
     async () => {
@@ -64,8 +63,6 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
   };
 
   const { errors } = formState;
-
-  console.log(`🚀 ~ file: Test3.jsx:66 ~ errors:`, errors);
 
   if (addtionalLoading) {
     return (

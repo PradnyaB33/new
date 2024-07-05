@@ -31,7 +31,7 @@ const useLocationMutation = () => {
   const getUserLocation = useMutation({
     mutationFn: fetchLocationData,
     onSuccess: (data) => {
-      console.log(`🚀 ~ file: mutation.jsx:34 ~ data:`, data);
+      console.info(`🚀 ~ file: mutation.jsx:34 ~ data:`, data);
     },
     onError: (data) => {
       console.error(data);
@@ -64,7 +64,6 @@ const useLocationMutation = () => {
   });
   const fetchUrl = async () => {
     const data1 = await getUserLocation?.mutateAsync();
-    console.log(`🚀 ~ file: mutation.jsx:100 ~ data1:`, data1);
     const data = await axios.get(
       `${process.env.REACT_APP_API}/route/punch-main/create-image-url?lat=${data1?.latitude}&lng=${data1?.longitude}`,
       {

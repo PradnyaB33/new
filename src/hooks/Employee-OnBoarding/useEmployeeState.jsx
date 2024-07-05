@@ -42,7 +42,6 @@ const useEmployeeState = create((set) => {
       set({ data: { ...data } });
     },
     setStep1Data: (orgName) => {
-      console.log(`🚀 ~ file: Org.jsx:31 ~ orgName:`, orgName);
       set({
         ...orgName,
       });

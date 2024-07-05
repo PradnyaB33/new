@@ -9,7 +9,6 @@ const useManageSubscriptionMutation = () => {
   const { handleAlert } = useContext(TestContext);
 
   const handleForm = async (data) => {
-    console.log(`🚀 ~ file: subscription-mutaiton.jsx:48 ~ data:`, data);
     const result = await axios.post(
       `${process.env.REACT_APP_API}/route/organization/organization-upgrade/${data?.organisationId}`,
       data,
@@ -19,13 +18,11 @@ const useManageSubscriptionMutation = () => {
         },
       }
     );
-    console.log(`🚀 ~ file: subscription-mutaiton.jsx:57 ~ result:`, result);
     return result.data;
   };
   const { mutate } = useMutation({
     mutationFn: handleForm,
     onSuccess: async (data) => {
-      console.log(`🚀 ~ file: step-4.jsx:87 ~ data:`, data);
       if (data?.paymentType === "Phone_Pay") {
         window.location.href = data?.redirectUrl;
       } else {
@@ -76,13 +73,11 @@ const useManageSubscriptionMutation = () => {
         },
       }
     );
-    console.log(`🚀 ~ file: subscription-mutaiton.jsx:57 ~ result:`, result);
     return result.data;
   };
   const { mutate: renewMutate } = useMutation({
     mutationFn: renewHandleForm,
     onSuccess: async (data) => {
-      console.log(`🚀 ~ file: step-4.jsx:87 ~ data:`, data);
       if (data?.paymentType === "Phone_Pay") {
         window.location.href = data?.redirectUrl;
       } else {
@@ -133,13 +128,11 @@ const useManageSubscriptionMutation = () => {
         },
       }
     );
-    console.log(`🚀 ~ file: subscription-mutaiton.jsx:57 ~ result:`, result);
     return result.data;
   };
   const { mutate: payMutate } = useMutation({
     mutationFn: payHandleForm,
     onSuccess: async (data) => {
-      console.log(`🚀 ~ file: step-4.jsx:87 ~ data:`, data);
       if (data?.paymentType === "Phone_Pay") {
         window.location.href = data?.redirectUrl;
       } else {
@@ -194,13 +187,11 @@ const useManageSubscriptionMutation = () => {
         },
       }
     );
-    console.log(`🚀 ~ file: subscription-mutaiton.jsx:210 ~ result:`, result);
     return result.data;
   };
 
   const { mutate: verifyPromoCodeMutation } = useMutation(verifyPromoCode, {
     onSuccess: (data, { setValue }) => {
-      console.log(`🚀 ~ file: subscription-mutaiton.jsx ~ data:`, data);
       handleAlert(true, "success", data?.message);
       setValue("discount", data?.promoCode?.discount);
     },

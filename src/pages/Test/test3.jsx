@@ -53,9 +53,7 @@ const TrackingMap = () => {
     return response.data;
   };
   const { data, isError } = useQuery("pts", fetchPts);
-  console.log(`🚀 ~ file: test3.jsx:57 ~ data:`, data);
   if (isError) {
-    console.log(`🚀 ~ file: test3.jsx:50 ~ error:`, isError);
     handleAlert(true, "error", "error in getting the you location track");
   }
 

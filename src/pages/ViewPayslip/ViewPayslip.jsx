@@ -97,7 +97,6 @@ const ViewPayslip = () => {
             <h3 className="text-lg font-bold text-gray-700">
               Please select the month for which you need the Payslip Statement
             </h3>
-
             <input
               type="month"
               value={selectedDate.format("YYYY-MM")}
@@ -427,7 +426,6 @@ const ViewPayslip = () => {
                   marginLeft: "35%",
                   display: "flex",
                   justifyContent: "center",
-                  
                 }}
               >
                 "Please select the month for which you need the payslip

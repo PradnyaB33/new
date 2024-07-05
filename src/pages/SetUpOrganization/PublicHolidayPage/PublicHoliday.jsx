@@ -88,6 +88,8 @@ const PublicHoliday = () => {
       });
     }
   });
+  console.log(`🚀 ~ file: PublicHoliday.jsx:77 ~ data:`, data);
+
   const handleData = (e) => {
     const { name, value } = e.target;
 
@@ -233,6 +235,22 @@ const PublicHoliday = () => {
 
     handleClose();
   };
+  const isHoliday = (date) => {
+    // Ensure date is a Date object
+    const validDate = date instanceof Date ? date : new Date(date);
+    if (isNaN(validDate)) {
+      console.error("Invalid date provided to isHoliday");
+      return false;
+    }
+
+    // Convert the date to be checked to the start of the day in local time for accurate comparison
+    // Adjust the holiday date to the start of the day in local time before comparison
+    return data.some((holiday) => {
+      const holidayDateLocal = new Date(holiday.date).toLocaleDateString();
+      const dateLocal = validDate.toLocaleDateString();
+      return holidayDateLocal === dateLocal;
+    });
+  };
 
   return (
     <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
@@ -367,6 +385,7 @@ const PublicHoliday = () => {
                       slotProps={{
                         textField: { size: "small", fullWidth: true },
                       }}
+                      shouldDisableDate={isHoliday}
                     />
                   </DemoContainer>
                 </LocalizationProvider>

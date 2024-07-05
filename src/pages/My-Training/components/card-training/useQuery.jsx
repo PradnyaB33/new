@@ -55,7 +55,6 @@ const useCardQuery = ({ trainingId }) => {
     }
   );
   const getProofOfSubmissionUrl = async (fullObject) => {
-    console.log(`🚀 ~ file: useQuery.jsx:58 ~ fullObject:`, fullObject);
     const result = await axios.get(
       `${process.env.REACT_APP_API}/route/s3createFile/training-proof-of-submission-${fullObject?.employeeTrainingId}`,
       {

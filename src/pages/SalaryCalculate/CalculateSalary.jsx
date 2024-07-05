@@ -1,14 +1,11 @@
-import Box from "@mui/material/Box";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import axios from "axios";
 import dayjs from "dayjs";
-import React, { useContext, useEffect, useMemo, useState } from "react";
-import { useQuery } from "react-query";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import useCalculateSalaryQuery from "../../hooks/CalculateSalaryHook/useCalculateSalaryQuery";
+import { useQuery } from "react-query";
 
 function CalculateSalary() {
   const { handleAlert } = useContext(TestContext);
@@ -18,8 +15,6 @@ function CalculateSalary() {
   const currentDate = dayjs();
   const [selectedDate, setSelectedDate] = useState(currentDate);
   const [numDaysInMonth, setNumDaysInMonth] = useState(0);
-  const [availableEmployee, setAvailableEmployee] = useState();
-  const [publicHolidays, setPublicHoliDays] = useState([]);
   const [employeeSummary, setEmployeeSummary] = useState([]);
   const [paidLeaveDays, setPaidLeaveDays] = useState(0);
   const [unPaidLeaveDays, setUnPaidLeaveDays] = useState(0);
@@ -27,103 +22,34 @@ function CalculateSalary() {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
   console.log(setIsSubmitDisabled);
 
-  // get the alreday salary data created
-  const [salaryInfo, setSalaryInfo] = useState([]);
-  const fetchEmployeeData = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employeeSalary/viewpayslip/${userId}/${organisationId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+  const {
+    salaryInfo,
+    availableEmployee,
+    publicHolidaysCount,
+    formattedDate,
+    empLoanAplicationInfo,
+    remotePunchAllowance,
+  } = useCalculateSalaryQuery({ userId, organisationId, remotePunchingCount });
 
-      setSalaryInfo(response.data.salaryDetails);
-    } catch (error) {
-      console.error(error);
-    }
+  const handleDateChange = (event) => {
+    setSelectedDate(dayjs(event.target.value));
   };
+
   useEffect(() => {
-    fetchEmployeeData();
-    // eslint-disable-next-line
-  }, []);
-  //  to get the employee
-  const fetchAvailableEmployee = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get/profile/${userId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      setAvailableEmployee(response.data.employee);
-    } catch (error) {
-      console.error(error);
-      handleAlert(true, "error", "Failed to fetch User Profile Data");
-    }
-  };
-  useEffect(() => {
-    fetchAvailableEmployee();
-    // eslint-disable-next-line
-  }, []);
-  // for date change function
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-    const monthFromSelectedDate = date.format("M");
-    const yearFromSelectedDate = date.format("YYYY");
+    const monthFromSelectedDate = selectedDate.format("M");
+    const yearFromSelectedDate = selectedDate.format("YYYY");
     const salaryExists = salaryInfo.some(
       (salary) =>
         String(salary.month) === monthFromSelectedDate &&
         String(salary.year) === yearFromSelectedDate
     );
-
     console.log(salaryExists);
-    const daysInMonth = date.daysInMonth();
-    setNumDaysInMonth(daysInMonth);
+    setNumDaysInMonth(currentDate.daysInMonth());
     setPaidLeaveDays(0);
     setUnPaidLeaveDays(0);
-  };
-  const formattedDate = dayjs(selectedDate).format("MMM-YY");
-  //  to get holiday
-  const fetchHoliday = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/holiday/get/${organisationId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      setPublicHoliDays(response.data.holidays);
-    } catch (error) {
-      console.error(error);
-      handleAlert(true, "error", "Failed to fetch Holiday");
-    }
-  };
-  useEffect(() => {
-    fetchHoliday();
+    setShiftTotalAllowance(0);
     // eslint-disable-next-line
   }, []);
-  const countPublicHolidaysInCurrentMonth = () => {
-    const selectedMonth = selectedDate.format("M");
-    const selectedYear = selectedDate.format("YYYY");
-
-    const holidaysInCurrentMonth = publicHolidays.filter((holiday) => {
-      const holidayDate = dayjs(holiday.date);
-      return (
-        holidayDate.month() + 1 === parseInt(selectedMonth) &&
-        holidayDate.year() === parseInt(selectedYear)
-      );
-    });
-
-    return holidaysInCurrentMonth.length;
-  };
-  let publicHolidaysCount = countPublicHolidaysInCurrentMonth();
 
   // to get the leave like unpaid  , paid  remote punching count etc
   const fetchDataAndFilter = async () => {
@@ -149,6 +75,7 @@ function CalculateSalary() {
 
   const selectedMonth = selectedDate.format("M");
   const selectedYear = selectedDate.format("YYYY");
+
   const filterDataByMonthYear = (data, selectedMonth, selectedYear) => {
     const numericMonth = parseInt(selectedMonth, 10);
     const numericYear = parseInt(selectedYear, 10);
@@ -165,77 +92,23 @@ function CalculateSalary() {
       selectedMonth,
       selectedYear
     );
+
     if (filteredData.length > 0) {
       const { paidleaveDays, unpaidleaveDays, remotePunching } =
         filteredData[0];
       setPaidLeaveDays(paidleaveDays);
       setUnPaidLeaveDays(unpaidleaveDays);
-      setRemotePunchingCount(remotePunching)
+      setRemotePunchingCount(remotePunching);
     }
   }, [employeeSummary, selectedMonth, selectedYear]);
 
-  // pull the total deduction of loan of employee if he/she apply the loan
-  const { data: empLoanAplicationInfo } = useQuery(
-    ["empLoanAplication", organisationId],
-    async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/${userId}/get-ongoing-loan-data`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      return response.data.data;
-    }
-  );
+  console.log("empsummary", employeeSummary);
 
-  // calculate the no fo days employee present
-  const calculateDaysEmployeePresent = () => {
-    const daysPresent = numDaysInMonth - unPaidLeaveDays;
-    return daysPresent;
-  };
-  let noOfDaysEmployeePresent = calculateDaysEmployeePresent();
-
-  // calculate the salary component
-  const calculateSalaryComponent = (componentValue) => {
-    const daysInMonth = numDaysInMonth;
-    if (!isNaN(parseFloat(componentValue)) && daysInMonth > 0) {
-      return (
-        (parseFloat(componentValue) / daysInMonth) *
-        noOfDaysEmployeePresent
-      ).toFixed(2);
-    } else {
-      return 0;
-    }
-  };
-  let basicSalary = calculateSalaryComponent(
-    availableEmployee?.salaryComponent?.Basic || ""
-  );
-  let hraSalary = calculateSalaryComponent(
-    availableEmployee?.salaryComponent?.HRA || ""
-  );
-  let daSalary = calculateSalaryComponent(
-    availableEmployee?.salaryComponent?.DA || ""
-  );
-  let foodAllowance = calculateSalaryComponent(
-    availableEmployee?.salaryComponent?.["Food allowance"] || ""
-  );
-  let salesAllowance = calculateSalaryComponent(
-    availableEmployee?.salaryComponent?.["Sales allowance"] || ""
-  );
-  let specialAllowance = calculateSalaryComponent(
-    availableEmployee?.salaryComponent?.["Special allowance"] || ""
-  );
-  let travelAllowance = calculateSalaryComponent(
-    availableEmployee?.salaryComponent?.["Travel allowance"] || ""
-  );
-  let variableAllowance = calculateSalaryComponent(
-    availableEmployee?.salaryComponent?.["Variable allowance"] || ""
-  );
   // to get shifts of employee
+  const selectedMonths = selectedDate.format("M");
+  const selectedYears = selectedDate.format("YYYY");
   const { data: getShifts } = useQuery(
-    ["shiftAllowance", userId, selectedMonth, selectedYear],
+    ["shiftAllowance", userId, selectedMonths, selectedYears],
     async () => {
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/get/shifts/${userId}`,
@@ -244,8 +117,8 @@ function CalculateSalary() {
             Authorization: token,
           },
           params: {
-            month: parseInt(selectedMonth),
-            year: parseInt(selectedYear),
+            month: parseInt(selectedMonths),
+            year: parseInt(selectedYears),
           },
         }
       );
@@ -309,37 +182,77 @@ function CalculateSalary() {
     setShiftTotalAllowance(total);
   }, [shiftCounts, shiftAllowances]);
 
-  
-  // to get remote punching amount
-  const { data: getremotePuncingAmount } = useQuery(
-    ["remote-punching"],
-    async () => {
+  const fetchRemotePunchingCount = async (userId, startDate, endDate) => {
+    try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/remote-punch/${organisationId}`,
+        `${process.env.REACT_APP_API}/route/remote-punch-count/${userId}?startDate=${startDate}&endDate=${endDate}`,
         {
           headers: {
             Authorization: token,
           },
         }
       );
-      return response.data.remotePunchingObject.allowanceQuantity;
+      setRemotePunchingCount(response.data.remotePunchingCount || 0);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch remote punching count");
     }
+  };
+
+  const startDate = selectedDate.startOf("month").format("YYYY-MM-DD");
+  const endDate = selectedDate.endOf("month").format("YYYY-MM-DD");
+
+  useEffect(() => {
+    fetchRemotePunchingCount(userId, startDate, endDate);
+    // eslint-disable-next-line
+  }, [selectedDate, userId, startDate, endDate]);
+
+  console.log("remoute punching count", remotePunchingCount);
+
+  // calculate the no fo days employee present
+  const calculateDaysEmployeePresent = () => {
+    const daysPresent = numDaysInMonth - unPaidLeaveDays;
+    return daysPresent;
+  };
+  let noOfDaysEmployeePresent = calculateDaysEmployeePresent();
+
+  // calculate the salary component
+  const calculateSalaryComponent = (componentValue) => {
+    const daysInMonth = numDaysInMonth;
+    if (!isNaN(parseFloat(componentValue)) && daysInMonth > 0) {
+      return (
+        (parseFloat(componentValue) / daysInMonth) *
+        noOfDaysEmployeePresent
+      ).toFixed(2);
+    } else {
+      return 0;
+    }
+  };
+  let basicSalary = calculateSalaryComponent(
+    availableEmployee?.salaryComponent?.Basic || ""
+  );
+  let hraSalary = calculateSalaryComponent(
+    availableEmployee?.salaryComponent?.HRA || ""
+  );
+  let daSalary = calculateSalaryComponent(
+    availableEmployee?.salaryComponent?.DA || ""
+  );
+  let foodAllowance = calculateSalaryComponent(
+    availableEmployee?.salaryComponent?.["Food allowance"] || ""
+  );
+  let salesAllowance = calculateSalaryComponent(
+    availableEmployee?.salaryComponent?.["Sales allowance"] || ""
+  );
+  let specialAllowance = calculateSalaryComponent(
+    availableEmployee?.salaryComponent?.["Special allowance"] || ""
+  );
+  let travelAllowance = calculateSalaryComponent(
+    availableEmployee?.salaryComponent?.["Travel allowance"] || ""
+  );
+  let variableAllowance = calculateSalaryComponent(
+    availableEmployee?.salaryComponent?.["Variable allowance"] || ""
   );
 
-  const isValidAmount =
-    !isNaN(getremotePuncingAmount) &&
-    getremotePuncingAmount !== null &&
-    getremotePuncingAmount !== undefined;
-
-  const isValidCount =
-    !isNaN(remotePunchingCount) &&
-    remotePunchingCount !== null &&
-    remotePunchingCount !== undefined;
-
-  const remotePunchAllowance =
-    isValidAmount && isValidCount
-      ? remotePunchingCount * getremotePuncingAmount
-      : 0;
   // calculate the total gross salary
   let totalSalary =
     parseFloat(basicSalary || 0) +
@@ -367,9 +280,6 @@ function CalculateSalary() {
       (application) => {
         const loanDisbursementDate = new Date(application.loanDisbursementDate);
         const loanCompletionDate = new Date(application.loanCompletedDate);
-        console.log("current date", currentDate);
-        console.log("starting date", loanDisbursementDate);
-        console.log("completed date", loanCompletionDate);
         return (
           loanDisbursementDate <= currentDate &&
           currentDate <= loanCompletionDate
@@ -506,20 +416,19 @@ function CalculateSalary() {
 
   return (
     <div className="container mx-auto p-6">
-      <div className="flex items-center justify-center">
-        <Box className="text-center">
+      <div className="flex items-center justify-center mb-6">
+        <div className="text-center">
           <h3 className="text-lg font-bold text-gray-700">
-            Select Month and Year
+            Please select the month for calculate the salary.
           </h3>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateCalendar
-              value={selectedDate}
-              onChange={handleDateChange}
-              views={["month", "year"]}
-              openTo="month"
-            />
-          </LocalizationProvider>
-        </Box>
+          <input
+            type="month"
+            value={selectedDate.format("YYYY-MM")}
+            onChange={handleDateChange}
+            style={{ width: "500px" }}
+            className="border border-gray-300 rounded-md p-2 mt-2"
+          />
+        </div>
       </div>
 
       <div className="flex items-center justify-between mb-6">
