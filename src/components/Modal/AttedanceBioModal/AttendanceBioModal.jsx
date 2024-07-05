@@ -421,12 +421,6 @@ const AttendanceBioModal = ({
     }
   };
 
-<<<<<<< HEAD
-  const handleSync = async () => {
-    try {
-      if (!emailSearch) {
-        handleAlert(true, "error", "Please enter an email address to search.");
-=======
   console.log(checkedEmployees);
 
   // Validate email format
@@ -439,7 +433,6 @@ const AttendanceBioModal = ({
     try {
       if (!validateEmail(emailSearch)) {
         handleAlert(true, "error", "Please enter a valid email address.");
->>>>>>> cf5f93f59375f74830cdf2c4e289c578528a77e4
         return;
       }
 
