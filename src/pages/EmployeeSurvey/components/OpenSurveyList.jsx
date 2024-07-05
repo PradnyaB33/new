@@ -30,10 +30,6 @@ const OpenSurveyList = () => {
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-open-survey`,
         {
-          params: {
-            email: user?.email,
-            creatorId: user?._id,
-          },
           headers: {
             Authorization: authToken,
           },
@@ -69,7 +65,7 @@ const OpenSurveyList = () => {
   const handleOpenSurvey = () => {
     setOpenSurvey(!openSurvey)
   }
-
+console.log("surveys.......",surveys);
   return (
     <div>
       <div className="flex  justify-between  gap-3 w-full border-gray-300 my-2">
@@ -122,6 +118,9 @@ const OpenSurveyList = () => {
                       <th scope="col" className="!text-left pl-8 py-3">
                         Status
                       </th>
+                      <th scope="col" className="!text-left pl-8 py-3">
+
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -129,6 +128,9 @@ const OpenSurveyList = () => {
                       <tr key={index} className="!font-medium border-b ">
                         <td className="!text-left pl-8 py-3">
                           {DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } })}
+                        </td>
+                        <td className="!text-left py-3 pl-9">
+                          progress
                         </td>
                         <td className="!text-left py-3 pl-9">
                           <Button

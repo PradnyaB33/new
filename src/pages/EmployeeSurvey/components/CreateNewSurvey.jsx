@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "react-query";
-import { Select, Typography, TextField, MenuItem, Checkbox, Button, IconButton, FormControlLabel, Switch } from '@mui/material';
+import { Select, Typography, TextField, MenuItem, Checkbox, Button, IconButton, FormControlLabel, Switch, Radio } from '@mui/material';
 import AuthInputFiled from '../../../components/InputFileds/AuthInputFiled';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
@@ -16,6 +16,7 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { Email, West } from "@mui/icons-material";
 import { useNavigate, useParams } from 'react-router-dom';
 import { TestContext } from "../../../State/Function/Main";
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 dayjs.extend(isSameOrBefore);
 
@@ -41,6 +42,7 @@ const CreateNewSurvey = () => {
         ["survey", id],
         async () => {
             const response = await axios.get(`${process.env.REACT_APP_API}/route/organization/${organisationId}/get-single-draft-survey/${id}`, {
+              
                 headers: {
                     Authorization: authToken,
                 },
@@ -123,9 +125,25 @@ const CreateNewSurvey = () => {
             newQuestions[qIndex].options[oIndex].title = value;
         } else if (key === 'checked') {
             newQuestions[qIndex].options[oIndex].checked = !newQuestions[qIndex].options[oIndex].checked;
+        } else if (key === 'radio') {
+            newQuestions[qIndex].options.forEach((opt, index) => {
+                opt.checked = index === oIndex;
+            });
         }
         setQuestions(newQuestions);
     };
+    // const handleOptionChange = (qIndex, oIndex, key, value) => {
+    //     const newQuestions = [...questions];
+    //     if (key === 'title') {
+    //         newQuestions[qIndex].options[oIndex].title = value;
+    //     } else if (key === 'checked') {
+    //         // Ensure only one option is selected at a time for multi-choice questions
+    //         newQuestions[qIndex].options.forEach((opt, index) => {
+    //             opt.checked = index === oIndex;
+    //         });
+    //     }
+    //     setQuestions(newQuestions);
+    // };
 
     const handleRequiredChange = (index) => {
         const newQuestions = [...questions];
@@ -184,12 +202,22 @@ const CreateNewSurvey = () => {
                 );
             case 'Dropdown':
                 return (
-                    <TextField
-                        id="dropdown-options"
-                        label="Dropdown Options (comma-separated)"
-                        placeholder="Option 1, Option 2, Option 3"
-                        fullWidth
-                    />
+                    <div>
+                        {options?.map((option, index) => (
+                            <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                                <TextField
+                                    value={option.title}
+                                    onChange={(e) => handleOptionChange(qIndex, index, 'title', e.target.value)}
+                                    fullWidth
+                                    style={{ marginLeft: '10px' }}
+                                    variant='standard'
+                                />
+                            </div>
+                        ))}
+                        <Button onClick={() => handleAddOption(qIndex)} aria-label="add option">
+                            Add Options
+                        </Button>
+                    </div>
                 );
             case 'Date':
                 return (
@@ -204,6 +232,30 @@ const CreateNewSurvey = () => {
                         disabled
                     />
                 );
+            case 'Multi-choice':
+                return (
+                    <div>
+                        {options?.map((option, index) => (
+                            <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                                <Radio
+                                    checked={option.checked}
+                                    onChange={() => handleOptionChange(qIndex, index, 'radio')}
+                                    disabled
+                                />
+                                <TextField
+                                    value={option.title}
+                                    onChange={(e) => handleOptionChange(qIndex, index, 'title', e.target.value)}
+                                    fullWidth
+                                    style={{ marginLeft: '10px' }}
+                                    variant='standard'
+                                />
+                            </div>
+                        ))}
+                        <Button onClick={() => handleAddOption(qIndex)} aria-label="add option">
+                            Add Options
+                        </Button>
+                    </div>
+                )
             default:
                 return null;
         }
@@ -229,6 +281,16 @@ const CreateNewSurvey = () => {
         const copiedQuestion = { ...newQuestions[index] };
         newQuestions.splice(index + 1, 0, copiedQuestion);
         setQuestions(newQuestions);
+    };
+
+    const handleSuffleQuestion = (index) => {
+        const newQuestions = [...questions];
+        if (index > 0) {
+            const shuffledQuestion = newQuestions[index];
+            newQuestions.splice(index, 1);
+            newQuestions.splice(index - 1, 0, shuffledQuestion);
+            setQuestions(newQuestions);
+        }
     };
 
     const handleSubmitForm = (data, status) => {
@@ -316,7 +378,7 @@ const CreateNewSurvey = () => {
                         <div className="w-full mt-4 p-4">
                             <h1 className="text-2xl mb-4 font-bold">Create Survey</h1>
                             <form onSubmit={handleSubmit((data) => handleSubmitForm(data, true))} className="w-full flex  flex-1 space-y-2 flex-col">
-                                <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-2" style={{ marginBottom: "120px" }}>
+                                <div className="grid grid-cols-1  md:grid-cols-2 w-full gap-2" style={{ marginBottom: "130px" }}>
                                     <AuthInputFiled
                                         name="title"
                                         control={control}
@@ -325,7 +387,7 @@ const CreateNewSurvey = () => {
                                         label="Title"
                                         errors={errors}
                                         rules={{ required: 'Title is required' }}
-                                        className="!h-20"
+                                        className="!h-20 mb-36 sm:mb-28 md:mb-0"
                                     />
                                     <AuthInputFiled
                                         name="description"
@@ -344,6 +406,9 @@ const CreateNewSurvey = () => {
                                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                                 <Typography variant="p">Question {index + 1}</Typography>
                                                 <div>
+                                                    {index > 0 && (<IconButton onClick={() => handleSuffleQuestion(index)} aria-label="shuffle question">
+                                                        <ArrowUpwardIcon />
+                                                    </IconButton>)}
                                                     <IconButton onClick={() => handleCopyQuestion(index)} aria-label="copy question">
                                                         <FileCopyIcon />
                                                     </IconButton>
@@ -387,6 +452,7 @@ const CreateNewSurvey = () => {
                                                     <MenuItem value="Checkboxes">Checkboxes</MenuItem>
                                                     <MenuItem value="Dropdown">Dropdown</MenuItem>
                                                     <MenuItem value="Date">Date</MenuItem>
+                                                    <MenuItem value="Multi-choice">Multi-choice</MenuItem>
                                                 </Select>
                                             </div>
                                             {renderAnswerInput(index)}
@@ -398,7 +464,7 @@ const CreateNewSurvey = () => {
                                         Add Question
                                     </Button>
                                 </div>
-                                <div className="grid grid-cols-2 w-full gap-2" style={{ marginTop: "30px" }}>
+                                <div className="grid grid-cols-2 md w-full gap-2" style={{ marginTop: "30px" }}>
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                                         <DatePicker
                                             label="Starting date"

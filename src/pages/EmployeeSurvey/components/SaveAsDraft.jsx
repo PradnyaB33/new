@@ -12,6 +12,7 @@ import {
   DialogContent,
   CircularProgress,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import UserProfile from "../../../hooks/UserData/useUser";
 import { UseContext } from "../../../State/UseState/UseContext";
@@ -21,6 +22,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const SaveAsDraft = () => {
   //hooks
@@ -32,7 +34,7 @@ const SaveAsDraft = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const organisationId = user?.organizationId;
-  console.log("user//..", user);
+
   //get authToken
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -41,6 +43,7 @@ const SaveAsDraft = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentSurveyId, setCurrentSurveyId] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  const [draftSurvey, setDraftSurvey] = useState(false)
 
   //get draft survey
   const { data: surveys, isLoading, isError } = useQuery(
@@ -113,94 +116,115 @@ const SaveAsDraft = () => {
     handleCloseConfirmation();
   };
 
+  const handleDraftSurvey = () => {
+    setDraftSurvey(!draftSurvey)
+  }
+
   return (
     <div>
-      <div className="p-4 border-y-[.5px] border-gray-300">
-        <div className="flex justify-end gap-3 mb-3 md:mb-0 w-full md:w-auto">
-          <TextField
-            placeholder="Search"
-            variant="outlined"
-            size="small"
-            sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
-          />
+      <div className="flex  justify-between  gap-3 w-full border-gray-300 my-2">
+        <div className="flex justify-start ">
+          <Typography variant="p">
+            Draft Survey
+          </Typography>
+        </div>
+        <div className="flex justify-end">
+          <AddCircleOutlineIcon style={{ width: "40px" }} onClick={handleDraftSurvey} />
+          <Typography variant="p" className="">
+            Count: {surveys?.length}
+          </Typography>
         </div>
       </div>
-      {isLoading ? (
-        <div className="flex justify-center p-4">
-          <CircularProgress />
-        </div>
-      ) : isError ? (
-        <div className="flex justify-center p-4 text-red-500">
-          Error fetching data
-        </div>
-      ) : surveys && surveys.length > 0 ? (
-        <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-          <table className="min-w-full bg-white text-left !text-sm font-light">
-            <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-              <tr className="!font-semibold">
-                <th scope="col" className="!text-left pl-8 py-3">
-                  Title
-                </th>
-                <th scope="col" className="!text-left pl-8 py-3">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {surveys.map((survey) => (
-                <tr key={survey._id} className="!font-medium border-b ">
-                  <td className="!text-left pl-8 py-3">
-                    {DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } })}
-                  </td>
-                  <td className="!text-left pl-9 py-3">
-                    <MoreVert
-                      onClick={(e) => handleClick(e, survey._id)}
-                      className="cursor-pointer"
-                    />
-                    <Menu
-                      elevation={2}
-                      anchorEl={anchorEl}
-                      open={Boolean(anchorEl && currentSurveyId === survey._id)}
-                      onClose={handleCloseIcon}
-                    >
-                      <Tooltip title="Edit Survey">
-                        <MenuItem onClick={() => handleEditSurvey(survey._id)}>
-                          <EditIcon
-                            color="primary"
-                            aria-label="edit"
-                            style={{
-                              color: "#2196f3",
-                              marginRight: "10px",
-                            }}
-                          />
-                          Edit
-                        </MenuItem>
-                      </Tooltip>
-                      <Tooltip title="Delete Survey">
-                        <MenuItem onClick={() => handleDeleteConfirmation(survey._id)}>
-                          <DeleteOutlineIcon
-                            color="primary"
-                            aria-label="delete"
-                            style={{
-                              color: "#f50057",
-                              marginRight: "10px",
-                            }}
-                          />
-                          Delete
-                        </MenuItem>
-                      </Tooltip>
-                    </Menu>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <section className="py-6 px-8 w-full">
-          <p>Nothing to draft</p>
-        </section>
-      )}
+      {draftSurvey ? (
+        <>
+          <div className="p-4 border-y-[.5px] border-gray-300">
+            <div className="flex justify-end gap-3 mb-3 md:mb-0 w-full md:w-auto">
+              <TextField
+                placeholder="Search"
+                variant="outlined"
+                size="small"
+                sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
+              />
+            </div>
+          </div>
+          {isLoading ? (
+            <div className="flex justify-center p-4">
+              <CircularProgress />
+            </div>
+          ) : isError ? (
+            <div className="flex justify-center p-4 text-red-500">
+              Error fetching data
+            </div>
+          ) : surveys && surveys.length > 0 ? (
+            <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
+              <table className="min-w-full bg-white text-left !text-sm font-light">
+                <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+                  <tr className="!font-semibold">
+                    <th scope="col" className="!text-left pl-8 py-3">
+                      Title
+                    </th>
+                    <th scope="col" className="!text-left pl-8 py-3">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {surveys.map((survey) => (
+                    <tr key={survey._id} className="!font-medium border-b ">
+                      <td className="!text-left pl-8 py-3">
+                        {DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } })}
+                      </td>
+                      <td className="!text-left pl-9 py-3">
+                        <MoreVert
+                          onClick={(e) => handleClick(e, survey._id)}
+                          className="cursor-pointer"
+                        />
+                        <Menu
+                          elevation={2}
+                          anchorEl={anchorEl}
+                          open={Boolean(anchorEl && currentSurveyId === survey._id)}
+                          onClose={handleCloseIcon}
+                        >
+                          <Tooltip title="Edit Survey">
+                            <MenuItem onClick={() => handleEditSurvey(survey._id)}>
+                              <EditIcon
+                                color="primary"
+                                aria-label="edit"
+                                style={{
+                                  color: "#2196f3",
+                                  marginRight: "10px",
+                                }}
+                              />
+                              Edit
+                            </MenuItem>
+                          </Tooltip>
+                          <Tooltip title="Delete Survey">
+                            <MenuItem onClick={() => handleDeleteConfirmation(survey._id)}>
+                              <DeleteOutlineIcon
+                                color="primary"
+                                aria-label="delete"
+                                style={{
+                                  color: "#f50057",
+                                  marginRight: "10px",
+                                }}
+                              />
+                              Delete
+                            </MenuItem>
+                          </Tooltip>
+                        </Menu>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <section className="py-6 px-8 w-full">
+              <p>Nothing to draft</p>
+            </section>
+          )}
+        </>
+      ) : null}
 
       <Dialog
         open={deleteConfirmation !== null}

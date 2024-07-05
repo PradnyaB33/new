@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { CircularProgress, IconButton, Button } from "@mui/material";
+import { CircularProgress, IconButton, Button, FormControlLabel, Checkbox, Radio, RadioGroup, FormControl, TextField, Select, MenuItem } from "@mui/material";
 import { UseContext } from "../../../State/UseState/UseContext";
 import UserProfile from "../../../hooks/UserData/useUser";
 import DOMPurify from "dompurify";
 import { West } from "@mui/icons-material";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import { useQuery, useMutation } from 'react-query';
 import { TestContext } from "../../../State/Function/Main";
@@ -23,10 +23,10 @@ const EmployeeSurveyForm = () => {
     const user = getCurrentUser();
     const organisationId = user?.organizationId;
 
-    //useForm 
+    // useForm 
     const { control, handleSubmit, formState: { errors } } = useForm();
 
-    //Get Form
+    // Get Form
     const { data: surveyData, error, isLoading } = useQuery(
         ['survey', organisationId, surveyId, authToken],
         async () => {
@@ -42,7 +42,7 @@ const EmployeeSurveyForm = () => {
         }
     );
 
-    //Post Data
+    // Post Data
     const mutation = useMutation(
         async (data) => {
             await axios.post(
@@ -59,7 +59,7 @@ const EmployeeSurveyForm = () => {
             onSuccess: (response) => {
                 if (response.status === 201 || response.status === 200) {
                     navigate(`/organisation/${organisationId}/employee-survey`);
-                };
+                }
                 handleAlert(true, "success", "Saved survey response successfully");
             },
             onError: (error) => {
@@ -94,6 +94,9 @@ const EmployeeSurveyForm = () => {
         return <div>Error fetching survey data</div>;
     }
 
+    const handleClose = () => {
+        navigate(`/organisation/${organisationId}/employee-survey`);
+    };
     return (
         <div className="bg-gray-50 min-h-screen h-auto font-family">
             <header className="text-xl w-full pt-6 flex flex-col md:flex-row items-start md:items-center gap-2 bg-white shadow-md p-4">
@@ -126,7 +129,7 @@ const EmployeeSurveyForm = () => {
                                 {DOMPurify.sanitize(surveyData?.description, { USE_PROFILES: { html: false } })}
                             </p>
                             <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-1 space-y-2 flex-col">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                                     {surveyData?.questions.map((q, index) => (
                                         <div key={q._id}>
                                             <div>
@@ -145,21 +148,80 @@ const EmployeeSurveyForm = () => {
                                                         error={errors[`answer_${index}`]}
                                                     />
                                                 )}
+                                                {q.questionType === "Paragraph" && (
+                                                    <AuthInputFiled
+                                                        name={`answer_${index}`}
+                                                        control={control}
+                                                        type="textarea"
+                                                        placeholder="Enter detailed answer*"
+                                                        readOnly={false}
+                                                        maxLimit={150}
+                                                        errors={errors}
+                                                        error={errors[`answer_${index}`]}
+                                                    />
+                                                )}
                                                 {q.questionType === "Checkboxes" && (
                                                     q.options.map((option, optIndex) => (
-                                                        <div key={optIndex} className="flex">
-                                                            <div className="flex justify-start">
-                                                                <AuthInputFiled
-                                                                    name={`question_${index}_option_${optIndex}`}
-                                                                    control={control}
-                                                                    type="checkbox"
-                                                                    errors={errors}
-                                                                    error={errors[`question_${index}_option_${optIndex}`]}
-                                                                />
-                                                            </div>
-                                                            <span className="flex justify-start">{option}</span>
+                                                        <div key={optIndex} className="flex items-center">
+                                                            <Controller
+                                                                name={`question_${index}_option_${optIndex}`}
+                                                                control={control}
+                                                                render={({ field }) => (
+                                                                    <Checkbox {...field} />
+                                                                )}
+                                                            />
+                                                            <span className="ml-2">{option}</span>
                                                         </div>
                                                     ))
+                                                )}
+                                                {q.questionType === "Dropdown" && (
+                                                    <Controller
+                                                        name={`answer_${index}`}
+                                                        control={control}
+                                                        render={({ field }) => (
+                                                            <Select {...field} fullWidth>
+                                                                {q.options.map((option, optIndex) => (
+                                                                    <MenuItem key={optIndex} value={option}>
+                                                                        {option}
+                                                                    </MenuItem>
+                                                                ))}
+                                                            </Select>
+                                                        )}
+                                                    />
+                                                )}
+                                                {q.questionType === "Date" && (
+                                                    <Controller
+                                                        name={`answer_${index}`}
+                                                        control={control}
+                                                        render={({ field }) => (
+                                                            <TextField
+                                                                {...field}
+                                                                type="date"
+                                                                fullWidth
+                                                                InputLabelProps={{ shrink: true }}
+                                                            />
+                                                        )}
+                                                    />
+                                                )}
+                                                {q.questionType === "Multi-choice" && (
+                                                    <FormControl component="fieldset">
+                                                        <Controller
+                                                            name={`answer_${index}`}
+                                                            control={control}
+                                                            render={({ field }) => (
+                                                                <RadioGroup {...field}>
+                                                                    {q.options.map((option, optIndex) => (
+                                                                        <FormControlLabel
+                                                                            key={optIndex}
+                                                                            value={option}
+                                                                            control={<Radio />}
+                                                                            label={option}
+                                                                        />
+                                                                    ))}
+                                                                </RadioGroup>
+                                                            )}
+                                                        />
+                                                    </FormControl>
                                                 )}
                                             </div>
                                         </div>
@@ -168,7 +230,14 @@ const EmployeeSurveyForm = () => {
                                 <div className="flex gap-4 mt-4 justify-end">
                                     <Button type="submit" variant="contained" color="primary" className="mt-4">
                                         Submit
-                                    </Button></div>
+                                    </Button>
+                                    <Button type="button" variant="outlined" color="primary">
+                                        Save For Now
+                                    </Button>
+                                    <Button onClick={handleClose} variant="outlined" color="error">
+                                        Close
+                                    </Button>
+                                </div>
                             </form>
                         </div>
                     </div>
