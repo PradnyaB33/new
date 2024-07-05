@@ -1,5 +1,4 @@
 import {
-  AssignmentTurnedIn,
   Business,
   Category,
   CircleNotifications,
@@ -728,15 +727,15 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <LocationOn className=" !text-[1.2em] text-[#67748E]" />,
             text: "Geo Fencing",
           },
-          {
-            key: "empNotification",
-            isVisible: ["Employee"].includes(role),
-            link: "/emp-notification",
-            icon: (
-              <AssignmentTurnedIn className=" !text-[1.2em] text-[#67748E]" />
-            ),
-            text: "Remote Punching Status",
-          },
+          // {
+          //   key: "empNotification",
+          //   isVisible: ["Employee"].includes(role),
+          //   link: "/emp-notification",
+          //   icon: (
+          //     <AssignmentTurnedIn className=" !text-[1.2em] text-[#67748E]" />
+          //   ),
+          //   text: "Remote Punching Status",
+          // },
         ],
       },
 
