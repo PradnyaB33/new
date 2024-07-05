@@ -268,6 +268,7 @@ const AuthInputFiled = ({
                   <Select
                     isClearable={isClearable}
                     aria-errormessage=""
+                    id={name}
                     placeholder={placeholder}
                     styles={{
                       control: (styles) => ({

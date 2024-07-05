@@ -26,7 +26,7 @@ import axios from "axios";
 import { format } from "date-fns";
 import moment from "moment";
 import React, { useContext, useMemo, useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import Select from "react-select";
 import { TestContext } from "../../../../State/Function/Main";
 import EmptyAlertBox from "../../../../components/EmptyAlertBox";
@@ -247,8 +247,6 @@ const GoalsTable = ({ performance, isError }) => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
 
-  const [isOptions, setIsOptions] = useState(false);
-
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
   };
@@ -328,7 +326,7 @@ const GoalsTable = ({ performance, isError }) => {
     //eslint-disable-next-line
   }, []);
 
-  const acceptGoal = async (status) => {
+  const acceptGoal = useMutation(async (status) => {
     try {
       const data = {
         status,
@@ -355,20 +353,7 @@ const GoalsTable = ({ performance, isError }) => {
     } catch (e) {
       console.log(e);
     }
-  };
-
-  console.log(
-    performance?.isMidGoal
-      ? true
-      : performance?.stages === "Goal setting" &&
-          isTimeFinish &&
-          (role !== "Employee"
-            ? true
-            : role === "Employee" && performance.isSelfGoal
-            ? true
-            : false),
-    "current data"
-  );
+  });
 
   return (
     <section className=" py-0 mb-10 ">
@@ -752,16 +737,17 @@ const GoalsTable = ({ performance, isError }) => {
         </div>
         <Divider variant="fullWidth" orientation="horizontal" />
 
-        {(role === "Employee" &&
-          performance?.stages !== "Goal setting" &&
-          openMenu?.status !== "Goal Submitted" &&
-          openMenu?.approverId !== user._id) ||
-          (performance?.stages !==
-            "Monitoring stage/Feedback collection stage" &&
-            role !== "Manager") ||
-          (openMenu?.status !== "Goal Rejected" && role !== "Employee" && (
-            <h1 className="py-2 px-4 w-full h-full ">No options</h1>
-          ))}
+        {role === "Employee" &&
+        openMenu?.goalStatus === "Pending" &&
+        openMenu?.approverId !== user._id &&
+        performance?.stages !== "Monitoring stage/Feedback collection stage" &&
+        role !== "Manager" &&
+        openMenu?.status !== "Goal Rejected" &&
+        role !== "Employee" ? (
+          <h1 className="py-2 px-4 w-full h-full ">No options</h1>
+        ) : (
+          <></>
+        )}
 
         {role !== "Employee" &&
           openMenu?.goalStatus === "Pending" &&
@@ -769,7 +755,7 @@ const GoalsTable = ({ performance, isError }) => {
             <>
               <MenuItem
                 className="!p-0"
-                onClick={() => acceptGoal("Goal Approved")}
+                onClick={() => acceptGoal.mutate("Goal Approved")}
               >
                 <div className="hover:!bg-green-500  flex  w-full h-full items-center hover:!text-white transition-all gap-4  py-2 px-4">
                   Approve goal
@@ -777,7 +763,7 @@ const GoalsTable = ({ performance, isError }) => {
               </MenuItem>
               <MenuItem
                 className="!p-0"
-                onClick={() => acceptGoal("Goal Rejected")}
+                onClick={() => acceptGoal.mutate("Goal Rejected")}
               >
                 <div className="hover:!bg-red-500 !text-red-500 flex  w-full h-full items-center hover:!text-white transition-all gap-4  py-2 px-4">
                   Reject Goal

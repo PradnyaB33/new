@@ -4,7 +4,12 @@ import EmptyAlertBox from "../../../../components/EmptyAlertBox";
 import DashboardModel from "../GoalTable/Modal/DashboardModel";
 import TabelSkeleton from "../GoalTable/Skelton/TabelSkeleton";
 
-const DashboardTable = ({ tableData, role, tableFetching, performance }) => {
+const DashboardTable = ({
+  tableData = [],
+  role,
+  tableFetching,
+  performance,
+}) => {
   // const counts = tableData?.reduce((acc, record) => {
   //   if (record.managerRating) {
   //     if (!acc[record.managerRating]) {

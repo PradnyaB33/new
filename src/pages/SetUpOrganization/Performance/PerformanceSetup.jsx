@@ -308,6 +308,18 @@ const PerformanceSetup = () => {
                   error={errors.goals}
                 />
 
+                <AuthInputFiled
+                  name="stages"
+                  icon={ListAlt}
+                  control={control}
+                  options={stagesOptions}
+                  type="select"
+                  placeholder="Stages"
+                  label="Select Stage *"
+                  errors={errors}
+                  error={errors.stages}
+                />
+
                 <div className="grid grid-cols-2 gap-4">
                   <AuthInputFiled
                     name="startdate"
@@ -329,18 +341,6 @@ const PerformanceSetup = () => {
                     error={errors.enddate}
                   />
                 </div>
-
-                <AuthInputFiled
-                  name="stages"
-                  icon={ListAlt}
-                  control={control}
-                  options={stagesOptions}
-                  type="select"
-                  placeholder="Stages"
-                  label="Select Stage *"
-                  errors={errors}
-                  error={errors.stages}
-                />
 
                 <AuthInputFiled
                   name="ratings"

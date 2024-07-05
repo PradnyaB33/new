@@ -32,11 +32,11 @@ const PerformanceDashboard = () => {
       queryKey: ["performanceDashTable"],
       queryFn: () => getPerformanceTable({ authToken, role, organisationId }),
     },
-    { enabled: role === "Manager" || role === "HR" }
+    { enabled: role === "Manager" || role === "HR" || role === "Super-Admin" }
   );
 
   const goalStatusCounts =
-    role === "Employee"
+    tableData?.length <= 0
       ? []
       : tableData?.reduce((acc, record) => {
           if (record.goals && record.goals.length) {
