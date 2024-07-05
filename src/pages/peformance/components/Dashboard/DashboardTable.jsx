@@ -5,16 +5,16 @@ import DashboardModel from "../GoalTable/Modal/DashboardModel";
 import TabelSkeleton from "../GoalTable/Skelton/TabelSkeleton";
 
 const DashboardTable = ({ tableData, role, tableFetching, performance }) => {
-  const counts = tableData?.reduce((acc, record) => {
-    if (record.managerRating) {
-      if (!acc[record.managerRating]) {
-        acc[record.managerRating] = 0;
-      }
-      acc[record.managerRating]++;
-    }
+  // const counts = tableData?.reduce((acc, record) => {
+  //   if (record.managerRating) {
+  //     if (!acc[record.managerRating]) {
+  //       acc[record.managerRating] = 0;
+  //     }
+  //     acc[record.managerRating]++;
+  //   }
 
-    return acc;
-  }, {});
+  //   return acc;
+  // }, {});
 
   const [previewModal, setPreviewModal] = useState(false);
   const [previewId, setPreviewId] = useState(null);

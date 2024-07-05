@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import React, { useState } from "react";
+import React from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import usePerformanceApi from "../../../hooks/Performance/usePerformanceApi";
@@ -13,7 +13,7 @@ import Message from "../components/Message";
 const PerformanceDashboard = () => {
   const user = UserProfile().getCurrentUser();
   const role = UserProfile().useGetCurrentRole();
-  const [employeeGoals, setEmployeeGoals] = useState();
+  // const [employeeGoals, setEmployeeGoals] = useState();
   const { organisationId } = useParams();
   console.log(`🚀 ~ organisationId:`, organisationId);
   const authToken = useAuthToken();
