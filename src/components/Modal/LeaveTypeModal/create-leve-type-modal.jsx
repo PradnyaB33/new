@@ -73,8 +73,6 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
         handleClose();
       },
       onError: (data) => {
-        console.log(`🚀 ~ file: create-leve-type-modal.jsx:72 ~ data:`, data);
-        console.log("error");
         handleAlert(
           true,
           "error",
@@ -96,7 +94,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
   return (
     <ReusableModal heading={"Add leave type"} open={open} onClose={handleClose}>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <Stack width={400}>
+        <Stack className="w-[-webkit-fill-available]">
           <AuthInputFiled
             name="leaveName"
             icon={WorkOffOutlined}

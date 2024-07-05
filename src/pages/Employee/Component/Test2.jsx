@@ -131,7 +131,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       path: ["confirmPassword"],
     });
 
-  const { control, formState, handleSubmit, getValues, setValue } = useForm({
+  const { control, formState, handleSubmit, setValue } = useForm({
     defaultValues: {
       designation: designation,
       profile: profile,
@@ -149,7 +149,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     resolver: zodResolver(EmployeeSchema),
   });
 
-  console.log(`🚀 ~ file: Test2.jsx:153 ~ getValues:`, getValues());
   const { isFetching } = useQuery(
     ["employeeId", employeeId],
     async () => {
@@ -168,7 +167,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     },
     {
       onSuccess: (data) => {
-        console.log("data" , data);
+        console.log("data", data);
         if (data) {
           setValue("empId", data.employee.empId || "");
           setValue("companyemail", data.employee.companyemail || "");

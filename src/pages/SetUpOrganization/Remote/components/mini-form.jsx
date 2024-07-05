@@ -3,7 +3,12 @@ import { Button } from "@mui/material";
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Business, LocationOn, Money } from "@mui/icons-material";
+import {
+  Business,
+  EmojiEmotions,
+  LocationOn,
+  Money,
+} from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
@@ -12,6 +17,7 @@ const organizationSchema = z.object({
   allowanceQuantity: z.string(),
   dualWorkflow: z.boolean(),
   geoFencing: z.boolean(),
+  faceRecognition: z.boolean(),
 });
 
 const MiniForm = ({ data, mutate }) => {
@@ -23,12 +29,12 @@ const MiniForm = ({ data, mutate }) => {
         : "0",
       dualWorkflow: data?.remotePunchingObject?.dualWorkflow || false,
       geoFencing: data?.remotePunchingObject?.geoFencing || false,
+      faceRecognition: data?.remotePunchingObject?.faceRecognition || false,
     },
     resolver: zodResolver(organizationSchema),
   });
   const { errors } = formState;
   const onSubmit = (data) => {
-    console.log(`🚀 ~ file: RemoteSetup.jsx:35 ~ data:`, data);
     mutate(data);
   };
   return (
@@ -58,6 +64,19 @@ const MiniForm = ({ data, mutate }) => {
           error={errors.geoFencing}
           descriptionText={
             "Enabling Geo Fencing will allow the employee to punch in only from the allowed location."
+          }
+        />
+        <AuthInputFiled
+          name="faceRecognition"
+          icon={EmojiEmotions}
+          control={control}
+          type="checkbox"
+          placeholder="Face Recognition"
+          label="Face Recognition"
+          errors={errors}
+          error={errors.faceRecognition}
+          descriptionText={
+            "Enabling Face Recognition will allow the employee to punch in only after face recognition."
           }
         />
         <AuthInputFiled

@@ -11,7 +11,6 @@ import { Link, useLocation, useParams } from "react-router-dom";
 const SetupSideBar = ({ children }) => {
   const location = useLocation();
   const { id } = useParams("");
-  console.log(`🚀 ~ file: SetupSideBar.jsx:14 ~ id:`, id);
 
   const data = [
     {

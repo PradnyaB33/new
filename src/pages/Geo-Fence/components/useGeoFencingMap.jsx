@@ -55,7 +55,7 @@ const useGeoFencingMap = ({ watch, onClose }) => {
       onClose();
     },
     onError: (error) => {
-      console.log(`🚀 ~ file: useGeoFencingMap.jsx:67 ~ error`, error);
+      console.error(`🚀 ~ file: useGeoFencingMap.jsx:67 ~ error`, error);
       handleAlert(true, "error", error?.response?.data?.message || "Error");
     },
   });

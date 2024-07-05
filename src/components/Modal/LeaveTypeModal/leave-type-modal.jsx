@@ -81,7 +81,7 @@ const LeaveTypeModal = ({ handleClose, open, id, leaveType }) => {
       onClose={handleClose}
     >
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <Stack spacing={2} width={400}>
+        <Stack spacing={2} className="w-[-webkit-fill-available]">
           <AuthInputFiled
             name="leaveName"
             icon={WorkOffOutlined}

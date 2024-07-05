@@ -103,7 +103,6 @@ const Step2 = ({ nextStep, departments, orgTrainingType }) => {
     resolver: zodResolver(trainingDetailSchema),
   });
   const { errors } = formState;
-  console.log(`🚀 ~ file: page.jsx:107 ~ errors:`, errors);
   const onSubmit = (data) => {
     setStep2(data);
     nextStep();

@@ -11,6 +11,7 @@ import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
+import useLoadModel from "../../hooks/FaceMode/useFaceModal";
 import UserProfile from "../../hooks/UserData/useUser";
 import useHook from "../../hooks/UserProfile/useHook";
 import { getSignedUrl, uploadFile } from "../../services/api";
@@ -23,11 +24,12 @@ const EmployeeProfile = () => {
   const user = getCurrentUser();
   const userId = user._id;
   const queryClient = useQueryClient();
-  const [error, setError] = useState();
   const { UserInformation } = useHook();
   const [url, setUrl] = useState();
   const fileInputRef = useRef();
   const [file, setFile] = useState();
+  const { detectFaceOnlyMutation, uploadImageToBackendMutation } =
+    useLoadModel();
 
   const UserProfileSchema = z.object({
     additional_phone_number: z
@@ -79,20 +81,32 @@ const EmployeeProfile = () => {
         );
         setValue("status_message", data?.employee?.status_message);
       },
-      onError: () => {
-        setError("Error fetching profile data.");
-      },
+      onError: () => {},
     }
   );
-  console.log({profileData , isLoading});
+  console.log(
+    `🚀 ~ file: UserProfile.jsx:97 ~ profileData, isLoading:`,
+    profileData,
+    isLoading
+  );
 
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type.startsWith("image/")) {
       setFile(selectedFile);
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setUrl(reader.result);
+      reader.onloadend = async () => {
+        const img = new Image();
+        img.src = reader.result;
+        const faces = await detectFaceOnlyMutation({
+          img,
+        });
+
+        if (faces.length === 1) {
+          setUrl(() => reader.result);
+        } else {
+          setUrl(UserInformation?.user_logo_url);
+        }
       };
       reader.readAsDataURL(selectedFile);
     } else {
@@ -117,9 +131,7 @@ const EmployeeProfile = () => {
         handleAlert(true, "success", "Additional details added successfully!");
         reset();
       },
-      onError: () => {
-        setError("Error updating additional details.");
-      },
+      onError: () => {},
     }
   );
 
@@ -130,22 +142,19 @@ const EmployeeProfile = () => {
         const signedUrlResponse = await getSignedUrl();
         const signedUrl = signedUrlResponse.url;
         imageUrl = await uploadFile(signedUrl, file);
+        await uploadImageToBackendMutation();
       }
 
       const requestData = {
         ...data,
         user_logo_url: imageUrl?.Location.split("?")[0],
       };
-      console.log(requestData);
       await AddAdditionalInformation.mutateAsync(requestData);
     } catch (error) {
       console.error(error);
       handleAlert(true, "error", "Error updating additional details");
-      setError("Error updating additional details");
     }
   };
-
-  console.log(error);
 
   return (
     <div>
@@ -180,8 +189,9 @@ const EmployeeProfile = () => {
                 <div className="w-full h-full flex flex-col justify-center items-center">
                   {url || UserInformation?.user_logo_url ? (
                     <img
+                      id="image-1"
                       src={url || UserInformation?.user_logo_url}
-                      alt="Selected"
+                      alt="profile-pic"
                       style={{
                         width: "150px",
                         height: "150px",
@@ -192,6 +202,7 @@ const EmployeeProfile = () => {
                     <Skeleton variant="circular" width="150px" height="150px" />
                   )}
                   <button
+                    type="button"
                     onClick={() => fileInputRef.current.click()}
                     className="flex justify-center h-full bg-[#1976d2] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
                   >

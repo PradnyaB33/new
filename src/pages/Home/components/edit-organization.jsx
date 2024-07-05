@@ -67,8 +67,6 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
     resolver: zodResolver(organizationSchema),
   });
   const onSubmit = async (data) => {
-    console.log(`🚀 ~ file: edit-organization.jsx:45 ~ item:`, item);
-
     updateOrganizationMutation.mutate({
       id: item?._id,
       data,
@@ -76,7 +74,6 @@ const EditOrganisation = ({ item, handleCloseConfirmation }) => {
     });
   };
   const { errors } = formState;
-  console.log(`🚀 ~ file: edit-organization.jsx:72 ~ errors:`, errors);
 
   return (
     <div className="flex flex-col gap-4 mt-3">

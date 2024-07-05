@@ -421,10 +421,25 @@ const AttendanceBioModal = ({
     }
   };
 
+<<<<<<< HEAD
   const handleSync = async () => {
     try {
       if (!emailSearch) {
         handleAlert(true, "error", "Please enter an email address to search.");
+=======
+  console.log(checkedEmployees);
+
+  // Validate email format
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const handleSync = async () => {
+    try {
+      if (!validateEmail(emailSearch)) {
+        handleAlert(true, "error", "Please enter a valid email address.");
+>>>>>>> cf5f93f59375f74830cdf2c4e289c578528a77e4
         return;
       }
 
@@ -585,7 +600,7 @@ const AttendanceBioModal = ({
                     ))}
               </tbody>
             </table>
-            <nav
+            {/* <nav
               style={{
                 display: "flex",
                 justifyContent: "center",
@@ -643,6 +658,98 @@ const AttendanceBioModal = ({
                     >
                       {n}
                     </a>
+                  </li>
+                ))}
+                <li style={{ display: "inline-block" }} className="page-item">
+                  <button
+                    style={{
+                      color: "#007bff",
+                      padding: "8px 12px",
+                      border: "1px solid #007bff",
+                      textDecoration: "none",
+                      borderRadius: "4px",
+                      transition: "all 0.3s ease",
+                      cursor: "pointer",
+                    }}
+                    className="page-link"
+                    onClick={nextPage}
+                  >
+                    Next
+                  </button>
+                </li>
+              </ul>
+            </nav> */}
+            <nav
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "30px",
+                marginBottom: "20px",
+              }}
+            >
+              <ul className="pagination" style={{ display: "inline-block" }}>
+                <li
+                  style={{ display: "inline-block", marginRight: "5px" }}
+                  className="page-item"
+                >
+                  <button
+                    style={{
+                      color: "#007bff",
+                      padding: "8px 12px",
+                      border: "1px solid #007bff",
+                      textDecoration: "none",
+                      borderRadius: "4px",
+                      transition: "all 0.3s ease",
+                      cursor: "pointer",
+                    }}
+                    className="page-link"
+                    onClick={prePage}
+                  >
+                    Prev
+                  </button>
+                </li>
+                {numbers?.map((n, index) => (
+                  <li
+                    key={index}
+                    className={`page-item ${currentPage === n ? "active" : ""}`}
+                    style={{
+                      display: "inline-block",
+                      marginRight: "5px",
+                    }}
+                  >
+                    {n === "..." ? (
+                      <span
+                        style={{
+                          color: "#007bff",
+                          padding: "8px 12px",
+                          border: "1px solid transparent",
+                          textDecoration: "none",
+                          borderRadius: "4px",
+                          transition: "all 0.3s ease",
+                          cursor: "default",
+                        }}
+                      >
+                        ...
+                      </span>
+                    ) : (
+                      <a
+                        href={`#${n}`}
+                        style={{
+                          color: currentPage === n ? "#fff" : "#007bff",
+                          backgroundColor:
+                            currentPage === n ? "#007bff" : "transparent",
+                          padding: "8px 12px",
+                          border: "1px solid #007bff",
+                          textDecoration: "none",
+                          borderRadius: "4px",
+                          transition: "all 0.3s ease",
+                        }}
+                        className="page-link"
+                        onClick={() => changePage(n)}
+                      >
+                        {n}
+                      </a>
+                    )}
                   </li>
                 ))}
                 <li style={{ display: "inline-block" }} className="page-item">

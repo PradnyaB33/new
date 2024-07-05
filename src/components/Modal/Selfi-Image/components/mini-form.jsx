@@ -2,6 +2,7 @@ import { Button } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import useLocationMutation from "../../../../hooks/QueryHook/Location/mutation";
 import useSelfieStore from "../../../../hooks/QueryHook/Location/zustand-store";
+import useSelfieFaceDetect from "../useSelfieFaceDetect";
 
 const MiniForm = () => {
   const { media } = useSelfieStore();
@@ -9,13 +10,15 @@ const MiniForm = () => {
   const videoRef = useRef();
   const [imageCaptured, setImageCaptured] = useState(false);
   const { getImageUrl } = useLocationMutation();
+  const { faceDetectedData, detectFaceOnlyMutation, matchFacesMutation } =
+    useSelfieFaceDetect();
 
   useEffect(() => {
     let video = videoRef.current;
     video.srcObject = media;
   }, [media]);
 
-  const takePicture = () => {
+  const takePicture = async () => {
     let width = 640;
     let height = 480;
     let photo = photoRef.current;
@@ -23,8 +26,28 @@ const MiniForm = () => {
     photo.width = width;
     photo.height = height;
     let ctx = photo.getContext("2d");
-    ctx.drawImage(video, 0, 0, photo.width, photo.height);
+
+    await ctx.drawImage(video, 0, 0, photo.width, photo.height);
     setImageCaptured(true);
+
+    const dataUrl = photo.toDataURL("image/png");
+
+    // Create a new Image object and set its src to the data URL
+    const img = new Image();
+    img.src = dataUrl;
+
+    const faces = await detectFaceOnlyMutation({
+      img,
+    });
+
+    const descriptor = new Float32Array(faceDetectedData?.data?.descriptor);
+    if (faces?.length !== 1) {
+      return setImageCaptured(false);
+    }
+    await matchFacesMutation({
+      currentDescriptor: faces[0]?.descriptor,
+      descriptor,
+    });
   };
 
   const clearImage = () => {

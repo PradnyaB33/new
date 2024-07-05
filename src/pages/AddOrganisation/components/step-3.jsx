@@ -32,7 +32,6 @@ const Step3 = ({ nextStep }) => {
   });
   const { errors } = formState;
   const onSubmit = (data) => {
-    console.log(`🚀 ~ file: step-3.jsx:26 ~ data:`, data);
     setStep3Data(data);
     nextStep();
   };

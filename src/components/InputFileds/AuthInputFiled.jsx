@@ -62,7 +62,6 @@ const AuthInputFiled = ({
   useRange = false,
   asSingle = true,
 }) => {
-  
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
 
@@ -286,10 +285,6 @@ const AuthInputFiled = ({
                     options={options}
                     value={field?.value}
                     onChange={(value) => {
-                      console.log(
-                        `🚀 ~ file: AuthInputFiled.jsx:236 ~ value:`,
-                        value
-                      );
                       if (value === null) {
                         updateField(name, value);
                         field.onChange({ value: undefined, label: undefined });
@@ -429,10 +424,6 @@ const AuthInputFiled = ({
                     }}
                     options={options}
                     onChange={(value) => {
-                      console.log(
-                        `🚀 ~ file: AuthInputFiled.jsx:431 ~ value:`,
-                        value
-                      );
                       field.onChange(
                         value.map((item) => {
                           return item.value;

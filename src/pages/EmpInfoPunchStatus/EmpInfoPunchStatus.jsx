@@ -5,11 +5,12 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { TestContext } from "../../State/Function/Main";
 import AttendanceBioModal from "../../components/Modal/AttedanceBioModal/AttendanceBioModal";
+import Info from "@mui/icons-material/Info";
 
 const EmpInfoPunchStatus = () => {
   const { organisationId } = useParams();
@@ -22,13 +23,19 @@ const EmpInfoPunchStatus = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [fileName, setFileName] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state
   const itemsPerPage = 10;
-  console.log(setTotalPages);
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
+    if (!file) {
+      setFileName("");
+      setTableData([]);
+      return;
+    }
     setFileName(file.name);
     const reader = new FileReader();
+    setLoading(true); // Set loading to true when file upload starts
 
     reader.onload = (event) => {
       const data = event.target.result;
@@ -39,6 +46,7 @@ const EmpInfoPunchStatus = () => {
       setTableData(
         parsedData.slice(2).map((row) => ({ ...row, selected: false }))
       );
+      setLoading(false); // Set loading to false once data is parsed
     };
 
     reader.readAsBinaryString(file);
@@ -59,8 +67,7 @@ const EmpInfoPunchStatus = () => {
     setCurrentPage(1);
   };
 
-  // Filter data based on search criteria
-  const filteredData = (tableData ?? []).filter((row) => {
+  const filteredData = tableData.filter((row) => {
     return (
       row?.[1]?.toLowerCase()?.includes(searchName?.toLowerCase() ?? "") &&
       row?.[0]?.toLowerCase()?.includes(searchId?.toLowerCase() ?? "") &&
@@ -68,22 +75,13 @@ const EmpInfoPunchStatus = () => {
     );
   });
 
-  // Calculate indexes of the items to display based on current page
+  useEffect(() => {
+    setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
+  }, [filteredData.length]);
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredData?.slice(indexOfFirstItem, indexOfLastItem);
-
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const nextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-  };
-
-  const prePage = () => {
-    setCurrentPage((prevPage) => prevPage - 1);
-  };
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleEmployeeSelect = (index) => {
     const selectedEmployeeId = currentItems[index][0];
@@ -107,9 +105,65 @@ const EmpInfoPunchStatus = () => {
       ]);
     }
   };
-  console.log("selected employee", selectedEmployees);
 
-  // for open the modal for display employee
+  const prePage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const changePage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const getPaginationNumbers = () => {
+    const pages = [];
+    const maxPagesToShow = 5;
+    const halfMaxPagesToShow = Math.floor(maxPagesToShow / 2);
+
+    if (totalPages <= maxPagesToShow) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= halfMaxPagesToShow) {
+        for (let i = 1; i <= maxPagesToShow; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(totalPages);
+      } else if (currentPage + halfMaxPagesToShow >= totalPages) {
+        pages.push(1);
+        pages.push("...");
+        for (let i = totalPages - maxPagesToShow + 1; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push("...");
+        for (
+          let i = currentPage - halfMaxPagesToShow;
+          i <= currentPage + halfMaxPagesToShow;
+          i++
+        ) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(totalPages);
+      }
+    }
+
+    return pages;
+  };
+
+  const paginationNumbers = getPaginationNumbers();
+
   const [empModalOpen, setEmpModalOpen] = useState(false);
   const handleEmpModalOpen = () => {
     if (selectedEmployees.length === 0) {
@@ -200,43 +254,44 @@ const EmpInfoPunchStatus = () => {
             </div>
           </div>
 
-          <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-            <table className="min-w-full bg-white text-left !text-sm font-light">
-              <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-                <tr className="!font-semibold">
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Select
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Sr. No
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Employee ID
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    First Name
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Department
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Date
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Punch Time
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Punch State
-                  </th>
-                  <th scope="col" className="!text-left pl-8 py-3">
-                    Area
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentItems &&
-                  currentItems?.length > 0 &&
-                  currentItems?.map((row, index) => (
+          {fileName === "" && (
+            <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+              <article className="flex items-center mb-1 text-red-500 gap-2">
+                <Info className="!text-2xl" />
+                <h1 className="text-lg font-semibold">
+                  Please select the file.
+                </h1>
+              </article>
+              <p>File not found.</p>
+            </section>
+          )}
+
+          {!loading && fileName !== "" && (
+            <div className="overflow-x-auto">
+              <table className="w-full whitespace-nowrap">
+                <thead>
+                  <tr className="bg-gray-200 border-b-2 border-gray-300">
+                    <th className="!text-left pl-8 py-3">
+                      <Tooltip title={"Select the employee"} arrow>
+                        <input
+                          type="checkbox"
+                          disabled={true}
+                          style={{ cursor: "default" }}
+                        />
+                      </Tooltip>
+                    </th>
+                    <th className="!text-left pl-8 py-3">Sr No.</th>
+                    <th className="py-3 pl-8">Employee ID</th>
+                    <th className="py-3 pl-8">Name</th>
+                    <th className="py-3 pl-8">Department</th>
+                    <th className="py-3 pl-8">Date</th>
+                    <th className="py-3 pl-8">Day</th>
+                    <th className="py-3 pl-8">In Time</th>
+                    <th className="py-3 pl-8">Out Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentItems.map((row, index) => (
                     <tr key={index}>
                       <td className="!text-left pl-8 py-3">
                         <Tooltip title={"Select the employee"} arrow>
@@ -261,55 +316,113 @@ const EmpInfoPunchStatus = () => {
                       <td className="py-3 pl-8">{row[6]}</td>
                     </tr>
                   ))}
-              </tbody>
-            </table>
-          </div>
+                </tbody>
+              </table>
+            </div>
+          )}
 
-          {/* Pagination */}
-
-          <nav
-            className="pagination"
-            style={{
-              textAlign: "center",
-              marginTop: "20px",
-              marginBottom: "20px",
-            }}
-          >
-            <Button
-              onClick={prePage}
-              disabled={currentPage === 1}
-              variant="outlined"
-              style={{ marginRight: "10px" }}
+          {loading && (
+            <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+              <article className="flex items-center mb-1 text-red-500 gap-2">
+                <Info className="!text-2xl" />
+                <h1 className="text-lg font-semibold">Loading...</h1>
+              </article>
+              <p>Data is loading.</p>
+            </section>
+          )}
+        </article>
+        <nav
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "30px",
+            marginBottom: "20px",
+          }}
+        >
+          <ul className="pagination" style={{ display: "inline-block" }}>
+            <li
+              style={{ display: "inline-block", marginRight: "5px" }}
+              className="page-item"
             >
-              Prev
-            </Button>
-            {currentPage === 1 && (
-              <Button
-                onClick={() => paginate(2)}
-                variant="outlined"
-                style={{ marginRight: "10px" }}
+              <button
+                style={{
+                  color: "#007bff",
+                  padding: "8px 12px",
+                  border: "1px solid #007bff",
+                  textDecoration: "none",
+                  borderRadius: "4px",
+                  transition: "all 0.3s ease",
+                  cursor: "pointer",
+                }}
+                className="page-link"
+                onClick={prePage}
+              >
+                Prev
+              </button>
+            </li>
+            {paginationNumbers.map((n, index) => (
+              <li
+                key={index}
+                className={`page-item ${currentPage === n ? "active" : ""}`}
+                style={{
+                  display: "inline-block",
+                  marginRight: "5px",
+                }}
+              >
+                {n === "..." ? (
+                  <span
+                    style={{
+                      color: "#007bff",
+                      padding: "8px 12px",
+                      border: "1px solid transparent",
+                      textDecoration: "none",
+                      borderRadius: "4px",
+                      transition: "all 0.3s ease",
+                      cursor: "default",
+                    }}
+                  >
+                    ...
+                  </span>
+                ) : (
+                  <a
+                    href={`#${n}`}
+                    style={{
+                      color: currentPage === n ? "#fff" : "#007bff",
+                      backgroundColor:
+                        currentPage === n ? "#007bff" : "transparent",
+                      padding: "8px 12px",
+                      border: "1px solid #007bff",
+                      textDecoration: "none",
+                      borderRadius: "4px",
+                      transition: "all 0.3s ease",
+                    }}
+                    className="page-link"
+                    onClick={() => changePage(n)}
+                  >
+                    {n}
+                  </a>
+                )}
+              </li>
+            ))}
+            <li style={{ display: "inline-block" }} className="page-item">
+              <button
+                style={{
+                  color: "#007bff",
+                  padding: "8px 12px",
+                  border: "1px solid #007bff",
+                  textDecoration: "none",
+                  borderRadius: "4px",
+                  transition: "all 0.3s ease",
+                  cursor: "pointer",
+                }}
+                className="page-link"
+                onClick={nextPage}
               >
                 Next
-              </Button>
-            )}
-            {currentPage === 2 && (
-              <Button
-                onClick={() => paginate(1)}
-                variant="outlined"
-                style={{ marginRight: "10px" }}
-              >
-                1
-              </Button>
-            )}
-            <Button
-              onClick={nextPage}
-              disabled={currentPage === totalPages}
-              variant="outlined"
-            >
-              Next
-            </Button>
-          </nav>
-        </article>
+              </button>
+            </li>
+          </ul>
+        </nav>
       </Container>
 
       <AttendanceBioModal

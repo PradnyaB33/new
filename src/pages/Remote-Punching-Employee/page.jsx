@@ -16,7 +16,6 @@ const EmployeeRemotePunch = () => {
   }, [mutate]);
 
   const { locationArray, startTime, endTime } = useSelfieStore();
-  console.log(`🚀 ~ file: page.jsx:19 ~ locationArray:`, locationArray);
 
   const { isLoaded } = useJsApiLoader({
     id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,

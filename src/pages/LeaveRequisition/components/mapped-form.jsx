@@ -42,7 +42,6 @@ const Mapped = ({
   const handleChange = async (event) => {
     newAppliedLeaveEvents[index].leaveTypeDetailsId = event.target.value;
     let temp = newAppliedLeaveEvents;
-    console.log(`🚀 ~ file: mapped-form.jsx:40 ~ temp:`, temp);
     let result = await checkLeaveProblem(
       data?.leaveTypes,
       event.target.value,
@@ -71,7 +70,6 @@ const Mapped = ({
       ...subtractedLeaves.filter((item) => item.count < 0),
       ...data?.leaveTypes.filter((item) => item.count > 0),
     ];
-    console.log(`🚀 ~ file: mapped-form.jsx:69 ~ array:`, array);
   }
 
   return (

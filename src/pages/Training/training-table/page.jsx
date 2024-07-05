@@ -6,7 +6,6 @@ import TrainingTableLoading from "./components/loading-skeleton";
 
 const TrainingTable = ({ mainData }) => {
   const { data, isLoading } = useTrainingHook();
-  console.log(`🚀 ~ file: page.jsx:9 ~ data:`, data);
 
   return (
     <>
