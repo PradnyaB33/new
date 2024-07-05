@@ -62,11 +62,13 @@ const DashboardModel = ({ open, handleClose, id }) => {
                 <Close className="!text-[16px]" />
               </IconButton>
             </div>
-
             <div className="space-y-4 pb-4 px-4">
               <div className="flex flex-wrap w-full gap-2 items-center">
                 <div className="px-4 p-2 bg-gray-50 border-gray-200 border rounded-md">
-                  Rating: {empData?.managerRating}
+                  Rating:{" "}
+                  {empData?.managerRating
+                    ? empData?.managerRating
+                    : "Rating not given"}
                 </div>
                 <div className="px-4 p-2 bg-gray-50 border-gray-200 border rounded-md">
                   Goals Completed:{" "}
@@ -92,6 +94,17 @@ const DashboardModel = ({ open, handleClose, id }) => {
                 </div>
               </div>
 
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(
+                    empData?.managerFeedback
+                      ? `Review : ${empData?.managerFeedback}`
+                      : "Review : Not yet reviewed by manager"
+                  ),
+                }}
+                className="px-4 p-2 bg-gray-50 border-gray-200 border rounded-md"
+              ></div>
+
               {/* another */}
               {empData?.goals?.length === 0 ? (
                 <EmptyAlertBox title={"Goals not found for this employee"} />
@@ -108,9 +121,9 @@ const DashboardModel = ({ open, handleClose, id }) => {
                       <th scope="col" className="py-3 text-sm px-2 ">
                         Goal Name
                       </th>
-                      <th scope="col" className="py-3 text-sm px-2 ">
+                      {/* <th scope="col" className="py-3 text-sm px-2 ">
                         Goal Measurements
-                      </th>
+                      </th> */}
                       <th scope="col" className="py-3 text-sm px-2 ">
                         Timeline
                       </th>
@@ -131,12 +144,12 @@ const DashboardModel = ({ open, handleClose, id }) => {
                         <td className="w-max px-2 hover:bg-gray-50 !font-medium   border-b">
                           {goal?.goal}
                         </td>
-                        <td
+                        {/* <td
                           dangerouslySetInnerHTML={{
                             __html: DOMPurify.sanitize(goal?.measurments),
                           }}
                           className="w-max px-2 hover:bg-gray-50 !font-medium   border-b"
-                        ></td>
+                        ></td> */}
 
                         <td className="w-max px-2 hover:bg-gray-50 !font-medium   border-b">
                           {format(new Date(goal?.startDate), "PP")} -{" "}

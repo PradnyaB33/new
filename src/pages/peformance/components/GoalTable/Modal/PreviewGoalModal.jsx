@@ -132,11 +132,11 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
                         format(new Date(getSingleGoal?.endDate), "PP")}
                     </div>
 
-                    {getSingleGoal?.empId === user?._id &&
+                    {getSingleGoal?.empId?._id === user?._id &&
                       getSingleGoal.goalStatus !== "Pending" &&
                       getSingleGoal.goalStatus !== "Goal Rejected" && (
                         <div
-                          className={`${"bg-[ghostwhite]"} flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+                          className={`bg-gray-50  flex rounded-md px-2 border-gray-200 border-[.5px]  items-center`}
                         >
                           {/* <Icon className="text-gray-700" /> */}
                           <Select
@@ -147,6 +147,7 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
                                 ...styles,
                                 borderWidth: "0px",
                                 boxShadow: "none",
+                                backgroundColor: "#f9fafb",
                               }),
                             }}
                             components={{
@@ -155,7 +156,7 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
                             value={GoalStatus?.find(
                               (item) => item.label === getSingleGoal?.goalStatus
                             )}
-                            className={`${"bg-[ghostwhite]"} bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                            className={`bg-gray-50  w-full !outline-none px-2 !shadow-none !border-none !border-0`}
                             options={GoalStatus}
                             onChange={(value) => {
                               SubmitGoal(value);
