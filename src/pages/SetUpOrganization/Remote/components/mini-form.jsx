@@ -3,7 +3,12 @@ import { Button } from "@mui/material";
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Business, LocationOn, Money } from "@mui/icons-material";
+import {
+  Business,
+  EmojiEmotions,
+  LocationOn,
+  Money,
+} from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
@@ -63,7 +68,7 @@ const MiniForm = ({ data, mutate }) => {
         />
         <AuthInputFiled
           name="faceRecognition"
-          icon={LocationOn}
+          icon={EmojiEmotions}
           control={control}
           type="checkbox"
           placeholder="Face Recognition"
