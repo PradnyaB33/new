@@ -1,6 +1,6 @@
 import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect,  useState } from "react";
 import { TestContext } from "../../State/Function/Main";
 import dayjs from "dayjs";
 import { useQuery } from "react-query";
@@ -117,83 +117,7 @@ const useCalculateSalaryQuery = ({
     }
   );
 
-  // to get shifts of employee
-  const selectedMonth = selectedDate.format("M");
-  const selectedYear = selectedDate.format("YYYY");
-  const { data: getShifts } = useQuery(
-    ["shiftAllowance", userId, selectedMonth, selectedYear],
-    async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/get/shifts/${userId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-          params: {
-            month: parseInt(selectedMonth),
-            year: parseInt(selectedYear),
-          },
-        }
-      );
-      return response.data.shiftRequests;
-    }
-  );
-
-  // to get shift count of employee
-  const countShifts = (shifts) => {
-    const shiftCount = {};
-    shifts.forEach((shift) => {
-      const title = shift.title;
-      if (shiftCount[title]) {
-        shiftCount[title]++;
-      } else {
-        shiftCount[title] = 1;
-      }
-    });
-    return shiftCount;
-  };
-  const shiftCounts = useMemo(
-    () => (getShifts ? countShifts(getShifts) : {}),
-    [getShifts]
-  );
-
-  // get the amount of shift
-  const { data: shiftAllowanceAmount } = useQuery(
-    ["shift-allowance-amount"],
-    async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/shifts/${organisationId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      return response.data.shifts;
-    }
-  );
-
-  const shiftAllowances = useMemo(() => {
-    if (shiftAllowanceAmount) {
-      return shiftAllowanceAmount.reduce((acc, shift) => {
-        acc[shift.shiftName.toLowerCase()] = shift.allowance;
-        return acc;
-      }, {});
-    }
-    return {};
-  }, [shiftAllowanceAmount]);
-
-  const [shiftTotalAllowance, setShiftTotalAllowance] = useState(0);
-  useEffect(() => {
-    let total = 0;
-    for (const [shiftTitle, count] of Object.entries(shiftCounts)) {
-      const shiftAllowance = shiftAllowances[shiftTitle.toLowerCase()];
-      if (shiftAllowance) {
-        total += count * shiftAllowance;
-      }
-    }
-    setShiftTotalAllowance(total);
-  }, [shiftCounts, shiftAllowances]);
+  
 
   // to get remote punching amount
   const { data: getremotePuncingAmount } = useQuery(
@@ -234,7 +158,6 @@ const useCalculateSalaryQuery = ({
     publicHolidaysCount,
     formattedDate,
     empLoanAplicationInfo,
-    shiftTotalAllowance,
     remotePunchAllowance,
   };
 };

@@ -1,10 +1,11 @@
 import axios from "axios";
 import dayjs from "dayjs";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import useCalculateSalaryQuery from "../../hooks/CalculateSalaryHook/useCalculateSalaryQuery";
+import { useQuery } from "react-query";
 
 function CalculateSalary() {
   const { handleAlert } = useContext(TestContext);
@@ -12,10 +13,7 @@ function CalculateSalary() {
   const token = cookies["aegis"];
   const { userId, organisationId } = useParams();
   const currentDate = dayjs();
-  // const [selectedDate, setSelectedDate] = useState(currentDate);
-  const [selectedDate, setSelectedDate] = useState(
-    currentDate.subtract(1, "month")
-  );
+  const [selectedDate, setSelectedDate] = useState(currentDate);
   const [numDaysInMonth, setNumDaysInMonth] = useState(0);
   const [employeeSummary, setEmployeeSummary] = useState([]);
   const [paidLeaveDays, setPaidLeaveDays] = useState(0);
@@ -30,12 +28,14 @@ function CalculateSalary() {
     publicHolidaysCount,
     formattedDate,
     empLoanAplicationInfo,
-    shiftTotalAllowance,
     remotePunchAllowance,
   } = useCalculateSalaryQuery({ userId, organisationId, remotePunchingCount });
 
   const handleDateChange = (event) => {
     setSelectedDate(dayjs(event.target.value));
+  };
+
+  useEffect(() => {
     const monthFromSelectedDate = selectedDate.format("M");
     const yearFromSelectedDate = selectedDate.format("YYYY");
     const salaryExists = salaryInfo.some(
@@ -43,12 +43,13 @@ function CalculateSalary() {
         String(salary.month) === monthFromSelectedDate &&
         String(salary.year) === yearFromSelectedDate
     );
-
     console.log(salaryExists);
     setNumDaysInMonth(currentDate.daysInMonth());
     setPaidLeaveDays(0);
     setUnPaidLeaveDays(0);
-  };
+    setShiftTotalAllowance(0);
+    // eslint-disable-next-line
+  }, []);
 
   // to get the leave like unpaid  , paid  remote punching count etc
   const fetchDataAndFilter = async () => {
@@ -102,6 +103,111 @@ function CalculateSalary() {
   }, [employeeSummary, selectedMonth, selectedYear]);
 
   console.log("empsummary", employeeSummary);
+
+  // to get shifts of employee
+  const selectedMonths = selectedDate.format("M");
+  const selectedYears = selectedDate.format("YYYY");
+  const { data: getShifts } = useQuery(
+    ["shiftAllowance", userId, selectedMonths, selectedYears],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/get/shifts/${userId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+          params: {
+            month: parseInt(selectedMonths),
+            year: parseInt(selectedYears),
+          },
+        }
+      );
+      return response.data.shiftRequests;
+    }
+  );
+
+  // to get shift count of employee
+  const countShifts = (shifts) => {
+    const shiftCount = {};
+    shifts.forEach((shift) => {
+      const title = shift.title;
+      if (shiftCount[title]) {
+        shiftCount[title]++;
+      } else {
+        shiftCount[title] = 1;
+      }
+    });
+    return shiftCount;
+  };
+  const shiftCounts = useMemo(
+    () => (getShifts ? countShifts(getShifts) : {}),
+    [getShifts]
+  );
+
+  // get the amount of shift
+  const { data: shiftAllowanceAmount } = useQuery(
+    ["shift-allowance-amount"],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/shifts/${organisationId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return response.data.shifts;
+    }
+  );
+
+  const shiftAllowances = useMemo(() => {
+    if (shiftAllowanceAmount) {
+      return shiftAllowanceAmount.reduce((acc, shift) => {
+        acc[shift.shiftName.toLowerCase()] = shift.allowance;
+        return acc;
+      }, {});
+    }
+    return {};
+  }, [shiftAllowanceAmount]);
+
+  const [shiftTotalAllowance, setShiftTotalAllowance] = useState(0);
+  useEffect(() => {
+    let total = 0;
+    for (const [shiftTitle, count] of Object.entries(shiftCounts)) {
+      const shiftAllowance = shiftAllowances[shiftTitle.toLowerCase()];
+      if (shiftAllowance) {
+        total += count * shiftAllowance;
+      }
+    }
+    setShiftTotalAllowance(total);
+  }, [shiftCounts, shiftAllowances]);
+
+  const fetchRemotePunchingCount = async (userId, startDate, endDate) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/remote-punch-count/${userId}?startDate=${startDate}&endDate=${endDate}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setRemotePunchingCount(response.data.remotePunchingCount || 0);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch remote punching count");
+    }
+  };
+
+  const startDate = selectedDate.startOf("month").format("YYYY-MM-DD");
+  const endDate = selectedDate.endOf("month").format("YYYY-MM-DD");
+
+  useEffect(() => {
+    fetchRemotePunchingCount(userId, startDate, endDate);
+    // eslint-disable-next-line
+  }, [selectedDate, userId, startDate, endDate]);
+
+  console.log("remoute punching count", remotePunchingCount);
 
   // calculate the no fo days employee present
   const calculateDaysEmployeePresent = () => {

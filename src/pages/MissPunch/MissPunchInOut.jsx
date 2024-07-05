@@ -105,11 +105,8 @@ const MissPunchInOut = () => {
                 <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
                   <article className="flex items-center mb-1 text-red-500 gap-2">
                     <Info className="!text-2xl" />
-                    <h1 className="text-lg font-semibold">
-                      No Missed Data Found
-                    </h1>
+                    <h1 className="text-lg font-semibold">No Data Found</h1>
                   </article>
-                  <p>Calculate the hours of employee.</p>
                 </section>
               )}
             </article>
@@ -118,9 +115,8 @@ const MissPunchInOut = () => {
           <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
             <article className="flex items-center mb-1 text-red-500 gap-2">
               <Info className="!text-2xl" />
-              <h1 className="text-lg font-semibold">No Missed Data Found</h1>
+              <h1 className="text-lg font-semibold">No Data Found</h1>
             </article>
-            <p>Calculate the hours of employee.</p>
           </section>
         )}
       </Container>

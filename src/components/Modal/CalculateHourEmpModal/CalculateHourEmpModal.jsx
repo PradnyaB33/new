@@ -36,9 +36,16 @@ const CalculateHourEmpModal = ({
   console.log("punching record", empPunchingData);
   console.log({ setTotalPages });
 
-  // Schema for calculate hour
   const CalculateHourSchemas = z.object({
-    hour: z.string(),
+    hour: z.string().refine(
+      (value) => {
+        const regex = /^(0*(?:[0-9]|1[0-9]|2[0-4]))$/;
+        return regex.test(value);
+      },
+      {
+        message: "Hour must be a valid number between 0 and 24.",
+      }
+    ),
     timeRange: z
       .object({
         startDate: z.string().optional(),
@@ -47,8 +54,7 @@ const CalculateHourEmpModal = ({
       .optional(),
   });
 
-  const { control, formState, getValues } = useForm({
-    defaultValues: {},
+  const { control, formState, getValues, setError, reset } = useForm({
     resolver: zodResolver(CalculateHourSchemas),
   });
   const { errors } = formState;
@@ -62,6 +68,12 @@ const CalculateHourEmpModal = ({
   const handleCalculateHours = async () => {
     const data = getValues();
     const { hour, timeRange } = data;
+    const regex = /^(0*(?:[0-9]|1[0-9]|2[0-4]))$/;
+    if (!regex.test(hour)) {
+      setError("hour", { type: "custom", message: "hour should be 0 to 24" });
+    } else {
+      setError("hour", null);
+    }
 
     if (!timeRange?.startDate || !timeRange?.endDate) {
       alert("Please select a valid date range.");
@@ -154,6 +166,7 @@ const CalculateHourEmpModal = ({
         console.log(responseData);
         handleClose();
         handleAlert(true, "success", "Hours calculated successfully.");
+        reset();
       } catch (error) {
         console.error("Error calculating hours:", error);
         handleAlert(
@@ -229,8 +242,8 @@ const CalculateHourEmpModal = ({
                 icon={AccessTimeIcon}
                 control={control}
                 type="number"
-                placeholder="Hour"
-                label="Hour *"
+                placeholder="Total Shift Hour"
+                label=" Total  Shift Hour *"
                 errors={errors}
                 error={errors.hour}
               />
@@ -241,8 +254,8 @@ const CalculateHourEmpModal = ({
                 control={control}
                 type="calender"
                 asSingle={false}
-                placeholder="Select Time Range"
-                label="Select Time Range *"
+                placeholder="Select Date Range"
+                label="Select Date Range *"
                 readOnly={false}
                 maxLimit={15}
                 useRange={true}
