@@ -110,7 +110,7 @@ const ManagerPerfromanceDashboard = () => {
         </div>
       </aside> */}
 
-      <aside className="w-full flex h-max  gap-8">
+      <aside className="w-full  grid h-max  gap-8">
         {/* <div className="w-max px-4 pb-4  flex flex-col  rounded-sm bg-gray-50 border  justify-center">
           <div className="flex my-4 sm:flex-row flex-col sm:justify-between gap-2 sm:items-center">
             <h1 className="text-lg font-bold text-[#67748E]">Goals chart</h1>
@@ -119,6 +119,7 @@ const ManagerPerfromanceDashboard = () => {
             <Doughnut options={optionsDougnut} data={data2} />
           </div>
         </div> */}
+
         <div className="w-max px-4 pb-4  flex flex-col rounded-sm bg-gray-50 border  justify-center">
           <div className="flex my-4 sm:flex-row flex-col sm:justify-between gap-2 sm:items-center">
             <h1 className="text-lg font-bold text-[#67748E]">Rating Graph</h1>

@@ -111,10 +111,10 @@ const PerformanceDashboard = () => {
           data={
             role === "Employee"
               ? `${statusCounts?.Completed ?? 0} / ${
-                  selfGoals?.goals?.length
+                  selfGoals?.goals?.length ?? 0
                 } completed`
               : `${goalStatusCounts?.Completed ?? 0} / ${
-                  goalStatusCounts?.total
+                  goalStatusCounts?.total ?? 0
                 } completed`
           }
         />
@@ -140,7 +140,7 @@ const PerformanceDashboard = () => {
         />
       </div>
 
-      {role === "Manager" && (
+      {(role === "Manager" || role === "Super-Admin" || role === "HR") && (
         <div className="my-4">
           <DashboardTable
             tableData={tableData}

@@ -1,10 +1,8 @@
-import { Checklist } from "@mui/icons-material";
 import { Avatar, Pagination } from "@mui/material";
 import React, { useState } from "react";
-import Select from "react-select";
+import EmptyAlertBox from "../../../../components/EmptyAlertBox";
 import DashboardModel from "../GoalTable/Modal/DashboardModel";
 import TabelSkeleton from "../GoalTable/Skelton/TabelSkeleton";
-import ManagerPerfromanceDashboard from "./ManagerPerfromanceDashboard";
 
 const DashboardTable = ({ tableData, role, tableFetching, performance }) => {
   const counts = tableData?.reduce((acc, record) => {
@@ -35,7 +33,7 @@ const DashboardTable = ({ tableData, role, tableFetching, performance }) => {
     <>
       <div className="my-2 flex">
         <div className=" gap-4 ">
-          {role !== "Employee" && (
+          {/* {role !== "Employee" && (
             <div className={`space-y-1 min-w-[250px]  md:min-w-[15vw] `}>
               <div
                 className={`flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
@@ -69,14 +67,16 @@ const DashboardTable = ({ tableData, role, tableFetching, performance }) => {
                 />
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </div>
       {tableFetching ? (
         <TabelSkeleton />
+      ) : tableData?.length === 0 ? (
+        <EmptyAlertBox title={"No data found about performance"} />
       ) : (
         <div className="flex gap-2">
-          <div className="w-[70%]">
+          <div className="w-full">
             <table className=" overflow-auto table-fixed  border border-collapse min-w-full bg-white  text-left  !text-sm font-light">
               <thead className="border-b bg-gray-100 font-bold">
                 <tr className="!font-semibold ">
@@ -184,9 +184,9 @@ const DashboardTable = ({ tableData, role, tableFetching, performance }) => {
             </div>
           </div>
 
-          <div className="w-[30%]">
+          {/* <div className="w-[30%]">
             <ManagerPerfromanceDashboard performance={performance} />
-          </div>
+          </div> */}
         </div>
       )}
 

@@ -280,7 +280,7 @@ const GoalsModel = ({
 
             <AuthInputFiled
               name="description"
-              readOnly={performance?.stages !== "Goal setting"}
+              // readOnly={performance?.stages !== "Goal setting"}
               icon={Paid}
               control={control}
               type="texteditor"

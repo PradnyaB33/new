@@ -470,34 +470,36 @@ const GoalsTable = ({ performance, isError }) => {
                 </div>
               </div>
             )}
-            <div className={`space-y-1 min-w-[15vw] `}>
-              <div
-                className={`flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
-              >
-                <Person className="text-gray-700 md:text-lg !text-[1em]" />
-                <Select
-                  aria-errormessage=""
-                  placeholder={"Assignee"}
-                  isClearable
-                  styles={{
-                    control: (styles) => ({
-                      ...styles,
-                      borderWidth: "0px",
-                      boxShadow: "none",
-                    }),
-                  }}
-                  className={` bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
-                  components={{
-                    Option: CustomOption,
-                    IndicatorSeparator: () => null,
-                  }}
-                  options={options}
-                  onChange={(value) => {
-                    setEmployeeGoals(value?.value);
-                  }}
-                />
+            {role !== "Employee" && (
+              <div className={`space-y-1 min-w-[15vw] `}>
+                <div
+                  className={`flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+                >
+                  <Person className="text-gray-700 md:text-lg !text-[1em]" />
+                  <Select
+                    aria-errormessage=""
+                    placeholder={"Assignee"}
+                    isClearable
+                    styles={{
+                      control: (styles) => ({
+                        ...styles,
+                        borderWidth: "0px",
+                        boxShadow: "none",
+                      }),
+                    }}
+                    className={` bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                    components={{
+                      Option: CustomOption,
+                      IndicatorSeparator: () => null,
+                    }}
+                    options={options}
+                    onChange={(value) => {
+                      setEmployeeGoals(value?.value);
+                    }}
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
             {(performance?.isMidGoal && isTimeFinish) ||
             (performance?.stages === "Goal setting" &&
@@ -520,6 +522,8 @@ const GoalsTable = ({ performance, isError }) => {
         {isFetching || performance === undefined ? (
           // <CircularProgress />
           <TabelSkeleton />
+        ) : orgGoals?.goals?.length <= 0 ? (
+          <EmptyAlertBox title={"Goals Not Found"} />
         ) : (
           <div className="bg-white w-full overflow-x-auto">
             {/* <section className="bg-gray-50 border py-6 px-8 rounded-md w-full">
@@ -558,11 +562,11 @@ const GoalsTable = ({ performance, isError }) => {
                     <th scope="col" className="py-3 text-sm px-2 ">
                       Time
                     </th>
-                    {performance?.stages !== "Goal setting" && (
+                    {/* {performance?.stages !== "Goal setting" && (
                       <th scope="col" className="py-3 text-sm px-2 ">
                         Monitoring done
                       </th>
-                    )}
+                    )} */}
 
                     <th scope="col" className=" py-3 text-sm px-2 ">
                       Status
@@ -656,7 +660,7 @@ const GoalsTable = ({ performance, isError }) => {
                         </Tooltip>
                       </td>
 
-                      {performance?.stages !== "Goal setting" && (
+                      {/* {performance?.stages !== "Goal setting" && (
                         <td
                           onClick={() => handleOpen(goal._id)}
                           className="cursor-pointer text-left px-2 text-sm w-[200px]  "
@@ -667,7 +671,7 @@ const GoalsTable = ({ performance, isError }) => {
                             <CheckCircle className="text-green-400 " />
                           )}
                         </td>
-                      )}
+                      )} */}
 
                       <td
                         onClick={() => handleOpen(goal._id)}
@@ -760,8 +764,7 @@ const GoalsTable = ({ performance, isError }) => {
           ))}
 
         {role !== "Employee" &&
-          performance?.stages === "Goal setting" &&
-          openMenu?.status === "Goal Submitted" &&
+          openMenu?.goalStatus === "Pending" &&
           openMenu?.approverId === user._id && (
             <>
               <MenuItem
