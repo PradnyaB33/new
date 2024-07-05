@@ -12,6 +12,7 @@ const organizationSchema = z.object({
   allowanceQuantity: z.string(),
   dualWorkflow: z.boolean(),
   geoFencing: z.boolean(),
+  faceRecognition: z.boolean(),
 });
 
 const MiniForm = ({ data, mutate }) => {
@@ -23,6 +24,7 @@ const MiniForm = ({ data, mutate }) => {
         : "0",
       dualWorkflow: data?.remotePunchingObject?.dualWorkflow || false,
       geoFencing: data?.remotePunchingObject?.geoFencing || false,
+      faceRecognition: data?.remotePunchingObject?.faceRecognition || false,
     },
     resolver: zodResolver(organizationSchema),
   });
@@ -57,6 +59,19 @@ const MiniForm = ({ data, mutate }) => {
           error={errors.geoFencing}
           descriptionText={
             "Enabling Geo Fencing will allow the employee to punch in only from the allowed location."
+          }
+        />
+        <AuthInputFiled
+          name="faceRecognition"
+          icon={LocationOn}
+          control={control}
+          type="checkbox"
+          placeholder="Face Recognition"
+          label="Face Recognition"
+          errors={errors}
+          error={errors.faceRecognition}
+          descriptionText={
+            "Enabling Face Recognition will allow the employee to punch in only after face recognition."
           }
         />
         <AuthInputFiled
