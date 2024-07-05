@@ -45,7 +45,6 @@ const InputForm = () => {
               value: month,
             }))}
             onChange={(value) => {
-              console.log(`🚀 ~ file: input-form.jsx:48 ~ value:`, value);
               // setMonth(value.value);
               if (value === null) {
                 return setMonth(undefined);
@@ -74,7 +73,6 @@ const InputForm = () => {
                 value: month?._id,
               }))}
               onChange={(value) => {
-                console.log(`🚀 ~ file: input-form.jsx:25 ~ value`, value);
                 if (value === null) {
                   return setLeaveTypeDetailsId("");
                 }
@@ -99,7 +97,6 @@ const InputForm = () => {
               value: month?.value,
             }))}
             onChange={(value) => {
-              console.log(`🚀 ~ file: input-form.jsx:25 ~ value`, value);
               if (value === null) {
                 return setStatus("");
               }

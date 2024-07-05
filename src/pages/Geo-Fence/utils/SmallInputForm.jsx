@@ -15,7 +15,7 @@ const SmallInputForm = ({ circleId }) => {
     resolver: zodResolver(formSchema),
   });
   const { data } = useSearchEmployee({ watch, circleId });
-  console.log(`🚀 ~ file: SmallInputForm.jsx:19 ~ data:`, data);
+  console.info(`🚀 ~ file: SmallInputForm.jsx:18 ~ data:`, data);
 
   const { errors } = formState;
   const onSubmit = (data) => {

@@ -71,8 +71,6 @@ const Step1 = ({ nextStep }) => {
     isTrial,
   } = useOrg();
 
-  console.log(`🚀 ~ file: step-1.jsx:71 ~ location:`, location);
-
   const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
       orgName: orgName,
@@ -90,9 +88,7 @@ const Step1 = ({ nextStep }) => {
     resolver: zodResolver(organizationSchema),
   });
   const { errors } = formState;
-  console.log(`🚀 ~ file: step-1.jsx:79 ~ errors:`, errors);
   const onSubmit = async (data) => {
-    console.log(`🚀 ~ file: step-1.jsx:68 ~ data:`, data);
     await setStep1Data(data);
     nextStep();
   };

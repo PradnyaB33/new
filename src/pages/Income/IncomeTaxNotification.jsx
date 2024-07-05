@@ -74,7 +74,6 @@ const IncomeTaxNotification = () => {
             value: month?.value,
           }))}
           onChange={(value) => {
-            console.log(`🚀 ~ file: input-form.jsx:25 ~ value`, value);
             if (value === null) {
               return setStatus("");
             }

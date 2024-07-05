@@ -18,11 +18,9 @@ const useOrgGeo = () => {
     queryKey: ["geo-fenced-areas", organisationId],
     queryFn: getOrgCircle,
     enabled: organisationId !== undefined,
-    onSuccess: (data) => {
-      console.log(`🚀 ~ file: useOrgGeo.jsx:24 ~ data`, data);
-    },
+
     onError: (error) => {
-      console.log(`🚀 ~ file: useOrgGeo.jsx:27 ~ error`, error);
+      console.error(`🚀 ~ file: useOrgGeo.jsx:27 ~ error`, error);
       handleAlert(true, "error", error?.response?.data?.message || "Error");
     },
   });

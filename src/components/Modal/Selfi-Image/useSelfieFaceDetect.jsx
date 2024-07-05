@@ -46,7 +46,6 @@ const useSelfieFaceDetect = () => {
   const { mutateAsync: detectFaceOnlyMutation } = useMutation({
     mutationFn: detectFaceOnly,
     onSuccess: async (data) => {
-      console.log(`🚀 ~ file: useFaceModal.jsx:68 ~ data:`, data);
       if (data?.length === 0) {
         handleAlert(true, "error", "No faces found in the image");
       } else if (data?.length > 1) {
@@ -69,12 +68,8 @@ const useSelfieFaceDetect = () => {
       [descriptor]
     );
     let faceMatcher = new faceApi.FaceMatcher(labeledFace, matchScore);
-    console.log(
-      `🚀 ~ file: useSelfieFaceDetect.jsx:72 ~ faceMatcher:`,
-      faceMatcher
-    );
+
     let results = faceMatcher.findBestMatch(currentDescriptor);
-    console.log(`🚀 ~ file: useSelfieFaceDetect.jsx:77 ~ results:`, results);
     return results;
   };
 
@@ -106,7 +101,6 @@ const useSelfieFaceDetect = () => {
     queryKey: ["face-detected"],
     queryFn: getImageAndVerify,
     onSuccess: async (data) => {
-      console.log(`🚀 ~ file: useSelfieFaceDetect.jsx:108 ~ data:`, data);
       //   setUserDescriptor(data?.descriptor);
     },
     onError: (error) => {

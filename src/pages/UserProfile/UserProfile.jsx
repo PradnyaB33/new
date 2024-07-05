@@ -101,7 +101,6 @@ const EmployeeProfile = () => {
         const faces = await detectFaceOnlyMutation({
           img,
         });
-        console.log(`🚀 ~ file: UserProfile.jsx:112 ~ faces:`, faces);
 
         if (faces.length === 1) {
           setUrl(() => reader.result);

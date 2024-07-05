@@ -10,9 +10,6 @@ const useSubscriptionMutation = () => {
   const { handleAlert } = useContext(TestContext);
 
   const updateSubscription = async ({ subscriptionId, data, handleClose }) => {
-    console.log(`🚀 ~ file: mutation.jsx:13 ~ handleClose:`, handleClose);
-    console.log(`🚀 ~ file: mutation.jsx:9 ~ data:`, data);
-    console.log(`🚀 ~ file: mutation.jsx:9 ~ subscriptionId:`, subscriptionId);
     const response = await axios.patch(
       `${process.env.REACT_APP_API}/route/subscription-status/${subscriptionId}`,
       { data },
@@ -23,7 +20,6 @@ const useSubscriptionMutation = () => {
       }
     );
     response.data.handleClose = handleClose;
-    console.log(`🚀 ~ file: mutation.jsx:26 ~   response.data:`, response.data);
     return response.data;
   };
 

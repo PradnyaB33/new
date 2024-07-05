@@ -23,7 +23,6 @@ import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import EditOrganisation from "./edit-organization";
 const Organisation = ({ item }) => {
-  console.log(`🚀 ~ file: Organisation.jsx:27 ~ item:`, item);
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [editConfirmation, setEditConfirmation] = useState(null);

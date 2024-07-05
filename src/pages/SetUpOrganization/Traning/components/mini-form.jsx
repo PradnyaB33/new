@@ -31,7 +31,6 @@ const organizationSchema = z.object({
 });
 
 const MiniForm = ({ data, mutate, organisationId }) => {
-  console.log(`🚀 ~ file: mini-form.jsx:26 ~ data:`, data);
   const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       canManagerAssign: data?.canManagerAssign ? data?.canManagerAssign : false,
@@ -54,7 +53,6 @@ const MiniForm = ({ data, mutate, organisationId }) => {
     organisationId: organisationId,
   });
 
-  console.log(`🚀 ~ file: mini-form.jsx:53 ~ newMan:`, newMan);
   const { errors, isDirty } = formState;
   const onSubmit = (data) => {
     mutate(data);

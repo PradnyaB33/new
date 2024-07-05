@@ -8,7 +8,6 @@ import SearchAdd from "../utils/SearchAdd";
 import ViewDelete from "./ViewDelete";
 
 const GeoFenceCard = ({ item }) => {
-  console.log(`🚀 ~ file: GeoFenceCard.jsx:11 ~ item:`, item);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);

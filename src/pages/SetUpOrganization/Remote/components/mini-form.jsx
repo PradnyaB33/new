@@ -28,7 +28,6 @@ const MiniForm = ({ data, mutate }) => {
   });
   const { errors } = formState;
   const onSubmit = (data) => {
-    console.log(`🚀 ~ file: RemoteSetup.jsx:35 ~ data:`, data);
     mutate(data);
   };
   return (

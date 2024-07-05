@@ -23,7 +23,6 @@ const OnlyPlaceAutoComplete = ({
   const [address, setAddress] = useState("");
   const handleSelect = async (option, onChange) => {
     if (option === null) {
-      console.log(`🚀 ~ file: places-autocomplete.jsx:30 ~ center:`, center);
       onChange({
         address: "",
         position: center,

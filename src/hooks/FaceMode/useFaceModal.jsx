@@ -9,7 +9,6 @@ import useFaceStore from "./useFaceStore";
 const useLoadModel = () => {
   const { handleAlert } = useContext(TestContext);
   const { descriptor, setDescriptor } = useFaceStore();
-  console.log(`🚀 ~ file: useFaceModal.jsx:12 ~ descriptor:`, descriptor);
   const { decodedToken } = useGetUser();
 
   const loadModels = async () => {
@@ -71,7 +70,6 @@ const useLoadModel = () => {
   const { mutateAsync: detectFaceOnlyMutation } = useMutation({
     mutationFn: detectFaceOnly,
     onSuccess: async (data) => {
-      console.log(`🚀 ~ file: useFaceModal.jsx:68 ~ data:`, data);
       if (data?.length === 0) {
         handleAlert(true, "error", "No faces found in the image");
       } else if (data?.length > 1) {
@@ -132,7 +130,7 @@ const useLoadModel = () => {
   const { mutateAsync: uploadImageToBackendMutation } = useMutation({
     mutationFn: uploadImageToBackend,
     onSuccess: (data) => {
-      console.log(`🚀 ~ file: useFaceModal.jsx:132 ~ data:`, data);
+      console.info(`🚀 ~ file: useFaceModal.jsx:132 ~ data:`, data);
     },
     onError: (error) => {
       console.error("Error uploading image to backend", error);

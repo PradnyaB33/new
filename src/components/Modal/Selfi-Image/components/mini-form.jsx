@@ -12,10 +12,6 @@ const MiniForm = () => {
   const { getImageUrl } = useLocationMutation();
   const { faceDetectedData, detectFaceOnlyMutation, matchFacesMutation } =
     useSelfieFaceDetect();
-  console.log(
-    `🚀 ~ file: mini-form.jsx:14 ~ faceDetectedData:`,
-    faceDetectedData
-  );
 
   useEffect(() => {
     let video = videoRef.current;
@@ -45,7 +41,6 @@ const MiniForm = () => {
     });
 
     const descriptor = new Float32Array(faceDetectedData?.data?.descriptor);
-    console.log(`🚀 ~ file: mini-form.jsx:52 ~ descriptor:`, descriptor);
     if (faces?.length !== 1) {
       return setImageCaptured(false);
     }
@@ -53,8 +48,6 @@ const MiniForm = () => {
       currentDescriptor: faces[0]?.descriptor,
       descriptor,
     });
-
-    console.log(`🚀 ~ file: mini-form.jsx:68 ~ result:`, result);
   };
 
   const clearImage = () => {

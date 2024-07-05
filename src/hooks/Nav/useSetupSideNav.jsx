@@ -31,7 +31,6 @@ const useSetupSideNav = ({ organisationId }) => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const { data } = useSubscriptionGet({ organisationId });
-  console.log(`🚀 ~ file: useSetupSideNav.jsx:30 ~ data:`, data);
 
   const linkData = [
     {

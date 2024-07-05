@@ -10,7 +10,6 @@ import SubscriptionRow from "./components/subscriptionRow";
 const Subscription = () => {
   const { organisationId } = useParams();
   const { data, isLoading } = useSubscriptionGet({ organisationId });
-  console.log(`🚀 ~ file: Subscription.jsx:13 ~ data:`, data);
 
   return (
     <>
@@ -127,10 +126,6 @@ const Subscription = () => {
 export default Subscription;
 const getValue = (array = [], parentArray = []) => {
   const index = array.findIndex(([key, other]) => key === "basicPackageCount");
-  console.log(`🚀 ~ file: Subscription.jsx:130 ~ index:`, index);
-  console.log(
-    `🚀 ~ file: Subscription.jsx:133 ~ parentArray[index]:`,
-    parentArray[index][1]
-  );
+
   return parentArray[index][1];
 };

@@ -73,8 +73,6 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
         handleClose();
       },
       onError: (data) => {
-        console.log(`🚀 ~ file: create-leve-type-modal.jsx:72 ~ data:`, data);
-        console.log("error");
         handleAlert(
           true,
           "error",
