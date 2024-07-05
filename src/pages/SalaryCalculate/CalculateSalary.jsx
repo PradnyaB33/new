@@ -12,7 +12,10 @@ function CalculateSalary() {
   const token = cookies["aegis"];
   const { userId, organisationId } = useParams();
   const currentDate = dayjs();
-  const [selectedDate, setSelectedDate] = useState(currentDate);
+  // const [selectedDate, setSelectedDate] = useState(currentDate);
+  const [selectedDate, setSelectedDate] = useState(
+    currentDate.subtract(1, "month")
+  );
   const [numDaysInMonth, setNumDaysInMonth] = useState(0);
   const [employeeSummary, setEmployeeSummary] = useState([]);
   const [paidLeaveDays, setPaidLeaveDays] = useState(0);
@@ -97,6 +100,8 @@ function CalculateSalary() {
       setRemotePunchingCount(remotePunching);
     }
   }, [employeeSummary, selectedMonth, selectedYear]);
+
+  console.log("empsummary", employeeSummary);
 
   // calculate the no fo days employee present
   const calculateDaysEmployeePresent = () => {
