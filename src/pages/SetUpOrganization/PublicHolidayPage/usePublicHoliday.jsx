@@ -28,7 +28,6 @@ const usePublicHoliday = (id) => {
     },
     {
       onSuccess: (data) => {
-        console.log(`🚀 ~ file: usePublicHoliday.jsx:30 ~ data:`, data);
         setAllPublicHoliday(data);
       },
     }

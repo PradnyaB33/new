@@ -17,7 +17,6 @@ const useOrganisationMutation = () => {
       `🚀 ~ file: mutation.jsx:12 ~ handleCloseConfirmation:`,
       handleCloseConfirmation
     );
-    console.log(`🚀 ~ file: mutation.jsx:12 ~ id:`, id);
     const formData = new FormData();
 
     // Append file to FormData
@@ -49,9 +48,7 @@ const useOrganisationMutation = () => {
   };
   const updateOrganizationMutation = useMutation(handleEditConfirmation, {
     onSuccess: (data) => {
-      console.log(`🚀 ~ file: mutation.jsx:32 ~ data:`, data);
       handleAlert(true, "success", "Organisation Updated Successfully");
-      console.log(`🚀 ~ file: mutation.jsx:53 ~ data.function:`, data.function);
       data?.function();
       queryClient.invalidateQueries("orglist");
     },

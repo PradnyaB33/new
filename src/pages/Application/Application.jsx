@@ -226,7 +226,6 @@ const Application = () => {
           </div>
         ) : (
           employeeLeaveList.map((item) => {
-            console.log(`🚀 ~ file: Application.jsx:229 ~ item:`, item);
             return (
               <Grid
                 key={item._id}

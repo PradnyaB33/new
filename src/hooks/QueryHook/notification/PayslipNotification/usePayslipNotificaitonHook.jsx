@@ -30,7 +30,6 @@ const usePayslipNotificationHook = () => {
     isFetching,
   } = useQuery("payslip-notification", getPaySlipNotification, {
     onSuccess: async (data) => {
-      console.log(`🚀 ~ file: hook.jsx:56 ~ data:`, data?.length);
       setNotificationCount(data?.length ?? 0);
     },
     refetchOnWindowFocus: false,

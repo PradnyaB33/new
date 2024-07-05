@@ -84,19 +84,14 @@ const AttendanceBioModal = ({
     }
   };
 
-  // Validate email format
-  const validateEmail = (email) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  };
   console.log(checkedEmployees);
   const handleSync = async () => {
     try {
-      if (!validateEmail(emailSearch)) {
+      const empEmail = checkedEmployees.map((employee) => employee.email);
+      if (!empEmail) {
         handleAlert(true, "error", "Please enter a valid email address.");
         return;
       }
-
       const syncedData = selectedEmployees.map((employee) => ({
         date: employee[3],
         punchingTime: employee[4],

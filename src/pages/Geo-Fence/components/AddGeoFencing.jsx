@@ -7,8 +7,6 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import LocationRelated from "./LocationRelated";
 
 const AddGeoFencing = ({ onClose, data }) => {
-  console.log(`🚀 ~ file: AddGeoFencing.jsx:12 ~ data:`, data);
-
   const formSchema = z.object({
     location: z
       .any({

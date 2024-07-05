@@ -22,9 +22,7 @@ const Step2 = ({ nextStep }) => {
     resolver: zodResolver(packageSchema),
   });
   const { isDirty, errors } = formState;
-  console.log(`🚀 ~ file: step-2.jsx:24 ~ errors:`, errors);
   const onSubmit = (data) => {
-    console.log(`🚀 ~ file: step-2.jsx:27 ~ data:`, data);
     setStep2Data(data?.packageInfo);
     nextStep();
   };

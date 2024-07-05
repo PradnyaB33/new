@@ -2,6 +2,7 @@ import { Info, West } from "@mui/icons-material";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import { Avatar, CircularProgress } from "@mui/material";
 import axios from "axios";
+import moment from "moment";
 import React from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
@@ -131,17 +132,22 @@ const EmpNotification = () => {
                           )}
                         </div>
 
-                        <button
-                          className={`md:w-[100px] h-[30px] md:h-auto ${
-                            item.status === "Pending"
-                              ? "bg-[#ffa500]"
-                              : item.status === "Approved"
-                              ? "bg-[#008000]"
-                              : "bg-[#ff0000]"
-                          } text-white md:px-4 px-2 py-1 md:py-2 rounded-md`}
-                        >
-                          {item.status}
-                        </button>
+                        <div className="flex flex-col items-center justify-center gap-2 ">
+                          <button
+                            className={`md:w-[100px] h-[30px] md:h-auto ${
+                              item.status === "Pending"
+                                ? "bg-[#ffa500]"
+                                : item.status === "Approved"
+                                ? "bg-[#008000]"
+                                : "bg-[#ff0000]"
+                            } text-white md:px-4 px-2 py-1 md:py-2 rounded-md`}
+                          >
+                            {item.status}
+                          </button>
+                          <div className="text-sm text-gray-700 underline">
+                            {moment(item?.updatedAt).fromNow()}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))}

@@ -85,8 +85,6 @@ const BillingCard = ({ doc }) => {
       ) {
         return false;
       } else {
-        console.log("i think i am expired");
-        console.log(`🚀 ~ file: billing-card.jsx:89 ~ doc:`, doc);
         if (doc?.upcomingPackageInfo?.packageName) {
           return false;
         } else {

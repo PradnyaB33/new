@@ -21,7 +21,7 @@ const MiniForm = ({ mutate, doc }) => {
     employeeTrainingId: z.string(),
   });
 
-  const { control, formState, handleSubmit, getValues } = useForm({
+  const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       proofOfSubmissionUrl: undefined,
       rating: undefined,
@@ -36,7 +36,6 @@ const MiniForm = ({ mutate, doc }) => {
     mutate(data);
   };
 
-  console.log(`🚀 ~ file: mini-form.jsx:33 ~ getValues:`, getValues());
   return (
     <form
       className="flex flex-col gap-4 items-center w-full"

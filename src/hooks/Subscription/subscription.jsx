@@ -24,9 +24,7 @@ const useSubscription = (organizationId) => {
       return response.data;
     },
     queryKey: [`subscription`, organizationId],
-    onSuccess: async (data) => {
-      //   console.log(`🚀 ~ file: Organisation.jsx:144 ~ data:`, data);
-    },
+
     onError: async (data) => {
       //   console.error(`🚀 ~ file: Organisation.jsx:144 ~ data:`, data);
     },

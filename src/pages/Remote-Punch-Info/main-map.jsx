@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 
 const MainMap = ({ punchData, isLoaded }) => {
   const [waypoints, setWaypoints] = useState([]);
-  console.log(`🚀 ~ file: main-map.jsx:5 ~ isLoaded:`, isLoaded);
-  console.log("This is punchData", punchData);
 
   useEffect(() => {
     if (punchData && punchData.data && punchData.data.length > 0) {

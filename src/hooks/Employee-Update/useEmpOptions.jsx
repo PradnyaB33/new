@@ -1,21 +1,18 @@
 import useEmployeeQuery from "./useEmployeeQuery";
 
 const useEmployeeOptions = (organisationId) => {
-    const {
-        DepartmentListCall,
-        DesignationCall,
-        SalaryTempCall,
-        EmpTypesCall,
-        ManagerListCall,
-        ShiftCall,
-        CostNumberCall,
-        EmpRoleListCall,
-        LocationListCall,
-        EmpCodeCall,
-      } = useEmployeeQuery(organisationId);
-    
-
- 
+  const {
+    DepartmentListCall,
+    DesignationCall,
+    SalaryTempCall,
+    EmpTypesCall,
+    ManagerListCall,
+    ShiftCall,
+    CostNumberCall,
+    EmpRoleListCall,
+    LocationListCall,
+    EmpCodeCall,
+  } = useEmployeeQuery(organisationId);
 
   const DepartmentList = DepartmentListCall();
   const ManagerList = ManagerListCall();
@@ -62,12 +59,6 @@ const useEmployeeOptions = (organisationId) => {
   // const RolesOptions =
   //   empRolesList?.roles &&
   //   Object.entries(empRolesList?.roles).map(([key, other], index) => {
-  //     console.log(`🚀 ~ file: useEmpOption.jsx:54 ~ other:`, other);
-  //     console.log(`🚀 ~ file: useEmpOption.jsx:54 ~ key:`, key);
-  //     console.log(
-  //       `🚀 ~ file: useEmpOption.jsx:57 ~ other?.isActive :`,
-  //       other?.isActive
-  //     );
   //     if (other?.isActive === true) {
   //       return {
   //         value: key, // Extract the _id property from the role object
@@ -77,7 +68,6 @@ const useEmployeeOptions = (organisationId) => {
   //       return null;
   //     }
   //   });
-  console.log(`🚀 ~ file: useEmpOption.jsx:52 ~ RolesOptions:`, RolesOptions);
   const Shiftoptions = shiftList?.shifts?.map((item) => {
     return {
       value: item?._id,
@@ -92,7 +82,7 @@ const useEmployeeOptions = (organisationId) => {
     };
   });
 
-   console.log("dept cost center no" , cosnotoptions);
+  console.log("dept cost center no", cosnotoptions);
 
   const locationoption = locationList?.locationsData?.map((item) => {
     return {

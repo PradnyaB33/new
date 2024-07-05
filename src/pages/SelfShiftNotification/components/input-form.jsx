@@ -55,7 +55,6 @@ const InputForm = () => {
             value: month,
           }))}
           onChange={(value) => {
-            console.log(`🚀 ~ file: input-form.jsx:48 ~ value:`, value);
             if (!value) {
               setMonth(null);
             } else {
@@ -82,7 +81,6 @@ const InputForm = () => {
             { label: "Rejected", value: "Rejected" },
           ]}
           onChange={(value) => {
-            console.log(`🚀 ~ file: input-form.jsx:25 ~ value`, value);
             if (!value) {
               setStatusState(null);
             } else {

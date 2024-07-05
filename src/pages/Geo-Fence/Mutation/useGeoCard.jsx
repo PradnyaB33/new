@@ -14,7 +14,6 @@ const useGeoMutation = () => {
   };
   const { mutate } = useMutation(deleteGeoCard, {
     onSuccess: (data) => {
-      console.log(`🚀 ~ file: useGeoMutation.jsx:8 ~ data`, data);
       handleAlert(true, "success", data?.message);
       queryClient.invalidateQueries("geo-fenced-areas");
     },
@@ -32,7 +31,6 @@ const useGeoMutation = () => {
     addEmployeeToCircle,
     {
       onSuccess: (data, { onClose }) => {
-        console.log(`🚀 ~ file: useGeoMutation.jsx:25 ~ data`, data);
         queryClient.invalidateQueries(`employee-get-org`);
         queryClient.invalidateQueries(`geo-fenced-areas`);
         handleAlert(true, "success", data?.message);
@@ -53,7 +51,6 @@ const useGeoMutation = () => {
     removeEmployeeToCircle,
     {
       onSuccess: (data, { onClose }) => {
-        console.log(`🚀 ~ file: useGeoMutation.jsx:25 ~ data`, data);
         queryClient.invalidateQueries(`employee-get-org`);
         queryClient.invalidateQueries(`geo-fenced-areas`);
         handleAlert(true, "success", data?.message);

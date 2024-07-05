@@ -26,7 +26,7 @@ const useSetupRemotePunching = (organisationId) => {
     },
     {
       onSuccess: (data) => {
-        console.log(`🚀 ~ file: remote-punching.jsx:29 ~ data:`, data);
+        console.info(`🚀 ~ file: remote-punching.jsx:29 ~ data:`, data);
       },
       onError: (error) => {
         console.error(`🚀 ~ file: remote-punching.jsx:29 ~ error:`, error);

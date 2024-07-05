@@ -60,18 +60,18 @@ const EmpInfoPunchStatus = () => {
   };
 
   // Filter data based on search criteria
-  const filteredData = tableData.filter((row) => {
+  const filteredData = (tableData ?? []).filter((row) => {
     return (
-      row[1].toLowerCase().includes(searchName.toLowerCase()) &&
-      row[0].toLowerCase().includes(searchId.toLowerCase()) &&
-      row[2].toLowerCase().includes(searchDepartment.toLowerCase())
+      row?.[1]?.toLowerCase()?.includes(searchName?.toLowerCase() ?? "") &&
+      row?.[0]?.toLowerCase()?.includes(searchId?.toLowerCase() ?? "") &&
+      row?.[2]?.toLowerCase()?.includes(searchDepartment?.toLowerCase() ?? "")
     );
   });
 
   // Calculate indexes of the items to display based on current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filteredData?.slice(indexOfFirstItem, indexOfLastItem);
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -107,7 +107,6 @@ const EmpInfoPunchStatus = () => {
       ]);
     }
   };
-
   console.log("selected employee", selectedEmployees);
 
   // for open the modal for display employee
