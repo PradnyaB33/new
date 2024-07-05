@@ -142,8 +142,8 @@ const EmployeeProfile = () => {
         const signedUrlResponse = await getSignedUrl();
         const signedUrl = signedUrlResponse.url;
         imageUrl = await uploadFile(signedUrl, file);
+        await uploadImageToBackendMutation();
       }
-      await uploadImageToBackendMutation();
 
       const requestData = {
         ...data,
