@@ -14,7 +14,6 @@ import {
   MenuItem,
   Select,
   TextField,
-  Typography,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -24,10 +23,13 @@ import axios from "axios";
 import { format } from "date-fns";
 import dayjs from "dayjs";
 import React, { useContext, useEffect, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
+import ReusableModel from "../../../components/Modal/component";
 import Setup from "../Setup";
+import MiniForm from "./components/miniform";
+import usePublicHoliday from "./components/usePublicHoliday";
 
 const PublicHoliday = () => {
   const id = useParams().organisationId;
@@ -46,6 +48,7 @@ const PublicHoliday = () => {
   const queryClient = useQueryClient();
 
   const orgId = useParams().organisationId;
+  const { data } = usePublicHoliday();
 
   const [inputdata, setInputData] = useState({
     name: "",
@@ -73,33 +76,7 @@ const PublicHoliday = () => {
     })();
   }, [authToken, id]);
 
-  const { data } = useQuery("holidays", async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/holiday/get/${id}`
-      );
-      return response.data.holidays;
-    } catch (error) {
-      console.error("Error fetching holidays:", error);
-      setAppAlert({
-        alert: true,
-        type: "error",
-        msg: "An Error occurred while fetching holidays",
-      });
-    }
-  });
   console.log(`🚀 ~ file: PublicHoliday.jsx:77 ~ data:`, data);
-
-  const handleData = (e) => {
-    const { name, value } = e.target;
-
-    if (value.length <= 35) {
-      setInputData({
-        ...inputdata,
-        [name]: value,
-      });
-    }
-  };
 
   const handleClose = () => {
     setOpenModal(false);
@@ -235,22 +212,6 @@ const PublicHoliday = () => {
 
     handleClose();
   };
-  const isHoliday = (date) => {
-    // Ensure date is a Date object
-    const validDate = date instanceof Date ? date : new Date(date);
-    if (isNaN(validDate)) {
-      console.error("Invalid date provided to isHoliday");
-      return false;
-    }
-
-    // Convert the date to be checked to the start of the day in local time for accurate comparison
-    // Adjust the holiday date to the start of the day in local time before comparison
-    return data.some((holiday) => {
-      const holidayDateLocal = new Date(holiday.date).toLocaleDateString();
-      const dateLocal = validDate.toLocaleDateString();
-      return holidayDateLocal === dateLocal;
-    });
-  };
 
   return (
     <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
@@ -339,119 +300,14 @@ const PublicHoliday = () => {
             </section>
           )}
 
-          <Dialog
+          <ReusableModel
+            heading="Add Public Holiday"
+            subHeading="Add a public holiday to your organization"
             open={openModal}
             onClose={handleClose}
-            maxWidth="sm"
-            fullWidth
           >
-            <h1 className="text-xl pl-2 font-semibold font-sans mt-4 ml-4">
-              Add Holiday
-            </h1>
-            <DialogContent className="flex gap-3 flex-col">
-              <div className="flex gap-3 flex-col mt-3">
-                <TextField
-                  required
-                  size="small"
-                  className="w-full"
-                  label="Holiday name"
-                  type="text"
-                  name="name"
-                  value={inputdata.name}
-                  onChange={handleData}
-                />
-                {!inputdata.name && formSubmitted && (
-                  <Typography variant="body2" color="error">
-                    Required.
-                  </Typography>
-                )}
-
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer
-                    className="w-full"
-                    components={["DatePicker"]}
-                    required
-                  >
-                    <DatePicker
-                      label="Date"
-                      value={inputdata.date}
-                      onChange={(newDate) => {
-                        setInputData({
-                          ...inputdata,
-                          date: newDate,
-                        });
-                        console.log(newDate);
-                      }}
-                      slotProps={{
-                        textField: { size: "small", fullWidth: true },
-                      }}
-                      shouldDisableDate={isHoliday}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                <FormControl size="small" fullWidth>
-                  <InputLabel id="holiday-type-label">Holiday type</InputLabel>
-                  <Select
-                    labelId="holiday-type-label"
-                    id="demo-simple-select"
-                    label="holiday type"
-                    className="mb-[8px]"
-                    value={inputdata.type}
-                    name="type"
-                    onChange={handleData}
-                  >
-                    <MenuItem value="Optional">Optional</MenuItem>
-                    <MenuItem value="Mandatory">Mandatory</MenuItem>
-                  </Select>
-                </FormControl>
-                {!inputdata.type && formSubmitted && (
-                  <Typography variant="body2" color="error">
-                    Required.
-                  </Typography>
-                )}
-                <FormControl size="small" fullWidth>
-                  <InputLabel id="region-label">Region</InputLabel>
-                  <Select
-                    labelId="region-label"
-                    id="demo-simple-select"
-                    label="Region"
-                    className="mb-[8px]"
-                    onChange={handleData}
-                    value={inputdata.region}
-                    name="region"
-                  >
-                    {locations.map((location, idx) => (
-                      <MenuItem key={idx} value={location.shortName}>
-                        {location.shortName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                {!inputdata.region && formSubmitted && (
-                  <Typography variant="body2" color="error">
-                    Required.
-                  </Typography>
-                )}
-                <div className="flex gap-4  mt-4  justify-end">
-                  <Button
-                    onClick={handleClose}
-                    color="error"
-                    variant="outlined"
-                  >
-                    Cancel
-                  </Button>
-
-                  <Button
-                    onClick={handleSubmit}
-                    variant="contained"
-                    color="primary"
-                  >
-                    Submit
-                  </Button>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+            <MiniForm locations={locations} data={data} onClose={handleClose} />
+          </ReusableModel>
 
           <Dialog fullWidth open={actionModal} onClose={handleClose}>
             <DialogContent>
