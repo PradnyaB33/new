@@ -68,7 +68,7 @@ const EmployeeSurveyForm = () => {
         }
     );
 
-    const onSubmit = (formData) => {
+    const onSubmit = (formData, responseStatus) => {
         const data = {
             surveyId: surveyData._id,
             title: surveyData.title,
@@ -79,10 +79,10 @@ const EmployeeSurveyForm = () => {
                     ? q.options.filter((_, optIndex) => formData[`question_${index}_option_${optIndex}`])
                     : formData[`answer_${index}`],
             })),
-            responseStatus: true,
+            responseStatus: responseStatus,
             employeeId: user._id,
         };
-
+        console.log("data..........", data);
         mutation.mutate(data);
     };
 
@@ -228,10 +228,10 @@ const EmployeeSurveyForm = () => {
                                     ))}
                                 </div>
                                 <div className="flex gap-4 mt-4 justify-end">
-                                    <Button type="submit" variant="contained" color="primary" className="mt-4">
+                                    <Button type="submit" variant="contained" color="primary" className="mt-4" onClick={handleSubmit((data) => onSubmit(data, "End"))}>
                                         Submit
                                     </Button>
-                                    <Button type="button" variant="outlined" color="primary">
+                                    <Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => onSubmit(data, "Pending"))}>
                                         Save For Now
                                     </Button>
                                     <Button onClick={handleClose} variant="outlined" color="error">

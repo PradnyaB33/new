@@ -1,9 +1,6 @@
-import { Typography, IconButton, Button } from "@mui/material";
-import React, { useState } from "react";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import {
-    West
-} from "@mui/icons-material";
+import { IconButton, Button } from "@mui/material";
+import React from "react";
+import { West } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import OpenSurveyList from "./components/OpenSurveyList";
 import CloseSurveyList from "./components/CloseSurveyList";
@@ -14,10 +11,6 @@ const EmployeeSurvey = () => {
     //hooks
     const navigate = useNavigate();
 
-    //states
-    const [closeSurvey, setCloseSurvey] = useState(false)
-
-
     //get organizationId
     const { getCurrentUser } = UserProfile();
     const user = getCurrentUser();
@@ -26,12 +19,6 @@ const EmployeeSurvey = () => {
     //create new survey 
     const handleCreateNewSurvey = () => {
         navigate(`/organisation/${organisationId}/create-new-survey`);
-    }
-
-
-
-    const handleCloseSurvey = () => {
-        setCloseSurvey(!closeSurvey)
     }
 
     return (
@@ -48,9 +35,10 @@ const EmployeeSurvey = () => {
                 <div className="flex flex-col md:flex-row justify-between w-full md:ml-4">
                     <div className="mb-2 md:mb-0 md:mr-4">
                         <h1 className="text-xl font-bold">Employee Survey</h1>
-                        <p className="text-sm text-gray-600">
-                            Here you can create and fill survey
-                        </p>
+                        {user?.profile.includes('Super-Admin') || user?.profile.includes('HR')
+                            ? <p className="text-sm text-gray-600">Here you can create and fill survey</p>
+                            : <p className="text-sm text-gray-600">Here you can fill survey</p>
+                        }
                     </div>
                 </div>
             </header>
@@ -78,20 +66,7 @@ const EmployeeSurvey = () => {
                 </div>
                 {(user?.profile.includes('Super-Admin') || user?.profile.includes('HR')) && (
                     <div className="px-4 py-2 bg-white w-full h-max shadow-md rounded-2m border my-8">
-                        <div className="flex  justify-between  gap-3 w-full border-gray-300 my-2">
-                            <div className="flex justify-start ">
-                                <Typography variant="p">
-                                    Close Survey
-                                </Typography>
-                            </div>
-                            <div className="flex justify-end">
-                                <AddCircleOutlineIcon style={{ width: "40px" }} onClick={handleCloseSurvey} />
-                                <Typography variant="p" className="">
-                                    Count: 10
-                                </Typography>
-                            </div>
-                        </div>
-                        {closeSurvey ? <CloseSurveyList /> : null}
+                        <CloseSurveyList />
                     </div>
                 )}
             </section>
