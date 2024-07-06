@@ -44,7 +44,6 @@ const PublicHoliday = () => {
   const [selectedHolidayId, setSelectedHolidayId] = useState(null);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-  const [formSubmitted, setFormSubmitted] = useState(false);
   const queryClient = useQueryClient();
 
   const orgId = useParams().organisationId;
@@ -99,30 +98,6 @@ const PublicHoliday = () => {
       ...prev,
       date: newDate.toISOString(),
     }));
-  };
-  const handleSubmit = async () => {
-    setFormSubmitted(true);
-    if (!inputdata.name && !inputdata.type && !inputdata.region) return;
-    try {
-      await axios.post(`${process.env.REACT_APP_API}/route/holiday/create`, {
-        ...inputdata,
-        organizationId: id,
-      });
-      setOpenModal(false);
-      setAppAlert({
-        alert: true,
-        type: "success",
-        msg: "Holiday created successfully.",
-      });
-      queryClient.invalidateQueries("holidays");
-    } catch (error) {
-      console.error("Error:", error);
-      setAppAlert({
-        alert: true,
-        type: "error",
-        msg: error.response.data.message,
-      });
-    }
   };
 
   const handleOperateEdit = async (id) => {
