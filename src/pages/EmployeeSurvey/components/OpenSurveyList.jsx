@@ -43,35 +43,7 @@ console.log("user",user);
   );
 
   //get response survey
-  const { data: surveyResponse, isLoading1, isError1 } = useQuery(
-    ["responseSurvey", organisationId],
-    async () => {
-      // Ensure surveys is defined and has at least one survey
-      if (!surveys || surveys.length === 0) {
-        return []; // Return an empty array or handle appropriately
-      }
-  
-      // Assuming you want to fetch the response for the first survey in the list
-      const surveyId = surveys[0]._id; // Adjust this based on your logic to get the correct surveyId
-  
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-response-survey`,
-        {
-          params: {
-            surveyId: surveyId,
-            employeeId: user?._id
-          },
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      return response.data;
-    },
-    {
-      enabled: !!organisationId && !!authToken,
-    }
-  );
+ 
   
   // Handle form navigation
   const handleSurveyForm = (surveyId) => {
@@ -97,7 +69,6 @@ console.log("user",user);
     setOpenSurvey(!openSurvey)
   }
 console.log("surveys.......",surveys);
-console.log('surveyResponse',surveyResponse);
   return (
     <div>
       <div className="flex  justify-between  gap-3 w-full border-gray-300 my-2">
