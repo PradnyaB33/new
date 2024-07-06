@@ -1,7 +1,7 @@
 import axios from "axios";
 import { CategoryScale, Chart } from "chart.js";
 import moment from "moment";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { useMutation, useQuery } from "react-query";
 import Select from "react-select";
@@ -17,6 +17,7 @@ const HRgraph = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const [employeeData, setEmployeeData] = useState([]);
+  console.log(`🚀 ~ file: HRgraph.jsx:20 ~ employeeData:`, employeeData);
   const [employee, setEmployee] = useState([]);
 
   const [selectedyear, setSelectedYear] = useState({
@@ -77,10 +78,6 @@ const HRgraph = () => {
     return filterData;
   };
 
-  useEffect(() => {
-    console.log(employeeData, "EmployeeData");
-  }, [employeeData]);
-
   const { data: LeaveYearData } = useQuery(
     ["leaveData", selectedyear],
     getYearLeaves
@@ -124,7 +121,6 @@ const HRgraph = () => {
         paidleaveDays: monthData.paidleaveDays,
       };
     });
-    console.log(`🚀 ~ organizedData:`, organizedData);
 
     return organizedData;
   };

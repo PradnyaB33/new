@@ -1,6 +1,4 @@
 import { Info } from "@mui/icons-material";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import HolidayVillageOutlinedIcon from "@mui/icons-material/HolidayVillageOutlined";
 import {
   Button,
@@ -9,7 +7,6 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
-  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -20,19 +17,18 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
-import { format } from "date-fns";
 import dayjs from "dayjs";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import ReusableModel from "../../../components/Modal/component";
 import Setup from "../Setup";
+import HolidayRow from "./components/holiday-row";
 import MiniForm from "./components/miniform";
 import usePublicHoliday from "./components/usePublicHoliday";
 
 const PublicHoliday = () => {
-  const id = useParams().organisationId;
   const { setAppAlert } = useContext(UseContext);
   const [openModal, setOpenModal] = useState(false);
   const [actionModal, setActionModal] = useState(false);
@@ -40,14 +36,11 @@ const PublicHoliday = () => {
   const [type, setType] = useState("");
   const [region, setRegion] = useState("");
   const [operation, setOperation] = useState("");
-  const [locations, setLocations] = useState([]);
   const [selectedHolidayId, setSelectedHolidayId] = useState(null);
-  const { cookies } = useContext(UseContext);
-  const authToken = cookies["aegis"];
   const queryClient = useQueryClient();
 
   const orgId = useParams().organisationId;
-  const { data } = usePublicHoliday();
+  const { data, locations } = usePublicHoliday();
 
   const [inputdata, setInputData] = useState({
     name: "",
@@ -56,24 +49,6 @@ const PublicHoliday = () => {
     region: "",
     organizationId: "",
   });
-
-  useEffect(() => {
-    (async () => {
-      await axios
-        .get(
-          `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${id}`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        )
-        .then((resp) => {
-          setLocations(resp.data.locationsData);
-        })
-        .catch((e) => console.log(e));
-    })();
-  }, [authToken, id]);
 
   console.log(`🚀 ~ file: PublicHoliday.jsx:77 ~ data:`, data);
 
@@ -237,30 +212,7 @@ const PublicHoliday = () => {
                 </thead>
                 <tbody>
                   {data?.map((data, id) => (
-                    <tr className="!font-medium border-b" key={id}>
-                      <td className="!text-left pl-9">{id + 1}</td>
-                      <td className="py-3 text-left">{data.name}</td>
-                      <td className="py-3 text-left">
-                        {data && format(new Date(data?.date), "PP")}
-                      </td>
-                      <td className="py-3  text-left">{data.type}</td>
-                      <td className=" text-left">
-                        <IconButton
-                          color="primary"
-                          aria-label="edit"
-                          onClick={() => handleOperateEdit(data._id)}
-                        >
-                          <EditOutlinedIcon />
-                        </IconButton>
-                        <IconButton
-                          color="error"
-                          aria-label="delete"
-                          onClick={() => handleOperateDelete(data._id)}
-                        >
-                          <DeleteOutlineIcon />
-                        </IconButton>
-                      </td>
-                    </tr>
+                    <HolidayRow {...{ data, id }} />
                   ))}
                 </tbody>
               </table>
@@ -350,8 +302,8 @@ const PublicHoliday = () => {
                         value={region}
                         name="region"
                       >
-                        {locations.length > 0 ? (
-                          locations.map((location, idx) => (
+                        {locations?.length > 0 ? (
+                          locations?.map((location, idx) => (
                             <MenuItem key={idx} value={location.shortName}>
                               {location.shortName}
                             </MenuItem>
