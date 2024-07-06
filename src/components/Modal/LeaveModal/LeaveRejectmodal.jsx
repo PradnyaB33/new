@@ -153,7 +153,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                 <h1 className="text-xl px-4 md:!px-0 font-semibold ">
                   {" "}
                   {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
-                  has filed a request to refuse{" "}
+                  has filed a request to deny{" "}
                   {items?.leaveTypeDetailsId?.leaveName} on{" "}
                   {format(new Date(items.start), "dd-MM-yyyy")}
                 </h1>
