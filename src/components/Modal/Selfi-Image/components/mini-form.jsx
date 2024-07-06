@@ -1,9 +1,9 @@
-import { EmojiEmotionsOutlined } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import useLocationMutation from "../../../../hooks/QueryHook/Location/mutation";
 import useSelfieStore from "../../../../hooks/QueryHook/Location/zustand-store";
 import useSelfieFaceDetect from "../useSelfieFaceDetect";
+import Loader from "./Loader";
 
 const MiniForm = () => {
   const { media } = useSelfieStore();
@@ -75,9 +75,7 @@ const MiniForm = () => {
           className={`container rounded-lg ${imageCaptured && "!hidden"}`}
           id="client-video"
         ></video>
-        <div className="preloader12 absolute inset-0 flex items-center justify-center p">
-          <EmojiEmotionsOutlined className="pulse text-white !text-4xl" />
-        </div>
+        <Loader isLoading={true} />
 
         <canvas
           ref={photoRef}
