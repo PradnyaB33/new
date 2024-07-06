@@ -17,6 +17,7 @@ export default function FabIcons() {
     setStartTime();
   };
   const { faceDetectedData } = useSelfieFaceDetect();
+
   console.log(
     `🚀 ~ file: speed-dial.jsx:20 ~ faceDetectedData:`,
     faceDetectedData
@@ -25,7 +26,7 @@ export default function FabIcons() {
     <>
       {!start ? (
         <Fab
-          disabled={true}
+          disabled={faceDetectedData === undefined}
           onClick={() => setOpen(true)}
           color="primary"
           variant="extended"

@@ -40,6 +40,7 @@ const MiniForm = () => {
       img,
     });
 
+    console.log(`🚀 ~ file: mini-form.jsx:48 ~ faces:`, faces);
     const descriptor = new Float32Array(faceDetectedData?.data?.descriptor);
     if (faces?.length !== 1) {
       return setImageCaptured(false);
