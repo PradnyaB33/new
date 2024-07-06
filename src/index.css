@@ -203,15 +203,6 @@ body {
   width: 250px;
   height: 250px;
 }
-.preloader12 {
-  border: 3px solid #1976d2;
-  border-top: 3px solid #d5312f;
-  border-bottom: 3px solid #d5312f;
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
-  animation: spin 1s ease-in-out infinite;
-}
 
 .SetupSection {
   opacity: 0;

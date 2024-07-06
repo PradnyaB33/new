@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as faceApi from "face-api.js";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import useFaceStore from "../../../hooks/FaceMode/useFaceStore";
@@ -10,6 +10,7 @@ const useSelfieFaceDetect = () => {
   const { handleAlert } = useContext(TestContext);
   const { descriptor, setDescriptor } = useFaceStore();
   const { decodedToken } = useGetUser();
+  const [loading, setLoading] = useState(false);
 
   const loadModels = async () => {
     await faceApi.nets.faceExpressionNet.loadFromUri("/models");
@@ -26,7 +27,7 @@ const useSelfieFaceDetect = () => {
     };
   };
 
-  const { data, isLoading, isFetched } = useQuery({
+  const { data, isLoading, isFetching } = useQuery({
     queryKey: ["load-model"],
     queryFn: loadModels,
     refetchOnMount: false,
@@ -43,7 +44,10 @@ const useSelfieFaceDetect = () => {
     return faces;
   };
 
-  const { mutateAsync: detectFaceOnlyMutation } = useMutation({
+  const {
+    mutateAsync: detectFaceOnlyMutation,
+    isLoading: isFaceDetectionLoading,
+  } = useMutation({
     mutationFn: detectFaceOnly,
     onSuccess: async (data) => {
       if (data?.length === 0) {
@@ -73,20 +77,21 @@ const useSelfieFaceDetect = () => {
     return results;
   };
 
-  const { mutateAsync: matchFacesMutation } = useMutation({
-    mutationFn: matchFaces,
-    onSuccess: (data) => {
-      if (data._label === decodedToken?.user?._id) {
-        handleAlert(true, "success", "Face match found");
-      } else {
-        handleAlert(true, "error", "Face match not found");
-      }
-    },
-    onError: (error) => {
-      console.error("Error matching faces", error);
-      handleAlert(true, "error", error?.message);
-    },
-  });
+  const { mutateAsync: matchFacesMutation, isLoading: isMutationLoading } =
+    useMutation({
+      mutationFn: matchFaces,
+      onSuccess: (data) => {
+        if (data._label === decodedToken?.user?._id) {
+          handleAlert(true, "success", "Face match found");
+        } else {
+          handleAlert(true, "error", "Face match not found");
+        }
+      },
+      onError: (error) => {
+        console.error("Error matching faces", error);
+        handleAlert(true, "error", error?.message);
+      },
+    });
 
   const getImageAndVerify = async ({ localDescriptor }) => {
     const config = { headers: { "Content-Type": "application/json" } };
@@ -114,27 +119,17 @@ const useSelfieFaceDetect = () => {
   return {
     data,
     isLoading,
-    isFetched,
     matchFacesMutation,
     detectFaceOnlyMutation,
     descriptor,
     setDescriptor,
     faceDetectedData,
+    loading,
+    setLoading,
+    isMutationLoading,
+    isFaceDetectionLoading,
+    isFetching,
   };
 };
 
 export default useSelfieFaceDetect;
-//   let matchScore = 0.63;
-//   let descriptorFloat32 = new Float32Array(data?.descriptor);
-
-//   let labeledFace = new faceApi.LabeledFaceDescriptors(
-//     decodedToken?.user?._id,
-//     [descriptorFloat32]
-//   );
-//   let faceMatcher = new faceApi.FaceMatcher(labeledFace, matchScore);
-//   let results = faceMatcher.findBestMatch(localDescriptor);
-//   if (results._label === decodedToken?.user?._id) {
-//     handleAlert(true, "success", "Face match found");
-//   } else {
-//     handleAlert(true, "error", "Face match not found");
-//   }

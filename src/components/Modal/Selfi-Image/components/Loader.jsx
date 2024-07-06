@@ -4,13 +4,15 @@ import React from "react";
 const Loader = ({ isLoading = false }) => {
   return (
     isLoading && (
-      <>
+      <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center flex-col gap-4 backdrop-filter backdrop-blur-sm bg-black bg-opacity-30 z-50">
         {" "}
-        <div className="preloader12 absolute left-0 right-0 m-auto inset-0 flex items-center justify-center p">
-          <EmojiEmotionsOutlined className="pulse text-white !text-4xl" />
+        <div className="rounded-full border-t-[3px] border-b-[3px] border-[3px] border-[#1976d2] border-t-[#d5312f] border-b-[#d5312f] animate-spin w-14 h-14 inset-0 flex items-center justify-center p">
+          <EmojiEmotionsOutlined className="animate-pulse text-white !text-4xl" />
         </div>
-        <p>Recognizing face and authenticating</p>
-      </>
+        <p className="text-white animate-pulse ring-offset-2 underline-offset-4 underline">
+          Recognizing face and authenticating
+        </p>
+      </div>
     )
   );
 };
