@@ -1,3 +1,4 @@
+import { EmojiEmotionsOutlined } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import useLocationMutation from "../../../../hooks/QueryHook/Location/mutation";
@@ -67,17 +68,23 @@ const MiniForm = () => {
       className="flex flex-col gap-4 w-full"
       noValidate
     >
-      <video
-        ref={videoRef}
-        autoPlay={true}
-        className={`container rounded-lg ${imageCaptured && "!hidden"}`}
-        id="client-video"
-      />
-      <canvas
-        ref={photoRef}
-        className={`container rounded-lg ${!imageCaptured && "!hidden"}`}
-        id="client-photo"
-      />
+      <div className="relative backdrop-filter backdrop-blur-sm bg-opacity-30 z-50">
+        <video
+          ref={videoRef}
+          autoPlay={true}
+          className={`container rounded-lg ${imageCaptured && "!hidden"}`}
+          id="client-video"
+        ></video>
+        <div className="preloader12 absolute inset-0 flex items-center justify-center p">
+          <EmojiEmotionsOutlined className="pulse text-white !text-4xl" />
+        </div>
+
+        <canvas
+          ref={photoRef}
+          className={`container rounded-lg ${!imageCaptured && "!hidden"}`}
+          id="client-photo"
+        />
+      </div>
       <div className="flex w-full justify-between">
         <Button
           onClick={clearImage}
