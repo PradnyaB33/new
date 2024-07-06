@@ -44,10 +44,14 @@ const MiniForm = () => {
     if (faces?.length !== 1) {
       return setImageCaptured(false);
     }
-    await matchFacesMutation({
+    const response = await matchFacesMutation({
       currentDescriptor: faces[0]?.descriptor,
       descriptor,
     });
+    if (response?._label === "unknown") {
+      return setImageCaptured(false);
+    }
+    console.log(`🚀 ~ file: mini-form.jsx:62 ~ response:`, response);
   };
 
   const clearImage = () => {
