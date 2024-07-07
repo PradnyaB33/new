@@ -8,20 +8,20 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
+import EditDesignation from "./edit-form";
 
-const DesignationRow = ({ data, id }) => {
-  const [showConfirmationDialog, setShowConfirmationDialog] =
-    React.useState(false);
+const DesignationRow = ({
+  data,
+  id,
+  updateDesignationMutation,
+  deleteDesignationMutation,
+}) => {
+  const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [showEditDesignationModal, setShowEditDesignationModal] =
-    React.useState(false);
+    useState(false);
 
-  const handleUpdateConfirmation = () => {
-    console.log("update");
-  };
-  const handleConfirmDelete = () => {
-    console.log("delete");
-  };
+  const [editDesignation, setEditDesignation] = useState(false);
 
   return (
     <tr className="!font-medium border-b" key={id}>
@@ -65,7 +65,12 @@ const DesignationRow = ({ data, id }) => {
             <Button
               variant="contained"
               size="small"
-              onClick={handleConfirmDelete}
+              onClick={() =>
+                deleteDesignationMutation({
+                  designationId: data?._id,
+                  onClose: () => setShowConfirmationDialog(false),
+                })
+              }
               color="error"
             >
               Delete
@@ -95,12 +100,21 @@ const DesignationRow = ({ data, id }) => {
             <Button
               variant="contained"
               color="error"
-              onClick={handleUpdateConfirmation}
+              onClick={() => {
+                setEditDesignation(true);
+                setShowEditDesignationModal(false);
+              }}
             >
               Update
             </Button>
           </DialogActions>
         </Dialog>
+        <EditDesignation
+          open={editDesignation}
+          handleClose={() => setEditDesignation(false)}
+          defaultValues={data}
+          updateDesignation={updateDesignationMutation}
+        />
       </td>
     </tr>
   );

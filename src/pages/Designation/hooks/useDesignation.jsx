@@ -18,7 +18,7 @@ const useDesignation = () => {
 
     return response.data.designations;
   };
-  const { data: designation } = useQuery({
+  const { data: designation, isFetching } = useQuery({
     queryKey: [`designation-list-${organisationId}`],
     queryFn: getDesignation,
     refetchOnMount: false,
@@ -63,7 +63,77 @@ const useDesignation = () => {
     },
   });
 
-  return { designation, addDesignationMutation };
+  const deleteDesignation = async ({ designationId, onClose }) => {
+    const response = await axios.delete(
+      `${process.env.REACT_APP_API}/route/designation/create/${designationId}`,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+    return response.data;
+  };
+
+  const { mutate: deleteDesignationMutation } = useMutation({
+    mutationFn: deleteDesignation,
+    onSuccess: async (data, { onClose }) => {
+      console.log("Designation deleted successfully", data);
+      await queryClient.invalidateQueries([
+        `designation-list-${organisationId}`,
+      ]);
+      onClose();
+      handleAlert(true, "success", "Designation deleted successfully");
+    },
+    onError: (error) => {
+      console.error("Error deleting designation", error);
+      handleAlert(
+        true,
+        "error",
+        error?.response?.data?.message || "Error deleting designation"
+      );
+    },
+  });
+
+  const editDesignation = async ({ designationId, data, onClose }) => {
+    const response = await axios.patch(
+      `${process.env.REACT_APP_API}/route/designation/create/${designationId}`,
+      data
+    );
+    return response.data;
+  };
+
+  const { mutate: updateDesignationMutation } = useMutation({
+    mutationFn: editDesignation,
+    onSuccess: async (data, { onClose }) => {
+      console.log("Designation edited successfully", data);
+      onClose();
+      await queryClient.invalidateQueries([
+        `designation-list-${organisationId}`,
+      ]);
+      handleAlert(
+        true,
+        "success",
+        data?.message || "Designation edited successfully"
+      );
+    },
+    onError: (error) => {
+      console.error("Error editing designation", error);
+      handleAlert(
+        true,
+        "error",
+        error?.response?.data?.message || "Error editing designation"
+      );
+    },
+  });
+
+  return {
+    designation,
+    addDesignationMutation,
+    deleteDesignationMutation,
+    updateDesignationMutation,
+    isFetching,
+  };
 };
 
 export default useDesignation;

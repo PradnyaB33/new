@@ -10,8 +10,12 @@ import useDepartmentLocation from "./hooks/useDepartmentLocation";
 
 const OrganizationLocations = () => {
   const [open, setOpen] = useState(false);
-  const { locationList, addLocationMutation, deleteLocationMutation } =
-    useDepartmentLocation();
+  const {
+    locationList,
+    addLocationMutation,
+    deleteLocationMutation,
+    updateLocationMutation,
+  } = useDepartmentLocation();
   return (
     <section className="bg-gray-50 min-h-screen w-full">
       <Setup>
@@ -81,7 +85,12 @@ const OrganizationLocations = () => {
                   <tbody>
                     {locationList?.map((location, index) => (
                       <LocationRow
-                        {...{ location, index, deleteLocationMutation }}
+                        {...{
+                          location,
+                          index,
+                          deleteLocationMutation,
+                          updateLocationMutation,
+                        }}
                       />
                     ))}
                   </tbody>

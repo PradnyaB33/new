@@ -10,7 +10,12 @@ import {
 import React from "react";
 import LocationEdit from "./location-edit";
 
-const LocationRow = ({ location, index, deleteLocationMutation }) => {
+const LocationRow = ({
+  location,
+  index,
+  deleteLocationMutation,
+  updateLocationMutation,
+}) => {
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   return (
@@ -80,6 +85,7 @@ const LocationRow = ({ location, index, deleteLocationMutation }) => {
           open={editOpen}
           onClose={() => setEditOpen(false)}
           defaultValues={location}
+          updateLocationMutation={updateLocationMutation}
         />
       </td>
     </tr>

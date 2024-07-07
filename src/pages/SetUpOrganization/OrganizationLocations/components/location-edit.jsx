@@ -20,7 +20,7 @@ import ReusableModal from "../../../../components/Modal/component";
 const LocationEdit = ({
   open,
   onClose,
-  addLocationMutation,
+  updateLocationMutation,
   defaultValues,
 }) => {
   console.log(
@@ -62,7 +62,11 @@ const LocationEdit = ({
   console.log(`🚀 ~ file: location-edit.jsx:30 ~ errors:`, errors);
   const onSubmit = async (data) => {
     console.log(data);
-    addLocationMutation({ data, onClose: closedAndReset });
+    updateLocationMutation({
+      data,
+      onClose: closedAndReset,
+      locationId: defaultValues._id,
+    });
   };
 
   const selectedCountryCode = Country.getAllCountries().find(
