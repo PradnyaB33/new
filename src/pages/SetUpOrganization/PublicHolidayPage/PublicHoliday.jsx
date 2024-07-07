@@ -1,6 +1,4 @@
 import { Info } from "@mui/icons-material";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import HolidayVillageOutlinedIcon from "@mui/icons-material/HolidayVillageOutlined";
 import {
   Button,
@@ -9,28 +7,28 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
-  IconButton,
   InputLabel,
   MenuItem,
   Select,
   TextField,
-  Typography,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
-import { format } from "date-fns";
 import dayjs from "dayjs";
-import React, { useContext, useEffect, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import React, { useContext, useState } from "react";
+import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
+import ReusableModel from "../../../components/Modal/component";
 import Setup from "../Setup";
+import HolidayRow from "./components/holiday-row";
+import MiniForm from "./components/miniform";
+import usePublicHoliday from "./components/usePublicHoliday";
 
 const PublicHoliday = () => {
-  const id = useParams().organisationId;
   const { setAppAlert } = useContext(UseContext);
   const [openModal, setOpenModal] = useState(false);
   const [actionModal, setActionModal] = useState(false);
@@ -38,14 +36,11 @@ const PublicHoliday = () => {
   const [type, setType] = useState("");
   const [region, setRegion] = useState("");
   const [operation, setOperation] = useState("");
-  const [locations, setLocations] = useState([]);
   const [selectedHolidayId, setSelectedHolidayId] = useState(null);
-  const { cookies } = useContext(UseContext);
-  const authToken = cookies["aegis"];
-  const [formSubmitted, setFormSubmitted] = useState(false);
   const queryClient = useQueryClient();
 
   const orgId = useParams().organisationId;
+  const { data, locations } = usePublicHoliday();
 
   const [inputdata, setInputData] = useState({
     name: "",
@@ -55,51 +50,7 @@ const PublicHoliday = () => {
     organizationId: "",
   });
 
-  useEffect(() => {
-    (async () => {
-      await axios
-        .get(
-          `${process.env.REACT_APP_API}/route/location/getOrganizationLocations/${id}`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        )
-        .then((resp) => {
-          setLocations(resp.data.locationsData);
-        })
-        .catch((e) => console.log(e));
-    })();
-  }, [authToken, id]);
-
-  const { data } = useQuery("holidays", async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/holiday/get/${id}`
-      );
-      return response.data.holidays;
-    } catch (error) {
-      console.error("Error fetching holidays:", error);
-      setAppAlert({
-        alert: true,
-        type: "error",
-        msg: "An Error occurred while fetching holidays",
-      });
-    }
-  });
   console.log(`🚀 ~ file: PublicHoliday.jsx:77 ~ data:`, data);
-
-  const handleData = (e) => {
-    const { name, value } = e.target;
-
-    if (value.length <= 35) {
-      setInputData({
-        ...inputdata,
-        [name]: value,
-      });
-    }
-  };
 
   const handleClose = () => {
     setOpenModal(false);
@@ -122,30 +73,6 @@ const PublicHoliday = () => {
       ...prev,
       date: newDate.toISOString(),
     }));
-  };
-  const handleSubmit = async () => {
-    setFormSubmitted(true);
-    if (!inputdata.name && !inputdata.type && !inputdata.region) return;
-    try {
-      await axios.post(`${process.env.REACT_APP_API}/route/holiday/create`, {
-        ...inputdata,
-        organizationId: id,
-      });
-      setOpenModal(false);
-      setAppAlert({
-        alert: true,
-        type: "success",
-        msg: "Holiday created successfully.",
-      });
-      queryClient.invalidateQueries("holidays");
-    } catch (error) {
-      console.error("Error:", error);
-      setAppAlert({
-        alert: true,
-        type: "error",
-        msg: error.response.data.message,
-      });
-    }
   };
 
   const handleOperateEdit = async (id) => {
@@ -235,22 +162,6 @@ const PublicHoliday = () => {
 
     handleClose();
   };
-  const isHoliday = (date) => {
-    // Ensure date is a Date object
-    const validDate = date instanceof Date ? date : new Date(date);
-    if (isNaN(validDate)) {
-      console.error("Invalid date provided to isHoliday");
-      return false;
-    }
-
-    // Convert the date to be checked to the start of the day in local time for accurate comparison
-    // Adjust the holiday date to the start of the day in local time before comparison
-    return data.some((holiday) => {
-      const holidayDateLocal = new Date(holiday.date).toLocaleDateString();
-      const dateLocal = validDate.toLocaleDateString();
-      return holidayDateLocal === dateLocal;
-    });
-  };
 
   return (
     <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
@@ -301,30 +212,7 @@ const PublicHoliday = () => {
                 </thead>
                 <tbody>
                   {data?.map((data, id) => (
-                    <tr className="!font-medium border-b" key={id}>
-                      <td className="!text-left pl-9">{id + 1}</td>
-                      <td className="py-3 text-left">{data.name}</td>
-                      <td className="py-3 text-left">
-                        {data && format(new Date(data?.date), "PP")}
-                      </td>
-                      <td className="py-3  text-left">{data.type}</td>
-                      <td className=" text-left">
-                        <IconButton
-                          color="primary"
-                          aria-label="edit"
-                          onClick={() => handleOperateEdit(data._id)}
-                        >
-                          <EditOutlinedIcon />
-                        </IconButton>
-                        <IconButton
-                          color="error"
-                          aria-label="delete"
-                          onClick={() => handleOperateDelete(data._id)}
-                        >
-                          <DeleteOutlineIcon />
-                        </IconButton>
-                      </td>
-                    </tr>
+                    <HolidayRow {...{ data, id }} />
                   ))}
                 </tbody>
               </table>
@@ -339,119 +227,14 @@ const PublicHoliday = () => {
             </section>
           )}
 
-          <Dialog
+          <ReusableModel
+            heading="Add Public Holiday"
+            subHeading="Add a public holiday to your organization"
             open={openModal}
             onClose={handleClose}
-            maxWidth="sm"
-            fullWidth
           >
-            <h1 className="text-xl pl-2 font-semibold font-sans mt-4 ml-4">
-              Add Holiday
-            </h1>
-            <DialogContent className="flex gap-3 flex-col">
-              <div className="flex gap-3 flex-col mt-3">
-                <TextField
-                  required
-                  size="small"
-                  className="w-full"
-                  label="Holiday name"
-                  type="text"
-                  name="name"
-                  value={inputdata.name}
-                  onChange={handleData}
-                />
-                {!inputdata.name && formSubmitted && (
-                  <Typography variant="body2" color="error">
-                    Required.
-                  </Typography>
-                )}
-
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer
-                    className="w-full"
-                    components={["DatePicker"]}
-                    required
-                  >
-                    <DatePicker
-                      label="Date"
-                      value={inputdata.date}
-                      onChange={(newDate) => {
-                        setInputData({
-                          ...inputdata,
-                          date: newDate,
-                        });
-                        console.log(newDate);
-                      }}
-                      slotProps={{
-                        textField: { size: "small", fullWidth: true },
-                      }}
-                      shouldDisableDate={isHoliday}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                <FormControl size="small" fullWidth>
-                  <InputLabel id="holiday-type-label">Holiday type</InputLabel>
-                  <Select
-                    labelId="holiday-type-label"
-                    id="demo-simple-select"
-                    label="holiday type"
-                    className="mb-[8px]"
-                    value={inputdata.type}
-                    name="type"
-                    onChange={handleData}
-                  >
-                    <MenuItem value="Optional">Optional</MenuItem>
-                    <MenuItem value="Mandatory">Mandatory</MenuItem>
-                  </Select>
-                </FormControl>
-                {!inputdata.type && formSubmitted && (
-                  <Typography variant="body2" color="error">
-                    Required.
-                  </Typography>
-                )}
-                <FormControl size="small" fullWidth>
-                  <InputLabel id="region-label">Region</InputLabel>
-                  <Select
-                    labelId="region-label"
-                    id="demo-simple-select"
-                    label="Region"
-                    className="mb-[8px]"
-                    onChange={handleData}
-                    value={inputdata.region}
-                    name="region"
-                  >
-                    {locations.map((location, idx) => (
-                      <MenuItem key={idx} value={location.shortName}>
-                        {location.shortName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                {!inputdata.region && formSubmitted && (
-                  <Typography variant="body2" color="error">
-                    Required.
-                  </Typography>
-                )}
-                <div className="flex gap-4  mt-4  justify-end">
-                  <Button
-                    onClick={handleClose}
-                    color="error"
-                    variant="outlined"
-                  >
-                    Cancel
-                  </Button>
-
-                  <Button
-                    onClick={handleSubmit}
-                    variant="contained"
-                    color="primary"
-                  >
-                    Submit
-                  </Button>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+            <MiniForm locations={locations} data={data} onClose={handleClose} />
+          </ReusableModel>
 
           <Dialog fullWidth open={actionModal} onClose={handleClose}>
             <DialogContent>
@@ -519,8 +302,8 @@ const PublicHoliday = () => {
                         value={region}
                         name="region"
                       >
-                        {locations.length > 0 ? (
-                          locations.map((location, idx) => (
+                        {locations?.length > 0 ? (
+                          locations?.map((location, idx) => (
                             <MenuItem key={idx} value={location.shortName}>
                               {location.shortName}
                             </MenuItem>

@@ -14,7 +14,15 @@ import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
 const organizationSchema = z.object({
   allowance: z.boolean(),
-  allowanceQuantity: z.string(),
+  allowanceQuantity: z.string().refine(
+    (doc) => {
+      // number should greater than 0 and less than 100000
+      return Number(doc) >= 0 && Number(doc) < 100000;
+    },
+    {
+      message: "The Allowance Quantity must be between 0 and 1,00,000",
+    }
+  ),
   dualWorkflow: z.boolean(),
   geoFencing: z.boolean(),
   faceRecognition: z.boolean(),

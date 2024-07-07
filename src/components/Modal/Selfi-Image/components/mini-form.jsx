@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import useLocationMutation from "../../../../hooks/QueryHook/Location/mutation";
 import useSelfieStore from "../../../../hooks/QueryHook/Location/zustand-store";
 import useSelfieFaceDetect from "../useSelfieFaceDetect";
+import Loader from "./Loader";
 
 const MiniForm = () => {
   const { media } = useSelfieStore();
@@ -44,10 +45,14 @@ const MiniForm = () => {
     if (faces?.length !== 1) {
       return setImageCaptured(false);
     }
-    await matchFacesMutation({
+    const response = await matchFacesMutation({
       currentDescriptor: faces[0]?.descriptor,
       descriptor,
     });
+    if (response?._label === "unknown") {
+      return setImageCaptured(false);
+    }
+    console.log(`🚀 ~ file: mini-form.jsx:62 ~ response:`, response);
   };
 
   const clearImage = () => {
@@ -63,17 +68,21 @@ const MiniForm = () => {
       className="flex flex-col gap-4 w-full"
       noValidate
     >
-      <video
-        ref={videoRef}
-        autoPlay={true}
-        className={`container rounded-lg ${imageCaptured && "!hidden"}`}
-        id="client-video"
-      />
-      <canvas
-        ref={photoRef}
-        className={`container rounded-lg ${!imageCaptured && "!hidden"}`}
-        id="client-photo"
-      />
+      <div className="relative backdrop-filter backdrop-blur-sm bg-opacity-30 z-50">
+        <video
+          ref={videoRef}
+          autoPlay={true}
+          className={`container rounded-lg ${imageCaptured && "!hidden"}`}
+          id="client-video"
+        ></video>
+        <Loader isLoading={true} />
+
+        <canvas
+          ref={photoRef}
+          className={`container rounded-lg ${!imageCaptured && "!hidden"}`}
+          id="client-photo"
+        />
+      </div>
       <div className="flex w-full justify-between">
         <Button
           onClick={clearImage}

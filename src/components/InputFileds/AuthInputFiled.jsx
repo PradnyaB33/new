@@ -61,6 +61,7 @@ const AuthInputFiled = ({
   isClearable = false,
   useRange = false,
   asSingle = true,
+  shouldDisableDate,
 }) => {
   const [focusedInput, setFocusedInput] = React.useState(null);
   const { updateField } = useEmpState();
@@ -695,6 +696,7 @@ const AuthInputFiled = ({
                 {...field}
                 disabled={disabled}
                 formNoValidate
+                shouldDisableDate={shouldDisableDate}
               />
               <label
                 htmlFor={name}
@@ -836,6 +838,7 @@ const AuthInputFiled = ({
                   } border-none bg-white w-full outline-none px-2`}
                   {...field}
                   formNoValidate
+                  shouldDisableDate={shouldDisableDate}
                 />
               </div>
             </>
@@ -1102,6 +1105,7 @@ const AuthInputFiled = ({
                   {...field}
                   autoComplete={autoComplete ?? "on"}
                   formNoValidate
+                  shouldDisableDate={shouldDisableDate}
                 />
               </div>
             );

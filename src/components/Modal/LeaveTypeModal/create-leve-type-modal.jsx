@@ -94,7 +94,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
   return (
     <ReusableModal heading={"Add leave type"} open={open} onClose={handleClose}>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <Stack width={400}>
+        <Stack className="w-[-webkit-fill-available]">
           <AuthInputFiled
             name="leaveName"
             icon={WorkOffOutlined}
