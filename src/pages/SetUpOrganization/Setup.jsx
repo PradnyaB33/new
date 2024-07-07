@@ -4,12 +4,9 @@ import React from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import BackComponent from "../../components/BackComponent/BackComponent";
 import useSetupSideNav from "../../hooks/Nav/useSetupSideNav";
-import useSubscriptionGet from "../../hooks/QueryHook/Subscription/hook";
 
 const Setup = ({ children }) => {
   const { organisationId } = useParams("");
-  const { data: item } = useSubscriptionGet({ organisationId });
-  console.log(`🚀 ~ item:`, item);
 
   const { linkData } = useSetupSideNav({ organisationId });
   const navigate = useNavigate();
