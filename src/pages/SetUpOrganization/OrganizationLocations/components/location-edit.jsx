@@ -1,5 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { HolidayVillage } from "@mui/icons-material";
+import {
+  Business,
+  Contacts,
+  CropDin,
+  DriveFileRenameOutline,
+  Flag,
+  PinDrop,
+  RecentActors,
+  SouthAmerica,
+} from "@mui/icons-material";
 import { Button } from "@mui/material";
 import { City, Country, State } from "country-state-city";
 import React from "react";
@@ -71,10 +80,10 @@ const LocationEdit = ({
       heading={"Edit Location"}
       subHeading={"Edit the location of your organisation"}
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} className="overflow-scroll">
         <AuthInputFiled
           name="continent"
-          icon={HolidayVillage}
+          icon={SouthAmerica}
           control={control}
           type="naresh-select"
           placeholder="Continent"
@@ -93,7 +102,7 @@ const LocationEdit = ({
         />
         <AuthInputFiled
           name="country"
-          icon={HolidayVillage}
+          icon={Flag}
           control={control}
           type="naresh-select"
           placeholder="Country"
@@ -107,7 +116,7 @@ const LocationEdit = ({
         />
         <AuthInputFiled
           name="state"
-          icon={HolidayVillage}
+          icon={CropDin}
           control={control}
           type="naresh-select"
           placeholder="State"
@@ -123,7 +132,7 @@ const LocationEdit = ({
         />
         <AuthInputFiled
           name="city"
-          icon={HolidayVillage}
+          icon={Business}
           control={control}
           type="naresh-select"
           placeholder="City"
@@ -139,7 +148,7 @@ const LocationEdit = ({
         />
         <AuthInputFiled
           name="shortName"
-          icon={HolidayVillage}
+          icon={DriveFileRenameOutline}
           control={control}
           type="text"
           placeholder="Short Name"
@@ -149,7 +158,7 @@ const LocationEdit = ({
         />
         <AuthInputFiled
           name="pinCode"
-          icon={HolidayVillage}
+          icon={PinDrop}
           control={control}
           type="number"
           placeholder="Pin Code"
@@ -159,7 +168,7 @@ const LocationEdit = ({
         />
         <AuthInputFiled
           name="addressLine1"
-          icon={HolidayVillage}
+          icon={Contacts}
           control={control}
           type="text"
           placeholder="Address Line 1"
@@ -169,7 +178,7 @@ const LocationEdit = ({
         />
         <AuthInputFiled
           name="addressLine2"
-          icon={HolidayVillage}
+          icon={RecentActors}
           control={control}
           type="text"
           placeholder="Address Line 2"

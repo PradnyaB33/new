@@ -6,7 +6,7 @@ import { IntlProvider } from "react-intl";
 import Setup from "../Setup";
 import LocationAdd from "./components/location-add";
 import LocationRow from "./components/location-row";
-import useDepartmentLocation from "./components/useDepartmentLocation";
+import useDepartmentLocation from "./hooks/useDepartmentLocation";
 
 const OrganizationLocations = () => {
   const [open, setOpen] = useState(false);
