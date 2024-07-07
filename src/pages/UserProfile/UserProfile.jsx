@@ -11,6 +11,7 @@ import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
+import Loader from "../../components/Modal/Selfi-Image/components/Loader";
 import useLoadModel from "../../hooks/FaceMode/useFaceModal";
 import UserProfile from "../../hooks/UserData/useUser";
 import useHook from "../../hooks/UserProfile/useHook";
@@ -28,8 +29,12 @@ const EmployeeProfile = () => {
   const [url, setUrl] = useState();
   const fileInputRef = useRef();
   const [file, setFile] = useState();
-  const { detectFaceOnlyMutation, uploadImageToBackendMutation } =
-    useLoadModel();
+  const {
+    detectFaceOnlyMutation,
+    uploadImageToBackendMutation,
+    loading,
+    setLoading,
+  } = useLoadModel();
 
   const UserProfileSchema = z.object({
     additional_phone_number: z
@@ -91,6 +96,7 @@ const EmployeeProfile = () => {
   );
 
   const handleImageChange = (e) => {
+    setLoading(true);
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type.startsWith("image/")) {
       setFile(selectedFile);
@@ -104,8 +110,10 @@ const EmployeeProfile = () => {
 
         if (faces.length === 1) {
           setUrl(() => reader.result);
+          setLoading(false);
         } else {
           setUrl(UserInformation?.user_logo_url);
+          setLoading(false);
         }
       };
       reader.readAsDataURL(selectedFile);
@@ -192,6 +200,7 @@ const EmployeeProfile = () => {
                       id="image-1"
                       src={url || UserInformation?.user_logo_url}
                       alt="profile-pic"
+                      className="object-cover"
                       style={{
                         width: "150px",
                         height: "150px",
@@ -201,6 +210,11 @@ const EmployeeProfile = () => {
                   ) : (
                     <Skeleton variant="circular" width="150px" height="150px" />
                   )}
+                  <Loader
+                    isLoading={loading}
+                    outerClassName="!w-screen !h-screen"
+                  />
+
                   <button
                     type="button"
                     onClick={() => fileInputRef.current.click()}
