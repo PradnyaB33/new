@@ -135,7 +135,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                 items?.status === "Deleted" ? (
                   <h1 className="text-xl px-4 md:!px-0 font-semibold ">
                     {items?.employeeId?.first_name}{" "}
-                    {items?.employeeId?.last_name} has raised filed a request of{" "}
+                    {items?.employeeId?.last_name} has filed a request of{" "}
                     {items?.leaveTypeDetailsId?.leaveName} on{" "}
                     {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
                     {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
