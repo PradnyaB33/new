@@ -391,7 +391,7 @@ const GoalsTable = ({ performance, isError }) => {
         </div>
       )}
 
-      <div className=" bg-white rounded-md ">
+      <div className="  rounded-md ">
         {/* <div className=" py-2">
           <h1 className="text-black  text-2xl">
             {role === "Employee" ? "My Goals" : "Manager Goals"}
@@ -425,7 +425,7 @@ const GoalsTable = ({ performance, isError }) => {
             {role !== "Employee" && (
               <div className={`space-y-1 min-w-[250px]  md:min-w-[15vw] `}>
                 <div
-                  className={`flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+                  className={`flex rounded-md px-2 bg-white border-gray-200 border-[.5px]  items-center`}
                 >
                   <Checklist className="text-gray-700 md:text-lg !text-[1em]" />
                   <Select
@@ -458,7 +458,7 @@ const GoalsTable = ({ performance, isError }) => {
             {role !== "Employee" && (
               <div className={`space-y-1 min-w-[15vw] `}>
                 <div
-                  className={`flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+                  className={`flex rounded-md px-2 bg-white border-gray-200 border-[.5px] items-center`}
                 >
                   <Person className="text-gray-700 md:text-lg !text-[1em]" />
                   <Select
@@ -510,7 +510,7 @@ const GoalsTable = ({ performance, isError }) => {
         ) : orgGoals?.goals?.length <= 0 ? (
           <EmptyAlertBox title={"Goals Not Found"} />
         ) : (
-          <div className="bg-white w-full overflow-x-auto">
+          <div className=" w-full overflow-x-auto">
             {/* <section className="bg-gray-50 border py-6 px-8 rounded-md w-full">
               <article className="flex  text-red-500 gap-2">
                 <Info className="!text-3xl mt-1" />
@@ -566,7 +566,7 @@ const GoalsTable = ({ performance, isError }) => {
                   {orgGoals?.goals?.map((goal, id) => (
                     <tr
                       key={id}
-                      className={` hover:bg-gray-50 !font-medium  w-max border-b `}
+                      className={` hover:bg-gray-50 bg-white  !font-medium  w-max border-b `}
                     >
                       <td
                         onClick={() => handleOpen(goal._id)}
@@ -694,7 +694,7 @@ const GoalsTable = ({ performance, isError }) => {
               </table>
               <Stack
                 direction={"row"}
-                className="border-[.5px] border-gray-200 border-t-0 px-4 py-2 h-full  items-center w-full justify-between "
+                className="border-[.5px] border-gray-200 bg-white  border-t-0 px-4 py-2 h-full  items-center w-full justify-between "
               >
                 <div>
                   <h1>

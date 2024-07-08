@@ -12,14 +12,6 @@ const ReviewTable = ({ tableData, performance, isFetching }) => {
   const [openEdit, setOpenEdit] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
 
-  // const { fetchPerformanceSetup } = usePerformanceApi();
-  // const user = UserProfile().getCurrentUser();
-
-  // const authToken = useAuthToken();
-  // const { data: performance } = useQuery(["performancePeriod"], () =>
-  //   fetchPerformanceSetup({ user, authToken })
-  // );
-
   const handleClose = () => {
     setOpenEdit(false);
     setPage(1);
@@ -32,14 +24,7 @@ const ReviewTable = ({ tableData, performance, isFetching }) => {
 
   const itemsPerPage = 10;
 
-  // const handleChange = (event, value) => {
-  //   setPage(value);
-  // };
-
-  const paginatedData = tableData?.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
+  const paginatedData = tableData?.data;
 
   console.log(paginatedData, "review");
 

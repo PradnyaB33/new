@@ -82,7 +82,7 @@ const TestTab = () => {
 
       <div className="px-8 py-4">
         <Tab.Group>
-          <Tab.List className=" mb-3 flex w-max space-x-1 rounded-xl bg-gray-100 p-1">
+          <Tab.List className=" mb-3 flex w-max space-x-1 rounded-xl bg-gray-200 p-1">
             {tabArray
               ?.filter((tab) => {
                 if (role === "Employee" && tab?.title === "Review & Feedback") {
