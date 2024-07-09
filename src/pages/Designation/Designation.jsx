@@ -1,37 +1,27 @@
 import { Add, Info } from "@mui/icons-material";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import {
-  Button,
-  Checkbox,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControlLabel,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
+import DesignationRow from "./components/desingation-row";
+import AddDesignation from "./components/mini-form-add";
+import useDesignation from "./hooks/useDesignation";
 
 const Designation = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [click, setClick] = useState(false);
+  console.log(`🚀 ~ file: Designation.jsx:18 ~ click:`, click);
   const { organisationId } = useParams();
   const [designationIdRequired, setDesignationIdRequired] = useState(false);
   const { setAppAlert } = useContext(UseContext);
   const [prefixRequired, setPrefixRequired] = useState(false);
   const [prefixLength, setPrefixLength] = useState(0);
   const [numCharacters, setNumCharacters] = useState(1);
-  const [designation, setDesignation] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [designationName, setDesignationName] = useState("");
   const [counter, setCounter] = useState(1);
@@ -43,6 +33,9 @@ const Designation = () => {
   const [trackedId, setTrackedId] = useState("");
   const [showUpdateConfirmationDialog, setShowUpdateConfirmationDialog] =
     useState(false);
+
+  const { designation, addDesignationMutation } = useDesignation();
+  console.log(`🚀 ~ file: Designation.jsx:43 ~ designation:`, designation);
 
   const handleClick = (id) => {
     setClick(!click);
@@ -58,7 +51,6 @@ const Designation = () => {
     axios
       .get(`${process.env.REACT_APP_API}/route/designation/create/${id}`)
       .then((response) => {
-        setDesignation(response.data.designation);
         console.log(designation);
         setTrackedId(id);
         setDesignationName(response.data.designation.designationName);
@@ -242,17 +234,6 @@ const Designation = () => {
     setDesignationToDelete(null);
   };
 
-  const { data: data2 } = useQuery("designations", async () => {
-    try {
-      const resp = await axios.get(
-        `${process.env.REACT_APP_API}/route/designation/create/${organisationId}`
-      );
-      return resp.data.designations;
-    } catch (error) {
-      console.error("Error fetching data :", error.message);
-    }
-  });
-
   const getPrefixFromName = (name, length) => {
     return name.substring(0, length);
   };
@@ -282,14 +263,14 @@ const Designation = () => {
               </div>
               <Button
                 className="!font-semibold !bg-sky-500 flex items-center gap-2"
-                onClick={handleAddDesignation}
+                onClick={() => setClick(true)}
                 variant="contained"
               >
                 <Add />
                 Add Designation
               </Button>
             </div>
-            {data2?.length > 0 ? (
+            {designation?.length > 0 ? (
               <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
                 <table className="min-w-full bg-white text-left !text-sm font-light">
                   <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
@@ -306,27 +287,8 @@ const Designation = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {data2?.map((data, id) => (
-                      <tr className="!font-medium border-b" key={id}>
-                        <td className="!text-left pl-9">{id + 1}</td>
-                        <td className=" py-3">{data?.designationName}</td>
-                        <td className="px-2">
-                          <IconButton
-                            color="primary"
-                            aria-label="edit"
-                            onClick={() => handleClickEdit(data._id)}
-                          >
-                            <EditOutlinedIcon />
-                          </IconButton>
-                          <IconButton
-                            color="error"
-                            aria-label="delete"
-                            onClick={() => handleDeleteDesignation(data._id)}
-                          >
-                            <DeleteOutlineIcon />
-                          </IconButton>
-                        </td>
-                      </tr>
+                    {designation?.map((data, id) => (
+                      <DesignationRow key={id} {...{ data, id }} />
                     ))}
                   </tbody>
                 </table>
@@ -340,173 +302,13 @@ const Designation = () => {
                 <p>No designation found. Please add a designation.</p>
               </section>
             )}
-
-            <Dialog open={click} onClose={handleClose} maxWidth="sm" fullWidth>
-              <h1 className="text-xl pl-2 font-semibold font-sans mt-4 ml-4">
-                {editMode ? "Edit Designation" : "Add Designation"}
-              </h1>
-              <DialogContent>
-                <TextField
-                  style={{ marginTop: "1rem", marginBottom: "1rem" }}
-                  required
-                  name="name"
-                  size="small"
-                  className="w-full"
-                  label="Designation Name"
-                  type="text"
-                  value={designationName}
-                  onChange={(e) => {
-                    if (e.target.value.length <= 35) {
-                      setDesignationName(e.target.value);
-                    }
-                  }}
-                />
-                {designationIdRequired && (
-                  <>
-                    {prefixRequired && (
-                      <TextField
-                        style={{ marginBottom: "1rem", marginTop: "1rem" }}
-                        required
-                        name="prefixLength"
-                        size="small"
-                        className="w-full"
-                        label="Prefix Length"
-                        type="number"
-                        value={prefixLength}
-                        onChange={(e) => setPrefixLength(e.target.value)}
-                        inputProps={{ min: "1", max: "6" }}
-                      />
-                    )}
-                  </>
-                )}
-
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={enterDesignationId}
-                      onChange={() =>
-                        setEnterDesignationId(!enterDesignationId)
-                      }
-                    />
-                  }
-                  label="Prefix Required"
-                />
-                {enterDesignationId && (
-                  <>
-                    <p className="font-extrabold">
-                      Note 1: Please provide the length of prefix characters
-                      below.
-                    </p>
-                  </>
-                )}
-                {!enterDesignationId && (
-                  <>
-                    <p className="font-extrabold">
-                      Note : you can add numbers by default
-                    </p>
-                  </>
-                )}
-
-                {enterDesignationId && (
-                  <>
-                    <TextField
-                      style={{ marginTop: "1rem" }}
-                      required
-                      name="numCharacters"
-                      size="small"
-                      className="w-full"
-                      label="no of Characters"
-                      type="number"
-                      value={numCharacters}
-                      onChange={(e) => setNumCharacters(e.target.value)}
-                    />
-                    <p className="font-extrabold my-2">
-                      Note 2: If the number of characters is 0, only numeric
-                      values are accepted.
-                    </p>
-                  </>
-                )}
-
-                <TextField
-                  style={{ marginTop: "1rem" }}
-                  name="designationId"
-                  size="small"
-                  className="w-full"
-                  label="Designation ID"
-                  type="text"
-                  value={designationId}
-                  onChange={handleDesignationIdChange}
-                />
-                {!designationId}
-              </DialogContent>
-
-              <div className="mt-5  mb-4 flex  gap-2  mr-4 justify-end">
-                <Button color="error" variant="outlined" onClick={handleClose}>
-                  cancel
-                </Button>
-                <Button
-                  onClick={handleAddDesignation}
-                  variant="contained"
-                  color="primary"
-                >
-                  {editMode ? "Apply" : "Submit"}
-                </Button>
-              </div>
-            </Dialog>
-            <Dialog
-              open={showConfirmationDialog}
-              onClose={handleCloseConfirmationDialog}
-            >
-              <DialogTitle>Confirm Deletion</DialogTitle>
-              <DialogContent>
-                <p>
-                  Please confirm your decision to delete this designation, as
-                  this action cannot be undone.
-                </p>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  onClick={handleCloseConfirmationDialog}
-                  variant="outlined"
-                  color="primary"
-                  size="small"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="contained"
-                  size="small"
-                  onClick={handleConfirmDelete}
-                  color="error"
-                >
-                  Delete
-                </Button>
-              </DialogActions>
-            </Dialog>
-            <Dialog
-              open={showUpdateConfirmationDialog}
-              onClose={() => setShowUpdateConfirmationDialog(false)}
-              maxWidth="sm"
-              fullWidth
-            >
-              <DialogTitle>Confirmation</DialogTitle>
-              <DialogContent>
-                <Typography>
-                  Are you sure you want to update this designation?
-                </Typography>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  color="primary"
-                  onClick={() => setShowUpdateConfirmationDialog(false)}
-                >
-                  Cancel
-                </Button>
-                <Button color="error" onClick={handleUpdateConfirmation}>
-                  Update
-                </Button>
-              </DialogActions>
-            </Dialog>
+            <AddDesignation
+              {...{
+                open: click,
+                handleClose: () => setClick(false),
+                addDesignationMutation,
+              }}
+            />
           </article>
         </Setup>
       </section>

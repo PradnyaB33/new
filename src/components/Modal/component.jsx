@@ -11,7 +11,7 @@ const ReusableModal = ({ open, onClose, children, heading, subHeading }) => {
       aria-describedby="modal-modal-description"
       keepMounted={false}
     >
-      <Box className="border-none gap-2 shadow-md outline-none rounded-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 md:w-[400px] sm:w-fit w-[95%] z-10 p-4 bg-white flex flex-col">
+      <Box className="border-none gap-2 shadow-md outline-none h-[300px] md:h-fit rounded-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 md:w-[400px] sm:w-fit w-[95%] z-10 p-4 bg-white flex flex-col">
         {heading && (
           <div className="pb-2 border-b-2 flex justify-between items-center">
             <div>
