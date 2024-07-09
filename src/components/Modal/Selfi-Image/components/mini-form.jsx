@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import useLocationMutation from "../../../../hooks/QueryHook/Location/mutation";
 import useSelfieStore from "../../../../hooks/QueryHook/Location/zustand-store";
 import useSelfieFaceDetect from "../useSelfieFaceDetect";
+import Loader from "./Loader";
 
 const MiniForm = () => {
   const { media } = useSelfieStore();
@@ -10,8 +11,17 @@ const MiniForm = () => {
   const videoRef = useRef();
   const [imageCaptured, setImageCaptured] = useState(false);
   const { getImageUrl } = useLocationMutation();
-  const { faceDetectedData, detectFaceOnlyMutation, matchFacesMutation } =
-    useSelfieFaceDetect();
+  const {
+    faceDetectedData,
+    detectFaceOnlyMutation,
+    matchFacesMutation,
+    loading,
+    setLoading,
+    isLoading,
+    isMutationLoading,
+    isFaceDetectionLoading,
+    isFetching,
+  } = useSelfieFaceDetect();
 
   useEffect(() => {
     let video = videoRef.current;
@@ -19,6 +29,8 @@ const MiniForm = () => {
   }, [media]);
 
   const takePicture = async () => {
+    setLoading(() => true);
+    setImageCaptured(true);
     let width = 640;
     let height = 480;
     let photo = photoRef.current;
@@ -28,7 +40,6 @@ const MiniForm = () => {
     let ctx = photo.getContext("2d");
 
     await ctx.drawImage(video, 0, 0, photo.width, photo.height);
-    setImageCaptured(true);
 
     const dataUrl = photo.toDataURL("image/png");
 
@@ -42,6 +53,7 @@ const MiniForm = () => {
 
     const descriptor = new Float32Array(faceDetectedData?.data?.descriptor);
     if (faces?.length !== 1) {
+      setLoading(false);
       return setImageCaptured(false);
     }
     const response = await matchFacesMutation({
@@ -49,9 +61,10 @@ const MiniForm = () => {
       descriptor,
     });
     if (response?._label === "unknown") {
+      setLoading(false);
       return setImageCaptured(false);
     }
-    console.log(`🚀 ~ file: mini-form.jsx:62 ~ response:`, response);
+    setLoading(false);
   };
 
   const clearImage = () => {
@@ -67,23 +80,34 @@ const MiniForm = () => {
       className="flex flex-col gap-4 w-full"
       noValidate
     >
-      <video
-        ref={videoRef}
-        autoPlay={true}
-        className={`container rounded-lg ${imageCaptured && "!hidden"}`}
-        id="client-video"
-      />
-      <canvas
-        ref={photoRef}
-        className={`container rounded-lg ${!imageCaptured && "!hidden"}`}
-        id="client-photo"
-      />
+      <div className="relative ">
+        <video
+          ref={videoRef}
+          autoPlay={true}
+          className={`container rounded-lg ${imageCaptured && "!hidden"}`}
+          id="client-video"
+        ></video>
+        <Loader
+          isLoading={
+            loading ||
+            isLoading ||
+            isMutationLoading ||
+            isFaceDetectionLoading ||
+            isFetching
+          }
+        />
+
+        <canvas
+          ref={photoRef}
+          className={`container rounded-lg ${!imageCaptured && "!hidden"}`}
+          id="client-photo"
+        />
+      </div>
       <div className="flex w-full justify-between">
         <Button
           onClick={clearImage}
           variant="contained"
           color="error"
-          type="submit"
           disabled={!imageCaptured}
         >
           Clear
@@ -91,7 +115,6 @@ const MiniForm = () => {
         <Button
           onClick={() => getImageUrl.mutate()}
           variant="contained"
-          type="submit"
           disabled={!imageCaptured}
         >
           Upload
@@ -99,7 +122,6 @@ const MiniForm = () => {
         <Button
           onClick={takePicture}
           variant="contained"
-          type="submit"
           disabled={imageCaptured}
         >
           Capture

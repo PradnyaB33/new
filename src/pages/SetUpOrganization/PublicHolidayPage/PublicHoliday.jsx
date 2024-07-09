@@ -75,32 +75,6 @@ const PublicHoliday = () => {
     }));
   };
 
-  const handleOperateEdit = async (id) => {
-    setActionModal(true);
-    setOpenModal(false);
-    setOperation("edit");
-    setSelectedHolidayId(id);
-
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/holiday/getone/${id}`
-      );
-      const holidayData = response.data.holidays;
-
-      setName(holidayData.name);
-      setType(holidayData.type);
-      setRegion(holidayData.region);
-    } catch (error) {
-      console.error("Error fetching holiday data for edit:", error);
-    }
-  };
-
-  const handleOperateDelete = (id) => {
-    setActionModal(true);
-    setOperation("delete");
-    setSelectedHolidayId(id);
-  };
-
   const doTheOperation = async () => {
     const id = selectedHolidayId;
 

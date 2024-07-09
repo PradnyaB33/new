@@ -4,6 +4,7 @@ import useGetUser from "../../hooks/Token/useUser";
 
 const useGetGeoFencing = () => {
   const { authToken, decodedToken } = useGetUser();
+
   const fetchEmployeeLocation = async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/geo-fence/get-employee-circle/${decodedToken?.user?._id}`,
@@ -24,6 +25,11 @@ const useGetGeoFencing = () => {
   } = useQuery({
     queryKey: [`employee-geo-fence-area`, decodedToken?.user?._id],
     queryFn: fetchEmployeeLocation,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    onSuccess: (data) => {
+      console.log("Employee geo area", data);
+    },
   });
   return { employeeGeoArea, isLoading, error };
 };
