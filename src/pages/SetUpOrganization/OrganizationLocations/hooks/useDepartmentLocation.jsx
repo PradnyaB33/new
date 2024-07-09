@@ -104,7 +104,45 @@ const useDepartmentLocation = () => {
     },
   });
 
-  return { locationList, addLocationMutation, deleteLocationMutation };
+  const updateLocation = async ({ data, onClose, locationId }) => {
+    const response = await axios.put(
+      `${process.env.REACT_APP_API}/route/location/updateOrganizationLocations/${locationId}`,
+      data,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+    return response.data;
+  };
+
+  const { mutate: updateLocationMutation } = useMutation({
+    mutationFn: updateLocation,
+    onSuccess: async (data, { onClose }) => {
+      console.log("Location updated successfully", data);
+      await queryClient.invalidateQueries([
+        `departmentLocation-${organisationId}`,
+      ]);
+      handleAlert(true, "success", "Location updated successfully");
+      onClose();
+    },
+    onError: (error) => {
+      console.log("error", error);
+      handleAlert(
+        true,
+        "error",
+        error?.response?.data?.message || "Something went wrong"
+      );
+    },
+  });
+
+  return {
+    locationList,
+    addLocationMutation,
+    deleteLocationMutation,
+    updateLocationMutation,
+  };
 };
 
 export default useDepartmentLocation;
