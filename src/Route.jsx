@@ -1393,7 +1393,7 @@ const App = () => {
           element={<EmployeeSurveyForm />}
         />
         <Route
-          path="/organisation/:organisationId/survey-form/:surveyId"
+          path="/organisation/:organisationId/survey-form/:surveyId/:responseId"
           element={<EmployeeSurveyForm />}
         />
         <Route

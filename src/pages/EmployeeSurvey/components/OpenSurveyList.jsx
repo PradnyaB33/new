@@ -17,13 +17,14 @@ const OpenSurveyList = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const organisationId = user?.organizationId;
-console.log("user",user);
+
   // Get cookies
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-  const [openSurvey, setOpenSurvey] = useState(false)
 
-  //get open survey
+  const [openSurvey, setOpenSurvey] = useState(false);
+
+  // Get open surveys
   const { data: surveys, isLoading, isError } = useQuery(
     ["openSurveys", organisationId],
     async () => {
@@ -42,12 +43,29 @@ console.log("user",user);
     }
   );
 
-  //get response survey
- 
-  
+  // Get response surveys
+  const { data: responseSurvey } = useQuery(
+    ["responseSurveys", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-response-survey`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data;
+    },
+    {
+      enabled: !!organisationId && !!authToken,
+    }
+  );
+  console.log("responseSurvey", responseSurvey);
   // Handle form navigation
-  const handleSurveyForm = (surveyId) => {
-    navigate(`/organisation/${organisationId}/survey-form/${surveyId}`);
+  const handleSurveyForm = (surveyId,responseId) => {
+    console.log("responseId",responseId);
+    navigate(`/organisation/${organisationId}/survey-form/${surveyId}/${responseId}`);
   };
 
   // Generate Excel function
@@ -66,9 +84,22 @@ console.log("user",user);
   };
 
   const handleOpenSurvey = () => {
-    setOpenSurvey(!openSurvey)
-  }
-console.log("surveys.......",surveys);
+    setOpenSurvey(!openSurvey);
+  };
+
+  console.log("surveys.......", surveys);
+
+  // Match surveys with their responses
+  const matchedResponses = surveys?.map(survey => {
+    const responses = responseSurvey?.filter(response => response?.surveyId === survey?._id);
+    return {
+      ...survey,
+      responses: responses || []  // Attach responses array to each survey
+    };
+  });
+
+  console.log("Matched Responses:", matchedResponses);
+
   return (
     <div>
       <div className="flex  justify-between  gap-3 w-full border-gray-300 my-2">
@@ -118,31 +149,36 @@ console.log("surveys.......",surveys);
                       <th scope="col" className="!text-left pl-8 py-3">
                         Title
                       </th>
-                      <th scope="col" className="!text-left pl-8 py-3">
-                        Status
-                      </th>
-                      <th scope="col" className="!text-left pl-8 py-3">
 
+                      <th scope="col" className="!text-left pl-8 py-3">
+                        Actions
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {surveys?.map((survey, index) => (
+                    {matchedResponses?.map((survey, index) => (
                       <tr key={index} className="!font-medium border-b ">
                         <td className="!text-left pl-8 py-3">
                           {DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } })}
                         </td>
-                        <td className="!text-left py-3 pl-9">
-                          progress
-                        </td>
-                        <td className="!text-left py-3 pl-9">
-                          <Button
-                            variant="outlined"
-                            onClick={() => handleSurveyForm(survey._id)}
-                            sx={{ textTransform: "none", width: "100px" }}
-                          >
-                            Fill Form
-                          </Button>
+                        <td className="!text-left py-3 pl-6">
+                          {survey.responses.length > 0 ? (
+                            <Button
+                              variant="outlined"
+                              onClick={() => handleSurveyForm(survey._id,survey.responses[0]._id)}
+                              sx={{ textTransform: "none", width: "100px" }}
+                            >
+                              {survey.responses[0].responseStatus}
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="outlined"
+                              onClick={() => handleSurveyForm(survey._id,survey.responses[0]._id)}
+                              sx={{ textTransform: "none", width: "130px" }}
+                            >
+                              Take Survey
+                            </Button>
+                          )}
                         </td>
                       </tr>
                     ))}

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CircularProgress, IconButton, Button, FormControlLabel, Checkbox, Radio, RadioGroup, FormControl, TextField, Select, MenuItem } from "@mui/material";
@@ -14,7 +14,8 @@ import { TestContext } from "../../../State/Function/Main";
 const EmployeeSurveyForm = () => {
     const navigate = useNavigate();
     const { handleAlert } = useContext(TestContext);
-    const { surveyId } = useParams();
+    const { surveyId, responseId } = useParams();
+    console.log("responseId..", responseId);
     const { cookies } = useContext(UseContext);
     const authToken = cookies["aegis"];
 
@@ -24,7 +25,7 @@ const EmployeeSurveyForm = () => {
     const organisationId = user?.organizationId;
 
     // useForm 
-    const { control, handleSubmit, formState: { errors } } = useForm();
+    const { control, handleSubmit, setValue,formState: { errors } } = useForm();
 
     // Get Form
     const { data: surveyData, error, isLoading } = useQuery(
@@ -39,6 +40,35 @@ const EmployeeSurveyForm = () => {
                 }
             );
             return response.data;
+        }
+    );
+
+    // Fetch single survey data
+    const [singleResponseSurvey, setSingleResponseSurvey] = useState(null);
+    console.log("singleResponseSurvey", singleResponseSurvey);
+
+    const { isLoading: isLoading1 } = useQuery(
+        ["singleResponseSurvey", surveyId],
+        async () => {
+            const response = await axios.get(
+                `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-single-response-survey/${surveyId}/${responseId}`,
+                {
+                    headers: {
+                        Authorization: authToken,
+                    },
+                }
+            );
+            return response.data;
+        },
+        {
+            enabled: !!surveyId,
+            onSuccess: (data) => {
+
+                setSingleResponseSurvey(data);
+                data.questions.forEach((q, index) => {
+                    setValue(`answer_${index}`, q.answer);
+                });
+            },
         }
     );
 

@@ -27,6 +27,7 @@ const CreateNewSurvey = () => {
     //states
     const [questions, setQuestions] = useState([{ question: '', questionType: '', options: [], required: false }]);
     const [showSelectAll, setShowSelectAll] = useState(false);
+    const [formSubmitted, setFormSubmitted] = useState(false);
 
     //get organisationId
     const { getCurrentUser } = UserProfile();
@@ -363,6 +364,7 @@ const CreateNewSurvey = () => {
 
     //handleSubmitForm 
     const handleSubmitForm = (data, status) => {
+        setFormSubmitted(true);
         const formData = {
             title: data.title,
             description: data.description,
@@ -474,6 +476,11 @@ const CreateNewSurvey = () => {
                                                             <MenuItem value="Date">Date</MenuItem>
                                                             <MenuItem value="Multi-choice">Multi-choice</MenuItem>
                                                         </Select>
+                                                        <div className="h-4 !mb-1">
+                                                            {formSubmitted && (
+                                                                <p className="text-sm text-red-500">Please select a question type</p>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div>
