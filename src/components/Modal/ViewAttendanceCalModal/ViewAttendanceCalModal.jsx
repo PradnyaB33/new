@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import {
   Container,
   Dialog,
@@ -6,15 +6,25 @@ import {
   Typography,
   Grid,
   IconButton,
+  Button,
 } from "@mui/material";
-import { Close } from "@mui/icons-material";
+import { Close, Delete } from "@mui/icons-material";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import MyToolbar from "../../../pages/ViewCalculateAttendance/MyToolbar";
+import { useContext, useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
+import axios from "axios";
+import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
 
 const ViewAttendanceCallModal = ({ handleClose, open, employee }) => {
+  const { handleAlert } = useContext(TestContext);
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const queryClient = useQueryClient();
 
   const localizer = momentLocalizer(moment);
 
@@ -33,7 +43,26 @@ const ViewAttendanceCallModal = ({ handleClose, open, employee }) => {
     setSelectedEvent(null);
   };
 
-  console.log("select event", selectedEvent);
+  const handleDelete = () => {
+    const id = selectedEvent._id;
+    console.log("id", id);
+    deleteMutation.mutate(id);
+  };
+  const deleteMutation = useMutation(
+    (id) =>
+      axios.delete(`${process.env.REACT_APP_API}/route/employee/delete/${id}`, {
+        headers: {
+          Authorization: authToken,
+        },
+      }),
+    {
+      onSuccess: () => {
+        // Invalidate and refetch the data after successful deletion
+        queryClient.invalidateQueries("delete-record");
+        handleAlert(true, "success", "Record deleted succesfully");
+      },
+    }
+  );
 
   return (
     <Dialog
@@ -130,6 +159,16 @@ const ViewAttendanceCallModal = ({ handleClose, open, employee }) => {
                   ? selectedEvent.totalHours
                   : "0"}
               </Typography>
+
+              {/* Delete button */}
+              <Button
+                variant="contained"
+                color="error"
+                startIcon={<Delete />}
+                onClick={handleDelete}
+              >
+                Delete Event
+              </Button>
             </div>
           )}
         </DialogContent>

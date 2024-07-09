@@ -1,4 +1,10 @@
-import { Container, Typography, TextField, IconButton } from "@mui/material";
+import {
+  Container,
+  Typography,
+  TextField,
+  IconButton,
+  Button,
+} from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -14,41 +20,23 @@ const ViewCalculateAttendance = () => {
   const [emailSearch, setEmailSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [numbers, setNumbers] = useState([]);
-  console.log(setTotalPages);
-  console.log(setNumbers);
 
   // For Get Query
   const { data: calculateAttendanceData } = useQuery(
-    ["calculateAttendanceData", organisationId],
+    ["calculateAttendanceData", organisationId, currentPage],
     async () => {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-punching-info`,
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-punching-info?page=${currentPage}`,
         {
           headers: {
             Authorization: authToken,
           },
         }
       );
+      setTotalPages(response.data.totalPages || 1);
       return response.data.data;
     }
   );
-
-  const prePage = () => {
-    if (currentPage !== 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const nextPage = () => {
-    if (currentPage !== totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const changePage = (id) => {
-    setCurrentPage(id);
-  };
 
   // for open the modal for display employee
   const [empModalOpen, setEmpModalOpen] = useState(false);
@@ -61,6 +49,23 @@ const ViewCalculateAttendance = () => {
     setEmpModalOpen(false);
     setEmployee();
   };
+
+  const prePage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const nextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  };
+
+  const changePage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const paginationNumbers = Array.from(
+    { length: totalPages },
+    (_, index) => index + 1
+  );
 
   return (
     <>
@@ -107,124 +112,78 @@ const ViewCalculateAttendance = () => {
                 </tr>
               </thead>
               <tbody>
-                {calculateAttendanceData
-                  ?.filter((item) => {
-                    return (
-                      !emailSearch.toLowerCase() ||
-                      (item?.EmployeeId?.email !== null &&
-                        item?.EmployeeId?.email !== undefined &&
-                        item?.EmployeeId?.email
-                          .toLowerCase()
-                          .includes(emailSearch))
-                    );
-                  })
-                  .map((item, id) => (
-                    <tr className="!font-medium border-b" key={id}>
-                      <td className="!text-left pl-8 py-3">{id + 1}</td>
-                      <td className="py-3 pl-6">
-                        {item?.EmployeeId?.empId || ""}
-                      </td>
-                      <td className="py-3 pl-6">
-                        {item?.EmployeeId?.first_name || ""}
-                      </td>
-                      <td className="py-3 pl-6">
-                        {item?.EmployeeId?.email || ""}
-                      </td>
-                      <td className="!text-left pl-6 py-3">
-                        <IconButton
-                          aria-label="view"
-                          size="small"
-                          onClick={() => {
-                            handleEmpModalOpen(item);
-                          }}
-                        >
-                          <CalendarMonthIcon sx={{ color: "green" }} />
-                        </IconButton>
-                      </td>
-                    </tr>
-                  ))}
+                {calculateAttendanceData &&
+                  calculateAttendanceData
+                    ?.filter((item) => {
+                      return (
+                        !emailSearch.toLowerCase() ||
+                        (item?.EmployeeId?.email !== null &&
+                          item?.EmployeeId?.email !== undefined &&
+                          item?.EmployeeId?.email
+                            .toLowerCase()
+                            .includes(emailSearch))
+                      );
+                    })
+                    .map((item, id) => (
+                      <tr className="!font-medium border-b" key={id}>
+                        <td className="!text-left pl-8 py-3">
+                          {id + 1 + (currentPage - 1) * 10}
+                        </td>
+                        <td className="py-3 pl-6">
+                          {item?.EmployeeId?.empId || ""}
+                        </td>
+                        <td className="py-3 pl-6">
+                          {item?.EmployeeId?.first_name || ""}
+                        </td>
+                        <td className="py-3 pl-6">
+                          {item?.EmployeeId?.email || ""}
+                        </td>
+                        <td className="!text-left pl-6 py-3">
+                          <IconButton
+                            aria-label="view"
+                            size="small"
+                            onClick={() => {
+                              handleEmpModalOpen(item);
+                            }}
+                          >
+                            <CalendarMonthIcon sx={{ color: "green" }} />
+                          </IconButton>
+                        </td>
+                      </tr>
+                    ))}
               </tbody>
             </table>
-
-            <nav
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "30px",
-                marginBottom: "20px",
-              }}
+          </div>
+          <div className="flex justify-between p-4">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={prePage}
+              disabled={currentPage === 1}
             >
-              <ul
-                style={{ display: "inline-block", marginRight: "5px" }}
-                className="pagination"
-              >
-                <li
-                  style={{ display: "inline-block", marginRight: "5px" }}
-                  className="page-item"
-                >
-                  <button
-                    style={{
-                      color: "#007bff",
-                      padding: "8px 12px",
-                      border: "1px solid #007bff",
-                      textDecoration: "none",
-                      borderRadius: "4px",
-                      transition: "all 0.3s ease",
-                      cursor: "pointer",
-                    }}
-                    className="page-link"
-                    onClick={prePage}
+              Previous
+            </Button>
+            <div>
+              {paginationNumbers &&
+                paginationNumbers?.map((number, index) => (
+                  <Button
+                    key={index}
+                    variant={number === currentPage ? "contained" : "outlined"}
+                    color="primary"
+                    onClick={() => changePage(number)}
                   >
-                    Prev
-                  </button>
-                </li>
-                {numbers.map((n, i) => (
-                  <li
-                    key={i}
-                    className={`page-item ${currentPage === n ? "active" : ""}`}
-                    style={{
-                      display: "inline-block",
-                      marginRight: "5px",
-                    }}
-                  >
-                    <a
-                      href={`#${n}`}
-                      style={{
-                        color: currentPage === n ? "#fff" : "#007bff",
-                        backgroundColor:
-                          currentPage === n ? "#007bff" : "transparent",
-                        padding: "8px 12px",
-                        border: "1px solid #007bff",
-                        textDecoration: "none",
-                        borderRadius: "4px",
-                        transition: "all 0.3s ease",
-                      }}
-                      className="page-link"
-                      onClick={() => changePage(n)}
-                    >
-                      {n}
-                    </a>
-                  </li>
+                    {number}
+                  </Button>
                 ))}
-                <li style={{ display: "inline-block" }} className="page-item">
-                  <button
-                    style={{
-                      color: "#007bff",
-                      padding: "8px 12px",
-                      border: "1px solid #007bff",
-                      textDecoration: "none",
-                      borderRadius: "4px",
-                      transition: "all 0.3s ease",
-                      cursor: "pointer",
-                    }}
-                    className="page-link"
-                    onClick={nextPage}
-                  >
-                    Next
-                  </button>
-                </li>
-              </ul>
-            </nav>
+            </div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={nextPage}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </Button>
           </div>
         </article>
       </Container>
