@@ -110,6 +110,7 @@ import MyTraining from "./pages/My-Training/page";
 import AssignOrg from "./pages/OrgList/AssignOrg";
 import PayslipNotification from "./pages/PayslipNotification/PayslipNotification";
 import CreateJobPosition from "./pages/Recruitment/CreateJobPosition";
+import EditJobPosition from "./pages/Recruitment/EditJobPosition";
 import ViewJobPosition from "./pages/Recruitment/ViewJobPosition";
 import ReportingMis from "./pages/ReportingMis/page";
 import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
@@ -130,7 +131,6 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import EditJobPosition from "./pages/Recruitment/EditJobPosition";
 
 const App = () => {
   return (

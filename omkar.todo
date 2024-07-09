@@ -41,7 +41,12 @@ Performance Management:
 
 
     Task Left:
-        ☐ 360 Review & Rate
+        360 Review & Rate:
+            ✔ create a backend to store 360 review and rating @done(24-07-09 10:48)
+            ☐ create a frontend to display 360 review and rating given by employee in dashboard section under view card as create two tabs goals & 360 review 
+            
+
+
         ☐ Employee Acceptance & Revaluation @discussion only for manager rating
         ☐ After employee chanage status to Goal complete then manager gets workflow 
         ☐ if employee change status to goal complete then manager gets workflow to review and rate the goal @discussion
