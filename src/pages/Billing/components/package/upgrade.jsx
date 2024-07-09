@@ -120,7 +120,7 @@ const UpgradePackage = ({ handleClose, open, organisation }) => {
             label="Employee To Add *"
             errors={errors}
             error={errors.employeeToAdd}
-            descriptionText={"Here u can add number of employee to add"}
+            descriptionText={"Here you can add number of employee to add"}
           />
           <AuthInputFiled
             name="packageInfo"
