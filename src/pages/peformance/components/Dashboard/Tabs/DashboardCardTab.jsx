@@ -1,5 +1,6 @@
 import { Tab } from "@headlessui/react";
 import React from "react";
+import GoalsTab from "./GoalsTab";
 
 const DashboardCardTab = () => {
   function classNames(...classes) {
@@ -40,26 +41,12 @@ const DashboardCardTab = () => {
                 {tab?.title}
               </Tab>
             ))}
-            {/* <Tab
-              className={({ selected }) =>
-                classNames(
-                  "w-full rounded-lg py-2.5 px-10 text-sm font-medium leading-5 whitespace-nowrap",
-                  selected
-                    ? "bg-white text-blue-500 shadow"
-                    : "text-black hover:bg-gray-200 "
-                )
-              }
-            >
-              Goal Setting
-            </Tab> */}
           </Tab.List>
           <Tab.Panels>
             <Tab.Panel>
-              <h1>Hii there</h1>
-              {/* <PerformanceDashboard /> */}
+              <GoalsTab />
             </Tab.Panel>
             <Tab.Panel>
-              {/* <GoalSettingTab /> */}
               <h1>Hii review there</h1>
             </Tab.Panel>
           </Tab.Panels>

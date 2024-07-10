@@ -386,7 +386,7 @@ const ReportForm = () => {
             type="calender"
             asSingle={false}
             placeholder="Report Type"
-            label="Select Time Range *"
+            label="Select Date Range *"
             readOnly={false}
             maxLimit={15}
             useRange={true}

@@ -7,7 +7,7 @@ import { useQuery } from "react-query";
 import EmptyAlertBox from "../../../../../components/EmptyAlertBox";
 import usePerformanceApi from "../../../../../hooks/Performance/usePerformanceApi";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
-import DashboardCardTab from "../../Dashboard/DashboardCardTab";
+import DashboardCardTab from "../../Dashboard/Tabs/DashboardCardTab";
 import PreviewSkeleton from "../Skelton/PreviewSkeleton";
 
 const DashboardModel = ({ open, handleClose, id }) => {
@@ -22,16 +22,21 @@ const DashboardModel = ({ open, handleClose, id }) => {
     p: 4,
   };
 
-  // const user = UserProfile()?.getCurrentUser();
   const authToken = useAuthToken();
-  const { getEmployeePerformanceTable } = usePerformanceApi();
+  const { getEmployeePerformanceTable, setDashboardData } = usePerformanceApi();
 
   const { data: empData, isFetching: empDashFetching } = useQuery(
     {
       queryKey: ["employeePerformanceTable", id],
       queryFn: () => getEmployeePerformanceTable({ authToken, empId: id }),
     },
-    { enabled: id !== null || id !== undefined }
+
+    {
+      onSuccess: (data) => {
+        setDashboardData(data);
+      },
+      enabled: id !== null || !open,
+    }
   );
 
   return (
