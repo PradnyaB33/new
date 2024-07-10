@@ -6,7 +6,7 @@ import RateReviewModel from "../GoalTable/Modal/Rate_Review_Model";
 import TabelSkeleton from "../GoalTable/Skelton/TabelSkeleton";
 
 const ReviewTable = ({ tableData, performance, isFetching }) => {
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
   const [isOpen, setIsOpen] = useState(null);
   console.log(`🚀 ~ isOpen:`, isOpen);
   const [openEdit, setOpenEdit] = useState(false);
@@ -14,15 +14,13 @@ const ReviewTable = ({ tableData, performance, isFetching }) => {
 
   const handleClose = () => {
     setOpenEdit(false);
-    setPage(1);
+    // setPage(1);
   };
 
   const handleOpen = (id) => {
     setOpenEdit(true);
     setOpenMenu(id);
   };
-
-  const itemsPerPage = 10;
 
   const paginatedData = tableData?.data;
 

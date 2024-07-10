@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import React, { useState } from "react";
+import React from "react";
 import { useQuery } from "react-query";
 import usePerformanceApi from "../../../hooks/Performance/usePerformanceApi";
 import useAuthToken from "../../../hooks/Token/useAuth";
@@ -8,8 +8,7 @@ import Message from "../components/Message";
 import ReviewTable from "../components/Review/ReviewTable";
 const ReviewTab = () => {
   const authToken = useAuthToken();
-  const [message, setMessage] = useState("Welcome to Goal Settings");
-  console.log(`🚀 ~ message:`, message);
+
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();

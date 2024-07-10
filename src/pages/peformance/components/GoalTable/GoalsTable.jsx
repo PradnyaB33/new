@@ -1,16 +1,9 @@
 import {
-  AssignmentTurnedIn,
-  Cancel,
-  CheckCircle,
   Checklist,
-  Info,
   KeyboardDoubleArrowDown,
   MoreHoriz,
   Person,
-  RateReview,
   Search,
-  Star,
-  WatchLater,
 } from "@mui/icons-material";
 import {
   Avatar,
@@ -134,99 +127,6 @@ import TabelSkeleton from "./Skelton/TabelSkeleton";
 //     </div>
 //   );
 // };
-const GoalStatus = ({ goal, status, performance, isTimeFinish }) => {
-  return (
-    <div className={`px-3 py-1 flex items-center gap-1  rounded-sm  w-max`}>
-      {performance.stages === "Goal setting" &&
-        (!isTimeFinish && status === "pending" ? (
-          <p className="text-orange-500">
-            <WatchLater /> Goal not submitted in time
-          </p>
-        ) : status === "Monitoring Completed" ? (
-          <p className="text-blue-500">
-            <RateReview /> Monitoring Completed
-          </p>
-        ) : status === "Goal Completed" ? (
-          <>
-            <CheckCircle /> Goal Completed
-          </>
-        ) : status === "Goal Submitted" ? (
-          <p className="text-gray-500">
-            <Info className="text-xs" /> Waiting for Approval
-          </p>
-        ) : status === "Goal Approved" ? (
-          <p className="text-green-500">
-            <AssignmentTurnedIn className="text-xs" /> Goal Approved
-          </p>
-        ) : status === "Goal Rejected" ? (
-          <p className="text-red-500">
-            <Cancel className="text-xs" /> {status}
-          </p>
-        ) : (
-          <p className="text-gray-500">
-            <Info /> Pending
-          </p>
-        ))}
-      {performance?.stages === "Monitoring stage/Feedback collection stage" &&
-        (!isTimeFinish ? (
-          <p
-            // style={{ textShadow: "0 0 0  1px #333" }}
-            className="text-orange-500"
-          >
-            <WatchLater /> Monitoring Overdue
-          </p>
-        ) : status === "Monitoring Completed" ? (
-          <p className="text-blue-500">
-            <RateReview /> Monitoring Completed
-          </p>
-        ) : (
-          <p className="text-gray-500">
-            <Info /> Monitoring Pending
-          </p>
-        ))}
-
-      {performance?.stages === "Employee acceptance/acknowledgement stage" &&
-        (!goal.isMonitoringCompleted ? (
-          <p
-            // style={{ textShadow: "0 0 0  1px #333" }}
-            className="text-orange-500"
-          >
-            <WatchLater /> Monitoring Overdue
-          </p>
-        ) : !isTimeFinish && status === "pending" ? (
-          <p className="text-orange-500">
-            <WatchLater /> Goal Acceptance Overdue
-          </p>
-        ) : (
-          <p className="text-gray-500">
-            <Info /> Goal Acceptance Pending
-          </p>
-        ))}
-
-      {performance?.stages ===
-        "KRA stage/Ratings Feedback/Manager review stage" &&
-        (!goal.isMonitoringCompleted || !isTimeFinish ? (
-          <p
-            // style={{ textShadow: "0 0 0  1px #333" }}
-            className="text-orange-500"
-          >
-            <WatchLater /> Monitoring Overdue
-          </p>
-        ) : status === "Rating Completed" ? (
-          <p
-            // style={{ textShadow: "0 0 0  1px #333" }}
-            className="text-[#ffd700] "
-          >
-            <Star /> Rating Completed
-          </p>
-        ) : (
-          <p className="text-gray-500">
-            <Info /> Rating Pending
-          </p>
-        ))}
-    </div>
-  );
-};
 
 const GoalsTable = ({ performance, isError }) => {
   const { useGetCurrentRole, getCurrentUser } = UserProfile();
