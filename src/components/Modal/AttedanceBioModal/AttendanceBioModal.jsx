@@ -55,14 +55,18 @@ const AttendanceBioModal = ({
   const handleCheckEmp = (employee) => {
     const isChecked = checkedEmployees.some((emp) => emp._id === employee._id);
     if (isChecked) {
-      setCheckedEmployees(
-        checkedEmployees.filter((emp) => emp._id !== employee._id)
+      const updatedCheckedEmployees = checkedEmployees.filter(
+        (emp) => emp._id !== employee._id
       );
+      setCheckedEmployees(updatedCheckedEmployees);
+      if (updatedCheckedEmployees.length === 0) {
+        setEmailSearch("");
+      }
     } else {
       setCheckedEmployees([...checkedEmployees, employee]);
+      setEmailSearch(employee.email);
     }
   };
-
   console.log(checkedEmployees);
 
   // Validate email format
@@ -168,6 +172,7 @@ const AttendanceBioModal = ({
             <div className="flex items-center gap-3 mb-3 md:mb-0">
               <Tooltip title={"Search employee by employee email"} arrow>
                 <TextField
+                  value={emailSearch}
                   onChange={(e) => setEmailSearch(e.target.value)}
                   placeholder="Search Email...."
                   variant="outlined"
@@ -227,7 +232,7 @@ const AttendanceBioModal = ({
                             <input
                               type="checkbox"
                               checked={checkedEmployees.some(
-                                (emp) => emp._id === item._id
+                                (emp) => emp._id === item?._id
                               )}
                               onChange={() => handleCheckEmp(item)}
                             />
