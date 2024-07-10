@@ -144,6 +144,7 @@ const GoalsModel = ({
       let currentData = { ...data, creatorRole: role };
       console.log(`🚀 ~ data:`, data);
       if (role === "Employee") {
+        currentData.goalStatus = "Pending";
         currentData.assignee = [user._id];
       } else {
         currentData.assignee = data?.assignee?.map((emp) => emp) ?? [];
@@ -161,7 +162,7 @@ const GoalsModel = ({
     },
     {
       onSuccess: () => {
-        handleAlert(true, "success", "Performance setup created successfully");
+        handleAlert(true, "success", "Goal created successfully");
         queryClient.invalidateQueries("orggoals");
         handleClose();
       },
@@ -279,7 +280,7 @@ const GoalsModel = ({
 
             <AuthInputFiled
               name="description"
-              readOnly={performance?.stages !== "Goal setting"}
+              // readOnly={performance?.stages !== "Goal setting"}
               icon={Paid}
               control={control}
               type="texteditor"

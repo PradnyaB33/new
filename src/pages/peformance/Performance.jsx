@@ -3,7 +3,7 @@ import TestTab from "./components/TestTab";
 
 const Performance = () => {
   return (
-    <div>
+    <div className="min-h-screen ">
       {/* <PerformanceTab /> */}
 
       <TestTab />

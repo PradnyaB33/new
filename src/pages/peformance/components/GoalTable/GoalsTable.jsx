@@ -1,17 +1,9 @@
 import {
-  AssignmentTurnedIn,
-  Autorenew,
-  Cancel,
-  CheckCircle,
   Checklist,
-  Info,
   KeyboardDoubleArrowDown,
   MoreHoriz,
   Person,
-  RateReview,
   Search,
-  Star,
-  WatchLater,
 } from "@mui/icons-material";
 import {
   Avatar,
@@ -27,7 +19,7 @@ import axios from "axios";
 import { format } from "date-fns";
 import moment from "moment";
 import React, { useContext, useMemo, useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import Select from "react-select";
 import { TestContext } from "../../../../State/Function/Main";
 import EmptyAlertBox from "../../../../components/EmptyAlertBox";
@@ -42,139 +34,99 @@ import RatingModel from "./Modal/RatingModel";
 import RevaluateModel from "./Modal/RevaluateModel";
 import TabelSkeleton from "./Skelton/TabelSkeleton";
 
-const GoalStatus = ({ goal, status, performance, isTimeFinish }) => {
-  return (
-    <div className={`px-3 py-1 flex items-center gap-1  rounded-sm  w-max`}>
-      {performance.stages === "Goal setting" &&
-        (!isTimeFinish && status === "pending" ? (
-          <p className="text-orange-500">
-            <WatchLater /> Goal not submitted in time
-          </p>
-        ) : goal.isReviewCompleted ? (
-          <p
-            // style={{ textShadow: "0 0 0  1px #333" }}
-            className="text-[#ffd700] "
-          >
-            <Star /> Rating Completed
-          </p>
-        ) : goal.isMonitoringCompleted ? (
-          <p className="text-blue-500">
-            <RateReview /> Monitoring Completed
-          </p>
-        ) : status === "Monitoring Completed" ? (
-          <p className="text-blue-500">
-            <RateReview /> Monitoring Completed
-          </p>
-        ) : status === "Goal Completed" ? (
-          <>
-            <CheckCircle /> Goal Completed
-          </>
-        ) : status === "Goal Submitted" ? (
-          <p className="text-gray-500">
-            <Info className="text-xs" /> Waiting for Approval
-          </p>
-        ) : status === "Goal Approved" ? (
-          <p className="text-green-500">
-            <AssignmentTurnedIn className="text-xs" /> Goal Approved
-          </p>
-        ) : status === "Goal Rejected" ? (
-          <>
-            <Cancel /> {status}
-          </>
-        ) : (
-          <p className="text-gray-500">
-            <Info /> Pending
-          </p>
-        ))}
+// const GoalStatus = ({ goal, status, performance, isTimeFinish }) => {
+//   return (
+//     <div className={`px-3 py-1 flex items-center gap-1  rounded-sm  w-max`}>
+//       {performance.stages === "Goal setting" &&
+//         (!isTimeFinish && status === "pending" ? (
+//           <p className="text-orange-500">
+//             <WatchLater /> Goal not submitted in time
+//           </p>
+//         ) : status === "Monitoring Completed" ? (
+//           <p className="text-blue-500">
+//             <RateReview /> Monitoring Completed
+//           </p>
+//         ) : status === "Goal Completed" ? (
+//           <>
+//             <CheckCircle /> Goal Completed
+//           </>
+//         ) : status === "Goal Submitted" ? (
+//           <p className="text-gray-500">
+//             <Info className="text-xs" /> Waiting for Approval
+//           </p>
+//         ) : status === "Goal Approved" ? (
+//           <p className="text-green-500">
+//             <AssignmentTurnedIn className="text-xs" /> Goal Approved
+//           </p>
+//         ) : status === "Goal Rejected" ? (
+//           <p className="text-red-500">
+//             <Cancel className="text-xs" /> {status}
+//           </p>
+//         ) : (
+//           <p className="text-gray-500">
+//             <Info /> Pending
+//           </p>
+//         ))}
+//       {performance?.stages === "Monitoring stage/Feedback collection stage" &&
+//         (!isTimeFinish ? (
+//           <p
+//             // style={{ textShadow: "0 0 0  1px #333" }}
+//             className="text-orange-500"
+//           >
+//             <WatchLater /> Monitoring Overdue
+//           </p>
+//         ) : status === "Monitoring Completed" ? (
+//           <p className="text-blue-500">
+//             <RateReview /> Monitoring Completed
+//           </p>
+//         ) : (
+//           <p className="text-gray-500">
+//             <Info /> Monitoring Pending
+//           </p>
+//         ))}
 
-      {performance?.stages === "Monitoring stage/Feedback collection stage" &&
-        (goal.isReviewCompleted ? (
-          <p
-            // style={{ textShadow: "0 0 0  1px #333" }}
-            className="text-[#ffd700] "
-          >
-            <Star /> Rating Completed
-          </p>
-        ) : !isTimeFinish ? (
-          <p
-            // style={{ textShadow: "0 0 0  1px #333" }}
-            className="text-orange-500"
-          >
-            <WatchLater /> Monitoring Overdue
-          </p>
-        ) : status === "Monitoring Completed" ? (
-          <p className="text-blue-500">
-            <RateReview /> Monitoring Completed
-          </p>
-        ) : (
-          <p className="text-gray-500">
-            <Info /> Monitoring Pending
-          </p>
-        ))}
+//       {performance?.stages === "Employee acceptance/acknowledgement stage" &&
+//         (!goal.isMonitoringCompleted ? (
+//           <p
+//             // style={{ textShadow: "0 0 0  1px #333" }}
+//             className="text-orange-500"
+//           >
+//             <WatchLater /> Monitoring Overdue
+//           </p>
+//         ) : !isTimeFinish && status === "pending" ? (
+//           <p className="text-orange-500">
+//             <WatchLater /> Goal Acceptance Overdue
+//           </p>
+//         ) : (
+//           <p className="text-gray-500">
+//             <Info /> Goal Acceptance Pending
+//           </p>
+//         ))}
 
-      {performance?.stages === "Employee acceptance/acknowledgement stage" &&
-        (!goal.isMonitoringCompleted ? (
-          <p
-            // style={{ textShadow: "0 0 0  1px #333" }}
-            className="text-orange-500"
-          >
-            <WatchLater /> Monitoring Overdue
-          </p>
-        ) : !goal.isReviewCompleted ? (
-          <p
-            // style={{ textShadow: "0 0 0  1px #333" }}
-            className="text-orange-500"
-          >
-            <WatchLater /> Rating & Review Overdue
-          </p>
-        ) : !isTimeFinish ? (
-          <p
-            // style={{ textShadow: "0 0 0  1px #333" }}
-            className="text-orange-500"
-          >
-            <WatchLater /> Goal Acceptance Overdue
-          </p>
-        ) : status === "Revaluation Requested" ? (
-          <p
-            // style={{ textShadow: "0 0 0  1px #333" }}
-            className="text-[#3f51b5]"
-          >
-            <Autorenew /> Revaluation Requested
-          </p>
-        ) : status === "Goal Completed" ? (
-          <p className="text-green-500">
-            <CheckCircle /> Goal Completed
-          </p>
-        ) : (
-          <p className="text-gray-500">
-            <Info /> Goal Acceptance Pending
-          </p>
-        ))}
-
-      {performance?.stages ===
-        "KRA stage/Ratings Feedback/Manager review stage" &&
-        (!goal.isMonitoringCompleted || !isTimeFinish ? (
-          <p
-            // style={{ textShadow: "0 0 0  1px #333" }}
-            className="text-orange-500"
-          >
-            <WatchLater /> Monitoring Overdue
-          </p>
-        ) : status === "Rating Completed" ? (
-          <p
-            // style={{ textShadow: "0 0 0  1px #333" }}
-            className="text-[#ffd700] "
-          >
-            <Star /> Rating Completed
-          </p>
-        ) : (
-          <p className="text-gray-500">
-            <Info /> Rating Pending
-          </p>
-        ))}
-    </div>
-  );
-};
+//       {performance?.stages ===
+//         "KRA stage/Ratings Feedback/Manager review stage" &&
+//         (!goal.isMonitoringCompleted || !isTimeFinish ? (
+//           <p
+//             // style={{ textShadow: "0 0 0  1px #333" }}
+//             className="text-orange-500"
+//           >
+//             <WatchLater /> Monitoring Overdue
+//           </p>
+//         ) : status === "Rating Completed" ? (
+//           <p
+//             // style={{ textShadow: "0 0 0  1px #333" }}
+//             className="text-[#ffd700] "
+//           >
+//             <Star /> Rating Completed
+//           </p>
+//         ) : (
+//           <p className="text-gray-500">
+//             <Info /> Rating Pending
+//           </p>
+//         ))}
+//     </div>
+//   );
+// };
 
 const GoalsTable = ({ performance, isError }) => {
   const { useGetCurrentRole, getCurrentUser } = UserProfile();
@@ -192,6 +144,8 @@ const GoalsTable = ({ performance, isError }) => {
   const { handleAlert } = useContext(TestContext);
   const openMenuBox = Boolean(anchorEl);
   const [focusedInput, setFocusedInput] = useState(null);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -237,9 +191,6 @@ const GoalsTable = ({ performance, isError }) => {
     return data;
   });
 
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
-
   const { data: orgGoals = [], isFetching } = useQuery(
     ["orggoals", employeeGoals, page, search],
     async () => {
@@ -275,18 +226,19 @@ const GoalsTable = ({ performance, isError }) => {
     //eslint-disable-next-line
   }, []);
 
-  const acceptGoal = async (status) => {
+  const acceptGoal = useMutation(async (status) => {
     try {
       const data = {
         status,
         isGoalSettingCompleted: false,
         assignee: { label: openMenu.empId._id, value: openMenu.empId._id },
+        goalStatus: "Not started",
       };
 
-      // let isGoalSettingCompleted = false;
-      if (status === "Goal Approved") {
-        data.isGoalSettingCompleted = true;
+      if (status === "Goal Rejected") {
+        data.goalStatus = "Goal Rejected";
       }
+
       await axios.patch(
         `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${openMenu._id}`,
         { data },
@@ -301,7 +253,7 @@ const GoalsTable = ({ performance, isError }) => {
     } catch (e) {
       console.log(e);
     }
-  };
+  });
 
   return (
     <section className=" py-0 mb-10 ">
@@ -313,130 +265,153 @@ const GoalsTable = ({ performance, isError }) => {
           }
         />
       )}
-      {!isError &&
-        (isFetching || performance === undefined ? (
-          // <CircularProgress />
-          <TabelSkeleton />
-        ) : orgGoals?.goals?.length <= 0 ? (
+      {isError && !isFetching && (
+        <div className="gap-2 flex flex-col w-full items-end">
+          {performance?.isMidGoal && isTimeFinish
+            ? true
+            : performance?.stages === "Goal setting" &&
+              isTimeFinish &&
+              (role !== "Employee"
+                ? true
+                : role === "Employee" && performance.isSelfGoal
+                ? true
+                : false) && (
+                <button
+                  type="button"
+                  onClick={() => setOpen(true)}
+                  className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+                >
+                  Add Goal
+                </button>
+              )}
           <EmptyAlertBox
             title={"Goals Not Found"}
             desc={"Add goals to goal settings."}
           />
-        ) : (
-          <div className=" bg-white rounded-md ">
-            {/* <div className=" py-2">
+        </div>
+      )}
+
+      <div className="  rounded-md ">
+        {/* <div className=" py-2">
           <h1 className="text-black  text-2xl">
             {role === "Employee" ? "My Goals" : "Manager Goals"}
           </h1>
         </div> */}
-            <div className="my-2 flex justify-between">
-              <div className="flex gap-4 ">
+        <div className="my-2 flex justify-between">
+          <div className="flex gap-4 ">
+            <div className={`space-y-1  min-w-[300px] md:min-w-[40vw] w-max `}>
+              <div
+                onFocus={() => {
+                  setFocusedInput("search");
+                }}
+                onBlur={() => setFocusedInput(null)}
+                className={` ${
+                  focusedInput === "search"
+                    ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
+                    : "outline-none border-gray-200 border-[.5px]"
+                } flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px]`}
+                // className="flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px] outline-none border-gray-200 border-[.5px]"
+              >
+                <Search className="text-gray-700 md:text-lg !text-[1em]" />
+                <input
+                  type={"text"}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder={"Search goals"}
+                  className={`border-none bg-white w-full outline-none px-2  `}
+                  formNoValidate
+                />
+              </div>
+            </div>
+            {role !== "Employee" && (
+              <div className={`space-y-1 min-w-[250px]  md:min-w-[15vw] `}>
                 <div
-                  className={`space-y-1  min-w-[300px] md:min-w-[40vw] w-max `}
+                  className={`flex rounded-md px-2 bg-white border-gray-200 border-[.5px]  items-center`}
                 >
-                  <div
-                    onFocus={() => {
-                      setFocusedInput("search");
+                  <Checklist className="text-gray-700 md:text-lg !text-[1em]" />
+                  <Select
+                    aria-errormessage=""
+                    placeholder={"Goal Type"}
+                    isClearable
+                    styles={{
+                      control: (styles) => ({
+                        ...styles,
+                        borderWidth: "0px",
+                        boxShadow: "none",
+                      }),
                     }}
-                    onBlur={() => setFocusedInput(null)}
-                    className={` ${
-                      focusedInput === "search"
-                        ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
-                        : "outline-none border-gray-200 border-[.5px]"
-                    } flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px]`}
-                    // className="flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px] outline-none border-gray-200 border-[.5px]"
-                  >
-                    <Search className="text-gray-700 md:text-lg !text-[1em]" />
-                    <input
-                      type={"text"}
-                      onChange={(e) => setSearch(e.target.value)}
-                      placeholder={"Search goals"}
-                      className={`border-none bg-white w-full outline-none px-2  `}
-                      formNoValidate
-                    />
-                  </div>
-                </div>
-                {role !== "Employee" && (
-                  <div className={`space-y-1 min-w-[250px]  md:min-w-[15vw] `}>
-                    <div
-                      className={`flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
-                    >
-                      <Checklist className="text-gray-700 md:text-lg !text-[1em]" />
-                      <Select
-                        aria-errormessage=""
-                        placeholder={"Goal Type"}
-                        isClearable
-                        styles={{
-                          control: (styles) => ({
-                            ...styles,
-                            borderWidth: "0px",
-                            boxShadow: "none",
-                          }),
-                        }}
-                        className={` bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
-                        components={{
-                          // Option: CustomOption,
-                          IndicatorSeparator: () => null,
-                        }}
-                        options={performance?.goals?.map((goal) => ({
-                          label: goal,
-                          value: goal,
-                        }))}
-                        onChange={(value) => {
-                          setEmployeeGoals(value?.value);
-                        }}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <div className={`space-y-1 min-w-[15vw] `}>
-                  <div
-                    className={`flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
-                  >
-                    <Person className="text-gray-700 md:text-lg !text-[1em]" />
-                    <Select
-                      aria-errormessage=""
-                      placeholder={"Assignee"}
-                      isClearable
-                      styles={{
-                        control: (styles) => ({
-                          ...styles,
-                          borderWidth: "0px",
-                          boxShadow: "none",
-                        }),
-                      }}
-                      className={` bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
-                      components={{
-                        Option: CustomOption,
-                        IndicatorSeparator: () => null,
-                      }}
-                      options={options}
-                      onChange={(value) => {
-                        setEmployeeGoals(value?.value);
-                      }}
-                    />
-                  </div>
+                    className={` bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                    components={{
+                      // Option: CustomOption,
+                      IndicatorSeparator: () => null,
+                    }}
+                    options={performance?.goals?.map((goal) => ({
+                      label: goal,
+                      value: goal,
+                    }))}
+                    onChange={(value) => {
+                      setEmployeeGoals(value?.value);
+                    }}
+                  />
                 </div>
               </div>
+            )}
+            {role !== "Employee" && (
+              <div className={`space-y-1 min-w-[15vw] `}>
+                <div
+                  className={`flex rounded-md px-2 bg-white border-gray-200 border-[.5px] items-center`}
+                >
+                  <Person className="text-gray-700 md:text-lg !text-[1em]" />
+                  <Select
+                    aria-errormessage=""
+                    placeholder={"Assignee"}
+                    isClearable
+                    styles={{
+                      control: (styles) => ({
+                        ...styles,
+                        borderWidth: "0px",
+                        boxShadow: "none",
+                      }),
+                    }}
+                    className={` bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                    components={{
+                      Option: CustomOption,
+                      IndicatorSeparator: () => null,
+                    }}
+                    options={options}
+                    onChange={(value) => {
+                      setEmployeeGoals(value?.value);
+                    }}
+                  />
+                </div>
+              </div>
+            )}
 
-              {performance?.stages === "Goal setting" &&
-                (isTimeFinish && role !== "Employee"
-                  ? true
-                  : role === "Employee" && performance.isSelfGoal
-                  ? true
-                  : false) && (
-                  <button
-                    type="button"
-                    onClick={() => setOpen(true)}
-                    className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-                  >
-                    Add Goal
-                  </button>
-                )}
-            </div>
-            <div className="bg-white w-full overflow-x-auto">
-              {/* <section className="bg-gray-50 border py-6 px-8 rounded-md w-full">
+            {(performance?.isMidGoal && isTimeFinish) ||
+            (performance?.stages === "Goal setting" &&
+              isTimeFinish &&
+              (role !== "Employee" ||
+                (role === "Employee" && performance.isSelfGoal))) ? (
+              <button
+                type="button"
+                onClick={() => setOpen(true)}
+                className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+              >
+                Add Goal
+              </button>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+
+        {isFetching || performance === undefined ? (
+          // <CircularProgress />
+          <TabelSkeleton />
+        ) : orgGoals?.goals?.length <= 0 ? (
+          <EmptyAlertBox title={"Goals Not Found"} />
+        ) : (
+          <div className=" w-full overflow-x-auto">
+            {/* <section className="bg-gray-50 border py-6 px-8 rounded-md w-full">
               <article className="flex  text-red-500 gap-2">
                 <Info className="!text-3xl mt-1" />
                 <div>
@@ -445,106 +420,121 @@ const GoalsTable = ({ performance, isError }) => {
                 </div>
               </article>
             </section> */}
-              <div className="overflow-auto ">
-                <table className="w-full table-auto  border border-collapse min-w-full bg-white  text-left  !text-sm font-light">
-                  <thead className="border-b bg-gray-100 font-bold">
-                    <tr className="!font-semibold ">
-                      <th
-                        scope="col"
-                        className="!text-left px-2 w-max py-3 text-sm "
-                      >
-                        Sr. No
-                      </th>
-                      <th scope="col" className="py-3 text-sm px-2 "></th>
-                      <th scope="col" className="py-3 text-sm px-2 ">
-                        Goal Name
-                      </th>
+            <div className="overflow-auto ">
+              <table className="w-full table-auto  border border-collapse min-w-full bg-white  text-left  !text-sm font-light">
+                <thead className="border-b bg-gray-100 font-bold">
+                  <tr className="!font-semibold ">
+                    <th
+                      scope="col"
+                      className="!text-left px-2 w-max py-3 text-sm "
+                    >
+                      Sr. No
+                    </th>
+                    <th scope="col" className="py-3 text-sm px-2 "></th>
+                    <th scope="col" className="py-3 text-sm px-2 ">
+                      Goal Name
+                    </th>
 
+                    {role !== "Employee" && (
                       <th scope="col" className="py-3 text-sm px-2 ">
                         Assignee
                       </th>
+                    )}
+                    <th scope="col" className="py-3 text-sm px-2 ">
+                      Goal Type
+                    </th>
+
+                    <th scope="col" className="py-3 text-sm px-2 ">
+                      Time
+                    </th>
+                    {/* {performance?.stages !== "Goal setting" && (
                       <th scope="col" className="py-3 text-sm px-2 ">
-                        Goal Type
+                        Monitoring done
                       </th>
+                    )} */}
 
-                      <th scope="col" className="py-3 text-sm px-2 ">
-                        Time
-                      </th>
+                    <th scope="col" className=" py-3 text-sm px-2 ">
+                      Status
+                    </th>
 
-                      <th scope="col" className=" py-3 text-sm px-2 ">
-                        Status
-                      </th>
-
-                      <th scope="col" className=" py-3 text-sm px-2 ">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {orgGoals?.goals?.map((goal, id) => (
-                      <tr
-                        key={id}
-                        className={` hover:bg-gray-50 !font-medium  w-max border-b `}
+                    <th scope="col" className=" py-3 text-sm px-2 ">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orgGoals?.goals?.map((goal, id) => (
+                    <tr
+                      key={id}
+                      className={` hover:bg-gray-50 bg-white  !font-medium  w-max border-b `}
+                    >
+                      <td
+                        onClick={() => handleOpen(goal._id)}
+                        className="!text-left  cursor-pointer py-4    px-2 text-sm w-[70px]  "
                       >
-                        <td
-                          onClick={() => handleOpen(goal._id)}
-                          className="!text-left  cursor-pointer py-4    px-2 text-sm w-[70px]  "
-                        >
-                          {(page - 1) * 10 + id + 1}
-                        </td>
+                        {(page - 1) * 10 + id + 1}
+                      </td>
 
-                        <td
-                          className="w-[30px] hover:bg-gray-50 !font-medium  border-b"
-                          onClick={() => handleOpen(goal._id)}
-                        >
-                          {goal.downcasted && (
-                            <Tooltip
-                              className="cursor-pointer"
-                              title="This goal is downcasted any changes will apply to all related downcasted goal"
-                            >
-                              <KeyboardDoubleArrowDown className="text-blue-500" />
-                            </Tooltip>
-                          )}{" "}
-                        </td>
-                        <td
-                          onClick={() => handleOpen(goal._id)}
-                          className="text-sm cursor-pointer truncate text-left   px-2"
+                      <td
+                        className="w-[30px] hover:bg-gray-50 !font-medium  border-b"
+                        onClick={() => handleOpen(goal._id)}
+                      >
+                        {goal.downcasted && (
+                          <Tooltip
+                            className="cursor-pointer"
+                            title="This goal is downcasted any changes will apply to all related downcasted goal"
+                          >
+                            <KeyboardDoubleArrowDown className="text-blue-500" />
+                          </Tooltip>
+                        )}{" "}
+                      </td>
+                      <td
+                        onClick={() => handleOpen(goal._id)}
+                        className="text-sm cursor-pointer truncate text-left   px-2"
+                      >
+                        <Tooltip
+                          className="cursor-pointer"
+                          title="Click to view"
                         >
                           <p className="space-x-3 truncate">{goal.goal}</p>
-                        </td>
-
+                        </Tooltip>
+                      </td>
+                      {role !== "Employee" && (
                         <td
                           onClick={() => handleOpen(goal._id)}
-                          className="text-sm cursor-pointer  text-left   px-2"
+                          className="text-sm w-max cursor-pointer  text-left   px-2"
                         >
-                          <div className="flex items-center gap-4">
-                            <Tooltip
-                              title={`${goal?.empId?.first_name} ${goal?.empId?.last_name}`}
-                            >
+                          <Tooltip title={`Click to view`}>
+                            <div className="flex w-max items-center gap-4">
                               <Avatar src={goal?.empId?.user_logo_url} />
-                            </Tooltip>
-                            <p className="text-sm">
-                              {goal?.empId?.first_name} {goal?.empId?.last_name}
-                            </p>
-                          </div>
+                              <p className="text-sm">
+                                {goal?.empId?.first_name}{" "}
+                                {goal?.empId?.last_name}
+                              </p>
+                            </div>
+                          </Tooltip>
                         </td>
+                      )}
 
-                        <td
-                          onClick={() => handleOpen(goal?._id)}
-                          className=" cursor-pointer text-left !p-0 !w-[250px]  "
-                        >
+                      <td
+                        onClick={() => handleOpen(goal?._id)}
+                        className=" cursor-pointer text-left !p-0 !w-[250px]  "
+                      >
+                        <Tooltip title={`Click to view`}>
                           <p
                             className={`
                         px-2 md:w-full w-max text-sm`}
                           >
                             {goal?.goalType}
                           </p>
-                        </td>
+                        </Tooltip>
+                      </td>
 
-                        <td
-                          onClick={() => handleOpen(goal._id)}
-                          className=" cursor-pointer text-left !p-0 !w-[250px]  "
-                        >
+                      <td
+                        onClick={() => handleOpen(goal._id)}
+                        className=" cursor-pointer text-left !p-0 !w-[250px]  "
+                      >
+                        <Tooltip title={`Click to view`}>
                           <p
                             className={`
                         px-2 md:w-full w-max text-sm`}
@@ -552,65 +542,78 @@ const GoalsTable = ({ performance, isError }) => {
                             {format(new Date(goal.startDate), "PP")} -{" "}
                             {format(new Date(goal.endDate), "PP")}
                           </p>
-                        </td>
+                        </Tooltip>
+                      </td>
 
+                      {/* {performance?.stages !== "Goal setting" && (
                         <td
                           onClick={() => handleOpen(goal._id)}
-                          className="cursor-pointer text-left text-sm w-[200px]  "
+                          className="cursor-pointer text-left px-2 text-sm w-[200px]  "
                         >
-                          <GoalStatus
-                            goal={goal}
-                            isTimeFinish={isTimeFinish}
-                            status={goal?.status}
-                            performance={performance}
-                          />
+                          {!goal?.comments ? (
+                            <Cancel className="text-red-400 " />
+                          ) : (
+                            <CheckCircle className="text-green-400 " />
+                          )}
                         </td>
-                        {isTimeFinish && goal?.status !== "Goal Completed" && (
-                          // goal?.isMonitoringCompleted &&
-                          <td className="cursor-pointer text-left text-sm  ">
-                            <IconButton
-                              id="basic-button"
-                              aria-controls={
-                                openMenu ? "basic-menu" : undefined
-                              }
-                              aria-haspopup="true"
-                              aria-expanded={openMenu ? "true" : undefined}
-                              onClick={(e) => {
-                                handleClick(e);
-                                // setCurrentGoal(goal);
-                                setopenMenu(goal);
-                              }}
-                            >
-                              <MoreHoriz />
-                            </IconButton>
-                          </td>
-                        )}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <Stack
-                  direction={"row"}
-                  className="border-[.5px] border-gray-200 border-t-0 px-4 py-2 h-full  items-center w-full justify-between "
-                >
-                  <div>
-                    <h1>
-                      Showing {page} to {orgGoals?.totalPages} of{" "}
-                      {orgGoals?.totalGoals} entries
-                    </h1>
-                  </div>
-                  <Pagination
-                    count={orgGoals?.totalPages}
-                    page={page}
-                    color="primary"
-                    shape="rounded"
-                    onChange={(event, value) => setPage(value)}
-                  />
-                </Stack>
-              </div>
+                      )} */}
+
+                      <td
+                        onClick={() => handleOpen(goal._id)}
+                        className="cursor-pointer text-left text-sm w-[200px]  "
+                      >
+                        {goal?.goalStatus}
+                        {/* <GoalStatus
+                          goal={goal}
+                          isTimeFinish={isTimeFinish}
+                          status={goal?.status}
+                          performance={performance}
+                        /> */}
+                      </td>
+                      {isTimeFinish && goal?.status !== "Goal Completed" && (
+                        // goal?.isMonitoringCompleted &&
+                        <td className="cursor-pointer text-left text-sm  ">
+                          <IconButton
+                            id="basic-button"
+                            aria-controls={openMenu ? "basic-menu" : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={openMenu ? "true" : undefined}
+                            onClick={(e) => {
+                              handleClick(e);
+                              // setCurrentGoal(goal);
+                              setopenMenu(goal);
+                            }}
+                          >
+                            <MoreHoriz />
+                          </IconButton>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <Stack
+                direction={"row"}
+                className="border-[.5px] border-gray-200 bg-white  border-t-0 px-4 py-2 h-full  items-center w-full justify-between "
+              >
+                <div>
+                  <h1>
+                    Showing {page} to {orgGoals?.totalPages} of{" "}
+                    {orgGoals?.totalGoals} entries
+                  </h1>
+                </div>
+                <Pagination
+                  count={orgGoals?.totalPages}
+                  page={page}
+                  color="primary"
+                  shape="rounded"
+                  onChange={(event, value) => setPage(value)}
+                />
+              </Stack>
             </div>
           </div>
-        ))}
+        )}
+      </div>
 
       <GoalsModel
         performance={performance}
@@ -634,16 +637,25 @@ const GoalsTable = ({ performance, isError }) => {
         </div>
         <Divider variant="fullWidth" orientation="horizontal" />
 
+        {role === "Employee" &&
+        openMenu?.goalStatus === "Pending" &&
+        openMenu?.approverId !== user._id &&
+        performance?.stages !== "Monitoring stage/Feedback collection stage" &&
+        role !== "Manager" &&
+        openMenu?.status !== "Goal Rejected" &&
+        role !== "Employee" ? (
+          <h1 className="py-2 px-4 w-full h-full ">No options</h1>
+        ) : (
+          <></>
+        )}
+
         {role !== "Employee" &&
-          performance?.stages === "Goal setting" &&
-          openMenu?.status === "Goal Submitted" &&
-          (performance.isManagerApproval
-            ? openMenu?.creatorId === user._id
-            : role === "HR") && (
+          openMenu?.goalStatus === "Pending" &&
+          openMenu?.approverId === user._id && (
             <>
               <MenuItem
                 className="!p-0"
-                onClick={() => acceptGoal("Goal Approved")}
+                onClick={() => acceptGoal.mutate("Goal Approved")}
               >
                 <div className="hover:!bg-green-500  flex  w-full h-full items-center hover:!text-white transition-all gap-4  py-2 px-4">
                   Approve goal
@@ -651,7 +663,7 @@ const GoalsTable = ({ performance, isError }) => {
               </MenuItem>
               <MenuItem
                 className="!p-0"
-                onClick={() => acceptGoal("Goal Rejected")}
+                onClick={() => acceptGoal.mutate("Goal Rejected")}
               >
                 <div className="hover:!bg-red-500 !text-red-500 flex  w-full h-full items-center hover:!text-white transition-all gap-4  py-2 px-4">
                   Reject Goal
@@ -683,45 +695,21 @@ const GoalsTable = ({ performance, isError }) => {
                   handleMenuClose();
                 }}
               >
-                {/* {openMenu?.status === "Goal Rejected"  && role === "Employee" */}
                 Reapply for goal
-                {/* : "Update Goal"} */}
               </MenuItem>
             )}
-            {!openMenu?.isMonitoringCompleted &&
-              openMenu?.creatorId === user._id && (
-                <MenuItem
-                  onClick={() => {
-                    setOpenEdit(true);
-                    setPreviewId(openMenu);
-                    handleMenuClose();
-                  }}
-                >
-                  Update Goal
-                </MenuItem>
-              )}
+            {openMenu?.creatorId === user._id && (
+              <MenuItem
+                onClick={() => {
+                  setOpenEdit(true);
+                  setPreviewId(openMenu);
+                  handleMenuClose();
+                }}
+              >
+                Update Goal
+              </MenuItem>
+            )}
           </>
-        )}
-        {(performance?.stages ===
-          "KRA stage/Ratings Feedback/Manager review stage" ||
-          (openMenu?.status === "Revaluation Requested" &&
-            performance.stages ===
-              "Employee acceptance/acknowledgement stage")) && (
-          <MenuItem
-            onClick={() => {
-              setOpenEdit(true);
-              setPreviewId(openMenu);
-              handleMenuClose();
-            }}
-          >
-            {openMenu?.status === "Revaluation Requested" &&
-            (performance.stages ===
-              "KRA stage/Ratings Feedback/Manager review stage" ||
-              performance.stages ===
-                "Employee acceptance/acknowledgement stage")
-              ? "Revaluate Employee"
-              : "Add review & rating"}
-          </MenuItem>
         )}
 
         {performance?.stages === "Goal setting" &&
@@ -739,7 +727,7 @@ const GoalsTable = ({ performance, isError }) => {
             </MenuItem>
           )}
 
-        {performance?.stages === "Employee acceptance/acknowledgement stage" &&
+        {/* {performance?.stages === "Employee acceptance/acknowledgement stage" &&
           role === "Employee" && (
             <>
               <MenuItem
@@ -759,7 +747,7 @@ const GoalsTable = ({ performance, isError }) => {
                 </div>
               </MenuItem>
             </>
-          )}
+          )} */}
       </Menu>
 
       <DeleteGoal

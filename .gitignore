@@ -11,6 +11,8 @@
 /.vscode
 .env
 
+/omkar.todo
+
 # misc
 # .DS_Store
 # .env.local

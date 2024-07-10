@@ -4,7 +4,7 @@ import React from "react";
 const EmptyAlertBox = ({ title, desc }) => {
   return (
     <section className="bg-gray-50 border py-6 px-8 rounded-md w-full">
-      <article className="flex  text-red-500 gap-2">
+      <article className="flex items-center text-red-500 gap-2">
         <Info className="!text-3xl mt-1" />
         <div>
           <h1 className="text-xl font-semibold">{title}</h1>

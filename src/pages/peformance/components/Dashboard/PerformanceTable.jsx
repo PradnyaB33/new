@@ -47,7 +47,7 @@ const PerformanceTable = ({ tableData, isLoading, performance }) => {
               }`}
             >
               <table
-                className={`  table-auto  border border-collapse min-w-full  text-left  !text-sm font-light `}
+                className={`  table-fixed  border border-collapse min-w-full  text-left  !text-sm font-light `}
               >
                 <thead className="border-b bg-gray-100 font-bold">
                   <tr className="!font-semibold ">
@@ -93,12 +93,12 @@ const PerformanceTable = ({ tableData, isLoading, performance }) => {
                       <Tooltip title="Click to get employee performance details">
                         <td
                           onClick={() => setIsOpen(goal)}
-                          className="text-sm cursor-pointer  text-left   px-2"
+                          className="text-sm cursor-pointer w-max text-left   px-2"
                         >
                           <div className="flex items-center gap-4">
                             <Avatar src={goal?.empId?.user_logo_url} />
 
-                            <p className="text-sm">
+                            <p className="text-sm ">
                               {goal?.empId?.first_name} {goal?.empId?.last_name}
                             </p>
                           </div>

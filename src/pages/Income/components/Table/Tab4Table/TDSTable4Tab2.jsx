@@ -21,6 +21,7 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../../../State/Function/Main";
+import useGetEmployeeSalaryByFinaicalYear from "../../../../../hooks/IncomeTax/useGetEmployeeSalaryByFinaicalYear";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../../hooks/UserData/useUser";
 
@@ -33,7 +34,10 @@ const TDSTable4Tab2 = () => {
   const user = getCurrentUser();
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [id, setId] = useState(null);
-
+  const { usersalary, getFinancialCurrentYear } =
+    useGetEmployeeSalaryByFinaicalYear();
+  const { start, end } = getFinancialCurrentYear();
+  let finacialYear = `${start.split("-")[1]}-${end.split("-")[1]}`;
   const handleDeleteConfirmation = (itemIndex, id) => {
     setDeleteConfirmation(itemIndex);
     setId(id);
@@ -47,9 +51,11 @@ const TDSTable4Tab2 = () => {
     console.log(index);
     const newData = [...tableData];
     const value = newData[index][Object.keys(newData[index])[0]][id];
+
     const requestData = {
       empId: user._id,
-      financialYear: "2023-2024",
+      financialYear: finacialYear,
+      usersalary: usersalary?.TotalInvestInvestment,
       requestData: {
         name: value.name,
         sectionname: "SectionDeduction",
@@ -183,6 +189,8 @@ const TDSTable4Tab2 = () => {
     const value = newData[index][Object.keys(newData[index])[0]][id];
     const requestData = {
       empId: user._id,
+      financialYear: finacialYear,
+      usersalary: usersalary?.TotalInvestInvestment,
       requestData: {
         name: value.name,
         sectionname: "SectionDeduction",

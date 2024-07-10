@@ -5,6 +5,7 @@ import { useQuery } from "react-query";
 import usePerformanceApi from "../../../hooks/Performance/usePerformanceApi";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
+import Card from "../components/Card";
 import GoalsTable from "../components/GoalTable/GoalsTable";
 import Message from "../components/Message";
 
@@ -107,6 +108,9 @@ const GoalSettingTab = () => {
           }
         }
       },
+      onError: (error) => {
+        console.log(error);
+      },
     }
   );
 
@@ -144,7 +148,28 @@ const GoalSettingTab = () => {
       <Message />
 
       <div className="flex  pb-4  gap-8">
-        <div className="min-w-[250px] border rounded-md">
+        <Card
+          title={"Performance Period"}
+          data={`  ${
+            performance?.appraisalStartDate &&
+            format(new Date(performance?.appraisalStartDate), "PP")
+          } - ${
+            performance?.appraisalEndDate &&
+            format(new Date(performance?.appraisalEndDate), "PP")
+          }`}
+        />
+        <Card
+          title={"Current Cycle Period"}
+          data={`${
+            performance?.startdate &&
+            format(new Date(performance?.startdate), "PP")
+          } - ${
+            performance?.enddate && format(new Date(performance?.enddate), "PP")
+          }`}
+        />
+        <Card title={"Performance Stage"} data={performance?.stages} />
+
+        {/* <div className="min-w-[250px] border rounded-md">
           <div className=" px-4 py-3 bg-white  rounded-lg leading-none flex items-top justify-start space-x-6">
             <div className="space-y-1">
               <h1 className=" font-semibold text-[#67748E] ">
@@ -185,7 +210,7 @@ const GoalSettingTab = () => {
               <p className="text-md  tracking-tight ">{performance?.stages}</p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <GoalsTable performance={performance} isError={isError} />
