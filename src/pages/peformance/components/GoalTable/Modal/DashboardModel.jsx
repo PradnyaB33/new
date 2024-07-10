@@ -7,7 +7,6 @@ import { useQuery } from "react-query";
 import EmptyAlertBox from "../../../../../components/EmptyAlertBox";
 import usePerformanceApi from "../../../../../hooks/Performance/usePerformanceApi";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
-import UserProfile from "../../../../../hooks/UserData/useUser";
 import DashboardCardTab from "../../Dashboard/DashboardCardTab";
 import PreviewSkeleton from "../Skelton/PreviewSkeleton";
 
@@ -23,7 +22,7 @@ const DashboardModel = ({ open, handleClose, id }) => {
     p: 4,
   };
 
-  const user = UserProfile()?.getCurrentUser();
+  // const user = UserProfile()?.getCurrentUser();
   const authToken = useAuthToken();
   const { getEmployeePerformanceTable } = usePerformanceApi();
 
