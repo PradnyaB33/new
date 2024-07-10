@@ -55,9 +55,10 @@ const AddShiftModal = ({ open, handleClose, addMutate }) => {
       },
       "Shift type is required"
     ),
-    allowance: z.string().min((value) => {
+    allowance: z.string().refine((value) => {
       let allowance = Number(value);
-      return allowance > 0 && allowance < 1000000;
+      console.log(`🚀 ~ file: shift-add-model.jsx:60 ~ allowance:`, allowance);
+      return allowance >= 0 && allowance < 1000000;
     }, "Allowance must be greater than 0 and less than 10,00,000"),
     organizationId: z.string().optional("Organization Id is required"),
   });
@@ -78,8 +79,6 @@ const AddShiftModal = ({ open, handleClose, addMutate }) => {
     },
   });
 
-  console.log("watch", watch());
-
   startTime = watch("startDateTime");
   endTime = watch("endDateTime");
 
@@ -99,8 +98,6 @@ const AddShiftModal = ({ open, handleClose, addMutate }) => {
   };
 
   const onSubmit = async (data) => {
-    console.log(`🚀 ~ file: shift-add-model.jsx:90 ~ data:`, data);
-
     let updatedData = {
       allowance: Number(data.allowance),
       shiftName: data.shiftName,
