@@ -1,58 +1,17 @@
 import { Add, Info } from "@mui/icons-material";
 
 import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Skeleton,
-} from "@mui/material";
-import React, { useState } from "react";
+import { Button, Skeleton } from "@mui/material";
+import React from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import { useQueryClient } from "react-query";
-import { useParams } from "react-router";
-import ShiftModal from "../../../components/Modal/shift/ShiftModal";
 import Setup from "../../SetUpOrganization/Setup";
 import AddShiftModal from "./components/shift-add-model";
 import ShiftRow from "./components/shift-row";
 import useShiftQuery from "./hook/useShiftQuery";
 const Shifts = () => {
-  const { organisationId } = useParams("");
-  const queryClient = useQueryClient();
-
-  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
-
   const [open, setOpen] = React.useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [ShiftId, setShiftId] = useState(null);
-  const { data, isLoading, deleteMutation, addMutate } = useShiftQuery();
-  const handleOpen = () => {
-    setOpen(true);
-    setShiftId(null);
-  };
-
-  const handleDeleteConfirmation = (id) => {
-    setDeleteConfirmation(id);
-  };
-
-  const handleCloseConfirmation = () => {
-    setDeleteConfirmation(null);
-  };
-
-  const handleEditModalOpen = (shiftId) => {
-    setEditModalOpen(true);
-    console.log(shiftId);
-    queryClient.invalidateQueries(["shift", ShiftId]);
-    setShiftId(shiftId); // Set the shiftId for editing
-  };
-
-  const handleDelete = (id) => {
-    // Call the deleteMutation function with the id of the item to delete
-    deleteMutation.mutate(id);
-    handleCloseConfirmation();
-  };
+  const { data, isLoading, deleteMutation, addMutate, editMutate } =
+    useShiftQuery();
 
   return (
     <>
@@ -75,7 +34,7 @@ const Shifts = () => {
               </div>
               <Button
                 className="!font-semibold !bg-sky-500 flex items-center gap-2"
-                onClick={handleOpen}
+                onClick={() => setOpen(true)}
                 variant="contained"
               >
                 <Add className="!text-md" />
@@ -119,6 +78,9 @@ const Shifts = () => {
                                 Shift End Time
                               </th>
                               <th scope="col" className="px-6 py-3 ">
+                                Allowance
+                              </th>
+                              <th scope="col" className="px-6 py-3 ">
                                 Week Days
                               </th>
                               <th scope="col" className="px-6 py-3 ">
@@ -133,10 +95,8 @@ const Shifts = () => {
                                   key={index}
                                   index={index}
                                   items={items}
-                                  handleEditModalOpen={handleEditModalOpen}
-                                  handleDeleteConfirmation={
-                                    handleDeleteConfirmation
-                                  }
+                                  editMutate={editMutate}
+                                  deleteMutation={deleteMutation}
                                 />
                               ))}
                           </tbody>
@@ -164,46 +124,6 @@ const Shifts = () => {
         open={open}
         handleClose={() => setOpen(false)}
       />
-
-      <ShiftModal
-        id={organisationId}
-        open={editModalOpen}
-        shiftId={ShiftId}
-        setShiftId={setShiftId}
-        setOpen={setOpen}
-        setEditModalOpen={setEditModalOpen}
-      />
-
-      <Dialog
-        open={deleteConfirmation !== null}
-        onClose={handleCloseConfirmation}
-      >
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <p>
-            Please confirm your decision to delete the shift, as this action
-            cannot be undone.
-          </p>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleCloseConfirmation}
-            variant="outlined"
-            color="primary"
-            size="small"
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => handleDelete(deleteConfirmation)}
-            color="error"
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 };

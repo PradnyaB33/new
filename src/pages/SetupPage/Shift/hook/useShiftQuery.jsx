@@ -29,18 +29,23 @@ const useShiftQuery = () => {
     refetchOnWindowFocus: false,
   });
 
-  const deleteRequest = async (id) => {
+  const deleteRequest = async ({ id, onClose }) => {
+    console.log(`🚀 ~ file: useShiftQuery.jsx:33 ~ { id, onClose }:`, {
+      id,
+      onClose,
+    });
     await axios.delete(`${process.env.REACT_APP_API}/route/shifts/${id}`, {
       headers: {
         Authorization: authToken,
       },
     });
   };
-  const deleteMutation = useMutation({
+  const { mutate: deleteMutation } = useMutation({
     mutationFn: deleteRequest,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["shifts", organisationId]);
+    onSuccess: async (data, { onClose }) => {
+      await queryClient.invalidateQueries(["shifts", organisationId]);
       handleAlert(true, "success", "Shift deleted successfully");
+      onClose();
     },
     onError: () => {
       handleAlert(true, "error", "Failed to delete shift");
@@ -70,7 +75,36 @@ const useShiftQuery = () => {
       );
     },
   });
-  return { data, isLoading, deleteMutation, addMutate };
+
+  const editShift = async ({ data, onClose }) => {
+    await axios.patch(
+      `${process.env.REACT_APP_API}/route/shifts/${data._id}`,
+      data,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+  };
+
+  const { mutate: editMutate } = useMutation({
+    mutationFn: editShift,
+    onSuccess: async (data, { onClose }) => {
+      await queryClient.invalidateQueries(["shifts", organisationId]);
+      handleAlert(true, "success", "Shift updated successfully");
+      onClose();
+    },
+    onError: (error) => {
+      handleAlert(
+        true,
+        "error",
+        error.response.data.message || "Failed to update shift"
+      );
+    },
+  });
+
+  return { data, isLoading, deleteMutation, addMutate, editMutate };
 };
 
 export default useShiftQuery;
