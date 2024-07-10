@@ -29,7 +29,7 @@ const OrganizationLocations = () => {
                 <div>
                   <h1 className="!text-lg">Location</h1>
                   <p className="text-xs text-gray-600">
-                    Add organization location here.
+                    Add organisation location here.
                   </p>
                 </div>
               </div>
