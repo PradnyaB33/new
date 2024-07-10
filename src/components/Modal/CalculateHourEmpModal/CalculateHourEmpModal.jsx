@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { useNavigate } from "react-router-dom";
 
 const CalculateHourEmpModal = ({
   handleClose,
@@ -31,10 +32,11 @@ const CalculateHourEmpModal = ({
   const { handleAlert } = useContext(TestContext);
   const { justify } = useHourHook();
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 10;
-  console.log("punching record", empPunchingData);
-  console.log({ setTotalPages });
+  const totalPages = Math.ceil(
+    empPunchingData?.punchingRecords?.length / itemsPerPage
+  );
+  const navigate = useNavigate("");
 
   const CalculateHourSchemas = z.object({
     hour: z.string().refine(
@@ -63,6 +65,24 @@ const CalculateHourEmpModal = ({
     const data = getValues();
     console.log("form data", data);
   }, [getValues]);
+
+  // Pagination functions
+  const prePage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const nextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  };
+
+  const changePage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const paginationNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    paginationNumbers.push(i);
+  }
 
   // calculate hours
   const handleCalculateHours = async () => {
@@ -167,6 +187,7 @@ const CalculateHourEmpModal = ({
         handleClose();
         handleAlert(true, "success", "Hours calculated successfully.");
         reset();
+        navigate(`/organisation/${organisationId}/view-calculate-data`);
       } catch (error) {
         console.error("Error calculating hours:", error);
         handleAlert(
@@ -179,17 +200,6 @@ const CalculateHourEmpModal = ({
   };
 
   console.log(remarks);
-
-  // pagination
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-  const nextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-  };
-  const prePage = () => {
-    setCurrentPage((prevPage) => prevPage - 1);
-  };
 
   return (
     <Dialog
@@ -312,51 +322,40 @@ const CalculateHourEmpModal = ({
               </tbody>
             </table>
           </div>
-        </Container>
 
-        {/* Pagination */}
-        <nav
-          className="pagination"
-          style={{
-            textAlign: "center",
-            marginTop: "20px",
-            marginBottom: "20px",
-          }}
-        >
-          <Button
-            onClick={prePage}
-            disabled={currentPage === 1}
-            variant="outlined"
-            style={{ marginRight: "10px" }}
-          >
-            Prev
-          </Button>
-          {currentPage === 1 && (
+          {/* Pagination */}
+          <div className="flex justify-between p-4">
             <Button
-              onClick={() => paginate(2)}
-              variant="outlined"
-              style={{ marginRight: "10px" }}
+              variant="contained"
+              color="primary"
+              onClick={prePage}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </Button>
+            <div>
+              {paginationNumbers &&
+                paginationNumbers?.map((number, index) => (
+                  <Button
+                    key={index}
+                    variant={number === currentPage ? "contained" : "outlined"}
+                    color="primary"
+                    onClick={() => changePage(number)}
+                  >
+                    {number}
+                  </Button>
+                ))}
+            </div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={nextPage}
+              disabled={currentPage === totalPages}
             >
               Next
             </Button>
-          )}
-          {currentPage === 2 && (
-            <Button
-              onClick={() => paginate(1)}
-              variant="outlined"
-              style={{ marginRight: "10px" }}
-            >
-              1
-            </Button>
-          )}
-          <Button
-            onClick={nextPage}
-            disabled={currentPage === totalPages}
-            variant="outlined"
-          >
-            Next
-          </Button>
-        </nav>
+          </div>
+        </Container>
       </DialogContent>
       <DialogActions className="px-4 !py-3 shadow-md outline-none rounded-md bg-gray-50">
         <Button
@@ -366,12 +365,8 @@ const CalculateHourEmpModal = ({
         >
           Calculate Hours
         </Button>
-        <Button
-          onClick={handleClose}
-          variant="contained"
-          className="bg-blue-800 hover:bg-blue-800"
-        >
-          Close
+        <Button color="error" variant="outlined" onClick={handleClose}>
+          Cancel
         </Button>
       </DialogActions>
     </Dialog>
