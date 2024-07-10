@@ -202,11 +202,6 @@ const ShiftModal = ({
       }
     } catch (error) {
       console.error(error);
-      // handleAlert(
-      //   true,
-      //   "error",
-      //   "An error occurred while creating a new shift"
-      // );
     }
   };
 
@@ -222,17 +217,6 @@ const ShiftModal = ({
     bgcolor: "background.paper",
     p: 4,
   };
-
-  // useEffect(() => {
-  //   if (selectedDays?.length < 1) {
-  //     setFieldError("selectedDays", {
-  //       message: "Please select at least one day",
-  //     });
-  //   }
-  //   if (selectedDays?.length > 1) {
-  //     setFieldError("selectedDays", null);
-  //   }
-  // }, [setError]);
 
   const handleDaySelection = (event, newSelectedDays) => {
     setSelectedDays(newSelectedDays);

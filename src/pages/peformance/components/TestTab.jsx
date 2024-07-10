@@ -16,7 +16,7 @@ const TestTab = () => {
   }
 
   const user = UserProfile().getCurrentUser();
-  // const role = UserProfile().useGetCurrentRole();
+  const role = UserProfile().useGetCurrentRole();
   const authToken = useAuthToken();
   const { fetchPerformanceSetup } = usePerformanceApi();
   const { data: performance } = useQuery(["performancePeriod"], () =>
@@ -51,20 +51,23 @@ const TestTab = () => {
     //       ? true
     //       : false,
     // },
+
     {
       title: "Review & Feedback",
       component: <ReviewTab />,
       disabled:
-        performance?.stages !==
-        "KRA stage/Ratings Feedback/Manager review stage"
-          ? true
-          : false,
+        performance?.stages ===
+          "KRA stage/Ratings Feedback/Manager review stage" ||
+        performance?.stages === "Employee acceptance/acknowledgement stage"
+          ? false
+          : true,
     },
   ];
+
   return (
     <>
       <header className="text-lg w-full pt-6 bg-white border  p-4">
-        <Link to={"/income-tax"}>
+        <Link to={-1}>
           <West className="mx-4 !text-xl" />
         </Link>
         Performance Management
@@ -79,24 +82,31 @@ const TestTab = () => {
 
       <div className="px-8 py-4">
         <Tab.Group>
-          <Tab.List className=" mb-3 flex w-max space-x-1 rounded-xl bg-gray-100 p-1">
-            {tabArray.map((tab, index) => (
-              <Tab
-                disabled={tab.disabled}
-                className={({ selected }) =>
-                  classNames(
-                    "w-full rounded-lg py-2.5 px-10 text-sm font-medium leading-5 whitespace-nowrap",
-                    selected
-                      ? "bg-white text-blue-700 shadow"
-                      : "text-black hover:bg-gray-200 ",
-                    tab.disabled &&
-                      "cursor-not-allowed text-gray-400 hover:bg-gray-100"
-                  )
+          <Tab.List className=" mb-3 flex w-max space-x-1 rounded-xl bg-gray-200 p-1">
+            {tabArray
+              ?.filter((tab) => {
+                if (role === "Employee" && tab?.title === "Review & Feedback") {
+                  return null;
                 }
-              >
-                {tab?.title}
-              </Tab>
-            ))}
+                return tab;
+              })
+              ?.map((tab, index) => (
+                <Tab
+                  disabled={tab.disabled}
+                  className={({ selected }) =>
+                    classNames(
+                      "w-full rounded-lg py-2.5 px-10 text-sm font-medium leading-5 whitespace-nowrap",
+                      selected
+                        ? "bg-white text-blue-700 shadow"
+                        : "text-black hover:bg-gray-200 ",
+                      tab.disabled &&
+                        "cursor-not-allowed text-gray-400 hover:bg-gray-100"
+                    )
+                  }
+                >
+                  {tab?.title}
+                </Tab>
+              ))}
             {/* <Tab
               className={({ selected }) =>
                 classNames(
@@ -117,10 +127,11 @@ const TestTab = () => {
             <Tab.Panel>
               <GoalSettingTab />
             </Tab.Panel>
-            <Tab.Panel>
-              <ReviewTab />
-            </Tab.Panel>
-            {/* <Tab.Panel>Content 3</Tab.Panel> */}
+            {role !== "Employee" && (
+              <Tab.Panel>
+                <ReviewTab />
+              </Tab.Panel>
+            )}
           </Tab.Panels>
         </Tab.Group>
       </div>

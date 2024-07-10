@@ -1,11 +1,12 @@
 import { Close } from "@mui/icons-material";
-import { Box, IconButton, Modal } from "@mui/material";
+import { Avatar, Box, IconButton, Modal } from "@mui/material";
 import axios from "axios";
 import { format } from "date-fns";
 import DOMPurify from "dompurify";
 import React, { useContext } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import "react-quill/dist/quill.snow.css";
+import Select from "react-select";
 import { TestContext } from "../../../../../State/Function/Main";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../../hooks/UserData/useUser";
@@ -25,6 +26,13 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
     maxHeight: "80vh",
     p: 4,
   };
+
+  const GoalStatus = [
+    { label: "Not Started", value: "Not Started" },
+    { label: "In Progress", value: "In Progress" },
+    { label: "Completed", value: "Completed" },
+    // { label: "Overdue", value: "Overdue" },
+  ];
 
   // const sanitizedMeasurment = DOMPurify.sanitize(getGoal?.measurement);
   const { useGetCurrentRole, getCurrentUser } = UserProfile();
@@ -56,7 +64,7 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
   );
   const sanitizedDescription = DOMPurify.sanitize(getSingleGoal?.description);
 
-  const SubmitGoal = async () => {
+  const SubmitGoal = async (goalStatus) => {
     try {
       const assignee = { label: user.name, value: user._id };
 
@@ -64,10 +72,13 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
         getSingleGoal?.creatorId === user._id
           ? "Goal Submitted"
           : "Goal Accepted";
+      let requestData = { assignee, status };
+      if (goalStatus)
+        requestData = { ...requestData, goalStatus: goalStatus.value };
 
       await axios.patch(
         `${process.env.REACT_APP_API}/route/performance/updateSingleGoal/${id}`,
-        { data: { status, assignee } },
+        { data: requestData },
         {
           headers: {
             Authorization: authToken,
@@ -110,14 +121,6 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
               <div className="space-y-4 pb-4 px-4">
                 <div className="flex justify-between">
                   <div className="flex w-full gap-2 items-center">
-                    {/* <div
-                      className={`bg-green-500 flex rounded-md p-2 text-white  border-gray-200 border-[.5px]  items-center`}
-                    >
-                      {getSingleGoal?.status
-                        ? getSingleGoal?.status
-                        : "Pending"}
-                    </div> */}
-
                     <div className=" p-2 bg-gray-50 border-gray-200 border rounded-md">
                       Start Date: -{" "}
                       {getSingleGoal?.startDate &&
@@ -128,6 +131,39 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
                       {getSingleGoal?.endDate &&
                         format(new Date(getSingleGoal?.endDate), "PP")}
                     </div>
+
+                    {getSingleGoal?.empId?._id === user?._id &&
+                      getSingleGoal.goalStatus !== "Pending" &&
+                      getSingleGoal.goalStatus !== "Goal Rejected" && (
+                        <div
+                          className={`bg-gray-50  flex rounded-md px-2 border-gray-200 border-[.5px]  items-center`}
+                        >
+                          {/* <Icon className="text-gray-700" /> */}
+                          <Select
+                            aria-errormessage=""
+                            placeholder={"Status"}
+                            styles={{
+                              control: (styles) => ({
+                                ...styles,
+                                borderWidth: "0px",
+                                boxShadow: "none",
+                                backgroundColor: "#f9fafb",
+                              }),
+                            }}
+                            components={{
+                              IndicatorSeparator: () => null,
+                            }}
+                            value={GoalStatus?.find(
+                              (item) => item.label === getSingleGoal?.goalStatus
+                            )}
+                            className={`bg-gray-50  w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                            options={GoalStatus}
+                            onChange={(value) => {
+                              SubmitGoal(value);
+                            }}
+                          />
+                        </div>
+                      )}
                   </div>
 
                   {role === "Employee" &&
@@ -195,18 +231,21 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
                   <p className="font-semibold text-[#67748E]">Attachments</p>
                   <p className="">No data</p>
                 </div>
-                {role === "Employee" && (
-                  <div className="hover:bg-gray-100 rounded-md ">
-                    <p className="px-2">Assigned to</p>
-                    <p className="">No data</p>
+                {role !== "Employee" && (
+                  <div className="hover:bg-gray-100 rounded-md  px-2">
+                    <p className="font-semibold text-[#67748E] mb-2">
+                      Assigned to
+                    </p>
+
+                    <div className="flex w-max items-center gap-2">
+                      <Avatar src={getSingleGoal?.empId?.user_logo_url} />
+                      <p className="text-sm">
+                        {getSingleGoal?.empId?.first_name}{" "}
+                        {getSingleGoal?.empId?.last_name}
+                      </p>
+                    </div>
                   </div>
                 )}
-                {/* <div className="hover:bg-gray-100 rounded-md ">
-                  <p className="px-2">Reporter to</p>
-                  <p className="px-2 mt-2 flex items-center gap-2">
-                    <Avatar sx={{ width: 35, height: 35 }} /> Test user
-                  </p>
-                </div> */}
               </div>
             </>
           )}

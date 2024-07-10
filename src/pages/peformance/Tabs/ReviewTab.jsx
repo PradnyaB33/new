@@ -1,6 +1,5 @@
 import { format } from "date-fns";
-import moment from "moment";
-import React, { useState } from "react";
+import React from "react";
 import { useQuery } from "react-query";
 import usePerformanceApi from "../../../hooks/Performance/usePerformanceApi";
 import useAuthToken from "../../../hooks/Token/useAuth";
@@ -9,8 +8,7 @@ import Message from "../components/Message";
 import ReviewTable from "../components/Review/ReviewTable";
 const ReviewTab = () => {
   const authToken = useAuthToken();
-  const [message, setMessage] = useState("Welcome to Goal Settings");
-  console.log(`🚀 ~ message:`, message);
+
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
@@ -18,99 +16,12 @@ const ReviewTab = () => {
   const { fetchPerformanceSetup, getPerformanceDashboardTable } =
     usePerformanceApi();
 
-  const { data: tableData } = useQuery(["dashboardTable"], () =>
+  const { data: tableData, isFetching } = useQuery(["dashboardTable"], () =>
     getPerformanceDashboardTable({ role, authToken })
   );
 
-  const { data: performance } = useQuery(
-    ["performancePeriod"],
-    () => fetchPerformanceSetup({ user, authToken }),
-    {
-      onSuccess: (data) => {
-        const endDate = moment(data.enddate); // replace with your actual endDate field
-        const currentDate = moment();
-
-        console.log("enddate", endDate.diff(currentDate, "days"));
-        if (data?.stages === "Send form to employee") {
-          if (endDate.diff(currentDate, "days") <= 2) {
-            setMessage(
-              "The submission period for employee forms is soon closing."
-            );
-          }
-          if (endDate.diff(currentDate, "days") < 0) {
-            setMessage("Time for sending for has been ended.");
-          } else {
-            setMessage(
-              "The process to send the form to the employee has now started."
-            );
-          }
-        }
-
-        if (data?.stages === "Goal setting") {
-          if (endDate.diff(currentDate, "days") <= 2) {
-            setMessage(
-              "The submission period for goal setting is soon closing."
-            );
-          }
-          if (endDate.diff(currentDate, "days") < 0) {
-            setMessage("Time for setting up goal has been ended.");
-          } else {
-            setMessage("The process to set up goal has now started.");
-          }
-        }
-
-        if (
-          data?.stages === "KRA stage/Ratings Feedback/Manager review stage"
-        ) {
-          if (endDate.diff(currentDate, "days") <= 2) {
-            setMessage(
-              "The submission period for KRA stage/Ratings Feedback/Manager review is soon closing."
-            );
-          }
-          if (endDate.diff(currentDate, "days") < 0) {
-            setMessage(
-              "Time for KRA stage/Ratings Feedback/Manager review has been ended."
-            );
-          } else {
-            setMessage(
-              "The process to KRA stage/Ratings Feedback/Manager review has now started."
-            );
-          }
-        }
-        if (data?.stages === "Monitoring stage/Feedback collection stage") {
-          if (endDate.diff(currentDate, "days") < 0) {
-            setMessage(
-              "The submission period for KRA stage/Ratings Feedback/Manager review is soon closing."
-            );
-          }
-          if (endDate.diff(currentDate, "days") < 0) {
-            setMessage(
-              "Time for KRA stage/Ratings Feedback/Manager review has been ended."
-            );
-          } else {
-            setMessage(
-              "The process to KRA stage/Ratings Feedback/Manager review has now started."
-            );
-          }
-        }
-        if (data?.stages === "Employee acceptance/acknowledgement stage") {
-          if (endDate.diff(currentDate, "days") <= 2) {
-            setMessage(
-              "The submission period for employee acceptance/acknowledgement is soon closing."
-            );
-          }
-          if (endDate.diff(currentDate, "days") < 0) {
-            setMessage(
-              "Time for employee acceptance/acknowledgement has been ended."
-            );
-          } else {
-            setMessage(
-              "The process to accept/acknowledge goal has now started."
-            );
-          }
-        }
-      },
-    }
+  const { data: performance } = useQuery(["performancePeriod"], () =>
+    fetchPerformanceSetup({ user, authToken })
   );
 
   return (
@@ -173,7 +84,11 @@ const ReviewTab = () => {
         </div>
       </div>
 
-      <ReviewTable tableData={tableData} />
+      <ReviewTable
+        tableData={tableData}
+        performance={performance}
+        isFetching={isFetching}
+      />
     </div>
   );
 };

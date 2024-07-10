@@ -57,11 +57,11 @@ const PerformanceSetup = () => {
     ),
     isDownCast: z.boolean().optional(),
     isFeedback: z.boolean().optional(),
-    isNonMeasurableAllowed: z.boolean().optional(),
+    // isNonMeasurableAllowed: z.boolean().optional(),
     isManagerApproval: z.boolean().optional(),
     isMidGoal: z.boolean().optional(),
     isSendFormInMid: z.boolean().optional(),
-    deleteFormEmployeeOnBoarding: z.boolean().optional(),
+    // deleteFormEmployeeOnBoarding: z.boolean().optional(),
     isKRA: z.boolean().optional(),
     isSelfGoal: z.boolean().optional(),
   });
@@ -98,20 +98,18 @@ const PerformanceSetup = () => {
       isManagerApproval: false,
       isMidGoal: false,
       isSendFormInMid: false,
-      deleteFormEmployeeOnBoarding: false,
+      // deleteFormEmployeeOnBoarding: false,
       isKRA: false,
       isSelfGoal: false,
     },
   });
 
-  console.log(`🚀 ~ errors:`, errors);
-
   useEffect(() => {
     if (performance) {
-      setValue(
-        "deleteFormEmployeeOnBoarding",
-        performance.deleteFormEmployeeOnBoarding
-      );
+      // setValue(
+      //   "deleteFormEmployeeOnBoarding",
+      //   performance.deleteFormEmployeeOnBoarding
+      // );
       setValue("enddate", {
         startDate: performance.enddate,
         endDate: performance.enddate,
@@ -310,6 +308,18 @@ const PerformanceSetup = () => {
                   error={errors.goals}
                 />
 
+                <AuthInputFiled
+                  name="stages"
+                  icon={ListAlt}
+                  control={control}
+                  options={stagesOptions}
+                  type="select"
+                  placeholder="Stages"
+                  label="Select Stage *"
+                  errors={errors}
+                  error={errors.stages}
+                />
+
                 <div className="grid grid-cols-2 gap-4">
                   <AuthInputFiled
                     name="startdate"
@@ -331,18 +341,6 @@ const PerformanceSetup = () => {
                     error={errors.enddate}
                   />
                 </div>
-
-                <AuthInputFiled
-                  name="stages"
-                  icon={ListAlt}
-                  control={control}
-                  options={stagesOptions}
-                  type="select"
-                  placeholder="Stages"
-                  label="Select Stage *"
-                  errors={errors}
-                  error={errors.stages}
-                />
 
                 <AuthInputFiled
                   name="ratings"
@@ -381,7 +379,7 @@ const PerformanceSetup = () => {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <AuthInputFiled
+                  {/* <AuthInputFiled
                     name="isNonMeasurableAllowed"
                     icon={TrendingUp}
                     control={control}
@@ -390,7 +388,7 @@ const PerformanceSetup = () => {
                     label="Non-mesurable target can be added *"
                     errors={errors}
                     error={errors.isNonMeasurableAllowed}
-                  />
+                  /> */}
                   <AuthInputFiled
                     name="isManagerApproval"
                     icon={TrendingUp}
@@ -401,10 +399,7 @@ const PerformanceSetup = () => {
                     errors={errors}
                     error={errors.isManagerApproval}
                   />
-                </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  {" "}
                   <AuthInputFiled
                     name="isMidGoal"
                     icon={TrendingUp}
@@ -415,6 +410,10 @@ const PerformanceSetup = () => {
                     errors={errors}
                     error={errors.isMidGoal}
                   />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  {" "}
                   <AuthInputFiled
                     name="isSendFormInMid"
                     icon={TrendingUp}
@@ -427,7 +426,7 @@ const PerformanceSetup = () => {
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <AuthInputFiled
+                  {/* <AuthInputFiled
                     name="deleteFormEmployeeOnBoarding"
                     icon={TrendingUp}
                     control={control}
@@ -436,7 +435,7 @@ const PerformanceSetup = () => {
                     label="Delete the form when employee offboarded"
                     errors={errors}
                     error={errors.deleteFormEmployeeOnBoarding}
-                  />
+                  /> */}
                   <AuthInputFiled
                     name="isKRA"
                     icon={TrendingUp}

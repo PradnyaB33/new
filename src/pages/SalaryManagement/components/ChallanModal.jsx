@@ -233,6 +233,7 @@ const ChallanModal = ({ handleClose, open, id }) => {
         const pfChallanText = getResponse?.data
           ?.map((item) =>
             [
+              item?.uanno ?? "",
               item?.name ?? "",
               item?.grossSalary ?? "",
               item?.epfWAGES ?? "",

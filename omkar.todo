@@ -1,0 +1,52 @@
+Create Flow Chart:
+    ☐ Create a flow chart for the project 
+    
+✘ Discussed about the project @discussion. @cancelled(24-07-05 08:27)
+
+Performance Setup:
+    Super admin can change the performance cycle as follows:
+        ✔ Set Stages @done(24-07-05 07:59)
+        ✔ Start Date @done(24-07-05 08:01)
+        ✔ End Date @done(24-07-05 08:01)
+        ✔ Mid Goals @done(24-07-05 08:02)
+        ✔ Employee can add goals @done(24-07-05 08:02)
+        ✔ Manager can downcast goals @done(24-07-05 08:03)
+        ✔ Self goal can update or delete @done(24-07-05 08:03)
+
+Performance Management:
+    Goal Setting:
+        ✔ If in setup mid goals option is enabled then user can create goal at mid stage of performance cycle @done(24-07-05 08:07)
+        ✔ IF employee can add goal option is enabled then employee can able to self add goals this goals will go for approval workflow @done(24-07-05 08:07)
+        ✔ Manager can able to downcast goal this goal can downcasted to all employess under him @done(24-07-05 08:08)
+        ✔ only self goal has option to update or delete  @done(24-07-05 08:09)
+
+    Monitoring Stage:
+        ✔ Manager can add Monitoring points for employyes goals @done(24-07-05 08:23)
+        
+    Review & Rating:
+        ☐ 360 Review @discussion
+        ✔ Manager Review @done(24-07-05 08:16)
+        ✘ Self Review @cancelled(24-07-05 08:17)
+    
+    Employee Acceptance & Revaluation:
+        ☐ Employee can accept the review and rating
+
+    Dashboard:
+        ☐ Manager Dashboard:
+            ✔ Employess will display on table @done(24-07-05 08:19)
+            ✔ When click on employee name it will open a modal which display review , rating and all goals of employee @done(24-07-05 08:20)
+        ☐ Employee Dashboard
+            ✔ Employee can see a pie chart which display his goals status @done(24-07-05 08:21)
+            ☐ Another task @discussion
+
+
+    Task Left:
+        360 Review & Rate:
+            ✔ create a backend to store 360 review and rating @done(24-07-09 10:48)
+            ☐ create a frontend to display 360 review and rating given by employee in dashboard section under view card as create two tabs goals & 360 review 
+            
+
+
+        ☐ Employee Acceptance & Revaluation @discussion only for manager rating
+        ☐ After employee chanage status to Goal complete then manager gets workflow 
+        ☐ if employee change status to goal complete then manager gets workflow to review and rate the goal @discussion
