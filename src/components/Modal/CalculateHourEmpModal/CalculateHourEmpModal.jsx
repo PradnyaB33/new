@@ -96,8 +96,13 @@ const CalculateHourEmpModal = ({
     }
 
     if (!timeRange?.startDate || !timeRange?.endDate) {
-      alert("Please select a valid date range.");
+      setError("timeRange", {
+        type: "custom",
+        message: "Please select a valid date range.",
+      });
       return;
+    } else {
+      setError("timeRange", null);
     }
 
     const startDate = new Date(timeRange.startDate);

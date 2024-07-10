@@ -19,12 +19,18 @@ import axios from "axios";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 
-const ViewAttendanceCallModal = ({ handleClose, open, employee }) => {
+const ViewAttendanceCallModal = ({
+  handleClose,
+  open,
+  employee,
+  organisationId,
+}) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [selectedEvent, setSelectedEvent] = useState(null);
   const queryClient = useQueryClient();
+  console.log(organisationId);
 
   const localizer = momentLocalizer(moment);
 
@@ -50,16 +56,21 @@ const ViewAttendanceCallModal = ({ handleClose, open, employee }) => {
   };
   const deleteMutation = useMutation(
     (id) =>
-      axios.delete(`${process.env.REACT_APP_API}/route/employee/delete/${id}`, {
-        headers: {
-          Authorization: authToken,
-        },
-      }),
+      axios.delete(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/delete-record/${id}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      ),
     {
       onSuccess: () => {
         // Invalidate and refetch the data after successful deletion
-        queryClient.invalidateQueries("delete-record");
+        queryClient.invalidateQueries("calculateAttendanceData");
         handleAlert(true, "success", "Record deleted succesfully");
+        setSelectedEvent(null);
+        handleClose();
       },
     }
   );
@@ -131,7 +142,14 @@ const ViewAttendanceCallModal = ({ handleClose, open, employee }) => {
         aria-describedby="modal-modal-description"
       >
         <DialogContent>
-          <Typography variant="h6">Details :</Typography>
+          <Grid container justifyContent="space-between" alignItems="center">
+            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              Details
+            </Typography>
+            <IconButton onClick={handleCloseModal}>
+              <Close />
+            </IconButton>
+          </Grid>
           {selectedEvent && (
             <div>
               <Typography>
@@ -161,14 +179,16 @@ const ViewAttendanceCallModal = ({ handleClose, open, employee }) => {
               </Typography>
 
               {/* Delete button */}
-              <Button
-                variant="contained"
-                color="error"
-                startIcon={<Delete />}
-                onClick={handleDelete}
-              >
-                Delete Event
-              </Button>
+              <div className=" mt-4 text-center">
+                <Button
+                  variant="contained"
+                  color="error"
+                  startIcon={<Delete />}
+                  onClick={handleDelete}
+                >
+                  Delete
+                </Button>
+              </div>
             </div>
           )}
         </DialogContent>

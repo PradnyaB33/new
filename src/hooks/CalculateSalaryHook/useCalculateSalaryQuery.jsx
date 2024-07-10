@@ -111,6 +111,7 @@ const useCalculateSalaryQuery = ({
       : 0;
 
   const formattedDate = selectedDate.format("MMM-YY");
+  
 
   return {
     salaryInfo,

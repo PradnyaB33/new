@@ -40,8 +40,8 @@ const EmployeeProfile = () => {
     additional_phone_number: z
       .string()
       .max(10, { message: "Phone Number must be 10 digits" })
-      .refine((value) => value.length === 10, {
-        message: "Phone Number must be exactly 10 digits",
+      .refine((value) => value.length === 10 || value.length === 0, {
+        message: "Phone Number must be either 10 digits or empty",
       })
       .optional(),
     chat_id: z.string().optional(),
@@ -55,11 +55,7 @@ const EmployeeProfile = () => {
     reset,
     setValue,
   } = useForm({
-    defaultValues: {
-      additional_phone_number: undefined,
-      chat_id: undefined,
-      status_message: undefined,
-    },
+    defaultValues: {},
     resolver: zodResolver(UserProfileSchema),
   });
 
@@ -82,7 +78,7 @@ const EmployeeProfile = () => {
         setValue("chat_id", data?.employee?.chat_id);
         setValue(
           "additional_phone_number",
-          String(data?.employee?.additional_phone_number)
+          String(data?.employee?.additional_phone_number || "")
         );
         setValue("status_message", data?.employee?.status_message);
       },
