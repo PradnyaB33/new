@@ -1,5 +1,5 @@
 import { Assignment, Info } from "@mui/icons-material";
-import { Container, IconButton, Typography } from "@mui/material";
+import { Container, IconButton, Typography, Button } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useQuery } from "react-query";
@@ -12,39 +12,57 @@ const MissPunchJustify = () => {
   const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  console.log(user);
   const organisationId = user.organizationId;
-  console.log(organisationId);
 
-  //for  Get Query
-  const { data: unavailableRecord } = useQuery(
-    ["unavailableRecord", organisationId],
+  // State for pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  // Fetch data with pagination
+  const { data: unavailableRecord, isLoading } = useQuery(
+    ["unavailableRecord", organisationId, currentPage],
     async () => {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/unavailable-record`,
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/unavailable-record?page=${currentPage}`,
         {
           headers: {
             Authorization: authToken,
           },
         }
       );
+      setTotalPages(response.data.totalPages || 1);
       return response.data.data;
     }
   );
 
-  console.log("unavailable record", unavailableRecord);
-
-  // for open the modal for display employee
+  // Modal state
   const [missPunchModalOpen, setMissPunchModalOpen] = useState(false);
-  const [unavailableRecordId, setUnavailableRecordsId] = useState();
-  const handleMissPunchModalOpen = (_id) => {
-    setUnavailableRecordsId(_id);
+  const [unavailableRecordId, setUnavailableRecordsId] = useState(null);
+
+  // Open modal handler
+  const handleMissPunchModalOpen = (id) => {
+    setUnavailableRecordsId(id);
     setMissPunchModalOpen(true);
   };
+
+  // Close modal handler
   const handleMissPunchModalClose = () => {
     setMissPunchModalOpen(false);
-    setUnavailableRecordsId();
+    setUnavailableRecordsId(null);
   };
+
+  // Pagination handlers
+  const nextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const prePage = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <>
@@ -59,9 +77,9 @@ const MissPunchJustify = () => {
           unavailableRecord.map((record, index) => (
             <article
               key={index}
-              className=" bg-white w-full h-max shadow-md rounded-sm border items-center mb-4"
+              className="bg-white w-full h-max shadow-md rounded-sm border items-center mb-4"
             >
-              <Typography variant="h7" className=" pl-2 mb-6 mt-2">
+              <Typography variant="h7" className="pl-2 mb-6 mt-2">
                 {record.employeeId.first_name} {record.employeeId.last_name}
               </Typography>
 
@@ -96,7 +114,9 @@ const MissPunchJustify = () => {
                       {record.unavailableRecords.map(
                         (unavailableRecord, id) => (
                           <tr className="!font-medium border-b" key={id}>
-                            <td className="!text-left pl-8 py-3">{id + 1}</td>
+                            <td className="!text-left pl-8 py-3">
+                              {(currentPage - 1) * 10 + id + 1}
+                            </td>
                             <td className="!text-left pl-6 py-3">
                               {new Date(
                                 unavailableRecord.recordDate
@@ -155,8 +175,40 @@ const MissPunchJustify = () => {
             </article>
           </section>
         )}
+        {/* Pagination */}
+        <div className="flex justify-between p-4">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={prePage}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </Button>
+          <div>
+            {[...Array(totalPages)].map((_, index) => (
+              <Button
+                key={index}
+                variant={index + 1 === currentPage ? "contained" : "outlined"}
+                color="primary"
+                onClick={() => setCurrentPage(index + 1)}
+              >
+                {index + 1}
+              </Button>
+            ))}
+          </div>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={nextPage}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </Button>
+        </div>
       </Container>
 
+      {/* Modal */}
       <MissPunchJustifyModal
         handleClose={handleMissPunchModalClose}
         open={missPunchModalOpen}

@@ -23,7 +23,7 @@ const EmpInfoPunchStatus = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [fileName, setFileName] = useState("");
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false);
   const itemsPerPage = 10;
 
   const handleFileUpload = (e) => {
@@ -35,7 +35,7 @@ const EmpInfoPunchStatus = () => {
     }
     setFileName(file.name);
     const reader = new FileReader();
-    setLoading(true); // Set loading to true when file upload starts
+    setLoading(true);
 
     reader.onload = (event) => {
       const data = event.target.result;
@@ -83,25 +83,75 @@ const EmpInfoPunchStatus = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
+  console.log("table data", tableData);
+  // select for individual record
   const handleEmployeeSelect = (index) => {
-    const selectedEmployeeId = currentItems[index][0];
-    const selectedEmployeeRecords = tableData.filter(
-      (employee) => employee[0] === selectedEmployeeId
+    const selectedEmployeeRecord = currentItems[index];
+    const isSelected = selectedEmployees.some(
+      (emp) =>
+        emp[0] === selectedEmployeeRecord[0] &&
+        emp[1] === selectedEmployeeRecord[1] &&
+        emp[2] === selectedEmployeeRecord[2] &&
+        emp[3] === selectedEmployeeRecord[3] &&
+        emp[4] === selectedEmployeeRecord[4] &&
+        emp[5] === selectedEmployeeRecord[5] &&
+        emp[6] === selectedEmployeeRecord[6] &&
+        emp[7] === selectedEmployeeRecord[7] &&
+        emp[8] === selectedEmployeeRecord[8] &&
+        emp[9] === selectedEmployeeRecord[9]
     );
 
-    const allSelected = selectedEmployeeRecords.every((record) =>
+    if (isSelected) {
+      setSelectedEmployees((prevSelected) =>
+        prevSelected.filter(
+          (emp) =>
+            emp[0] !== selectedEmployeeRecord[0] ||
+            emp[1] !== selectedEmployeeRecord[1] ||
+            emp[2] !== selectedEmployeeRecord[2] ||
+            emp[3] !== selectedEmployeeRecord[3] ||
+            emp[4] !== selectedEmployeeRecord[4] ||
+            emp[5] !== selectedEmployeeRecord[5] ||
+            emp[6] !== selectedEmployeeRecord[6] ||
+            emp[7] !== selectedEmployeeRecord[7] ||
+            emp[8] !== selectedEmployeeRecord[8] ||
+            emp[9] !== selectedEmployeeRecord[9]
+        )
+      );
+    } else {
+      setSelectedEmployees((prevSelected) => [
+        ...prevSelected,
+        selectedEmployeeRecord,
+      ]);
+    }
+  };
+
+  // select for multiple record
+  const handleSelectAll = () => {
+    const allEmployeeIds = currentItems.map((row) => row[0]);
+    const allEmployeeRecords = tableData.filter((row) =>
+      allEmployeeIds.includes(row[0])
+    );
+
+    const allSelected = allEmployeeRecords.every((record) =>
       selectedEmployees.some((emp) => emp[0] === record[0])
     );
 
     if (allSelected) {
-      const deselectedEmployees = selectedEmployees.filter(
-        (emp) => emp[0] !== selectedEmployeeId
+      setSelectedEmployees((prevSelected) =>
+        prevSelected.filter((emp) => !allEmployeeIds.includes(emp[0]))
       );
-      setSelectedEmployees(deselectedEmployees);
     } else {
       setSelectedEmployees((prevSelected) => [
         ...prevSelected,
-        ...selectedEmployeeRecords,
+        ...allEmployeeRecords.filter(
+          (record) =>
+            !prevSelected.some(
+              (emp) =>
+                emp[0] === record[0] &&
+                emp[3] === record[3] &&
+                emp[4] === record[4]
+            )
+        ),
       ]);
     }
   };
@@ -271,38 +321,61 @@ const EmpInfoPunchStatus = () => {
               <table className="w-full whitespace-nowrap">
                 <thead>
                   <tr className="bg-gray-200 border-b-2 border-gray-300">
-                    <th className="!text-left pl-8 py-3">
-                      <Tooltip title={"Select the employee"} arrow>
-                        <input
-                          type="checkbox"
-                          disabled={true}
-                          style={{ cursor: "default" }}
-                        />
-                      </Tooltip>
+                    <th className="pl-8 py-2 text-left">
+                      <input
+                        type="checkbox"
+                        onChange={handleSelectAll}
+                        checked={
+                          currentItems.length > 0 &&
+                          currentItems.every((row) =>
+                            selectedEmployees.some(
+                              (emp) =>
+                                emp[0] === row[0] &&
+                                emp[1] === row[1] &&
+                                emp[2] === row[2] &&
+                                emp[3] === row[3] &&
+                                emp[4] === row[4] &&
+                                emp[5] === row[5] &&
+                                emp[6] === row[6] &&
+                                emp[7] === row[7] &&
+                                emp[8] === row[8] &&
+                                emp[9] === row[9]
+                            )
+                          )
+                        }
+                      />
                     </th>
                     <th className="!text-left pl-8 py-3">Sr No.</th>
-                    <th className="py-3 pl-8">Employee ID</th>
-                    <th className="py-3 pl-8">Name</th>
-                    <th className="py-3 pl-8">Department</th>
-                    <th className="py-3 pl-8">Date</th>
-                    <th className="py-3 pl-8">Day</th>
-                    <th className="py-3 pl-8">In Time</th>
-                    <th className="py-3 pl-8">Out Time</th>
+                    <th className="py-3 pl-8 !text-left">Employee ID</th>
+                    <th className="py-3 pl-8 !text-left">Name</th>
+                    <th className="py-3 pl-8 !text-left">Department</th>
+                    <th className="py-3 pl-8 !text-left">Date</th>
+                    <th className="py-3 pl-8 !text-left">Day</th>
+                    <th className="py-3 pl-8 !text-left">In Time</th>
+                    <th className="py-3 pl-8 !text-left">Out Time</th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentItems.map((row, index) => (
                     <tr key={index}>
                       <td className="!text-left pl-8 py-3">
-                        <Tooltip title={"Select the employee"} arrow>
-                          <input
-                            type="checkbox"
-                            checked={selectedEmployees.some(
-                              (emp) => emp[0] === row[0]
-                            )}
-                            onChange={() => handleEmployeeSelect(index)}
-                          />
-                        </Tooltip>
+                        <input
+                          type="checkbox"
+                          checked={selectedEmployees.some(
+                            (emp) =>
+                              emp[0] === row[0] &&
+                              emp[1] === row[1] &&
+                              emp[2] === row[2] &&
+                              emp[3] === row[3] &&
+                              emp[4] === row[4] &&
+                              emp[5] === row[5] &&
+                              emp[6] === row[6] &&
+                              emp[7] === row[7] &&
+                              emp[8] === row[8] &&
+                              emp[9] === row[9]
+                          )}
+                          onChange={() => handleEmployeeSelect(index)}
+                        />
                       </td>
                       <td className="!text-left pl-8 py-3">
                         {(currentPage - 1) * itemsPerPage + index + 1}
@@ -330,99 +403,39 @@ const EmpInfoPunchStatus = () => {
               <p>Data is loading.</p>
             </section>
           )}
-        </article>
-        <nav
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "30px",
-            marginBottom: "20px",
-          }}
-        >
-          <ul className="pagination" style={{ display: "inline-block" }}>
-            <li
-              style={{ display: "inline-block", marginRight: "5px" }}
-              className="page-item"
+          <div className="flex justify-between p-4">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={prePage}
+              disabled={currentPage === 1}
             >
-              <button
-                style={{
-                  color: "#007bff",
-                  padding: "8px 12px",
-                  border: "1px solid #007bff",
-                  textDecoration: "none",
-                  borderRadius: "4px",
-                  transition: "all 0.3s ease",
-                  cursor: "pointer",
-                }}
-                className="page-link"
-                onClick={prePage}
-              >
-                Prev
-              </button>
-            </li>
-            {paginationNumbers.map((n, index) => (
-              <li
-                key={index}
-                className={`page-item ${currentPage === n ? "active" : ""}`}
-                style={{
-                  display: "inline-block",
-                  marginRight: "5px",
-                }}
-              >
-                {n === "..." ? (
-                  <span
-                    style={{
-                      color: "#007bff",
-                      padding: "8px 12px",
-                      border: "1px solid transparent",
-                      textDecoration: "none",
-                      borderRadius: "4px",
-                      transition: "all 0.3s ease",
-                      cursor: "default",
-                    }}
+              Previous
+            </Button>
+            <div>
+              {paginationNumbers &&
+                paginationNumbers?.map((number, index) => (
+                  <Button
+                    key={index}
+                    variant={number === currentPage ? "contained" : "outlined"}
+                    color="primary"
+                    onClick={() => number !== "..." && changePage(number)}
+                    disabled={number === "..."}
                   >
-                    ...
-                  </span>
-                ) : (
-                  <a
-                    href={`#${n}`}
-                    style={{
-                      color: currentPage === n ? "#fff" : "#007bff",
-                      backgroundColor:
-                        currentPage === n ? "#007bff" : "transparent",
-                      padding: "8px 12px",
-                      border: "1px solid #007bff",
-                      textDecoration: "none",
-                      borderRadius: "4px",
-                      transition: "all 0.3s ease",
-                    }}
-                    className="page-link"
-                    onClick={() => changePage(n)}
-                  >
-                    {n}
-                  </a>
-                )}
-              </li>
-            ))}
-            <li style={{ display: "inline-block" }} className="page-item">
-              <button
-                style={{
-                  color: "#007bff",
-                  padding: "8px 12px",
-                  border: "1px solid #007bff",
-                  textDecoration: "none",
-                  borderRadius: "4px",
-                  transition: "all 0.3s ease",
-                  cursor: "pointer",
-                }}
-                className="page-link"
-                onClick={nextPage}
-              >
-                Next
-              </button>
-            </li>
-          </ul>
-        </nav>
+                    {number}
+                  </Button>
+                ))}
+            </div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={nextPage}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </Button>
+          </div>
+        </article>
       </Container>
 
       <AttendanceBioModal
