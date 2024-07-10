@@ -104,7 +104,9 @@ const EmployeeSurveyForm = () => {
             title: surveyData.title,
             description: surveyData.description,
             questions: surveyData.questions.map((q, index) => ({
-                question: q.question,
+                questionId:q?._id,
+                questionType:q?.questionType,
+                question: q?.question,
                 answer: q.questionType === "Checkboxes"
                     ? q.options.filter((_, optIndex) => formData[`question_${index}_option_${optIndex}`])
                     : formData[`answer_${index}`],
@@ -173,7 +175,7 @@ const EmployeeSurveyForm = () => {
                                                         type="text"
                                                         placeholder="Enter answer*"
                                                         readOnly={false}
-                                                        maxLimit={15}
+                                                        maxLimit={100}
                                                         errors={errors}
                                                         error={errors[`answer_${index}`]}
                                                     />
@@ -261,7 +263,7 @@ const EmployeeSurveyForm = () => {
                                     <Button type="submit" variant="contained" color="primary" className="mt-4" onClick={handleSubmit((data) => onSubmit(data, "End"))}>
                                         Submit
                                     </Button>
-                                    <Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => onSubmit(data, "Pending"))}>
+                                    <Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => onSubmit(data, "Complete Survey"))}>
                                         Save For Now
                                     </Button>
                                     <Button onClick={handleClose} variant="outlined" color="error">

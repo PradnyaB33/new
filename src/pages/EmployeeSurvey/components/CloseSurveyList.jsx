@@ -7,6 +7,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import DOMPurify from "dompurify";
 import { useQuery } from "react-query";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import * as XLSX from "xlsx";
 
 const CloseSurveyList = () => {
   // Hooks
@@ -42,14 +43,30 @@ const CloseSurveyList = () => {
     }
   );
 
-  const handleSurveyDetails = () => {
-    navigate("/organisation/:organisationId/survey-details");
+  const handleSurveyDetails = (surveyId) => {
+    console.log("surveyId",surveyId);
+    navigate(`/organisation/:organisationId/survey-details/${surveyId}`);
   }
 
 
   const handleCloseSurvey = () => {
     setCloseSurvey(!closeSurvey)
   }
+
+   // Generate Excel function
+   const generateExcel = () => {
+    const data = [["Title", "Status"]];
+    surveys.forEach((survey) => {
+      const cleanTitle = DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } });
+      data.push([cleanTitle, survey.status]);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "SurveyData");
+
+    XLSX.writeFile(wb, "survey_data.xlsx");
+  };
 
   return (
     <div>
@@ -76,6 +93,11 @@ const CloseSurveyList = () => {
                 size="small"
                 sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
               />
+              {(user?.profile.includes('Super-Admin') || user?.profile.includes('HR')) && (
+                <Button variant="contained" color="warning" onClick={generateExcel}>
+                  Generate Excel
+                </Button>
+              )}
             </div>
           </div>
           {isLoading ? (

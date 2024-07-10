@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Button, CircularProgress, TextField, Typography } from "@mui/material";
-import * as XLSX from "xlsx";
 import UserProfile from "../../../hooks/UserData/useUser";
 import { UseContext } from "../../../State/UseState/UseContext";
 import DOMPurify from "dompurify";
@@ -63,24 +62,14 @@ const OpenSurveyList = () => {
   );
   console.log("responseSurvey", responseSurvey);
   // Handle form navigation
-  const handleSurveyForm = (surveyId,responseId) => {
-    console.log("responseId",responseId);
-    navigate(`/organisation/${organisationId}/survey-form/${surveyId}/${responseId}`);
-  };
+  const handleSurveyForm = (surveyId, responseId) => {
+    if (responseId === undefined) {
+      navigate(`/organisation/${organisationId}/survey-form/${surveyId}`)
+    }
+    else {
+      navigate(`/organisation/${organisationId}/survey-form/${surveyId}/${responseId}`);
+    }
 
-  // Generate Excel function
-  const generateExcel = () => {
-    const data = [["Title", "Status"]];
-    surveys.forEach((survey) => {
-      const cleanTitle = DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } });
-      data.push([cleanTitle, survey.status]);
-    });
-
-    const ws = XLSX.utils.aoa_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "SurveyData");
-
-    XLSX.writeFile(wb, "survey_data.xlsx");
   };
 
   const handleOpenSurvey = () => {
@@ -94,7 +83,7 @@ const OpenSurveyList = () => {
     const responses = responseSurvey?.filter(response => response?.surveyId === survey?._id);
     return {
       ...survey,
-      responses: responses || []  // Attach responses array to each survey
+      responses: responses || []
     };
   });
 
@@ -125,11 +114,6 @@ const OpenSurveyList = () => {
                 size="small"
                 sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
               />
-              {(user?.profile.includes('Super-Admin') || user?.profile.includes('HR')) && (
-                <Button variant="contained" color="warning" onClick={generateExcel}>
-                  Generate Excel
-                </Button>
-              )}
             </div>
           </div>
           {isLoading ? (
@@ -165,7 +149,7 @@ const OpenSurveyList = () => {
                           {survey.responses.length > 0 ? (
                             <Button
                               variant="outlined"
-                              onClick={() => handleSurveyForm(survey._id,survey.responses[0]._id)}
+                              onClick={() => handleSurveyForm(survey?._id, survey.responses[0]?._id)}
                               sx={{ textTransform: "none", width: "100px" }}
                             >
                               {survey.responses[0].responseStatus}
@@ -173,7 +157,7 @@ const OpenSurveyList = () => {
                           ) : (
                             <Button
                               variant="outlined"
-                              onClick={() => handleSurveyForm(survey._id,survey.responses[0]._id)}
+                              onClick={() => handleSurveyForm(survey?._id, survey.responses[0]?._id)}
                               sx={{ textTransform: "none", width: "130px" }}
                             >
                               Take Survey
