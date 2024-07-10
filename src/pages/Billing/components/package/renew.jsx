@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  CropFree,
   FactoryOutlined,
   Inventory,
   Numbers,
@@ -199,7 +200,7 @@ const RenewPackage = ({ handleClose, open, organisation }) => {
 
           <AuthInputFiled
             name="promoCode"
-            icon={Numbers}
+            icon={CropFree}
             control={control}
             type="input-action"
             placeholder="#summer2021"

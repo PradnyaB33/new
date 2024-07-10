@@ -20,12 +20,12 @@ function CalculateSalary() {
   const [unPaidLeaveDays, setUnPaidLeaveDays] = useState(0);
   const [remotePunchingCount, setRemotePunchingCount] = useState(0);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
+  const [publicHolidays, setPublicHoliDays] = useState([]);
   console.log(setIsSubmitDisabled);
 
   const {
     salaryInfo,
     availableEmployee,
-    publicHolidaysCount,
     formattedDate,
     empLoanAplicationInfo,
     remotePunchAllowance,
@@ -36,6 +36,31 @@ function CalculateSalary() {
   };
 
   useEffect(() => {
+    const fetchDataAndFilter = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/leave/getYearLeaves/${userId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setEmployeeSummary(response.data);
+      } catch (error) {
+        console.error(error);
+        handleAlert(
+          true,
+          "error",
+          "Failed to fetch Employee Attendance Summary"
+        );
+      }
+    };
+    fetchDataAndFilter();
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
     const monthFromSelectedDate = selectedDate.format("M");
     const yearFromSelectedDate = selectedDate.format("YYYY");
     const salaryExists = salaryInfo.some(
@@ -43,50 +68,26 @@ function CalculateSalary() {
         String(salary.month) === monthFromSelectedDate &&
         String(salary.year) === yearFromSelectedDate
     );
-    console.log(salaryExists);
-    setNumDaysInMonth(currentDate.daysInMonth());
-    setPaidLeaveDays(0);
-    setUnPaidLeaveDays(0);
-    setShiftTotalAllowance(0);
-    // eslint-disable-next-line
-  }, []);
+    console.log("Salary Exists:", salaryExists);
+    setNumDaysInMonth(selectedDate.daysInMonth());
+  }, [selectedDate, salaryInfo]);
 
-  // to get the leave like unpaid  , paid  remote punching count etc
-  const fetchDataAndFilter = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/leave/getYearLeaves/${userId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      setEmployeeSummary(response.data);
-    } catch (error) {
-      console.error(error);
-      handleAlert(true, "error", "Failed to fetch Employee Attendance Summary");
-    }
-  };
+
   useEffect(() => {
-    fetchDataAndFilter();
-    // eslint-disable-next-line
-  }, []);
+    const selectedMonth = selectedDate.format("M");
+    const selectedYear = selectedDate.format("YYYY");
 
-  const selectedMonth = selectedDate.format("M");
-  const selectedYear = selectedDate.format("YYYY");
+    const filterDataByMonthYear = (data, selectedMonth, selectedYear) => {
+      const numericMonth = parseInt(selectedMonth, 10);
+      const numericYear = parseInt(selectedYear, 10);
+      return data.filter((item) => {
+        const itemMonth = parseInt(item.month, 10);
+        return (
+          itemMonth === numericMonth && parseInt(item.year, 10) === numericYear
+        );
+      });
+    };
 
-  const filterDataByMonthYear = (data, selectedMonth, selectedYear) => {
-    const numericMonth = parseInt(selectedMonth, 10);
-    const numericYear = parseInt(selectedYear, 10);
-    return data.filter((item) => {
-      const itemMonth = parseInt(item.month, 10);
-      return (
-        itemMonth === numericMonth && parseInt(item.year, 10) === numericYear
-      );
-    });
-  };
-  useEffect(() => {
     const filteredData = filterDataByMonthYear(
       employeeSummary,
       selectedMonth,
@@ -94,15 +95,52 @@ function CalculateSalary() {
     );
 
     if (filteredData.length > 0) {
-      const { paidleaveDays, unpaidleaveDays, remotePunching } =
-        filteredData[0];
+      const { paidleaveDays, unpaidleaveDays } = filteredData[0];
       setPaidLeaveDays(paidleaveDays);
       setUnPaidLeaveDays(unpaidleaveDays);
-      setRemotePunchingCount(remotePunching);
+    } else {
+      setPaidLeaveDays(0);
+      setUnPaidLeaveDays(0);
     }
-  }, [employeeSummary, selectedMonth, selectedYear]);
+  }, [employeeSummary, selectedDate]);
 
-  console.log("empsummary", employeeSummary);
+  //  to get holiday
+  const fetchHoliday = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/holiday/get/${organisationId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setPublicHoliDays(response.data.holidays);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch Holiday");
+    }
+  };
+  useEffect(() => {
+    fetchHoliday();
+    // eslint-disable-next-line
+  }, []);
+  
+  const countPublicHolidaysInCurrentMonth = () => {
+    const selectedMonth = selectedDate.format("M");
+    const selectedYear = selectedDate.format("YYYY");
+
+    const holidaysInCurrentMonth = publicHolidays.filter((holiday) => {
+      const holidayDate = dayjs(holiday.date);
+      return (
+        holidayDate.month() + 1 === parseInt(selectedMonth) &&
+        holidayDate.year() === parseInt(selectedYear)
+      );
+    });
+
+    return holidaysInCurrentMonth.length;
+  };
+  let publicHolidaysCount = countPublicHolidaysInCurrentMonth();
 
   // to get shifts of employee
   const selectedMonths = selectedDate.format("M");

@@ -52,8 +52,8 @@ import {
   default as DepartmentDeletion,
 } from "./pages/SetupPage/DepartmentDeletion";
 import EmailSetting from "./pages/SetupPage/EmailSetting";
+import Shifts from "./pages/SetupPage/Shift/Page";
 import ShiftManagement from "./pages/SetupPage/ShiftManagement/shiftAllowance";
-import Shifts from "./pages/SetupPage/Shifts";
 import WeekendHoliday from "./pages/SetupPage/WeekendHoliday";
 import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
@@ -835,14 +835,6 @@ const App = () => {
           }
         />
         <Route
-          path="/organisation/:organisationId/setup/set-shifts"
-          element={
-            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-              <Shifts />
-            </RequireAuth>
-          }
-        />
-        <Route
           path="/organisation/:organisationId/setup/weekly-off"
           element={
             <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
@@ -868,14 +860,14 @@ const App = () => {
             </RequireAuth>
           }
         />
-        <Route
+        {/* <Route
           path="/set-shifts/:id"
           element={
             <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-              <Shifts />
+              <Shift s />
             </RequireAuth>
           }
-        />
+        /> */}
         <Route
           path="/add-inputfield/:id"
           element={

@@ -118,6 +118,7 @@ const Step1 = ({ nextStep }) => {
             type="date"
             placeholder="Foundation Date"
             label="Foundation Date *"
+            max={new Date().toISOString().split("T")[0]}
             errors={errors}
             error={errors.foundation_date}
           />

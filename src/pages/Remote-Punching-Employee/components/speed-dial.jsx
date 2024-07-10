@@ -18,10 +18,6 @@ export default function FabIcons() {
   };
   const { faceDetectedData } = useSelfieFaceDetect();
 
-  console.log(
-    `🚀 ~ file: speed-dial.jsx:20 ~ faceDetectedData:`,
-    faceDetectedData
-  );
   return (
     <>
       {!start ? (

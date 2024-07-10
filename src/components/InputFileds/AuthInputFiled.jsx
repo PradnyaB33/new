@@ -1,6 +1,6 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { Close, Send, Visibility, VisibilityOff } from "@mui/icons-material";
-import { Avatar, Button } from "@mui/material";
+import { Avatar, Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import moment from "moment";
 import { default as React, useMemo } from "react";
 import Autocomplete, { usePlacesWidget } from "react-google-autocomplete";
@@ -56,7 +56,6 @@ const AuthInputFiled = ({
   value,
   autoComplete,
   onInputActionClick,
-  InputFiledActionIcon,
   onInputActionClear,
   isClearable = false,
   useRange = false,
@@ -69,7 +68,6 @@ const AuthInputFiled = ({
   const handleFocus = (fieldName) => {
     setFocusedInput(fieldName);
   };
-
   const { ref } = usePlacesWidget({
     apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     onPlaceSelected: (place) => console.log(place),
@@ -369,7 +367,7 @@ const AuthInputFiled = ({
               </>
             )}
           />
-          <div className="h-4 !mb-1">
+          <div className="h-full !mb-1">
             <p className="text-xs pl-2">{descriptionText}</p>
             <ErrorMessage
               errors={errors}
@@ -876,17 +874,6 @@ const AuthInputFiled = ({
           id={name}
           render={({ field }) => (
             <>
-              {/* <div
-                onFocus={() => {
-                  handleFocus(name);
-                }}
-                onBlur={() => setFocusedInput(null)}
-                className={`${readOnly && "bg-[ghostwhite]"} ${
-                  focusedInput === name
-                    ? "border-blue-500 border-[2px]"
-                    : "border-gray-200 border-[.5px]"
-                } flex rounded-md items-center px-2   bg-white py-1 md:py-[6px]`}
-              > */}
               <ReactQuill
                 theme="snow"
                 value={field.value}
@@ -894,9 +881,7 @@ const AuthInputFiled = ({
                 className="h-40"
                 onChange={field.onChange}
                 modules={modules}
-                // formats={formats}
               />
-              {/* </div> */}
             </>
           )}
         />
@@ -981,7 +966,7 @@ const AuthInputFiled = ({
             errors={errors}
             name={name}
             render={({ message }) => (
-              <p className="text-sm mb-4 absolute !bg-white  text-red-500">
+              <p className="text-sm mb-4 absolute !bg-white  text-red-500 px-2">
                 {message}
               </p>
             )}
@@ -1062,6 +1047,7 @@ const AuthInputFiled = ({
       </div>
     );
   }
+
   if (type === "rounded-text-field") {
     return (
       <div className={`space-y-1 min-w-11 ${className}`}>
@@ -1215,6 +1201,74 @@ const AuthInputFiled = ({
           )}
         />
         {/* </div> */}
+      </div>
+    );
+  }
+  if (type === "week-input") {
+    return (
+      <div
+        className={`space-y-1 w-full !overflow-auto mb-4 ${className}`}
+        style={{ width: "100%", justifyContent: "center", gap: "2px" }}
+      >
+        <label
+          className={`${
+            errors.selectedDays && "text-red-500"
+          } font-semibold text-gray-500 text-md`}
+          htmlFor="demo-simple-select-label"
+        >
+          {label}
+        </label>
+        <Controller
+          control={control}
+          name={name}
+          id={name}
+          render={({ field }) => (
+            <ToggleButtonGroup
+              value={field.value}
+              onChange={(event, newSelectedDays) => {
+                field.onChange(newSelectedDays);
+              }}
+              aria-label={name}
+              className="mt-2 w-max !space-x-5"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              {(optionlist || [])?.map((day) => (
+                <ToggleButton
+                  key={day.label}
+                  value={day.value}
+                  className="!rounded-full !border-[2px] !border-gray-200 !text-xs font-semibold"
+                  style={{
+                    width: "35px",
+                    height: "35px",
+                    padding: "2px",
+                    backgroundColor: field?.value?.includes(day?.value)
+                      ? "#1976d2"
+                      : "transparent",
+                    color: field?.value?.includes(day?.value)
+                      ? "white"
+                      : "black",
+                  }}
+                >
+                  {day.label}
+                </ToggleButton>
+              ))}
+            </ToggleButtonGroup>
+          )}
+        />
+        <div className="h-fit min-h-6 w-full">
+          <ErrorMessage
+            errors={errors}
+            name={name}
+            render={({ message }) => (
+              <p className="text-sm relative !bg-white  text-red-500">
+                {message}
+              </p>
+            )}
+          />
+        </div>
       </div>
     );
   }

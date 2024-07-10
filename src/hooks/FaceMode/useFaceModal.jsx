@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as faceApi from "face-api.js";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { TestContext } from "../../State/Function/Main";
 import useGetUser from "../Token/useUser";
@@ -10,6 +10,7 @@ const useLoadModel = () => {
   const { handleAlert } = useContext(TestContext);
   const { descriptor, setDescriptor } = useFaceStore();
   const { decodedToken } = useGetUser();
+  const [loading, setLoading] = useState(false);
 
   const loadModels = async () => {
     await faceApi.nets.faceExpressionNet.loadFromUri("/models");
@@ -181,6 +182,8 @@ const useLoadModel = () => {
     detectFaceOnlyMutation,
     descriptor,
     setDescriptor,
+    loading,
+    setLoading,
   };
 };
 

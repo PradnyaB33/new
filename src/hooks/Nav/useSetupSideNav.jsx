@@ -23,10 +23,6 @@ import { useLocation } from "react-router-dom";
 import useSubscriptionGet from "../QueryHook/Subscription/hook";
 import UserProfile from "../UserData/useUser";
 const useSetupSideNav = ({ organisationId }) => {
-  console.log(
-    `🚀 ~ file: useSetupSideNav.jsx:26 ~ organisationId:`,
-    organisationId
-  );
   const location = useLocation();
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
