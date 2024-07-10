@@ -5,7 +5,7 @@ const usePerformanceApi = create((set) => ({
   isTimeFinish: undefined,
   setIsTimeFinish: (isTimeFinish) => set({ isTimeFinish }),
   dashboardData: undefined,
-  setDashboardData: (dashboardData) => set({ ...dashboardData }),
+  setDashboardData: (dashboardData) => set({ dashboardData }),
   getPerformanceTable: async ({ role, authToken, organisationId }) => {
     try {
       const response = await axios.get(
@@ -26,7 +26,7 @@ const usePerformanceApi = create((set) => ({
   getEmployeePerformanceTable: async ({ authToken, empId }) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route//performance/getPerformanceTableForEmployee/${empId}`,
+        `${process.env.REACT_APP_API}/route/performance/getPerformanceTableForEmployee/${empId}`,
         {
           headers: {
             Authorization: authToken,
