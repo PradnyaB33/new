@@ -46,7 +46,7 @@ const EmployeeSurveyForm = () => {
     // Fetch single survey data
     const [singleResponseSurvey, setSingleResponseSurvey] = useState(null);
 
-    const { isLoading1 } = useQuery(
+    const { isLoading: isLoading1 } = useQuery(
         ["singleResponseSurvey", surveyId],
         async () => {
             const response = await axios.get(
@@ -62,7 +62,6 @@ const EmployeeSurveyForm = () => {
         {
             enabled: !!surveyId,
             onSuccess: (data) => {
-
                 setSingleResponseSurvey(data);
                 data.questions.forEach((q, index) => {
                     setValue(`answer_${index}`, q.answer);
@@ -72,9 +71,22 @@ const EmployeeSurveyForm = () => {
     );
 
     // Post Data
-    const mutation = useMutation(
-        async (data) => {
-            await axios.post(
+    const mutation = useMutation(async (data) => {
+        let response;
+        if (data.isUpdate) {
+            // Update response survey
+            response = await axios.put(
+                `${process.env.REACT_APP_API}/route/organization/${organisationId}/update-employee-survey-response-form/${responseId}`,
+                data,
+                {
+                    headers: {
+                        Authorization: authToken,
+                    },
+                }
+            );
+        } else {
+            // Add new response survey
+            response = await axios.post(
                 `${process.env.REACT_APP_API}/route/organization/${organisationId}/add-employee-survey-response-form`,
                 data,
                 {
@@ -83,21 +95,28 @@ const EmployeeSurveyForm = () => {
                     },
                 }
             );
-        },
+        }
+        console.log("response", response);
+        return response;
+    },
         {
             onSuccess: (response) => {
                 if (response.status === 201 || response.status === 200) {
                     navigate(`/organisation/${organisationId}/employee-survey`);
                 }
+
                 handleAlert(true, "success", "Saved survey response successfully");
             },
             onError: (error) => {
                 console.error("Error submitting survey responses:", error);
+                if (error?.response?.status === 400) {
+                    handleAlert(true, "error", error?.response?.data?.error);
+                }
             }
         }
     );
 
-    const onSubmit = (formData, responseStatus) => {
+    const onSubmit = (formData, responseStatus, isUpdate) => {
         const data = {
             surveyId: surveyData._id,
             title: surveyData.title,
@@ -112,6 +131,7 @@ const EmployeeSurveyForm = () => {
             })),
             responseStatus: responseStatus,
             employeeId: user._id,
+            isUpdate: isUpdate,
         };
 
         mutation.mutate(data);
@@ -128,6 +148,7 @@ const EmployeeSurveyForm = () => {
     const handleClose = () => {
         navigate(`/organisation/${organisationId}/employee-survey`);
     };
+
     return (
         <div className="bg-gray-50 min-h-screen h-auto font-family">
             <header className="text-xl w-full pt-6 flex flex-col md:flex-row items-start md:items-center gap-2 bg-white shadow-md p-4">
@@ -153,13 +174,9 @@ const EmployeeSurveyForm = () => {
                 <article className="w-full rounded-lg bg-white">
                     <div className="w-full md:px-5 px-1">
                         <div className="w-full mt-4 p-4">
-                            <h1 className="text-2xl mb-4 font-bold">
-                                {DOMPurify.sanitize(surveyData.title, { USE_PROFILES: { html: false } })}
-                            </h1>
-                            <p className="mb-5">
-                                {DOMPurify.sanitize(surveyData?.description, { USE_PROFILES: { html: false } })}
-                            </p>
-                            <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-1 space-y-2 flex-col">
+                            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(surveyData?.title || '') }}></div>
+                            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(surveyData?.description || '') }}></div>
+                            <form onSubmit={handleSubmit((data) => onSubmit(data, "End", false))} className="w-full flex flex-1 space-y-2 flex-col">
                                 <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                                     {surveyData?.questions.map((q, index) => (
                                         <div key={q._id}>
@@ -221,17 +238,14 @@ const EmployeeSurveyForm = () => {
                                                     />
                                                 )}
                                                 {q.questionType === "Date" && (
-                                                    <Controller
+                                                    <AuthInputFiled
                                                         name={`answer_${index}`}
                                                         control={control}
-                                                        render={({ field }) => (
-                                                            <TextField
-                                                                {...field}
-                                                                type="date"
-                                                                fullWidth
-                                                                InputLabelProps={{ shrink: true }}
-                                                            />
-                                                        )}
+                                                        type="date"
+                                                        placeholder="dd-mm-yyyy"
+                                                        label="Date*"
+                                                        errors={errors}
+                                                        error={errors[`answer_${index}`]}
                                                     />
                                                 )}
                                                 {q.questionType === "Multi-choice" && (
@@ -259,12 +273,21 @@ const EmployeeSurveyForm = () => {
                                     ))}
                                 </div>
                                 <div className="flex gap-4 mt-4 justify-end">
-                                    <Button type="submit" variant="contained" color="primary" className="mt-4" onClick={handleSubmit((data) => onSubmit(data, "End"))}>
-                                        Submit
-                                    </Button>
-                                    <Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => onSubmit(data, "Complete Survey"))}>
-                                        Save For Now
-                                    </Button>
+                                    {responseId ? <><Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => onSubmit(data, "End", true))}>
+                                        Save
+                                    </Button><Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => onSubmit(data, "Complete Survey", true))}>
+                                            Save For Now
+                                        </Button></> :
+                                        <>
+                                            <Button type="submit" variant="contained" color="primary" className="mt-4" onClick={handleSubmit((data) => onSubmit(data, "End"))}>
+                                                Save
+                                            </Button>
+                                            <Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => onSubmit(data, "Complete Survey"))}>
+                                                Save For Now
+                                            </Button>
+                                        </>
+
+                                    }
                                     <Button onClick={handleClose} variant="outlined" color="error">
                                         Close
                                     </Button>

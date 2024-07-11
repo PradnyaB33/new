@@ -452,8 +452,8 @@ const CreateNewSurvey = () => {
                                     </div>
 
                                     {questions?.map((q, index) => (
-                                        <div className="grid grid-cols-1 w-full">
-                                            <div key={index} >
+                                        <div className="grid grid-cols-1 w-full" key={index}>
+                                            <div>
                                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: "30px" }}>
                                                     <label className='font-semibold text-gray-500 text-md'>Question {index + 1}</label>
                                                     <div>
@@ -587,7 +587,7 @@ const CreateNewSurvey = () => {
                                         />
                                     </div>
 
-                                    <div className="flex gap-4 mt-4 justify-end">
+                                    <div className="flex flex-col xs:flex-row gap-4 mt-4 justify-end">
                                         <Button type="submit" variant="contained" color="primary" onClick={() => handleSubmit((data) => handleSubmitForm(data, true))}>
                                             {id ? "Update Survey" : "Complete Survey"}
                                         </Button>

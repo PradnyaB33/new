@@ -62,13 +62,13 @@ const OpenSurveyList = () => {
   );
 
   // Handle form navigation
-  const handleSurveyForm = (surveyId, responseId) => {
-    if (responseId === undefined) {
-      navigate(`/organisation/${organisationId}/survey-form/${surveyId}`)
-    }
-    else {
-      navigate(`/organisation/${organisationId}/survey-form/${surveyId}/${responseId}`);
-    }
+  const handleSurveyForm = (surveyId) => {
+
+    navigate(`/organisation/${organisationId}/survey-form/${surveyId}`)
+
+    // else {
+    //   navigate(`/organisation/${organisationId}/survey-form/${surveyId}/${responseId}`);
+    // }
 
   };
 
@@ -84,6 +84,10 @@ const OpenSurveyList = () => {
       responses: responses || []
     };
   });
+
+  const handleCompleteSurveyForm = (surveyId, responseId) => {
+    navigate(`/organisation/${organisationId}/survey-form/${surveyId}/${responseId}`);
+  };
 
   return (
     <div>
@@ -143,17 +147,26 @@ const OpenSurveyList = () => {
                         </td>
                         <td className="!text-left py-3 pl-6">
                           {survey.responses.length > 0 ? (
-                            <Button
-                              variant="outlined"
-                              onClick={() => handleSurveyForm(survey?._id, survey.responses[0]?._id)}
-                              sx={{ textTransform: "none", width: "100px" }}
-                            >
-                              {survey.responses[0].responseStatus}
-                            </Button>
+                            <div>
+                              <Button
+                                variant="outlined"
+                                onClick={() => handleCompleteSurveyForm(survey?._id, survey.responses[0]?._id)}
+                                sx={{ textTransform: "none", width: "100px" }}
+                              >
+                                {survey.responses[0].responseStatus}
+                              </Button>
+                            </div>
+                            // <Button
+                            //   variant="outlined"
+                            //   onClick={() => handleSurveyForm(survey?._id, survey.responses[0]?._id)}
+                            //   sx={{ textTransform: "none", width: "100px" }}
+                            // >
+                            //   {survey.responses[0].responseStatus}
+                            // </Button>
                           ) : (
                             <Button
                               variant="outlined"
-                              onClick={() => handleSurveyForm(survey?._id, survey.responses[0]?._id)}
+                              onClick={() => handleSurveyForm(survey?._id)}
                               sx={{ textTransform: "none", width: "130px" }}
                             >
                               Take Survey

@@ -620,7 +620,9 @@ const TestNavItems = ({ toggleDrawer }) => {
           },
           {
             key: "EmployeeSurvey",
-            isVisible: [
+            isVisible: 
+            data?.organisation?.packageInfo === "Intermediate Plan" &&
+            window.location.pathname?.includes("organisation") &&[
               "Super-Admin",
               "Delegate-Super-Admin",
               "Department-Head",
