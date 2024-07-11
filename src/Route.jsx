@@ -131,6 +131,8 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import JobPositionNotificaitonToMgr from "./pages/Recruitment/Notification/JobPositonNotificatinToMgr";
+import JobNotificationToEmp from "./pages/Recruitment/Notification/JobNotificationToEmp";
 
 const App = () => {
   return (
@@ -488,7 +490,14 @@ const App = () => {
           path="/organisation/:organisationId/create-job-position"
           element={
             <RequireAuth
-              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "HR",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Manager",
+              ]}
             >
               <CreateJobPosition />
             </RequireAuth>
@@ -498,7 +507,14 @@ const App = () => {
           path="/organisation/:organisationId/view-job-position"
           element={
             <RequireAuth
-              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "HR",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Manager",
+              ]}
             >
               <ViewJobPosition />
             </RequireAuth>
@@ -1344,6 +1360,11 @@ const App = () => {
           path="/loan-notification-to-emp"
           element={<LoanNotificationToEmp />}
         />
+        <Route
+          path="/job-position-to-mgr"
+          element={<JobPositionNotificaitonToMgr />}
+        />
+        <Route path="/job-position-to-emp" element={<JobNotificationToEmp />} />
         <Route
           path="/missed-punch-notification-to-emp"
           element={<MissedPunchNotificationToEmp />}
