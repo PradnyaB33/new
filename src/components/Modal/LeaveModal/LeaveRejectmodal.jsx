@@ -71,9 +71,9 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
         reduceNotificationCount(length);
       },
       {
-        onSuccess: () => {
-          queryClient.invalidateQueries("employee-leave");
-          queryClient.invalidateQueries("EmpDataLeave");
+        onSuccess: async () => {
+          await queryClient.invalidateQueries("employee-leave");
+          await queryClient.invalidateQueries("EmpDataLeave");
         },
       }
     );
