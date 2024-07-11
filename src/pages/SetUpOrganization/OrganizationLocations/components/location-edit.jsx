@@ -35,7 +35,7 @@ const LocationEdit = ({
     continent: z.string(),
     pinCode: z.string().regex(/^\d{6}$/, "Pin code must be 6 digits"),
     addressLine1: z.string(),
-    addressLine2: z.string(),
+    addressLine2: z.string().optional(),
     organizationId: z.string(),
   });
 
@@ -186,7 +186,7 @@ const LocationEdit = ({
           control={control}
           type="text"
           placeholder="Address Line 2"
-          label="Address Line 2 *"
+          label="Address Line 2"
           errors={errors}
           error={errors.addressLine2}
         />
