@@ -1,6 +1,7 @@
 import { Tab } from "@headlessui/react";
 import React from "react";
 import GoalsTab from "./GoalsTab";
+import ReviewTab from "./ReviewTab";
 
 const DashboardCardTab = () => {
   function classNames(...classes) {
@@ -9,11 +10,11 @@ const DashboardCardTab = () => {
 
   const tabArray = [
     {
-      title: "Dashboard",
+      title: "Goals Table",
       disabled: false,
     },
     {
-      title: "Goal Setting",
+      title: "Other Rating",
       //   component: <GoalSettingTab />,
       disabled: false,
     },
@@ -47,7 +48,7 @@ const DashboardCardTab = () => {
               <GoalsTab />
             </Tab.Panel>
             <Tab.Panel>
-              <h1>Hii review there</h1>
+              <ReviewTab />
             </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>
