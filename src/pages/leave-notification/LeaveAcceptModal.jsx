@@ -28,7 +28,6 @@ const LeaveAcceptModal = () => {
             },
           }
         );
-        console.log("this is my data bro", res.data);
         return res.data;
       } catch (error) {
         console.log(error);
@@ -124,6 +123,7 @@ const LeaveAcceptModal = () => {
                 <div className=" md:px-4 px-0 ">
                   {EmpNotification?.leaveRequests?.map((items, itemIndex) => (
                     <LeaveRejectmodal
+                      key={itemIndex}
                       items={items}
                       idx={itemIndex}
                       length={EmpNotification?.leaveRequests?.length}

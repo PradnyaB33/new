@@ -56,26 +56,27 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
       },
     }
   );
-  const { mutate: acceptLeaveMutation, isLoading: mutateLoading } = useMutation(
-    ({ id, length }) => {
-      axios.post(
-        `${process.env.REACT_APP_API}/route/leave/accept/${id}`,
-        { message: "Your Request is successfully approved" },
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      reduceNotificationCount(length);
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("employee-leave");
-        queryClient.invalidateQueries("EmpDataLeave");
+  const { mutateAsync: acceptLeaveMutation, isLoading: mutateLoading } =
+    useMutation(
+      ({ id, length }) => {
+        axios.post(
+          `${process.env.REACT_APP_API}/route/leave/accept/${id}`,
+          { message: "Your Request is successfully approved" },
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        reduceNotificationCount(length);
       },
-    }
-  );
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries("employee-leave");
+          queryClient.invalidateQueries("EmpDataLeave");
+        },
+      }
+    );
 
   if (mutateLoading) {
     return <Loader />;
@@ -185,8 +186,8 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                     <Button
                       disabled={mutateLoading || isFetching}
                       variant="contained"
-                      onClick={() =>
-                        acceptLeaveMutation({ id: items._id, length })
+                      onClick={async () =>
+                        await acceptLeaveMutation({ id: items._id, length })
                       }
                       color="primary"
                       sx={{
@@ -209,7 +210,7 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                           backgroundColor: "#BB1F11",
                         },
                       }}
-                      disabled={rejectLoading || isFetching}
+                      disabled={rejectLoading || isFetching || mutateLoading}
                     >
                       Reject
                     </Button>
