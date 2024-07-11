@@ -22,7 +22,13 @@ const organizationSchema = z.object({
   orgName: z
     .string()
     .max(32, { message: "Name must be at least 32 characters" }),
-  foundation_date: z.string(),
+  foundation_date: z.string().refine(
+    (date) => {
+      const currentDate = new Date().toISOString().split("T")[0];
+      return date <= currentDate;
+    },
+    { message: "Foundation date must be less than or equal to current date" }
+  ),
   web_url: z.string(),
   industry_type: z.enum(["Technology", "Finance", "Healthcare", "Education"]),
   email: z.string().email(),
