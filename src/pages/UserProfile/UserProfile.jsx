@@ -86,7 +86,7 @@ const EmployeeProfile = () => {
     }
   );
   console.log(
-    `🚀 ~ file: UserProfile.jsx:97 ~ profileData, isLoading:`,
+    `🚀 ~ file: UserProfile.jsx:97 ~ profileData, isLoading : `,
     profileData,
     isLoading
   );
