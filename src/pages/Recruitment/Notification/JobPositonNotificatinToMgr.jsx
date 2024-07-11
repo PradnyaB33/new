@@ -7,31 +7,32 @@ import useJobPositionNotification from "../../../hooks/QueryHook/notification/jo
 const JobPositionNotificaitonToMgr = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const { getEmployeeRequestLoanApplication } = useLoanNotification();
-
+  const { getJobPositionToMgr } = useJobPositionNotification();
+  
   const handleEmployeeClick = (employee) => {
     setSelectedEmployee(employee);
   };
 
   let filteredEmployees = [];
 
-  if (Array.isArray(getEmployeeRequestLoanApplication)) {
-    filteredEmployees = getEmployeeRequestLoanApplication.filter(
-      (employee) =>
-        employee?.userId?.first_name
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
-        employee?.userId?.last_name
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase())
-    );
+  if (Array.isArray(getJobPositionToMgr)) {
+    filteredEmployees = getJobPositionToMgr.filter((creatorId) => {
+      const firstName = creatorId?.first_name || "";
+      const lastName = creatorId?.last_name || "";
+      return (
+        firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        lastName.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    });
   }
+
+  console.log("filter employee", filteredEmployees);
 
   return (
     <div className="w-full">
       <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
         <West className="mx-4 !text-xl" />
-         Job Position Requests
+        Job Position Requests
       </header>
       <section className="min-h-[90vh] flex">
         <article className="w-[20%] overflow-auto max-h-[90vh] h-full bg-white border-gray-200">
@@ -53,21 +54,21 @@ const JobPositionNotificaitonToMgr = () => {
           </div>
           {filteredEmployees && filteredEmployees.length > 0 && (
             <div>
-              {filteredEmployees?.map((employee) => (
+              {filteredEmployees?.map((creatorId) => (
                 <div
                   className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50`}
-                  key={employee?.userId?._id}
-                  onClick={() => handleEmployeeClick(employee)}
+                  key={creatorId?._id}
+                  onClick={() => handleEmployeeClick(creatorId)}
                 >
-                  <Avatar src={employee?.avatarSrc} />
+                  <Avatar src={creatorId?.avatarSrc} />
                   <div>
                     <h1 className="text-[1.2rem]">
-                      {employee?.userId?.first_name}{" "}
-                      {employee?.userId?.last_name}
+                      {creatorId?.creatorId?.first_name}{" "}
+                      {creatorId?.creatorId?.last_name}
                     </h1>
 
                     <h1 className={`text-sm text-gray-500`}>
-                      {employee?.userId?.email}
+                      {creatorId?.creatorId?.email}
                     </h1>
                   </div>
                 </div>
@@ -77,7 +78,10 @@ const JobPositionNotificaitonToMgr = () => {
         </article>
         <div className="w-[80%]">
           {selectedEmployee ? (
-            <JobPositionApproval employee={selectedEmployee} />
+            <JobPositionApproval
+              employee={selectedEmployee}
+              onActionComplete={() => setSelectedEmployee(null)}
+            />
           ) : (
             <div className="p-4 space-y-1 flex items-center gap-3">
               <Avatar className="text-white !bg-blue-500">
@@ -86,8 +90,7 @@ const JobPositionNotificaitonToMgr = () => {
               <div>
                 <h1 className=" text-xl">Job Position Requests</h1>
                 <p className="text-sm">
-                  Here you would be able to approve or reject the job position
-                  notifications
+                  Here you would be able to approve or reject the job position.
                 </p>
               </div>
             </div>

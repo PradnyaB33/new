@@ -1,9 +1,4 @@
-import {
-  Business,
-  CheckCircle,
-  Person,
-  West,
-} from "@mui/icons-material";
+import { Business, CheckCircle, Person, West } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
