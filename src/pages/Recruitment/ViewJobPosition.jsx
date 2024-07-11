@@ -25,7 +25,6 @@ import { UseContext } from "../../State/UseState/UseContext";
 import { useMutation, useQueryClient } from "react-query";
 import MovingIcon from "@mui/icons-material/Moving";
 import { Link } from "react-router-dom";
-import SendIcon from "@mui/icons-material/Send";
 
 const ViewJobPosition = () => {
   const { cookies } = useContext(UseContext);
@@ -73,7 +72,7 @@ const ViewJobPosition = () => {
       ),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("get-job-position");
+        queryClient.invalidateQueries("job-position");
         handleAlert(true, "success", "Job position deleted successfully");
         handleCloseConfirmation();
       },
@@ -116,8 +115,8 @@ const ViewJobPosition = () => {
                         color="primary"
                         label={
                           job?.status === "Approved"
-                            ? "Actively Hiring"
-                            : "Not Hiring"
+                            ? "Published"
+                            : "Not Published"
                         }
                         variant="outlined"
                         icon={<MovingIcon />}
@@ -146,77 +145,34 @@ const ViewJobPosition = () => {
                       open={Boolean(anchorEl)}
                       onClose={handleCloseIcon}
                     >
-                      {job?.isSaveDraft === "true" ? (
-                        <div>
-                          <Tooltip title="Edit job position">
-                            <MenuItem onClick={handleEditClick}>
-                              <EditIcon
-                                color="primary"
-                                aria-label="edit"
-                                style={{
-                                  color: "#2196f3",
-                                  marginRight: "10px",
-                                }}
-                              />
-                            </MenuItem>
-                          </Tooltip>
-                          <Tooltip title="Delete job position">
-                            <MenuItem
-                              onClick={() => handleDeleteConfirmation(job?._id)}
-                            >
-                              <DeleteOutlineIcon
-                                color="primary"
-                                aria-label="delete"
-                                style={{
-                                  color: "#f50057",
-                                  marginRight: "10px",
-                                }}
-                              />
-                            </MenuItem>
-                          </Tooltip>
-                        </div>
-                      ) : (
-                        <div>
-                          <Tooltip title="Send job position">
-                            <MenuItem>
-                              <SendIcon
-                                color="primary"
-                                aria-label="send"
-                                style={{
-                                  color: "#2196f3",
-                                  marginRight: "10px",
-                                }}
-                              />
-                            </MenuItem>
-                          </Tooltip>
-                          <Tooltip title="Edit job position">
-                            <MenuItem onClick={handleEditClick}>
-                              <EditIcon
-                                color="primary"
-                                aria-label="edit"
-                                style={{
-                                  color: "#2196f3",
-                                  marginRight: "10px",
-                                }}
-                              />
-                            </MenuItem>
-                          </Tooltip>
-                          <Tooltip title="Delete job position">
-                            <MenuItem
-                              onClick={() => handleDeleteConfirmation(job?._id)}
-                            >
-                              <DeleteOutlineIcon
-                                color="primary"
-                                aria-label="delete"
-                                style={{
-                                  color: "#f50057",
-                                  marginRight: "10px",
-                                }}
-                              />
-                            </MenuItem>
-                          </Tooltip>
-                        </div>
-                      )}
+                      <div>
+                        <Tooltip title="Edit job position">
+                          <MenuItem onClick={handleEditClick}>
+                            <EditIcon
+                              color="primary"
+                              aria-label="edit"
+                              style={{
+                                color: "#2196f3",
+                                marginRight: "10px",
+                              }}
+                            />
+                          </MenuItem>
+                        </Tooltip>
+                        <Tooltip title="Delete job position">
+                          <MenuItem
+                            onClick={() => handleDeleteConfirmation(job?._id)}
+                          >
+                            <DeleteOutlineIcon
+                              color="primary"
+                              aria-label="delete"
+                              style={{
+                                color: "#f50057",
+                                marginRight: "10px",
+                              }}
+                            />
+                          </MenuItem>
+                        </Tooltip>
+                      </div>
                     </Menu>
                   </div>
                 </Box>

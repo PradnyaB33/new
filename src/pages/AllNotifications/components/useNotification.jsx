@@ -13,6 +13,7 @@ import useShiftNotification from "../../../hooks/QueryHook/notification/shift-no
 import useTDSNotificationHook from "../../../hooks/QueryHook/notification/tds-notification/hook";
 import UserProfile from "../../../hooks/UserData/useUser";
 import useLeaveNotification from "../../SelfLeaveNotification/useLeaveNotification";
+import useJobPositionNotification from "../../../hooks/QueryHook/notification/job-position-notification/useJobPositionNotification";
 
 const useNotification = () => {
   const { data } = useLeaveNotificationHook();
@@ -33,6 +34,8 @@ const useNotification = () => {
     getEmployeeRequestLoanApplication,
     getApprovedRejectLoanDataByApprover,
   } = useLoanNotification();
+  const { getJobPositionToMgr, getNotificationToEmp } =
+    useJobPositionNotification();
   const { PayslipNotification } = usePayslipNotificationHook();
   const { getAdvanceSalaryData, advanceSalaryNotification } =
     useAdvanceSalaryData();
@@ -94,12 +97,20 @@ const useNotification = () => {
     form16NotificationCount = 0;
   }
 
-  // for form 16 notification count
+  // for payslip notification count
   let payslipNotificationCount;
   if (role === "Employee") {
     payslipNotificationCount = PayslipNotification?.length ?? 0;
   } else {
     payslipNotificationCount = 0;
+  }
+
+  // for view job position count
+  let jobPositionCount;
+  if (role === "Employee") {
+    jobPositionCount = getNotificationToEmp?.length ?? 0;
+  } else {
+    jobPositionCount = getJobPositionToMgr?.length ?? 0;
   }
 
   useEffect(() => {
@@ -200,6 +211,14 @@ const useNotification = () => {
       color: "#51E8FD",
       url: tdsRoute,
       url2: "/notification/income-tax-details",
+      visible: true,
+    },
+    {
+      name: "Job Position Notification",
+      count: jobPositionCount,
+      color: "#51E8FD",
+      url: "/job-position-to-mgr",
+      url2: "/job-position-to-emp",
       visible: true,
     },
   ];

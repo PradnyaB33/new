@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Business, Money } from "@mui/icons-material";
+import { Business } from "@mui/icons-material";
 import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
 import { Button, Checkbox, FormControlLabel } from "@mui/material";
 import axios from "axios";
@@ -7,7 +7,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import Select from "react-select";
 import { z } from "zod";
 import { UseContext } from "../../../State/UseState/UseContext";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
@@ -17,59 +16,9 @@ import Setup from "../../SetUpOrganization/Setup";
 const SetupShift = () => {
   const { organisationId: orgId } = useParams();
   const authToken = useAuthToken();
-  const [shifts, setShifts] = useState([]);
-  const [shiftId, setShiftId] = useState(null);
   const [showAmountField, setShowAmountField] = useState(false);
   const { setAppAlert } = useContext(UseContext);
   const queryClient = useQueryClient();
-
-  useEffect(() => {
-    console.log(shiftId);
-  }, [shiftId]);
-
-  const handleChange = (value) => {
-    console.log("this is the value ", value);
-
-    setShiftId(value ? value.value : null);
-    (async () => {
-      try {
-        const resp = await axios.get(
-          `${process.env.REACT_APP_API}/route/getSingleshifts/${value.value}`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        );
-        setValue("amount", String(resp.data?.shifts?.allowance));
-        console.log("this is shift data", resp.data.shifts);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  };
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const resp = await axios.get(
-          `${process.env.REACT_APP_API}/route/shifts/${orgId}`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        );
-        const finalShifts = resp.data.shifts.map((item) => ({
-          value: item._id,
-          label: item.shiftName,
-        }));
-        setShifts(finalShifts);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, [orgId, authToken]);
 
   const formSchema = z.object({
     amount: z.string().refine((val) => !isNaN(val), {
@@ -124,7 +73,6 @@ const SetupShift = () => {
               extraAllowance: data.extraAllowance
                 ? Number(data.extraAllowance)
                 : undefined,
-              shiftId: shiftId,
             },
           },
           { headers: { Authorization: authToken } }
@@ -210,36 +158,6 @@ const SetupShift = () => {
                     />
                   </div>
                 </div>
-                {showAmountField && (
-                  <div className="flex flex-col gap-2 mt-4 w-[36vw] mb-4">
-                    <Select
-                      value={
-                        shifts.find((shift) => shift.value === shiftId) || null
-                      }
-                      isClearable
-                      className="min-w-60 z-50"
-                      aria-errormessage=""
-                      placeholder={"Select Shift"}
-                      components={{
-                        IndicatorSeparator: () => null,
-                      }}
-                      options={shifts}
-                      onChange={handleChange}
-                    />
-                    <AuthInputFiled
-                      className="w-[36vw]"
-                      name="amount"
-                      icon={Money}
-                      control={control}
-                      type="number"
-                      placeholder="Enter Allowance Amount"
-                      label="Enter Amount *"
-                      errors={errors}
-                      error={errors.amount}
-                    />
-                  </div>
-                )}
-
                 <div className="py-2 mt-6">
                   <Button
                     className="mt-4"
