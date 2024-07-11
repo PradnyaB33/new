@@ -6,6 +6,7 @@ import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import useCalculateSalaryQuery from "../../hooks/CalculateSalaryHook/useCalculateSalaryQuery";
 import { useQuery } from "react-query";
+import useAdvanceSalaryQuery from "../../hooks/AdvanceSalaryHook/useAdvanceSalaryQuery";
 
 function CalculateSalary() {
   const { handleAlert } = useContext(TestContext);
@@ -72,7 +73,6 @@ function CalculateSalary() {
     setNumDaysInMonth(selectedDate.daysInMonth());
   }, [selectedDate, salaryInfo]);
 
-
   useEffect(() => {
     const selectedMonth = selectedDate.format("M");
     const selectedYear = selectedDate.format("YYYY");
@@ -104,6 +104,8 @@ function CalculateSalary() {
     }
   }, [employeeSummary, selectedDate]);
 
+  console.log("employee summary", employeeSummary);
+
   //  to get holiday
   const fetchHoliday = async () => {
     try {
@@ -125,7 +127,7 @@ function CalculateSalary() {
     fetchHoliday();
     // eslint-disable-next-line
   }, []);
-  
+
   const countPublicHolidaysInCurrentMonth = () => {
     const selectedMonth = selectedDate.format("M");
     const selectedYear = selectedDate.format("YYYY");
@@ -245,7 +247,41 @@ function CalculateSalary() {
     // eslint-disable-next-line
   }, [selectedDate, userId, startDate, endDate]);
 
-  console.log("remoute punching count", remotePunchingCount);
+  // to get the income tax
+  // pull the total deduction of loan of employee if he/she apply the loan
+  const { getTotalSalaryEmployee } = useAdvanceSalaryQuery(organisationId);
+  const calculateFinancialYear = (date) => {
+    const month = date?.month();
+    const currentYear = date?.year();
+    if (month < 3) {
+      // January, February, March
+      return `${currentYear - 1}-${currentYear}`;
+    } else {
+      return `${currentYear}-${currentYear + 1}`;
+    }
+  };
+
+  const financialYear = calculateFinancialYear(dayjs(selectedDate));
+  console.log("financialYear", financialYear);
+  const { data: annualIncomeTax } = useQuery(
+    ["getIncomeTax", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/tds/getMyDeclaration/${financialYear}/${getTotalSalaryEmployee}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return response.data.getTotalTaxableIncome;
+    }
+  );
+  console.log("annual income tax", annualIncomeTax);
+  const monthlyIncomeTax =
+    typeof annualIncomeTax === "number" && annualIncomeTax > 0
+      ? (annualIncomeTax / 12).toFixed(2)
+      : "0.00";
 
   // calculate the no fo days employee present
   const calculateDaysEmployeePresent = () => {
@@ -619,14 +655,14 @@ function CalculateSalary() {
             <tr>
               <td class="px-4 py-2 border">Food Allowance:</td>
               <td class="px-4 py-2 border">{foodAllowance}</td>
-              <td class="py-2 border">Loan Deduction</td>
+              <td class="py-2 border">Loan Deduction :</td>
               <td class="py-2 border">{loanDeduction ?? 0}</td>
             </tr>
             <tr>
               <td class="px-4 py-2 border">Sales Allowance:</td>
               <td class="px-4 py-2 border">{salesAllowance}</td>
-              <td class="px-4 py-2 border"></td>
-              <td class="px-4 py-2 border"></td>
+              <td class="py-2 border">Income Tax :</td>
+              <td class="py-2 border">{monthlyIncomeTax ?? 0}</td>
             </tr>
             <tr>
               <td class="px-4 py-2 border">Special Allowance:</td>

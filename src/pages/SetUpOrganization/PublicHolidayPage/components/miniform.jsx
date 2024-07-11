@@ -1,5 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { HolidayVillage } from "@mui/icons-material";
+import {
+  BeachAccess,
+  CalendarToday,
+  Circle,
+  HolidayVillage,
+} from "@mui/icons-material";
 import { Button } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -63,7 +68,7 @@ const MiniForm = ({ locations, data, onClose }) => {
       />
       <AuthInputFiled
         name="holidayDate"
-        icon={HolidayVillage}
+        icon={CalendarToday}
         control={control}
         type="date"
         placeholder="Holiday Date"
@@ -74,7 +79,7 @@ const MiniForm = ({ locations, data, onClose }) => {
       />
       <AuthInputFiled
         name="holidayType"
-        icon={HolidayVillage}
+        icon={BeachAccess}
         control={control}
         type="naresh-select"
         placeholder="Holiday Type"
@@ -88,7 +93,7 @@ const MiniForm = ({ locations, data, onClose }) => {
       />
       <AuthInputFiled
         name="holidayRegion"
-        icon={HolidayVillage}
+        icon={Circle}
         control={control}
         type="naresh-select"
         placeholder="Holiday Region"

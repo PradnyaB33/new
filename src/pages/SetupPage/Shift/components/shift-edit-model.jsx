@@ -4,14 +4,13 @@ import { Button } from "@mui/material";
 import dayjs from "dayjs";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
 import { z } from "zod";
 import AuthInputFiled from "../../../../components/InputFileds/AuthInputFiled";
 import ReusableModal from "../../../../components/Modal/component";
 
-const AddShiftModal = ({ open, handleClose, addMutate }) => {
+const EditShiftModal = ({ open, handleClose, editMutate, items: data }) => {
+  console.log(`🚀 ~ file: shift-edit-model.jsx:12 ~ data:`, data);
   let startTime, endTime;
-  const { organisationId } = useParams();
 
   const refineFunction = (value) => {
     const startDate = new Date(`1970-01-01T${startTime}:00Z`);
@@ -19,7 +18,6 @@ const AddShiftModal = ({ open, handleClose, addMutate }) => {
     const diffInHours = Math.abs(endDate - startDate) / 1000 / 60 / 60;
     return diffInHours >= 9;
   };
-
   const ShiftSchema = z.object({
     startDateTime: z
       .string()
@@ -49,34 +47,33 @@ const AddShiftModal = ({ open, handleClose, addMutate }) => {
         ])
       )
       .nonempty("Please select at least one day"),
-    workingFrom: z.object(
-      {
-        label: z.string(),
-        value: z.string(),
-      },
-      "Shift type is required"
-    ),
-    allowance: z.string().refine((value) => {
+    workingFrom: z.enum(["office", "remote"]),
+    allowance: z.string().min((value) => {
       let allowance = Number(value);
-      console.log(`🚀 ~ file: shift-add-model.jsx:60 ~ allowance:`, allowance);
-      return allowance >= 0 && allowance < 1000000;
+      return allowance > 0 && allowance < 1000000;
     }, "Allowance must be greater than 0 and less than 10,00,000"),
     organizationId: z.string().optional("Organization Id is required"),
+    _id: z.string().optional("Shift Id is required"),
   });
 
   const {
     handleSubmit,
     control,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty },
+
     watch,
   } = useForm({
     resolver: zodResolver(ShiftSchema),
     defaultValues: {
-      startDateTime: dayjs(new Date()).format("HH:mm"),
-      endDateTime: dayjs(new Date()).add(9, "hour").format("HH:mm"),
-      allowance: "0",
-      organizationId: organisationId,
+      startDateTime: dayjs(`1970-01-01T${data?.startTime}:00`).format("HH:mm"),
+      endDateTime: dayjs(`1970-01-01T${data?.endTime}:00`).format("HH:mm"),
+      allowance: `${data?.allowance}`,
+      organizationId: data?.organizationId,
+      selectedDays: data?.selectedDays,
+      shiftName: data?.shiftName,
+      workingFrom: data?.workingFrom,
+      _id: data?._id,
     },
   });
 
@@ -99,23 +96,26 @@ const AddShiftModal = ({ open, handleClose, addMutate }) => {
   };
 
   const onSubmit = async (data) => {
+    console.log(`🚀 ~ file: shift-add-model.jsx:90 ~ data:`, data);
+
     let updatedData = {
-      allowance: Number(data.allowance),
-      shiftName: data.shiftName,
-      workingFrom: data.workingFrom.value,
-      startTime: data.startDateTime,
-      endTime: data.endDateTime,
-      selectedDays: data.selectedDays,
-      organizationId: data.organizationId,
+      allowance: Number(data?.allowance),
+      shiftName: data?.shiftName,
+      workingFrom: data?.workingFrom,
+      startTime: data?.startDateTime,
+      endTime: data?.endDateTime,
+      selectedDays: data?.selectedDays,
+      organizationId: data?.organizationId,
+      _id: data?._id,
     };
-    addMutate({ data: updatedData, onClose });
+    editMutate({ data: updatedData, onClose });
   };
 
   return (
     <ReusableModal
       open={open}
       onClose={onClose}
-      heading={"Add Shift"}
+      heading={"Edit Shift"}
       subHeading={
         "Create multiple types of shifts applicable to all employees. Ex: morning, afternoon."
       }
@@ -124,7 +124,7 @@ const AddShiftModal = ({ open, handleClose, addMutate }) => {
         <AuthInputFiled
           name="workingFrom"
           control={control}
-          type="select"
+          type="naresh-select"
           icon={Work}
           placeholder="Shift Type"
           label="Enter Shift Type *"
@@ -132,16 +132,16 @@ const AddShiftModal = ({ open, handleClose, addMutate }) => {
           maxLimit={15}
           options={[
             {
-              label: "Remote",
+              label: "remote",
               value: "remote",
             },
             {
-              label: "Office",
+              label: "office",
               value: "office",
             },
           ]}
           errors={errors}
-          error={errors.workingFrom}
+          error={errors?.workingFrom}
         />
         <AuthInputFiled
           name="shiftName"
@@ -153,7 +153,7 @@ const AddShiftModal = ({ open, handleClose, addMutate }) => {
           readOnly={false}
           maxLimit={15}
           errors={errors}
-          error={errors.shiftName}
+          error={errors?.shiftName}
         />
         <AuthInputFiled
           name="allowance"
@@ -165,7 +165,7 @@ const AddShiftModal = ({ open, handleClose, addMutate }) => {
           readOnly={false}
           maxLimit={15}
           errors={errors}
-          error={errors.allowance}
+          error={errors?.allowance}
         />
         <AuthInputFiled
           name="startDateTime"
@@ -177,7 +177,7 @@ const AddShiftModal = ({ open, handleClose, addMutate }) => {
           readOnly={false}
           maxLimit={15}
           errors={errors}
-          error={errors.startDateTime}
+          error={errors?.startDateTime}
         />
         <AuthInputFiled
           name="endDateTime"
@@ -189,7 +189,7 @@ const AddShiftModal = ({ open, handleClose, addMutate }) => {
           readOnly={false}
           maxLimit={15}
           errors={errors}
-          error={errors.endDateTime}
+          error={errors?.endDateTime}
         />
 
         <AuthInputFiled
@@ -198,16 +198,22 @@ const AddShiftModal = ({ open, handleClose, addMutate }) => {
           type="week-input"
           label="Select Week Days *"
           errors={errors}
-          error={errors.selectedDays}
+          error={errors?.selectedDays}
           optionlist={daysOfWeek}
         />
 
-        <Button fullWidth type="submit" variant="contained" color="primary">
-          Add Shift
+        <Button
+          disabled={!isDirty}
+          fullWidth
+          type="submit"
+          variant="contained"
+          color="primary"
+        >
+          Edit Shift
         </Button>
       </form>
     </ReusableModal>
   );
 };
 
-export default AddShiftModal;
+export default EditShiftModal;

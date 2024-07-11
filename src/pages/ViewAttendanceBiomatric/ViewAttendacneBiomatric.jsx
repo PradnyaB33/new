@@ -1,4 +1,10 @@
-import { Container, Typography, IconButton, Tooltip } from "@mui/material";
+import {
+  Container,
+  Typography,
+  IconButton,
+  Tooltip,
+  Button,
+} from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -7,14 +13,13 @@ import { useQuery } from "react-query";
 import EmployeeTypeSkeleton from "../SetUpOrganization/components/EmployeeTypeSkeleton";
 import { Info } from "@mui/icons-material";
 import CalculateHourEmpModal from "../../components/Modal/CalculateHourEmpModal/CalculateHourEmpModal";
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+
 const ViewAttendacneBiomatric = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { organisationId } = useParams();
-  
 
-  //for  Get Query
   const { data: empAttendanceData, isLoading } = useQuery(
     ["empAttendanceData", organisationId],
     async () => {
@@ -30,16 +35,63 @@ const ViewAttendacneBiomatric = () => {
     }
   );
 
-  // for open the modal for display employee and calculate hour
   const [modalOpen, setModalOpen] = useState(false);
   const [empPunchingData, setEmpPunchingData] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
   const handleModalOpen = (data) => {
     setEmpPunchingData(data);
     setModalOpen(true);
   };
+
   const handleModalClose = () => {
     setModalOpen(false);
   };
+
+  const totalPages = Math.ceil((empAttendanceData?.length || 0) / itemsPerPage);
+
+  const prePage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const nextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  };
+
+  const changePage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const paginationNumbers = [];
+  if (totalPages <= 5) {
+    for (let i = 1; i <= totalPages; i++) {
+      paginationNumbers.push(i);
+    }
+  } else {
+    if (currentPage <= 3) {
+      paginationNumbers.push(1, 2, 3, 4, "...", totalPages);
+    } else if (currentPage >= totalPages - 2) {
+      paginationNumbers.push(
+        1,
+        "...",
+        totalPages - 3,
+        totalPages - 2,
+        totalPages - 1,
+        totalPages
+      );
+    } else {
+      paginationNumbers.push(
+        1,
+        "...",
+        currentPage - 1,
+        currentPage,
+        currentPage + 1,
+        "...",
+        totalPages
+      );
+    }
+  }
 
   return (
     <>
@@ -55,61 +107,104 @@ const ViewAttendacneBiomatric = () => {
           {isLoading ? (
             <EmployeeTypeSkeleton />
           ) : empAttendanceData?.length > 0 ? (
-            <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
-              <table className="min-w-full bg-white  text-left !text-sm font-light">
-                <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
-                  <tr className="!font-semibold ">
-                    <th scope="col" className="!text-left pl-8 py-3 ">
-                      Sr. No
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Employee Id
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Employee Name
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Employee Email
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {empAttendanceData &&
-                    empAttendanceData.length > 0 &&
-                    empAttendanceData.map((empAttendanceItem, id) => (
-                      <tr className="!font-medium border-b" key={id}>
-                        <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                        <td className="!text-left  pl-7 py-3 ">
-                          {empAttendanceItem?.EmployeeId?.empId || ""}
-                        </td>
-                        <td className="!text-left  pl-7 py-3 ">
-                          {empAttendanceItem?.EmployeeId?.first_name || ""}
-                        </td>
-                        <td className="!text-left  pl-7 py-3 ">
-                          {empAttendanceItem?.EmployeeId?.email || ""}
-                        </td>
-                        <td className="!text-left pl-4 py-3">
-                          <Tooltip
-                            title={"Calculate the hours of employee"}
-                            arrow
-                          >
-                            <IconButton
-                              aria-label="view"
-                              size="small"
-                              onClick={() => handleModalOpen(empAttendanceItem)}
+            <>
+              <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
+                <table className="min-w-full bg-white  text-left !text-sm font-light">
+                  <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
+                    <tr className="!font-semibold ">
+                      <th scope="col" className="!text-left pl-8 py-3 ">
+                        Sr. No
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Employee Id
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Employee Name
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Employee Email
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {empAttendanceData
+                      .slice(
+                        (currentPage - 1) * itemsPerPage,
+                        currentPage * itemsPerPage
+                      )
+                      .map((empAttendanceItem, id) => (
+                        <tr className="!font-medium border-b" key={id}>
+                          <td className="!text-left pl-8 py-3 ">
+                            {id + 1 + (currentPage - 1) * itemsPerPage}
+                          </td>
+                          <td className="!text-left  pl-7 py-3 ">
+                            {empAttendanceItem?.EmployeeId?.empId || ""}
+                          </td>
+                          <td className="!text-left  pl-7 py-3 ">
+                            {empAttendanceItem?.EmployeeId?.first_name || ""}
+                          </td>
+                          <td className="!text-left  pl-7 py-3 ">
+                            {empAttendanceItem?.EmployeeId?.email || ""}
+                          </td>
+                          <td className="!text-left pl-4 py-3">
+                            <Tooltip
+                              title={"Calculate the hours of employee"}
+                              arrow
                             >
-                              <AccessTimeIcon sx={{ color: "green" }} />
-                            </IconButton>
-                          </Tooltip>
-                        </td>
-                      </tr>
+                              <IconButton
+                                aria-label="view"
+                                size="small"
+                                onClick={() =>
+                                  handleModalOpen(empAttendanceItem)
+                                }
+                              >
+                                <AccessTimeIcon sx={{ color: "green" }} />
+                              </IconButton>
+                            </Tooltip>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="flex justify-between p-4">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={prePage}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </Button>
+                <div>
+                  {paginationNumbers &&
+                    paginationNumbers.map((number, index) => (
+                      <Button
+                        key={index}
+                        variant={
+                          number === currentPage ? "contained" : "outlined"
+                        }
+                        color="primary"
+                        onClick={() => number !== "..." && changePage(number)}
+                        disabled={number === "..."}
+                      >
+                        {number}
+                      </Button>
                     ))}
-                </tbody>
-              </table>
-            </div>
+                </div>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={nextPage}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </Button>
+              </div>
+            </>
           ) : (
             <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
               <article className="flex items-center mb-1 text-red-500 gap-2">

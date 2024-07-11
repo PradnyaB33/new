@@ -203,7 +203,7 @@ const PublicHoliday = () => {
 
           <ReusableModel
             heading="Add Public Holiday"
-            subHeading="Add a public holiday to your organization"
+            subHeading="Add a public holiday to your organisation"
             open={openModal}
             onClose={handleClose}
           >
