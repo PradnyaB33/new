@@ -16,7 +16,7 @@ const DashboardModel = ({ open, handleClose, id }) => {
     transform: "translate(-50%, -50%)",
     bgcolor: "background.paper",
     overflow: "auto",
-    maxHeight: "80vh",
+    maxHeight: "60vh",
     p: 4,
   };
 
@@ -102,7 +102,7 @@ const DashboardModel = ({ open, handleClose, id }) => {
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(
                     empData?.managerFeedback
-                      ? `Review : ${empData?.managerFeedback}`
+                      ? `Review : ${empData?.managerFeedback} `
                       : "Review : Not yet reviewed by manager"
                   ),
                 }}
