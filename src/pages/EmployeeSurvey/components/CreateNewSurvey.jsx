@@ -380,7 +380,6 @@ const CreateNewSurvey = () => {
             creatorId: user?._id,
             status: status,
         };
-        console.log("formdata", formData);
         mutation.mutate(formData, {
             onSuccess: (data) => {
                 console.log('Form successfully submitted', data);

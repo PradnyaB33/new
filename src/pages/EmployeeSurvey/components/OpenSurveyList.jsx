@@ -60,7 +60,7 @@ const OpenSurveyList = () => {
       enabled: !!organisationId && !!authToken,
     }
   );
-  console.log("responseSurvey", responseSurvey);
+
   // Handle form navigation
   const handleSurveyForm = (surveyId, responseId) => {
     if (responseId === undefined) {
@@ -76,8 +76,6 @@ const OpenSurveyList = () => {
     setOpenSurvey(!openSurvey);
   };
 
-  console.log("surveys.......", surveys);
-
   // Match surveys with their responses
   const matchedResponses = surveys?.map(survey => {
     const responses = responseSurvey?.filter(response => response?.surveyId === survey?._id);
@@ -86,8 +84,6 @@ const OpenSurveyList = () => {
       responses: responses || []
     };
   });
-
-  console.log("Matched Responses:", matchedResponses);
 
   return (
     <div>

@@ -15,7 +15,7 @@ const EmployeeSurveyForm = () => {
     const navigate = useNavigate();
     const { handleAlert } = useContext(TestContext);
     const { surveyId, responseId } = useParams();
-    console.log("responseId..", responseId);
+
     const { cookies } = useContext(UseContext);
     const authToken = cookies["aegis"];
 
@@ -25,7 +25,7 @@ const EmployeeSurveyForm = () => {
     const organisationId = user?.organizationId;
 
     // useForm 
-    const { control, handleSubmit, setValue,formState: { errors } } = useForm();
+    const { control, handleSubmit, setValue, formState: { errors } } = useForm();
 
     // Get Form
     const { data: surveyData, error, isLoading } = useQuery(
@@ -45,9 +45,8 @@ const EmployeeSurveyForm = () => {
 
     // Fetch single survey data
     const [singleResponseSurvey, setSingleResponseSurvey] = useState(null);
-    console.log("singleResponseSurvey", singleResponseSurvey);
 
-    const { isLoading: isLoading1 } = useQuery(
+    const { isLoading1 } = useQuery(
         ["singleResponseSurvey", surveyId],
         async () => {
             const response = await axios.get(
@@ -104,8 +103,8 @@ const EmployeeSurveyForm = () => {
             title: surveyData.title,
             description: surveyData.description,
             questions: surveyData.questions.map((q, index) => ({
-                questionId:q?._id,
-                questionType:q?.questionType,
+                questionId: q?._id,
+                questionType: q?.questionType,
                 question: q?.question,
                 answer: q.questionType === "Checkboxes"
                     ? q.options.filter((_, optIndex) => formData[`question_${index}_option_${optIndex}`])
@@ -114,7 +113,7 @@ const EmployeeSurveyForm = () => {
             responseStatus: responseStatus,
             employeeId: user._id,
         };
-        console.log("data..........", data);
+
         mutation.mutate(data);
     };
 

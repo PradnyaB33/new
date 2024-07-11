@@ -44,10 +44,8 @@ const CloseSurveyList = () => {
   );
 
   const handleSurveyDetails = (surveyId) => {
-    console.log("surveyId",surveyId);
     navigate(`/organisation/:organisationId/survey-details/${surveyId}`);
   }
-
 
   const handleCloseSurvey = () => {
     setCloseSurvey(!closeSurvey)

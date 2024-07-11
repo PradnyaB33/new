@@ -5,6 +5,7 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import QuestionStats from "./QuestionStats";
 import SummaryTab from "./SummaryTab";
+import IndividualResponse from "./IndividualResponse";
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -64,7 +65,7 @@ export default function SurveyDetails() {
                        <QuestionStats/>
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={2}>
-                        Tab Three Content
+                        <IndividualResponse/>
                     </CustomTabPanel>
                 </Box>
                 </article>

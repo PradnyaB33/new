@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useQuery } from 'react-query';
@@ -7,19 +7,23 @@ import UserProfile from '../../../hooks/UserData/useUser';
 import { UseContext } from '../../../State/UseState/UseContext';
 
 const QuestionStats = () => {
+    //hooks
     const { surveyId } = useParams();
+
+    //states
+    const [selectedQuestion, setSelectedQuestion] = useState(null);
+    const [openPopup, setOpenPopup] = useState(false);
+
+    //get organisationId
     const { getCurrentUser } = UserProfile();
     const user = getCurrentUser();
     const organisationId = user?.organizationId;
 
+    //get authToken
     const { cookies } = useContext(UseContext);
     const authToken = cookies['aegis'];
 
-    // State to manage popup visibility and selected question
-    const [selectedQuestion, setSelectedQuestion] = useState(null);
-    const [openPopup, setOpenPopup] = useState(false);
-
-    // Fetch survey responses
+    // Fetch survey responses data
     const { data: surveyResponses, isLoading, isError } = useQuery(
         ['surveyResponses', organisationId, surveyId, authToken],
         async () => {
@@ -31,31 +35,29 @@ const QuestionStats = () => {
                     },
                 }
             );
-            return response.data;
+            return response?.data;
         }
     );
 
     // Function to handle opening the popup with detailed responses
     const handleOpenPopup = (questionId) => {
-        // Filter survey responses based on questionId and collect all answers
         const answers = [];
         surveyResponses.forEach((survey) => {
-            const question = survey.questions.find((q) => q.questionId === questionId);
-            if (question && question.answer !== undefined) {
-                answers.push(question.answer);
+            const question = survey?.questions.find((q) => q?.questionId === questionId);
+            if (question && question?.answer !== undefined) {
+                answers.push(question?.answer);
             }
         });
 
-        // Set the selected question and its answers
         const selectedQues = surveyResponses.find((survey) =>
-            survey.questions.some((q) => q.questionId === questionId)
-        ).questions.find((question) => question.questionId === questionId);
+            survey?.questions.some((q) => q?.questionId === questionId)
+        ).questions.find((question) => question?.questionId === questionId);
 
         setSelectedQuestion({ ...selectedQues, answers });
         setOpenPopup(true);
     };
 
-    // Function to handle closing the popup
+    // handleClosePopup Function 
     const handleClosePopup = () => {
         setSelectedQuestion(null);
         setOpenPopup(false);
@@ -69,27 +71,28 @@ const QuestionStats = () => {
 
         let answerContent = null;
 
-        // Handle different question types
         switch (selectedQuestion.questionType) {
             case 'Short Answer':
             case 'Paragraph':
-                answerContent = <p>{selectedQuestion.answer}</p>;
+                answerContent = selectedQuestion?.answers?.map((ans, index) => (
+                    <p key={index}>{ans}</p>
+                ));
                 break;
             case 'Checkboxes':
             case 'Multi-choice':
                 answerContent = (
                     <ul>
-                        {selectedQuestion.answers.map((ans, index) => (
+                        {selectedQuestion?.answers?.map((ans, index) => (
                             <li key={index}>{ans}</li>
                         ))}
                     </ul>
                 );
                 break;
             case 'Dropdown':
-                answerContent = <p>{selectedQuestion.answer}</p>;
-                break;
             case 'Date':
-                answerContent = <p>{selectedQuestion.answer}</p>;
+                answerContent = selectedQuestion?.answers?.map((ans, index) => (
+                    <p key={index}>{ans}</p>
+                ));
                 break;
             default:
                 answerContent = <p>No answer found</p>;
@@ -98,14 +101,13 @@ const QuestionStats = () => {
         return <div>{answerContent}</div>;
     };
 
-    // Function to calculate count of responses for each question dynamically
+    // count function of individual question
     const calculateQuestionCounts = (questionId) => {
         if (!surveyResponses) return 0;
 
-        // Filter survey responses based on questionId and check if answer exists
         const questionResponses = surveyResponses.filter((survey) => {
-            const question = survey.questions.find((q) => q.questionId === questionId);
-            return question && question.answer !== undefined;
+            const question = survey?.questions?.find((q) => q?.questionId === questionId);
+            return question && question?.answer !== undefined;
         });
 
         return questionResponses.length;
@@ -134,7 +136,7 @@ const QuestionStats = () => {
         <div>
             <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
                 {isLoading ? (
-                    <p>Loading...</p>
+                    <CircularProgress />
                 ) : isError ? (
                     <p>Error fetching data</p>
                 ) : (
@@ -151,7 +153,6 @@ const QuestionStats = () => {
                         </thead>
                         <tbody>
                             {questionIds.map((questionId, index) => {
-                                // Find the first matching question in any survey response
                                 const matchingQuestion = surveyResponses
                                     .find((survey) =>
                                         survey.questions.some((q) => q.questionId === questionId)
@@ -180,11 +181,10 @@ const QuestionStats = () => {
                 )}
             </div>
 
-            {/* Popup Dialog for Detailed Responses */}
-            <Dialog open={openPopup} onClose={handleClosePopup}>
+            <Dialog open={openPopup} onClose={handleClosePopup} maxWidth="md"
+                fullWidth>
                 <DialogTitle>{selectedQuestion?.question}</DialogTitle>
                 <DialogContent dividers>
-                    {/* Render detailed responses */}
                     {renderDetailedResponses()}
                 </DialogContent>
                 <DialogActions>

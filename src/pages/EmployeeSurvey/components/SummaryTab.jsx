@@ -10,14 +10,19 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, T
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend);
 
 const SummaryTab = () => {
+  //hooks
   const { surveyId } = useParams();
+
+  //get organisationId
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const organisationId = user?.organizationId;
 
+  //get authToken
   const { cookies } = useContext(UseContext);
   const authToken = cookies['aegis'];
 
+  //get survey response data
   const { data: surveyData } = useQuery(
     ['surveyResponseSurverId', organisationId, surveyId, authToken],
     async () => {
@@ -33,6 +38,7 @@ const SummaryTab = () => {
     }
   );
 
+  //
   const aggregateAnswers = (responses) => {
     const aggregatedData = {};
 
@@ -48,12 +54,21 @@ const SummaryTab = () => {
 
         const answerArray = Array.isArray(question.answer) ? question.answer : [question.answer];
         answerArray.forEach(answer => {
-          if (!aggregatedData[question.questionId].answers[answer]) {
-            aggregatedData[question.questionId].answers[answer] = 0;
+          if (answer !== undefined) {
+            if (!aggregatedData[question.questionId].answers[answer]) {
+              aggregatedData[question.questionId].answers[answer] = 0;
+            }
+            aggregatedData[question.questionId].answers[answer] += 1;
           }
-          aggregatedData[question.questionId].answers[answer] += 1;
         });
       });
+    });
+
+    // Filter out questions without answers
+    Object.keys(aggregatedData).forEach(questionId => {
+      if (Object.keys(aggregatedData[questionId].answers).length === 0) {
+        delete aggregatedData[questionId];
+      }
     });
 
     return aggregatedData;
@@ -66,7 +81,6 @@ const SummaryTab = () => {
 
     switch (question.type) {
       case 'Checkboxes':
-      case 'Multi-choice':
         const barData = {
           labels: labels,
           datasets: [
@@ -77,11 +91,16 @@ const SummaryTab = () => {
             },
           ],
         };
-        return <div style={{ width: "400px" }} className='bg-white w-full h-max shadow-md rounded-sm border items-center p-4'>
-          <div className="p-2  w-auto "><Bar data={barData} />
-          </div></div>
+        return (
+          <div className='bg-white h-max shadow-md rounded-sm border items-center p-4 '>
+            <div className="p-2 w-auto">
+              <Bar data={barData} />
+            </div>
+          </div>
+        );
 
       case 'Dropdown':
+      case 'Multi-choice':
         const pieData = {
           labels: labels,
           datasets: [
@@ -94,12 +113,12 @@ const SummaryTab = () => {
         };
 
         return (
-          <div style={{ width: "400px" }} className='bg-white w-full h-max shadow-md rounded-sm border items-center p-4'>
-            <div className="p-2  w-auto ">
+          <div className='bg-white w-full h-max shadow-md rounded-sm border items-center p-4'>
+            <div className="p-2 w-">
               <Pie data={pieData} />
             </div>
           </div>
-        )
+        );
 
       case 'Paragraph':
       case 'Short Answer':
@@ -120,7 +139,7 @@ const SummaryTab = () => {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <div style={{ width: '60%', padding: '20px' }}>
+      <div style={{ padding: '20px' }}>
         {Object.keys(aggregatedData).map(questionId => (
           <div key={questionId} style={{ marginBottom: '20px' }}>
             <p className='text-xl py-2'>Q. {aggregatedData[questionId].question}</p>
