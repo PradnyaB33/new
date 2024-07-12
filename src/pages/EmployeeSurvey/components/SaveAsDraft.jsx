@@ -136,7 +136,7 @@ const SaveAsDraft = () => {
       </div>
       {draftSurvey ? (
         <>
-          <div className="p-4 border-y-[.5px] border-gray-300">
+          <div className="border-t-[.5px] border-gray-300">
             {/* <div className="flex justify-end gap-3 mb-3 md:mb-0 w-full md:w-auto">
               <TextField
                 placeholder="Search"
@@ -155,7 +155,7 @@ const SaveAsDraft = () => {
               Error fetching data
             </div>
           ) : surveys && surveys.length > 0 ? (
-            <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
+            <div className="overflow-auto !p-0 border-[.5px] border-gray-200 mt-4">
               <table className="min-w-full bg-white text-left !text-sm font-light">
                 <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                   <tr className="!font-semibold">
@@ -173,7 +173,7 @@ const SaveAsDraft = () => {
                       <td className="!text-left pl-8 py-3">
                         {DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } })}
                       </td>
-                      <td className="!text-left pl-9 py-3">
+                      <td className="!text-left pl-8 py-3">
                         <MoreVert
                           onClick={(e) => handleClick(e, survey._id)}
                           className="cursor-pointer"
@@ -218,8 +218,8 @@ const SaveAsDraft = () => {
               </table>
             </div>
           ) : (
-            <section className="py-6 px-8 w-full">
-              <p>Nothing to draft</p>
+            <section className="py-6  w-full">
+              <p>No data available</p>
             </section>
           )}
         </>

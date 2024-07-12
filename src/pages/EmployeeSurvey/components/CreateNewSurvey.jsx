@@ -408,9 +408,9 @@ const CreateNewSurvey = () => {
                 {/* Main Header Content */}
                 <div className="flex flex-col md:flex-row justify-between w-full md:ml-4">
                     <div className="mb-2 md:mb-0 md:mr-4">
-                        <h1 className="text-xl font-bold">Create Employee Survey</h1>
+                        <h1 className="text-xl font-bold">Create Employee Survey Form</h1>
                         <p className="text-sm text-gray-600">
-                            Here you can create survey
+                            Here you can create employee survey form 
                         </p>
                     </div>
                 </div>

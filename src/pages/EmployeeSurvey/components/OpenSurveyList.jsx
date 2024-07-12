@@ -42,7 +42,7 @@ const OpenSurveyList = () => {
       enabled: !!organisationId && !!authToken,
     }
   );
-console.log("surveys...///",surveys);
+
   // Get response surveys
   const { data: responseSurvey } = useQuery(
     ["responseSurveys", organisationId],
@@ -72,6 +72,7 @@ console.log("surveys...///",surveys);
     navigate(`/organisation/${organisationId}/survey-form/${surveyId}`)
   };
 
+  //handleOpenSurvey function
   const handleOpenSurvey = () => {
     setOpenSurvey(!openSurvey);
   };
@@ -102,7 +103,7 @@ console.log("surveys...///",surveys);
       </div>
       {openSurvey ? (
         <>
-          <div className="p-4 border-y-[.5px] border-gray-300">
+          <div className="border-t-[.5px] border-gray-300">
             {/* <div className="flex justify-end gap-3 mb-3 md:mb-0 w-full md:w-auto">
               <TextField
                 placeholder="Search"
@@ -122,7 +123,7 @@ console.log("surveys...///",surveys);
             </div>
           ) :
             surveys && surveys?.length > 0 ? (
-              <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
+              <div className="overflow-auto !p-0 border-[.5px] border-gray-200 mt-4">
                 <table className="min-w-full bg-white text-left !text-sm font-light">
                   <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                     <tr className="!font-semibold">
@@ -130,7 +131,7 @@ console.log("surveys...///",surveys);
                         Title
                       </th>
                       <th scope="col" className="!text-left pl-8 py-3">
-                       Closed Date
+                        Closed Date
                       </th>
                       <th scope="col" className="!text-left pl-8 py-3">
                         Actions
@@ -144,9 +145,9 @@ console.log("surveys...///",surveys);
                           {DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } })}
                         </td>
                         <td className="!text-left pl-8 py-3">
-                        {survey && format(new Date(survey?.employeeSurveyStartingDate), "PP")}
+                          {survey && format(new Date(survey?.employeeSurveyStartingDate), "PP")}
                         </td>
-                        <td className="!text-left py-3 pl-6">
+                        <td className="!text-left pl-8 py-3">
                           {survey.responses.length > 0 ? (
                             <div>
                               {survey.responses[0].responseStatus === "End" ?
@@ -183,8 +184,8 @@ console.log("surveys...///",surveys);
                 </table>
               </div>
             ) : (
-              <section className="py-6 px-8 w-full">
-                <p>Nothing to open survey</p>
+              <section className="py-6 w-full">
+                <p>No data available</p>
               </section>
             )}
         </>) : null}

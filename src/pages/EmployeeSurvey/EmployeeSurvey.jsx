@@ -16,7 +16,7 @@ const EmployeeSurvey = () => {
     const user = getCurrentUser();
     const organisationId = user?.organizationId;
 
-    //create new survey 
+    //create new survey navigation
     const handleCreateNewSurvey = () => {
         navigate(`/organisation/${organisationId}/create-new-survey`);
     }
@@ -42,7 +42,7 @@ const EmployeeSurvey = () => {
                     </div>
                 </div>
             </header>
-            <section className="md:px-8 md:py-2">
+            <section className="xs:px-8 xs:py-2">
                 {(user?.profile.includes('Super-Admin') || user?.profile.includes('HR')) && (
                     <div className="py-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
                         <div className="flex justify-end w-full">
@@ -50,6 +50,7 @@ const EmployeeSurvey = () => {
                                 className="!font-semibold !bg-sky-500 flex gap-2"
                                 variant="contained"
                                 onClick={handleCreateNewSurvey}
+                                sx={{textTransform:"none"}}
                             >
                                 Create New Survey
                             </Button>

@@ -14,6 +14,9 @@ const CloseSurveyList = () => {
   // Hooks
   const navigate = useNavigate();
 
+  //states
+  const [closeSurvey, setCloseSurvey] = useState(false)
+
   // Get organizationId
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
@@ -23,9 +26,7 @@ const CloseSurveyList = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
 
-  const [closeSurvey, setCloseSurvey] = useState(false)
-
-  //get open survey
+  //get closed survey data
   const { data: surveys, isLoading, isError } = useQuery(
     ["closedSurveys", organisationId],
     async () => {
@@ -44,10 +45,12 @@ const CloseSurveyList = () => {
     }
   );
 
+  //handleSurveyDetails function
   const handleSurveyDetails = (surveyId) => {
     navigate(`/organisation/:organisationId/survey-details/${surveyId}`);
   }
 
+  //handleCloseSurvey function
   const handleCloseSurvey = () => {
     setCloseSurvey(!closeSurvey)
   }
@@ -84,21 +87,7 @@ const CloseSurveyList = () => {
       </div>
       {closeSurvey ? (
         <>
-          <div className="p-4 border-y-[.5px] border-gray-300">
-            <div className="flex justify-end gap-3 mb-3 md:mb-0 w-full md:w-auto">
-              {/* <TextField
-                placeholder="Search"
-                variant="outlined"
-                size="small"
-                sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
-              /> */}
-              {(user?.profile.includes('Super-Admin') || user?.profile.includes('HR')) && (
-                <Button variant="contained" color="warning" onClick={generateExcel}>
-                  Generate Excel
-                </Button>
-              )}
-            </div>
-          </div>
+          <div className="border-t-[.5px] border-gray-300"></div>
           {isLoading ? (
             <div className="flex justify-center p-4">
               <CircularProgress />
@@ -109,47 +98,61 @@ const CloseSurveyList = () => {
             </div>
           ) :
             surveys && surveys?.length > 0 ? (
-              <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-                <table className="min-w-full bg-white text-left !text-sm font-light">
-                  <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-                    <tr className="!font-semibold">
-                      <th scope="col" className="!text-left pl-8 py-3">
-                        Title
-                      </th>
-                      <th scope="col" className="!text-left pl-8 py-3">
-                        Closed Date
-                      </th>
-                      <th scope="col" className="!text-left pl-8 py-3">
-                        Status
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {surveys?.map((survey, index) => (
-                      <tr key={index} className="!font-medium border-b ">
-                        <td className="!text-left pl-8 py-3">
-                          {DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } })}
-                        </td>
-                        <td className="!text-left pl-8 py-3">
-                          {survey && format(new Date(survey?.employeeSurveyStartingDate), "PP")}
-                        </td>
-                        <td className="!text-left py-3 pl-8">
-                          <Button
-                            variant="outlined"
-                            onClick={() => handleSurveyDetails(survey._id)}
-                            sx={{ textTransform: "none", width: "140px" }}
-                          >
-                            View Details
-                          </Button>
-                        </td>
+              <>
+                <div className="flex justify-end gap-3 mb-3 md:mb-0 w-full md:w-auto">
+                  {/* <TextField
+                placeholder="Search"
+                variant="outlined"
+                size="small"
+                sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
+              /> */}
+                  {(user?.profile.includes('Super-Admin') || user?.profile.includes('HR')) && (
+                    <Button sx={{ mt: 2, width: "auto" }} variant="contained" color="warning" onClick={generateExcel}>
+                      Generate Excel
+                    </Button>
+                  )}
+                </div>
+                <div className="overflow-auto !p-0 border-[.5px] border-gray-200 mt-4">
+                  <table className="min-w-full bg-white text-left !text-sm font-light">
+                    <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+                      <tr className="!font-semibold">
+                        <th scope="col" className="!text-left pl-8 py-3">
+                          Title
+                        </th>
+                        <th scope="col" className="!text-left pl-8 py-3">
+                          Closed Date
+                        </th>
+                        <th scope="col" className="!text-left pl-8 py-3">
+                          Status
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {surveys?.map((survey, index) => (
+                        <tr key={index} className="!font-medium border-b ">
+                          <td className="!text-left pl-8 py-3">
+                            {DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } })}
+                          </td>
+                          <td className="!text-left pl-8 py-3">
+                            {survey && format(new Date(survey?.employeeSurveyStartingDate), "PP")}
+                          </td>
+                          <td className="!text-left pl-8 py-3">
+                            <Button
+                              variant="outlined"
+                              onClick={() => handleSurveyDetails(survey._id)}
+                              sx={{ textTransform: "none", width: "auto" }}
+                            >
+                              View Details
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div></>
             ) : (
-              <section className="py-6 px-8 w-full">
-                <p>Nothing to closed survey</p>
+              <section className="py-6  w-full">
+                <p>No data available</p>
               </section>
             )}
         </>
