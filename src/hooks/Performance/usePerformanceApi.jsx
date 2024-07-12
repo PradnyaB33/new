@@ -74,6 +74,24 @@ const usePerformanceApi = create((set) => ({
         },
       }
     );
+
+    return data;
+  },
+
+  changeStatus: async ({ status, empId, authToken }) => {
+    const { data } = await axios.post(
+      `${process.env.REACT_APP_API}/route/performance/changeRatingStatus`,
+      {
+        empId,
+        status,
+      },
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+
     return data;
   },
 }));
