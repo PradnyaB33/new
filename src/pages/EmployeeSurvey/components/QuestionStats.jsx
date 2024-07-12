@@ -167,7 +167,7 @@ const QuestionStats = () => {
                                         <td className="py-3 pl-8">
                                             <Button
                                                 variant="outlined"
-                                                sx={{ textTransform: 'none', width: '40px' }}
+                                                sx={{ textTransform: 'none', width: 'auto' }}
                                                 onClick={() => handleOpenPopup(questionId)}
                                             >
                                                 {calculateQuestionCounts(questionId)}
