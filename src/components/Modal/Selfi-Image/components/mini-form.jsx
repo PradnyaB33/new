@@ -21,7 +21,10 @@ const MiniForm = () => {
     isMutationLoading,
     isFaceDetectionLoading,
     isFetching,
+    employeeOrgId,
   } = useSelfieFaceDetect();
+
+  console.log(`🚀 ~ file: mini-form.jsx:26 ~ employeeOrgId:`, employeeOrgId);
 
   useEffect(() => {
     let video = videoRef.current;
@@ -47,22 +50,27 @@ const MiniForm = () => {
     const img = new Image();
     img.src = dataUrl;
 
-    const faces = await detectFaceOnlyMutation({
-      img,
-    });
+    if (employeeOrgId?.employee?.faceRecognition === true) {
+      const faces = await detectFaceOnlyMutation({
+        img,
+      });
 
-    const descriptor = new Float32Array(faceDetectedData?.data?.descriptor);
-    if (faces?.length !== 1) {
+      const descriptor = new Float32Array(faceDetectedData?.data?.descriptor);
+      if (faces?.length !== 1) {
+        setLoading(false);
+        return setImageCaptured(false);
+      }
+      const response = await matchFacesMutation({
+        currentDescriptor: faces[0]?.descriptor,
+        descriptor,
+      });
+      if (response?._label === "unknown") {
+        setLoading(false);
+        return setImageCaptured(false);
+      }
+    } else {
       setLoading(false);
-      return setImageCaptured(false);
-    }
-    const response = await matchFacesMutation({
-      currentDescriptor: faces[0]?.descriptor,
-      descriptor,
-    });
-    if (response?._label === "unknown") {
-      setLoading(false);
-      return setImageCaptured(false);
+      return setImageCaptured(true);
     }
     setLoading(false);
   };
@@ -108,14 +116,28 @@ const MiniForm = () => {
           onClick={clearImage}
           variant="contained"
           color="error"
-          disabled={!imageCaptured}
+          disabled={
+            !imageCaptured ||
+            loading ||
+            isLoading ||
+            isMutationLoading ||
+            isFaceDetectionLoading ||
+            isFetching
+          }
         >
           Clear
         </Button>
         <Button
           onClick={() => getImageUrl.mutate()}
           variant="contained"
-          disabled={!imageCaptured}
+          disabled={
+            !imageCaptured ||
+            loading ||
+            isLoading ||
+            isMutationLoading ||
+            isFaceDetectionLoading ||
+            isFetching
+          }
         >
           Upload
         </Button>

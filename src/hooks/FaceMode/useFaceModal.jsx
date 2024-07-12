@@ -35,7 +35,7 @@ const useLoadModel = () => {
 
   const getEmployeeRemoteSet = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/remote-punch/get-employee-org-obj`,
+      `${process.env.REACT_APP_API}/route/remote-punch/get-employee-org-obj/org`,
       {
         headers: { Authorization: authToken },
       }
@@ -50,9 +50,9 @@ const useLoadModel = () => {
     onSuccess: (data) => {
       console.info(`🚀 ~ file: useFaceModal.jsx:62 ~ data:`, data);
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
-
-  console.log(`🚀 ~ file: useFaceModal.jsx:62 ~ employeeOrgId:`, employeeOrgId);
 
   const detectFaces = async ({ img }) => {
     const faces = await faceApi
@@ -207,6 +207,7 @@ const useLoadModel = () => {
     setDescriptor,
     loading,
     setLoading,
+    employeeOrgId,
   };
 };
 
