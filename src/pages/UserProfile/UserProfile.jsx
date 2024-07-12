@@ -88,7 +88,11 @@ const EmployeeProfile = () => {
       onError: () => {},
     }
   );
-
+  console.log(
+    `🚀 ~ file: UserProfile.jsx:103 ~ profileData, isLoading:`,
+    profileData,
+    isLoading
+  );
   const handleImageChange = (e) => {
     setLoading(true);
     const selectedFile = e.target.files[0];
