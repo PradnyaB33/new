@@ -133,6 +133,7 @@ import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
 import JobPositionNotificaitonToMgr from "./pages/Recruitment/Notification/JobPositonNotificatinToMgr";
 import JobNotificationToEmp from "./pages/Recruitment/Notification/JobNotificationToEmp";
+import OpenJobPosition from "./pages/Recruitment/OpenRoleJobPosition";
 
 const App = () => {
   return (
@@ -517,6 +518,28 @@ const App = () => {
               ]}
             >
               <ViewJobPosition />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/open-job-position"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <OpenJobPosition />
             </RequireAuth>
           }
         />
