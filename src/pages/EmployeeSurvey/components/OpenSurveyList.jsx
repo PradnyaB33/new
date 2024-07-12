@@ -1,12 +1,13 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Button, CircularProgress, TextField, Typography } from "@mui/material";
+import { Button, CircularProgress, Typography } from "@mui/material";
 import UserProfile from "../../../hooks/UserData/useUser";
 import { UseContext } from "../../../State/UseState/UseContext";
 import DOMPurify from "dompurify";
 import { useQuery } from "react-query";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { format } from "date-fns";
 
 const OpenSurveyList = () => {
   // Hooks
@@ -41,7 +42,7 @@ const OpenSurveyList = () => {
       enabled: !!organisationId && !!authToken,
     }
   );
-
+console.log("surveys...///",surveys);
   // Get response surveys
   const { data: responseSurvey } = useQuery(
     ["responseSurveys", organisationId],
@@ -62,14 +63,13 @@ const OpenSurveyList = () => {
   );
 
   // Handle form navigation
-  const handleSurveyForm = (surveyId) => {
+  const handleSurveyForm = (surveyId, responseId) => {
+    navigate(`/organisation/${organisationId}/survey-form/${surveyId}/${responseId}`)
+  };
 
+  // Handle form navigation
+  const handleTakeSurvey = (surveyId) => {
     navigate(`/organisation/${organisationId}/survey-form/${surveyId}`)
-
-    // else {
-    //   navigate(`/organisation/${organisationId}/survey-form/${surveyId}/${responseId}`);
-    // }
-
   };
 
   const handleOpenSurvey = () => {
@@ -84,10 +84,6 @@ const OpenSurveyList = () => {
       responses: responses || []
     };
   });
-
-  const handleCompleteSurveyForm = (surveyId, responseId) => {
-    navigate(`/organisation/${organisationId}/survey-form/${surveyId}/${responseId}`);
-  };
 
   return (
     <div>
@@ -107,14 +103,14 @@ const OpenSurveyList = () => {
       {openSurvey ? (
         <>
           <div className="p-4 border-y-[.5px] border-gray-300">
-            <div className="flex justify-end gap-3 mb-3 md:mb-0 w-full md:w-auto">
+            {/* <div className="flex justify-end gap-3 mb-3 md:mb-0 w-full md:w-auto">
               <TextField
                 placeholder="Search"
                 variant="outlined"
                 size="small"
                 sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
               />
-            </div>
+            </div> */}
           </div>
           {isLoading ? (
             <div className="flex justify-center p-4">
@@ -133,7 +129,9 @@ const OpenSurveyList = () => {
                       <th scope="col" className="!text-left pl-8 py-3">
                         Title
                       </th>
-
+                      <th scope="col" className="!text-left pl-8 py-3">
+                       Closed Date
+                      </th>
                       <th scope="col" className="!text-left pl-8 py-3">
                         Actions
                       </th>
@@ -145,29 +143,35 @@ const OpenSurveyList = () => {
                         <td className="!text-left pl-8 py-3">
                           {DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } })}
                         </td>
+                        <td className="!text-left pl-8 py-3">
+                        {survey && format(new Date(survey?.employeeSurveyStartingDate), "PP")}
+                        </td>
                         <td className="!text-left py-3 pl-6">
                           {survey.responses.length > 0 ? (
                             <div>
-                              <Button
-                                variant="outlined"
-                                onClick={() => handleCompleteSurveyForm(survey?._id, survey.responses[0]?._id)}
-                                sx={{ textTransform: "none", width: "100px" }}
-                              >
-                                {survey.responses[0].responseStatus}
-                              </Button>
+                              {survey.responses[0].responseStatus === "End" ?
+                                <Button
+                                  variant="outlined"
+                                  onClick={() => handleSurveyForm(survey?._id, survey.responses[0]?._id)}
+                                  sx={{ textTransform: "none", width: "auto" }}
+                                  disabled
+                                >
+                                  {survey.responses[0].responseStatus}
+                                </Button>
+                                :
+                                <Button
+                                  variant="outlined"
+                                  onClick={() => handleSurveyForm(survey?._id, survey.responses[0]?._id)}
+                                  sx={{ textTransform: "none", width: "auto" }}
+                                >
+                                  {survey.responses[0].responseStatus}
+                                </Button>}
                             </div>
-                            // <Button
-                            //   variant="outlined"
-                            //   onClick={() => handleSurveyForm(survey?._id, survey.responses[0]?._id)}
-                            //   sx={{ textTransform: "none", width: "100px" }}
-                            // >
-                            //   {survey.responses[0].responseStatus}
-                            // </Button>
                           ) : (
                             <Button
                               variant="outlined"
-                              onClick={() => handleSurveyForm(survey?._id)}
-                              sx={{ textTransform: "none", width: "130px" }}
+                              onClick={() => handleTakeSurvey(survey?._id)}
+                              sx={{ textTransform: "none", width: "auto" }}
                             >
                               Take Survey
                             </Button>

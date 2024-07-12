@@ -1,13 +1,14 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Button, CircularProgress, TextField, Typography } from "@mui/material";
+import { Button, CircularProgress, Typography } from "@mui/material";
 import UserProfile from "../../../hooks/UserData/useUser";
 import { UseContext } from "../../../State/UseState/UseContext";
 import DOMPurify from "dompurify";
 import { useQuery } from "react-query";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import * as XLSX from "xlsx";
+import { format } from "date-fns";
 
 const CloseSurveyList = () => {
   // Hooks
@@ -51,8 +52,8 @@ const CloseSurveyList = () => {
     setCloseSurvey(!closeSurvey)
   }
 
-   // Generate Excel function
-   const generateExcel = () => {
+  // Generate Excel function
+  const generateExcel = () => {
     const data = [["Title", "Status"]];
     surveys.forEach((survey) => {
       const cleanTitle = DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } });
@@ -85,12 +86,12 @@ const CloseSurveyList = () => {
         <>
           <div className="p-4 border-y-[.5px] border-gray-300">
             <div className="flex justify-end gap-3 mb-3 md:mb-0 w-full md:w-auto">
-              <TextField
+              {/* <TextField
                 placeholder="Search"
                 variant="outlined"
                 size="small"
                 sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
-              />
+              /> */}
               {(user?.profile.includes('Super-Admin') || user?.profile.includes('HR')) && (
                 <Button variant="contained" color="warning" onClick={generateExcel}>
                   Generate Excel
@@ -116,6 +117,9 @@ const CloseSurveyList = () => {
                         Title
                       </th>
                       <th scope="col" className="!text-left pl-8 py-3">
+                        Closed Date
+                      </th>
+                      <th scope="col" className="!text-left pl-8 py-3">
                         Status
                       </th>
                     </tr>
@@ -126,7 +130,10 @@ const CloseSurveyList = () => {
                         <td className="!text-left pl-8 py-3">
                           {DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } })}
                         </td>
-                        <td className="!text-left py-3 pl-9">
+                        <td className="!text-left pl-8 py-3">
+                          {survey && format(new Date(survey?.employeeSurveyStartingDate), "PP")}
+                        </td>
+                        <td className="!text-left py-3 pl-8">
                           <Button
                             variant="outlined"
                             onClick={() => handleSurveyDetails(survey._id)}

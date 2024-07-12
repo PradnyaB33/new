@@ -433,10 +433,9 @@ const CreateNewSurvey = () => {
                                             type="texteditor"
                                             placeholder="Title"
                                             label="Title"
+                                            maxLimit={100}
                                             errors={errors}
                                             error={errors.title}
-                                        // className="!h-20"
-                                        // mb-36 sm:mb-28 md:mb-0
                                         /></div>
                                     <div className="w-full">
                                         <AuthInputFiled
@@ -445,9 +444,9 @@ const CreateNewSurvey = () => {
                                             type="texteditor"
                                             placeholder="Description"
                                             label="Description"
+                                            maxLimit={1000}
                                             errors={errors}
                                             error={errors.description}
-                                        // className="!h-30"
                                         />
                                     </div>
 
@@ -588,13 +587,13 @@ const CreateNewSurvey = () => {
                                     </div>
 
                                     <div className="flex flex-col xs:flex-row gap-4 mt-4 justify-end">
-                                        <Button type="submit" variant="contained" color="primary" onClick={() => handleSubmit((data) => handleSubmitForm(data, true))}>
-                                            {id ? "Update Survey" : "Complete Survey"}
+                                        <Button type="submit" variant="contained" color="primary" onClick={() => handleSubmit((data) => handleSubmitForm(data, true))} sx={{ textTransform: "none" }}>
+                                            Save
                                         </Button>
-                                        <Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => handleSubmitForm(data, false))}>
+                                        <Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => handleSubmitForm(data, false))} sx={{ textTransform: "none" }}>
                                             Save For Now
                                         </Button>
-                                        <Button onClick={handleClose} variant="outlined" color="error">
+                                        <Button onClick={handleClose} variant="outlined" color="error" sx={{ textTransform: "none" }}>
                                             Close
                                         </Button>
                                     </div>

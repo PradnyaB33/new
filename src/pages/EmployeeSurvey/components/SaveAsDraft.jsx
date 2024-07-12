@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
-  TextField,
   Menu,
   MenuItem,
   Dialog,
@@ -138,14 +137,14 @@ const SaveAsDraft = () => {
       {draftSurvey ? (
         <>
           <div className="p-4 border-y-[.5px] border-gray-300">
-            <div className="flex justify-end gap-3 mb-3 md:mb-0 w-full md:w-auto">
+            {/* <div className="flex justify-end gap-3 mb-3 md:mb-0 w-full md:w-auto">
               <TextField
                 placeholder="Search"
                 variant="outlined"
                 size="small"
                 sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
               />
-            </div>
+            </div> */}
           </div>
           {isLoading ? (
             <div className="flex justify-center p-4">

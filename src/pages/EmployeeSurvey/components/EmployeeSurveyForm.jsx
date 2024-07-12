@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { CircularProgress, IconButton, Button, FormControlLabel, Checkbox, Radio, RadioGroup, FormControl, TextField, Select, MenuItem } from "@mui/material";
+import { CircularProgress, IconButton, Button, FormControlLabel, Checkbox, Radio, RadioGroup, FormControl, Select, MenuItem } from "@mui/material";
 import { UseContext } from "../../../State/UseState/UseContext";
 import UserProfile from "../../../hooks/UserData/useUser";
 import DOMPurify from "dompurify";
@@ -27,7 +27,7 @@ const EmployeeSurveyForm = () => {
     // useForm 
     const { control, handleSubmit, setValue, formState: { errors } } = useForm();
 
-    // Get Form
+    // Get question Form
     const { data: surveyData, error, isLoading } = useQuery(
         ['survey', organisationId, surveyId, authToken],
         async () => {
@@ -43,11 +43,11 @@ const EmployeeSurveyForm = () => {
         }
     );
 
-    // Fetch single survey data
+    // Get single survey answer form
     const [singleResponseSurvey, setSingleResponseSurvey] = useState(null);
-
+    console.log("singleResponseSurvey",singleResponseSurvey);
     const { isLoading: isLoading1 } = useQuery(
-        ["singleResponseSurvey", surveyId],
+        ["singleResponseSurvey", organisationId, surveyId, responseId, authToken],
         async () => {
             const response = await axios.get(
                 `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-single-response-survey/${surveyId}/${responseId}`,
@@ -60,7 +60,7 @@ const EmployeeSurveyForm = () => {
             return response.data;
         },
         {
-            enabled: !!surveyId,
+            enabled: !!surveyId && !!responseId && !!organisationId,
             onSuccess: (data) => {
                 setSingleResponseSurvey(data);
                 data.questions.forEach((q, index) => {
@@ -96,7 +96,6 @@ const EmployeeSurveyForm = () => {
                 }
             );
         }
-        console.log("response", response);
         return response;
     },
         {
@@ -137,7 +136,7 @@ const EmployeeSurveyForm = () => {
         mutation.mutate(data);
     };
 
-    if (isLoading) {
+    if (isLoading || isLoading1) {
         return <CircularProgress />;
     }
 
@@ -277,7 +276,8 @@ const EmployeeSurveyForm = () => {
                                         Save
                                     </Button><Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => onSubmit(data, "Complete Survey", true))}>
                                             Save For Now
-                                        </Button></> :
+                                        </Button>
+                                    </> :
                                         <>
                                             <Button type="submit" variant="contained" color="primary" className="mt-4" onClick={handleSubmit((data) => onSubmit(data, "End"))}>
                                                 Save
