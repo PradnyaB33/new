@@ -1,4 +1,4 @@
-import { Check } from "@mui/icons-material";
+import { Check, Info } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import { format } from "date-fns";
 import DOMPurify from "dompurify";
@@ -208,8 +208,10 @@ const PerformanceDashboard = () => {
                     />
                   </div>
 
+                  {selfGoals?.isRevaluation}
+
                   {selfGoals?.isRevaluation === "To Do" ||
-                  selfGoals?.isRevaluation === "Pending" ? (
+                  selfGoals?.isRevaluation === "Rejected" ? (
                     <footer className="flex gap-2">
                       <button
                         onClick={() => changePassword.mutate("Accepted")}
@@ -225,9 +227,19 @@ const PerformanceDashboard = () => {
                       </button>
                     </footer>
                   ) : (
-                    <p className="text-green-500 text-lg font-bold">
-                      <Check /> {selfGoals?.isRevaluation}
-                    </p>
+                    <>
+                      {selfGoals?.isRevaluation === "Accepted" ? (
+                        <p className="text-green-500 text-lg font-bold">
+                          <Check /> {selfGoals?.isRevaluation}
+                        </p>
+                      ) : selfGoals?.isRevaluation === "Pending" ? (
+                        <p className="text-gray-500 text-lg font-bold">
+                          <Info /> {selfGoals?.isRevaluation}
+                        </p>
+                      ) : (
+                        <></>
+                      )}
+                    </>
                   )}
                 </div>
               </div>

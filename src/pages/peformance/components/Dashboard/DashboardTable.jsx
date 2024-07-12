@@ -37,43 +37,9 @@ const DashboardTable = ({
   return (
     <>
       <div className="my-2 flex">
-        <div className=" gap-4 ">
-          {/* {role !== "Employee" && (
-            <div className={`space-y-1 min-w-[250px]  md:min-w-[15vw] `}>
-              <div
-                className={`flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
-              >
-                <Checklist className="text-gray-700 md:text-lg !text-[1em]" />
-                <Select
-                  aria-errormessage=""
-                  placeholder={"Goal Type"}
-                  isClearable
-                  styles={{
-                    control: (styles) => ({
-                      ...styles,
-                      borderWidth: "0px",
-                      boxShadow: "none",
-                    }),
-                  }}
-                  className={` bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
-                  components={{
-                    // Option: CustomOption,
-                    IndicatorSeparator: () => null,
-                  }}
-                  options={[
-                    {
-                      label: "data",
-                      value: "Datat",
-                    },
-                  ]}
-                  // onChange={(value) => {
-                  //   setEmployeeGoals(value?.value);
-                  // }}
-                />
-              </div>
-            </div>
-          )} */}
-        </div>
+        {/* <div className=" gap-4 ">
+     
+        </div> */}
       </div>
       {tableFetching ? (
         <TabelSkeleton />
