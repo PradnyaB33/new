@@ -9,9 +9,8 @@ const useRecruitmentQuery = (organisationId) => {
   const authToken = cookies["aegis"];
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
-  console.log(role);
 
-  //for  Get Query to get loan type
+  //for  Get Query to get job position
   const { data: getJobPosition } = useQuery(
     ["get-job-position", organisationId],
     async () => {
@@ -27,8 +26,25 @@ const useRecruitmentQuery = (organisationId) => {
     }
   );
 
+  //for  Get Query to get open job role
+  const { data: getOpenJobRole } = useQuery(
+    ["get-job-open-position", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/get-open-job-position`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
+
   return {
     getJobPosition,
+    getOpenJobRole,
   };
 };
 

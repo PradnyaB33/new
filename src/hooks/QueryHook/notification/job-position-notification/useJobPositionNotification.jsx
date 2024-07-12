@@ -36,8 +36,6 @@ const useJobPositionNotification = () => {
     }
   );
 
-  console.log(getJobPositionToMgr);
-
   const { data: getNotificationToEmp } = useQuery(
     ["job-positionss"],
     async () => {
@@ -52,8 +50,6 @@ const useJobPositionNotification = () => {
       return response.data.data;
     }
   );
-
-  console.log(getNotificationToEmp);
 
   return {
     getJobPositionToMgr,

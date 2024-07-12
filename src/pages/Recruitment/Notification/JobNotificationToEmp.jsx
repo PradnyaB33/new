@@ -1,5 +1,5 @@
 import React from "react";
-import InputForm from "../Component/InputForm";
+import InputForm from "../components/InputForm";
 
 const JobNotificationToEmp = () => {
   return (
