@@ -1,4 +1,4 @@
-import { PersonOutline } from "@mui/icons-material";
+import { LockReset, PersonOutline } from "@mui/icons-material";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Divider } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
@@ -104,6 +104,13 @@ export default function ProfileIcon() {
               className="flex gap-4  !text-sm items-center justify-center !py-3 hover:!bg-gray-100  "
             >
               <PersonOutline className="!text-[19px]" /> Profile
+            </MenuItem>
+            <MenuItem
+              key="reset-password"
+              onClick={() => handleNavigate("/resetpassword")}
+              className="flex gap-4  !text-sm items-center justify-center !py-3 hover:!bg-gray-100  "
+            >
+              <LockReset className="!text-[19px]" /> Reset Password
             </MenuItem>
 
             <MenuItem key="sign-out" className="!p-0" onClick={handleSignOut}>

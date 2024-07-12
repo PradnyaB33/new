@@ -37,7 +37,7 @@ const ReviewTable = ({ tableData, performance, isFetching }) => {
         />
       ) : (
         <table
-          className={`  table-auto  border border-collapse min-w-full  text-left  !text-sm font-light `}
+          className={`  table-auto bg-white  border border-collapse min-w-full  text-left  !text-sm font-light `}
         >
           <thead className="border-b bg-gray-100 font-bold">
             <tr className="!font-semibold ">

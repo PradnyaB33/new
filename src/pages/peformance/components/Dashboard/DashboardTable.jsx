@@ -4,23 +4,7 @@ import EmptyAlertBox from "../../../../components/EmptyAlertBox";
 import DashboardModel from "../GoalTable/Modal/DashboardModel";
 import TabelSkeleton from "../GoalTable/Skelton/TabelSkeleton";
 
-const DashboardTable = ({
-  tableData = [],
-  role,
-  tableFetching,
-  performance,
-}) => {
-  // const counts = tableData?.reduce((acc, record) => {
-  //   if (record.managerRating) {
-  //     if (!acc[record.managerRating]) {
-  //       acc[record.managerRating] = 0;
-  //     }
-  //     acc[record.managerRating]++;
-  //   }
-
-  //   return acc;
-  // }, {});
-
+const DashboardTable = ({ tableData = [], tableFetching }) => {
   const [previewModal, setPreviewModal] = useState(false);
   const [previewId, setPreviewId] = useState(null);
 
@@ -139,7 +123,7 @@ const DashboardTable = ({
                 ))}
               </tbody>
             </table>
-            <div className="border-[.5px] border-gray-200 border-t-0 px-4 py-2 h-max flex  items-center w-full justify-between ">
+            <div className="border-[.5px] bg-white border-gray-200 border-t-0 px-4 py-2 h-max flex  items-center w-full justify-between ">
               <div>
                 <h1>
                   Showing {1} to {1} of {4} entries
