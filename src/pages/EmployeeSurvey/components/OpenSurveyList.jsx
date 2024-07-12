@@ -1,92 +1,193 @@
-import { Button, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import * as XLSX from "xlsx";
+import axios from "axios";
+import { Button, CircularProgress, Typography } from "@mui/material";
+import UserProfile from "../../../hooks/UserData/useUser";
+import { UseContext } from "../../../State/UseState/UseContext";
+import DOMPurify from "dompurify";
+import { useQuery } from "react-query";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { format } from "date-fns";
 
 const OpenSurveyList = () => {
   // Hooks
   const navigate = useNavigate();
 
-  // Example JSON data
-  const surveyData = [
-    { title: "Employee satisfaction surveys", status: "Take Survey" },
-    { title: "Employee performance surveys", status: "Complete Survey" },
-    { title: "Professional development surveys", status: "Take Survey" },
-    { title: "Employee attitude surveys", status: "Complete Survey" },
-    { title: "Employer improvement surveys", status: "Take Survey" },
-    { title: "Employee experience/opinion surveys", status: "Take Survey" },
-  ];
+  // Get organizationId
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
+  const organisationId = user?.organizationId;
 
-  // State for survey list
-  const [surveys, setSurveys] = useState(surveyData);
-  console.log(`🚀 ~ file: OpenSurveyList.jsx:22 ~ setSurveys:`, setSurveys);
+  // Get cookies
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
+
+  const [openSurvey, setOpenSurvey] = useState(false);
+
+  // Get open surveys
+  const { data: surveys, isLoading, isError } = useQuery(
+    ["openSurveys", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-open-survey`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data;
+    },
+    {
+      enabled: !!organisationId && !!authToken,
+    }
+  );
+console.log("surveys...///",surveys);
+  // Get response surveys
+  const { data: responseSurvey } = useQuery(
+    ["responseSurveys", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-response-survey`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data;
+    },
+    {
+      enabled: !!organisationId && !!authToken,
+    }
+  );
 
   // Handle form navigation
-  const handleSurveyForm = () => {
-    navigate("/organisation/:organisationId/survey-form");
+  const handleSurveyForm = (surveyId, responseId) => {
+    navigate(`/organisation/${organisationId}/survey-form/${surveyId}/${responseId}`)
   };
 
-  // Generate Excel function
-  const generateExcel = () => {
-    const data = [["Title", "Status"]];
-    surveys.forEach((survey) => {
-      data.push([survey.title, survey.status]);
-    });
-
-    const ws = XLSX.utils.aoa_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "SurveyData");
-
-    XLSX.writeFile(wb, "survey_data.xlsx");
+  // Handle form navigation
+  const handleTakeSurvey = (surveyId) => {
+    navigate(`/organisation/${organisationId}/survey-form/${surveyId}`)
   };
+
+  const handleOpenSurvey = () => {
+    setOpenSurvey(!openSurvey);
+  };
+
+  // Match surveys with their responses
+  const matchedResponses = surveys?.map(survey => {
+    const responses = responseSurvey?.filter(response => response?.surveyId === survey?._id);
+    return {
+      ...survey,
+      responses: responses || []
+    };
+  });
 
   return (
     <div>
-      <div className="p-4 border-y-[.5px]  border-gray-300">
-        <div className="flex justify-end gap-3 mb-3 md:mb-0 w-full md:w-auto">
-          <TextField
-            placeholder="Search"
-            variant="outlined"
-            size="small"
-            sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
-          />
-          <Button variant="contained" color="warning" onClick={generateExcel}>
-            Generate Excel
-          </Button>
+      <div className="flex  justify-between  gap-3 w-full border-gray-300 my-2">
+        <div className="flex justify-start ">
+          <Typography variant="p">
+            Open Survey
+          </Typography>
+        </div>
+        <div className="flex justify-end">
+          <AddCircleOutlineIcon style={{ width: "40px" }} onClick={handleOpenSurvey} />
+          <Typography variant="p" className="">
+            Count: {surveys?.length}
+          </Typography>
         </div>
       </div>
-      <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-        <table className="min-w-full bg-white  text-left !text-sm font-light">
-          <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
-            <tr className="!font-semibold">
-              <th scope="col" className="!text-left pl-8 py-3">
-                Title
-              </th>
-              <th scope="col" className="!text-left pl-8 py-3">
-                Status
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {surveys.map((survey, index) => (
-              <tr key={index} className="!font-medium border-b">
-                <td className="!text-left pl-8 py-3">{survey.title}</td>
-                <td className="py-3 pl-8">
-                  <Button
-                    variant="outlined"
-                    onClick={handleSurveyForm}
-                    sx={{ textTransform: "none", width: "140px" }}
-                  >
-                    {survey.status === "Take Survey"
-                      ? "Take Survey"
-                      : "Complete Survey"}
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {openSurvey ? (
+        <>
+          <div className="p-4 border-y-[.5px] border-gray-300">
+            {/* <div className="flex justify-end gap-3 mb-3 md:mb-0 w-full md:w-auto">
+              <TextField
+                placeholder="Search"
+                variant="outlined"
+                size="small"
+                sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
+              />
+            </div> */}
+          </div>
+          {isLoading ? (
+            <div className="flex justify-center p-4">
+              <CircularProgress />
+            </div>
+          ) : isError ? (
+            <div className="flex justify-center p-4 text-red-500">
+              Error fetching data
+            </div>
+          ) :
+            surveys && surveys?.length > 0 ? (
+              <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
+                <table className="min-w-full bg-white text-left !text-sm font-light">
+                  <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+                    <tr className="!font-semibold">
+                      <th scope="col" className="!text-left pl-8 py-3">
+                        Title
+                      </th>
+                      <th scope="col" className="!text-left pl-8 py-3">
+                       Closed Date
+                      </th>
+                      <th scope="col" className="!text-left pl-8 py-3">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {matchedResponses?.map((survey, index) => (
+                      <tr key={index} className="!font-medium border-b ">
+                        <td className="!text-left pl-8 py-3">
+                          {DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } })}
+                        </td>
+                        <td className="!text-left pl-8 py-3">
+                        {survey && format(new Date(survey?.employeeSurveyStartingDate), "PP")}
+                        </td>
+                        <td className="!text-left py-3 pl-6">
+                          {survey.responses.length > 0 ? (
+                            <div>
+                              {survey.responses[0].responseStatus === "End" ?
+                                <Button
+                                  variant="outlined"
+                                  onClick={() => handleSurveyForm(survey?._id, survey.responses[0]?._id)}
+                                  sx={{ textTransform: "none", width: "auto" }}
+                                  disabled
+                                >
+                                  {survey.responses[0].responseStatus}
+                                </Button>
+                                :
+                                <Button
+                                  variant="outlined"
+                                  onClick={() => handleSurveyForm(survey?._id, survey.responses[0]?._id)}
+                                  sx={{ textTransform: "none", width: "auto" }}
+                                >
+                                  {survey.responses[0].responseStatus}
+                                </Button>}
+                            </div>
+                          ) : (
+                            <Button
+                              variant="outlined"
+                              onClick={() => handleTakeSurvey(survey?._id)}
+                              sx={{ textTransform: "none", width: "auto" }}
+                            >
+                              Take Survey
+                            </Button>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <section className="py-6 px-8 w-full">
+                <p>Nothing to open survey</p>
+              </section>
+            )}
+        </>) : null}
     </div>
   );
 };
