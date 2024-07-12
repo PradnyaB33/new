@@ -1,8 +1,8 @@
 import {
+  AccessTime,
   EventAvailable,
   EventBusy,
   Groups,
-  AccessTime,
 } from "@mui/icons-material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
@@ -90,7 +90,7 @@ const DashboardManger = () => {
 
   return (
     <section className=" bg-gray-50  min-h-screen w-full ">
-      <header className="text-xl font-bold w-full px-8 pt-6 bg-white !text-[#67748E] shadow-md  p-4">
+      <header className="text-xl w-full pt-6 bg-white border-b  p-4 px-8 ">
         Manager Dashboard
       </header>
 

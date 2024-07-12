@@ -5,9 +5,11 @@ import usePerformanceApi from "../../../../../hooks/Performance/usePerformanceAp
 
 const GoalsTab = () => {
   const { dashboardData: empData } = usePerformanceApi();
-  console.log(`🚀 ~ dashboardData:`, empData);
   return (
-    <>
+    <section>
+      <h1 className="text-lg text-[#67748E]  mb-2 font-bold">
+        Employee Goals{" "}
+      </h1>
       {empData?.goals?.length === 0 ? (
         <EmptyAlertBox title={"Goals not found for this employee"} />
       ) : (
@@ -80,7 +82,7 @@ const GoalsTab = () => {
           </tbody>
         </table>
       )}
-    </>
+    </section>
   );
 };
 

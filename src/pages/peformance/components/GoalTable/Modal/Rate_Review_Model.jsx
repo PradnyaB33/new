@@ -42,8 +42,16 @@ const Rate_Review_Model = ({ handleClose, open, options, id, performance }) => {
 
   useEffect(() => {
     setValue("assignee", `${id?.empId?.first_name} ${id?.empId?.last_name}`);
+    if (id?.others[0]?.managerRating) {
+      setValue("rating", {
+        label: id?.others[0]?.managerRating,
+        value: id?.others[0]?.managerRating,
+      });
+    }
+
+    setValue("review", id?.others[0]?.managerFeedback);
     // eslint-disable-next-line
-  }, [open]);
+  }, [open, id]);
 
   const queryClient = useQueryClient();
   const giveRating = useMutation(
@@ -70,29 +78,10 @@ const Rate_Review_Model = ({ handleClose, open, options, id, performance }) => {
     }
   );
 
-  //     queryFn: async () => {
-  //       const { data } = await axios.get(
-  //         `${process.env.REACT_APP_API}/route/performance/getSingleGoals/${id._id}`,
-  //         {
-  //           headers: {
-  //             Authorization: authToken,
-  //           },
-  //         }
-  //       );
-  //       return data;
-  //     },
-  //     enabled: !!id,
-
-  //     onSuccess: (data) => {
-  //       setValue("goal", data?.goal);
-  //     },
-  //   });
   const onSubmit = async (data) => {
     const goals = {
       review: data.review,
       rating: data.rating.value,
-      // status: "Rating Completed",
-      // isReviewCompleted: true,
     };
 
     giveRating.mutate(goals);
@@ -110,17 +99,10 @@ const Rate_Review_Model = ({ handleClose, open, options, id, performance }) => {
     return data;
   });
 
-  // const empoptions = getGoal?.assignee?.map((emp) => ({
-  //   value: emp._id,
-  //   label: `${emp.first_name} ${emp.last_name}`,
-  //   image: emp.user_logo_url,
-  // }));
-
   const ratingOptions = performance?.ratings?.map((rate) => ({
     value: rate,
     label: rate,
   }));
-  console.log(`🚀 ~ ratingOptions:`, performance);
 
   return (
     <>
@@ -150,18 +132,6 @@ const Rate_Review_Model = ({ handleClose, open, options, id, performance }) => {
             onSubmit={handleSubmit(onSubmit)}
             className="px-6 max-h-[80vh] overflow-auto "
           >
-            {/* <AuthInputFiled
-                name="goal"
-                icon={Paid}
-                control={control}
-                readOnly={true}
-                type="text"
-                placeholder="goal"
-                label="Goal Name"
-                errors={errors}
-                error={errors.goal}
-              /> */}
-
             <AuthInputFiled
               name="assignee"
               icon={PersonOutline}
