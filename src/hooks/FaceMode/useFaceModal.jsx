@@ -4,13 +4,15 @@ import { useContext, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { TestContext } from "../../State/Function/Main";
 import useGetUser from "../Token/useUser";
+import UserProfile from "../UserData/useUser";
 import useFaceStore from "./useFaceStore";
 
 const useLoadModel = () => {
   const { handleAlert } = useContext(TestContext);
   const { descriptor, setDescriptor } = useFaceStore();
-  const { decodedToken } = useGetUser();
+  const { decodedToken, authToken } = useGetUser();
   const [loading, setLoading] = useState(false);
+  const role = UserProfile().useGetCurrentRole();
 
   const loadModels = async () => {
     await faceApi.nets.faceExpressionNet.loadFromUri("/models");
@@ -27,6 +29,27 @@ const useLoadModel = () => {
   const { data, isLoading, isFetched } = useQuery({
     queryKey: ["load-model"],
     queryFn: loadModels,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
+  const getEmployeeRemoteSet = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/remote-punch/get-employee-org-obj/org`,
+      {
+        headers: { Authorization: authToken },
+      }
+    );
+    return response.data;
+  };
+
+  const { data: employeeOrgId } = useQuery({
+    queryFn: getEmployeeRemoteSet,
+    queryKey: ["remote-fetch", decodedToken?.user?.organizationId],
+    enabled: role !== "Super-Admin" || role !== "Delegate-Super-Admin",
+    onSuccess: (data) => {
+      console.info(`🚀 ~ file: useFaceModal.jsx:62 ~ data:`, data);
+    },
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
@@ -184,6 +207,7 @@ const useLoadModel = () => {
     setDescriptor,
     loading,
     setLoading,
+    employeeOrgId,
   };
 };
 

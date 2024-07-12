@@ -16,13 +16,22 @@ export default function FabIcons() {
     getUserImage.mutate();
     setStartTime();
   };
-  const { faceDetectedData } = useSelfieFaceDetect();
+  const { faceDetectedData, employeeOrgId } = useSelfieFaceDetect();
+  console.log(`🚀 ~ file: speed-dial.jsx:20 ~ employeeOrgId:`, employeeOrgId);
+  console.log(
+    `🚀 ~ file: speed-dial.jsx:20 ~ faceDetectedData:`,
+    faceDetectedData
+  );
 
   return (
     <>
       {!start ? (
         <Fab
-          disabled={faceDetectedData === undefined}
+          disabled={
+            employeeOrgId?.employee?.faceRecognition === true
+              ? faceDetectedData === undefined
+              : false
+          }
           onClick={() => setOpen(true)}
           color="primary"
           variant="extended"
