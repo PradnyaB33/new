@@ -28,7 +28,6 @@ const LeaveAcceptModal = () => {
             },
           }
         );
-        console.log("this is my data bro", res.data);
         return res.data;
       } catch (error) {
         console.log(error);
@@ -63,33 +62,34 @@ const LeaveAcceptModal = () => {
               </div>
             </div>
           </div>
-          {data?.arrayOfEmployee?.map(
-            (employee, idx) =>
-              employee !== null && (
-                <Link
-                  to={`/leave-notification/${employee?._id}`}
-                  className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${
-                    employee?._id === employeeId &&
-                    "bg-blue-500 text-white hover:!bg-blue-300"
-                  }`}
-                  key={idx}
-                >
-                  <Avatar />
-                  <div>
-                    <h1 className="md:text-[1.2rem] text-sm">
-                      {employee?.first_name} {employee?.last_name}
-                    </h1>
-                    <h1
-                      className={`md:text-sm text-xs text-gray-500 ${
-                        employee?._id === employeeId && "text-white"
-                      }`}
-                    >
-                      {employee?.email}
-                    </h1>
-                  </div>
-                </Link>
-              )
-          )}
+          {!isFetching &&
+            data?.arrayOfEmployee?.map(
+              (employee, idx) =>
+                employee !== null && (
+                  <Link
+                    to={`/leave-notification/${employee?._id}`}
+                    className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${
+                      employee?._id === employeeId &&
+                      "bg-blue-500 text-white hover:!bg-blue-300"
+                    }`}
+                    key={idx}
+                  >
+                    <Avatar />
+                    <div>
+                      <h1 className="md:text-[1.2rem] text-sm">
+                        {employee?.first_name} {employee?.last_name}
+                      </h1>
+                      <h1
+                        className={`md:text-sm text-xs text-gray-500 ${
+                          employee?._id === employeeId && "text-white"
+                        }`}
+                      >
+                        {employee?.email}
+                      </h1>
+                    </div>
+                  </Link>
+                )
+            )}
         </article>
 
         <article className="w-[75%] min-h-[90vh] border-l-[.5px]  bg-gray-50">
@@ -124,6 +124,7 @@ const LeaveAcceptModal = () => {
                 <div className=" md:px-4 px-0 ">
                   {EmpNotification?.leaveRequests?.map((items, itemIndex) => (
                     <LeaveRejectmodal
+                      key={itemIndex}
                       items={items}
                       idx={itemIndex}
                       length={EmpNotification?.leaveRequests?.length}

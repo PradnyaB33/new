@@ -34,7 +34,10 @@ const EmployeeProfile = () => {
     uploadImageToBackendMutation,
     loading,
     setLoading,
+    employeeOrgId,
   } = useLoadModel();
+
+  console.log(`🚀 ~ file: UserProfile.jsx:39 ~ employeeOrgId:`, employeeOrgId);
 
   const UserProfileSchema = z.object({
     additional_phone_number: z
@@ -86,11 +89,10 @@ const EmployeeProfile = () => {
     }
   );
   console.log(
-    `🚀 ~ file: UserProfile.jsx:97 ~ profileData, isLoading:`,
+    `🚀 ~ file: UserProfile.jsx:103 ~ profileData, isLoading:`,
     profileData,
     isLoading
   );
-
   const handleImageChange = (e) => {
     setLoading(true);
     const selectedFile = e.target.files[0];
@@ -98,17 +100,22 @@ const EmployeeProfile = () => {
       setFile(selectedFile);
       const reader = new FileReader();
       reader.onloadend = async () => {
-        const img = new Image();
-        img.src = reader.result;
-        const faces = await detectFaceOnlyMutation({
-          img,
-        });
+        if (employeeOrgId?.employee?.faceRecognition === true) {
+          const img = new Image();
+          img.src = reader.result;
+          const faces = await detectFaceOnlyMutation({
+            img,
+          });
 
-        if (faces.length === 1) {
-          setUrl(() => reader.result);
-          setLoading(false);
+          if (faces.length === 1) {
+            setUrl(() => reader.result);
+            setLoading(false);
+          } else {
+            setUrl(UserInformation?.user_logo_url);
+            setLoading(false);
+          }
         } else {
-          setUrl(UserInformation?.user_logo_url);
+          setUrl(() => reader.result);
           setLoading(false);
         }
       };
