@@ -4,9 +4,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import useMultiStepForm from "../../hooks/useStepForm";
 import StepFormWrapper from "../../components/step-form/wrapper";
-import Test1 from "./Component/Test1";
-import Test2 from "./Component/Test2";
-import Test3 from "./Component/Test3";
+import Test1 from "./components/Test1";
+import Test2 from "./components/Test2";
+import Test3 from "./components/Test3";
 
 const CreateJobPosition = () => {
   const {

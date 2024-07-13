@@ -1,17 +1,18 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Business, Person } from "@mui/icons-material";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import NotesIcon from "@mui/icons-material/Notes";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useDepartmentState from "../../../hooks/DepartmentHook/useDepartmentState";
 import useDeptOption from "../../../hooks/DepartmentHook/useDeptOption";
-import { useParams } from "react-router-dom";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import NotesIcon from "@mui/icons-material/Notes";
 
 const Step1 = ({ nextStep, isLastStep }) => {
   const organisationId = useParams();
+
   const {
     DepartmentLocationOptions,
     DepartmentHeadOptions,
@@ -28,7 +29,9 @@ const Step1 = ({ nextStep, isLastStep }) => {
   } = useDepartmentState();
 
   const DepartmentSchema = z.object({
-    dept_name: z.string().min(2, { message: "Minimum two characters required" }),
+    dept_name: z
+      .string()
+      .min(2, { message: "Minimum two characters required" }),
     dept_description: z.string().optional(),
     dept_location: z.object({
       label: z.string(),
@@ -60,7 +63,7 @@ const Step1 = ({ nextStep, isLastStep }) => {
   });
 
   const { errors } = formState;
-  console.log(errors);
+
   const onSubmit = async (data) => {
     console.log(`🚀 ~ data:`, data);
     console.log(getValues());

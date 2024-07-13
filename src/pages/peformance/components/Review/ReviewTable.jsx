@@ -2,6 +2,7 @@ import { Edit } from "@mui/icons-material";
 import { Avatar, IconButton } from "@mui/material";
 import DOMPurify from "dompurify";
 import { React, useState } from "react";
+import EmptyAlertBox from "../../../../components/EmptyAlertBox";
 import RateReviewModel from "../GoalTable/Modal/Rate_Review_Model";
 import TabelSkeleton from "../GoalTable/Skelton/TabelSkeleton";
 
@@ -30,9 +31,13 @@ const ReviewTable = ({ tableData, performance, isFetching }) => {
     <div>
       {isFetching ? (
         <TabelSkeleton />
+      ) : paginatedData?.length === 0 ? (
+        <EmptyAlertBox
+          title={"No revaluation request for current performance appraisal"}
+        />
       ) : (
         <table
-          className={`  table-auto  border border-collapse min-w-full  text-left  !text-sm font-light `}
+          className={`  table-auto bg-white  border border-collapse min-w-full  text-left  !text-sm font-light `}
         >
           <thead className="border-b bg-gray-100 font-bold">
             <tr className="!font-semibold ">

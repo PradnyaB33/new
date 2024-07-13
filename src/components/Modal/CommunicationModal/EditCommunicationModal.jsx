@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Modal } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { z } from "zod";
@@ -10,6 +10,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
 import { Email } from "@mui/icons-material";
 import GroupIcon from "@mui/icons-material/Group";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -18,6 +19,7 @@ const style = {
   bgcolor: "background.paper",
   p: 4,
 };
+
 const communicationOptions = [
   { label: "HR Communication", value: "HR" },
   { label: "Accounts Communication", value: "Accounts" },
@@ -34,17 +36,17 @@ const EditCommunicationModal = ({
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
-  const [error, setError] = useState("");
-  console.log(error);
 
   const EmpCommunicationSchema = z.object({
     email: z.string().email(),
-    communication: z.array(
-      z.object({
-        label: z.string(),
-        value: z.string(),
-      })
-    ),
+    communication: z
+      .array(
+        z.object({
+          label: z.string(),
+          value: z.string(),
+        })
+      )
+      .min(1, "Communication type is required"),
   });
 
   const {
@@ -52,15 +54,15 @@ const EditCommunicationModal = ({
     formState: { errors },
     handleSubmit,
     setValue,
+    setError,
   } = useForm({
     defaultValues: {
-      email: undefined,
-      communication: undefined,
+      email: "",
+      communication: [],
     },
     resolver: zodResolver(EmpCommunicationSchema),
   });
 
-  //for  Get Query
   const { data: getCommunicationById } = useQuery(
     ["emailCommunication", organisationId, editCommunicationId],
     async () => {
@@ -75,7 +77,6 @@ const EditCommunicationModal = ({
       return response.data.data;
     }
   );
-  console.log("getCommunicationById", getCommunicationById);
 
   useEffect(() => {
     if (getCommunicationById) {
@@ -117,11 +118,9 @@ const EditCommunicationModal = ({
     try {
       const communicationValue = data.communication.map((item) => item.label);
       const formData = { email: data.email, communication: communicationValue };
-      console.log(formData);
       await EditCommunication.mutateAsync(formData);
     } catch (error) {
-      console.error(error);
-      setError("An error occurred while updation email.");
+      setError("An error occurred while updating email.");
     }
   };
 
@@ -136,14 +135,12 @@ const EditCommunicationModal = ({
         sx={style}
         className="border-none !z-10 !pt-0 !px-0 !w-[90%] lg:!w-[50%] md:!w-[60%] shadow-md outline-none rounded-md"
       >
-        <div className="flex justify-between py-4 items-center  px-4">
-          <h1 className="text-xl pl-2 font-semibold font-sans">
-            Edit Email 
-          </h1>
+        <div className="flex justify-between py-4 items-center px-4">
+          <h1 className="text-xl pl-2 font-semibold font-sans">Edit Email</h1>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="px-5 space-y-4 mt-4">
-            <div className="space-y-2 ">
+            <div className="space-y-2">
               <AuthInputFiled
                 name="email"
                 icon={Email}
@@ -155,7 +152,7 @@ const EditCommunicationModal = ({
                 error={errors.email}
               />
             </div>
-            <div className="space-y-2 ">
+            <div className="space-y-2">
               <AuthInputFiled
                 name="communication"
                 icon={GroupIcon}
@@ -170,8 +167,7 @@ const EditCommunicationModal = ({
                 optionlist={communicationOptions ? communicationOptions : []}
               />
             </div>
-
-            <div className="flex gap-4 mt-4 mr-4  mb-4 justify-end ">
+            <div className="flex gap-4 mt-4 mr-4 mb-4 justify-end">
               <Button onClick={handleClose} color="error" variant="outlined">
                 Cancel
               </Button>
