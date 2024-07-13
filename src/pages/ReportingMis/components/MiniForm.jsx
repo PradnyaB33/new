@@ -131,9 +131,6 @@ const ReportForm = () => {
   };
 
   const GenerateSalary = (employees) => {
-    console.log(`🚀 ~ employees:`, employees);
-    // Create a new workbook
-
     const isSalaryExists = employees.every(
       (employee) => employee.salary.length === 0
     );
