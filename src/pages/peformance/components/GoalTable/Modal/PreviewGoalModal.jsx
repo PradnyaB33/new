@@ -136,18 +136,38 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
                       getSingleGoal.goalStatus !== "Pending" &&
                       getSingleGoal.goalStatus !== "Goal Rejected" && (
                         <div
-                          className={`bg-gray-50  flex rounded-md px-2 border-gray-200 border-[.5px]  items-center`}
+                          className={` ${
+                            getSingleGoal?.goalStatus === "In Progress"
+                              ? "bg-blue-500 "
+                              : getSingleGoal?.goalStatus === "Completed"
+                              ? "bg-green-500"
+                              : "bg-gray-50"
+                          }  flex rounded-md px-2 border-gray-200 border-[.5px]  items-center`}
                         >
                           {/* <Icon className="text-gray-700" /> */}
                           <Select
                             aria-errormessage=""
                             placeholder={"Status"}
                             styles={{
+                              singleValue: (styles) => ({
+                                ...styles,
+                                color:
+                                  getSingleGoal?.goalStatus === "In Progress"
+                                    ? "white" // Text color for "In Progress"
+                                    : getSingleGoal?.goalStatus === "Completed"
+                                    ? "white" // Text color for "Completed", adjust as needed
+                                    : "black", // Default text color, adjust as needed
+                              }),
                               control: (styles) => ({
                                 ...styles,
                                 borderWidth: "0px",
                                 boxShadow: "none",
-                                backgroundColor: "#f9fafb",
+                                backgroundColor:
+                                  getSingleGoal?.goalStatus === "In Progress"
+                                    ? "#3b82f6" // Equivalent to bg-blue-500
+                                    : getSingleGoal?.goalStatus === "Completed"
+                                    ? "#10b981" // Equivalent to bg-green-500
+                                    : "#f9fafb", // Equivalent to bg-gray-50
                               }),
                             }}
                             components={{
@@ -156,7 +176,13 @@ const PreviewGoalModal = ({ open, handleClose, id, performance, assignee }) => {
                             value={GoalStatus?.find(
                               (item) => item.label === getSingleGoal?.goalStatus
                             )}
-                            className={`bg-gray-50  w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                            className={` ${
+                              getSingleGoal?.goalStatus === "In Progress"
+                                ? "bg-blue-500 "
+                                : getSingleGoal?.goalStatus === "Completed"
+                                ? "bg-green-500"
+                                : "bg-gray-50"
+                            }   w-full !outline-none  px-2 !shadow-none !border-none !border-0`}
                             options={GoalStatus}
                             onChange={(value) => {
                               SubmitGoal(value);

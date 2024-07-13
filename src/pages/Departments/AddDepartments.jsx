@@ -244,7 +244,6 @@ const AddDepartments = () => {
             <p className="text-xs text-gray-600 text-center">
               Add multiple departments for your organisation.
             </p>
-            {/* Input Fields */}
             <FormControl sx={{ width: "100%", marginTop: "1rem" }}>
               <TextField
                 required

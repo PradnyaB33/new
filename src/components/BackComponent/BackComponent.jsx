@@ -29,6 +29,7 @@ const BackComponent = () => {
     "/assingOrganizationToSelf",
     "/mis-report",
     "/view-job-position",
+    "resetpassword",
     // "/billing",
     "employee-onboarding",
     // "/organizationList",

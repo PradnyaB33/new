@@ -60,9 +60,9 @@ const PerformanceSetup = () => {
     // isNonMeasurableAllowed: z.boolean().optional(),
     isManagerApproval: z.boolean().optional(),
     isMidGoal: z.boolean().optional(),
-    isSendFormInMid: z.boolean().optional(),
+    // isSendFormInMid: z.boolean().optional(),
     // deleteFormEmployeeOnBoarding: z.boolean().optional(),
-    isKRA: z.boolean().optional(),
+    // isKRA: z.boolean().optional(),
     isSelfGoal: z.boolean().optional(),
   });
 
@@ -97,9 +97,9 @@ const PerformanceSetup = () => {
       isNonMeasurableAllowed: false,
       isManagerApproval: false,
       isMidGoal: false,
-      isSendFormInMid: false,
+      // // isSendFormInMid: false,
       // deleteFormEmployeeOnBoarding: false,
-      isKRA: false,
+      // isKRA: false,
       isSelfGoal: false,
     },
   });
@@ -135,12 +135,12 @@ const PerformanceSetup = () => {
       );
       setValue("isDownCast", performance.isDownCast);
       setValue("isFeedback", performance.isFeedback);
-      setValue("isKRA", performance.isKRA);
+      // setValue("isKRA", performance.isKRA);
       setValue("isManagerApproval", performance.isManagerApproval);
       setValue("isMidGoal", performance.isMidGoal);
       setValue("isNonMeasurableAllowed", performance.isNonMeasurableAllowed);
       setValue("isSelfGoal", performance.isSelfGoal);
-      setValue("isSendFormInMid", performance.isSendFormInMid);
+      // setValue("isSendFormInMid", performance.isSendFormInMid);
       setValue("organizationId", performance.organizationId);
       setValue("stages", {
         label: performance.stages,
@@ -411,7 +411,7 @@ const PerformanceSetup = () => {
                     error={errors.isMidGoal}
                   />
                 </div>
-
+                {/* 
                 <div className="grid grid-cols-2 gap-4">
                   {" "}
                   <AuthInputFiled
@@ -424,7 +424,7 @@ const PerformanceSetup = () => {
                     errors={errors}
                     error={errors.isSendFormInMid}
                   />
-                </div>
+                </div> */}
                 <div className="grid grid-cols-2 gap-4">
                   {/* <AuthInputFiled
                     name="deleteFormEmployeeOnBoarding"
@@ -436,7 +436,7 @@ const PerformanceSetup = () => {
                     errors={errors}
                     error={errors.deleteFormEmployeeOnBoarding}
                   /> */}
-                  <AuthInputFiled
+                  {/* <AuthInputFiled
                     name="isKRA"
                     icon={TrendingUp}
                     control={control}
@@ -445,7 +445,7 @@ const PerformanceSetup = () => {
                     label="Employee can add KRA"
                     errors={errors}
                     error={errors.isKRA}
-                  />
+                  /> */}
                 </div>
                 <AuthInputFiled
                   name="isSelfGoal"
