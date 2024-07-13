@@ -12,7 +12,7 @@ import useDeptOption from "../../../hooks/DepartmentHook/useDeptOption";
 
 const Step1 = ({ nextStep, isLastStep }) => {
   const organisationId = useParams();
-  console.log(`🚀 ~ file: Step1.jsx:15 ~ organisationId:`, organisationId);
+
   const {
     DepartmentLocationOptions,
     DepartmentHeadOptions,
@@ -63,7 +63,7 @@ const Step1 = ({ nextStep, isLastStep }) => {
   });
 
   const { errors } = formState;
-  console.log(errors);
+
   const onSubmit = async (data) => {
     console.log(`🚀 ~ data:`, data);
     console.log(getValues());
