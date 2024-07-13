@@ -27,7 +27,6 @@ const CreateNewSurvey = () => {
     //states
     const [questions, setQuestions] = useState([{ question: '', questionType: '', options: [], required: false }]);
     const [showSelectAll, setShowSelectAll] = useState(false);
-    const [formSubmitted, setFormSubmitted] = useState(false);
 
     //get organisationId
     const { getCurrentUser } = UserProfile();
@@ -364,7 +363,6 @@ const CreateNewSurvey = () => {
 
     //handleSubmitForm 
     const handleSubmitForm = (data, status) => {
-        setFormSubmitted(true);
         const formData = {
             title: data.title,
             description: data.description,
@@ -410,7 +408,7 @@ const CreateNewSurvey = () => {
                     <div className="mb-2 md:mb-0 md:mr-4">
                         <h1 className="text-xl font-bold">Create Employee Survey Form</h1>
                         <p className="text-sm text-gray-600">
-                            Here you can create employee survey form 
+                            Here you can create employee survey form
                         </p>
                     </div>
                 </div>
@@ -426,11 +424,11 @@ const CreateNewSurvey = () => {
                             <div className="w-full mt-4 px-2 sm:px-4 lg:px-6">
                                 <h1 className="text-xl mb-4 font-bold">Create Survey</h1>
                                 <form onSubmit={handleSubmit((data) => handleSubmitForm(data, true))} className="w-full flex flex-col space-y-4">
-                                    <div className="w-full">
+                                    <div className="w-full space-y-2">
                                         <AuthInputFiled
                                             name="title"
                                             control={control}
-                                            type="texteditor"
+                                            type="textEditor"
                                             placeholder="Title"
                                             label="Title"
                                             maxLimit={100}
@@ -441,7 +439,7 @@ const CreateNewSurvey = () => {
                                         <AuthInputFiled
                                             name="description"
                                             control={control}
-                                            type="texteditor"
+                                            type="textEditor"
                                             placeholder="Description"
                                             label="Description"
                                             maxLimit={1000}
@@ -453,7 +451,7 @@ const CreateNewSurvey = () => {
                                     {questions?.map((q, index) => (
                                         <div className="grid grid-cols-1 w-full" key={index}>
                                             <div>
-                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: "30px" }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: "20px" }}>
                                                     <label className='font-semibold text-gray-500 text-md'>Question {index + 1}</label>
                                                     <div>
                                                         <Select
@@ -474,11 +472,6 @@ const CreateNewSurvey = () => {
                                                             <MenuItem value="Date">Date</MenuItem>
                                                             <MenuItem value="Multi-choice">Multi-choice</MenuItem>
                                                         </Select>
-                                                        <div className="h-4 !mb-1">
-                                                            {formSubmitted && (
-                                                                <p className="text-sm text-red-500">Please select a question type</p>
-                                                            )}
-                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div>
