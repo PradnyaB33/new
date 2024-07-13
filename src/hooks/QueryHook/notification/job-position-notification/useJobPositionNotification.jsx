@@ -9,16 +9,16 @@ const useJobPositionNotification = () => {
   const authToken = cookies["aegis"];
   const { setNotificationCount } = useNotificationCount();
 
-  // get the employee whose raised a request for loan applicaiton
+  // get job position to mgr for approve and reject
   const {
-    data: getEmployeeRequestLoanApplication,
+    data: getJobPositionToMgr,
     isFetching,
     isLoading,
   } = useQuery(
-    ["empLoanApplyRequest"],
+    ["job-position"],
     async () => {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/pendingLoans`,
+        `${process.env.REACT_APP_API}/route/get-job-position-to-manager`,
         {
           headers: {
             Authorization: authToken,
@@ -36,12 +36,11 @@ const useJobPositionNotification = () => {
     }
   );
 
-  //for get loan data
-  const { data: getApprovedRejectLoanDataByApprover } = useQuery(
-    ["getApprovedRejectedData"],
+  const { data: getNotificationToEmp } = useQuery(
+    ["job-positionss"],
     async () => {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/get-approved-reject-loan-to-employee`,
+        `${process.env.REACT_APP_API}/route/get-notification-to-emp`,
         {
           headers: {
             Authorization: authToken,
@@ -53,8 +52,8 @@ const useJobPositionNotification = () => {
   );
 
   return {
-    getEmployeeRequestLoanApplication,
-    getApprovedRejectLoanDataByApprover,
+    getJobPositionToMgr,
+    getNotificationToEmp,
     isLoading,
     isFetching,
   };

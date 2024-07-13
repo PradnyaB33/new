@@ -116,10 +116,7 @@ const useFaceRecModal = () => {
       console.log("Data fetched successfully", data);
       let matchScore = 0.63;
       let descriptorFloat32 = new Float32Array(data?.faceData?.descriptor);
-      console.log(
-        `🚀 ~ file: useLoadModel.jsx:128 ~ descriptorFloat32:`,
-        descriptorFloat32
-      );
+
       let secondImgElem = document.getElementById("second-img");
       let faces = await detectFacesMutation({
         img: secondImgElem,
