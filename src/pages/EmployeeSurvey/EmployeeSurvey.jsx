@@ -50,16 +50,11 @@ const EmployeeSurvey = () => {
                                 className="!font-semibold !bg-sky-500 flex gap-2"
                                 variant="contained"
                                 onClick={handleCreateNewSurvey}
-                                sx={{textTransform:"none"}}
+                                sx={{ textTransform: "none" }}
                             >
                                 Create New Survey
                             </Button>
                         </div>
-                    </div>
-                )}
-                {(user?.profile.includes('Super-Admin') || user?.profile.includes('HR')) && (
-                    <div className="px-4 py-2 bg-white w-full h-max shadow-md rounded-2m border my-8">
-                        <SaveAsDraft />
                     </div>
                 )}
                 <div className="px-4 py-2 bg-white w-full h-max shadow-md rounded-2m border my-8">
@@ -68,6 +63,11 @@ const EmployeeSurvey = () => {
                 {(user?.profile.includes('Super-Admin') || user?.profile.includes('HR')) && (
                     <div className="px-4 py-2 bg-white w-full h-max shadow-md rounded-2m border my-8">
                         <CloseSurveyList />
+                    </div>
+                )}
+                {(user?.profile.includes('Super-Admin') || user?.profile.includes('HR')) && (
+                    <div className="px-4 py-2 bg-white w-full h-max shadow-md rounded-2m border my-8">
+                        <SaveAsDraft />
                     </div>
                 )}
             </section>

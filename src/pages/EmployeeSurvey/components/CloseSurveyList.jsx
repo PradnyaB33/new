@@ -75,7 +75,7 @@ const CloseSurveyList = () => {
       <div className="flex  justify-between  gap-3 w-full border-gray-300 my-2">
         <div className="flex justify-start ">
           <Typography variant="p">
-            Close Survey
+            Closed Survey
           </Typography>
         </div>
         <div className="flex justify-end">
