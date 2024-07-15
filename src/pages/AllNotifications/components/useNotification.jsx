@@ -222,7 +222,6 @@ const useNotification = () => {
       visible: true,
     },
   ];
-  console.log(`🚀 ~ file: useNotification.jsx:225 ~ dummyData:`, dummyData);
   return { dummyData };
 };
 

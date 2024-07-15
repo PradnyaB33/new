@@ -27,7 +27,7 @@ const CreateNewSurvey = () => {
     //states
     const [questions, setQuestions] = useState([{ question: '', questionType: '', options: [], required: false }]);
     const [showSelectAll, setShowSelectAll] = useState(false);
-
+    const [questionTypeSelected, setQuestionTypeSelected] = useState(Array.from({ length: questions.length }, () => false));
 
     //get organisationId
     const { getCurrentUser } = UserProfile();
@@ -150,6 +150,9 @@ const CreateNewSurvey = () => {
         newQuestions[index].questionType = selectedType;
         newQuestions[index].options = [];
         setQuestions(newQuestions);
+        const updatedSelected = [...questionTypeSelected];
+        updatedSelected[index] = selectedType !== ''; // Update to true if a type is selected
+        setQuestionTypeSelected(updatedSelected);
     };
 
     //handleAddOption function
@@ -475,7 +478,12 @@ const CreateNewSurvey = () => {
                                                             <MenuItem value="Multi-choice">Multi-choice</MenuItem>
                                                         </Select>
                                                         <div className="h-4 !mb-1">
-                                                            <p className="text-sm text-red-500">Please select a question type</p>
+                                                            {!questionTypeSelected[index] && (
+                                                                <div className="h-4 !mb-1">
+                                                                    <p className="text-sm text-red-500">Please select a question type</p>
+                                                                </div>
+                                                            )}
+
                                                         </div>
                                                     </div>
                                                 </div>

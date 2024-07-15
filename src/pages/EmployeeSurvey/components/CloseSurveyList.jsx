@@ -44,7 +44,7 @@ const CloseSurveyList = () => {
       enabled: !!organisationId && !!authToken,
     }
   );
-
+console.log("surveys....",surveys);
   //handleSurveyDetails function
   const handleSurveyDetails = (surveyId) => {
     navigate(`/organisation/:organisationId/survey-details/${surveyId}`);
@@ -56,19 +56,75 @@ const CloseSurveyList = () => {
   }
 
   // Generate Excel function
-  const generateExcel = () => {
-    const data = [["Title", "Status"]];
-    surveys.forEach((survey) => {
-      const cleanTitle = DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } });
-      data.push([cleanTitle, survey.status]);
+  // const generateExcel = () => {
+  //   const data = [["Title", "Status"]];
+  //   surveys.forEach((survey) => {
+  //     const cleanTitle = DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } });
+  //     data.push([cleanTitle, survey.status]);
+  //   });
+
+  //   const ws = XLSX.utils.aoa_to_sheet(data);
+  //   const wb = XLSX.utils.book_new();
+  //   XLSX.utils.book_append_sheet(wb, ws, "SurveyData");
+
+  //   XLSX.writeFile(wb, "survey_data.xlsx");
+  // };
+// Generate Excel function
+const generateExcel = () => {
+  const wb = XLSX.utils.book_new();
+
+  // Create a header array for all surveys
+  const headers = [
+    "Title",
+    "Description",
+    "Employee Survey Starting Date",
+    "Employee Survey End Date",
+    "Creator ID",
+    "Organization ID"
+  ];
+
+  // Loop through surveys to collect data
+  surveys.forEach((survey, index) => {
+    // Initialize data array for each survey
+    const data = [];
+
+    // Push survey details into the data array
+    data.push([
+      DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } }),
+      DOMPurify.sanitize(survey.description, { USE_PROFILES: { html: false } }),
+      survey.status ? "Active" : "Inactive",
+      format(new Date(survey.employeeSurveyStartingDate), "PP"),
+      format(new Date(survey.employeeSurveyEndDate), "PP"),
+      survey.creatorId,
+      survey.organisationId
+    ]);
+
+    // Push question headers into the data array
+    survey.questions.forEach((question, qIndex) => {
+      data.push([
+        `Question ${qIndex + 1}`,
+        `Question ${qIndex + 1} Type`,
+        `Question ${qIndex + 1} Options`
+      ]);
+
+      // Add responses as columns
+      if (survey.responses && survey.responses.length > 0) {
+        survey.responses.forEach((response, rIndex) => {
+          data.push([`Response ${rIndex + 1} for Question ${qIndex + 1}`]);
+        });
+      } else {
+        data.push([`Response for Question ${qIndex + 1}`]);
+      }
     });
 
+    // Create worksheet for each survey
     const ws = XLSX.utils.aoa_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "SurveyData");
+    XLSX.utils.book_append_sheet(wb, ws, `Survey ${index + 1}`);
+  });
 
-    XLSX.writeFile(wb, "survey_data.xlsx");
-  };
+  // Save workbook as Excel file
+  XLSX.writeFile(wb, "survey_data.xlsx");
+};
 
   return (
     <div>
