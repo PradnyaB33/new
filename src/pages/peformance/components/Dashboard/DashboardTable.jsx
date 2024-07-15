@@ -4,23 +4,7 @@ import EmptyAlertBox from "../../../../components/EmptyAlertBox";
 import DashboardModel from "../GoalTable/Modal/DashboardModel";
 import TabelSkeleton from "../GoalTable/Skelton/TabelSkeleton";
 
-const DashboardTable = ({
-  tableData = [],
-  role,
-  tableFetching,
-  performance,
-}) => {
-  // const counts = tableData?.reduce((acc, record) => {
-  //   if (record.managerRating) {
-  //     if (!acc[record.managerRating]) {
-  //       acc[record.managerRating] = 0;
-  //     }
-  //     acc[record.managerRating]++;
-  //   }
-
-  //   return acc;
-  // }, {});
-
+const DashboardTable = ({ tableData = [], tableFetching }) => {
   const [previewModal, setPreviewModal] = useState(false);
   const [previewId, setPreviewId] = useState(null);
 
@@ -37,43 +21,9 @@ const DashboardTable = ({
   return (
     <>
       <div className="my-2 flex">
-        <div className=" gap-4 ">
-          {/* {role !== "Employee" && (
-            <div className={`space-y-1 min-w-[250px]  md:min-w-[15vw] `}>
-              <div
-                className={`flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
-              >
-                <Checklist className="text-gray-700 md:text-lg !text-[1em]" />
-                <Select
-                  aria-errormessage=""
-                  placeholder={"Goal Type"}
-                  isClearable
-                  styles={{
-                    control: (styles) => ({
-                      ...styles,
-                      borderWidth: "0px",
-                      boxShadow: "none",
-                    }),
-                  }}
-                  className={` bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
-                  components={{
-                    // Option: CustomOption,
-                    IndicatorSeparator: () => null,
-                  }}
-                  options={[
-                    {
-                      label: "data",
-                      value: "Datat",
-                    },
-                  ]}
-                  // onChange={(value) => {
-                  //   setEmployeeGoals(value?.value);
-                  // }}
-                />
-              </div>
-            </div>
-          )} */}
-        </div>
+        {/* <div className=" gap-4 ">
+     
+        </div> */}
       </div>
       {tableFetching ? (
         <TabelSkeleton />
@@ -173,7 +123,7 @@ const DashboardTable = ({
                 ))}
               </tbody>
             </table>
-            <div className="border-[.5px] border-gray-200 border-t-0 px-4 py-2 h-max flex  items-center w-full justify-between ">
+            <div className="border-[.5px] bg-white border-gray-200 border-t-0 px-4 py-2 h-max flex  items-center w-full justify-between ">
               <div>
                 <h1>
                   Showing {1} to {1} of {4} entries

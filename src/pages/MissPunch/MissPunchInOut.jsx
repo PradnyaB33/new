@@ -3,14 +3,17 @@ import { Container, Typography, Button } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
+import { West } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 
 const MissPunchInOut = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { organisationId } = useParams();
   const [currentEmployeeIndex, setCurrentEmployeeIndex] = useState(0);
+  const navigate = useNavigate();
 
   // Fetch all records
   const { data: unavailableRecord } = useQuery(
@@ -46,6 +49,11 @@ const MissPunchInOut = () => {
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen py-8 px-4">
+        <div className=" mt-3">
+          <IconButton onClick={() => navigate(-1)}>
+            <West className="text-xl" />
+          </IconButton>
+        </div>
         <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
           Employee Missed Punch
         </Typography>

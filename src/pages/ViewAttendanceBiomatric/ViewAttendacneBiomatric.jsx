@@ -7,18 +7,20 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useQuery } from "react-query";
 import EmployeeTypeSkeleton from "../SetUpOrganization/components/EmployeeTypeSkeleton";
 import { Info } from "@mui/icons-material";
 import CalculateHourEmpModal from "../../components/Modal/CalculateHourEmpModal/CalculateHourEmpModal";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { West } from "@mui/icons-material";
 
 const ViewAttendacneBiomatric = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { organisationId } = useParams();
+  const navigate = useNavigate();
 
   const { data: empAttendanceData, isLoading } = useQuery(
     ["empAttendanceData", organisationId],
@@ -97,6 +99,12 @@ const ViewAttendacneBiomatric = () => {
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className=" bg-white w-full h-max shadow-md rounded-sm border items-center">
+          <div className=" mt-3">
+            <IconButton onClick={() => navigate(-1)}>
+              <West className="text-xl" />
+            </IconButton>
+          </div>
+
           <Typography variant="h4" className=" text-center pl-10  mb-6 mt-2">
             Employee’s Time Track
           </Typography>

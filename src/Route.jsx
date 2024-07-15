@@ -113,6 +113,7 @@ import CreateJobPosition from "./pages/Recruitment/CreateJobPosition";
 import EditJobPosition from "./pages/Recruitment/EditJobPosition";
 import ViewJobPosition from "./pages/Recruitment/ViewJobPosition";
 import ReportingMis from "./pages/ReportingMis/page";
+import ResetNewPassword from "./pages/ResetNewPassword/ResetNewPassword";
 import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
 import SelfShiftNotification from "./pages/SelfShiftNotification/page";
 import EmpCommunication from "./pages/SetUpOrganization/EmpCommunication/EmpCommunication";
@@ -133,6 +134,7 @@ import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
 import JobPositionNotificaitonToMgr from "./pages/Recruitment/Notification/JobPositonNotificatinToMgr";
 import JobNotificationToEmp from "./pages/Recruitment/Notification/JobNotificationToEmp";
+import OpenJobPosition from "./pages/Recruitment/OpenRoleJobPosition";
 
 const App = () => {
   return (
@@ -283,6 +285,7 @@ const App = () => {
           element={<MissedPunchNotification />}
         />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/resetpassword" element={<ResetNewPassword />} />
 
         <Route
           path="/waiting"
@@ -517,6 +520,28 @@ const App = () => {
               ]}
             >
               <ViewJobPosition />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/open-job-position"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <OpenJobPosition />
             </RequireAuth>
           }
         />

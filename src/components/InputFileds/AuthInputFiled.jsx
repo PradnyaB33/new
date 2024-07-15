@@ -874,8 +874,7 @@ const AuthInputFiled = ({
         <div>
           <label
             htmlFor={name}
-            className={`${error && "text-red-500"
-              } font-semibold  text-gray-500 text-md`}
+            className={`${error && "text-red-500"} font-semibold text-gray-500 text-md`}
           >
             {label}
           </label>
@@ -884,7 +883,7 @@ const AuthInputFiled = ({
             name={name}
             id={name}
             render={({ field }) => (
-              <>
+              <div>
                 <ReactQuill
                   theme="snow"
                   value={field.value}
@@ -892,16 +891,16 @@ const AuthInputFiled = ({
                   onChange={field.onChange}
                   modules={modules}
                 />
-              </>
+              </div>
             )}
           />
         </div>
-        <div>
+        <div style={{ marginTop: '10px' }}>
           <ErrorMessage
             errors={errors}
             name={name}
             render={({ message }) => (
-              <p className="text-sm mb-4 relative !bg-white  text-red-500">
+              <p className="text-sm text-red-500">
                 {message}
               </p>
             )}

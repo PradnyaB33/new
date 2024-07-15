@@ -6,6 +6,7 @@ import useMissedPunchNotificationCount from "../../../hooks/QueryHook/notificati
 import usePayslipNotificationHook from "../../../hooks/QueryHook/notification/PayslipNotification/usePayslipNotificaitonHook";
 import useAdvanceSalaryData from "../../../hooks/QueryHook/notification/advance-salary-notification/useAdvanceSalary";
 import useDocNotification from "../../../hooks/QueryHook/notification/document-notification/hook";
+import useJobPositionNotification from "../../../hooks/QueryHook/notification/job-position-notification/useJobPositionNotification";
 import useLeaveNotificationHook from "../../../hooks/QueryHook/notification/leave-notification/hook";
 import useLoanNotification from "../../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
 import usePunchNotification from "../../../hooks/QueryHook/notification/punch-notification/hook";
@@ -13,7 +14,6 @@ import useShiftNotification from "../../../hooks/QueryHook/notification/shift-no
 import useTDSNotificationHook from "../../../hooks/QueryHook/notification/tds-notification/hook";
 import UserProfile from "../../../hooks/UserData/useUser";
 import useLeaveNotification from "../../SelfLeaveNotification/useLeaveNotification";
-import useJobPositionNotification from "../../../hooks/QueryHook/notification/job-position-notification/useJobPositionNotification";
 
 const useNotification = () => {
   const { data } = useLeaveNotificationHook();
@@ -207,7 +207,7 @@ const useNotification = () => {
 
     {
       name: "TDS Notification",
-      count: tds ?? 0,
+      count: typeof tds === Number ? tds : 0,
       color: "#51E8FD",
       url: tdsRoute,
       url2: "/notification/income-tax-details",
@@ -222,6 +222,7 @@ const useNotification = () => {
       visible: true,
     },
   ];
+  console.log(`🚀 ~ file: useNotification.jsx:225 ~ dummyData:`, dummyData);
   return { dummyData };
 };
 

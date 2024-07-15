@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Search, West, RequestQuote } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
-import JobPositionApproval from "../Component/JobPositionApproval";
+import JobPositionApproval from "../components/JobPositionApproval";
 import useJobPositionNotification from "../../../hooks/QueryHook/notification/job-position-notification/useJobPositionNotification";
 
 const JobPositionNotificaitonToMgr = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const { getJobPositionToMgr } = useJobPositionNotification();
-  
+
   const handleEmployeeClick = (employee) => {
     setSelectedEmployee(employee);
   };

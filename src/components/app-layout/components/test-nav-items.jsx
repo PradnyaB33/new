@@ -564,16 +564,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       Recruitment: {
         open: false,
         icon: <PeopleAlt className=" !text-[1.2em] text-[#67748E]" />,
-        isVisible:
-          window.location.pathname?.includes("organisation") &&
-          [
-            "Super-Admin",
-            "Delegate-Super-Admin",
-            "HR",
-            "Department-Head",
-            "Delegate-Department-Head",
-            "Manager",
-          ]?.includes(role),
+        isVisible: window.location.pathname?.includes("organisation"),
         routes: [
           {
             key: "createjobposition",
@@ -602,6 +593,25 @@ const TestNavItems = ({ toggleDrawer }) => {
             link: `organisation/${orgId}/view-job-position`,
             icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
             text: "View Job Position",
+          },
+          {
+            key: "openjobposition",
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+              "Employee",
+            ].includes(role),
+            link: `organisation/${orgId}/open-job-position`,
+            icon: <PersonRemove className=" !text-[1.2em] text-[#67748E]" />,
+            text: "Open Job Role",
           },
         ],
       },

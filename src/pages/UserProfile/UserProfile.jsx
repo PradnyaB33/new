@@ -16,6 +16,7 @@ import useLoadModel from "../../hooks/FaceMode/useFaceModal";
 import UserProfile from "../../hooks/UserData/useUser";
 import useHook from "../../hooks/UserProfile/useHook";
 import { getSignedUrl, uploadFile } from "../../services/api";
+import ResetNewPassword from "../ResetNewPassword/ResetNewPassword";
 
 const EmployeeProfile = () => {
   const { handleAlert } = useContext(TestContext);
@@ -29,6 +30,11 @@ const EmployeeProfile = () => {
   const [url, setUrl] = useState();
   const fileInputRef = useRef();
   const [file, setFile] = useState();
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   const {
     detectFaceOnlyMutation,
     uploadImageToBackendMutation,
@@ -306,6 +312,14 @@ const EmployeeProfile = () => {
                       </>
                     )}
                   </h1>
+
+                  <button
+                    type="button"
+                    onClick={() => setOpen(true)}
+                    className="flex justify-center h-full bg-[#1976d2] shadow-md pt-1 pb-1 pr-4 pl-4 rounded-md font-semibold mt-2 text-white"
+                  >
+                    Reset Password
+                  </button>
                 </div>
               </div>
             </div>
@@ -361,6 +375,8 @@ const EmployeeProfile = () => {
           </div>
         </form>
       </Paper>
+
+      <ResetNewPassword open={open} handleClose={handleClose} />
     </div>
   );
 };

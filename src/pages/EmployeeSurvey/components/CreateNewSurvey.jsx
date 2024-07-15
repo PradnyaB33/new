@@ -364,7 +364,7 @@ const CreateNewSurvey = () => {
 
     //handleSubmitForm 
     const handleSubmitForm = (data, status) => {
-
+      
         const formData = {
             title: data.title,
             description: data.description,
@@ -411,6 +411,7 @@ const CreateNewSurvey = () => {
                         <h1 className="text-xl font-bold">Create Employee Survey Form</h1>
                         <p className="text-sm text-gray-600">
                             Here you can create employee survey form
+                            Here you can create employee survey form
                         </p>
                     </div>
                 </div>
@@ -426,7 +427,7 @@ const CreateNewSurvey = () => {
                             <div className="w-full mt-4 px-2 sm:px-4 lg:px-6">
                                 <h1 className="text-xl mb-4 font-bold">Create Survey</h1>
                                 <form onSubmit={handleSubmit((data) => handleSubmitForm(data, true))} className="w-full flex flex-col space-y-4">
-                                    <div className="w-full">
+                                    <div className="w-full space-y-2">
                                         <AuthInputFiled
                                             name="title"
                                             control={control}
@@ -453,6 +454,7 @@ const CreateNewSurvey = () => {
                                     {questions?.map((q, index) => (
                                         <div className="grid grid-cols-1 w-full" key={index}>
                                             <div>
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: "20px" }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: "20px" }}>
                                                     <label className='font-semibold text-gray-500 text-md'>Question {index + 1}</label>
                                                     <div>
@@ -514,6 +516,7 @@ const CreateNewSurvey = () => {
                                                     />
                                                 </div>
                                             </div>
+                                        </div>
                                         </div>
                                     ))}
                                     <div className="flex gap-4 mt-4 justify-end">
