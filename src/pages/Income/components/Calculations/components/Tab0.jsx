@@ -10,7 +10,6 @@ const Tab0 = () => {
   // const [taxAmount, setTaxAmount] = useState(0);
   // const [cess, setCess] = useState(0);
   // const [tax, setTax] = useState(0);
-  const {} = useIncomeTax();
   const {
     getCurrentFinancialYear,
     setTaxAmount,
