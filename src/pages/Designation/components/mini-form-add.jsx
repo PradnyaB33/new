@@ -14,7 +14,7 @@ const AddDesignation = ({ open, handleClose, addDesignationMutation }) => {
   const designationSchema = z.object({
     designationName: z
       .string()
-      .min(3, "Designation Name must be atleast 3 characters")
+      .min(2, "Designation Name must be atleast 2 characters")
       .max(50, "Designation Name must be less than 50 characters"),
     designationId: z
       .string()

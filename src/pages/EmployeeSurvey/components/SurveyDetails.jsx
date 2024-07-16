@@ -3,8 +3,9 @@ import PropTypes from "prop-types";
 import { Container, Box } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
-import BulletTypeAnswerPieChart from "./BulletTypeAnswerPieChart";
 import QuestionStats from "./QuestionStats";
+import SummaryTab from "./SummaryTab";
+import IndividualResponse from "./IndividualResponse";
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -58,13 +59,13 @@ export default function SurveyDetails() {
                         </Tabs>
                     </Box>
                     <CustomTabPanel value={value} index={0}>
-                      <BulletTypeAnswerPieChart/>
+                      <SummaryTab/>
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
                        <QuestionStats/>
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={2}>
-                        Tab Three Content
+                        <IndividualResponse/>
                     </CustomTabPanel>
                 </Box>
                 </article>

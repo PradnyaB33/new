@@ -11,7 +11,7 @@ import {
   IconButton,
 } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
@@ -27,6 +27,87 @@ const EmpCommunication = () => {
   const authToken = cookies["aegis"];
   const { organisationId } = useParams();
   const queryClient = useQueryClient();
+
+  // Communication Permission 
+  const [surveyPermission, setSurveyPermission] = useState(false);
+  const [isFirstTimeAdd, setIsFirstTimeAdd] = useState(true);
+
+  // Fetch initial survey permission state
+  useEffect(() => {
+    const fetchSurveyPermission = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-permission-survey`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        console.log("response", response);
+        setSurveyPermission(response?.data?.surveyPermission);
+        setIsFirstTimeAdd(response?.data?.isFirstTimeAdd);
+      } catch (error) {
+        console.error("Error fetching survey permission:", error);
+      }
+    };
+
+    fetchSurveyPermission();
+  }, [organisationId, authToken]);
+
+
+  // Add Permission
+  const mutationAdd = useMutation(
+    async () => {
+      await axios.post(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/add-employee-survey-permission`,
+        { surveyPermission: true },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: () => {
+        handleAlert(true, "success", "Survey permission added successfully");
+        setIsFirstTimeAdd(false);
+      },
+    }
+  );
+
+  // Update Permission
+  const mutationUpdate = useMutation(
+    async (isChecked) => {
+      await axios.put(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/update-employee-survey-permission`,
+        { surveyPermission: isChecked },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: () => {
+        handleAlert(true, "success", "Survey permission updated successfully");
+      },
+    }
+  );
+
+  // Handle checkbox change
+  const handleCheckboxChange = (event) => {
+    const isChecked = event.target.checked;
+    setSurveyPermission(isChecked);
+
+    if (isChecked && isFirstTimeAdd) {
+      mutationAdd.mutate();
+    } else {
+      mutationUpdate.mutate(isChecked);
+    }
+  };
 
   //for  Get Query
   const { data: getCommunication, isLoading } = useQuery(
@@ -44,7 +125,6 @@ const EmpCommunication = () => {
     }
   );
 
-  console.log("get communication", getCommunication);
 
   // for add
   const [openCommunciationModal, setOpenCommunicationModal] = useState(false);
@@ -109,6 +189,24 @@ const EmpCommunication = () => {
       <section className="bg-gray-50 min-h-screen w-full">
         <Setup>
           <article>
+            <div className="p-4 border-b-[.5px]  border-gray-300">
+              <div>
+                <h1 className="!text-lg">Communication</h1>
+              </div><br />
+              <div>
+                <label htmlFor="surveyPermission" className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="surveyPermission"
+                    name="surveyPermission"
+                    className="form-checkbox h-5 w-5 text-blue-500"
+                    checked={surveyPermission}
+                    onChange={handleCheckboxChange}
+                  />
+                  <span className="ml-2">Enable Communication</span>
+                </label>
+              </div>
+            </div>
             <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">
               <div className="flex gap-3 ">
                 <div className="mt-1">

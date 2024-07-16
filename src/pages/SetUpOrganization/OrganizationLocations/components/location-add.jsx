@@ -65,7 +65,10 @@ const LocationAdd = ({ open, onClose, addLocationMutation }) => {
       heading={"Add Location"}
       subHeading={"Add a new location to your organisation"}
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="overflow-scroll">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="overflow-scroll h-[80vh]"
+      >
         <AuthInputFiled
           name="continent"
           icon={SouthAmerica}

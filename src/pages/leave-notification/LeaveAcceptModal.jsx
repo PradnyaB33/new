@@ -4,13 +4,21 @@ import axios from "axios";
 import React from "react";
 import { useQuery } from "react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import Select from "react-select";
 import LeaveRejectmodal from "../../components/Modal/LeaveModal/LeaveRejectmodal";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
-import useAuthToken from "../../hooks/Token/useAuth";
+import useOrgList from "../../hooks/QueryHook/Orglist/hook";
+import useGetUser from "../../hooks/Token/useUser";
 const LeaveAcceptModal = () => {
-  const authToken = useAuthToken();
+  const { authToken, decodedToken } = useGetUser();
   const { employeeId } = useParams();
-  const { data } = useLeaveNotificationHook();
+  const { data, updateOrganizationId, organizationId } =
+    useLeaveNotificationHook();
+  console.log(
+    `🚀 ~ file: LeaveAcceptModal.jsx:16 ~ organizationId:`,
+    organizationId
+  );
+  const { data: orgData } = useOrgList();
 
   const {
     data: EmpNotification,
@@ -39,13 +47,29 @@ const LeaveAcceptModal = () => {
   const navigate = useNavigate();
   return (
     <div>
-      <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
-        <span className="cursor-pointer" onClick={() => navigate(-1)}>
-          <West className="mx-4 !text-xl" />
-        </span>
-        Employee Attendance and Leave Request
+      <header className="text-xl w-full pt-6 border flex justify-between bg-white shadow-md p-4">
+        <div>
+          <span className="cursor-pointer" onClick={() => navigate(-1)}>
+            <West className="mx-4 !text-xl" />
+          </span>
+          <div className="inline">Employee Attendance and Leave Request</div>
+        </div>
+        <div>
+          {decodedToken?.user?.profile.includes("Super-Admin") && (
+            <Select
+              options={orgData?.organizations?.map((org) => ({
+                value: org?._id,
+                label: org?.orgName,
+              }))}
+              onChange={(e) => updateOrganizationId(e)}
+              placeholder={"Select Organisations"}
+              value={organizationId}
+              className="!w-[300px]"
+            />
+          )}
+        </div>
       </header>
-      <section className="min-h-[90vh] flex  ">
+      <section className="min-h-[90vh] flex">
         <article className="md:w-[25%] w-[200px] overflow-auto max-h-[90vh] h-full bg-white  border-gray-200">
           <div className="p-6 !py-2  ">
             <div className="space-y-2">
