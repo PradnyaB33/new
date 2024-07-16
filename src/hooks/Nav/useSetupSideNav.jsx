@@ -6,7 +6,6 @@ import {
 } from "@mui/icons-material";
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
@@ -19,7 +18,7 @@ import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
 import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
 import WorkOffOutlinedIcon from "@mui/icons-material/WorkOffOutlined";
 import { useLocation } from "react-router-dom";
-
+import SmsSharpIcon from '@mui/icons-material/SmsSharp';
 import useSubscriptionGet from "../QueryHook/Subscription/hook";
 import UserProfile from "../UserData/useUser";
 const useSetupSideNav = ({ organisationId }) => {
@@ -130,8 +129,8 @@ const useSetupSideNav = ({ organisationId }) => {
       ),
     },
     {
-      label: "Add Email",
-      icon: EmailOutlinedIcon,
+      label: "Communication",
+      icon: SmsSharpIcon,
       href: `/organisation/${organisationId}/setup/email-communicaiton`,
       active:
         location.pathname ===

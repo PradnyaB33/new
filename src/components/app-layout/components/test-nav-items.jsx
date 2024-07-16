@@ -50,6 +50,7 @@ import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
+import useGetCommunicationPermission from "../../../pages/EmployeeSurvey/useContext/Permission";
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
@@ -61,6 +62,10 @@ const TestNavItems = ({ toggleDrawer }) => {
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
+
+  const { data: survey } = useGetCommunicationPermission();
+  console.log("surveyPermission", survey?.surveyPermission);
+
 
   // Update organization ID when URL changes
   useEffect(() => {
@@ -112,6 +117,8 @@ const TestNavItems = ({ toggleDrawer }) => {
     organisationId: orgId,
   });
 
+  console.log("data edli wla", data?.organisation?.packageInfo === "Intermediate Plan" &&
+    window.location.pathname?.includes("organisation") && !survey?.surveyPermission);
   const [isVisible, setisVisible] = useState(true);
 
   useEffect(() => {
@@ -643,25 +650,13 @@ const TestNavItems = ({ toggleDrawer }) => {
             ].includes(role),
             link: `/organisation/${orgId}/create-communication`,
             icon: <ChatIcon className=" !text-[1.2em] text-[#67748E]" />,
-            text: "Communication",
+            text: "Broadcast",
           },
           {
             key: "EmployeeSurvey",
-            isVisible: 
-            data?.organisation?.packageInfo === "Intermediate Plan" &&
-            window.location.pathname?.includes("organisation") &&[
-              "Super-Admin",
-              "Delegate-Super-Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "HR",
-              "Manager",
-              "Employee",
-            ].includes(role),
+            isVisible:
+              data?.organisation?.packageInfo === "Intermediate Plan" &&
+              window.location.pathname?.includes("organisation") && survey?.surveyPermission,
             link: `/organisation/${orgId}/employee-survey`,
             icon: <AssignmentIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Employee Survey",
@@ -823,7 +818,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       check,
       data?.organisation?.packageInfo,
       location.pathname,
-      role,
+      role, survey?.surveyPermission
     ]
   );
 

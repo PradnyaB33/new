@@ -11,7 +11,7 @@ import {
   IconButton,
 } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
@@ -20,6 +20,7 @@ import AddCommunicationModal from "../../../components/Modal/CommunicationModal/
 import EditCommunicationModal from "../../../components/Modal/CommunicationModal/EditCommunicationModal";
 import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
+import useGetCommunicationPermission from "../../EmployeeSurvey/useContext/Permission";
 
 const EmpCommunication = () => {
   const { handleAlert } = useContext(TestContext);
@@ -29,59 +30,14 @@ const EmpCommunication = () => {
   const queryClient = useQueryClient();
 
   // Communication Permission 
-  const [surveyPermission, setSurveyPermission] = useState(false);
-  const [isFirstTimeAdd, setIsFirstTimeAdd] = useState(true);
-
-  // Fetch initial survey permission state
-  useEffect(() => {
-    const fetchSurveyPermission = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-permission-survey`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        );
-        console.log("response", response);
-        setSurveyPermission(response?.data?.surveyPermission);
-        setIsFirstTimeAdd(response?.data?.isFirstTimeAdd);
-      } catch (error) {
-        console.error("Error fetching survey permission:", error);
-      }
-    };
-
-    fetchSurveyPermission();
-  }, [organisationId, authToken]);
-
+  const { data, setSurveyPermission } = useGetCommunicationPermission()
+  console.log("data", data);
 
   // Add Permission
-  const mutationAdd = useMutation(
-    async () => {
-      await axios.post(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/add-employee-survey-permission`,
-        { surveyPermission: true },
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-    },
-    {
-      onSuccess: () => {
-        handleAlert(true, "success", "Survey permission added successfully");
-        setIsFirstTimeAdd(false);
-      },
-    }
-  );
-
-  // Update Permission
-  const mutationUpdate = useMutation(
+  const mutationPermission = useMutation(
     async (isChecked) => {
-      await axios.put(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/update-employee-survey-permission`,
+      await axios.post(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/employee-survey-permission`,
         { surveyPermission: isChecked },
         {
           headers: {
@@ -91,8 +47,9 @@ const EmpCommunication = () => {
       );
     },
     {
-      onSuccess: () => {
+      onSuccess: async () => {
         handleAlert(true, "success", "Survey permission updated successfully");
+        await queryClient.invalidateQueries("survey-permission");
       },
     }
   );
@@ -101,12 +58,7 @@ const EmpCommunication = () => {
   const handleCheckboxChange = (event) => {
     const isChecked = event.target.checked;
     setSurveyPermission(isChecked);
-
-    if (isChecked && isFirstTimeAdd) {
-      mutationAdd.mutate();
-    } else {
-      mutationUpdate.mutate(isChecked);
-    }
+    mutationPermission.mutate(isChecked);
   };
 
   //for  Get Query
@@ -191,7 +143,7 @@ const EmpCommunication = () => {
           <article>
             <div className="p-4 border-b-[.5px]  border-gray-300">
               <div>
-                <h1 className="!text-lg">Communication</h1>
+                <h1 className="!text-lg">Communication Permission</h1>
               </div><br />
               <div>
                 <label htmlFor="surveyPermission" className="flex items-center">
@@ -200,10 +152,10 @@ const EmpCommunication = () => {
                     id="surveyPermission"
                     name="surveyPermission"
                     className="form-checkbox h-5 w-5 text-blue-500"
-                    checked={surveyPermission}
+                    checked={data?.surveyPermission ?? false}
                     onChange={handleCheckboxChange}
                   />
-                  <span className="ml-2">Enable Communication</span>
+                  <span className="ml-2">{data?.surveyPermission ? "Disable Survey" : "Enable Survey"}</span>
                 </label>
               </div>
             </div>
