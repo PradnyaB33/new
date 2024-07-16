@@ -27,6 +27,7 @@ const CreateNewSurvey = () => {
     //states
     const [questions, setQuestions] = useState([{ question: '', questionType: '', options: [], required: false }]);
     const [showSelectAll, setShowSelectAll] = useState(false);
+    const [questionTypeSelected, setQuestionTypeSelected] = useState(Array.from({ length: questions.length }, () => false));
 
     //get organisationId
     const { getCurrentUser } = UserProfile();
@@ -149,6 +150,9 @@ const CreateNewSurvey = () => {
         newQuestions[index].questionType = selectedType;
         newQuestions[index].options = [];
         setQuestions(newQuestions);
+        const updatedSelected = [...questionTypeSelected];
+        updatedSelected[index] = selectedType !== ''; // Update to true if a type is selected
+        setQuestionTypeSelected(updatedSelected);
     };
 
     //handleAddOption function
@@ -363,6 +367,7 @@ const CreateNewSurvey = () => {
 
     //handleSubmitForm 
     const handleSubmitForm = (data, status) => {
+
         const formData = {
             title: data.title,
             description: data.description,
@@ -424,7 +429,7 @@ const CreateNewSurvey = () => {
                             <div className="w-full mt-4 px-2 sm:px-4 lg:px-6">
                                 <h1 className="text-xl mb-4 font-bold">Create Survey</h1>
                                 <form onSubmit={handleSubmit((data) => handleSubmitForm(data, true))} className="w-full flex flex-col space-y-4">
-                                    <div className="w-full space-y-2">
+                                    <div className="w-full">
                                         <AuthInputFiled
                                             name="title"
                                             control={control}
@@ -455,7 +460,7 @@ const CreateNewSurvey = () => {
                                                     <label className='font-semibold text-gray-500 text-md'>Question {index + 1}</label>
                                                     <div>
                                                         <Select
-                                                            style={{ width: "200px" }}
+                                                            style={{ width: "200px", height: "42px" }}
                                                             labelId={`question-type-label-${index}`}
                                                             id={`question-type-select-${index}`}
                                                             value={q.questionType || ''}
@@ -472,6 +477,14 @@ const CreateNewSurvey = () => {
                                                             <MenuItem value="Date">Date</MenuItem>
                                                             <MenuItem value="Multi-choice">Multi-choice</MenuItem>
                                                         </Select>
+                                                        <div className="h-4 !mb-1">
+                                                            {!questionTypeSelected[index] && (
+                                                                <div className="h-4 !mb-1">
+                                                                    <p className="text-sm text-red-500">Please select a question type</p>
+                                                                </div>
+                                                            )}
+
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div>

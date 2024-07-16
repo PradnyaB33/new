@@ -34,7 +34,7 @@ const useLeaveNotificationHook = () => {
   };
   const getUserNotification = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/leave/get?organizationId=${organizationId}`,
+      `${process.env.REACT_APP_API}/route/leave/get?organizationId=${organizationId?.value}`,
       {
         headers: { Authorization: authToken },
       }
