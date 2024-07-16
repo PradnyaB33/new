@@ -3,14 +3,12 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import useNotificationCount from "../../../../components/app-layout/notification-zustand";
 import useGetUser from "../../../Token/useUser";
-import useOrgList from "../../Orglist/hook";
 
 const useLeaveNotificationHook = () => {
   const { authToken, decodedToken } = useGetUser();
   console.log(`🚀 ~ file: hook.jsx:8 ~ decodedToken:`, decodedToken);
   const { setNotificationCount } = useNotificationCount();
 
-  const { data: orgData } = useOrgList();
   const [organizationId, setOrganizationId] = useState();
 
   console.log(`🚀 ~ file: hook.jsx:26 ~ organizationId:`, organizationId);
