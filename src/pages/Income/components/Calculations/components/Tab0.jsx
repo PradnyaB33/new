@@ -1,16 +1,25 @@
 import { CircularProgress } from "@mui/material";
 import axios from "axios";
-import React, { useState } from "react";
+import React from "react";
 import { useQuery } from "react-query";
 import useIncomeTax from "../../../../../hooks/IncomeTax/useIncomeTax";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
 
 const Tab0 = () => {
   const authToken = useAuthToken();
-  const [taxAmount, setTaxAmount] = useState(0);
-  const [cess, setCess] = useState(0);
-  const [tax, setTax] = useState(0);
-  const { getCurrentFinancialYear } = useIncomeTax();
+  // const [taxAmount, setTaxAmount] = useState(0);
+  // const [cess, setCess] = useState(0);
+  // const [tax, setTax] = useState(0);
+  const {} = useIncomeTax();
+  const {
+    getCurrentFinancialYear,
+    setTaxAmount,
+    setCess,
+    setTax,
+    taxAmount,
+    cess,
+    tax,
+  } = useIncomeTax();
   const {
     data: salaryAmount,
     // isFetched: salaryFetch,
@@ -52,6 +61,7 @@ const Tab0 = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["oldRegime"],
     queryFn: GetOldTax,
+    refetchOnMount: false,
     onSuccess: (res) => {
       let taxAmount = 0;
       let cess = 0;

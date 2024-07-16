@@ -20,12 +20,13 @@ const useTDSNotificationHook = () => {
     );
     return response.data;
   };
+
   const { data, isLoading, isFetching } = useQuery(
-    "tds-notification",
+    "tds-notification-count",
     getUserNotification,
     {
       onSuccess: async (data) => {
-        setNotificationCount(data ?? 0);
+        setNotificationCount(Number(data) ?? 0);
       },
       refetchOnWindowFocus: false,
       refetchOnMount: false,

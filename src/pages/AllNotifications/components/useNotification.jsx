@@ -207,7 +207,7 @@ const useNotification = () => {
 
     {
       name: "TDS Notification",
-      count: typeof tds === Number ? tds : 0,
+      count: Number(tds) ?? 0,
       color: "#51E8FD",
       url: tdsRoute,
       url2: "/notification/income-tax-details",

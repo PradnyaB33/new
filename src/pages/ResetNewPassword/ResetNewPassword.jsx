@@ -80,7 +80,11 @@ const ResetNewPassword = ({ open, handleClose }) => {
       },
       onError: async (error) => {
         console.log(`🚀 ~ error:`, error);
-        handleAlert(true, "error", error?.response?.data?.message);
+        handleAlert(
+          true,
+          "error",
+          error?.response?.data?.message ?? "Server Error please try again"
+        );
       },
     }
   );

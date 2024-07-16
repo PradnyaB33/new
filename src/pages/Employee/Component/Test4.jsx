@@ -59,7 +59,7 @@ const Test4 = ({ prevStep }) => {
       const filteredData = Object.fromEntries(
         Object.entries(data).filter(([key, value]) => value !== null)
       );
-      console.log("filter data" , filteredData);
+      console.log("filter data", filteredData);
 
       // Use filteredData in your component or wherever you need the data
       const userData = {
@@ -187,9 +187,19 @@ const Test4 = ({ prevStep }) => {
               </div>
             </div>
 
-            <div className="p-2 w-[30%] rounded-sm ">
-              <h1 className="text-gray-500 text-sm">Bank Account</h1>
-              <p className="">{bank_account_no}</p>
+            <div className="grid grid-cols-1 sm:!grid-cols-2 md:!grid-cols-3 justify-between">
+              <div className="p-2 w-[30%] rounded-sm ">
+                <h1 className="text-gray-500 text-sm">Bank Account</h1>
+                <p className="">{bank_account_no}</p>
+              </div>
+              <div className="p-2 w-[30%] rounded-sm ">
+                <h1 className="text-gray-500 text-sm">UAN Number</h1>
+                <p className="">{uanNo}</p>
+              </div>
+              <div className="p-2 w-[30%] rounded-sm ">
+                <h1 className="text-gray-500 text-sm">ESIC Number</h1>
+                <p className="">{esicNo}</p>
+              </div>
             </div>
 
             <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">

@@ -17,6 +17,9 @@ const calculateFinancialYear = () => {
 
 const useIncomeTax = create((set) => ({
   editStatus: {},
+  taxAmount: 0,
+  cess: 0,
+  tax: 0,
   tableData: [],
   declarationData: {},
   deleteConfirmation: null,
@@ -24,6 +27,11 @@ const useIncomeTax = create((set) => ({
   pdf: null,
   setIsLoading: (status) => set({ isLoading: status }),
   financialYear: calculateFinancialYear(),
+
+  setTaxAmount: (taxAmount) => set({ taxAmount: taxAmount }),
+  setCess: (taxAmount) => set({ cess: taxAmount }),
+  setTax: (taxAmount) => set({ tax: taxAmount }),
+
   setTableData: (newData) => set({ tableData: newData }),
   setEditStatus: (newStatus) => set({ editStatus: newStatus }),
   handleDeleteConfirmation: (id) => set({ deleteConfirmation: id }),
