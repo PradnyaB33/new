@@ -30,7 +30,9 @@ const LocationRow = ({
       <td className="py-2 px-3">{location.city}</td>
       <td className="py-2 px-3">{location.shortName}</td>
       <td className="py-2 px-3">
-        {`${location.addressLine1} ${location.addressLine2} ${location.pinCode}`}
+        {`${location.addressLine1} ${
+          location.addressLine2 !== undefined ? location.addressLine2 : ""
+        } ${location.pinCode}`}
       </td>
       <td className="whitespace-nowrap px-3 py-2">
         <IconButton

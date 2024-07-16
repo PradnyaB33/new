@@ -107,19 +107,19 @@ const ReportForm = () => {
     const headers = [
       "Employee Id",
       "Employee Name",
-      ...dateRange,
       "Total Present",
       "Total Absent",
       "Not Applied",
+      ...dateRange,
     ];
 
     const employeeInfo = data?.map((item) => [
       item?.empID,
       item?.name,
-      ...item?.attendance?.map((date) => date?.present),
       item?.totalDaysPresent,
       item?.totalDaysAbsent,
       item?.totalDaysNotApplied,
+      ...item?.attendance?.map((date) => date?.present),
     ]);
 
     const ws = XLSX.utils.aoa_to_sheet([headers, ...employeeInfo]);
@@ -131,9 +131,6 @@ const ReportForm = () => {
   };
 
   const GenerateSalary = (employees) => {
-    console.log(`🚀 ~ employees:`, employees);
-    // Create a new workbook
-
     const isSalaryExists = employees.every(
       (employee) => employee.salary.length === 0
     );
