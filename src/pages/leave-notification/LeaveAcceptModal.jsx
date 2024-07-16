@@ -8,9 +8,9 @@ import Select from "react-select";
 import LeaveRejectmodal from "../../components/Modal/LeaveModal/LeaveRejectmodal";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import useOrgList from "../../hooks/QueryHook/Orglist/hook";
-import useAuthToken from "../../hooks/Token/useAuth";
+import useGetUser from "../../hooks/Token/useUser";
 const LeaveAcceptModal = () => {
-  const authToken = useAuthToken();
+  const { authToken, decodedToken } = useGetUser();
   const { employeeId } = useParams();
   const { data, updateOrganizationId, organizationId } =
     useLeaveNotificationHook();
@@ -55,16 +55,18 @@ const LeaveAcceptModal = () => {
           <div className="inline">Employee Attendance and Leave Request</div>
         </div>
         <div>
-          <Select
-            options={orgData?.organizations?.map((org) => ({
-              value: org?._id,
-              label: org?.orgName,
-            }))}
-            onChange={(e) => updateOrganizationId(e)}
-            placeholder={"Select Organisations"}
-            value={organizationId}
-            className="!w-[300px]"
-          />
+          {decodedToken?.user?.profile.includes("Super-Admin") && (
+            <Select
+              options={orgData?.organizations?.map((org) => ({
+                value: org?._id,
+                label: org?.orgName,
+              }))}
+              onChange={(e) => updateOrganizationId(e)}
+              placeholder={"Select Organisations"}
+              value={organizationId}
+              className="!w-[300px]"
+            />
+          )}
         </div>
       </header>
       <section className="min-h-[90vh] flex">
