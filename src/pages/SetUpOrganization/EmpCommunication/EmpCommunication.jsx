@@ -11,7 +11,7 @@ import {
   IconButton,
 } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
@@ -30,8 +30,13 @@ const EmpCommunication = () => {
   const queryClient = useQueryClient();
 
   // Communication Permission 
-  const { data, setSurveyPermission } = useGetCommunicationPermission()
-  console.log("data", data);
+  const { data, surveyPermission, setSurveyPermission } = useGetCommunicationPermission(organisationId)
+
+  useEffect(() => {
+    if (data !== undefined) {
+      setSurveyPermission(data?.surveyPermission ?? false);
+    }
+  }, [data]);
 
   // Add Permission
   const mutationPermission = useMutation(
@@ -48,7 +53,7 @@ const EmpCommunication = () => {
     },
     {
       onSuccess: async () => {
-        handleAlert(true, "success", "Survey permission updated successfully");
+        handleAlert(true, "success", "Survey permission save successfully");
         await queryClient.invalidateQueries("survey-permission");
       },
     }
@@ -152,7 +157,7 @@ const EmpCommunication = () => {
                     id="surveyPermission"
                     name="surveyPermission"
                     className="form-checkbox h-5 w-5 text-blue-500"
-                    checked={data?.surveyPermission ?? false}
+                    checked={surveyPermission}
                     onChange={handleCheckboxChange}
                   />
                   <span className="ml-2">{data?.surveyPermission ? "Disable Survey" : "Enable Survey"}</span>

@@ -62,7 +62,7 @@ const CreateNewSurvey = () => {
     });
 
     //useForm
-    const { control, formState, handleSubmit, setValue, watch } = useForm({
+    const { control, formState, handleSubmit, setValue, watch, trigger } = useForm({
         defaultValues: {
             title,
             description,
@@ -151,7 +151,7 @@ const CreateNewSurvey = () => {
         newQuestions[index].options = [];
         setQuestions(newQuestions);
         const updatedSelected = [...questionTypeSelected];
-        updatedSelected[index] = selectedType !== ''; // Update to true if a type is selected
+        updatedSelected[index] = selectedType !== '';
         setQuestionTypeSelected(updatedSelected);
     };
 
@@ -244,9 +244,9 @@ const CreateNewSurvey = () => {
         }))
         : [];
 
-    //handleSelectAll function for select all employee
-    const handleSelectAll = (fieldName) => {
-        setValue(fieldName, employeeEmail);
+    const handleSelectAll = async (fieldName) => {
+        await setValue(fieldName, employeeEmail);
+        await trigger(fieldName); // Trigger validation for the "to" field
     };
 
     //renderAnswerInput
@@ -384,9 +384,6 @@ const CreateNewSurvey = () => {
             status: status,
         };
         mutation.mutate(formData, {
-            onSuccess: (data) => {
-                console.log('Form successfully submitted', data);
-            },
             onError: (error) => {
                 console.error('Error submitting form', error);
             },
@@ -398,6 +395,20 @@ const CreateNewSurvey = () => {
         navigate(`/organisation/${organisationId}/employee-survey`);
     };
 
+    const handleSaveForNow = () => {
+        const formData = {
+            title: watch("title"),
+            description: watch("description"),
+            employeeSurveyStartingDate: watch("employeeSurveyStartingDate"),
+            employeeSurveyEndDate: watch("employeeSurveyEndDate"),
+            questions,
+            to: watch("to")?.map(option => option.value),
+            responseStatus: false,
+        };
+
+        mutation.mutate(formData);
+    };
+    
     return (
         <div className="bg-gray-50 min-h-screen h-auto">
             <header className="text-xl w-full pt-6 flex flex-col md:flex-row items-start md:items-center gap-2 bg-white shadow-md p-4">
@@ -587,8 +598,9 @@ const CreateNewSurvey = () => {
                                             readOnly={false}
                                             maxLimit={15}
                                             errors={errors}
-                                            error={errors.to}
                                             optionlist={employeeEmail ? employeeEmail : []}
+                                            error={!!errors.to}
+                                            helperText={errors.to ? errors.to.message : ""}
                                         />
                                     </div>
 
@@ -596,7 +608,7 @@ const CreateNewSurvey = () => {
                                         <Button type="submit" variant="contained" color="primary" onClick={() => handleSubmit((data) => handleSubmitForm(data, true))} sx={{ textTransform: "none" }}>
                                             Save
                                         </Button>
-                                        <Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => handleSubmitForm(data, false))} sx={{ textTransform: "none" }}>
+                                        <Button type="button" variant="outlined" color="primary" onClick={handleSaveForNow} sx={{ textTransform: "none" }}>
                                             Save For Now
                                         </Button>
                                         <Button onClick={handleClose} variant="outlined" color="error" sx={{ textTransform: "none" }}>

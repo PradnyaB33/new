@@ -51,6 +51,8 @@ import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
 import useGetCommunicationPermission from "../../../pages/EmployeeSurvey/useContext/Permission";
+import { useQueryClient } from "react-query";
+
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
@@ -62,10 +64,7 @@ const TestNavItems = ({ toggleDrawer }) => {
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
-
-  const { data: survey } = useGetCommunicationPermission();
-  console.log("surveyPermission", survey?.surveyPermission);
-
+  const queryClient = useQueryClient();
 
   // Update organization ID when URL changes
   useEffect(() => {
@@ -75,7 +74,8 @@ const TestNavItems = ({ toggleDrawer }) => {
       setOrgId(user?.organizationId);
     }
     // eslint-disable-next-line
-  }, [location.pathname, orgId]);
+    queryClient.invalidateQueries("survey-permission");
+  }, [location.pathname, queryClient]);
 
   useEffect(() => {
     (async () => {
@@ -117,13 +117,15 @@ const TestNavItems = ({ toggleDrawer }) => {
     organisationId: orgId,
   });
 
-  console.log("data edli wla", data?.organisation?.packageInfo === "Intermediate Plan" &&
-    window.location.pathname?.includes("organisation") && !survey?.surveyPermission);
+  //git communication employee survey permission
+  const organisationId = data?.organisation?._id
+  const { data: survey } = useGetCommunicationPermission(organisationId);
+
   const [isVisible, setisVisible] = useState(true);
 
   useEffect(() => {
     setisVisible(location.pathname.includes("/organisation"));
-  }, [location.pathname]);
+  }, [location.pathname, organisationId]);
 
   let navItems = useMemo(
     () => ({
@@ -656,7 +658,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             key: "EmployeeSurvey",
             isVisible:
               data?.organisation?.packageInfo === "Intermediate Plan" &&
-              window.location.pathname?.includes("organisation") && survey?.surveyPermission,
+              survey?.surveyPermission,
             link: `/organisation/${orgId}/employee-survey`,
             icon: <AssignmentIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Employee Survey",
