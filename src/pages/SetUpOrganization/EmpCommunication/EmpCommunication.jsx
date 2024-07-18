@@ -36,6 +36,7 @@ const EmpCommunication = () => {
     if (data !== undefined) {
       setSurveyPermission(data?.surveyPermission ?? false);
     }
+    //eslint-disable-next-line
   }, [data]);
 
   // Add Permission

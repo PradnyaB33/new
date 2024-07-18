@@ -6,6 +6,7 @@ import OpenSurveyList from "./components/OpenSurveyList";
 import CloseSurveyList from "./components/CloseSurveyList";
 import SaveAsDraft from "./components/SaveAsDraft";
 import UserProfile from "../../hooks/UserData/useUser";
+import SaveSurveyList from "./components/SaveSurveyList";
 
 const EmployeeSurvey = () => {
     //hooks
@@ -60,6 +61,11 @@ const EmployeeSurvey = () => {
                 <div className="px-4 py-2 bg-white w-full h-max shadow-md rounded-2m border my-8">
                     <OpenSurveyList />
                 </div>
+                {(user?.profile.includes('Super-Admin') || user?.profile.includes('HR')) && (
+                    <div className="px-4 py-2 bg-white w-full h-max shadow-md rounded-2m border my-8">
+                        <SaveSurveyList />
+                    </div>
+                )}
                 {(user?.profile.includes('Super-Admin') || user?.profile.includes('HR')) && (
                     <div className="px-4 py-2 bg-white w-full h-max shadow-md rounded-2m border my-8">
                         <CloseSurveyList />

@@ -73,8 +73,9 @@ const TestNavItems = ({ toggleDrawer }) => {
     } else {
       setOrgId(user?.organizationId);
     }
-    // eslint-disable-next-line
+   
     queryClient.invalidateQueries("survey-permission");
+     // eslint-disable-next-line
   }, [location.pathname, queryClient]);
 
   useEffect(() => {
