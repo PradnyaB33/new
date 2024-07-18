@@ -51,7 +51,6 @@ const DepartmentList = () => {
   const queryClient = useQueryClient();
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [open, setOpen] = useState(false);
-  // const [deptList, setDepartmentList] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -69,6 +68,7 @@ const DepartmentList = () => {
       }
     })();
   }, [authToken, organisationId]);
+
   useEffect(() => {
     (async () => {
       try {
@@ -97,8 +97,7 @@ const DepartmentList = () => {
         }
       );
 
-      return response.data.department;
-      // setDepartmentList(response.data.department);
+      return response.data.departments;
     } catch (error) {
       console.error(error);
     }
@@ -110,6 +109,7 @@ const DepartmentList = () => {
   );
 
   console.log(deptList);
+
   // Delete Query for deleting Single Department
   const handleDeleteConfirmation = (id) => {
     setDeleteConfirmation(id);
@@ -133,9 +133,6 @@ const DepartmentList = () => {
   };
   const handleDelete = (id) => {
     deleteMutation.mutate(id);
-    // setDepartmentList((department) =>
-    //   department.filter((department) => department._id !== id)
-    // );
     queryClient.invalidateQueries("department");
 
     setDeleteConfirmation(null);

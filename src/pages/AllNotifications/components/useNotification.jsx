@@ -14,6 +14,7 @@ import useShiftNotification from "../../../hooks/QueryHook/notification/shift-no
 import useTDSNotificationHook from "../../../hooks/QueryHook/notification/tds-notification/hook";
 import UserProfile from "../../../hooks/UserData/useUser";
 import useLeaveNotification from "../../SelfLeaveNotification/useLeaveNotification";
+import useDepartmentNotification from "../../../hooks/QueryHook/notification/department-notification/hook";
 
 const useNotification = () => {
   const { data } = useLeaveNotificationHook();
@@ -41,6 +42,9 @@ const useNotification = () => {
     useAdvanceSalaryData();
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
+  const { getDepartmnetData, getDeptNotificationToEmp } =
+    useDepartmentNotification();
+
   const tdsRoute = useMemo(() => {
     if (
       role === "Accountant" ||
@@ -111,6 +115,22 @@ const useNotification = () => {
     jobPositionCount = getNotificationToEmp?.length ?? 0;
   } else {
     jobPositionCount = getJobPositionToMgr?.length ?? 0;
+  }
+
+  // department notification count
+  console.log("role", role);
+  let departmentNotificationCount;
+
+  if (role === "Employee") {
+    departmentNotificationCount = getDeptNotificationToEmp?.length ?? 0;
+  } else if (
+    role === "HR" ||
+    role === "Super-Admin" ||
+    role === "Delegate-Super-Admin"
+  ) {
+    departmentNotificationCount = getDepartmnetData?.length ?? 0;
+  } else {
+    departmentNotificationCount = 0;
   }
 
   useEffect(() => {
@@ -219,6 +239,14 @@ const useNotification = () => {
       color: "#51E8FD",
       url: "/job-position-to-mgr",
       url2: "/job-position-to-emp",
+      visible: true,
+    },
+    {
+      name: "Add Department Request",
+      count: departmentNotificationCount,
+      color: "#51E8FD",
+      url: "/department-notification-approval",
+      url2: "/department-notification-to-emp",
       visible: true,
     },
   ];
