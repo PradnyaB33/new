@@ -135,6 +135,8 @@ import ShiftNotification from "./pages/shift-notification/page";
 import JobPositionNotificaitonToMgr from "./pages/Recruitment/Notification/JobPositonNotificatinToMgr";
 import JobNotificationToEmp from "./pages/Recruitment/Notification/JobNotificationToEmp";
 import OpenJobPosition from "./pages/Recruitment/OpenRoleJobPosition";
+import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
+import DepartmentNotificationToEmp from "./pages/DeptNotification/DepartmentNotificationToEmp";
 
 const App = () => {
   return (
@@ -1413,6 +1415,14 @@ const App = () => {
         <Route
           path="/advance-salary-notification-to-emp"
           element={<AdvanceSalaryNotificationToEmp />}
+        />
+        <Route
+          path="/department-notification-approval"
+          element={<DepartmentNotification />}
+        />
+        <Route
+          path="/department-notification-to-emp"
+          element={<DepartmentNotificationToEmp />}
         />
         <Route
           path="/organisation/:organisationId/employee-survey"

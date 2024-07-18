@@ -6,12 +6,16 @@ import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import { Error } from "@mui/icons-material";
 import { useMutation, useQuery } from "react-query";
+import UserProfile from "../../../hooks/UserData/useUser";
 const Step3 = ({ prevStep }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { handleAlert } = useContext(TestContext);
   const { organisationId } = useParams();
   const navigate = useNavigate("");
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
+  console.log("role", role);
 
   const {
     dept_name,
@@ -63,7 +67,7 @@ const Step3 = ({ prevStep }) => {
       console.log("deptdata", deptData);
 
       const response = axios.post(
-        `${process.env.REACT_APP_API}/route/department/create/${organisationId}`,
+        `${process.env.REACT_APP_API}/route/department/create/${organisationId}?role=${role}`,
         deptData,
         {
           headers: {
@@ -76,11 +80,11 @@ const Step3 = ({ prevStep }) => {
     },
     {
       onSuccess: (response) => {
-        handleAlert(
-          true,
-          "success",
-          `${dept_name} department added successfully`
-        );
+        const successMessage =
+          role === "HR" || role === "Super-Admin"
+            ? "Department added successfully"
+            : "Request sent successfully.";
+        handleAlert(true, "success", successMessage);
         emptyState();
         navigate(`/organisation/${organisationId}/department-list`);
       },

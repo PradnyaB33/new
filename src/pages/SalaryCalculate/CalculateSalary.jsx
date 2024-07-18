@@ -263,6 +263,7 @@ function CalculateSalary() {
 
   const financialYear = calculateFinancialYear(dayjs(selectedDate));
   console.log("financialYear", financialYear);
+  console.log("get total salary" , getTotalSalaryEmployee);
   const { data: annualIncomeTax } = useQuery(
     ["getIncomeTax", organisationId],
     async () => {
@@ -282,6 +283,8 @@ function CalculateSalary() {
     typeof annualIncomeTax === "number" && annualIncomeTax > 0
       ? (annualIncomeTax / 12).toFixed(2)
       : "0.00";
+
+  console.log("monthly income tax", monthlyIncomeTax);
 
   // calculate the no fo days employee present
   const calculateDaysEmployeePresent = () => {
