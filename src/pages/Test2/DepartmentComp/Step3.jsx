@@ -83,7 +83,7 @@ const Step3 = ({ prevStep }) => {
         const successMessage =
           role === "HR" || role === "Super-Admin"
             ? "Department added successfully"
-            : "Request sent successfully.";
+            : "Request sent successfully."; 
         handleAlert(true, "success", successMessage);
         emptyState();
         navigate(`/organisation/${organisationId}/department-list`);
