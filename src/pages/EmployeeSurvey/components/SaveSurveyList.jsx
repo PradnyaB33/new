@@ -1,14 +1,25 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
-import { CircularProgress, Typography } from "@mui/material";
+import { CircularProgress, Typography, Menu, Tooltip, MenuItem, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import UserProfile from "../../../hooks/UserData/useUser";
 import { UseContext } from "../../../State/UseState/UseContext";
 import DOMPurify from "dompurify";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { format } from "date-fns";
+import { MoreVert } from "@mui/icons-material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditIcon from "@mui/icons-material/Edit";
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import { TestContext } from "../../../State/Function/Main";
+import { useNavigate } from "react-router-dom";
 
 const SaveSurveyList = () => {
+    //hooks
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
+    const { handleAlert } = useContext(TestContext);
+
     // Get organizationId
     const { getCurrentUser } = UserProfile();
     const user = getCurrentUser();
@@ -18,11 +29,15 @@ const SaveSurveyList = () => {
     const { cookies } = useContext(UseContext);
     const authToken = cookies["aegis"];
 
+    //states
     const [saveSurvey, setSaveSurvey] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [currentSurveyId, setCurrentSurveyId] = useState(null);
+    const [deleteConfirmation, setDeleteConfirmation] = useState(null);
 
     // Get open surveys
     const { data: surveys, isLoading, isError } = useQuery(
-        ["openSurveys", organisationId],
+        ["createdSurvey", organisationId],
         async () => {
             const response = await axios.get(
                 `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-save-survey`,
@@ -32,29 +47,78 @@ const SaveSurveyList = () => {
                     },
                 }
             );
-            return response;
+            return response?.data;
         },
         {
             enabled: !!organisationId && !!authToken,
         }
     );
 
-
-
-
-
-
     //handleOpenSurvey function
     const handleOpenSurvey = () => {
         setSaveSurvey(!saveSurvey);
     };
+
+    const handleClick = (e, id) => {
+        setAnchorEl(e.currentTarget);
+        setCurrentSurveyId(id);
+    };
+
+    const handleCloseIcon = () => {
+        setAnchorEl(null);
+        setCurrentSurveyId(null);
+    };
+
+    //delete created survey
+    const deleteMutation = useMutation(
+        (surveyId) =>
+            axios.delete(
+                `${process.env.REACT_APP_API}/route/organization/${organisationId}/delete-draft-survey/${surveyId}`,
+                {
+                    headers: {
+                        Authorization: authToken,
+                    },
+                }
+            ),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries("createdSurvey");
+                handleAlert(true, "success", "Employee survey deleted successfully");
+            },
+            onError: () => {
+                handleAlert(true, "error", "Failed to delete the survey");
+            },
+        }
+    );
+
+    const handleDeleteConfirmation = (surveyId) => {
+        setDeleteConfirmation(surveyId);
+    };
+
+    const handleCloseConfirmation = () => {
+        setDeleteConfirmation(null);
+    };
+
+    const handleDelete = () => {
+        deleteMutation.mutate(deleteConfirmation);
+        handleCloseConfirmation();
+    };
+
+    const handleEditSurvey = (surveyId) => {
+        navigate(`/organisation/${organisationId}/update-survey/${surveyId}`);
+    };
+
+    const handleShowSurvey = (surveyId) => {
+        navigate(`/organisation/${organisationId}/view-survey/${surveyId}`);
+    };
+
     console.log("saveSurvey", surveys);
     return (
         <div>
             <div className="flex  justify-between  gap-3 w-full border-gray-300 my-2">
                 <div className="flex justify-start ">
                     <Typography variant="p">
-                        Save Survey
+                        Created Survey
                     </Typography>
                 </div>
                 <div className="flex justify-end">
@@ -99,6 +163,9 @@ const SaveSurveyList = () => {
                                             <th scope="col" className="!text-left pl-8 py-3">
                                                 End Date
                                             </th>
+                                            <th scope="col" className="!text-left pl-8 py-3">
+                                                Actions
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -110,9 +177,61 @@ const SaveSurveyList = () => {
                                                 <td className="!text-left pl-8 py-3">
                                                     {survey && format(new Date(survey?.employeeSurveyStartingDate), "PP")}
                                                 </td>
-                                                {/* <td className="!text-left pl-8 py-3">
-                                                    {survey && format(new Date(survey?.employeeSurveyEndingDate), "PP")}
-                                                </td> */}
+                                                <td className="!text-left pl-8 py-3">
+                                                    {survey && format(new Date(survey?.employeeSurveyEndDate), "PP")}
+                                                </td>
+                                                <td className="!text-left pl-8 py-3">
+                                                    <MoreVert
+                                                        onClick={(e) => handleClick(e, survey._id)}
+                                                        className="cursor-pointer"
+                                                    />
+                                                    <Menu
+                                                        elevation={2}
+                                                        anchorEl={anchorEl}
+                                                        open={Boolean(anchorEl && currentSurveyId === survey._id)}
+                                                        onClose={handleCloseIcon}
+                                                    >
+                                                        <Tooltip title="View Survey">
+                                                            <MenuItem onClick={() => handleShowSurvey(survey._id)}>
+                                                                <VisibilityOutlinedIcon
+                                                                    color="primary"
+                                                                    aria-label="view"
+                                                                    style={{
+                                                                        color: "grey",
+                                                                        marginRight: "10px",
+                                                                    }}
+                                                                />
+                                                                View
+                                                            </MenuItem>
+                                                        </Tooltip>
+                                                        <Tooltip title="Edit Survey">
+                                                            <MenuItem onClick={() => handleEditSurvey(survey._id)}>
+                                                                <EditIcon
+                                                                    color="primary"
+                                                                    aria-label="edit"
+                                                                    style={{
+                                                                        color: "#2196f3",
+                                                                        marginRight: "10px",
+                                                                    }}
+                                                                />
+                                                                Edit
+                                                            </MenuItem>
+                                                        </Tooltip>
+                                                        <Tooltip title="Delete Survey">
+                                                            <MenuItem onClick={() => handleDeleteConfirmation(survey._id)}>
+                                                                <DeleteOutlineIcon
+                                                                    color="primary"
+                                                                    aria-label="delete"
+                                                                    style={{
+                                                                        color: "#f50057",
+                                                                        marginRight: "10px",
+                                                                    }}
+                                                                />
+                                                                Delete
+                                                            </MenuItem>
+                                                        </Tooltip>
+                                                    </Menu>
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -124,6 +243,35 @@ const SaveSurveyList = () => {
                             </section>
                         )}
                 </>) : null}
+
+            <Dialog
+                open={deleteConfirmation !== null}
+                onClose={handleCloseConfirmation}
+            >
+                <DialogTitle>Confirm Deletion</DialogTitle>
+                <DialogContent>
+                    <p>Please confirm your decision to delete this survey, as this action cannot be undone.</p>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={handleCloseConfirmation}
+                        variant="outlined"
+                        color="primary"
+                        size="small"
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
+                        size="small"
+                        onClick={handleDelete}
+                        color="error"
+                    >
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
         </div>
     );
 };

@@ -18,7 +18,8 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import { TestContext } from "../../../State/Function/Main";
 import useCreateEmployeeSurveyState from '../../../hooks/EmployeeSurvey/EmployeeSurvey';
 
-const CreateNewSurvey = () => {
+const CreateNewSurvey = ({ isEditable }) => {
+    console.log("isEditable", isEditable);
     //hooks
     const navigate = useNavigate();
     const { handleAlert } = useContext(TestContext);
@@ -291,13 +292,15 @@ const CreateNewSurvey = () => {
                                     fullWidth
                                     style={{ marginLeft: '10px' }}
                                     variant='standard'
+                                    disabled={!isEditable}
                                 />
                             </div>
                         ))}
-                        <div className='mt-2'>
-                            <Button onClick={() => handleAddOption(qIndex)} aria-label="add option">
-                                Add Options
-                            </Button></div>
+                        {isEditable && (
+                            <div className='mt-2'>
+                                <Button onClick={() => handleAddOption(qIndex)} aria-label="add option">
+                                    Add Options
+                                </Button></div>)}
                     </div>
                 );
             case 'Dropdown':
@@ -311,14 +314,16 @@ const CreateNewSurvey = () => {
                                     fullWidth
                                     style={{ marginLeft: '10px' }}
                                     variant='standard'
+                                    disabled={!isEditable}
                                 />
                             </div>
                         ))}
-                        <div className='mt-2'>
-                            <Button onClick={() => handleAddOption(qIndex)} aria-label="add option">
-                                Add Options
-                            </Button>
-                        </div>
+                        {isEditable && (
+                            <div className='mt-2'>
+                                <Button onClick={() => handleAddOption(qIndex)} aria-label="add option">
+                                    Add Options
+                                </Button>
+                            </div>)}
                     </div>
                 );
             case 'Date':
@@ -352,12 +357,14 @@ const CreateNewSurvey = () => {
                                     fullWidth
                                     style={{ marginLeft: '10px' }}
                                     variant='standard'
+                                    disabled={!isEditable}
                                 />
                             </div>
                         ))}
-                        <Button onClick={() => handleAddOption(qIndex)} aria-label="add option">
-                            Add Options
-                        </Button>
+                        {isEditable && (
+                            <Button onClick={() => handleAddOption(qIndex)} aria-label="add option">
+                                Add Options
+                            </Button>)}
                     </div>
                 )
             default:
@@ -408,7 +415,7 @@ const CreateNewSurvey = () => {
 
         mutation.mutate(formData);
     };
-    
+
     return (
         <div className="bg-gray-50 min-h-screen h-auto">
             <header className="text-xl w-full pt-6 flex flex-col md:flex-row items-start md:items-center gap-2 bg-white shadow-md p-4">
@@ -438,7 +445,7 @@ const CreateNewSurvey = () => {
                     <article className="w-full rounded-lg bg-white">
                         <div className="w-full md:px-5 px-1">
                             <div className="w-full mt-4 px-2 sm:px-4 lg:px-6">
-                                <h1 className="text-xl mb-4 font-bold">Create Survey</h1>
+                                <h1 className="text-xl mb-4 font-bold">{isEditable ? "Create Survey" : "View Survey"}</h1>
                                 <form onSubmit={handleSubmit((data) => handleSubmitForm(data, true))} className="w-full flex flex-col space-y-4">
                                     <div className="w-full">
                                         <AuthInputFiled
@@ -450,6 +457,7 @@ const CreateNewSurvey = () => {
                                             maxLimit={100}
                                             errors={errors}
                                             error={errors.title}
+                                            readOnly={!isEditable}
                                         /></div>
                                     <div className="w-full">
                                         <AuthInputFiled
@@ -461,6 +469,7 @@ const CreateNewSurvey = () => {
                                             maxLimit={1000}
                                             errors={errors}
                                             error={errors.description}
+                                            readOnly={!isEditable}
                                         />
                                     </div>
 
@@ -477,6 +486,7 @@ const CreateNewSurvey = () => {
                                                             value={q.questionType || ''}
                                                             onChange={(e) => handleQuestionTypeChange(index, e)}
                                                             displayEmpty
+                                                            disabled={!isEditable}
                                                         >
                                                             <MenuItem value="" disabled>
                                                                 Select Question Type
@@ -488,14 +498,14 @@ const CreateNewSurvey = () => {
                                                             <MenuItem value="Date">Date</MenuItem>
                                                             <MenuItem value="Multi-choice">Multi-choice</MenuItem>
                                                         </Select>
-                                                        <div className="h-4 !mb-1">
-                                                            {!questionTypeSelected[index] && (
-                                                                <div className="h-4 !mb-1">
-                                                                    <p className="text-sm text-red-500">Please select a question type</p>
-                                                                </div>
-                                                            )}
-
-                                                        </div>
+                                                        {isEditable && (
+                                                            <div className="h-4 !mb-1">
+                                                                {!questionTypeSelected[index] && (
+                                                                    <div className="h-4 !mb-1">
+                                                                        <p className="text-sm text-red-500">Please select a question type</p>
+                                                                    </div>
+                                                                )}
+                                                            </div>)}
                                                     </div>
                                                 </div>
                                                 <div>
@@ -506,40 +516,45 @@ const CreateNewSurvey = () => {
                                                             fullWidth
                                                             value={q.question}
                                                             onChange={(e) => handleQuestionChange(index, e)}
+                                                            disabled={!isEditable}
                                                         />
                                                     </div>
                                                 </div>
                                                 {renderAnswerInput(index)}
                                                 <div className='flex justify-end'>
-                                                    {index > 0 && (<IconButton onClick={() => handleSuffleQuestion(index)} aria-label="shuffle question">
-                                                        <ArrowUpwardIcon />
-                                                    </IconButton>)}
-                                                    <IconButton onClick={() => handleCopyQuestion(index)} aria-label="copy question">
-                                                        <FileCopyIcon />
-                                                    </IconButton>
-                                                    <IconButton onClick={() => handleRemoveQuestion(index)} aria-label="remove question">
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                    <FormControlLabel
-                                                        control={
-                                                            <Switch
-                                                                checked={q.required}
-                                                                onChange={() => handleRequiredChange(index)}
-                                                                name={`required-${index}`}
-                                                                color="primary"
-                                                            />
-                                                        }
-                                                        label="Required"
-                                                    />
+                                                    {isEditable && (
+                                                        <>{index > 0 && (<IconButton onClick={() => handleSuffleQuestion(index)} aria-label="shuffle question">
+                                                            <ArrowUpwardIcon />
+                                                        </IconButton>)}
+                                                            <IconButton onClick={() => handleCopyQuestion(index)} aria-label="copy question">
+                                                                <FileCopyIcon />
+                                                            </IconButton>
+                                                            <IconButton onClick={() => handleRemoveQuestion(index)} aria-label="remove question">
+                                                                <DeleteIcon />
+                                                            </IconButton>
+                                                            <FormControlLabel
+                                                                control={
+                                                                    <Switch
+                                                                        checked={q.required}
+                                                                        onChange={() => handleRequiredChange(index)}
+                                                                        name={`required-${index}`}
+                                                                        color="primary"
+                                                                    />
+                                                                }
+                                                                label="Required"
+                                                            /></>
+                                                    )}
                                                 </div>
+
                                             </div>
                                         </div>
                                     ))}
-                                    <div className="flex gap-4 mt-4 justify-end">
-                                        <Button color="primary" variant="outlined" onClick={handleAddQuestion}>
-                                            Add Question
-                                        </Button>
-                                    </div>
+                                    {isEditable && (
+                                        <div className="flex gap-4 mt-4 justify-end">
+                                            <Button color="primary" variant="outlined" onClick={handleAddQuestion}>
+                                                Add Question
+                                            </Button>
+                                        </div>)}
                                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2" style={{ marginTop: "30px" }}>
                                         <AuthInputFiled
                                             name="employeeSurveyStartingDate"
@@ -551,6 +566,7 @@ const CreateNewSurvey = () => {
                                             errors={errors}
                                             error={errors.employeeSurveyStartingDate}
                                             min={new Date().toISOString().split("T")[0]}
+                                            disabled={!isEditable}
                                         />
                                         <AuthInputFiled
                                             name="employeeSurveyEndDate"
@@ -562,19 +578,22 @@ const CreateNewSurvey = () => {
                                             errors={errors}
                                             error={errors.employeeSurveyEndDate}
                                             min={watch("employeeSurveyStartingDate")}
+                                            disabled={!isEditable}
                                         />
                                     </div>
-                                    <div className="space-y-2 ">
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={showSelectAll}
-                                                    onChange={(e) => setShowSelectAll(e.target.checked)}
-                                                />
-                                            }
-                                            label="Do you want to select all employee emails?"
-                                        />
-                                    </div>
+                                    {isEditable && (
+                                        <div className="space-y-2 ">
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={showSelectAll}
+                                                        onChange={(e) => setShowSelectAll(e.target.checked)}
+                                                    />
+                                                }
+                                                label="Do you want to select all employee emails?"
+                                            />
+                                        </div>
+                                    )}
 
                                     {showSelectAll && (
                                         <div className="space-y-2 ">
@@ -595,26 +614,26 @@ const CreateNewSurvey = () => {
                                             type="autocomplete"
                                             placeholder="To"
                                             label="To"
-                                            readOnly={false}
                                             maxLimit={15}
                                             errors={errors}
                                             optionlist={employeeEmail ? employeeEmail : []}
                                             error={!!errors.to}
                                             helperText={errors.to ? errors.to.message : ""}
+                                            readOnly={!isEditable}
                                         />
                                     </div>
-
-                                    <div className="flex flex-col xs:flex-row gap-4 mt-4 justify-end">
-                                        <Button type="submit" variant="contained" color="primary" onClick={() => handleSubmit((data) => handleSubmitForm(data, true))} sx={{ textTransform: "none" }}>
-                                            Save
-                                        </Button>
-                                        <Button type="button" variant="outlined" color="primary" onClick={handleSaveForNow} sx={{ textTransform: "none" }}>
-                                            Save For Now
-                                        </Button>
-                                        <Button onClick={handleClose} variant="outlined" color="error" sx={{ textTransform: "none" }}>
-                                            Close
-                                        </Button>
-                                    </div>
+                                    {isEditable && (
+                                        <div className="flex flex-col xs:flex-row gap-4 mt-4 justify-end">
+                                            <Button type="submit" variant="contained" color="primary" onClick={() => handleSubmit((data) => handleSubmitForm(data, true))} sx={{ textTransform: "none" }}>
+                                                Save
+                                            </Button>
+                                            <Button type="button" variant="outlined" color="primary" onClick={handleSaveForNow} sx={{ textTransform: "none" }}>
+                                                Save For Now
+                                            </Button>
+                                            <Button onClick={handleClose} variant="outlined" color="error" sx={{ textTransform: "none" }}>
+                                                Close
+                                            </Button>
+                                        </div>)}
                                 </form>
                             </div>
                         </div>

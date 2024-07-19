@@ -605,6 +605,7 @@ const AuthInputFiled = ({
                     options={optionlist}
                     placeholder={placeholder}
                     isMulti
+                    isDisabled={readOnly} 
                     styles={{
                       control: (styles) => ({
                         ...styles,

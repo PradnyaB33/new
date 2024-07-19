@@ -1430,11 +1430,19 @@ const App = () => {
         />
         <Route
           path="/organisation/:organisationId/create-new-survey"
-          element={<CreateNewSurvey />}
+          element={<CreateNewSurvey isEditable={true} />}
         />
         <Route
           path="/organisation/:organisationId/create-new-survey/:id"
-          element={<CreateNewSurvey />}
+          element={<CreateNewSurvey isEditable={true} />}
+        />
+        <Route
+          path="/organisation/:organisationId/update-survey/:id"
+          element={<CreateNewSurvey isEditable={true} />}
+        />
+        <Route
+          path="/organisation/:organisationId/view-survey/:id"
+          element={<CreateNewSurvey isEditable={false} />}
         />
         <Route
           path="/organisation/:organisationId/survey-form"

@@ -25,7 +25,7 @@ const OpenSurveyList = () => {
   const [openSurvey, setOpenSurvey] = useState(false);
 
   // Get open surveys
-  const { data: surveys, isLoading, isError } = useQuery(
+  const { data: surveys , isLoading, isError } = useQuery(
     ["openSurveys", organisationId],
     async () => {
       const response = await axios.get(
@@ -79,7 +79,7 @@ const OpenSurveyList = () => {
 
   // Match surveys with their responses
   const matchedResponses = surveys?.map(survey => {
-    const responses = responseSurvey?.filter(response => response?.surveyId === survey?._id);
+    const responses = responseSurvey?.filter(response => response.surveyId === survey?._id);
     return {
       ...survey,
       responses: responses || []
@@ -142,18 +142,18 @@ const OpenSurveyList = () => {
                     {matchedResponses?.map((survey, index) => (
                       <tr key={index} className="!font-medium border-b ">
                         <td className="!text-left pl-8 py-3">
-                          {DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } })}
+                          {DOMPurify.sanitize(survey?.title, { USE_PROFILES: { html: false } })}
                         </td>
                         <td className="!text-left pl-8 py-3">
                           {survey && format(new Date(survey?.employeeSurveyStartingDate), "PP")}
                         </td>
                         <td className="!text-left pl-8 py-3">
-                          {survey.responses.length > 0 ? (
+                          {survey?.responses?.length > 0 ? (
                             <div>
-                              {survey.responses[0].responseStatus === "End" ?
+                              {survey?.responses[0]?.responseStatus === "End" ?
                                 <Button
                                   variant="outlined"
-                                  onClick={() => handleSurveyForm(survey?._id, survey.responses[0]?._id)}
+                                  onClick={() => handleSurveyForm(survey?._id, survey?.responses[0]?._id)}
                                   sx={{ textTransform: "none", width: "auto" }}
                                   disabled
                                 >
@@ -162,10 +162,10 @@ const OpenSurveyList = () => {
                                 :
                                 <Button
                                   variant="outlined"
-                                  onClick={() => handleSurveyForm(survey?._id, survey.responses[0]?._id)}
+                                  onClick={() => handleSurveyForm(survey?._id, survey?.responses[0]?._id)}
                                   sx={{ textTransform: "none", width: "auto" }}
                                 >
-                                  {survey.responses[0].responseStatus}
+                                  {survey?.responses[0]?.responseStatus}
                                 </Button>}
                             </div>
                           ) : (
