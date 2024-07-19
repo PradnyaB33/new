@@ -59,78 +59,78 @@ const CloseSurveyList = () => {
     setCloseSurvey(!closeSurvey);
   };
 
-  // Generate Excel function
-  // const generateExcel = () => {
-  //   const data = [["Title", "Status"]];
-  //   surveys.forEach((survey) => {
-  //     const cleanTitle = DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } });
-  //     data.push([cleanTitle, survey.status]);
-  //   });
+ // Fetch a single survey data
+ const fetchSingleSurvey = async (surveyId) => {
+  try {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-response-survey-surveyId/${surveyId}`,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching survey:", error);
+    throw error;
+  }
+};
 
-  //   const ws = XLSX.utils.aoa_to_sheet(data);
-  //   const wb = XLSX.utils.book_new();
-  //   XLSX.utils.book_append_sheet(wb, ws, "SurveyData");
+// Generate Excel function
+const generateExcelForSurvey = (surveys) => {
+  console.log("Generate Excel",surveys);
+  if (!surveys || surveys.length === 0) return;
 
-  //   XLSX.writeFile(wb, "survey_data.xlsx");
-  // };
-  // Generate Excel function
-  const generateExcel = () => {
-    const wb = XLSX.utils.book_new();
+  // Extract title and description from the first survey
+  const title = surveys[0].title
+  const description = surveys[0].description
 
-    // Create a header array for all surveys
-    // const headers = [
-    //   "Title",
-    //   "Description",
-    //   "Employee Survey Starting Date",
-    //   "Employee Survey End Date",
-    //   "Creator ID",
-    //   "Organization ID"
-    // ];
+  // Extract all questions from the surveys
+  const questionSet = new Set();
+  surveys.forEach(survey => {
+    survey.questions.forEach(q => questionSet.add(q.question));
+  });
 
-    // Loop through surveys to collect data
-    surveys.forEach((survey, index) => {
-      // Initialize data array for each survey
-      const data = [];
+  const questions = Array.from(questionSet);
 
-      // Push survey details into the data array
-      data.push([
-        DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } }),
-        DOMPurify.sanitize(survey.description, {
-          USE_PROFILES: { html: false },
-        }),
-        survey.status ? "Active" : "Inactive",
-        format(new Date(survey.employeeSurveyStartingDate), "PP"),
-        format(new Date(survey.employeeSurveyEndDate), "PP"),
-        survey.creatorId,
-        survey.organisationId,
-      ]);
+  // Create the header rows
+  const headers = [
+    ["Title", "Description"],
+    [title, description],
+    [], // Empty row for separation
+    questions // Column headers for questions
+  ];
 
-      // Push question headers into the data array
-      survey.questions.forEach((question, qIndex) => {
-        data.push([
-          `Question ${qIndex + 1}`,
-          `Question ${qIndex + 1} Type`,
-          `Question ${qIndex + 1} Options`,
-        ]);
-
-        // Add responses as columns
-        if (survey.responses && survey.responses.length > 0) {
-          survey.responses.forEach((response, rIndex) => {
-            data.push([`Response ${rIndex + 1} for Question ${qIndex + 1}`]);
-          });
-        } else {
-          data.push([`Response for Question ${qIndex + 1}`]);
-        }
-      });
-
-      // Create worksheet for each survey
-      const ws = XLSX.utils.aoa_to_sheet(data);
-      XLSX.utils.book_append_sheet(wb, ws, `Survey ${index + 1}`);
+  // Prepare the data rows
+  const data = surveys.map(survey => {
+    const row = questions.map(q => {
+      const question = survey.questions.find(qn => qn.question === q);
+      return question ? question.answer : 'N/A';
     });
+    return row;
+  });
 
-    // Save workbook as Excel file
-    XLSX.writeFile(wb, "survey_data.xlsx");
-  };
+  // Create worksheet and workbook
+  const ws = XLSX.utils.aoa_to_sheet([...headers, ...data]);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Survey Data");
+
+  // Write to file
+  XLSX.writeFile(wb, `${title}.xlsx`);
+};
+
+
+
+// Handle Excel click function
+const handleExcelClick = async (surveyId) => {
+  try {
+    const survey = await fetchSingleSurvey(surveyId);
+    generateExcelForSurvey(survey);
+  } catch (error) {
+    console.error("Error fetching survey:", error);
+  }
+};
 
   return (
     <div>
@@ -161,26 +161,7 @@ const CloseSurveyList = () => {
             </div>
           ) : surveys && surveys?.length > 0 ? (
             <>
-              <div className="flex justify-end gap-3 mb-3 md:mb-0 w-full md:w-auto">
-                {/* <TextField
-                placeholder="Search"
-                variant="outlined"
-                size="small"
-                sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 200 }}
-              /> */}
-                {(user?.profile.includes("Super-Admin") ||
-                  user?.profile.includes("HR")) && (
-                  <Button
-                    sx={{ mt: 2, width: "auto" }}
-                    variant="contained"
-                    color="warning"
-                    onClick={generateExcel}
-                  >
-                    Generate Excel
-                  </Button>
-                )}
-              </div>
-              <div className="overflow-auto !p-0 border-[.5px] border-gray-200 mt-4">
+                           <div className="overflow-auto !p-0 border-[.5px] border-gray-200 mt-4">
                 <table className="min-w-full bg-white text-left !text-sm font-light">
                   <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                     <tr className="!font-semibold">
@@ -192,6 +173,9 @@ const CloseSurveyList = () => {
                       </th>
                       <th scope="col" className="!text-left pl-8 py-3">
                         Status
+                      </th>
+                      <th scope="col" className="!text-left pl-8 py-3">
+                        Generate Excel
                       </th>
                     </tr>
                   </thead>
@@ -217,6 +201,16 @@ const CloseSurveyList = () => {
                             sx={{ textTransform: "none", width: "auto" }}
                           >
                             View Details
+                          </Button>
+                        </td>
+                        <td className="!text-left pl-8 py-3">
+                          <Button
+                            variant="outlined"
+                            color="warning"
+                            onClick={() => handleExcelClick(survey._id)}
+                            sx={{ textTransform: "none", width: "auto" }}
+                          >
+                            Excel
                           </Button>
                         </td>
                       </tr>

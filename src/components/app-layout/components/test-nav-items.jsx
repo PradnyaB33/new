@@ -73,9 +73,9 @@ const TestNavItems = ({ toggleDrawer }) => {
     } else {
       setOrgId(user?.organizationId);
     }
-   
+
     queryClient.invalidateQueries("survey-permission");
-     // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [location.pathname, queryClient]);
 
   useEffect(() => {
@@ -122,6 +122,18 @@ const TestNavItems = ({ toggleDrawer }) => {
   const organisationId = data?.organisation?._id
   const { data: survey } = useGetCommunicationPermission(organisationId);
 
+    // Update organization ID when URL changes
+    useEffect(() => {
+      if ((role === "Super-Admin", "Delegate-Super-Admin")) {
+        getOrganizationIdFromPathname(location.pathname);
+      } else {
+        setOrgId(user?.organizationId);
+      }
+  
+      queryClient.invalidateQueries("survey-permission");
+      // eslint-disable-next-line
+    }, [location.pathname, queryClient]);
+    
   const [isVisible, setisVisible] = useState(true);
 
   useEffect(() => {
@@ -627,30 +639,16 @@ const TestNavItems = ({ toggleDrawer }) => {
       },
       Communication: {
         open: false,
-        isVisible: ["Super-Admin", "Delegate-Super-Admin", "Department-Head",
-          "Delegate-Department-Head",
-          "Department-Admin",
-          "Delegate-Department-Admin",
-          "Accountant",
-          "Delegate-Accountant",
-          "HR",
-          "Manager", "Employee"].includes(role),
+        isVisible:
+          data?.organisation?.packageInfo === "Intermediate Plan" &&
+          survey?.surveyPermission,
         icon: <Business className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
             key: "createCommunication",
-            isVisible: [
-              "Super-Admin",
-              "Delegate-Super-Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "HR",
-              "Manager",
-            ].includes(role),
+            isVisible:
+              data?.organisation?.packageInfo === "Intermediate Plan" &&
+              survey?.surveyPermission,
             link: `/organisation/${orgId}/create-communication`,
             icon: <ChatIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Broadcast",

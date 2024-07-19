@@ -21,15 +21,21 @@ import EditCommunicationModal from "../../../components/Modal/CommunicationModal
 import Setup from "../Setup";
 import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
 import useGetCommunicationPermission from "../../EmployeeSurvey/useContext/Permission";
+import GroupIcon from '@mui/icons-material/Group';
 
 const EmpCommunication = () => {
+  //Hooks
   const { handleAlert } = useContext(TestContext);
-  const { cookies } = useContext(UseContext);
-  const authToken = cookies["aegis"];
-  const { organisationId } = useParams();
   const queryClient = useQueryClient();
 
-  // Communication Permission 
+  //Get authToken
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
+
+  //Get organisationId
+  const { organisationId } = useParams();
+
+  //Get Communication Permission 
   const { data, surveyPermission, setSurveyPermission } = useGetCommunicationPermission(organisationId)
 
   useEffect(() => {
@@ -39,7 +45,7 @@ const EmpCommunication = () => {
     //eslint-disable-next-line
   }, [data]);
 
-  // Add Permission
+  // Add Communication Permission
   const mutationPermission = useMutation(
     async (isChecked) => {
       await axios.post(
@@ -54,7 +60,7 @@ const EmpCommunication = () => {
     },
     {
       onSuccess: async () => {
-        handleAlert(true, "success", "Survey permission save successfully");
+        handleAlert(true, "success", data === undefined ? "Survey permission saved successfully" : "Survey permission updated successfully");
         await queryClient.invalidateQueries("survey-permission");
       },
     }
@@ -148,10 +154,18 @@ const EmpCommunication = () => {
         <Setup>
           <article>
             <div className="p-4 border-b-[.5px]  border-gray-300">
-              <div>
-                <h1 className="!text-lg">Communication Permission</h1>
+              <div className="flex gap-3 ">
+                <div className="mt-1">
+                  <GroupIcon />
+                </div>
+                <div>
+                  <h1 className="!text-lg">Communication</h1>
+                  <p className="text-xs text-gray-600">
+                    If you want access to communication permission, please check the checkbox.
+                  </p>
+                </div>
               </div><br />
-              <div>
+              <div className="pl-9">
                 <label htmlFor="surveyPermission" className="flex items-center">
                   <input
                     type="checkbox"
