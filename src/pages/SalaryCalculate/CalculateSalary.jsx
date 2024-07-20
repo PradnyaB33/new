@@ -104,8 +104,6 @@ function CalculateSalary() {
     }
   }, [employeeSummary, selectedDate]);
 
-  console.log("employee summary", employeeSummary);
-
   //  to get holiday
   const fetchHoliday = async () => {
     try {
@@ -262,8 +260,7 @@ function CalculateSalary() {
   };
 
   const financialYear = calculateFinancialYear(dayjs(selectedDate));
-  console.log("financialYear", financialYear);
-  console.log("get total salary" , getTotalSalaryEmployee);
+
   const { data: annualIncomeTax } = useQuery(
     ["getIncomeTax", organisationId],
     async () => {
@@ -278,13 +275,11 @@ function CalculateSalary() {
       return response.data.getTotalTaxableIncome;
     }
   );
-  console.log("annual income tax", annualIncomeTax);
+
   const monthlyIncomeTax =
     typeof annualIncomeTax === "number" && annualIncomeTax > 0
       ? (annualIncomeTax / 12).toFixed(2)
       : "0.00";
-
-  console.log("monthly income tax", monthlyIncomeTax);
 
   // calculate the no fo days employee present
   const calculateDaysEmployeePresent = () => {
@@ -392,6 +387,56 @@ function CalculateSalary() {
 
   // calculate Total Net Salary
   let totalNetSalary = (totalGrossSalary - totalDeduction).toFixed(2);
+
+  //to get advance salary data of employee
+  const [totalNetSalaries, setTotalNetSalaries] = useState(0);
+  const { data: adSalAmt } = useQuery(
+    ["advanceSalaries", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/${userId}/get-advancesalary-data`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
+
+  console.log("adSalAmt", adSalAmt);
+
+  useEffect(() => {
+    if (adSalAmt && adSalAmt.length > 0) {
+      const calculateNetSalary = (adSalAmt, totalNetSalary) => {
+        const advanceSalaryData = adSalAmt[0];
+        const { advancedSalaryAmounts, noOfMonth } = advanceSalaryData;
+        console.log("advance salary amt", advancedSalaryAmounts);
+        console.log("noOfMonth", noOfMonth);
+        console.log("total net salary", totalNetSalary);
+
+        const monthlyDeduction = advancedSalaryAmounts / noOfMonth;
+        console.log("monthly deduction", monthlyDeduction);
+
+        const netSalary = Array.from({ length: noOfMonth }).map((_, index) => {
+          return totalNetSalary - monthlyDeduction;
+        });
+        console.log("netSalary", netSalary);
+        const totalNetSalaryies = netSalary.reduce(
+          (acc, curr) => acc + curr,
+          0
+        );
+        console.log("totalNetSalaryies", totalNetSalaryies);
+        return totalNetSalaryies;
+      };
+
+      const totalNetSalarys = calculateNetSalary(adSalAmt, totalNetSalary);
+      setTotalNetSalaries(totalNetSalarys);
+    }
+  }, [adSalAmt, totalNetSalary]);
+
+  console.log("total net salaies", totalNetSalaries);
 
   // submit the data
   const saveSalaryDetail = async () => {
@@ -658,14 +703,18 @@ function CalculateSalary() {
             <tr>
               <td class="px-4 py-2 border">Food Allowance:</td>
               <td class="px-4 py-2 border">{foodAllowance}</td>
-              <td class="py-2 border">Loan Deduction :</td>
-              <td class="py-2 border">{loanDeduction ?? 0}</td>
+              <td class="py-2 border">Income Tax :</td>
+              <td class="py-2 border">{monthlyIncomeTax ?? 0}</td>
             </tr>
             <tr>
               <td class="px-4 py-2 border">Sales Allowance:</td>
               <td class="px-4 py-2 border">{salesAllowance}</td>
-              <td class="py-2 border">Income Tax :</td>
-              <td class="py-2 border">{monthlyIncomeTax ?? 0}</td>
+              {empLoanAplicationInfo?.length > 0 && (
+                <>
+                  <td className="py-2 border">Loan Deduction :</td>
+                  <td className="py-2 border">{loanDeduction ?? 0}</td>
+                </>
+              )}
             </tr>
             <tr>
               <td class="px-4 py-2 border">Special Allowance:</td>
