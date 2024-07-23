@@ -201,7 +201,7 @@ const EditAdvanceSalaryModal = ({
         </h1>
       </div>
       <div className="px-5 space-y-4 mt-4">
-      <div>
+        <div>
           {formErrors.noOfMonth && (
             <p className="text-red-500">*{formErrors.noOfMonth}</p>
           )}
