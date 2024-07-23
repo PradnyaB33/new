@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import {
   Menu,
@@ -32,7 +32,8 @@ const SaveAsDraft = () => {
   //get organisationId
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
-  const organisationId = user?.organizationId;
+  const param = useParams();
+  const organisationId = param?.organisationId;
 
   //get authToken
   const { cookies } = useContext(UseContext);

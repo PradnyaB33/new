@@ -12,7 +12,6 @@ import {
     Button
 } from "@mui/material";
 import { UseContext } from "../../../State/UseState/UseContext";
-import UserProfile from "../../../hooks/UserData/useUser";
 import DOMPurify from "dompurify";
 import { useQuery } from 'react-query';
 
@@ -28,9 +27,8 @@ const IndividualResponse = () => {
     const authToken = cookies["aegis"];
 
     //get organisationId
-    const { getCurrentUser } = UserProfile();
-    const user = getCurrentUser();
-    const organisationId = user?.organizationId;
+    const param = useParams();
+    const organisationId = param?.organisationId;
 
     //get survey response data
     const { data: surveyResponses, isLoading, isError } = useQuery(

@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import axios from 'axios';
-import UserProfile from '../../../hooks/UserData/useUser';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { UseContext } from '../../../State/UseState/UseContext';
@@ -14,9 +13,8 @@ const SummaryTab = () => {
   const { surveyId } = useParams();
 
   //get organisationId
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
-  const organisationId = user?.organizationId;
+  const param = useParams();
+  const organisationId = param?.organisationId;
 
   //get authToken
   const { cookies } = useContext(UseContext);

@@ -33,7 +33,8 @@ const CreateNewSurvey = ({ isEditable }) => {
     //get organisationId
     const { getCurrentUser } = UserProfile();
     const user = getCurrentUser();
-    const organisationId = user?.organizationId;
+    const param = useParams();
+    const organisationId = param?.organisationId;
 
     //get authToken
     const { cookies } = useContext(UseContext);

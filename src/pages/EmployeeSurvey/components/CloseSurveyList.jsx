@@ -5,9 +5,8 @@ import { format } from "date-fns";
 import DOMPurify from "dompurify";
 import React, { useContext, useState } from "react";
 import { useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
-import UserProfile from "../../../hooks/UserData/useUser";
 import { UseContext } from "../../../State/UseState/UseContext";
 
 const CloseSurveyList = () => {
@@ -18,9 +17,8 @@ const CloseSurveyList = () => {
   const [closeSurvey, setCloseSurvey] = useState(false);
 
   // Get organizationId
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
-  const organisationId = user?.organizationId;
+  const param = useParams();
+  const organisationId = param?.organisationId;
 
   // Get cookies
   const { cookies } = useContext(UseContext);
@@ -59,78 +57,78 @@ const CloseSurveyList = () => {
     setCloseSurvey(!closeSurvey);
   };
 
- // Fetch a single survey data
- const fetchSingleSurvey = async (surveyId) => {
-  try {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-response-survey-surveyId/${surveyId}`,
-      {
-        headers: {
-          Authorization: authToken,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching survey:", error);
-    throw error;
-  }
-};
+  // Fetch a single survey data
+  const fetchSingleSurvey = async (surveyId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-response-survey-surveyId/${surveyId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching survey:", error);
+      throw error;
+    }
+  };
 
-// Generate Excel function
-const generateExcelForSurvey = (surveys) => {
-  console.log("Generate Excel",surveys);
-  if (!surveys || surveys.length === 0) return;
+  // Generate Excel function
+  const generateExcelForSurvey = (surveys) => {
+    console.log("Generate Excel", surveys);
+    if (!surveys || surveys.length === 0) return;
 
-  // Extract title and description from the first survey
-  const title = surveys[0].title
-  const description = surveys[0].description
+    // Extract title and description from the first survey
+    const title = surveys[0].title
+    const description = surveys[0].description
 
-  // Extract all questions from the surveys
-  const questionSet = new Set();
-  surveys.forEach(survey => {
-    survey.questions.forEach(q => questionSet.add(q.question));
-  });
-
-  const questions = Array.from(questionSet);
-
-  // Create the header rows
-  const headers = [
-    ["Title", "Description"],
-    [title, description],
-    [], // Empty row for separation
-    questions // Column headers for questions
-  ];
-
-  // Prepare the data rows
-  const data = surveys.map(survey => {
-    const row = questions.map(q => {
-      const question = survey.questions.find(qn => qn.question === q);
-      return question ? question.answer : 'N/A';
+    // Extract all questions from the surveys
+    const questionSet = new Set();
+    surveys.forEach(survey => {
+      survey.questions.forEach(q => questionSet.add(q.question));
     });
-    return row;
-  });
 
-  // Create worksheet and workbook
-  const ws = XLSX.utils.aoa_to_sheet([...headers, ...data]);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Survey Data");
+    const questions = Array.from(questionSet);
 
-  // Write to file
-  XLSX.writeFile(wb, `${title}.xlsx`);
-};
+    // Create the header rows
+    const headers = [
+      ["Title", "Description"],
+      [title, description],
+      [], // Empty row for separation
+      questions // Column headers for questions
+    ];
+
+    // Prepare the data rows
+    const data = surveys.map(survey => {
+      const row = questions.map(q => {
+        const question = survey.questions.find(qn => qn.question === q);
+        return question ? question.answer : 'N/A';
+      });
+      return row;
+    });
+
+    // Create worksheet and workbook
+    const ws = XLSX.utils.aoa_to_sheet([...headers, ...data]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Survey Data");
+
+    // Write to file
+    XLSX.writeFile(wb, `${title}.xlsx`);
+  };
 
 
 
-// Handle Excel click function
-const handleExcelClick = async (surveyId) => {
-  try {
-    const survey = await fetchSingleSurvey(surveyId);
-    generateExcelForSurvey(survey);
-  } catch (error) {
-    console.error("Error fetching survey:", error);
-  }
-};
+  // Handle Excel click function
+  const handleExcelClick = async (surveyId) => {
+    try {
+      const survey = await fetchSingleSurvey(surveyId);
+      generateExcelForSurvey(survey);
+    } catch (error) {
+      console.error("Error fetching survey:", error);
+    }
+  };
 
   return (
     <div>
@@ -161,7 +159,7 @@ const handleExcelClick = async (surveyId) => {
             </div>
           ) : surveys && surveys?.length > 0 ? (
             <>
-                           <div className="overflow-auto !p-0 border-[.5px] border-gray-200 mt-4">
+              <div className="overflow-auto !p-0 border-[.5px] border-gray-200 mt-4">
                 <table className="min-w-full bg-white text-left !text-sm font-light">
                   <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                     <tr className="!font-semibold">

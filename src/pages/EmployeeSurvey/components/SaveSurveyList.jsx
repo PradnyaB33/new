@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
 import { CircularProgress, Typography, Menu, Tooltip, MenuItem, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
-import UserProfile from "../../../hooks/UserData/useUser";
 import { UseContext } from "../../../State/UseState/UseContext";
 import DOMPurify from "dompurify";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -12,7 +11,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { TestContext } from "../../../State/Function/Main";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const SaveSurveyList = () => {
     //hooks
@@ -21,9 +20,8 @@ const SaveSurveyList = () => {
     const { handleAlert } = useContext(TestContext);
 
     // Get organizationId
-    const { getCurrentUser } = UserProfile();
-    const user = getCurrentUser();
-    const organisationId = user?.organizationId;
+    const param = useParams();
+    const organisationId = param?.organisationId;
 
     // Get cookies
     const { cookies } = useContext(UseContext);

@@ -74,9 +74,8 @@ const TestNavItems = ({ toggleDrawer }) => {
       setOrgId(user?.organizationId);
     }
 
-    queryClient.invalidateQueries("survey-permission");
     // eslint-disable-next-line
-  }, [location.pathname, queryClient]);
+  }, [location.pathname]);
 
   useEffect(() => {
     (async () => {
@@ -130,15 +129,18 @@ const TestNavItems = ({ toggleDrawer }) => {
         setOrgId(user?.organizationId);
       }
   
-      queryClient.invalidateQueries("survey-permission");
       // eslint-disable-next-line
-    }, [location.pathname, queryClient]);
+    }, [location.pathname]);
     
   const [isVisible, setisVisible] = useState(true);
 
   useEffect(() => {
     setisVisible(location.pathname.includes("/organisation"));
   }, [location.pathname, organisationId]);
+
+  useEffect(() => {
+    queryClient.invalidateQueries("survey-permission");
+  },[queryClient])
 
   let navItems = useMemo(
     () => ({

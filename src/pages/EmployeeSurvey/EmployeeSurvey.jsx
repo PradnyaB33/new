@@ -1,7 +1,7 @@
 import { IconButton, Button } from "@mui/material";
 import React from "react";
 import { West } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import OpenSurveyList from "./components/OpenSurveyList";
 import CloseSurveyList from "./components/CloseSurveyList";
 import SaveAsDraft from "./components/SaveAsDraft";
@@ -15,7 +15,8 @@ const EmployeeSurvey = () => {
     //get organizationId
     const { getCurrentUser } = UserProfile();
     const user = getCurrentUser();
-    const organisationId = user?.organizationId;
+    const param = useParams();
+    const organisationId = param?.organisationId;
 
     //create new survey navigation
     const handleCreateNewSurvey = () => {

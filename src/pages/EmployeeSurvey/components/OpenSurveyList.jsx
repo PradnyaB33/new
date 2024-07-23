@@ -1,8 +1,7 @@
 import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Button, CircularProgress, Typography } from "@mui/material";
-import UserProfile from "../../../hooks/UserData/useUser";
 import { UseContext } from "../../../State/UseState/UseContext";
 import DOMPurify from "dompurify";
 import { useQuery } from "react-query";
@@ -14,10 +13,9 @@ const OpenSurveyList = () => {
   const navigate = useNavigate();
 
   // Get organizationId
-  const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
-  const organisationId = user?.organizationId;
-
+  const param = useParams();
+  const organisationId = param?.organisationId;
+  console.log("organisationId", organisationId);
   // Get cookies
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -25,7 +23,7 @@ const OpenSurveyList = () => {
   const [openSurvey, setOpenSurvey] = useState(false);
 
   // Get open surveys
-  const { data: surveys , isLoading, isError } = useQuery(
+  const { data: surveys, isLoading, isError } = useQuery(
     ["openSurveys", organisationId],
     async () => {
       const response = await axios.get(

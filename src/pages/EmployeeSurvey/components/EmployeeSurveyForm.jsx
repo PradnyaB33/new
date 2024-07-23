@@ -22,7 +22,9 @@ const EmployeeSurveyForm = () => {
     // Get organizationId
     const { getCurrentUser } = UserProfile();
     const user = getCurrentUser();
-    const organisationId = user?.organizationId;
+    
+    const param = useParams();
+    const organisationId = param?.organisationId;
 
     // useForm 
     const { control, handleSubmit, setValue, formState: { errors } } = useForm();

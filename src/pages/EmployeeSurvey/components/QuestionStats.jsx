@@ -3,7 +3,6 @@ import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogT
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useQuery } from 'react-query';
-import UserProfile from '../../../hooks/UserData/useUser';
 import { UseContext } from '../../../State/UseState/UseContext';
 
 const QuestionStats = () => {
@@ -15,9 +14,9 @@ const QuestionStats = () => {
     const [openPopup, setOpenPopup] = useState(false);
 
     //get organisationId
-    const { getCurrentUser } = UserProfile();
-    const user = getCurrentUser();
-    const organisationId = user?.organizationId;
+    const param = useParams();
+    const organisationId = param?.organisationId;
+    console.log("organisationId", organisationId);
 
     //get authToken
     const { cookies } = useContext(UseContext);
