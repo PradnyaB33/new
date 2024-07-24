@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "react-query";
@@ -26,6 +26,8 @@ const CreateNewSurvey = ({ isEditable }) => {
     const { id } = useParams();
 
     //states
+    const [org, setOrg] = useState();
+    console.log("org...", org?.email);
     const [questions, setQuestions] = useState([{ question: '', questionType: '', options: [], required: false }]);
     const [showSelectAll, setShowSelectAll] = useState(false);
     const [questionTypeSelected, setQuestionTypeSelected] = useState(Array.from({ length: questions.length }, () => false));
@@ -35,7 +37,7 @@ const CreateNewSurvey = ({ isEditable }) => {
     const user = getCurrentUser();
     const param = useParams();
     const organisationId = param?.organisationId;
-
+    console.log("organisationId", organisationId);
     //get authToken
     const { cookies } = useContext(UseContext);
     const authToken = cookies["aegis"];
@@ -46,7 +48,10 @@ const CreateNewSurvey = ({ isEditable }) => {
         description,
         employeeSurveyStartingDate,
         employeeSurveyEndDate,
-        to
+        to,
+        from,
+        subject,
+        body
     } = useCreateEmployeeSurveyState();
 
     //EmployeeSurveySchema
@@ -70,12 +75,26 @@ const CreateNewSurvey = ({ isEditable }) => {
             description,
             employeeSurveyStartingDate,
             employeeSurveyEndDate,
-            to
+            to,
+            from,
+            subject,
+            body
         },
         resolver: zodResolver(EmployeeSurveySchema),
     });
 
     const { errors } = formState;
+
+    //Get Organisation Perticular Data
+    useEffect(() => {
+        (async () => {
+            const resp = await axios.get(
+                `${process.env.REACT_APP_API}/route/organization/get/${organisationId}`
+            );
+            console.log("this is the data", resp.data.organizations);
+            setOrg(resp.data.organizations);
+        })();
+    }, [organisationId]);
 
     // Fetch single survey data
     const { isLoading } = useQuery(
@@ -387,10 +406,12 @@ const CreateNewSurvey = ({ isEditable }) => {
             })),
             employeeSurveyStartingDate: data.employeeSurveyStartingDate,
             employeeSurveyEndDate: data.employeeSurveyEndDate,
-            to: data.to?.map(option => option.value),
+            to: data.to?.map(option => option ),
             creatorId: user?._id,
             status: status,
-        };
+            from:org?._id,
+
+        };  
         mutation.mutate(formData, {
             onError: (error) => {
                 console.error('Error submitting form', error);
@@ -478,7 +499,7 @@ const CreateNewSurvey = ({ isEditable }) => {
                                         <div className="grid grid-cols-1 w-full" key={index}>
                                             <div>
                                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: "20px" }}>
-                                                    <label className='font-semibold text-gray-500 text-md'>Question</label>
+                                                    <label className='font-semibold text-gray-500 text-md'>Question {index + 1}</label>
                                                     <div>
                                                         <Select
                                                             style={{ width: "200px", height: "42px" }}
