@@ -167,7 +167,7 @@ const CloseSurveyList = () => {
                         Title
                       </th>
                       <th scope="col" className="!text-left pl-8 py-3">
-                        Closed Date
+                        End Date
                       </th>
                       <th scope="col" className="!text-left pl-8 py-3">
                         Status

@@ -478,7 +478,7 @@ const CreateNewSurvey = ({ isEditable }) => {
                                         <div className="grid grid-cols-1 w-full" key={index}>
                                             <div>
                                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: "20px" }}>
-                                                    <label className='font-semibold text-gray-500 text-md'>Question {index + 1}</label>
+                                                    <label className='font-semibold text-gray-500 text-md'>Question</label>
                                                     <div>
                                                         <Select
                                                             style={{ width: "200px", height: "42px" }}
@@ -626,7 +626,7 @@ const CreateNewSurvey = ({ isEditable }) => {
                                     {isEditable && (
                                         <div className="flex flex-col xs:flex-row gap-4 mt-4 justify-end">
                                             <Button type="submit" variant="contained" color="primary" onClick={() => handleSubmit((data) => handleSubmitForm(data, true))} sx={{ textTransform: "none" }}>
-                                                Save
+                                                Submit
                                             </Button>
                                             <Button type="button" variant="outlined" color="primary" onClick={handleSaveForNow} sx={{ textTransform: "none" }}>
                                                 Save For Now
