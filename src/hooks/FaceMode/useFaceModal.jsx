@@ -204,7 +204,7 @@ const useLoadModel = () => {
     getImageAndVerifyMutation,
     detectFaceOnlyMutation,
     descriptor,
-    setDescriptor, 
+    setDescriptor,
     loading,
     setLoading,
     employeeOrgId,
