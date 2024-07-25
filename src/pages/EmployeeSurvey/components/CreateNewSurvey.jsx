@@ -17,6 +17,7 @@ import UserProfile from '../../../hooks/UserData/useUser';
 import { UseContext } from "../../../State/UseState/UseContext";
 import { TestContext } from "../../../State/Function/Main";
 import useCreateEmployeeSurveyState from '../../../hooks/EmployeeSurvey/EmployeeSurvey';
+import DOMPurify from "dompurify";
 
 const CreateNewSurvey = ({ isEditable }) => {
     console.log("isEditable", isEditable);
@@ -31,7 +32,8 @@ const CreateNewSurvey = ({ isEditable }) => {
     const [questions, setQuestions] = useState([{ question: '', questionType: '', options: [], required: false }]);
     const [showSelectAll, setShowSelectAll] = useState(false);
     const [questionTypeSelected, setQuestionTypeSelected] = useState(Array.from({ length: questions.length }, () => false));
-
+    const [surveyData, setSurveyData] = useState();
+    console.log("surveyData", surveyData);
     //get organisationId
     const { getCurrentUser } = UserProfile();
     const user = getCurrentUser();
@@ -109,6 +111,7 @@ const CreateNewSurvey = ({ isEditable }) => {
         },
         {
             onSuccess: (data) => {
+                setSurveyData(data)
                 if (data) {
                     setValue("title", data?.title);
                     setValue("description", data?.description);
@@ -121,7 +124,12 @@ const CreateNewSurvey = ({ isEditable }) => {
                         required: q.required,
                     })));
 
-                    setValue("to", data?.to?.map(option => ({ label: option, value: option })));
+                    const transformedToField = data.to.map(option => ({
+                        label: option.value,
+                        value: option.value
+                    }));
+
+                    setValue('to', transformedToField);
                 }
             },
             enabled: !!id,
@@ -406,12 +414,12 @@ const CreateNewSurvey = ({ isEditable }) => {
             })),
             employeeSurveyStartingDate: data.employeeSurveyStartingDate,
             employeeSurveyEndDate: data.employeeSurveyEndDate,
-            to: data.to?.map(option => option ),
+            to: data.to?.map(option => option),
             creatorId: user?._id,
             status: status,
-            from:org?._id,
+            from: org?._id,
 
-        };  
+        };
         mutation.mutate(formData, {
             onError: (error) => {
                 console.error('Error submitting form', error);
@@ -469,31 +477,33 @@ const CreateNewSurvey = ({ isEditable }) => {
                             <div className="w-full mt-4 px-2 sm:px-4 lg:px-6">
                                 <h1 className="text-xl mb-4 font-bold">{isEditable ? "Create Survey" : "View Survey"}</h1>
                                 <form onSubmit={handleSubmit((data) => handleSubmitForm(data, true))} className="w-full flex flex-col space-y-4">
-                                    <div className="w-full">
-                                        <AuthInputFiled
-                                            name="title"
-                                            control={control}
-                                            type="textEditor"
-                                            placeholder="Title"
-                                            label="Title"
-                                            maxLimit={100}
-                                            errors={errors}
-                                            error={errors.title}
-                                            readOnly={!isEditable}
-                                        /></div>
-                                    <div className="w-full">
-                                        <AuthInputFiled
-                                            name="description"
-                                            control={control}
-                                            type="textEditor"
-                                            placeholder="Description"
-                                            label="Description"
-                                            maxLimit={1000}
-                                            errors={errors}
-                                            error={errors.description}
-                                            readOnly={!isEditable}
-                                        />
-                                    </div>
+                                    {isEditable ?
+                                        <><div className="w-full">
+                                            <AuthInputFiled
+                                                name="title"
+                                                control={control}
+                                                type="textEditor"
+                                                placeholder="Title"
+                                                label="Title"
+                                                maxLimit={100}
+                                                errors={errors}
+                                                error={errors.title}
+                                                readOnly={!isEditable}
+                                            /></div>
+                                            <div className="w-full">
+                                                <AuthInputFiled
+                                                    name="description"
+                                                    control={control}
+                                                    type="textEditor"
+                                                    placeholder="Description"
+                                                    label="Description"
+                                                    maxLimit={1000}
+                                                    errors={errors}
+                                                    error={errors.description}
+                                                    readOnly={!isEditable}
+                                                />
+                                            </div></> : <><div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(surveyData?.title || '') }}></div>
+                                            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(surveyData?.description || '') }}></div></>}
 
                                     {questions?.map((q, index) => (
                                         <div className="grid grid-cols-1 w-full" key={index}>
