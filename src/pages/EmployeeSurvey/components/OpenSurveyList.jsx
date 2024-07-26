@@ -88,9 +88,14 @@ const OpenSurveyList = () => {
     <div>
       <div className="flex  justify-between  gap-3 w-full border-gray-300 my-2">
         <div className="flex justify-start ">
-          <Typography variant="p">
-            Open Survey
-          </Typography>
+          <div className="mb-2 md:mb-0 md:mr-4">
+            <p className="font-bold">Open Survey</p>
+            <p className="text-sm text-gray-600">
+            Here you can see list of currently active surveys.
+             </p>
+          </div>
+
+         
         </div>
         <div className="flex justify-end">
           <AddCircleOutlineIcon style={{ width: "40px" }} onClick={handleOpenSurvey} />

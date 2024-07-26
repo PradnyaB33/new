@@ -133,52 +133,56 @@ const QuestionStats = () => {
 
     return (
         <div>
-            <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
-                {isLoading ? (
-                    <CircularProgress />
-                ) : isError ? (
-                    <p>Error fetching data</p>
-                ) : (
-                    <table className="min-w-full bg-white text-left !text-sm font-light">
-                        <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
-                            <tr className="!font-semibold">
-                                <th scope="col" className="!text-left pl-8 py-3">
-                                    Question
-                                </th>
-                                <th scope="col" className="!text-left pl-8 py-3">
-                                    Count
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {questionIds.map((questionId, index) => {
-                                const matchingQuestion = surveyResponses
-                                    .find((survey) =>
-                                        survey.questions.some((q) => q.questionId === questionId)
-                                    )
-                                    ?.questions.find((q) => q.questionId === questionId);
+            {surveyResponses && surveyResponses.length > 0 ?
+                <div className="overflow-auto !p-0 border-[.5px] border-gray-200">
+                    {isLoading ? (
+                        <CircularProgress />
+                    ) : isError ? (
+                        <p>Error fetching data</p>
+                    ) : (
+                        <table className="min-w-full bg-white text-left !text-sm font-light">
+                            <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+                                <tr className="!font-semibold">
+                                    <th scope="col" className="!text-left pl-8 py-3">
+                                        Question
+                                    </th>
+                                    <th scope="col" className="!text-left pl-8 py-3">
+                                        Count
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {questionIds.map((questionId, index) => {
+                                    const matchingQuestion = surveyResponses
+                                        .find((survey) =>
+                                            survey.questions.some((q) => q.questionId === questionId)
+                                        )
+                                        ?.questions.find((q) => q.questionId === questionId);
 
-                                return (
-                                    <tr key={index} className="!font-medium border-b">
-                                        <td className="!text-left pl-8 py-3">
-                                            {matchingQuestion?.question}
-                                        </td>
-                                        <td className="py-3 pl-8">
-                                            <Button
-                                                variant="outlined"
-                                                sx={{ textTransform: 'none', width: 'auto' }}
-                                                onClick={() => handleOpenPopup(questionId)}
-                                            >
-                                                {calculateQuestionCounts(questionId)}
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                )}
-            </div>
+                                    return (
+                                        <tr key={index} className="!font-medium border-b">
+                                            <td className="!text-left pl-8 py-3">
+                                                {matchingQuestion?.question}
+                                            </td>
+                                            <td className="py-3 pl-8">
+                                                <Button
+                                                    variant="outlined"
+                                                    sx={{ textTransform: 'none', width: 'auto' }}
+                                                    onClick={() => handleOpenPopup(questionId)}
+                                                >
+                                                    {calculateQuestionCounts(questionId)}
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    )}
+                </div>
+                : <p>No response data available</p>
+            }
+
 
             <Dialog open={openPopup} onClose={handleClosePopup} maxWidth="md"
                 fullWidth>

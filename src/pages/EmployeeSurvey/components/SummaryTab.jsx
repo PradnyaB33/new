@@ -134,18 +134,23 @@ const SummaryTab = () => {
   };
 
   const aggregatedData = surveyData ? aggregateAnswers(surveyData) : {};
-
+  console.log("aggregatedData", surveyData?.length);
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <div style={{ padding: '20px' }}>
-        {Object.keys(aggregatedData).map(questionId => (
-          <div key={questionId} style={{ marginBottom: '20px' }}>
-            <p className='text-xl py-2'>Q. {aggregatedData[questionId].question}</p>
-            {renderChart(aggregatedData[questionId])}
+    <>
+      {surveyData && surveyData.length > 0 ?
+        <div style={{ display: 'flex' }}>
+          <div style={{ padding: '20px' }}>
+
+            <>{Object.keys(aggregatedData).map(questionId => (
+              <div key={questionId} style={{ marginBottom: '20px' }}>
+                <p className='text-xl py-2'>Q. {aggregatedData[questionId].question}</p>
+                {renderChart(aggregatedData[questionId])}
+              </div>
+            ))} </>
           </div>
-        ))}
-      </div>
-    </div>
+        </div> : <p>No response data available</p>
+      }
+    </>
   );
 };
 

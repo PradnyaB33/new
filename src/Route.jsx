@@ -1429,6 +1429,10 @@ const App = () => {
           element={<EmployeeSurvey />}
         />
         <Route
+          path="/organisation/:organisationId/employee-survey/:employeeId"
+          element={<EmployeeSurvey />}
+        />
+        <Route
           path="/organisation/:organisationId/create-new-survey"
           element={<CreateNewSurvey isEditable={true} />}
         />

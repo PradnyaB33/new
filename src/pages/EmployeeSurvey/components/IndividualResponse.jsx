@@ -147,7 +147,7 @@ const IndividualResponse = () => {
                         </article>
                     </section>
                 ) : (
-                    <p>No survey responses found</p>
+                    <p>No response data available</p>
                 )
             )}
         </>

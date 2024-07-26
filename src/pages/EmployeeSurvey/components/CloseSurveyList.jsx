@@ -49,7 +49,7 @@ const CloseSurveyList = () => {
   console.log("surveys....", surveys);
   //handleSurveyDetails function
   const handleSurveyDetails = (surveyId) => {
-    navigate(`/organisation/:organisationId/survey-details/${surveyId}`);
+    navigate(`/organisation/${organisationId}/survey-details/${surveyId}`);
   };
 
   //handleCloseSurvey function
@@ -134,8 +134,12 @@ const CloseSurveyList = () => {
     <div>
       <div className="flex  justify-between  gap-3 w-full border-gray-300 my-2">
         <div className="flex justify-start ">
-          <Typography variant="p">Closed Survey</Typography>
-        </div>
+          <div className="mb-2 md:mb-0 md:mr-4">
+            <p className="font-bold">Closed Survey</p>
+            <p className="text-sm text-gray-600">
+              Here you can view closed surveys along with their responses.
+            </p>
+          </div></div>
         <div className="flex justify-end">
           <AddCircleOutlineIcon
             style={{ width: "40px" }}

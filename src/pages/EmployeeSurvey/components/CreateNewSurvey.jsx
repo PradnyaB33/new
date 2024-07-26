@@ -18,6 +18,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import { TestContext } from "../../../State/Function/Main";
 import useCreateEmployeeSurveyState from '../../../hooks/EmployeeSurvey/EmployeeSurvey';
 import DOMPurify from "dompurify";
+import ClearIcon from '@mui/icons-material/Clear';
 
 const CreateNewSurvey = ({ isEditable }) => {
     console.log("isEditable", isEditable);
@@ -279,25 +280,149 @@ const CreateNewSurvey = ({ isEditable }) => {
     };
 
     //renderAnswerInput
+    // const renderAnswerInput = (qIndex) => {
+    //     const { questionType, options } = questions[qIndex];
+
+    //     const handleRemoveOption = (qIndex, oIndex) => {
+    //         const newQuestions = [...questions];
+    //         newQuestions[qIndex].options.splice(oIndex, 1);
+    //         setQuestions(newQuestions);
+    //     };
+
+    //     switch (questionType) {
+    //         case 'Short Answer':
+    //             return (
+    //                 <TextField
+    //                     id="answer-input"
+    //                     label="Short-answer text"
+    //                     placeholder={`Enter ${questionType} Answer`}
+    //                     fullWidth
+    //                     variant='standard'
+    //                     disabled
+    //                 />
+    //             );
+    //         case 'Paragraph':
+    //             return (
+    //                 <TextField
+    //                     id="answer-input"
+    //                     label="Long-answer text"
+    //                     placeholder={`Enter ${questionType} Answer`}
+    //                     fullWidth
+    //                     variant='standard'
+    //                     disabled
+    //                 />
+    //             );
+    //         case 'Checkboxes':
+    //             return (
+    //                 <div>
+    //                     {options?.map((option, index) => (
+    //                         <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+    //                             <Checkbox
+    //                                 checked={option.checked}
+    //                                 onChange={() => handleOptionChange(qIndex, index, 'checked')}
+    //                                 disabled
+    //                             />
+    //                             <TextField
+    //                                 value={option.title}
+    //                                 onChange={(e) => handleOptionChange(qIndex, index, 'title', e.target.value)}
+    //                                 fullWidth
+    //                                 style={{ marginLeft: '10px' }}
+    //                                 variant='standard'
+    //                                 disabled={!isEditable}
+    //                             />
+    //                         </div>
+    //                     ))}
+    //                     {isEditable && (
+    //                         <div className='mt-2'>
+    //                             <Button onClick={() => handleAddOption(qIndex)} aria-label="add option">
+    //                                 Add Options
+    //                             </Button></div>)}
+    //                 </div>
+    //             );
+    //         case 'Dropdown':
+    //             return (
+    //                 <div>
+    //                     {options?.map((option, index) => (
+    //                         <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+    //                             <TextField
+    //                                 value={option.title}
+    //                                 onChange={(e) => handleOptionChange(qIndex, index, 'title', e.target.value)}
+    //                                 fullWidth
+    //                                 style={{ marginLeft: '10px' }}
+    //                                 variant='standard'
+    //                                 disabled={!isEditable}
+    //                             />
+    //                         </div>
+    //                     ))}
+    //                     {isEditable && (
+    //                         <div className='mt-2'>
+    //                             <Button onClick={() => handleAddOption(qIndex)} aria-label="add option">
+    //                                 Add Options
+    //                             </Button>
+    //                         </div>)}
+    //                 </div>
+    //             );
+    //         case 'Date':
+    //             return (
+    //                 <div className='mt-4'>
+    //                     <TextField
+    //                         id="date-input"
+    //                         label="Select Date"
+    //                         type="date"
+    //                         InputLabelProps={{
+    //                             shrink: true,
+    //                         }}
+    //                         fullWidth
+    //                         disabled
+    //                     />
+    //                 </div>
+    //             );
+    //         case 'Multi-choice':
+    //             return (
+    //                 <div>
+    //                     {options?.map((option, index) => (
+    //                         <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+    //                             <Radio
+    //                                 checked={option.checked}
+    //                                 onChange={() => handleOptionChange(qIndex, index, 'radio')}
+    //                                 disabled
+    //                             />
+    //                             <TextField
+    //                                 value={option.title}
+    //                                 onChange={(e) => handleOptionChange(qIndex, index, 'title', e.target.value)}
+    //                                 fullWidth
+    //                                 style={{ marginLeft: '10px' }}
+    //                                 variant='standard'
+    //                                 disabled={!isEditable}
+    //                             />
+    //                         </div>
+    //                     ))}
+    //                     {isEditable && (
+    //                         <Button onClick={() => handleAddOption(qIndex)} aria-label="add option">
+    //                             Add Options
+    //                         </Button>)}
+    //                 </div>
+    //             )
+    //         default:
+    //             return null;
+    //     }
+    // };
     const renderAnswerInput = (qIndex) => {
         const { questionType, options } = questions[qIndex];
+    
+        const handleRemoveOption = (qIndex, oIndex) => {
+            const newQuestions = [...questions];
+            newQuestions[qIndex].options.splice(oIndex, 1);
+            setQuestions(newQuestions);
+        };
+    
         switch (questionType) {
             case 'Short Answer':
-                return (
-                    <TextField
-                        id="answer-input"
-                        label="Short-answer text"
-                        placeholder={`Enter ${questionType} Answer`}
-                        fullWidth
-                        variant='standard'
-                        disabled
-                    />
-                );
             case 'Paragraph':
                 return (
                     <TextField
                         id="answer-input"
-                        label="Long-answer text"
+                        label={questionType === 'Short Answer' ? "Short-answer text" : "Long-answer text"}
                         placeholder={`Enter ${questionType} Answer`}
                         fullWidth
                         variant='standard'
@@ -305,37 +430,24 @@ const CreateNewSurvey = ({ isEditable }) => {
                     />
                 );
             case 'Checkboxes':
-                return (
-                    <div>
-                        {options?.map((option, index) => (
-                            <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                                <Checkbox
-                                    checked={option.checked}
-                                    onChange={() => handleOptionChange(qIndex, index, 'checked')}
-                                    disabled
-                                />
-                                <TextField
-                                    value={option.title}
-                                    onChange={(e) => handleOptionChange(qIndex, index, 'title', e.target.value)}
-                                    fullWidth
-                                    style={{ marginLeft: '10px' }}
-                                    variant='standard'
-                                    disabled={!isEditable}
-                                />
-                            </div>
-                        ))}
-                        {isEditable && (
-                            <div className='mt-2'>
-                                <Button onClick={() => handleAddOption(qIndex)} aria-label="add option">
-                                    Add Options
-                                </Button></div>)}
-                    </div>
-                );
             case 'Dropdown':
                 return (
                     <div>
                         {options?.map((option, index) => (
                             <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                                {questionType === 'Checkboxes' ? (
+                                    <Checkbox
+                                        checked={option.checked}
+                                        onChange={() => handleOptionChange(qIndex, index, 'checked')}
+                                        disabled
+                                    />
+                                ) : (
+                                    <Radio
+                                        checked={option.checked}
+                                        onChange={() => handleOptionChange(qIndex, index, 'radio')}
+                                        disabled
+                                    />
+                                )}
                                 <TextField
                                     value={option.title}
                                     onChange={(e) => handleOptionChange(qIndex, index, 'title', e.target.value)}
@@ -344,6 +456,11 @@ const CreateNewSurvey = ({ isEditable }) => {
                                     variant='standard'
                                     disabled={!isEditable}
                                 />
+                                {isEditable && (
+                                    <IconButton onClick={() => handleRemoveOption(qIndex, index)} aria-label="remove option">
+                                        <ClearIcon />
+                                    </IconButton>
+                                )}
                             </div>
                         ))}
                         {isEditable && (
@@ -351,23 +468,20 @@ const CreateNewSurvey = ({ isEditable }) => {
                                 <Button onClick={() => handleAddOption(qIndex)} aria-label="add option">
                                     Add Options
                                 </Button>
-                            </div>)}
+                            </div>
+                        )}
                     </div>
                 );
             case 'Date':
                 return (
-                    <div className='mt-4'>
-                        <TextField
-                            id="date-input"
-                            label="Select Date"
-                            type="date"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            fullWidth
-                            disabled
-                        />
-                    </div>
+                    <TextField
+                        id="date-input"
+                        label="Select Date"
+                        type="date"
+                        InputLabelProps={{ shrink: true }}
+                        fullWidth
+                        disabled
+                    />
                 );
             case 'Multi-choice':
                 return (
@@ -387,19 +501,25 @@ const CreateNewSurvey = ({ isEditable }) => {
                                     variant='standard'
                                     disabled={!isEditable}
                                 />
+                                {isEditable && (
+                                    <IconButton onClick={() => handleRemoveOption(qIndex, index)} aria-label="remove option">
+                                        <ClearIcon />
+                                    </IconButton>
+                                )}
                             </div>
                         ))}
                         {isEditable && (
                             <Button onClick={() => handleAddOption(qIndex)} aria-label="add option">
                                 Add Options
-                            </Button>)}
+                            </Button>
+                        )}
                     </div>
-                )
+                );
             default:
                 return null;
         }
     };
-
+    
     //handleSubmitForm 
     const handleSubmitForm = (data, status) => {
 
@@ -459,7 +579,7 @@ const CreateNewSurvey = ({ isEditable }) => {
                 {/* Main Header Content */}
                 <div className="flex flex-col md:flex-row justify-between w-full md:ml-4">
                     <div className="mb-2 md:mb-0 md:mr-4">
-                        <h1 className="text-xl font-bold">Create Employee Survey Form</h1>
+                        <h1 className="text-xl font-bold">Employee Survey</h1>
                         <p className="text-sm text-gray-600">
                             Here you can create employee survey form
                         </p>
@@ -475,7 +595,7 @@ const CreateNewSurvey = ({ isEditable }) => {
                     <article className="w-full rounded-lg bg-white">
                         <div className="w-full md:px-5 px-1">
                             <div className="w-full mt-4 px-2 sm:px-4 lg:px-6">
-                                <h1 className="text-xl mb-4 font-bold">{isEditable ? "Create Survey" : "View Survey"}</h1>
+                                <h1 className="text-xl mb-4 font-bold">{isEditable ? "Create Employee Survey" : "View Employee Survey"}</h1>
                                 <form onSubmit={handleSubmit((data) => handleSubmitForm(data, true))} className="w-full flex flex-col space-y-4">
                                     {isEditable ?
                                         <><div className="w-full">
@@ -594,7 +714,7 @@ const CreateNewSurvey = ({ isEditable }) => {
                                             control={control}
                                             type="date"
                                             placeholder="dd-mm-yyyy"
-                                            label="Starting date*"
+                                            label="Start date*"
                                             errors={errors}
                                             error={errors.employeeSurveyStartingDate}
                                             min={new Date().toISOString().split("T")[0]}
@@ -606,7 +726,7 @@ const CreateNewSurvey = ({ isEditable }) => {
                                             control={control}
                                             type="date"
                                             placeholder="dd-mm-yyyy"
-                                            label="Ending date*"
+                                            label="End date*"
                                             errors={errors}
                                             error={errors.employeeSurveyEndDate}
                                             min={watch("employeeSurveyStartingDate")}

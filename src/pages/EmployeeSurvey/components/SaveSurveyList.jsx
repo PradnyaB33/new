@@ -33,6 +33,9 @@ const SaveSurveyList = () => {
     const [currentSurveyId, setCurrentSurveyId] = useState(null);
     const [deleteConfirmation, setDeleteConfirmation] = useState(null);
 
+    // Get the current date
+    const currentDate = new Date();
+
     // Get open surveys
     const { data: surveys, isLoading, isError } = useQuery(
         ["createdSurvey", organisationId],
@@ -115,10 +118,12 @@ const SaveSurveyList = () => {
         <div>
             <div className="flex  justify-between  gap-3 w-full border-gray-300 my-2">
                 <div className="flex justify-start ">
-                    <Typography variant="p">
-                        Created Survey
-                    </Typography>
-                </div>
+                    <div className="mb-2 md:mb-0 md:mr-4">
+                        <p className="font-bold">Created Survey</p>
+                        <p className="text-sm text-gray-600">
+                            Here you can see list of all surveys that have been created.
+                        </p>
+                    </div></div>
                 <div className="flex justify-end">
                     <AddCircleOutlineIcon style={{ width: "40px" }} onClick={handleOpenSurvey} />
                     <Typography variant="p" className="">
@@ -202,7 +207,22 @@ const SaveSurveyList = () => {
                                                                 View
                                                             </MenuItem>
                                                         </Tooltip>
-                                                        <Tooltip title="Edit Survey">
+                                                        {currentDate < new Date(survey.employeeSurveyStartingDate) && (
+                                                            <Tooltip title="Edit Survey">
+                                                                <MenuItem onClick={() => handleEditSurvey(survey._id)}>
+                                                                    <EditIcon
+                                                                        color="primary"
+                                                                        aria-label="edit"
+                                                                        style={{
+                                                                            color: "#2196f3",
+                                                                            marginRight: "10px",
+                                                                        }}
+                                                                    />
+                                                                    Edit
+                                                                </MenuItem>
+                                                            </Tooltip>
+                                                        )}
+                                                        {/* <Tooltip title="Edit Survey">
                                                             <MenuItem onClick={() => handleEditSurvey(survey._id)}>
                                                                 <EditIcon
                                                                     color="primary"
@@ -214,7 +234,7 @@ const SaveSurveyList = () => {
                                                                 />
                                                                 Edit
                                                             </MenuItem>
-                                                        </Tooltip>
+                                                        </Tooltip> */}
                                                         <Tooltip title="Delete Survey">
                                                             <MenuItem onClick={() => handleDeleteConfirmation(survey._id)}>
                                                                 <DeleteOutlineIcon

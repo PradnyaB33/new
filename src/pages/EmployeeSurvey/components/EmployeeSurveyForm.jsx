@@ -22,7 +22,7 @@ const EmployeeSurveyForm = () => {
     // Get organizationId
     const { getCurrentUser } = UserProfile();
     const user = getCurrentUser();
-    
+
     const param = useParams();
     const organisationId = param?.organisationId;
 
@@ -47,7 +47,7 @@ const EmployeeSurveyForm = () => {
 
     // Get single survey answer form
     const [singleResponseSurvey, setSingleResponseSurvey] = useState(null);
-    console.log("singleResponseSurvey",singleResponseSurvey);
+    console.log("singleResponseSurvey", singleResponseSurvey);
     const { isLoading: isLoading1 } = useQuery(
         ["singleResponseSurvey", organisationId, surveyId, responseId, authToken],
         async () => {
@@ -163,7 +163,7 @@ const EmployeeSurveyForm = () => {
                 {/* Main Header Content */}
                 <div className="flex flex-col md:flex-row justify-between w-full md:ml-4">
                     <div className="mb-2 md:mb-0 md:mr-4">
-                        <h1 className="text-xl font-bold">Fill Employee Survey</h1>
+                        <h1 className="text-xl font-bold">Employee Survey</h1>
                         <p className="text-sm text-gray-600">
                             Here you can fill survey
                         </p>
@@ -282,7 +282,7 @@ const EmployeeSurveyForm = () => {
                                     </> :
                                         <>
                                             <Button type="submit" variant="contained" color="primary" className="mt-4" onClick={handleSubmit((data) => onSubmit(data, "End"))}>
-                                                Save
+                                                Submit
                                             </Button>
                                             <Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => onSubmit(data, "Complete Survey"))}>
                                                 Save For Now

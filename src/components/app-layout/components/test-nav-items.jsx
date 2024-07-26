@@ -63,6 +63,7 @@ const TestNavItems = ({ toggleDrawer }) => {
   const { decodedToken: decoded } = useGetUser();
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
+  const empId = user?._id;
   const role = useGetCurrentRole();
   const queryClient = useQueryClient();
 
@@ -660,7 +661,9 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible:
               data?.organisation?.packageInfo === "Intermediate Plan" &&
               survey?.surveyPermission,
-            link: `/organisation/${orgId}/employee-survey`,
+              link: user?.profile.includes('Super-Admin') || user?.profile.includes('HR')
+              ? `/organisation/${orgId}/employee-survey`
+              : `/organisation/${orgId}/employee-survey/${empId}`,
             icon: <AssignmentIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Employee Survey",
           },

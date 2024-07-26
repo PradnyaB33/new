@@ -46,8 +46,8 @@ export default function SurveyDetails() {
     return (
         <>
             <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
-                <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center"> <Box sx={{ my: "20px" }}>
-                    <Box sx={{ borderBottom: 1, borderColor: "divider", display: "flex", justifyContent: "center" }}>
+                <article className="SetupSection bg-white w-full h-max shadow-md rounded-sm border items-center"> <Box sx={{ mt: "40px" }}>
+                    <Box sx={{ borderBottom: 1, borderColor: "divider", display: "flex", paddingLeft: "20px" }}>
                         <Tabs
                             value={value}
                             onChange={handleChange}
@@ -59,13 +59,13 @@ export default function SurveyDetails() {
                         </Tabs>
                     </Box>
                     <CustomTabPanel value={value} index={0}>
-                      <SummaryTab/>
+                        <SummaryTab />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
-                       <QuestionStats/>
+                        <QuestionStats />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={2}>
-                        <IndividualResponse/>
+                        <IndividualResponse />
                     </CustomTabPanel>
                 </Box>
                 </article>
