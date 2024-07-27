@@ -96,8 +96,8 @@ const CloseSurveyList = () => {
     const headers = [
       ["Title", "Description"],
       [title, description],
-      [], // Empty row for separation
-      questions // Column headers for questions
+      [], 
+      questions 
     ];
 
     // Prepare the data rows
@@ -117,8 +117,6 @@ const CloseSurveyList = () => {
     // Write to file
     XLSX.writeFile(wb, `${title}.xlsx`);
   };
-
-
 
   // Handle Excel click function
   const handleExcelClick = async (surveyId) => {

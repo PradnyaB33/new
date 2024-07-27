@@ -161,7 +161,7 @@ const EmpCommunication = () => {
                 <div>
                   <h1 className="!text-lg">Communication</h1>
                   <p className="text-xs text-gray-600">
-                    If you want access to communication permission, please check the checkbox.
+                    Here you can manage organisational communication as well as employee surveys.
                   </p>
                 </div>
               </div><br />
@@ -175,8 +175,11 @@ const EmpCommunication = () => {
                     checked={surveyPermission}
                     onChange={handleCheckboxChange}
                   />
-                  <span className="ml-2">{data?.surveyPermission ? "Disable Survey" : "Enable Survey"}</span>
+                  <p className="ml-2">Employee Survey</p><br />
                 </label>
+                <p className="text-xs text-gray-600">
+                  By enabling this checkbox you are allowing to create employee surveys.
+                </p>
               </div>
             </div>
             <div className="p-4  border-b-[.5px] flex  justify-between  gap-3 w-full border-gray-300">

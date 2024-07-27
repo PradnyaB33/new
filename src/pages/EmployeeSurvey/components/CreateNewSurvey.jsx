@@ -72,7 +72,7 @@ const CreateNewSurvey = ({ isEditable }) => {
     });
 
     //useForm
-    const { control, formState, handleSubmit, setValue, watch, trigger } = useForm({
+    const { control, formState, handleSubmit, getValues, setValue, watch, trigger } = useForm({
         defaultValues: {
             title,
             description,
@@ -409,13 +409,13 @@ const CreateNewSurvey = ({ isEditable }) => {
     // };
     const renderAnswerInput = (qIndex) => {
         const { questionType, options } = questions[qIndex];
-    
+
         const handleRemoveOption = (qIndex, oIndex) => {
             const newQuestions = [...questions];
             newQuestions[qIndex].options.splice(oIndex, 1);
             setQuestions(newQuestions);
         };
-    
+
         switch (questionType) {
             case 'Short Answer':
             case 'Paragraph':
@@ -442,11 +442,12 @@ const CreateNewSurvey = ({ isEditable }) => {
                                         disabled
                                     />
                                 ) : (
-                                    <Radio
-                                        checked={option.checked}
-                                        onChange={() => handleOptionChange(qIndex, index, 'radio')}
-                                        disabled
-                                    />
+                                    null
+                                    // <Radio
+                                    //     checked={option.checked}
+                                    //     onChange={() => handleOptionChange(qIndex, index, 'radio')}
+                                    //     disabled
+                                    // />
                                 )}
                                 <TextField
                                     value={option.title}
@@ -481,6 +482,7 @@ const CreateNewSurvey = ({ isEditable }) => {
                         InputLabelProps={{ shrink: true }}
                         fullWidth
                         disabled
+                        sx={{ mt: "20px" }}
                     />
                 );
             case 'Multi-choice':
@@ -519,7 +521,7 @@ const CreateNewSurvey = ({ isEditable }) => {
                 return null;
         }
     };
-    
+
     //handleSubmitForm 
     const handleSubmitForm = (data, status) => {
 
@@ -551,8 +553,8 @@ const CreateNewSurvey = ({ isEditable }) => {
     const handleClose = () => {
         navigate(`/organisation/${organisationId}/employee-survey`);
     };
-
-    const handleSaveForNow = () => {
+   
+    const handleSaveForLater = async () => {
         const formData = {
             title: watch("title"),
             description: watch("description"),
@@ -563,7 +565,11 @@ const CreateNewSurvey = ({ isEditable }) => {
             responseStatus: false,
         };
 
-        mutation.mutate(formData);
+        try {
+            await mutation.mutateAsync(formData);
+        } catch (error) {
+            handleAlert(true, 'error', 'Title is required');
+        }
     };
 
     return (
@@ -579,9 +585,11 @@ const CreateNewSurvey = ({ isEditable }) => {
                 {/* Main Header Content */}
                 <div className="flex flex-col md:flex-row justify-between w-full md:ml-4">
                     <div className="mb-2 md:mb-0 md:mr-4">
-                        <h1 className="text-xl font-bold">Employee Survey</h1>
+                        <h1 className="text-xl font-bold">
+                            {id ? (isEditable ? "Edit Employee Survey" : "View Employee Survey") : "Create Employee Survey"}
+                        </h1>
                         <p className="text-sm text-gray-600">
-                            Here you can create employee survey form
+                            Here you can {id ? (isEditable ? "edit" : "view") : "create"} employee survey form
                         </p>
                     </div>
                 </div>
@@ -595,7 +603,6 @@ const CreateNewSurvey = ({ isEditable }) => {
                     <article className="w-full rounded-lg bg-white">
                         <div className="w-full md:px-5 px-1">
                             <div className="w-full mt-4 px-2 sm:px-4 lg:px-6">
-                                <h1 className="text-xl mb-4 font-bold">{isEditable ? "Create Employee Survey" : "View Employee Survey"}</h1>
                                 <form onSubmit={handleSubmit((data) => handleSubmitForm(data, true))} className="w-full flex flex-col space-y-4">
                                     {isEditable ?
                                         <><div className="w-full">
@@ -717,7 +724,8 @@ const CreateNewSurvey = ({ isEditable }) => {
                                             label="Start date*"
                                             errors={errors}
                                             error={errors.employeeSurveyStartingDate}
-                                            min={new Date().toISOString().split("T")[0]}
+                                            min={new Date().toISOString().slice(0, 10)}
+                                            // min={new Date().toISOString().split("T")[0]}
                                             disabled={!isEditable}
                                         />
                                         <AuthInputFiled
@@ -776,10 +784,12 @@ const CreateNewSurvey = ({ isEditable }) => {
                                     </div>
                                     {isEditable && (
                                         <div className="flex flex-col xs:flex-row gap-4 mt-4 justify-end">
-                                            <Button type="submit" variant="contained" color="primary" onClick={() => handleSubmit((data) => handleSubmitForm(data, true))} sx={{ textTransform: "none" }}>
+                                            <Button type="submit" variant="contained" color="primary"
+                                                //  onClick={() => handleSubmit((data) => handleSubmitForm(data, true))} 
+                                                sx={{ textTransform: "none" }}>
                                                 Submit
                                             </Button>
-                                            <Button type="button" variant="outlined" color="primary" onClick={handleSaveForNow} sx={{ textTransform: "none" }}>
+                                            <Button type="button" variant="outlined" color="primary" onClick={() => handleSaveForLater(getValues())} sx={{ textTransform: "none" }}>
                                                 Save For Now
                                             </Button>
                                             <Button onClick={handleClose} variant="outlined" color="error" sx={{ textTransform: "none" }}>

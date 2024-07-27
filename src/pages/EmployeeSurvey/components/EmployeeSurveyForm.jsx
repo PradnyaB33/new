@@ -211,7 +211,7 @@ const EmployeeSurveyForm = () => {
                                                 )}
                                                 {q.questionType === "Checkboxes" && (
                                                     q.options.map((option, optIndex) => (
-                                                        <div key={optIndex} className="flex items-center">
+                                                        <div key={optIndex} className="space-y-1 flex items-center">
                                                             <Controller
                                                                 name={`question_${index}_option_${optIndex}`}
                                                                 control={control}
@@ -224,6 +224,7 @@ const EmployeeSurveyForm = () => {
                                                     ))
                                                 )}
                                                 {q.questionType === "Dropdown" && (
+                                                    <div className="space-y-1">
                                                     <Controller
                                                         name={`answer_${index}`}
                                                         control={control}
@@ -236,18 +237,18 @@ const EmployeeSurveyForm = () => {
                                                                 ))}
                                                             </Select>
                                                         )}
-                                                    />
+                                                    /></div>
                                                 )}
                                                 {q.questionType === "Date" && (
+                                                    <div className="space-y-1">
                                                     <AuthInputFiled
                                                         name={`answer_${index}`}
                                                         control={control}
                                                         type="date"
                                                         placeholder="dd-mm-yyyy"
-                                                        label="Date*"
                                                         errors={errors}
                                                         error={errors[`answer_${index}`]}
-                                                    />
+                                                    /></div>
                                                 )}
                                                 {q.questionType === "Multi-choice" && (
                                                     <FormControl component="fieldset">
