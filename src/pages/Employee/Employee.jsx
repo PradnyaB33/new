@@ -6,6 +6,7 @@ import EmployeeListToRole from "./EmployeeListToRole";
 import EmployeeListToEmployee from "./EmployeeListtoEmployee";
 
 const Employee = () => {
+  // define the state, get function hook
   const { organisationId } = useParams();
   const { useGetCurrentRole, getCurrentUser } = UserProfile();
   const user = getCurrentUser();

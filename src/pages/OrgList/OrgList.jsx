@@ -6,9 +6,9 @@ import useOrgList from "../../hooks/QueryHook/Orglist/hook";
 import Organisation from "../Home/components/Organisation";
 
 const OrgList = () => {
+  // define the state, hook , other import funciton
   const { data, isLoading } = useOrgList();
-  console.log(data?.organizations?.map((item) => item?._id));
-
+  
   return (
     <>
       <div className="bg-gray-50 h-screen">

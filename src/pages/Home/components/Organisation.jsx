@@ -23,6 +23,7 @@ import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import EditOrganisation from "./edit-organization";
 const Organisation = ({ item }) => {
+  // to define state, hooks, import other function if needed
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [editConfirmation, setEditConfirmation] = useState(null);
@@ -31,6 +32,8 @@ const Organisation = ({ item }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const navigate = useNavigate();
+
+  // to define the handleClick function
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
   };

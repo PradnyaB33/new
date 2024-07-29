@@ -20,7 +20,8 @@ const NewOranisationForm = () => {
     totalSteps,
     goToStep,
   } = useMultiStepForm(4);
-
+  
+  // switch the component using next and prev button
   const useSwitch = (step) => {
     switch (step) {
       case 1:
@@ -35,6 +36,8 @@ const NewOranisationForm = () => {
         return null;
     }
   };
+
+  // define the steppar
   const stepper = [
     {
       label: "Organisation Details",

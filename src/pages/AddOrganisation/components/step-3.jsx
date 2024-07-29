@@ -11,6 +11,7 @@ import { z } from "zod";
 import useOrg from "../../../State/Org/Org";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 
+// to define the package count schema
 const packageCountSchema = z.object({
   count: z
     .string()
@@ -20,8 +21,12 @@ const packageCountSchema = z.object({
   }),
   paymentType: z.enum(["Phone_Pay", "RazorPay"]),
 });
+
 const Step3 = ({ nextStep }) => {
+  // to define the state , hook and import the other function
   const { count, setStep3Data, cycleCount, paymentType } = useOrg();
+
+  // use useForm
   const { control, handleSubmit, formState } = useForm({
     defaultValues: {
       count,
@@ -31,6 +36,8 @@ const Step3 = ({ nextStep }) => {
     resolver: zodResolver(packageCountSchema),
   });
   const { errors } = formState;
+
+  // to define the onSubmit function
   const onSubmit = (data) => {
     setStep3Data(data);
     nextStep();

@@ -5,9 +5,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import { Error } from "@mui/icons-material";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import UserProfile from "../../../hooks/UserData/useUser";
 const Step3 = ({ prevStep }) => {
+  // to define the state, hook , other funciton
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { handleAlert } = useContext(TestContext);
@@ -15,8 +16,6 @@ const Step3 = ({ prevStep }) => {
   const navigate = useNavigate("");
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
-  console.log("role", role);
-
   const {
     dept_name,
     dept_description,
@@ -29,26 +28,8 @@ const Step3 = ({ prevStep }) => {
     dept_cost_center_id,
     emptyState,
   } = useDepartmentState();
-  const data = useDepartmentState();
-  console.log(data);
 
-  //for  Get Query
-  const { data: department } = useQuery(
-    ["department", organisationId],
-    async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/department/get/${organisationId}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      return response.data.department;
-    }
-  );
-  console.log("department", department);
-
+  // to define the handleSumbit function
   const handleSubmit = useMutation(
     () => {
       const deptData = {
@@ -63,8 +44,6 @@ const Step3 = ({ prevStep }) => {
         departmentId: dept_id,
         dept_cost_center_id: dept_cost_center_id,
       };
-
-      console.log("deptdata", deptData);
 
       const response = axios.post(
         `${process.env.REACT_APP_API}/route/department/create/${organisationId}?role=${role}`,
@@ -83,7 +62,7 @@ const Step3 = ({ prevStep }) => {
         const successMessage =
           role === "HR" || role === "Super-Admin"
             ? "Department added successfully"
-            : "Request sent successfully."; 
+            : "Request sent successfully.";
         handleAlert(true, "success", successMessage);
         emptyState();
         navigate(`/organisation/${organisationId}/department-list`);

@@ -5,6 +5,7 @@ import ReportIcon from "@mui/icons-material/Report";
 import { UseContext } from "../../State/UseState/UseContext";
 
 const AppLoader = () => {
+  // to get the appLoading function from UseContext
   const { appLoading } = useContext(UseContext);
   return (
     <>

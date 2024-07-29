@@ -10,10 +10,16 @@ import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 
 const Test4 = ({ prevStep }) => {
+  // to get the user from UserProfile Component
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const creatorId = user._id;
-  console.log(creatorId);
+  // use useNavigate
+  const navigate = useNavigate("");
+  const { handleAlert } = useContext(TestContext);
+  const authToken = useAuthToken();
+  const { organisationId } = useParams("");
+
   const {
     first_name,
     last_name,
@@ -46,13 +52,7 @@ const Test4 = ({ prevStep }) => {
     esicNo,
   } = useEmpState();
 
-  const navigate = useNavigate("");
-  const { handleAlert } = useContext(TestContext);
-
-  const authToken = useAuthToken();
-
-  const { organisationId } = useParams("");
-
+  // define the handleSubmit function
   const handleSubmit = useMutation(
     () => {
       const filteredData = Object.fromEntries(
@@ -132,29 +132,6 @@ const Test4 = ({ prevStep }) => {
       <div className="w-full mt-4">
         <h1 className="text-2xl mb-2 font-bold">Confirm Details</h1>
 
-        {/* {designation?.value &&
-        worklocation?.value &&
-        deptname?.value &&
-        employmentType?.value &&
-        salarystructure?.value &&
-        dept_cost_center_no?.value &&
-        shift_allocation?.value &&
-        dept_cost_center_no?.value &&
-        first_name &&
-        last_name &&
-        email &&
-        password &&
-        phone_number &&
-        address &&
-        citizenship &&
-        adhar_card_number &&
-        pan_card_number &&
-        gender &&
-        bank_account_no &&
-        date_of_birth &&
-        empId &&
-        companyemail &&
-        joining_date ? ( */}
         <>
           <div className="md:p-3 py-1 ">
             <h1 className=" text-lg bg-gray-200 px-4 py-2 w-full  my-2">
@@ -331,18 +308,6 @@ const Test4 = ({ prevStep }) => {
             </button>
           </div>
         </>
-        {/* ) : (
-          <section className=" py-6 px-8 rounded-md w-full">
-            <article className="flex items-center mb-1 text-red-500 gap-2">
-              <Error className="!text-2xl" />
-              <h1 className="text-xl font-semibold">Kindly fill all fields</h1>
-            </article>
-            <p>
-              Please fill the fields from the previous steps to able to view and
-              confirm the new employee onboarding
-            </p>
-          </section>
-        )} */}
       </div>
     </>
   );

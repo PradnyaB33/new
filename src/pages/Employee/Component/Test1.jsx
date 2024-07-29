@@ -42,6 +42,7 @@ const isAtLeastNineteenYearsOld = (value) => {
 };
 
 const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
+  // to define the state, import funciton and hook
   const {
     setStep1Data,
     first_name,
@@ -59,11 +60,11 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
     uanNo,
     esicNo,
   } = useEmployeeState();
-
   const { employeeId } = useParams();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
 
+  // to define the scema using zod
   const EmployeeSchema = z.object({
     first_name: z
       .string()
@@ -126,6 +127,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
       .optional(),
   });
 
+  // use useForm
   const { control, formState, setValue, handleSubmit } = useForm({
     defaultValues: {
       first_name: first_name,
@@ -146,6 +148,7 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
     resolver: zodResolver(EmployeeSchema),
   });
 
+  // for getting the data existing employee and set the value
   const { isLoading } = useQuery(
     ["employeeId", employeeId],
     async () => {
@@ -213,8 +216,8 @@ const Test1 = ({ nextStep, prevStep, isFirstStep, isLastStep }) => {
   );
 
   const { errors } = formState;
+  // to define the onSumbit funciton
   const onSubmit = async (data) => {
-    console.log(`🚀 ~ data:`, data);
     setStep1Data(data);
     nextStep();
   };

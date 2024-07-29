@@ -26,22 +26,11 @@ import useEmpOption from "../../../hooks/Employee-OnBoarding/useEmpOption";
 import useEmployeeState from "../../../hooks/Employee-OnBoarding/useEmployeeState";
 
 const Test2 = ({ isLastStep, nextStep, prevStep }) => {
+  // to define the state, hook and other function
   const organisationId = useParams("");
   const { employeeId } = useParams("");
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-  const {
-    Departmentoptions,
-    Manageroptions,
-    RolesOptions,
-    Shiftoptions,
-    locationoption,
-    cosnotoptions,
-    salaryTemplateoption,
-    empTypesoption,
-    Designationoption,
-  } = useEmpOption(organisationId);
-
   const {
     designation,
     profile,
@@ -59,6 +48,19 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     date_of_birth,
   } = useEmployeeState();
 
+  // to get the data from organization like department , location data
+  const {
+    Departmentoptions,
+    Manageroptions,
+    RolesOptions,
+    Shiftoptions,
+    locationoption,
+    cosnotoptions,
+    salaryTemplateoption,
+    empTypesoption,
+    Designationoption,
+  } = useEmpOption(organisationId);
+
   const isAtLeastNineteenYearsOld = (value) => {
     const dob = new Date(value);
     const birth = moment(date_of_birth, "YYYY-MM-DD");
@@ -66,7 +68,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     const differenceInDOB = currentValue.diff(birth, "years");
     return differenceInDOB >= 19;
   };
-
+  
+  // to define the schema using zod
   const EmployeeSchema = z
     .object({
       designation: z.object({
@@ -130,7 +133,9 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       message: "Password don't match",
       path: ["confirmPassword"],
     });
+  
 
+  // use useForm
   const { control, formState, handleSubmit, setValue } = useForm({
     defaultValues: {
       designation: designation,
@@ -148,7 +153,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     },
     resolver: zodResolver(EmployeeSchema),
   });
-
+  
+  // fetch the data of existing employee and set the value
   const { isFetching } = useQuery(
     ["employeeId", employeeId],
     async () => {
@@ -167,7 +173,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     },
     {
       onSuccess: (data) => {
-        console.log("data", data);
         if (data) {
           setValue("empId", data.employee.empId || "");
           setValue("companyemail", data.employee.companyemail || "");
@@ -287,6 +292,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   );
 
   const { errors } = formState;
+  // to define the onSubmit function
   const onsubmit = (data) => {
     setStep2Data(data);
     nextStep();

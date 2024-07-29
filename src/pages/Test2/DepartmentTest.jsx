@@ -8,6 +8,7 @@ import Step1 from "./DepartmentComp/Step1";
 import Step2 from "./DepartmentComp/Step2";
 import Step3 from "./DepartmentComp/Step3";
 const DepartmentTest = () => {
+// hook
   const {
     step,
     nextStep,
@@ -17,7 +18,8 @@ const DepartmentTest = () => {
     totalSteps,
     goToStep,
   } = useMultiStepForm(3);
-
+  
+  // steppar
   const stepper = [
     {
       label: "Department Details",
@@ -32,7 +34,8 @@ const DepartmentTest = () => {
       icon: CheckCircle,
     },
   ];
-
+  
+  // swtiching the component
   const useSwitch = (step) => {
     switch (step) {
       case 1:

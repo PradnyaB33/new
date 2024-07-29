@@ -18,6 +18,8 @@ import { z } from "zod";
 import useOrg from "../../../State/Org/Org";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useGetUser from "../../../hooks/Token/useUser";
+
+// to define the schema for organization validation
 const organizationSchema = z.object({
   orgName: z
     .string()
@@ -61,8 +63,8 @@ const organizationSchema = z.object({
   isTrial: z.boolean(),
 });
 const Step1 = ({ nextStep }) => {
+  // to state, hook , import other funciton
   const { decodedToken } = useGetUser();
-
   const {
     orgName,
     foundation_date,
@@ -76,7 +78,8 @@ const Step1 = ({ nextStep }) => {
     setStep1Data,
     isTrial,
   } = useOrg();
-
+ 
+  // use useForm
   const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
       orgName: orgName,
@@ -94,6 +97,8 @@ const Step1 = ({ nextStep }) => {
     resolver: zodResolver(organizationSchema),
   });
   const { errors } = formState;
+
+//  define the onSubmit function
   const onSubmit = async (data) => {
     await setStep1Data(data);
     nextStep();

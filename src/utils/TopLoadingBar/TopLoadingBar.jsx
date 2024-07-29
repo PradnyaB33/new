@@ -3,6 +3,7 @@ import LoadingBar from "react-top-loading-bar";
 import { UseContext } from "../../State/UseState/UseContext";
 
 const TopLoadingBar = () => {
+  // to get the setProgess , progress from UseContext
   const { setProgress, progress } = useContext(UseContext);
   return (
     <LoadingBar

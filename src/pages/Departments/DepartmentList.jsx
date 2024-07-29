@@ -27,6 +27,7 @@ import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 
 const DepartmentList = () => {
+  // to define the state, import the funciton ,
   const { handleAlert } = useContext(TestContext);
   const [departmentName, setDepartmentName] = useState("");
   const [headList, setHeadList] = useState([]);
@@ -39,7 +40,6 @@ const DepartmentList = () => {
   const [costCenterDescription, setCostCenterDescription] = useState("");
   const [departmentId, setDepartmentId] = useState("");
   const [departmentHeadName, setDepartmentHeadName] = useState("");
-  console.log(`🚀 ~ departmentHeadName:`, departmentHeadName);
   const [departmentHeadDelegateName, setDepartmentHeadDelegateName] =
     useState("");
   const [locations, setLocations] = useState([]);
@@ -61,7 +61,7 @@ const DepartmentList = () => {
             headers: { Authorization: authToken },
           }
         );
-        console.log(resp);
+
         setHeadList(resp?.data.employees);
       } catch (error) {
         console.log(error.message);
@@ -107,8 +107,6 @@ const DepartmentList = () => {
     "department",
     fetchDepartmentList
   );
-
-  console.log(deptList);
 
   // Delete Query for deleting Single Department
   const handleDeleteConfirmation = (id) => {

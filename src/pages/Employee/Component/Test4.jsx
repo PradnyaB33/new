@@ -10,10 +10,15 @@ import useAuthToken from "../../../hooks/Token/useAuth";
 import UserProfile from "../../../hooks/UserData/useUser";
 
 const Test4 = ({ prevStep }) => {
+  // to define the state, hook and import other function
   const { employeeId } = useParams("");
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const creatorId = user._id;
+  const navigate = useNavigate("");
+  const { handleAlert } = useContext(TestContext);
+  const authToken = useAuthToken();
+  const { organisationId } = useParams("");
 
   const {
     first_name,
@@ -47,19 +52,12 @@ const Test4 = ({ prevStep }) => {
     esicNo,
   } = useEmployeeState();
 
-  const navigate = useNavigate("");
-  const { handleAlert } = useContext(TestContext);
-
-  const authToken = useAuthToken();
-
-  const { organisationId } = useParams("");
-
+  // to define the handleSumbit function
   const handleSubmit = useMutation(
     () => {
       const filteredData = Object.fromEntries(
         Object.entries(data).filter(([key, value]) => value !== null)
       );
-      console.log("filter data", filteredData);
 
       // Use filteredData in your component or wherever you need the data
       const userData = {

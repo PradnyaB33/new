@@ -4,10 +4,12 @@ import { UseContext } from "../UseState/UseContext";
 const UseEffectContext = createContext();
 
 const UseEffectState = (props) => {
+  // to get the setProgress , location from UseContext
   const { setProgress, location } = useContext(UseContext);
 
   const state = { name: "harry", class: "5b" };
-
+ 
+  // if location change that time useEffect call
   useEffect(() => {
     setProgress(10);
     setTimeout(() => {

@@ -13,6 +13,7 @@ import useEmpQuery from "../../../hooks/Employee-OnBoarding/useEmpQuery";
 import useEmployeeState from "../../../hooks/Employee-OnBoarding/useEmployeeState";
 
 const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
+   // to define the state, import funciton and hook
   const organisationId = useParams("");
   const { employeeId } = useParams("");
   const { cookies } = useContext(UseContext);
@@ -29,7 +30,9 @@ const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
     },
     resolver: zodResolver(EmployeeSchema),
   });
+  
 
+  // // for getting the data existing employee and set the value
   const { isLoading } = useQuery(
     ["employeeId", employeeId],
     async () => {
