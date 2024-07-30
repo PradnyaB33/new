@@ -13,7 +13,7 @@ const useEmpOption = (organisationId) => {
     LocationListCall,
     EmpCodeCall,
     OnBoardManagerListCall,
-    GetHrListCall
+    GetHrListCall,
   } = useEmpQuery(organisationId);
   const DepartmentList = DepartmentListCall();
   const ManagerList = ManagerListCall();
@@ -27,14 +27,16 @@ const useEmpOption = (organisationId) => {
   const DesignationList = DesignationCall();
   const empTypes = EmpTypesCall();
   const getHr = GetHrListCall();
-  console.log("getHr" , getHr);
+  console.log("getHr", getHr);
 
-  const Departmentoptions = DepartmentList?.department?.map((item) => {
+  const Departmentoptions = DepartmentList?.departments?.map((item) => {
     return {
       value: item?._id,
       label: item?.departmentName,
     };
   });
+  console.log("department list", DepartmentList);
+  console.log("department opeion", Departmentoptions);
 
   const Manageroptions = ManagerList?.manager?.map((item) => {
     return {
@@ -131,7 +133,7 @@ const useEmpOption = (organisationId) => {
     salaryTemplateoption,
     empTypesoption,
     Designationoption,
-    HrOptions
+    HrOptions,
   };
 };
 

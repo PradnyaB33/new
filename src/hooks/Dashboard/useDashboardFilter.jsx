@@ -95,7 +95,7 @@ export default function useDashboardFilter(organisationId) {
   );
 
   // Options
-  const Departmentoptions = Department?.department?.map((item) => {
+  const Departmentoptions = Department?.departments?.map((item) => {
     return {
       value: item?._id,
       label: item?.departmentName,
