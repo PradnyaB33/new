@@ -103,6 +103,7 @@ const useIncomeTax = create((set) => ({
         handleAlert(true, "error", "Only PDF format allowed");
         return state;
       }
+      
       if (file?.size > 500 * 1024) {
         handleAlert(true, "error", "File size must be under 500kb");
         return state;
