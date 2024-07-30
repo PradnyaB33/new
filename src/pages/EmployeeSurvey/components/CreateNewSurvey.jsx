@@ -561,7 +561,7 @@ const CreateNewSurvey = ({ isEditable }) => {
             employeeSurveyStartingDate: watch("employeeSurveyStartingDate"),
             employeeSurveyEndDate: watch("employeeSurveyEndDate"),
             questions,
-            to: watch("to")?.map(option => option.value),
+            to: watch("to")   ,
             responseStatus: false,
         };
 

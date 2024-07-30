@@ -225,30 +225,30 @@ const EmployeeSurveyForm = () => {
                                                 )}
                                                 {q.questionType === "Dropdown" && (
                                                     <div className="space-y-1">
-                                                    <Controller
-                                                        name={`answer_${index}`}
-                                                        control={control}
-                                                        render={({ field }) => (
-                                                            <Select {...field} fullWidth>
-                                                                {q.options.map((option, optIndex) => (
-                                                                    <MenuItem key={optIndex} value={option}>
-                                                                        {option}
-                                                                    </MenuItem>
-                                                                ))}
-                                                            </Select>
-                                                        )}
-                                                    /></div>
+                                                        <Controller
+                                                            name={`answer_${index}`}
+                                                            control={control}
+                                                            render={({ field }) => (
+                                                                <Select {...field} fullWidth>
+                                                                    {q.options.map((option, optIndex) => (
+                                                                        <MenuItem key={optIndex} value={option}>
+                                                                            {option}
+                                                                        </MenuItem>
+                                                                    ))}
+                                                                </Select>
+                                                            )}
+                                                        /></div>
                                                 )}
                                                 {q.questionType === "Date" && (
                                                     <div className="space-y-1">
-                                                    <AuthInputFiled
-                                                        name={`answer_${index}`}
-                                                        control={control}
-                                                        type="date"
-                                                        placeholder="dd-mm-yyyy"
-                                                        errors={errors}
-                                                        error={errors[`answer_${index}`]}
-                                                    /></div>
+                                                        <AuthInputFiled
+                                                            name={`answer_${index}`}
+                                                            control={control}
+                                                            type="date"
+                                                            placeholder="dd-mm-yyyy"
+                                                            errors={errors}
+                                                            error={errors[`answer_${index}`]}
+                                                        /></div>
                                                 )}
                                                 {q.questionType === "Multi-choice" && (
                                                     <FormControl component="fieldset">
@@ -276,7 +276,7 @@ const EmployeeSurveyForm = () => {
                                 </div>
                                 <div className="flex gap-4 mt-4 justify-end">
                                     {responseId ? <><Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => onSubmit(data, "End", true))}>
-                                        Save
+                                        Submit
                                     </Button><Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => onSubmit(data, "Complete Survey", true))}>
                                             Save For Now
                                         </Button>

@@ -1,26 +1,53 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { UseContext } from '../../../State/UseState/UseContext';
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend } from 'chart.js';
+import {
+  Button
+} from "@mui/material";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend);
 
-const SummaryTab = () => {
-  //hooks
-  const { surveyId } = useParams();
+const PaginatedAnswers = ({ answers }) => {
+  const [currentPage, setCurrentPage] = useState(0);
 
-  //get organisationId
+  const handleNext = () => {
+    if (currentPage < answers.length - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  return (
+    <div >
+      <div>{answers[currentPage]}</div>
+      <div className="flex justify-end mt-4 space-x-2">
+        <Button variant="outlined" onClick={handlePrevious} disabled={currentPage === 0}>
+          Pre
+        </Button>
+        <Button variant="outlined" onClick={handleNext} disabled={currentPage === answers.length - 1}>
+          Next
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const SummaryTab = () => {
+  const { surveyId } = useParams();
   const param = useParams();
   const organisationId = param?.organisationId;
-
-  //get authToken
   const { cookies } = useContext(UseContext);
   const authToken = cookies['aegis'];
 
-  //get survey response data
   const { data: surveyData } = useQuery(
     ['surveyResponseSurverId', organisationId, surveyId, authToken],
     async () => {
@@ -36,7 +63,6 @@ const SummaryTab = () => {
     }
   );
 
-  //
   const aggregateAnswers = (responses) => {
     const aggregatedData = {};
 
@@ -46,25 +72,17 @@ const SummaryTab = () => {
           aggregatedData[question.questionId] = {
             question: question.question,
             type: question.questionType,
-            answers: {},
+            answers: [],
           };
         }
 
         const answerArray = Array.isArray(question.answer) ? question.answer : [question.answer];
-        answerArray.forEach(answer => {
-          if (answer !== undefined) {
-            if (!aggregatedData[question.questionId].answers[answer]) {
-              aggregatedData[question.questionId].answers[answer] = 0;
-            }
-            aggregatedData[question.questionId].answers[answer] += 1;
-          }
-        });
+        aggregatedData[question.questionId].answers.push(...answerArray);
       });
     });
 
-    // Filter out questions without answers
     Object.keys(aggregatedData).forEach(questionId => {
-      if (Object.keys(aggregatedData[questionId].answers).length === 0) {
+      if (aggregatedData[questionId].answers.length === 0) {
         delete aggregatedData[questionId];
       }
     });
@@ -74,8 +92,8 @@ const SummaryTab = () => {
 
   const renderChart = (question) => {
     const data = question.answers;
-    const labels = Object.keys(data);
-    const values = Object.values(data);
+    const labels = [...new Set(data)];
+    const values = labels.map(label => data.filter(answer => answer === label).length);
 
     switch (question.type) {
       case 'Checkboxes':
@@ -90,11 +108,12 @@ const SummaryTab = () => {
           ],
         };
         return (
-          <div className='bg-white h-max shadow-md rounded-sm border items-center p-4 '>
-            <div className="p-2 w-auto">
-              <Bar data={barData} />
-            </div>
-          </div>
+          <div style={{ display: 'flex' }}>
+            <div className='bg-white h-max shadow-md rounded-sm border items-center p-4 '>
+              <div className="p-2 w-auto">
+                <Bar data={barData} />
+              </div>
+            </div></div>
         );
 
       case 'Dropdown':
@@ -111,36 +130,33 @@ const SummaryTab = () => {
         };
 
         return (
-          <div className='bg-white w-full h-max shadow-md rounded-sm border items-center p-4'>
-            <div className="p-2 w-">
-              <Pie data={pieData} />
-            </div>
-          </div>
+          <div style={{ display: 'flex' }}>
+            <div className='bg-white shadow-md rounded-sm border items-center p-4'>
+              <div className="p-2 w-">
+                <Pie data={pieData} />
+              </div>
+            </div></div>
         );
 
       case 'Paragraph':
       case 'Short Answer':
+      case 'Date':
       default:
         return (
-          <div className='bg-white w-full h-max shadow-md rounded-sm border items-center p-4'>
-            <ul>
-              {labels.map((answer, index) => (
-                <li key={index}>{answer}</li>
-              ))}
-            </ul>
+          <div className='bg-white w-full h-max shadow-md rounded-sm border items-center p-4' style={{ padding: "30px" }}>
+            <PaginatedAnswers answers={data} />
           </div>
         );
     }
   };
 
   const aggregatedData = surveyData ? aggregateAnswers(surveyData) : {};
-  console.log("aggregatedData", surveyData?.length);
+  console.log("surveyData", surveyData);
   return (
     <>
       {surveyData && surveyData.length > 0 ?
-        <div style={{ display: 'flex' }}>
+        <div>
           <div style={{ padding: '20px' }}>
-
             <>{Object.keys(aggregatedData).map(questionId => (
               <div key={questionId} style={{ marginBottom: '20px' }}>
                 <p className='text-xl py-2'>Q. {aggregatedData[questionId].question}</p>

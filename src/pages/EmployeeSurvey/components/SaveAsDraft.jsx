@@ -22,6 +22,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { format } from "date-fns";
 
 const SaveAsDraft = () => {
   //hooks
@@ -166,6 +167,12 @@ const SaveAsDraft = () => {
                       Title
                     </th>
                     <th scope="col" className="!text-left pl-8 py-3">
+                      Start Date
+                    </th>
+                    <th scope="col" className="!text-left pl-8 py-3">
+                      End Date
+                    </th>
+                    <th scope="col" className="!text-left pl-8 py-3">
                       Action
                     </th>
                   </tr>
@@ -175,6 +182,12 @@ const SaveAsDraft = () => {
                     <tr key={survey._id} className="!font-medium border-b ">
                       <td className="!text-left pl-8 py-3">
                         {DOMPurify.sanitize(survey.title, { USE_PROFILES: { html: false } })}
+                      </td>
+                      <td className="!text-left pl-8 py-3">
+                        {survey && format(new Date(survey?.employeeSurveyStartingDate), "PP")}
+                      </td>
+                      <td className="!text-left pl-8 py-3">
+                        {survey && format(new Date(survey?.employeeSurveyEndDate), "PP")}
                       </td>
                       <td className="!text-left pl-8 py-3">
                         <MoreVert

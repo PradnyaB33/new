@@ -96,8 +96,8 @@ const CloseSurveyList = () => {
     const headers = [
       ["Title", "Description"],
       [title, description],
-      [], 
-      questions 
+      [],
+      questions
     ];
 
     // Prepare the data rows
@@ -169,6 +169,9 @@ const CloseSurveyList = () => {
                         Title
                       </th>
                       <th scope="col" className="!text-left pl-8 py-3">
+                        Start Date
+                      </th>
+                      <th scope="col" className="!text-left pl-8 py-3">
                         End Date
                       </th>
                       <th scope="col" className="!text-left pl-8 py-3">
@@ -188,11 +191,10 @@ const CloseSurveyList = () => {
                           })}
                         </td>
                         <td className="!text-left pl-8 py-3">
-                          {survey &&
-                            format(
-                              new Date(survey?.employeeSurveyStartingDate),
-                              "PP"
-                            )}
+                          {survey && format(new Date(survey?.employeeSurveyStartingDate), "PP")}
+                        </td>
+                        <td className="!text-left pl-8 py-3">
+                          {survey && format(new Date(survey?.employeeSurveyEndDate), "PP")}
                         </td>
                         <td className="!text-left pl-8 py-3">
                           <Button

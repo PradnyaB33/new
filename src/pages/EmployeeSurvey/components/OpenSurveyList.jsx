@@ -91,11 +91,11 @@ const OpenSurveyList = () => {
           <div className="mb-2 md:mb-0 md:mr-4">
             <p className="font-bold">Open Survey</p>
             <p className="text-sm text-gray-600">
-            Here you can see list of currently active surveys.
-             </p>
+              Here you can see list of currently active surveys.
+            </p>
           </div>
 
-         
+
         </div>
         <div className="flex justify-end">
           <AddCircleOutlineIcon style={{ width: "40px" }} onClick={handleOpenSurvey} />
@@ -134,6 +134,9 @@ const OpenSurveyList = () => {
                         Title
                       </th>
                       <th scope="col" className="!text-left pl-8 py-3">
+                        Start Date
+                      </th>
+                      <th scope="col" className="!text-left pl-8 py-3">
                         End Date
                       </th>
                       <th scope="col" className="!text-left pl-8 py-3">
@@ -149,6 +152,9 @@ const OpenSurveyList = () => {
                         </td>
                         <td className="!text-left pl-8 py-3">
                           {survey && format(new Date(survey?.employeeSurveyStartingDate), "PP")}
+                        </td>
+                        <td className="!text-left pl-8 py-3">
+                          {survey && format(new Date(survey?.employeeSurveyEndDate), "PP")}
                         </td>
                         <td className="!text-left pl-8 py-3">
                           {survey?.responses?.length > 0 ? (
