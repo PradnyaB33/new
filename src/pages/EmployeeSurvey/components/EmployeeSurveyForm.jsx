@@ -12,10 +12,12 @@ import { useQuery, useMutation } from 'react-query';
 import { TestContext } from "../../../State/Function/Main";
 
 const EmployeeSurveyForm = () => {
+    //hooks
     const navigate = useNavigate();
     const { handleAlert } = useContext(TestContext);
     const { surveyId, responseId } = useParams();
 
+    //Get Cookies
     const { cookies } = useContext(UseContext);
     const authToken = cookies["aegis"];
 
@@ -47,7 +49,7 @@ const EmployeeSurveyForm = () => {
 
     // Get single survey answer form
     const [singleResponseSurvey, setSingleResponseSurvey] = useState(null);
-    console.log("singleResponseSurvey", singleResponseSurvey);
+    console.log("singleResponseSurvey",singleResponseSurvey)
     const { isLoading: isLoading1 } = useQuery(
         ["singleResponseSurvey", organisationId, surveyId, responseId, authToken],
         async () => {

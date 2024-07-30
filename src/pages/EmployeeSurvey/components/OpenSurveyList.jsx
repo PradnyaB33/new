@@ -7,11 +7,15 @@ import DOMPurify from "dompurify";
 import { useQuery } from "react-query";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { format } from "date-fns";
+import UserProfile from "../../../hooks/UserData/useUser";
 
 const OpenSurveyList = () => {
   // Hooks
   const navigate = useNavigate();
+  const { useGetCurrentRole } = UserProfile();
+  const role = useGetCurrentRole();
 
+  console.log("useGetCurrentRole..........", role)
   // Get organizationId
   const param = useParams();
   const organisationId = param?.organisationId;
@@ -139,9 +143,9 @@ const OpenSurveyList = () => {
                       <th scope="col" className="!text-left pl-8 py-3">
                         End Date
                       </th>
-                      <th scope="col" className="!text-left pl-8 py-3">
+                      {role === 'Employee' && <th scope="col" className="!text-left pl-8 py-3">
                         Actions
-                      </th>
+                      </th>}
                     </tr>
                   </thead>
                   <tbody>
@@ -156,7 +160,7 @@ const OpenSurveyList = () => {
                         <td className="!text-left pl-8 py-3">
                           {survey && format(new Date(survey?.employeeSurveyEndDate), "PP")}
                         </td>
-                        <td className="!text-left pl-8 py-3">
+                        {role === 'Employee' && <td className="!text-left pl-8 py-3">
                           {survey?.responses?.length > 0 ? (
                             <div>
                               {survey?.responses[0]?.responseStatus === "End" ?
@@ -186,7 +190,7 @@ const OpenSurveyList = () => {
                               Take Survey
                             </Button>
                           )}
-                        </td>
+                        </td>}
                       </tr>
                     ))}
                   </tbody>

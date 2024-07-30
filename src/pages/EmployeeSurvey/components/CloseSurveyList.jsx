@@ -46,7 +46,7 @@ const CloseSurveyList = () => {
       enabled: !!organisationId && !!authToken,
     }
   );
-  console.log("surveys....", surveys);
+
   //handleSurveyDetails function
   const handleSurveyDetails = (surveyId) => {
     navigate(`/organisation/${organisationId}/survey-details/${surveyId}`);
@@ -77,7 +77,6 @@ const CloseSurveyList = () => {
 
   // Generate Excel function
   const generateExcelForSurvey = (surveys) => {
-    console.log("Generate Excel", surveys);
     if (!surveys || surveys.length === 0) return;
 
     // Extract title and description from the first survey

@@ -10,8 +10,11 @@ import SaveSurveyList from "./components/SaveSurveyList";
 
 const EmployeeSurvey = () => {
     // Hooks
+    const { getCurrentUser, useGetCurrentRole } = UserProfile();
+    const role = useGetCurrentRole();
+
+    console.log("useGetCurrentRole..........", role)
     const navigate = useNavigate();
-    const { getCurrentUser } = UserProfile();
     const user = getCurrentUser();
     const param = useParams();
     const organisationId = param?.organisationId;
@@ -42,16 +45,15 @@ const EmployeeSurvey = () => {
                     <div className="mb-2 md:mb-0 md:mr-4">
                         <h1 className="text-xl font-bold">Employee Survey</h1>
                         <p className="text-sm text-gray-600">
-                            {employeeId === undefined && isAdminOrHR
+                            {employeeId === undefined && isAdminOrHR && role !== 'Employee'
                                 ? "Here you can create and fill survey"
-                                : "Here you can fill survey"
-                            }
+                                : "Here you can fill survey"}
                         </p>
                     </div>
                 </div>
             </header>
             <section className="xs:px-8 xs:py-2">
-                {employeeId === undefined && isAdminOrHR && (
+                {employeeId === undefined && isAdminOrHR && role !== 'Employee' && (
                     <div className="py-4 border-b-[.5px] flex justify-between gap-3 w-full border-gray-300">
                         <div className="flex justify-end w-full">
                             <Button
@@ -68,7 +70,7 @@ const EmployeeSurvey = () => {
                 <div className="px-4 py-2 bg-white w-full h-max shadow-md rounded-2m border my-8">
                     <OpenSurveyList />
                 </div>
-                {employeeId === undefined && isAdminOrHR && (
+                {employeeId === undefined && isAdminOrHR && role !== 'Employee' && (
                     <>
                         <div className="px-4 py-2 bg-white w-full h-max shadow-md rounded-2m border my-8">
                             <SaveSurveyList />
