@@ -235,19 +235,20 @@ const SaveSurveyList = () => {
                                                                 Edit
                                                             </MenuItem>
                                                         </Tooltip> */}
-                                                        <Tooltip title="Delete Survey">
-                                                            <MenuItem onClick={() => handleDeleteConfirmation(survey._id)}>
-                                                                <DeleteOutlineIcon
-                                                                    color="primary"
-                                                                    aria-label="delete"
-                                                                    style={{
-                                                                        color: "#f50057",
-                                                                        marginRight: "10px",
-                                                                    }}
-                                                                />
-                                                                Delete
-                                                            </MenuItem>
-                                                        </Tooltip>
+                                                        {currentDate < new Date(survey.employeeSurveyStartingDate) && (
+                                                            <Tooltip title="Delete Survey">
+                                                                <MenuItem onClick={() => handleDeleteConfirmation(survey._id)}>
+                                                                    <DeleteOutlineIcon
+                                                                        color="primary"
+                                                                        aria-label="delete"
+                                                                        style={{
+                                                                            color: "#f50057",
+                                                                            marginRight: "10px",
+                                                                        }}
+                                                                    />
+                                                                    Delete
+                                                                </MenuItem>
+                                                            </Tooltip>)}
                                                     </Menu>
                                                 </td>
                                             </tr>

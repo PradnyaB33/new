@@ -49,7 +49,7 @@ const EmployeeSurveyForm = () => {
 
     // Get single survey answer form
     const [singleResponseSurvey, setSingleResponseSurvey] = useState(null);
-    console.log("singleResponseSurvey",singleResponseSurvey)
+    console.log("singleResponseSurvey", singleResponseSurvey)
     const { isLoading: isLoading1 } = useQuery(
         ["singleResponseSurvey", organisationId, surveyId, responseId, authToken],
         async () => {
@@ -277,7 +277,7 @@ const EmployeeSurveyForm = () => {
                                     ))}
                                 </div>
                                 <div className="flex gap-4 mt-4 justify-end">
-                                    {responseId ? <><Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => onSubmit(data, "End", true))}>
+                                    {responseId ? <><Button type="button" variant="contained" color="primary" onClick={handleSubmit((data) => onSubmit(data, "End", true))}>
                                         Submit
                                     </Button><Button type="button" variant="outlined" color="primary" onClick={handleSubmit((data) => onSubmit(data, "Complete Survey", true))}>
                                             Save For Now

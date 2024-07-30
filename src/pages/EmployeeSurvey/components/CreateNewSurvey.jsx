@@ -313,9 +313,9 @@ const CreateNewSurvey = ({ isEditable }) => {
 
   const employeeEmail = employee
     ? employee?.map((emp) => ({
-        label: emp.email,
-        value: emp.email,
-      }))
+      label: emp.email,
+      value: emp.email,
+    }))
     : [];
 
   //handleSelectAll function
@@ -569,7 +569,7 @@ const CreateNewSurvey = ({ isEditable }) => {
                           control={control}
                           type="textEditor"
                           placeholder="Title"
-                          label="Title"
+                          label="Title*"
                           maxLimit={100}
                           errors={errors}
                           error={errors.title}
@@ -622,6 +622,12 @@ const CreateNewSurvey = ({ isEditable }) => {
                             Question {index + 1}
                           </label>
                           <div>
+                            <label
+
+                              className=" font-semibold text-gray-500 text-md"
+                            >
+                              Question Type*
+                            </label><br />
                             <Select
                               style={{ width: "200px", height: "42px" }}
                               labelId={`question-type-label-${index}`}
@@ -647,17 +653,6 @@ const CreateNewSurvey = ({ isEditable }) => {
                                 Multi-choice
                               </MenuItem>
                             </Select>
-                            {isEditable && (
-                              <div className="h-4 !mb-1">
-                                {!questionTypeSelected[index] && (
-                                  <div className="h-4 !mb-1">
-                                    <p className="text-sm text-red-500">
-                                      Please select a question type
-                                    </p>
-                                  </div>
-                                )}
-                              </div>
-                            )}
                           </div>
                         </div>
                         <div>
@@ -795,24 +790,50 @@ const CreateNewSurvey = ({ isEditable }) => {
                       readOnly={!isEditable}
                     />
                   </div>
+                  <div>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          // checked={employeeCredential}
+                          // onChange={(e) => setEmployeeCredential(e.target.checked)}
+                        />
+                      }
+                      label="Employee name confidential"
+                    />
+
+                    {/* <AuthInputFiled
+                      className={"w-full flex items-start justify-center flex-col"}
+                      name={"trainingDownCasted"}
+                      control={control}
+                      type="checkbox"
+                      placeholder="Downcasted"
+                      label="Down Cast"
+                      errors={errors}
+                      error={errors.trainingDownCasted}
+                      icon={TrendingDownOutlined}
+                      descriptionText={
+                        "Down-Casted Training will be automatically assigned to organization employees."
+                      }
+                    /> */}
+                  </div>
                   {isEditable && (
                     <div className="flex flex-col xs:flex-row gap-4 mt-4 justify-end">
                       <Button
                         type="submit"
                         variant="contained"
                         color="primary"
-                        sx={{ textTransform: "none" }}
+                        sx={{ textTransform: "none", width: "100px" }}
                       >
-                        {mutation.isLoading ? <CircularProgress/> :"Submit"}
+                        {mutation.isLoading ? <CircularProgress size={20} /> : "Submit"}
                       </Button>
                       <Button
                         type="button"
                         variant="outlined"
                         color="primary"
                         onClick={() => handleSaveForLater(getValues())}
-                        sx={{ textTransform: "none" }}
+                        sx={{ textTransform: "none", width: "150px" }}
                       >
-                        Save For Now
+                        {mutation.isLoading ? <CircularProgress size={20} /> : "Save For Now"}
                       </Button>
                       <Button
                         onClick={handleClose}
