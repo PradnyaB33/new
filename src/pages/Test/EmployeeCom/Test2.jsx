@@ -44,6 +44,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     Designationoption,
   } = useEmpOption(organisationId);
 
+  console.log("department opeion" , Departmentoptions);
+
   const {
     confirmPassword,
     designation,
