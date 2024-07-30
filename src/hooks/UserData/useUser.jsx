@@ -7,7 +7,8 @@ const UserProfile = () => {
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
   const roletoken = cookies["role"];
-
+  
+  // to get user
   const getCurrentUser = () => {
     if (token) {
       const decodedToken = jwtDecode(token);
@@ -18,7 +19,8 @@ const UserProfile = () => {
       }
     }
   };
-
+  
+  // to get current role
   const useGetCurrentRole = () => {
     const { data } = useQuery({
       queryKey: ["role"],

@@ -27,7 +27,8 @@ const EditEmployee = () => {
     goToStep,
   } = useMultiStepForm(4);
   const navigate = useNavigate();
-
+   
+  // to define the steppar
   const stepper = [
     {
       label: "Personal Details",
@@ -46,7 +47,8 @@ const EditEmployee = () => {
       icon: CheckCircle,
     },
   ];
-
+  
+  // swtiching the component based on Next and Prev button
   const useSwitch = (step) => {
     switch (step) {
       case 1:

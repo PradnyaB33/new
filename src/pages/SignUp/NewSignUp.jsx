@@ -21,20 +21,24 @@ import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import UserProfile from "../../hooks/UserData/useUser";
 
 const SignIn = () => {
+  // hooks
   const { handleAlert } = useContext(TestContext);
   const location = useLocation();
+  // state
   const [display, setdisplay] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [otp, setOTP] = useState("");
   const [time, setTime] = useState(1);
   const [isTimeVisible, setIsTimeVisible] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
-
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [visibleCPassword, setVisibleCPassword] = useState(false);
 
+  // to get current user
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
+
+  // navigate
   const navigate = useNavigate("");
 
   useEffect(() => {
@@ -63,6 +67,7 @@ const SignIn = () => {
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
+  // define the validation using zod
   const SignUpSchema = z
     .object({
       first_name: z
@@ -98,8 +103,7 @@ const SignIn = () => {
       path: ["confirmPassword"],
     });
 
-  // Create a type for validation
-
+  // use useForm
   const {
     handleSubmit,
     control,
@@ -112,11 +116,8 @@ const SignIn = () => {
 
   const number = watch("phone");
 
+  // to define the onSubmit function
   const onSubmit = async (data) => {
-    // if (!isVerified) {
-    //   handleAlert(true, "error", "Please verify mobile no first");
-    //   return false;
-    // }
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create`,
@@ -230,13 +231,6 @@ const SignIn = () => {
                 </h1>
               </div>
             </div>
-            {/* <div className="flex-col gap-4 w-max !flex md:space-x-4  space-x-2 mb-4 ">
-              <div className="flex flex-col space-y-1">
-                <h1 className="font-bold text-2xl md:text-3xl">
-                  Register Account
-                </h1>
-              </div>
-            </div> */}
 
             <div className="mt-6 grid md:grid-cols-2 grid-cols-1 gap-2">
               {/* First Name */}

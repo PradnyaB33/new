@@ -13,6 +13,7 @@ import { packageArray } from "../../../utils/Data/data";
 import PricingCard from "./step-2-components/pricing-card";
 
 const Step4 = () => {
+  // to define state , hook , import other function
   const [confirmOpen, setConfirmOpen] = useState(false);
   const data = useOrg();
   const { handleAlert } = useContext(TestContext);
@@ -23,13 +24,8 @@ const Step4 = () => {
       Authorization: authToken,
     },
   };
-  // const handleDismiss = async (id) => {
-  //   const response = await axios.delete(
-  //     `${process.env.REACT_APP_API}/route/organization/delete/${id}`,
-  //     config
-  //   );
-  //   return response.data;
-  // };
+
+  // to define the handleForm function to add organization
   const handleForm = async () => {
     if (data.packageInfo === undefined) {
       return "Please Select Plan And Package";
@@ -79,7 +75,6 @@ const Step4 = () => {
           },
           modal: {
             ondismiss: function () {
-              // mutate2(data.organization._id);
               console.log("Checkout form closed by the user");
             },
           },
@@ -102,6 +97,7 @@ const Step4 = () => {
     },
   });
 
+  // to define the function for package calculation
   const getPriceMain = useMemo(() => {
     const expirationDate = moment().add(3 * data?.cycleCount, "months");
     const dateDifference = expirationDate.diff(moment(), "days");

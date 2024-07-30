@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { UseContext } from "../../State/UseState/UseContext";
 const EmployeeListToEmployee = ({ organisationId }) => {
+  // to define the state, hook , and import other function
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [nameSearch, setNameSearch] = useState("");
@@ -12,8 +13,9 @@ const EmployeeListToEmployee = ({ organisationId }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
-  console.log(availableEmployee, "avialabel days");
+  
 
+  // to fetch the employee
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
@@ -40,8 +42,9 @@ const EmployeeListToEmployee = ({ organisationId }) => {
     fetchAvailableEmployee(currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
-  console.log(availableEmployee);
+  
 
+  // to pagination
   const prePage = () => {
     if (currentPage !== 1) {
       fetchAvailableEmployee(currentPage - 1);

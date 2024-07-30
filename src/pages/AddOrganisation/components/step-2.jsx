@@ -14,7 +14,10 @@ const packageSchema = z.object({
   }),
 });
 const Step2 = ({ nextStep }) => {
+  // to define the state
   const { packageInfo, setStep2Data } = useOrg();
+
+  // use useForm
   const { handleSubmit, control, formState } = useForm({
     defaultValues: {
       packageInfo,
@@ -22,6 +25,8 @@ const Step2 = ({ nextStep }) => {
     resolver: zodResolver(packageSchema),
   });
   const { isDirty, errors } = formState;
+
+  // to define the onSubmit function
   const onSubmit = (data) => {
     setStep2Data(data?.packageInfo);
     nextStep();

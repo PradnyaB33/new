@@ -10,12 +10,13 @@ import UserProfile from "../../hooks/UserData/useUser";
 import useSignup from "../../hooks/useLoginForm";
 
 const SignIn = () => {
+  // state
   const { setEmail, setPassword, email, password } = useSignup();
-  // const [selectRole, setSelectRole] = useState("");
   const { handleAlert } = useContext(TestContext);
-  // const { setCookie } = useContext(UseContext);
+  // navigate
   const redirect = useNavigate();
-
+  
+  // to get current user information and user role
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
@@ -50,7 +51,8 @@ const SignIn = () => {
     }
     // eslint-disable-next-line
   }, [role, window.location.pathname]);
-
+  
+  // to define the funciton for handle role
   const handleRole = useMutation(
     (data) => {
       const res = axios.post(
@@ -70,7 +72,8 @@ const SignIn = () => {
       },
     }
   );
-
+  
+  // to define the fuction for logged in
   const handleLogin = useMutation(
     async (data) => {
       const res = await axios.post(

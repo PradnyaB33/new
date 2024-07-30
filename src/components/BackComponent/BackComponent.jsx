@@ -3,6 +3,7 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const BackComponent = () => {
+  // to for back navigation
   const navigate = useNavigate();
   const location = useLocation();
 

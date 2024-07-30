@@ -11,14 +11,13 @@ import useDepartmentState from "../../../hooks/DepartmentHook/useDepartmentState
 import useDeptOption from "../../../hooks/DepartmentHook/useDeptOption";
 
 const Step1 = ({ nextStep, isLastStep }) => {
+  // state
   const organisationId = useParams();
-
   const {
     DepartmentLocationOptions,
     DepartmentHeadOptions,
     DelegateDepartmentHeadOptions,
   } = useDeptOption(organisationId);
-
   const {
     setStep1Data,
     dept_name,
@@ -28,6 +27,7 @@ const Step1 = ({ nextStep, isLastStep }) => {
     dept_delegate_head_name,
   } = useDepartmentState();
 
+  // to define the schema using zod
   const DepartmentSchema = z.object({
     dept_name: z
       .string()
@@ -51,7 +51,8 @@ const Step1 = ({ nextStep, isLastStep }) => {
       .optional(),
   });
 
-  const { control, formState, handleSubmit, getValues } = useForm({
+  // use useForm
+  const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       dept_name: dept_name,
       dept_description: dept_description,
@@ -61,12 +62,10 @@ const Step1 = ({ nextStep, isLastStep }) => {
     },
     resolver: zodResolver(DepartmentSchema),
   });
-
   const { errors } = formState;
 
+  // to define the onSubmit funciton
   const onSubmit = async (data) => {
-    console.log(`🚀 ~ data:`, data);
-    console.log(getValues());
     setStep1Data(data);
     nextStep();
   };

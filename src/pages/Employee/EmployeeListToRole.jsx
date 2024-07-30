@@ -11,6 +11,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 const EmployeeListToRole = () => {
+  // to  define state, hook and import other function  if user needed
   const navigate = useNavigate();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -22,7 +23,9 @@ const EmployeeListToRole = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
+   
 
+  // to fetch the employee
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
@@ -44,12 +47,13 @@ const EmployeeListToRole = () => {
       console.log(error);
     }
   };
-
   useEffect(() => {
     fetchAvailableEmployee(currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
+  
 
+  // for pagination
   const prePage = () => {
     if (currentPage !== 1) {
       fetchAvailableEmployee(currentPage - 1);
@@ -65,7 +69,9 @@ const EmployeeListToRole = () => {
   const changePage = (id) => {
     fetchAvailableEmployee(id);
   };
+  
 
+  // to navigate to other component
   const handleEditClick = (empId) => {
     navigate(`/organisation/${organisationId}/edit-employee/${empId}`);
   };

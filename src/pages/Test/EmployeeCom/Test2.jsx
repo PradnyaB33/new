@@ -25,7 +25,13 @@ import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 
 const Test2 = ({ isLastStep, nextStep, prevStep }) => {
+  // state , hook and other if user needed
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const [visiblePassword, setVisiblePassword] = useState(false);
+  const [visibleCPassword, setVisibleCPassword] = useState(false);
   const organisationId = useParams("");
+
   const {
     Departmentoptions,
     onBoardManageroptions,
@@ -59,17 +65,6 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
 
   const isAtLeastNineteenYearsOld = (value) => {
     const dob = new Date(value);
-    // let differenceInYears = currentDate.getFullYear() - dob.getFullYear();
-    // const monthDiff = currentDate.getMonth() - dob.getMonth();
-
-    // // If the birth month is after the current month, reduce the age by 1
-    // if (
-    //   monthDiff < 0 ||
-    //   (monthDiff === 0 && currentDate.getDate() < dob.getDate())
-    // ) {
-    //   differenceInYears--;
-    // }
-
     const birth = moment(date_of_birth, "YYYY-MM-DD");
     const currentValue = moment(dob, "YYYY-MM-DD");
     const differenceInDOB = currentValue.diff(birth, "years");
@@ -77,14 +72,9 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
     return differenceInDOB >= 19;
   };
 
-  const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-  const [visiblePassword, setVisiblePassword] = useState(false);
-  const [visibleCPassword, setVisibleCPassword] = useState(false);
-
   const { data } = useSubscriptionGet(organisationId);
-  console.log(`🚀 ~ subscriptionDetails:`, data?.organisation?.foundation_date);
+  
+  // employee schema using zod
   const EmployeeSchema = z
     .object({
       password: z
@@ -173,7 +163,8 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
       message: "Password don't match",
       path: ["confirmPassword"],
     });
-
+  
+    // to define the useForm
   const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       confirmPassword: confirmPassword,
@@ -195,6 +186,7 @@ const Test2 = ({ isLastStep, nextStep, prevStep }) => {
   });
 
   const { errors } = formState;
+  // to define the onSubmit 
   const onsubmit = (data) => {
     setStep2Data(data);
     nextStep();

@@ -9,6 +9,7 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import useDepartmentState from "../../../hooks/DepartmentHook/useDepartmentState";
 
 const Step2 = ({ isLastStep, nextStep, prevStep }) => {
+  // to define the state
   const {
     dept_cost_center_name,
     dept_cost_center_description,
@@ -16,14 +17,17 @@ const Step2 = ({ isLastStep, nextStep, prevStep }) => {
     dept_cost_center_id,
     setStep2Data,
   } = useDepartmentState();
+ 
 
+  // to define the schema using zod
   const DepartmentSchema = z.object({
     dept_cost_center_name: z.string().optional(),
     dept_cost_center_description: z.string().optional(),
     dept_id: z.string(),
     dept_cost_center_id: z.string(),
   });
-
+  
+  // to define the useForm from react-hook-form
   const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       dept_cost_center_name: dept_cost_center_name,
@@ -35,8 +39,9 @@ const Step2 = ({ isLastStep, nextStep, prevStep }) => {
   });
 
   const { errors } = formState;
+
+  // to define the onSubmit funciton
   const onsubmit = (data) => {
-    console.log(data);
     setStep2Data(data);
     nextStep();
   };

@@ -23,6 +23,7 @@ import * as XLSX from "xlsx";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 const DeleteEmployee = () => {
+  // to define the state, hook and other if user neeed
   const { handleAlert } = useContext(TestContext);
   const { setAppAlert, cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -42,6 +43,8 @@ const DeleteEmployee = () => {
   const [showConfirmationExcel, setShowConfirmationExcel] = useState(false);
   const { organisationId } = useParams();
   const [selectedFile, setSelectedFile] = useState(null);
+
+
   // pull the employee data
   const fetchAvailableEmployee = async (page) => {
     try {
@@ -70,7 +73,7 @@ const DeleteEmployee = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
-  // function for previous button , next button and current button
+  // function for previous button , next button and current button of pagination
   const prePage = () => {
     if (currentPage !== 1) {
       fetchAvailableEmployee(currentPage - 1);

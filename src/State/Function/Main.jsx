@@ -4,8 +4,10 @@ import { UseContext } from "../UseState/UseContext";
 const TestContext = createContext();
 
 const TestState = (props) => {
+  // to get the setAppAlert or setAppLoading from UseContext
   const { setAppAlert, setAppLoading } = useContext(UseContext);
-
+  
+  // create the handleAlert function 
   const handleAlert = (alert, type, msg) => {
     setAppAlert({
       alert: alert || false,
@@ -13,7 +15,8 @@ const TestState = (props) => {
       msg: msg || "this is test message",
     });
   };
-
+  
+  // crate the handleLoader function
   const handleLoader = (load, color) => {
     setAppLoading({
       load: load || true,

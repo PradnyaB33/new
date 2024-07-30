@@ -54,6 +54,7 @@ import useGetCommunicationPermission from "../../../pages/EmployeeSurvey/useCont
 import { useQueryClient } from "react-query";
 
 const TestNavItems = ({ toggleDrawer }) => {
+  // to define the route and pass the dynamic organization id
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];

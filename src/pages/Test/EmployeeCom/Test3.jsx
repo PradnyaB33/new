@@ -10,21 +10,23 @@ import useEmpQuery from "../../../hooks/Employee-OnBoarding/useEmpQuery";
 import useEmpState from "../../../hooks/Employee-OnBoarding/useEmpState";
 
 const Test3 = ({ isLastStep, nextStep, prevStep, isFirstStep }) => {
+  // define state, hook and other if needed
   const organisationId = useParams("");
   const { AdditionalListCall } = useEmpQuery(organisationId);
   const { addtionalFields, addtionalLoading } = AdditionalListCall();
-
   const { setStep3Data, data } = useEmpState();
-
   const EmployeeSchema = z.object({}).catchall(z.any().optional());
-
+  
+  // define the useForm
   const { control, formState, handleSubmit } = useForm({
     defaultValues: {
       ...data,
     },
     resolver: zodResolver(EmployeeSchema),
   });
+  
 
+  // to define the onSubmit function
   const onSubmit = (testData) => {
     setStep3Data(testData);
     nextStep();
