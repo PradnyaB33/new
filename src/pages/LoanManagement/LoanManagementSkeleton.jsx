@@ -2,6 +2,7 @@ import Skeleton from "@mui/material/Skeleton";
 import React from "react";
 
 const LoanManagementSkeleton = () => {
+  // to create the component for skeleton
   return (
     <>
       <table className="min-w-full bg-white  text-left !text-sm font-light">

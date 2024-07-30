@@ -10,6 +10,7 @@ const useCalculateSalaryQuery = ({
   organisationId,
   remotePunchingCount,
 }) => {
+  // state, hook
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];

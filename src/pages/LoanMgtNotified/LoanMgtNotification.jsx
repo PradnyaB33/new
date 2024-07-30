@@ -6,10 +6,11 @@ import useLoanNotification from "../../hooks/QueryHook/notification/loan-notific
 
 
 const LoanMgtNotification = () => {
+  // to define the state, hook , import other function if needed
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const { getEmployeeRequestLoanApplication } = useLoanNotification();
-
+ 
   const handleEmployeeClick = (employee) => {
     setSelectedEmployee(employee);
   };

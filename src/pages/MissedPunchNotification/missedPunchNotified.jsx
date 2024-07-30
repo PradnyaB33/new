@@ -8,6 +8,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 import UserProfile from "../../hooks/UserData/useUser";
 
 const MissedPunchNotified = ({ employeeId }) => {
+  // to define the state, hook , import other function if user needed
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -32,13 +33,11 @@ const MissedPunchNotified = ({ employeeId }) => {
       return response.data.data;
     }
   );
-  console.log("unavailable record by empid", unavailableRecord);
 
   // for manager
   // approved by manager
   const handleApprovalUpdateByMgr = async (recordId) => {
     try {
-      console.log("record id", recordId);
       const response = await axios.put(
         `${process.env.REACT_APP_API}/route/organization/${organisationId}/update-approvalId/${recordId}`,
         {},
@@ -63,7 +62,6 @@ const MissedPunchNotified = ({ employeeId }) => {
   //  reject by manager
   const handleRejectUnavailableRecord = async (recordId) => {
     try {
-      console.log("record id", recordId);
       const response = await axios.put(
         `${process.env.REACT_APP_API}/route/organization/${organisationId}/reject-unavailable-record/${recordId}`,
         {},
@@ -82,7 +80,7 @@ const MissedPunchNotified = ({ employeeId }) => {
     }
   };
 
-  //  for hr
+  //  for hr approved the unavailable record
   const handleApprovalUnavailableRecord = async (recordId) => {
     try {
       console.log("record id", recordId);
@@ -102,7 +100,9 @@ const MissedPunchNotified = ({ employeeId }) => {
       console.error("Error approving record:", error);
       handleAlert(true, "error", "Failed to approve record.");
     }
-  };
+  }; 
+
+  // to define the function for approval the leave record
   const handleApprovedLeaveUnavailableRecord = async (recordId) => {
     try {
       const response = await axios.put(

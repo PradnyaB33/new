@@ -20,6 +20,7 @@ const AttendanceBioModal = ({
   organisationId,
   selectedEmployees,
 }) => {
+  // to import the state, hook and import other function if needed
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { handleAlert } = useContext(TestContext);
@@ -30,6 +31,7 @@ const AttendanceBioModal = ({
   const [checkedEmployees, setCheckedEmployees] = useState([]);
   const navigate = useNavigate("");
 
+  // call get api for retrive the employee in organization
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
@@ -75,6 +77,7 @@ const AttendanceBioModal = ({
     return regex.test(email);
   };
 
+  // to define the function for sync the data
   const handleSync = async () => {
     try {
       if (!validateEmail(emailSearch)) {
@@ -126,6 +129,7 @@ const AttendanceBioModal = ({
     }
   };
 
+  // navigation
   const totalPagesArray = Array.from(
     { length: totalPages },
     (_, index) => index + 1

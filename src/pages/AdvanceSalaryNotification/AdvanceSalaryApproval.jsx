@@ -12,19 +12,20 @@ import { useQueryClient } from "react-query";
 import ViewDocumentModal from "./ViewDocumentModal";
 
 const AdvanceSalaryApproval = ({ employee }) => {
+  // state
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { handleAlert } = useContext(TestContext);
   const queryClient = useQueryClient();
-  console.log(employee);
   const advanceSalaryId = employee._id;
-  console.log(advanceSalaryId);
+  
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toDateString();
   };
-
+  
+  // for approve and reject
   const handleApprovalReject = async (status) => {
     try {
       const response = await axios.put(

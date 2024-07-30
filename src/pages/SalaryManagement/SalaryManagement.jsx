@@ -13,6 +13,7 @@ import UpdateSalaryModal from "../../components/Modal/CreateSalaryModel/UpdateSa
 import ChallanModal from "./components/ChallanModal";
 
 const SalaryManagement = () => {
+  // state
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -24,9 +25,10 @@ const SalaryManagement = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
-
   const navigate = useNavigate();
+  
 
+  // get query for fetch the employee
   const fetchAvailableEmployee = async (page) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee/${organisationId}?page=${page}`;
@@ -54,7 +56,9 @@ const SalaryManagement = () => {
     fetchAvailableEmployee(currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
+  
 
+  // pagination
   const prePage = () => {
     if (currentPage !== 1) {
       fetchAvailableEmployee(currentPage - 1);

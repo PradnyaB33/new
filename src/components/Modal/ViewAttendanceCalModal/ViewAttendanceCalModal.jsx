@@ -1,4 +1,3 @@
-// import React, { useState } from "react";
 import {
   Container,
   Dialog,
@@ -25,15 +24,15 @@ const ViewAttendanceCallModal = ({
   employee,
   organisationId,
 }) => {
+  // to define the state , hook and import other function if needed
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [selectedEvent, setSelectedEvent] = useState(null);
   const queryClient = useQueryClient();
-  console.log(organisationId);
-
   const localizer = momentLocalizer(moment);
 
+  // to map the punching data from employee
   const events = employee?.punchingData.map((data) => ({
     ...data,
     title: data.status,
@@ -41,14 +40,17 @@ const ViewAttendanceCallModal = ({
     end: new Date(data.recordDate),
   }));
 
+  // to define the functin for open the event
   const handleEventClick = (event) => {
     setSelectedEvent(event);
   };
 
+  // to define the function for close the event
   const handleCloseModal = () => {
     setSelectedEvent(null);
   };
 
+  // to delete the query for delete single record s
   const handleDelete = () => {
     const id = selectedEvent._id;
     console.log("id", id);

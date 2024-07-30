@@ -1,4 +1,4 @@
-import { useContext} from "react";
+import { useContext } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
@@ -24,8 +24,8 @@ const useAdvanceSalaryQuery = (organisationId) => {
     }
   );
 
-   //for  Get Query to get department
-   const { data: getDepartment } = useQuery(
+  //for  Get Query to get department
+  const { data: getDepartment } = useQuery(
     ["department", organisationId],
     async () => {
       const response = await axios.get(
@@ -42,7 +42,7 @@ const useAdvanceSalaryQuery = (organisationId) => {
 
   return {
     getTotalSalaryEmployee,
-    getDepartment , 
+    getDepartment,
   };
 };
 

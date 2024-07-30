@@ -9,6 +9,7 @@ import { useQuery } from "react-query";
 import useAdvanceSalaryQuery from "../../hooks/AdvanceSalaryHook/useAdvanceSalaryQuery";
 
 function CalculateSalary() {
+  // state
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
@@ -35,7 +36,8 @@ function CalculateSalary() {
   const handleDateChange = (event) => {
     setSelectedDate(dayjs(event.target.value));
   };
-
+  
+  // fetch leave of employee
   useEffect(() => {
     const fetchDataAndFilter = async () => {
       try {

@@ -13,7 +13,6 @@ const style = {
 };
 
 const ViewLoanDataNotificationModal = ({ handleClose, open, loanData }) => {
-  console.log(loanData);
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toDateString();

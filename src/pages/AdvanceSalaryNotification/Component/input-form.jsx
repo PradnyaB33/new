@@ -7,8 +7,6 @@ const InputForm = () => {
   const { advanceSalaryNotification, isFetching, isLoading } =
     useAdvanceSalaryData();
 
-  console.log("data", advanceSalaryNotification);
-
   return (
     <div className="flex w-full flex-col gap-4">
       {(isLoading || isFetching) &&

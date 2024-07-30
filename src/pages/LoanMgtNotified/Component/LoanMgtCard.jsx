@@ -3,8 +3,6 @@ import React from "react";
 import dayjs from "dayjs"; // Import dayjs for date formatting
 
 const LoanMgtCards = ({ items }) => {
-  console.log("items", items);
-
   const status =
     items && items !== null && items !== undefined ? items.status : "";
   const updatedAt =

@@ -14,6 +14,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 const UpdateSalaryModal = ({ handleClose, open, empId }) => {
+  // states
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
@@ -33,6 +34,7 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
     "Sales allowance": "",
   });
 
+  // get query to fetch the employee
   const {
     data: salaryInput,
     isLoading,
@@ -56,7 +58,6 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
       enabled: open && empId !== null && empId !== undefined,
     }
   );
-  console.log("salaryInput", salaryInput);
 
   useEffect(() => {
     if (
@@ -161,7 +162,9 @@ const UpdateSalaryModal = ({ handleClose, open, empId }) => {
       },
     }
   );
+ 
 
+  // function for edit salary data
   const EditSalaryData = async (data) => {
     try {
       const data = {

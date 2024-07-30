@@ -29,6 +29,7 @@ import LoanManagementPieChart from "./LoanManagementPieChart";
 import LoanManagementSkeleton from "./LoanManagementSkeleton";
 
 const LoanManagement = () => {
+  //  to define the state, hook and import other function if needed
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { handleAlert } = useContext(TestContext);
@@ -59,6 +60,7 @@ const LoanManagement = () => {
     return date.toDateString();
   };
 
+  // calculate the loan pending amount , loan amount paid
   const calculateLoanStatus = (loan) => {
     const currentDate = new Date();
     const loanStartingDate = loan?.loanDisbursementDate
@@ -125,6 +127,7 @@ const LoanManagement = () => {
     setTotalPendingAmount(pendingAmount);
   }, [selectedLoans]);
 
+  // to define the function check wheather loan data is checked or unchecked
   const handleCheckboxChange = (loan) => {
     if (selectedLoans.includes(loan)) {
       setSelectedLoans(
@@ -145,7 +148,8 @@ const LoanManagement = () => {
   const handleCreateModalClose = () => {
     setCreateModalOpen(false);
   };
-  // for edit
+
+  // for edit the load data
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [loan, setLoan] = useState(null);
   const handleEditModalOpen = (loan) => {
@@ -157,7 +161,7 @@ const LoanManagement = () => {
     setLoan(null);
   };
 
-  // for delete
+  // for delete the loan data
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const handleDeleteConfirmation = (id) => {
     setDeleteConfirmation(id);

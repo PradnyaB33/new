@@ -3,11 +3,14 @@ import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
 
 const ViewDocumentModal = ({ handleClose, open, document }) => {
-  console.log(document);
   let documentUrl = document?.file;
   console.log(documentUrl);
 
-  const isImage = documentUrl && (documentUrl.endsWith(".jpg") || documentUrl.endsWith(".jpeg") || documentUrl.endsWith(".png"));
+  const isImage =
+    documentUrl &&
+    (documentUrl.endsWith(".jpg") ||
+      documentUrl.endsWith(".jpeg") ||
+      documentUrl.endsWith(".png"));
 
   return (
     <>
@@ -42,7 +45,7 @@ const ViewDocumentModal = ({ handleClose, open, document }) => {
                 <img
                   src={documentUrl}
                   alt="User Document"
-                  style={{ maxHeight: '80vh', maxWidth: '100%' }}
+                  style={{ maxHeight: "80vh", maxWidth: "100%" }}
                 />
               </div>
             ) : (

@@ -53,8 +53,6 @@ const AdvanceSalary = () => {
     }
   );
 
-  console.log(getEmployeeAdvanceSalaryData);
-
   // for apply the advance salary modal
   const [applyAdvanceSalaryModalOpen, setAdvanceSalaryModalOpen] =
     useState(false);
@@ -83,7 +81,7 @@ const AdvanceSalary = () => {
     setAdvanceSalary(null);
   };
 
-  // for delete
+  // for delete the query to delete record
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const handleDeleteConfirmation = (id) => {
     setDeleteConfirmation(id);

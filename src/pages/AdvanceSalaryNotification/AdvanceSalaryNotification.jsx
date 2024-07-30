@@ -5,10 +5,12 @@ import useAdvanceSalaryData from "../../hooks/QueryHook/notification/advance-sal
 import AdvanceSalaryApproval from "./AdvanceSalaryApproval";
 
 const AdvanceSalaryNotification = () => {
+  // state
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const { getAdvanceSalaryData} = useAdvanceSalaryData();
-
+  
+  // function to select employee
   const handleEmployeeClick = (employee) => {
     setSelectedEmployee(employee);
   };

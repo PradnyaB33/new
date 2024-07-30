@@ -15,6 +15,7 @@ import { West } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 
 const EmpInfoPunchStatus = () => {
+  // define the state , hook and import function if needed
   const navigate = useNavigate();
   const { organisationId } = useParams();
   const { handleAlert } = useContext(TestContext);
@@ -29,6 +30,7 @@ const EmpInfoPunchStatus = () => {
   const [loading, setLoading] = useState(false);
   const itemsPerPage = 10;
 
+  //  to define the function for upload file
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (!file) {
@@ -49,22 +51,25 @@ const EmpInfoPunchStatus = () => {
       setTableData(
         parsedData.slice(2).map((row) => ({ ...row, selected: false }))
       );
-      setLoading(false); // Set loading to false once data is parsed
+      setLoading(false);
     };
 
     reader.readAsBinaryString(file);
   };
 
+  // to define the function for search by name
   const handleSearchName = (e) => {
     setSearchName(e.target.value);
     setCurrentPage(1);
   };
 
+  // to define the function for search by id
   const handleSearchId = (e) => {
     setSearchId(e.target.value);
     setCurrentPage(1);
   };
 
+  // to define the function for search by department
   const handleSearchDepartment = (e) => {
     setSearchDepartment(e.target.value);
     setCurrentPage(1);
@@ -86,7 +91,6 @@ const EmpInfoPunchStatus = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
-  console.log("table data", tableData);
   // select for individual record
   const handleEmployeeSelect = (index) => {
     const selectedEmployeeRecord = currentItems[index];
@@ -165,6 +169,7 @@ const EmpInfoPunchStatus = () => {
     }
   };
 
+  // navigation
   const nextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -217,6 +222,7 @@ const EmpInfoPunchStatus = () => {
 
   const paginationNumbers = getPaginationNumbers();
 
+  //  to open the model
   const [empModalOpen, setEmpModalOpen] = useState(false);
   const handleEmpModalOpen = () => {
     if (selectedEmployees.length === 0) {
@@ -226,6 +232,7 @@ const EmpInfoPunchStatus = () => {
     }
   };
 
+  // to close the model
   const handleEmpModalClose = () => {
     setEmpModalOpen(false);
     setSelectedEmployees([]);

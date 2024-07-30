@@ -24,6 +24,7 @@ import { TestContext } from "../../../State/Function/Main";
 import UserProfile from "../../../hooks/UserData/useUser";
 
 const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
+  // to define the state , hook  ,import other function if needed
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
@@ -51,6 +52,7 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
     // eslint-disable-next-line
   }, [advanceSalaryStartingDate, noOfMonth]);
 
+  // to define the function for change the emi
   const handleNoOfEmiChange = (e) => {
     const value = e.target.value;
     if (!isNaN(value) && parseInt(value) >= 0) {
@@ -65,6 +67,7 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
     }
   };
 
+  // to calculate the completion date
   const calculateCompletionDate = (startingDate, noOfMonth) => {
     const monthsToAdd = parseInt(noOfMonth);
     if (!isNaN(monthsToAdd)) {
@@ -76,6 +79,7 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
   };
   const advancedSalaryAmounts = getTotalSalaryEmployee * noOfMonth;
 
+  // to define the function for change the file
   const [file, setFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const handleFileChange = (event) => {
@@ -105,9 +109,8 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
       return response.data.data;
     }
   );
-
-  console.log("loan amount", loanAmount);
-
+  
+  // to define the function for add the advance salary data
   const queryClient = useQueryClient();
   const AddAdvanceSalary = useMutation(
     (data) =>
@@ -137,7 +140,8 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
       },
     }
   );
-
+ 
+  // to define the handleSubmit function
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

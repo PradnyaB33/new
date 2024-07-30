@@ -26,6 +26,7 @@ const CalculateHourEmpModal = ({
   empPunchingData,
   organisationId,
 }) => {
+  // to define the state, hook and other function if needed
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const [remarks, setRemarks] = useState("");
@@ -38,6 +39,7 @@ const CalculateHourEmpModal = ({
   );
   const navigate = useNavigate("");
 
+  // to define the schema for validation
   const CalculateHourSchemas = z.object({
     hour: z.string().refine(
       (value) => {
@@ -84,7 +86,7 @@ const CalculateHourEmpModal = ({
     paginationNumbers.push(i);
   }
 
-  // calculate hours
+  // defined the function for calculation hours
   const handleCalculateHours = async () => {
     const data = getValues();
     const { hour, timeRange } = data;
@@ -167,8 +169,6 @@ const CalculateHourEmpModal = ({
         status: remarks,
         justify: justify,
       };
-
-      console.log(postData);
 
       try {
         const response = await fetch(

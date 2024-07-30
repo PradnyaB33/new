@@ -27,6 +27,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import { TestContext } from "../../../State/Function/Main";
 
 const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
+  // to define state , hook and import other function if user needed
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
@@ -80,6 +81,7 @@ const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
     setCompletedDate,
   ]);
 
+  // to write the useEffect get the loan value or max loan value based on selected loan
   useEffect(() => {
     if (loanType && getEmployeeLoanType) {
       const selectedLoanType = getEmployeeLoanType.find(
@@ -99,6 +101,7 @@ const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
     // eslint-disable-next-line
   }, [loanDisbursementDate, noOfEmi]);
 
+  // to define the function change the no of emi
   const handleNoOfEmiChange = (e) => {
     const value = e.target.value;
     if (!isNaN(value) && parseInt(value) >= 0) {
@@ -113,6 +116,7 @@ const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
     }
   };
 
+  // to define the function for calculation compleiton data
   const calculateCompletionDate = (disbursementDate, emiCount) => {
     const monthsToAdd = parseInt(emiCount);
     if (!isNaN(monthsToAdd)) {
@@ -123,6 +127,7 @@ const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
     }
   };
 
+  // to define the function for set the file
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     const fileSizeLimit = 150 * 1024;
@@ -134,13 +139,13 @@ const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
       setErrorMessage("");
     }
   };
-  
 
   const getFileNameFromURL = (url) => {
     const parts = url.split("/");
     return parts[parts.length - 1];
   };
 
+  // to define the function to update the loan data
   const queryClient = useQueryClient();
   const updateLoanData = useMutation(
     (data) =>
@@ -170,6 +175,7 @@ const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
     }
   );
 
+  //  to define the function for check is loan amount is fifty percent of total salary of employee
   const checkTotalSalary = async (loanData) => {
     const totalSalary = getTotalSalaryEmployee;
     const fiftyPercentOfSalary = totalSalary * 0.5;
@@ -192,6 +198,7 @@ const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
     }
   };
 
+  // this function is for pass the loan data to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -233,11 +240,11 @@ const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
       formData.append(
         "loanDisbursementDate",
         dayjs(loanDisbursementDate).toISOString()
-      ); 
+      );
       formData.append(
         "loanCompletedDate",
         dayjs(loanCompletedDate).toISOString()
-      ); 
+      );
       formData.append("noOfEmi", noOfEmi);
       formData.append("loanPrincipalAmount", principalPerMonth);
       formData.append("loanInteresetAmount", interestPerMonths);
@@ -397,15 +404,17 @@ const EditLoanModal = ({ handleClose, open, organisationId, loan }) => {
                     </Typography>
                   </div>
                 )}
-                 <div style={{ display: "flex", alignItems: "center" }}>
-                <Button
-                  variant="contained"
-                  component="span"
-                  style={{ marginTop: "15px" }}
-                >
-                  Upload File
-                </Button>
-                {file && <p className="text-green-500 ml-2 mt-2">{file.name}</p>}
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Button
+                    variant="contained"
+                    component="span"
+                    style={{ marginTop: "15px" }}
+                  >
+                    Upload File
+                  </Button>
+                  {file && (
+                    <p className="text-green-500 ml-2 mt-2">{file.name}</p>
+                  )}
                 </div>
               </label>
 

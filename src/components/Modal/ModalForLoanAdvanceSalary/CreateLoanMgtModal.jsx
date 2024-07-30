@@ -26,6 +26,7 @@ import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 
 const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
+  // to define the state , hook and import other function if user needed
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
@@ -57,11 +58,13 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     interestPerMonths,
   } = useCalculation();
 
-  const { getEmployeeLoanType, getTotalSalaryEmployee  , getDeductionOfLoanData } =
-    useLoanQuery(organisationId);
-    console.log("getDeductionOfLoanData" , getDeductionOfLoanData);
-    
+  const {
+    getEmployeeLoanType,
+    getTotalSalaryEmployee,
+    getDeductionOfLoanData,
+  } = useLoanQuery(organisationId);
 
+  // to write the useEffect get the loan value or max loan value based on selected loan
   useEffect(() => {
     if (loanType) {
       const selectedLoanType = getEmployeeLoanType.find(
@@ -81,6 +84,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     // eslint-disable-next-line
   }, [loanDisbursementDate, noOfEmi]);
 
+  // to define the function change the no of emi
   const handleNoOfEmiChange = (e) => {
     const value = e.target.value;
     if (!isNaN(value) && parseInt(value) >= 0) {
@@ -95,6 +99,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     }
   };
 
+  // to define the function for calculation compleiton data
   const calculateCompletionDate = (disbursementDate, emiCount) => {
     const monthsToAdd = parseInt(emiCount);
     if (!isNaN(monthsToAdd)) {
@@ -105,6 +110,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     }
   };
 
+  // to define the function for set the file
   const [file, setFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const handleFileChange = (event) => {
@@ -119,6 +125,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     }
   };
 
+  // to define the function to add the loan data
   const queryClient = useQueryClient();
   const AddLoanData = useMutation(
     (data) =>
@@ -141,7 +148,6 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
           "Your loan application has been submitted successfully. It is now awaiting approval from HR"
         );
         handleClose();
-        // window.location.reload();
       },
       onError: () => {
         setErrors("An Error occurred while creating a loan data.");
@@ -149,45 +155,22 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     }
   );
 
-  // const createLoanData = async (loanData) => {
-  //   const totalSalary = getTotalSalaryEmployee;
-  //   const fiftyPercentOfSalary = totalSalary * 0.5;
-  //   console.log("fiftyPercentOfSalary", fiftyPercentOfSalary);
-
-  //   if (loanData?.totalDeduction > fiftyPercentOfSalary) {
-  //     handleAlert(
-  //       true,
-  //       "error",
-  //       "Total deduction amount should be 50% of your total monthly salary"
-  //     );
-  //     return;
-  //   }
-
-  //   try {
-  //     await AddLoanData.mutateAsync(loanData);
-  //   } catch (error) {
-  //     console.error("An error occurred while creating a loan data", error);
-  //     setErrors("An Error occurred while creating a loan data.");
-  //   }
-  // };
+  //  to define the function for check is loan amount is fifty percent of total salary of employee
   const createLoanData = async (loanData) => {
     const totalSalary = getTotalSalaryEmployee;
     const fiftyPercentOfSalary = totalSalary * 0.5;
-    
-    console.log("totalSalary", totalSalary);
-    console.log("fiftyPercentOfSalary", fiftyPercentOfSalary);
-    
-    const totalExistingDeductions = getDeductionOfLoanData?.reduce((acc, loans) => acc + loans.totalDeduction, 0) || 0;
-    console.log("totalExistingDeductions", totalExistingDeductions);
-    
+
+    const totalExistingDeductions =
+      getDeductionOfLoanData?.reduce(
+        (acc, loans) => acc + loans.totalDeduction,
+        0
+      ) || 0;
+
     const newLoanDeduction = totalDeductionPerMonth || 0;
-    console.log("newLoanDeduction", newLoanDeduction);
-    
-    const totalDeduction = parseInt(totalExistingDeductions) + parseInt(newLoanDeduction);
-    console.log("totalDeduction", totalDeduction);
-    
-    console.log("Comparison:", totalDeduction, ">", fiftyPercentOfSalary);
-    
+
+    const totalDeduction =
+      parseInt(totalExistingDeductions) + parseInt(newLoanDeduction);
+
     if (totalDeduction > fiftyPercentOfSalary) {
       handleAlert(
         true,
@@ -196,7 +179,7 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
       );
       return;
     }
-    
+
     try {
       await AddLoanData.mutateAsync(loanData);
     } catch (error) {
@@ -204,7 +187,8 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
       setErrors("An Error occurred while creating a loan data.");
     }
   };
-  
+
+  // this function is for pass the loan data to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -262,7 +246,6 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
 
   console.log(errors);
   console.log(loanValue);
-
 
   return (
     <Dialog
@@ -402,20 +385,22 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
                   Upload Document
                 </FormLabel>
                 <div style={{ display: "flex", alignItems: "center" }}>
-                <label htmlFor="file-upload">
-                  <input
-                    style={{ display: "none" }}
-                    id="file-upload"
-                    type="file"
-                    accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
-                    onChange={handleFileChange}
-                  />
+                  <label htmlFor="file-upload">
+                    <input
+                      style={{ display: "none" }}
+                      id="file-upload"
+                      type="file"
+                      accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                      onChange={handleFileChange}
+                    />
 
-                  <Button variant="contained" component="span">
-                    Upload Document
-                  </Button>
-                </label>
-                {file && <p className="text-green-500 ml-2 mt-2">{file.name}</p>}
+                    <Button variant="contained" component="span">
+                      Upload Document
+                    </Button>
+                  </label>
+                  {file && (
+                    <p className="text-green-500 ml-2 mt-2">{file.name}</p>
+                  )}
                 </div>
                 {errorMessage && (
                   <p className="text-red-500 mt-2">{errorMessage}</p>

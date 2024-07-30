@@ -17,11 +17,17 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { West } from "@mui/icons-material";
 
 const ViewAttendacneBiomatric = () => {
+  // to import the state, hook and import other function if needed
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { organisationId } = useParams();
   const navigate = useNavigate();
-
+  const [modalOpen, setModalOpen] = useState(false);
+  const [empPunchingData, setEmpPunchingData] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  
+  // to get the employee attendance data 
   const { data: empAttendanceData, isLoading } = useQuery(
     ["empAttendanceData", organisationId],
     async () => {
@@ -37,20 +43,20 @@ const ViewAttendacneBiomatric = () => {
     }
   );
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [empPunchingData, setEmpPunchingData] = useState();
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
+ 
+  // to define the function for open the model
   const handleModalOpen = (data) => {
     setEmpPunchingData(data);
     setModalOpen(true);
   };
-
+  
+  // to define the function for close the model
   const handleModalClose = () => {
     setModalOpen(false);
   };
+  
 
+  // for pagination
   const totalPages = Math.ceil((empAttendanceData?.length || 0) / itemsPerPage);
 
   const prePage = () => {

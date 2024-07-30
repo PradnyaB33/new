@@ -4,8 +4,10 @@ import moment from "moment";
 import React, { useState } from "react";
 
 const MissedPunchCard = ({ items }) => {
-  console.log("items", items);
+  // to define the state
+  const [selectedTimePeriod, setSelectedTimePeriod] = useState("all");
 
+  // to define the functin for time
   const getTimeAgo = (updatedAt) => {
     const now = new Date();
     const updatedTime = new Date(updatedAt);
@@ -25,18 +27,17 @@ const MissedPunchCard = ({ items }) => {
     }
   };
 
-  const [selectedTimePeriod, setSelectedTimePeriod] = useState("all");
+  // to define the function change the time
   const handleTimePeriodChange = (event) => {
     setSelectedTimePeriod(event.target.value);
   };
-
+  
+  // to filter the data 
   const filteredMissedPunchData = () => {
     if (!items || !Array.isArray(items.unavailableRecords)) {
       return [];
     }
-
     const records = items.unavailableRecords;
-
     if (selectedTimePeriod === "all") {
       return records;
     } else {

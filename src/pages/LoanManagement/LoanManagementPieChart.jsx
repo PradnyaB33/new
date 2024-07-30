@@ -5,6 +5,7 @@ import {   Typography } from "@mui/material";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const LoanManagementPieChart = ({ totalPaidAmount, totalPendingAmount }) => {
+  // get the data that shown in the pie chart
   const data = {
     labels: ["Paid Amount", "Pending Amount"],
     datasets: [

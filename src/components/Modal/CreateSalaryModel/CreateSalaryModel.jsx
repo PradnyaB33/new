@@ -14,6 +14,7 @@ import { useQuery } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 const CreateSalaryModel = ({ handleClose, open, empId }) => {
+  // state
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
@@ -31,7 +32,8 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
     "Travel allowance": "",
     "Sales allowance": "",
   });
-
+  
+  // to get employee salary component data
   const {
     data: salaryInput,
     isLoading,
@@ -55,6 +57,8 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
       enabled: open && empId !== null && empId !== undefined,
     }
   );
+
+  // function to change the value
   const handleInputChange = (name, value) => {
     const enteredValue = parseFloat(value);
     if (!isNaN(enteredValue) && enteredValue > 10000000) {

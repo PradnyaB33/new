@@ -16,6 +16,7 @@ import { West } from "@mui/icons-material";
 const ITEMS_PER_PAGE = 10;
 
 const ViewCalculateAttendance = () => {
+  // to define the state ,  hook and import other function if needed
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { organisationId } = useParams();
@@ -73,7 +74,9 @@ const ViewCalculateAttendance = () => {
     setEmpModalOpen(false);
     setEmployee();
   };
+  
 
+  // pagination
   const prePage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };

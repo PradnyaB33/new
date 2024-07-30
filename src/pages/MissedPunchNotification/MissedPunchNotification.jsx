@@ -3,17 +3,14 @@ import { Search, West, RequestQuote } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 import useMissedPunchNotificationCount from "../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 import MissedPunchNotified from "./missedPunchNotified";
-import UserProfile from "../../hooks/UserData/useUser";
 
 const MissedPunchNotification = () => {
+  // to define the state, hook ,import other function if needed
   const { missPunchData } = useMissedPunchNotificationCount();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const { useGetCurrentRole } = UserProfile();
-  const role = useGetCurrentRole();
 
-  console.log("role", role);
-
+  // to filter the employee based on first nanae , last name
   const filteredEmployees =
     missPunchData && Array.isArray(missPunchData)
       ? missPunchData.filter(
@@ -26,15 +23,13 @@ const MissedPunchNotification = () => {
               .includes(searchQuery.toLowerCase())
         )
       : [];
-
+ 
+  // to define the function for get the employee those selected by user.
   const handleEmployeeClick = (employee) => {
     setSelectedEmployee(employee);
   };
 
-  console.log("selected emplyee", selectedEmployee);
-
   const employeeId = selectedEmployee && selectedEmployee?.employeeId?._id;
-  console.log("employee id", employeeId);
 
   return (
     <div className="w-full">

@@ -5,12 +5,14 @@ import { UseContext } from "../../../../State/UseState/UseContext";
 import { useContext } from "react";
 
 const useMissedPunchNotificationCount = () => {
+  // to define the state , hook , import other function if needed
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const organisationId = user?.organizationId;
 
+  // to get the missed punch data
   const getMissedPunchNotification = async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-unavaialble-record`,
@@ -27,7 +29,7 @@ const useMissedPunchNotificationCount = () => {
     isFetching,
   } = useQuery("employee-missed-punch", getMissedPunchNotification);
 
-  //for get loan data
+  //to get the missed punch data of all employee
   const { data: getMissedPunchData } = useQuery(
     ["getMissedPunchData"],
     async () => {

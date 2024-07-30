@@ -11,13 +11,12 @@ import { useQuery, useQueryClient } from "react-query";
 import ViewDocumentModal from "./ViewDocumentModal";
 import Button from "@mui/material/Button";
 const LoanMgtApproval = ({ employee }) => {
+  // to define the state , hook , import other function
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { handleAlert } = useContext(TestContext);
   const queryClient = useQueryClient();
-  console.log("employee", employee);
   let loanId = employee?._id;
-  console.log("loan id", loanId);
 
   //for get loan data
   const { data: getEmployeeLoanInfo } = useQuery(
@@ -35,13 +34,12 @@ const LoanMgtApproval = ({ employee }) => {
     }
   );
 
-  console.log(getEmployeeLoanInfo);
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toDateString();
   };
 
+  // to define the funcitn for approved the loan data
   const handleApproval = async (status) => {
     try {
       const response = await axios.put(
@@ -78,6 +76,7 @@ const LoanMgtApproval = ({ employee }) => {
       handleAlert(true, "error", "Something went wrong");
     }
   };
+  
   // for view the loan data
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [userUploadDocumnet, setUserUploadDocumnet] = useState(null);

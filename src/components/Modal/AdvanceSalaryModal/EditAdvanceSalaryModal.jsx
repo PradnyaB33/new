@@ -29,7 +29,7 @@ const EditAdvanceSalaryModal = ({
   organisationId,
   advanceSalary,
 }) => {
-  console.log(advanceSalary);
+  // to define the state , hook 
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
@@ -65,6 +65,7 @@ const EditAdvanceSalaryModal = ({
     setAdvanceSalaryId,
   ]);
   const { getTotalSalaryEmployee } = useAdvanceSalaryQuery(organisationId);
+
   const getFileNameFromURL = (url) => {
     const parts = url.split("/");
     return parts[parts.length - 1];
@@ -75,7 +76,8 @@ const EditAdvanceSalaryModal = ({
     }
     // eslint-disable-next-line
   }, [advanceSalaryStartingDate, noOfMonth]);
-
+  
+  // to define the funciton for change the no of emi
   const handleNoOfEmiChange = (e) => {
     const value = e.target.value;
     if (!isNaN(value) && parseInt(value) >= 0) {
@@ -89,6 +91,8 @@ const EditAdvanceSalaryModal = ({
       setNoOfEmiError("No of month should not be negative");
     }
   };
+
+  // to define functin for calculating the compleiton data
   const calculateCompletionDate = (startingDate, noOfMonth) => {
     const monthsToAdd = parseInt(noOfMonth);
     if (!isNaN(monthsToAdd)) {
@@ -99,7 +103,8 @@ const EditAdvanceSalaryModal = ({
     }
   };
   const advancedSalaryAmounts = getTotalSalaryEmployee * noOfMonth;
-
+  
+  // to define the function for change the file
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     const fileSizeLimit = 150 * 1024;
@@ -110,8 +115,9 @@ const EditAdvanceSalaryModal = ({
       setErrorMessage("");
     }
   };
-  console.log(file);
 
+ 
+  // to define the function for update the advance salary
   const queryClient = useQueryClient();
   const UpdateAdvanceSalary = useMutation(
     (data) =>
@@ -140,7 +146,9 @@ const EditAdvanceSalaryModal = ({
       },
     }
   );
+ 
 
+  // ṭo define the handleSubmit function
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
