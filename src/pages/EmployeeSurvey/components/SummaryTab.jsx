@@ -11,7 +11,7 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend);
 
-const PaginatedAnswers = ({ answers }) => {
+const PaginatedAnswers = ({ answers, employeeName }) => {
   const [currentPage, setCurrentPage] = useState(0);
 
   const handleNext = () => {
@@ -27,7 +27,8 @@ const PaginatedAnswers = ({ answers }) => {
   };
 
   return (
-    <div >
+    <div>
+      <div>Employee Name: {employeeName[currentPage]}</div>
       <div>{answers[currentPage]}</div>
       <div className="flex justify-end mt-4 space-x-2">
         <Button variant="outlined" onClick={handlePrevious} disabled={currentPage === 0}>
@@ -95,6 +96,12 @@ const SummaryTab = () => {
     const labels = [...new Set(data)];
     const values = labels.map(label => data.filter(answer => answer === label).length);
 
+    const employeeNames = surveyData.map(response => {
+      const firstName = response.employeeId?.first_name || 'Unknown';
+      const lastName = response.employeeId?.last_name || '';
+      return `${firstName} ${lastName}`.trim();
+    });
+    console.log("employeeNames", employeeNames);
     switch (question.type) {
       case 'Checkboxes':
         const barData = {
@@ -144,14 +151,14 @@ const SummaryTab = () => {
       default:
         return (
           <div className='bg-white w-full h-max shadow-md rounded-sm border items-center p-4' style={{ padding: "30px" }}>
-            <PaginatedAnswers answers={data} />
+            <PaginatedAnswers answers={data} employeeName={employeeNames} />
           </div>
         );
     }
   };
 
   const aggregatedData = surveyData ? aggregateAnswers(surveyData) : {};
-  console.log("surveyData", surveyData);
+
   return (
     <>
       {surveyData && surveyData.length > 0 ?

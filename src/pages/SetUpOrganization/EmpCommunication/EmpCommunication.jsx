@@ -34,7 +34,7 @@ const EmpCommunication = () => {
 
   //Get organisationId
   const { organisationId } = useParams();
-
+  console.log("organisationId././", organisationId);
   //Get Communication Permission 
   const { data, surveyPermission, setSurveyPermission } = useGetCommunicationPermission(organisationId)
 
@@ -60,8 +60,9 @@ const EmpCommunication = () => {
     },
     {
       onSuccess: async () => {
-        handleAlert(true, "success", data === undefined ? "Survey permission saved successfully" : "Survey permission updated successfully");
         await queryClient.invalidateQueries("survey-permission");
+        handleAlert(true, "success", data === undefined ? "Survey permission saved successfully" : "Survey permission updated successfully");
+        window.location.Reload()
       },
     }
   );

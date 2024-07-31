@@ -143,7 +143,7 @@ const OpenSurveyList = () => {
                       <th scope="col" className="!text-left pl-8 py-3">
                         End Date
                       </th>
-                      {role === 'Employee' && <th scope="col" className="!text-left pl-8 py-3">
+                      {role !== 'Super-Admin' && <th scope="col" className="!text-left pl-8 py-3">
                         Actions
                       </th>}
                     </tr>
@@ -160,7 +160,7 @@ const OpenSurveyList = () => {
                         <td className="!text-left pl-8 py-3">
                           {survey && format(new Date(survey?.employeeSurveyEndDate), "PP")}
                         </td>
-                        {role === 'Employee' && <td className="!text-left pl-8 py-3">
+                        {role !== 'Super-Admin' && <td className="!text-left pl-8 py-3">
                           {survey?.responses?.length > 0 ? (
                             <div>
                               {survey?.responses[0]?.responseStatus === "End" ?
