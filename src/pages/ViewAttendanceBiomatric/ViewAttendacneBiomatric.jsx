@@ -26,8 +26,8 @@ const ViewAttendacneBiomatric = () => {
   const [empPunchingData, setEmpPunchingData] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  
-  // to get the employee attendance data 
+
+  // to get the employee attendance data
   const { data: empAttendanceData, isLoading } = useQuery(
     ["empAttendanceData", organisationId],
     async () => {
@@ -43,18 +43,16 @@ const ViewAttendacneBiomatric = () => {
     }
   );
 
- 
   // to define the function for open the model
   const handleModalOpen = (data) => {
     setEmpPunchingData(data);
     setModalOpen(true);
   };
-  
+
   // to define the function for close the model
   const handleModalClose = () => {
     setModalOpen(false);
   };
-  
 
   // for pagination
   const totalPages = Math.ceil((empAttendanceData?.length || 0) / itemsPerPage);
