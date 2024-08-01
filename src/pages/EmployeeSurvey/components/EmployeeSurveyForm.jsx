@@ -135,6 +135,7 @@ const EmployeeSurveyForm = () => {
             responseStatus: responseStatus,
             employeeId: user._id,
             isUpdate: isUpdate,
+            employeeCredential:surveyData?.employeeCredential
         };
 
         mutation.mutate(data);

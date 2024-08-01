@@ -21,7 +21,7 @@ const IndividualResponse = () => {
 
     //states
     const [currentPage, setCurrentPage] = useState(1);
-    const [currentBlock, setCurrentBlock] = useState(1); // current block of pages
+    const [currentBlock, setCurrentBlock] = useState(1);
 
     //get authToken
     const { cookies } = useContext(UseContext);
@@ -51,7 +51,7 @@ const IndividualResponse = () => {
     const totalResponses = surveyResponses ? surveyResponses.length : 0;
     const totalPages = Math.ceil(totalResponses);
     const currentSurvey = surveyResponses ? surveyResponses[currentPage - 1] : null;
-    console.log("currentSurvey", currentSurvey);
+   
     const pagesPerBlock = 10;
     const totalBlocks = Math.ceil(totalPages / pagesPerBlock);
 
@@ -91,7 +91,7 @@ const IndividualResponse = () => {
                                 {currentSurvey && (
                                     <div key={currentSurvey._id}>
                                         <div className="w-full mt-4 p-4">
-                                            <div><h3>Employee Name: {currentSurvey?.employeeId?.first_name} {currentSurvey?.employeeId?.last_name}</h3></div>
+                                            {currentSurvey?.employeeCredential ? null : <div><h3>Employee Name: {currentSurvey?.employeeId?.first_name} {currentSurvey?.employeeId?.last_name}</h3></div>}
                                             <h1 className="text-2xl mb-4 font-bold">
                                                 {DOMPurify.sanitize(currentSurvey.title, { USE_PROFILES: { html: false } })}
                                             </h1>

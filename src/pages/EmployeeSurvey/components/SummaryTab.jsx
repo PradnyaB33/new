@@ -11,36 +11,7 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend);
 
-const PaginatedAnswers = ({ answers, employeeName }) => {
-  const [currentPage, setCurrentPage] = useState(0);
 
-  const handleNext = () => {
-    if (currentPage < answers.length - 1) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  return (
-    <div>
-      <div>Employee Name: {employeeName[currentPage]}</div>
-      <div>{answers[currentPage]}</div>
-      <div className="flex justify-end mt-4 space-x-2">
-        <Button variant="outlined" onClick={handlePrevious} disabled={currentPage === 0}>
-          Pre
-        </Button>
-        <Button variant="outlined" onClick={handleNext} disabled={currentPage === answers.length - 1}>
-          Next
-        </Button>
-      </div>
-    </div>
-  );
-};
 
 const SummaryTab = () => {
   const { surveyId } = useParams();
@@ -63,6 +34,41 @@ const SummaryTab = () => {
       return response.data;
     }
   );
+
+  //response employee name confidential
+  const employeeCredentialArray = surveyData ? surveyData.map(item => item?.employeeCredential).filter(credential => credential !== undefined) : [];
+  const allTrue = employeeCredentialArray.every(credential => credential === true);
+
+  const PaginatedAnswers = ({ answers, employeeName }) => {
+    const [currentPage, setCurrentPage] = useState(0);
+
+    const handleNext = () => {
+      if (currentPage < answers.length - 1) {
+        setCurrentPage(currentPage + 1);
+      }
+    };
+
+    const handlePrevious = () => {
+      if (currentPage > 0) {
+        setCurrentPage(currentPage - 1);
+      }
+    };
+
+    return (
+      <div>
+        {allTrue ? null : <div>Employee Name: {employeeName[currentPage]}</div>}
+        <div>{answers[currentPage]}</div>
+        <div className="flex justify-end mt-4 space-x-2">
+          <Button variant="outlined" onClick={handlePrevious} disabled={currentPage === 0}>
+            Pre
+          </Button>
+          <Button variant="outlined" onClick={handleNext} disabled={currentPage === answers.length - 1}>
+            Next
+          </Button>
+        </div>
+      </div>
+    );
+  };
 
   const aggregateAnswers = (responses) => {
     const aggregatedData = {};
@@ -101,7 +107,7 @@ const SummaryTab = () => {
       const lastName = response.employeeId?.last_name || '';
       return `${firstName} ${lastName}`.trim();
     });
-    console.log("employeeNames", employeeNames);
+
     switch (question.type) {
       case 'Checkboxes':
         const barData = {

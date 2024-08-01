@@ -47,6 +47,7 @@ const CreateNewSurvey = ({ isEditable }) => {
     Array.from({ length: questions.length }, () => false)
   );
   const [surveyData, setSurveyData] = useState();
+  const [employeeCredential, setEmployeeCredential] = useState(false);
 
   //get organisationId
   const { getCurrentUser } = UserProfile();
@@ -486,6 +487,7 @@ const CreateNewSurvey = ({ isEditable }) => {
       creatorId: user?._id,
       status: status,
       from: org?._id,
+      employeeCredential:employeeCredential
     };
 
     mutation.mutate(formData, {
@@ -510,6 +512,7 @@ const CreateNewSurvey = ({ isEditable }) => {
       questions,
       to: watch("to"),
       responseStatus: false,
+      employeeCredential:employeeCredential
     };
 
     try {
@@ -794,8 +797,8 @@ const CreateNewSurvey = ({ isEditable }) => {
                     <FormControlLabel
                       control={
                         <Checkbox
-                        // checked={employeeCredential}
-                        // onChange={(e) => setEmployeeCredential(e.target.checked)}
+                          checked={employeeCredential}
+                          onChange={(e) => setEmployeeCredential(e.target.checked)}
                         />
                       }
                       label="Employee name confidential"
