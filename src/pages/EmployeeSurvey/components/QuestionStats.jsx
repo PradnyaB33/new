@@ -23,7 +23,7 @@ const PaginatedAnswers = ({ answers, employeeName }) => {
 
   return (
     <div>
-      <div>Employee Name: {employeeName[currentPage]}</div>
+      {/* <div>Employee Name: {employeeName[currentPage]}</div> */}
       <div>{answers[currentPage]}</div>
       <div className="flex justify-end mt-4 space-x-2">
         <Button variant="outlined" onClick={handlePrevious} disabled={currentPage === 0}>

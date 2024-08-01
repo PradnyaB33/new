@@ -794,27 +794,12 @@ const CreateNewSurvey = ({ isEditable }) => {
                     <FormControlLabel
                       control={
                         <Checkbox
-                          // checked={employeeCredential}
-                          // onChange={(e) => setEmployeeCredential(e.target.checked)}
+                        // checked={employeeCredential}
+                        // onChange={(e) => setEmployeeCredential(e.target.checked)}
                         />
                       }
                       label="Employee name confidential"
                     />
-
-                    {/* <AuthInputFiled
-                      className={"w-full flex items-start justify-center flex-col"}
-                      name={"trainingDownCasted"}
-                      control={control}
-                      type="checkbox"
-                      placeholder="Downcasted"
-                      label="Down Cast"
-                      errors={errors}
-                      error={errors.trainingDownCasted}
-                      icon={TrendingDownOutlined}
-                      descriptionText={
-                        "Down-Casted Training will be automatically assigned to organization employees."
-                      }
-                    /> */}
                   </div>
                   {isEditable && (
                     <div className="flex flex-col xs:flex-row gap-4 mt-4 justify-end">
@@ -833,7 +818,7 @@ const CreateNewSurvey = ({ isEditable }) => {
                         onClick={() => handleSaveForLater(getValues())}
                         sx={{ textTransform: "none", width: "150px" }}
                       >
-                        {mutation.isLoading ? <CircularProgress size={20} /> : "Save For Now"}
+                        Save For Now
                       </Button>
                       <Button
                         onClick={handleClose}
