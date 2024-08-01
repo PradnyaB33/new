@@ -487,7 +487,7 @@ const CreateNewSurvey = ({ isEditable }) => {
       creatorId: user?._id,
       status: status,
       from: org?._id,
-      employeeCredential:employeeCredential
+      employeeCredential: employeeCredential
     };
 
     mutation.mutate(formData, {
@@ -512,7 +512,7 @@ const CreateNewSurvey = ({ isEditable }) => {
       questions,
       to: watch("to"),
       responseStatus: false,
-      employeeCredential:employeeCredential
+      employeeCredential: employeeCredential
     };
 
     try {
@@ -748,7 +748,7 @@ const CreateNewSurvey = ({ isEditable }) => {
                       label="End date*"
                       errors={errors}
                       error={errors.employeeSurveyEndDate}
-                      min={watch("employeeSurveyStartingDate")}
+                      min={watch("employeeSurveyStartingDate") ? new Date(new Date(watch("employeeSurveyStartingDate")).getTime() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10)}
                       disabled={!isEditable}
                     />
                   </div>
