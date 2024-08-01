@@ -518,7 +518,7 @@ const CreateNewSurvey = ({ isEditable }) => {
     try {
       await mutation.mutateAsync(formData);
     } catch (error) {
-      handleAlert(true, "error", "Title is required");
+      handleAlert(true, "error", error?.response?.data?.message);
     }
   };
 

@@ -134,7 +134,7 @@ const CloseSurveyList = () => {
           <div className="mb-2 md:mb-0 md:mr-4">
             <p className="font-bold">Closed Survey</p>
             <p className="text-sm text-gray-600">
-              Here you can view closed surveys along with their responses.
+              Here you see closed surveys along with their responses.
             </p>
           </div></div>
         <div className="flex justify-end">

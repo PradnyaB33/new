@@ -46,8 +46,8 @@ const EmployeeSurvey = () => {
                         <h1 className="text-xl font-bold">Employee Survey</h1>
                         <p className="text-sm text-gray-600">
                             {employeeId === undefined && isAdminOrHR && role !== 'Employee'
-                                ? "Here you can create and fill survey"
-                                : "Here you can fill survey"}
+                                ? "Here you can create employee survey"
+                                : "Here you can fill employee survey"}
                         </p>
                     </div>
                 </div>
