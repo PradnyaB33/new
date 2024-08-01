@@ -8,9 +8,9 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(lat1 * (Math.PI / 180)) *
-      Math.cos(lat2 * (Math.PI / 180)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+    Math.cos(lat2 * (Math.PI / 180)) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = R * c;
 
@@ -51,9 +51,8 @@ const MappedPunches = ({
         return (
           <div
             key={idx}
-            className={`w-full rounded-lg h-auto bg-[#e2f1ff] flex flex-col mb-3 ${
-              punchObjectId === doc._id ? "border border-primary" : ""
-            }`}
+            className={`w-full rounded-lg h-auto bg-[#e2f1ff] flex flex-col mb-3 ${punchObjectId === doc._id ? "border border-primary" : ""
+              }`}
             onClick={() => setPunchObjectId(doc._id)}
           >
             <div className="flex w-full items-center h-full p-5">
@@ -76,11 +75,15 @@ const MappedPunches = ({
                   End Time:{" "}
                   {doc.data && doc.data.length > 0 && doc?.createdAt
                     ? new Date(
-                        doc?.data[doc.data.length - 1]?.time
-                      ).toLocaleTimeString()
+                      doc?.data[doc.data.length - 1]?.time
+                    ).toLocaleTimeString()
                     : "N/A"}
                 </h1>
                 <h1>Distance Travelled: {distance}</h1>
+                <h1>  Miss Punch time:{" "}
+                 
+                    <span>{idx +1}</span>
+                 </h1>
               </div>
             </div>
           </div>

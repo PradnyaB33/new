@@ -11,36 +11,40 @@ import { useNavigate } from "react-router-dom";
 import useNotificationRemotePunching from "../../../../hooks/QueryHook/Remote-Punch/components/mutation";
 
 const PunchMapModal = ({ items, idx }) => {
+  //hooks
   const navigate = useNavigate();
+
+  //state
   const [openModal, setOpenModal] = useState(false);
   const [mReason, setMReason] = useState("");
-  console.log("yash items", items);
-  const calculateDistance = (coords) => {
-    let totalDistance = 0;
-    const R = 6371;
 
-    for (let i = 1; i < coords.length; i++) {
-      const lat1 = coords[i - 1].lat;
-      const lon1 = coords[i - 1].lng;
-      const lat2 = coords[i].lat;
-      const lon2 = coords[i].lng;
+  // const calculateDistance = (coords) => {
+  //   let totalDistance = 0;
+  //   const R = 6371;
 
-      const dLat = ((lat2 - lat1) * Math.PI) / 180;
-      const dLon = ((lon2 - lon1) * Math.PI) / 180;
-      const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos((lat1 * Math.PI) / 180) *
-          Math.cos((lat2 * Math.PI) / 180) *
-          Math.sin(dLon / 2) *
-          Math.sin(dLon / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      const d = R * c;
-      totalDistance += d;
-    }
+  //   for (let i = 1; i < coords.length; i++) {
+  //     const lat1 = coords[i - 1].lat;
+  //     const lon1 = coords[i - 1].lng;
+  //     const lat2 = coords[i].lat;
+  //     const lon2 = coords[i].lng;
 
-    return totalDistance.toFixed(2); // rounding to 2 decimal places for simplicity
-  };
+  //     const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  //     const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  //     const a =
+  //       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+  //       Math.cos((lat1 * Math.PI) / 180) *
+  //         Math.cos((lat2 * Math.PI) / 180) *
+  //         Math.sin(dLon / 2) *
+  //         Math.sin(dLon / 2);
+  //     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  //     const d = R * c;
+  //     totalDistance += d;
+  //   }
 
+  //   return totalDistance.toFixed(2); // rounding to 2 decimal places for simplicity
+  // };
+
+  //handle reject button function
   const handleRejectButtonClick = () => {
     setOpenModal(true);
   };
@@ -50,6 +54,7 @@ const PunchMapModal = ({ items, idx }) => {
     setOpenModal(false);
   };
 
+  // handle modal close function
   const handleModalClose = () => {
     setOpenModal(false);
     setMReason(""); // Reset mReason state when modal is closed
@@ -57,15 +62,18 @@ const PunchMapModal = ({ items, idx }) => {
 
   const { notifyAccountantMutation, RejectManagerMutation } =
     useNotificationRemotePunching();
-  const distanceTraveled =
-    items.punchData[0].data && items.punchData[0].data.length > 1
-      ? calculateDistance(items.punchData[0].data)
-      : 0;
+
+  // const distanceTraveled =
+  //   items.punchData[0].data && items.punchData[0].data.length > 1
+  //     ? calculateDistance(items.punchData[0].data)
+  //     : 0;
+
+  //handle view route click
   const handleViewRouteClick = () => {
     const id = items._id;
     navigate(`/remote/info/${id}`);
   };
-  console.log("yash items", items);
+
   return (
     <div className="w-full">
       <div className="w-full h-auto bg-white flex p-4 pl-8 pr-8 justify-between items-center shadow-md mt-3">
@@ -115,7 +123,7 @@ const PunchMapModal = ({ items, idx }) => {
                 <>{new Date(items?.createdAt).toLocaleDateString()} </>
               )}
             </h1>
-            <h1>
+            {/* <h1>
               Start Time :{" "}
               {new Date(items?.punchData[0]?.createdAt).toLocaleTimeString()}
             </h1>
@@ -129,12 +137,12 @@ const PunchMapModal = ({ items, idx }) => {
               <h1>
                 Total Distance Travelled : {items.punchData[0].distance} Km
               </h1>
-            )}
+            )} */}
 
             {items.punchData[0].image === "" ? (
-              <h1>requested for : {items.punchData.length} times</h1>
+              <h1>Miss Punch Requested : {items.punchData.length} times</h1>
             ) : (
-              <h1>Punching Restarted: {items.punchData.length} times</h1>
+              <h1>Remote Punching Restarted: {items.punchData.length} times</h1>
             )}
           </div>
         </div>
@@ -165,6 +173,7 @@ const PunchMapModal = ({ items, idx }) => {
               Reject
             </Button>
 
+            {/*show modal for reject request*/}
             <Dialog open={openModal} fullWidth onClose={handleModalClose}>
               <DialogTitle>Enter Rejection Reason</DialogTitle>
               <DialogContent>

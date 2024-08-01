@@ -5,9 +5,12 @@ import { TestContext } from "../../../State/Function/Main";
 import useAuthToken from "../../Token/useAuth";
 
 const useSetupRemotePunching = (organisationId) => {
-  const authToken = useAuthToken();
+  //hooks
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
+
+  //get token
+  const authToken = useAuthToken();
 
   const { data, isLoading } = useQuery(
     `remote-fetch-${organisationId}`,
@@ -33,6 +36,7 @@ const useSetupRemotePunching = (organisationId) => {
       },
     }
   );
+
   const updateRemotePunching = async (data) => {
     await axios.post(
       `${process.env.REACT_APP_API}/route/remote-punch/${organisationId}`,
@@ -42,6 +46,7 @@ const useSetupRemotePunching = (organisationId) => {
       }
     );
   };
+
   const { mutate } = useMutation(updateRemotePunching, {
     onSuccess: async (data) => {
       await queryClient.invalidateQueries(`remote-fetch-${organisationId}`);

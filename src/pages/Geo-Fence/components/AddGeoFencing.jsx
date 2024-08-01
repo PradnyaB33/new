@@ -65,9 +65,9 @@ const AddGeoFencing = ({ onClose, data }) => {
             value={watch("location")}
           />
         </div>
-        {data?.lat && (
+        {/* {data?.lat && ( */}
           <LocationRelated watch={watch} data={data} onClose={onClose} />
-        )}
+        {/* )} */}
       </form>
     </>
   );
