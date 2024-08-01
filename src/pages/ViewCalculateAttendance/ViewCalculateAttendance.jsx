@@ -74,7 +74,6 @@ const ViewCalculateAttendance = () => {
     setEmpModalOpen(false);
     setEmployee();
   };
-  
 
   // pagination
   const prePage = () => {

@@ -38,6 +38,7 @@ const CalculateHourEmpModal = ({
     empPunchingData?.punchingRecords?.length / itemsPerPage
   );
   const navigate = useNavigate("");
+  console.log("empPunchingData", empPunchingData);
 
   // to define the schema for validation
   const CalculateHourSchemas = z.object({
@@ -86,13 +87,132 @@ const CalculateHourEmpModal = ({
     paginationNumbers.push(i);
   }
 
-  // defined the function for calculation hours
+  // // defined the function for calculation hours
+  // const handleCalculateHours = async () => {
+  //   const data = getValues();
+  //   const { hour, timeRange } = data;
+  //   const regex = /^(0*(?:[0-9]|1[0-9]|2[0-4]))$/;
+  //   if (!regex.test(hour)) {
+  //     setError("hour", { type: "custom", message: "hour should be 0 to 24" });
+  //   } else {
+  //     setError("hour", null);
+  //   }
+
+  //   if (!timeRange?.startDate || !timeRange?.endDate) {
+  //     setError("timeRange", {
+  //       type: "custom",
+  //       message: "Please select a valid date range.",
+  //     });
+  //     return;
+  //   } else {
+  //     setError("timeRange", null);
+  //   }
+
+  //   const startDate = new Date(timeRange.startDate);
+  //   const endDate = new Date(timeRange.endDate);
+  //   const punchingRecords = empPunchingData?.punchingRecords || [];
+
+  //   for (
+  //     let date = new Date(startDate);
+  //     date <= endDate;
+  //     date.setDate(date.getDate() + 1)
+  //   ) {
+  //     const formattedDate = new Date(date.toISOString().split("T")[0]);
+  //     let punchInTime = null;
+  //     let punchOutTime = null;
+
+  //     for (const record of punchingRecords) {
+  //       const recordDate = new Date(record.date).toISOString().split("T")[0];
+  //       if (recordDate === formattedDate.toISOString().split("T")[0]) {
+  //         if (record?.punchingStatus === "Check In" && !punchInTime) {
+  //           punchInTime = new Date(`1970-01-01T${record?.punchingTime}`);
+  //         } else if (record?.punchingStatus === "Check Out" && !punchOutTime) {
+  //           punchOutTime = new Date(`1970-01-01T${record?.punchingTime}`);
+  //         }
+  //         if (punchInTime && punchOutTime) break;
+  //       }
+  //     }
+
+  //     let totalHours = 0;
+  //     if (punchInTime && punchOutTime) {
+  //       const timeDiff = punchOutTime - punchInTime;
+  //       totalHours = Math.max(0, timeDiff / (1000 * 60 * 60));
+  //     }
+
+  //     const formattedTotalHours = Math.floor(totalHours);
+  //     const formattedMinutes = Math.round(
+  //       (totalHours - formattedTotalHours) * 60
+  //     );
+
+  //     let totalHour = `${formattedTotalHours} hr`;
+  //     if (formattedMinutes > 0) {
+  //       totalHour += ` ${formattedMinutes} min`;
+  //     }
+
+  //     let remarks = "";
+  //     if (totalHours >= hour) {
+  //       remarks = "Available";
+  //     } else if (totalHours > 0) {
+  //       remarks = "Partial";
+  //     } else {
+  //       remarks = "Unavailable";
+  //     }
+
+  //     setRemarks(remarks);
+
+  //     const postData = {
+  //       EmployeeId: empPunchingData?.EmployeeId._id,
+  //       organizationId: organisationId,
+  //       recordDate: date.toISOString(),
+  //       punchInTime: punchInTime ? punchInTime.toISOString() : null,
+  //       punchOutTime: punchOutTime ? punchOutTime.toISOString() : null,
+  //       totalHours: totalHour,
+  //       status: remarks,
+  //       justify: justify,
+  //     };
+
+  //     try {
+  //       const response = await fetch(
+  //         `${process.env.REACT_APP_API}/route/organization/${organisationId}/punching-data`,
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Authorization: authToken,
+  //           },
+  //           body: JSON.stringify(postData),
+  //         }
+  //       );
+
+  //       if (!response.ok) {
+  //         throw new Error("Failed to calculate hours.");
+  //       }
+
+  //       const responseData = await response.json();
+  //       console.log(responseData);
+  //       handleClose();
+  //       handleAlert(true, "success", "Hours calculated successfully.");
+  //       reset();
+  //       navigate(`/organisation/${organisationId}/view-calculate-data`);
+  //     } catch (error) {
+  //       console.error("Error calculating hours:", error);
+  //       handleAlert(
+  //         false,
+  //         "error",
+  //         `Failed to calculate hours. Please try again. ${error.message}`
+  //       );
+  //     }
+  //   }
+  // };
+  // Function to calculate total hours
   const handleCalculateHours = async () => {
     const data = getValues();
     const { hour, timeRange } = data;
     const regex = /^(0*(?:[0-9]|1[0-9]|2[0-4]))$/;
+
     if (!regex.test(hour)) {
       setError("hour", { type: "custom", message: "hour should be 0 to 24" });
+      return;
     } else {
       setError("hour", null);
     }
@@ -107,30 +227,42 @@ const CalculateHourEmpModal = ({
       setError("timeRange", null);
     }
 
-    const startDate = new Date(timeRange.startDate);
-    const endDate = new Date(timeRange.endDate);
     const punchingRecords = empPunchingData?.punchingRecords || [];
 
-    for (
-      let date = new Date(startDate);
-      date <= endDate;
-      date.setDate(date.getDate() + 1)
-    ) {
-      const formattedDate = new Date(date.toISOString().split("T")[0]);
-      let punchInTime = null;
-      let punchOutTime = null;
+    // Filter and organize records
+    const filteredRecords = {};
 
-      for (const record of punchingRecords) {
-        const recordDate = new Date(record.date).toISOString().split("T")[0];
-        if (recordDate === formattedDate.toISOString().split("T")[0]) {
-          if (record?.punchingStatus === "Check In" && !punchInTime) {
-            punchInTime = new Date(`1970-01-01T${record?.punchingTime}`);
-          } else if (record?.punchingStatus === "Check Out" && !punchOutTime) {
-            punchOutTime = new Date(`1970-01-01T${record?.punchingTime}`);
-          }
-          if (punchInTime && punchOutTime) break;
+    punchingRecords.forEach((record) => {
+      const date = new Date(record.date).toISOString().split("T")[0];
+      if (!filteredRecords[date]) {
+        filteredRecords[date] = { checkIn: null, checkOut: null };
+      }
+      if (record.punchingStatus === "Check In") {
+        if (
+          !filteredRecords[date].checkIn ||
+          record.punchingTime < filteredRecords[date].checkIn.punchingTime
+        ) {
+          filteredRecords[date].checkIn = record;
+        }
+      } else if (record.punchingStatus === "Check Out") {
+        if (
+          !filteredRecords[date].checkOut ||
+          record.punchingTime > filteredRecords[date].checkOut.punchingTime
+        ) {
+          filteredRecords[date].checkOut = record;
         }
       }
+    });
+    console.log("filter record", filteredRecords);
+
+    // Iterate over filtered records
+    for (const [date, { checkIn, checkOut }] of Object.entries(
+      filteredRecords
+    )) {
+      if (!checkIn || !checkOut) continue;
+
+      const punchInTime = new Date(`1970-01-01T${checkIn.punchingTime}`);
+      const punchOutTime = new Date(`1970-01-01T${checkOut.punchingTime}`);
 
       let totalHours = 0;
       if (punchInTime && punchOutTime) {
@@ -149,7 +281,9 @@ const CalculateHourEmpModal = ({
       }
 
       let remarks = "";
-      if (totalHours >= hour) {
+      if (totalHours > hour) {
+        remarks = "Overtime";
+      } else if (totalHours === hour) {
         remarks = "Available";
       } else if (totalHours > 0) {
         remarks = "Partial";
@@ -162,9 +296,9 @@ const CalculateHourEmpModal = ({
       const postData = {
         EmployeeId: empPunchingData?.EmployeeId._id,
         organizationId: organisationId,
-        recordDate: date.toISOString(),
-        punchInTime: punchInTime ? punchInTime.toISOString() : null,
-        punchOutTime: punchOutTime ? punchOutTime.toISOString() : null,
+        recordDate: date,
+        punchInTime: punchInTime.toISOString(),
+        punchOutTime: punchOutTime.toISOString(),
         totalHours: totalHour,
         status: remarks,
         justify: justify,
