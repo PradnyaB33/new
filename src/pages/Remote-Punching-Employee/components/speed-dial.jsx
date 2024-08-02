@@ -6,31 +6,44 @@ import useSelfieFaceDetect from "../../../components/Modal/Selfi-Image/useSelfie
 import useLocationMutation from "../../../hooks/QueryHook/Location/mutation";
 import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
 import StopRemotePunch from "./stop-remote-punching";
+import useOrgGeo from "../../Geo-Fence/useOrgGeo";
+import UserProfile from "../../../hooks/UserData/useUser";
 
 export default function FabIcons() {
   const { start, setStart, setStartTime } = useSelfieStore();
   const [open, setOpen] = useState(false);
   const { getUserImage } = useLocationMutation();
+  const { getCurrentUser } = UserProfile();
+  const user = getCurrentUser();
+  const userMatch = user?._id;
+
   const handleOperate = () => {
     setOpen(false);
     getUserImage.mutate();
     setStartTime();
   };
   const { faceDetectedData, employeeOrgId } = useSelfieFaceDetect();
-  console.log(`🚀 ~ file: speed-dial.jsx:20 ~ employeeOrgId:`, employeeOrgId);
-  console.log(
-    `🚀 ~ file: speed-dial.jsx:20 ~ faceDetectedData:`,
-    faceDetectedData
+ 
+
+  const { data } = useOrgGeo();
+
+  const isUserMatchInEmployeeList = data?.area?.some(area =>
+    area.employee.includes(userMatch)
   );
 
   return (
     <>
       {!start ? (
         <Fab
+          // disabled={
+          //   employeeOrgId?.employee?.faceRecognition === true
+          //     ? faceDetectedData === undefined
+          //     : false
+          // }
           disabled={
             employeeOrgId?.employee?.faceRecognition === true
-              ? faceDetectedData === undefined
-              : false
+              ? isUserMatchInEmployeeList
+              : faceDetectedData === undefined
           }
           onClick={() => setOpen(true)}
           color="primary"
