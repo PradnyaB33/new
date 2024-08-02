@@ -10,7 +10,9 @@ import BasicSpeedDial from "./components/speed-dial";
 
 const EmployeeRemotePunch = () => {
   const { getUserLocation } = useLocationMutation();
+
   const { data, mutate } = getUserLocation;
+
   useEffect(() => {
     mutate();
   }, [mutate]);
@@ -22,6 +24,7 @@ const EmployeeRemotePunch = () => {
 
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   });
+
   return (
     <div className="w-full h-full bg-slate-200">
       <div className="flex  items-center justify-center h-[92vh]">
