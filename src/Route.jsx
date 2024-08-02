@@ -87,7 +87,8 @@ import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
-import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
+//import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
+import EmpInfoByDynimacally from "./pages/EmpInfoPunchStatus/EmpInfoByDynanimacally";
 import EmployeeNotification from "./pages/Employee-Notification/page";
 import EditEmployee from "./pages/Employee/EditEmployee";
 import EmployeeSurvey from "./pages/EmployeeSurvey/EmployeeSurvey";
@@ -567,13 +568,23 @@ const App = () => {
             </RequireAuth>
           }
         />
-        <Route
+        {/* <Route
           path="/organisation/:organisationId/emo-info-punch-status"
           element={
             <RequireAuth
               permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
             >
               <EmpInfoPunchStatus />
+            </RequireAuth>
+          }
+        /> */}
+        <Route
+          path="/organisation/:organisationId/emo-info-punch-status"
+          element={
+            <RequireAuth
+              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
+            >
+              <EmpInfoByDynimacally />
             </RequireAuth>
           }
         />
@@ -1467,7 +1478,8 @@ const App = () => {
               ]}
             >
               <EmployeeSurvey />
-            </RequireAuth>}
+            </RequireAuth>
+          }
         />
         <Route
           path="/organisation/:organisationId/create-new-survey"
@@ -1487,27 +1499,33 @@ const App = () => {
                 "Employee",
                 7,
               ]}
-            ><CreateNewSurvey isEditable={true} />
-            </RequireAuth>}
+            >
+              <CreateNewSurvey isEditable={true} />
+            </RequireAuth>
+          }
         />
         <Route
           path="/organisation/:organisationId/create-new-survey/:id"
-          element={<RequireAuth
-            permission={[
-              "Super-Admin",
-              "Delegate-Super-Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "HR",
-              "Manager",
-              "Employee",
-              7,
-            ]}
-          ><CreateNewSurvey isEditable={true} /></RequireAuth>}
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+                7,
+              ]}
+            >
+              <CreateNewSurvey isEditable={true} />
+            </RequireAuth>
+          }
         />
         <Route
           path="/organisation/:organisationId/update-survey/:id"
@@ -1527,45 +1545,56 @@ const App = () => {
                 "Employee",
                 7,
               ]}
-            ><CreateNewSurvey isEditable={true} /></RequireAuth>}
+            >
+              <CreateNewSurvey isEditable={true} />
+            </RequireAuth>
+          }
         />
         <Route
           path="/organisation/:organisationId/view-survey/:id"
-          element={<RequireAuth
-            permission={[
-              "Super-Admin",
-              "Delegate-Super-Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "HR",
-              "Manager",
-              "Employee",
-              7,
-            ]}
-          ><CreateNewSurvey isEditable={false} /></RequireAuth>}
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+                7,
+              ]}
+            >
+              <CreateNewSurvey isEditable={false} />
+            </RequireAuth>
+          }
         />
         <Route
           path="/organisation/:organisationId/survey-form"
-          element={<RequireAuth
-            permission={[
-              "Super-Admin",
-              "Delegate-Super-Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "HR",
-              "Manager",
-              "Employee",
-              7,
-            ]}
-          ><EmployeeSurveyForm /></RequireAuth>}
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+                7,
+              ]}
+            >
+              <EmployeeSurveyForm />
+            </RequireAuth>
+          }
         />
         <Route
           path="/organisation/:organisationId/survey-form/:surveyId/:responseId"
@@ -1585,27 +1614,33 @@ const App = () => {
                 "Employee",
                 7,
               ]}
-            ><EmployeeSurveyForm /></RequireAuth>}
+            >
+              <EmployeeSurveyForm />
+            </RequireAuth>
+          }
         />
         <Route
           path="/organisation/:organisationId/survey-form/:surveyId"
-          element={<RequireAuth
-            permission={[
-              "Super-Admin",
-              "Delegate-Super-Admin",
-              "Department-Head",
-              "Delegate-Department-Head",
-              "Department-Admin",
-              "Delegate-Department-Admin",
-              "Accountant",
-              "Delegate-Accountant",
-              "HR",
-              "Manager",
-              "Employee",
-              7,
-            ]}
-          ><EmployeeSurveyForm />
-          </RequireAuth>}
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+                7,
+              ]}
+            >
+              <EmployeeSurveyForm />
+            </RequireAuth>
+          }
         />
         <Route
           path="/organisation/:organisationId/survey-details/:surveyId"
@@ -1625,7 +1660,10 @@ const App = () => {
                 "Employee",
                 7,
               ]}
-            ><SurveyDetails /></RequireAuth>}
+            >
+              <SurveyDetails />
+            </RequireAuth>
+          }
         />
       </Routes>
     </AuthProvider>
