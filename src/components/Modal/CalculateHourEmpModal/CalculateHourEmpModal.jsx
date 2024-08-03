@@ -19,6 +19,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useQuery } from "react-query";
 
 const CalculateHourEmpModal = ({
   handleClose,
@@ -87,124 +89,36 @@ const CalculateHourEmpModal = ({
     paginationNumbers.push(i);
   }
 
-  // // defined the function for calculation hours
-  // const handleCalculateHours = async () => {
-  //   const data = getValues();
-  //   const { hour, timeRange } = data;
-  //   const regex = /^(0*(?:[0-9]|1[0-9]|2[0-4]))$/;
-  //   if (!regex.test(hour)) {
-  //     setError("hour", { type: "custom", message: "hour should be 0 to 24" });
-  //   } else {
-  //     setError("hour", null);
-  //   }
+  // Fetch OvertimeAllowance setup
+  const [isOvertimeAllowanceEnabled, setIsOvertimeAllowanceEnabled] =
+    useState(false);
+    console.log(setIsOvertimeAllowanceEnabled);
 
-  //   if (!timeRange?.startDate || !timeRange?.endDate) {
-  //     setError("timeRange", {
-  //       type: "custom",
-  //       message: "Please select a valid date range.",
-  //     });
-  //     return;
-  //   } else {
-  //     setError("timeRange", null);
-  //   }
+  // Get Query for fetching weekend in the organization
+  const { data: getWeekend } = useQuery(
+    ["getWeekend", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/weekend/get/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data;
+    }
+  );
 
-  //   const startDate = new Date(timeRange.startDate);
-  //   const endDate = new Date(timeRange.endDate);
-  //   const punchingRecords = empPunchingData?.punchingRecords || [];
+  let weekendDays =
+    getWeekend && getWeekend.days && getWeekend.days.length > 0
+      ? getWeekend.days[0].days.map((dayObj) => dayObj.day)
+      : [];
 
-  //   for (
-  //     let date = new Date(startDate);
-  //     date <= endDate;
-  //     date.setDate(date.getDate() + 1)
-  //   ) {
-  //     const formattedDate = new Date(date.toISOString().split("T")[0]);
-  //     let punchInTime = null;
-  //     let punchOutTime = null;
+  console.log("Weekend days:", weekendDays);
 
-  //     for (const record of punchingRecords) {
-  //       const recordDate = new Date(record.date).toISOString().split("T")[0];
-  //       if (recordDate === formattedDate.toISOString().split("T")[0]) {
-  //         if (record?.punchingStatus === "Check In" && !punchInTime) {
-  //           punchInTime = new Date(`1970-01-01T${record?.punchingTime}`);
-  //         } else if (record?.punchingStatus === "Check Out" && !punchOutTime) {
-  //           punchOutTime = new Date(`1970-01-01T${record?.punchingTime}`);
-  //         }
-  //         if (punchInTime && punchOutTime) break;
-  //       }
-  //     }
+  // function to calculate total hours
 
-  //     let totalHours = 0;
-  //     if (punchInTime && punchOutTime) {
-  //       const timeDiff = punchOutTime - punchInTime;
-  //       totalHours = Math.max(0, timeDiff / (1000 * 60 * 60));
-  //     }
-
-  //     const formattedTotalHours = Math.floor(totalHours);
-  //     const formattedMinutes = Math.round(
-  //       (totalHours - formattedTotalHours) * 60
-  //     );
-
-  //     let totalHour = `${formattedTotalHours} hr`;
-  //     if (formattedMinutes > 0) {
-  //       totalHour += ` ${formattedMinutes} min`;
-  //     }
-
-  //     let remarks = "";
-  //     if (totalHours >= hour) {
-  //       remarks = "Available";
-  //     } else if (totalHours > 0) {
-  //       remarks = "Partial";
-  //     } else {
-  //       remarks = "Unavailable";
-  //     }
-
-  //     setRemarks(remarks);
-
-  //     const postData = {
-  //       EmployeeId: empPunchingData?.EmployeeId._id,
-  //       organizationId: organisationId,
-  //       recordDate: date.toISOString(),
-  //       punchInTime: punchInTime ? punchInTime.toISOString() : null,
-  //       punchOutTime: punchOutTime ? punchOutTime.toISOString() : null,
-  //       totalHours: totalHour,
-  //       status: remarks,
-  //       justify: justify,
-  //     };
-
-  //     try {
-  //       const response = await fetch(
-  //         `${process.env.REACT_APP_API}/route/organization/${organisationId}/punching-data`,
-  //         {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             Authorization: authToken,
-  //           },
-  //           body: JSON.stringify(postData),
-  //         }
-  //       );
-
-  //       if (!response.ok) {
-  //         throw new Error("Failed to calculate hours.");
-  //       }
-
-  //       const responseData = await response.json();
-  //       console.log(responseData);
-  //       handleClose();
-  //       handleAlert(true, "success", "Hours calculated successfully.");
-  //       reset();
-  //       navigate(`/organisation/${organisationId}/view-calculate-data`);
-  //     } catch (error) {
-  //       console.error("Error calculating hours:", error);
-  //       handleAlert(
-  //         false,
-  //         "error",
-  //         `Failed to calculate hours. Please try again. ${error.message}`
-  //       );
-  //     }
-  //   }
-  // };
-  // Function to calculate total hours
   const handleCalculateHours = async () => {
     const data = getValues();
     const { hour, timeRange } = data;
@@ -234,8 +148,12 @@ const CalculateHourEmpModal = ({
 
     punchingRecords.forEach((record) => {
       const date = new Date(record.date).toISOString().split("T")[0];
+      const dayOfWeek = new Date(record.date).toLocaleString("en-US", {
+        weekday: "short",
+      });
+
       if (!filteredRecords[date]) {
-        filteredRecords[date] = { checkIn: null, checkOut: null };
+        filteredRecords[date] = { checkIn: null, checkOut: null, dayOfWeek };
       }
       if (record.punchingStatus === "Check In") {
         if (
@@ -253,19 +171,22 @@ const CalculateHourEmpModal = ({
         }
       }
     });
-    console.log("filter record", filteredRecords);
 
     // Iterate over filtered records
-    for (const [date, { checkIn, checkOut }] of Object.entries(
+    for (const [date, { checkIn, checkOut, dayOfWeek }] of Object.entries(
       filteredRecords
     )) {
-      if (!checkIn || !checkOut) continue;
-
-      const punchInTime = new Date(`1970-01-01T${checkIn.punchingTime}`);
-      const punchOutTime = new Date(`1970-01-01T${checkOut.punchingTime}`);
-
       let totalHours = 0;
-      if (punchInTime && punchOutTime) {
+
+      if (!checkIn || !checkOut) {
+        console.log(
+          `Skipping calculation for date: ${date} as checkIn or checkOut is missing.`
+        );
+        totalHours = 0;
+      } else {
+        const punchInTime = new Date(`1970-01-01T${checkIn.punchingTime}`);
+        const punchOutTime = new Date(`1970-01-01T${checkOut.punchingTime}`);
+
         const timeDiff = punchOutTime - punchInTime;
         totalHours = Math.max(0, timeDiff / (1000 * 60 * 60));
       }
@@ -281,9 +202,11 @@ const CalculateHourEmpModal = ({
       }
 
       let remarks = "";
-      if (totalHours > hour) {
+      if (weekendDays.includes(dayOfWeek)) {
+        remarks = "ExtraShift";
+      } else if (isOvertimeAllowanceEnabled && totalHours > hour) {
         remarks = "Overtime";
-      } else if (totalHours === hour) {
+      } else if (totalHours >= hour) {
         remarks = "Available";
       } else if (totalHours > 0) {
         remarks = "Partial";
@@ -293,16 +216,25 @@ const CalculateHourEmpModal = ({
 
       setRemarks(remarks);
 
+      console.log("total hour", totalHours);
+      console.log("remark", remarks);
+
       const postData = {
         EmployeeId: empPunchingData?.EmployeeId._id,
         organizationId: organisationId,
         recordDate: date,
-        punchInTime: punchInTime.toISOString(),
-        punchOutTime: punchOutTime.toISOString(),
+        punchInTime: checkIn
+          ? new Date(`1970-01-01T${checkIn.punchingTime}`).toISOString()
+          : null,
+        punchOutTime: checkOut
+          ? new Date(`1970-01-01T${checkOut.punchingTime}`).toISOString()
+          : null,
         totalHours: totalHour,
         status: remarks,
         justify: justify,
       };
+
+      console.log("post data", postData);
 
       try {
         const response = await fetch(

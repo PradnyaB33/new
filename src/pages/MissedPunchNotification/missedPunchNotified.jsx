@@ -100,7 +100,7 @@ const MissedPunchNotified = ({ employeeId }) => {
       console.error("Error approving record:", error);
       handleAlert(true, "error", "Failed to approve record.");
     }
-  }; 
+  };
 
   // to define the function for approval the leave record
   const handleApprovedLeaveUnavailableRecord = async (recordId) => {

@@ -38,6 +38,8 @@ const MissPunchJustify = () => {
     }
   );
 
+  console.log("unavialble record", unavailableRecord);
+
   // Modal state
   const [missPunchModalOpen, setMissPunchModalOpen] = useState(false);
   const [unavailableRecordId, setUnavailableRecordsId] = useState(null);

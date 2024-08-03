@@ -5,6 +5,7 @@ import useMissedPunchNotificationCount from "../../../hooks/QueryHook/notificati
 const InputForm = () => {
   // to get the missed punching data of employee
   const { getMissedPunchData } = useMissedPunchNotificationCount();
+  console.log("get missed punch data" , getMissedPunchData);
 
   return (
     <div className="flex w-full flex-col gap-4">
