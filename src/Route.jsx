@@ -139,6 +139,9 @@ import OpenJobPosition from "./pages/Recruitment/OpenRoleJobPosition";
 import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
 import DepartmentNotificationToEmp from "./pages/DeptNotification/DepartmentNotificationToEmp";
 import TempPunchingData from "./pages/EmployeeSurvey/components/TempPunchingData";
+// import  Overtime setup
+
+import OvertimeSetup from "./pages/OvertimeSetup/OvertimeSetup";
 
 const App = () => {
   return (
@@ -180,6 +183,25 @@ const App = () => {
             </RequireAuth>
           }
         />
+
+        {/* OvertimeSetup */}
+        <Route
+          path="/organisation/:organisationId/setup/overtime-setup"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Employee",
+                "Manager",
+                "HR",
+              ]}
+            >
+              <OvertimeSetup />
+            </RequireAuth>
+          }
+        />
+
         <Route
           path="/organisation/:organisationId/add-delegate/"
           element={
@@ -1685,12 +1707,12 @@ const App = () => {
                 "Employee",
                 7,
               ]}
-            ><TempPunchingData /></RequireAuth>}
+            >
+              <TempPunchingData />
+            </RequireAuth>
+          }
         />
-
-
       </Routes>
-
     </AuthProvider>
   );
 };

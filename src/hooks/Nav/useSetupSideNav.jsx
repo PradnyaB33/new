@@ -61,6 +61,22 @@ const useSetupSideNav = ({ organisationId }) => {
         ["Super-Admin", "Delegate-Super-Admin"].includes(role)
       ),
     },
+
+
+     //ADD> Overtime setup
+     {
+      label: "Overtime",
+      icon: EventNoteOutlinedIcon,
+      href: `/organisation/${organisationId}/setup/overtime-setup`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/overtime-setup`,
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
+    },
+
+
     {
       label: "Location",
       icon: AddLocationAltOutlined,
