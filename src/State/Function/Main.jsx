@@ -12,7 +12,7 @@ const TestState = (props) => {
     setAppAlert({
       alert: alert || false,
       type: type || "success",
-      msg: msg || "this is test message",
+      msg: msg,
     });
   };
   
