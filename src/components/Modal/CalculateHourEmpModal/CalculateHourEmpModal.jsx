@@ -89,11 +89,6 @@ const CalculateHourEmpModal = ({
     paginationNumbers.push(i);
   }
 
-  // Fetch OvertimeAllowance setup
-  const [isOvertimeAllowanceEnabled, setIsOvertimeAllowanceEnabled] =
-    useState(false);
-    console.log(setIsOvertimeAllowanceEnabled);
-
   // Get Query for fetching weekend in the organization
   const { data: getWeekend } = useQuery(
     ["getWeekend", organisationId],
@@ -117,8 +112,29 @@ const CalculateHourEmpModal = ({
 
   console.log("Weekend days:", weekendDays);
 
-  // function to calculate total hours
+  // Get Query for fetching overtime in the organization
+  const { data: overtime } = useQuery(
+    ["overtime", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/get/${organisationId}/overtime`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
+  console.log("overtime", overtime);
+  let isOvertimeAllowanceEnabled =
+    overtime && overtime?.overtimeAllowanceRequired;
+  console.log("isOverTimeAllowanceEnable", isOvertimeAllowanceEnabled);
+  let overTimeHour = overtime && overtime?.minimumOvertimeHours;
+  console.log("overTimeHour", overTimeHour);
 
+  // function to calculate total hours
   const handleCalculateHours = async () => {
     const data = getValues();
     const { hour, timeRange } = data;
