@@ -6,31 +6,51 @@ import useSelfieFaceDetect from "../../../components/Modal/Selfi-Image/useSelfie
 import useLocationMutation from "../../../hooks/QueryHook/Location/mutation";
 import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
 import StopRemotePunch from "./stop-remote-punching";
+import useOrgGeo from "../../Geo-Fence/useOrgGeo";
+import UserProfile from "../../../hooks/UserData/useUser";
 
 export default function FabIcons() {
+  //hooks
   const { start, setStart, setStartTime } = useSelfieStore();
-  const [open, setOpen] = useState(false);
   const { getUserImage } = useLocationMutation();
+  const { getCurrentUser } = UserProfile();
+
+  //state
+  const [open, setOpen] = useState(false);
+
+  //get current user login id
+  const user = getCurrentUser();
+  const userMatch = user?._id;
+
+  //handle operrate function for face capture
   const handleOperate = () => {
     setOpen(false);
     getUserImage.mutate();
     setStartTime();
   };
-  const { faceDetectedData, employeeOrgId } = useSelfieFaceDetect();
-  console.log(`🚀 ~ file: speed-dial.jsx:20 ~ employeeOrgId:`, employeeOrgId);
-  console.log(
-    `🚀 ~ file: speed-dial.jsx:20 ~ faceDetectedData:`,
-    faceDetectedData
+
+  //get all allowance data of dualWorkflow, geoFencing,faceRecognition, extra allowance
+  const { employeeOrgId } = useSelfieFaceDetect();
+
+  //selected employee list for geofencing
+  const { data } = useOrgGeo();
+
+  //match currect user and selcted employee in list
+  const isUserMatchInEmployeeList = data?.area?.some(area =>
+    area.employee.includes(userMatch)
   );
 
   return (
     <>
       {!start ? (
         <Fab
+          // disabled={
+          //   employeeOrgId?.employee?.faceRecognition === true
+          //     ? faceDetectedData === undefined
+          //     : false
+          // }
           disabled={
-            employeeOrgId?.employee?.faceRecognition === true
-              ? faceDetectedData === undefined
-              : false
+            employeeOrgId?.employee?.geoFencing === true && isUserMatchInEmployeeList === true
           }
           onClick={() => setOpen(true)}
           color="primary"

@@ -3,11 +3,11 @@ import { Skeleton } from "@mui/material";
 import React from "react";
 import { useParams } from "react-router";
 import Setup from "../Setup";
-
 import useSetupRemotePunching from "../../../hooks/QueryHook/Setup/remote-punching";
 import MiniForm from "./components/mini-form";
 
 const RemoteSetup = () => {
+  //get organisationId
   const { organisationId } = useParams();
   const { data, isLoading, mutate } = useSetupRemotePunching(organisationId);
   return (

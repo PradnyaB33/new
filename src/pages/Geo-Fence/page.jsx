@@ -47,9 +47,9 @@ const GeoFencing = () => {
           subHeading={"You can activate geofencing for a specific zone"}
           onClose={() => setOpen(false)}
         >
-          {locationData?.lat && (
+           {/* {locationData?.lat && (  */}
             <AddGeoFencing onClose={() => setOpen(false)} data={locationData} />
-          )}
+          {/* )}  */}
         </ReusableModal>
       </div>
     </>

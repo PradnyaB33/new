@@ -9,11 +9,16 @@ import useAuthToken from "../../../hooks/Token/useAuth";
 import PunchMapModal from "./components/mapped-form";
 
 const PunchAcceptModal = () => {
-  const authToken = useAuthToken();
+  //hooks
   const { employeeId } = useParams();
-  const { data } = usePunchNotification();
-  console.log("my data", data?.arrayOfEmployee);
 
+  //get authToken
+  const authToken = useAuthToken();
+
+  //get all employee punching and miss punch data
+  const { data } = usePunchNotification();
+
+  //get perticular employee punching and miss punch data
   const { data: EmpNotification, isLoading: empDataLoading } = useQuery({
     queryKey: ["EmpDataPunch", employeeId],
     queryFn: async () => {
@@ -26,7 +31,7 @@ const PunchAcceptModal = () => {
             },
           }
         );
-        console.log("this is my data bro", res.data);
+
         return res.data;
       } catch (error) {
         console.log(error);
@@ -44,6 +49,7 @@ const PunchAcceptModal = () => {
         Employee Punch Request
       </header>
       <section className="min-h-[90vh] flex  ">
+        {/*Show all employee data*/}
         <article className="w-[25%] overflow-auto max-h-[90vh] h-full bg-white  border-gray-200">
           <div className="p-6 !py-2  ">
             <div className="space-y-2">
@@ -51,7 +57,6 @@ const PunchAcceptModal = () => {
                 className={`flex  rounded-md items-center px-2 outline-none border-gray-200 border-[.5px]  bg-white py-1 md:py-[6px]`}
               >
                 <Search className="text-gray-700 md:text-lg !text-[1em]" />
-
                 <input
                   type={"test"}
                   placeholder={"Search Employee"}
@@ -65,10 +70,9 @@ const PunchAcceptModal = () => {
               employee !== null && (
                 <Link
                   to={`/punch-notification/${employee?._id}`}
-                  className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${
-                    employee?._id === employeeId &&
+                  className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${employee?._id === employeeId &&
                     "bg-blue-500 text-white hover:!bg-blue-300"
-                  }`}
+                    }`}
                   key={idx}
                 >
                   <Avatar />
@@ -77,9 +81,8 @@ const PunchAcceptModal = () => {
                       {employee?.first_name} {employee?.last_name}
                     </h1>
                     <h1
-                      className={`text-sm text-gray-500 ${
-                        employee?._id === employeeId && "text-white"
-                      }`}
+                      className={`text-sm text-gray-500 ${employee?._id === employeeId && "text-white"
+                        }`}
                     >
                       {employee?.email}
                     </h1>
@@ -89,6 +92,7 @@ const PunchAcceptModal = () => {
           )}
         </article>
 
+        {/*show perticular employee data*/}
         <article className="w-[75%] min-h-[90vh] border-l-[.5px]  bg-gray-50">
           {empDataLoading ? (
             <div className="flex items-center justify-center my-2">

@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import useLocationMutation from "../../../../hooks/QueryHook/Location/mutation";
 import useSelfieStore from "../../../../hooks/QueryHook/Location/zustand-store";
@@ -11,6 +11,8 @@ const MiniForm = () => {
   const videoRef = useRef();
   const [imageCaptured, setImageCaptured] = useState(false);
   const { getImageUrl } = useLocationMutation();
+  console.log("getImageUrl",getImageUrl);
+  
   const {
     faceDetectedData,
     detectFaceOnlyMutation,
@@ -139,7 +141,7 @@ const MiniForm = () => {
             isFetching
           }
         >
-          Upload
+        {getImageUrl.isLoading ? <CircularProgress size={20} /> : "Upload"}
         </Button>
         <Button
           onClick={takePicture}

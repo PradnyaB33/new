@@ -23,7 +23,7 @@ const MissedPunchNotification = () => {
               .includes(searchQuery.toLowerCase())
         )
       : [];
- 
+
   // to define the function for get the employee those selected by user.
   const handleEmployeeClick = (employee) => {
     setSelectedEmployee(employee);
