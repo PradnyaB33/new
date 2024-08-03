@@ -137,6 +137,7 @@ import JobNotificationToEmp from "./pages/Recruitment/Notification/JobNotificati
 import OpenJobPosition from "./pages/Recruitment/OpenRoleJobPosition";
 import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
 import DepartmentNotificationToEmp from "./pages/DeptNotification/DepartmentNotificationToEmp";
+import TempPunchingData from "./pages/EmployeeSurvey/components/TempPunchingData";
 
 const App = () => {
   return (
@@ -1627,7 +1628,31 @@ const App = () => {
               ]}
             ><SurveyDetails /></RequireAuth>}
         />
+
+        <Route
+          path="/organisation/:organisationId/temp-punch-data"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+                7,
+              ]}
+            ><TempPunchingData /></RequireAuth>}
+        />
+
+
       </Routes>
+
     </AuthProvider>
   );
 };

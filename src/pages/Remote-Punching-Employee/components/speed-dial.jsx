@@ -10,23 +10,32 @@ import useOrgGeo from "../../Geo-Fence/useOrgGeo";
 import UserProfile from "../../../hooks/UserData/useUser";
 
 export default function FabIcons() {
+  //hooks
   const { start, setStart, setStartTime } = useSelfieStore();
-  const [open, setOpen] = useState(false);
   const { getUserImage } = useLocationMutation();
   const { getCurrentUser } = UserProfile();
+
+  //state
+  const [open, setOpen] = useState(false);
+
+  //get current user login id
   const user = getCurrentUser();
   const userMatch = user?._id;
 
+  //handle operrate function for face capture
   const handleOperate = () => {
     setOpen(false);
     getUserImage.mutate();
     setStartTime();
   };
-  const { faceDetectedData, employeeOrgId } = useSelfieFaceDetect();
- 
 
+  //get all allowance data of dualWorkflow, geoFencing,faceRecognition, extra allowance
+  const { employeeOrgId } = useSelfieFaceDetect();
+
+  //selected employee list for geofencing
   const { data } = useOrgGeo();
 
+  //match currect user and selcted employee in list
   const isUserMatchInEmployeeList = data?.area?.some(area =>
     area.employee.includes(userMatch)
   );
@@ -41,9 +50,7 @@ export default function FabIcons() {
           //     : false
           // }
           disabled={
-            employeeOrgId?.employee?.faceRecognition === true
-              ? isUserMatchInEmployeeList
-              : faceDetectedData === undefined
+            employeeOrgId?.employee?.geoFencing === true && isUserMatchInEmployeeList === true
           }
           onClick={() => setOpen(true)}
           color="primary"
