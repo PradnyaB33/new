@@ -4,17 +4,16 @@ import { Avatar } from "@mui/material";
 import LoanMgtApproval from "./LoanMgtApproval";
 import useLoanNotification from "../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
 
-
 const LoanMgtNotification = () => {
   // to define the state, hook , import other function if needed
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const { getEmployeeRequestLoanApplication } = useLoanNotification();
- 
+
   const handleEmployeeClick = (employee) => {
     setSelectedEmployee(employee);
   };
-  
+
   let filteredEmployees = [];
 
   if (Array.isArray(getEmployeeRequestLoanApplication)) {
