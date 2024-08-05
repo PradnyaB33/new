@@ -1674,29 +1674,6 @@ const App = () => {
             </RequireAuth>
           }
         />
-
-        <Route
-          path="/organisation/:organisationId/temp-punch-data"
-          element={
-            <RequireAuth
-              permission={[
-                "Super-Admin",
-                "Delegate-Super-Admin",
-                "Department-Head",
-                "Delegate-Department-Head",
-                "Department-Admin",
-                "Delegate-Department-Admin",
-                "Accountant",
-                "Delegate-Accountant",
-                "HR",
-                "Manager",
-                "Employee",
-                7,
-              ]}
-            ><TempPunchingData /></RequireAuth>}
-        />
-
-
       </Routes>
 
     </AuthProvider>
