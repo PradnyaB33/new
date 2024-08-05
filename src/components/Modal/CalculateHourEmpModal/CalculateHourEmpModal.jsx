@@ -72,6 +72,41 @@ const CalculateHourEmpModal = ({
   }, [getValues]);
 
   // Pagination functions
+  const getPaginationButtons = (currentPage, totalPages) => {
+    const buttons = [];
+    const maxButtons = 5;
+    const half = Math.floor(maxButtons / 2);
+
+    let startPage = Math.max(1, currentPage - half);
+    let endPage = Math.min(totalPages, currentPage + half);
+
+    if (currentPage <= half) {
+      endPage = Math.min(maxButtons, totalPages);
+    } else if (currentPage + half >= totalPages) {
+      startPage = Math.max(totalPages - maxButtons + 1, 1);
+    }
+
+    if (startPage > 1) {
+      buttons.push(1);
+      if (startPage > 2) {
+        buttons.push("...");
+      }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      buttons.push(i);
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        buttons.push("...");
+      }
+      buttons.push(totalPages);
+    }
+
+    return buttons;
+  };
+
   const prePage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
@@ -81,13 +116,12 @@ const CalculateHourEmpModal = ({
   };
 
   const changePage = (pageNumber) => {
-    setCurrentPage(pageNumber);
+    if (pageNumber !== "..." && pageNumber !== currentPage) {
+      setCurrentPage(pageNumber);
+    }
   };
 
-  const paginationNumbers = [];
-  for (let i = 1; i <= totalPages; i++) {
-    paginationNumbers.push(i);
-  }
+  const paginationButtons = getPaginationButtons(currentPage, totalPages);
 
   // Get Query for fetching weekend in the organization
   const { data: getWeekend } = useQuery(
@@ -135,12 +169,181 @@ const CalculateHourEmpModal = ({
   console.log("overTimeHour", overTimeHour);
 
   // function to calculate total hours
+  // const handleCalculateHours = async () => {
+  //   const data = getValues();
+  //   const { hour, timeRange } = data;
+  //   const regex = /^(0*(?:[0-9]|1[0-9]|2[0-4]))$/;
+
+  //   if (!regex.test(hour)) {
+  //     setError("hour", { type: "custom", message: "hour should be 0 to 24" });
+  //     return;
+  //   } else {
+  //     setError("hour", null);
+  //   }
+
+  //   if (!timeRange?.startDate || !timeRange?.endDate) {
+  //     setError("timeRange", {
+  //       type: "custom",
+  //       message: "Please select a valid date range.",
+  //     });
+  //     return;
+  //   } else {
+  //     setError("timeRange", null);
+  //   }
+
+  //   const startDate = new Date(timeRange.startDate);
+  //   const endDate = new Date(timeRange.endDate);
+
+  //   // Ensure endDate is inclusive
+  //   endDate.setDate(endDate.getDate() + 1);
+
+  //   const punchingRecords = empPunchingData?.punchingRecords || [];
+
+  //   // Filter and organize records
+  //   const filteredRecords = {};
+
+  //   punchingRecords.forEach((record) => {
+  //     const recordDate = new Date(record.date);
+  //     if (recordDate >= startDate && recordDate < endDate) {
+  //       const date = recordDate.toISOString().split("T")[0];
+  //       const dayOfWeek = recordDate.toLocaleString("en-US", {
+  //         weekday: "short",
+  //       });
+
+  //       if (!filteredRecords[date]) {
+  //         filteredRecords[date] = { checkIn: null, checkOut: null, dayOfWeek };
+  //       }
+  //       if (record.punchingStatus === "Check In") {
+  //         if (
+  //           !filteredRecords[date].checkIn ||
+  //           record.punchingTime < filteredRecords[date].checkIn.punchingTime
+  //         ) {
+  //           filteredRecords[date].checkIn = record;
+  //         }
+  //       } else if (record.punchingStatus === "Check Out") {
+  //         if (
+  //           !filteredRecords[date].checkOut ||
+  //           record.punchingTime > filteredRecords[date].checkOut.punchingTime
+  //         ) {
+  //           filteredRecords[date].checkOut = record;
+  //         }
+  //       }
+  //     }
+  //   });
+
+  //   console.log("filterrecords", filteredRecords);
+
+  //   // Iterate over filtered records
+  //   for (const [date, { checkIn, checkOut, dayOfWeek }] of Object.entries(
+  //     filteredRecords
+  //   )) {
+  //     let totalHours = 0;
+
+  //     if (!checkIn || !checkOut) {
+  //       console.log(
+  //         `Skipping calculation for date: ${date} as checkIn or checkOut is missing.`
+  //       );
+  //       totalHours = 0;
+  //     } else {
+  //       const punchInTime = new Date(`1970-01-01T${checkIn.punchingTime}`);
+  //       const punchOutTime = new Date(`1970-01-01T${checkOut.punchingTime}`);
+
+  //       const timeDiff = punchOutTime - punchInTime;
+  //       totalHours = Math.max(0, timeDiff / (1000 * 60 * 60));
+  //     }
+
+  //     const formattedTotalHours = Math.floor(totalHours);
+  //     const formattedMinutes = Math.round(
+  //       (totalHours - formattedTotalHours) * 60
+  //     );
+
+  //     let totalHour = `${formattedTotalHours} hr`;
+  //     if (formattedMinutes > 0) {
+  //       totalHour += ` ${formattedMinutes} min`;
+  //     }
+
+  //     let totalOverTimeHour = (hour + overTimeHour);
+  //     console.log("totalOverTimeHour" , totalOverTimeHour);
+
+  //     let remarks = "";
+  //     if (weekendDays.includes(dayOfWeek)) {
+  //       remarks = "ExtraShift";
+  //     } else if (
+  //       isOvertimeAllowanceEnabled &&
+  //       totalHours >= totalOverTimeHour
+  //     ) {
+  //       remarks = "Overtime";
+  //     } else if (totalHours >= hour) {
+  //       remarks = "Available";
+  //     } else if (totalHours > 0) {
+  //       remarks = "Partial";
+  //     } else {
+  //       remarks = "Unavailable";
+  //     }
+
+  //     setRemarks(remarks);
+
+  //     console.log("total hour", totalHours);
+  //     console.log("remark", remarks);
+
+  //     const postData = {
+  //       EmployeeId: empPunchingData?.EmployeeId._id,
+  //       organizationId: organisationId,
+  //       recordDate: date,
+  //       punchInTime: checkIn
+  //         ? new Date(`1970-01-01T${checkIn.punchingTime}`).toISOString()
+  //         : null,
+  //       punchOutTime: checkOut
+  //         ? new Date(`1970-01-01T${checkOut.punchingTime}`).toISOString()
+  //         : null,
+  //       totalHours: totalHour,
+  //       status: remarks,
+  //       justify: justify,
+  //     };
+
+  //     console.log("post data", postData);
+
+  //     try {
+  //       const response = await fetch(
+  //         `${process.env.REACT_APP_API}/route/organization/${organisationId}/punching-data`,
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Authorization: authToken,
+  //           },
+  //           body: JSON.stringify(postData),
+  //         }
+  //       );
+
+  //       if (!response.ok) {
+  //         throw new Error("Failed to calculate hours.");
+  //       }
+
+  //       const responseData = await response.json();
+  //       console.log(responseData);
+  //       handleClose();
+  //       handleAlert(true, "success", "Hours calculated successfully.");
+  //       reset();
+  //       navigate(`/organisation/${organisationId}/view-calculate-data`);
+  //     } catch (error) {
+  //       console.error("Error calculating hours:", error);
+  //       handleAlert(
+  //         false,
+  //         "error",
+  //         `Failed to calculate hours. Please try again. ${error.message}`
+  //       );
+  //     }
+  //   }
+  // };
   const handleCalculateHours = async () => {
     const data = getValues();
     const { hour, timeRange } = data;
     const regex = /^(0*(?:[0-9]|1[0-9]|2[0-4]))$/;
 
-    if (!regex.test(hour)) {
+    // Validate and convert `hour` to number
+    const parsedHour = parseFloat(hour);
+    if (isNaN(parsedHour) || !regex.test(hour)) {
       setError("hour", { type: "custom", message: "hour should be 0 to 24" });
       return;
     } else {
@@ -157,36 +360,54 @@ const CalculateHourEmpModal = ({
       setError("timeRange", null);
     }
 
+    // Convert and validate `overTimeHour`
+    const parsedOverTimeHour = parseFloat(overTimeHour);
+    if (isNaN(parsedOverTimeHour)) {
+      console.error("Invalid overtime hour value");
+      return;
+    }
+
+    const startDate = new Date(timeRange.startDate);
+    const endDate = new Date(timeRange.endDate);
+
+    // Ensure endDate is inclusive
+    endDate.setDate(endDate.getDate() + 1);
+
     const punchingRecords = empPunchingData?.punchingRecords || [];
 
     // Filter and organize records
     const filteredRecords = {};
 
     punchingRecords.forEach((record) => {
-      const date = new Date(record.date).toISOString().split("T")[0];
-      const dayOfWeek = new Date(record.date).toLocaleString("en-US", {
-        weekday: "short",
-      });
+      const recordDate = new Date(record.date);
+      if (recordDate >= startDate && recordDate < endDate) {
+        const date = recordDate.toISOString().split("T")[0];
+        const dayOfWeek = recordDate.toLocaleString("en-US", {
+          weekday: "short",
+        });
 
-      if (!filteredRecords[date]) {
-        filteredRecords[date] = { checkIn: null, checkOut: null, dayOfWeek };
-      }
-      if (record.punchingStatus === "Check In") {
-        if (
-          !filteredRecords[date].checkIn ||
-          record.punchingTime < filteredRecords[date].checkIn.punchingTime
-        ) {
-          filteredRecords[date].checkIn = record;
+        if (!filteredRecords[date]) {
+          filteredRecords[date] = { checkIn: null, checkOut: null, dayOfWeek };
         }
-      } else if (record.punchingStatus === "Check Out") {
-        if (
-          !filteredRecords[date].checkOut ||
-          record.punchingTime > filteredRecords[date].checkOut.punchingTime
-        ) {
-          filteredRecords[date].checkOut = record;
+        if (record.punchingStatus === "Check In") {
+          if (
+            !filteredRecords[date].checkIn ||
+            record.punchingTime < filteredRecords[date].checkIn.punchingTime
+          ) {
+            filteredRecords[date].checkIn = record;
+          }
+        } else if (record.punchingStatus === "Check Out") {
+          if (
+            !filteredRecords[date].checkOut ||
+            record.punchingTime > filteredRecords[date].checkOut.punchingTime
+          ) {
+            filteredRecords[date].checkOut = record;
+          }
         }
       }
     });
+
+    console.log("filterrecords", filteredRecords);
 
     // Iterate over filtered records
     for (const [date, { checkIn, checkOut, dayOfWeek }] of Object.entries(
@@ -217,12 +438,18 @@ const CalculateHourEmpModal = ({
         totalHour += ` ${formattedMinutes} min`;
       }
 
+      // Calculate total overtime hour
+      const totalOverTimeHour = parsedHour + parsedOverTimeHour;
+
       let remarks = "";
       if (weekendDays.includes(dayOfWeek)) {
         remarks = "ExtraShift";
-      } else if (isOvertimeAllowanceEnabled && totalHours > hour) {
+      } else if (
+        isOvertimeAllowanceEnabled &&
+        totalHours >= totalOverTimeHour
+      ) {
         remarks = "Overtime";
-      } else if (totalHours >= hour) {
+      } else if (totalHours >= parsedHour) {
         remarks = "Available";
       } else if (totalHours > 0) {
         remarks = "Partial";
@@ -411,7 +638,8 @@ const CalculateHourEmpModal = ({
           </div>
 
           {/* Pagination */}
-          <div className="flex justify-between p-4">
+          {/* Pagination */}
+          <div className="flex items-center justify-center p-4">
             <Button
               variant="contained"
               color="primary"
@@ -420,18 +648,18 @@ const CalculateHourEmpModal = ({
             >
               Previous
             </Button>
-            <div>
-              {paginationNumbers &&
-                paginationNumbers?.map((number, index) => (
-                  <Button
-                    key={index}
-                    variant={number === currentPage ? "contained" : "outlined"}
-                    color="primary"
-                    onClick={() => changePage(number)}
-                  >
-                    {number}
-                  </Button>
-                ))}
+            <div className="mx-4">
+              {paginationButtons.map((btn, index) => (
+                <Button
+                  key={index}
+                  variant={btn === currentPage ? "contained" : "outlined"}
+                  color="primary"
+                  onClick={() => changePage(btn)}
+                  disabled={btn === "..." || btn === currentPage}
+                >
+                  {btn}
+                </Button>
+              ))}
             </div>
             <Button
               variant="contained"

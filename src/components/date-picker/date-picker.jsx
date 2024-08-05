@@ -33,6 +33,7 @@ const AppDatePicker = ({
   newAppliedLeaveEvents,
   isCalendarOpen,
   shiftData,
+  machinePunchingRecord,
   deleteLeaveMutation,
   calLoader,
   setCalLoader,
@@ -47,6 +48,7 @@ const AppDatePicker = ({
   const [openDelete, setOpenDelete] = useState(false);
   const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
     usePublicHoliday(organisationId);
+  console.log("machine punching record", machinePunchingRecord);
 
   const { data: data2 } = useQuery(
     "employee-disable-weekends",
@@ -411,6 +413,7 @@ const AppDatePicker = ({
           Update
         </Button>
       </div>
+
       <ReusableModal
         open={openDelete}
         onClose={() => setOpenDelete(false)}

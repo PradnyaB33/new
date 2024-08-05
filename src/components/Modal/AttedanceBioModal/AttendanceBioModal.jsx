@@ -94,8 +94,10 @@ const AttendanceBioModal = ({
         return;
       }
 
+      console.log("selectedEmployees", selectedEmployees);
+
       const syncedData = selectedEmployees.map((employee) => ({
-        date: new Date(employee?.Date.split("-").reverse().join("-")),
+        date: new Date(employee.Date), // Directly use the date if in ISO format
         punchingTime: employee["Punch Time"],
         punchingStatus: employee["Punch State"],
       }));
@@ -103,6 +105,8 @@ const AttendanceBioModal = ({
       console.log("syncedData", syncedData);
 
       const EmployeeIds = checkedEmployees.map((employee) => employee._id);
+
+      console.log("EmployeeIds", EmployeeIds);
 
       await Promise.all(
         EmployeeIds.map((EmployeeId) =>

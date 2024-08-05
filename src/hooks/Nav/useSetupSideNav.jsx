@@ -18,7 +18,7 @@ import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
 import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
 import WorkOffOutlinedIcon from "@mui/icons-material/WorkOffOutlined";
 import { useLocation } from "react-router-dom";
-import SmsSharpIcon from '@mui/icons-material/SmsSharp';
+import SmsSharpIcon from "@mui/icons-material/SmsSharp";
 import useSubscriptionGet from "../QueryHook/Subscription/hook";
 import UserProfile from "../UserData/useUser";
 const useSetupSideNav = ({ organisationId }) => {
@@ -199,6 +199,15 @@ const useSetupSideNav = ({ organisationId }) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/shift-allowance`,
+      isVisible: true,
+    },
+    {
+      label: "Overtime Allowance",
+      icon: PaidOutlinedIcon,
+      href: `/organisation/${organisationId}/setup/overtime-setup`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/overtime-setup`,
       isVisible: true,
     },
     {
