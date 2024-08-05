@@ -138,8 +138,7 @@ import JobNotificationToEmp from "./pages/Recruitment/Notification/JobNotificati
 import OpenJobPosition from "./pages/Recruitment/OpenRoleJobPosition";
 import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
 import DepartmentNotificationToEmp from "./pages/DeptNotification/DepartmentNotificationToEmp";
-import TempPunchingData from "./pages/EmployeeSurvey/components/TempPunchingData";
-
+import OvertimeSetup from "./pages/OvertimeSetup/OvertimeSetup";
 const App = () => {
   return (
     <AuthProvider>
@@ -1594,6 +1593,15 @@ const App = () => {
               ]}
             >
               <EmployeeSurveyForm />
+            </RequireAuth>
+          }
+        />
+        {/* OvertimeSetup */}
+        <Route
+          path="/organisation/:organisationId/setup/overtime-setup"
+          element={
+            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+              <OvertimeSetup />
             </RequireAuth>
           }
         />

@@ -95,10 +95,12 @@ const AttendanceBioModal = ({
       }
 
       const syncedData = selectedEmployees.map((employee) => ({
-        date: employee[3],
-        punchingTime: employee[4],
-        punchingStatus: employee[5],
+        date: new Date(employee?.Date.split("-").reverse().join("-")),
+        punchingTime: employee["Punch Time"],
+        punchingStatus: employee["Punch State"],
       }));
+
+      console.log("syncedData", syncedData);
 
       const EmployeeIds = checkedEmployees.map((employee) => employee._id);
 
