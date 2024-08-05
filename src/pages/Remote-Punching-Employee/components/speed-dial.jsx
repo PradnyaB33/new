@@ -2,25 +2,25 @@ import { PlayArrow } from "@mui/icons-material";
 import { Button, Dialog, DialogContent, Fab } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
-import useSelfieFaceDetect from "../../../components/Modal/Selfi-Image/useSelfieFaceDetect";
+// import useSelfieFaceDetect from "../../../components/Modal/Selfi-Image/useSelfieFaceDetect";
 import useLocationMutation from "../../../hooks/QueryHook/Location/mutation";
 import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
 import StopRemotePunch from "./stop-remote-punching";
-import useOrgGeo from "../../Geo-Fence/useOrgGeo";
-import UserProfile from "../../../hooks/UserData/useUser";
+// import useOrgGeo from "../../Geo-Fence/useOrgGeo";
+// import UserProfile from "../../../hooks/UserData/useUser";
 
 export default function FabIcons() {
   //hooks
   const { start, setStart, setStartTime } = useSelfieStore();
   const { getUserImage } = useLocationMutation();
-  const { getCurrentUser } = UserProfile();
+  // const { getCurrentUser } = UserProfile();
 
   //state
   const [open, setOpen] = useState(false);
 
   //get current user login id
-  const user = getCurrentUser();
-  const userMatch = user?._id;
+  // const user = getCurrentUser();
+  // const userMatch = user?._id;
 
   //handle operrate function for face capture
   const handleOperate = () => {
@@ -30,15 +30,15 @@ export default function FabIcons() {
   };
 
   //get all allowance data of dualWorkflow, geoFencing,faceRecognition, extra allowance
-  const { employeeOrgId } = useSelfieFaceDetect();
+  // const { employeeOrgId } = useSelfieFaceDetect();
 
   //selected employee list for geofencing
-  const { data } = useOrgGeo();
+  // const { data } = useOrgGeo();
 
   //match currect user and selcted employee in list
-  const isUserMatchInEmployeeList = data?.area?.some(area =>
-    area.employee.includes(userMatch)
-  );
+  // const isUserMatchInEmployeeList = data?.area?.some(area =>
+  //   area.employee.includes(userMatch)
+  // );
 
   return (
     <>
@@ -49,9 +49,9 @@ export default function FabIcons() {
           //     ? faceDetectedData === undefined
           //     : false
           // }
-          disabled={
-            employeeOrgId?.employee?.geoFencing === true && isUserMatchInEmployeeList === true
-          }
+          // disabled={
+          //   employeeOrgId?.employee?.geoFencing === true && isUserMatchInEmployeeList === true
+          // }
           onClick={() => setOpen(true)}
           color="primary"
           variant="extended"

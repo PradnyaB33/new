@@ -52,8 +52,23 @@ import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
 import useGetCommunicationPermission from "../../../pages/EmployeeSurvey/useContext/Permission";
 import { useQueryClient } from "react-query";
+import useSelfieFaceDetect from "../../../components/Modal/Selfi-Image/useSelfieFaceDetect";
 
 const TestNavItems = ({ toggleDrawer }) => {
+  //_--------------------geofencing---------------
+  // get all allowance data of dualWorkflow, geoFencing,faceRecognition, extra allowance
+  const { employeeOrgId } = useSelfieFaceDetect();
+  console.log("employeeOrgId", employeeOrgId);
+
+  //selected employee list for geofencing
+  // const { data:geofencingData } = useOrgGeo();
+
+  //match currect user and selcted employee in list
+  // const isUserMatchInEmployeeList = geofencingData?.area?.some(area =>
+  //   area.employee.includes(userMatch)
+  // );
+//////////////////////////////////////////////////
+
   // to define the route and pass the dynamic organization id
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
@@ -123,17 +138,17 @@ const TestNavItems = ({ toggleDrawer }) => {
   const organisationId = data?.organisation?._id
   const { data: survey } = useGetCommunicationPermission(organisationId);
 
-    // Update organization ID when URL changes
-    useEffect(() => {
-      if ((role === "Super-Admin", "Delegate-Super-Admin")) {
-        getOrganizationIdFromPathname(location.pathname);
-      } else {
-        setOrgId(user?.organizationId);
-      }
-  
-      // eslint-disable-next-line
-    }, [location.pathname]);
-    
+  // Update organization ID when URL changes
+  useEffect(() => {
+    if ((role === "Super-Admin", "Delegate-Super-Admin")) {
+      getOrganizationIdFromPathname(location.pathname);
+    } else {
+      setOrgId(user?.organizationId);
+    }
+
+    // eslint-disable-next-line
+  }, [location.pathname]);
+
   const [isVisible, setisVisible] = useState(true);
 
   useEffect(() => {
@@ -142,7 +157,7 @@ const TestNavItems = ({ toggleDrawer }) => {
 
   useEffect(() => {
     queryClient.invalidateQueries("survey-permission");
-  },[queryClient])
+  }, [queryClient])
 
   let navItems = useMemo(
     () => ({
@@ -662,7 +677,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible:
               data?.organisation?.packageInfo === "Intermediate Plan" &&
               survey?.surveyPermission,
-              link: user?.profile.includes('Super-Admin') || user?.profile.includes('HR')
+            link: user?.profile.includes('Super-Admin') || user?.profile.includes('HR')
               ? `/organisation/${orgId}/employee-survey`
               : `/organisation/${orgId}/employee-survey/${empId}`,
             icon: <AssignmentIcon className=" !text-[1.2em] text-[#67748E]" />,
