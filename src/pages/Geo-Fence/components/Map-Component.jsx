@@ -1,7 +1,9 @@
-import {  GoogleMap, MarkerF, PolylineF } from "@react-google-maps/api";
+import { CircleF, GoogleMap, MarkerF, PolylineF } from "@react-google-maps/api";
 import React from "react";
+import useGetGeoFencing from "../../Remote-Punching-Employee/useGetGeoFencing";
 
 const MapComponent = ({ isLoaded, data, locationArray }) => {
+  const { employeeGeoArea } = useGetGeoFencing();
 
   return isLoaded ? (
     <GoogleMap
@@ -32,7 +34,7 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
           label={"Starting Position"}
         />
       )}
-      {/* {employeeGeoArea?.area?.map((area) => {
+      {employeeGeoArea?.area?.map((area) => {
         return (
           <CircleF
             center={{
@@ -49,7 +51,7 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
             }}
           />
         );
-      })} */}
+      })}
     </GoogleMap>
   ) : (
     <></>

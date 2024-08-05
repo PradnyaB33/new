@@ -4,8 +4,13 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 
-const useOrgGeo = () => {
-  const { organisationId } = useParams();
+const useOrgGeo = (orgId) => {
+  console.log("orgId././",orgId);
+  
+  const { organisationId: paramsOrgId } = useParams();
+  const organisationId = orgId || paramsOrgId;
+  console.log("organisationIdsdsd",organisationId);
+  
   const { handleAlert } = useContext(TestContext);
   const getOrgCircle = async () => {
     const result = await axios.get(

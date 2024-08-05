@@ -139,6 +139,7 @@ import OpenJobPosition from "./pages/Recruitment/OpenRoleJobPosition";
 import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
 import DepartmentNotificationToEmp from "./pages/DeptNotification/DepartmentNotificationToEmp";
 import OvertimeSetup from "./pages/OvertimeSetup/OvertimeSetup";
+import GeoFencingEmployeeSide from "./pages/Geo-Fence/components/GeoFencingEmployeeSide";
 const App = () => {
   return (
     <AuthProvider>
@@ -206,7 +207,18 @@ const App = () => {
           path="/organisation/:organisationId/remotePunching/geo-fencing"
           element={<GeoFencing />}
         />
-
+        <Route
+          path="/organisation/:organisationId/geo-fencing"
+          element={
+            <RequireAuth
+              permission={[
+                "Employee",
+              ]}
+            >
+              <GeoFencingEmployeeSide />
+            </RequireAuth>
+          }
+        />
         {/* Login Routes */}
         <Route path="/test3" element={<TestYash />} />
         <Route

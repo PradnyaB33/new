@@ -2,15 +2,14 @@ import { Chip } from "@mui/material";
 import { useJsApiLoader } from "@react-google-maps/api";
 import moment from "moment";
 import React, { useEffect } from "react";
-import SelfieForm from "../../components/Modal/Selfi-Image/Selfie";
-import useLocationMutation from "../../hooks/QueryHook/Location/mutation";
-import useSelfieStore from "../../hooks/QueryHook/Location/zustand-store";
-import MapComponent from "./components/Map-Component";
-import BasicSpeedDial from "./components/speed-dial";
+import SelfieForm from "../../../components/Modal/Selfi-Image/Selfie";
+import useLocationMutation from "../../../hooks/QueryHook/Location/mutation";
+import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
+import MapComponent from "./Map-Component"; 
+import SpeedDialEmployee from "./Speed-dial-employee";
 
-const EmployeeRemotePunch = () => {
+const GeoFencingEmployeeSide = () => {
   const { getUserLocation } = useLocationMutation();
-console.log("getUserLocation././".getUserLocation);
 
   const { data, mutate } = getUserLocation;
 
@@ -75,11 +74,11 @@ console.log("getUserLocation././".getUserLocation);
             variant="filled"
           />
         </div>
-        <BasicSpeedDial />
+        <SpeedDialEmployee />
         <SelfieForm />
       </div>
     </div>
   );
 };
 
-export default EmployeeRemotePunch;
+export default GeoFencingEmployeeSide;

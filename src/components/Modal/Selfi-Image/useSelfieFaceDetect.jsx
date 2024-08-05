@@ -43,6 +43,16 @@ const useSelfieFaceDetect = () => {
       .withFaceDescriptors()
       .withFaceExpressions()
       .withAgeAndGender();
+
+
+    //M/////////////////M
+    // Verify descriptor lengths
+    faces.forEach(face => {
+      if (face.descriptor && face.descriptor.length === 0) {
+        throw new Error('Descriptor is empty');
+      }
+    });
+    //M/////////////////M
     return faces;
   };
 
@@ -55,6 +65,7 @@ const useSelfieFaceDetect = () => {
     );
     return response.data;
   };
+
   const { data: employeeOrgId } = useQuery({
     queryFn: getEmployeeRemoteSet,
     queryKey: ["remote-fetch", decodedToken?.user?.organizationId],
@@ -87,17 +98,39 @@ const useSelfieFaceDetect = () => {
     },
   });
 
-  const matchFaces = async ({ currentDescriptor, descriptor }) => {
+  // const matchFaces = async ({ currentDescriptor, descriptor }) => {
+  //   let matchScore = 0.63;
+  //   let labeledFace = new faceApi.LabeledFaceDescriptors(
+  //     decodedToken?.user?._id,
+  //     [descriptor]
+  //   );
+  //   let faceMatcher = new faceApi.FaceMatcher(labeledFace, matchScore);
+
+  //   let results = faceMatcher.findBestMatch(currentDescriptor);
+  //   return results;
+  // };
+
+   //M////////////M
+   const matchFaces = async ({ currentDescriptor, descriptor }) => {
+    if (!Array.isArray(currentDescriptor) || !Array.isArray(descriptor)) {
+      throw new Error('Descriptors must be arrays');
+    }
+
+    console.log('Current Descriptor Length:', currentDescriptor.length);
+    console.log('Descriptor Length:', descriptor.length);
+
+    if (currentDescriptor.length !== descriptor.length) {
+      throw new Error('Descriptor lengths mismatch');
+    }
+
     let matchScore = 0.63;
-    let labeledFace = new faceApi.LabeledFaceDescriptors(
-      decodedToken?.user?._id,
-      [descriptor]
-    );
+    let labeledFace = new faceApi.LabeledFaceDescriptors(decodedToken?.user?._id, [descriptor]);
     let faceMatcher = new faceApi.FaceMatcher(labeledFace, matchScore);
 
     let results = faceMatcher.findBestMatch(currentDescriptor);
     return results;
   };
+  //M///////////////////M
 
   const { mutateAsync: matchFacesMutation, isLoading: isMutationLoading } =
     useMutation({
@@ -156,3 +189,6 @@ const useSelfieFaceDetect = () => {
 };
 
 export default useSelfieFaceDetect;
+
+
+
