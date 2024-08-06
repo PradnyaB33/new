@@ -63,8 +63,8 @@ const MissPunchInOut = () => {
         {currentEmployeeRecord && currentEmployeeRecord ? (
           <article className="bg-white w-full h-max shadow-md rounded-sm border items-center mb-4">
             <Typography variant="h7" className="pl-2 mb-10 mt-2">
-              Employee Name: {currentEmployeeRecord?.employeeId.first_name}{" "}
-              {currentEmployeeRecord?.employeeId.last_name}
+              Employee Name: {currentEmployeeRecord?.employeeId?.first_name}{" "}
+              {currentEmployeeRecord?.employeeId?.last_name}
             </Typography>
 
             {currentEmployeeRecord?.unavailableRecords?.length > 0 ? (
@@ -90,29 +90,29 @@ const MissPunchInOut = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {currentEmployeeRecord.unavailableRecords.map(
+                    {currentEmployeeRecord?.unavailableRecords?.map(
                       (unavailableRecord, id) => (
                         <tr className="!font-medium border-b" key={id}>
                           <td className="!text-left pl-8 py-3">{id + 1}</td>
                           <td className="!text-left pl-6 py-3">
                             {new Date(
-                              unavailableRecord.recordDate
+                              unavailableRecord?.recordDate
                             ).toLocaleDateString()}
                           </td>
                           <td className="!text-left pl-6 py-3">
-                            {unavailableRecord.status}
+                            {unavailableRecord?.status}
                           </td>
                           <td className="!text-left pl-6 py-3">
-                            {unavailableRecord.punchInTime
+                            {unavailableRecord?.punchInTime
                               ? new Date(
-                                  unavailableRecord.punchInTime
+                                  unavailableRecord?.punchInTime
                                 ).toLocaleTimeString()
                               : "-"}
                           </td>
                           <td className="!text-left pl-6 py-3">
-                            {unavailableRecord.punchOutTime
+                            {unavailableRecord?.punchOutTime
                               ? new Date(
-                                  unavailableRecord.punchOutTime
+                                  unavailableRecord?.punchOutTime
                                 ).toLocaleTimeString()
                               : "-"}
                           </td>

@@ -77,6 +77,8 @@ const AttendanceBioModal = ({
     return regex.test(email);
   };
 
+  console.log("selectedEmployees", selectedEmployees);
+
   // to define the function for sync the data
   const handleSync = async () => {
     try {
@@ -93,13 +95,16 @@ const AttendanceBioModal = ({
         );
         return;
       }
-
-      console.log("selectedEmployees", selectedEmployees);
+      // const syncedData = selectedEmployees.map((employee) => ({
+      //   date: new Date(employee.Date),
+      //   punchingTime: employee["Punch Time"],
+      //   punchingStatus: employee["Punch State"],
+      // }));
 
       const syncedData = selectedEmployees.map((employee) => ({
-        date: new Date(employee.Date), // Directly use the date if in ISO format
-        punchingTime: employee["Punch Time"],
-        punchingStatus: employee["Punch State"],
+        date: new Date(employee[3]),
+        punchingTime: employee[4],
+        punchingStatus: employee[5],
       }));
 
       console.log("syncedData", syncedData);

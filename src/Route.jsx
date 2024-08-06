@@ -87,8 +87,8 @@ import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
-//import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
-import EmpInfoByDynimacally from "./pages/EmpInfoPunchStatus/EmpInfoByDynanimacally";
+import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
+//import EmpInfoByDynimacally from "./pages/EmpInfoPunchStatus/EmpInfoByDynanimacally";
 import EmployeeNotification from "./pages/Employee-Notification/page";
 import EditEmployee from "./pages/Employee/EditEmployee";
 import EmployeeSurvey from "./pages/EmployeeSurvey/EmployeeSurvey";
@@ -580,7 +580,7 @@ const App = () => {
             </RequireAuth>
           }
         />
-        {/* <Route
+        <Route
           path="/organisation/:organisationId/emo-info-punch-status"
           element={
             <RequireAuth
@@ -589,8 +589,8 @@ const App = () => {
               <EmpInfoPunchStatus />
             </RequireAuth>
           }
-        /> */}
-        <Route
+        />
+        {/* <Route
           path="/organisation/:organisationId/emo-info-punch-status"
           element={
             <RequireAuth
@@ -599,7 +599,7 @@ const App = () => {
               <EmpInfoByDynimacally />
             </RequireAuth>
           }
-        />
+        /> */}
         <Route
           path="/organisation/:organisationId/view-calculate-data"
           element={
@@ -1687,7 +1687,6 @@ const App = () => {
           }
         />
       </Routes>
-
     </AuthProvider>
   );
 };

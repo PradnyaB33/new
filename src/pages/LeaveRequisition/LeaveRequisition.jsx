@@ -36,7 +36,6 @@ const LeaveRequisition = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { organisationId } = useParams();
-  console.log("organisationId", organisationId);
 
   //for  Get Query to get department
   const { data: machinePunchingRecord } = useQuery(
@@ -53,7 +52,6 @@ const LeaveRequisition = () => {
       return response.data.data[0].availableRecords;
     }
   );
-  console.log("machine punching record", machinePunchingRecord);
 
   return (
     <>
