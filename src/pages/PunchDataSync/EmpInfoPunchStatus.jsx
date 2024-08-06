@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useContext, useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { TestContext } from "../../State/Function/Main";
 import AttendanceBioModal from "../../components/Modal/AttedanceBioModal/AttendanceBioModal";
@@ -14,10 +14,10 @@ import Info from "@mui/icons-material/Info";
 import { West } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 
-const EmpInfoPunchStatus = () => {
+const EmpInfoPunchStatus = ({ organisationId }) => {
   // define the state , hook and import function if needed
   const navigate = useNavigate();
-  const { organisationId } = useParams();
+  // const { organisationId } = useParams();
   const { handleAlert } = useContext(TestContext);
   const [tableData, setTableData] = useState([]);
   const [searchName, setSearchName] = useState("");

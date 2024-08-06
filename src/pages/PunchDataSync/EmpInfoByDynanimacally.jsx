@@ -8,19 +8,17 @@ import {
   IconButton,
 } from "@mui/material";
 import { West } from "@mui/icons-material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
-import AttendanceBioModal from "../../components/Modal/AttedanceBioModal/AttendanceBioModal";
 import { TestContext } from "../../State/Function/Main";
 import Info from "@mui/icons-material/Info";
+import AttendanceModel from "../../components/Modal/AttedanceBioModal/AttendanceModel";
 
-const EmpInfoByDynimacally = () => {
+const EmpInfoByDynimacally = ({ organisationId }) => {
   // Hooks
   const navigate = useNavigate();
-  const param = useParams();
-  const organisationId = param?.organisationId;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchName, setSearchName] = useState("");
@@ -56,7 +54,6 @@ const EmpInfoByDynimacally = () => {
   );
 
   // Update filtered data based on search inputs
-
   useEffect(() => {
     const filtered =
       tempPunchData?.filter((data) => {
@@ -347,7 +344,7 @@ const EmpInfoByDynimacally = () => {
         </article>
       </Container>
 
-      <AttendanceBioModal
+      <AttendanceModel
         handleClose={handleEmpModalClose}
         open={empModalOpen}
         organisationId={organisationId}
