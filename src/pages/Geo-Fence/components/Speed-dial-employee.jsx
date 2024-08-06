@@ -17,7 +17,7 @@ export default function SpeedDialEmployee() {
 
   //state
   const [open, setOpen] = useState(false);
-
+  const geoFencing = "geoFencing";
   //get current user login id
   // const user = getCurrentUser();
   // const userMatch = user?._id;
@@ -61,7 +61,7 @@ export default function SpeedDialEmployee() {
           Start
         </Fab>
       ) : (
-        <StopRemotePunch {...{ setStart }} />
+        <StopRemotePunch {...{ setStart,geoFencing }} />
       )}
 
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -70,7 +70,7 @@ export default function SpeedDialEmployee() {
             <h1 className="font-semibold text-3xl">Confirm Action</h1>
           </div>
           <h1 className="text-lg mt-2">
-            Are you sure you want to start remote access?
+            Are you sure you want to start geo access?
           </h1>
           <div className="flex gap-4 mt-4">
             <Button onClick={handleOperate} size="small" variant="contained">

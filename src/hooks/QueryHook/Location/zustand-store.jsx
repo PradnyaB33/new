@@ -1,5 +1,6 @@
 import { create } from "zustand";
-
+ 
+//initialize state for remote puching
 const useSelfieStore = create((set) => ({
   open: false,
   media: null,

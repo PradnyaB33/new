@@ -8,10 +8,19 @@ import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 
 const useSelfieFaceDetect = () => {
-  const { handleAlert } = useContext(TestContext);
-  const { descriptor, setDescriptor } = useFaceStore();
-  const { decodedToken, authToken } = useGetUser();
+  //state
   const [loading, setLoading] = useState(false);
+
+  //hooks
+  const { handleAlert } = useContext(TestContext);
+
+  //get descriptor
+  const { descriptor, setDescriptor } = useFaceStore();
+
+  //get decode and auth token
+  const { decodedToken, authToken } = useGetUser();
+
+  //get user role
   const role = UserProfile().useGetCurrentRole();
 
   const loadModels = async () => {
@@ -45,14 +54,14 @@ const useSelfieFaceDetect = () => {
       .withAgeAndGender();
 
 
-    //M/////////////////M
+    //MM
     // Verify descriptor lengths
     faces.forEach(face => {
       if (face.descriptor && face.descriptor.length === 0) {
         throw new Error('Descriptor is empty');
       }
     });
-    //M/////////////////M
+    //MM
     return faces;
   };
 
@@ -110,8 +119,8 @@ const useSelfieFaceDetect = () => {
   //   return results;
   // };
 
-   //M////////////M
-   const matchFaces = async ({ currentDescriptor, descriptor }) => {
+  //M////////////M
+  const matchFaces = async ({ currentDescriptor, descriptor }) => {
     if (!Array.isArray(currentDescriptor) || !Array.isArray(descriptor)) {
       throw new Error('Descriptors must be arrays');
     }

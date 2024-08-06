@@ -2,56 +2,31 @@ import { PlayArrow } from "@mui/icons-material";
 import { Button, Dialog, DialogContent, Fab } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
-// import useSelfieFaceDetect from "../../../components/Modal/Selfi-Image/useSelfieFaceDetect";
 import useLocationMutation from "../../../hooks/QueryHook/Location/mutation";
 import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
 import StopRemotePunch from "./stop-remote-punching";
-// import useOrgGeo from "../../Geo-Fence/useOrgGeo";
-// import UserProfile from "../../../hooks/UserData/useUser";
 
 export default function FabIcons() {
-  //hooks
+  //get start - true when remote punching start,setStartTime - new Date
   const { start, setStart, setStartTime } = useSelfieStore();
+
+  //get user image
   const { getUserImage } = useLocationMutation();
-  // const { getCurrentUser } = UserProfile();
 
   //state
   const [open, setOpen] = useState(false);
 
-  //get current user login id
-  // const user = getCurrentUser();
-  // const userMatch = user?._id;
-
-  //handle operrate function for face capture
+  //handle operate function for face capture
   const handleOperate = () => {
     setOpen(false);
     getUserImage.mutate();
     setStartTime();
   };
 
-  //get all allowance data of dualWorkflow, geoFencing,faceRecognition, extra allowance
-  // const { employeeOrgId } = useSelfieFaceDetect();
-
-  //selected employee list for geofencing
-  // const { data } = useOrgGeo();
-
-  //match currect user and selcted employee in list
-  // const isUserMatchInEmployeeList = data?.area?.some(area =>
-  //   area.employee.includes(userMatch)
-  // );
-
   return (
     <>
       {!start ? (
         <Fab
-          // disabled={
-          //   employeeOrgId?.employee?.faceRecognition === true
-          //     ? faceDetectedData === undefined
-          //     : false
-          // }
-          // disabled={
-          //   employeeOrgId?.employee?.geoFencing === true && isUserMatchInEmployeeList === true
-          // }
           onClick={() => setOpen(true)}
           color="primary"
           variant="extended"
@@ -64,6 +39,7 @@ export default function FabIcons() {
         <StopRemotePunch {...{ setStart }} />
       )}
 
+      {/*confirmation dialog box*/}
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent>
           <div className="w-full text-center text-red-500">

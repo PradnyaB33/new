@@ -9,8 +9,8 @@ import MapComponent from "./components/Map-Component";
 import BasicSpeedDial from "./components/speed-dial";
 
 const EmployeeRemotePunch = () => {
+  //get user exact location data
   const { getUserLocation } = useLocationMutation();
-console.log("getUserLocation././".getUserLocation);
 
   const { data, mutate } = getUserLocation;
 
@@ -18,8 +18,10 @@ console.log("getUserLocation././".getUserLocation);
     mutate();
   }, [mutate]);
 
+  //get exact location and start and end time data
   const { locationArray, startTime, endTime } = useSelfieStore();
 
+  //google map loaded
   const { isLoaded } = useJsApiLoader({
     id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
 
@@ -34,6 +36,7 @@ console.log("getUserLocation././".getUserLocation);
         ) : (
           "Loading"
         )}
+        {/*data visible on ui*/}
         <div className="top-12 right-12 rounded-xl absolute gap-4 p-10 flex flex-col items-end justify-center">
           <Chip
             label={`Please do not connect to any wi-fi till you location is fetching`}
@@ -57,11 +60,10 @@ console.log("getUserLocation././".getUserLocation);
                 variant="filled"
               />
               <Chip
-                label={`Ended at ${
-                  endTime
-                    ? moment(endTime).format("hh:mm:ss")
-                    : moment().format("hh:mm:ss")
-                }`}
+                label={`Ended at ${endTime
+                  ? moment(endTime).format("hh:mm:ss")
+                  : moment().format("hh:mm:ss")
+                  }`}
                 className="!bg-white !text-md"
                 onClick={(e) => console.log(e)}
                 variant="filled"

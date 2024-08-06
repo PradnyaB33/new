@@ -55,8 +55,6 @@ const EmpInfoByDynimacally = () => {
     }
   );
 
- 
-
   // Update filtered data based on search inputs
 
   useEffect(() => {
@@ -75,7 +73,6 @@ const EmpInfoByDynimacally = () => {
     setFilteredData(filtered);
     setTotalPages(Math.ceil(filtered.length / itemsPerPage));
   }, [tempPunchData, searchName, searchId, searchDepartment]);
-
 
   // Get the data to display on the current page
   const currentData = filteredData?.slice(
@@ -153,19 +150,16 @@ const EmpInfoByDynimacally = () => {
     }
   };
 
- 
   // Handle "Select All" checkbox
   const handleSelectAllChange = (event) => {
     const isChecked = event.target.checked;
     setSelectAll(isChecked);
     if (isChecked) {
-      setSelectedEmployees(currentData);
+      setSelectedEmployees(filteredData);
     } else {
       setSelectedEmployees([]);
     }
   };
-
- 
 
   //  to open the model
   const [empModalOpen, setEmpModalOpen] = useState(false);

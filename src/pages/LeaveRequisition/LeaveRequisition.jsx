@@ -1,6 +1,6 @@
 import { CalendarMonth } from "@mui/icons-material";
 import { Badge, Button, Skeleton } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
 import AppDatePicker from "../../components/date-picker/date-picker";
@@ -8,6 +8,10 @@ import HeaderBackComponent from "../../components/header/component";
 import useLeaveData from "../../hooks/Leave/useLeaveData";
 import LeaveTable from "./components/LeaveTabel";
 import Mapped from "./components/mapped-form";
+import { useQuery } from "react-query";
+import axios from "axios";
+import { UseContext } from "../../State/UseState/UseContext";
+import { useParams } from "react-router";
 
 const LeaveRequisition = () => {
   const {
@@ -29,6 +33,27 @@ const LeaveRequisition = () => {
     calLoader,
     setCalLoader,
   } = useLeaveData();
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aegis"];
+  const { organisationId } = useParams();
+  console.log("organisationId", organisationId);
+
+  //for  Get Query to get department
+  const { data: machinePunchingRecord } = useQuery(
+    ["machinePunching", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/availableRecords`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.data[0].availableRecords;
+    }
+  );
+  console.log("machine punching record", machinePunchingRecord);
 
   return (
     <>
@@ -93,6 +118,7 @@ const LeaveRequisition = () => {
             <AppDatePicker
               data={data}
               shiftData={shiftData}
+              machinePunchingRecord={machinePunchingRecord}
               handleUpdateFunction={handleUpdateFunction}
               selectEvent={selectEvent}
               setselectEvent={setselectEvent}
