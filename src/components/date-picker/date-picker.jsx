@@ -10,7 +10,6 @@ import {
 import moment from "moment";
 import { momentLocalizer } from "react-big-calendar";
 import { useQuery, useQueryClient } from "react-query";
-
 import axios from "axios";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Calendar } from "react-big-calendar";
@@ -33,7 +32,6 @@ const AppDatePicker = ({
   newAppliedLeaveEvents,
   isCalendarOpen,
   shiftData,
-  machinePunchingRecord,
   deleteLeaveMutation,
   calLoader,
   setCalLoader,
@@ -48,7 +46,11 @@ const AppDatePicker = ({
   const [openDelete, setOpenDelete] = useState(false);
   const { filteredHolidayWithStartAndEnd, allPublicHoliday } =
     usePublicHoliday(organisationId);
-  console.log("machine punching record", machinePunchingRecord);
+
+  const currentMonth = moment().month();
+  const currentYear = moment().year();
+  console.log("current month", currentMonth);
+  console.log("currentYear ", currentYear);
 
   const { data: data2 } = useQuery(
     "employee-disable-weekends",

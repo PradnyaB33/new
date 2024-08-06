@@ -18,6 +18,7 @@ import { Person } from "@mui/icons-material";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
 import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const MissPunchJustifyModal = ({
   handleClose,
@@ -25,6 +26,7 @@ const MissPunchJustifyModal = ({
   unavailableRecordId,
   organisationId,
 }) => {
+  const navigate = useNavigate();
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
@@ -78,6 +80,14 @@ const MissPunchJustifyModal = ({
     reset();
   };
 
+  const handleRedirect = async (actionType) => {
+    if (actionType === "leave") {
+      navigate(`/organisation/${organisationId}/leave`);
+    } else if (actionType === "shift") {
+      navigate(`/shift-management`);
+    }
+  };
+
   return (
     <Dialog
       PaperProps={{
@@ -122,8 +132,29 @@ const MissPunchJustifyModal = ({
             />
           </div>
 
-          <DialogActions>
-            <Button type="submit" variant="contained" color="primary">
+          <DialogActions
+            sx={{
+              justifyContent: "center",
+              gap: "10px",
+            }}
+          >
+            <Button
+              type="button"
+              variant="contained"
+              color="primary"
+              onClick={() => handleRedirect("leave")}
+            >
+              Apply for Leave
+            </Button>
+            <Button
+              type="button"
+              variant="contained"
+              color="secondary"
+              onClick={() => handleRedirect("shift")}
+            >
+              Apply for Shift
+            </Button>
+            <Button type="submit" variant="contained" color="success">
               Submit
             </Button>
             <Button onClick={handleClose} color="error" variant="outlined">
