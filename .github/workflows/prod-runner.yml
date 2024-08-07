@@ -41,8 +41,7 @@ jobs:
 
   release-project:
     name: 🚀 Release project
-    # runs-on: [prod-runner]
-    runs-on: [🚀 prod-runner-main]
+    runs-on: [prod-runner]
     needs: build
     steps:
       - name: 📥 Download artifact
