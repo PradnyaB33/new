@@ -87,8 +87,7 @@ import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
-import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
-//import EmpInfoByDynimacally from "./pages/EmpInfoPunchStatus/EmpInfoByDynanimacally";
+import RendarPunchSyncFile from "./pages/PunchDataSync/RendarPunchSyncFile";
 import EmployeeNotification from "./pages/Employee-Notification/page";
 import EditEmployee from "./pages/Employee/EditEmployee";
 import EmployeeSurvey from "./pages/EmployeeSurvey/EmployeeSurvey";
@@ -586,20 +585,11 @@ const App = () => {
             <RequireAuth
               permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
             >
-              <EmpInfoPunchStatus />
+              <RendarPunchSyncFile />
             </RequireAuth>
           }
         />
-        {/* <Route
-          path="/organisation/:organisationId/emo-info-punch-status"
-          element={
-            <RequireAuth
-              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
-            >
-              <EmpInfoByDynimacally />
-            </RequireAuth>
-          }
-        /> */}
+
         <Route
           path="/organisation/:organisationId/view-calculate-data"
           element={

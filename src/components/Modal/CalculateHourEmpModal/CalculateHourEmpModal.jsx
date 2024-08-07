@@ -168,6 +168,201 @@ const CalculateHourEmpModal = ({
   let overTimeHour = overtime && overtime?.minimumOvertimeHours;
   console.log("overTimeHour", overTimeHour);
 
+  // function to calculate total hours
+  // const handleCalculateHours = async () => {
+  //   const data = getValues();
+  //   const { hour, timeRange } = data;
+  //   const regex = /^(0*(?:[0-9]|1[0-9]|2[0-4]))$/;
+
+  //   // Validate and convert `hour` to number
+  //   const parsedHour = parseFloat(hour);
+  //   if (isNaN(parsedHour) || !regex.test(hour)) {
+  //     setError("hour", { type: "custom", message: "hour should be 0 to 24" });
+  //     return;
+  //   } else {
+  //     setError("hour", null);
+  //   }
+
+  //   if (!timeRange?.startDate || !timeRange?.endDate) {
+  //     setError("timeRange", {
+  //       type: "custom",
+  //       message: "Please select a valid date range.",
+  //     });
+  //     return;
+  //   } else {
+  //     setError("timeRange", null);
+  //   }
+
+  //   // Convert and validate `overTimeHour`
+  //   const parsedOverTimeHour = parseFloat(overTimeHour);
+  //   if (isNaN(parsedOverTimeHour)) {
+  //     console.error("Invalid overtime hour value");
+  //     return;
+  //   }
+
+  //   const startDate = new Date(timeRange.startDate);
+  //   const endDate = new Date(timeRange.endDate);
+
+  //   // Ensure endDate is inclusive
+  //   endDate.setDate(endDate.getDate() + 1);
+
+  //   const punchingRecords = empPunchingData?.punchingRecords || [];
+
+  //   // Filter and organize records
+  //   const filteredRecords = {};
+
+  //   punchingRecords.forEach((record) => {
+  //     const recordDate = new Date(record.date);
+  //     if (recordDate >= startDate && recordDate < endDate) {
+  //       const date = recordDate.toISOString().split("T")[0];
+  //       const dayOfWeek = recordDate.toLocaleString("en-US", {
+  //         weekday: "short",
+  //       });
+
+  //       if (!filteredRecords[date]) {
+  //         filteredRecords[date] = { checkIn: null, checkOut: null, dayOfWeek };
+  //       }
+  //       if (record.punchingStatus === "Check In") {
+  //         if (
+  //           !filteredRecords[date].checkIn ||
+  //           record.punchingTime < filteredRecords[date].checkIn.punchingTime
+  //         ) {
+  //           filteredRecords[date].checkIn = record;
+  //         }
+  //       } else if (record.punchingStatus === "Check Out") {
+  //         if (
+  //           !filteredRecords[date].checkOut ||
+  //           record.punchingTime > filteredRecords[date].checkOut.punchingTime
+  //         ) {
+  //           filteredRecords[date].checkOut = record;
+  //         }
+  //       }
+  //     }
+  //   });
+
+  //   console.log("filteredRecords", filteredRecords);
+
+  //   // Iterate over each date within the selected time range
+  //   for (
+  //     let currentDate = new Date(startDate);
+  //     currentDate < endDate;
+  //     currentDate.setDate(currentDate.getDate() + 1)
+  //   ) {
+  //     const date = currentDate.toISOString().split("T")[0];
+  //     const dayOfWeek = currentDate.toLocaleString("en-US", {
+  //       weekday: "short",
+  //     });
+  //     const record = filteredRecords[date] || {};
+
+  //     let totalHours = 0;
+  //     let remarks = "";
+
+  //     // Skip calculation if it's a weekend and no checkIn or checkOut records exist
+  //     if (
+  //       weekendDays.includes(dayOfWeek) &&
+  //       (!record.checkIn || !record.checkOut)
+  //     ) {
+  //       continue;
+  //     }
+
+  //     if (record.checkIn && record.checkOut) {
+  //       const punchInTime = new Date(
+  //         `1970-01-01T${record.checkIn.punchingTime}`
+  //       );
+  //       const punchOutTime = new Date(
+  //         `1970-01-01T${record.checkOut.punchingTime}`
+  //       );
+
+  //       const timeDiff = punchOutTime - punchInTime;
+  //       totalHours = Math.max(0, timeDiff / (1000 * 60 * 60));
+  //     } else if (!weekendDays.includes(dayOfWeek)) {
+  //       totalHours = 0;
+  //     }
+
+  //     const formattedTotalHours = Math.floor(totalHours);
+  //     const formattedMinutes = Math.round(
+  //       (totalHours - formattedTotalHours) * 60
+  //     );
+
+  //     let totalHour = `${formattedTotalHours} hr`;
+  //     if (formattedMinutes > 0) {
+  //       totalHour += ` ${formattedMinutes} min`;
+  //     }
+
+  //     // Calculate total overtime hour
+  //     const totalOverTimeHour = parsedHour + parsedOverTimeHour;
+
+  //     if (weekendDays.includes(dayOfWeek)) {
+  //       remarks = "ExtraShift";
+  //     } else if (
+  //       isOvertimeAllowanceEnabled &&
+  //       totalHours >= totalOverTimeHour
+  //     ) {
+  //       remarks = "Overtime";
+  //     } else if (totalHours >= parsedHour) {
+  //       remarks = "Available";
+  //     } else if (totalHours > 0) {
+  //       remarks = "Partial";
+  //     } else {
+  //       remarks = "Unavailable";
+  //     }
+
+  //     setRemarks(remarks);
+
+  //     console.log("total hour", totalHours);
+  //     console.log("remark", remarks);
+
+  //     const postData = {
+  //       EmployeeId: empPunchingData?.EmployeeId._id,
+  //       organizationId: organisationId,
+  //       recordDate: date,
+  //       punchInTime: record.checkIn
+  //         ? new Date(`1970-01-01T${record.checkIn.punchingTime}`).toISOString()
+  //         : null,
+  //       punchOutTime: record.checkOut
+  //         ? new Date(`1970-01-01T${record.checkOut.punchingTime}`).toISOString()
+  //         : null,
+  //       totalHours: totalHour,
+  //       status: remarks,
+  //       justify: justify,
+  //     };
+
+  //     console.log("post data", postData);
+
+  //     try {
+  //       const response = await fetch(
+  //         `${process.env.REACT_APP_API}/route/organization/${organisationId}/punching-data`,
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Authorization: authToken,
+  //           },
+  //           body: JSON.stringify(postData),
+  //         }
+  //       );
+
+  //       if (!response.ok) {
+  //         throw new Error("Failed to calculate hours.");
+  //       }
+
+  //       const responseData = await response.json();
+  //       console.log(responseData);
+  //       handleClose();
+  //       handleAlert(true, "success", "Hours calculated successfully.");
+  //       reset();
+  //       navigate(`/organisation/${organisationId}/view-calculate-data`);
+  //     } catch (error) {
+  //       console.error("Error calculating hours:", error);
+  //       handleAlert(
+  //         false,
+  //         "error",
+  //         `Failed to calculate hours. Please try again. ${error.message}`
+  //       );
+  //     }
+  //   }
+  // };
+
   const handleCalculateHours = async () => {
     const data = getValues();
     const { hour, timeRange } = data;
@@ -254,6 +449,7 @@ const CalculateHourEmpModal = ({
       const record = filteredRecords[date] || {};
 
       let totalHours = 0;
+      let overTimeHours = 0;
       let remarks = "";
 
       // Skip calculation if it's a weekend and no checkIn or checkOut records exist
@@ -274,6 +470,11 @@ const CalculateHourEmpModal = ({
 
         const timeDiff = punchOutTime - punchInTime;
         totalHours = Math.max(0, timeDiff / (1000 * 60 * 60));
+
+        // Calculate overtime hours
+        if (totalHours > parsedHour) {
+          overTimeHours = totalHours - parsedHour;
+        }
       } else if (!weekendDays.includes(dayOfWeek)) {
         totalHours = 0;
       }
@@ -288,14 +489,13 @@ const CalculateHourEmpModal = ({
         totalHour += ` ${formattedMinutes} min`;
       }
 
-      // Calculate total overtime hour
-      const totalOverTimeHour = parsedHour + parsedOverTimeHour;
+      const formattedOverTimeHours = parseFloat(overTimeHours.toFixed(2)); // Number
 
       if (weekendDays.includes(dayOfWeek)) {
         remarks = "ExtraShift";
       } else if (
         isOvertimeAllowanceEnabled &&
-        totalHours >= totalOverTimeHour
+        totalHours >= parsedHour + parsedOverTimeHour
       ) {
         remarks = "Overtime";
       } else if (totalHours >= parsedHour) {
@@ -309,6 +509,7 @@ const CalculateHourEmpModal = ({
       setRemarks(remarks);
 
       console.log("total hour", totalHours);
+      console.log("overtime hours", overTimeHours);
       console.log("remark", remarks);
 
       const postData = {
@@ -323,6 +524,7 @@ const CalculateHourEmpModal = ({
           : null,
         totalHours: totalHour,
         status: remarks,
+        overtimeHours: formattedOverTimeHours, // Send overtime hours to the database
         justify: justify,
       };
 
