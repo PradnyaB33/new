@@ -1,9 +1,13 @@
-import {  GoogleMap, MarkerF, PolylineF } from "@react-google-maps/api";
+import { 
+  // CircleF,
+  GoogleMap, MarkerF, PolylineF } from "@react-google-maps/api";
 import React from "react";
+// import useGetGeoFencing from "../../Remote-Punching-Employee/useGetGeoFencing";
 
 //this component used for show position onf user when start remote puching
 
 const MapComponent = ({ isLoaded, data, locationArray }) => {
+  // const { employeeGeoArea } = useGetGeoFencing();
 
   return isLoaded ? (
     <GoogleMap
@@ -35,6 +39,25 @@ const MapComponent = ({ isLoaded, data, locationArray }) => {
           label={"Starting Position"}
         />
       )}
+      {/* {employeeGeoArea?.area?.map((area) => {
+        return (
+          <CircleF
+            center={{
+              lat: area?.center?.coordinates[0],
+              lng: area?.center?.coordinates[1],
+            }}
+            radius={area?.radius}
+            options={{
+              strokeColor: "#0033ff",
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: "#0033ff",
+              fillOpacity: 0.35,
+            }}
+          />
+        );
+      })} */}
+
     </GoogleMap>
   ) : (
     <></>

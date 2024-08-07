@@ -149,31 +149,56 @@ const useLocationMutation = () => {
   });
 
   //check User Is In GeoFence area
-  const checkUserIsInGeoFence = async ({ latitude, longitude }) => {
-    const isInGeoFence = employeeGeoArea?.area?.some(async (area) => {
-      const distance = await axios.get(
-        `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${latitude},${longitude}&destinations=${area?.latitude},${area?.longitude}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
-      );
-      return distance.data.rows[0].elements[0].distance.value < area?.radius;
-    });
+  // const checkUserIsInGeoFence = async ({ latitude, longitude }) => {
+  //   const isInGeoFence = employeeGeoArea?.area?.some(async (area) => {
+  //     const distance = await axios.get(
+  //       `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${latitude},${longitude}&destinations=${area?.latitude},${area?.longitude}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
+  //     );
+  //     return distance.data.rows[0].elements[0].distance.value < area?.radius;
+  //   });
         
-    return isInGeoFence;
+  //   return isInGeoFence;
+  // };
+
+  // const { mutateAsync: checkUserInGeoFenceMutationAs } = useMutation({
+  //   mutationFn: checkUserIsInGeoFence,
+  //   onSuccess: (data) => {
+  //     if (data) {
+  //       handleAlert(true, "success", "User is in geo-fence");
+  //     } else {
+  //       handleAlert(true, "error", "User is not in geo-fence");
+  //     }
+  //   },
+  //   onError: (data) => {
+  //     handleAlert(true, "error", data.message);
+  //   },
+  // });
+  const checkUserIsInGeoFence = async ({ latitude, longitude }) => {
+    const distances = await Promise.all(
+      employeeGeoArea?.area?.map(async (area) => {
+        const response = await axios.get(
+          `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${latitude},${longitude}&destinations=${area?.center?.coordinates[0]},${area?.center?.coordinates[1]}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
+        );
+        const distanceValue = response.data.rows[0].elements[0].distance.value;
+        return distanceValue < area?.radius;
+      })
+    );
+    return distances.some((isInGeoFence) => isInGeoFence);
   };
 
-  const { mutateAsync: checkUserInGeoFenceMutationAs } = useMutation({
+  const checkUserInGeoFenceMutationAs = useMutation({
     mutationFn: checkUserIsInGeoFence,
     onSuccess: (data) => {
       if (data) {
         handleAlert(true, "success", "User is in geo-fence");
       } else {
-        handleAlert(true, "error", "User is not in geo-fence");
+        handleAlert(true, "error", "User is not in geo-fence. Expected location: " + JSON.stringify(employeeGeoArea.area.map(area => ({ lat: area.center.coordinates[0], lng: area.center.coordinates[1] }))));
       }
     },
     onError: (data) => {
       handleAlert(true, "error", data.message);
     },
   });
-
   return {
     getUserLocation,
     getUserImage,
