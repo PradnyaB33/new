@@ -36,7 +36,7 @@ function CalculateSalary() {
   const handleDateChange = (event) => {
     setSelectedDate(dayjs(event.target.value));
   };
-  
+
   // fetch leave of employee
   useEffect(() => {
     const fetchDataAndFilter = async () => {
@@ -62,6 +62,8 @@ function CalculateSalary() {
     fetchDataAndFilter();
     // eslint-disable-next-line
   }, []);
+
+  console.log("employee summary" , employeeSummary);
 
   useEffect(() => {
     const monthFromSelectedDate = selectedDate.format("M");
