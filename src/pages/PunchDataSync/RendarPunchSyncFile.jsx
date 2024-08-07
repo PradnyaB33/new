@@ -1,5 +1,5 @@
-import { Container } from "@mui/material";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
+import { Container, Button, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import axios from "axios";
@@ -9,9 +9,9 @@ import { UseContext } from "../../State/UseState/UseContext";
 
 const RenderPunchSyncFile = () => {
   const { organisationId } = useParams();
-  // Get cookies
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
+  const [syncOption, setSyncOption] = useState("file");
 
   // Get punching data by org
   const { data: tempPunchData } = useQuery(
@@ -34,18 +34,36 @@ const RenderPunchSyncFile = () => {
 
   console.log("tempPunchData", tempPunchData);
 
-  // Determine which component to render based on the role
-  const renderPunchSyncComponent = () => {
-    if (!tempPunchData || tempPunchData.length === 0) {
-      return <EmpInfoPunchStatus organisationId={organisationId} />;
-    } else {
-      return <EmpInfoByDynimacally organisationId={organisationId} />;
-    }
+  // Handler for changing sync option
+  const handleSyncOptionChange = (option) => {
+    setSyncOption(option);
   };
 
   return (
     <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
-      {renderPunchSyncComponent()}
+      <Typography variant="h5" className="mb-4" style={{ padding: "10px 0" }}>
+        Do you want to sync the data via:
+      </Typography>
+      <div className="mb-6" style={{ display: "flex", gap: "16px" }}>
+        <Button
+          variant={syncOption === "file" ? "contained" : "outlined"}
+          onClick={() => handleSyncOptionChange("file")}
+        >
+          Upload File
+        </Button>
+        <Button
+          variant={syncOption === "dynamic" ? "contained" : "outlined"}
+          onClick={() => handleSyncOptionChange("dynamic")}
+        >
+          Dynamically Display
+        </Button>
+      </div>
+
+      {syncOption === "file" ? (
+        <EmpInfoPunchStatus organisationId={organisationId} />
+      ) : (
+        <EmpInfoByDynimacally organisationId={organisationId} />
+      )}
     </Container>
   );
 };
