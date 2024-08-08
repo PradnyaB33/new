@@ -27,6 +27,13 @@ const useNotification = () => {
   const { data: shiftNotification } = useShiftNotification();
   const [emp, setEmp] = useState();
   const { data: data3 } = usePunchNotification();
+
+  const geoFencingData = data3?.punchNotification?.map(item => item?.geoFencingArea) || [];
+
+  const trueCount = geoFencingData.reduce((count, item) => item === true ? count + 1 : count, 0);
+
+  const falseCount = geoFencingData.reduce((count, item) => item === false ? count + 1 : count, 0);
+
   // const {data:geoFencing}=useGeoFencingNotification();
   const { data: data4 } = useDocNotification();
   const { data: tds } = useTDSNotificationHook();
@@ -177,20 +184,20 @@ const useNotification = () => {
     },
     {
       name: "Remote Punching Notification",
-      count: data3?.punchNotification?.length ?? 0,
+      count: falseCount,
       color: "#51FD96",
       url: "/punch-notification",
       url2: "/self/emp-main-notification",
       visible: emp?.packageInfo === "Intermediate Plan",
     },
-    // {
-    //   name: "Geo Fencing Notification",
-    //   count: geoFencing?.punchNotification?.length ?? 0,
-    //   color: "#51FD96",
-    //   url: "/geo-notification",
-    //   url2: "/self/emp-main-notification",
-    //   visible: emp?.packageInfo === "Intermediate Plan",
-    // },
+    {
+      name: "Geo Fencing Notification",
+      count: trueCount,
+      color: "#51FD96",
+      url: "/punch-notification",
+      url2: "/self/emp-main-notification",
+      visible: emp?.packageInfo === "Intermediate Plan",
+    },
     {
       name: "Document Approval Notification",
       count: data4?.data?.doc.length ?? 0,
