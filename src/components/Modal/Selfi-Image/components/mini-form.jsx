@@ -9,10 +9,14 @@ const MiniForm = () => {
   const { media } = useSelfieStore();
   const photoRef = useRef();
   const videoRef = useRef();
+
+  //state
   const [imageCaptured, setImageCaptured] = useState(false);
+
+  //get image url
   const { getImageUrl } = useLocationMutation();
-  console.log("getImageUrl",getImageUrl);
-  
+
+  //get useSelfieFaceDetect data
   const {
     faceDetectedData,
     detectFaceOnlyMutation,
@@ -26,13 +30,13 @@ const MiniForm = () => {
     employeeOrgId,
   } = useSelfieFaceDetect();
 
-  console.log(`🚀 ~ file: mini-form.jsx:26 ~ employeeOrgId:`, employeeOrgId);
-
+  //useEffect
   useEffect(() => {
     let video = videoRef.current;
     video.srcObject = media;
   }, [media]);
 
+  //take picture function
   const takePicture = async () => {
     setLoading(() => true);
     setImageCaptured(true);
@@ -62,10 +66,12 @@ const MiniForm = () => {
         setLoading(false);
         return setImageCaptured(false);
       }
+
       const response = await matchFacesMutation({
         currentDescriptor: faces[0]?.descriptor,
         descriptor,
       });
+
       if (response?._label === "unknown") {
         setLoading(false);
         return setImageCaptured(false);
@@ -77,6 +83,7 @@ const MiniForm = () => {
     setLoading(false);
   };
 
+  //clear Image function
   const clearImage = () => {
     let photo = photoRef.current;
     let ctx = photo.getContext("2d");
@@ -141,7 +148,7 @@ const MiniForm = () => {
             isFetching
           }
         >
-        {getImageUrl.isLoading ? <CircularProgress size={20} /> : "Upload"}
+          {getImageUrl.isLoading ? <CircularProgress size={20} /> : "Upload"}
         </Button>
         <Button
           onClick={takePicture}

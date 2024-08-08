@@ -585,7 +585,7 @@ const CreateNewSurvey = ({ isEditable }) => {
                           control={control}
                           type="textEditor"
                           placeholder="Description"
-                          label="Description"
+                          label="Description*"
                           maxLimit={1000}
                           errors={errors}
                           error={errors.description}

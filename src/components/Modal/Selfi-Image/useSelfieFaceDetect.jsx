@@ -8,10 +8,19 @@ import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
 
 const useSelfieFaceDetect = () => {
-  const { handleAlert } = useContext(TestContext);
-  const { descriptor, setDescriptor } = useFaceStore();
-  const { decodedToken, authToken } = useGetUser();
+  //state
   const [loading, setLoading] = useState(false);
+
+  //hooks
+  const { handleAlert } = useContext(TestContext);
+
+  //get descriptor
+  const { descriptor, setDescriptor } = useFaceStore();
+
+  //get decode and auth token
+  const { decodedToken, authToken } = useGetUser();
+
+  //get user role
   const role = UserProfile().useGetCurrentRole();
 
   const loadModels = async () => {
@@ -43,6 +52,16 @@ const useSelfieFaceDetect = () => {
       .withFaceDescriptors()
       .withFaceExpressions()
       .withAgeAndGender();
+
+
+    //MM
+    // Verify descriptor lengths
+    faces.forEach(face => {
+      if (face.descriptor && face.descriptor.length === 0) {
+        throw new Error('Descriptor is empty');
+      }
+    });
+    //MM
     return faces;
   };
 
@@ -55,6 +74,7 @@ const useSelfieFaceDetect = () => {
     );
     return response.data;
   };
+
   const { data: employeeOrgId } = useQuery({
     queryFn: getEmployeeRemoteSet,
     queryKey: ["remote-fetch", decodedToken?.user?.organizationId],
@@ -87,17 +107,39 @@ const useSelfieFaceDetect = () => {
     },
   });
 
+  // const matchFaces = async ({ currentDescriptor, descriptor }) => {
+  //   let matchScore = 0.63;
+  //   let labeledFace = new faceApi.LabeledFaceDescriptors(
+  //     decodedToken?.user?._id,
+  //     [descriptor]
+  //   );
+  //   let faceMatcher = new faceApi.FaceMatcher(labeledFace, matchScore);
+
+  //   let results = faceMatcher.findBestMatch(currentDescriptor);
+  //   return results;
+  // };
+
+  //M////////////M
   const matchFaces = async ({ currentDescriptor, descriptor }) => {
+    if (!Array.isArray(currentDescriptor) || !Array.isArray(descriptor)) {
+      throw new Error('Descriptors must be arrays');
+    }
+
+    console.log('Current Descriptor Length:', currentDescriptor.length);
+    console.log('Descriptor Length:', descriptor.length);
+
+    if (currentDescriptor.length !== descriptor.length) {
+      throw new Error('Descriptor lengths mismatch');
+    }
+
     let matchScore = 0.63;
-    let labeledFace = new faceApi.LabeledFaceDescriptors(
-      decodedToken?.user?._id,
-      [descriptor]
-    );
+    let labeledFace = new faceApi.LabeledFaceDescriptors(decodedToken?.user?._id, [descriptor]);
     let faceMatcher = new faceApi.FaceMatcher(labeledFace, matchScore);
 
     let results = faceMatcher.findBestMatch(currentDescriptor);
     return results;
   };
+  //M///////////////////M
 
   const { mutateAsync: matchFacesMutation, isLoading: isMutationLoading } =
     useMutation({
@@ -156,3 +198,6 @@ const useSelfieFaceDetect = () => {
 };
 
 export default useSelfieFaceDetect;
+
+
+
