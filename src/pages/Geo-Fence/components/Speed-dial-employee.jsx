@@ -11,8 +11,10 @@ import StopRemotePunch from "../../Remote-Punching-Employee/components/stop-remo
 
 export default function SpeedDialEmployee() {
   //hooks
-  const { start, setStart, setStartTime } = useSelfieStore();
+  const { start, setStart, setStartTime ,geoFencingArea,setGeoFencingArea} = useSelfieStore();
   const { getUserImage } = useLocationMutation();
+ console.log("geoFencingArea",geoFencingArea);
+ 
   // const { getCurrentUser } = UserProfile();
 
   //state
@@ -27,6 +29,7 @@ export default function SpeedDialEmployee() {
     setOpen(false);
     getUserImage.mutate();
     setStartTime();
+    setGeoFencingArea(true)
   };
 
   //get all allowance data of dualWorkflow, geoFencing,faceRecognition, extra allowance

@@ -8,7 +8,7 @@ import StopRemotePunch from "./stop-remote-punching";
 
 export default function FabIcons() {
   //get start - true when remote punching start,setStartTime - new Date
-  const { start, setStart, setStartTime } = useSelfieStore();
+  const { start, setStart, setStartTime ,setGeoFencingArea} = useSelfieStore();
 
   //get user image
   const { getUserImage } = useLocationMutation();
@@ -21,6 +21,7 @@ export default function FabIcons() {
     setOpen(false);
     getUserImage.mutate();
     setStartTime();
+    setGeoFencingArea(false);
   };
 
   return (

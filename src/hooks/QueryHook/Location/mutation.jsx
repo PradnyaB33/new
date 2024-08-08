@@ -14,7 +14,7 @@ const useLocationMutation = () => {
   const { authToken } = useGetUser();
 
   //get state from useSelfieStore
-  const { setOpen, setMedia, setPunchObjectId, media, setStart } =
+  const { geoFencingArea,setOpen, setMedia, setPunchObjectId, media, setStart } =
     useSelfieStore();
 
   //geo area of employee
@@ -119,7 +119,7 @@ const useLocationMutation = () => {
   const fetchPunchObject = async (image) => {
     const data = await axios.post(
       `${process.env.REACT_APP_API}/route/punch`,
-      { image },
+      { image ,geoFencingArea},
       {
         headers: {
           "Content-Type": "application/json",
