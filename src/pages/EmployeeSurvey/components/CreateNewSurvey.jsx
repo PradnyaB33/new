@@ -136,6 +136,8 @@ const CreateNewSurvey = ({ isEditable }) => {
     },
     {
       onSuccess: (data) => {
+        console.log("data..........", data);
+
         setSurveyData(data);
         if (data) {
           setValue("title", data?.title);
@@ -166,6 +168,7 @@ const CreateNewSurvey = ({ isEditable }) => {
           }));
 
           setValue("to", transformedToField);
+          setEmployeeCredential(data?.employeeCredential)
         }
       },
       enabled: !!id,
@@ -784,7 +787,7 @@ const CreateNewSurvey = ({ isEditable }) => {
                       control={control}
                       type="autocomplete"
                       placeholder="To"
-                      label="To"
+                      label="To*"
                       maxLimit={15}
                       errors={errors}
                       optionlist={employeeEmail ? employeeEmail : []}
