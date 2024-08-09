@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import {
   Checkbox,
   TextField,
@@ -10,8 +10,6 @@ import {
   Radio,
   FormLabel,
   Tooltip,
-  Snackbar,
-  Alert,
   Card,
   CardContent,
   Typography,
@@ -26,6 +24,8 @@ import axios from "axios";
 import Setup from "../SetUpOrganization/Setup";
 import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
+import { useQuery } from "react-query";
+import { TestContext } from "../../State/Function/Main";
 
 // Custom styles
 const CustomCard = styled(Card)`
@@ -50,46 +50,47 @@ const CustomTypography = styled(Typography)`
 `;
 
 const OvertimeSetup = () => {
+  // hook
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-
-  //useParams to extract Organization id
+  const { handleAlert } = useContext(TestContext);
   const { organisationId } = useParams();
-  console.log(organisationId);
 
-  //useState
+  //state
   const [overtimeAllowed, setOvertimeAllowed] = useState(false);
   const [minimumOvertimeHours, setMinimumOvertimeHours] = useState("");
   const [overtimeAllowanceRequired, setOvertimeAllowanceRequired] =
     useState(false);
   const [allowanceParameter, setAllowanceParameter] = useState("perHour");
   const [allowanceAmount, setAllowanceAmount] = useState("");
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  //useEffect
-  useEffect(() => {
-    if (organisationId) {
-      axios
-        .get(
-          `${process.env.REACT_APP_API}/route/organization/${organisationId}/overtime`
-        )
-        .then((response) => {
-          const settings = response.data[0] || {};
-          setOvertimeAllowed(settings.overtimeAllowed || false);
-          setMinimumOvertimeHours(settings.minimumOvertimeHours || "");
-          setOvertimeAllowanceRequired(
-            settings.overtimeAllowanceRequired || false
-          );
-          setAllowanceParameter(settings.allowanceParameter || "perHour");
-          setAllowanceAmount(settings.allowanceAmount || "");
-        })
-        .catch((error) => {
-          console.error("Error fetching overtime settings:", error);
-          setSnackbarMessage("Error fetching settings");
-          setOpenSnackbar(true);
-        });
+
+  // get query
+  useQuery(
+    ["overtimeSettings", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/overtime`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data[0] || {};
+    },
+    {
+      onSuccess: (settings) => {
+        setOvertimeAllowed(settings.overtimeAllowed || false);
+        setMinimumOvertimeHours(settings.minimumOvertimeHours || "");
+        setOvertimeAllowanceRequired(
+          settings.overtimeAllowanceRequired || false
+        );
+        setAllowanceParameter(settings.allowanceParameter || "perHour");
+        setAllowanceAmount(settings.allowanceAmount || "");
+      },
+      onError: () => {},
     }
-  }, [organisationId]);
+  );
 
   const handleInputChange = (setter) => (event) => {
     setter(event.target.value);
@@ -98,28 +99,152 @@ const OvertimeSetup = () => {
   const handleCheckboxChange = (setter) => (event) => {
     setter(event.target.checked);
   };
-  //function for reset
-  const resetForm = () => {
-    setOvertimeAllowed(false);
-    setMinimumOvertimeHours("");
-    setOvertimeAllowanceRequired(false);
-    setAllowanceParameter("perHour");
-    setAllowanceAmount("");
-  };
 
-  const handleSubmit = (event) => {
+  // for adding the data
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+
+  //   // Validate the form inputs
+  //   if (!overtimeAllowed) {
+  //     handleAlert(
+  //       true,
+  //       "error",
+  //       "Please check 'Overtime Allowed' before proceeding."
+  //     );
+  //     return;
+  //   }
+
+  //   if (!overtimeAllowanceRequired) {
+  //     handleAlert(
+  //       true,
+  //       "error",
+  //       "Please check 'Overtime allowance' before proceeding."
+  //     );
+  //     return;
+  //   }
+
+  //   if (overtimeAllowed) {
+  //     const minHours = Number(minimumOvertimeHours);
+
+  //     if (isNaN(minHours) || minHours <= 0 || minHours > 24) {
+  //       handleAlert(
+  //         true,
+  //         "error",
+  //         "Number of Hours Allowed for Overtime must be greater than 0 and less than or equal to 24."
+  //       );
+  //       return;
+  //     }
+  //   }
+
+  //   const laskh = 1000000;
+
+  //   if (overtimeAllowanceRequired) {
+  //     const allowance = Number(allowanceAmount);
+
+  //     if (isNaN(allowance) || allowance <= 0 || allowance > laskh) {
+  //       handleAlert(
+  //         true,
+  //         "error",
+  //         `Overtime Allowances Amount is required, and less than or equal to lakh.`
+  //       );
+  //       return;
+  //     }
+  //   }
+
+  //   // Proceed with form submission if validation passes
+  //   const overtimeSettings = {
+  //     overtimeAllowed,
+  //     minimumOvertimeHours: Number(minimumOvertimeHours),
+  //     overtimeAllowanceRequired,
+  //     allowanceParameter,
+  //     allowanceAmount: Number(allowanceAmount),
+  //     organizationId: organisationId,
+  //   };
+
+  //   axios
+  //     .post(
+  //       `${process.env.REACT_APP_API}/route/organization/${organisationId}/overtime`,
+  //       overtimeSettings,
+  //       {
+  //         headers: {
+  //           Authorization: authToken,
+  //         },
+  //       }
+  //     )
+  //     .then(() => {
+  //       handleAlert(true, "success", "Overtime setup successfully.");
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       handleAlert(
+  //         true,
+  //         "error",
+  //         "Error occurred while setting up the overtime."
+  //       );
+  //     });
+  // };
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const overtimeSettings = {
-      overtimeAllowed,
-      minimumOvertimeHours: Number(minimumOvertimeHours),
-      overtimeAllowanceRequired,
-      allowanceParameter,
-      allowanceAmount: Number(allowanceAmount),
-      organizationId: organisationId,
-    };
 
-    axios
-      .post(
+    try {
+      // Validate the form inputs
+      if (!overtimeAllowed) {
+        handleAlert(
+          true,
+          "error",
+          "Please check 'Overtime Allowed' before proceeding."
+        );
+        return;
+      }
+
+      if (!overtimeAllowanceRequired) {
+        handleAlert(
+          true,
+          "error",
+          "Please check 'Overtime allowance' before proceeding."
+        );
+        return;
+      }
+
+      if (overtimeAllowed) {
+        const minHours = Number(minimumOvertimeHours);
+
+        if (isNaN(minHours) || minHours <= 0 || minHours > 24) {
+          handleAlert(
+            true,
+            "error",
+            "Number of Hours Allowed for Overtime must be greater than 0 and less than or equal to 24."
+          );
+          return;
+        }
+      }
+
+      const laskh = 1000000;
+
+      if (overtimeAllowanceRequired) {
+        const allowance = Number(allowanceAmount);
+
+        if (isNaN(allowance) || allowance <= 0 || allowance > laskh) {
+          handleAlert(
+            true,
+            "error",
+            `Overtime Allowances Amount is required, and less than or equal to ${laskh}.`
+          );
+          return;
+        }
+      }
+
+      // Proceed with form submission if validation passes
+      const overtimeSettings = {
+        overtimeAllowed,
+        minimumOvertimeHours: Number(minimumOvertimeHours),
+        overtimeAllowanceRequired,
+        allowanceParameter,
+        allowanceAmount: Number(allowanceAmount),
+        organizationId: organisationId,
+      };
+
+      await axios.post(
         `${process.env.REACT_APP_API}/route/organization/${organisationId}/overtime`,
         overtimeSettings,
         {
@@ -127,21 +252,17 @@ const OvertimeSetup = () => {
             Authorization: authToken,
           },
         }
-      )
-      .then(() => {
-        setSnackbarMessage("Overtime saved successfully!");
-        setOpenSnackbar(true);
-        resetForm();
-      })
-      .catch((error) => {
-        console.error("Error saving overtime:", error);
-        setSnackbarMessage("Error saving settings");
-        setOpenSnackbar(true);
-      });
-  };
+      );
 
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
+      handleAlert(true, "success", "Overtime setup successfully.");
+    } catch (error) {
+      console.log(error);
+      handleAlert(
+        true,
+        "error",
+        "Error occurred while setting up the overtime."
+      );
+    }
   };
 
   return (
@@ -159,7 +280,7 @@ const OvertimeSetup = () => {
                   variant="h5"
                   className="mb-4 flex items-center"
                 >
-                  <Settings className="mr-2" /> Overtime Setup
+                  <Settings className="mr-2" /> Overtime
                 </CustomTypography>
                 <Divider className="mb-4" />
                 <form onSubmit={handleSubmit}>
@@ -277,19 +398,6 @@ const OvertimeSetup = () => {
           </motion.div>
         </Box>
       </Setup>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </>
   );
 };
