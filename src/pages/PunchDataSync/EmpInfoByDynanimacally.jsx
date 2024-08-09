@@ -34,7 +34,7 @@ const EmpInfoByDynimacally = ({ organisationId }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
 
-  // Get punching data by org
+  // Get punching data by orgId
   const { data: tempPunchData } = useQuery(
     ["tempPunchData", organisationId],
     async () => {

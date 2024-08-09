@@ -17,7 +17,6 @@ import { IconButton } from "@mui/material";
 const EmpInfoPunchStatus = ({ organisationId }) => {
   // define the state , hook and import function if needed
   const navigate = useNavigate();
-  // const { organisationId } = useParams();
   const { handleAlert } = useContext(TestContext);
   const [tableData, setTableData] = useState([]);
   const [searchName, setSearchName] = useState("");
@@ -163,6 +162,7 @@ const EmpInfoPunchStatus = ({ organisationId }) => {
     }
   };
 
+  // pagination
   const prePage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -219,7 +219,6 @@ const EmpInfoPunchStatus = ({ organisationId }) => {
 
     return pages;
   };
-
   const paginationNumbers = getPaginationNumbers();
 
   //  to open the model
@@ -344,7 +343,7 @@ const EmpInfoPunchStatus = ({ organisationId }) => {
                         checked={
                           currentItems.length > 0 &&
                           currentItems.every((row) =>
-                            selectedEmployees.some(
+                            selectedEmployees?.some(
                               (emp) =>
                                 emp[0] === row[0] &&
                                 emp[1] === row[1] &&
@@ -372,39 +371,40 @@ const EmpInfoPunchStatus = ({ organisationId }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentItems.map((row, index) => (
-                    <tr key={index}>
-                      <td className="!text-left pl-8 py-3">
-                        <input
-                          type="checkbox"
-                          checked={selectedEmployees.some(
-                            (emp) =>
-                              emp[0] === row[0] &&
-                              emp[1] === row[1] &&
-                              emp[2] === row[2] &&
-                              emp[3] === row[3] &&
-                              emp[4] === row[4] &&
-                              emp[5] === row[5] &&
-                              emp[6] === row[6] &&
-                              emp[7] === row[7] &&
-                              emp[8] === row[8] &&
-                              emp[9] === row[9]
-                          )}
-                          onChange={() => handleEmployeeSelect(index)}
-                        />
-                      </td>
-                      <td className="!text-left pl-8 py-3">
-                        {(currentPage - 1) * itemsPerPage + index + 1}
-                      </td>
-                      <td className="py-3 pl-8">{row[0]}</td>
-                      <td className="py-3 pl-8">{row[1]}</td>
-                      <td className="py-3 pl-8">{row[2]}</td>
-                      <td className="py-3 pl-8">{row[3]}</td>
-                      <td className="py-3 pl-8">{row[4]}</td>
-                      <td className="py-3 pl-8">{row[5]}</td>
-                      <td className="py-3 pl-8">{row[6]}</td>
-                    </tr>
-                  ))}
+                  {currentItems &&
+                    currentItems?.map((row, index) => (
+                      <tr key={index}>
+                        <td className="!text-left pl-8 py-3">
+                          <input
+                            type="checkbox"
+                            checked={selectedEmployees?.some(
+                              (emp) =>
+                                emp[0] === row[0] &&
+                                emp[1] === row[1] &&
+                                emp[2] === row[2] &&
+                                emp[3] === row[3] &&
+                                emp[4] === row[4] &&
+                                emp[5] === row[5] &&
+                                emp[6] === row[6] &&
+                                emp[7] === row[7] &&
+                                emp[8] === row[8] &&
+                                emp[9] === row[9]
+                            )}
+                            onChange={() => handleEmployeeSelect(index)}
+                          />
+                        </td>
+                        <td className="!text-left pl-8 py-3">
+                          {(currentPage - 1) * itemsPerPage + index + 1}
+                        </td>
+                        <td className="py-3 pl-8">{row[0]}</td>
+                        <td className="py-3 pl-8">{row[1]}</td>
+                        <td className="py-3 pl-8">{row[2]}</td>
+                        <td className="py-3 pl-8">{row[3]}</td>
+                        <td className="py-3 pl-8">{row[4]}</td>
+                        <td className="py-3 pl-8">{row[5]}</td>
+                        <td className="py-3 pl-8">{row[6]}</td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>

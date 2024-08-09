@@ -11,7 +11,6 @@ import BasicSpeedDial from "./components/speed-dial";
 const EmployeeRemotePunch = () => {
   //get user exact location data
   const { getUserLocation } = useLocationMutation();
-  const { getUserImage } = useLocationMutation();
   const { data, mutate } = getUserLocation;
 
   useEffect(() => {
