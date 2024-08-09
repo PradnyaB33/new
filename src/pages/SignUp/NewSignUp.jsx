@@ -115,10 +115,14 @@ const SignIn = () => {
   });
 
   const number = watch("phone");
-
   // to define the onSubmit function
   const onSubmit = async (data) => {
     try {
+      if (!isVerified) {
+        handleAlert(true, "warning", "Please verify your phone number");
+        return false;
+      }
+
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create`,
         data
