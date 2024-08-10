@@ -11,8 +11,8 @@ const AdminCardSke = () => {
         </div>
         <Skeleton
           variant="rounded"
-          width={46}
-          height={46}
+          width={60}
+          height={60}
           className={`!bg-gray-300 text-4xl  shadow-sm`}
         />
       </div>
