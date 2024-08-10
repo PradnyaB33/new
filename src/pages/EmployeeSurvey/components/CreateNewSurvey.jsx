@@ -512,6 +512,13 @@ const CreateNewSurvey = ({ isEditable }) => {
       description: watch("description"),
       employeeSurveyStartingDate: watch("employeeSurveyStartingDate"),
       employeeSurveyEndDate: watch("employeeSurveyEndDate"),
+      // questions: questions?.map((q) => ({
+      //   question: q.question,
+      //   questionType: q.questionType,
+      //   options: q.options?.map((opt) => opt.title),
+      //   required: q.required,
+      // })),
+    
       questions,
       to: watch("to"),
       responseStatus: false,

@@ -336,12 +336,12 @@ const AppDatePicker = ({
                 events={
                   data
                     ? [
-                        ...data?.currentYearLeaves,
-                        ...shiftData?.requests,
-                        ...newAppliedLeaveEvents,
-                        ...filteredHolidayWithStartAndEnd,
-                        ...allPublicHoliday,
-                      ]
+                      ...data?.currentYearLeaves,
+                      ...shiftData?.requests,
+                      ...newAppliedLeaveEvents,
+                      ...filteredHolidayWithStartAndEnd,
+                      ...allPublicHoliday,
+                    ]
                     : [...newAppliedLeaveEvents]
                 }
                 startAccessor="start"

@@ -62,6 +62,7 @@ const QuestionStats = () => {
       return response?.data;
     }
   );
+  console.log("surveyResponses", surveyResponses);
 
   const handleOpenPopup = (questionId) => {
     const answers = [];
