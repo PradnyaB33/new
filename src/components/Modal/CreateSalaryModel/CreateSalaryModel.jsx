@@ -22,6 +22,8 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
   const [deduction, setDeduction] = useState("");
   const [employee_pf, setEmployeePf] = useState("");
   const [esic, setEsic] = useState("");
+
+  // No requirement of states for salary component
   const [inputValue, setInputValue] = useState({
     Basic: "",
     HRA: "",
@@ -32,7 +34,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
     "Travel allowance": "",
     "Sales allowance": "",
   });
-  
+
   // to get employee salary component data
   const {
     data: salaryInput,
