@@ -988,6 +988,7 @@ const customStyles = {
 const AttendenceBar = ({ attendenceData, isLoading }) => {
   const { setSelectedYear, selectedYear } = useDashGlobal();
   const user = UserProfile().getCurrentUser();
+  console.log(user)
   const { handleAlert } = useContext(TestContext);
 
   const currentYear = new Date().getFullYear();

@@ -329,6 +329,7 @@ const HRgraph = () => {
     value: new Date().getFullYear(),
     label: new Date().getFullYear(),
   });
+  console.log(employeeData)
 
   // const customStyles = {
   //   control: (base) => ({
@@ -362,42 +363,42 @@ const HRgraph = () => {
   //   }),
   // };
 
-  const option = {
-    elements: {
-      line: {
-        tension: 0.5,
-      },
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-        ticks: {
-          color: "#555",
-          font: {
-            family: "'Roboto', sans-serif",
-            size: 10,
-          },
-        },
-      },
-      y: {
-        grid: {
-          display: true,
-          color: "#e0e0e0",
-        },
-        ticks: {
-          color: "#555",
-          font: {
-            family: "'Roboto', sans-serif",
-            size: 10,
-          },
-        },
-      },
-    },
-    maintainAspectRatio: false,
-    responsive: true,
-  };
+  // const option = {
+  //   elements: {
+  //     line: {
+  //       tension: 0.5,
+  //     },
+  //   },
+  //   scales: {
+  //     x: {
+  //       grid: {
+  //         display: false,
+  //       },
+  //       ticks: {
+  //         color: "#555",
+  //         font: {
+  //           family: "'Roboto', sans-serif",
+  //           size: 10,
+  //         },
+  //       },
+  //     },
+  //     y: {
+  //       grid: {
+  //         display: true,
+  //         color: "#e0e0e0",
+  //       },
+  //       ticks: {
+  //         color: "#555",
+  //         font: {
+  //           family: "'Roboto', sans-serif",
+  //           size: 10,
+  //         },
+  //       },
+  //     },
+  //   },
+  //   maintainAspectRatio: false,
+  //   responsive: true,
+  // };
   
   const customStyles = {
     control: (base) => ({
