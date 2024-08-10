@@ -21,6 +21,7 @@ import { useLocation } from "react-router-dom";
 import SmsSharpIcon from '@mui/icons-material/SmsSharp';
 import useSubscriptionGet from "../QueryHook/Subscription/hook";
 import UserProfile from "../UserData/useUser";
+
 const useSetupSideNav = ({ organisationId }) => {
   const location = useLocation();
   const { getCurrentUser } = UserProfile();
@@ -76,7 +77,29 @@ const useSetupSideNav = ({ organisationId }) => {
       ),
     },
 
+    //LiveData
+    // {
+    //   label: "LiveData",
+    //   icon: SmsSharpIcon,
+    //   href: `/organisation/${organisationId}/setup/liveData`,
+    //   active:
+    //     location.pathname ===
+    //     `/organisation/${organisationId}/setup/liveData`,
+    //   isVisible: user?.profile?.some((role) =>
+    //     ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+    //   ),
+    // },
 
+    {
+      label: "LiveData",
+      icon: SmsSharpIcon,
+      href: `/organisation/${organisationId}/setup/liveData`,
+      active: location.pathname === `/organisation/${organisationId}/setup/liveData`,
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+      ),
+    },
+    
     {
       label: "Location",
       icon: AddLocationAltOutlined,

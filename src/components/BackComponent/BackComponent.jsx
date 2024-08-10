@@ -42,7 +42,8 @@ const BackComponent = () => {
     "/emo-info-punch-status" , 
     "/view-attendance-biomatric",
     "/missed-punch-in-out",
-    "/missed-justify"
+    "/missed-justify",
+    "/liveSyncData"
 
   ];
 

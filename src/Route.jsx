@@ -143,6 +143,10 @@ import TempPunchingData from "./pages/EmployeeSurvey/components/TempPunchingData
 
 import OvertimeSetup from "./pages/OvertimeSetup/OvertimeSetup";
 
+//import LiveData
+import LiveData from "./pages/LiveData/LiveData";
+import LiveSyncData from "./pages/EmpInfoPunchStatus/LiveSyncData";
+
 const App = () => {
   return (
     <AuthProvider>
@@ -202,6 +206,25 @@ const App = () => {
           }
         />
 
+        {/* LiveData */}
+        <Route
+          path="/organisation/:organisationId/setup/liveData"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Employee",
+                "Manager",
+                "HR",
+              ]}
+            >
+              <LiveData />
+            </RequireAuth>
+          }
+        />
+        
+        
         <Route
           path="/organisation/:organisationId/add-delegate/"
           element={
@@ -396,7 +419,7 @@ const App = () => {
           }
         />
         <Route
-          path="/organisation/:organisationId/dashboard/super-admin"
+          path="/organisation/:organisationId/dashboard/super-admin" 
           element={
             <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
               <SuperAdmin />
@@ -631,6 +654,7 @@ const App = () => {
             </RequireAuth>
           }
         />
+
         <Route
           path="/organisation/:organisationId/view-attendance-biomatric"
           element={
@@ -702,6 +726,30 @@ const App = () => {
               ]}
             >
               <MissPunchJustify />
+            </RequireAuth>
+          }
+        />
+
+        {/* LiveSyncData */}
+        <Route
+          path="/organisation/:organisationId/liveSyncData"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+             <LiveSyncData/>
             </RequireAuth>
           }
         />
