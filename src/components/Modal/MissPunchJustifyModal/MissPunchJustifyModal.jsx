@@ -16,31 +16,103 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Person } from "@mui/icons-material";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AddBusiness } from "@mui/icons-material";
 
 const MissPunchJustifyModal = ({
   handleClose,
   open,
-  unavailableRecordId,
+  unavailableRecords,
   organisationId,
 }) => {
   const navigate = useNavigate();
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
-  console.log("unavailable id ", unavailableRecordId);
+  const unavailableRecordId = unavailableRecords?._id;
+  const { justify, leave, shift } = useMissedJustifyState();
 
-  const { justify } = useMissedJustifyState();
+  //for  Get Query
+  const { data: shiftData } = useQuery(
+    ["shiftData", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/shifts/${organisationId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.shifts;
+    }
+  );
+  console.log("shift data", shiftData);
+  const Shiftoptions = shiftData?.map((item) => {
+    return {
+      value: item?._id,
+      label: item?.shiftName,
+    };
+  });
+  console.log("Shiftoptions", Shiftoptions);
+
+  // get query for leave
+  const { data } = useQuery(
+    "leaveTypes",
+    async () => {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+      };
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/route/leave-types-details/get`,
+        { organisationId: organisationId },
+        config
+      );
+      return response.data.data;
+    },
+    {
+      onSuccess: (newData) => {
+        // Update the query cache with the new data
+        queryClient.setQueryData("leaveTypes", newData);
+      },
+    }
+  );
+  console.log("data", data);
+
+  const Leavetoptions = data?.map((item) => {
+    return {
+      value: item?._id,
+      label: item?.leaveName,
+    };
+  });
+  console.log("Leavetoptions", Leavetoptions);
 
   const MissPunchSchema = z.object({
-    justify: z.string(),
+    justify: z.string().optional(),
+    leave: z
+      .object({
+        label: z.string().optional(),
+        value: z.string().optional(),
+      })
+      .optional(),
+    shift: z
+      .object({
+        label: z.string().optional(),
+        value: z.string().optional(),
+      })
+      .optional(),
   });
 
   const { control, formState, handleSubmit, reset } = useForm({
     defaultValues: {
       justify: justify,
+      leave: leave?.label,
+      shift: shift?.label,
     },
     resolver: zodResolver(MissPunchSchema),
   });
@@ -75,8 +147,13 @@ const MissPunchJustifyModal = ({
   );
 
   const onSubmit = async (data) => {
+    const formattedData = {
+      ...data,
+      leave: data.leave?.label || "",
+      shift: data.shift?.label || "",
+    };
     console.log(data);
-    AddMissJustifyData.mutate(data);
+    AddMissJustifyData.mutate(formattedData);
     reset();
   };
 
@@ -95,7 +172,7 @@ const MissPunchJustifyModal = ({
           width: "100%",
           maxWidth: "800px!important",
           height: "100%",
-          maxHeight: "35vh!important",
+          maxHeight: "65vh!important",
         },
       }}
       open={open}
@@ -119,18 +196,42 @@ const MissPunchJustifyModal = ({
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className=" ml-2 mr-2 mt-2">
-          <div className="space-y-2 ">
-            <AuthInputFiled
-              name="justify"
-              icon={Person}
-              control={control}
-              type="text"
-              placeholder="Forgot..."
-              label="Enter your justification"
-              errors={errors}
-              error={errors.justify}
-            />
-          </div>
+          <AuthInputFiled
+            name="justify"
+            icon={Person}
+            control={control}
+            type="text"
+            placeholder="Forgot..."
+            label="Enter your justification"
+            errors={errors}
+            error={errors.justify}
+          />
+
+          <AuthInputFiled
+            name="leave"
+            value={leave}
+            icon={AddBusiness}
+            control={control}
+            type="select"
+            placeholder="Select Leave"
+            label="Leave"
+            errors={errors}
+            error={errors.leave}
+            options={Leavetoptions}
+          />
+
+          <AuthInputFiled
+            name="shift"
+            value={shift}
+            icon={AddBusiness}
+            control={control}
+            type="select"
+            placeholder=" Select Shift"
+            label="Select Shift"
+            errors={errors}
+            error={errors.shift}
+            options={Shiftoptions}
+          />
 
           <DialogActions
             sx={{
