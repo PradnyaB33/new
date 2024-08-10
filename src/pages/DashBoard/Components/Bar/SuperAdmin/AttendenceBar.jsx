@@ -930,7 +930,7 @@ import Select from "react-select";
 import * as XLSX from "xlsx";
 import { TestContext } from "../../../../../State/Function/Main";
 import useDashGlobal from "../../../../../hooks/Dashboard/useDashGlobal";
-import UserProfile from "../../../../../hooks/UserData/useUser";
+// import UserProfile from "../../../../../hooks/UserData/useUser";
 import { motion } from "framer-motion";
 import { FaFileExcel } from "react-icons/fa";
 import AOS from 'aos';
@@ -987,7 +987,7 @@ const customStyles = {
 
 const AttendenceBar = ({ attendenceData, isLoading }) => {
   const { setSelectedYear, selectedYear } = useDashGlobal();
-  const user = UserProfile().getCurrentUser();
+  // const user = UserProfile().getCurrentUser();
   const { handleAlert } = useContext(TestContext);
 
   const currentYear = new Date().getFullYear();
