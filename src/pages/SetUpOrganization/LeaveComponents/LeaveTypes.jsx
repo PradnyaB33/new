@@ -40,6 +40,7 @@ const LeaveTypes = ({ open, handleClose, id }) => {
       },
     }
   );
+  console.log("data", data);
 
   const handleCreateLeave = () => {
     setConfirmOpen(true);

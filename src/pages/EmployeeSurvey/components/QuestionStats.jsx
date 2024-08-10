@@ -6,7 +6,7 @@ import { useQuery } from 'react-query';
 import { UseContext } from '../../../State/UseState/UseContext';
 
 const PaginatedAnswers = ({ answers, employeeName }) => {
-    console.log("employeeName",employeeName);
+  console.log("employeeName", employeeName);
   const [currentPage, setCurrentPage] = useState(0);
 
   const handleNext = () => {
@@ -62,6 +62,7 @@ const QuestionStats = () => {
       return response?.data;
     }
   );
+  console.log("surveyResponses", surveyResponses);
 
   const handleOpenPopup = (questionId) => {
     const answers = [];
@@ -70,7 +71,7 @@ const QuestionStats = () => {
       const question = survey?.questions.find((q) => q?.questionId === questionId);
       if (question && question?.answer !== undefined) {
         answers.push(question?.answer);
-        employeeNames.push(survey?.employeeName); 
+        employeeNames.push(survey?.employeeName);
       }
     });
 
@@ -93,12 +94,13 @@ const QuestionStats = () => {
     }
 
     const { answers, employeeNames, questionType } = selectedQuestion;
-    console.log("employeeName....",employeeNames);
+
     let answerContent = null;
 
     switch (questionType) {
       case 'Short Answer':
       case 'Paragraph':
+      case 'Date':
         answerContent = <PaginatedAnswers answers={answers} employeeName={employeeNames} />;
         break;
       case 'Checkboxes':

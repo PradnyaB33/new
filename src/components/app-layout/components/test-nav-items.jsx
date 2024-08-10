@@ -52,23 +52,9 @@ import UserProfile from "../../../hooks/UserData/useUser";
 import TestAccordian from "./TestAccordian";
 import useGetCommunicationPermission from "../../../pages/EmployeeSurvey/useContext/Permission";
 import { useQueryClient } from "react-query";
-import useSelfieFaceDetect from "../../../components/Modal/Selfi-Image/useSelfieFaceDetect";
+import useOrgGeo from "../../../pages/Geo-Fence/useOrgGeo";
 
 const TestNavItems = ({ toggleDrawer }) => {
-  //_--------------------geofencing---------------
-  // get all allowance data of dualWorkflow, geoFencing,faceRecognition, extra allowance
-  const { employeeOrgId } = useSelfieFaceDetect();
-  console.log("employeeOrgId", employeeOrgId);
-
-  //selected employee list for geofencing
-  // const { data:geofencingData } = useOrgGeo();
-
-  //match currect user and selcted employee in list
-  // const isUserMatchInEmployeeList = geofencingData?.area?.some(area =>
-  //   area.employee.includes(userMatch)
-  // );
-//////////////////////////////////////////////////
-
   // to define the route and pass the dynamic organization id
   const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
@@ -82,6 +68,17 @@ const TestNavItems = ({ toggleDrawer }) => {
   const empId = user?._id;
   const role = useGetCurrentRole();
   const queryClient = useQueryClient();
+
+  //_--------------------geofencing---------------
+  //selected employee list for geofencing
+  const { data: geofencingData } = useOrgGeo(orgId);
+
+  //match currect user and selcted employee in list
+  const isUserMatchInEmployeeList = geofencingData?.area?.some(area =>
+    area.employee.includes(empId)
+  );
+
+  //////////////////////////////////////////////////
 
   // Update organization ID when URL changes
   useEffect(() => {
@@ -751,7 +748,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             "Super-Admin",
             "Delegate-Super-Admin",
           ].includes(role) &&
-          data?.organisation?.packageInfo === "Intermediate Plan",
+          data?.organisation?.packageInfo === "Intermediate Plan" && !isUserMatchInEmployeeList,
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
@@ -759,6 +756,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible: [
               "Employee",
               "Super-Admin",
+              "Manager",
               "Delegate-Super-Admin",
             ].includes(role),
             link: `/organisation/${orgId}/employee-remote-punching`,
@@ -770,12 +768,47 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible: [
               "Employee",
               "Super-Admin",
+              "Manager",
               "Delegate-Super-Admin",
             ].includes(role),
             link: `/organisation/${orgId}/remotePunching`,
             icon: <PanToolAlt className=" !text-[1.2em] text-[#67748E]" />,
             text: "Apply Miss For Punch",
           },
+          // {
+          //   key: "geoFencing",
+          //   isVisible: [
+          //     "Super-Admin",
+          //     "Manager",
+          //     "Delegate-Super-Admin",
+          //   ].includes(role),
+          //   link: `/organisation/${orgId}/remotePunching/geo-fencing`,
+          //   icon: <LocationOn className=" !text-[1.2em] text-[#67748E]" />,
+          //   text: "Geo Fencing",
+          // },
+
+          // {
+          //   key: "empNotification",
+          //   isVisible: ["Employee"].includes(role),
+          //   link: "/emp-notification",
+          //   icon: (
+          //     <AssignmentTurnedIn className=" !text-[1.2em] text-[#67748E]" />
+          //   ),
+          //   text: "Remote Punching Status",
+          // },
+        ],
+      },
+      AddGeoFencing: {
+        open: false,
+        isVisible:
+          [
+            "Manager",
+            "Super-Admin",
+            "Delegate-Super-Admin",
+          ].includes(role) &&
+          data?.organisation?.packageInfo === "Intermediate Plan",
+        icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
+        routes: [
           {
             key: "geoFencing",
             isVisible: [
@@ -787,15 +820,35 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <LocationOn className=" !text-[1.2em] text-[#67748E]" />,
             text: "Geo Fencing",
           },
-          // {
-          //   key: "empNotification",
-          //   isVisible: ["Employee"].includes(role),
-          //   link: "/emp-notification",
-          //   icon: (
-          //     <AssignmentTurnedIn className=" !text-[1.2em] text-[#67748E]" />
-          //   ),
-          //   text: "Remote Punching Status",
-          // },
+        ],
+      },
+
+      GeoFencing: {
+        open: false,
+        isVisible:
+          ["Employee", "Manager", "Super-Admin", "Delegate-Super-Admin"].includes(role) &&
+          data?.organisation?.packageInfo === "Intermediate Plan" &&
+          isUserMatchInEmployeeList,
+        icon: <MonetizationOn className="!text-[1.2em] text-[#67748E]" />,
+        routes: [
+          {
+            key: "geoFencing",
+            isVisible: ["Employee"].includes(role),
+            link: `/organisation/${orgId}/geo-fencing`,
+            icon: <LocationOn className="!text-[1.2em] text-[#67748E]" />,
+            text: "Geo Fencing",
+          },
+          {
+            key: "addGeoFencing",
+            isVisible: [
+              "Super-Admin",
+              "Manager",
+              "Delegate-Super-Admin",
+            ].includes(role),
+            link: `/organisation/${orgId}/remotePunching/geo-fencing`,
+            icon: <LocationOn className="!text-[1.2em] text-[#67748E]" />,
+            text: "Geo Fencing",
+          },
         ],
       },
 

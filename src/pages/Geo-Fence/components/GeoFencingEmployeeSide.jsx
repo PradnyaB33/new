@@ -2,25 +2,23 @@ import { Chip } from "@mui/material";
 import { useJsApiLoader } from "@react-google-maps/api";
 import moment from "moment";
 import React, { useEffect } from "react";
-import SelfieForm from "../../components/Modal/Selfi-Image/Selfie";
-import useLocationMutation from "../../hooks/QueryHook/Location/mutation";
-import useSelfieStore from "../../hooks/QueryHook/Location/zustand-store";
-import MapComponent from "./components/Map-Component";
-import BasicSpeedDial from "./components/speed-dial";
+import SelfieForm from "../../../components/Modal/Selfi-Image/Selfie";
+import useLocationMutation from "../../../hooks/QueryHook/Location/mutation";
+import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
+import MapComponent from "./Map-Component"; 
+import SpeedDialEmployee from "./Speed-dial-employee";
 
-const EmployeeRemotePunch = () => {
-  //get user exact location data
+const GeoFencingEmployeeSide = () => {
   const { getUserLocation } = useLocationMutation();
+
   const { data, mutate } = getUserLocation;
 
   useEffect(() => {
     mutate();
   }, [mutate]);
 
-  //get exact location and start and end time data
   const { locationArray, startTime, endTime } = useSelfieStore();
 
-  //google map loaded
   const { isLoaded } = useJsApiLoader({
     id: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
 
@@ -35,7 +33,6 @@ const EmployeeRemotePunch = () => {
         ) : (
           "Loading"
         )}
-        {/*data visible on ui*/}
         <div className="top-12 right-12 rounded-xl absolute gap-4 p-10 flex flex-col items-end justify-center">
           <Chip
             label={`Please do not connect to any wi-fi till you location is fetching`}
@@ -59,10 +56,11 @@ const EmployeeRemotePunch = () => {
                 variant="filled"
               />
               <Chip
-                label={`Ended at ${endTime
-                  ? moment(endTime).format("hh:mm:ss")
-                  : moment().format("hh:mm:ss")
-                  }`}
+                label={`Ended at ${
+                  endTime
+                    ? moment(endTime).format("hh:mm:ss")
+                    : moment().format("hh:mm:ss")
+                }`}
                 className="!bg-white !text-md"
                 onClick={(e) => console.log(e)}
                 variant="filled"
@@ -76,11 +74,11 @@ const EmployeeRemotePunch = () => {
             variant="filled"
           />
         </div>
-        <BasicSpeedDial />
+        <SpeedDialEmployee />
         <SelfieForm />
       </div>
     </div>
   );
 };
 
-export default EmployeeRemotePunch;
+export default GeoFencingEmployeeSide;

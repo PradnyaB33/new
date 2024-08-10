@@ -6,7 +6,11 @@ import useGetUser from "../../Token/useUser";
 import useSelfieStore from "./zustand-store";
 
 const useStartPunch = () => {
+  //get auth token
   const { authToken } = useGetUser();
+  const { handleAlert } = useContext(TestContext);
+
+  //get state from useSelfieStore
   const {
     punchObjectId,
     start,
@@ -17,18 +21,15 @@ const useStartPunch = () => {
     clearTemporaryArray,
   } = useSelfieStore();
 
-  const { handleAlert } = useContext(TestContext);
+  //get location data
   const fetchLocationData = async () => {
     startGeoLocationWatch.mutate();
 
-    console.log(
-      `🚀 ~ file: independant-use-query.jsx:18 ~ temporaryArray:`,
-      temporaryArray
-    );
     const payload = {
       temporaryArray,
       punchObjectId,
     };
+
     const response = await axios.patch(
       `${process.env.REACT_APP_API}/route/punch`,
       payload,
@@ -56,6 +57,7 @@ const useStartPunch = () => {
       );
     },
   });
+
   const getNavigatorData = async () => {
     const id = navigator.geolocation.watchPosition(
       (positionCallback) => {

@@ -87,8 +87,7 @@ import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
-//import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
-import EmpInfoByDynimacally from "./pages/EmpInfoPunchStatus/EmpInfoByDynanimacally";
+import RendarPunchSyncFile from "./pages/PunchDataSync/RendarPunchSyncFile";
 import EmployeeNotification from "./pages/Employee-Notification/page";
 import EditEmployee from "./pages/Employee/EditEmployee";
 import EmployeeSurvey from "./pages/EmployeeSurvey/EmployeeSurvey";
@@ -139,6 +138,7 @@ import OpenJobPosition from "./pages/Recruitment/OpenRoleJobPosition";
 import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
 import DepartmentNotificationToEmp from "./pages/DeptNotification/DepartmentNotificationToEmp";
 import OvertimeSetup from "./pages/OvertimeSetup/OvertimeSetup";
+import GeoFencingEmployeeSide from "./pages/Geo-Fence/components/GeoFencingEmployeeSide";
 const App = () => {
   return (
     <AuthProvider>
@@ -244,7 +244,18 @@ const App = () => {
           path="/organisation/:organisationId/remotePunching/geo-fencing"
           element={<GeoFencing />}
         />
-
+        <Route
+          path="/organisation/:organisationId/geo-fencing"
+          element={
+            <RequireAuth
+              permission={[
+                "Employee",
+              ]}
+            >
+              <GeoFencingEmployeeSide />
+            </RequireAuth>
+          }
+        />
         {/* Login Routes */}
         <Route path="/test3" element={<TestYash />} />
         <Route
@@ -606,26 +617,17 @@ const App = () => {
             </RequireAuth>
           }
         />
-        {/* <Route
-          path="/organisation/:organisationId/emo-info-punch-status"
-          element={
-            <RequireAuth
-              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
-            >
-              <EmpInfoPunchStatus />
-            </RequireAuth>
-          }
-        /> */}
         <Route
           path="/organisation/:organisationId/emo-info-punch-status"
           element={
             <RequireAuth
               permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
             >
-              <EmpInfoByDynimacally />
+              <RendarPunchSyncFile />
             </RequireAuth>
           }
         />
+
         <Route
           path="/organisation/:organisationId/view-calculate-data"
           element={

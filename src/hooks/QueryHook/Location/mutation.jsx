@@ -7,12 +7,18 @@ import useGetUser from "../../Token/useUser";
 import useSelfieStore from "./zustand-store";
 
 const useLocationMutation = () => {
+  //handle alert
   const { handleAlert } = useContext(TestContext);
+
+  //auth token
   const { authToken } = useGetUser();
-  const { setOpen, setMedia, setPunchObjectId, media, setStart } =
+
+  //get state from useSelfieStore
+  const { geoFencingArea,setOpen, setMedia, setPunchObjectId, media, setStart } =
     useSelfieStore();
+
+  //geo area of employee
   const { employeeGeoArea } = useGetGeoFencing();
-  console.log(`🚀 ~ file: mutation.jsx:15 ~ employeeGeoArea:`, employeeGeoArea);
 
   const fetchLocationData = async () => {
     const position = await new Promise((resolve, reject) => {
@@ -31,6 +37,7 @@ const useLocationMutation = () => {
     };
   };
 
+  //get user current location data
   const getUserLocation = useMutation({
     mutationFn: fetchLocationData,
     onSuccess: (data) => {
@@ -42,6 +49,7 @@ const useLocationMutation = () => {
     },
   });
 
+  //fetch user image
   const fetchUserImage = async () => {
     const stream = await new Promise((resolve, reject) => {
       navigator.mediaDevices
@@ -65,16 +73,10 @@ const useLocationMutation = () => {
       handleAlert(true, "error", data.message);
     },
   });
+
+  //get image url
   const fetchUrl = async () => {
     const data1 = await getUserLocation?.mutateAsync();
-    // const locationIsInGeoFence = await checkUserInGeoFenceMutationAs({
-    //   latitude: data1?.latitude,
-    //   longitude: data1?.longitude,
-    // });
-    // console.log(
-    //   `🚀 ~ file: mutation.jsx:74 ~ locationIsInGeoFence:`,
-    //   locationIsInGeoFence
-    // );
     const data = await axios.get(
       `${process.env.REACT_APP_API}/route/punch-main/create-image-url?lat=${data1?.latitude}&lng=${data1?.longitude}`,
       {
@@ -84,6 +86,7 @@ const useLocationMutation = () => {
         },
       }
     );
+
     return data.data;
   };
 
@@ -111,10 +114,12 @@ const useLocationMutation = () => {
       handleAlert(true, "error", data?.response?.data?.message);
     },
   });
+
+  //get punch object id
   const fetchPunchObject = async (image) => {
     const data = await axios.post(
       `${process.env.REACT_APP_API}/route/punch`,
-      { image },
+      { image ,geoFencingArea},
       {
         headers: {
           "Content-Type": "application/json",
@@ -122,6 +127,7 @@ const useLocationMutation = () => {
         },
       }
     );
+
     return data.data;
   };
 
@@ -138,35 +144,61 @@ const useLocationMutation = () => {
       setStart(true);
     },
     onError: (data) => {
-      console.error(`🚀 ~ file: mutation.jsx:167 ~ data:`, data?.response);
       handleAlert(true, "error", data?.response?.data?.message);
     },
   });
 
+  //check User Is In GeoFence area
+  // const checkUserIsInGeoFence = async ({ latitude, longitude }) => {
+  //   const isInGeoFence = employeeGeoArea?.area?.some(async (area) => {
+  //     const distance = await axios.get(
+  //       `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${latitude},${longitude}&destinations=${area?.latitude},${area?.longitude}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
+  //     );
+  //     return distance.data.rows[0].elements[0].distance.value < area?.radius;
+  //   });
+        
+  //   return isInGeoFence;
+  // };
+
+  // const { mutateAsync: checkUserInGeoFenceMutationAs } = useMutation({
+  //   mutationFn: checkUserIsInGeoFence,
+  //   onSuccess: (data) => {
+  //     if (data) {
+  //       handleAlert(true, "success", "User is in geo-fence");
+  //     } else {
+  //       handleAlert(true, "error", "User is not in geo-fence");
+  //     }
+  //   },
+  //   onError: (data) => {
+  //     handleAlert(true, "error", data.message);
+  //   },
+  // });
   const checkUserIsInGeoFence = async ({ latitude, longitude }) => {
-    const isInGeoFence = employeeGeoArea?.area?.some(async (area) => {
-      const distance = await axios.get(
-        `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${latitude},${longitude}&destinations=${area?.latitude},${area?.longitude}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
-      );
-      return distance.data.rows[0].elements[0].distance.value < area?.radius;
-    });
-    return isInGeoFence;
+    const distances = await Promise.all(
+      employeeGeoArea?.area?.map(async (area) => {
+        const response = await axios.get(
+          `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${latitude},${longitude}&destinations=${area?.center?.coordinates[0]},${area?.center?.coordinates[1]}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
+        );
+        const distanceValue = response.data.rows[0].elements[0].distance.value;
+        return distanceValue < area?.radius;
+      })
+    );
+    return distances.some((isInGeoFence) => isInGeoFence);
   };
 
-  const { mutateAsync: checkUserInGeoFenceMutationAs } = useMutation({
+  const checkUserInGeoFenceMutationAs = useMutation({
     mutationFn: checkUserIsInGeoFence,
     onSuccess: (data) => {
       if (data) {
         handleAlert(true, "success", "User is in geo-fence");
       } else {
-        handleAlert(true, "error", "User is not in geo-fence");
+        handleAlert(true, "error", "User is not in geo-fence. Expected location: " + JSON.stringify(employeeGeoArea.area.map(area => ({ lat: area.center.coordinates[0], lng: area.center.coordinates[1] }))));
       }
     },
     onError: (data) => {
       handleAlert(true, "error", data.message);
     },
   });
-
   return {
     getUserLocation,
     getUserImage,

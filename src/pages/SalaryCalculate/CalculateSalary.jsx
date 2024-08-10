@@ -28,21 +28,30 @@ function CalculateSalary() {
   const {
     salaryInfo,
     availableEmployee,
-    formattedDate,
     empLoanAplicationInfo,
     remotePunchAllowance,
   } = useCalculateSalaryQuery({ userId, organisationId, remotePunchingCount });
 
+  const formattedDate = selectedDate.format("MMM-YY");
+
   const handleDateChange = (event) => {
     setSelectedDate(dayjs(event.target.value));
   };
-  
+
   // fetch leave of employee
+  const month = selectedDate.$M + 1;
+  const year = selectedDate.$y;
+
+  console.log("selected date", selectedDate);
+  console.log("year", year);
+  console.log("month", month);
+
+  // Fetch leave of employee when selectedDate changes
   useEffect(() => {
     const fetchDataAndFilter = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API}/route/leave/getYearLeaves/${userId}`,
+          `${process.env.REACT_APP_API}/route/employee/leaves/${year}/${month}/${userId}`,
           {
             headers: {
               Authorization: token,
@@ -59,9 +68,20 @@ function CalculateSalary() {
         );
       }
     };
+
     fetchDataAndFilter();
-    // eslint-disable-next-line
-  }, []);
+     // eslint-disable-next-line
+  }, [month, year]);
+
+  useEffect(() => {
+    console.log("employee summary", employeeSummary);
+    setPaidLeaveDays(employeeSummary?.paidLeaveDays || 0);
+    setUnPaidLeaveDays(employeeSummary?.unpaidLeaveDays || 0);
+  }, [employeeSummary, month, year]);
+
+  console.log({ paidLeaveDays, unPaidLeaveDays });
+
+  console.log({ paidLeaveDays, unPaidLeaveDays });
 
   useEffect(() => {
     const monthFromSelectedDate = selectedDate.format("M");
@@ -74,37 +94,6 @@ function CalculateSalary() {
     console.log("Salary Exists:", salaryExists);
     setNumDaysInMonth(selectedDate.daysInMonth());
   }, [selectedDate, salaryInfo]);
-
-  useEffect(() => {
-    const selectedMonth = selectedDate.format("M");
-    const selectedYear = selectedDate.format("YYYY");
-
-    const filterDataByMonthYear = (data, selectedMonth, selectedYear) => {
-      const numericMonth = parseInt(selectedMonth, 10);
-      const numericYear = parseInt(selectedYear, 10);
-      return data.filter((item) => {
-        const itemMonth = parseInt(item.month, 10);
-        return (
-          itemMonth === numericMonth && parseInt(item.year, 10) === numericYear
-        );
-      });
-    };
-
-    const filteredData = filterDataByMonthYear(
-      employeeSummary,
-      selectedMonth,
-      selectedYear
-    );
-
-    if (filteredData.length > 0) {
-      const { paidleaveDays, unpaidleaveDays } = filteredData[0];
-      setPaidLeaveDays(paidleaveDays);
-      setUnPaidLeaveDays(unpaidleaveDays);
-    } else {
-      setPaidLeaveDays(0);
-      setUnPaidLeaveDays(0);
-    }
-  }, [employeeSummary, selectedDate]);
 
   //  to get holiday
   const fetchHoliday = async () => {

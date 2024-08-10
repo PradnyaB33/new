@@ -4,13 +4,20 @@ import React, { useEffect, useState } from "react";
 import useStartPunch from "../../../hooks/QueryHook/Location/independant-use-query";
 import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
 
-const StopRemotePunch = ({ setStart }) => {
-  const { refetch } = useStartPunch();
+const StopRemotePunch = ({ setStart,geoFencing }) => {
+  console.log("geoFencing././",geoFencing);
+  
+  //state
   const [open, setOpen] = useState(false);
+
+  const { refetch } = useStartPunch();
+  
   const { id, setEndTime } = useSelfieStore();
+
   useEffect(() => {
     refetch();
   }, [refetch]);
+  
   const stopRemotePunching = () => {
     setStart(false);
     navigator.geolocation.clearWatch(id);
@@ -29,7 +36,7 @@ const StopRemotePunch = ({ setStart }) => {
         onClick={() => setOpen(true)}
       >
         <Stop sx={{ mr: 1 }} className={`animate-pulse text-white`} />
-        Stop Remote Punching
+       {geoFencing === "geoFencing" ? "Stop Geo Fencing": "Stop Remote Punching"} 
       </Fab>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent>
@@ -37,7 +44,7 @@ const StopRemotePunch = ({ setStart }) => {
             <h1 className="font-semibold text-3xl">Confirm Action</h1>
           </div>
           <h1 className="text-lg mt-2">
-            Are you sure you want to stop remote access?
+          {geoFencing === "geoFencing" ? "Are you sure you want to stop geo access?": "Are you sure you want to stop remote access?"}  
           </h1>
           <div className="flex gap-4 mt-4">
             <Button

@@ -136,6 +136,8 @@ const CreateNewSurvey = ({ isEditable }) => {
     },
     {
       onSuccess: (data) => {
+        console.log("data..........", data);
+
         setSurveyData(data);
         if (data) {
           setValue("title", data?.title);
@@ -166,6 +168,7 @@ const CreateNewSurvey = ({ isEditable }) => {
           }));
 
           setValue("to", transformedToField);
+          setEmployeeCredential(data?.employeeCredential)
         }
       },
       enabled: !!id,
@@ -509,6 +512,13 @@ const CreateNewSurvey = ({ isEditable }) => {
       description: watch("description"),
       employeeSurveyStartingDate: watch("employeeSurveyStartingDate"),
       employeeSurveyEndDate: watch("employeeSurveyEndDate"),
+      // questions: questions?.map((q) => ({
+      //   question: q.question,
+      //   questionType: q.questionType,
+      //   options: q.options?.map((opt) => opt.title),
+      //   required: q.required,
+      // })),
+    
       questions,
       to: watch("to"),
       responseStatus: false,
@@ -585,7 +595,7 @@ const CreateNewSurvey = ({ isEditable }) => {
                           control={control}
                           type="textEditor"
                           placeholder="Description"
-                          label="Description"
+                          label="Description*"
                           maxLimit={1000}
                           errors={errors}
                           error={errors.description}
@@ -784,7 +794,7 @@ const CreateNewSurvey = ({ isEditable }) => {
                       control={control}
                       type="autocomplete"
                       placeholder="To"
-                      label="To"
+                      label="To*"
                       maxLimit={15}
                       errors={errors}
                       optionlist={employeeEmail ? employeeEmail : []}

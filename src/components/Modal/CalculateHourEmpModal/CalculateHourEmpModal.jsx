@@ -33,7 +33,7 @@ const CalculateHourEmpModal = ({
   const authToken = cookies["aegis"];
   const [remarks, setRemarks] = useState("");
   const { handleAlert } = useContext(TestContext);
-  const { justify } = useHourHook();
+  const { justify, leave, shift } = useHourHook();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(
@@ -72,6 +72,41 @@ const CalculateHourEmpModal = ({
   }, [getValues]);
 
   // Pagination functions
+  const getPaginationButtons = (currentPage, totalPages) => {
+    const buttons = [];
+    const maxButtons = 5;
+    const half = Math.floor(maxButtons / 2);
+
+    let startPage = Math.max(1, currentPage - half);
+    let endPage = Math.min(totalPages, currentPage + half);
+
+    if (currentPage <= half) {
+      endPage = Math.min(maxButtons, totalPages);
+    } else if (currentPage + half >= totalPages) {
+      startPage = Math.max(totalPages - maxButtons + 1, 1);
+    }
+
+    if (startPage > 1) {
+      buttons.push(1);
+      if (startPage > 2) {
+        buttons.push("...");
+      }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      buttons.push(i);
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        buttons.push("...");
+      }
+      buttons.push(totalPages);
+    }
+
+    return buttons;
+  };
+
   const prePage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
@@ -81,13 +116,12 @@ const CalculateHourEmpModal = ({
   };
 
   const changePage = (pageNumber) => {
-    setCurrentPage(pageNumber);
+    if (pageNumber !== "..." && pageNumber !== currentPage) {
+      setCurrentPage(pageNumber);
+    }
   };
 
-  const paginationNumbers = [];
-  for (let i = 1; i <= totalPages; i++) {
-    paginationNumbers.push(i);
-  }
+  const paginationButtons = getPaginationButtons(currentPage, totalPages);
 
   // Get Query for fetching weekend in the organization
   const { data: getWeekend } = useQuery(
@@ -134,13 +168,15 @@ const CalculateHourEmpModal = ({
   let overTimeHour = overtime && overtime?.minimumOvertimeHours;
   console.log("overTimeHour", overTimeHour);
 
-  // function to calculate total hours
+  //  calculate hour
   const handleCalculateHours = async () => {
     const data = getValues();
     const { hour, timeRange } = data;
     const regex = /^(0*(?:[0-9]|1[0-9]|2[0-4]))$/;
 
-    if (!regex.test(hour)) {
+    // Validate and convert `hour` to number
+    const parsedHour = parseFloat(hour);
+    if (isNaN(parsedHour) || !regex.test(hour)) {
       setError("hour", { type: "custom", message: "hour should be 0 to 24" });
       return;
     } else {
@@ -157,54 +193,96 @@ const CalculateHourEmpModal = ({
       setError("timeRange", null);
     }
 
+    // Convert and validate `overTimeHour`
+    const parsedOverTimeHour = parseFloat(overTimeHour);
+    if (isNaN(parsedOverTimeHour)) {
+      console.error("Invalid overtime hour value");
+      return;
+    }
+
+    const startDate = new Date(timeRange.startDate);
+    const endDate = new Date(timeRange.endDate);
+
+    // Ensure endDate is inclusive
+    endDate.setDate(endDate.getDate() + 1);
+
     const punchingRecords = empPunchingData?.punchingRecords || [];
 
     // Filter and organize records
     const filteredRecords = {};
 
     punchingRecords.forEach((record) => {
-      const date = new Date(record.date).toISOString().split("T")[0];
-      const dayOfWeek = new Date(record.date).toLocaleString("en-US", {
-        weekday: "short",
-      });
+      const recordDate = new Date(record.date);
+      if (recordDate >= startDate && recordDate < endDate) {
+        const date = recordDate.toISOString().split("T")[0];
+        const dayOfWeek = recordDate.toLocaleString("en-US", {
+          weekday: "short",
+        });
 
-      if (!filteredRecords[date]) {
-        filteredRecords[date] = { checkIn: null, checkOut: null, dayOfWeek };
-      }
-      if (record.punchingStatus === "Check In") {
-        if (
-          !filteredRecords[date].checkIn ||
-          record.punchingTime < filteredRecords[date].checkIn.punchingTime
-        ) {
-          filteredRecords[date].checkIn = record;
+        if (!filteredRecords[date]) {
+          filteredRecords[date] = { checkIn: null, checkOut: null, dayOfWeek };
         }
-      } else if (record.punchingStatus === "Check Out") {
-        if (
-          !filteredRecords[date].checkOut ||
-          record.punchingTime > filteredRecords[date].checkOut.punchingTime
-        ) {
-          filteredRecords[date].checkOut = record;
+        if (record.punchingStatus === "Check In") {
+          if (
+            !filteredRecords[date].checkIn ||
+            record.punchingTime < filteredRecords[date].checkIn.punchingTime
+          ) {
+            filteredRecords[date].checkIn = record;
+          }
+        } else if (record.punchingStatus === "Check Out") {
+          if (
+            !filteredRecords[date].checkOut ||
+            record.punchingTime > filteredRecords[date].checkOut.punchingTime
+          ) {
+            filteredRecords[date].checkOut = record;
+          }
         }
       }
     });
 
-    // Iterate over filtered records
-    for (const [date, { checkIn, checkOut, dayOfWeek }] of Object.entries(
-      filteredRecords
-    )) {
-      let totalHours = 0;
+    console.log("filteredRecords", filteredRecords);
 
-      if (!checkIn || !checkOut) {
-        console.log(
-          `Skipping calculation for date: ${date} as checkIn or checkOut is missing.`
+    // Iterate over each date within the selected time range
+    for (
+      let currentDate = new Date(startDate);
+      currentDate < endDate;
+      currentDate.setDate(currentDate.getDate() + 1)
+    ) {
+      const date = currentDate.toISOString().split("T")[0];
+      const dayOfWeek = currentDate.toLocaleString("en-US", {
+        weekday: "short",
+      });
+      const record = filteredRecords[date] || {};
+
+      let totalHours = 0;
+      let overTimeHours = 0;
+      let remarks = "";
+
+      // Skip calculation if it's a weekend and no checkIn or checkOut records exist
+      if (
+        weekendDays.includes(dayOfWeek) &&
+        (!record.checkIn || !record.checkOut)
+      ) {
+        continue;
+      }
+
+      if (record.checkIn && record.checkOut) {
+        const punchInTime = new Date(
+          `1970-01-01T${record.checkIn.punchingTime}`
         );
-        totalHours = 0;
-      } else {
-        const punchInTime = new Date(`1970-01-01T${checkIn.punchingTime}`);
-        const punchOutTime = new Date(`1970-01-01T${checkOut.punchingTime}`);
+        const punchOutTime = new Date(
+          `1970-01-01T${record.checkOut.punchingTime}`
+        );
 
         const timeDiff = punchOutTime - punchInTime;
         totalHours = Math.max(0, timeDiff / (1000 * 60 * 60));
+
+        // Calculate overtime hours
+        if (totalHours > parsedHour) {
+          overTimeHours = totalHours - parsedHour;
+        }
+      } else if (!weekendDays.includes(dayOfWeek)) {
+        totalHours = 0;
       }
 
       const formattedTotalHours = Math.floor(totalHours);
@@ -217,12 +295,16 @@ const CalculateHourEmpModal = ({
         totalHour += ` ${formattedMinutes} min`;
       }
 
-      let remarks = "";
+      const formattedOverTimeHours = parseFloat(overTimeHours.toFixed(2)); // Number
+
       if (weekendDays.includes(dayOfWeek)) {
         remarks = "ExtraShift";
-      } else if (isOvertimeAllowanceEnabled && totalHours > hour) {
+      } else if (
+        isOvertimeAllowanceEnabled &&
+        totalHours >= parsedHour + parsedOverTimeHour
+      ) {
         remarks = "Overtime";
-      } else if (totalHours >= hour) {
+      } else if (totalHours >= parsedHour) {
         remarks = "Available";
       } else if (totalHours > 0) {
         remarks = "Partial";
@@ -233,21 +315,25 @@ const CalculateHourEmpModal = ({
       setRemarks(remarks);
 
       console.log("total hour", totalHours);
+      console.log("overtime hours", overTimeHours);
       console.log("remark", remarks);
 
       const postData = {
         EmployeeId: empPunchingData?.EmployeeId._id,
         organizationId: organisationId,
         recordDate: date,
-        punchInTime: checkIn
-          ? new Date(`1970-01-01T${checkIn.punchingTime}`).toISOString()
+        punchInTime: record.checkIn
+          ? new Date(`1970-01-01T${record.checkIn.punchingTime}`).toISOString()
           : null,
-        punchOutTime: checkOut
-          ? new Date(`1970-01-01T${checkOut.punchingTime}`).toISOString()
+        punchOutTime: record.checkOut
+          ? new Date(`1970-01-01T${record.checkOut.punchingTime}`).toISOString()
           : null,
         totalHours: totalHour,
         status: remarks,
+        overtimeHours: formattedOverTimeHours, // Send overtime hours to the database
         justify: justify,
+        leave: leave,
+        shift: shift,
       };
 
       console.log("post data", postData);
@@ -411,7 +497,8 @@ const CalculateHourEmpModal = ({
           </div>
 
           {/* Pagination */}
-          <div className="flex justify-between p-4">
+          {/* Pagination */}
+          <div className="flex items-center justify-center p-4">
             <Button
               variant="contained"
               color="primary"
@@ -420,18 +507,18 @@ const CalculateHourEmpModal = ({
             >
               Previous
             </Button>
-            <div>
-              {paginationNumbers &&
-                paginationNumbers?.map((number, index) => (
-                  <Button
-                    key={index}
-                    variant={number === currentPage ? "contained" : "outlined"}
-                    color="primary"
-                    onClick={() => changePage(number)}
-                  >
-                    {number}
-                  </Button>
-                ))}
+            <div className="mx-4">
+              {paginationButtons.map((btn, index) => (
+                <Button
+                  key={index}
+                  variant={btn === currentPage ? "contained" : "outlined"}
+                  color="primary"
+                  onClick={() => changePage(btn)}
+                  disabled={btn === "..." || btn === currentPage}
+                >
+                  {btn}
+                </Button>
+              ))}
             </div>
             <Button
               variant="contained"

@@ -23,7 +23,7 @@ const MissPunchJustify = () => {
 
   // Fetch data with pagination
   const { data: unavailableRecord, isLoading } = useQuery(
-    ["unavailableRecord", organisationId, currentPage],
+    ["missedJustifyData", organisationId, currentPage],
     async () => {
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/organization/${organisationId}/unavailable-record?page=${currentPage}`,
@@ -38,22 +38,22 @@ const MissPunchJustify = () => {
     }
   );
 
-  console.log("unavialble record", unavailableRecord);
+  console.log("unavailable record", unavailableRecord);
 
   // Modal state
   const [missPunchModalOpen, setMissPunchModalOpen] = useState(false);
-  const [unavailableRecordId, setUnavailableRecordsId] = useState(null);
+  const [unavailableRecords, setUnavailableRecords] = useState(null);
 
   // Open modal handler
-  const handleMissPunchModalOpen = (id) => {
-    setUnavailableRecordsId(id);
+  const handleMissPunchModalOpen = (data) => {
+    setUnavailableRecords(data);
     setMissPunchModalOpen(true);
   };
 
   // Close modal handler
   const handleMissPunchModalClose = () => {
     setMissPunchModalOpen(false);
-    setUnavailableRecordsId(null);
+    setUnavailableRecords(null);
   };
 
   // Pagination handlers
@@ -72,7 +72,7 @@ const MissPunchJustify = () => {
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen py-8 px-4">
-        <div className=" mt-3">
+        <div className="mt-3">
           <IconButton onClick={() => navigate(-1)}>
             <West className="text-xl" />
           </IconButton>
@@ -153,9 +153,12 @@ const MissPunchJustify = () => {
                               <IconButton
                                 color="primary"
                                 onClick={() =>
-                                  handleMissPunchModalOpen(
-                                    unavailableRecord._id
-                                  )
+                                  handleMissPunchModalOpen(unavailableRecord)
+                                }
+                                disabled={
+                                  Boolean(unavailableRecord.justify) ||
+                                  unavailableRecord.leave ||
+                                  unavailableRecord.shift
                                 }
                               >
                                 <Assignment />
@@ -223,7 +226,7 @@ const MissPunchJustify = () => {
         handleClose={handleMissPunchModalClose}
         open={missPunchModalOpen}
         organisationId={organisationId}
-        unavailableRecordId={unavailableRecordId}
+        unavailableRecords={unavailableRecords}
       />
     </>
   );
