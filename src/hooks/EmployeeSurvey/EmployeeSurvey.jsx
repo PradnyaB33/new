@@ -8,6 +8,11 @@ const useCreateEmployeeSurveyState = create((set) => {
         from: undefined,
         subject: undefined,
         body: undefined,
-}});
+        employeeSurveyStartingDate: null,
+        employeeSurveyEndDate: null,
+        setEmployeeSurveyStartingDate: (date) => set({ employeeSurveyStartingDate: date }),
+        setEmployeeSurveyEndDate: (date) => set({ employeeSurveyEndDate: date }),
+    }
+});
 
 export default useCreateEmployeeSurveyState;
