@@ -365,9 +365,9 @@ const EmpInfoPunchStatus = ({ organisationId }) => {
                     <th className="py-3 pl-8 !text-left">Name</th>
                     <th className="py-3 pl-8 !text-left">Department</th>
                     <th className="py-3 pl-8 !text-left">Date</th>
-                    <th className="py-3 pl-8 !text-left">Day</th>
-                    <th className="py-3 pl-8 !text-left">In Time</th>
-                    <th className="py-3 pl-8 !text-left">Out Time</th>
+                    <th className="py-3 pl-8 !text-left">In/Out time</th>
+                    <th className="py-3 pl-8 !text-left">Punch Status</th>
+                    <th className="py-3 pl-8 !text-left">Location</th>
                   </tr>
                 </thead>
                 <tbody>

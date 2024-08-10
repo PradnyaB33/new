@@ -229,7 +229,9 @@ const MissedPunchNotified = ({ employeeId }) => {
                                   : "-"}
                               </td>
                               <td className="!text-left pl-6 py-3">
-                                {unavailableRecord?.justify || ""}
+                                {unavailableRecord?.justify ||
+                                  unavailableRecord?.leave ||
+                                  unavailableRecord?.shift || ""}
                               </td>
                               <td className="!text-left pl-6 py-3">
                                 {role === "Manager" ? (

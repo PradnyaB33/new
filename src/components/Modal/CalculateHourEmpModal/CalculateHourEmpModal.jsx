@@ -33,7 +33,7 @@ const CalculateHourEmpModal = ({
   const authToken = cookies["aegis"];
   const [remarks, setRemarks] = useState("");
   const { handleAlert } = useContext(TestContext);
-  const { justify } = useHourHook();
+  const { justify, leave, shift } = useHourHook();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(
@@ -332,6 +332,8 @@ const CalculateHourEmpModal = ({
         status: remarks,
         overtimeHours: formattedOverTimeHours, // Send overtime hours to the database
         justify: justify,
+        leave: leave,
+        shift: shift,
       };
 
       console.log("post data", postData);
