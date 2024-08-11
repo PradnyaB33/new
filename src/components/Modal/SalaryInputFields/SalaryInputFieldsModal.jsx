@@ -23,11 +23,14 @@ export let salaryComponentArray = [
 
 const style = {
   position: "absolute",
+  height: "80vh",
+  minHeight: "80vh",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
   bgcolor: "background.paper",
   p: 4,
+  overflow: "auto",
 };
 
 const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
@@ -70,7 +73,15 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
       label: z.string(),
       value: z.string(),
     }),
-    salaryStructure: z
+    income: z
+      .array(
+        z.object({
+          label: z.string(),
+          value: z.string(),
+        })
+      )
+      .nonempty({ message: "required" }),
+    deductions: z
       .array(
         z.object({
           label: z.string(),
@@ -90,7 +101,8 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
     resolver: zodResolver(SalaryTemplateSchema),
     defaultValues: {
       name: undefined,
-      salaryStructure: [],
+      income: [],
+      deductions: [],
       empTypes: {},
     },
   });
@@ -122,18 +134,14 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
           setValue("empTypes", { label: empType.title, value: empType._id });
         }
 
-        console.log(
-          data?.SalarTemplates?.salaryStructure.map((item) => ({
-            label: item?.salaryComponent,
-            value: item?.salaryComponent,
-          }))
-        );
-        const values = data?.SalarTemplates?.salaryStructure.map((item) => ({
-          label: item?.salaryComponent,
-          value: item?.salaryComponent,
-        }));
+        // const values = data?.SalarTemplates
+        //   ? data?.SalarTemplates?.salaryStructure.map((item) => ({
+        //       label: item?.salaryComponent,
+        //       value: item?.salaryComponent,
+        //     }))
+        //   : [];
 
-        setValue("salaryStructure", values);
+        // setValue("salaryStructure", values);
       },
       enabled: open && salaryId !== null && salaryId !== undefined,
     }
@@ -167,8 +175,11 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   const AddSalaryInputs = useMutation(
     async (data) => {
       let newdata = {
-        salaryStructure: data.salaryStructure.map((item) => {
-          return { salaryComponent: item.value };
+        income: data.income.map((item) => {
+          return item.value;
+        }),
+        deductions: data.deductions.map((item) => {
+          return item.value;
         }),
         empType: data.empTypes.value,
         name: data.name,
@@ -193,7 +204,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
       },
 
       onError: (err) => {
-        handleAlert(true, "error", err?.response?.data?.error);
+        handleAlert(true, "error", ` error ${err}`);
       },
     }
   );
@@ -201,8 +212,11 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   const EditSalaryTemplate = useMutation(
     async (data) => {
       let newdata = {
-        salaryStructure: data.salaryStructure.map((item) => {
-          return { salaryComponent: item.value };
+        income: data.income.map((item) => {
+          return item.value;
+        }),
+        deductions: data.deductions.map((item) => {
+          return item.value;
         }),
         empType: data.empTypes.value,
         name: data.name,
@@ -297,7 +311,9 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
               errors={errors}
               error={errors.empTypes}
             />
-            <AuthInputFiled
+
+            {/* in update this will removed  */}
+            {/* <AuthInputFiled
               name="salaryStructure"
               icon={Money}
               control={control}
@@ -305,6 +321,34 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
               optionlist={salaryComponentArray}
               placeholder="Salary Component"
               label="Enter Salary Component *"
+              readOnly={false}
+              maxLimit={15}
+              errors={errors}
+              error={errors.salaryStructure}
+            /> */}
+
+            <AuthInputFiled
+              name="income"
+              icon={Money}
+              control={control}
+              type="autocomplete"
+              optionlist={salaryComponentArray}
+              placeholder="Salary Component"
+              label="Enter Income Component *"
+              readOnly={false}
+              maxLimit={15}
+              errors={errors}
+              error={errors.salaryStructure}
+            />
+
+            <AuthInputFiled
+              name="deductions"
+              icon={Money}
+              control={control}
+              type="autocomplete"
+              optionlist={salaryComponentArray}
+              placeholder="Salary Component"
+              label="Enter Deductions Component "
               readOnly={false}
               maxLimit={15}
               errors={errors}
