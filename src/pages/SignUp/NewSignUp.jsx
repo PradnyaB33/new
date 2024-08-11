@@ -19,11 +19,13 @@ import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import UserProfile from "../../hooks/UserData/useUser";
+import useAuthentication from "./useAuthentication";
 
 const SignIn = () => {
   // hooks
   const { handleAlert } = useContext(TestContext);
   const location = useLocation();
+  const { countryCode } = useAuthentication();
   // state
   const [display, setdisplay] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
@@ -138,6 +140,7 @@ const SignIn = () => {
     (data) =>
       axios.post(`${process.env.REACT_APP_API}/route/employee/sendOtp`, {
         number: data,
+        countryCode,
       }),
     {
       onSuccess: (data) => {

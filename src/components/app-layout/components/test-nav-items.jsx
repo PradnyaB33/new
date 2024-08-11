@@ -44,15 +44,15 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { SiMicrosoftexcel } from "react-icons/si";
+import { useQueryClient } from "react-query";
 import { useLocation } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useSubscriptionGet from "../../../hooks/QueryHook/Subscription/hook";
 import useGetUser from "../../../hooks/Token/useUser";
 import UserProfile from "../../../hooks/UserData/useUser";
-import TestAccordian from "./TestAccordian";
 import useGetCommunicationPermission from "../../../pages/EmployeeSurvey/useContext/Permission";
-import { useQueryClient } from "react-query";
 import useOrgGeo from "../../../pages/Geo-Fence/useOrgGeo";
+import TestAccordian from "./TestAccordian";
 
 const TestNavItems = ({ toggleDrawer }) => {
   // to define the route and pass the dynamic organization id
@@ -74,7 +74,7 @@ const TestNavItems = ({ toggleDrawer }) => {
   const { data: geofencingData } = useOrgGeo(orgId);
 
   //match currect user and selcted employee in list
-  const isUserMatchInEmployeeList = geofencingData?.area?.some(area =>
+  const isUserMatchInEmployeeList = geofencingData?.area?.some((area) =>
     area.employee.includes(empId)
   );
 
@@ -132,7 +132,7 @@ const TestNavItems = ({ toggleDrawer }) => {
   });
 
   //git communication employee survey permission
-  const organisationId = data?.organisation?._id
+  const organisationId = data?.organisation?._id;
   const { data: survey } = useGetCommunicationPermission(organisationId);
 
   // Update organization ID when URL changes
@@ -154,7 +154,7 @@ const TestNavItems = ({ toggleDrawer }) => {
 
   useEffect(() => {
     queryClient.invalidateQueries("survey-permission");
-  }, [queryClient])
+  }, [queryClient]);
 
   let navItems = useMemo(
     () => ({
@@ -170,16 +170,17 @@ const TestNavItems = ({ toggleDrawer }) => {
               role === "Manager"
                 ? `organisation/${orgId}/dashboard/manager-dashboard`
                 : role === "HR"
-                  ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                  : role === "Employee"
-                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                    : "/organizationList",
+                ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                : role === "Employee"
+                ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                : "/organizationList",
             icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
             text: "Dashboard",
           },
         ],
       },
-      "Self Help": {
+
+      Attendence: {
         open: true,
         icon: <Category className=" !text-[1.2em] text-[#67748E]" />,
         isVisible: true,
@@ -193,6 +194,22 @@ const TestNavItems = ({ toggleDrawer }) => {
             ),
             text: "Attendance & Leave Management",
           },
+          {
+            key: "view emp attendance",
+            isVisible: true,
+            link: `/organisation/${orgId}/ManagementCalender`,
+            icon: (
+              <AccessTimeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
+            ),
+            text: "Employee Attendance",
+          },
+        ],
+      },
+      "Self Help": {
+        open: true,
+        icon: <Category className=" !text-[1.2em] text-[#67748E]" />,
+        isVisible: true,
+        routes: [
           {
             key: "accountSettings",
             isVisible: true,
@@ -674,9 +691,11 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible:
               data?.organisation?.packageInfo === "Intermediate Plan" &&
               survey?.surveyPermission,
-            link: user?.profile.includes('Super-Admin') || user?.profile.includes('HR')
-              ? `/organisation/${orgId}/employee-survey`
-              : `/organisation/${orgId}/employee-survey/${empId}`,
+            link:
+              user?.profile.includes("Super-Admin") ||
+              user?.profile.includes("HR")
+                ? `/organisation/${orgId}/employee-survey`
+                : `/organisation/${orgId}/employee-survey/${empId}`,
             icon: <AssignmentIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Employee Survey",
           },
@@ -726,7 +745,8 @@ const TestNavItems = ({ toggleDrawer }) => {
             "Super-Admin",
             "Delegate-Super-Admin",
           ].includes(role) &&
-          data?.organisation?.packageInfo === "Intermediate Plan" && !isUserMatchInEmployeeList,
+          data?.organisation?.packageInfo === "Intermediate Plan" &&
+          !isUserMatchInEmployeeList,
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
           {
@@ -779,11 +799,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       AddGeoFencing: {
         open: false,
         isVisible:
-          [
-            "Manager",
-            "Super-Admin",
-            "Delegate-Super-Admin",
-          ].includes(role) &&
+          ["Manager", "Super-Admin", "Delegate-Super-Admin"].includes(role) &&
           data?.organisation?.packageInfo === "Intermediate Plan",
         icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
         routes: [
@@ -804,7 +820,12 @@ const TestNavItems = ({ toggleDrawer }) => {
       GeoFencing: {
         open: false,
         isVisible:
-          ["Employee", "Manager", "Super-Admin", "Delegate-Super-Admin"].includes(role) &&
+          [
+            "Employee",
+            "Manager",
+            "Super-Admin",
+            "Delegate-Super-Admin",
+          ].includes(role) &&
           data?.organisation?.packageInfo === "Intermediate Plan" &&
           isUserMatchInEmployeeList,
         icon: <MonetizationOn className="!text-[1.2em] text-[#67748E]" />,
@@ -893,7 +914,8 @@ const TestNavItems = ({ toggleDrawer }) => {
       check,
       data?.organisation?.packageInfo,
       location.pathname,
-      role, survey?.surveyPermission
+      role,
+      survey?.surveyPermission,
     ]
   );
 

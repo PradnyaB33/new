@@ -83,11 +83,12 @@ import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/Advance
 import AdvanceSalaryNotificationToEmp from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotificationToEmp";
 import ParentNotification from "./pages/AllNotifications/page";
 import Communication from "./pages/Communication/Communication";
+import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
+import DepartmentNotificationToEmp from "./pages/DeptNotification/DepartmentNotificationToEmp";
 import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
-import RendarPunchSyncFile from "./pages/PunchDataSync/RendarPunchSyncFile";
 import EmployeeNotification from "./pages/Employee-Notification/page";
 import EditEmployee from "./pages/Employee/EditEmployee";
 import EmployeeSurvey from "./pages/EmployeeSurvey/EmployeeSurvey";
@@ -95,9 +96,11 @@ import CreateNewSurvey from "./pages/EmployeeSurvey/components/CreateNewSurvey";
 import EmployeeSurveyForm from "./pages/EmployeeSurvey/components/EmployeeSurveyForm";
 import SurveyDetails from "./pages/EmployeeSurvey/components/SurveyDetails";
 import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
+import GeoFencingEmployeeSide from "./pages/Geo-Fence/components/GeoFencingEmployeeSide";
 import GeoFencing from "./pages/Geo-Fence/page";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
+import ManagementCalender from "./pages/LeaveRequisition/Manager/ManagementCalender";
 import LetterSetup from "./pages/LetterTypes/LetterSetup";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
@@ -108,9 +111,14 @@ import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunch
 import MissedPunchNotificationToEmp from "./pages/MissedPunchNotification/MissedPunchNotificationToEmp";
 import MyTraining from "./pages/My-Training/page";
 import AssignOrg from "./pages/OrgList/AssignOrg";
+import OvertimeSetup from "./pages/OvertimeSetup/OvertimeSetup";
 import PayslipNotification from "./pages/PayslipNotification/PayslipNotification";
+import RendarPunchSyncFile from "./pages/PunchDataSync/RendarPunchSyncFile";
 import CreateJobPosition from "./pages/Recruitment/CreateJobPosition";
 import EditJobPosition from "./pages/Recruitment/EditJobPosition";
+import JobNotificationToEmp from "./pages/Recruitment/Notification/JobNotificationToEmp";
+import JobPositionNotificaitonToMgr from "./pages/Recruitment/Notification/JobPositonNotificatinToMgr";
+import OpenJobPosition from "./pages/Recruitment/OpenRoleJobPosition";
 import ViewJobPosition from "./pages/Recruitment/ViewJobPosition";
 import ReportingMis from "./pages/ReportingMis/page";
 import ResetNewPassword from "./pages/ResetNewPassword/ResetNewPassword";
@@ -132,13 +140,6 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import JobPositionNotificaitonToMgr from "./pages/Recruitment/Notification/JobPositonNotificatinToMgr";
-import JobNotificationToEmp from "./pages/Recruitment/Notification/JobNotificationToEmp";
-import OpenJobPosition from "./pages/Recruitment/OpenRoleJobPosition";
-import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
-import DepartmentNotificationToEmp from "./pages/DeptNotification/DepartmentNotificationToEmp";
-import OvertimeSetup from "./pages/OvertimeSetup/OvertimeSetup";
-import GeoFencingEmployeeSide from "./pages/Geo-Fence/components/GeoFencingEmployeeSide";
 const App = () => {
   return (
     <AuthProvider>
@@ -209,11 +210,7 @@ const App = () => {
         <Route
           path="/organisation/:organisationId/geo-fencing"
           element={
-            <RequireAuth
-              permission={[
-                "Employee",
-              ]}
-            >
+            <RequireAuth permission={["Employee"]}>
               <GeoFencingEmployeeSide />
             </RequireAuth>
           }
@@ -1345,6 +1342,27 @@ const App = () => {
               ]}
             >
               <LeaveRequisition />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/ManagementCalender"
+          element={
+            <RequireAuth
+              permission={[
+                "Employee",
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "HR",
+                "Accountant",
+                "Manager",
+              ]}
+            >
+              <ManagementCalender />
             </RequireAuth>
           }
         />
