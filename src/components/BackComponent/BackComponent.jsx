@@ -15,6 +15,7 @@ const BackComponent = () => {
     "/sign-in",
     "/sign-up",
     "setup",
+    "ManagementCalender",
     "super-admin",
     "/manager-dashboard",
     "employee-dashboard",
@@ -39,11 +40,10 @@ const BackComponent = () => {
     "/leave",
     "/geo-fencing",
     "/view-calculate-data",
-    "/emo-info-punch-status" , 
+    "/emo-info-punch-status",
     "/view-attendance-biomatric",
     "/missed-punch-in-out",
-    "/missed-justify"
-
+    "/missed-justify",
   ];
 
   if (
