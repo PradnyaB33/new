@@ -20,8 +20,6 @@ const ViewPayslip = () => {
     // Convert the selected date string to a Day.js object
     setSelectedDate(dayjs(event.target.value));
   };
-
-  console.log(selectedDate);
   const monthFromSelectedDate = selectedDate.format("M");
   const yearFromSelectedDate = selectedDate.format("YYYY");
 
@@ -51,8 +49,6 @@ const ViewPayslip = () => {
     fetchEmployeeData();
     // eslint-disable-next-line
   }, []);
-
-  console.log("salaryinfo", salaryInfo);
 
   // Find the salary info based on user-selected month and year
   const filteredSalaryInfo = salaryInfo.find((info) => {
@@ -262,86 +258,37 @@ const ViewPayslip = () => {
                       <td class="py-2 border">Particulars</td>
                       <td class="py-2 border">Amount</td>
                     </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">Basic :</td>
-                      <td class="px-4 py-2 border">
-                        {filteredSalaryInfo?.basicSalary || ""}
-                      </td>
-                      <td class="py-2 border">Professional Tax:</td>
-                      <td class="py-2 border">
-                        {employeeInfo?.deduction || "0.00"}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">DA :</td>
-                      <td class="px-4 py-2 border">
-                        {filteredSalaryInfo?.daSalary || ""}
-                      </td>
-                      <td class="py-2 border">Employee PF:</td>
-                      <td class="py-2 border">
-                        {employeeInfo?.employee_pf || "0.00"}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">HRA:</td>
-                      <td class="px-4 py-2 border">
-                        {filteredSalaryInfo?.hraSalary || ""}
-                      </td>
-                      <td class="py-2 border">ESIC :</td>
-                      <td class="py-2 border">
-                        {employeeInfo?.esic || "0.00"}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">Food Allowance:</td>
-                      <td class="px-4 py-2 border">
-                        {filteredSalaryInfo?.foodAllowance || ""}
-                      </td>
-                      {filteredSalaryInfo &&
-                        filteredSalaryInfo.loanDeduction !== 0 && (
-                          <>
-                            <td class="py-2 border">Loan Deduction :</td>
-                            <td class="py-2 border">
-                              {filteredSalaryInfo?.loanDeduction || "0"}
-                            </td>
-                          </>
-                        )}
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">Sales Allowance:</td>
-                      <td class="px-4 py-2 border">
-                        {filteredSalaryInfo?.salesAllowance || ""}
-                      </td>
-                      <td class="px-4 py-2 border"></td>
-                      <td class="px-4 py-2 border"></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">Special Allowance:</td>
-                      <td class="px-4 py-2 border">
-                        {" "}
-                        {filteredSalaryInfo?.specialAllowance || ""}
-                      </td>
-                      <td class="px-4 py-2 border"></td>
-                      <td class="px-4 py-2 border"></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">Travel Allowance:</td>
-                      <td class="px-4 py-2 border">
-                        {" "}
-                        {filteredSalaryInfo?.travelAllowance || ""}
-                      </td>
-                      <td class="px-4 py-2 border"></td>
-                      <td class="px-4 py-2 border"></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-2 border">Variable Pay Allowance:</td>
-                      <td class="px-4 py-2 border">
-                        {" "}
-                        {filteredSalaryInfo?.variableAllowance || ""}
-                      </td>
-                      <td class="px-4 py-2 border"></td>
-                      <td class="px-4 py-2 border"></td>
-                    </tr>
+                    {Array.from({
+                      length: Math.max(
+                        (filteredSalaryInfo &&
+                          filteredSalaryInfo?.income?.length) ||
+                          0,
+                        (filteredSalaryInfo &&
+                          filteredSalaryInfo?.deductions?.length) ||
+                          0
+                      ),
+                    }).map((_, index) => {
+                      return (
+                        <tr key={index}>
+                          {/* Income column */}
+                          <td className="px-4 py-2 border">
+                            {filteredSalaryInfo?.income?.[index]?.name || ""}
+                          </td>
+                          <td className="px-4 py-2 border">
+                            {filteredSalaryInfo?.income?.[index]?.value || ""}
+                          </td>
+                          {/* Deduction column */}
+                          <td className="px-4 py-2 border">
+                            {filteredSalaryInfo?.deductions?.[index]?.name ||
+                              ""}
+                          </td>
+                          <td className="px-4 py-2 border">
+                            {filteredSalaryInfo?.deductions?.[index]?.value ||
+                              ""}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -367,7 +314,7 @@ const ViewPayslip = () => {
                 </table>
               </div>
 
-              {/* total net salaey */}
+              {/* total net salary */}
               <div>
                 <table class="w-full mt-10 border ">
                   <thead>

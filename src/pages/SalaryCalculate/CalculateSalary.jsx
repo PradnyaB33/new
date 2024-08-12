@@ -21,28 +21,21 @@ function CalculateSalary() {
   const [paidLeaveDays, setPaidLeaveDays] = useState(0);
   const [unPaidLeaveDays, setUnPaidLeaveDays] = useState(0);
   const [remotePunchingCount, setRemotePunchingCount] = useState(0);
-  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
   const [publicHolidays, setPublicHoliDays] = useState([]);
-  console.log(setIsSubmitDisabled);
-
   const {
     salaryInfo,
     availableEmployee,
     empLoanAplicationInfo,
     remotePunchAllowance,
   } = useCalculateSalaryQuery({ userId, organisationId, remotePunchingCount });
-
   const formattedDate = selectedDate.format("MMM-YY");
-
   const handleDateChange = (event) => {
     setSelectedDate(dayjs(event.target.value));
   };
 
-  // fetch leave of employee
+  // Fetch leave of employee when selectedDate changes specific month
   const month = selectedDate.$M + 1;
   const year = selectedDate.$y;
-
-  // Fetch leave of employee when selectedDate changes
   useEffect(() => {
     const fetchDataAndFilter = async () => {
       try {
@@ -64,13 +57,10 @@ function CalculateSalary() {
         );
       }
     };
-
     fetchDataAndFilter();
     // eslint-disable-next-line
   }, [month, year]);
-
   useEffect(() => {
-    console.log("employee summary", employeeSummary);
     setPaidLeaveDays(employeeSummary?.paidLeaveDays || 0);
     setUnPaidLeaveDays(employeeSummary?.unpaidLeaveDays || 0);
   }, [employeeSummary, month, year]);
@@ -78,7 +68,7 @@ function CalculateSalary() {
   useEffect(() => {
     const monthFromSelectedDate = selectedDate.format("M");
     const yearFromSelectedDate = selectedDate.format("YYYY");
-    const salaryExists = salaryInfo.some(
+    const salaryExists = salaryInfo?.some(
       (salary) =>
         String(salary.month) === monthFromSelectedDate &&
         String(salary.year) === yearFromSelectedDate
@@ -87,7 +77,7 @@ function CalculateSalary() {
     setNumDaysInMonth(selectedDate.daysInMonth());
   }, [selectedDate, salaryInfo]);
 
-  //  to get holiday
+  // to get holiday in the organization
   const fetchHoliday = async () => {
     try {
       const response = await axios.get(
@@ -108,7 +98,7 @@ function CalculateSalary() {
     fetchHoliday();
     // eslint-disable-next-line
   }, []);
-
+  // count the public holidays count
   const countPublicHolidaysInCurrentMonth = () => {
     const selectedMonth = selectedDate.format("M");
     const selectedYear = selectedDate.format("YYYY");
@@ -125,7 +115,7 @@ function CalculateSalary() {
   };
   let publicHolidaysCount = countPublicHolidaysInCurrentMonth();
 
-  // to get shifts of employee
+  // to get shifts of employee based on month
   const selectedMonths = selectedDate.format("M");
   const selectedYears = selectedDate.format("YYYY");
   const { data: getShifts } = useQuery(
@@ -146,12 +136,11 @@ function CalculateSalary() {
       return response.data.shiftRequests;
     }
   );
-
   // to get shift count of employee
   const countShifts = (shifts) => {
     const shiftCount = {};
     shifts.forEach((shift) => {
-      const title = shift.title;
+      const title = shift?.title;
       if (shiftCount[title]) {
         shiftCount[title]++;
       } else {
@@ -165,7 +154,7 @@ function CalculateSalary() {
     [getShifts]
   );
 
-  // get the amount of shift
+  // get the amount of shift in the organization
   const { data: shiftAllowanceAmount } = useQuery(
     ["shift-allowance-amount"],
     async () => {
@@ -183,7 +172,7 @@ function CalculateSalary() {
 
   const shiftAllowances = useMemo(() => {
     if (shiftAllowanceAmount) {
-      return shiftAllowanceAmount.reduce((acc, shift) => {
+      return shiftAllowanceAmount?.reduce((acc, shift) => {
         acc[shift.shiftName.toLowerCase()] = shift.allowance;
         return acc;
       }, {});
@@ -203,6 +192,7 @@ function CalculateSalary() {
     setShiftTotalAllowance(total);
   }, [shiftCounts, shiftAllowances]);
 
+  // to fetch the remote punching count of employee in a specific month
   const fetchRemotePunchingCount = async (userId, startDate, endDate) => {
     try {
       const response = await axios.get(
@@ -219,18 +209,16 @@ function CalculateSalary() {
       handleAlert(true, "error", "Failed to fetch remote punching count");
     }
   };
-
   const startDate = selectedDate.startOf("month").format("YYYY-MM-DD");
   const endDate = selectedDate.endOf("month").format("YYYY-MM-DD");
-
   useEffect(() => {
     fetchRemotePunchingCount(userId, startDate, endDate);
     // eslint-disable-next-line
   }, [selectedDate, userId, startDate, endDate]);
 
-  // to get the income tax
-  // pull the total deduction of loan of employee if he/she apply the loan
+  // to get the total salary of employee
   const { getTotalSalaryEmployee } = useAdvanceSalaryQuery(organisationId);
+  // calculate the financial year
   const calculateFinancialYear = (date) => {
     const month = date?.month();
     const currentYear = date?.year();
@@ -241,9 +229,9 @@ function CalculateSalary() {
       return `${currentYear}-${currentYear + 1}`;
     }
   };
-
   const financialYear = calculateFinancialYear(dayjs(selectedDate));
 
+  // to get the annual income tax
   const { data: annualIncomeTax } = useQuery(
     ["getIncomeTax", organisationId],
     async () => {
@@ -258,11 +246,11 @@ function CalculateSalary() {
       return response.data.getTotalTaxableIncome;
     }
   );
-
+  // calculate monthly income tax based on annual income tax
   const monthlyIncomeTax =
     typeof annualIncomeTax === "number" && annualIncomeTax > 0
-      ? (annualIncomeTax / 12).toFixed(2)
-      : "0.00";
+      ? annualIncomeTax / 12
+      : "0";
 
   // calculate the no fo days employee present
   const calculateDaysEmployeePresent = () => {
@@ -271,7 +259,41 @@ function CalculateSalary() {
   };
   let noOfDaysEmployeePresent = calculateDaysEmployeePresent();
 
-  // to get employee salary component data
+  // get the loan deduction amount from loan application data of employee
+  let loanDeduction = 0;
+  if (Array.isArray(empLoanAplicationInfo)) {
+    const currentDate = new Date();
+    // Filter loan applications that are currently active
+    const loanDeductionApplications = empLoanAplicationInfo?.filter(
+      (application) => {
+        const loanDisbursementDate = new Date(
+          application?.loanDisbursementDate
+        );
+        const loanCompletionDate = new Date(application?.loanCompletedDate);
+        return (
+          loanDisbursementDate <= currentDate &&
+          currentDate <= loanCompletionDate
+        );
+      }
+    );
+
+    // Calculate the total loan deduction for active loans
+    loanDeduction = loanDeductionApplications.reduce((total, application) => {
+      // Check if the current application is within the loan disbursement and completion dates
+      const loanDisbursementDate = new Date(application.loanDisbursementDate);
+      const loanCompletionDate = new Date(application.loanCompletedDate);
+      if (
+        loanDisbursementDate <= currentDate &&
+        currentDate <= loanCompletionDate
+      ) {
+        return total + parseFloat(application.totalDeduction || 0);
+      }
+      return total;
+    }, 0);
+  }
+  loanDeduction = isNaN(loanDeduction) ? 0 : Math.round(loanDeduction);
+
+  // to get employee salary component data of employee
   const { data: salaryComponent } = useQuery(
     ["salary-component", userId],
     async () => {
@@ -286,17 +308,13 @@ function CalculateSalary() {
       return response.data.data;
     }
   );
-
-  console.log("Salary component", salaryComponent);
-
-  // calculate the salary component
+  // calculate the salary component for income
   const [incomeValues, setIncomeValues] = useState([]);
-  const [deductionsValues, setDeductionValues] = useState([]);
-
   useEffect(() => {
     const daysInMonth = numDaysInMonth;
     console.log("temp", salaryComponent?.income);
-    salaryComponent?.income?.map((item) => {
+
+    salaryComponent?.income?.forEach((item) => {
       const updatedValue =
         (item?.value / daysInMonth) * noOfDaysEmployeePresent;
 
@@ -310,42 +328,100 @@ function CalculateSalary() {
           };
           return updatedState;
         } else {
-          return [...pre, { name: item?.name, value: Math.round(updatedValue) }];
+          return [
+            ...pre,
+            { name: item?.name, value: Math.round(updatedValue) },
+          ];
         }
       });
     });
-  }, [selectedDate , salaryComponent]);
 
+    // eslint-disable-next-line
+  }, [selectedDate, salaryComponent]);
 
-  // calculate deduction
+  const extendedIncomeValues = [...incomeValues];
+  // Check if shiftTotalAllowance should be added
+  if (shiftTotalAllowance > 0) {
+    extendedIncomeValues.push({
+      name: "shiftTotalAllowance",
+      value: shiftTotalAllowance,
+    });
+  }
+  // Check if remotePunchAllowance should be added
+  if (remotePunchAllowance > 0) {
+    extendedIncomeValues.push({
+      name: "remotePunchAllowance",
+      value: remotePunchAllowance,
+    });
+  }
+  // Now pass extendedIncomeValues to income
+  const incomeData = extendedIncomeValues;
+
+  // calculate total deduction of employee
+  const [deductionValues, setDeductionValues] = useState([]);
+  useEffect(() => {
+    if (salaryComponent?.deductions) {
+      setDeductionValues(salaryComponent.deductions);
+    }
+  }, [salaryComponent?.deductions]);
+
+  const extendedDeductionValue = [...deductionValues];
+  // Pushing monthlyIncomeTax into extendedDeductionValue
+  if (monthlyIncomeTax > 0) {
+    extendedDeductionValue.push({
+      name: "Income Tax",
+      value: monthlyIncomeTax,
+    });
+  }
+  // pushing loan deduction to extendedDeductionValue
+  useEffect(() => {
+    const currentDate = new Date();
+    const loanDisbursement = new Date(
+      empLoanAplicationInfo?.loanDisbursementDate
+    );
+    const loanCompleted = new Date(empLoanAplicationInfo?.loanCompletedDate);
+
+    if (
+      loanDeduction > 0 &&
+      currentDate >= loanDisbursement &&
+      currentDate <= loanCompleted
+    ) {
+      setDeductionValues((prevDeductions) => [
+        ...prevDeductions,
+        {
+          name: "loanDeduction",
+          value: loanDeduction,
+        },
+      ]);
+    }
+  }, [loanDeduction, empLoanAplicationInfo]);
+
+  // calculate total deduction ,total  income,  total net salary
   const [salary, setSalary] = useState({
     totalIncome: 0,
     totalDeduction: 0,
     totalNetSalary: 0,
   });
   const calSalary = () => {
-    const deductions = salaryComponent?.deductions.reduce((a, c) => {
+    const deductions = extendedDeductionValue.reduce((a, c) => {
       return a + c.value;
     }, 0);
 
-    const income = incomeValues?.reduce((a, c) => {
+    const income = incomeData?.reduce((a, c) => {
       return a + c.value;
     }, 0);
 
     const total = income - deductions;
     setSalary({
-      totalDeduction: Math.round(deductions) ,
+      totalDeduction: Math.round(deductions),
       totalIncome: Math.round(income),
       totalNetSalary: Math.round(total),
     });
   };
-
   useEffect(() => {
     calSalary();
     //eslint-disable-next-line
-  }, [selectedDate , salaryComponent , incomeValues]);
-
-  console.log("fgt", salary);
+  }, [selectedDate, salaryComponent, incomeValues]);
 
   // submit the data
   const saveSalaryDetail = async () => {
@@ -389,8 +465,8 @@ function CalculateSalary() {
       }
       const data = {
         employeeId: userId,
-        income : incomeValues,
-        deductions : salaryComponent?.deductions,
+        income: incomeData,
+        deductions: extendedDeductionValue,
         totalGrossSalary: salary?.totalIncome,
         totalDeduction: salary?.totalDeduction,
         totalNetSalary: salary?.totalNetSalary,
@@ -404,7 +480,7 @@ function CalculateSalary() {
         year: selectedDate.format("YYYY"),
         organizationId: organisationId,
       };
-      console.log(data);
+      console.log("data", data);
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employeeSalary/add-salary/${userId}/${organisationId}`,
         data,
@@ -420,7 +496,6 @@ function CalculateSalary() {
           "success",
           "Monthly Salary Detail added Successfully"
         );
-        window.location.reload();
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
@@ -582,125 +657,32 @@ function CalculateSalary() {
               <td class="py-2 border">Particulars</td>
               <td class="py-2 border">Amount</td>
             </tr>
-
             {Array.from({
               length: Math.max(
-                incomeValues?.length || 0,
-                salaryComponent?.deductions?.length || 0
+                extendedIncomeValues?.length || 0,
+                extendedDeductionValue?.length || 0
               ),
-            }).map((_, index) => (
-              <tr key={index}>
-                {/* Income column */}
-                <td className="px-4 py-2 border">
-                  {incomeValues?.[index]?.name || ""}
-                </td>
-                <td className="px-4 py-2 border">
-                  {incomeValues?.[index]?.value || ""}
-                </td>
-
-                {/* Deduction column */}
-                <td className="px-4 py-2 border">
-                  {salaryComponent?.deductions?.[index]?.name || ""}
-                </td>
-                <td className="px-4 py-2 border">
-                  {salaryComponent?.deductions?.[index]?.value || ""}
-                </td>
-              </tr>
-            ))}
-
-            {/* {incomeValues &&
-              incomeValues?.length > 0 &&
-              incomeValues?.map((item, id) => (
-                <tr key={id}>
-                  <td className="px-4 py-2 border">{item?.name}</td>
-                  <td className="px-4 py-2 border">{item?.value}</td>
+            }).map((_, index) => {
+              return (
+                <tr key={index}>
+                  {/* Income column */}
+                  <td className="px-4 py-2 border">
+                    {extendedIncomeValues?.[index]?.name || ""}
+                  </td>
+                  <td className="px-4 py-2 border">
+                    {extendedIncomeValues?.[index]?.value || ""}
+                  </td>
+                  {/* Deduction column */}
+                  <td className="px-4 py-2 border">
+                    {extendedDeductionValue?.[index]?.name || ""}
+                  </td>
+                  <td className="px-4 py-2 border">
+                    {extendedDeductionValue?.[index]?.value || ""}
+                  </td>
                 </tr>
-              ))}
-            {salaryComponent?.deductions &&
-              salaryComponent?.deductions?.length > 0 &&
-              salaryComponent?.deductions?.map((item, id) => (
-                <tr key={id}>
-                  <td className="px-4 py-2 border">{item?.name}</td>
-                  <td className="px-4 py-2 border">{item?.value}</td>
-                </tr>
-              ))} */}
+              );
+            })}
           </tbody>
-          {/* <tbody>
-            <tr>
-              <td class="px-4 py-2 border">Particulars</td>
-              <td class="py-2 border">Amount</td>
-              <td class="py-2 border">Particulars</td>
-              <td class="py-2 border">Amount</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-2 border">Basic :</td>
-              <td class="px-4 py-2 border">{basicSalary}</td>
-              <td class="py-2 border">Professional Tax:</td>
-              <td class="py-2 border">{deduction}</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-2 border">DA :</td>
-              <td class="px-4 py-2 border">{daSalary}</td>
-              <td class="py-2 border">Employee PF:</td>
-              <td class="py-2 border">{employee_pf}</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-2 border">HRA:</td>
-              <td class="px-4 py-2 border">{hraSalary}</td>
-              <td class="py-2 border">ESIC :</td>
-              <td class="py-2 border">{esic}</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-2 border">Food Allowance:</td>
-              <td class="px-4 py-2 border">{foodAllowance}</td>
-              <td class="py-2 border">Income Tax :</td>
-              <td class="py-2 border">{monthlyIncomeTax ?? 0}</td>
-            </tr>
-            <tr>
-              <td class="px-4 py-2 border">Sales Allowance:</td>
-              <td class="px-4 py-2 border">{salesAllowance}</td>
-              {empLoanAplicationInfo?.length > 0 && (
-                <>
-                  <td className="py-2 border">Loan Deduction :</td>
-                  <td className="py-2 border">{loanDeduction ?? 0}</td>
-                </>
-              )}
-            </tr>
-            <tr>
-              <td class="px-4 py-2 border">Special Allowance:</td>
-              <td class="px-4 py-2 border">{specialAllowance}</td>
-              <td class="px-4 py-2 border"></td>
-              <td class="px-4 py-2 border"></td>
-            </tr>
-            <tr>
-              <td class="px-4 py-2 border">Travel Allowance:</td>
-              <td class="px-4 py-2 border">{travelAllowance}</td>
-              <td class="px-4 py-2 border"></td>
-              <td class="px-4 py-2 border"></td>
-            </tr>
-            <tr>
-              <td class="px-4 py-2 border">Variable Pay Allowance:</td>
-              <td class="px-4 py-2 border">{variableAllowance}</td>
-              <td class="px-4 py-2 border"></td>
-              <td class="px-4 py-2 border"></td>
-            </tr>
-            {shiftTotalAllowance > 0 && (
-              <tr>
-                <td class="px-4 py-2 border">Shift Allowance:</td>
-                <td class="px-4 py-2 border">{shiftTotalAllowance}</td>
-                <td class="px-4 py-2 border"></td>
-                <td class="px-4 py-2 border"></td>
-              </tr>
-            )}
-            {remotePunchAllowance > 0 && (
-              <tr>
-                <td class="px-4 py-2 border">Remote Punching Allowance:</td>
-                <td class="px-4 py-2 border">{remotePunchAllowance ?? 0}</td>
-                <td class="px-4 py-2 border"></td>
-                <td class="px-4 py-2 border"></td>
-              </tr>
-            )}
-          </tbody> */}
         </table>
       </div>
 
@@ -710,9 +692,9 @@ function CalculateSalary() {
           <thead class="border">
             <tr class="bg-blue-200 border">
               <th class="px-4 py-2 border">Total Gross Salary :</th>
-              <th class="pl-24 py-2 border"> {salary?.totalIncome}</th>
+              <th class="pl-24 py-2 border"> {salary?.totalIncome || ""}</th>
               <th class="px-4 py-2 border">Total Deduction :</th>
-              <th class="px-4 py-2 border"> {salary?.totalDeduction}</th>
+              <th class="px-4 py-2 border"> {salary?.totalDeduction || ""}</th>
             </tr>
           </thead>
           <tbody class="border"></tbody>
@@ -726,7 +708,7 @@ function CalculateSalary() {
             <tr class="bg-blue-200">
               <th class="px-4 py-2 ">Total Net Salary</th>
               <th></th>
-              <th class="px-4 py-2">{salary?.totalNetSalary}</th>
+              <th class="px-4 py-2">{salary?.totalNetSalary || ""}</th>
               <th class="px-4 py-2"></th>
             </tr>
           </thead>
@@ -749,11 +731,12 @@ function CalculateSalary() {
             margin: "20px",
           }}
         >
-          {isSubmitDisabled ? null : (
-            <button className="px-4 py-2 rounded bg-blue-500 text-white border-none text-base cursor-pointer">
-              Submit
-            </button>
-          )}
+          <button
+            onClick={saveSalaryDetail}
+            className="px-4 py-2 rounded bg-blue-500 text-white border-none text-base cursor-pointer"
+          >
+            Submit
+          </button>
         </div>
       </div>
     </div>
