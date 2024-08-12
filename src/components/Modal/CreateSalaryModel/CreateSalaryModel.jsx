@@ -80,29 +80,6 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
     }
   );
 
-  // to get employee salary component data
-  const { data: salaryComponent } = useQuery(
-    ["salaryComponent", empId],
-    async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/get-salary-component/${empId}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      return response.data.data;
-    },
-     {
-       onSuccess : (data)=>{
-        // setIncomeValues(data.income)
-        setDeductionsValues(data.deductions)     
-      }
-     }
-  );
-     
-
   const handleApply = async () => {
     try {
       const data = {
@@ -210,7 +187,10 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                               <input
                                 type="number"
                                 name={item}
-                                value={incomeValues.find(ele => ele?.name === item)?.value}
+                                value={
+                                  incomeValues.find((ele) => ele?.name === item)
+                                    ?.value
+                                }
                                 min={0}
                                 onChange={(e) =>
                                   handleIncomeChange(e, setIncomeValues)
@@ -243,7 +223,11 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                               <input
                                 type="number"
                                 name={item}
-                                value={deductionsValues.find(ele => ele?.name === item)?.value}
+                                value={
+                                  deductionsValues.find(
+                                    (ele) => ele?.name === item
+                                  )?.value
+                                }
                                 onChange={(e) =>
                                   handleIncomeChange(e, setDeductionsValues)
                                 }
