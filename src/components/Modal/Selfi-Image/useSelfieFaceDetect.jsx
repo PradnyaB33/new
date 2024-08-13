@@ -120,35 +120,83 @@ const useSelfieFaceDetect = () => {
   // };
 
   //M////////////M
+  // const matchFaces = async ({ currentDescriptor, descriptor }) => {
+  //   if (!Array.isArray(currentDescriptor) || !Array.isArray(descriptor)) {
+  //     throw new Error('Descriptors must be arrays');
+  //   }
+
+  //   console.log('Current Descriptor Length:', currentDescriptor.length);
+  //   console.log('Descriptor Length:', descriptor.length);
+
+  //   if (currentDescriptor.length !== descriptor.length) {
+  //     throw new Error('Descriptor lengths mismatch');
+  //   }
+
+  //   let matchScore = 0.63;
+  //   let labeledFace = new faceApi.LabeledFaceDescriptors(decodedToken?.user?._id, [descriptor]);
+  //   let faceMatcher = new faceApi.FaceMatcher(labeledFace, matchScore);
+
+  //   let results = faceMatcher.findBestMatch(currentDescriptor);
+  //   return results;
+  // };
+  //M///////////////////M
   const matchFaces = async ({ currentDescriptor, descriptor }) => {
-    if (!Array.isArray(currentDescriptor) || !Array.isArray(descriptor)) {
-      throw new Error('Descriptors must be arrays');
+    console.log("descriptor", descriptor);
+    console.log("currentDescriptor", currentDescriptor);
+
+    let results = null;
+
+    // Check if descriptor exists and has a length greater than 0
+    if (descriptor?.length > 0) {
+      // Ensure descriptors are arrays
+      if (!Array.isArray(currentDescriptor) || !Array.isArray(descriptor)) {
+        handleAlert(true, "error", "Descriptors must be arrays");
+        return;
+      }
+
+      // Log descriptor lengths for debugging
+      console.log('Current Descriptor Length:', currentDescriptor.length);
+      console.log('Descriptor Length:', descriptor.length);
+
+      // Ensure descriptors have the same length
+      if (currentDescriptor.length !== descriptor.length) {
+        handleAlert(true, "error", "Descriptor lengths mismatch");
+        return;
+      }
+
+      // Set up face matching
+      let matchScore = 0.63;
+      let labeledFace = new faceApi.LabeledFaceDescriptors(decodedToken?.user?._id, [descriptor]);
+      let faceMatcher = new faceApi.FaceMatcher(labeledFace, matchScore);
+
+      // Find best match
+      results = faceMatcher.findBestMatch(currentDescriptor);
+    } else {
+      // Show an alert if the descriptor is empty or undefined
+      handleAlert(true, "error", "Descriptor is empty or undefined");
+      return;
     }
 
-    console.log('Current Descriptor Length:', currentDescriptor.length);
-    console.log('Descriptor Length:', descriptor.length);
-
-    if (currentDescriptor.length !== descriptor.length) {
-      throw new Error('Descriptor lengths mismatch');
-    }
-
-    let matchScore = 0.63;
-    let labeledFace = new faceApi.LabeledFaceDescriptors(decodedToken?.user?._id, [descriptor]);
-    let faceMatcher = new faceApi.FaceMatcher(labeledFace, matchScore);
-
-    let results = faceMatcher.findBestMatch(currentDescriptor);
     return results;
   };
-  //M///////////////////M
-
+  ////M
   const { mutateAsync: matchFacesMutation, isLoading: isMutationLoading } =
     useMutation({
       mutationFn: matchFaces,
+      // onSuccess: (data) => {
+      //   if (data._label === decodedToken?.user?._id) {
+      //     handleAlert(true, "success", "Face match found");
+      //   } else {
+      //     handleAlert(true, "error", "Face match not found");
+      //   }
+      // },
       onSuccess: (data) => {
-        if (data._label === decodedToken?.user?._id) {
+        if (data && data._label === decodedToken?.user?._id) {
           handleAlert(true, "success", "Face match found");
-        } else {
+        } else if (data) {
           handleAlert(true, "error", "Face match not found");
+        } else {
+          handleAlert(true, "error", "No match data returned");
         }
       },
       onError: (error) => {
