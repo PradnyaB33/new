@@ -140,6 +140,7 @@ const useSelfieFaceDetect = () => {
   //   return results;
   // };
   //M///////////////////M
+
   const matchFaces = async ({ currentDescriptor, descriptor }) => {
     console.log("descriptor", descriptor);
     console.log("currentDescriptor", currentDescriptor);
@@ -179,7 +180,7 @@ const useSelfieFaceDetect = () => {
 
     return results;
   };
-  ////M
+
   const { mutateAsync: matchFacesMutation, isLoading: isMutationLoading } =
     useMutation({
       mutationFn: matchFaces,
