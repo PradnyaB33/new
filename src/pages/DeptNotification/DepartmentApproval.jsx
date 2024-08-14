@@ -9,7 +9,7 @@ import { UseContext } from "../../State/UseState/UseContext";
 import { TestContext } from "../../State/Function/Main";
 import { useQueryClient } from "react-query";
 
-const DepartmentApproval = ({ employee , onApprovalCompletion }) => {
+const DepartmentApproval = ({ employee, onApprovalCompletion }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const { handleAlert } = useContext(TestContext);
@@ -111,7 +111,9 @@ const DepartmentApproval = ({ employee , onApprovalCompletion }) => {
               </Typography>
               <Typography gutterBottom component="div">
                 {" "}
-                {`${employee?.departmentHeadName?.first_name} ${employee?.departmentHeadName?.last_name}`}
+                {`${employee?.departmentHeadName?.first_name || ""} ${
+                  employee?.departmentHeadName?.last_name || ""
+                }`}
               </Typography>
             </Stack>
             <Stack
@@ -124,7 +126,9 @@ const DepartmentApproval = ({ employee , onApprovalCompletion }) => {
               </Typography>
               <Typography gutterBottom component="div">
                 {" "}
-                {`${employee?.departmentHeadDelegateName?.first_name} ${employee?.departmentHeadDelegateName?.last_name}`}
+                {`${employee?.departmentHeadDelegateName?.first_name || ""} ${
+                  employee?.departmentHeadDelegateName?.last_name || ""
+                }`}
               </Typography>
             </Stack>
           </Box>
