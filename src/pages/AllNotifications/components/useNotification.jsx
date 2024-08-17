@@ -28,11 +28,18 @@ const useNotification = () => {
   const [emp, setEmp] = useState();
   const { data: data3 } = usePunchNotification();
 
-  const geoFencingData = data3?.punchNotification?.map(item => item?.geoFencingArea) || [];
+  const geoFencingData =
+    data3?.punchNotification?.map((item) => item?.geoFencingArea) || [];
 
-  const trueCount = geoFencingData.reduce((count, item) => item === true ? count + 1 : count, 0);
+  const trueCount = geoFencingData.reduce(
+    (count, item) => (item === true ? count + 1 : count),
+    0
+  );
 
-  const falseCount = geoFencingData.reduce((count, item) => item === false ? count + 1 : count, 0);
+  const falseCount = geoFencingData.reduce(
+    (count, item) => (item === false ? count + 1 : count),
+    0
+  );
 
   // const {data:geoFencing}=useGeoFencingNotification();
   const { data: data4 } = useDocNotification();
@@ -161,6 +168,7 @@ const useNotification = () => {
     })();
     // eslint-disable-next-line
   }, []);
+  
   const dummyData = [
     {
       name: "Leave Notification",
@@ -247,7 +255,7 @@ const useNotification = () => {
     {
       name: "TDS Notification",
       // count: Number(tds) ?? 0,
-      count: typeof tds === 'number' ? tds : 0,
+      count: typeof tds === "number" ? tds : 0,
       color: "#51E8FD",
       url: tdsRoute,
       url2: "/notification/income-tax-details",
