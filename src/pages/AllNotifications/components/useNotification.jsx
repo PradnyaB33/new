@@ -36,10 +36,22 @@ const useNotification = () => {
     0
   );
 
+  /////////////////////
   const falseCount = geoFencingData.reduce(
     (count, item) => (item === false ? count + 1 : count),
     0
   );
+  // Calculate total notificationCount for geoFencingArea false
+  const punchNotifications = data3?.punchNotification || [];
+  const totalFalseNotificationsCount = punchNotifications
+    .filter((item) => item.geoFencingArea === false)
+    .reduce((total, item) =>
+      total + (item.punchData?.reduce((sum, punch) => sum + punch.notificationCount, 0) || 0),
+      0);
+
+  console.log("totalFalseNotificationsCount", totalFalseNotificationsCount);
+
+  /////////////////
 
   // const {data:geoFencing}=useGeoFencingNotification();
   const { data: data4 } = useDocNotification();
@@ -168,7 +180,7 @@ const useNotification = () => {
     })();
     // eslint-disable-next-line
   }, []);
-  
+
   const dummyData = [
     {
       name: "Leave Notification",
@@ -192,7 +204,7 @@ const useNotification = () => {
     },
     {
       name: "Remote Punching Notification",
-      count: falseCount,
+      count: totalFalseNotificationsCount,
       color: "#51FD96",
       url: "/punch-notification",
       url2: "/self/emp-main-notification",
