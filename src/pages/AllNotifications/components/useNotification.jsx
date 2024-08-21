@@ -15,6 +15,9 @@ import useTDSNotificationHook from "../../../hooks/QueryHook/notification/tds-no
 import UserProfile from "../../../hooks/UserData/useUser";
 import useLeaveNotification from "../../SelfLeaveNotification/useLeaveNotification";
 import useDepartmentNotification from "../../../hooks/QueryHook/notification/department-notification/hook";
+import { useQuery } from "react-query";
+import useAuthToken from "../../../hooks/Token/useAuth";
+import useOrgGeo from "../../Geo-Fence/useOrgGeo";
 // import useGeoFencingNotification from "../../../hooks/QueryHook/notification/geo-fencing-notification/hook";
 
 const useNotification = () => {
@@ -27,31 +30,29 @@ const useNotification = () => {
   const { data: shiftNotification } = useShiftNotification();
   const [emp, setEmp] = useState();
   const { data: data3 } = usePunchNotification();
+  const authToken = useAuthToken();
 
-  const geoFencingData =
-    data3?.punchNotification?.map((item) => item?.geoFencingArea) || [];
-
-  const trueCount = geoFencingData.reduce(
-    (count, item) => (item === true ? count + 1 : count),
-    0
-  );
-
-  /////////////////////
-  const falseCount = geoFencingData.reduce(
-    (count, item) => (item === false ? count + 1 : count),
-    0
-  );
-  // Calculate total notificationCount for geoFencingArea false
-  const punchNotifications = data3?.punchNotification || [];
-  const totalFalseNotificationsCount = punchNotifications
-    .filter((item) => item.geoFencingArea === false)
-    .reduce((total, item) =>
-      total + (item.punchData?.reduce((sum, punch) => sum + punch.notificationCount, 0) || 0),
-      0);
-
-  console.log("totalFalseNotificationsCount", totalFalseNotificationsCount);
-
-  /////////////////
+  //Employee Side remote and geofencing Notification count
+  const employeeId = user._id;
+  const { data: EmpNotification } = useQuery({
+    queryKey: ["EmpDataPunchNotification", employeeId],
+    queryFn: async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API}/route/punch/get-notification/${employeeId}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        return res.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    enabled: employeeId !== undefined,
+  });
 
   // const {data:geoFencing}=useGeoFencingNotification();
   const { data: data4 } = useDocNotification();
@@ -164,6 +165,59 @@ const useNotification = () => {
     departmentNotificationCount = 0;
   }
 
+  // Calculate total notificationCount for geoFencingArea false
+  const punchNotifications = data3?.punchNotification || [];
+  const totalFalseNotificationsCount = punchNotifications
+    .filter((item) => item.geoFencingArea === false)
+    .reduce((total, item) =>
+      total + (item.punchData?.reduce((sum, punch) => sum + punch.notificationCount, 0) || 0),
+      0);
+
+  const totalTrueNotificationsCount = punchNotifications
+    .filter((item) => item.geoFencingArea === true)
+    .reduce((total, item) =>
+      total + (item.punchData?.reduce((sum, punch) => sum + punch.notificationCount, 0) || 0),
+      0);
+
+  // remote punch notification count
+  let remotePunchingCount;
+  if (role === "Employee") {
+    // Check if geoFencingArea is true and then assign the approveRejectNotificationCount
+    const punchData = EmpNotification?.punchData?.[0];
+    console.log("punchData", punchData);
+
+    if (punchData?.geoFencingArea === false) {
+      remotePunchingCount = punchData.approveRejectNotificationCount;
+    } else {
+      remotePunchingCount = 0; // Set to 0 if geoFencingArea is not true
+    }
+  } else {
+    remotePunchingCount = totalFalseNotificationsCount;
+  }
+
+  let geoFencingCount;
+  if (role === "Employee") {
+    // Check if geoFencingArea is true and then assign the approveRejectNotificationCount
+    const punchData = EmpNotification?.punchData?.[0];
+    console.log("punchData", punchData);
+
+    if (punchData?.geoFencingArea === true) {
+      geoFencingCount = punchData.approveRejectNotificationCount;
+    } else {
+      geoFencingCount = 0; // Set to 0 if geoFencingArea is not true
+    }
+  } else {
+    geoFencingCount = totalTrueNotificationsCount;
+  }
+
+  //selected employee list for geofencing
+  const { data: geofencingData } = useOrgGeo(user?.organizationId);
+
+  //match currect user and selcted employee in list
+  const isUserMatchInEmployeeList = geofencingData?.area?.some(area =>
+    area.employee.includes(employeeId)
+  );
+
   useEffect(() => {
     (async () => {
       if (user?._id) {
@@ -202,22 +256,45 @@ const useNotification = () => {
       url2: "/self/shift-notification",
       visible: true,
     },
-    {
-      name: "Remote Punching Notification",
-      count: totalFalseNotificationsCount,
-      color: "#51FD96",
-      url: "/punch-notification",
-      url2: "/self/emp-main-notification",
-      visible: emp?.packageInfo === "Intermediate Plan",
-    },
-    {
-      name: "Geo Fencing Notification",
-      count: trueCount,
-      color: "#51FD96",
-      url: "/punch-notification",
-      url2: "/self/emp-main-notification",
-      visible: emp?.packageInfo === "Intermediate Plan",
-    },
+    ...(role === "Super-Admin" || role === "Manager"
+      ? [
+        {
+          name: "Remote Punching Notification",
+          count: remotePunchingCount,
+          color: "#51FD96",
+          url: "/punch-notification",
+          url2: "/remote-punching-notification",
+          visible: emp?.packageInfo === "Intermediate Plan",
+        },
+        {
+          name: "Geo Fencing Notification",
+          count: geoFencingCount,
+          color: "#51FD96",
+          url: "/geo-fencing-notification",
+          url2: "/geofencing-notification",
+          visible: emp?.packageInfo === "Intermediate Plan",
+        },
+      ]
+      : // For Employees, conditionally show either Remote Punching or Geo Fencing based on `isUserMatchInEmployeeList`
+      [
+        isUserMatchInEmployeeList
+          ? {
+            name: "Geo Fencing Notification",
+            count: geoFencingCount,
+            color: "#51FD96",
+            url: "/geo-fencing-notification",
+            url2: "/geofencing-notification",
+            visible: emp?.packageInfo === "Intermediate Plan",
+          }
+          : {
+            name: "Remote Punching Notification",
+            count: remotePunchingCount,
+            color: "#51FD96",
+            url: "/punch-notification",
+            url2: "/remote-punching-notification",
+            visible: emp?.packageInfo === "Intermediate Plan",
+          },
+      ]),
     {
       name: "Document Approval Notification",
       count: data4?.data?.doc.length ?? 0,
