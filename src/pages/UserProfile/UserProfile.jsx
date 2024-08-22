@@ -91,7 +91,7 @@ const EmployeeProfile = () => {
         );
         setValue("status_message", data?.employee?.status_message);
       },
-      onError: () => {},
+      onError: () => { },
     }
   );
   console.log(
@@ -148,7 +148,7 @@ const EmployeeProfile = () => {
         handleAlert(true, "success", "Additional details added successfully!");
         reset();
       },
-      onError: () => {},
+      onError: () => { },
     }
   );
 
