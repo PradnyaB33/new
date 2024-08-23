@@ -2,9 +2,9 @@ import { Button } from "@mui/material";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
-import useShiftNotification from "../useShiftNotification";
 import ShiftRequestCard from "./employee-shift-card";
 import ShiftRequestLoaderCard from "./employee-shift-loader";
+import useShiftNotificationCount from "../useShiftNotificationCount";
 
 const InputForm = () => {
   const {
@@ -16,7 +16,7 @@ const InputForm = () => {
     skip,
     isLoading,
     isFetching,
-  } = useShiftNotification();
+  } = useShiftNotificationCount();
 
   const [month, setMonth] = useState(moment().format("MMMM"));
   const [status, setStatusState] = useState("");
@@ -35,8 +35,6 @@ const InputForm = () => {
     `🚀 ~ file: input-form.jsx:126 ~ data?.leaveRequests?.length:`,
     data?.leaveRequests?.length
   );
-
-  console.log("data", data);
 
   return (
     <div className="flex w-full flex-col gap-4">

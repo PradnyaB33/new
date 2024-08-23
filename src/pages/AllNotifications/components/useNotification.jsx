@@ -10,7 +10,6 @@ import useJobPositionNotification from "../../../hooks/QueryHook/notification/jo
 import useLeaveNotificationHook from "../../../hooks/QueryHook/notification/leave-notification/hook";
 import useLoanNotification from "../../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
 import usePunchNotification from "../../../hooks/QueryHook/notification/punch-notification/hook";
-import useShiftNotification from "../../../hooks/QueryHook/notification/shift-notificatoin/hook";
 import useTDSNotificationHook from "../../../hooks/QueryHook/notification/tds-notification/hook";
 import UserProfile from "../../../hooks/UserData/useUser";
 import useLeaveNotification from "../../SelfLeaveNotification/useLeaveNotification";
@@ -18,19 +17,52 @@ import useDepartmentNotification from "../../../hooks/QueryHook/notification/dep
 import { useQuery } from "react-query";
 import useAuthToken from "../../../hooks/Token/useAuth";
 import useOrgGeo from "../../Geo-Fence/useOrgGeo";
-// import useGeoFencingNotification from "../../../hooks/QueryHook/notification/geo-fencing-notification/hook";
+import useShiftNotification from "../../../hooks/QueryHook/notification/shift-notificatoin/hook";
+import UseEmployeeShiftNotification from "../../SelfShiftNotification/UseEmployeeShiftNotification";
 
 const useNotification = () => {
   const { data } = useLeaveNotificationHook();
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
-  const { getCurrentUser } = UserProfile();
+  const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
+  const role = useGetCurrentRole();
   const { data: selfLeaveNotification } = useLeaveNotification();
-  const { data: shiftNotification } = useShiftNotification();
+  const { data: shiftNotification } = useShiftNotification();//super admin and manager side notification
+  const { data: employeeShiftNotification } = UseEmployeeShiftNotification();//employee side notification
   const [emp, setEmp] = useState();
   const { data: data3 } = usePunchNotification();
   const authToken = useAuthToken();
+
+  //states
+  const [shiftCount, setShiftCount] = useState(0);
+  const [employeeShiftCount, setEmployeeShiftCount] = useState(0);
+
+  //super admin and manager side shift notification count
+  useEffect(() => {
+    if (shiftNotification && shiftNotification.length > 0) {
+      let total = 0;
+      shiftNotification.forEach(item => {
+        total += item.notificationCount;
+      });
+      setShiftCount(total);
+    } else {
+      setShiftCount(0);
+    }
+  }, [shiftNotification]);
+
+  //employee side shift notification count
+  useEffect(() => {
+    if (employeeShiftNotification && employeeShiftNotification?.requests && employeeShiftNotification?.requests?.length > 0) {
+      let total = 0;
+      employeeShiftNotification?.requests.forEach(item => {
+        total += item?.approveRejectNotificationCount || 0;
+      });
+      setEmployeeShiftCount(total);
+    } else {
+      setEmployeeShiftCount(0);
+    }
+  }, [employeeShiftNotification]);
 
   //Employee Side remote and geofencing Notification count
   const employeeId = user._id;
@@ -54,7 +86,60 @@ const useNotification = () => {
     enabled: employeeId !== undefined,
   });
 
-  // const {data:geoFencing}=useGeoFencingNotification();
+  // Calculate total notificationCount for geoFencingArea false
+  const punchNotifications = data3?.punchNotification || [];
+  const totalFalseNotificationsCount = punchNotifications
+    .filter((item) => item.geoFencingArea === false)
+    .reduce((total, item) =>
+      total + (item.punchData?.reduce((sum, punch) => sum + punch.notificationCount, 0) || 0),
+      0);
+
+  const totalTrueNotificationsCount = punchNotifications
+    .filter((item) => item.geoFencingArea === true)
+    .reduce((total, item) =>
+      total + (item.punchData?.reduce((sum, punch) => sum + punch.notificationCount, 0) || 0),
+      0);
+
+  // remote punch notification count
+  let remotePunchingCount;
+  if (role === "Employee") {
+    // Check if geoFencingArea is true and then assign the approveRejectNotificationCount
+    const punchData = EmpNotification?.punchData?.[0];
+    console.log("punchData", punchData);
+
+    if (punchData?.geoFencingArea === false) {
+      remotePunchingCount = punchData.approveRejectNotificationCount;
+    } else {
+      remotePunchingCount = 0; // Set to 0 if geoFencingArea is not true
+    }
+  } else {
+    remotePunchingCount = totalFalseNotificationsCount;
+  }
+
+  let geoFencingCount;
+  if (role === "Employee") {
+    // Check if geoFencingArea is true and then assign the approveRejectNotificationCount
+    const punchData = EmpNotification?.punchData?.[0];
+    console.log("punchData", punchData);
+
+    if (punchData?.geoFencingArea === true) {
+      geoFencingCount = punchData.approveRejectNotificationCount;
+    } else {
+      geoFencingCount = 0; // Set to 0 if geoFencingArea is not true
+    }
+  } else {
+    geoFencingCount = totalTrueNotificationsCount;
+  }
+
+  //selected employee list for geofencing
+  const { data: geofencingData } = useOrgGeo(user?.organizationId);
+
+  //match currect user and selcted employee in list
+  const isUserMatchInEmployeeList = geofencingData?.area?.some(area =>
+    area.employee.includes(employeeId)
+  );
+
+  //
   const { data: data4 } = useDocNotification();
   const { data: tds } = useTDSNotificationHook();
 
@@ -72,8 +157,7 @@ const useNotification = () => {
   const { PayslipNotification } = usePayslipNotificationHook();
   const { getAdvanceSalaryData, advanceSalaryNotification } =
     useAdvanceSalaryData();
-  const { useGetCurrentRole } = UserProfile();
-  const role = useGetCurrentRole();
+
   const { getDepartmnetData, getDeptNotificationToEmp } =
     useDepartmentNotification();
 
@@ -165,58 +249,6 @@ const useNotification = () => {
     departmentNotificationCount = 0;
   }
 
-  // Calculate total notificationCount for geoFencingArea false
-  const punchNotifications = data3?.punchNotification || [];
-  const totalFalseNotificationsCount = punchNotifications
-    .filter((item) => item.geoFencingArea === false)
-    .reduce((total, item) =>
-      total + (item.punchData?.reduce((sum, punch) => sum + punch.notificationCount, 0) || 0),
-      0);
-
-  const totalTrueNotificationsCount = punchNotifications
-    .filter((item) => item.geoFencingArea === true)
-    .reduce((total, item) =>
-      total + (item.punchData?.reduce((sum, punch) => sum + punch.notificationCount, 0) || 0),
-      0);
-
-  // remote punch notification count
-  let remotePunchingCount;
-  if (role === "Employee") {
-    // Check if geoFencingArea is true and then assign the approveRejectNotificationCount
-    const punchData = EmpNotification?.punchData?.[0];
-    console.log("punchData", punchData);
-
-    if (punchData?.geoFencingArea === false) {
-      remotePunchingCount = punchData.approveRejectNotificationCount;
-    } else {
-      remotePunchingCount = 0; // Set to 0 if geoFencingArea is not true
-    }
-  } else {
-    remotePunchingCount = totalFalseNotificationsCount;
-  }
-
-  let geoFencingCount;
-  if (role === "Employee") {
-    // Check if geoFencingArea is true and then assign the approveRejectNotificationCount
-    const punchData = EmpNotification?.punchData?.[0];
-    console.log("punchData", punchData);
-
-    if (punchData?.geoFencingArea === true) {
-      geoFencingCount = punchData.approveRejectNotificationCount;
-    } else {
-      geoFencingCount = 0; // Set to 0 if geoFencingArea is not true
-    }
-  } else {
-    geoFencingCount = totalTrueNotificationsCount;
-  }
-
-  //selected employee list for geofencing
-  const { data: geofencingData } = useOrgGeo(user?.organizationId);
-
-  //match currect user and selcted employee in list
-  const isUserMatchInEmployeeList = geofencingData?.area?.some(area =>
-    area.employee.includes(employeeId)
-  );
 
   useEffect(() => {
     (async () => {
@@ -234,7 +266,9 @@ const useNotification = () => {
     })();
     // eslint-disable-next-line
   }, []);
-
+  const count = role === "Super-Admin" || role === "Manager"
+    ? shiftCount
+    : employeeShiftCount;
   const dummyData = [
     {
       name: "Leave Notification",
@@ -250,12 +284,13 @@ const useNotification = () => {
 
     {
       name: "Shift Notification",
-      count: shiftNotification?.length ?? 0,
+      count: count,
       color: "#3668ff",
       url: "/shift-notification",
       url2: "/self/shift-notification",
       visible: true,
     },
+
     ...(role === "Super-Admin" || role === "Manager"
       ? [
         {
