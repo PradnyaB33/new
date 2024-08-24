@@ -218,7 +218,6 @@ const App = () => {
           }
         /> */}
 
-
         <Route
           path="/organisation/:organisationId/add-delegate/"
           element={
@@ -252,11 +251,7 @@ const App = () => {
         <Route
           path="/organisation/:organisationId/geo-fencing"
           element={
-            <RequireAuth
-              permission={[
-                "Employee",
-              ]}
-            >
+            <RequireAuth permission={["Employee"]}>
               <GeoFencingEmployeeSide />
             </RequireAuth>
           }
@@ -320,7 +315,10 @@ const App = () => {
           element={<LeaveNotification />}
         />
         <Route path="/punch-notification" element={<PunchNotification />} />
-        <Route path="/geo-fencing-notification" element={<GeoFencingAcceptModal />} />
+        <Route
+          path="/geo-fencing-notification"
+          element={<GeoFencingAcceptModal />}
+        />
         {/* <Route
           path="self/shift-notification"
           element={<EmpShiftNotification />}
@@ -989,14 +987,7 @@ const App = () => {
             </RequireAuth>
           }
         />
-        {/* <Route
-          path="/set-shifts/:id"
-          element={
-            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-              <Shift s />
-            </RequireAuth>
-          }
-        /> */}
+
         <Route
           path="/add-inputfield/:id"
           element={
