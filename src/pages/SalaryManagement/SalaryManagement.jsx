@@ -65,7 +65,6 @@ const SalaryManagement = () => {
 
   const changePage = (id) => {
     fetchAvailableEmployee(id);
-    
   };
 
   // modal for create salary

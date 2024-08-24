@@ -308,6 +308,8 @@ function CalculateSalary() {
       return response.data.data;
     }
   );
+  console.log("salary component", salaryComponent);
+
   // calculate the salary component for income
   const [incomeValues, setIncomeValues] = useState([]);
   useEffect(() => {

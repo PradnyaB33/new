@@ -82,7 +82,6 @@ const CreateSalaryModel = ({ handleClose, open, empId, id }) => {
       enabled: open && empId !== null && empId !== undefined,
     }
   );
-
   const resetForm = () => {
     setIncomeValues([]);
     setDeductionsValues([]);

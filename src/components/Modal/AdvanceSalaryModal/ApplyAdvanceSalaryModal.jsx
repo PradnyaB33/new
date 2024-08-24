@@ -33,6 +33,7 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
   const userId = user._id;
   const [noofemiError, setNoOfEmiError] = useState("");
   const [errors, setErrors] = useState("");
+  const [totalSalaryError, setTotalSalaryError] = useState("");
   const [formErrors, setFormErrors] = useState({});
   const {
     noOfMonth,
@@ -42,7 +43,6 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
     setAdvanceSalaryStartingDate,
     setAdvanceSalaryEndingDate,
   } = useAdvanceSalaryState();
-
   const { getTotalSalaryEmployee } = useAdvanceSalaryQuery(organisationId);
 
   useEffect(() => {
@@ -77,7 +77,11 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
       setAdvanceSalaryEndingDate(completionDate);
     }
   };
-  const advancedSalaryAmounts = getTotalSalaryEmployee * noOfMonth;
+  console.log("get total salary", getTotalSalaryEmployee);
+
+  const advancedSalaryAmounts =
+    Number(getTotalSalaryEmployee) * Number(noOfMonth);
+  console.log("advance salary amt", advancedSalaryAmounts);
 
   // to define the function for change the file
   const [file, setFile] = useState(null);
@@ -92,7 +96,6 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
       setErrorMessage("");
     }
   };
-  console.log(file);
 
   //for get loan data
   const { data: loanAmount } = useQuery(
@@ -109,7 +112,7 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
       return response.data.data;
     }
   );
-  
+
   // to define the function for add the advance salary data
   const queryClient = useQueryClient();
   const AddAdvanceSalary = useMutation(
@@ -140,10 +143,14 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
       },
     }
   );
- 
+
   // to define the handleSubmit function
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!getTotalSalaryEmployee || isNaN(getTotalSalaryEmployee)) {
+      setTotalSalaryError("Total salary is invalid or not available.");
+      return;
+    }
     try {
       const requiredFields = ["advanceSalaryStartingDate", "noOfMonth"];
       const data = {
@@ -187,6 +194,7 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
     }
   };
   console.log(errors);
+  // console.log(error);
 
   return (
     <Dialog
@@ -278,7 +286,13 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
           <div>
             Advance salary completion date : {advanceSalaryEndingDate || ""}
           </div>
-          <div>Advance salary amount : {advancedSalaryAmounts ?? "0.00"}</div>
+          <div>
+            Advance salary amount :{" "}
+            {isNaN(advancedSalaryAmounts) ? "0.00" : advancedSalaryAmounts}
+          </div>
+          {totalSalaryError && (
+            <p className="text-red-500 mt-2">*{totalSalaryError}</p>
+          )}
         </div>
 
         <DialogContent>
