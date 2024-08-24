@@ -13,7 +13,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-const CreateSalaryModel = ({ handleClose, open, empId }) => {
+import { useNavigate } from "react-router-dom";
+
+const CreateSalaryModel = ({ handleClose, open, empId, id }) => {
   // state
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
@@ -21,6 +23,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
   const [incomeValues, setIncomeValues] = useState([]);
   const [deductionsValues, setDeductionsValues] = useState([]);
   const [totalValues, setTotalValues] = useState([]);
+  const navigate = useNavigate();
 
   const handleIncomeChange = (e, setState) => {
     const { name, value } = e.target;
@@ -80,6 +83,12 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
     }
   );
 
+  const resetForm = () => {
+    setIncomeValues([]);
+    setDeductionsValues([]);
+    setTotalValues(0);
+  };
+
   const handleApply = async () => {
     try {
       const data = {
@@ -99,6 +108,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
       );
       console.log(response);
       handleAlert(true, "success", "Salary Detail added Successfully");
+      resetForm();
       handleClose();
     } catch (error) {
       console.error("Error adding salary data:", error);
@@ -124,7 +134,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
     >
       <div className="flex w-full justify-between py-4 items-center  px-4">
         <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
-          Create Salary
+          Create, Update and Calculate Salary
         </h1>
         <IconButton onClick={handleClose}>
           <CloseIcon className="!text-[16px]" />
@@ -138,10 +148,9 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
 
         <div className="px-5 space-y-4 mt-4">
           <p className="text-md">
-            Create Salary For{" "}
             <span className="text-lg  font-semibold">{`${salaryInput?.employee?.first_name} ${salaryInput?.employee?.last_name}`}</span>
           </p>
-          <p className="text-md">Salary Component</p>
+
           <div className="overflow-auto  !p-0 bg-gray-200">
             <table className="min-w-full bg-white  text-left !text-sm font-light">
               <thead className="border-b bg-gray-100  font-medium dark:border-neutral-500">
@@ -271,11 +280,20 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
           </div>
 
           <DialogActions>
-            <Button onClick={handleClose} color="error" variant="outlined">
-              Cancel
-            </Button>
             <Button onClick={handleApply} variant="contained" color="primary">
               Submit
+            </Button>
+            <Button
+              onClick={() =>
+                navigate(`/organisation/${id}/salary-calculate/${empId}`)
+              }
+              variant="contained"
+              color="primary"
+            >
+              Calculate Salary
+            </Button>
+            <Button onClick={handleClose} color="error" variant="outlined">
+              Cancel
             </Button>
           </DialogActions>
         </div>
