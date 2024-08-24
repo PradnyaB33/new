@@ -21,22 +21,57 @@ import useShiftNotification from "../../../hooks/QueryHook/notification/shift-no
 import UseEmployeeShiftNotification from "../../SelfShiftNotification/UseEmployeeShiftNotification";
 
 const useNotification = () => {
-  const { data } = useLeaveNotificationHook();
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
-  const { data: selfLeaveNotification } = useLeaveNotification();
+  const { data } = useLeaveNotificationHook();//super admin and manager side notification
   const { data: shiftNotification } = useShiftNotification();//super admin and manager side notification
   const { data: employeeShiftNotification } = UseEmployeeShiftNotification();//employee side notification
+  const { data: selfLeaveNotification } = useLeaveNotification();
   const [emp, setEmp] = useState();
   const { data: data3 } = usePunchNotification();
   const authToken = useAuthToken();
+  console.log("selfLeaveNotification", selfLeaveNotification);
 
   //states
   const [shiftCount, setShiftCount] = useState(0);
   const [employeeShiftCount, setEmployeeShiftCount] = useState(0);
+  const [leaveCount, setLeaveCount] = useState(0);
+  const [employeeLeaveCount, setEmployeeLeaveCount] = useState(0);
+  console.log("employeeLeaveCount", employeeLeaveCount);
+
+  //super admin and manager side leave notification count
+  useEffect(() => {
+    if (data && data?.leaveRequests && data?.leaveRequests?.length > 0) {
+      let total = 0;
+      data?.leaveRequests.forEach(item => {
+        total += item.notificationCount;
+      });
+      setLeaveCount(total);
+    } else {
+      setLeaveCount(0);
+    }
+  }, [data]);
+
+  //employee side leave notification count
+  useEffect(() => {
+    if (selfLeaveNotification && selfLeaveNotification?.leaveRequests
+      && selfLeaveNotification?.leaveRequests?.length > 0) {
+      let total = 0;
+      selfLeaveNotification?.leaveRequests?.forEach(item => {
+        total += item.approveRejectNotificationCount;
+      });
+      setEmployeeLeaveCount(total);
+    } else {
+      setEmployeeLeaveCount(0);
+    }
+  }, [selfLeaveNotification]);
+
+  const Leavecount = role === "Super-Admin" || role === "Manager"
+    ? leaveCount
+    : employeeLeaveCount;
 
   //super admin and manager side shift notification count
   useEffect(() => {
@@ -63,6 +98,10 @@ const useNotification = () => {
       setEmployeeShiftCount(0);
     }
   }, [employeeShiftNotification]);
+
+  const count = role === "Super-Admin" || role === "Manager"
+    ? shiftCount
+    : employeeShiftCount;
 
   //Employee Side remote and geofencing Notification count
   const employeeId = user._id;
@@ -266,16 +305,11 @@ const useNotification = () => {
     })();
     // eslint-disable-next-line
   }, []);
-  const count = role === "Super-Admin" || role === "Manager"
-    ? shiftCount
-    : employeeShiftCount;
+
   const dummyData = [
     {
       name: "Leave Notification",
-      count:
-        data?.leaveRequests?.length ??
-        selfLeaveNotification?.leaveRequests?.length ??
-        0,
+      count: Leavecount,
       color: "#FF7373",
       url: "/leave-notification",
       url2: "/self/leave-notification",

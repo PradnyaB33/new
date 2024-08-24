@@ -2,23 +2,21 @@ import { Info, RequestQuote, Search, West } from "@mui/icons-material";
 import { Avatar, CircularProgress } from "@mui/material";
 import axios from "axios";
 import React from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 import LeaveRejectmodal from "../../components/Modal/LeaveModal/LeaveRejectmodal";
 import useLeaveNotificationHook from "../../hooks/QueryHook/notification/leave-notification/hook";
 import useOrgList from "../../hooks/QueryHook/Orglist/hook";
 import useGetUser from "../../hooks/Token/useUser";
+
 const LeaveAcceptModal = () => {
   const { authToken, decodedToken } = useGetUser();
   const { employeeId } = useParams();
   const { data, updateOrganizationId, organizationId } =
     useLeaveNotificationHook();
-  console.log(
-    `🚀 ~ file: LeaveAcceptModal.jsx:16 ~ organizationId:`,
-    organizationId
-  );
   const { data: orgData } = useOrgList();
+  const queryClient = useQueryClient();
 
   const {
     data: EmpNotification,
@@ -45,6 +43,35 @@ const LeaveAcceptModal = () => {
   });
 
   const navigate = useNavigate();
+
+  // Mutation to update notification count
+  const mutation = useMutation(
+    ({ employeeId }) => {
+      return axios.put(
+        `${process.env.REACT_APP_API}/route/leave/update/notificationCount/${employeeId}`,
+        { notificationCount: 0 },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: () => {
+        // Refetch the punch notifications after updating notification count
+        queryClient.invalidateQueries("employee-leave");
+      },
+      onError: (error) => {
+        console.error("Error updating notification count:", error);
+      },
+    }
+  );
+
+  const handleEmployeeClick = (employeeId) => {
+    mutation.mutate({ employeeId });
+  };
+
   return (
     <div>
       <header className="text-xl w-full pt-6 border flex justify-between bg-white shadow-md p-4">
@@ -91,11 +118,11 @@ const LeaveAcceptModal = () => {
               (employee, idx) =>
                 employee !== null && (
                   <Link
+                    onClick={() => handleEmployeeClick(employee?._id)}
                     to={`/leave-notification/${employee?._id}`}
-                    className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${
-                      employee?._id === employeeId &&
+                    className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${employee?._id === employeeId &&
                       "bg-blue-500 text-white hover:!bg-blue-300"
-                    }`}
+                      }`}
                     key={idx}
                   >
                     <Avatar />
@@ -104,9 +131,8 @@ const LeaveAcceptModal = () => {
                         {employee?.first_name} {employee?.last_name}
                       </h1>
                       <h1
-                        className={`md:text-sm text-xs text-gray-500 ${
-                          employee?._id === employeeId && "text-white"
-                        }`}
+                        className={`md:text-sm text-xs text-gray-500 ${employee?._id === employeeId && "text-white"
+                          }`}
                       >
                         {employee?.email}
                       </h1>
