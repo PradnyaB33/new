@@ -43,16 +43,16 @@ const CreateSalaryModel = ({ handleClose, open, empId, id }) => {
 
   const calTotalSalary = () => {
     const income = incomeValues.reduce((a, c) => {
-      return a + parseInt(c.value);
-    }, 0);
-    const deductions = deductionsValues.reduce((a, c) => {
-      return a + parseInt(c.value);
+      return a + (parseInt(c.value) || 0); 
     }, 0);
 
-    const total = parseInt(income) - parseInt(deductions);
+    const deductions = deductionsValues.reduce((a, c) => {
+      return a + (parseInt(c.value) || 0); 
+    }, 0);
+
+    const total = income - deductions;
     setTotalValues(total);
   };
-
   useEffect(() => {
     calTotalSalary();
     //eslint-disable-next-line
@@ -82,11 +82,6 @@ const CreateSalaryModel = ({ handleClose, open, empId, id }) => {
       enabled: open && empId !== null && empId !== undefined,
     }
   );
-  const resetForm = () => {
-    setIncomeValues([]);
-    setDeductionsValues([]);
-    setTotalValues(0);
-  };
 
   const handleApply = async () => {
     try {
@@ -107,7 +102,6 @@ const CreateSalaryModel = ({ handleClose, open, empId, id }) => {
       );
       console.log(response);
       handleAlert(true, "success", "Salary Detail added Successfully");
-      resetForm();
       handleClose();
     } catch (error) {
       console.error("Error adding salary data:", error);
@@ -273,7 +267,6 @@ const CreateSalaryModel = ({ handleClose, open, empId, id }) => {
                   backgroundColor: "#f9f9f9",
                   fontWeight: "bold",
                 }}
-                readOnly
               />
             </div>
           </div>
