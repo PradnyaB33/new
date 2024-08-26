@@ -69,6 +69,7 @@ function CalculateSalary() {
     setPaidLeaveDays(employeeSummary?.paidLeaveDays || 0);
     setUnPaidLeaveDays(employeeSummary?.unpaidLeaveDays || 0);
   }, [employeeSummary, month, year]);
+  console.log("employee summary" , employeeSummary);
 
   useEffect(() => {
     const monthFromSelectedDate = selectedDate.format("M");

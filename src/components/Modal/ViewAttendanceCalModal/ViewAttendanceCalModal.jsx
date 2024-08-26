@@ -69,7 +69,7 @@ const ViewAttendanceCallModal = ({
     {
       onSuccess: () => {
         // Invalidate and refetch the data after successful deletion
-        queryClient.invalidateQueries("calculateAttendanceData");
+        queryClient.invalidateQueries("empAttendanceData");
         handleAlert(true, "success", "Record deleted succesfully");
         setSelectedEvent(null);
         handleClose();
