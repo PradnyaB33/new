@@ -64,41 +64,10 @@ const useSetupSideNav = ({ organisationId }) => {
     },
 
 
-     //ADD> Overtime setup
-     {
-      label: "Overtime",
-      icon: EventNoteOutlinedIcon,
-      href: `/organisation/${organisationId}/setup/overtime-setup`,
-      active:
-        location.pathname ===
-        `/organisation/${organisationId}/setup/overtime-setup`,
-      isVisible: user?.profile?.some((role) =>
-        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
-      ),
-    },
+   
 
-    //LiveData
-    // {
-    //   label: "LiveData",
-    //   icon: SmsSharpIcon,
-    //   href: `/organisation/${organisationId}/setup/liveData`,
-    //   active:
-    //     location.pathname ===
-    //     `/organisation/${organisationId}/setup/liveData`,
-    //   isVisible: user?.profile?.some((role) =>
-    //     ["Super-Admin", "Delegate-Super-Admin"].includes(role)
-    //   ),
-    // },
-
-    {
-      label: "LiveData",
-      icon: SmsSharpIcon,
-      href: `/organisation/${organisationId}/setup/liveData`,
-      active: location.pathname === `/organisation/${organisationId}/setup/liveData`,
-      isVisible: user?.profile?.some((role) =>
-        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
-      ),
-    },
+   
+ 
     
     {
       label: "Location",

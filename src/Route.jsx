@@ -180,25 +180,8 @@ const App = () => {
           }
         />
 
-        {/* OvertimeSetup */}
-        <Route
-          path="/organisation/:organisationId/setup/overtime-setup"
-          element={
-            <RequireAuth
-              permission={[
-                "Super-Admin",
-                "Delegate-Super-Admin",
-                "Employee",
-                "Manager",
-                "HR",
-              ]}
-            >
-              <OvertimeSetup />
-            </RequireAuth>
-          }
-        />
-
       
+
         
         
         <Route
