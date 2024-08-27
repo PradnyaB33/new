@@ -930,11 +930,12 @@ import Select from "react-select";
 import * as XLSX from "xlsx";
 import { TestContext } from "../../../../../State/Function/Main";
 import useDashGlobal from "../../../../../hooks/Dashboard/useDashGlobal";
-import UserProfile from "../../../../../hooks/UserData/useUser";
+// import UserProfile from "../../../../../hooks/UserData/useUser";
 import { motion } from "framer-motion";
 import { FaFileExcel } from "react-icons/fa";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+ import UserProfile from "../../../../../hooks/UserData/useUser";
 
 const customStyles = {
   control: (base) => ({
@@ -943,11 +944,11 @@ const customStyles = {
     boxShadow: "none",
     backgroundColor: "#f9f9f9",
     borderRadius: "4px",
-    padding: "2px 4px", 
+    // padding: "2px 4px", 
     fontFamily: "'Roboto', sans-serif",
-    zIndex: 10,
-    minHeight: '28px', 
-    height: '28px', 
+    zIndex: 20,
+    // minHeight: '28px', 
+    // height: '28px', 
     display: 'flex',
     alignItems: 'center', 
     justifyContent: 'center', 
@@ -960,6 +961,8 @@ const customStyles = {
     right: 0,
     fontFamily: "'Roboto', sans-serif",
     fontSize: 12, 
+    zIndex: 30,
+    position:'absolute',
   }),
   placeholder: (defaultStyles) => ({
     ...defaultStyles,
@@ -1141,7 +1144,7 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
       ) : (
         <div className="flex flex-col gap-2">
           <div data-aos="fade-up" className="flex-col sm:flex-row sm:justify-between items-start gap-2 mb-2">
-            <h1 className="text-lg font-bold text-gray-800">Attendance Overview</h1>
+            <h1 className="text-xl font-bold text-gray-800">Attendance Overview</h1>
             <p className="text-gray-600 text-xs">
               The chart below provides an overview of attendance data.
             </p>
@@ -1149,7 +1152,7 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
               <motion.button
                 onClick={() => mutation.mutate()}
                 disabled={mutation.isLoading}
-                className={`flex items-center gap-1 px-2 py-0.5 text-sm rounded-md text-white bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 ${mutation.isLoading && "cursor-not-allowed bg-gray-400 text-gray-700"}`}
+                className={`flex items-center gap-1 px-2 py-2 text-sm rounded-md text-white bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 ${mutation.isLoading && "cursor-not-allowed bg-gray-400 text-gray-700"}`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -1177,3 +1180,6 @@ const AttendenceBar = ({ attendenceData, isLoading }) => {
 };
 
 export default AttendenceBar;
+
+
+//after push

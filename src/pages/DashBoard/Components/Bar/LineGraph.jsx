@@ -1,6 +1,4 @@
 
-
-
 import React, { useEffect, useContext } from "react";
 import { Skeleton } from "@mui/material";
 import { Line } from "react-chartjs-2";
@@ -61,15 +59,18 @@ const customStyles = {
     boxShadow: "none",
     backgroundColor: "#f9f9f9",
     borderRadius: "4px",
-    padding: "2px 4px", 
+    // padding: "2px 4px", 
     fontFamily: "'Roboto', sans-serif",
     zIndex: 10,
-    minHeight: '28px', 
-    height: '28px', 
+    // minHeight: '20px', 
+    // height: '28px', 
+    minheight:'90%',
+    // width:"100%",
     display: 'flex',
     alignItems: 'center', 
     justifyContent: 'center', 
     margin:'auto',
+    
   }),
   menu: (base) => ({
     ...base,
@@ -240,7 +241,7 @@ const LineGraph = ({
       ) : (
         <div className="flex flex-col gap-2">
           <div data-aos="fade-up" className="flex-col sm:flex-row sm:justify-between items-start gap-2 mb-2">
-            <h1 className="text-lg font-bold text-gray-800">Salary Overview</h1>
+            <h1 className="text-xl font-bold text-gray-800">Salary Overview</h1>
             <p className="text-gray-600 text-xs">
               The chart below provides an overview of salary data.
             </p>
@@ -249,7 +250,7 @@ const LineGraph = ({
             <motion.button
               onClick={() => mutation.mutate()}
               disabled={mutation.isLoading}
-              className={`flex items-center gap-1 px-2 py-0.5 text-sm rounded-md text-white bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 ${mutation.isLoading ? "cursor-not-allowed bg-gray-400 text-gray-700" : ""}`}
+              className={`flex items-center gap-1 px-2 py-2 text-sm rounded-md text-white bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 ${mutation.isLoading ? "cursor-not-allowed bg-gray-400 text-gray-700" : ""}`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               aria-label="Generate Excel Report"
@@ -265,6 +266,7 @@ const LineGraph = ({
               value={selectedyear}
               options={yearOptions}
               data-aos="fade-up"
+              
             />
           </div>
           <div  data-aos="fade-up" className=" relative w-full h-[300px]">

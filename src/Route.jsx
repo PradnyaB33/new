@@ -84,6 +84,7 @@ import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/Advance
 import AdvanceSalaryNotificationToEmp from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotificationToEmp";
 import ParentNotification from "./pages/AllNotifications/page";
 import Communication from "./pages/Communication/Communication";
+import EditDepartment from "./pages/Departments/EditDepartment";
 import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
 import DepartmentNotificationToEmp from "./pages/DeptNotification/DepartmentNotificationToEmp";
 import DocManage from "./pages/DocumentManagement/DocManage";
@@ -143,6 +144,7 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+
 const App = () => {
   return (
     <AuthProvider>
@@ -183,42 +185,6 @@ const App = () => {
             </RequireAuth>
           }
         />
-
-        {/* OvertimeSetup */}
-        <Route
-          path="/organisation/:organisationId/setup/overtime-setup"
-          element={
-            <RequireAuth
-              permission={[
-                "Super-Admin",
-                "Delegate-Super-Admin",
-                "Employee",
-                "Manager",
-                "HR",
-              ]}
-            >
-              <OvertimeSetup />
-            </RequireAuth>
-          }
-        />
-
-        {/* LiveData */}
-        {/* <Route
-          path="/organisation/:organisationId/setup/liveData"
-          element={
-            <RequireAuth
-              permission={[
-                "Super-Admin",
-                "Delegate-Super-Admin",
-                "Employee",
-                "Manager",
-                "HR",
-              ]}
-            >
-              <LiveData />
-            </RequireAuth>
-          }
-        /> */}
 
         <Route
           path="/organisation/:organisationId/add-delegate/"
@@ -479,6 +445,24 @@ const App = () => {
               ]}
             >
               <DepartmentTest />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/edit-department/:deptId"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "HR",
+              ]}
+            >
+              <EditDepartment />
             </RequireAuth>
           }
         />

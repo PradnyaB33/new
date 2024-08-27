@@ -1,3 +1,4 @@
+//😎
 import {
   AccessTime,
   EventAvailable,
@@ -20,6 +21,8 @@ const DashboardManger = () => {
   const { organisationId } = useParams("");
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
+
+  const cardSize = "w-72 h-28 "; // Adjust card size here
 
   const [selectedyear, setSelectedYear] = useState({
     value: new Date().getFullYear(),
@@ -97,28 +100,32 @@ const DashboardManger = () => {
       <div className=" lg:px-8 sm:px-4 px-2 w-full">
         <div className="flex mt-6">
           <div className="w-full lg:flex-row flex-col flex gap-5">
-            <div className="flex flex-col h-max w-full lg:w-[70%] gap-3">
-              <div className="flex flex-1  flex-wrap w-full justify-between gap-2 md:gap-5 ">
+            <div className="flex flex-col h-max w-full lg:w-[75%] gap-3">
+              {/* <div className="flex flex-1  flex-wrap w-full justify-between gap-2 md:gap-5 "> */}
+              <div className="grid xl:grid-cols-3 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-6 w-full gap-2 md:gap-5">
                 <SuperAdminCard
                   icon={Groups}
-                  className={"!min-w-[150px]"}
+                  // className={"!min-w-[150px]"}
                   title={"Total Employees"}
                   data={
                     EmployeeDataOfManager?.data[0]?.reporteeIds?.length ?? 0
                   }
                   color={"!bg-sky-500"}
+                  cardSize={cardSize}
                 />
                 <SuperAdminCard
-                  className={"!min-w-[150px]"}
+                  // className={"!min-w-[150px]"}
                   icon={AccessTime}
                   title={"Shift Allowance"}
                   isLoading={managerShiftLoading}
                   data={managerShift ?? 0}
                   color={"!bg-orange-500"}
+                  cardSize={cardSize}
+                  // 
                 />
                 <SuperAdminCard
                   icon={EventAvailable}
-                  className={"!min-w-[150px]"}
+                  // className={"!min-w-[150px]"}
                   data={
                     EmployeeDataOfManager?.data[0]?.reporteeIds?.length -
                       managerAttendence ?? 0
@@ -126,16 +133,20 @@ const DashboardManger = () => {
                   isLoading={managerAttendenceLoading}
                   title={"Present Today"}
                   color={"!bg-green-500"}
+                  cardSize={cardSize}
                 />
                 <SuperAdminCard
                   icon={EventBusy}
-                  className={"!min-w-[150px]"}
+                  // className={"!min-w-[150px]"}
                   data={managerAttendence ?? 0}
                   isLoading={managerAttendenceLoading}
                   title={"Today's Leave"}
                   color={"!bg-red-500"}
+                  cardSize={cardSize}
                 />
               </div>
+
+              {/* <hr /> */}
 
               <div className="block  2xl:space-y-0 space-y-3">
                 <ManagerEmployeeChart
@@ -148,7 +159,7 @@ const DashboardManger = () => {
 
             <div className="w-full lg:w-[30%]  space-y-3">
               <EmployeeLeaveRequest />
-            </div>
+            </div> 
           </div>
         </div>
       </div>
@@ -157,3 +168,16 @@ const DashboardManger = () => {
 };
 
 export default DashboardManger;
+
+
+
+
+
+
+
+
+
+
+
+
+

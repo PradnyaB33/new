@@ -408,11 +408,13 @@ const customSelectStyles = {
     color: "#9ca3af",
   }),
 };
-
+ 
 const SuperAdmin = () => {
   const { organisationId } = useParams();
   const location = useLocation();
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const cardSize = "w-66 h-30"; // Adjust card size here
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -470,6 +472,7 @@ const SuperAdmin = () => {
       </header>
       <div className="md:px-8 px-2 w-full">
         <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-6 w-full gap-2 md:gap-5">
+        {/* <div className="grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-4"> */}
           <SuperAdminCard
             icon={Groups}
             color={"!bg-blue-500"}
@@ -477,6 +480,7 @@ const SuperAdmin = () => {
             isLoading={employeeLoading}
             title={"Overall Employees"}
             data-aos="fade-up"
+            cardSize={cardSize}
           />
           <SuperAdminCard
             color={"!bg-green-500"}
@@ -489,6 +493,7 @@ const SuperAdmin = () => {
             }
             title={"Present Today"}
             data-aos="fade-up"
+            cardSize={cardSize}
           />
           <SuperAdminCard
             title={"Today's Leave"}
@@ -497,6 +502,7 @@ const SuperAdmin = () => {
             data={absentEmployee}
             isLoading={employeeLoading}
             data-aos="fade-up"
+            cardSize={cardSize}
           />
           <SuperAdminCard
             color={"!bg-amber-500"}
@@ -505,6 +511,7 @@ const SuperAdmin = () => {
             isLoading={managerLoading}
             title={"People's Manager"}
             data-aos="fade-up"
+            cardSize={cardSize}
           />
           <SuperAdminCard
             color={"!bg-orange-500"}
@@ -513,6 +520,7 @@ const SuperAdmin = () => {
             data={loc?.locationCount}
             title={"Locations"}
             data-aos="fade-up"
+            cardSize={cardSize}
           />
           {mainD?.organisation?.packageInfo === "Intermediate Plan" && (
             <SuperAdminCard
@@ -522,6 +530,7 @@ const SuperAdmin = () => {
               data={loc?.locationCount}
               title={"Remote Employees"}
               data-aos="fade-up"
+              cardSize={cardSize}
             />
           )}
         </div>
