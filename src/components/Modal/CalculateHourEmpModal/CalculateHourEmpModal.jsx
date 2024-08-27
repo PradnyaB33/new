@@ -33,7 +33,7 @@ const CalculateHourEmpModal = ({
   const authToken = cookies["aegis"];
   const [remarks, setRemarks] = useState("");
   const { handleAlert } = useContext(TestContext);
-  const { justify } = useHourHook();
+  const { justify, leave, shift } = useHourHook();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(
@@ -120,7 +120,6 @@ const CalculateHourEmpModal = ({
       setCurrentPage(pageNumber);
     }
   };
-
   const paginationButtons = getPaginationButtons(currentPage, totalPages);
 
   // Get Query for fetching weekend in the organization
@@ -138,14 +137,10 @@ const CalculateHourEmpModal = ({
       return response.data;
     }
   );
-
   let weekendDays =
     getWeekend && getWeekend.days && getWeekend.days.length > 0
       ? getWeekend.days[0].days.map((dayObj) => dayObj.day)
       : [];
-
-  console.log("Weekend days:", weekendDays);
-
   // Get Query for fetching overtime in the organization
   const { data: overtime } = useQuery(
     ["overtime", organisationId],
@@ -161,12 +156,9 @@ const CalculateHourEmpModal = ({
       return response.data.data;
     }
   );
-  console.log("overtime", overtime);
   let isOvertimeAllowanceEnabled =
     overtime && overtime?.overtimeAllowanceRequired;
-  console.log("isOverTimeAllowanceEnable", isOvertimeAllowanceEnabled);
   let overTimeHour = overtime && overtime?.minimumOvertimeHours;
-  console.log("overTimeHour", overTimeHour);
 
   //  calculate hour
   const handleCalculateHours = async () => {
@@ -314,10 +306,6 @@ const CalculateHourEmpModal = ({
 
       setRemarks(remarks);
 
-      console.log("total hour", totalHours);
-      console.log("overtime hours", overTimeHours);
-      console.log("remark", remarks);
-
       const postData = {
         EmployeeId: empPunchingData?.EmployeeId._id,
         organizationId: organisationId,
@@ -330,12 +318,12 @@ const CalculateHourEmpModal = ({
           : null,
         totalHours: totalHour,
         status: remarks,
-        overtimeHours: formattedOverTimeHours, // Send overtime hours to the database
+        overtimeHours: formattedOverTimeHours, 
         justify: justify,
+        leave: leave,
+        shift: shift,
       };
-
       console.log("post data", postData);
-
       try {
         const response = await fetch(
           `${process.env.REACT_APP_API}/route/organization/${organisationId}/punching-data`,
@@ -369,7 +357,7 @@ const CalculateHourEmpModal = ({
       }
     }
   };
-
+  
   console.log(remarks);
 
   return (

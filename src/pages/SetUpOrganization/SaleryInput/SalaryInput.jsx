@@ -231,7 +231,7 @@ const SalaryInput = () => {
           horizontal: "left",
         }}
       >
-        <div className="overflow-auto">
+        <div className="overflow-auto h-auto max-h-[60vh]">
           <h1 className="pb-4 text-lg">Salary Structure</h1>
           <table className="min-w-full bg-white  text-left !text-sm font-light">
             <thead className="border-b bg-gray-100 border-[.5px] border-gray-300  font-medium dark:border-neutral-500">

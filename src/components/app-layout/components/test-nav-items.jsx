@@ -520,6 +520,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <CallMissedIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Missed Punch ",
           },
+          
           {
             key: "missjustify",
             isVisible: [
@@ -539,6 +540,27 @@ const TestNavItems = ({ toggleDrawer }) => {
             link: `organisation/${orgId}/missed-justify`,
             icon: <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Missed Justify",
+          },
+          //LiveSyncData 
+          {
+            key: "liveSyncData",
+            isVisible: [
+              "Super-Admin",
+              "Delegate-Super-Admin",
+              "Delegate-Super-Admin",
+              "Department-Head",
+              "Delegate-Department-Head",
+              "Department-Admin",
+              "Delegate-Department-Admin",
+              "Accountant",
+              "Delegate-Accountant",
+              "HR",
+              "Manager",
+              "Employee",
+            ].includes(role),
+            link: `organisation/${orgId}/liveSyncData`,
+            icon: <CalendarMonthIcon className=" !text-[1.2em] text-[#67748E]" />,
+            text: "LiveSync Data",
           },
         ],
       },

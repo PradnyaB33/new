@@ -16,6 +16,7 @@ import Datepicker from "react-tailwindcss-datepicker";
 import useEmpState from "../../hooks/Employee-OnBoarding/useEmpState";
 import useAuthentication from "../../pages/SignUp/useAuthentication";
 import PlaceAutoComplete from "./places-autocomplete";
+import useAuthentication from "../../pages/SignUp/useAuthentication";
 
 // import Autocomplete from "react-google-autocomplete";
 
@@ -150,7 +151,7 @@ const AuthInputFiled = ({
                 <Datepicker
                   inputClassName={"border-none w-full outline-none"}
                   useRange={useRange}
-                  asSingle={asSingle}
+                  asSingle={false}
                   popoverDirection="down"
                   readOnly={true}
                   onChange={(value) => {

@@ -73,6 +73,7 @@ import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 import OrgChart from "./Test/OrgChart";
+import GeoFencingAcceptModal from "./components/Modal/RemotePunchingModal/GeoFencingAcceptModal";
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
@@ -135,6 +136,7 @@ import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttenda
 import ViewCalculateAttendance from "./pages/ViewCalculateAttendance/ViewCalculateAttendance";
 import CustomCalander from "./pages/custom/Calendar";
 import DocNotification from "./pages/doc-notification/DocNotification";
+import EmpGeoFencingNotification from "./pages/emp-notifications/EmpGeoFencingNotification";
 import EmpNotification from "./pages/emp-notifications/EmpNotification";
 import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
@@ -180,6 +182,43 @@ const App = () => {
             </RequireAuth>
           }
         />
+
+        {/* OvertimeSetup */}
+        <Route
+          path="/organisation/:organisationId/setup/overtime-setup"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Employee",
+                "Manager",
+                "HR",
+              ]}
+            >
+              <OvertimeSetup />
+            </RequireAuth>
+          }
+        />
+
+        {/* LiveData */}
+        {/* <Route
+          path="/organisation/:organisationId/setup/liveData"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Employee",
+                "Manager",
+                "HR",
+              ]}
+            >
+              <LiveData />
+            </RequireAuth>
+          }
+        /> */}
+
         <Route
           path="/organisation/:organisationId/add-delegate/"
           element={
@@ -191,10 +230,13 @@ const App = () => {
 
         <Route path="/paymentfailed" element={<PaymentFailed />} />
         <Route
-          path="/self/emp-main-notification"
+          path="/remote-punching-notification"
           element={<EmpNotification />}
         />
-
+        <Route
+          path="/geofencing-notification"
+          element={<EmpGeoFencingNotification />}
+        />
         <Route path="/loading" element={<Loader />} />
         <Route path="/my-training" element={<MyTraining />} />
         <Route path="/testOrg" element={<NewOranisationForm />} />
@@ -274,6 +316,10 @@ const App = () => {
           element={<LeaveNotification />}
         />
         <Route path="/punch-notification" element={<PunchNotification />} />
+        <Route
+          path="/geo-fencing-notification"
+          element={<GeoFencingAcceptModal />}
+        />
         {/* <Route
           path="self/shift-notification"
           element={<EmpShiftNotification />}
@@ -281,6 +327,10 @@ const App = () => {
         <Route
           path="/punch-notification/:employeeId"
           element={<PunchNotification />}
+        />
+        <Route
+          path="geo-fencing-notification/:employeeId"
+          element={<GeoFencingAcceptModal />}
         />
         <Route path="/shift-notification" element={<ShiftNotification />} />
         <Route
@@ -607,6 +657,7 @@ const App = () => {
             </RequireAuth>
           }
         />
+
         <Route
           path="/organisation/:organisationId/view-attendance-biomatric"
           element={
@@ -681,6 +732,30 @@ const App = () => {
             </RequireAuth>
           }
         />
+
+        {/* LiveSyncData */}
+        {/* <Route
+          path="/organisation/:organisationId/liveSyncData"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+             <LiveSyncData/>
+            </RequireAuth>
+          }
+        /> */}
         <Route
           path="/organisation/:organisationId/employee-offboarding"
           element={
@@ -913,14 +988,7 @@ const App = () => {
             </RequireAuth>
           }
         />
-        {/* <Route
-          path="/set-shifts/:id"
-          element={
-            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-              <Shift s />
-            </RequireAuth>
-          }
-        /> */}
+
         <Route
           path="/add-inputfield/:id"
           element={

@@ -26,7 +26,7 @@ const RenderPunchSyncFile = () => {
             variant={syncOption === "file" ? "contained" : "outlined"}
             onClick={() => handleSyncOptionChange("file")}
           >
-            Upload File
+            Sync via File
           </Button>
         </Tooltip>
         <Tooltip title="Display data dynamically">
@@ -34,7 +34,7 @@ const RenderPunchSyncFile = () => {
             variant={syncOption === "dynamic" ? "contained" : "outlined"}
             onClick={() => handleSyncOptionChange("dynamic")}
           >
-            Dynamically Display
+            Live Display
           </Button>
         </Tooltip>
       </div>

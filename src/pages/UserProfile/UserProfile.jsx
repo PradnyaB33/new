@@ -256,61 +256,21 @@ const EmployeeProfile = () => {
 
                 <div className="w-full">
                   <h1 className="text-lg text-left" style={{ color: "#000" }}>
-                    {!UserInformation?.status_message ? (
-                      <div className="w-full">
-                        <Skeleton
-                          variant="text"
-                          width="200px"
-                          className="flex m-auto"
-                          sx={{ fontSize: "1rem" }}
-                        />
-                      </div>
-                    ) : (
-                      <>
-                        <span>
-                          <strong>Status:</strong>{" "}
-                          {UserInformation?.status_message || ""}
-                        </span>
-                      </>
-                    )}
+                    <span>
+                      <strong>Status:</strong>{" "}
+                      {UserInformation?.status_message || ""}
+                    </span>
                   </h1>
                   <h1 className="text-lg text-left" style={{ color: "#000" }}>
-                    {!UserInformation?.chat_id ? (
-                      <div className="w-full">
-                        <Skeleton
-                          variant="text"
-                          width="200px"
-                          className="flex m-auto"
-                          sx={{ fontSize: "1rem" }}
-                        />
-                      </div>
-                    ) : (
-                      <>
-                        <span>
-                          <strong>Chat ID:</strong>{" "}
-                          {UserInformation?.chat_id || ""}
-                        </span>
-                      </>
-                    )}
+                    <span>
+                      <strong>Chat ID:</strong> {UserInformation?.chat_id || ""}
+                    </span>
                   </h1>
                   <h1 className="text-lg text-left" style={{ color: "#000" }}>
-                    {!UserInformation?.additional_phone_number ? (
-                      <div className="w-full">
-                        <Skeleton
-                          variant="text"
-                          width="200px"
-                          className="flex m-auto"
-                          sx={{ fontSize: "1rem" }}
-                        />
-                      </div>
-                    ) : (
-                      <>
-                        <span>
-                          <strong>Contact:</strong>{" "}
-                          {UserInformation?.additional_phone_number || ""}
-                        </span>
-                      </>
-                    )}
+                    <span>
+                      <strong>Contact:</strong>{" "}
+                      {UserInformation?.additional_phone_number || ""}
+                    </span>
                   </h1>
 
                   <button

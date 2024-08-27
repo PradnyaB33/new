@@ -132,7 +132,7 @@ const LeaveRequisition = () => {
             />
 
             {newAppliedLeaveEvents.length > 0 &&
-            Array.isArray(newAppliedLeaveEvents) ? (
+              Array.isArray(newAppliedLeaveEvents) ? (
               <>
                 <form
                   onSubmit={handleSubmit}

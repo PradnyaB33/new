@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as faceApi from "face-api.js";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import useFaceStore from "../../../hooks/FaceMode/useFaceStore";
@@ -10,6 +10,7 @@ import UserProfile from "../../../hooks/UserData/useUser";
 const useSelfieFaceDetect = () => {
   //state
   const [loading, setLoading] = useState(false);
+  const [uploadBtnActive, setUploadBtnInActive] = useState();
 
   //hooks
   const { handleAlert } = useContext(TestContext);
@@ -86,6 +87,8 @@ const useSelfieFaceDetect = () => {
     refetchOnWindowFocus: false,
   });
 
+console.log("employeeOrgIdasdaaaaaaas",employeeOrgId?.employee?.faceRecognition);
+
   const {
     mutateAsync: detectFaceOnlyMutation,
     isLoading: isFaceDetectionLoading,
@@ -102,53 +105,43 @@ const useSelfieFaceDetect = () => {
       }
     },
     onError: (error) => {
+      console.log("error",error?.message);
+      
       console.error("Error detecting faces", error);
       handleAlert(true, "error", error?.message);
     },
   });
 
-  // const matchFaces = async ({ currentDescriptor, descriptor }) => {
-  //   let matchScore = 0.63;
-  //   let labeledFace = new faceApi.LabeledFaceDescriptors(
-  //     decodedToken?.user?._id,
-  //     [descriptor]
-  //   );
-  //   let faceMatcher = new faceApi.FaceMatcher(labeledFace, matchScore);
-
-  //   let results = faceMatcher.findBestMatch(currentDescriptor);
-  //   return results;
-  // };
-
-  //M////////////M
   const matchFaces = async ({ currentDescriptor, descriptor }) => {
-    if (!Array.isArray(currentDescriptor) || !Array.isArray(descriptor)) {
-      throw new Error('Descriptors must be arrays');
-    }
-
-    console.log('Current Descriptor Length:', currentDescriptor.length);
-    console.log('Descriptor Length:', descriptor.length);
-
-    if (currentDescriptor.length !== descriptor.length) {
-      throw new Error('Descriptor lengths mismatch');
-    }
-
     let matchScore = 0.63;
-    let labeledFace = new faceApi.LabeledFaceDescriptors(decodedToken?.user?._id, [descriptor]);
+    let labeledFace = new faceApi.LabeledFaceDescriptors(
+      decodedToken?.user?._id,
+      [descriptor]
+    );
     let faceMatcher = new faceApi.FaceMatcher(labeledFace, matchScore);
 
     let results = faceMatcher.findBestMatch(currentDescriptor);
     return results;
   };
-  //M///////////////////M
 
   const { mutateAsync: matchFacesMutation, isLoading: isMutationLoading } =
     useMutation({
       mutationFn: matchFaces,
+      // onSuccess: (data) => {
+      //   if (data._label === decodedToken?.user?._id) {
+      //     handleAlert(true, "success", "Face match found");
+      //   } else {
+      //     handleAlert(true, "error", "Face match not found");
+      //   }
+      // },
       onSuccess: (data) => {
-        if (data._label === decodedToken?.user?._id) {
+        if (data && data._label === decodedToken?.user?._id) {
           handleAlert(true, "success", "Face match found");
-        } else {
+          setUploadBtnInActive("Face match found")
+        } else if (data) {
           handleAlert(true, "error", "Face match not found");
+        } else {
+          handleAlert(true, "error", "No match data returned");
         }
       },
       onError: (error) => {
@@ -180,6 +173,13 @@ const useSelfieFaceDetect = () => {
     refetchOnWindowFocus: false,
   });
 
+  useEffect(() => {
+    // Check if face recognition is enabled but no face image exists
+    if (employeeOrgId?.employee?.faceRecognition && !descriptor) {
+      handleAlert(true, "warning", "Please upload an image first");
+    }
+  }, [employeeOrgId, descriptor, handleAlert]);
+
   return {
     data,
     isLoading,
@@ -194,6 +194,7 @@ const useSelfieFaceDetect = () => {
     isFaceDetectionLoading,
     isFetching,
     employeeOrgId,
+    uploadBtnActive
   };
 };
 

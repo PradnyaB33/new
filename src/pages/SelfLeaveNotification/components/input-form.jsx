@@ -4,9 +4,9 @@ import React, { useState } from "react";
 import Select from "react-select";
 import useLeaveData from "../../../hooks/Leave/useLeaveData";
 import useLeaveRequesationHook from "../../../hooks/QueryHook/Leave-Requsation/hook";
-import useLeaveNotification from "../useLeaveNotification";
 import LeaveRequestCard from "./employee-leave-card";
 import LeaveRequestLoaderCard from "./employee-leave-loader";
+import useLeaveNotificationCount from "../UseLeaveNotificationCout";
 
 const InputForm = () => {
   const {
@@ -20,7 +20,7 @@ const InputForm = () => {
     isLoading,
     leaveTypeDetails,
     isFetching,
-  } = useLeaveNotification();
+  } = useLeaveNotificationCount();
 
   const { data: leaveMain2 } = useLeaveData();
   const { data: leaveMain } = useLeaveRequesationHook();
@@ -120,7 +120,7 @@ const InputForm = () => {
             onClick={() => {
               setSkip((prev) => prev - 1);
             }}
-            // type="button"
+          // type="button"
           >
             Previous
           </Button>
@@ -129,7 +129,7 @@ const InputForm = () => {
             onClick={() => {
               setSkip((prev) => prev + 1);
             }}
-            // type="button"
+          // type="button"
           >
             Next
           </Button>
