@@ -38,7 +38,7 @@ const SignIn = () => {
 
   // to get current user
   const { getCurrentUser } = UserProfile();
-  const { countryCode } = useAuthentication();
+  // const { countryCode } = useAuthentication();
   const user = getCurrentUser();
 
   // navigate

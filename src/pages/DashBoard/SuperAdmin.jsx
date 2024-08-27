@@ -346,17 +346,26 @@
 
 // export default SuperAdmin;
 
-
-
-import { Dashboard, FilterAlt, FilterAltOff ,West,Groups,EventAvailable,EventBusy,SupervisorAccount,LocationOn,NearMe, } from "@mui/icons-material";
+import {
+  Dashboard,
+  EventAvailable,
+  EventBusy,
+  FilterAlt,
+  FilterAltOff,
+  Groups,
+  LocationOn,
+  NearMe,
+  SupervisorAccount,
+  West,
+} from "@mui/icons-material";
 import { IconButton, Popover } from "@mui/material";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { motion } from "framer-motion";
 import React, { useEffect } from "react";
 import { useQueryClient } from "react-query";
 import { Link, useLocation, useParams } from "react-router-dom";
 import Select from "react-select";
-import { motion } from "framer-motion";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import useDashGlobal from "../../hooks/Dashboard/useDashGlobal";
 import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
 import useEmployee from "../../hooks/Dashboard/useEmployee";
@@ -369,34 +378,34 @@ import SkeletonFilterSection from "./Components/Skeletons/SkeletonFilterSection"
 const customSelectStyles = {
   control: (provided) => ({
     ...provided,
-    borderColor: '#d1d5db', 
-    boxShadow: 'none',
-    '&:hover': {
-      borderColor: '#4f46e5', 
+    borderColor: "#d1d5db",
+    boxShadow: "none",
+    "&:hover": {
+      borderColor: "#4f46e5",
     },
-    '&:focus': {
-      borderColor: '#4f46e5', // Blue border on focus
+    "&:focus": {
+      borderColor: "#4f46e5", // Blue border on focus
     },
-    backgroundColor: '#ffffff', // White background
-    borderRadius: '8px', 
-    padding: '2px',
+    backgroundColor: "#ffffff", // White background
+    borderRadius: "8px",
+    padding: "2px",
   }),
   menu: (provided) => ({
     ...provided,
-    borderRadius: '8px',
-    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+    borderRadius: "8px",
+    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
   }),
   option: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isSelected ? '#4f46e5' : '#ffffff', // Blue for selected option
-    color: state.isSelected ? '#ffffff' : '#000000', // White text for selected option
-    '&:hover': {
-      backgroundColor: '#f3f4f6', 
+    backgroundColor: state.isSelected ? "#4f46e5" : "#ffffff", // Blue for selected option
+    color: state.isSelected ? "#ffffff" : "#000000", // White text for selected option
+    "&:hover": {
+      backgroundColor: "#f3f4f6",
     },
   }),
   placeholder: (provided) => ({
     ...provided,
-    color: '#9ca3af',
+    color: "#9ca3af",
   }),
 };
 
@@ -473,7 +482,11 @@ const SuperAdmin = () => {
             color={"!bg-green-500"}
             isLoading={employeeLoading}
             icon={EventAvailable}
-            data={!isNaN(employee?.totalEmployees) ? employee?.totalEmployees - absentEmployee : 0}
+            data={
+              !isNaN(employee?.totalEmployees)
+                ? employee?.totalEmployees - absentEmployee
+                : 0
+            }
             title={"Present Today"}
             data-aos="fade-up"
           />
@@ -721,4 +734,3 @@ const SuperAdmin = () => {
 };
 
 export default SuperAdmin;
-
