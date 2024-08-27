@@ -15,10 +15,10 @@ import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import PersonPinOutlinedIcon from "@mui/icons-material/PersonPinOutlined";
 import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
+import SmsSharpIcon from "@mui/icons-material/SmsSharp";
 import WeekendOutlinedIcon from "@mui/icons-material/WeekendOutlined";
 import WorkOffOutlinedIcon from "@mui/icons-material/WorkOffOutlined";
 import { useLocation } from "react-router-dom";
-import SmsSharpIcon from "@mui/icons-material/SmsSharp";
 import useSubscriptionGet from "../QueryHook/Subscription/hook";
 import UserProfile from "../UserData/useUser";
 
@@ -63,9 +63,8 @@ const useSetupSideNav = ({ organisationId }) => {
       ),
     },
 
-
-     //ADD> Overtime setup
-     {
+    //ADD> Overtime setup
+    {
       label: "Overtime",
       icon: EventNoteOutlinedIcon,
       href: `/organisation/${organisationId}/setup/overtime-setup`,
@@ -94,12 +93,13 @@ const useSetupSideNav = ({ organisationId }) => {
       label: "LiveData",
       icon: SmsSharpIcon,
       href: `/organisation/${organisationId}/setup/liveData`,
-      active: location.pathname === `/organisation/${organisationId}/setup/liveData`,
+      active:
+        location.pathname === `/organisation/${organisationId}/setup/liveData`,
       isVisible: user?.profile?.some((role) =>
         ["Super-Admin", "Delegate-Super-Admin"].includes(role)
       ),
     },
-    
+
     {
       label: "Location",
       icon: AddLocationAltOutlined,
@@ -264,6 +264,17 @@ const useSetupSideNav = ({ organisationId }) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/performance-management`,
+      isVisible:
+        true && data?.organisation?.packageInfo === "Intermediate Plan",
+      // isVisible: data?.organisation?.packageInfo === "Intermediate Plan",
+    },
+    {
+      label: "PF & ESIC Norms Calculation",
+      icon: SellOutlined,
+      href: `/organisation/${organisationId}/setup/calculation-setup`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/calculation-setup`,
       isVisible:
         true && data?.organisation?.packageInfo === "Intermediate Plan",
       // isVisible: data?.organisation?.packageInfo === "Intermediate Plan",

@@ -7,12 +7,11 @@ import {
   Popover,
   Select,
 } from "@mui/material";
-import moment from "moment";
-import { momentLocalizer } from "react-big-calendar";
-import { useQuery, useQueryClient } from "react-query";
 import axios from "axios";
+import moment from "moment";
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Calendar } from "react-big-calendar";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import useGetUser from "../../hooks/Token/useUser";
@@ -336,12 +335,12 @@ const AppDatePicker = ({
                 events={
                   data
                     ? [
-                      ...data?.currentYearLeaves,
-                      ...shiftData?.requests,
-                      ...newAppliedLeaveEvents,
-                      ...filteredHolidayWithStartAndEnd,
-                      ...allPublicHoliday,
-                    ]
+                        ...data?.currentYearLeaves,
+                        ...shiftData?.requests,
+                        ...newAppliedLeaveEvents,
+                        ...filteredHolidayWithStartAndEnd,
+                        ...allPublicHoliday,
+                      ]
                     : [...newAppliedLeaveEvents]
                 }
                 startAccessor="start"

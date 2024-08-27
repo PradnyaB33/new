@@ -126,6 +126,7 @@ import ResetNewPassword from "./pages/ResetNewPassword/ResetNewPassword";
 import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
 import SelfShiftNotification from "./pages/SelfShiftNotification/page";
 import EmpCommunication from "./pages/SetUpOrganization/EmpCommunication/EmpCommunication";
+import PFESIC from "./pages/SetUpOrganization/PFESIC";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
@@ -1693,6 +1694,16 @@ const App = () => {
             </RequireAuth>
           }
         />
+
+        <Route
+          path="/organisation/:organisationId/setup/calculation-setup"
+          element={
+            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+              <PFESIC />
+            </RequireAuth>
+          }
+        />
+
         <Route
           path="/organisation/:organisationId/survey-form/:surveyId/:responseId"
           element={
