@@ -9,7 +9,7 @@ import {
   IconButton,
 } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
@@ -18,21 +18,43 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
-  const [errorMessage, setErrorMessage] = useState("");
-  const [deduction, setDeduction] = useState("");
-  const [employee_pf, setEmployeePf] = useState("");
-  const [esic, setEsic] = useState("");
-  const [inputValue, setInputValue] = useState({
-    Basic: "",
-    HRA: "",
-    DA: "",
-    "Food allowance": "",
-    "Variable allowance": "",
-    "Special allowance": "",
-    "Travel allowance": "",
-    "Sales allowance": "",
-  });
-  
+  const [incomeValues, setIncomeValues] = useState([]);
+  const [deductionsValues, setDeductionsValues] = useState([]);
+  const [totalValues, setTotalValues] = useState([]);
+
+  const handleIncomeChange = (e, setState) => {
+    const { name, value } = e.target;
+
+    setState((prevState) => {
+      const existingIndex = prevState.findIndex((item) => item.name === name);
+
+      if (existingIndex !== -1) {
+        const updatedState = [...prevState];
+        updatedState[existingIndex] = { name, value };
+        return updatedState;
+      } else {
+        return [...prevState, { name, value }];
+      }
+    });
+  };
+
+  const calTotalSalary = () => {
+    const income = incomeValues.reduce((a, c) => {
+      return a + parseInt(c.value);
+    }, 0);
+    const deductions = deductionsValues.reduce((a, c) => {
+      return a + parseInt(c.value);
+    }, 0);
+
+    const total = parseInt(income) - parseInt(deductions);
+    setTotalValues(total);
+  };
+
+  useEffect(() => {
+    calTotalSalary();
+    //eslint-disable-next-line
+  }, [incomeValues, deductionsValues]);
+
   // to get employee salary component data
   const {
     data: salaryInput,
@@ -58,74 +80,16 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
     }
   );
 
-  // function to change the value
-  const handleInputChange = (name, value) => {
-    const enteredValue = parseFloat(value);
-    if (!isNaN(enteredValue) && enteredValue > 10000000) {
-      setErrorMessage("Please enter a number less than 1 crore");
-      return;
-    }
-
-    setErrorMessage("");
-    setInputValue({
-      ...inputValue,
-      [name]: value,
-    });
-  };
-
-  // Function to calculate total salary
-  const calculateTotalSalary = () => {
-    const {
-      Basic,
-      HRA,
-      DA,
-      "Food allowance": foodAllowance,
-      "Variable allowance": variableAllowance,
-      "Special allowance": specialAllowance,
-      "Travel allowance": travelAllowance,
-      "Sales allowance": salesAllowance,
-    } = inputValue;
-
-    const basicValue = parseFloat(Basic) || 0;
-    const hraValue = parseFloat(HRA) || 0;
-    const daValue = parseFloat(DA) || 0;
-    const foodAllowanceValue = parseFloat(foodAllowance) || 0;
-    const variableAllowanceValue = parseFloat(variableAllowance) || 0;
-    const specialAllowanceValue = parseFloat(specialAllowance) || 0;
-    const travelAllowanceValue = parseFloat(travelAllowance) || 0;
-    const salesAllowanceValue = parseFloat(salesAllowance) || 0;
-    const deductionValue = parseFloat(deduction) || 0;
-    const employeePfValue = parseFloat(employee_pf) || 0;
-    const esicValue = parseFloat(esic) || 0;
-    const total =
-      basicValue +
-      hraValue +
-      daValue +
-      foodAllowanceValue +
-      variableAllowanceValue +
-      specialAllowanceValue +
-      travelAllowanceValue +
-      salesAllowanceValue -
-      deductionValue -
-      employeePfValue -
-      esicValue;
-
-    return total.toFixed(2);
-  };
-  let totalSalary = calculateTotalSalary();
-
   const handleApply = async () => {
     try {
       const data = {
-        inputValue,
-        deduction,
-        employee_pf,
-        esic,
-        totalSalary,
+        income: incomeValues,
+        deductions: deductionsValues,
+        totalSalary: totalValues,
       };
 
       const response = await axios.post(
-        `${process.env.REACT_APP_API}/route/employee/salary/add/${empId}`,
+        `${process.env.REACT_APP_API}/route/add-salary-component/${empId}`,
         data,
         {
           headers: {
@@ -133,27 +97,9 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
           },
         }
       );
-      if (response.data.success) {
-        handleAlert(true, "error", "Invalid authorization");
-      } else {
-        handleAlert(true, "success", "Salary Detail added Successfully");
-
-        setInputValue({
-          Basic: "",
-          HRA: "",
-          DA: "",
-          "Food allowance": "",
-          "Varialble allowance": "",
-          "Special allowance": "",
-          "Travel allowance": "",
-          "Sales allowance": "",
-        });
-        setDeduction("");
-        setEmployeePf("");
-        setEsic("");
-        totalSalary = "";
-        handleClose();
-      }
+      console.log(response);
+      handleAlert(true, "success", "Salary Detail added Successfully");
+      handleClose();
     } catch (error) {
       console.error("Error adding salary data:", error);
       handleAlert(true, "error", "Something went wrong");
@@ -225,33 +171,71 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                   </tr>
                 ) : (
                   <>
-                    {salaryInput?.employee?.salarystructure?.salaryStructure &&
-                      salaryInput?.employee?.salarystructure?.salaryStructure
-                        ?.length > 0 &&
-                      salaryInput?.employee?.salarystructure?.salaryStructure?.map(
+                    <h1 className="text-lg p-4 font-semibold leading-3 tracking-tight">
+                      Income
+                    </h1>
+                    {salaryInput?.employee?.salarystructure?.income &&
+                      salaryInput?.employee?.salarystructure?.income?.length >
+                        0 &&
+                      salaryInput?.employee?.salarystructure?.income?.map(
                         (item, id) => (
                           <tr key={id} className="space-y-4 w-full">
                             <td className="!text-left w-full pl-8 pr-8 py-3">
-                              {item?.salaryComponent || ""}
+                              {item}
                             </td>
                             <td>
                               <input
                                 type="number"
+                                name={item}
+                                value={
+                                  incomeValues.find((ele) => ele?.name === item)
+                                    ?.value
+                                }
+                                min={0}
+                                onChange={(e) =>
+                                  handleIncomeChange(e, setIncomeValues)
+                                }
                                 placeholder="Enter the input"
                                 style={{
                                   padding: "10px",
                                   border: "1px solid #ccc",
                                   borderRadius: "4px",
                                 }}
-                                value={inputValue[item?.salaryComponent] || ""}
-                                onChange={(e) => {
-                                  const inputValue = e.target.value;
-                                  if (!isNaN(inputValue) && inputValue >= 0) {
-                                    handleInputChange(
-                                      item.salaryComponent,
-                                      inputValue
-                                    );
-                                  }
+                              />
+                            </td>
+                          </tr>
+                        )
+                      )}
+
+                    <h1 className="text-lg p-4 font-semibold leading-3 tracking-tight">
+                      Deduction
+                    </h1>
+                    {salaryInput?.employee?.salarystructure?.deductions &&
+                      salaryInput?.employee?.salarystructure?.deductions
+                        ?.length > 0 &&
+                      salaryInput?.employee?.salarystructure?.deductions?.map(
+                        (item, id) => (
+                          <tr key={id} className="space-y-6 w-full">
+                            <td className="!text-left w-full pl-8 pr-8 py-3">
+                              {item}
+                            </td>
+                            <td>
+                              <input
+                                type="number"
+                                name={item}
+                                value={
+                                  deductionsValues.find(
+                                    (ele) => ele?.name === item
+                                  )?.value
+                                }
+                                onChange={(e) =>
+                                  handleIncomeChange(e, setDeductionsValues)
+                                }
+                                placeholder="Enter the input"
+                                style={{
+                                  padding: "10px",
+                                  border: "1px solid #ccc",
+                                  borderRadius: "4px",
                                 }}
                               />
                             </td>
@@ -260,78 +244,11 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                       )}
                   </>
                 )}
-                <tr className="!mt-4">
-                  <td className="!text-left pl-8 pr-8 py-3">
-                    Professinal Tax (Deduction)
-                  </td>
-                  <input
-                    type="number"
-                    placeholder="Enter the input"
-                    style={{
-                      padding: "10px",
-                      border: "1px solid #ccc",
-                      borderRadius: "4px",
-                      marginTop: "10px",
-                    }}
-                    value={deduction}
-                    onChange={(e) => {
-                      const inputValue = e.target.value;
-                      if (!isNaN(inputValue) && inputValue >= 0) {
-                        setDeduction(inputValue);
-                      }
-                    }}
-                  />
-                </tr>
-                <tr>
-                  <td className="!text-left pl-8 pr-8 py-3">Employee PF</td>
-                  <td className="py-3 ">
-                    <input
-                      type="number"
-                      placeholder="Enter the input"
-                      style={{
-                        padding: "10px",
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                      }}
-                      value={employee_pf}
-                      onChange={(e) => {
-                        const inputValue1 = e.target.value;
-                        if (!isNaN(inputValue1) && inputValue1 >= 0) {
-                          setEmployeePf(inputValue1);
-                        }
-                      }}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td className="!text-left pl-8 pr-8 py-3">ESIC</td>
-                  <td className="py-3 ">
-                    <input
-                      type="number"
-                      placeholder="Enter the input"
-                      style={{
-                        padding: "10px",
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                      }}
-                      value={esic}
-                      onChange={(e) => {
-                        const inputValue2 = e.target.value;
-                        if (!isNaN(inputValue2) && inputValue2 >= 0) {
-                          setEsic(inputValue2);
-                        }
-                      }}
-                    />
-                  </td>
-                </tr>
               </tbody>
             </table>
           </div>
           <div className="w-full">
             <Divider variant="fullWidth" orientation="horizontal" />
-          </div>
-          <div style={{ height: "5px", width: "280px" }}>
-            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
           </div>
 
           <div>
@@ -339,6 +256,7 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
               <span className="font-semibold">Total Salary</span>
               <input
                 type="number"
+                value={totalValues ?? 0}
                 placeholder="Total Salary"
                 style={{
                   padding: "10px",
@@ -347,7 +265,6 @@ const CreateSalaryModel = ({ handleClose, open, empId }) => {
                   backgroundColor: "#f9f9f9",
                   fontWeight: "bold",
                 }}
-                value={totalSalary}
                 readOnly
               />
             </div>

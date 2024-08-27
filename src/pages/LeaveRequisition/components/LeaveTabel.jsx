@@ -6,13 +6,13 @@ import React, { useContext, useState } from "react";
 import { TestContext } from "../../../State/Function/Main";
 import useLeaveRequesationHook from "../../../hooks/QueryHook/Leave-Requsation/hook";
 import SummaryTable from "./summaryTable";
-
+ 
 const LeaveTable = () => {
   const { handleAlert } = useContext(TestContext);
   const [anchorEl, setAnchorEl] = useState(null);
-
+ 
   const { data, isLoading, isError, error } = useLeaveRequesationHook();
-
+ 
   if (isError) {
     handleAlert(
       true,
@@ -79,7 +79,7 @@ const LeaveTable = () => {
       </article>
     );
   }
-
+ 
   if (isError) {
     return <p>Error loading data</p>;
   }
@@ -124,7 +124,7 @@ const LeaveTable = () => {
           </h1>
         </div>
       </div>
-
+ 
       <Popover
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
@@ -139,5 +139,132 @@ const LeaveTable = () => {
     </article>
   );
 };
-
+ 
 export default LeaveTable;
+
+
+// ✅
+// import { Help, MoreHoriz, MoreVert } from "@mui/icons-material";
+// import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+// import { IconButton, Popover, Skeleton, Tooltip } from "@mui/material";
+// import Divider from "@mui/material/Divider";
+// import React, { useContext, useState } from "react";
+// import { TestContext } from "../../../State/Function/Main";
+// import useLeaveRequesationHook from "../../../hooks/QueryHook/Leave-Requsation/hook";
+// import SummaryTable from "./summaryTable";
+
+// const LeaveTable = () => {
+//   const { handleAlert } = useContext(TestContext);
+//   const [anchorEl, setAnchorEl] = useState(null);
+
+//   const { data, isLoading, isError, error } = useLeaveRequesationHook();
+
+//   if (isError) {
+//     handleAlert(
+//       true,
+//       "error",
+//       error?.response?.data?.message || "Sorry, the server is under maintenance"
+//     );
+//     return (
+//       <article className="w-full md:w-[215px] h-max py-6 bg-white border border-red-500 shadow-xl rounded-lg transition-transform transform hover:scale-105">
+//         <h1 className="text-lg px-6 font-semibold flex items-center gap-2 text-red-600">
+//           <Help />
+//           <span>Failed to load data</span>
+//         </h1>
+//         <Divider className="mt-4 mb-6 border-red-500" />
+//         <div className="px-6 space-y-4">
+//           {[1, 2, 3, 4].map((index) => (
+//             <div key={index} className="space-y-2">
+//               <Skeleton variant="text" className="w-1/4 h-6" />
+//               <Skeleton variant="text" className="w-2/4 h-8" />
+//               <Divider className="border-red-500" />
+//             </div>
+//           ))}
+//         </div>
+//       </article>
+//     );
+//   }
+
+//   if (isLoading) {
+//     return (
+//       <article className="w-full  h-max py-6 bg-white shadow-xl rounded-lg transition-transform transform hover:scale-105">
+//         <h1 className="text-lg px-6 font-semibold flex items-center gap-2 text-gray-600">
+//           <AccountBalanceIcon />
+//           <span>Balance Leaves</span>
+//           <Tooltip title="Click to get Summary for current month">
+//             <IconButton className="transition-transform transform hover:scale-110">
+//               <MoreHoriz className="text-black" />
+//             </IconButton>
+//           </Tooltip>
+//         </h1>
+//         <Divider className="mt-4 mb-6" />
+//         <div className="px-6 space-y-4">
+//           {[1, 2, 3, 4].map((index) => (
+//             <div key={index} className="space-y-2">
+//               <Skeleton variant="text" className="w-1/4 h-6" />
+//               <Skeleton variant="text" className="w-2/4 h-8" />
+//               <Divider />
+//             </div>
+//           ))}
+//         </div>
+//       </article>
+//     );
+//   }
+
+//   const handlePopoverOpen = (event) => {
+//     setAnchorEl(event.currentTarget);
+//   };
+
+//   const handlePopoverClose = () => {
+//     setAnchorEl(null);
+//   };
+
+//   return (
+//     <article className="w-full  h-max bg-white shadow-xl rounded-lg transition-transform transform hover:scale-105">
+//       <h1 className="text-lg py-6 px-6 font-semibold flex items-center gap-2 justify-between bg-gray-100 border-b border-gray-300">
+//         <AccountBalanceIcon className="text-gray-600" />
+//         <span>Balance Leaves</span>
+//         <Tooltip title="Click to get Summary for current month">
+//           <IconButton
+//             onClick={handlePopoverOpen}
+//             className="transition-transform transform hover:scale-110"
+//           >
+//             <MoreVert className="text-black" />
+//           </IconButton>
+//         </Tooltip>
+//       </h1>
+      
+//       <div className="mt-4 px-6">
+//         {data?.leaveTypes?.map((item, index) => (
+//           <div
+//             key={index}
+//             className="flex justify-between items-center py-4 px-4 rounded-lg mb-2 transition-shadow hover:shadow-lg"
+//             style={{ backgroundColor: item.color }}
+//           >
+//             <h2 className="text-md font-medium text-gray-800">{item.leaveName}</h2>
+//             <h2 className="text-lg font-semibold text-gray-900">{item.count}</h2>
+//           </div>
+//         ))}
+//         <div className="flex justify-between items-center py-4 px-4 border-t border-gray-300">
+//           <h2 className="text-md font-medium text-gray-800">Total Leave Balance</h2>
+//           <h2 className="text-lg font-semibold text-gray-900">{data.totalCount}</h2>
+//         </div>
+//       </div>
+
+//       <Popover
+//         open={Boolean(anchorEl)}
+//         anchorEl={anchorEl}
+//         onClose={handlePopoverClose}
+//         anchorOrigin={{
+//           vertical: "bottom",
+//           horizontal: "left",
+//         }}
+//         className="transition-transform transform scale-95"
+//       >
+//         <SummaryTable />
+//       </Popover>
+//     </article>
+//   );
+// };
+
+// export default LeaveTable;

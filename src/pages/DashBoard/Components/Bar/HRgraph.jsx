@@ -299,7 +299,7 @@
 
 
 
-
+// ....
 
 import axios from "axios";
 import { CategoryScale, Chart } from "chart.js";
@@ -329,7 +329,9 @@ const HRgraph = () => {
     value: new Date().getFullYear(),
     label: new Date().getFullYear(),
   });
+
 console.log(employeeData);
+
   // const customStyles = {
   //   control: (base) => ({
   //     ...base,
@@ -406,11 +408,11 @@ console.log(employeeData);
       boxShadow: "none",
       backgroundColor: "#f9f9f9",
       borderRadius: "4px",
-      padding: "2px 4px", 
+      // padding: "2px 4px", 
       fontFamily: "'Roboto', sans-serif",
       zIndex: 10,
-      minHeight: '28px', 
-      height: '28px', 
+      // minHeight: '28px', 
+      // height: '28px', 
       display: 'flex',
       alignItems: 'center', 
       justifyContent: 'center', 
@@ -444,7 +446,7 @@ console.log(employeeData);
     }),
     indicatorSeparator: (base) => ({
       ...base,
-      display: 'none', // Hide the separator
+      display: 'none', 
     }),
   };
   
@@ -591,7 +593,7 @@ console.log(employeeData);
     <div className=" relative mb-6 h-[440px]  bg-gradient-to-r from-yellow-50 via-yellow-100 to-yellow-200 p-6 rounded-lg shadow-lg">
       <div className="flex flex-col gap-2" data-aos="fade-up">
         <div className="flex-col sm:flex-row sm:justify-between items-start gap-2 mb-2">
-          <h1 className="text-lg font-bold text-gray-800">Employee Attendance</h1>
+          <h1 className="text-xl font-bold text-gray-800">Employee Attendance </h1>
           <p className="text-gray-600 text-xs">
             {/* The chart below provides an overview of employee attendance, including available days, unpaid leave days, and paid leave days for each month. */}
             The chart below provides an overview of employee attendance.
@@ -600,7 +602,7 @@ console.log(employeeData);
             <motion.button
               onClick={() => mutation.mutate()}
               disabled={mutation.isLoading}
-              className={`flex items-center gap-1 px-2 py-0.5 text-sm rounded-md text-white bg-gradient-to-r from-yellow-500 to-yellow-700 hover:from-yellow-600 hover:to-yellow-800 focus:outline-none focus:ring-2 focus:ring-yellow-500 ${mutation.isLoading && "cursor-not-allowed bg-gray-400 text-gray-700"}`}
+              className={`flex items-center gap-1 px-2 py-2 text-sm rounded-md text-white bg-gradient-to-r from-yellow-500 to-yellow-700 hover:from-yellow-600 hover:to-yellow-800 focus:outline-none focus:ring-2 focus:ring-yellow-500 ${mutation.isLoading && "cursor-not-allowed bg-gray-400 text-gray-700"}`}
               aria-label="Generate Excel Report"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -660,3 +662,5 @@ console.log(employeeData);
 
 export default HRgraph;
 
+
+//Reffer this HrGraph.jsx component  change exact styling design Ui into Graphs representation . note:dont change or remove any code functionality

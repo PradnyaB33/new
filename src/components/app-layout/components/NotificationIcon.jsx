@@ -38,7 +38,11 @@ const NotificationIcon = () => {
     setOrgId(orgId);
   };
   const { dummyData } = useNotification();
+  console.log("dummyData",dummyData);
+  
   const totalCount = dummyData.reduce((acc, item) => acc + item.count, 0);
+  console.log("totalCount..",totalCount);
+  
   return (
     <Link to={`/organisation/${orgId}/notification`}>
       <Badge

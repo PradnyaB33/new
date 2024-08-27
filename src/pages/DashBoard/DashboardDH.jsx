@@ -1,3 +1,4 @@
+//ISSUEEEEEEEEEEEEE
 import {
   AccessTime,
   AdminPanelSettings,
@@ -24,6 +25,7 @@ const DashboardDH = () => {
   const { setSelectedSalaryYear, selectedSalaryYear } = useDashGlobal();
   const { organisationId } = useParams("");
 
+  const DHcardSize = "w-66 h-30"; 
   console.log(user.deptname);
 
   // custom hooks
@@ -143,13 +145,14 @@ const DashboardDH = () => {
         Department Head Dashboard
       </header>
       <div className="md:px-8 px-2 w-full">
-        <div className="flex flex-1 mt-6 flex-wrap w-full justify-between gap-2 md:gap-5 ">
+        <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-6 w-full gap-2 md:gap-5 ">
           <SuperAdminCard
             icon={Groups}
             color={"!bg-blue-500"}
             data={employeeCount ?? 0}
             isLoading={employeeCountLoading}
             title={"Overall Employees"}
+               DHcardSize={DHcardSize}
           />
           <SuperAdminCard
             color={"!bg-green-500"}
@@ -157,6 +160,7 @@ const DashboardDH = () => {
             data={managerCount?.deptEmployees?.length ?? 0}
             isLoading={managerCountLoading}
             title={"People's Manager"}
+            DHcardSize={DHcardSize}
           />
           <SuperAdminCard
             title={"Today's Leave"}
@@ -164,6 +168,7 @@ const DashboardDH = () => {
             color={"!bg-red-500"}
             data={employeeDeptLeaveCount ?? 0}
             isLoading={employeeDeptLeaveCountLoading}
+            DHcardSize={DHcardSize}
           />
           <SuperAdminCard
             color={"!bg-orange-500"}
@@ -171,6 +176,7 @@ const DashboardDH = () => {
             icon={AccessTime}
             data={employeeDeptOnShift ?? 0}
             title={"Special Shift"}
+            DHcardSize={DHcardSize}
           />
         </div>
         {/* {false ? (

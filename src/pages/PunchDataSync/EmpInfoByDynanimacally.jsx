@@ -1,4 +1,3 @@
-
 import React, { useContext, useState, useEffect } from "react";
 import {
   Button,
@@ -9,18 +8,17 @@ import {
   IconButton,
 } from "@mui/material";
 import { West } from "@mui/icons-material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
-import AttendanceBioModal from "../../components/Modal/AttedanceBioModal/AttendanceBioModal";
 import { TestContext } from "../../State/Function/Main";
+import Info from "@mui/icons-material/Info";
+import AttendanceModel from "../../components/Modal/AttedanceBioModal/AttendanceModel";
 
-const EmpInfoByDynimacally = () => {
+const EmpInfoByDynimacally = ({ organisationId }) => {
   // Hooks
   const navigate = useNavigate();
-  const param = useParams();
-  const organisationId = param?.organisationId;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchName, setSearchName] = useState("");
@@ -29,13 +27,14 @@ const EmpInfoByDynimacally = () => {
   const { handleAlert } = useContext(TestContext);
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
   const itemsPerPage = 10;
 
   // Get cookies
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
 
-  // Get punching data by org
+  // Get punching data by orgId
   const { data: tempPunchData } = useQuery(
     ["tempPunchData", organisationId],
     async () => {
@@ -54,18 +53,20 @@ const EmpInfoByDynimacally = () => {
     }
   );
 
-  console.log("tempData", tempPunchData);
-
   // Update filtered data based on search inputs
   useEffect(() => {
     const filtered =
       tempPunchData?.filter((data) => {
+        const firstName = String(data["First Name"]).toLowerCase();
+        const employeeId = String(data["Employee ID"]).toLowerCase();
+        const department = String(data.Department).toLowerCase();
+
         return (
-          data["First Name"].toLowerCase().includes(searchName.toLowerCase()) &&
-          data.Department.toLowerCase().includes(searchDepartment.toLowerCase())
+          firstName.includes(searchName.toLowerCase()) &&
+          employeeId.includes(searchId.toLowerCase()) &&
+          department.includes(searchDepartment.toLowerCase())
         );
       }) || [];
-
     setFilteredData(filtered);
     setTotalPages(Math.ceil(filtered.length / itemsPerPage));
   }, [tempPunchData, searchName, searchId, searchDepartment]);
@@ -134,6 +135,28 @@ const EmpInfoByDynimacally = () => {
   };
 
   const paginationNumbers = getPaginationNumbers();
+
+  // Handle checkbox change for individual employees
+  const handleCheckboxChange = (event, employeeData) => {
+    if (event.target.checked) {
+      setSelectedEmployees((prev) => [...prev, employeeData]);
+    } else {
+      setSelectedEmployees((prev) =>
+        prev.filter((emp) => emp._id !== employeeData._id)
+      );
+    }
+  };
+
+  // Handle "Select All" checkbox
+  const handleSelectAllChange = (event) => {
+    const isChecked = event.target.checked;
+    setSelectAll(isChecked);
+    if (isChecked) {
+      setSelectedEmployees(filteredData);
+    } else {
+      setSelectedEmployees([]);
+    }
+  };
 
   //  to open the model
   const [empModalOpen, setEmpModalOpen] = useState(false);
@@ -217,13 +240,17 @@ const EmpInfoByDynimacally = () => {
             </div>
           </div>
 
-          <div className="px-4 py-2 bg-white w-full h-max shadow-md rounded-2m border my-8">
+          <div className="px-4 py-2 bg-white w-full h-max shadow-md rounded-2m  my-8">
             <div className="overflow-auto !p-0 border-[.5px] border-gray-200 mt-4">
               <table className="min-w-full bg-white text-left !text-sm font-light">
                 <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
                   <tr className="!font-semibold">
                     <th className="pl-8 py-2 text-left">
-                      <input type="checkbox" />
+                      <input
+                        type="checkbox"
+                        checked={selectAll}
+                        onChange={handleSelectAllChange}
+                      />
                     </th>
                     <th className="!text-left pl-8 py-3">Sr No.</th>
                     <th className="py-3 pl-8 !text-left">Employee ID</th>
@@ -239,8 +266,15 @@ const EmpInfoByDynimacally = () => {
                     currentData.map((data, index) => (
                       <tr key={index} className="!font-medium border-b">
                         <td className="!text-left pl-8 py-3">
-                          <input type="checkbox" />
+                          <input
+                            type="checkbox"
+                            onChange={(e) => handleCheckboxChange(e, data)}
+                            checked={selectedEmployees.some(
+                              (emp) => emp._id === data._id
+                            )}
+                          />
                         </td>
+
                         <td className="!text-left pl-8 py-3">
                           {(currentPage - 1) * itemsPerPage + index + 1}
                         </td>
@@ -263,11 +297,13 @@ const EmpInfoByDynimacally = () => {
                       </tr>
                     ))
                   ) : (
-                    <tr>
-                      <td colSpan="8" className="text-center py-3">
-                        No data available
-                      </td>
-                    </tr>
+                    <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+                      <article className="flex items-center mb-1 text-red-500 gap-2">
+                        <Info className="!text-2xl" />
+                        <h1 className="text-lg font-semibold">Loading...</h1>
+                      </article>
+                      <p>Data is loading.</p>
+                    </section>
                   )}
                 </tbody>
               </table>
@@ -308,7 +344,7 @@ const EmpInfoByDynimacally = () => {
         </article>
       </Container>
 
-      <AttendanceBioModal
+      <AttendanceModel
         handleClose={handleEmpModalClose}
         open={empModalOpen}
         organisationId={organisationId}

@@ -15,6 +15,7 @@ import useTDSNotificationHook from "../../../hooks/QueryHook/notification/tds-no
 import UserProfile from "../../../hooks/UserData/useUser";
 import useLeaveNotification from "../../SelfLeaveNotification/useLeaveNotification";
 import useDepartmentNotification from "../../../hooks/QueryHook/notification/department-notification/hook";
+// import useGeoFencingNotification from "../../../hooks/QueryHook/notification/geo-fencing-notification/hook";
 
 const useNotification = () => {
   const { data } = useLeaveNotificationHook();
@@ -26,15 +27,33 @@ const useNotification = () => {
   const { data: shiftNotification } = useShiftNotification();
   const [emp, setEmp] = useState();
   const { data: data3 } = usePunchNotification();
+
+  const geoFencingData =
+    data3?.punchNotification?.map((item) => item?.geoFencingArea) || [];
+
+  const trueCount = geoFencingData.reduce(
+    (count, item) => (item === true ? count + 1 : count),
+    0
+  );
+
+  const falseCount = geoFencingData.reduce(
+    (count, item) => (item === false ? count + 1 : count),
+    0
+  );
+
+  // const {data:geoFencing}=useGeoFencingNotification();
   const { data: data4 } = useDocNotification();
   const { data: tds } = useTDSNotificationHook();
+
   const { missPunchData, getMissedPunchData } =
     useMissedPunchNotificationCount();
+
   const { Form16Notification } = useForm16NotificationHook();
   const {
     getEmployeeRequestLoanApplication,
     getApprovedRejectLoanDataByApprover,
   } = useLoanNotification();
+
   const { getJobPositionToMgr, getNotificationToEmp } =
     useJobPositionNotification();
   const { PayslipNotification } = usePayslipNotificationHook();
@@ -149,6 +168,7 @@ const useNotification = () => {
     })();
     // eslint-disable-next-line
   }, []);
+  
   const dummyData = [
     {
       name: "Leave Notification",
@@ -172,13 +192,20 @@ const useNotification = () => {
     },
     {
       name: "Remote Punching Notification",
-      count: data3?.punchNotification?.length ?? 0,
+      count: falseCount,
       color: "#51FD96",
       url: "/punch-notification",
       url2: "/self/emp-main-notification",
       visible: emp?.packageInfo === "Intermediate Plan",
     },
-
+    {
+      name: "Geo Fencing Notification",
+      count: trueCount,
+      color: "#51FD96",
+      url: "/punch-notification",
+      url2: "/self/emp-main-notification",
+      visible: emp?.packageInfo === "Intermediate Plan",
+    },
     {
       name: "Document Approval Notification",
       count: data4?.data?.doc.length ?? 0,
@@ -227,7 +254,8 @@ const useNotification = () => {
 
     {
       name: "TDS Notification",
-      count: Number(tds) ?? 0,
+      // count: Number(tds) ?? 0,
+      count: typeof tds === "number" ? tds : 0,
       color: "#51E8FD",
       url: tdsRoute,
       url2: "/notification/income-tax-details",

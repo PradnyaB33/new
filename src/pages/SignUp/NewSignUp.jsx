@@ -19,6 +19,7 @@ import { z } from "zod";
 import { TestContext } from "../../State/Function/Main";
 import AuthInputFiled from "../../components/InputFileds/AuthInputFiled";
 import UserProfile from "../../hooks/UserData/useUser";
+import useAuthentication from "./useAuthentication";
 
 const SignIn = () => {
   // hooks
@@ -36,6 +37,7 @@ const SignIn = () => {
 
   // to get current user
   const { getCurrentUser } = UserProfile();
+  const { countryCode } = useAuthentication();
   const user = getCurrentUser();
 
   // navigate
@@ -115,10 +117,14 @@ const SignIn = () => {
   });
 
   const number = watch("phone");
-
   // to define the onSubmit function
   const onSubmit = async (data) => {
     try {
+      if (!isVerified) {
+        handleAlert(true, "warning", "Please verify your phone number");
+        return false;
+      }
+
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create`,
         data
@@ -138,6 +144,7 @@ const SignIn = () => {
     (data) =>
       axios.post(`${process.env.REACT_APP_API}/route/employee/sendOtp`, {
         number: data,
+        countryCode,
       }),
     {
       onSuccess: (data) => {

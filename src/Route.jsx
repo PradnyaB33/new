@@ -87,8 +87,7 @@ import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
-//import EmpInfoPunchStatus from "./pages/EmpInfoPunchStatus/EmpInfoPunchStatus";
-import EmpInfoByDynimacally from "./pages/EmpInfoPunchStatus/EmpInfoByDynanimacally";
+import RendarPunchSyncFile from "./pages/PunchDataSync/RendarPunchSyncFile";
 import EmployeeNotification from "./pages/Employee-Notification/page";
 import EditEmployee from "./pages/Employee/EditEmployee";
 import EmployeeSurvey from "./pages/EmployeeSurvey/EmployeeSurvey";
@@ -138,15 +137,8 @@ import JobNotificationToEmp from "./pages/Recruitment/Notification/JobNotificati
 import OpenJobPosition from "./pages/Recruitment/OpenRoleJobPosition";
 import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
 import DepartmentNotificationToEmp from "./pages/DeptNotification/DepartmentNotificationToEmp";
-import TempPunchingData from "./pages/EmployeeSurvey/components/TempPunchingData";
-// import  Overtime setup
-
 import OvertimeSetup from "./pages/OvertimeSetup/OvertimeSetup";
-
-//import LiveData
-import LiveData from "./pages/LiveData/LiveData";
-import LiveSyncData from "./pages/EmpInfoPunchStatus/LiveSyncData";
-
+import GeoFencingEmployeeSide from "./pages/Geo-Fence/components/GeoFencingEmployeeSide";
 const App = () => {
   return (
     <AuthProvider>
@@ -206,23 +198,7 @@ const App = () => {
           }
         />
 
-        {/* LiveData */}
-        <Route
-          path="/organisation/:organisationId/setup/liveData"
-          element={
-            <RequireAuth
-              permission={[
-                "Super-Admin",
-                "Delegate-Super-Admin",
-                "Employee",
-                "Manager",
-                "HR",
-              ]}
-            >
-              <LiveData />
-            </RequireAuth>
-          }
-        />
+      
         
         
         <Route
@@ -252,7 +228,18 @@ const App = () => {
           path="/organisation/:organisationId/remotePunching/geo-fencing"
           element={<GeoFencing />}
         />
-
+        <Route
+          path="/organisation/:organisationId/geo-fencing"
+          element={
+            <RequireAuth
+              permission={[
+                "Employee",
+              ]}
+            >
+              <GeoFencingEmployeeSide />
+            </RequireAuth>
+          }
+        />
         {/* Login Routes */}
         <Route path="/test3" element={<TestYash />} />
         <Route
@@ -297,6 +284,7 @@ const App = () => {
             <RequireAuth permission={["Super-Admin"]}>
               <Billing />
             </RequireAuth>
+            
           }
         />
         {/* <Route path="/choose-role" element={<RolePage />} /> */}
@@ -614,26 +602,17 @@ const App = () => {
             </RequireAuth>
           }
         />
-        {/* <Route
-          path="/organisation/:organisationId/emo-info-punch-status"
-          element={
-            <RequireAuth
-              permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
-            >
-              <EmpInfoPunchStatus />
-            </RequireAuth>
-          }
-        /> */}
         <Route
           path="/organisation/:organisationId/emo-info-punch-status"
           element={
             <RequireAuth
               permission={["Super-Admin", "Delegate-Super-Admin", "HR"]}
             >
-              <EmpInfoByDynimacally />
+              <RendarPunchSyncFile />
             </RequireAuth>
           }
         />
+
         <Route
           path="/organisation/:organisationId/view-calculate-data"
           element={
@@ -731,7 +710,7 @@ const App = () => {
         />
 
         {/* LiveSyncData */}
-        <Route
+        {/* <Route
           path="/organisation/:organisationId/liveSyncData"
           element={
             <RequireAuth
@@ -752,7 +731,7 @@ const App = () => {
              <LiveSyncData/>
             </RequireAuth>
           }
-        />
+        /> */}
         <Route
           path="/organisation/:organisationId/employee-offboarding"
           element={
@@ -1667,6 +1646,15 @@ const App = () => {
             </RequireAuth>
           }
         />
+        {/* OvertimeSetup */}
+        <Route
+          path="/organisation/:organisationId/setup/overtime-setup"
+          element={
+            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+              <OvertimeSetup />
+            </RequireAuth>
+          }
+        />
         <Route
           path="/organisation/:organisationId/survey-form/:surveyId/:responseId"
           element={
@@ -1733,30 +1721,6 @@ const App = () => {
               ]}
             >
               <SurveyDetails />
-            </RequireAuth>
-          }
-        />
-
-        <Route
-          path="/organisation/:organisationId/temp-punch-data"
-          element={
-            <RequireAuth
-              permission={[
-                "Super-Admin",
-                "Delegate-Super-Admin",
-                "Department-Head",
-                "Delegate-Department-Head",
-                "Department-Admin",
-                "Delegate-Department-Admin",
-                "Accountant",
-                "Delegate-Accountant",
-                "HR",
-                "Manager",
-                "Employee",
-                7,
-              ]}
-            >
-              <TempPunchingData />
             </RequireAuth>
           }
         />

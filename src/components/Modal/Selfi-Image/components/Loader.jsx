@@ -1,6 +1,7 @@
 import { EmojiEmotionsOutlined } from "@mui/icons-material";
 import React from "react";
 
+//loader for upload photo
 const Loader = ({ isLoading = false, outerClassName = "" }) => {
   return (
     isLoading && (

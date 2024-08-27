@@ -6,9 +6,9 @@ import BackComponent from "../../components/BackComponent/BackComponent";
 import useSetupSideNav from "../../hooks/Nav/useSetupSideNav";
 
 const Setup = ({ children }) => {
-  const { organizationId } = useParams("");
+  const { organisationId } = useParams("");
 
-  const { linkData } = useSetupSideNav({ organizationId });
+  const { linkData } = useSetupSideNav({ organisationId });
   const navigate = useNavigate();
 
   return (

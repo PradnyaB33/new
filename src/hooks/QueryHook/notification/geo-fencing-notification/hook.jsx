@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import useGetUser from "../../../Token/useUser";
 
-const usePunchNotification = () => {
+const useGeoFencingNotification = () => {
   const { authToken } = useGetUser();
   const [organizationId, setOrganizationId] = useState();
   console.log(`🚀 ~ file: hook.jsx:9 ~ setOrganizationId:`, setOrganizationId);
@@ -14,8 +14,6 @@ const usePunchNotification = () => {
         headers: { Authorization: authToken },
       }
     );
-    console.log("response.data",response.data);
-    
     return response.data;
   };
 
@@ -30,4 +28,4 @@ const usePunchNotification = () => {
   };
 };
 
-export default usePunchNotification;
+export default useGeoFencingNotification;

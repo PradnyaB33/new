@@ -38,10 +38,7 @@
 
 // export default SuperAdminCard;
 
-
-
-
-
+//😎
 
 // import { Avatar } from "@mui/material";
 // import React, { useEffect } from "react";
@@ -66,73 +63,7 @@
 //     <motion.div
 //       data-aos="fade-up"
 //       whileHover={{ scale: 1.05 }}
-//       className={`relative p-4 bg-white border rounded-lg shadow-md flex flex-col items-center justify-center transition-transform duration-300 mt-4 mb-4 hover:shadow-lg ${className}`}
-//     >
-//       {isLoading ? (
-//         <AdminCardSke />
-//       ) : (
-//         <>
-
-//           <motion.div
-//             whileHover={{ scale: 1.15, rotate: 10 }}
-//             className={`flex items-center justify-center ${color} rounded-full p-2 shadow-sm mb-2 absolute -top-8`} 
-//           >
-//             <Avatar
-//               className="text-white"
-//               sx={{
-//                 bgcolor: 'transparent',
-//                 width: 50, 
-//                 height: 50, 
-//                 borderRadius: '50%',
-//                 display: 'flex',
-//                 alignItems: 'center',
-//                 justifyContent: 'center',
-//                 boxShadow: 'none',
-//               }}
-//               variant="rounded"
-//             >
-//               <Icon style={{ fontSize: '2.2em' }} />
-//             </Avatar>
-//           </motion.div>
-
-//           <div className="text-center mt-12 space-y-1">
-//             <h1 className="text-xl font-bold text-gray-800 mb-0.5">{title}</h1>
-//             <h2 className="text-lg font-bold text-blue-700">{data}</h2>
-//           </div>
-//         </>
-//       )}
-//     </motion.div>
-//   );
-// };
-
-// export default SuperAdminCard;
-
-
-
-// import { Avatar } from "@mui/material";
-// import React, { useEffect } from "react";
-// import { motion } from "framer-motion";
-// import AdminCardSke from "../../Skeletons/AdminCardSke";
-// import AOS from 'aos';
-// import 'aos/dist/aos.css';
-
-// const SuperAdminCard = ({
-//   title,
-//   icon: Icon,
-//   data,
-//   color,
-//   isLoading,
-//   className = "",
-// }) => {
-//   useEffect(() => {
-//     AOS.init({ duration: 1000 });
-//   }, []);
-
-//   return (
-//     <motion.div
-//       data-aos="fade-up"
-//       whileHover={{ scale: 1.05 }}
-//       className={`relative p-4 bg-gradient-to-r from-blue-50 to-blue-100 border rounded-lg shadow-lg flex flex-col items-center justify-center transition-transform duration-300 mt-4 mb-4 hover:shadow-xl hover:bg-gradient-to-r hover:from-blue-200 hover:to-blue-300 ${className}`}
+//       className={` h-28  relative p-4 bg-gradient-to-r from-blue-50 to-blue-100 border rounded-lg shadow-lg flex flex-col items-center justify-center transition-transform duration-300 mt-4 mb-4 hover:shadow-xl hover:bg-gradient-to-r hover:from-blue-200 hover:to-blue-300 ${className}`}
 //     >
 //       {isLoading ? (
 //         <AdminCardSke />
@@ -146,8 +77,8 @@
 //               className="text-white"
 //               sx={{
 //                 bgcolor: 'transparent',
-//                 width: 60, 
-//                 height: 60, 
+//                 width: 49,
+//                 height: 49,
 //                 borderRadius: '50%',
 //                 display: 'flex',
 //                 alignItems: 'center',
@@ -156,7 +87,7 @@
 //               }}
 //               variant="rounded"
 //             >
-//               <Icon style={{ fontSize: '2.5em' }} />
+//               <Icon style={{ fontSize: '2em' }} />
 //             </Avatar>
 //           </motion.div>
 
@@ -173,57 +104,71 @@
 // export default SuperAdminCard;
 
 
+
 import { Avatar } from "@mui/material";
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import AdminCardSke from "../../Skeletons/AdminCardSke";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const SuperAdminCard = ({
   title,
-  icon: Icon,
+  icon: Icon, 
   data,
   color,
   isLoading,
   className = "",
+  cardSize, // New prop for card size
+  DHcardSize,
 }) => {
   useEffect(() => {
     AOS.init({ duration: 1000 });
   }, []);
 
+  const sizeClass = cardSize  || DHcardSize ; // Default size if cardSize is not provided
+  // const sizeClass = DHcardSize ; // Default size if cardSize is not provided
+ 
+  // console.log('😋😋😋✔😋😋',DHcardSize); //
+  
+  //  "w-64 h-28"
+  // "w-52 h-30
   return (
     <motion.div
       data-aos="fade-up"
       whileHover={{ scale: 1.05 }}
-      className={` h-28  relative p-4 bg-gradient-to-r from-blue-50 to-blue-100 border rounded-lg shadow-lg flex flex-col items-center justify-center transition-transform duration-300 mt-4 mb-4 hover:shadow-xl hover:bg-gradient-to-r hover:from-blue-200 hover:to-blue-300 ${className}`}
+      className={` h-28 relative p-4 bg-gradient-to-r from-blue-50 to-blue-100 border rounded-lg shadow-lg flex flex-col items-center justify-center transition-transform duration-300 mt-4 mb-4 hover:shadow-xl hover:bg-gradient-to-r hover:from-blue-200 hover:to-blue-300 ${className} ${sizeClass}`}
     >
       {isLoading ? (
         <AdminCardSke />
       ) : (
-        <>  
+        <>
           <motion.div
             whileHover={{ scale: 1.15, rotate: 10 }}
-            className={`flex items-center justify-center ${color} rounded-full p-2 shadow-lg mb-2 absolute -top-8`}
+            className={`flex items-center justify-center ${color} rounded-full p-2 shadow-lg mb-2 absolute -top-8 ${sizeClass}`}
+            style={{ width: "4rem", height: "4rem" }} // Explicitly set icon container size
           >
             <Avatar
               className="text-white"
               sx={{
-                bgcolor: 'transparent',
-                width: 49, 
-                height: 49, 
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: 'none',
+                bgcolor: "transparent",
+                // width: 49,
+                // height: 49,
+                width: "2.5rem", //  icon size
+                height: "2.5rem",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "none",
               }}
               variant="rounded"
             >
-              <Icon style={{ fontSize: '2em' }} />
+              <Icon style={{ fontSize: "2em" }} />
             </Avatar>
           </motion.div>
 
+       
           <div className="text-center mt-12 space-y-1">
             <h1 className="text-xl font-bold text-gray-800 mb-0.5">{title}</h1>
             <h2 className="text-lg font-bold text-blue-800">{data}</h2>

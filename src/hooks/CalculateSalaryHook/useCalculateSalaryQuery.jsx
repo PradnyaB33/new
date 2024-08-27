@@ -2,7 +2,6 @@ import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useContext, useEffect, useState } from "react";
 import { TestContext } from "../../State/Function/Main";
-import dayjs from "dayjs";
 import { useQuery } from "react-query";
 
 const useCalculateSalaryQuery = ({
@@ -14,9 +13,6 @@ const useCalculateSalaryQuery = ({
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const token = cookies["aegis"];
-  const currentDate = dayjs();
-  const [selectedDate, setSelectedDate] = useState(currentDate);
-  console.log(setSelectedDate);
 
   // get the alreday salary data created
   const [salaryInfo, setSalaryInfo] = useState([]);
@@ -111,13 +107,9 @@ const useCalculateSalaryQuery = ({
       ? remotePunchingCount * getremotePuncingAmount
       : 0;
 
-  const formattedDate = selectedDate.format("MMM-YY");
-  
-
   return {
     salaryInfo,
     availableEmployee,
-    formattedDate,
     empLoanAplicationInfo,
     remotePunchAllowance,
   };

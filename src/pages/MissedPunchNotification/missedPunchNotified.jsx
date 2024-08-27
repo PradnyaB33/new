@@ -80,6 +80,7 @@ const MissedPunchNotified = ({ employeeId }) => {
     }
   };
 
+  // for hr
   //  for hr approved the unavailable record
   const handleApprovalUnavailableRecord = async (recordId) => {
     try {
@@ -100,10 +101,10 @@ const MissedPunchNotified = ({ employeeId }) => {
       console.error("Error approving record:", error);
       handleAlert(true, "error", "Failed to approve record.");
     }
-  }; 
+  };
 
-  // to define the function for approval the leave record
-  const handleApprovedLeaveUnavailableRecord = async (recordId) => {
+  // to define the function for approval the unpaid leave
+  const handleApprovedUnpaidLeave = async (recordId) => {
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_API}/route/organization/${organisationId}/approved-leave-unavailable-record/${recordId}`,
@@ -117,6 +118,27 @@ const MissedPunchNotified = ({ employeeId }) => {
       console.log(response);
       await queryClient.refetchQueries(["unavailableRecords", organisationId]);
       handleAlert(true, "success", "Approved leave successfully.");
+    } catch (error) {
+      console.error("Error approving record:", error);
+      handleAlert(true, "error", "Failed to approve record.");
+    }
+  };
+
+  // to define the function for approval the extra shift
+  const handleApprovedExtraShift = async (recordId) => {
+    try {
+      const response = await axios.put(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/approved-extra-shift-record/${recordId}`,
+        {},
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      console.log(response);
+      await queryClient.refetchQueries(["unavailableRecords", organisationId]);
+      handleAlert(true, "success", "Approved extra shift successfully.");
     } catch (error) {
       console.error("Error approving record:", error);
       handleAlert(true, "error", "Failed to approve record.");
@@ -207,7 +229,9 @@ const MissedPunchNotified = ({ employeeId }) => {
                                   : "-"}
                               </td>
                               <td className="!text-left pl-6 py-3">
-                                {unavailableRecord?.justify || ""}
+                                {unavailableRecord?.justify ||
+                                  unavailableRecord?.leave ||
+                                  unavailableRecord?.shift || ""}
                               </td>
                               <td className="!text-left pl-6 py-3">
                                 {role === "Manager" ? (
@@ -238,9 +262,19 @@ const MissedPunchNotified = ({ employeeId }) => {
                                           unavailableRecord._id
                                         )
                                       }
-                                      className="bg-blue-500 text-white px-2 py-1 ml-2 rounded-md"
+                                      className="bg-green-500 text-white px-2 py-1 ml-2 rounded-md"
                                     >
-                                      Approved as leave
+                                      Approved Extra shift
+                                    </button>
+                                    <button
+                                      onClick={() =>
+                                        handleApprovalUpdateByMgr(
+                                          unavailableRecord._id
+                                        )
+                                      }
+                                      className="bg-red-500 text-white px-2 py-1 ml-2 rounded-md"
+                                    >
+                                      Approved Unpaid leave
                                     </button>
                                   </>
                                 ) : role === "HR" ? (
@@ -269,13 +303,23 @@ const MissedPunchNotified = ({ employeeId }) => {
 
                                     <button
                                       onClick={() =>
-                                        handleApprovedLeaveUnavailableRecord(
+                                        handleApprovedExtraShift(
                                           unavailableRecord._id
                                         )
                                       }
-                                      className="bg-blue-500 text-white px-2 py-1 ml-2 rounded-md"
+                                      className="bg-green-500 text-white px-2 py-1 ml-2 rounded-md"
                                     >
-                                      Approved as leave
+                                      Approved Extra shift
+                                    </button>
+                                    <button
+                                      onClick={() =>
+                                        handleApprovedUnpaidLeave(
+                                          unavailableRecord._id
+                                        )
+                                      }
+                                      className="bg-red-500 text-white px-2 py-1 ml-2 rounded-md"
+                                    >
+                                      Approved unpaid leave
                                     </button>
                                   </>
                                 ) : null}

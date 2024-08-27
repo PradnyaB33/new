@@ -24,6 +24,7 @@ const MappedPunches = ({
   punchObjectId,
 }) => {
   const { data } = useGetSinglePunch({ Id });
+console.log("data",data);
 
   return (
     <div className={`w-full h-80 ${className} cursor-pointer`}>
@@ -79,7 +80,7 @@ const MappedPunches = ({
                     ).toLocaleTimeString()
                     : "N/A"}
                 </h1>
-                <h1>Distance Travelled: {distance}</h1>
+                <h1>Distance Travelled: {doc?.distance}</h1>
                 <h1>  Miss Punch time:{" "}
                  
                     <span>{idx +1}</span>
