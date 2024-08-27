@@ -120,21 +120,25 @@ const ManagementCalender = () => {
                         style={{ background: item.color }}
                         className={`h-3 w-3 rounded-full `}
                       />
-                      <h1 className="text-lg text-gray-700   tracking-tight">
-                        {item?.leaveName}
-                      </h1>
+                      <div>
+                        <h1 className="text-lg text-gray-700   tracking-tight">
+                          {item?.leaveName}
+                        </h1>
+                        <h1 className="text-xl">{item?.count}</h1>
+                      </div>
                     </div>
-                    <h1 className="text-xl">{item?.count}</h1>
                   </div>
                 ))}
 
                 <div className="border-b p-4  ">
                   <div className="flex items-center gap-2">
-                    <h1 className="text-xl text-gray-700   tracking-tight">
+                    <h1 className="text-xl text-gray-700 font-semibold  tracking-tight">
                       Total
                     </h1>
+                    <h1 className="text-xl text-gray-700 font-semibold   tracking-tight">
+                      {leaveTableData?.totalCoutn}
+                    </h1>
                   </div>
-                  <h1 className="text-2xl">{leaveTableData?.totalCoutn}</h1>
                 </div>
               </div>
               <div className="manager-cal w-[70%] p-4 bg-white rounded-md border flex items-center justify-center ">
