@@ -905,6 +905,8 @@ const DashboardHr = () => {
     getAttendenceData,
   } = useDashboardFilter(user.organizationId);
 
+  console.log(salaryGraphLoading,customStyles);
+  
   const getRemoteEmployeeCount = async () => {
     try {
       const { data } = await axios.get(
