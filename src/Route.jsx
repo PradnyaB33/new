@@ -141,6 +141,8 @@ import OvertimeSetup from "./pages/OvertimeSetup/OvertimeSetup";
 import GeoFencingEmployeeSide from "./pages/Geo-Fence/components/GeoFencingEmployeeSide";
 import GeoFencingAcceptModal from "./components/Modal/RemotePunchingModal/GeoFencingAcceptModal";
 import EmpGeoFencingNotification from "./pages/emp-notifications/EmpGeoFencingNotification";
+import EditDepartment from "./pages/Departments/EditDepartment";
+
 const App = () => {
   return (
     <AuthProvider>
@@ -477,6 +479,24 @@ const App = () => {
               ]}
             >
               <DepartmentTest />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/edit-department/:deptId"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "HR",
+              ]}
+            >
+              <EditDepartment />
             </RequireAuth>
           }
         />
