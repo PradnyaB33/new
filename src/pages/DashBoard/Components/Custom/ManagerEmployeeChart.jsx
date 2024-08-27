@@ -776,7 +776,7 @@
 //aos motion
 import React, { useContext, useState, useEffect } from "react";
 import { Info } from "@mui/icons-material";
-import { Card, CircularProgress, Skeleton } from "@mui/material";
+import { Card, Skeleton } from "@mui/material";
 import axios from "axios";
 import { CategoryScale, Chart } from "chart.js";
 import { Bar } from "react-chartjs-2";
