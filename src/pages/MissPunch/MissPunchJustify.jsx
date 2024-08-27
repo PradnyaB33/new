@@ -6,8 +6,6 @@ import { useQuery } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
 import MissPunchJustifyModal from "../../components/Modal/MissPunchJustifyModal/MissPunchJustifyModal";
 import UserProfile from "../../hooks/UserData/useUser";
-import { West } from "@mui/icons-material";
-import { useNavigate } from "react-router";
 
 const MissPunchJustify = () => {
   const { cookies } = useContext(UseContext);
@@ -15,7 +13,7 @@ const MissPunchJustify = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const organisationId = user.organizationId;
-  const navigate = useNavigate();
+  
 
   // State for pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -72,11 +70,11 @@ const MissPunchJustify = () => {
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen py-8 px-4">
-        <div className="mt-3">
+        {/* <div className="mt-3">
           <IconButton onClick={() => navigate(-1)}>
             <West className="text-xl" />
           </IconButton>
-        </div>
+        </div> */}
         <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
           Missed Justify
         </Typography>

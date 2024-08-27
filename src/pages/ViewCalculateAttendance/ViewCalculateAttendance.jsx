@@ -7,12 +7,12 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useQuery } from "react-query";
 import ViewAttendanceCallModal from "../../components/Modal/ViewAttendanceCalModal/ViewAttendanceCalModal";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { West } from "@mui/icons-material";
+//import { West } from "@mui/icons-material";
 const ITEMS_PER_PAGE = 10;
 
 const ViewCalculateAttendance = () => {
@@ -23,33 +23,45 @@ const ViewCalculateAttendance = () => {
   const [emailSearch, setEmailSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredData, setFilteredData] = useState([]);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // For Get Query
   const {
     data: calculateAttendanceData,
     isLoading,
     error,
-  } = useQuery(["calculateAttendanceData", organisationId], async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-punching-info`,
-      {
-        headers: {
-          Authorization: authToken,
-        },
-      }
-    );
-    return response.data.data;
-  });
+  } = useQuery(
+    ["empAttendanceData", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/organization/${organisationId}/get-punching-info`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.data;
+    },
+    {
+      staleTime: 0, // Data will be considered stale immediately
+      cacheTime: 0, // Data will not be cached
+      refetchOnWindowFocus: true, // Refetch on window focus
+      refetchOnReconnect: true, // Refetch on network reconnect
+    }
+  );
+  
+  console.log("calculated attendnace data", calculateAttendanceData);
 
   useEffect(() => {
     if (calculateAttendanceData) {
       const filtered = calculateAttendanceData.filter((item) => {
         return (
-          !emailSearch.toLowerCase() ||
-          (item?.EmployeeId?.email !== null &&
-            item?.EmployeeId?.email !== undefined &&
-            item?.EmployeeId?.email.toLowerCase().includes(emailSearch))
+          item?.EmployeeId !== null && // Ensure EmployeeId is not null
+          (!emailSearch.toLowerCase() ||
+            (item?.EmployeeId?.email !== null &&
+              item?.EmployeeId?.email !== undefined &&
+              item?.EmployeeId?.email.toLowerCase().includes(emailSearch)))
         );
       });
       setFilteredData(filtered);
@@ -100,11 +112,11 @@ const ViewCalculateAttendance = () => {
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className=" bg-white w-full h-max shadow-md rounded-sm border items-center">
-          <div className=" mt-3">
+          {/* <div className=" mt-3">
             <IconButton onClick={() => navigate(-1)}>
               <West className="text-xl" />
             </IconButton>
-          </div>
+          </div> */}
 
           <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
             Employee’s Calendar View

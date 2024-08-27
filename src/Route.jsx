@@ -139,6 +139,8 @@ import DepartmentNotification from "./pages/DeptNotification/DepartmentNotificat
 import DepartmentNotificationToEmp from "./pages/DeptNotification/DepartmentNotificationToEmp";
 import OvertimeSetup from "./pages/OvertimeSetup/OvertimeSetup";
 import GeoFencingEmployeeSide from "./pages/Geo-Fence/components/GeoFencingEmployeeSide";
+import GeoFencingAcceptModal from "./components/Modal/RemotePunchingModal/GeoFencingAcceptModal";
+import EmpGeoFencingNotification from "./pages/emp-notifications/EmpGeoFencingNotification";
 const App = () => {
   return (
     <AuthProvider>
@@ -195,10 +197,13 @@ const App = () => {
 
         <Route path="/paymentfailed" element={<PaymentFailed />} />
         <Route
-          path="/self/emp-main-notification"
+          path="/remote-punching-notification"
           element={<EmpNotification />}
         />
-
+        <Route
+          path="/geofencing-notification"
+          element={<EmpGeoFencingNotification />}
+        />
         <Route path="/loading" element={<Loader />} />
         <Route path="/my-training" element={<MyTraining />} />
         <Route path="/testOrg" element={<NewOranisationForm />} />
@@ -214,11 +219,7 @@ const App = () => {
         <Route
           path="/organisation/:organisationId/geo-fencing"
           element={
-            <RequireAuth
-              permission={[
-                "Employee",
-              ]}
-            >
+            <RequireAuth permission={["Employee"]}>
               <GeoFencingEmployeeSide />
             </RequireAuth>
           }
@@ -283,6 +284,10 @@ const App = () => {
           element={<LeaveNotification />}
         />
         <Route path="/punch-notification" element={<PunchNotification />} />
+        <Route
+          path="/geo-fencing-notification"
+          element={<GeoFencingAcceptModal />}
+        />
         {/* <Route
           path="self/shift-notification"
           element={<EmpShiftNotification />}
@@ -290,6 +295,10 @@ const App = () => {
         <Route
           path="/punch-notification/:employeeId"
           element={<PunchNotification />}
+        />
+        <Route
+          path="geo-fencing-notification/:employeeId"
+          element={<GeoFencingAcceptModal />}
         />
         <Route path="/shift-notification" element={<ShiftNotification />} />
         <Route
@@ -390,7 +399,7 @@ const App = () => {
           }
         />
         <Route
-          path="/organisation/:organisationId/dashboard/super-admin" 
+          path="/organisation/:organisationId/dashboard/super-admin"
           element={
             <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
               <SuperAdmin />
@@ -947,14 +956,7 @@ const App = () => {
             </RequireAuth>
           }
         />
-        {/* <Route
-          path="/set-shifts/:id"
-          element={
-            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
-              <Shift s />
-            </RequireAuth>
-          }
-        /> */}
+
         <Route
           path="/add-inputfield/:id"
           element={

@@ -5,10 +5,8 @@ import {
   TextField,
   Tooltip,
   Typography,
-  IconButton,
 } from "@mui/material";
-import { West } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+// import { West } from "@mui/icons-material";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { UseContext } from "../../State/UseState/UseContext";
@@ -18,7 +16,7 @@ import AttendanceModel from "../../components/Modal/AttedanceBioModal/Attendance
 
 const EmpInfoByDynimacally = ({ organisationId }) => {
   // Hooks
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchName, setSearchName] = useState("");
@@ -178,11 +176,11 @@ const EmpInfoByDynimacally = ({ organisationId }) => {
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen">
         <article className=" bg-white w-full h-max shadow-md rounded-sm border items-center">
-          <div className=" mt-3">
+          {/* <div className=" mt-3">
             <IconButton onClick={() => navigate(-1)}>
               <West className="text-xl" />
             </IconButton>
-          </div>
+          </div> */}
           <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
             Employee’s Punch Sync
           </Typography>

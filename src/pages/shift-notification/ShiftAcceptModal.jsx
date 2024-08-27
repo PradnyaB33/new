@@ -2,16 +2,16 @@ import { Info, RequestQuote, Search, West } from "@mui/icons-material";
 import { Avatar, CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import ShiftRejectModel from "../../components/Modal/ShiftRequestModal/ShiftRejectModel";
 import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
-// import PunchMapModal from "./components/mapped-form";
 
 const ShiftAcceptModal = ({ data }) => {
   const authToken = useAuthToken();
   const { getCurrentUser } = UserProfile();
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   let isAcc = false;
   const user = getCurrentUser();
@@ -89,6 +89,35 @@ const ShiftAcceptModal = ({ data }) => {
       .includes(searchTerm.toLowerCase())
   );
 
+  // Mutation to update notification count
+  const mutation = useMutation(
+    ({ employeeId }) => {
+      return axios.put(
+        `${process.env.REACT_APP_API}/route/shift/update/notificationCount/${employeeId}`,
+        { notificationCount: 0 },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: () => {
+        // Refetch the punch notifications after updating notification count
+        queryClient.invalidateQueries("shift-request");
+      },
+      onError: (error) => {
+        console.error("Error updating notification count:", error);
+      },
+    }
+  );
+
+  const handleEmployeeClick = (employeeId) => {
+    // Call the mutation to update the notification count
+    mutation.mutate({ employeeId });
+  };
+
   return (
     <div>
       <header className="text-xl w-full pt-6 border bg-white shadow-md   p-4">
@@ -120,11 +149,11 @@ const ShiftAcceptModal = ({ data }) => {
             (employee, idx) =>
               employee !== null && (
                 <Link
+                  onClick={() => handleEmployeeClick(employee?._id)}
                   to={`/shift-notification/${employee?._id}`}
-                  className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${
-                    employee?._id === employeeId &&
+                  className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${employee?._id === employeeId &&
                     "bg-blue-500 text-white hover:!bg-blue-300"
-                  }`}
+                    }`}
                   key={idx}
                 >
                   <Avatar />
@@ -133,9 +162,8 @@ const ShiftAcceptModal = ({ data }) => {
                       {employee?.first_name} {employee?.last_name}
                     </h1>
                     <h1
-                      className={`text-sm text-gray-500 ${
-                        employee?._id === employeeId && "text-white"
-                      }`}
+                      className={`text-sm text-gray-500 ${employee?._id === employeeId && "text-white"
+                        }`}
                     >
                       {employee?.email}
                     </h1>

@@ -28,7 +28,9 @@ const MiniForm = () => {
     isFaceDetectionLoading,
     isFetching,
     employeeOrgId,
+    uploadBtnActive
   } = useSelfieFaceDetect();
+  console.log("employeeOrgId", employeeOrgId?.employee?.faceRecognition);
 
   //useEffect
   useEffect(() => {
@@ -145,7 +147,8 @@ const MiniForm = () => {
             isLoading ||
             isMutationLoading ||
             isFaceDetectionLoading ||
-            isFetching
+            isFetching ||
+            (employeeOrgId?.employee?.faceRecognition === true && uploadBtnActive !== "Face match found")
           }
         >
           {getImageUrl.isLoading ? <CircularProgress size={20} /> : "Upload"}
