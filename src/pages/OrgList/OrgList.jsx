@@ -113,7 +113,7 @@ const OrgList = () => {
       setSearchQuery(query);
     }, 300),
     []
-    
+  
   );
  
   console.log(useCallback);
