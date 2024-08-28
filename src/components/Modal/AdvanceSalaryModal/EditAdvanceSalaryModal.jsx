@@ -11,7 +11,6 @@ import {
   Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -22,6 +21,7 @@ import useAdvanceSalaryState from "../../../hooks/AdvanceSalaryHook/useAdvanceSa
 import useAdvanceSalaryQuery from "../../../hooks/AdvanceSalaryHook/useAdvanceSalaryQuery";
 import { UseContext } from "../../../State/UseState/UseContext";
 import { TestContext } from "../../../State/Function/Main";
+import Box from "@mui/material/Box";
 
 const EditAdvanceSalaryModal = ({
   handleClose,
@@ -29,7 +29,7 @@ const EditAdvanceSalaryModal = ({
   organisationId,
   advanceSalary,
 }) => {
-  // to define the state , hook 
+  // to define the state , hook
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
@@ -76,7 +76,7 @@ const EditAdvanceSalaryModal = ({
     }
     // eslint-disable-next-line
   }, [advanceSalaryStartingDate, noOfMonth]);
-  
+
   // to define the funciton for change the no of emi
   const handleNoOfEmiChange = (e) => {
     const value = e.target.value;
@@ -103,7 +103,7 @@ const EditAdvanceSalaryModal = ({
     }
   };
   const advancedSalaryAmounts = getTotalSalaryEmployee * noOfMonth;
-  
+
   // to define the function for change the file
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -116,7 +116,6 @@ const EditAdvanceSalaryModal = ({
     }
   };
 
- 
   // to define the function for update the advance salary
   const queryClient = useQueryClient();
   const UpdateAdvanceSalary = useMutation(
@@ -146,7 +145,6 @@ const EditAdvanceSalaryModal = ({
       },
     }
   );
- 
 
   // ṭo define the handleSubmit function
   const handleSubmit = async (e) => {
@@ -214,10 +212,10 @@ const EditAdvanceSalaryModal = ({
             <p className="text-red-500">*{formErrors.noOfMonth}</p>
           )}
         </div>
-        <div className="space-y-2 ">
+        {/* <div className="space-y-2">
           <FormControl fullWidth sx={{ marginBottom: "1rem" }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={["DatePicker"]}>
+              <DemoContainer components={["DatePicker"]} className="w-full">
                 <DatePicker
                   label="Advance salary starting date"
                   value={
@@ -236,6 +234,39 @@ const EditAdvanceSalaryModal = ({
                   }}
                 />
               </DemoContainer>
+            </LocalizationProvider>
+            {formErrors.loanDisbursementDate && (
+              <Typography color="error">
+                {formErrors.loanDisbursementDate}
+              </Typography>
+            )}
+          </FormControl>
+        </div> */}
+        <div className="space-y-2">
+          <FormControl fullWidth sx={{ marginBottom: "1rem" }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Box width="100%">
+                {" "}
+                {/* Wrap the DatePicker in a Box with full width */}
+                <DatePicker
+                  label="Advance salary starting date"
+                  value={
+                    advanceSalaryStartingDate
+                      ? dayjs(advanceSalaryStartingDate)
+                      : null
+                  }
+                  onChange={(newValue) =>
+                    setAdvanceSalaryStartingDate(dayjs(newValue))
+                  }
+                  slotProps={{
+                    textField: {
+                      variant: "outlined",
+                      error: Boolean(formErrors.advanceSalaryStartingDate),
+                      fullWidth: true, // Ensure the TextField inside DatePicker is full width
+                    },
+                  }}
+                />
+              </Box>
             </LocalizationProvider>
             {formErrors.loanDisbursementDate && (
               <Typography color="error">
