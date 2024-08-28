@@ -14,8 +14,8 @@ import Select, { components } from "react-select";
 import CreatableSelect from "react-select/creatable";
 import Datepicker from "react-tailwindcss-datepicker";
 import useEmpState from "../../hooks/Employee-OnBoarding/useEmpState";
-import PlaceAutoComplete from "./places-autocomplete";
 import useAuthentication from "../../pages/SignUp/useAuthentication";
+import PlaceAutoComplete from "./places-autocomplete";
 
 // import Autocomplete from "react-google-autocomplete";
 
