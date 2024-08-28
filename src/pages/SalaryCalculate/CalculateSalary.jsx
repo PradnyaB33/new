@@ -423,6 +423,7 @@ function CalculateSalary() {
 
     // Step 7: Calculate emlCtr (Employer Contribution) using ECS from PfSetup
     const emlCtr = (totalGrossSalary * PfSetup?.ECS) / 100;
+    console.log("emlCtr", emlCtr);
 
     // Step 8: Use forEach to update PF and ESIC values in deductionValues array
     deductionValues.forEach((deduction) => {
