@@ -82,6 +82,9 @@ const ShiftAcceptModal = ({ data }) => {
       }
     },
     enabled: employeeId !== undefined,
+    onSuccess: () => {
+      queryClient.invalidateQueries("shift-request");
+    },
   });
   const filteredEmployees = data2?.arrayOfEmployee?.filter((employee) =>
     `${employee?.first_name} ${employee?.last_name}`
