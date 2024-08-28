@@ -15,13 +15,20 @@ import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import { useNavigate } from "react-router-dom";
 
-const CreateSalaryModel = ({ handleClose, open, empId, id }) => {
+const CreateSalaryModel = ({
+  handleClose,
+  open,
+  empId,
+  id,
+  incomeValues,
+  setIncomeValues,
+  deductionsValues,
+  setDeductionsValues,
+}) => {
   // state
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
-  const [incomeValues, setIncomeValues] = useState([]);
-  const [deductionsValues, setDeductionsValues] = useState([]);
   const [totalValues, setTotalValues] = useState([]);
   const navigate = useNavigate();
 
@@ -43,11 +50,11 @@ const CreateSalaryModel = ({ handleClose, open, empId, id }) => {
 
   const calTotalSalary = () => {
     const income = incomeValues.reduce((a, c) => {
-      return a + (parseInt(c.value) || 0); 
+      return a + (parseInt(c.value) || 0);
     }, 0);
 
     const deductions = deductionsValues.reduce((a, c) => {
-      return a + (parseInt(c.value) || 0); 
+      return a + (parseInt(c.value) || 0);
     }, 0);
 
     const total = income - deductions;
@@ -82,6 +89,30 @@ const CreateSalaryModel = ({ handleClose, open, empId, id }) => {
       enabled: open && empId !== null && empId !== undefined,
     }
   );
+
+  // to get the data of existing salary component
+  // to get employee salary component data of employee
+  const { data: salaryComponent } = useQuery(
+    ["salary-component", empId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/get-salary-component/${empId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
+  console.log("salary component", salaryComponent);
+
+  useEffect(() => {
+    setIncomeValues(salaryComponent?.income ?? []);
+    setDeductionsValues(salaryComponent?.deductions ?? []);
+    // eslint-disable-next-line
+  }, [salaryComponent, empId]);
 
   const handleApply = async () => {
     try {
