@@ -170,10 +170,10 @@ const TestNavItems = ({ toggleDrawer }) => {
               role === "Manager"
                 ? `organisation/${orgId}/dashboard/manager-dashboard`
                 : role === "HR"
-                ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                : role === "Employee"
-                ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                : "/organizationList",
+                  ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                  : role === "Employee"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
             icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
             text: "Dashboard",
           },
@@ -520,7 +520,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             icon: <CallMissedIcon className=" !text-[1.2em] text-[#67748E]" />,
             text: "Missed Punch ",
           },
-          
+
           {
             key: "missjustify",
             isVisible: [
@@ -715,7 +715,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               survey?.surveyPermission,
             link:
               user?.profile.includes("Super-Admin") ||
-              user?.profile.includes("HR")
+                user?.profile.includes("HR")
                 ? `/organisation/${orgId}/employee-survey`
                 : `/organisation/${orgId}/employee-survey/${empId}`,
             icon: <AssignmentIcon className=" !text-[1.2em] text-[#67748E]" />,
