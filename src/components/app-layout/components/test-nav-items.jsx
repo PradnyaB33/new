@@ -1093,7 +1093,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               },
             ],
           },
-          RemotePunch: {
+          "Remote Punch": {
             open: false,
             isVisible:
               [
@@ -1153,7 +1153,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               // },
             ],
           },
-          AddGeoFencing: {
+          "Geo Fencing": {
             open: false,
             isVisible:
               ["Manager", "Super-Admin", "Delegate-Super-Admin"].includes(
@@ -1170,17 +1170,16 @@ const TestNavItems = ({ toggleDrawer }) => {
                 ].includes(role),
                 link: `/organisation/${orgId}/remotePunching/geo-fencing`,
                 icon: <LocationOn className=" !text-[1.2em] text-[#67748E]" />,
-                text: "Geo Fencing",
+                text: "Add Geo Fencing",
               },
             ],
           },
 
-          GeoFencing: {
+          "Geofencing": {
             open: false,
             isVisible:
               [
                 "Employee",
-                "Manager",
                 "Super-Admin",
                 "Delegate-Super-Admin",
               ].includes(role) &&

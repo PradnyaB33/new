@@ -16,6 +16,7 @@ const GeoFencingAcceptModal = () => {
     const authToken = useAuthToken();
     const [selectedPunchId, setSelectedPunchId] = useState(null);
     console.log("selectedPunchId", selectedPunchId);
+    const geoFence = "geoFence";
 
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -86,7 +87,7 @@ const GeoFencingAcceptModal = () => {
     return (
         <div>
             <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
-                <Link to={"/organisation/:organisationId/income-tax"}>
+                <Link to={"/organisation/:organisationId/notification"}>
                     <West className="mx-4 !text-xl" />
                 </Link>
                 Employee Geo Fencing Request
@@ -170,7 +171,7 @@ const GeoFencingAcceptModal = () => {
                                     {EmpNotification?.punchNotification
                                         ?.filter((notification) => notification.geoFencingArea === true) // Filter by geoFencingArea
                                         ?.map((items, itemIndex) => (
-                                            <PunchMapModal key={itemIndex} items={items} idx={itemIndex} />
+                                            <PunchMapModal key={itemIndex} items={items} idx={itemIndex} geoFence={geoFence} />
                                         ))}
                                 </div>
                             </>

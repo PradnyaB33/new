@@ -111,7 +111,9 @@ const useLocationMutation = () => {
       }
     },
     onError: (data) => {
-      handleAlert(true, "error", data?.response?.data?.message);
+      console.log("error", data?.response?.data?.message);
+
+      // handleAlert(true, "error", data?.response?.data?.message);
     },
   });
 

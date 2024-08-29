@@ -10,39 +10,14 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useNotificationRemotePunching from "../../../../hooks/QueryHook/Remote-Punch/components/mutation";
 
-const PunchMapModal = ({ items, idx }) => {
+const PunchMapModal = ({ items, idx, geoFence }) => {
   //hooks
   const navigate = useNavigate();
 
   //state
   const [openModal, setOpenModal] = useState(false);
   const [mReason, setMReason] = useState("");
-
-  // const calculateDistance = (coords) => {
-  //   let totalDistance = 0;
-  //   const R = 6371;
-
-  //   for (let i = 1; i < coords.length; i++) {
-  //     const lat1 = coords[i - 1].lat;
-  //     const lon1 = coords[i - 1].lng;
-  //     const lat2 = coords[i].lat;
-  //     const lon2 = coords[i].lng;
-
-  //     const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  //     const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  //     const a =
-  //       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-  //       Math.cos((lat1 * Math.PI) / 180) *
-  //         Math.cos((lat2 * Math.PI) / 180) *
-  //         Math.sin(dLon / 2) *
-  //         Math.sin(dLon / 2);
-  //     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  //     const d = R * c;
-  //     totalDistance += d;
-  //   }
-
-  //   return totalDistance.toFixed(2); // rounding to 2 decimal places for simplicity
-  // };
+  const [imageModalOpen, setImageModalOpen] = useState(false);
 
   //handle reject button function
   const handleRejectButtonClick = () => {
@@ -63,15 +38,20 @@ const PunchMapModal = ({ items, idx }) => {
   const { notifyAccountantMutation, RejectManagerMutation } =
     useNotificationRemotePunching();
 
-  // const distanceTraveled =
-  //   items.punchData[0].data && items.punchData[0].data.length > 1
-  //     ? calculateDistance(items.punchData[0].data)
-  //     : 0;
-
   //handle view route click
   const handleViewRouteClick = () => {
     const id = items._id;
     navigate(`/remote/info/${id}`);
+  };
+
+  //handle image click
+  const handleImageClick = () => {
+    setImageModalOpen(true);
+  };
+
+  //handle image modal close
+  const handleImageModalClose = () => {
+    setImageModalOpen(false);
   };
 
   return (
@@ -97,7 +77,7 @@ const PunchMapModal = ({ items, idx }) => {
                       borderRadius: "20%",
                     }}
                     src={items.employeeId.user_logo_url}
-                    alt=""
+                    alt="img"
                   />
                 ) : (
                   <div className="h-[100px] w-[100px]">
@@ -107,9 +87,11 @@ const PunchMapModal = ({ items, idx }) => {
                         width: "100%",
                         height: "100%",
                         borderRadius: "20%",
+                        cursor: "pointer"
                       }}
                       src={items.punchData[0].image}
-                      alt=""
+                      alt="img1"
+                      onClick={handleImageClick}
                     />
                   </div>
                 )}
@@ -123,24 +105,10 @@ const PunchMapModal = ({ items, idx }) => {
                 <>{new Date(items?.createdAt).toLocaleDateString()} </>
               )}
             </h1>
-            {/* <h1>
-              Start Time :{" "}
-              {new Date(items?.punchData[0]?.createdAt).toLocaleTimeString()}
-            </h1>
-            <h1>
-              End Time:{" "}
-              {new Date(items?.punchData[0]?.updatedAt).toLocaleTimeString()}
-            </h1>
-
-            <h1>Total Estimated Distance : {distanceTraveled} Km </h1>
-            {items.punchData[0].distance !== 0 && (
-              <h1>
-                Total Distance Travelled : {items.punchData[0].distance} Km
-              </h1>
-            )} */}
-
             {items.punchData[0].image === "" ? (
               <h1>Miss Punch Requested : {items.punchData.length} times</h1>
+            ) : geoFence === "geoFence" ? (
+              <h1>Geo Fencing Restarted: {items.punchData.length} times</h1>
             ) : (
               <h1>Remote Punching Restarted: {items.punchData.length} times</h1>
             )}
@@ -213,6 +181,17 @@ const PunchMapModal = ({ items, idx }) => {
           </div>
         </div>
       </div>
+
+      {/* Image Modal */}
+      <Dialog open={imageModalOpen} onClose={handleImageModalClose} maxWidth="md">
+        <DialogContent>
+          <img
+            src={items.punchData[0].image}
+            alt=""
+            style={{ width: "100%", height: "auto" }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
