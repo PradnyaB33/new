@@ -798,62 +798,68 @@
 
 // export default DashBoardHR;
 
-
-
-
 //😎😋😊
 
-import { Dashboard, EventAvailable, EventBusy, FilterAlt, FilterAltOff, Groups, LocationOn, NearMe, SupervisorAccount } from "@mui/icons-material";
+import {
+  Dashboard,
+  EventAvailable,
+  EventBusy,
+  FilterAlt,
+  FilterAltOff,
+  Groups,
+  LocationOn,
+  NearMe,
+  SupervisorAccount,
+} from "@mui/icons-material";
 import { IconButton, Popover } from "@mui/material";
-import axios from "axios";
-import React, { useEffect } from "react";
-import { useQuery, useQueryClient } from "react-query";
-import { useLocation, useParams } from "react-router-dom";
-import Select from "react-select";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import { motion } from "framer-motion";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import React, { useEffect } from "react";
+import { useQueryClient } from "react-query";
+import { useLocation } from "react-router-dom";
+import Select from "react-select";
 import useDashGlobal from "../../hooks/Dashboard/useDashGlobal";
 import useDashboardFilter from "../../hooks/Dashboard/useDashboardFilter";
 import useEmployee from "../../hooks/Dashboard/useEmployee";
-import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
 import LineGraph from "./Components/Bar/LineGraph";
 import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
 import SkeletonFilterSection from "./Components/Skeletons/SkeletonFilterSection";
+import useRemoteCount from "./hooks/useRemoteCount";
 
 const customSelectStyles = {
   control: (provided) => ({
     ...provided,
-    borderColor: '#d1d5db',
-    boxShadow: 'none',
-    '&:hover': {
-      borderColor: '#4f46e5',
+    borderColor: "#d1d5db",
+    boxShadow: "none",
+    "&:hover": {
+      borderColor: "#4f46e5",
     },
-    '&:focus': {
-      borderColor: '#4f46e5',
+    "&:focus": {
+      borderColor: "#4f46e5",
     },
-    backgroundColor: '#ffffff',
-    borderRadius: '8px',
-    padding: '2px',
+    backgroundColor: "#ffffff",
+    borderRadius: "8px",
+    padding: "2px",
   }),
   menu: (provided) => ({
     ...provided,
-    borderRadius: '8px',
-    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+    borderRadius: "8px",
+    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
   }),
   option: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isSelected ? '#4f46e5' : '#ffffff',
-    color: state.isSelected ? '#ffffff' : '#000000',
-    '&:hover': {
-      backgroundColor: '#f3f4f6',
+    backgroundColor: state.isSelected ? "#4f46e5" : "#ffffff",
+    color: state.isSelected ? "#ffffff" : "#000000",
+    "&:hover": {
+      backgroundColor: "#f3f4f6",
     },
   }),
   placeholder: (provided) => ({
     ...provided,
-    color: '#9ca3af',
+    color: "#9ca3af",
   }),
 };
 
@@ -863,11 +869,6 @@ const DashboardHr = () => {
   const { employee, employeeLoading } = useEmployee(user.organizationId);
   const { setSelectedSalaryYear, selectedSalaryYear } = useDashGlobal();
   const location = useLocation();
-  console.log("location",location);
-  
-  const authToken = useAuthToken();
-  const { organisationId } = useParams();
-
   const queryClient = useQueryClient();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -887,11 +888,11 @@ const DashboardHr = () => {
     Managers,
     managerLoading,
     oraganizationLoading,
-    salaryGraphLoading,
+    // salaryGraphLoading,
     locationOptions,
     managerOptions,
     Departmentoptions,
-    customStyles,
+    // customStyles,
     data,
     locations,
     location: loc,
@@ -905,29 +906,7 @@ const DashboardHr = () => {
     getAttendenceData,
   } = useDashboardFilter(user.organizationId);
 
-  console.log(salaryGraphLoading,customStyles);
-  
-  const getRemoteEmployeeCount = async () => {
-    try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/route/punch/getTodayRemoteEmp/${organisationId}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      return data;
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-
-  const { data: remoteEmployeeCount } = useQuery({
-    queryKey: ["remoteEmployee"],
-    queryFn: getRemoteEmployeeCount,
-  });
-
+  const { remoteEmployeeCount } = useRemoteCount(user.organizationId);
   useEffect(() => {
     if (location.pathname?.includes("/DH-dashboard")) {
       getAttendenceData();
@@ -946,11 +925,10 @@ const DashboardHr = () => {
           : "HR Dashboard"}
       </header>
       <div className="md:px-8 px-2 w-full">
-      {/* <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 place-items-center gap-2 md:gap-5 mt-6"> */}
+        {/* <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 place-items-center gap-2 md:gap-5 mt-6"> */}
         {/* <div className="grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 content-center sm:grid-cols-1 sm:justify-items-center sm:items-center  gap-4 mt-6 w-full"> */}
         <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 mt-6 w-full place-items-center">
           <SuperAdminCard
-          
             icon={Groups}
             color={"!bg-blue-500"}
             data={employee?.totalEmployees}
@@ -963,7 +941,11 @@ const DashboardHr = () => {
             color={"!bg-green-500"}
             isLoading={employeeLoading}
             icon={EventAvailable}
-            data={!isNaN(employee?.totalEmployees) ? employee?.totalEmployees - absentEmployee : 0}
+            data={
+              !isNaN(employee?.totalEmployees)
+                ? employee?.totalEmployees - absentEmployee
+                : 0
+            }
             title={"Present Today"}
             data-aos="fade-up"
             cardSize={cardSize}

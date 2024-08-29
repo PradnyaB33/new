@@ -374,6 +374,7 @@ import LineGraph from "./Components/Bar/LineGraph";
 import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
 import SkeletonFilterSection from "./Components/Skeletons/SkeletonFilterSection";
+import useRemoteCount from "./hooks/useRemoteCount";
 
 const customSelectStyles = {
   control: (provided) => ({
@@ -408,9 +409,11 @@ const customSelectStyles = {
     color: "#9ca3af",
   }),
 };
- 
+
 const SuperAdmin = () => {
   const { organisationId } = useParams();
+  const { remoteEmployeeCount } = useRemoteCount(organisationId);
+
   const location = useLocation();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -472,7 +475,7 @@ const SuperAdmin = () => {
       </header>
       <div className="md:px-8 px-2 w-full">
         <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-6 w-full gap-2 md:gap-5">
-        {/* <div className="grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-4"> */}
+          {/* <div className="grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-4"> */}
           <SuperAdminCard
             icon={Groups}
             color={"!bg-blue-500"}
@@ -527,7 +530,7 @@ const SuperAdmin = () => {
               color={"!bg-indigo-500"}
               isLoading={false}
               icon={NearMe}
-              data={loc?.locationCount}
+              data={remoteEmployeeCount}
               title={"Remote Employees"}
               data-aos="fade-up"
               cardSize={cardSize}

@@ -41,6 +41,7 @@ const PublicHoliday = () => {
 
   const orgId = useParams().organisationId;
   const { data, locations } = usePublicHoliday();
+  console.log(`🚀 ~ locations:`, locations);
 
   const [inputdata, setInputData] = useState({
     name: "",

@@ -268,7 +268,6 @@ const AuthInputFiled = ({
                   {Icon && <Icon className="text-gray-700 text-xs" />}
                   <Select
                     isClearable={isClearable}
-                    aria-errormessage=""
                     id={name}
                     placeholder={placeholder}
                     styles={{
