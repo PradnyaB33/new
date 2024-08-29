@@ -58,9 +58,11 @@ const useSetupSideNav = ({ organisationId }) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/set-shifts`,
-      isVisible: user?.profile?.some((role) =>
-        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
-      ),
+      isVisible:
+        data?.organisation?.packageInfo !== "Essential Plan" &&
+        user?.profile?.some((role) =>
+          ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+        ),
     },
 
     //ADD> Overtime setup
@@ -71,9 +73,11 @@ const useSetupSideNav = ({ organisationId }) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/overtime-setup`,
-      isVisible: user?.profile?.some((role) =>
-        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
-      ),
+      isVisible:
+        data?.organisation?.packageInfo !== "Essential Plan" &&
+        user?.profile?.some((role) =>
+          ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+        ),
     },
 
     //LiveData
@@ -89,16 +93,16 @@ const useSetupSideNav = ({ organisationId }) => {
     //   ),
     // },
 
-    {
-      label: "LiveData",
-      icon: SmsSharpIcon,
-      href: `/organisation/${organisationId}/setup/liveData`,
-      active:
-        location.pathname === `/organisation/${organisationId}/setup/liveData`,
-      isVisible: user?.profile?.some((role) =>
-        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
-      ),
-    },
+    // {
+    //   label: "LiveData",
+    //   icon: SmsSharpIcon,
+    //   href: `/organisation/${organisationId}/setup/liveData`,
+    //   active:
+    //     location.pathname === `/organisation/${organisationId}/setup/liveData`,
+    //   isVisible: user?.profile?.some((role) =>
+    //     ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+    //   ),
+    // },
 
     {
       label: "Location",
@@ -174,9 +178,11 @@ const useSetupSideNav = ({ organisationId }) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/email-communicaiton`,
-      isVisible: user?.profile?.some((role) =>
-        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
-      ),
+      isVisible:
+        data?.organisation?.packageInfo !== "Essential Plan" &&
+        user?.profile?.some((role) =>
+          ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+        ),
     },
     {
       label: "Weekly Off",
@@ -218,9 +224,11 @@ const useSetupSideNav = ({ organisationId }) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/loan-management`,
-      isVisible: user?.profile?.some((role) =>
-        ["Super-Admin", "Delegate-Super-Admin"].includes(role)
-      ),
+      isVisible:
+        data?.organisation?.packageInfo !== "Essential Plan" &&
+        user?.profile?.some((role) =>
+          ["Super-Admin", "Delegate-Super-Admin"].includes(role)
+        ),
     },
     {
       label: "Remote Punching",
@@ -236,9 +244,10 @@ const useSetupSideNav = ({ organisationId }) => {
       icon: PaidOutlinedIcon,
       href: `/organisation/${organisationId}/setup/shift-allowance`,
       active:
+        data?.organisation?.packageInfo !== "Essential Plan" &&
         location.pathname ===
-        `/organisation/${organisationId}/setup/shift-allowance`,
-      isVisible: true,
+          `/organisation/${organisationId}/setup/shift-allowance`,
+      isVisible: true && data?.organisation?.packageInfo !== "Essential Plan",
     },
     {
       label: "Overtime Allowance",
@@ -247,7 +256,7 @@ const useSetupSideNav = ({ organisationId }) => {
       active:
         location.pathname ===
         `/organisation/${organisationId}/setup/overtime-setup`,
-      isVisible: true,
+      isVisible: true && data?.organisation?.packageInfo !== "Essential Plan",
     },
     {
       label: "Training",

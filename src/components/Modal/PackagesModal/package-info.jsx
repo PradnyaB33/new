@@ -33,6 +33,9 @@ const PackageInfo = ({ handleClose, open, setPackage, billedPackage }) => {
                 Packages
               </th>
               <th scope="col" className="px-6 py-3 text-center">
+                Essential
+              </th>
+              <th scope="col" className="px-6 py-3 text-center">
                 Basic
               </th>
               <th scope="col" className="px-6 py-3 text-center">
@@ -52,6 +55,13 @@ const PackageInfo = ({ handleClose, open, setPackage, billedPackage }) => {
                 >
                   <td className="whitespace-nowrap px-6 py-2 font-bold">
                     {doc.packageName}
+                  </td>
+                  <td
+                    className={`whitespace-nowrap px-6 py-2 text-center ${
+                      doc.Essential === "✓" ? "text-black" : "text-red-600"
+                    }`}
+                  >
+                    {doc.Essential === "✓" ? "✓" : "X"}
                   </td>
                   <td
                     className={`whitespace-nowrap px-6 py-2 text-center ${

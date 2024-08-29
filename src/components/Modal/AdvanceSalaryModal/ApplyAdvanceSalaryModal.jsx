@@ -77,11 +77,9 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
       setAdvanceSalaryEndingDate(completionDate);
     }
   };
-  console.log("get total salary", getTotalSalaryEmployee);
 
   const advancedSalaryAmounts =
     Number(getTotalSalaryEmployee) * Number(noOfMonth);
-  console.log("advance salary amt", advancedSalaryAmounts);
 
   // to define the function for change the file
   const [file, setFile] = useState(null);
@@ -136,7 +134,9 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
           "Your advance salary application has been submitted successfully. It is now awaiting approval from HR"
         );
         handleClose();
-        window.location.reload();
+        setAdvanceSalaryStartingDate();
+        setAdvanceSalaryEndingDate();
+        setNoOfMonth();
       },
       onError: () => {
         setErrors("An Error occurred while applying advance salary data.");
@@ -194,7 +194,6 @@ const ApplyAdvanceSalaryModal = ({ handleClose, open, organisationId }) => {
     }
   };
   console.log(errors);
-  // console.log(error);
 
   return (
     <Dialog

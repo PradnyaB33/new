@@ -104,6 +104,9 @@ const Step4 = () => {
     if (data?.packageInfo?.packageName === "Basic Plan") {
       const perDayPrice = 55 / dateDifference;
       return Math.round(perDayPrice * dateDifference);
+    } else if (data?.packageInfo?.packageName === "Essential Plan") {
+      const perDayPrice = 30 / dateDifference;
+      return Math.round(perDayPrice * dateDifference);
     } else if (data?.packageInfo?.packageName === "Intermediate Plan") {
       const perDayPrice = 85 / dateDifference;
       return Math.round(perDayPrice * dateDifference);
@@ -134,6 +137,7 @@ const Step4 = () => {
           <PricingCard
             setConfirmOpen={setConfirmOpen}
             h1={data?.packageInfo?.packageName}
+            downDescriptionText="Click to view the other benefits"
             packageId={process.env.REACT_APP_BASICPLAN || "plan_NgWEcv4vEvrZFc"}
             value={data?.packageId}
             price={getPriceMain}
@@ -165,6 +169,10 @@ const returnArray = (plan = "Basic Plan") => {
   } else if (plan === "Intermediate Plan") {
     return packageArray
       .filter((doc, index) => doc.Intermediate === "✓" && index <= 5)
+      .reverse();
+  } else if (plan === "Essential Plan") {
+    return packageArray
+      .filter((doc, index) => doc.Essential === "✓" && index <= 5)
       .reverse();
   } else {
     return packageArray
