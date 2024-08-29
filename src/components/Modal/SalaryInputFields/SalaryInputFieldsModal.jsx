@@ -21,6 +21,13 @@ export let salaryComponentArray = [
   { label: "Sales allowance", value: "Sales allowance" },
 ];
 
+export let salaryDeductionArray = [
+  { label: "PF", value: "PF" },
+  { label: "ESIC", value: "ESIC" },
+  { label: "TDS", value: "TDS" },
+  { label: "Professional Tax", value: "Professional Tax" },
+];
+
 const style = {
   position: "absolute",
   height: "80vh",
@@ -346,7 +353,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
               icon={Money}
               control={control}
               type="autocomplete"
-              optionlist={salaryComponentArray}
+              optionlist={salaryDeductionArray}
               placeholder="Salary Component"
               label="Enter Deductions Component "
               readOnly={false}

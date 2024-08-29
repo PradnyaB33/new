@@ -73,6 +73,7 @@ import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 import NotFound from "./utils/Forbidden/NotFound";
 // import AccountantNotification from "./pages/Notification/AccountantNotification";
 import OrgChart from "./Test/OrgChart";
+import GeoFencingAcceptModal from "./components/Modal/RemotePunchingModal/GeoFencingAcceptModal";
 import CookiesPolicy from "./components/TermsPrivacyCookies/CookiesPolicy";
 import PrivacyPolicy from "./components/TermsPrivacyCookies/PrivacyPolicy";
 import TabTermsPrivacyPolicy from "./components/TermsPrivacyCookies/TabTermsPrivacyPolicy";
@@ -83,11 +84,13 @@ import AdvanceSalaryNotification from "./pages/AdvanceSalaryNotification/Advance
 import AdvanceSalaryNotificationToEmp from "./pages/AdvanceSalaryNotification/AdvanceSalaryNotificationToEmp";
 import ParentNotification from "./pages/AllNotifications/page";
 import Communication from "./pages/Communication/Communication";
+import EditDepartment from "./pages/Departments/EditDepartment";
+import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
+import DepartmentNotificationToEmp from "./pages/DeptNotification/DepartmentNotificationToEmp";
 import DocManage from "./pages/DocumentManagement/DocManage";
 import DocManageAuth from "./pages/DocumentManagement/DocManageAuth";
 import OrgDocManage from "./pages/DocumentManagement/OrgDocManage";
 import EmpExcelOnboard from "./pages/EmpExcelOnboard/EmpExcelOnboard";
-import RendarPunchSyncFile from "./pages/PunchDataSync/RendarPunchSyncFile";
 import EmployeeNotification from "./pages/Employee-Notification/page";
 import EditEmployee from "./pages/Employee/EditEmployee";
 import EmployeeSurvey from "./pages/EmployeeSurvey/EmployeeSurvey";
@@ -95,9 +98,11 @@ import CreateNewSurvey from "./pages/EmployeeSurvey/components/CreateNewSurvey";
 import EmployeeSurveyForm from "./pages/EmployeeSurvey/components/EmployeeSurveyForm";
 import SurveyDetails from "./pages/EmployeeSurvey/components/SurveyDetails";
 import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
+import GeoFencingEmployeeSide from "./pages/Geo-Fence/components/GeoFencingEmployeeSide";
 import GeoFencing from "./pages/Geo-Fence/page";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
+import ManagementCalender from "./pages/LeaveRequisition/Manager/ManagementCalender";
 import LetterSetup from "./pages/LetterTypes/LetterSetup";
 import LoanMgtApproval from "./pages/LoanMgtNotified/LoanMgtApproval";
 import LoanMgtNotification from "./pages/LoanMgtNotified/LoanMgtNotification";
@@ -108,15 +113,21 @@ import MissedPunchNotification from "./pages/MissedPunchNotification/MissedPunch
 import MissedPunchNotificationToEmp from "./pages/MissedPunchNotification/MissedPunchNotificationToEmp";
 import MyTraining from "./pages/My-Training/page";
 import AssignOrg from "./pages/OrgList/AssignOrg";
+import OvertimeSetup from "./pages/OvertimeSetup/OvertimeSetup";
 import PayslipNotification from "./pages/PayslipNotification/PayslipNotification";
+import RendarPunchSyncFile from "./pages/PunchDataSync/RendarPunchSyncFile";
 import CreateJobPosition from "./pages/Recruitment/CreateJobPosition";
 import EditJobPosition from "./pages/Recruitment/EditJobPosition";
+import JobNotificationToEmp from "./pages/Recruitment/Notification/JobNotificationToEmp";
+import JobPositionNotificaitonToMgr from "./pages/Recruitment/Notification/JobPositonNotificatinToMgr";
+import OpenJobPosition from "./pages/Recruitment/OpenRoleJobPosition";
 import ViewJobPosition from "./pages/Recruitment/ViewJobPosition";
 import ReportingMis from "./pages/ReportingMis/page";
 import ResetNewPassword from "./pages/ResetNewPassword/ResetNewPassword";
 import SelfLeaveNotification from "./pages/SelfLeaveNotification/page";
 import SelfShiftNotification from "./pages/SelfShiftNotification/page";
 import EmpCommunication from "./pages/SetUpOrganization/EmpCommunication/EmpCommunication";
+import PFESIC from "./pages/SetUpOrganization/PFESIC";
 import PerformanceSetup from "./pages/SetUpOrganization/Performance/PerformanceSetup";
 import RemoteSetup from "./pages/SetUpOrganization/Remote/RemoteSetup";
 import AddRoles from "./pages/SetUpOrganization/Roles/AddRoles";
@@ -127,21 +138,12 @@ import ViewAttendacneBiomatric from "./pages/ViewAttendanceBiomatric/ViewAttenda
 import ViewCalculateAttendance from "./pages/ViewCalculateAttendance/ViewCalculateAttendance";
 import CustomCalander from "./pages/custom/Calendar";
 import DocNotification from "./pages/doc-notification/DocNotification";
+import EmpGeoFencingNotification from "./pages/emp-notifications/EmpGeoFencingNotification";
 import EmpNotification from "./pages/emp-notifications/EmpNotification";
 import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
-import JobPositionNotificaitonToMgr from "./pages/Recruitment/Notification/JobPositonNotificatinToMgr";
-import JobNotificationToEmp from "./pages/Recruitment/Notification/JobNotificationToEmp";
-import OpenJobPosition from "./pages/Recruitment/OpenRoleJobPosition";
-import DepartmentNotification from "./pages/DeptNotification/DepartmentNotification";
-import DepartmentNotificationToEmp from "./pages/DeptNotification/DepartmentNotificationToEmp";
-import OvertimeSetup from "./pages/OvertimeSetup/OvertimeSetup";
-import GeoFencingEmployeeSide from "./pages/Geo-Fence/components/GeoFencingEmployeeSide";
-import GeoFencingAcceptModal from "./components/Modal/RemotePunchingModal/GeoFencingAcceptModal";
-import EmpGeoFencingNotification from "./pages/emp-notifications/EmpGeoFencingNotification";
-import EditDepartment from "./pages/Departments/EditDepartment";
 
 const App = () => {
   return (
@@ -184,10 +186,6 @@ const App = () => {
           }
         />
 
-      
-
-        
-        
         <Route
           path="/organisation/:organisationId/add-delegate/"
           element={
@@ -270,7 +268,6 @@ const App = () => {
             <RequireAuth permission={["Super-Admin"]}>
               <Billing />
             </RequireAuth>
-            
           }
         />
         {/* <Route path="/choose-role" element={<RolePage />} /> */}
@@ -1402,6 +1399,27 @@ const App = () => {
           }
         />
         <Route
+          path="/organisation/:organisationId/ManagementCalender"
+          element={
+            <RequireAuth
+              permission={[
+                "Employee",
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "HR",
+                "Accountant",
+                "Manager",
+              ]}
+            >
+              <ManagementCalender />
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/shift-management"
           element={
             <RequireAuth permission={["Employee", "Super-Admin"]}>
@@ -1660,6 +1678,16 @@ const App = () => {
             </RequireAuth>
           }
         />
+
+        <Route
+          path="/organisation/:organisationId/setup/calculation-setup"
+          element={
+            <RequireAuth permission={["Super-Admin", "Delegate-Super-Admin"]}>
+              <PFESIC />
+            </RequireAuth>
+          }
+        />
+
         <Route
           path="/organisation/:organisationId/survey-form/:surveyId/:responseId"
           element={

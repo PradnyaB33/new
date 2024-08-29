@@ -76,7 +76,7 @@ const LoanMgtApproval = ({ employee }) => {
       handleAlert(true, "error", "Something went wrong");
     }
   };
-  
+
   // for view the loan data
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [userUploadDocumnet, setUserUploadDocumnet] = useState(null);

@@ -179,7 +179,6 @@ const GoalsTable = ({ performance, isError }) => {
   }, [performance?.enddate]);
 
   const { data: employeeData } = useQuery(["employee", role], async () => {
-    console.log("query called", role);
     const { data } = await axios.get(
       `${process.env.REACT_APP_API}/route/employee/getEmployeeUnderManager/${role}`,
       {
