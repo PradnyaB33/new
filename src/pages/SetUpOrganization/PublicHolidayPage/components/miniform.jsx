@@ -95,7 +95,7 @@ const MiniForm = ({ locations, data, onClose }) => {
         name="holidayRegion"
         icon={Circle}
         control={control}
-        type="naresh-select"
+        type="select"
         placeholder="Holiday Region"
         label="Holiday Region *"
         errors={errors}

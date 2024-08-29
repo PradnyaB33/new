@@ -154,9 +154,10 @@ const ShiftAcceptModal = ({ data }) => {
                 <Link
                   onClick={() => handleEmployeeClick(employee?._id)}
                   to={`/shift-notification/${employee?._id}`}
-                  className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${employee?._id === employeeId &&
+                  className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${
+                    employee?._id === employeeId &&
                     "bg-blue-500 text-white hover:!bg-blue-300"
-                    }`}
+                  }`}
                   key={idx}
                 >
                   <Avatar />
@@ -165,8 +166,9 @@ const ShiftAcceptModal = ({ data }) => {
                       {employee?.first_name} {employee?.last_name}
                     </h1>
                     <h1
-                      className={`text-sm text-gray-500 ${employee?._id === employeeId && "text-white"
-                        }`}
+                      className={`text-sm text-gray-500 ${
+                        employee?._id === employeeId && "text-white"
+                      }`}
                     >
                       {employee?.email}
                     </h1>
