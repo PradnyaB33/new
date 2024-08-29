@@ -8,7 +8,7 @@ export const packageArray = [
   },
   {
     packageName: "Dual approval workflow",
-    Essential: "✓",
+    Essential: "-",
     Basic: "✓",
     Intermediate: "✓",
     Enterprise: "✓",

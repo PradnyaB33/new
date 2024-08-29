@@ -198,14 +198,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               },
               {
                 key: "view emp attendance",
-                isVisible:
-                  true &&
-                  [
-                    "Super-Admin",
-                    "Delegate-Super-Admin",
-                    "HR",
-                    "Manager",
-                  ].includes(role),
+                isVisible: true,
                 link: `/organisation/${orgId}/ManagementCalender`,
                 icon: (
                   <AccessTimeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
@@ -511,7 +504,12 @@ const TestNavItems = ({ toggleDrawer }) => {
               },
               {
                 key: "view emp attendance",
-                isVisible: true,
+                isVisible: [
+                  "Super-Admin",
+                  "Delegate-Super-Admin",
+                  "HR",
+                  "Manager",
+                ].includes(role),
                 link: `/organisation/${orgId}/ManagementCalender`,
                 icon: (
                   <AccessTimeOutlinedIcon className=" !text-[1.2em] text-[#67748E]" />
@@ -641,15 +639,6 @@ const TestNavItems = ({ toggleDrawer }) => {
             isVisible: true,
             icon: <Payment className=" !text-[1.2em] text-[#67748E]" />,
             routes: [
-              {
-                key: "allowance",
-                isVisible: true,
-                link: "/allowance",
-                icon: (
-                  <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />
-                ),
-                text: "Allowance",
-              },
               {
                 key: "payslip",
                 isVisible: true,
