@@ -85,7 +85,7 @@ const AddShiftModal = ({ open, handleClose, addMutate }) => {
 
   const daysOfWeek = [
     { label: "Mon", value: "Monday" },
-    { label: "Tus", value: "Tuesday" },
+    { label: "Tue", value: "Tuesday" },
     { label: "Wed", value: "Wednesday" },
     { label: "Thur", value: "Thursday" },
     { label: "Fri", value: "Friday" },
