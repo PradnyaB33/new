@@ -134,6 +134,7 @@ const CreateSalaryModel = ({
       console.log(response);
       handleAlert(true, "success", "Salary Detail added Successfully");
       handleClose();
+      window.location.reload();
     } catch (error) {
       console.error("Error adding salary data:", error);
       handleAlert(true, "error", "Something went wrong");

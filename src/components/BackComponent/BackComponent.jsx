@@ -30,16 +30,9 @@ const BackComponent = () => {
     "/organizationList",
     "/assingOrganizationToSelf",
     "/mis-report",
-    "/view-job-position",
     "resetpassword",
-    "employee-onboarding",
     "/leave",
     "/geo-fencing",
-    // "/view-calculate-data",
-    // "/emo-info-punch-status",
-    // "/view-attendance-biomatric",
-    // "/missed-punch-in-out",
-    // "/missed-justify",
     "/liveSyncData",
   ];
 

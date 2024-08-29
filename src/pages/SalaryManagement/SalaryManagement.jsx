@@ -334,10 +334,10 @@ const SalaryManagement = () => {
         open={createModalOpen}
         handleClose={handleClose}
         empId={employeeId}
-        incomeValues = {incomeValues}
-        setIncomeValues = {setIncomeValues}
-        deductionsValues = {deductionsValues}
-        setDeductionsValues = {setDeductionsValues}
+        incomeValues={incomeValues}
+        setIncomeValues={setIncomeValues}
+        deductionsValues={deductionsValues}
+        setDeductionsValues={setDeductionsValues}
       />
     </>
   );
