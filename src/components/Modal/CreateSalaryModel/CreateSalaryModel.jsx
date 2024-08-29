@@ -116,12 +116,24 @@ const CreateSalaryModel = ({
 
   const handleApply = async () => {
     try {
+      // Filter out income components with null, undefined, or zero value
+      const filteredIncomeValues = incomeValues?.filter(
+        (item) =>
+          item.value !== null && item.value !== undefined && item.value !== 0
+      );
+  
+      // Filter out deduction components with null, undefined, or zero value
+      const filteredDeductionsValues = deductionsValues?.filter(
+        (item) =>
+          item.value !== null && item.value !== undefined && item.value !== 0
+      );
+  
       const data = {
-        income: incomeValues,
-        deductions: deductionsValues,
+        income: filteredIncomeValues,
+        deductions: filteredDeductionsValues,
         totalSalary: totalValues,
       };
-
+  
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/add-salary-component/${empId}`,
         data,
@@ -134,13 +146,12 @@ const CreateSalaryModel = ({
       console.log(response);
       handleAlert(true, "success", "Salary Detail added Successfully");
       handleClose();
-      window.location.reload();
     } catch (error) {
       console.error("Error adding salary data:", error);
       handleAlert(true, "error", "Something went wrong");
     }
   };
-
+  
   return (
     <Dialog
       PaperProps={{
