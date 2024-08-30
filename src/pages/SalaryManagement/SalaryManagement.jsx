@@ -20,6 +20,8 @@ const SalaryManagement = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [numbers, setNumbers] = useState([]);
   const { organisationId } = useParams();
+  const [incomeValues, setIncomeValues] = useState([]);
+  const [deductionsValues, setDeductionsValues] = useState([]);
 
   // get query for fetch the employee
   const fetchAvailableEmployee = async (page) => {
@@ -78,6 +80,8 @@ const SalaryManagement = () => {
   const handleClose = () => {
     setCreateModalOpen(false);
     setEmployeeId(null);
+    setIncomeValues([]);
+    setDeductionsValues([]);
   };
 
   const [openChallanModal, setOpenChallanModal] = useState(false);
@@ -330,6 +334,10 @@ const SalaryManagement = () => {
         open={createModalOpen}
         handleClose={handleClose}
         empId={employeeId}
+        incomeValues={incomeValues}
+        setIncomeValues={setIncomeValues}
+        deductionsValues={deductionsValues}
+        setDeductionsValues={setDeductionsValues}
       />
     </>
   );
