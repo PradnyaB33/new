@@ -2,6 +2,7 @@ import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import React from "react";
 import { useQuery } from "react-query";
+import useGetEmployeeSalaryByFinaicalYear from "../../../../../hooks/IncomeTax/useGetEmployeeSalaryByFinaicalYear";
 import useIncomeTax from "../../../../../hooks/IncomeTax/useIncomeTax";
 import useAuthToken from "../../../../../hooks/Token/useAuth";
 
@@ -19,31 +20,33 @@ const Tab0 = () => {
     cess,
     tax,
   } = useIncomeTax();
-  const {
-    data: salaryAmount,
-    // isFetched: salaryFetch,
-    // isFetching: salaryFetching,
-    isLoading: salaryLoading,
-  } = useQuery({
-    queryKey: ["financialYearGross"],
-    queryFn: async () => {
-      try {
-        const { financialYearStart, financialYearEnd } =
-          getCurrentFinancialYear();
-        const salaryData = await axios.get(
-          `${process.env.REACT_APP_API}/route/employeeSalary/getEmployeeSalaryPerFinancialYear?fromDate=${financialYearStart}&toDate=${financialYearEnd}`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        );
-        return salaryData.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  });
+  const { usersalary: salaryAmount, isFetching } =
+    useGetEmployeeSalaryByFinaicalYear();
+  // const {
+  //   data: salaryAmount,
+  //   // isFetched: salaryFetch,
+  //   // isFetching: salaryFetching,
+  //   isLoading: salaryLoading,
+  // } = useQuery({
+  //   queryKey: ["financialYearGross"],
+  //   queryFn: async () => {
+  //     try {
+  //       const { financialYearStart, financialYearEnd } =
+  //         getCurrentFinancialYear();
+  //       const salaryData = await axios.get(
+  //         `${process.env.REACT_APP_API}/route/employeeSalary/getEmployeeSalaryPerFinancialYear?fromDate=${financialYearStart}&toDate=${financialYearEnd}`,
+  //         {
+  //           headers: {
+  //             Authorization: authToken,
+  //           },
+  //         }
+  //       );
+  //       return salaryData.data;
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   },
+  // });
 
   async function GetOldTax() {
     const data = await axios.get(
@@ -162,6 +165,12 @@ const Tab0 = () => {
     enabled: !isNaN(salaryAmount?.TotalInvestInvestment),
   });
 
+  console.log(
+    "Running it",
+    salaryAmount?.TotalInvestInvestment,
+    data?.salaryDeclaration
+  );
+
   return (
     <div className="overflow-auto !p-0 ">
       <div className="flex items-center justify-between ">
@@ -171,7 +180,7 @@ const Tab0 = () => {
         </div>
       </div>
 
-      {isLoading || salaryLoading ? (
+      {isLoading || isFetching ? (
         <div>
           <CircularProgress />
         </div>

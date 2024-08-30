@@ -214,8 +214,8 @@ const GoalsTable = ({ performance, isError }) => {
   );
 
   const options = useMemo(() => {
-    if (employeeData) {
-      return employeeData.map((emp) => ({
+    if (Array.isArray(employeeData) && employeeData) {
+      return employeeData?.map((emp) => ({
         value: emp._id,
         label: `${emp.first_name} ${emp.last_name}`,
         image: emp.user_logo_url,
