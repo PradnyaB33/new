@@ -8,6 +8,29 @@
   animation: scrolling 30s linear infinite;
 }
 
+.rbc-toolbar-label {
+  font-size: 1.5em; /* Change font size */
+  font-weight: bold; /* Make the text bold */
+}
+
+.manager-cal .rbc-month-view {
+  padding: 0 !important;
+}
+.manager-cal .rbc-toolbar {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  gap: 4px;
+}
+.manager-cal .rbc-label {
+  display: flex;
+  justify-content: flex-end;
+}
+.manager-cal .rbc-calendar {
+  display: flex;
+  align-items: center;
+}
+
 @keyframes scrolling {
   0% {
     transform: translateX(100%);

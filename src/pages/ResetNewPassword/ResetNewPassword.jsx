@@ -117,9 +117,9 @@ const ResetNewPassword = ({ open, handleClose }) => {
           sx={style}
           className="border-none !z-10 !pt-0 !px-0 w-max shadow-md outline-none rounded-md"
         >
-          <section className="md:px-8 flex space-x-2 md:py-6">
+          <section className="p-2 px-4 flex space-x-2 ">
             <article className="w-full rounded-md ">
-              <div className="flex w-[500px] items-center flex-col gap-5 justify-center overflow-hidden bg-[white] ">
+              <div className="flex w-[500px] p-4 items-center flex-col gap-5 justify-center overflow-hidden bg-[white] ">
                 <div className="w-full">
                   <div className="flex items-center justify-between">
                     <h1 className="text-3xl text-gray-700   font-semibold  tracking-tight">

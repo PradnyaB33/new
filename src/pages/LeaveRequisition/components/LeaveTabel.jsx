@@ -187,8 +187,8 @@ const LeaveTable = () => {
 
   if (isLoading) {
     return (
-      <article className="w-full  px-6 h-max py-6 bg-white shadow-xl rounded-lg ">
-        <h1 className="text-lg  font-semibold flex items-center gap-2 text-gray-600">
+      <article className="w-full  px-6 h-max py-6 bg-white   ">
+        <h1 className="text-lg  font-semibold flex items-center gap-2 text-gray-700   ">
           <AccountBalanceIcon />
           <span>Balance Leaves</span>
           <Tooltip title="Click to get Summary for current month">
@@ -220,8 +220,8 @@ const LeaveTable = () => {
   };
 
   return (
-    <article className="w-full  h-max bg-white shadow-xl rounded-lg ">
-      <h1 className="text-lg p-1 px-4 font-semibold flex items-center gap-2 justify-between bg-gray-100 border-b border-gray-300">
+    <article className="w-full  h-max bg-white shadow-sm rounded-lg ">
+      <h1 className="text-lg p-1 px-4 font-semibold flex items-center gap-2 justify-between bg-gray-100 ">
         <AccountBalanceIcon className="text-gray-600" />
         <span className=" text-gray-600 font-semibold">Balance Leaves</span>
         <Tooltip title="Click to get Summary for current month">

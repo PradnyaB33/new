@@ -5,8 +5,16 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import LocationRelated from "./LocationRelated";
+import axios from "axios";
+import { useQuery } from "react-query";
 
-const AddGeoFencing = ({ onClose, data }) => {
+//get added geofencing zone
+const fetchGeoFencingCircle = async (circleId) => {
+  const { data } = await axios.get(`${process.env.REACT_APP_API}/route/geo-fence/area/${circleId}`);
+  return data?.data;
+};
+
+const AddGeoFencing = ({ onClose, data, circleId }) => {
   const formSchema = z.object({
     location: z
       .any({
@@ -45,12 +53,24 @@ const AddGeoFencing = ({ onClose, data }) => {
     console.log(data);
   };
 
+  //useQuery for get added geofencing zone
+  const { data: circleData } = useQuery(
+    ["geoFencingCircle", circleId],
+    () => fetchGeoFencingCircle(circleId),
+    {
+      enabled: !!circleId,
+    }
+  );
+
   return (
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col items-center gap-4"
+        className="flex flex-col items-center gap-4 overflow-scroll h-[80vh]"
       >
+        <div>Note:<span className="text-xs text-gray-600 ">1. To add the geofencing zone, type the address into the input field.
+          <br />2. Select the geofencing zone by using the circle option on the map.</span>
+        </div>
         <div className="w-full">
           <AuthInputFiled
             className="w-full"
@@ -65,9 +85,7 @@ const AddGeoFencing = ({ onClose, data }) => {
             value={watch("location")}
           />
         </div>
-        {/* {data?.lat && ( */}
-          <LocationRelated watch={watch} data={data} onClose={onClose} />
-        {/* )}  */}
+        <LocationRelated watch={watch} data={data} onClose={onClose} circleId={circleId} circleData={circleData} />
       </form>
     </>
   );

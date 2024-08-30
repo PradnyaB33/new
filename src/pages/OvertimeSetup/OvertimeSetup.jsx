@@ -17,7 +17,7 @@ import {
   Box,
   Grid,
 } from "@mui/material";
-import { Settings, Save as SaveIcon } from "@mui/icons-material";
+import { Settings } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import styled from "@emotion/styled";
 import axios from "axios";
@@ -29,7 +29,7 @@ import { TestContext } from "../../State/Function/Main";
 
 // Custom styles
 const CustomCard = styled(Card)`
-  background-color: #f0f4ff;
+  background-color: #ffffff;
   border: 1px solid #d0e2ff;
   border-radius: 10px;
 `;
@@ -43,6 +43,7 @@ const CustomButton = styled(Button)`
     background-color: #003f7f;
   }
 `;
+console.log(CustomButton)
 
 const CustomTypography = styled(Typography)`
   color: #003f7f;
@@ -69,17 +70,18 @@ const OvertimeSetup = () => {
     ["overtimeSettings", organisationId],
     async () => {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/organization/${organisationId}/overtime`,
+        `${process.env.REACT_APP_API}/route/get/${organisationId}/overtime`,
         {
           headers: {
             Authorization: authToken,
           },
         }
       );
-      return response.data[0] || {};
+      return response.data.data || {};
     },
     {
       onSuccess: (settings) => {
+        console.log("settiogn" , settings)
         setOvertimeAllowed(settings.overtimeAllowed || false);
         setMinimumOvertimeHours(settings.minimumOvertimeHours || "");
         setOvertimeAllowanceRequired(
@@ -185,7 +187,7 @@ const OvertimeSetup = () => {
   return (
     <>
       <Setup>
-        <Box className="bg-gray-50 min-h-screen w-full p-8">
+        <Box className="bg-white min-h-screen w-full p-8" >
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -197,15 +199,23 @@ const OvertimeSetup = () => {
                   variant="h5"
                   className="mb-4 flex items-center"
                 >
-                  <Settings className="mr-2" /> Overtime
+                  <Settings className="mr-2  text-gray-700" /> 
+                  <div>
+                  <h1 className="!text-lg font-medium text-gray-800">Overtime</h1>
+                  <p className="text-xs font-medium text-gray-500">
+                    Configure Overtime Allowance settings
+                  </p>
+                </div>
                 </CustomTypography>
-                <Divider className="mb-4" />
+             
+                <Divider className="mb-4 pt-4" />
                 <form onSubmit={handleSubmit}>
                   <FormGroup>
-                    <Tooltip
-                      title="Enable or disable overtime for employees"
+                    {/* <Tooltip */}
+                      {/* title="Enable or disable overtime for employees"
                       arrow
-                    >
+                      //  placement="left"
+                    > */}
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -215,12 +225,13 @@ const OvertimeSetup = () => {
                         }
                         label="Overtime Allowed"
                       />
-                    </Tooltip>
+                    {/* </Tooltip> */}
                     {overtimeAllowed && (
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
+                        //  placement="left"
                       >
                         <Grid container spacing={2} className="mb-4">
                           <Grid item xs={12} sm={6}>
@@ -301,14 +312,18 @@ const OvertimeSetup = () => {
                     )}
                   </FormGroup>
                   <br />
-                  <CustomButton
+                  {/* <CustomButton
                     variant="contained"
                     type="submit"
                     className="py-2 mt-4"
                     startIcon={<SaveIcon />}
                   >
                     Save
-                  </CustomButton>
+                  </CustomButton> */}
+
+                  <Button variant="contained" type="submit">
+          Save
+        </Button>
                 </form>
               </CardContent>
             </CustomCard>

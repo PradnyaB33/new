@@ -49,6 +49,11 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
     setDisbursementDate,
     setNoOfEmi,
     setCompletedDate,
+    setRateOfInterest,
+    setPrincipalAmount,
+    setInteresetAmount,
+    setTotalDeduction,
+    setTotalDeductionWithSi,
   } = useLaonState();
 
   const {
@@ -148,6 +153,18 @@ const CreateLoanMgtModal = ({ handleClose, open, organisationId }) => {
           "Your loan application has been submitted successfully. It is now awaiting approval from HR"
         );
         handleClose();
+        setLoanType();
+        setLoanAmount();
+        setDisbursementDate();
+        setNoOfEmi();
+        setRateOfInterest();
+        setMaxLoanValue();
+        setLoanValue();
+        setCompletedDate();
+        setPrincipalAmount();
+        setInteresetAmount();
+        setTotalDeduction();
+        setTotalDeductionWithSi();
       },
       onError: () => {
         setErrors("An Error occurred while creating a loan data.");

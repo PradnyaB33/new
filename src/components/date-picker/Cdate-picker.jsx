@@ -1704,6 +1704,7 @@ const CAppDatePicker = ({
   setIsCAppDatePickerVisible,
   calLoader,
   setCalLoader,
+  setCalendarOpen,
 }) => {
   const localizer = momentLocalizer(moment);
   const queryClient = useQueryClient();
@@ -1959,7 +1960,8 @@ const CAppDatePicker = ({
   }, []);
 
   return (
-    <div className="relative border-2 border-gray-300 p-2">
+    <div className="relative border-2 border-gray-200 p-3">
+    {/* // <div className="relative  p-2"> */}
   
     
       {calLoader && (
@@ -2049,6 +2051,9 @@ const CAppDatePicker = ({
             if (newAppliedLeaveEvents?.length > 0) {
               setIsCAppDatePickerVisible(false);
             }
+            //it is more importatnt👍
+              setCalendarOpen(false)
+          
           }}
         >
           Submit

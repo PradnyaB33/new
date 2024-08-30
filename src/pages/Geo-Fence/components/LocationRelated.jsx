@@ -7,7 +7,8 @@ import {
 } from "@react-google-maps/api";
 import React from "react";
 import useGeoFencingMap from "./useGeoFencingMap";
-const LocationRelated = ({ watch, data, onClose }) => {
+
+const LocationRelated = ({ watch, data, onClose, circleId, circleData }) => {
   const {
     circleRef,
     circleComplete,
@@ -19,10 +20,6 @@ const LocationRelated = ({ watch, data, onClose }) => {
     watch,
     onClose,
   });
-  console.log(
-    `🚀 ~ file: LocationRelated.jsx:37 ~ watch("location"):`,
-    watch("location")
-  );
 
   return (
     <div className="h-full w-full flex flex-col items-center">
@@ -60,66 +57,72 @@ const LocationRelated = ({ watch, data, onClose }) => {
                 zIndex: 1,
                 draggable: true,
               },
-
               drawingControl: true,
             }}
             onLoad={(drawingManager) => {
-              console.log(
-                `🚀 ~ file: GeoMaps.jsx:39 ~ drawingManager`,
-                drawingManager
-              );
               drawingRef.current = drawingManager;
             }}
           />
         )}
-
-        {circle && (
+        {circleId ?
           <CircleF
-            center={circle?.center}
-            radius={circle?.radius}
+            center={{
+              lat: circleData?.center?.coordinates[0],
+              lng: circleData?.center?.coordinates[1],
+            }}
+            radius={circleData?.radius}
             options={{
-              fillColor: `#2198f3`,
-              strokeColor: "#2196f3",
-              fillOpacity: 0.5,
+              strokeColor: "#0033ff",
+              strokeOpacity: 0.8,
               strokeWeight: 2,
-              clickable: true,
-              editable: true,
-              zIndex: 1,
-              draggable: true,
-            }}
-            onCenterChanged={(center) => {
-              console.log(
-                "center",
-                circleRef.current?.center?.lat(),
-                circleRef.current?.center?.lng(),
-                circleRef.current?.radius
-              );
-              console.log(
-                "getCenter",
-                circle?.center?.center?.lat(),
-                circle?.center?.center?.lng()
-              );
-            }}
-            onRadiusChanged={(radius) => {
-              console.log("radius", radius);
-            }}
-            onLoad={(circle) => {
-              console.log(
-                `🚀 ~ file: LocationRelated.jsx:86 ~ circle:`,
-                circle
-              );
-              circleRef.current = circle;
+              fillColor: "#0033ff",
+              fillOpacity: 0.35,
             }}
           />
-        )}
+          :
+          circle && (
+            <CircleF
+              center={circle?.center}
+              radius={circle?.radius}
+              options={{
+                fillColor: `#2198f3`,
+                strokeColor: "#2196f3",
+                fillOpacity: 0.5,
+                strokeWeight: 2,
+                clickable: true,
+                editable: true,
+                zIndex: 1,
+                draggable: true,
+              }}
+              onCenterChanged={(center) => {
+                console.log(
+                  "center",
+                  circleRef.current?.center?.lat(),
+                  circleRef.current?.center?.lng(),
+                  circleRef.current?.radius
+                );
+                console.log(
+                  "getCenter",
+                  circle?.center?.center?.lat(),
+                  circle?.center?.center?.lng()
+                );
+              }}
+              onRadiusChanged={(radius) => {
+                console.log("radius", radius);
+              }}
+              onLoad={(circle) => {
+                circleRef.current = circle;
+              }}
+            />
+          )}
       </GoogleMap>
-      <Button
+      {circleId ? null : <Button
         onClick={addCircleMutate}
         disabled={circle?.center?.lat === undefined}
         variant="contained"
       >
         ADD
-      </Button>
+      </Button>}
     </div>
   );
 };

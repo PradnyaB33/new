@@ -27,7 +27,10 @@ const useNotification = () => {
   const user = getCurrentUser();
   const role = useGetCurrentRole();
   const { data } = useLeaveNotificationHook();//super admin and manager side notification
-  const { data: shiftNotification } = useShiftNotification();//super admin and manager side notification
+  const { data: shiftNotification, accData } = useShiftNotification();//super admin and manager side notification
+  console.log("shiftNotification", accData);
+
+
   const { data: employeeShiftNotification } = UseEmployeeShiftNotification();//employee side notification
   const { data: selfLeaveNotification } = useLeaveNotification();
   const [emp, setEmp] = useState();
@@ -40,6 +43,7 @@ const useNotification = () => {
   const [employeeShiftCount, setEmployeeShiftCount] = useState(0);
   const [leaveCount, setLeaveCount] = useState(0);
   const [employeeLeaveCount, setEmployeeLeaveCount] = useState(0);
+  const [shiftAccCount, setShiftAccCount] = useState(0);
   console.log("employeeLeaveCount", employeeLeaveCount);
 
   //super admin and manager side leave notification count
@@ -86,6 +90,18 @@ const useNotification = () => {
     }
   }, [shiftNotification]);
 
+  //Account side shift notification count
+  useEffect(() => {
+    if (accData && accData.length > 0) {
+      let total = 0;
+      accData.forEach(item => {
+        total += item.notificationAccCount;
+      });
+      setShiftAccCount(total);
+    } else {
+      setShiftAccCount(0);
+    }
+  }, [accData]);
   //employee side shift notification count
   useEffect(() => {
     if (employeeShiftNotification && employeeShiftNotification?.requests && employeeShiftNotification?.requests?.length > 0) {
@@ -101,10 +117,10 @@ const useNotification = () => {
 
   const count = role === "Super-Admin" || role === "Manager"
     ? shiftCount
-    : employeeShiftCount;
+    : role === "Accountant" ? shiftAccCount : employeeShiftCount;
 
   //Employee Side remote and geofencing Notification count
-  const employeeId = user._id;
+  const employeeId = user?._id;
   const { data: EmpNotification } = useQuery({
     queryKey: ["EmpDataPunchNotification", employeeId],
     queryFn: async () => {

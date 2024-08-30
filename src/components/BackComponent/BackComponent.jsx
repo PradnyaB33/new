@@ -15,6 +15,7 @@ const BackComponent = () => {
     "/sign-in",
     "/sign-up",
     "setup",
+    "ManagementCalender",
     "super-admin",
     "/manager-dashboard",
     "employee-dashboard",
