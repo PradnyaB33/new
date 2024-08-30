@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useNotificationRemotePunching from "../../../hooks/QueryHook/Remote-Punch/components/mutation";
 
 const calculateDistance = (coords) => {
@@ -18,9 +18,9 @@ const calculateDistance = (coords) => {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos((lat1 * Math.PI) / 180) *
-        Math.cos((lat2 * Math.PI) / 180) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c;
     totalDistance += d;
@@ -31,7 +31,7 @@ const calculateDistance = (coords) => {
 
 const PunchingRejectModal = ({ items, length }) => {
   const navigate = useNavigate();
-  console.log("yash items", items);
+  const { organisationId } = useParams();
 
   const { notifyAccountantMutation, RejectManagerMutation } =
     useNotificationRemotePunching();
@@ -41,9 +41,9 @@ const PunchingRejectModal = ({ items, length }) => {
       : 0;
   const handleViewRouteClick = () => {
     const id = items._id;
-    navigate(`/remote/info/${id}`);
+    navigate(`/organisation/${organisationId}/remote/info/${id}`);
   };
-  console.log("yash items", items);
+
   return (
     <div className="w-full">
       <div className="w-full h-auto bg-white flex p-4 pl-8 pr-8 justify-between items-center shadow-md mt-3">

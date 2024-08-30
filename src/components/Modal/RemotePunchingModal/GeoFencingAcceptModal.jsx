@@ -10,12 +10,13 @@ import PunchMapModal from "./components/mapped-form";
 
 const GeoFencingAcceptModal = () => {
     // Hooks
-    const { employeeId } = useParams();
+    const { employeeId, organisationId } = useParams();
     const queryClient = useQueryClient();
     const { data: punchNotifications } = usePunchNotification();
     const authToken = useAuthToken();
     const [selectedPunchId, setSelectedPunchId] = useState(null);
     console.log("selectedPunchId", selectedPunchId);
+    const geoFence = "geoFence";
 
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -86,7 +87,7 @@ const GeoFencingAcceptModal = () => {
     return (
         <div>
             <header className="text-xl w-full pt-6 border bg-white shadow-md p-4">
-                <Link to={"/organisation/:organisationId/income-tax"}>
+                <Link to={"/organisation/:organisationId/notification"}>
                     <West className="mx-4 !text-xl" />
                 </Link>
                 Employee Geo Fencing Request
@@ -118,7 +119,7 @@ const GeoFencingAcceptModal = () => {
                                 notification?.employeeId ? (
                                     <Link
                                         onClick={() => handleEmployeeClick(notification?.employeeId?._id)} // Click handler
-                                        to={`/geo-fencing-notification/${notification?.employeeId?._id}`}
+                                        to={`/organisation/${organisationId}/geo-fencing-notification/${notification?.employeeId?._id}`}
                                         className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${notification?.employeeId?._id === employeeId ? "bg-blue-500 text-white hover:!bg-blue-300" : ""
                                             }`}
                                         key={idx}
@@ -170,7 +171,7 @@ const GeoFencingAcceptModal = () => {
                                     {EmpNotification?.punchNotification
                                         ?.filter((notification) => notification.geoFencingArea === true) // Filter by geoFencingArea
                                         ?.map((items, itemIndex) => (
-                                            <PunchMapModal key={itemIndex} items={items} idx={itemIndex} />
+                                            <PunchMapModal key={itemIndex} items={items} idx={itemIndex} geoFence={geoFence} />
                                         ))}
                                 </div>
                             </>

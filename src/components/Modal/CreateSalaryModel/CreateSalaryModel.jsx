@@ -68,7 +68,7 @@ const CreateSalaryModel = ({
   // to get employee salary component data
   const {
     data: salaryInput,
-    isLoading,
+    isFetching,
     isError,
   } = useQuery(
     ["empData", empId],
@@ -106,7 +106,6 @@ const CreateSalaryModel = ({
       return response.data.data;
     }
   );
-  console.log("salary component", salaryComponent);
 
   useEffect(() => {
     setIncomeValues(salaryComponent?.income ?? []);
@@ -116,24 +115,35 @@ const CreateSalaryModel = ({
 
   const handleApply = async () => {
     try {
-      // Filter out income components with null, undefined, or zero value
+      // Filter out income components with null, undefined, or zero value, and also exclude those with invalid names
       const filteredIncomeValues = incomeValues?.filter(
         (item) =>
-          item.value !== null && item.value !== undefined && item.value !== 0
+          item.name &&
+          item.value !== null &&
+          item.value !== undefined &&
+          item.value !== 0 &&
+          item.value !== ""
       );
-  
-      // Filter out deduction components with null, undefined, or zero value
+
+      console.log("filter income value", filteredIncomeValues);
+
+      // Filter out deduction components with null, undefined, or zero value, and also exclude those with invalid names
       const filteredDeductionsValues = deductionsValues?.filter(
         (item) =>
-          item.value !== null && item.value !== undefined && item.value !== 0
+          item.name &&
+          item.value !== null &&
+          item.value !== undefined &&
+          item.value !== 0 &&
+          item.value !== ""
       );
-  
+      console.log("filter deduction value", filteredDeductionsValues);
+
       const data = {
         income: filteredIncomeValues,
         deductions: filteredDeductionsValues,
         totalSalary: totalValues,
       };
-  
+
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/add-salary-component/${empId}`,
         data,
@@ -151,7 +161,7 @@ const CreateSalaryModel = ({
       handleAlert(true, "error", "Something went wrong");
     }
   };
-  
+
   return (
     <Dialog
       PaperProps={{
@@ -200,7 +210,7 @@ const CreateSalaryModel = ({
                 </tr>
               </thead>
               <tbody>
-                {isLoading ? (
+                {isFetching ? (
                   <tr>
                     <td colSpan={2}>
                       <CircularProgress />

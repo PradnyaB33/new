@@ -66,7 +66,7 @@ const AddGeoFencing = ({ onClose, data, circleId }) => {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col items-center gap-4 overflow-scroll h-[80vh]"
+        className="flex flex-col items-center gap-4 overflow-scroll lg:h-[80vh] md:h-[120vh] sm:h-[200vh] xs:h-[250vh]"
       >
         <div>Note:<span className="text-xs text-gray-600 ">1. To add the geofencing zone, type the address into the input field.
           <br />2. Select the geofencing zone by using the circle option on the map.</span>

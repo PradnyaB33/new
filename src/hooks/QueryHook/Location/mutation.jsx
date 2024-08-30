@@ -107,10 +107,12 @@ const useLocationMutation = () => {
 
         getPunchObject.mutate(data?.url?.split("?")[0]);
       } catch (error) {
+
         console.error("Error uploading image:", error);
       }
     },
     onError: (data) => {
+      console.log("error", data?.response?.data?.message);
       handleAlert(true, "error", data?.response?.data?.message);
     },
   });

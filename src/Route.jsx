@@ -202,7 +202,7 @@ const App = () => {
           element={<EmpNotification />}
         />
         <Route
-          path="/geofencing-notification"
+          path="/organisation/:organisationId/geofencing-notification"
           element={<EmpGeoFencingNotification />}
         />
         <Route path="/loading" element={<Loader />} />
@@ -248,7 +248,7 @@ const App = () => {
           path="/organisation/:organisationId/setup/letter-types"
           element={<LetterSetup />}
         />
-        <Route path="/remote/info/:Id" element={<RemoteManager />} />
+        <Route path="/organisation/:organisationId/remote/info/:Id" element={<RemoteManager />} />
         <Route path="/remote/notification" element={<RemoteNotification />} />
         <Route path="/doc-notification" element={<DocNotification />} />
         <Route path="/emp/docs" element={<DocManage />} />
@@ -285,7 +285,7 @@ const App = () => {
         />
         <Route path="/punch-notification" element={<PunchNotification />} />
         <Route
-          path="/geo-fencing-notification"
+          path="/organisation/:organisationId/geo-fencing-notification"
           element={<GeoFencingAcceptModal />}
         />
         {/* <Route
@@ -297,7 +297,7 @@ const App = () => {
           element={<PunchNotification />}
         />
         <Route
-          path="geo-fencing-notification/:employeeId"
+          path="/organisation/:organisationId/geo-fencing-notification/:employeeId"
           element={<GeoFencingAcceptModal />}
         />
         <Route path="/shift-notification" element={<ShiftNotification />} />

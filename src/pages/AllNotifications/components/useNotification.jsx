@@ -19,24 +19,22 @@ import useAuthToken from "../../../hooks/Token/useAuth";
 import useOrgGeo from "../../Geo-Fence/useOrgGeo";
 import useShiftNotification from "../../../hooks/QueryHook/notification/shift-notificatoin/hook";
 import UseEmployeeShiftNotification from "../../SelfShiftNotification/UseEmployeeShiftNotification";
+import { useParams } from "react-router-dom";
 
 const useNotification = () => {
   const { cookies } = useContext(UseContext);
+  const { organisationId } = useParams();
   const token = cookies["aegis"];
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
   const { data } = useLeaveNotificationHook();//super admin and manager side notification
   const { data: shiftNotification, accData } = useShiftNotification();//super admin and manager side notification
-  console.log("shiftNotification", accData);
-
-
   const { data: employeeShiftNotification } = UseEmployeeShiftNotification();//employee side notification
   const { data: selfLeaveNotification } = useLeaveNotification();
   const [emp, setEmp] = useState();
   const { data: data3 } = usePunchNotification();
   const authToken = useAuthToken();
-  console.log("selfLeaveNotification", selfLeaveNotification);
 
   //states
   const [shiftCount, setShiftCount] = useState(0);
@@ -44,7 +42,7 @@ const useNotification = () => {
   const [leaveCount, setLeaveCount] = useState(0);
   const [employeeLeaveCount, setEmployeeLeaveCount] = useState(0);
   const [shiftAccCount, setShiftAccCount] = useState(0);
-  console.log("employeeLeaveCount", employeeLeaveCount);
+  const [loanCount, setLoanCount] = useState(0);;
 
   //super admin and manager side leave notification count
   useEffect(() => {
@@ -194,7 +192,6 @@ const useNotification = () => {
     area.employee.includes(employeeId)
   );
 
-  //
   const { data: data4 } = useDocNotification();
   const { data: tds } = useTDSNotificationHook();
 
@@ -204,14 +201,28 @@ const useNotification = () => {
   const { Form16Notification } = useForm16NotificationHook();
   const {
     getEmployeeRequestLoanApplication,
-    getApprovedRejectLoanDataByApprover,
+    // getApprovedRejectLoanDataByApprover,
   } = useLoanNotification();
+
+  //get notification count of loan 
+  useEffect(() => {
+    if (getEmployeeRequestLoanApplication && getEmployeeRequestLoanApplication?.length > 0) {
+      let total = 0;
+      getEmployeeRequestLoanApplication?.forEach(item => {
+        total += item.notificationCount;
+      });
+      setLoanCount(total);
+    } else {
+      setLoanCount(0);
+    }
+  }, [getEmployeeRequestLoanApplication]);
 
   const { getJobPositionToMgr, getNotificationToEmp } =
     useJobPositionNotification();
   const { PayslipNotification } = usePayslipNotificationHook();
   const { getAdvanceSalaryData, advanceSalaryNotification } =
     useAdvanceSalaryData();
+  console.log("getAdvanceSalaryData", getAdvanceSalaryData);
 
   const { getDepartmnetData, getDeptNotificationToEmp } =
     useDepartmentNotification();
@@ -228,16 +239,16 @@ const useNotification = () => {
   }, [role]);
 
   // for loan notification count
-  let loanNotificationCount;
-  if (
-    role === "HR" ||
-    role === "Super-Admin" ||
-    role === "Delegate-Super-Admin"
-  ) {
-    loanNotificationCount = getEmployeeRequestLoanApplication?.length ?? 0;
-  } else {
-    loanNotificationCount = getApprovedRejectLoanDataByApprover?.length ?? 0;
-  }
+  // let loanNotificationCount;
+  // if (
+  //   role === "HR" ||
+  //   role === "Super-Admin" ||
+  //   role === "Delegate-Super-Admin"
+  // ) {
+  //   loanNotificationCount = getEmployeeRequestLoanApplication?.length ?? 0;
+  // } else {
+  //   loanNotificationCount = getApprovedRejectLoanDataByApprover?.length ?? 0;
+  // }
 
   // for advance salary notification count
   let advanceSalaryNotifyCount;
@@ -304,7 +315,6 @@ const useNotification = () => {
     departmentNotificationCount = 0;
   }
 
-
   useEffect(() => {
     (async () => {
       if (user?._id) {
@@ -355,8 +365,8 @@ const useNotification = () => {
           name: "Geo Fencing Notification",
           count: geoFencingCount,
           color: "#51FD96",
-          url: "/geo-fencing-notification",
-          url2: "/geofencing-notification",
+          url: `/organisation/${organisationId}/geo-fencing-notification`,
+          url2: `/organisation/${organisationId}/geofencing-notification`,
           visible: emp?.packageInfo === "Intermediate Plan",
         },
       ]
@@ -367,8 +377,8 @@ const useNotification = () => {
             name: "Geo Fencing Notification",
             count: geoFencingCount,
             color: "#51FD96",
-            url: "/geo-fencing-notification",
-            url2: "/geofencing-notification",
+            url: `/organisation/${organisationId}/geo-fencing-notification`,
+            url2: `/organisation/${organisationId}/geofencing-notification`,
             visible: emp?.packageInfo === "Intermediate Plan",
           }
           : {
@@ -389,7 +399,7 @@ const useNotification = () => {
     },
     {
       name: "Loan Notification",
-      count: loanNotificationCount,
+      count: loanCount,
       color: "#51E8FD",
       url: "/loan-notification",
       url2: "/loan-notification-to-emp",
