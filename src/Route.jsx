@@ -100,6 +100,7 @@ import SurveyDetails from "./pages/EmployeeSurvey/components/SurveyDetails";
 import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
 import GeoFencingEmployeeSide from "./pages/Geo-Fence/components/GeoFencingEmployeeSide";
 import GeoFencing from "./pages/Geo-Fence/page";
+import IncomeTaxPage from "./pages/Income-Tax/page";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import ManagementCalender from "./pages/LeaveRequisition/Manager/ManagementCalender";
@@ -1291,6 +1292,28 @@ const App = () => {
               ]}
             >
               <TDSCalculation />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/income-tax-section"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <IncomeTaxPage />
             </RequireAuth>
           }
         />
