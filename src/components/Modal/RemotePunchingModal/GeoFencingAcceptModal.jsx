@@ -10,7 +10,7 @@ import PunchMapModal from "./components/mapped-form";
 
 const GeoFencingAcceptModal = () => {
     // Hooks
-    const { employeeId } = useParams();
+    const { employeeId, organisationId } = useParams();
     const queryClient = useQueryClient();
     const { data: punchNotifications } = usePunchNotification();
     const authToken = useAuthToken();
@@ -119,7 +119,7 @@ const GeoFencingAcceptModal = () => {
                                 notification?.employeeId ? (
                                     <Link
                                         onClick={() => handleEmployeeClick(notification?.employeeId?._id)} // Click handler
-                                        to={`/geo-fencing-notification/${notification?.employeeId?._id}`}
+                                        to={`/organisation/${organisationId}/geo-fencing-notification/${notification?.employeeId?._id}`}
                                         className={`px-6 my-1 mx-3 py-2 flex gap-2 rounded-md items-center hover:bg-gray-50 ${notification?.employeeId?._id === employeeId ? "bg-blue-500 text-white hover:!bg-blue-300" : ""
                                             }`}
                                         key={idx}

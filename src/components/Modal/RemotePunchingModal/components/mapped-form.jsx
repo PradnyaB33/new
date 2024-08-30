@@ -7,13 +7,13 @@ import {
   TextField,
 } from "@mui/material";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useNotificationRemotePunching from "../../../../hooks/QueryHook/Remote-Punch/components/mutation";
 
 const PunchMapModal = ({ items, idx, geoFence }) => {
   //hooks
   const navigate = useNavigate();
-
+  const { organisationId } = useParams();
   //state
   const [openModal, setOpenModal] = useState(false);
   const [mReason, setMReason] = useState("");
@@ -41,7 +41,7 @@ const PunchMapModal = ({ items, idx, geoFence }) => {
   //handle view route click
   const handleViewRouteClick = () => {
     const id = items._id;
-    navigate(`/remote/info/${id}`);
+    navigate(`/organisation/${organisationId}/remote/info/${id}`);
   };
 
   //handle image click

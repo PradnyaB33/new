@@ -19,18 +19,17 @@ import useAuthToken from "../../../hooks/Token/useAuth";
 import useOrgGeo from "../../Geo-Fence/useOrgGeo";
 import useShiftNotification from "../../../hooks/QueryHook/notification/shift-notificatoin/hook";
 import UseEmployeeShiftNotification from "../../SelfShiftNotification/UseEmployeeShiftNotification";
+import { useParams } from "react-router-dom";
 
 const useNotification = () => {
   const { cookies } = useContext(UseContext);
+  const { organisationId } = useParams();
   const token = cookies["aegis"];
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
   const { data } = useLeaveNotificationHook();//super admin and manager side notification
   const { data: shiftNotification, accData } = useShiftNotification();//super admin and manager side notification
-  console.log("shiftNotification", accData);
-
-
   const { data: employeeShiftNotification } = UseEmployeeShiftNotification();//employee side notification
   const { data: selfLeaveNotification } = useLeaveNotification();
   const [emp, setEmp] = useState();
@@ -44,7 +43,6 @@ const useNotification = () => {
   const [leaveCount, setLeaveCount] = useState(0);
   const [employeeLeaveCount, setEmployeeLeaveCount] = useState(0);
   const [shiftAccCount, setShiftAccCount] = useState(0);
-  console.log("employeeLeaveCount", employeeLeaveCount);
 
   //super admin and manager side leave notification count
   useEffect(() => {
@@ -355,8 +353,8 @@ const useNotification = () => {
           name: "Geo Fencing Notification",
           count: geoFencingCount,
           color: "#51FD96",
-          url: "/geo-fencing-notification",
-          url2: "/geofencing-notification",
+          url: `/organisation/${organisationId}/geo-fencing-notification`,
+          url2: `/organisation/${organisationId}/geofencing-notification`,
           visible: emp?.packageInfo === "Intermediate Plan",
         },
       ]
@@ -367,8 +365,8 @@ const useNotification = () => {
             name: "Geo Fencing Notification",
             count: geoFencingCount,
             color: "#51FD96",
-            url: "/geo-fencing-notification",
-            url2: "/geofencing-notification",
+            url: `/organisation/${organisationId}/geo-fencing-notification`,
+            url2: `/organisation/${organisationId}/geofencing-notification`,
             visible: emp?.packageInfo === "Intermediate Plan",
           }
           : {
