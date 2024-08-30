@@ -53,7 +53,7 @@ const ViewDelete = ({ onClose, circleId }) => {
   );
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex gap-4 flex-col">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex gap-4 flex-col overflow-scroll">
       <SmallInputForm circleId={circleId} />
       <div className="flex flex-col gap-4 max-h-[300px] overflow-auto h-auto">
         <TableComponent register={register} setValue={setValue} watch={watch} addedEmployee={addedEmployee} />

@@ -35,7 +35,6 @@ const useNotification = () => {
   const [emp, setEmp] = useState();
   const { data: data3 } = usePunchNotification();
   const authToken = useAuthToken();
-  console.log("selfLeaveNotification", selfLeaveNotification);
 
   //states
   const [shiftCount, setShiftCount] = useState(0);
@@ -43,6 +42,7 @@ const useNotification = () => {
   const [leaveCount, setLeaveCount] = useState(0);
   const [employeeLeaveCount, setEmployeeLeaveCount] = useState(0);
   const [shiftAccCount, setShiftAccCount] = useState(0);
+  const [loanCount, setLoanCount] = useState(0);;
 
   //super admin and manager side leave notification count
   useEffect(() => {
@@ -192,7 +192,6 @@ const useNotification = () => {
     area.employee.includes(employeeId)
   );
 
-  //
   const { data: data4 } = useDocNotification();
   const { data: tds } = useTDSNotificationHook();
 
@@ -202,14 +201,28 @@ const useNotification = () => {
   const { Form16Notification } = useForm16NotificationHook();
   const {
     getEmployeeRequestLoanApplication,
-    getApprovedRejectLoanDataByApprover,
+    // getApprovedRejectLoanDataByApprover,
   } = useLoanNotification();
+
+  //get notification count of loan 
+  useEffect(() => {
+    if (getEmployeeRequestLoanApplication && getEmployeeRequestLoanApplication?.length > 0) {
+      let total = 0;
+      getEmployeeRequestLoanApplication?.forEach(item => {
+        total += item.notificationCount;
+      });
+      setLoanCount(total);
+    } else {
+      setLoanCount(0);
+    }
+  }, [getEmployeeRequestLoanApplication]);
 
   const { getJobPositionToMgr, getNotificationToEmp } =
     useJobPositionNotification();
   const { PayslipNotification } = usePayslipNotificationHook();
   const { getAdvanceSalaryData, advanceSalaryNotification } =
     useAdvanceSalaryData();
+  console.log("getAdvanceSalaryData", getAdvanceSalaryData);
 
   const { getDepartmnetData, getDeptNotificationToEmp } =
     useDepartmentNotification();
@@ -226,16 +239,16 @@ const useNotification = () => {
   }, [role]);
 
   // for loan notification count
-  let loanNotificationCount;
-  if (
-    role === "HR" ||
-    role === "Super-Admin" ||
-    role === "Delegate-Super-Admin"
-  ) {
-    loanNotificationCount = getEmployeeRequestLoanApplication?.length ?? 0;
-  } else {
-    loanNotificationCount = getApprovedRejectLoanDataByApprover?.length ?? 0;
-  }
+  // let loanNotificationCount;
+  // if (
+  //   role === "HR" ||
+  //   role === "Super-Admin" ||
+  //   role === "Delegate-Super-Admin"
+  // ) {
+  //   loanNotificationCount = getEmployeeRequestLoanApplication?.length ?? 0;
+  // } else {
+  //   loanNotificationCount = getApprovedRejectLoanDataByApprover?.length ?? 0;
+  // }
 
   // for advance salary notification count
   let advanceSalaryNotifyCount;
@@ -301,7 +314,6 @@ const useNotification = () => {
   } else {
     departmentNotificationCount = 0;
   }
-
 
   useEffect(() => {
     (async () => {
@@ -387,7 +399,7 @@ const useNotification = () => {
     },
     {
       name: "Loan Notification",
-      count: loanNotificationCount,
+      count: loanCount,
       color: "#51E8FD",
       url: "/loan-notification",
       url2: "/loan-notification-to-emp",

@@ -31,6 +31,11 @@ const LoanMgtApproval = ({ employee }) => {
         }
       );
       return response.data.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["empLoanApplyRequest"] });
+      }
     }
   );
 
@@ -51,9 +56,11 @@ const LoanMgtApproval = ({ employee }) => {
           headers: {
             Authorization: authToken,
           },
-        }
+        },
       );
+
       console.log(response);
+
       // Invalidate the query to force refetch
       queryClient.invalidateQueries(["empLoanInfo", loanId]);
       // Display appropriate alert message based on action
@@ -70,6 +77,7 @@ const LoanMgtApproval = ({ employee }) => {
           `Rejected the request for loan application of ${getEmployeeLoanInfo?.userId?.first_name}`
         );
       }
+
       window.location.reload();
     } catch (error) {
       console.error("Error adding salary data:", error);
