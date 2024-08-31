@@ -20,7 +20,6 @@ const CreateModal = ({ open, setOpen }) => {
   const {
     handleSubmit,
     control,
-    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(InvestmentSchema),
