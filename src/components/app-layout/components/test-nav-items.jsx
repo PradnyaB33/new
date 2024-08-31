@@ -172,10 +172,10 @@ const TestNavItems = ({ toggleDrawer }) => {
                   role === "Manager"
                     ? `organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
-                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                        : "/organizationList",
+                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                    : role === "Employee"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
                 icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Dashboard",
               },
@@ -478,10 +478,10 @@ const TestNavItems = ({ toggleDrawer }) => {
                   role === "Manager"
                     ? `organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
-                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                        : "/organizationList",
+                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                    : role === "Employee"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
                 icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Dashboard",
               },
@@ -846,20 +846,7 @@ const TestNavItems = ({ toggleDrawer }) => {
 
               {
                 key: "missjustify",
-                isVisible: [
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ].includes(role),
+                isVisible: ["Employee"].includes(role),
                 link: `organisation/${orgId}/missed-justify`,
                 icon: <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Missed Justify",
@@ -1042,7 +1029,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   survey?.surveyPermission,
                 link:
                   user?.profile.includes("Super-Admin") ||
-                    user?.profile.includes("HR")
+                  user?.profile.includes("HR")
                     ? `/organisation/${orgId}/employee-survey`
                     : `/organisation/${orgId}/employee-survey/${empId}`,
                 icon: (
@@ -1175,14 +1162,12 @@ const TestNavItems = ({ toggleDrawer }) => {
             ],
           },
 
-          "Geofencing": {
+          Geofencing: {
             open: false,
             isVisible:
-              [
-                "Employee",
-                "Super-Admin",
-                "Delegate-Super-Admin",
-              ].includes(role) &&
+              ["Employee", "Super-Admin", "Delegate-Super-Admin"].includes(
+                role
+              ) &&
               data?.organisation?.packageInfo === "Intermediate Plan" &&
               isUserMatchInEmployeeList,
             icon: <MonetizationOn className="!text-[1.2em] text-[#67748E]" />,
