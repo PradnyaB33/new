@@ -11,15 +11,8 @@ const Tab0 = () => {
   // const [taxAmount, setTaxAmount] = useState(0);
   // const [cess, setCess] = useState(0);
   // const [tax, setTax] = useState(0);
-  const {
-    getCurrentFinancialYear,
-    setTaxAmount,
-    setCess,
-    setTax,
-    taxAmount,
-    cess,
-    tax,
-  } = useIncomeTax();
+  const { setTaxAmount, setCess, setTax, taxAmount, cess, tax } =
+    useIncomeTax();
   const { usersalary: salaryAmount, isFetching } =
     useGetEmployeeSalaryByFinaicalYear();
   // const {
