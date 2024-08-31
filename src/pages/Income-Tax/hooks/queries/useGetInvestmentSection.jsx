@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useQuery } from "react-query";
-import useAuthToken from "../../../hooks/Token/useAuth";
+import useAuthToken from "../../../../hooks/Token/useAuth";
 
 const useGetInvestmentSection = (search) => {
   const authToken = useAuthToken();

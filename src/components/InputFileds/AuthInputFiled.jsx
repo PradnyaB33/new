@@ -765,7 +765,7 @@ const AuthInputFiled = ({
                 )}
                 <input
                   type="file"
-                  accept="image/png,image/gif,image/jpeg,image/webp"
+                  // accept={accept}
                   id="logo_url"
                   maxLength={maxLimit && maxLimit}
                   readOnly={readOnly}

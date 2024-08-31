@@ -204,6 +204,7 @@ const MonitoringModel = ({ handleClose, open, options, id, performance }) => {
                 name="attachment"
                 icon={AttachFile}
                 control={control}
+                // accept={"image/png,image/gif,image/jpeg,image/webp"}
                 type="Typefile"
                 placeholder="100"
                 label="Add attachments"

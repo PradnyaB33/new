@@ -1,7 +1,7 @@
 import { Search } from "@mui/icons-material";
 import { Pagination, Stack } from "@mui/material";
 import React, { useState } from "react";
-import useGetInvestmentSection from "../hooks/useGetInvestmentSection";
+import useGetInvestmentSection from "../hooks/queries/useGetInvestmentSection";
 
 const InvestmentTable = ({ setOpen }) => {
   const [search, setSearch] = useState("");
