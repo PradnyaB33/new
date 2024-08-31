@@ -25,7 +25,7 @@ const ReusableModal = ({ open, onClose, children, heading, subHeading }) => {
             </IconButton>
           </div>
         )}
-        {children}
+        <div className="p-4">{children}</div>
       </Box>
     </Modal>
   );
