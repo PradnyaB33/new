@@ -2,6 +2,7 @@ import { Tab } from "@headlessui/react";
 import { West } from "@mui/icons-material";
 import React from "react";
 import { Link } from "react-router-dom";
+import CalculationTab from "./CalculationTab";
 import InvestmentTab from "./InvestmentTab";
 
 const IncomeTaxPage = () => {
@@ -55,7 +56,7 @@ const IncomeTaxPage = () => {
               <InvestmentTab />
             </Tab.Panel>
             <Tab.Panel>
-              <h1>Test one</h1>
+              <CalculationTab />
             </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>

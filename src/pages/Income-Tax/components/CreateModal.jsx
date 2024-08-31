@@ -7,6 +7,7 @@ import AuthInputFiled from "../../../components/InputFileds/AuthInputFiled";
 import ReusableModal from "../../../components/Modal/component";
 import {
   LetOutArray,
+  OthersArray,
   otherSections,
   SalaryArray,
   section80c,
@@ -16,7 +17,7 @@ import {
 } from "../data";
 import useCreateDeclaration from "../hooks/mutations/useCreateDeclaration";
 
-const CreateModal = ({ open, setOpen }) => {
+const CreateModal = ({ open, setOpen, investments }) => {
   // zod schema
   const InvestmentSchema = z.object({
     name: z.object({
@@ -49,8 +50,25 @@ const CreateModal = ({ open, setOpen }) => {
       sectionname: undefined,
       declaration: undefined,
       proof: undefined,
+      subsectionname: undefined,
     },
   });
+
+  useEffect(() => {
+    if (typeof open === "object") {
+      console.log(open);
+      setValue("name", { label: open?.name, value: open?.name });
+      setValue("declaration", Number(open?.declaration));
+      setValue("sectionname", {
+        label: open?.sectionname,
+        value: open?.sectionname,
+      });
+      setValue("subsectionname", {
+        label: open?.subsectionname ?? "",
+        value: open?.subsectionname ?? "",
+      });
+    }
+  }, [open]);
 
   const [sectionType, setSectionType] = React.useState([]);
   const [subSectionType, setSubSectionType] = React.useState([]);
@@ -59,6 +77,10 @@ const CreateModal = ({ open, setOpen }) => {
     () => {
       if (watch("sectionname")?.value === "Salary") {
         setSectionType(SalaryArray);
+      }
+
+      if (watch("sectionname")?.value === "Others") {
+        setSectionType(OthersArray);
       }
 
       if (watch("sectionname")?.value === "House") {
@@ -98,31 +120,63 @@ const CreateModal = ({ open, setOpen }) => {
       }
 
       if (
+        watch("sectionname")?.value === "House" &&
         watch("subsectionname")?.value === "(A) Self Occupied Property (Loss)"
       ) {
         setSectionType(SelfHouseArray);
       }
-      if (watch("subsectionname")?.value === "(C) Let out property") {
+      if (
+        watch("sectionname")?.value === "House" &&
+        watch("subsectionname")?.value ===
+          ("(C) Let out property" || "(B) Let out property")
+      ) {
         setSectionType(LetOutArray);
       }
 
-      if (watch("subsectionname")?.label === "80C") {
+      if (
+        watch("sectionname")?.label === "SectionDeduction" &&
+        watch("subsectionname")?.label === "80C"
+      ) {
         setSectionType(section80c);
       }
-      if (watch("subsectionname")?.label === "80C") {
-        setSectionType(section80c);
-      }
-      if (watch("subsectionname")?.label === "80 CCD") {
+      if (
+        watch("sectionname")?.label === "SectionDeduction" &&
+        watch("subsectionname")?.label === "80 CCD"
+      ) {
         setSectionType(section80CCD);
       }
-      if (watch("subsectionname")?.label === "80D") {
+      if (
+        watch("sectionname")?.label === "SectionDeduction" &&
+        watch("subsectionname")?.label === "80D"
+      ) {
         setSectionType(otherSections);
       }
-
-      setValue("name", { label: "", value: "" });
+      if (typeof open !== "object") {
+        setSectionType((prev) => {
+          return prev?.filter((item) => {
+            return !investments?.allInvestment?.some(
+              (inv) => item?.value === inv?.name
+            );
+          });
+        });
+        setValue("name", { label: "", value: "" });
+      }
     },
     // eslint-disable-next-line
     [watch("sectionname"), watch("subsectionname")]
+  );
+
+  useEffect(
+    () => {
+      if (
+        (watch("sectionname") !== "House" ||
+          watch("sectionname") !== "SectionDeduction") &&
+        typeof open !== "object"
+      ) {
+        setValue("subsectionname", { label: "", value: "" });
+      }
+    }, // eslint-disable-next-line
+    [watch("sectionname")]
   );
 
   const { createDeclarationMutation } = useCreateDeclaration();
@@ -148,6 +202,7 @@ const CreateModal = ({ open, setOpen }) => {
               name="sectionname"
               control={control}
               type="select"
+              readOnly={typeof open === "object"}
               placeholder="Select Section Type"
               label="Select Section Type *"
               options={sectionArray}
@@ -161,6 +216,7 @@ const CreateModal = ({ open, setOpen }) => {
                 name="subsectionname"
                 control={control}
                 type="select"
+                readOnly={typeof open === "object"}
                 placeholder="Select Subsection Type"
                 label="Select Subsection Type *"
                 options={subSectionType}
@@ -174,6 +230,7 @@ const CreateModal = ({ open, setOpen }) => {
               control={control}
               type="select"
               placeholder="Select Investment Type"
+              readOnly={typeof open === "object"}
               label="Select Investment Type *"
               options={sectionType}
               errors={errors}

@@ -245,7 +245,7 @@ const AuthInputFiled = ({
   if (type === "select") {
     return (
       <>
-        <div className={`space-y-1 w-full ${className}`}>
+        <div className={`space-y-1 w-full  ${className}`}>
           <label
             htmlFor={name}
             className={`${
@@ -263,12 +263,13 @@ const AuthInputFiled = ({
                 <div
                   className={`${
                     readOnly && "bg-[ghostwhite]"
-                  } flex rounded-md px-2 border-gray-200 border-[.5px] bg-white items-center`}
+                  } flex rounded-md  border-gray-200 border-[.5px] bg-white items-center`}
                 >
                   {Icon && <Icon className="text-gray-700 text-xs" />}
                   <Select
                     isClearable={isClearable}
                     id={name}
+                    isDisabled={readOnly}
                     placeholder={placeholder}
                     styles={{
                       control: (styles) => ({
@@ -276,10 +277,18 @@ const AuthInputFiled = ({
                         borderWidth: "0px",
                         boxShadow: "none",
                       }),
+                      placeholder: (styles) => ({
+                        ...styles,
+                        padding: "0 10px", // Add padding to the input field
+                      }),
+                      input: (styles) => ({
+                        ...styles,
+                        padding: "0 10px", // Add padding to the input field
+                      }),
                     }}
                     className={`${
                       readOnly && "bg-[ghostwhite]"
-                    } bg-white w-full !outline-none px-2 !shadow-none !border-none !border-0`}
+                    } bg-white w-full !outline-none  !shadow-none !border-none !border-0`}
                     components={{
                       IndicatorSeparator: () => null,
                     }}

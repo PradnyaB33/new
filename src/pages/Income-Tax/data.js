@@ -113,18 +113,6 @@ const LetOutArray = [
   },
 ];
 
-const LetOutCArray = [
-  {
-    name: "Rent of the property for the year",
-  },
-  {
-    name: "Less : Municipal taxes paid in the year",
-  },
-  {
-    name: "Less : Interest on housing loan",
-  },
-];
-
 const OthersArray = [
   {
     label: "Bank interest (SB account)",
@@ -263,7 +251,6 @@ const otherSections = [
 
 export {
   LetOutArray,
-  LetOutCArray,
   OthersArray,
   SalaryArray,
   SelfHouseArray,

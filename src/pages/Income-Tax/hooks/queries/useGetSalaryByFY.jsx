@@ -7,8 +7,8 @@ const useGetSalaryByFY = () => {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     let financialYearStart, financialYearEnd;
-    financialYearStart = `4-${currentYear}`;
-    financialYearEnd = `3-${currentYear + 1}`;
+    financialYearStart = `${currentYear}`;
+    financialYearEnd = `${currentYear + 1}`;
     return { start: financialYearStart, end: financialYearEnd };
   }
 

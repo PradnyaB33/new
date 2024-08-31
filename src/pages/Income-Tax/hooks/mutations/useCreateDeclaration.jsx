@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
+import useFunctions from "../../components/useFunctions";
 import useGetSalaryByFY from "../queries/useGetSalaryByFY";
 
 const useCreateDeclaration = () => {
@@ -12,6 +13,7 @@ const useCreateDeclaration = () => {
   const empId = UserProfile().getCurrentUser();
   const authToken = useAuthToken();
   const { usersalary, getFinancialCurrentYear } = useGetSalaryByFY();
+  const { setEditOpen } = useFunctions();
 
   const uploadProof = async (tdsfile) => {
     const data = await axios.get(
@@ -26,7 +28,7 @@ const useCreateDeclaration = () => {
 
     await axios.put(data?.data?.url, tdsfile, {
       headers: {
-        "Content-Type": tdsfile.type,
+        "Content-Type": tdsfile?.type,
       },
     });
 
@@ -37,7 +39,10 @@ const useCreateDeclaration = () => {
     async (data) => {
       const { start, end } = getFinancialCurrentYear();
 
-      let uploadproof = await uploadProof(data?.proof);
+      let uploadproof;
+      if (data?.proof) {
+        uploadproof = await uploadProof(data?.proof);
+      }
       let updatedData;
 
       if (data?.proof === null || data?.proof === undefined) {
@@ -50,6 +55,7 @@ const useCreateDeclaration = () => {
             name: data.name.value,
             proof: "",
             sectionname: data.sectionname.value,
+            subsectionname: data.subsectionname.value ?? "",
           },
         };
       } else {
@@ -79,6 +85,7 @@ const useCreateDeclaration = () => {
     {
       onSuccess: (data) => {
         handleAlert(true, "success", `Declaration submitted successfully`);
+        setEditOpen(null);
         queryClient.invalidateQueries({ queryKey: [`getInvestments`] });
       },
       onError: (error) => {
