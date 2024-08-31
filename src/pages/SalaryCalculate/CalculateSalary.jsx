@@ -386,7 +386,7 @@ function CalculateSalary() {
           acc.push({ ...deduction, value: employeePF });
         } else if (deduction.name === "ESIC") {
           if (empCtr > 0) {
-            acc.push({ ...deduction, value: empCtr });
+            acc.push({ ...deduction, value: Math.round(empCtr) });
           }
         } else {
           acc.push(deduction);
