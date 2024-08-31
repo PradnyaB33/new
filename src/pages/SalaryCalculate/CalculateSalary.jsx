@@ -528,7 +528,7 @@ function CalculateSalary() {
     });
 
     // eslint-disable-next-line
-  }, [deductionValues, incomeValues, salaryComponent]);
+  }, [deductionValues, incomeValues]);
 
   // submit the data
   const saveSalaryDetail = async () => {

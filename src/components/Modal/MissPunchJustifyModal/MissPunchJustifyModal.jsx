@@ -16,10 +16,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Person } from "@mui/icons-material";
 import AuthInputFiled from "../../InputFileds/AuthInputFiled";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { AddBusiness } from "@mui/icons-material";
 
 const MissPunchJustifyModal = ({
   handleClose,
@@ -32,87 +31,16 @@ const MissPunchJustifyModal = ({
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aegis"];
   const unavailableRecordId = unavailableRecords?._id;
-  const { justify, leave, shift } = useMissedJustifyState();
-
-  //for  Get Query
-  const { data: shiftData } = useQuery(
-    ["shiftData", organisationId],
-    async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/shifts/${organisationId}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      return response.data.shifts;
-    }
-  );
-  console.log("shift data", shiftData);
-  const Shiftoptions = shiftData?.map((item) => {
-    return {
-      value: item?._id,
-      label: item?.shiftName,
-    };
-  });
-  console.log("Shiftoptions", Shiftoptions);
-
-  // get query for leave
-  const { data } = useQuery(
-    "leaveTypes",
-    async () => {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: authToken,
-        },
-      };
-      const response = await axios.post(
-        `${process.env.REACT_APP_API}/route/leave-types-details/get`,
-        { organisationId: organisationId },
-        config
-      );
-      return response.data.data;
-    },
-    {
-      onSuccess: (newData) => {
-        // Update the query cache with the new data
-        queryClient.setQueryData("leaveTypes", newData);
-      },
-    }
-  );
-  console.log("data", data);
-
-  const Leavetoptions = data?.map((item) => {
-    return {
-      value: item?._id,
-      label: item?.leaveName,
-    };
-  });
-  console.log("Leavetoptions", Leavetoptions);
+  const { justify } = useMissedJustifyState();
+  console.log("unavailable record", unavailableRecords);
 
   const MissPunchSchema = z.object({
-    justify: z.string().optional(),
-    leave: z
-      .object({
-        label: z.string().optional(),
-        value: z.string().optional(),
-      })
-      .optional(),
-    shift: z
-      .object({
-        label: z.string().optional(),
-        value: z.string().optional(),
-      })
-      .optional(),
+    justify: z.string(),
   });
 
   const { control, formState, handleSubmit, reset } = useForm({
     defaultValues: {
       justify: justify,
-      leave: leave?.label,
-      shift: shift?.label,
     },
     resolver: zodResolver(MissPunchSchema),
   });
@@ -148,9 +76,7 @@ const MissPunchJustifyModal = ({
 
   const onSubmit = async (data) => {
     const formattedData = {
-      ...data,
-      leave: data.leave?.label || "",
-      shift: data.shift?.label || "",
+      justify: justify,
     };
     console.log(data);
     AddMissJustifyData.mutate(formattedData);
@@ -172,7 +98,7 @@ const MissPunchJustifyModal = ({
           width: "100%",
           maxWidth: "800px!important",
           height: "100%",
-          maxHeight: "65vh!important",
+          maxHeight: "40vh!important",
         },
       }}
       open={open}
@@ -207,60 +133,61 @@ const MissPunchJustifyModal = ({
             error={errors.justify}
           />
 
-          <AuthInputFiled
-            name="leave"
-            value={leave}
-            icon={AddBusiness}
-            control={control}
-            type="select"
-            placeholder="Select Leave"
-            label="Leave"
-            errors={errors}
-            error={errors.leave}
-            options={Leavetoptions}
-          />
-
-          <AuthInputFiled
-            name="shift"
-            value={shift}
-            icon={AddBusiness}
-            control={control}
-            type="select"
-            placeholder=" Select Shift"
-            label="Select Shift"
-            errors={errors}
-            error={errors.shift}
-            options={Shiftoptions}
-          />
-
           <DialogActions
             sx={{
               justifyContent: "center",
               gap: "10px",
             }}
           >
-            <Button
-              type="button"
-              variant="contained"
-              color="primary"
-              onClick={() => handleRedirect("leave")}
-            >
-              Apply for Leave
-            </Button>
-            <Button
-              type="button"
-              variant="contained"
-              color="secondary"
-              onClick={() => handleRedirect("shift")}
-            >
-              Apply for Shift
-            </Button>
-            <Button type="submit" variant="contained" color="success">
-              Submit
-            </Button>
-            <Button onClick={handleClose} color="error" variant="outlined">
-              Cancel
-            </Button>
+            {unavailableRecords &&
+            unavailableRecords.status !== null &&
+            unavailableRecords.status !== undefined &&
+            (unavailableRecords.status === "Partial" ||
+              unavailableRecords.status === "Unavailable") ? (
+              <>
+                <Button
+                  type="button"
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleRedirect("leave")}
+                >
+                  Apply for Leave
+                </Button>
+              </>
+            ) : null}
+
+            {unavailableRecords &&
+            unavailableRecords.status !== null &&
+            unavailableRecords.status !== undefined &&
+            unavailableRecords.status === "ExtraShift" ? (
+              <>
+                <Button
+                  type="button"
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => handleRedirect("shift")}
+                >
+                  Apply for Shift
+                </Button>
+              </>
+            ) : null}
+
+            {unavailableRecords &&
+            unavailableRecords.status !== null &&
+            unavailableRecords.status !== undefined &&
+            (unavailableRecords.status === "Partial" ||
+              unavailableRecords.status === "Unavailable" ||
+              unavailableRecords.status === "ExtraShift" ||
+              unavailableRecords.status === "Overtime") ? (
+              <>
+                <Button type="submit" variant="contained" color="success">
+                  Submit
+                </Button>
+                <Button onClick={handleClose} color="error" variant="outlined">
+                  Cancel
+                </Button>
+              </>
+            ) : null}
           </DialogActions>
         </form>
       </DialogContent>
