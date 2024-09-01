@@ -5,7 +5,13 @@ import {
   Person,
   West,
 } from "@mui/icons-material";
-import { Button, Checkbox, FormControlLabel, IconButton } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  CircularProgress,
+  FormControlLabel,
+  IconButton,
+} from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { CSVLink } from "react-csv";
@@ -22,14 +28,18 @@ import Test4 from "./EmployeeCom/Test4";
 
 // Helper function to convert date format
 const convertToISOFormat = (dateStr) => {
+  console.log(`🚀 ~ dateStr:`, typeof dateStr);
   let day, month, year;
 
-  if (dateStr.includes("-")) {
-    [day, month, year] = dateStr.split("-").map(Number);
-  } else if (dateStr.includes("/")) {
-    [day, month, year] = dateStr.split("/").map(Number);
+  const dateStrString = String(dateStr);
+
+  if (dateStrString.includes("-")) {
+    [day, month, year] = dateStrString.split("-").map(Number);
+  } else if (dateStrString.includes("/")) {
+    [day, month, year] = dateStrString.split("/").map(Number);
   } else {
-    throw new Error("Invalid date format");
+    console.error("Invalid date format");
+    return null;
   }
 
   const date = new Date(Date.UTC(year, month - 1, day));
@@ -48,6 +58,7 @@ const EmployeeTest = () => {
   const [members, setMembers] = useState();
   const [showExcelOnboarding, setShowExcelOnboarding] = useState(false);
   const [uploadedFileName, setUploadedFileName] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const orgId = useParams().organisationId;
 
@@ -70,24 +81,24 @@ const EmployeeTest = () => {
       setMembers(resp.data.members);
     })();
   }, [orgId]);
-
   const handleFileUpload = async (e) => {
+    setIsLoading(true);
     const file = e.target.files[0];
     const fileExtension = file.name.split(".").pop().toLowerCase();
-
     if (!["xlsx", "xls", "csv"].includes(fileExtension)) {
       setAppAlert({
         alert: true,
         type: "error",
         msg: "Only Excel files are allowed",
       });
+      setIsLoading(false);
       return;
     }
 
     setUploadedFileName(file.name);
     const reader = new FileReader();
 
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       const binaryStr = event.target.result;
       const workbook = XLSX.read(binaryStr, { type: "binary" });
       const sheetName = workbook.SheetNames[0];
@@ -110,7 +121,7 @@ const EmployeeTest = () => {
         email: data.email,
         password: data.password,
         organizationId: orgId,
-        date_of_birth: convertToISOFormat(data.date_of_birth),
+        date_of_birth: convertToISOFormat(data?.date_of_birth),
         phone_number: data.phone_number,
         address: data.address,
         gender: data.gender,
@@ -122,7 +133,7 @@ const EmployeeTest = () => {
 
       console.log("Final Data", finalData);
 
-      finalData.forEach(async (employee) => {
+      for (const employee of finalData) {
         // Validation for PAN and Aadhar card
         if (!isValidPanCard(employee.pan_card_number)) {
           setAppAlert({
@@ -130,7 +141,7 @@ const EmployeeTest = () => {
             type: "error",
             msg: `Invalid PAN card format for employee no ${employee.empId}`,
           });
-          return;
+          continue;
         }
 
         if (!isValidAadharCard(employee.adhar_card_number)) {
@@ -139,7 +150,7 @@ const EmployeeTest = () => {
             type: "error",
             msg: `Invalid Aadhar card format for employee no ${employee.empId}`,
           });
-          return;
+          continue;
         }
 
         try {
@@ -153,11 +164,6 @@ const EmployeeTest = () => {
             }
           );
           console.log(`Employee ${employee.empId} posted successfully`);
-          setAppAlert({
-            alert: true,
-            type: "success",
-            msg: "Onboarding Process Completed",
-          });
         } catch (error) {
           console.error(`Error posting employee ${employee.empId}:`, error);
           setAppAlert({
@@ -166,10 +172,17 @@ const EmployeeTest = () => {
             msg: error.response.data.message,
           });
         }
-      });
+      }
 
       // Clear file input value to allow re-uploading the same file
       fileInputRef.current.value = null;
+
+      setIsLoading(false);
+      setAppAlert({
+        alert: true,
+        type: "success",
+        msg: "Onboarding Process Completed",
+      });
     };
 
     reader.readAsBinaryString(file);
@@ -247,6 +260,11 @@ const EmployeeTest = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen h-auto">
+      {isLoading && (
+        <div className="fixed z-[100000] flex items-center justify-center bg-black/10 top-0 bottom-0 left-0 right-0">
+          <CircularProgress />
+        </div>
+      )}
       <header className="text-xl w-full pt-6 flex flex-col md:flex-row items-start md:items-center gap-2 bg-white shadow-md p-4">
         {/* Back Button */}
         <div className="flex-shrink-0">
