@@ -1,17 +1,18 @@
 import axios from "axios";
 import { useContext } from "react";
+import { useQueryClient } from "react-query";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
 import { TestContext } from "../../../../State/Function/Main";
-import useFunctions from "../../components/useFunctions";
 import useGetSalaryByFY from "../queries/useGetSalaryByFY";
+import useFunctions from "../useFunctions";
 
 const useDeleteInvestment = () => {
   const { getFinancialCurrentYear } = useGetSalaryByFY();
   const user = UserProfile().getCurrentUser();
   const authToken = useAuthToken();
-  // const queryClient = useQueryClient();
-  const { deleteConfirm } = useFunctions();
+  const queryClient = useQueryClient();
+  const { deleteConfirm, setDeleteConfirm } = useFunctions();
   const { handleAlert } = useContext(TestContext);
   const handleDelete = async () => {
     const { start, end } = getFinancialCurrentYear();
@@ -33,7 +34,8 @@ const useDeleteInvestment = () => {
       );
 
       handleAlert(true, "success", `Declaration deleted successfully`);
-      //   queryClient.invalidateQueries({ queryKey: [queryKey] });
+      setDeleteConfirm(null);
+      queryClient.invalidateQueries({ queryKey: [] });
     } catch (error) {
       console.log(error);
     }

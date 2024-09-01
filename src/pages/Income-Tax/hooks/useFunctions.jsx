@@ -3,12 +3,16 @@ import { create } from "zustand";
 const useFunctions = create((set) => ({
   page: 1,
   setPage: (page) => set({ page }),
+  open: false,
+  setOpen: (open) => set({ open }),
   search: "",
   setSearch: (search) => set({ search }),
   deleteConfirm: null,
   setDeleteConfirm: (deleteConfirm) => set({ deleteConfirm }),
   editOpen: null,
   setEditOpen: (editOpen) => set({ editOpen }),
+  pdf: null,
+  setPdf: (pdf) => set({ pdf }),
   isOpenCalculation: [],
   setIsOpenCalculation: (section) =>
     set((state) => {

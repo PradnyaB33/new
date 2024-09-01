@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import useDeleteInvestment from "../hooks/mutations/useDeleteInvestment";
-import useFunctions from "./useFunctions";
+import useFunctions from "../hooks/useFunctions";
 
 const DeleteInvestmentModal = () => {
   const { deleteConfirm, setDeleteConfirm } = useFunctions();

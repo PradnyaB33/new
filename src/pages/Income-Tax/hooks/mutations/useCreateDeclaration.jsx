@@ -4,8 +4,8 @@ import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 import UserProfile from "../../../../hooks/UserData/useUser";
-import useFunctions from "../../components/useFunctions";
 import useGetSalaryByFY from "../queries/useGetSalaryByFY";
+import useFunctions from "../useFunctions";
 
 const useCreateDeclaration = () => {
   const queryClient = useQueryClient();
@@ -13,7 +13,7 @@ const useCreateDeclaration = () => {
   const empId = UserProfile().getCurrentUser();
   const authToken = useAuthToken();
   const { usersalary, getFinancialCurrentYear } = useGetSalaryByFY();
-  const { setEditOpen } = useFunctions();
+  const { setEditOpen, setOpen } = useFunctions();
 
   const uploadProof = async (tdsfile) => {
     const data = await axios.get(
@@ -87,6 +87,7 @@ const useCreateDeclaration = () => {
         handleAlert(true, "success", `Declaration submitted successfully`);
         setEditOpen(null);
         queryClient.invalidateQueries({ queryKey: [`getInvestments`] });
+        setOpen(false);
       },
       onError: (error) => {
         console.log(error);

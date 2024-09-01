@@ -1,17 +1,14 @@
 import { PlayCircle } from "@mui/icons-material";
 import React from "react";
-import useGetInvestmentSection from "../hooks/queries/useGetInvestmentSection";
-import useFunctions from "./useFunctions";
+import useFunctions from "../hooks/useFunctions";
 
-const CalculationComponent = ({ section, heading, amount }) => {
-  console.log(`🚀 ~ amount:`, amount);
+const CalculationComponent = ({ section, heading, amount, investments }) => {
   const { setIsOpenCalculation, isOpenCalculation } = useFunctions();
   const handleToggleSection = () => {
     setIsOpenCalculation(section);
   };
-  const { investments } = useGetInvestmentSection("", 1);
   return (
-    <div className="p-4 bg-blue-100 rounded-md w-full">
+    <div className="p-4 bg-gray-100 rounded-md w-full">
       <header className="flex  gap-2 justify-between">
         <div className="flex gap-2 items-center">
           <PlayCircle
@@ -33,7 +30,7 @@ const CalculationComponent = ({ section, heading, amount }) => {
       {isOpenCalculation.includes(section) && (
         <div className="overflow-auto mt-4">
           <table className="w-full table-auto  border border-collapse min-w-full bg-white  text-left  !text-sm font-light">
-            <thead className="border-b bg-blue-200 font-bold">
+            <thead className="border-b bg-gray-200 font-bold">
               <tr className="!font-semibold ">
                 <th scope="col" className="!text-left px-2 w-max py-3 text-sm ">
                   Sr. No
@@ -47,27 +44,35 @@ const CalculationComponent = ({ section, heading, amount }) => {
               </tr>
             </thead>
             <tbody>
-              {investments?.allInvestment
-                ?.filter((item) => {
-                  return item?.sectionname === section;
-                })
-                ?.map((inv, id) => {
-                  return (
-                    <tr
-                      className={` bg-blue-50  !font-medium  w-max border-b `}
-                    >
-                      <td className="!text-left   py-4    px-2 text-sm w-[70px]  ">
-                        {id + 1}
-                      </td>
-                      <td className="!text-left   py-4    px-2 text-sm  ">
-                        {inv?.name}
-                      </td>
-                      <td className="!text-left   py-4    px-2 text-sm  ">
-                        {inv?.amount}
-                      </td>
-                    </tr>
-                  );
-                })}
+              {investments?.filter((item) => {
+                return item?.sectionname === section;
+              }).length <= 0 ? (
+                <tr className={`p-4 bg-gray-50  !font-medium  w-max border-b `}>
+                  <h1 className="p-4">No Data Found</h1>
+                </tr>
+              ) : (
+                investments
+                  ?.filter((item) => {
+                    return item?.sectionname === section;
+                  })
+                  ?.map((inv, id) => {
+                    return (
+                      <tr
+                        className={` bg-gray-50  !font-medium  w-max border-b `}
+                      >
+                        <td className="!text-left   py-4    px-2 text-sm w-[70px]  ">
+                          {id + 1}
+                        </td>
+                        <td className="!text-left   py-4    px-2 text-sm  ">
+                          {inv?.name}
+                        </td>
+                        <td className="!text-left   py-4    px-2 text-sm  ">
+                          {inv?.amountAccepted}
+                        </td>
+                      </tr>
+                    );
+                  })
+              )}
             </tbody>
           </table>
         </div>

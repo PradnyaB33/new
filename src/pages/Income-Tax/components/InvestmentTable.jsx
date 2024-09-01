@@ -1,8 +1,8 @@
 import { DeleteOutlined, EditOutlined, Search } from "@mui/icons-material";
 import { IconButton, Pagination, Stack } from "@mui/material";
 import React, { useState } from "react";
+import useFunctions from "../hooks/useFunctions";
 import InvestmentTableSkeleton from "./InvestmentTableSkeleton";
-import useFunctions from "./useFunctions";
 
 const InvestmentTable = ({ setOpen, investments, isFetching }) => {
   const { setSearch, setPage, page, setDeleteConfirm, setEditOpen } =
@@ -13,6 +13,7 @@ const InvestmentTable = ({ setOpen, investments, isFetching }) => {
     <>
       <div className="flex gap-4">
         {/* input field */}
+
         <div className={`space-y-1  min-w-[300px] md:min-w-[40vw] w-max `}>
           <div
             onFocus={() => {
@@ -37,13 +38,19 @@ const InvestmentTable = ({ setOpen, investments, isFetching }) => {
           </div>
         </div>
 
-        <div className="gap-2 flex flex-col w-full items-end">
+        <div className="gap-2 flex  w-full justify-end">
+          <button
+            type="button"
+            className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-gray-500 hover:bg-gray-500 focus-visible:outline-gray-500"
+          >
+            Change Regime
+          </button>
           <button
             type="button"
             onClick={() => setOpen(true)}
             className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
           >
-            Create Investment
+            Create Declaration
           </button>
         </div>
       </div>
@@ -112,7 +119,13 @@ const InvestmentTable = ({ setOpen, investments, isFetching }) => {
                       {inv.amountAccepted}
                     </td>
                     <td className=" text-left text-sm w-[200px]  ">
-                      View Proof
+                      <div
+                        onClick={() => handlePDF(item.proof)}
+                        className="px-2 flex gap-2 items-center h-max w-max  cursor-pointer"
+                      >
+                        <Article className="text-blue-500" />
+                        <h1>View Proof </h1>
+                      </div>
                     </td>
                     <td className=" text-left text-sm w-[200px]  ">
                       {inv?.status}

@@ -2,7 +2,7 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import useAuthToken from "../../../../hooks/Token/useAuth";
 
-const useGetSalaryByFY = () => {
+const useGetSalaryByFY = (empId = "") => {
   function getFinancialCurrentYear() {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
@@ -33,24 +33,26 @@ const useGetSalaryByFY = () => {
   const authToken = useAuthToken();
   const { start, end } = getFinancialCurrentMonthYear();
 
-  const { data: usersalary, isFetching } = useQuery({
-    queryKey: ["finacialYearData", start],
-    queryFn: async () => {
-      try {
-        const salaryData = await axios.get(
-          `${process.env.REACT_APP_API}/route/employeeSalary/getEmployeeSalaryPerFinancialYear?fromDate=${start}&toDate=${end}`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        );
+  const getFinancialYearData = async () => {
+    try {
+      const salaryData = await axios.get(
+        `${process.env.REACT_APP_API}/route/employeeSalary/getEmployeeSalaryPerFinancialYear?fromDate=${start}&toDate=${end}&empId=${empId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
 
-        return salaryData.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
+      return salaryData.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const { data: usersalary, isFetching } = useQuery({
+    queryKey: ["finacialYearData", start, empId],
+    queryFn: getFinancialYearData,
   });
 
   return {

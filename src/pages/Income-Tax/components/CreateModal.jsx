@@ -101,22 +101,20 @@ const CreateModal = ({ open, setOpen, investments }) => {
       }
 
       if (watch("sectionname")?.value === "SectionDeduction") {
-        setSubSectionType(
-          setSubSectionType([
-            {
-              label: "80C",
-              value: "Section80",
-            },
-            {
-              label: "80 CCD",
-              value: "Section 80CCD NPS",
-            },
-            {
-              label: "80D",
-              value: "Section80 50000",
-            },
-          ])
-        );
+        setSubSectionType([
+          {
+            label: "80C",
+            value: "Section80",
+          },
+          {
+            label: "80 CCD",
+            value: "Section 80CCD NPS",
+          },
+          {
+            label: "80D",
+            value: "Section80 50000",
+          },
+        ]);
       }
 
       if (
@@ -125,6 +123,7 @@ const CreateModal = ({ open, setOpen, investments }) => {
       ) {
         setSectionType(SelfHouseArray);
       }
+
       if (
         watch("sectionname")?.value === "House" &&
         watch("subsectionname")?.value ===
@@ -134,23 +133,24 @@ const CreateModal = ({ open, setOpen, investments }) => {
       }
 
       if (
-        watch("sectionname")?.label === "SectionDeduction" &&
+        watch("sectionname")?.value === "SectionDeduction" &&
         watch("subsectionname")?.label === "80C"
       ) {
         setSectionType(section80c);
       }
       if (
-        watch("sectionname")?.label === "SectionDeduction" &&
+        watch("sectionname")?.value === "SectionDeduction" &&
         watch("subsectionname")?.label === "80 CCD"
       ) {
         setSectionType(section80CCD);
       }
       if (
-        watch("sectionname")?.label === "SectionDeduction" &&
+        watch("sectionname")?.value === "SectionDeduction" &&
         watch("subsectionname")?.label === "80D"
       ) {
         setSectionType(otherSections);
       }
+
       if (typeof open !== "object") {
         setSectionType((prev) => {
           return prev?.filter((item) => {
@@ -190,7 +190,11 @@ const CreateModal = ({ open, setOpen, investments }) => {
       <ReusableModal
         open={open}
         onClose={() => setOpen(false)}
-        heading={"Create Investment"}
+        heading={
+          typeof open !== "object"
+            ? "Create Tax Declaration"
+            : "Edit Tax Declaration"
+        }
       >
         <div className="p-4">
           <form
