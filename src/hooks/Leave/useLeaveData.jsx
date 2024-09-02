@@ -114,6 +114,7 @@ const useLeaveData = () => {
     },
   });
 
+  // Delete Investment Mutation need to change in backend so if manager delete leave then it should be deleted directly  from employee leave table
   const deleteLeaveMutation = useMutation(
     async ({ id, deleteReason }) => {
       setCalLoader(true);

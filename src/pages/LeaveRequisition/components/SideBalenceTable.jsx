@@ -30,10 +30,10 @@ const SideBalenceTable = ({ leaveTableData }) => {
         {leaveTableData?.leaveTypes?.map((item, id) => (
           <div key={id} className="border-b p-4  ">
             <div className="flex items-center gap-2">
-              <div
+              {/* <div
                 style={{ background: item.color }}
                 className={`h-3 w-3 rounded-full `}
-              />
+              /> */}
               <div>
                 <h1 className="text-lg text-gray-700   tracking-tight">
                   {item?.leaveName}
