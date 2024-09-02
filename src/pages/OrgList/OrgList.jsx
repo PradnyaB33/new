@@ -16,6 +16,7 @@ const OrgList = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSearch = useCallback(
     debounce((query) => {
       setSearchQuery(query);

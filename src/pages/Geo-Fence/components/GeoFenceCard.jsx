@@ -4,13 +4,17 @@ import React from "react";
 import ReusableModal from "../../../components/Modal/component";
 import useGeoMutation from "../Mutation/useGeoCard";
 import useGetRevGeo from "../useGetRevGeo";
-import SearchAdd from "../utils/SearchAdd";
 import ViewDelete from "./ViewDelete";
+import useGetCurrentLocation from "../../../hooks/Location/useGetCurrentLocation";
+import AddGeoFencing from "./AddGeoFencing";
 
 const GeoFenceCard = ({ item }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [open1, setOpen1] = React.useState(false);
-  const [open2, setOpen2] = React.useState(false);
+  const [view, setView] = React.useState(false);
+  const [circleId, setCircleId] = React.useState(false);
+
+  const { data: locationData } = useGetCurrentLocation();
 
   const { data } = useGetRevGeo({
     lat: item?.center?.coordinates[0],
@@ -54,6 +58,15 @@ const GeoFenceCard = ({ item }) => {
           >
             <MenuItem
               onClick={() => {
+                setCircleId(item?._id)
+                setView(true)
+                handleClose();
+              }}
+            >
+              View
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
                 mutate({ id: item?._id });
                 handleClose();
               }}
@@ -71,38 +84,33 @@ const GeoFenceCard = ({ item }) => {
               Employee Count: {item?.employee?.length || 0}
             </p>
           </div>
-          <div className="flex gap-6 justify-between">
+          <div className="flex justify-end">
             <Button
               onClick={() => setOpen1(true)}
               variant="contained"
               size="small"
             >
-              Add Employee
-            </Button>
-            <Button
-              onClick={() => setOpen2(true)}
-              color="error"
-              variant="contained"
-              size="small"
-            >
-              Remove Employee
+              Manage Employee
             </Button>
           </div>
         </div>
         <ReusableModal
           open={open1}
-          heading={"Search And Add"}
+          heading={"Add Or Remove Employees"}
+          subHeading={`Here you can add or remove employees in geofencing zone`}
           onClose={() => setOpen1(false)}
         >
           <ViewDelete circleId={item?._id} onClose={() => setOpen1(false)} />
         </ReusableModal>
-        <ReusableModal
-          open={open2}
-          heading={"View And Delete"}
-          onClose={() => setOpen2(false)}
-        >
-          <SearchAdd circleId={item?._id} onClose={() => setOpen2(false)} />
-        </ReusableModal>
+        <div>
+          <ReusableModal
+            open={view}
+            heading={"View Geo Fencing"}
+            subHeading={"You can activate geofencing for a specific zone"}
+            onClose={() => setView(false)}
+          >
+            <AddGeoFencing onClose={() => setView(false)} data={locationData} circleId={circleId} />
+          </ReusableModal></div>
       </div>
     </div>
   );

@@ -8,12 +8,10 @@ const useAdvanceSalaryData = () => {
   const authToken = cookies["aegis"];
 
   const {
-    data: getAdvanceSalaryData,
-    isFetching,
-    isLoading,
-  } = useQuery(["getAdvanceSalaryData"], async () => {
+    data: getAdvanceSalary,
+  } = useQuery(["getAdvanceSalary"], async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/pending-advance-salary-data`,
+      `${process.env.REACT_APP_API}/route/advance-salary-data`,
       {
         headers: {
           Authorization: authToken,
@@ -23,11 +21,11 @@ const useAdvanceSalaryData = () => {
     return response.data.data;
   });
 
-  const { data: advanceSalaryNotification } = useQuery(
+  const { data: advanceSalaryNotificationEmp } = useQuery(
     ["advance-salary-notification"],
     async () => {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/send-notification-to-emp`,
+        `${process.env.REACT_APP_API}/route/advance-salary-notification-to-emp`,
         {
           headers: {
             Authorization: authToken,
@@ -39,10 +37,8 @@ const useAdvanceSalaryData = () => {
   );
 
   return {
-    getAdvanceSalaryData,
-    advanceSalaryNotification,
-    isLoading,
-    isFetching,
+    getAdvanceSalary,
+    advanceSalaryNotificationEmp
   };
 };
 

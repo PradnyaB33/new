@@ -17,7 +17,10 @@ const MiniForm = ({ locations, data, onClose }) => {
     holidayName: z.string(),
     holidayDate: z.string(),
     holidayType: z.enum(["Optional", "Mandatory"]),
-    holidayRegion: z.enum(locations?.map((location) => location.shortName)),
+    holidayRegion: z.object({
+      label: z.string(),
+      value: z.string(),
+    }),
   });
 
   const { addPublicHoliday } = usePublicHoliday();
@@ -27,14 +30,13 @@ const MiniForm = ({ locations, data, onClose }) => {
   });
 
   const { errors, isSubmitting } = formState;
-  console.log(`🚀 ~ file: miniform.jsx:22 ~ isSubmitting:`, isSubmitting);
   const onSubmit = async (data) => {
     console.log(data);
     const dataMain = {
       name: data.holidayName,
       date: data.holidayDate,
       type: data.holidayType,
-      region: data.holidayRegion,
+      region: data?.holidayRegion?.value,
     };
     addPublicHoliday({ data: dataMain, onClose });
   };
@@ -54,6 +56,7 @@ const MiniForm = ({ locations, data, onClose }) => {
       return holidayDateLocal === dateLocal;
     });
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <AuthInputFiled
@@ -95,7 +98,7 @@ const MiniForm = ({ locations, data, onClose }) => {
         name="holidayRegion"
         icon={Circle}
         control={control}
-        type="naresh-select"
+        type="select"
         placeholder="Holiday Region"
         label="Holiday Region *"
         errors={errors}

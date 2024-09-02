@@ -37,7 +37,7 @@ const TDSDeclarationModel = ({
   // console.log(empSalary, "Emp");
 
   const { data: empSalary } = useQuery({
-    queryKey: ["finacialYearData"],
+    queryKey: ["finacialYearDataForEmp"],
     queryFn: async () => {
       try {
         const salaryData = await axios.get(

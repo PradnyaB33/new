@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import SelfieForm from "../../../components/Modal/Selfi-Image/Selfie";
 import useLocationMutation from "../../../hooks/QueryHook/Location/mutation";
 import useSelfieStore from "../../../hooks/QueryHook/Location/zustand-store";
-import MapComponent from "./Map-Component"; 
+import MapComponent from "./Map-Component";
 import SpeedDialEmployee from "./Speed-dial-employee";
 
 const GeoFencingEmployeeSide = () => {
@@ -56,11 +56,10 @@ const GeoFencingEmployeeSide = () => {
                 variant="filled"
               />
               <Chip
-                label={`Ended at ${
-                  endTime
-                    ? moment(endTime).format("hh:mm:ss")
-                    : moment().format("hh:mm:ss")
-                }`}
+                label={`Ended at ${endTime
+                  ? moment(endTime).format("hh:mm:ss")
+                  : moment().format("hh:mm:ss")
+                  }`}
                 className="!bg-white !text-md"
                 onClick={(e) => console.log(e)}
                 variant="filled"

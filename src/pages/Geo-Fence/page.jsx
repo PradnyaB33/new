@@ -12,6 +12,7 @@ const GeoFencing = () => {
   const [open, setOpen] = useState(false);
   const { data } = useOrgGeo();
   const { data: locationData } = useGetCurrentLocation();
+
   return (
     <>
       <HeaderBackComponent
@@ -37,8 +38,8 @@ const GeoFencing = () => {
         <div className="flex gap-4 overflow-auto py-4">
           {data
             ? data?.area?.map((item) => (
-                <GeoFencingCard key={item} item={item} />
-              ))
+              <GeoFencingCard key={item} item={item} />
+            ))
             : "Sorry but you have not enable geo fencing checkbox from setup page."}
         </div>
         <ReusableModal
@@ -47,9 +48,7 @@ const GeoFencing = () => {
           subHeading={"You can activate geofencing for a specific zone"}
           onClose={() => setOpen(false)}
         >
-           {/* {locationData?.lat && (  */}
-            <AddGeoFencing onClose={() => setOpen(false)} data={locationData} />
-          {/* )}  */}
+          <AddGeoFencing onClose={() => setOpen(false)} data={locationData} />
         </ReusableModal>
       </div>
     </>

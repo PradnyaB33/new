@@ -25,6 +25,7 @@ const SignIn = () => {
   // hooks
   const { handleAlert } = useContext(TestContext);
   const location = useLocation();
+  const { countryCode } = useAuthentication();
   // state
   const [display, setdisplay] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
@@ -37,7 +38,7 @@ const SignIn = () => {
 
   // to get current user
   const { getCurrentUser } = UserProfile();
-  const { countryCode } = useAuthentication();
+  // const { countryCode } = useAuthentication();
   const user = getCurrentUser();
 
   // navigate

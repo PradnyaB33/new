@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useContext, useEffect } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../../State/Function/Main";
+import useGetEmployeeSalaryByFinaicalYear from "../../../../hooks/IncomeTax/useGetEmployeeSalaryByFinaicalYear";
 import useIncomeAPI from "../../../../hooks/IncomeTax/useIncomeAPI";
 import useIncomeTax from "../../../../hooks/IncomeTax/useIncomeTax";
 import useTDS from "../../../../hooks/IncomeTax/useTDS";
@@ -107,7 +108,8 @@ const TDSTable1 = () => {
     // },
   ];
 
-  const { setGrossTotal, grossTotal, setDeclared } = useTDS();
+  const { setGrossTotal, setDeclared } = useTDS();
+  const { usersalary: grossTotal } = useGetEmployeeSalaryByFinaicalYear();
   const {
     editStatus = {},
     handleEditClick,
@@ -209,10 +211,12 @@ const TDSTable1 = () => {
           if (item.name === "Gross salary") {
             return {
               ...item,
-              amount: isNaN(Number(grossTotal)) ? 0 : Number(grossTotal),
-              amountAccepted: isNaN(Number(grossTotal))
+              amount: isNaN(Number(grossTotal?.TotalInvestInvestment))
                 ? 0
-                : Number(grossTotal),
+                : Number(grossTotal?.TotalInvestInvestment),
+              amountAccepted: isNaN(Number(grossTotal?.TotalInvestInvestment))
+                ? 0
+                : Number(grossTotal?.TotalInvestInvestment),
               status: "Auto",
               proof: "",
             };

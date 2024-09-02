@@ -51,11 +51,6 @@ const MissPunchInOut = () => {
   return (
     <>
       <Container maxWidth="xl" className="bg-gray-50 min-h-screen py-8 px-4">
-        {/* <div className=" mt-3">
-          <IconButton onClick={() => navigate(-1)}>
-            <West className="text-xl" />
-          </IconButton>
-        </div> */}
         <Typography variant="h4" className="text-center pl-10 mb-6 mt-2">
           Employee Missed Punch
         </Typography>
@@ -89,6 +84,9 @@ const MissPunchInOut = () => {
                       <th scope="col" className="px-6 py-3">
                         Punch Out Time
                       </th>
+                      <th scope="col" className="px-6 py-3">
+                        Justify
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -117,6 +115,10 @@ const MissPunchInOut = () => {
                                   unavailableRecord?.punchOutTime
                                 ).toLocaleTimeString()
                               : "-"}
+                          </td>
+                          <td className="!text-left pl-6 py-3">
+                            {" "}
+                            {unavailableRecord?.justify}
                           </td>
                         </tr>
                       )

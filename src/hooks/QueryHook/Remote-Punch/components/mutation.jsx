@@ -8,7 +8,6 @@ const useNotificationRemotePunching = () => {
   const { authToken, decodedToken } = useGetUser();
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
-
   const notifyToManager = async (punchId) => {
     const response = await axios.post(
       `${process.env.REACT_APP_API}/route/punch/manager/${punchId}`,
