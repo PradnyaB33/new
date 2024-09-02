@@ -179,7 +179,6 @@ const GoalsTable = ({ performance, isError }) => {
   }, [performance?.enddate]);
 
   const { data: employeeData } = useQuery(["employee", role], async () => {
-    console.log("query called", role);
     const { data } = await axios.get(
       `${process.env.REACT_APP_API}/route/employee/getEmployeeUnderManager/${role}`,
       {
@@ -215,8 +214,8 @@ const GoalsTable = ({ performance, isError }) => {
   );
 
   const options = useMemo(() => {
-    if (employeeData) {
-      return employeeData.map((emp) => ({
+    if (Array.isArray(employeeData) && employeeData) {
+      return employeeData?.map((emp) => ({
         value: emp._id,
         label: `${emp.first_name} ${emp.last_name}`,
         image: emp.user_logo_url,

@@ -6,6 +6,17 @@ const PriceInput = ({ field }) => {
   return (
     <div className={`flex gap-4 flex-wrap justify-center`}>
       <PricingCard
+        h1="Essential Plan"
+        price={30}
+        onChange={field.onChange}
+        downDescriptionText="Click to view the other benefits"
+        packageId={process.env.REACT_APP_BASICPLAN || "plan_NgWEcv4vTZx"}
+        value={field.value}
+        mapArray={packageArray.filter(
+          (doc, index) => doc.Essential === "✓" && index <= 6
+        )}
+      />
+      <PricingCard
         onChange={field.onChange}
         packageId={process.env.REACT_APP_BASICPLAN || "plan_NgWEcv4vEvrZFc"}
         value={field.value}

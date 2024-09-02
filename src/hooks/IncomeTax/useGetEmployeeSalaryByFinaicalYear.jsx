@@ -5,32 +5,31 @@ import useAuthToken from "../Token/useAuth";
 const useGetEmployeeSalaryByFinaicalYear = () => {
   function getFinancialCurrentYear() {
     const currentDate = new Date();
-    const currentMonth = currentDate.getMonth() + 1; // JavaScript months are 0-indexed, so +1 to match natural numbering
+    const currentMonth = currentDate.getMonth() + 1;
     const currentYear = currentDate.getFullYear();
 
     let financialYearStart, financialYearEnd;
 
     if (currentMonth >= 4) {
-      // If current month is April or later, financial year starts this year
       financialYearStart = `4-${currentYear}`;
       financialYearEnd = `3-${currentYear + 1}`;
     } else {
-      // If current month is March or earlier, financial year started last year
       financialYearStart = `4-${currentYear - 1}`;
       financialYearEnd = `3-${currentYear}`;
     }
+
+    console.log(`🚀 ~ start, end:`, financialYearStart, financialYearEnd);
 
     return { start: financialYearStart, end: financialYearEnd };
   }
 
   const authToken = useAuthToken();
+  const { start, end } = getFinancialCurrentYear();
 
-  const { data: usersalary } = useQuery({
-    queryKey: ["finacialYearData"],
+  const { data: usersalary, isFetching } = useQuery({
+    queryKey: ["finacialYearData", start],
     queryFn: async () => {
       try {
-        const { start, end } = getFinancialCurrentYear();
-
         const salaryData = await axios.get(
           `${process.env.REACT_APP_API}/route/employeeSalary/getEmployeeSalaryPerFinancialYear?fromDate=${start}&toDate=${end}`,
           {
@@ -39,6 +38,8 @@ const useGetEmployeeSalaryByFinaicalYear = () => {
             },
           }
         );
+        console.log(`🚀 ~ start, end:`, start, end);
+
         return salaryData.data;
       } catch (error) {
         console.log(error);
@@ -46,7 +47,7 @@ const useGetEmployeeSalaryByFinaicalYear = () => {
     },
   });
 
-  return { usersalary, getFinancialCurrentYear };
+  return { usersalary, getFinancialCurrentYear, isFetching };
 };
 
 export default useGetEmployeeSalaryByFinaicalYear;

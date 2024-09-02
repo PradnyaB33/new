@@ -15,13 +15,20 @@ import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import { useNavigate } from "react-router-dom";
 
-const CreateSalaryModel = ({ handleClose, open, empId, id }) => {
+const CreateSalaryModel = ({
+  handleClose,
+  open,
+  empId,
+  id,
+  incomeValues,
+  setIncomeValues,
+  deductionsValues,
+  setDeductionsValues,
+}) => {
   // state
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aegis"];
-  const [incomeValues, setIncomeValues] = useState([]);
-  const [deductionsValues, setDeductionsValues] = useState([]);
   const [totalValues, setTotalValues] = useState([]);
   const navigate = useNavigate();
 
@@ -43,11 +50,11 @@ const CreateSalaryModel = ({ handleClose, open, empId, id }) => {
 
   const calTotalSalary = () => {
     const income = incomeValues.reduce((a, c) => {
-      return a + (parseInt(c.value) || 0); 
+      return a + (parseInt(c.value) || 0);
     }, 0);
 
     const deductions = deductionsValues.reduce((a, c) => {
-      return a + (parseInt(c.value) || 0); 
+      return a + (parseInt(c.value) || 0);
     }, 0);
 
     const total = income - deductions;
@@ -61,7 +68,7 @@ const CreateSalaryModel = ({ handleClose, open, empId, id }) => {
   // to get employee salary component data
   const {
     data: salaryInput,
-    isLoading,
+    isFetching,
     isError,
   } = useQuery(
     ["empData", empId],
@@ -83,11 +90,57 @@ const CreateSalaryModel = ({ handleClose, open, empId, id }) => {
     }
   );
 
+  // to get the data of existing salary component
+  // to get employee salary component data of employee
+  const { data: salaryComponent } = useQuery(
+    ["salary-component", empId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/get-salary-component/${empId}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
+
+  useEffect(() => {
+    setIncomeValues(salaryComponent?.income ?? []);
+    setDeductionsValues(salaryComponent?.deductions ?? []);
+    // eslint-disable-next-line
+  }, [salaryComponent, empId]);
+
   const handleApply = async () => {
     try {
+      // Filter out income components with null, undefined, or zero value, and also exclude those with invalid names
+      const filteredIncomeValues = incomeValues?.filter(
+        (item) =>
+          item.name &&
+          item.value !== null &&
+          item.value !== undefined &&
+          item.value !== 0 &&
+          item.value !== ""
+      );
+
+      console.log("filter income value", filteredIncomeValues);
+
+      // Filter out deduction components with null, undefined, or zero value, and also exclude those with invalid names
+      const filteredDeductionsValues = deductionsValues?.filter(
+        (item) =>
+          item.name &&
+          item.value !== null &&
+          item.value !== undefined &&
+          item.value !== 0 &&
+          item.value !== ""
+      );
+      console.log("filter deduction value", filteredDeductionsValues);
+
       const data = {
-        income: incomeValues,
-        deductions: deductionsValues,
+        income: filteredIncomeValues,
+        deductions: filteredDeductionsValues,
         totalSalary: totalValues,
       };
 
@@ -157,7 +210,7 @@ const CreateSalaryModel = ({ handleClose, open, empId, id }) => {
                 </tr>
               </thead>
               <tbody>
-                {isLoading ? (
+                {isFetching ? (
                   <tr>
                     <td colSpan={2}>
                       <CircularProgress />

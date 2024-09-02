@@ -9,6 +9,7 @@ const useShiftNotification = () => {
   const { useGetCurrentRole } = UserProfile();
   const role = useGetCurrentRole();
   const [notificationCount, setNotificationCount] = useState(0);
+  const [accData, setAccData] = useState();
 
   const getShiftNotification = async () => {
     let url;
@@ -37,6 +38,7 @@ const useShiftNotification = () => {
         headers: { Authorization: authToken },
       }
     );
+    setAccData(response.data.newReq)
     return response.data.newReq;
   };
 
@@ -55,6 +57,7 @@ const useShiftNotification = () => {
   const { data: count } = useQuery("shift-count", getCount);
 
   return {
+    accData,
     data,
     count,
     isLoading,

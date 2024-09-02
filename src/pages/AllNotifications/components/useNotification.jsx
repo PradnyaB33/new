@@ -19,28 +19,33 @@ import useAuthToken from "../../../hooks/Token/useAuth";
 import useOrgGeo from "../../Geo-Fence/useOrgGeo";
 import useShiftNotification from "../../../hooks/QueryHook/notification/shift-notificatoin/hook";
 import UseEmployeeShiftNotification from "../../SelfShiftNotification/UseEmployeeShiftNotification";
+import { useParams } from "react-router-dom";
 
 const useNotification = () => {
   const { cookies } = useContext(UseContext);
+  const { organisationId } = useParams();
   const token = cookies["aegis"];
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
   const { data } = useLeaveNotificationHook();//super admin and manager side notification
-  const { data: shiftNotification } = useShiftNotification();//super admin and manager side notification
+  const { data: shiftNotification, accData } = useShiftNotification();//super admin and manager side notification
   const { data: employeeShiftNotification } = UseEmployeeShiftNotification();//employee side notification
   const { data: selfLeaveNotification } = useLeaveNotification();
   const [emp, setEmp] = useState();
   const { data: data3 } = usePunchNotification();
   const authToken = useAuthToken();
-  console.log("selfLeaveNotification", selfLeaveNotification);
 
   //states
   const [shiftCount, setShiftCount] = useState(0);
   const [employeeShiftCount, setEmployeeShiftCount] = useState(0);
   const [leaveCount, setLeaveCount] = useState(0);
   const [employeeLeaveCount, setEmployeeLeaveCount] = useState(0);
-  console.log("employeeLeaveCount", employeeLeaveCount);
+  const [shiftAccCount, setShiftAccCount] = useState(0);
+  const [loanCount, setLoanCount] = useState(0);
+  const [empLoanCount, setEmpLoanCount] = useState(0);
+  const [advanceSalaryCount, setAdvanceSalaryCount] = useState(0);
+  const [empAdvanceSalaryCount, setEmpAdvanceSalaryCount] = useState(0);
 
   //super admin and manager side leave notification count
   useEffect(() => {
@@ -86,6 +91,19 @@ const useNotification = () => {
     }
   }, [shiftNotification]);
 
+  //Account side shift notification count
+  useEffect(() => {
+    if (accData && accData.length > 0) {
+      let total = 0;
+      accData.forEach(item => {
+        total += item.notificationAccCount;
+      });
+      setShiftAccCount(total);
+    } else {
+      setShiftAccCount(0);
+    }
+  }, [accData]);
+
   //employee side shift notification count
   useEffect(() => {
     if (employeeShiftNotification && employeeShiftNotification?.requests && employeeShiftNotification?.requests?.length > 0) {
@@ -101,7 +119,7 @@ const useNotification = () => {
 
   const count = role === "Super-Admin" || role === "Manager"
     ? shiftCount
-    : employeeShiftCount;
+    : role === "Accountant" ? shiftAccCount : employeeShiftCount;
 
   //Employee Side remote and geofencing Notification count
   const employeeId = user._id;
@@ -178,7 +196,72 @@ const useNotification = () => {
     area.employee.includes(employeeId)
   );
 
-  //
+  //Notification for loan
+  const {
+    getEmployeeRequestLoanApplication,
+    getLoanEmployee
+  } = useLoanNotification();
+
+  //get notification count of loan 
+  useEffect(() => {
+    if (getEmployeeRequestLoanApplication && getEmployeeRequestLoanApplication?.length > 0) {
+      let total = 0;
+      getEmployeeRequestLoanApplication?.forEach(item => {
+        total += item.notificationCount;
+      });
+      setLoanCount(total);
+    } else {
+      setLoanCount(0);
+    }
+
+    if (getLoanEmployee && getLoanEmployee?.length > 0) {
+      let total = 0;
+      getLoanEmployee?.forEach(item => {
+        total += item.acceptRejectNotificationCount;
+      });
+      setEmpLoanCount(total);
+    } else {
+      setEmpLoanCount(0);
+    }
+  }, [getEmployeeRequestLoanApplication, getLoanEmployee]);
+
+  const countLoan = role === "Super-Admin" || role === "HR" || role === "Delegate-Super-Admin"
+    ? loanCount
+    : empLoanCount;
+
+  //notification Count for advance salary
+  const { getAdvanceSalary, advanceSalaryNotificationEmp } =
+    useAdvanceSalaryData();
+
+  //get notification count of advance salary
+  useEffect(() => {
+    if (getAdvanceSalary && getAdvanceSalary?.length > 0) {
+      let total = 0;
+      getAdvanceSalary?.forEach(item => {
+        total += item.notificationCount;
+      });
+      setAdvanceSalaryCount(total);
+    } else {
+      setAdvanceSalaryCount(0);
+    }
+
+    if (advanceSalaryNotificationEmp && advanceSalaryNotificationEmp?.length > 0) {
+      let total = 0;
+      advanceSalaryNotificationEmp?.forEach(item => {
+        total += item.acceptRejectNotificationCount;
+      });
+      setEmpAdvanceSalaryCount(total);
+    } else {
+      setEmpAdvanceSalaryCount(0);
+    }
+  }, [getAdvanceSalary, advanceSalaryNotificationEmp]);
+
+  const countAdvance = role === "Super-Admin" || role === "HR" || role === "Delegate-Super-Admin"
+    ? advanceSalaryCount
+    : empAdvanceSalaryCount;
+
+  //////////////////////////////////////////////
+
   const { data: data4 } = useDocNotification();
   const { data: tds } = useTDSNotificationHook();
 
@@ -186,16 +269,10 @@ const useNotification = () => {
     useMissedPunchNotificationCount();
 
   const { Form16Notification } = useForm16NotificationHook();
-  const {
-    getEmployeeRequestLoanApplication,
-    getApprovedRejectLoanDataByApprover,
-  } = useLoanNotification();
 
   const { getJobPositionToMgr, getNotificationToEmp } =
     useJobPositionNotification();
   const { PayslipNotification } = usePayslipNotificationHook();
-  const { getAdvanceSalaryData, advanceSalaryNotification } =
-    useAdvanceSalaryData();
 
   const { getDepartmnetData, getDeptNotificationToEmp } =
     useDepartmentNotification();
@@ -210,30 +287,6 @@ const useNotification = () => {
     }
     return "/";
   }, [role]);
-
-  // for loan notification count
-  let loanNotificationCount;
-  if (
-    role === "HR" ||
-    role === "Super-Admin" ||
-    role === "Delegate-Super-Admin"
-  ) {
-    loanNotificationCount = getEmployeeRequestLoanApplication?.length ?? 0;
-  } else {
-    loanNotificationCount = getApprovedRejectLoanDataByApprover?.length ?? 0;
-  }
-
-  // for advance salary notification count
-  let advanceSalaryNotifyCount;
-  if (
-    role === "HR" ||
-    role === "Super-Admin" ||
-    role === "Delegate-Super-Admin"
-  ) {
-    advanceSalaryNotifyCount = getAdvanceSalaryData?.length ?? 0;
-  } else {
-    advanceSalaryNotifyCount = advanceSalaryNotification?.length ?? 0;
-  }
 
   // for missed punch notification count
   let missedPunchNotificationCount;
@@ -288,7 +341,6 @@ const useNotification = () => {
     departmentNotificationCount = 0;
   }
 
-
   useEffect(() => {
     (async () => {
       if (user?._id) {
@@ -339,8 +391,8 @@ const useNotification = () => {
           name: "Geo Fencing Notification",
           count: geoFencingCount,
           color: "#51FD96",
-          url: "/geo-fencing-notification",
-          url2: "/geofencing-notification",
+          url: `/organisation/${organisationId}/geo-fencing-notification`,
+          url2: `/organisation/${organisationId}/geofencing-notification`,
           visible: emp?.packageInfo === "Intermediate Plan",
         },
       ]
@@ -351,8 +403,8 @@ const useNotification = () => {
             name: "Geo Fencing Notification",
             count: geoFencingCount,
             color: "#51FD96",
-            url: "/geo-fencing-notification",
-            url2: "/geofencing-notification",
+            url: `/organisation/${organisationId}/geo-fencing-notification`,
+            url2: `/organisation/${organisationId}/geofencing-notification`,
             visible: emp?.packageInfo === "Intermediate Plan",
           }
           : {
@@ -373,7 +425,7 @@ const useNotification = () => {
     },
     {
       name: "Loan Notification",
-      count: loanNotificationCount,
+      count: countLoan,
       color: "#51E8FD",
       url: "/loan-notification",
       url2: "/loan-notification-to-emp",
@@ -381,7 +433,7 @@ const useNotification = () => {
     },
     {
       name: "Advance Salary Notification",
-      count: advanceSalaryNotifyCount ?? 0,
+      count: countAdvance,
       color: "#FF7373",
       url: "/advance-salary-notification",
       url2: "/advance-salary-notification-to-emp",

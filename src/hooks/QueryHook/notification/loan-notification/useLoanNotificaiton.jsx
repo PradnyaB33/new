@@ -37,11 +37,11 @@ const useLoanNotification = () => {
   );
 
   //for get loan data
-  const { data: getApprovedRejectLoanDataByApprover } = useQuery(
-    ["getApprovedRejectedData"],
+  const { data: getLoanEmployee } = useQuery(
+    ["getLoanEmployee"],
     async () => {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/get-approved-reject-loan-to-employee`,
+        `${process.env.REACT_APP_API}/route/get-loan-to-employee`,
         {
           headers: {
             Authorization: authToken,
@@ -54,9 +54,9 @@ const useLoanNotification = () => {
 
   return {
     getEmployeeRequestLoanApplication,
-    getApprovedRejectLoanDataByApprover,
     isLoading,
     isFetching,
+    getLoanEmployee
   };
 };
 

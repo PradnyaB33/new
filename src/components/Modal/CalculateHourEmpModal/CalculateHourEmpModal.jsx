@@ -46,11 +46,13 @@ const CalculateHourEmpModal = ({
   const CalculateHourSchemas = z.object({
     hour: z.string().refine(
       (value) => {
-        const regex = /^(0*(?:[0-9]|1[0-9]|2[0-4]))$/;
+        // Updated regex to allow numbers between 0 and 24 with optional decimal points
+        const regex = /^(0*(?:[0-9]|1[0-9]|2[0-4]))(\.\d{1,2})?$/;
         return regex.test(value);
       },
       {
-        message: "Hour must be a valid number between 0 and 24.",
+        message:
+          "Hour must be a valid number between 0 and 24, with up to two decimal places.",
       }
     ),
     timeRange: z
@@ -164,7 +166,7 @@ const CalculateHourEmpModal = ({
   const handleCalculateHours = async () => {
     const data = getValues();
     const { hour, timeRange } = data;
-    const regex = /^(0*(?:[0-9]|1[0-9]|2[0-4]))$/;
+    const regex = /^(0*(?:[0-9]|1[0-9]|2[0-4]))(\.\d{1,2})?$/;
 
     // Validate and convert `hour` to number
     const parsedHour = parseFloat(hour);
@@ -318,7 +320,7 @@ const CalculateHourEmpModal = ({
           : null,
         totalHours: totalHour,
         status: remarks,
-        overtimeHours: formattedOverTimeHours, 
+        overtimeHours: formattedOverTimeHours,
         justify: justify,
         leave: leave,
         shift: shift,
@@ -357,7 +359,6 @@ const CalculateHourEmpModal = ({
       }
     }
   };
-  
   console.log(remarks);
 
   return (

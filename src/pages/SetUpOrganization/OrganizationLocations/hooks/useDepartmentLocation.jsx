@@ -55,9 +55,9 @@ const useDepartmentLocation = () => {
   const { mutate: addLocationMutation } = useMutation({
     mutationFn: addLocation,
     onSuccess: async (data, { onClose }) => {
-      console.log("Location added successfully", data);
       await queryClient.invalidateQueries([
         `departmentLocation-${organisationId}`,
+        "getLocations",
       ]);
       handleAlert(true, "success", "Location added successfully");
       onClose();
