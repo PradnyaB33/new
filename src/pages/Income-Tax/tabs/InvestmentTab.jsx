@@ -3,6 +3,7 @@ import Card from "../../peformance/components/Card";
 import CreateModal from "../components/CreateModal";
 import DeleteInvestmentModal from "../components/DeleteInvestmentModal";
 import InvestmentTable from "../components/InvestmentTable";
+import RegimeModal from "../components/RegimeModal";
 import useGetInvestmentSection from "../hooks/queries/useGetInvestmentSection";
 import useFunctions from "../hooks/useFunctions";
 
@@ -41,6 +42,7 @@ const InvestmentTab = () => {
         setOpen={setEditOpen}
       />
       <DeleteInvestmentModal />
+      <RegimeModal />
     </section>
   );
 };

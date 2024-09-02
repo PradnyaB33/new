@@ -5,8 +5,15 @@ import useFunctions from "../hooks/useFunctions";
 import InvestmentTableSkeleton from "./InvestmentTableSkeleton";
 
 const InvestmentTable = ({ setOpen, investments, isFetching }) => {
-  const { setSearch, setPage, page, setDeleteConfirm, setEditOpen } =
-    useFunctions();
+  const {
+    setSearch,
+    setPage,
+    page,
+    setDeleteConfirm,
+    setEditOpen,
+    openRegimeModal,
+    setOpenRegimeModal,
+  } = useFunctions();
   const [focusedInput, setFocusedInput] = useState("");
 
   return (
@@ -41,6 +48,7 @@ const InvestmentTable = ({ setOpen, investments, isFetching }) => {
         <div className="gap-2 flex  w-full justify-end">
           <button
             type="button"
+            onClick={() => setOpenRegimeModal(true)}
             className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-gray-500 hover:bg-gray-500 focus-visible:outline-gray-500"
           >
             Change Regime
@@ -120,10 +128,10 @@ const InvestmentTable = ({ setOpen, investments, isFetching }) => {
                     </td>
                     <td className=" text-left text-sm w-[200px]  ">
                       <div
-                        onClick={() => handlePDF(item.proof)}
+                        // onClick={() => handlePDF(item.proof)}
                         className="px-2 flex gap-2 items-center h-max w-max  cursor-pointer"
                       >
-                        <Article className="text-blue-500" />
+                        {/* <Article className="text-blue-500" /> */}
                         <h1>View Proof </h1>
                       </div>
                     </td>

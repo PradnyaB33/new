@@ -32,7 +32,10 @@ const CreateModal = ({ open, setOpen, investments }) => {
       label: z.string(),
       value: z.string(),
     }),
-    declaration: z.string().min(1, { message: "Amount cannot be zero" }),
+    declaration: z.preprocess((val) => {
+      const num = Number(val);
+      return isNaN(num) ? val : num;
+    }, z.number().gt(0, { message: "Amount must be greater than zero" })),
     proof: z.instanceof(File).optional(),
   });
 
@@ -244,7 +247,7 @@ const CreateModal = ({ open, setOpen, investments }) => {
             <AuthInputFiled
               name="declaration"
               control={control}
-              type="number"
+              type="string"
               placeholder="Enter Amount"
               label="Enter Amount *"
               errors={errors}

@@ -179,7 +179,7 @@ const ResetNewPassword = ({ open, handleClose }) => {
 
                   <button
                     type="submit"
-                    className="py-2 rounded-md border text-sm font-bold w-full bg-blue-500 text-white"
+                    className="py-2 rounded-md border  font-bold w-full bg-blue-500 text-white"
                   >
                     Change Password
                   </button>

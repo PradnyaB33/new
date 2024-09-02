@@ -13,6 +13,12 @@ const useFunctions = create((set) => ({
   setEditOpen: (editOpen) => set({ editOpen }),
   pdf: null,
   setPdf: (pdf) => set({ pdf }),
+  openRegimeModal: false,
+  setOpenRegimeModal: (openRegimeModal) => set({ openRegimeModal }),
+
+  // Regime Modal selected items
+  selected: false,
+  setSelected: (openRegimeModal) => set({ openRegimeModal }),
   isOpenCalculation: [],
   setIsOpenCalculation: (section) =>
     set((state) => {
