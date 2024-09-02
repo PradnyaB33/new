@@ -83,7 +83,7 @@ const ManagementCalender = () => {
           //   </div>
           // ) :
           employeeLoading ||
-          EmployeeLeaves?.currentYearLeaves?.length <= 0 ||
+          // EmployeeLeaves?.currentYearLeaves?.length <= 0 ||
           !EmployeeLeaves ? (
             <div className="flex items-center flex-col gap-2 justify-center">
               <img src="/calender.svg" className="h-[200px]" alt="none" />
@@ -109,7 +109,7 @@ const ManagementCalender = () => {
               <div className="w-[30%] bg-white h-max rounded-md border ">
                 <header className="bg-gray-200">
                   <h1 className="text-xl  text-gray-700  border-b-2 p-4  font-semibold  tracking-tight">
-                    Balence Leaves
+                    Balance Leaves
                   </h1>
                 </header>
 
