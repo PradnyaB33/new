@@ -1,5 +1,3 @@
-
-
 import { useEffect, useState, useContext } from "react";
 import { motion } from "framer-motion";
 import AOS from "aos";
