@@ -77,7 +77,6 @@ const EmployeeTest = () => {
       const resp = await axios.get(
         `${process.env.REACT_APP_API}/route/organization/getmembers/${orgId}`
       );
-      console.log("this is the data", resp.data.organizations);
       setMembers(resp.data.members);
     })();
   }, [orgId]);

@@ -28,6 +28,7 @@ const usePublicHoliday = () => {
       console.log("Public Holiday Added");
       await queryClient.invalidateQueries(["getHoliday"]);
       onClose();
+      handleAlert(true, "success", "Public Holiday Added Successfully");
     },
     onError: (error) => {
       console.error("Error adding public holiday", error);
