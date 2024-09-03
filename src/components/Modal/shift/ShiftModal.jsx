@@ -123,7 +123,7 @@ const ShiftModal = ({
 
   const daysOfWeek = [
     { label: "Mon", value: "Monday" },
-    { label: "Tus", value: "Tuesday" },
+    { label: "Tue", value: "Tuesday" },
     { label: "Wed", value: "Wednesday" },
     { label: "Thur", value: "Thursday" },
     { label: "Fri", value: "Friday" },
@@ -389,9 +389,8 @@ const ShiftModal = ({
               style={{ width: "100%", justifyContent: "center", gap: "2px" }}
             >
               <label
-                className={`${
-                  errors.selectedDays && "text-red-500"
-                } font-semibold text-gray-500 text-md`}
+                className={`${errors.selectedDays && "text-red-500"
+                  } font-semibold text-gray-500 text-md`}
                 htmlFor="demo-simple-select-label"
               >
                 Select Week Days

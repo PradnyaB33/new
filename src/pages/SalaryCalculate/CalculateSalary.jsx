@@ -366,8 +366,8 @@ function CalculateSalary() {
         ? (totalGrossSalary * PfSetup?.ECP) / 100
         : 0
       : totalGrossSalary <= 21000
-      ? (totalGrossSalary * PfSetup?.ECP) / 100
-      : 0;
+        ? (totalGrossSalary * PfSetup?.ECP) / 100
+        : 0;
 
     // Step 7: Calculate emlCtr (Employer Contribution) using ECS from PfSetup
     // Only calculate if totalGrossSalary is less than or equal to 21000
@@ -376,8 +376,8 @@ function CalculateSalary() {
         ? (totalGrossSalary * PfSetup?.ECS) / 100
         : 0
       : totalGrossSalary <= 21000
-      ? (totalGrossSalary * PfSetup?.ECS) / 100
-      : 0;
+        ? (totalGrossSalary * PfSetup?.ECS) / 100
+        : 0;
 
     // Step 8: Update deduction values in state
     const updatedDeductions = salaryComponent?.deductions?.reduce(
@@ -733,8 +733,8 @@ function CalculateSalary() {
                     <td class="px-4 py-2 border">
                       {availableEmployee?.joining_date
                         ? new Date(
-                            availableEmployee?.joining_date
-                          ).toLocaleDateString("en-GB")
+                          availableEmployee?.joining_date
+                        ).toLocaleDateString("en-GB")
                         : ""}
                     </td>
                   </tr>
