@@ -83,7 +83,6 @@ function CalculateSalary() {
     console.log("Salary Exists:", salaryExists);
     setNumDaysInMonth(selectedDate.daysInMonth());
   }, [selectedDate, salaryInfo]);
-
   // to get holiday in the organization
   const fetchHoliday = async () => {
     try {
@@ -195,7 +194,6 @@ function CalculateSalary() {
     }
     setShiftTotalAllowance(total);
   }, [shiftCounts, shiftAllowances]);
-
   // to fetch the remote punching count of employee in a specific month
   const fetchRemotePunchingCount = async (userId, startDate, endDate) => {
     try {
@@ -219,7 +217,6 @@ function CalculateSalary() {
     fetchRemotePunchingCount(userId, startDate, endDate);
     // eslint-disable-next-line
   }, [selectedDate, userId, startDate, endDate]);
-
   // to get the total salary of employee
   const { getTotalSalaryEmployee } = useAdvanceSalaryQuery(organisationId);
 
@@ -249,7 +246,6 @@ function CalculateSalary() {
   };
   // Use the dynamically extracted joining date
   let noOfDaysEmployeePresent = calculateDaysEmployeePresent(joiningDate);
-
   // to get employee salary component data of employee
   const { data: salaryComponent, isFetching } = useQuery(
     ["salary-component", userId],
@@ -294,7 +290,6 @@ function CalculateSalary() {
 
     // eslint-disable-next-line
   }, [selectedDate, salaryComponent, noOfDaysEmployeePresent]);
-
   // Check if shiftTotalAllowance should be added
   if (shiftTotalAllowance > 0) {
     incomeValues.push({
@@ -309,20 +304,14 @@ function CalculateSalary() {
       value: remotePunchAllowance,
     });
   }
-
   // get the PFsetup from organizaiton
   const { PfSetup } = useGetPfEsicSetup({
     organisationId,
   });
-  console.log("ffff:", PfSetup);
-
   // Initialize the state for set deduction value
   let pwd = availableEmployee?.pwd;
-  console.log("pwd", pwd);
-
   const [deductionValues, setDeductionValues] = useState([]);
   const [employerContribution, setEmployerContribution] = useState(0);
-
   // Calculate the PF, ESIC and update the deduction value
   useEffect(() => {
     // Step 1: Initialize variables to store Basic and DA values
@@ -399,14 +388,10 @@ function CalculateSalary() {
     // Ensure deductionValues is always an array
     setDeductionValues(updatedDeductions ?? []);
     const adjustedEmlCtr = emlCtr > 0 ? emlCtr : 0;
-
     setEmployerContribution(adjustedEmlCtr);
 
     // eslint-disable-next-line
   }, [salaryComponent, PfSetup, selectedDate, incomeValues]);
-
-
-
   // calculate the financial year
   const calculateFinancialYear = (date) => {
     const month = date?.month();
@@ -419,7 +404,6 @@ function CalculateSalary() {
     }
   };
   const financialYear = calculateFinancialYear(dayjs(selectedDate));
-
   // to get the annual income tax
   const { data: annualIncomeTax } = useQuery(
     ["getIncomeTax", organisationId],
@@ -440,7 +424,6 @@ function CalculateSalary() {
     typeof annualIncomeTax === "number" && annualIncomeTax > 0
       ? annualIncomeTax / 12
       : "0";
-
   // Pushing monthlyIncomeTax into extendedDeductionValue
   if (monthlyIncomeTax > 0) {
     deductionValues.push({
@@ -503,7 +486,6 @@ function CalculateSalary() {
       ]);
     }
   }, [loanDeduction, empLoanAplicationInfo]);
-
   // calculate the total income (totalGrossSalary) , total deduction , totalNetAalary
   const [salary, setSalary] = useState({
     totalIncome: 0,
@@ -531,9 +513,6 @@ function CalculateSalary() {
 
     // eslint-disable-next-line
   }, [deductionValues, incomeValues]);
-
-  console.log("fdfd:", deductionValues);
-
   // submit the data
   const saveSalaryDetail = async () => {
     try {
