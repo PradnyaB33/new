@@ -25,6 +25,7 @@ const MissPunchJustifyModal = ({
   open,
   unavailableRecords,
   organisationId,
+  data,
 }) => {
   const navigate = useNavigate();
   const { handleAlert } = useContext(TestContext);
@@ -33,6 +34,7 @@ const MissPunchJustifyModal = ({
   const unavailableRecordId = unavailableRecords?._id;
   const { justify } = useMissedJustifyState();
   console.log("unavailable record", unavailableRecords);
+  console.log("data ", data);
 
   const MissPunchSchema = z.object({
     justify: z.string(),
