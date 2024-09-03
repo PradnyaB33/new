@@ -6,6 +6,18 @@ const useCustomStates = create((set) => ({
     set((state) => ({
       newAppliedLeaveEvents: [...(state.newAppliedLeaveEvents || []), newLeave],
     })),
+
+  updateLeaveEvent: (id, value) =>
+    set((state) => ({
+      newAppliedLeaveEvents: state.newAppliedLeaveEvents.map((item, index) =>
+        id === index
+          ? { ...item, leaveTypeDetailsId: value?.value, title: value?.label }
+          : item
+      ),
+    })),
+
+  emptyAppliedLeaveEvents: () => set({ newAppliedLeaveEvents: [] }),
+
   removeNewAppliedLeaveEvents: (id) =>
     set((state) => ({
       newAppliedLeaveEvents: state.newAppliedLeaveEvents.filter(

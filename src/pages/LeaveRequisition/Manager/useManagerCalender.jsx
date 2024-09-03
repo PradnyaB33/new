@@ -6,7 +6,11 @@ import UserProfile from "../../../hooks/UserData/useUser";
 const useManagerCalender = ({ employee, organisationId }) => {
   const authToken = useAuthToken();
   const role = UserProfile().useGetCurrentRole();
-  const { data: EmployeeLeaves, isLoading: employeeLoading } = useQuery(
+  const {
+    data: EmployeeLeaves,
+    isLoading: employeeLoading,
+    isFetching,
+  } = useQuery(
     ["manager-employee-leave", employee],
     async () => {
       const response = await axios.get(
@@ -54,7 +58,13 @@ const useManagerCalender = ({ employee, organisationId }) => {
     }
   );
 
-  return { EmployeeLeaves, employeeLoading, leaveTableData, employeeData };
+  return {
+    EmployeeLeaves,
+    employeeLoading,
+    leaveTableData,
+    employeeData,
+    isFetching,
+  };
 };
 
 export default useManagerCalender;
