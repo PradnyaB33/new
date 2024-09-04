@@ -10,18 +10,24 @@ import {
   People,
   PriorityHigh,
   RecyclingRounded,
-  Repeat,
   ShoppingBag,
   Subscriptions,
   TrendingUp,
 } from "@mui/icons-material";
-import { Button, Menu, MenuItem, alpha, styled } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, Grid, IconButton, Menu, MenuItem, Typography, alpha, styled } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
 import DescriptionBox from "./descripton-box";
 import PaySubscription from "./package/pay-sub";
 import RenewPackage from "./package/renew";
 import UpgradePackage from "./package/upgrade";
+import hrmsImg from "../../../assets/hrmsImg.png"
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import { toWords } from 'number-to-words';
+import QRcodeImg from "../../../assets/QRcode.svg";
+import SignImg from "../../../assets/sign.png"
+
 const StyledMenu = styled((props) => (
   <Menu
     style={{ background: "rgb(244 247 254 / var(--tw-bg-opacity))" }}
@@ -72,6 +78,7 @@ const BillingCard = ({ doc }) => {
   const [confirmOpen1, setConfirmOpen1] = useState(false);
   const [confirmOpen2, setConfirmOpen2] = useState(false);
   const [confirmOpen3, setConfirmOpen3] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const checkHasOrgDisabled = () => {
     // if organization subscriptionDetails.status is pending and the difference between the current date and the expiration date is greater than 0 then return true else return false
@@ -100,22 +107,102 @@ const BillingCard = ({ doc }) => {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
-  console.log(
-    `🚀 ~ file: billing-card.jsx:112`,
-    doc,
-    moment(doc?.createdAt).add(7, "days").diff(moment(), "days") > 0
-  );
-  return (
+
+  const handleModal = () => {
+    setOpenModal(true)
+  }
+
+  const exportPDF = async () => {
+    const pdfContent = document.getElementById("pdfContent");
+
+    html2canvas(pdfContent, {
+      logging: true,
+      letterRendering: 1,
+      useCORS: true,
+    }).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("landscape", "mm", "a4");
+      pdf.addImage(
+        imgData,
+        0,
+        0,
+        pdf.internal.pageSize.width,
+        pdf.internal.pageSize.height
+      );
+      pdf.save("billing-details.pdf");
+    });
+  };
+
+  const handleDownloadClick = () => {
+    exportPDF();
+  };
+
+  const getPrice = (packageInfo) => {
+    switch (packageInfo) {
+      case 'Essential Plan':
+        return '30';
+      case 'Basic Plan':
+        return '55';
+      case 'Intermediate Plan':
+        return '85';
+      case 'Enterprise Plan':
+        return '115';
+      default:
+        return '0';
+    }
+  };
+
+  const memberCount = Number(doc?.memberCount) || 0;
+  const cycleCount = Number(doc?.cycleCount) || 0;
+  const pricePerEmployee = getPrice(doc?.packageInfo);
+
+  const formatCurrency = (amount) => `₹ ${amount.toFixed(2)}`;
+  const totalIntermediatePrice = pricePerEmployee * memberCount;
+  const GST = totalIntermediatePrice * 0.18;
+  const Total = totalIntermediatePrice + GST;
+  const amountInWords = toWords(Total);
+
+  const data = [
+    '1',
+    `Aegis HRMS Software (${doc?.packageInfo})`,
+    '997331',
+    `₹ ${pricePerEmployee}`,
+    cycleCount,
+    memberCount,
+    `₹ ${totalIntermediatePrice}`,
+    `₹ ${GST}`,
+    `₹ ${Total}`
+  ];
+  const data1 = [
+    '',
+    `Total`,
+    '',
+    '',
+    '',
+    '',
+    '',
+    formatCurrency(GST),
+    formatCurrency(Total)
+  ];
+
+  const paymentDate = new Date(doc?.subscriptionDetails?.paymentDate);
+  const paymentformattedDate = `${String(paymentDate.getDate()).padStart(2, '0')}-${String(paymentDate.getMonth() + 1).padStart(2, '0')}-${paymentDate.getFullYear()}`;
+  const expirationDate = doc?.subscriptionDetails?.expirationDate;
+  const date = new Date(expirationDate);
+  const formattedDate = `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
+
+  return (<>
     <div className="shadow-twe-inner bg-Brand-Purple/brand-purple-1 rounded-md grid grid-cols-6">
       <div className="col-span-6 md:col-span-5 pl-4 pt-4 pb-4 gap-4 flex flex-col">
         <div className="flex justify-between">
           <div className="flex gap-4 items-end">
             <img
               src={doc?.logo_url}
-              alt="payment not received"
+              alt=""
               className="h-10 w-10 rounded-md border border-brand/purple"
             />
             <div className="text-2xl font-bold">{doc?.orgName}</div>
@@ -185,7 +272,6 @@ const BillingCard = ({ doc }) => {
         <div className="bg-brand/wahsed-blue rounded-md flex flex-wrap gap-2 p-2 items-center">
           {!checkHasOrgDisabled() ? (
             <>
-              {" "}
               <DescriptionBox
                 Icon={Subscriptions}
                 descriptionText={"Subscription charge date"}
@@ -203,16 +289,15 @@ const BillingCard = ({ doc }) => {
             </>
           ) : (
             <>
-              {" "}
               <DescriptionBox
                 Icon={RecyclingRounded}
                 descriptionText={"Your subscription is on trial"}
                 mainText={
                   moment(doc?.createdAt).add(7, "days").diff(moment(), "days") >
-                  0
+                    0
                     ? `Only ${moment(doc?.createdAt)
-                        .add(7, "days")
-                        .diff(moment(), "days")} days left`
+                      .add(7, "days")
+                      .diff(moment(), "days")} days left`
                     : "But trial has expired"
                 }
               />
@@ -233,7 +318,6 @@ const BillingCard = ({ doc }) => {
             descriptionText={"Purchased Plan"}
             mainText={doc?.packageInfo}
           />
-
           <DescriptionBox
             Icon={People}
             descriptionText={"Allowed employee count"}
@@ -248,14 +332,14 @@ const BillingCard = ({ doc }) => {
             moment(new Date()),
             "days"
           ) > 0 && (
-            <DescriptionBox
-              Icon={Loop}
-              descriptionText={"Your next renewal is after"}
-              mainText={`${moment(
-                doc?.subscriptionDetails?.expirationDate
-              ).diff(moment(new Date()), "days")} days`}
-            />
-          )}
+              <DescriptionBox
+                Icon={Loop}
+                descriptionText={"Your next renewal is after"}
+                mainText={`${moment(
+                  doc?.subscriptionDetails?.expirationDate
+                ).diff(moment(new Date()), "days")} days`}
+              />
+            )}
           <DescriptionBox
             Icon={Discount}
             descriptionText={"Organisation discount for next subscription"}
@@ -265,8 +349,8 @@ const BillingCard = ({ doc }) => {
       </div>
       <div className=" col-span-1 justify-center items-center hidden md:flex">
         {doc?.subscriptionDetails?.status === "Active" ? (
-          <div className="bg-[#5FF062] flex justify-center items-start p-8 rounded-full animate-pulse">
-            <Repeat className="text-white " fontSize="large" />
+          <div className="flex justify-center items-start p-8 rounded-full animate-pulse">
+            <Button variant="outlined" onClick={handleModal}>Invoice</Button>
           </div>
         ) : doc?.subscriptionDetails?.status === "Pending" ? (
           <div className="bg-[#E8A454] flex justify-center items-start p-8 rounded-full animate-pulse">
@@ -305,7 +389,217 @@ const BillingCard = ({ doc }) => {
         organisation={doc}
       />
     </div>
+    <Dialog open={openModal} onClose={() => setOpenModal(false)}
+      maxWidth="lg"
+      fullWidth={true}
+    >
+      <DialogContent>
+        <Grid
+          lg={12}
+          md={12}
+          sm={12}
+          xs={12}
+          container
+          id="pdfContent"
+          direction="row"
+          sx={{
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            border: '1px solid grey'
+          }}
+        >
+          <Grid item lg={3} md={3}
+            sm={6}
+            xs={12}>
+            <img src={hrmsImg} alt="" style={{ width: '150px' }} />
+          </Grid>
+          <Grid item lg={9} md={9}
+            sm={6}
+            xs={12} sx={{ textAlign: 'right' }}>
+            <Typography variant="h5">
+              Argan Technology Services Private Limited
+            </Typography>
+            <Typography variant="body2">
+              Address: office no.C503, The Onyx-Kalate Business Park, near Euro School,<br />
+              Shankar Kalat Nagar, Wakad, Pune, Pimpri-Chinchwad, Maharashtra 411057.<br />
+              Ph. no.: 9082462161 Email: sales@aegishrms.com<br />
+              GSTIN: 27AAVCA3805B1ZS,<br />
+              State: 27-Maharashtra
+            </Typography>
+          </Grid>
+          <Grid container lg={12} sx={{ mt: 1 }}>
+            <Grid item lg={6} sx={{ borderRight: '1px solid grey' }}>
+              <Box sx={{ bgcolor: '#1976d2' }}>
+                <Typography variant="body1" sx={{ color: 'white', p: 1 }}>
+                  Bill To:
+                </Typography>
+              </Box>
+              <Box sx={{ p: 1 }}>
+                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                  {`${doc?.orgName}`}
+                </Typography>
+                <Typography variant="body2">
+                  {`${doc?.location?.address}`}
+                  <br />
+                  Contact No.: {`${doc?.contact_number}`}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item lg={6} sx={{ borderRight: '1px solid grey', textAlign: 'right' }}>
+              <Box sx={{ bgcolor: '#1976d2' }}>
+                <Typography variant="body1" sx={{ color: 'white', p: 1 }}>
+                  Invoice Details
+                </Typography>
+              </Box>
+              <Box sx={{ p: 1 }}>
+                <Typography variant="body2">
+                  Invoice No.: Inv. 101<br />
+                  Date: {paymentformattedDate}<br />
+                  Due Date: {formattedDate}
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+
+          <Grid container >
+            <Grid container item >
+              {['#', 'Item Name', 'HSC/SAC', 'Essential price per Employee', 'Total number of months', 'Total Employee/Nos', 'Total Intermediate Price', 'GST Amount (18%)', 'Total  Amount'].map((heading, index) => (
+                <Grid item xs={1.33} key={index} sx={{ bgcolor: '#1976d2', borderRight: '1px solid grey' }}>
+                  <Typography variant="body1" sx={{ color: 'white', textAlign: 'center', p: 1 }}>
+                    {heading}
+                  </Typography>
+                </Grid>
+              ))}
+            </Grid>
+
+            <Grid container item sx={{ borderBottom: "1px solid grey" }}>
+              {/* Map through `data` array */}
+              {data.map((cellData, colIndex) => (
+                <Grid item xs={1.33} key={colIndex} sx={{ borderRight: '1px solid grey' }}>
+                  <Typography variant="body2" sx={{ textAlign: 'center' }}>
+                    {cellData}
+                  </Typography>
+                </Grid>
+              ))}
+            </Grid>
+
+            <Grid container item >
+              {/* Map through `data1` array */}
+              {data1.map((cellData, colIndex) => (
+                <Grid item xs={1.33} key={colIndex} sx={{ borderRight: '1px solid grey' }}>
+                  <Typography variant="body2" sx={{ textAlign: 'center' }}>
+                    {cellData}
+                  </Typography>
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
+          <Grid container >
+            <Grid lg={5.985} sx={{ borderRight: '1px solid grey' }}>
+              <Box sx={{ bgcolor: '#1976d2' }}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'white', p: 1 }} >
+                  Invoice Amount In Words
+                </Typography>
+              </Box>
+              <Box sx={{ p: 1 }}>
+                <Typography variant="body2">
+                  {amountInWords}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid container lg={5.985}>
+              <Grid container item >
+                {/* Map through `data1` array */}
+                {['Amount to be paid', Total].map((cellData, colIndex) => (
+                  <Grid item xs={6} key={colIndex} sx={{ bgcolor: '#1976d2', borderRight: '1px solid grey' }}>
+                    <Typography variant="body2" sx={{ textAlign: 'center', color: 'white', p: 1 }}>
+                      {cellData}
+                    </Typography>
+                  </Grid>
+                ))}
+              </Grid>
+              <Grid container item sx={{ borderBottom: "1px solid grey" }}>
+                {/* Map through `data1` array */}
+                {['Balance', 0].map((cellData, colIndex) => (
+                  <Grid item xs={6} key={colIndex} sx={{ borderRight: '1px solid grey' }}>
+                    <Typography variant="body2" sx={{ textAlign: 'center' }}>
+                      {cellData}
+                    </Typography>
+                  </Grid>
+                ))}
+              </Grid> <Grid container item >
+                {/* Map through `data1` array */}
+                {['Total', Total].map((cellData, colIndex) => (
+                  <Grid item xs={6} key={colIndex} sx={{ borderRight: '1px solid grey' }}>
+                    <Typography variant="body2" sx={{ textAlign: 'center' }}>
+                      {cellData}
+                    </Typography>
+                  </Grid>
+                ))}
+              </Grid> </Grid>
+          </Grid>  <Grid container sx={{ borderRadius: "1px solid grey" }} >
+            <Grid item lg={12} sx={{ borderRight: '1px solid grey' }}>
+              <Box sx={{ bgcolor: '#1976d2' }}>
+                <Typography variant="body1" sx={{ color: 'white', p: 1 }}>
+                  Bank Details
+                </Typography>
+              </Box>
+              <Grid container sx={{ borderRight: "1px solid grey", p: 2 }}>
+                <Grid lg={6}>
+                  <Box sx={{ display: "flex" }}>
+                    <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                      Name : HDFC BANK, WAKAD<br />
+                      Account No. : 50200060324080<br />
+                      IFSC code : HDFC0004887<br />
+                      Name : Argan Technology Services Pvt Ltd
+                    </Typography>
+                    <img src={QRcodeImg} alt="" style={{ width: "150px" }} />
+                  </Box>
+                </Grid>
+                <Grid lg={6} sx={{ p: 2, display: "flex", justifyContent: "center" }}>
+                  <Typography variant="p" sx={{ fontSize: "30px", textAlign: "center" }}>
+                    Authorized Signature
+                  </Typography> <br />
+                  <img src={SignImg} alt="" style={{ width: "150px" }} />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid sx={{ borderTop: "1px solid grey" }}>
+            <Typography variant="body2">
+              1. AEGIS HRMS subscription will be activated post receipt of complete payment of selected subscription module.<br />
+              2. Client has to provide necessary date related to Company Name, Hierarchy/Organisation Structure, employee details, Attendance System if any to integrate the input data in AEGIS HRMS for smooth operations.
+              <br />   3. Revised scope in subscription, change in employee numbers, additional customised modules apart from selected subscription will lead to price revision & to be paid separately.
+              <br />  4. Applicable 18 % GST as Indian Govt Taxation rules will be extra.
+              <br />  5. Validity of this proposal is for 14 days from the date of the proposal.
+              <br />  6. All AEGIS HRMS subscription /licence needs to be renewed per year as these Solutions are valid for 1 year from the date of activation.
+              <br />  7. All AEGIS HRMS subscription /licence operates on the Auto renewal mode unless notified for deactivation.
+              <br />  8. All AEGIS HRMS subscription /licence require Internet Connection during the operation.
+              <br />  9. All AEGIS HRMS subscription /licence provides inbuilt Data management & secure file exchange features.
+              <br /> 10. Technical Updates:-As per the application update cycle for 1 year
+              Technical Support:- One Year.
+              Training:-3 to 4 days Dedicated Session on AEGIS HRMS online or at Pune location at no other extra charges.
+              <br />  11. AEGIS HRMS will provide training to client nominated reps for smoother operations through online.
+              <br /> 12. The proposal does not cover the costs for travel to client premises if any post installation for training etc. All such cost be extra.
+              <br /> 13. Terms & Conditions ,Intellectual Property Rights and Other conditions are applicable as mentioned on our website www.aegishrms.com
+              <br /> 14. Subject to Pune, Maharashtra Jurisdiction
+
+            </Typography>
+            <Typography sx={{ fontWeight: "bold", }}>Note:-Payment made & Order once placed cannot be cancelled.</Typography>
+          </Grid>
+        </Grid>
+        <div className="flex justify-end item-right">
+          <IconButton onClick={handleDownloadClick}>
+            <Button variant="outlined" >Download</Button>
+          </IconButton>
+        </div>
+      </DialogContent>
+    </Dialog >
+  </>
   );
 };
 
 export default BillingCard;
+
+
+

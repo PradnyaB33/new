@@ -25,6 +25,7 @@ const MissPunchJustifyModal = ({
   open,
   unavailableRecords,
   organisationId,
+  data,
 }) => {
   const navigate = useNavigate();
   const { handleAlert } = useContext(TestContext);
@@ -33,6 +34,7 @@ const MissPunchJustifyModal = ({
   const unavailableRecordId = unavailableRecords?._id;
   const { justify } = useMissedJustifyState();
   console.log("unavailable record", unavailableRecords);
+  console.log("data ", data);
 
   const MissPunchSchema = z.object({
     justify: z.string(),
@@ -140,14 +142,14 @@ const MissPunchJustifyModal = ({
             }}
           >
             {unavailableRecords &&
-            unavailableRecords.status !== null &&
-            unavailableRecords.status !== undefined &&
-            (unavailableRecords.status === "Partial" ||
-              unavailableRecords.status === "Unavailable") ? (
+              unavailableRecords.status !== null &&
+              unavailableRecords.status !== undefined &&
+              (unavailableRecords.status === "Partial" ||
+                unavailableRecords.status === "Unavailable") ? (
               <>
                 <Button
                   type="button"
-                  variant="contained"
+                  variant="outlined"
                   color="primary"
                   onClick={() => handleRedirect("leave")}
                 >
@@ -157,13 +159,13 @@ const MissPunchJustifyModal = ({
             ) : null}
 
             {unavailableRecords &&
-            unavailableRecords.status !== null &&
-            unavailableRecords.status !== undefined &&
-            unavailableRecords.status === "ExtraShift" ? (
+              unavailableRecords.status !== null &&
+              unavailableRecords.status !== undefined &&
+              unavailableRecords.status === "ExtraShift" ? (
               <>
                 <Button
                   type="button"
-                  variant="contained"
+                  variant="outlined"
                   color="secondary"
                   onClick={() => handleRedirect("shift")}
                 >
@@ -173,12 +175,12 @@ const MissPunchJustifyModal = ({
             ) : null}
 
             {unavailableRecords &&
-            unavailableRecords.status !== null &&
-            unavailableRecords.status !== undefined &&
-            (unavailableRecords.status === "Partial" ||
-              unavailableRecords.status === "Unavailable" ||
-              unavailableRecords.status === "ExtraShift" ||
-              unavailableRecords.status === "Overtime") ? (
+              unavailableRecords.status !== null &&
+              unavailableRecords.status !== undefined &&
+              (unavailableRecords.status === "Partial" ||
+                unavailableRecords.status === "Unavailable" ||
+                unavailableRecords.status === "ExtraShift" ||
+                unavailableRecords.status === "Overtime") ? (
               <>
                 <Button type="submit" variant="contained" color="success">
                   Submit
