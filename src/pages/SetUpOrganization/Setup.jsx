@@ -22,7 +22,7 @@ const Setup = ({ children }) => {
           Organisation Setup
         </header>
         <article className="md:p-4 p-0 w-full h-full flex gap-4">
-          <aside className="md:flex md:w-[30%] lg:!w-[20%]  flex-col items-center shadow-lg justify-center bg-white h-screen overflow-y-auto w-full">
+          <aside className="md:flex hidden md:w-[30%] lg:!w-[20%]  flex-col items-center shadow-lg justify-center bg-white h-screen overflow-y-auto w-full">
             <div className="h-auto min-h-screen  w-full">
               <div className=" px-4 py-3 gap-4 border-b-[.5px] bg-gray-200 flex w-full items-center border-gray-300">
                 <div className="rounded-full h-[30px] w-[30px] flex items-center justify-center">
@@ -52,7 +52,7 @@ const Setup = ({ children }) => {
             </div>
           </aside>
 
-          <div className="SetupSection bg-white w-[100%] lg:!w-[80%] md:!w-[70%] shadow-md rounded-sm border  items-center">
+          <div className="SetupSection bg-white w-[100%] lg:!w-[80%] md:!w-[70%]  shadow-md rounded-sm border  items-center">
             <header className="block md:hidden text-xl w-full pt-2 bg-white shadow-md p-2 my-2">
               <BackComponent />
               <div className="inline" onClick={() => navigate(-1)}>

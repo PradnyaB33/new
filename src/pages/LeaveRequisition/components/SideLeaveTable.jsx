@@ -6,7 +6,7 @@ import {
 import { IconButton, Tooltip } from "@mui/material";
 import { format } from "date-fns";
 import moment from "moment";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Select from "react-select";
 import useLeaveTable from "../../../hooks/Leave/useLeaveTable";
 import { TestContext } from "../../../State/Function/Main";
@@ -21,9 +21,16 @@ const SideLeaveTable = ({ leaveTableData, empId }) => {
     setChangeTable,
   } = useCustomStates();
   const { leaveMutation } = useCreateLeaveRequest(empId);
-  console.log(`🚀 ~ newAppliedLeaveEvents:`, newAppliedLeaveEvents);
   const { handleAlert } = useContext(TestContext);
   const { withOutLeaves } = useLeaveTable();
+  const [selectedValues, setSelectedValues] = useState({});
+
+  const getCurrentLeavesCount = leaveTableData?.leaveTypes?.map((item) => ({
+    leaveName: item?.leaveName,
+    count: item?.count,
+  }));
+  const [getDifference, setGetDifference] = useState(getCurrentLeavesCount);
+  console.log(`🚀 ~ getDifference:`, getDifference);
 
   let newLeave = [];
 
@@ -48,7 +55,53 @@ const SideLeaveTable = ({ leaveTableData, empId }) => {
   }
 
   const handleChange = (value, id) => {
+    const leaveType = leaveTableData?.leaveTypes?.find(
+      (item) => item?.leaveName === value?.label
+    );
+
+    const getSelectedLeaves = newAppliedLeaveEvents?.find(
+      (_, index) => index === id
+    );
+
+    setGetDifference((prev) => {
+      return prev.map((item) => {
+        if (value?.label === item.leaveName) {
+          if (moment(getSelectedLeaves?.start).isSame(getSelectedLeaves?.end)) {
+            return {
+              leaveName: value?.label,
+              count: Number(item.count - 1),
+            };
+          }
+          return {
+            leaveName: value?.label,
+            count: Number(
+              item.count -
+                (moment(getSelectedLeaves?.end).diff(
+                  getSelectedLeaves?.start,
+                  "days"
+                ) +
+                  1)
+            ),
+          };
+        }
+        return item;
+      });
+    });
+
+    if (
+      getDifference.find((item) => item.leaveName === value?.label)?.count === 0
+    ) {
+      handleAlert(
+        true,
+        "error",
+        "You can't apply for more than available leaves"
+      );
+      setSelectedValues((prev) => ({ ...prev, [id]: null }));
+      return false;
+    }
+
     updateLeaveEvent(id, value);
+    setSelectedValues((prev) => ({ ...prev, [id]: value }));
   };
 
   return (
@@ -85,7 +138,7 @@ const SideLeaveTable = ({ leaveTableData, empId }) => {
                 >
                   <CalendarMonth className="text-gray-700 md:text-lg !text-[1em]" />
                   <Select
-                    aria-errormessage=""
+                    value={selectedValues[id] || null}
                     placeholder={"Select leave type"}
                     isClearable
                     styles={{
