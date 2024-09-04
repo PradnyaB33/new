@@ -122,7 +122,7 @@ const HeaderBackComponent2 = ({ heading, oneLineInfo }) => {
   
   const user = UserProfile().getCurrentUser();
 
-  // Extract and capitalize first name and last name  
+
   const firstName = capitalizeFirstLetter(user?.first_name);
   const lastName = capitalizeFirstLetter(user?.last_name);
 
