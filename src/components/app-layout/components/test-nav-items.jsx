@@ -774,15 +774,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               [
                 "Super-Admin",
                 "Delegate-Super-Admin",
-                "Delegate-Super-Admin",
-                "Department-Head",
-                "Delegate-Department-Head",
-                "Department-Admin",
-                "Delegate-Department-Admin",
-                "Accountant",
-                "Delegate-Accountant",
                 "HR",
-                "Manager",
                 "Employee",
               ]?.includes(role),
             routes: [
