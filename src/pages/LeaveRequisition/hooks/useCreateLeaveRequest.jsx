@@ -36,10 +36,10 @@ const useCreateLeaveRequest = (empId) => {
   };
 
   const leaveMutation = useMutation(createLeaveRequest, {
-    onSuccess: async() => {
+    onSuccess: async () => {
       handleAlert(true, "success", "Leaves created succcesfully");
-      emptyAppliedLeaveEvents();
       await queryClient.invalidateQueries("manager-employee-leave");
+      emptyAppliedLeaveEvents();
     },
   });
 

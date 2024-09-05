@@ -52,6 +52,8 @@ const ManagementCalender = () => {
     }));
   };
 
+  let combinedEvents = [];
+
   const currentYearLeavesWithIncreasedEndDate = increaseEndDateByOneDay(
     EmployeeLeaves?.currentYearLeaves || []
   );
@@ -60,7 +62,7 @@ const ManagementCalender = () => {
   );
 
   // Combine the arrays
-  const combinedEvents = [
+  combinedEvents = [
     ...currentYearLeavesWithIncreasedEndDate,
     ...newAppliedLeaveEventsWithIncreasedEndDate,
   ];
@@ -291,7 +293,7 @@ const ManagementCalender = () => {
 
         {isFetching ? (
           <SkeletonLeave />
-        ) :  !EmployeeLeaves ? (
+        ) : !EmployeeLeaves ? (
           <div className="flex items-center flex-col gap-2 justify-center">
             <img src="/calender.svg" className="h-[200px]" alt="none" />
             <div>
@@ -355,7 +357,10 @@ const ManagementCalender = () => {
                 //   toolbar: CustomToolbar,
                 // }}
                 selectable
-                events={combinedEvents}
+                events={[
+                  ...currentYearLeavesWithIncreasedEndDate,
+                  ...newAppliedLeaveEventsWithIncreasedEndDate,
+                ]}
                 onSelectSlot={handleSelectSlot}
                 onSelectEvent={handleSelectEvent}
                 dayPropGetter={dayPropGetter}

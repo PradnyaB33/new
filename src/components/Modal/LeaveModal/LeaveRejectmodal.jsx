@@ -86,7 +86,12 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
     rejectMutate(length); // Trigger the mutation
   };
 
-  console.log("items create", items?.creatorId, items?.employeeId?._id);
+  console.log(
+    "items create",
+    items?.creatorId,
+    items?.creatorId,
+    items?.creatorId === items?.employeeId?._id
+  );
   return (
     <Box
       className="py-2 space-y-5 h-max"
@@ -150,9 +155,9 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                       : `${items?.employeeId?.first_name}
                     ${items?.employeeId?.last_name}`}{" "}
                     {!items?.creatorId?._id ||
-                    items?.creatorId._id === items?.employeeId?._id
+                    items?.creatorId === items?.employeeId?._id
                       ? "has requested"
-                      : `has raised a leave request for ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} `}
+                      : `has raised a leave request for ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} for `}
                     {items?.leaveTypeDetailsId?.leaveName} from{" "}
                     {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
                     {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
@@ -168,11 +173,25 @@ const LeaveRejectmodal = ({ items, isLoading, isFetching, length }) => {
                 </h1>
               ) : (
                 <h1 className="text-xl px-4 md:!px-0 font-semibold ">
-                  {" "}
-                  {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
-                  has raised a {items?.leaveTypeDetailsId?.leaveName} request on{" "}
-                  {format(new Date(items.start), "dd-MM-yyyy")}
+                  {items?.creatorId
+                    ? `${items?.creatorId?.first_name}
+                    ${items?.creatorId?.last_name}`
+                    : `${items?.employeeId?.first_name}
+                    ${items?.employeeId?.last_name}`}{" "}
+                  {!items?.creatorId?._id ||
+                  items?.creatorId?._id === items?.employeeId?._id
+                    ? "has requested"
+                    : `has raised a leave request for ${items?.employeeId?.first_name} ${items?.employeeId?.last_name} `}
+                  {items?.leaveTypeDetailsId?.leaveName} from{" "}
+                  {format(new Date(items.start), "dd-MM-yyyy")} to{" "}
+                  {moment(items.end).subtract(1, "days").format("DD-MM-YYYY")}
                 </h1>
+                // <h1 className="text-xl px-4 md:!px-0 font-semibold ">
+                //   {" "}
+                //   {items?.employeeId?.first_name} {items?.employeeId?.last_name}{" "}
+                //   has raised a {items?.leaveTypeDetailsId?.leaveName} request on{" "}
+                //   {format(new Date(items.start), "dd-MM-yyyy")}
+                // </h1>
               )}
 
               {items?.status === "Deleted" ? (
