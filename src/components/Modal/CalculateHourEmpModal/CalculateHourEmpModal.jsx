@@ -161,10 +161,10 @@ const CalculateHourEmpModal = ({
   let isOvertimeAllowanceEnabled =
     overtime && overtime?.overtimeAllowanceRequired;
   let overTimeHour = overtime && overtime?.minimumOvertimeHours;
-  console.log("overTimeHour", overTimeHour);
 
   //  calculate hour
-  const handleCalculateHours = async () => {
+   //  calculate hour
+   const handleCalculateHours = async () => {
     const data = getValues();
     const { hour, timeRange } = data;
     const regex = /^(0*(?:[0-9]|1[0-9]|2[0-4]))(\.\d{1,2})?$/;
@@ -246,6 +246,7 @@ const CalculateHourEmpModal = ({
       const date = currentDate.toISOString().split("T")[0];
       const dayOfWeek = currentDate.toLocaleString("en-US", {
         weekday: "short",
+    
       });
       const record = filteredRecords[date] || {};
 
@@ -260,7 +261,7 @@ const CalculateHourEmpModal = ({
       ) {
         continue;
       }
-
+    
       if (record.checkIn && record.checkOut) {
         const punchInTime = new Date(
           `1970-01-01T${record.checkIn.punchingTime}`
@@ -289,6 +290,8 @@ const CalculateHourEmpModal = ({
       if (formattedMinutes > 0) {
         totalHour += ` ${formattedMinutes} min`;
       }
+
+      const formattedOverTimeHours = parseFloat(overTimeHours.toFixed(2)); // Number
 
       if (weekendDays.includes(dayOfWeek)) {
         remarks = "ExtraShift";
@@ -319,7 +322,7 @@ const CalculateHourEmpModal = ({
           : null,
         totalHours: totalHour,
         status: remarks,
-        overtimeHours: overTimeHours,
+        overtimeHours: formattedOverTimeHours,
         justify: justify,
         leave: leave,
         shift: shift,
