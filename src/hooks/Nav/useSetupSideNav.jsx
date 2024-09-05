@@ -246,7 +246,7 @@ const useSetupSideNav = ({ organisationId }) => {
       active:
         data?.organisation?.packageInfo !== "Essential Plan" &&
         location.pathname ===
-          `/organisation/${organisationId}/setup/shift-allowance`,
+        `/organisation/${organisationId}/setup/shift-allowance`,
       isVisible: true && data?.organisation?.packageInfo !== "Essential Plan",
     },
     {

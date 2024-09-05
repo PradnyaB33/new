@@ -172,10 +172,10 @@ const TestNavItems = ({ toggleDrawer }) => {
                   role === "Manager"
                     ? `organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
-                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                        : "/organizationList",
+                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                    : role === "Employee"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
                 icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Dashboard",
               },
@@ -478,10 +478,10 @@ const TestNavItems = ({ toggleDrawer }) => {
                   role === "Manager"
                     ? `organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                      : role === "Employee"
-                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                        : "/organizationList",
+                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                    : role === "Employee"
+                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                    : "/organizationList",
                 icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Dashboard",
               },
@@ -774,16 +774,9 @@ const TestNavItems = ({ toggleDrawer }) => {
               [
                 "Super-Admin",
                 "Delegate-Super-Admin",
-                "Delegate-Super-Admin",
-                "Department-Head",
-                "Delegate-Department-Head",
-                "Department-Admin",
-                "Delegate-Department-Admin",
-                "Accountant",
-                "Delegate-Accountant",
                 "HR",
-                "Manager",
                 "Employee",
+                
               ]?.includes(role),
             routes: [
               {
@@ -846,20 +839,7 @@ const TestNavItems = ({ toggleDrawer }) => {
 
               {
                 key: "missjustify",
-                isVisible: [
-                  "Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Delegate-Super-Admin",
-                  "Department-Head",
-                  "Delegate-Department-Head",
-                  "Department-Admin",
-                  "Delegate-Department-Admin",
-                  "Accountant",
-                  "Delegate-Accountant",
-                  "HR",
-                  "Manager",
-                  "Employee",
-                ].includes(role),
+                isVisible: ["Employee"].includes(role),
                 link: `organisation/${orgId}/missed-justify`,
                 icon: <ReceiptIcon className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Missed Justify",
@@ -1042,7 +1022,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   survey?.surveyPermission,
                 link:
                   user?.profile.includes("Super-Admin") ||
-                    user?.profile.includes("HR")
+                  user?.profile.includes("HR")
                     ? `/organisation/${orgId}/employee-survey`
                     : `/organisation/${orgId}/employee-survey/${empId}`,
                 icon: (
@@ -1093,7 +1073,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               },
             ],
           },
-          RemotePunch: {
+          "Remote Punch": {
             open: false,
             isVisible:
               [
@@ -1106,6 +1086,17 @@ const TestNavItems = ({ toggleDrawer }) => {
               !isUserMatchInEmployeeList,
             icon: <MonetizationOn className=" !text-[1.2em] text-[#67748E]" />,
             routes: [
+              {
+                key: "addRemoteVisitTask",
+                isVisible:
+                  ["Super-Admin", "Manager", "HR"].includes(role) &&
+                  data?.organisation?.packageInfo === "Intermediate Plan",
+                link: `/organisation/${orgId}/remote-punching-tasks`,
+                icon: (
+                  <AssignmentIcon className=" !text-[1.2em] text-[#67748E]" />
+                ),
+                text: "Remote Visit tasks",
+              },
               {
                 key: "addPunch",
                 isVisible: [
@@ -1153,7 +1144,7 @@ const TestNavItems = ({ toggleDrawer }) => {
               // },
             ],
           },
-          AddGeoFencing: {
+          "Geo Fencing": {
             open: false,
             isVisible:
               ["Manager", "Super-Admin", "Delegate-Super-Admin"].includes(
@@ -1170,20 +1161,17 @@ const TestNavItems = ({ toggleDrawer }) => {
                 ].includes(role),
                 link: `/organisation/${orgId}/remotePunching/geo-fencing`,
                 icon: <LocationOn className=" !text-[1.2em] text-[#67748E]" />,
-                text: "Geo Fencing",
+                text: "Add Geo Fencing",
               },
             ],
           },
 
-          GeoFencing: {
+          Geofencing: {
             open: false,
             isVisible:
-              [
-                "Employee",
-                "Manager",
-                "Super-Admin",
-                "Delegate-Super-Admin",
-              ].includes(role) &&
+              ["Employee", "Super-Admin", "Delegate-Super-Admin"].includes(
+                role
+              ) &&
               data?.organisation?.packageInfo === "Intermediate Plan" &&
               isUserMatchInEmployeeList,
             icon: <MonetizationOn className="!text-[1.2em] text-[#67748E]" />,

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useMutation, useQuery } from "react-query";
+import useGetEmployeeSalaryByFinaicalYear from "./useGetEmployeeSalaryByFinaicalYear";
 import useIncomeTax from "./useIncomeTax";
 
 const useIncomeAPI = (
@@ -69,30 +70,10 @@ const useIncomeAPI = (
     return data?.data?.url?.split("?")[0];
   };
 
-  const { data: usersalary } = useQuery({
-    queryKey: ["finacialYearData"],
-    queryFn: async () => {
-      try {
-        const { financialYearStart, financialYearEnd } =
-          getCurrentFinancialYear();
-        console.log(`🚀 ~ financialYearStart:`, financialYearStart);
-        const salaryData = await axios.get(
-          `${process.env.REACT_APP_API}/route/employeeSalary/getEmployeeSalaryPerFinancialYear?fromDate=${financialYearStart}&toDate=${financialYearEnd}`,
-          {
-            headers: {
-              Authorization: authToken,
-            },
-          }
-        );
-        return salaryData.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  });
+  const { usersalary } = useGetEmployeeSalaryByFinaicalYear();
 
   const { data: empSalary } = useQuery({
-    queryKey: ["finacialYearData"],
+    queryKey: ["finacialYearDataForemp"],
     queryFn: async () => {
       try {
         const salaryData = await axios.get(
@@ -124,13 +105,11 @@ const useIncomeAPI = (
       ),
     {
       onSuccess: (data) => {
-        console.log(`🚀 ~ data:`, data);
         handleAlert(true, "success", `Declaration submitted successfully`);
         queryClient.invalidateQueries({ queryKey: [`${queryKey}`] });
       },
       onError: (error) => {
         console.log(error);
-        // setEditStatus({ ...editStatus, [index]: null });
       },
       onSettled: (data, error, variables, context) => {
         setEditStatus((prevEditStatus) => ({

@@ -100,6 +100,7 @@ import SurveyDetails from "./pages/EmployeeSurvey/components/SurveyDetails";
 import Form16NotificationToEmp from "./pages/Form16NotificationToEmp/Form16NotificationToEmp";
 import GeoFencingEmployeeSide from "./pages/Geo-Fence/components/GeoFencingEmployeeSide";
 import GeoFencing from "./pages/Geo-Fence/page";
+import IncomeTaxPage from "./pages/Income-Tax/page";
 import IncomeTaxNotification from "./pages/Income/IncomeTaxNotification";
 import TDSCalculation from "./pages/Income/components/Calculations/TDSCalculation";
 import ManagementCalender from "./pages/LeaveRequisition/Manager/ManagementCalender";
@@ -144,6 +145,7 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import AddRemotePunchingTask from "./pages/Remote-Punching-Employee/AddRemotePunchingTask";
 
 const App = () => {
   return (
@@ -201,7 +203,7 @@ const App = () => {
           element={<EmpNotification />}
         />
         <Route
-          path="/geofencing-notification"
+          path="/organisation/:organisationId/geofencing-notification"
           element={<EmpGeoFencingNotification />}
         />
         <Route path="/loading" element={<Loader />} />
@@ -227,9 +229,22 @@ const App = () => {
         {/* Login Routes */}
         <Route path="/test3" element={<TestYash />} />
         <Route
+          path="/organisation/:organisationId/remote-punching-tasks"
+          element={<RequireAuth
+            permission={[
+              "Super-Admin",
+              "HR",
+              "Manager",
+            ]}
+          >
+            <AddRemotePunchingTask />
+          </RequireAuth>}
+        />
+        <Route
           path="/employee-remote-punching"
           element={<EmployeeRemotePunch />}
         />
+
         <Route
           path="/organisation/:organisationId/employee-remote-punching"
           element={<EmployeeRemotePunch />}
@@ -247,7 +262,7 @@ const App = () => {
           path="/organisation/:organisationId/setup/letter-types"
           element={<LetterSetup />}
         />
-        <Route path="/remote/info/:Id" element={<RemoteManager />} />
+        <Route path="/organisation/:organisationId/remote/info/:Id" element={<RemoteManager />} />
         <Route path="/remote/notification" element={<RemoteNotification />} />
         <Route path="/doc-notification" element={<DocNotification />} />
         <Route path="/emp/docs" element={<DocManage />} />
@@ -284,7 +299,7 @@ const App = () => {
         />
         <Route path="/punch-notification" element={<PunchNotification />} />
         <Route
-          path="/geo-fencing-notification"
+          path="/organisation/:organisationId/geo-fencing-notification"
           element={<GeoFencingAcceptModal />}
         />
         {/* <Route
@@ -296,7 +311,7 @@ const App = () => {
           element={<PunchNotification />}
         />
         <Route
-          path="geo-fencing-notification/:employeeId"
+          path="/organisation/:organisationId/geo-fencing-notification/:employeeId"
           element={<GeoFencingAcceptModal />}
         />
         <Route path="/shift-notification" element={<ShiftNotification />} />
@@ -1291,6 +1306,28 @@ const App = () => {
               ]}
             >
               <TDSCalculation />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/organisation/:organisationId/income-tax-section"
+          element={
+            <RequireAuth
+              permission={[
+                "Super-Admin",
+                "Delegate-Super-Admin",
+                "Department-Head",
+                "Delegate-Department-Head",
+                "Department-Admin",
+                "Delegate-Department-Admin",
+                "Accountant",
+                "Delegate-Accountant",
+                "HR",
+                "Manager",
+                "Employee",
+              ]}
+            >
+              <IncomeTaxPage />
             </RequireAuth>
           }
         />

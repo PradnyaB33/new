@@ -6,6 +6,7 @@ import { useQuery } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
 import MissPunchJustifyModal from "../../components/Modal/MissPunchJustifyModal/MissPunchJustifyModal";
 import UserProfile from "../../hooks/UserData/useUser";
+import useLeaveRequesationHook from "../../hooks/QueryHook/Leave-Requsation/hook";
 
 const MissPunchJustify = () => {
   const { cookies } = useContext(UseContext);
@@ -13,8 +14,6 @@ const MissPunchJustify = () => {
   const { getCurrentUser } = UserProfile();
   const user = getCurrentUser();
   const organisationId = user.organizationId;
-  
-
   // State for pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -35,8 +34,9 @@ const MissPunchJustify = () => {
       return response.data.data;
     }
   );
-
   console.log("unavailable record", unavailableRecord);
+
+  const { data } = useLeaveRequesationHook();
 
   // Modal state
   const [missPunchModalOpen, setMissPunchModalOpen] = useState(false);
@@ -225,6 +225,7 @@ const MissPunchJustify = () => {
         open={missPunchModalOpen}
         organisationId={organisationId}
         unavailableRecords={unavailableRecords}
+        data={data}
       />
     </>
   );

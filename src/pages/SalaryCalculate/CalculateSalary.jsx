@@ -10,6 +10,8 @@ import useAdvanceSalaryQuery from "../../hooks/AdvanceSalaryHook/useAdvanceSalar
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Button from "@mui/material/Button";
+import useGetPfEsicSetup from "../../hooks/Salary/useGetPfEsicSetup";
+import { CircularProgress } from "@mui/material";
 
 function CalculateSalary() {
   // state
@@ -33,10 +35,10 @@ function CalculateSalary() {
     remotePunchAllowance,
   } = useCalculateSalaryQuery({ userId, organisationId, remotePunchingCount });
   const formattedDate = selectedDate.format("MMM-YY");
+  // handle the date
   const handleDateChange = (event) => {
     setSelectedDate(dayjs(event.target.value));
   };
-  console.log("employee", availableEmployee);
 
   // Fetch leave of employee when selectedDate changes specific month
   const month = selectedDate.$M + 1;
@@ -69,8 +71,7 @@ function CalculateSalary() {
     setPaidLeaveDays(employeeSummary?.paidLeaveDays || 0);
     setUnPaidLeaveDays(employeeSummary?.unpaidLeaveDays || 0);
   }, [employeeSummary, month, year]);
-  console.log("employee summary" , employeeSummary);
-
+  console.log({ month, year, employeeSummary });
   useEffect(() => {
     const monthFromSelectedDate = selectedDate.format("M");
     const yearFromSelectedDate = selectedDate.format("YYYY");
@@ -82,7 +83,6 @@ function CalculateSalary() {
     console.log("Salary Exists:", salaryExists);
     setNumDaysInMonth(selectedDate.daysInMonth());
   }, [selectedDate, salaryInfo]);
-
   // to get holiday in the organization
   const fetchHoliday = async () => {
     try {
@@ -142,6 +142,8 @@ function CalculateSalary() {
       return response.data.shiftRequests;
     }
   );
+  console.log("get shift", getShifts);
+
   // to get shift count of employee
   const countShifts = (shifts) => {
     const shiftCount = {};
@@ -159,7 +161,7 @@ function CalculateSalary() {
     () => (getShifts ? countShifts(getShifts) : {}),
     [getShifts]
   );
-
+  console.log("shiftCounts", shiftCounts);
   // get the amount of shift in the organization
   const { data: shiftAllowanceAmount } = useQuery(
     ["shift-allowance-amount"],
@@ -175,7 +177,6 @@ function CalculateSalary() {
       return response.data.shifts;
     }
   );
-
   const shiftAllowances = useMemo(() => {
     if (shiftAllowanceAmount) {
       return shiftAllowanceAmount?.reduce((acc, shift) => {
@@ -185,6 +186,8 @@ function CalculateSalary() {
     }
     return {};
   }, [shiftAllowanceAmount]);
+
+  console.log("shiftAllowances", shiftAllowances);
 
   const [shiftTotalAllowance, setShiftTotalAllowance] = useState(0);
   useEffect(() => {
@@ -197,6 +200,8 @@ function CalculateSalary() {
     }
     setShiftTotalAllowance(total);
   }, [shiftCounts, shiftAllowances]);
+
+  console.log("shiftTotalAllowance", shiftTotalAllowance);
 
   // to fetch the remote punching count of employee in a specific month
   const fetchRemotePunchingCount = async (userId, startDate, endDate) => {
@@ -221,42 +226,8 @@ function CalculateSalary() {
     fetchRemotePunchingCount(userId, startDate, endDate);
     // eslint-disable-next-line
   }, [selectedDate, userId, startDate, endDate]);
-
   // to get the total salary of employee
   const { getTotalSalaryEmployee } = useAdvanceSalaryQuery(organisationId);
-  // calculate the financial year
-  const calculateFinancialYear = (date) => {
-    const month = date?.month();
-    const currentYear = date?.year();
-    if (month < 3) {
-      // January, February, March
-      return `${currentYear - 1}-${currentYear}`;
-    } else {
-      return `${currentYear}-${currentYear + 1}`;
-    }
-  };
-  const financialYear = calculateFinancialYear(dayjs(selectedDate));
-
-  // to get the annual income tax
-  const { data: annualIncomeTax } = useQuery(
-    ["getIncomeTax", organisationId],
-    async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/tds/getMyDeclaration/${financialYear}/${getTotalSalaryEmployee}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      return response.data.getTotalTaxableIncome;
-    }
-  );
-  // calculate monthly income tax based on annual income tax
-  const monthlyIncomeTax =
-    typeof annualIncomeTax === "number" && annualIncomeTax > 0
-      ? annualIncomeTax / 12
-      : "0";
 
   // calculate the no fo days employee present
   // Extract the dynamic joining date from the employee data
@@ -282,11 +253,143 @@ function CalculateSalary() {
 
     return daysPresent;
   };
-
   // Use the dynamically extracted joining date
   let noOfDaysEmployeePresent = calculateDaysEmployeePresent(joiningDate);
-  console.log("Number of days employee present", noOfDaysEmployeePresent);
 
+  // to get employee salary component data of employee
+  const { data: salaryComponent, isFetching } = useQuery(
+    ["salary-component", userId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/get-salary-component/${userId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return response.data.data;
+    }
+  );
+
+  // calculate the salary component for income
+  const [incomeValues, setIncomeValues] = useState([]);
+  useEffect(() => {
+    const daysInMonth = numDaysInMonth;
+    let updatedIncomeValues = [];
+
+    // Calculate the salary component
+    salaryComponent?.income?.forEach((item) => {
+      const updatedValue =
+        (item?.value / daysInMonth) * noOfDaysEmployeePresent;
+
+      const existingIndex = updatedIncomeValues.findIndex(
+        (ele) => ele.name === item.name
+      );
+
+      if (existingIndex !== -1) {
+        updatedIncomeValues[existingIndex] = {
+          name: item?.name,
+          value: Math.round(updatedValue),
+        };
+      } else {
+        updatedIncomeValues.push({
+          name: item?.name,
+          value: Math.round(updatedValue),
+        });
+      }
+    });
+
+    // Check if shiftTotalAllowance is greater than 0 and if the name "Shift Allowance" does not already exist
+    if (shiftTotalAllowance > 0) {
+      const existingIndex = updatedIncomeValues.findIndex(
+        (ele) => ele.name === "Shift Allowance"
+      );
+
+      if (existingIndex === -1) {
+        // If "Shift Allowance" does not exist, add it to the array
+        updatedIncomeValues.push({
+          name: "Shift Allowance",
+          value: shiftTotalAllowance,
+        });
+      } else {
+        // If "Shift Allowance" already exists, update its value
+        updatedIncomeValues[existingIndex].value = shiftTotalAllowance;
+      }
+    }
+
+    // Add Remote Punch Allowance if applicable
+    if (remotePunchAllowance > 0) {
+      const existingIndex = updatedIncomeValues.findIndex(
+        (ele) => ele.name === "Remote Punch Allowance"
+      );
+
+      if (existingIndex === -1) {
+        // If "Remote Punch Allowance" does not exist, add it to the array
+        updatedIncomeValues.push({
+          name: "Remote Punch Allowance",
+          value: remotePunchAllowance,
+        });
+      } else {
+        // If "Remote Punch Allowance" already exists, update its value
+        updatedIncomeValues[existingIndex].value = remotePunchAllowance;
+      }
+    }
+
+    // Update the incomeValues state with the new array
+    setIncomeValues(updatedIncomeValues);
+
+    // eslint-disable-next-line
+  }, [
+    selectedDate,
+    salaryComponent,
+    noOfDaysEmployeePresent,
+    shiftTotalAllowance,
+    remotePunchAllowance,
+  ]);
+
+  console.log("incomeValues", incomeValues);
+
+  // get the PFsetup from organizaiton
+  const { PfSetup } = useGetPfEsicSetup({
+    organisationId,
+  });
+  // Initialize the state for set deduction value
+  let pwd = availableEmployee?.pwd;
+  // calculate the financial year
+  const calculateFinancialYear = (date) => {
+    const month = date?.month();
+    const currentYear = date?.year();
+    if (month < 3) {
+      // January, February, March
+      return `${currentYear - 1}-${currentYear}`;
+    } else {
+      return `${currentYear}-${currentYear + 1}`;
+    }
+  };
+  const financialYear = calculateFinancialYear(dayjs(selectedDate));
+  // to get the annual income tax
+  const { data: annualIncomeTax } = useQuery(
+    ["getIncomeTax", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/tds/getMyDeclaration/${financialYear}/${getTotalSalaryEmployee}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return response.data.getTotalTaxableIncome;
+    }
+  );
+  // calculate monthly income tax based on annual income tax
+  const monthlyIncomeTax =
+    typeof annualIncomeTax === "number" && annualIncomeTax > 0
+      ? annualIncomeTax / 12
+      : "0";
+
+  console.log("monthly income tax", monthlyIncomeTax);
   // get the loan deduction amount from loan application data of employee
   let loanDeduction = 0;
   if (Array.isArray(empLoanAplicationInfo)) {
@@ -320,137 +423,154 @@ function CalculateSalary() {
     }, 0);
   }
   loanDeduction = isNaN(loanDeduction) ? 0 : Math.round(loanDeduction);
+  console.log("loan deduction", loanDeduction);
 
-  // to get employee salary component data of employee
-  const { data: salaryComponent } = useQuery(
-    ["salary-component", userId],
-    async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/get-salary-component/${userId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      return response.data.data;
-    }
-  );
-
-  // calculate the salary component for income
-  const [incomeValues, setIncomeValues] = useState([]);
+  const [deductionValues, setDeductionValues] = useState([]);
+  const [employerContribution, setEmployerContribution] = useState(0);
+  // Calculate the PF, ESIC and update the deduction value
   useEffect(() => {
-    const daysInMonth = numDaysInMonth;
+    // Step 1: Initialize variables to store Basic and DA values
+    let basic = 0;
+    let da = 0;
 
-    salaryComponent?.income?.forEach((item) => {
-      const updatedValue =
-        (item?.value / daysInMonth) * noOfDaysEmployeePresent;
-
-      setIncomeValues((pre) => {
-        const existingIndex = pre?.findIndex((ele) => ele.name === item.name);
-        if (existingIndex !== -1) {
-          const updatedState = [...pre];
-          updatedState[existingIndex] = {
-            name: item?.name,
-            value: Math.round(updatedValue),
-          };
-          return updatedState;
-        } else {
-          return [
-            ...pre,
-            { name: item?.name, value: Math.round(updatedValue) },
-          ];
-        }
-      });
+    // Step 2: Loop through the income array to find Basic and DA components
+    incomeValues?.forEach((item) => {
+      if (item.name === "Basic") {
+        basic = item.value;
+      }
+      if (item.name === "DA") {
+        da = item.value;
+      }
     });
+
+    // Calculate the combined Basic and DA
+    const combinedBasicDA = basic + da;
+
+    // Calculate the capped value for basicDA
+    const basicDA = combinedBasicDA < 15000 ? combinedBasicDA : 15000;
+
+    // Calculate the PF, ESIC, and update the deduction value
+    const employeePF = (basicDA * PfSetup?.EPF) / 100;
+
+    console.log("Basic:", basic);
+    console.log("DAaaa:", da);
+    console.log("Combined Basic and DA:", basic + da);
+    console.log("BasicDA:", basicDA);
+    console.log("employee pf:", employeePF);
+
+    // Step 5: Calculate the total gross salary
+    const totalGrossSalary = incomeValues?.reduce((a, c) => {
+      return a + c.value;
+    }, 0);
+
+    // Step 6: Calculate empCtr (Employee Contribution) using ECP from PfSetup
+    // Only calculate if totalGrossSalary is less than or equal to 21000
+    const empCtr = pwd
+      ? totalGrossSalary <= 25000
+        ? (totalGrossSalary * PfSetup?.ECP) / 100
+        : 0
+      : totalGrossSalary <= 21000
+      ? (totalGrossSalary * PfSetup?.ECP) / 100
+      : 0;
+
+    // Step 7: Calculate emlCtr (Employer Contribution) using ECS from PfSetup
+    // Only calculate if totalGrossSalary is less than or equal to 21000
+    const emlCtr = pwd
+      ? totalGrossSalary <= 25000
+        ? (totalGrossSalary * PfSetup?.ECS) / 100
+        : 0
+      : totalGrossSalary <= 21000
+      ? (totalGrossSalary * PfSetup?.ECS) / 100
+      : 0;
+
+    // Step 8: Update deduction values in state
+    const updatedDeductions = salaryComponent?.deductions?.reduce(
+      (acc, deduction) => {
+        if (deduction.name === "PF") {
+          acc.push({ ...deduction, value: employeePF });
+        } else if (deduction.name === "ESIC") {
+          if (empCtr > 0) {
+            acc.push({ ...deduction, value: Math.round(empCtr) });
+          }
+        } else {
+          acc.push(deduction);
+        }
+        return acc;
+      },
+      []
+    );
+
+    // Ensure deductionValues is always an array
+    setDeductionValues(updatedDeductions ?? []);
+
+    // Add loan deduction
+    const selectedDateObj = new Date(selectedDate);
+
+    empLoanAplicationInfo?.forEach((loanInfo) => {
+      const loanDisbursement = new Date(loanInfo?.loanDisbursementDate);
+      const loanCompleted = new Date(loanInfo?.loanCompletedDate);
+      if (
+        loanDeduction > 0 &&
+        selectedDateObj >= loanDisbursement &&
+        selectedDateObj <= loanCompleted
+      ) {
+        const existingIndex = updatedDeductions?.findIndex(
+          (ele) => ele.name === "Loan Deduction"
+        );
+        if (existingIndex !== -1) {
+          updatedDeductions[existingIndex] = {
+            name: "Loan Deduction",
+            value: loanDeduction,
+          };
+        } else {
+          updatedDeductions.push({
+            name: "Loan Deduction",
+            value: loanDeduction,
+          });
+        }
+      }
+    });
+
+    setDeductionValues(updatedDeductions);
+    const adjustedEmlCtr = emlCtr > 0 ? emlCtr : 0;
+    setEmployerContribution(adjustedEmlCtr);
 
     // eslint-disable-next-line
-  }, [selectedDate, salaryComponent, noOfDaysEmployeePresent]);
+  }, [
+    salaryComponent,
+    PfSetup,
+    selectedDate,
+    incomeValues,
+    loanDeduction,
+    empLoanAplicationInfo,
+  ]);
 
-  const extendedIncomeValues = [...incomeValues];
-  // Check if shiftTotalAllowance should be added
-  if (shiftTotalAllowance > 0) {
-    extendedIncomeValues.push({
-      name: "shiftTotalAllowance",
-      value: shiftTotalAllowance,
-    });
-  }
-  // Check if remotePunchAllowance should be added
-  if (remotePunchAllowance > 0) {
-    extendedIncomeValues.push({
-      name: "remotePunchAllowance",
-      value: remotePunchAllowance,
-    });
-  }
-  // Now pass extendedIncomeValues to income
-  const incomeData = extendedIncomeValues;
-
-  // calculate total deduction of employee
-  const [deductionValues, setDeductionValues] = useState([]);
-  useEffect(() => {
-    if (salaryComponent?.deductions) {
-      setDeductionValues(salaryComponent.deductions);
-    }
-  }, [salaryComponent?.deductions]);
-
-  const extendedDeductionValue = [...deductionValues];
-  // Pushing monthlyIncomeTax into extendedDeductionValue
-  if (monthlyIncomeTax > 0) {
-    extendedDeductionValue.push({
-      name: "Income Tax",
-      value: monthlyIncomeTax,
-    });
-  }
-  // pushing loan deduction to extendedDeductionValue
-  useEffect(() => {
-    const currentDate = new Date();
-    const loanDisbursement = new Date(
-      empLoanAplicationInfo?.loanDisbursementDate
-    );
-    const loanCompleted = new Date(empLoanAplicationInfo?.loanCompletedDate);
-
-    if (
-      loanDeduction > 0 &&
-      currentDate >= loanDisbursement &&
-      currentDate <= loanCompleted
-    ) {
-      setDeductionValues((prevDeductions) => [
-        ...prevDeductions,
-        {
-          name: "loanDeduction",
-          value: loanDeduction,
-        },
-      ]);
-    }
-  }, [loanDeduction, empLoanAplicationInfo]);
-
-  // calculate total deduction ,total  income,  total net salary
+  // calculate the total income (totalGrossSalary) , total deduction , totalNetAalary
   const [salary, setSalary] = useState({
     totalIncome: 0,
     totalDeduction: 0,
     totalNetSalary: 0,
   });
-  const calSalary = () => {
-    const deductions = extendedDeductionValue.reduce((a, c) => {
-      return a + c.value;
-    }, 0);
+  // Calculate total income, total deduction, total net salary
+  useEffect(() => {
+    // Calculate income first, regardless of deductionValues
+    const income = incomeValues?.reduce((a, c) => a + c.value, 0);
 
-    const income = incomeData?.reduce((a, c) => {
-      return a + c.value;
-    }, 0);
+    // Calculate deductions based on deductionValues
+    const deductions = deductionValues?.reduce((a, c) => a + c.value, 0);
 
+    // Calculate total income - deductions
     const total = income - deductions;
+
+    // Update the salary state
     setSalary({
       totalDeduction: Math.round(deductions),
       totalIncome: Math.round(income),
       totalNetSalary: Math.round(total),
     });
-  };
-  useEffect(() => {
-    calSalary();
-    //eslint-disable-next-line
-  }, [selectedDate, salaryComponent, incomeValues]);
 
+    // eslint-disable-next-line
+  }, [deductionValues, incomeValues]);
   // submit the data
   const saveSalaryDetail = async () => {
     try {
@@ -493,11 +613,12 @@ function CalculateSalary() {
       }
       const data = {
         employeeId: userId,
-        income: incomeData,
-        deductions: extendedDeductionValue,
+        income: incomeValues,
+        deductions: deductionValues,
         totalGrossSalary: salary?.totalIncome,
         totalDeduction: salary?.totalDeduction,
         totalNetSalary: salary?.totalNetSalary,
+        emlCtr: employerContribution,
         numDaysInMonth,
         formattedDate,
         publicHolidaysCount,
@@ -525,6 +646,7 @@ function CalculateSalary() {
           "Monthly Salary Detail added Successfully"
         );
       }
+      window.location.reload();
     } catch (error) {
       if (error.response && error.response.status === 400) {
         handleAlert(
@@ -538,7 +660,6 @@ function CalculateSalary() {
       }
     }
   };
-
   // download the pdf
   const exportPDF = async () => {
     const input = document.getElementById("App");
@@ -563,12 +684,10 @@ function CalculateSalary() {
       };
     });
   };
-
   const handleSubmitClick = () => {
     setActiveButton("submit");
     saveSalaryDetail();
   };
-
   const handleDownloadClick = () => {
     setActiveButton("download");
     exportPDF();
@@ -591,230 +710,235 @@ function CalculateSalary() {
         </div>
       </div>
 
-      <div id="App">
-        <div className="flex items-center justify-between mb-6">
-          <img
-            src={availableEmployee?.organizationId?.logo_url || ""}
-            alt="Company Logo"
-            className="w-20 h-20 rounded-full"
-          />
-          <div className="ml-4">
-            <p className="text-lg font-semibold flex items-center">
-              <span className=" mr-1">Organisation Name :</span>
-              <span style={{ whiteSpace: "pre-wrap" }}>
-                {availableEmployee?.organizationId?.orgName || ""}
-              </span>
-            </p>
-            <p className="text-lg flex items-center">
-              <span className=" mr-1">Location :</span>
-              <span>
-                {" "}
-                {availableEmployee?.organizationId?.location?.address || ""}
-              </span>
-            </p>
-            <p className="text-lg flex items-center">
-              <span className="mr-1">Contact No :</span>
-              <span>
-                {availableEmployee?.organizationId?.contact_number || ""}
-              </span>
-            </p>
-            <p className="text-lg flex items-center">
-              <span className="mr-1">Email :</span>
-              <span>{availableEmployee?.organizationId?.email || ""}</span>
-            </p>
-          </div>
-        </div>
+      {isFetching ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <div id="App">
+            <div className="flex items-center justify-between mb-6">
+              <img
+                src={availableEmployee?.organizationId?.logo_url || ""}
+                alt="Company Logo"
+                className="w-20 h-20 rounded-full"
+              />
+              <div className="ml-4">
+                <p className="text-lg font-semibold flex items-center">
+                  <span className=" mr-1">Organisation Name :</span>
+                  <span style={{ whiteSpace: "pre-wrap" }}>
+                    {availableEmployee?.organizationId?.orgName || ""}
+                  </span>
+                </p>
+                <p className="text-lg flex items-center">
+                  <span className=" mr-1">Location :</span>
+                  <span>
+                    {" "}
+                    {availableEmployee?.organizationId?.location?.address || ""}
+                  </span>
+                </p>
+                <p className="text-lg flex items-center">
+                  <span className="mr-1">Contact No :</span>
+                  <span>
+                    {availableEmployee?.organizationId?.contact_number || ""}
+                  </span>
+                </p>
+                <p className="text-lg flex items-center">
+                  <span className="mr-1">Email :</span>
+                  <span>{availableEmployee?.organizationId?.email || ""}</span>
+                </p>
+              </div>
+            </div>
 
-        <hr className="mb-6" />
-        {/* 1st table */}
-        <div>
-          <table class="w-full border border-collapse">
-            <thead>
-              <tr class="bg-blue-200">
-                <th class="px-4 py-2 border">Salary Slip</th>
-                <th class="border"></th>
-                <th class="px-4 py-2 border">Month</th>
-                <th class="px-4 py-2 border">{formattedDate}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="px-4 py-2 border">Employee Name:</td>
-                <td class="px-4 py-2 border">
-                  {`${availableEmployee?.first_name} ${availableEmployee?.last_name}`}
-                </td>
-                <td class="px-4 py-2 border">Date Of Joining:</td>
-                <td class="px-4 py-2 border">
-                  {availableEmployee?.joining_date
-                    ? new Date(
-                        availableEmployee?.joining_date
-                      ).toLocaleDateString("en-GB")
-                    : ""}
-                </td>
-              </tr>
-              <tr>
-                <td class="px-4 py-2 border">Designation:</td>
-                <td class="px-4 py-2 border">
-                  {" "}
-                  {(availableEmployee?.designation &&
-                    availableEmployee?.designation.length > 0 &&
-                    availableEmployee?.designation[0]?.designationName) ||
-                    ""}
-                </td>
-                <td class="px-4 py-2 border">Unpaid Leaves:</td>
-                <td class="px-4 py-2 border">{unPaidLeaveDays}</td>
-              </tr>
-              <tr>
-                <td class="px-4 py-2 border">Department Name:</td>
-                <td class="px-4 py-2 border">
-                  {" "}
-                  {(availableEmployee?.deptname &&
-                    availableEmployee?.deptname.length > 0 &&
-                    availableEmployee?.deptname[0]?.departmentName) ||
-                    ""}
-                </td>
-                <td class="px-4 py-2 border">No Of Working Days Attended:</td>
-                <td class="px-4 py-2 border">{noOfDaysEmployeePresent}</td>
-              </tr>
-              <tr>
-                <td class="px-4 py-2 border">PAN No:</td>
-                <td class="px-4 py-2 border">
-                  {availableEmployee?.pan_card_number}
-                </td>
-                <td class="px-4 py-2 border">Paid Leaves:</td>
-                <td class="px-4 py-2 border">{paidLeaveDays}</td>
-              </tr>
-              <tr>
-                <td class="px-4 py-2 border">Employee Id:</td>
-                <td class="px-4 py-2 border">{availableEmployee?.empId}</td>
-                <td class="px-4 py-2 border">Public Holidays:</td>
-                <td class="px-4 py-2 border">{publicHolidaysCount}</td>
-              </tr>
-              <tr>
-                <td class="px-4 py-2 border">Bank Account No:</td>
-                <td class="px-4 py-2 border">
-                  {availableEmployee?.bank_account_no || ""}
-                </td>
-
-                <td class="px-4 py-2 border">No Of Days in Month:</td>
-                <td class="px-4 py-2 border">{numDaysInMonth}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        {/* 2nd table */}
-        <div>
-          <table class="w-full border border-collapse">
-            <thead>
-              <tr class="bg-blue-200">
-                <th class="px-4 py-2 border">Income</th>
-                <th class="border"></th>
-                <th class="px-4 py-2 border">Deduction</th>
-                <th class="px-4 py-2 border"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="px-4 py-2 border">Particulars</td>
-                <td class="py-2 border">Amount</td>
-                <td class="py-2 border">Particulars</td>
-                <td class="py-2 border">Amount</td>
-              </tr>
-              {Array.from({
-                length: Math.max(
-                  extendedIncomeValues?.length || 0,
-                  extendedDeductionValue?.length || 0
-                ),
-              }).map((_, index) => {
-                return (
-                  <tr key={index}>
-                    {/* Income column */}
-                    <td className="px-4 py-2 border">
-                      {extendedIncomeValues?.[index]?.name || ""}
+            <hr className="mb-6" />
+            {/* 1st table */}
+            <div>
+              <table class="w-full border border-collapse">
+                <thead>
+                  <tr class="bg-blue-200">
+                    <th class="px-4 py-2 border">Salary Slip</th>
+                    <th class="border"></th>
+                    <th class="px-4 py-2 border">Month</th>
+                    <th class="px-4 py-2 border">{formattedDate}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="px-4 py-2 border">Employee Name:</td>
+                    <td class="px-4 py-2 border">
+                      {`${availableEmployee?.first_name} ${availableEmployee?.last_name}`}
                     </td>
-                    <td className="px-4 py-2 border">
-                      {extendedIncomeValues?.[index]?.value || ""}
-                    </td>
-                    {/* Deduction column */}
-                    <td className="px-4 py-2 border">
-                      {extendedDeductionValue?.[index]?.name || ""}
-                    </td>
-                    <td className="px-4 py-2 border">
-                      {extendedDeductionValue?.[index]?.value || ""}
+                    <td class="px-4 py-2 border">Date Of Joining:</td>
+                    <td class="px-4 py-2 border">
+                      {availableEmployee?.joining_date
+                        ? new Date(
+                            availableEmployee?.joining_date
+                          ).toLocaleDateString("en-GB")
+                        : ""}
                     </td>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                  <tr>
+                    <td class="px-4 py-2 border">Designation:</td>
+                    <td class="px-4 py-2 border">
+                      {" "}
+                      {(availableEmployee?.designation &&
+                        availableEmployee?.designation.length > 0 &&
+                        availableEmployee?.designation[0]?.designationName) ||
+                        ""}
+                    </td>
+                    <td class="px-4 py-2 border">Unpaid Leaves:</td>
+                    <td class="px-4 py-2 border">{unPaidLeaveDays}</td>
+                  </tr>
+                  <tr>
+                    <td class="px-4 py-2 border">Department Name:</td>
+                    <td class="px-4 py-2 border">
+                      {" "}
+                      {(availableEmployee?.deptname &&
+                        availableEmployee?.deptname.length > 0 &&
+                        availableEmployee?.deptname[0]?.departmentName) ||
+                        ""}
+                    </td>
+                    <td class="px-4 py-2 border">
+                      No Of Working Days Attended:
+                    </td>
+                    <td class="px-4 py-2 border">{noOfDaysEmployeePresent}</td>
+                  </tr>
+                  <tr>
+                    <td class="px-4 py-2 border">PAN No:</td>
+                    <td class="px-4 py-2 border">
+                      {availableEmployee?.pan_card_number}
+                    </td>
+                    <td class="px-4 py-2 border">Paid Leaves:</td>
+                    <td class="px-4 py-2 border">{paidLeaveDays}</td>
+                  </tr>
+                  <tr>
+                    <td class="px-4 py-2 border">Employee Id:</td>
+                    <td class="px-4 py-2 border">{availableEmployee?.empId}</td>
+                    <td class="px-4 py-2 border">Public Holidays:</td>
+                    <td class="px-4 py-2 border">{publicHolidaysCount}</td>
+                  </tr>
+                  <tr>
+                    <td class="px-4 py-2 border">Bank Account No:</td>
+                    <td class="px-4 py-2 border">
+                      {availableEmployee?.bank_account_no || ""}
+                    </td>
 
-        {/* total gross salary and deduction */}
-        <div>
-          <table class="w-full border border-collapse">
-            <thead class="border">
-              <tr class="bg-blue-200 border">
-                <th class="px-4 py-2 border">Total Gross Salary :</th>
-                <th class="pl-24 py-2 border"> {salary?.totalIncome || ""}</th>
-                <th class="px-4 py-2 border">Total Deduction :</th>
-                <th class="px-4 py-2 border">
-                  {" "}
-                  {salary?.totalDeduction || ""}
-                </th>
-              </tr>
-            </thead>
-            <tbody class="border"></tbody>
-          </table>
-        </div>
+                    <td class="px-4 py-2 border">No Of Days in Month:</td>
+                    <td class="px-4 py-2 border">{numDaysInMonth}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-        {/* total net salary */}
-        <div>
-          <table class="w-full mt-10 border ">
-            <thead>
-              <tr class="bg-blue-200">
-                <th class="px-4 py-2 ">Total Net Salary</th>
-                <th></th>
-                <th class="px-4 py-2">{salary?.totalNetSalary || ""}</th>
-                <th class="px-4 py-2"></th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
+            {/* 2nd table */}
+            <div>
+              <table class="w-full border border-collapse">
+                <thead>
+                  <tr class="bg-blue-200">
+                    <th class="px-4 py-2 border">Income</th>
+                    <th class="border"></th>
+                    <th class="px-4 py-2 border">Deduction</th>
+                    <th class="px-4 py-2 border"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="px-4 py-2 border">Particulars</td>
+                    <td class="py-2 border">Amount</td>
+                    <td class="py-2 border">Particulars</td>
+                    <td class="py-2 border">Amount</td>
+                  </tr>
+                  {Array.from({
+                    length: Math.max(
+                      incomeValues?.length || 0,
+                      deductionValues?.length || 0
+                    ),
+                  }).map((_, index) => {
+                    return (
+                      <tr key={index}>
+                        {/* Income column */}
+                        <td className="px-4 py-2 border">
+                          {incomeValues?.[index]?.name || ""}
+                        </td>
+                        <td className="px-4 py-2 border">
+                          {incomeValues?.[index]?.value || ""}
+                        </td>
+                        {/* Deduction column */}
+                        <td className="px-4 py-2 border">
+                          {deductionValues?.[index]?.name || ""}
+                        </td>
+                        <td className="px-4 py-2 border">
+                          {deductionValues?.[index]?.value || ""}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
 
-      {/* submit the salary */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          marginTop: "20px",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            gap: "20px",
-          }}
-        >
-          <Button
-            variant={activeButton === "submit" ? "contained" : "outlined"}
-            onClick={handleSubmitClick}
-            color="primary"
+            {/* total gross salary and deduction */}
+            <div>
+              <table class="w-full border border-collapse">
+                <thead class="border">
+                  <tr class="bg-blue-200 border">
+                    <th class="py-2 border">Total Gross Salary :</th>
+                    <th class=" py-2 border"> {salary?.totalIncome || ""}</th>
+                    <th class="py-2 border">Total Deduction :</th>
+                    <th class="py-2 border"> {salary?.totalDeduction || ""}</th>
+                  </tr>
+                </thead>
+                <tbody class="border"></tbody>
+              </table>
+            </div>
+
+            {/* total net salary */}
+            <div>
+              <table class="w-full mt-10 border ">
+                <thead>
+                  <tr class="bg-blue-200">
+                    <th class="px-4 py-2 ">Total Net Salary</th>
+                    <th></th>
+                    <th class="px-4 py-2">{salary?.totalNetSalary || ""}</th>
+                    <th class="px-4 py-2"></th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* submit the salary */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              marginTop: "20px",
+            }}
           >
-            Submit
-          </Button>
-          <Button
-            variant={activeButton === "download" ? "contained" : "outlined"}
-            onClick={handleDownloadClick}
-            color="primary"
-          >
-            Download PDF
-          </Button>
-        </div>
-      </div>
+            <div
+              style={{
+                display: "flex",
+                gap: "20px",
+              }}
+            >
+              <Button
+                variant={activeButton === "submit" ? "contained" : "outlined"}
+                onClick={handleSubmitClick}
+                color="primary"
+              >
+                Submit
+              </Button>
+              <Button
+                variant={activeButton === "download" ? "contained" : "outlined"}
+                onClick={handleDownloadClick}
+                color="primary"
+              >
+                Download PDF
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

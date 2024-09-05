@@ -62,6 +62,7 @@
     "moment-range": "^4.0.2",
     "multer": "^1.4.5-lts.1",
     "npm": "^10.5.2",
+    "number-to-words": "^1.2.4",
     "otp-input-react": "^0.3.0",
     "path-browserify": "^1.0.1",
     "pdfmake": "^0.2.10",

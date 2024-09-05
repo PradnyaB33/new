@@ -36,6 +36,7 @@ const EmpGeoFencingNotification = () => {
         },
         enabled: employeeId !== undefined,
     });
+    console.log("EmpNotification", EmpNotification);
 
     const punchId = EmpNotification?.punchData?.[0]?._id;
 
