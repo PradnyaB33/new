@@ -300,41 +300,39 @@ function CalculateSalary() {
       }
     });
 
-    // Add shiftTotalAllowance if applicable
+    // Check if shiftTotalAllowance is greater than 0 and if the name "Shift Allowance" does not already exist
     if (shiftTotalAllowance > 0) {
       const existingIndex = updatedIncomeValues.findIndex(
-        (ele) => ele.name === "shiftTotalAllowance"
+        (ele) => ele.name === "Shift Allowance"
       );
 
-      if (existingIndex !== -1) {
-        updatedIncomeValues[existingIndex] = {
-          name: "shiftTotalAllowance",
-          value: shiftTotalAllowance,
-        };
-      } else {
+      if (existingIndex === -1) {
+        // If "Shift Allowance" does not exist, add it to the array
         updatedIncomeValues.push({
-          name: "shiftTotalAllowance",
+          name: "Shift Allowance",
           value: shiftTotalAllowance,
         });
+      } else {
+        // If "Shift Allowance" already exists, update its value
+        updatedIncomeValues[existingIndex].value = shiftTotalAllowance;
       }
     }
 
-    // Add remotePunchAllowance if applicable
+    // Add Remote Punch Allowance if applicable
     if (remotePunchAllowance > 0) {
       const existingIndex = updatedIncomeValues.findIndex(
-        (ele) => ele.name === "remotePunchAllowance"
+        (ele) => ele.name === "Remote Punch Allowance"
       );
 
-      if (existingIndex !== -1) {
-        updatedIncomeValues[existingIndex] = {
-          name: "remotePunchAllowance",
-          value: remotePunchAllowance,
-        };
-      } else {
+      if (existingIndex === -1) {
+        // If "Remote Punch Allowance" does not exist, add it to the array
         updatedIncomeValues.push({
-          name: "remotePunchAllowance",
+          name: "Remote Punch Allowance",
           value: remotePunchAllowance,
         });
+      } else {
+        // If "Remote Punch Allowance" already exists, update its value
+        updatedIncomeValues[existingIndex].value = remotePunchAllowance;
       }
     }
 
@@ -472,8 +470,8 @@ function CalculateSalary() {
         ? (totalGrossSalary * PfSetup?.ECP) / 100
         : 0
       : totalGrossSalary <= 21000
-        ? (totalGrossSalary * PfSetup?.ECP) / 100
-        : 0;
+      ? (totalGrossSalary * PfSetup?.ECP) / 100
+      : 0;
 
     // Step 7: Calculate emlCtr (Employer Contribution) using ECS from PfSetup
     // Only calculate if totalGrossSalary is less than or equal to 21000
@@ -482,8 +480,8 @@ function CalculateSalary() {
         ? (totalGrossSalary * PfSetup?.ECS) / 100
         : 0
       : totalGrossSalary <= 21000
-        ? (totalGrossSalary * PfSetup?.ECS) / 100
-        : 0;
+      ? (totalGrossSalary * PfSetup?.ECS) / 100
+      : 0;
 
     // Step 8: Update deduction values in state
     const updatedDeductions = salaryComponent?.deductions?.reduce(
@@ -517,16 +515,16 @@ function CalculateSalary() {
         selectedDateObj <= loanCompleted
       ) {
         const existingIndex = updatedDeductions?.findIndex(
-          (ele) => ele.name === "loanDeduction"
+          (ele) => ele.name === "Loan Deduction"
         );
         if (existingIndex !== -1) {
           updatedDeductions[existingIndex] = {
-            name: "loanDeduction",
+            name: "Loan Deduction",
             value: loanDeduction,
           };
         } else {
           updatedDeductions.push({
-            name: "loanDeduction",
+            name: "Loan Deduction",
             value: loanDeduction,
           });
         }
@@ -772,8 +770,8 @@ function CalculateSalary() {
                     <td class="px-4 py-2 border">
                       {availableEmployee?.joining_date
                         ? new Date(
-                          availableEmployee?.joining_date
-                        ).toLocaleDateString("en-GB")
+                            availableEmployee?.joining_date
+                          ).toLocaleDateString("en-GB")
                         : ""}
                     </td>
                   </tr>
