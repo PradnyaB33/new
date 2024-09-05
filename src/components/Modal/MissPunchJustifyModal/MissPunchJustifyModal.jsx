@@ -34,7 +34,6 @@ const MissPunchJustifyModal = ({
   const unavailableRecordId = unavailableRecords?._id;
   const { justify } = useMissedJustifyState();
   console.log("unavailable record", unavailableRecords);
-  console.log("data ", data);
 
   const MissPunchSchema = z.object({
     justify: z.string(),
@@ -77,10 +76,11 @@ const MissPunchJustifyModal = ({
   );
 
   const onSubmit = async (data) => {
+    console.log("formattedData", data);
     const formattedData = {
-      justify: justify,
+      justify: data.justify,
     };
-    console.log(data);
+    console.log("formattedData", formattedData);
     AddMissJustifyData.mutate(formattedData);
     reset();
   };
@@ -142,10 +142,10 @@ const MissPunchJustifyModal = ({
             }}
           >
             {unavailableRecords &&
-              unavailableRecords.status !== null &&
-              unavailableRecords.status !== undefined &&
-              (unavailableRecords.status === "Partial" ||
-                unavailableRecords.status === "Unavailable") ? (
+            unavailableRecords.status !== null &&
+            unavailableRecords.status !== undefined &&
+            (unavailableRecords.status === "Partial" ||
+              unavailableRecords.status === "Unavailable") ? (
               <>
                 <Button
                   type="button"
@@ -159,9 +159,9 @@ const MissPunchJustifyModal = ({
             ) : null}
 
             {unavailableRecords &&
-              unavailableRecords.status !== null &&
-              unavailableRecords.status !== undefined &&
-              unavailableRecords.status === "ExtraShift" ? (
+            unavailableRecords.status !== null &&
+            unavailableRecords.status !== undefined &&
+            unavailableRecords.status === "ExtraShift" ? (
               <>
                 <Button
                   type="button"
@@ -175,12 +175,12 @@ const MissPunchJustifyModal = ({
             ) : null}
 
             {unavailableRecords &&
-              unavailableRecords.status !== null &&
-              unavailableRecords.status !== undefined &&
-              (unavailableRecords.status === "Partial" ||
-                unavailableRecords.status === "Unavailable" ||
-                unavailableRecords.status === "ExtraShift" ||
-                unavailableRecords.status === "Overtime") ? (
+            unavailableRecords.status !== null &&
+            unavailableRecords.status !== undefined &&
+            (unavailableRecords.status === "Partial" ||
+              unavailableRecords.status === "Unavailable" ||
+              unavailableRecords.status === "ExtraShift" ||
+              unavailableRecords.status === "Overtime") ? (
               <>
                 <Button type="submit" variant="contained" color="success">
                   Submit
