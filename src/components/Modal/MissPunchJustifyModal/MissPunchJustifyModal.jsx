@@ -76,7 +76,6 @@ const MissPunchJustifyModal = ({
   );
 
   const onSubmit = async (data) => {
-    console.log("formattedData", data);
     const formattedData = {
       justify: data.justify,
     };
