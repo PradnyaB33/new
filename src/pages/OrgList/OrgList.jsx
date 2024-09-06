@@ -1,6 +1,6 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { West } from '@mui/icons-material';
+
 import { Avatar, Skeleton, TextField, Tooltip, IconButton, Button } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Link } from 'react-router-dom';
@@ -10,6 +10,7 @@ import { debounce } from 'lodash';
 import { motion } from 'framer-motion';
 import 'aos/dist/aos.css'; // Import AOS styles
 import AOS from 'aos';
+import HeaderComponentPro from '../../components/header/HeaderComponentPro';
 
 const OrgList = () => {
   const { data, isLoading } = useOrgList();
@@ -61,21 +62,25 @@ const OrgList = () => {
   );
 
   return (
+    <section className="p-2 mt-10 shadow-lg ">
+        <HeaderComponentPro
+          heading={" Organisations List"}
+          oneLineInfo={
+            "Effortlessly select and manage all aspects of your organization"
+          }
+        />
+       
     <div className="min-h-screen">
-    {/* Header Section */}
-    <header className="text-xl w-full pt-6 bg-white border-b p-4 flex items-center">
-      <Link to="/">
-        <West className="mx-4 !text-xl cursor-pointer hover:text-blue-500 transition-colors duration-300" />
-      </Link>
-      {/* <span>Organisation List</span> */}
-    </header>
+  
+
+
 
     {/* Search and Button Section */}
     <div className="px-8 mt-6 mb-4 w-full">
       <div className="flex md:justify-between items-start gap-4 flex-col md:flex-row">
-        <div>
-          <h1 className="md:text-2xl text-xl font-semibold">Organisations List</h1>
-          <p className="text-gray-600">Select and Manage Your Organisation</p>
+        <div className='text-left sm:text-center md:text-center lg:text-left'>
+          <h1 className="    md:text-lg text-xl font-semibold">Manage Your Organizations</h1>
+          <p className="   text-gray-600">Select and Manage Your Organisation</p>
         </div>
 
         <div className="flex items-center gap-2 justify-end">
@@ -107,7 +112,7 @@ const OrgList = () => {
             }}
           />
 
-          <Tooltip title="Assign Organisation">
+          {/* <Tooltip title="Assign Organisation">
             <Button
               component={Link}
               to="/assingOrganizationToSelf"
@@ -131,7 +136,34 @@ const OrgList = () => {
             >
               Add Organisation
             </Button>
-          </Tooltip>
+          </Tooltip> */}
+          <div className="flex flex-wrap gap-2 justify-center p-4">
+      <Tooltip title="Assign Organisation">
+        <Button
+          component={Link}
+          to="/assign-organization-to-self"
+          variant="outlined"
+          color="primary"
+          className="m-2 md:w-auto w-full text-sm md:text-base"
+          data-aos="fade-up"
+        >
+          Assign Organisation
+        </Button>
+      </Tooltip>
+
+      <Tooltip title="Add New Organisation">
+        <Button
+          component={Link}
+          to="/add-organisation"
+          variant="outlined"
+          color="primary"
+          className="m-2 md:w-auto w-full text-sm md:text-base"
+          data-aos="fade-up"
+        >
+          Add Organisation
+        </Button>
+      </Tooltip>
+    </div>
         </div>
       </div>
     </div>
@@ -179,6 +211,7 @@ const OrgList = () => {
       </div>
       <br /> <br />
     </div>
+    </section>
   );
 };
 
