@@ -49,18 +49,13 @@ const Dashboard = () => {
 
   return (
     <>
-        <section className="p-2 mt-10 shadow-lg ">
-    <HeaderComponentPro  
-heading={
-  location.pathname?.includes("/employee-dashboard")
-    ? "Employee Dashboard"
-    : "Accountant Dashboard"
-}      oneLineInfo={
-  location.pathname?.includes("/employee-dashboard")
-    ? "View your performance metrics, tasks, and feedback."
-    : "Manage and review employee financial records and ensure compliance."
-}
-    />
+         <section className="p-2 mt-10 shadow-lg ">
+        <HeaderComponentPro
+          heading={" Dashboard"}
+          oneLineInfo={
+            "Get insights of Employee's data with interactive charts and reports"
+          }
+        />
 
 {/* 
 <section className="p-2 mt-10 shadow-lg bg-gray-50">

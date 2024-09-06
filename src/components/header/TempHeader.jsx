@@ -30,7 +30,9 @@ const TempHeader = ({ heading, oneLineInfo }) => {
       <div className="flex-grow flex flex-col items-center md:items-start text-center md:text-left">
         <h1 className="text-lg md:text-xl font-semibold">{heading}</h1>
         {oneLineInfo && (
-          <p className="text-xs md:text-sm text-gray-600 w-full text-center md:text-left">
+          // <p className="text-xs md:text-sm text-gray-600 w-full text-center md:text-left">
+          // temp
+          <p className="text-xs md:text-sm text-gray-600 w-full  !text-left">
             {oneLineInfo}
           </p>
         )}
