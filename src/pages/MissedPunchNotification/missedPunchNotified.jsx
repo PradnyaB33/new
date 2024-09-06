@@ -231,7 +231,8 @@ const MissedPunchNotified = ({ employeeId }) => {
                               <td className="!text-left pl-6 py-3">
                                 {unavailableRecord?.justify ||
                                   unavailableRecord?.leave ||
-                                  unavailableRecord?.shift || ""}
+                                  unavailableRecord?.shift ||
+                                  ""}
                               </td>
                               <td className="!text-left pl-6 py-3">
                                 {role === "Manager" ? (
@@ -252,7 +253,7 @@ const MissedPunchNotified = ({ employeeId }) => {
                                           unavailableRecord._id
                                         )
                                       }
-                                      className="bg-red-500 text-white px-2 py-1 rounded-md"
+                                      className="border border-red-500 text-red-500 px-2 py-1 ml-2 rounded-md bg-transparent"
                                     >
                                       Reject
                                     </button>
@@ -262,7 +263,7 @@ const MissedPunchNotified = ({ employeeId }) => {
                                           unavailableRecord._id
                                         )
                                       }
-                                      className="bg-green-500 text-white px-2 py-1 ml-2 rounded-md"
+                                      className="border border-green-500 text-green-500 px-2 py-1 ml-2 rounded-md bg-transparent"
                                     >
                                       Approved Extra shift
                                     </button>
@@ -272,7 +273,7 @@ const MissedPunchNotified = ({ employeeId }) => {
                                           unavailableRecord._id
                                         )
                                       }
-                                      className="bg-red-500 text-white px-2 py-1 ml-2 rounded-md"
+                                      className="border border-red-500 text-red-500 px-2 py-1 ml-2 rounded-md bg-transparent"
                                     >
                                       Approved Unpaid leave
                                     </button>
@@ -307,7 +308,7 @@ const MissedPunchNotified = ({ employeeId }) => {
                                           unavailableRecord._id
                                         )
                                       }
-                                      className="bg-green-500 text-white px-2 py-1 ml-2 rounded-md"
+                                      className="bg-green-500 text-white px-2 py-1 ml-2 rounded-md outline"
                                     >
                                       Approved Extra shift
                                     </button>

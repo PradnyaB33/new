@@ -83,7 +83,6 @@ function CalculateSalary() {
     console.log("Salary Exists:", salaryExists);
     setNumDaysInMonth(selectedDate.daysInMonth());
   }, [selectedDate, salaryInfo]);
-
   // to get holiday in the organization
   const fetchHoliday = async () => {
     try {
@@ -143,6 +142,8 @@ function CalculateSalary() {
       return response.data.shiftRequests;
     }
   );
+  console.log("get shift", getShifts);
+
   // to get shift count of employee
   const countShifts = (shifts) => {
     const shiftCount = {};
@@ -160,6 +161,7 @@ function CalculateSalary() {
     () => (getShifts ? countShifts(getShifts) : {}),
     [getShifts]
   );
+  console.log("shiftCounts", shiftCounts);
   // get the amount of shift in the organization
   const { data: shiftAllowanceAmount } = useQuery(
     ["shift-allowance-amount"],
@@ -184,6 +186,9 @@ function CalculateSalary() {
     }
     return {};
   }, [shiftAllowanceAmount]);
+
+  console.log("shiftAllowances", shiftAllowances);
+
   const [shiftTotalAllowance, setShiftTotalAllowance] = useState(0);
   useEffect(() => {
     let total = 0;
@@ -195,6 +200,8 @@ function CalculateSalary() {
     }
     setShiftTotalAllowance(total);
   }, [shiftCounts, shiftAllowances]);
+
+  console.log("shiftTotalAllowance", shiftTotalAllowance);
 
   // to fetch the remote punching count of employee in a specific month
   const fetchRemotePunchingCount = async (userId, startDate, endDate) => {
@@ -219,7 +226,6 @@ function CalculateSalary() {
     fetchRemotePunchingCount(userId, startDate, endDate);
     // eslint-disable-next-line
   }, [selectedDate, userId, startDate, endDate]);
-
   // to get the total salary of employee
   const { getTotalSalaryEmployee } = useAdvanceSalaryQuery(organisationId);
 
@@ -265,64 +271,162 @@ function CalculateSalary() {
       return response.data.data;
     }
   );
+
   // calculate the salary component for income
   const [incomeValues, setIncomeValues] = useState([]);
   useEffect(() => {
     const daysInMonth = numDaysInMonth;
+    let updatedIncomeValues = [];
 
+    // Calculate the salary component
     salaryComponent?.income?.forEach((item) => {
       const updatedValue =
         (item?.value / daysInMonth) * noOfDaysEmployeePresent;
 
-      setIncomeValues((pre) => {
-        const existingIndex = pre?.findIndex((ele) => ele.name === item.name);
-        if (existingIndex !== -1) {
-          const updatedState = [...pre];
-          updatedState[existingIndex] = {
-            name: item?.name,
-            value: Math.round(updatedValue),
-          };
-          return updatedState;
-        } else {
-          return [
-            ...pre,
-            { name: item?.name, value: Math.round(updatedValue) },
-          ];
-        }
-      });
+      const existingIndex = updatedIncomeValues.findIndex(
+        (ele) => ele.name === item.name
+      );
+
+      if (existingIndex !== -1) {
+        updatedIncomeValues[existingIndex] = {
+          name: item?.name,
+          value: Math.round(updatedValue),
+        };
+      } else {
+        updatedIncomeValues.push({
+          name: item?.name,
+          value: Math.round(updatedValue),
+        });
+      }
     });
+
+    // Check if shiftTotalAllowance is greater than 0 and if the name "Shift Allowance" does not already exist
+    if (shiftTotalAllowance > 0) {
+      const existingIndex = updatedIncomeValues.findIndex(
+        (ele) => ele.name === "Shift Allowance"
+      );
+
+      if (existingIndex === -1) {
+        // If "Shift Allowance" does not exist, add it to the array
+        updatedIncomeValues.push({
+          name: "Shift Allowance",
+          value: shiftTotalAllowance,
+        });
+      } else {
+        // If "Shift Allowance" already exists, update its value
+        updatedIncomeValues[existingIndex].value = shiftTotalAllowance;
+      }
+    }
+
+    // Add Remote Punch Allowance if applicable
+    if (remotePunchAllowance > 0) {
+      const existingIndex = updatedIncomeValues.findIndex(
+        (ele) => ele.name === "Remote Punch Allowance"
+      );
+
+      if (existingIndex === -1) {
+        // If "Remote Punch Allowance" does not exist, add it to the array
+        updatedIncomeValues.push({
+          name: "Remote Punch Allowance",
+          value: remotePunchAllowance,
+        });
+      } else {
+        // If "Remote Punch Allowance" already exists, update its value
+        updatedIncomeValues[existingIndex].value = remotePunchAllowance;
+      }
+    }
+
+    // Update the incomeValues state with the new array
+    setIncomeValues(updatedIncomeValues);
 
     // eslint-disable-next-line
-  }, [selectedDate, salaryComponent, noOfDaysEmployeePresent]);
+  }, [
+    selectedDate,
+    salaryComponent,
+    noOfDaysEmployeePresent,
+    shiftTotalAllowance,
+    remotePunchAllowance,
+  ]);
 
-  // Check if shiftTotalAllowance should be added
-  if (shiftTotalAllowance > 0) {
-    incomeValues.push({
-      name: "shiftTotalAllowance",
-      value: shiftTotalAllowance,
-    });
-  }
-  // Check if remotePunchAllowance should be added
-  if (remotePunchAllowance > 0) {
-    incomeValues.push({
-      name: "remotePunchAllowance",
-      value: remotePunchAllowance,
-    });
-  }
+  console.log("incomeValues", incomeValues);
 
   // get the PFsetup from organizaiton
   const { PfSetup } = useGetPfEsicSetup({
     organisationId,
   });
-  console.log("ffff:", PfSetup);
-
   // Initialize the state for set deduction value
   let pwd = availableEmployee?.pwd;
-  console.log("pwd", pwd);
+  // calculate the financial year
+  const calculateFinancialYear = (date) => {
+    const month = date?.month();
+    const currentYear = date?.year();
+    if (month < 3) {
+      // January, February, March
+      return `${currentYear - 1}-${currentYear}`;
+    } else {
+      return `${currentYear}-${currentYear + 1}`;
+    }
+  };
+  const financialYear = calculateFinancialYear(dayjs(selectedDate));
+  // to get the annual income tax
+  const { data: annualIncomeTax } = useQuery(
+    ["getIncomeTax", organisationId],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/tds/getMyDeclaration/${financialYear}/${getTotalSalaryEmployee}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return response.data.getTotalTaxableIncome;
+    }
+  );
+  // calculate monthly income tax based on annual income tax
+  const monthlyIncomeTax =
+    typeof annualIncomeTax === "number" && annualIncomeTax > 0
+      ? annualIncomeTax / 12
+      : "0";
+
+  console.log("monthly income tax", monthlyIncomeTax);
+  // get the loan deduction amount from loan application data of employee
+  let loanDeduction = 0;
+  if (Array.isArray(empLoanAplicationInfo)) {
+    const currentDate = new Date();
+    // Filter loan applications that are currently active
+    const loanDeductionApplications = empLoanAplicationInfo?.filter(
+      (application) => {
+        const loanDisbursementDate = new Date(
+          application?.loanDisbursementDate
+        );
+        const loanCompletionDate = new Date(application?.loanCompletedDate);
+        return (
+          loanDisbursementDate <= currentDate &&
+          currentDate <= loanCompletionDate
+        );
+      }
+    );
+
+    // Calculate the total loan deduction for active loans
+    loanDeduction = loanDeductionApplications.reduce((total, application) => {
+      // Check if the current application is within the loan disbursement and completion dates
+      const loanDisbursementDate = new Date(application.loanDisbursementDate);
+      const loanCompletionDate = new Date(application.loanCompletedDate);
+      if (
+        loanDisbursementDate <= currentDate &&
+        currentDate <= loanCompletionDate
+      ) {
+        return total + parseFloat(application.totalDeduction || 0);
+      }
+      return total;
+    }, 0);
+  }
+  loanDeduction = isNaN(loanDeduction) ? 0 : Math.round(loanDeduction);
+  console.log("loan deduction", loanDeduction);
 
   const [deductionValues, setDeductionValues] = useState([]);
   const [employerContribution, setEmployerContribution] = useState(0);
-
   // Calculate the PF, ESIC and update the deduction value
   useEffect(() => {
     // Step 1: Initialize variables to store Basic and DA values
@@ -398,111 +502,48 @@ function CalculateSalary() {
 
     // Ensure deductionValues is always an array
     setDeductionValues(updatedDeductions ?? []);
-    const adjustedEmlCtr = emlCtr > 0 ? emlCtr : 0;
 
+    // Add loan deduction
+    const selectedDateObj = new Date(selectedDate);
+
+    empLoanAplicationInfo?.forEach((loanInfo) => {
+      const loanDisbursement = new Date(loanInfo?.loanDisbursementDate);
+      const loanCompleted = new Date(loanInfo?.loanCompletedDate);
+      if (
+        loanDeduction > 0 &&
+        selectedDateObj >= loanDisbursement &&
+        selectedDateObj <= loanCompleted
+      ) {
+        const existingIndex = updatedDeductions?.findIndex(
+          (ele) => ele.name === "Loan Deduction"
+        );
+        if (existingIndex !== -1) {
+          updatedDeductions[existingIndex] = {
+            name: "Loan Deduction",
+            value: loanDeduction,
+          };
+        } else {
+          updatedDeductions.push({
+            name: "Loan Deduction",
+            value: loanDeduction,
+          });
+        }
+      }
+    });
+
+    setDeductionValues(updatedDeductions);
+    const adjustedEmlCtr = emlCtr > 0 ? emlCtr : 0;
     setEmployerContribution(adjustedEmlCtr);
 
     // eslint-disable-next-line
-  }, [salaryComponent, PfSetup, selectedDate, incomeValues]);
-
-
-
-  // calculate the financial year
-  const calculateFinancialYear = (date) => {
-    const month = date?.month();
-    const currentYear = date?.year();
-    if (month < 3) {
-      // January, February, March
-      return `${currentYear - 1}-${currentYear}`;
-    } else {
-      return `${currentYear}-${currentYear + 1}`;
-    }
-  };
-  const financialYear = calculateFinancialYear(dayjs(selectedDate));
-
-  // to get the annual income tax
-  const { data: annualIncomeTax } = useQuery(
-    ["getIncomeTax", organisationId],
-    async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/tds/getMyDeclaration/${financialYear}/${getTotalSalaryEmployee}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      return response.data.getTotalTaxableIncome;
-    }
-  );
-  // calculate monthly income tax based on annual income tax
-  const monthlyIncomeTax =
-    typeof annualIncomeTax === "number" && annualIncomeTax > 0
-      ? annualIncomeTax / 12
-      : "0";
-
-  // Pushing monthlyIncomeTax into extendedDeductionValue
-  if (monthlyIncomeTax > 0) {
-    deductionValues.push({
-      name: "Income Tax",
-      value: monthlyIncomeTax,
-    });
-  }
-  // get the loan deduction amount from loan application data of employee
-  let loanDeduction = 0;
-  if (Array.isArray(empLoanAplicationInfo)) {
-    const currentDate = new Date();
-    // Filter loan applications that are currently active
-    const loanDeductionApplications = empLoanAplicationInfo?.filter(
-      (application) => {
-        const loanDisbursementDate = new Date(
-          application?.loanDisbursementDate
-        );
-        const loanCompletionDate = new Date(application?.loanCompletedDate);
-        return (
-          loanDisbursementDate <= currentDate &&
-          currentDate <= loanCompletionDate
-        );
-      }
-    );
-
-    // Calculate the total loan deduction for active loans
-    loanDeduction = loanDeductionApplications.reduce((total, application) => {
-      // Check if the current application is within the loan disbursement and completion dates
-      const loanDisbursementDate = new Date(application.loanDisbursementDate);
-      const loanCompletionDate = new Date(application.loanCompletedDate);
-      if (
-        loanDisbursementDate <= currentDate &&
-        currentDate <= loanCompletionDate
-      ) {
-        return total + parseFloat(application.totalDeduction || 0);
-      }
-      return total;
-    }, 0);
-  }
-  loanDeduction = isNaN(loanDeduction) ? 0 : Math.round(loanDeduction);
-  // pushing loan deduction to deductionValues
-  useEffect(() => {
-    const currentDate = new Date();
-    const loanDisbursement = new Date(
-      empLoanAplicationInfo?.loanDisbursementDate
-    );
-    const loanCompleted = new Date(empLoanAplicationInfo?.loanCompletedDate);
-
-    if (
-      loanDeduction > 0 &&
-      currentDate >= loanDisbursement &&
-      currentDate <= loanCompleted
-    ) {
-      setDeductionValues((prevDeductions) => [
-        ...prevDeductions,
-        {
-          name: "loanDeduction",
-          value: loanDeduction,
-        },
-      ]);
-    }
-  }, [loanDeduction, empLoanAplicationInfo]);
+  }, [
+    salaryComponent,
+    PfSetup,
+    selectedDate,
+    incomeValues,
+    loanDeduction,
+    empLoanAplicationInfo,
+  ]);
 
   // calculate the total income (totalGrossSalary) , total deduction , totalNetAalary
   const [salary, setSalary] = useState({
@@ -510,7 +551,6 @@ function CalculateSalary() {
     totalDeduction: 0,
     totalNetSalary: 0,
   });
-
   // Calculate total income, total deduction, total net salary
   useEffect(() => {
     // Calculate income first, regardless of deductionValues
@@ -531,9 +571,6 @@ function CalculateSalary() {
 
     // eslint-disable-next-line
   }, [deductionValues, incomeValues]);
-
-  console.log("fdfd:", deductionValues);
-
   // submit the data
   const saveSalaryDetail = async () => {
     try {
@@ -843,16 +880,10 @@ function CalculateSalary() {
               <table class="w-full border border-collapse">
                 <thead class="border">
                   <tr class="bg-blue-200 border">
-                    <th class="px-4 py-2 border">Total Gross Salary :</th>
-                    <th class="pl-24 py-2 border">
-                      {" "}
-                      {salary?.totalIncome || ""}
-                    </th>
-                    <th class="px-4 py-2 border">Total Deduction :</th>
-                    <th class="px-4 py-2 border">
-                      {" "}
-                      {salary?.totalDeduction || ""}
-                    </th>
+                    <th class="py-2 border">Total Gross Salary :</th>
+                    <th class=" py-2 border"> {salary?.totalIncome || ""}</th>
+                    <th class="py-2 border">Total Deduction :</th>
+                    <th class="py-2 border"> {salary?.totalDeduction || ""}</th>
                   </tr>
                 </thead>
                 <tbody class="border"></tbody>

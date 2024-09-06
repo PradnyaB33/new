@@ -145,6 +145,7 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import AddRemotePunchingTask from "./pages/Remote-Punching-Employee/AddRemotePunchingTask";
 
 const App = () => {
   return (
@@ -228,9 +229,22 @@ const App = () => {
         {/* Login Routes */}
         <Route path="/test3" element={<TestYash />} />
         <Route
+          path="/organisation/:organisationId/remote-punching-tasks"
+          element={<RequireAuth
+            permission={[
+              "Super-Admin",
+              "HR",
+              "Manager",
+            ]}
+          >
+            <AddRemotePunchingTask />
+          </RequireAuth>}
+        />
+        <Route
           path="/employee-remote-punching"
           element={<EmployeeRemotePunch />}
         />
+
         <Route
           path="/organisation/:organisationId/employee-remote-punching"
           element={<EmployeeRemotePunch />}

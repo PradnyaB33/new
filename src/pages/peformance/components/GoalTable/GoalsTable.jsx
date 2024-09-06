@@ -269,20 +269,20 @@ const GoalsTable = ({ performance, isError }) => {
           {performance?.isMidGoal && isTimeFinish
             ? true
             : performance?.stages === "Goal setting" &&
-              isTimeFinish &&
-              (role !== "Employee"
-                ? true
-                : role === "Employee" && performance.isSelfGoal
+            isTimeFinish &&
+            (role !== "Employee"
+              ? true
+              : role === "Employee" && performance.isSelfGoal
                 ? true
                 : false) && (
-                <button
-                  type="button"
-                  onClick={() => setOpen(true)}
-                  className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
-                >
-                  Add Goal
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={() => setOpen(true)}
+                className="w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2 mr-4 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500"
+              >
+                Add Goal
+              </button>
+            )}
           <EmptyAlertBox
             title={"Goals Not Found"}
             desc={"Add goals to goal settings."}
@@ -304,12 +304,11 @@ const GoalsTable = ({ performance, isError }) => {
                   setFocusedInput("search");
                 }}
                 onBlur={() => setFocusedInput(null)}
-                className={` ${
-                  focusedInput === "search"
+                className={` ${focusedInput === "search"
                     ? "outline-blue-500 outline-3 border-blue-500 border-[2px]"
                     : "outline-none border-gray-200 border-[.5px]"
-                } flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px]`}
-                // className="flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px] outline-none border-gray-200 border-[.5px]"
+                  } flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px]`}
+              // className="flex  rounded-md items-center px-2   bg-white py-3 md:py-[6px] outline-none border-gray-200 border-[.5px]"
               >
                 <Search className="text-gray-700 md:text-lg !text-[1em]" />
                 <input
@@ -386,10 +385,10 @@ const GoalsTable = ({ performance, isError }) => {
             )}
 
             {(performance?.isMidGoal && isTimeFinish) ||
-            (performance?.stages === "Goal setting" &&
-              isTimeFinish &&
-              (role !== "Employee" ||
-                (role === "Employee" && performance.isSelfGoal))) ? (
+              (performance?.stages === "Goal setting" &&
+                isTimeFinish &&
+                (role !== "Employee" ||
+                  (role === "Employee" && performance.isSelfGoal))) ? (
               <button
                 type="button"
                 onClick={() => setOpen(true)}
@@ -637,12 +636,12 @@ const GoalsTable = ({ performance, isError }) => {
         <Divider variant="fullWidth" orientation="horizontal" />
 
         {role === "Employee" &&
-        openMenu?.goalStatus === "Pending" &&
-        openMenu?.approverId !== user._id &&
-        performance?.stages !== "Monitoring stage/Feedback collection stage" &&
-        role !== "Manager" &&
-        openMenu?.status !== "Goal Rejected" &&
-        role !== "Employee" ? (
+          openMenu?.goalStatus === "Pending" &&
+          openMenu?.approverId !== user._id &&
+          performance?.stages !== "Monitoring stage/Feedback collection stage" &&
+          role !== "Manager" &&
+          openMenu?.status !== "Goal Rejected" &&
+          role !== "Employee" ? (
           <h1 className="py-2 px-4 w-full h-full ">No options</h1>
         ) : (
           <></>
@@ -764,7 +763,7 @@ const GoalsTable = ({ performance, isError }) => {
           handleClose={handleClose}
         />
       ) : performance?.stages ===
-          "KRA stage/Ratings Feedback/Manager review stage" ||
+        "KRA stage/Ratings Feedback/Manager review stage" ||
         openMenu?.status === "Revaluation Requested" ? (
         <RatingModel
           open={openEdit}

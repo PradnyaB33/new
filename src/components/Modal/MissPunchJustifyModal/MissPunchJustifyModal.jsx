@@ -25,6 +25,7 @@ const MissPunchJustifyModal = ({
   open,
   unavailableRecords,
   organisationId,
+  data,
 }) => {
   const navigate = useNavigate();
   const { handleAlert } = useContext(TestContext);
@@ -76,9 +77,9 @@ const MissPunchJustifyModal = ({
 
   const onSubmit = async (data) => {
     const formattedData = {
-      justify: justify,
+      justify: data.justify,
     };
-    console.log(data);
+    console.log("formattedData", formattedData);
     AddMissJustifyData.mutate(formattedData);
     reset();
   };
@@ -147,7 +148,7 @@ const MissPunchJustifyModal = ({
               <>
                 <Button
                   type="button"
-                  variant="contained"
+                  variant="outlined"
                   color="primary"
                   onClick={() => handleRedirect("leave")}
                 >
@@ -163,7 +164,7 @@ const MissPunchJustifyModal = ({
               <>
                 <Button
                   type="button"
-                  variant="contained"
+                  variant="outlined"
                   color="secondary"
                   onClick={() => handleRedirect("shift")}
                 >
