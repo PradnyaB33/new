@@ -7,6 +7,8 @@ import useLocationMutation from "../../hooks/QueryHook/Location/mutation";
 import useSelfieStore from "../../hooks/QueryHook/Location/zustand-store";
 import MapComponent from "./components/Map-Component";
 import BasicSpeedDial from "./components/speed-dial";
+import TaskListEmployee from "./components/TaskListEmployee";
+import AddVisitDetails from "./components/AddVisitDetails";
 
 const EmployeeRemotePunch = () => {
   //get user exact location data
@@ -76,6 +78,9 @@ const EmployeeRemotePunch = () => {
             variant="filled"
           />
         </div>
+        <div className="flex">
+          <TaskListEmployee />
+          <AddVisitDetails /></div>
         <BasicSpeedDial />
         <SelfieForm />
       </div>

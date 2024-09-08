@@ -103,8 +103,8 @@ const GetAddedTask = () => {
                     <tr className="!font-semibold">
                         <th scope="col" className="py-3 text-sm px-2">Sr. No.</th>
                         <th scope="col" className="py-3 text-sm px-2">Title</th>
-                        <th scope="col" className="py-3 text-sm px-2">Actions</th>
                         <th scope="col" className="py-3 text-sm px-2"></th>
+                        <th scope="col" className="py-3 text-sm px-2">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -115,6 +115,14 @@ const GetAddedTask = () => {
                         >
                             <td className="py-3 px-2">{index + 1}</td>
                             <td className="py-3 px-2">{task.title}</td>
+                            <td className="py-3 px-2"><Button
+                                onClick={() => handleRowClick(task)}
+                                variant="outlined"
+                                color="primary"
+                                size="small"
+                            >
+                                view Details
+                            </Button></td>
                             <td className="py-3 px-2">
                                 <Tooltip title="Edit">
                                     <EditIcon
@@ -138,14 +146,6 @@ const GetAddedTask = () => {
                                     />
                                 </Tooltip>
                             </td>
-                            <td className="py-3 px-2"><Button
-                                onClick={() => handleRowClick(task)}
-                                variant="outlined"
-                                color="primary"
-                                size="small"
-                            >
-                                view Details
-                            </Button></td>
                         </tr>
                     ))}
                 </tbody>
