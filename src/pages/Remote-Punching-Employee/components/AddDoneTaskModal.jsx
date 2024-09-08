@@ -12,7 +12,8 @@ import { Button } from "@mui/material";
 import UserProfile from '../../../hooks/UserData/useUser';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 
-const AddDoneTaskModal = ({ taskData, onClose, userLocationData }) => {
+const AddDoneTaskModal = ({ taskData, onClose, userLocationData, punchObjectId }) => {
+
     const { handleAlert } = useContext(TestContext);
     const { cookies } = useContext(UseContext);
     const authToken = cookies["aegis"];
@@ -88,6 +89,7 @@ const AddDoneTaskModal = ({ taskData, onClose, userLocationData }) => {
                         lat: data.latitude,
                         long: data.longitude,
                     },
+                    punchObjectId: punchObjectId
                 },
                 {
                     headers: {

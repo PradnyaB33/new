@@ -1,15 +1,17 @@
 import React from 'react';
 
 const ModalForStatusShow = ({ taskData }) => {
+    console.log("taskData", taskData);
+
     if (!taskData) {
         return <div>No task data available.</div>;
     }
 
     return (
-        <div className="overflow-auto ">
+        <div className="overflow-auto">
             <div>
-                <h2 class=" text-2xl "> {taskData?.title}</h2>
-                <p class="text-sm text-muted-foreground">
+                <h2 className="text-2xl">{taskData?.title}</h2>
+                <p className="text-sm text-muted-foreground">
                     {taskData?.description}
                 </p><br />
             </div>
@@ -24,13 +26,24 @@ const ModalForStatusShow = ({ taskData }) => {
                 </thead>
                 <tbody>
                     {taskData.taskName.map((taskItem) =>
-                        taskData.to.map((email) => (
-                            <tr key={`${taskItem._id}-${email.value}`}>
-                                <td className="py-3 px-2">{taskItem.taskName}</td>
-                                <td className="py-3 px-2">{email.label}</td>
-                                <td className="py-3 px-2">{taskItem.status}</td>
-                            </tr>
-                        ))
+                        taskData.to.map((email) => {
+                            // Find the acceptedBy entry for this email
+                            const acceptedByEntry = taskItem.acceptedBy.find(
+                                (entry) => entry.employeeEmail === email.value
+                            );
+                            return (
+                                <tr className="border-b" key={`${taskItem._id}-${email.value}`}>
+                                    <td className="py-3 px-2">{taskItem.taskName}</td>
+                                    <td className="py-3 px-2">{email.label}</td>
+                                    <td className="py-3 px-2">
+                                        {acceptedByEntry ? acceptedByEntry.status : ''}
+                                    </td>
+                                    <td className="py-3 px-2">
+                                        {acceptedByEntry ? acceptedByEntry.comments : ''}
+                                    </td>
+                                </tr>
+                            );
+                        })
                     )}
                 </tbody>
             </table>

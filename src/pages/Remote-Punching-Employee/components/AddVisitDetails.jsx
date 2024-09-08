@@ -9,10 +9,10 @@ import useLocationMutation from '../../../hooks/QueryHook/Location/mutation';
 const AddVisitDetails = () => {
 
     const [open, setOpen] = useState(false);
-    const { start } = useSelfieStore();
+    const { start, punchObjectId } = useSelfieStore();
     const { getUserLocation } = useLocationMutation();
     const { data, mutate } = getUserLocation;
-    console.log("data", data);
+    console.log("punchObjectId", punchObjectId);
 
 
     useEffect(() => {
@@ -37,7 +37,7 @@ const AddVisitDetails = () => {
                 subHeading={"Here you can add task status"}
                 onClose={() => setOpen(false)}
             >
-                <AddDoneTaskModal onClose={() => setOpen(false)} userLocationData={data} />
+                <AddDoneTaskModal onClose={() => setOpen(false)} userLocationData={data} punchObjectId={punchObjectId} />
             </ReusableModal>
         </div>
     )
