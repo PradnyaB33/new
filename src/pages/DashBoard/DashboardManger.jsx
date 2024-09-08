@@ -14,6 +14,7 @@ import UserProfile from "../../hooks/UserData/useUser";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
 import ManagerEmployeeChart from "./Components/Custom/ManagerEmployeeChart";
 import EmployeeLeaveRequest from "./Components/List/EmployeLeaveReqest";
+import HeaderComponentPro from "../../components/header/HeaderComponentPro";
 
 const DashboardManger = () => {
   const { cookies } = useContext(UseContext);
@@ -92,10 +93,19 @@ const DashboardManger = () => {
     });
 
   return (
-    <section className=" bg-gray-50  min-h-screen w-full ">
-      <header className="text-xl w-full pt-6 bg-white border-b  p-4 px-8 ">
-        Manager Dashboard
-      </header>
+    // <section className=" bg-gray-50  min-h-screen w-full ">
+    //   <header className="text-xl w-full pt-6 bg-white border-b  p-4 px-8 ">
+    //     Manager Dashboard
+    //   </header>
+    <section className="p-2 mt-10 shadow-lg ">
+    <HeaderComponentPro  
+         heading={"Manager Dashboard"}
+      oneLineInfo={
+      //  "Manage and review department-specific metrics and reports for better insights"
+       "Manage and review employee attendance and leave management  "
+      }
+    />
+
 
       <div className=" lg:px-8 sm:px-4 px-2 w-full">
         <div className="flex mt-6">
@@ -156,7 +166,7 @@ const DashboardManger = () => {
                 />
               </div>
             </div>
-
+<br />
             <div className="w-full lg:w-[30%]  space-y-3">
               <EmployeeLeaveRequest />
             </div> 

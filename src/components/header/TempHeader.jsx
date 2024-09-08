@@ -1,4 +1,3 @@
-//👋Hello Developer Reffer this HeaderComponent as per Mam instructions , make sure Heading , navigate arrow icon ,Heading , one line Information should be same style.
 
 import { West } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
@@ -12,7 +11,7 @@ const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 };
 
-const HeaderComponentPro = ({ heading, oneLineInfo }) => {
+const TempHeader = ({ heading, oneLineInfo }) => {
   const navigate = useNavigate();
   
   const user = UserProfile().getCurrentUser();
@@ -32,6 +31,7 @@ const HeaderComponentPro = ({ heading, oneLineInfo }) => {
         <h1 className="text-lg md:text-xl font-semibold">{heading}</h1>
         {oneLineInfo && (
           // <p className="text-xs md:text-sm text-gray-600 w-full text-center md:text-left">
+          // temp
           <p className="text-xs md:text-sm text-gray-600 w-full  !text-left">
             {oneLineInfo}
           </p>
@@ -46,4 +46,4 @@ const HeaderComponentPro = ({ heading, oneLineInfo }) => {
   );
 };
 
-export default HeaderComponentPro;
+export default TempHeader;

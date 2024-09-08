@@ -21,7 +21,6 @@ import WorkOffOutlinedIcon from "@mui/icons-material/WorkOffOutlined";
 import { useLocation } from "react-router-dom";
 import useSubscriptionGet from "../QueryHook/Subscription/hook";
 import UserProfile from "../UserData/useUser";
-import AssignmentIcon from "@mui/icons-material/Assignment";
 
 const useSetupSideNav = ({ organisationId }) => {
   const location = useLocation();

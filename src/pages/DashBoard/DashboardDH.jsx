@@ -1,4 +1,4 @@
-//ISSUEEEEEEEEEEEEE
+
 import {
   AccessTime,
   AdminPanelSettings,
@@ -16,10 +16,11 @@ import UserProfile from "../../hooks/UserData/useUser";
 import LineGraph from "./Components/Bar/LineGraph";
 import AttendenceBar from "./Components/Bar/SuperAdmin/AttendenceBar";
 import SuperAdminCard from "./Components/Card/superadmin/SuperAdminCard";
+import HeaderComponentPro from "../../components/header/HeaderComponentPro";
 
 const DashboardDH = () => {
   const { getCurrentUser } = UserProfile();
-  const user = getCurrentUser();
+  const user = getCurrentUser(); 
   const authToken = useAuthToken();
 
   const { setSelectedSalaryYear, selectedSalaryYear } = useDashGlobal();
@@ -140,11 +141,22 @@ const DashboardDH = () => {
   console.log(employeeCount);
 
   return (
-    <section className=" bg-gray-50  min-h-screen w-full ">
-      <header className="text-xl font-bold w-full px-8 pt-6 bg-white !text-[#67748E] shadow-md  p-4">
-        Department Head Dashboard
-      </header>
-      <div className="md:px-8 px-2 w-full">
+    // <section className=" bg-gray-50  min-h-screen w-full ">
+    //   <header className="text-xl font-bold w-full px-8 pt-6 bg-white !text-[#67748E] shadow-md  p-4">
+    //     Department Head Dashboard
+    //   </header>
+
+    <section className="p-2 mt-10 shadow-lg ">
+    <HeaderComponentPro  
+         heading={"Department Head Dashboard"}
+      oneLineInfo={
+       "Manage and review department-specific metrics and reports for better insights"
+      }
+    />
+
+
+
+      <div className="md:px-8  px-2 w-full">
         <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 mt-6 w-full gap-2 md:gap-5 ">
           <SuperAdminCard
             icon={Groups}

@@ -37,7 +37,6 @@ const MissPunchJustify = () => {
   console.log("unavailable record", unavailableRecord);
 
   const { data } = useLeaveRequesationHook();
-  console.log("data", data);
 
   // Modal state
   const [missPunchModalOpen, setMissPunchModalOpen] = useState(false);
@@ -226,7 +225,7 @@ const MissPunchJustify = () => {
         open={missPunchModalOpen}
         organisationId={organisationId}
         unavailableRecords={unavailableRecords}
-        data = {data}
+        data={data}
       />
     </>
   );
