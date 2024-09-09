@@ -1,7 +1,6 @@
 //😎
 import Chart from "chart.js/auto";
 import React, { useState } from "react";
-
 import axios from "axios";
 import { CategoryScale } from "chart.js";
 import { useQuery } from "react-query";

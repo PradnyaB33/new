@@ -703,15 +703,13 @@ const CalculateHourEmpModal = ({
   console.log("overTimeHour", overTimeHour);
 
   //  calculate hour
-   //  calculate hour
-   const handleCalculateHours = async () => {
+  const handleCalculateHours = async () => {
     const data = getValues();
     const { hour, timeRange } = data;
     const regex = /^(0*(?:[0-9]|1[0-9]|2[0-4]))(\.\d{1,2})?$/;
 
-    console.log("timeRange" , timeRange);
-    console.log("hour" , hour);
-    
+    console.log("timeRange", timeRange);
+    console.log("hour", hour);
 
     // Validate and convert `hour` to number
     const parsedHour = parseFloat(hour);
@@ -734,22 +732,20 @@ const CalculateHourEmpModal = ({
 
     // Convert and validate `overTimeHour`
     const parsedOverTimeHour = parseFloat(overTimeHour);
-    console.log("parsedOverTimeHour" , parsedOverTimeHour);
+    console.log("parsedOverTimeHour", parsedOverTimeHour);
 
     const startDate = new Date(timeRange.startDate);
     const endDate = new Date(timeRange.endDate);
 
-    console.log("startDate" , startDate);
-    console.log("endDate" , endDate);
-    
-
+    console.log("startDate", startDate);
+    console.log("endDate", endDate);
 
     // Ensure endDate is inclusive
     endDate.setDate(endDate.getDate() + 1);
-    console.log("endDate with inclusive" , endDate);
+    console.log("endDate with inclusive", endDate);
 
     const punchingRecords = empPunchingData?.punchingRecords || [];
-    console.log("punchingRecords" , punchingRecords);
+    console.log("punchingRecords", punchingRecords);
 
     // Filter and organize records
     const filteredRecords = {};
@@ -838,7 +834,7 @@ const CalculateHourEmpModal = ({
         totalHour += ` ${formattedMinutes} min`;
       }
 
-      const formattedOverTimeHours = parseFloat(overTimeHours.toFixed(2)); 
+      const formattedOverTimeHours = parseFloat(overTimeHours.toFixed(2));
 
       if (weekendDays.includes(dayOfWeek)) {
         remarks = "ExtraShift";
@@ -897,7 +893,7 @@ const CalculateHourEmpModal = ({
         handleClose();
         handleAlert(true, "success", "Hours calculated successfully.");
         reset();
-         navigate(`/organisation/${organisationId}/view-calculate-data`);
+        navigate(`/organisation/${organisationId}/view-calculate-data`);
       } catch (error) {
         console.error("Error calculating hours:", error);
         handleAlert(
