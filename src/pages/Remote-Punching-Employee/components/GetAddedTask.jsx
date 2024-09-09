@@ -252,7 +252,6 @@ const GetAddedTask = () => {
         );
         return response.data;
     });
-    console.log("dsadsadata", data);
 
     const deleteTask = useMutation(
         async (taskId) => {

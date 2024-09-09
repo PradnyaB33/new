@@ -19,7 +19,6 @@ const AddDoneTaskModal = ({ taskData, onClose, userLocationData, punchObjectId }
     const authToken = cookies["aegis"];
     const { organisationId } = useParams();
     const queryClient = useQueryClient();
-    console.log("userLocationData", userLocationData);
 
     const { getCurrentUser } = UserProfile();
     const user = getCurrentUser();
@@ -73,8 +72,6 @@ const AddDoneTaskModal = ({ taskData, onClose, userLocationData, punchObjectId }
         const taskId = data.taskName.taskId;
         const subtaskId = data.taskName.value;
 
-        console.log("updatedData", updatedData);
-
         updateTaskStatus.mutate({ ...updatedData, taskId, subtaskId });
     };
 
@@ -126,7 +123,6 @@ const AddDoneTaskModal = ({ taskData, onClose, userLocationData, punchObjectId }
         { enabled: !!employeeEmail }
     );
 
-    console.log("acceptTask", data);
 
     const options = data?.data?.tasks.flatMap(task =>
         task.acceptedSubtasks.map(subtask => ({

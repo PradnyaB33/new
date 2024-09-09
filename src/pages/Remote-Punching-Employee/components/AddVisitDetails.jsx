@@ -12,12 +12,11 @@ const AddVisitDetails = () => {
     const { start, punchObjectId } = useSelfieStore();
     const { getUserLocation } = useLocationMutation();
     const { data, mutate } = getUserLocation;
-    console.log("punchObjectId", punchObjectId);
-
 
     useEffect(() => {
         mutate();
     }, [mutate]);
+
     return (
         <div>
             <Button

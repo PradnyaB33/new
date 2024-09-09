@@ -33,7 +33,6 @@ const AcceptRejectTaskModal = () => {
 
     },
     );
-    console.log("data", data);
 
     const filteredTasks = data?.remotePunchingTasks?.filter(task =>
         task.to.some(toItem => toItem.value === userEmail)
