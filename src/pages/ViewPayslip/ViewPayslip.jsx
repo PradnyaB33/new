@@ -778,4 +778,3 @@ const ViewPayslip = () => {
 };
 
 export default ViewPayslip;
-
