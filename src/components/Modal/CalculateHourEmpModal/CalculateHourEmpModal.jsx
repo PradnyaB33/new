@@ -744,8 +744,8 @@ const CalculateHourEmpModal = ({
 
 
     // Ensure endDate is inclusive
-    // endDate.setDate(endDate.getDate() + 1);
-    // console.log("endDate with inclusive" , endDate);
+    endDate.setDate(endDate.getDate() + 1);
+    console.log("endDate with inclusive" , endDate);
 
     const punchingRecords = empPunchingData?.punchingRecords || [];
     console.log("punchingRecords" , punchingRecords);
