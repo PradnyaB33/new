@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import { CategoryScale } from "chart.js";
 import { useQuery } from "react-query";
-import { useLocation } from 'react-router-dom';
 import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
 import HRgraph from "./Components/Bar/HRgraph";
@@ -44,7 +43,7 @@ const Dashboard = () => {
     ["salary-template-employee", selectedyear],
     getSalaryTemplate
   );
-  const location = useLocation();
+  
 
 
   return (
