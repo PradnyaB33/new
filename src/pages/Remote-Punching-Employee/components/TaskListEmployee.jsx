@@ -20,7 +20,7 @@ const TaskListEmployee = () => {
                 Tasks
             </Button>
             <ReusableModal
-                className='h-[700px]'
+                className="h-[600px]"
                 open={open}
                 heading={"Task List"}
                 subHeading={"Here you can see task list"}

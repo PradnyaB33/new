@@ -32,6 +32,7 @@ const AddRemotePunchingTask = () => {
                     <GetAddedTask />
                 </div>
                 <ReusableModal
+                    className="h-[600px]"
                     open={open}
                     heading={"Add Remote Punching Task"}
                     subHeading={"Here you can add remote punching task"}

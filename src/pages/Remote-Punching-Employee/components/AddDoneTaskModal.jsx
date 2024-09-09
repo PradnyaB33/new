@@ -137,8 +137,8 @@ const AddDoneTaskModal = ({ taskData, onClose, userLocationData, punchObjectId }
     ) || [];
 
     const statusData = [
-        { value: "done", label: "Done" },
-        { value: "inProgress", label: "In Progress" },
+        { value: "Completed", label: "Completed" },
+        { value: "Progress", label: "Progress" },
     ];
 
     console.log("data", data);

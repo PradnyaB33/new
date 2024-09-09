@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import { Checkbox, FormControlLabel, Button } from "@mui/material";
 import { Email } from "@mui/icons-material";
+import dayjs from "dayjs";
 
 const RemotePunchingTaskForm = ({ taskData, onClose }) => {
     const { handleAlert } = useContext(TestContext);
@@ -38,6 +39,7 @@ const RemotePunchingTaskForm = ({ taskData, onClose }) => {
                 value: z.string(),
             })
         ),
+        deadlineDate: z.string().min(1, { message: "Date is required" }),
     });
 
     const { control, formState: { errors }, handleSubmit, setValue, reset } = useForm({
@@ -47,6 +49,7 @@ const RemotePunchingTaskForm = ({ taskData, onClose }) => {
             description: undefined,
             taskName: [],
             to: undefined,
+            deadlineDate: undefined,
         },
     });
 
@@ -61,6 +64,7 @@ const RemotePunchingTaskForm = ({ taskData, onClose }) => {
                     value: task.taskName,
                 })),
                 to: taskData.to,
+                deadlineDate: dayjs(taskData.deadlineDate).format("YYYY-MM-DD"),
             });
         }
     }, [taskData, reset]);
@@ -80,6 +84,7 @@ const RemotePunchingTaskForm = ({ taskData, onClose }) => {
                 title: data.title,
                 taskName: data.taskName.map((item) => item.value),
                 to: data.to?.map((option) => option),
+                deadlineDate: data.deadlineDate,
             };
             await axios.post(
                 `${process.env.REACT_APP_API}/route/set-remote-task/${organisationId}`,
@@ -110,6 +115,7 @@ const RemotePunchingTaskForm = ({ taskData, onClose }) => {
                 title: data.title,
                 taskName: data.taskName.map((item) => item.value),
                 to: data.to?.map((option) => option),
+                deadlineDate: data.deadlineDate,
             };
             await axios.put(
                 `${process.env.REACT_APP_API}/route/set-remote-task/${organisationId}/${taskData._id}`,
@@ -204,7 +210,16 @@ const RemotePunchingTaskForm = ({ taskData, onClose }) => {
                         errors={errors}
                         error={errors.taskName}
                     />
-
+                    <AuthInputFiled
+                        name="deadlineDate"
+                        control={control}
+                        type="date"
+                        placeholder="dd-mm-yyyy"
+                        label="Date*"
+                        errors={errors}
+                        error={errors.deadlineDate}
+                        min={new Date().toISOString().slice(0, 10)}
+                    />
                     <div className="space-y-2 ">
                         <FormControlLabel
                             control={
