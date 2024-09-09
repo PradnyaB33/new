@@ -178,7 +178,7 @@ const RemotePunchingTaskForm = ({ taskData, onClose }) => {
                         placeholder="Title"
                         label="Enter Title*"
                         readOnly={false}
-                        maxLimit={35}
+                        maxLimit={50}
                         errors={errors}
                         error={errors.title}
                     />
@@ -188,6 +188,7 @@ const RemotePunchingTaskForm = ({ taskData, onClose }) => {
                         type="textarea"
                         placeholder="Description"
                         label="Enter Description*"
+                        maxLimit={1000}
                         errors={errors}
                         error={errors.description}
                     />
@@ -196,8 +197,8 @@ const RemotePunchingTaskForm = ({ taskData, onClose }) => {
                         icon={AssignmentIcon}
                         control={control}
                         type="autocomplete"
-                        placeholder="Enter Task"
-                        label="Task*"
+                        placeholder="Add Task"
+                        label="Add Task*"
                         readOnly={false}
                         maxLimit={15}
                         errors={errors}
