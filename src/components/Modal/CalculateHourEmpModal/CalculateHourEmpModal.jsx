@@ -165,7 +165,8 @@ const CalculateHourEmpModal = ({
   console.log("isOvertimeAllowanceEnabled", isOvertimeAllowanceEnabled);
 
   //  calculate hour
-  const handleCalculateHours = async () => {
+   //  calculate hour
+   const handleCalculateHours = async () => {
     const data = getValues();
     const { hour, timeRange } = data;
     const regex = /^(0*(?:[0-9]|1[0-9]|2[0-4]))(\.\d{1,2})?$/;
@@ -190,19 +191,20 @@ const CalculateHourEmpModal = ({
     }
 
     // Convert and validate `overTimeHour`
-    const parsedOverTimeHour = parseFloat(overTimeHourByOrg);
-    console.log("overtimeHours", parsedOverTimeHour);
+    const parsedOverTimeHour = parseFloat(overTimeHour);
+    if (isNaN(parsedOverTimeHour)) {
+      console.error("Invalid overtime hour value");
+      return;
+    }
 
     const startDate = new Date(timeRange.startDate);
     const endDate = new Date(timeRange.endDate);
-
-    console.log("startDate ", startDate);
-    console.log("endDate", endDate);
 
     // Ensure endDate is inclusive
     endDate.setDate(endDate.getDate() + 1);
 
     const punchingRecords = empPunchingData?.punchingRecords || [];
+
     // Filter and organize records
     const filteredRecords = {};
 
@@ -246,6 +248,7 @@ const CalculateHourEmpModal = ({
       const date = currentDate.toISOString().split("T")[0];
       const dayOfWeek = currentDate.toLocaleString("en-US", {
         weekday: "short",
+    
       });
       const record = filteredRecords[date] || {};
 
@@ -260,7 +263,7 @@ const CalculateHourEmpModal = ({
       ) {
         continue;
       }
-
+    
       if (record.checkIn && record.checkOut) {
         const punchInTime = new Date(
           `1970-01-01T${record.checkIn.punchingTime}`
@@ -279,8 +282,6 @@ const CalculateHourEmpModal = ({
       } else if (!weekendDays.includes(dayOfWeek)) {
         totalHours = 0;
       }
-      const formattedOverTimeHours = parseFloat(overTimeHours.toFixed(2)); // Number
-      console.log("formattedOverTimeHours", formattedOverTimeHours);
 
       const formattedTotalHours = Math.floor(totalHours);
       const formattedMinutes = Math.round(
@@ -291,6 +292,8 @@ const CalculateHourEmpModal = ({
       if (formattedMinutes > 0) {
         totalHour += ` ${formattedMinutes} min`;
       }
+
+      const formattedOverTimeHours = parseFloat(overTimeHours.toFixed(2)); // Number
 
       if (weekendDays.includes(dayOfWeek)) {
         remarks = "ExtraShift";
