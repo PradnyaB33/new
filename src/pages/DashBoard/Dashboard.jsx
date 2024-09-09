@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { CategoryScale } from "chart.js";
 import { useQuery } from "react-query";
+// import { useLocation } from 'react-router-dom';
 import useAuthToken from "../../hooks/Token/useAuth";
 import UserProfile from "../../hooks/UserData/useUser";
 import HRgraph from "./Components/Bar/HRgraph";
@@ -43,12 +44,12 @@ const Dashboard = () => {
     ["salary-template-employee", selectedyear],
     getSalaryTemplate
   );
-  
+  // const location = useLocation();
 
 
   return (
     <>
-         <section className="p-2 mt-10 shadow-lg ">
+      <section className="p-2 mt-10 shadow-lg ">
         <HeaderComponentPro
           heading={" Dashboard"}
           oneLineInfo={
@@ -56,7 +57,7 @@ const Dashboard = () => {
           }
         />
 
-{/* 
+        {/* 
 <section className="p-2 mt-10 shadow-lg bg-gray-50">
   <HeaderComponentPro
     heading={
@@ -75,11 +76,11 @@ const Dashboard = () => {
         <div className="py-3 px-2 md:px-8 w-full">
           <div className="flex md:flex-row flex-col w-full justify-between gap-2">
             <div className="space-y-3 md:space-y-0 md:my-4 mb-1 flex md:gap-2 gap-1 flex-col md:!w-[60%] w-[100%] md:pb-2">
-             {/* Employee Attandance */}
+              {/* Employee Attandance */}
               <HRgraph />
               {/* Salary Overview */}
-         
-  
+
+
               <LineGraph
                 salarydata={EmployeSalaryData?.employeeSalaryViaYear}
                 selectedyear={selectedyear}
@@ -90,7 +91,7 @@ const Dashboard = () => {
             </div>
 
             <div className="md:w-[40%] md:my-4 my-1 md:px-2 space-y-3 md:space-y-4">
-             
+
               <EmployeeLeavePie />
               <PublicHolidayDisplayList />
               <LeaveDisplayList />
