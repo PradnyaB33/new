@@ -30,7 +30,6 @@ const SideLeaveTable = ({ leaveTableData, empId }) => {
     count: item?.count,
   }));
   const [getDifference, setGetDifference] = useState(getCurrentLeavesCount);
-  console.log(`🚀 ~ getDifference:`, getDifference);
 
   let newLeave = [];
 

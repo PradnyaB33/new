@@ -14,6 +14,7 @@ import { Link, useParams } from "react-router-dom";
 import Select from "react-select";
 import { CustomOption } from "../../../components/InputFileds/AuthInputFiled";
 import { TestContext } from "../../../State/Function/Main";
+import DeleteModal from "../components/DeleteModal";
 import SideBalenceTable from "../components/SideBalenceTable";
 import SideLeaveTable from "../components/SideLeaveTable";
 import SkeletonLeave from "../components/skeletonComponent";
@@ -25,6 +26,7 @@ const ManagementCalender = () => {
   const localizer = momentLocalizer(moment);
   const { organisationId } = useParams("");
   const [employee, setEmployee] = useState("");
+  const [openDelete, setOpenDelete] = useState(null);
 
   const {
     EmployeeLeaves,
@@ -251,39 +253,12 @@ const ManagementCalender = () => {
                 {format(new Date(selectedLeave?.end), "PP")}
               </h1>
               <div className="flex gap-2 ">
-                <IconButton>
+                <IconButton onClick={() => setOpenDelete(selectedLeave?._id)}>
                   <DeleteOutlined color="error" />
                 </IconButton>
                 <IconButton>
                   <EditOutlined color="primary" />
                 </IconButton>
-                {/* <button
-                  type="button"
-                  disabled={
-                    selectedLeave?.title === "Selected Leave" || !selectedLeave
-                  }
-                  className={`w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2  text-md font-semibold text-white ${
-                    selectedLeave?.title === "Selected Leave" || !selectedLeave
-                      ? "bg-gray-400"
-                      : "bg-red-500 hover:bg-red-500"
-                  } focus-visible:outline-red-500`}
-                >
-                  Delete Leave
-                </button>
-                <button
-                  type="button"
-                  disabled={
-                    selectedLeave?.title === "Selected Leave" || !selectedLeave
-                  }
-                  className={`w-max flex group justify-center  gap-2 items-center rounded-md h-max px-4 py-2  text-md font-semibold text-white
-                 ${
-                   selectedLeave?.title === "Selected Leave" || !selectedLeave
-                     ? "bg-gray-400"
-                     : "bg-blue-500 hover:bg-blue-500"
-                 } focus-visible:outline-blue-500`}
-                >
-                  Update Leave
-                </button> */}
               </div>
             </div>
           ) : (
@@ -377,6 +352,12 @@ const ManagementCalender = () => {
           </section>
         )}
       </section>
+
+      <DeleteModal
+        open={openDelete}
+        handleClose={() => setOpenDelete(null)}
+        subtitle={"Delete employee attedance"}
+      />
     </div>
   );
 };

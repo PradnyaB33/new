@@ -170,7 +170,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                 isVisible: true,
                 link:
                   role === "Manager"
-                    ? `organisation/${orgId}/dashboard/manager-dashboard`
+                    ? `/organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
                     ? `/organisation/${orgId}/dashboard/HR-dashboard`
                     : role === "Employee"
@@ -308,7 +308,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "HR",
                   "Delegate-Super-Admin",
                 ].includes(role),
-                link: `organisation/${orgId}/employee-onboarding`,
+                link: `/organisation/${orgId}/employee-onboarding`,
                 icon: <PersonAdd className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Onboarding",
               },
@@ -342,7 +342,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "Manager",
                   "Employee",
                 ].includes(role),
-                link: `organisation/${orgId}/employee-list`,
+                link: `/organisation/${orgId}/employee-list`,
                 icon: <Groups className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Employee List",
               },
@@ -760,7 +760,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   "Manager",
                   "Employee",
                 ].includes(role),
-                link: `organisation/${orgId}/employee-list`,
+                link: `/organisation/${orgId}/employee-list`,
                 icon: <Groups className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Employee List",
               },
@@ -776,7 +776,6 @@ const TestNavItems = ({ toggleDrawer }) => {
                 "Delegate-Super-Admin",
                 "HR",
                 "Employee",
-                
               ]?.includes(role),
             routes: [
               {
