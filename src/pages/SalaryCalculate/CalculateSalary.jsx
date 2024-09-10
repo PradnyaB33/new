@@ -291,6 +291,11 @@ function CalculateSalary() {
     }
   );
   console.log("empOverTimeHour", empOverTimeHour);
+  let totalOvertimeAllowance = 0;
+  if (!isNaN(otamount) && !isNaN(empOverTimeHour)) {
+    totalOvertimeAllowance = otamount * empOverTimeHour;
+    console.log("totalOvertimeAllowance:", totalOvertimeAllowance);
+  }
 
   // to get employee salary component data of employee
   const { data: salaryComponent, isFetching } = useQuery(
@@ -374,11 +379,7 @@ function CalculateSalary() {
 
     // calculate overtime amount of employee in specific month
     // Check if both otamount and empOverTimeHour are valid numbers and proceed if true
-    let totalOvertimeAllowance = 0;
-    if (!isNaN(otamount) && !isNaN(empOverTimeHour)) {
-      totalOvertimeAllowance = otamount * empOverTimeHour;
-      console.log("totalOvertimeAllowance:", totalOvertimeAllowance);
-    }
+
     // Add overtime Allowance if applicable
     if (totalOvertimeAllowance > 0) {
       const existingIndex = updatedIncomeValues.findIndex(
