@@ -172,10 +172,10 @@ const TestNavItems = ({ toggleDrawer }) => {
                   role === "Manager"
                     ? `organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                    : role === "Employee"
-                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                    : "/organizationList",
+                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                      : role === "Employee"
+                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                        : "/organizationList",
                 icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Dashboard",
               },
@@ -478,10 +478,10 @@ const TestNavItems = ({ toggleDrawer }) => {
                   role === "Manager"
                     ? `organisation/${orgId}/dashboard/manager-dashboard`
                     : role === "HR"
-                    ? `/organisation/${orgId}/dashboard/HR-dashboard`
-                    : role === "Employee"
-                    ? `/organisation/${orgId}/dashboard/employee-dashboard`
-                    : "/organizationList",
+                      ? `/organisation/${orgId}/dashboard/HR-dashboard`
+                      : role === "Employee"
+                        ? `/organisation/${orgId}/dashboard/employee-dashboard`
+                        : "/organizationList",
                 icon: <Dashboard className=" !text-[1.2em] text-[#67748E]" />,
                 text: "Dashboard",
               },
@@ -776,7 +776,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                 "Delegate-Super-Admin",
                 "HR",
                 "Employee",
-                
+
               ]?.includes(role),
             routes: [
               {
@@ -1022,7 +1022,7 @@ const TestNavItems = ({ toggleDrawer }) => {
                   survey?.surveyPermission,
                 link:
                   user?.profile.includes("Super-Admin") ||
-                  user?.profile.includes("HR")
+                    user?.profile.includes("HR")
                     ? `/organisation/${orgId}/employee-survey`
                     : `/organisation/${orgId}/employee-survey/${empId}`,
                 icon: (
@@ -1077,6 +1077,7 @@ const TestNavItems = ({ toggleDrawer }) => {
             open: false,
             isVisible:
               [
+                "HR",
                 "Employee",
                 "Manager",
                 "Super-Admin",
@@ -1102,7 +1103,6 @@ const TestNavItems = ({ toggleDrawer }) => {
                 isVisible: [
                   "Employee",
                   "Super-Admin",
-                  "Manager",
                   "Delegate-Super-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/employee-remote-punching`,
@@ -1114,7 +1114,6 @@ const TestNavItems = ({ toggleDrawer }) => {
                 isVisible: [
                   "Employee",
                   "Super-Admin",
-                  "Manager",
                   "Delegate-Super-Admin",
                 ].includes(role),
                 link: `/organisation/${orgId}/remotePunching`,

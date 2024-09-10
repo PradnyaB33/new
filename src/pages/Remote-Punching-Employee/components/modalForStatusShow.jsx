@@ -1,46 +1,46 @@
-// import axios from 'axios';
-import React from "react";
-// import { useNavigate, useParams } from 'react-router-dom';
-// import { useQuery } from "react-query";
-// import { UseContext } from "../../../State/UseState/UseContext";
-// import { Button } from '@mui/material';
+import axios from 'axios';
+import React, { useContext } from "react";
+import { useNavigate, useParams } from 'react-router-dom';
+import { useQuery } from "react-query";
+import { UseContext } from "../../../State/UseState/UseContext";
+import { Button } from '@mui/material';
 
 const ModalForStatusShow = ({ taskData }) => {
-    // const { organisationId } = useParams();
-    // const navigate = useNavigate();
-    // const { cookies } = useContext(UseContext);
-    // const authToken = cookies["aegis"];
+    const { organisationId } = useParams();
+    const navigate = useNavigate();
+    const { cookies } = useContext(UseContext);
+    const authToken = cookies["aegis"];
 
     // Get employee data for the "to" field
-    // const { data: employees } = useQuery(
-    //     ["employee", organisationId],
-    //     async () => {
-    //         const response = await axios.get(
-    //             `${process.env.REACT_APP_API}/route/employee/${organisationId}/get-emloyee`,
-    //             {
-    //                 headers: {
-    //                     Authorization: authToken,
-    //                 },
-    //             }
-    //         );
-    //         return response.data.employees;
-    //     }
-    // );
+    const { data: employees } = useQuery(
+        ["employee", organisationId],
+        async () => {
+            const response = await axios.get(
+                `${process.env.REACT_APP_API}/route/employee/${organisationId}/get-emloyee`,
+                {
+                    headers: {
+                        Authorization: authToken,
+                    },
+                }
+            );
+            return response.data.employees;
+        }
+    );
 
     if (!taskData) {
         return <div>No task data available.</div>;
     }
 
-    // const handleComplete = (email) => {
-    //     const employee = employees.find(emp => emp.email === email);
-    //     console.log("employsdasdsaee", employee);
+    const handleComplete = (email) => {
+        const employee = employees.find(emp => emp.email === email);
+        console.log("employsdasdsaee", employee);
 
-    //     if (employee) {
-    //         navigate(`/organisation/${organisationId}/remote-task/${employee._id}`);
-    //     } else {
-    //         console.error("Employee not found");
-    //     }
-    // }
+        if (employee) {
+            navigate(`/organisation/${organisationId}/remote-task/${employee._id}`);
+        } else {
+            console.error("Employee not found");
+        }
+    }
 
     return (
         <div className="overflow-auto">
@@ -75,8 +75,8 @@ const ModalForStatusShow = ({ taskData }) => {
                                             ? acceptedByEntry.status
                                                 ?
                                                 acceptedByEntry.status === "Completed" ?
-                                                    acceptedByEntry.status
-                                                    //  <Button onClick={() => handleComplete(email.value)}>Completed</Button>
+                                                    // acceptedByEntry.status
+                                                    <Button onClick={() => handleComplete(email.value)}>Completed</Button>
                                                     : acceptedByEntry.status
                                                 : acceptedByEntry.accepted
                                                     ? 'Accept'

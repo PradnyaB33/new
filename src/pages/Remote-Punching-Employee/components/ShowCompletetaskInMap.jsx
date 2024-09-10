@@ -1,10 +1,14 @@
 // import axios from 'axios';
 import React from 'react'
+import usePunchNotification from '../../../hooks/QueryHook/notification/punch-notification/hook';
 // import { useQuery } from 'react-query';
 // import { useParams } from 'react-router-dom'
 // import { UseContext } from '../../../State/UseState/UseContext';
 
 const ShowCompletetaskInMap = () => {
+    const { data: punchNotifications } = usePunchNotification();
+    console.log("punchNotifications", punchNotifications);
+
     // const { Id } = useParams();
     // console.log("assas", Id);
     // const { cookies } = useContext(UseContext);
