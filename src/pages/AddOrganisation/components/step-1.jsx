@@ -78,7 +78,7 @@ const Step1 = ({ nextStep }) => {
     setStep1Data,
     isTrial,
   } = useOrg();
- 
+
   // use useForm
   const { control, formState, handleSubmit, watch } = useForm({
     defaultValues: {
@@ -98,7 +98,7 @@ const Step1 = ({ nextStep }) => {
   });
   const { errors } = formState;
 
-//  define the onSubmit function
+  //  define the onSubmit function
   const onSubmit = async (data) => {
     await setStep1Data(data);
     nextStep();

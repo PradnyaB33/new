@@ -1,25 +1,25 @@
 import axios from "axios";
 import { useContext, useEffect, useMemo, useState } from "react";
+import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useForm16NotificationHook from "../../../hooks/QueryHook/notification/Form16Notification/useForm16NotificationHook";
 import useMissedPunchNotificationCount from "../../../hooks/QueryHook/notification/MissedPunchNotification/MissedPunchNotification";
 import usePayslipNotificationHook from "../../../hooks/QueryHook/notification/PayslipNotification/usePayslipNotificaitonHook";
 import useAdvanceSalaryData from "../../../hooks/QueryHook/notification/advance-salary-notification/useAdvanceSalary";
+import useDepartmentNotification from "../../../hooks/QueryHook/notification/department-notification/hook";
 import useDocNotification from "../../../hooks/QueryHook/notification/document-notification/hook";
 import useJobPositionNotification from "../../../hooks/QueryHook/notification/job-position-notification/useJobPositionNotification";
 import useLeaveNotificationHook from "../../../hooks/QueryHook/notification/leave-notification/hook";
 import useLoanNotification from "../../../hooks/QueryHook/notification/loan-notification/useLoanNotificaiton";
 import usePunchNotification from "../../../hooks/QueryHook/notification/punch-notification/hook";
-import useTDSNotificationHook from "../../../hooks/QueryHook/notification/tds-notification/hook";
-import UserProfile from "../../../hooks/UserData/useUser";
-import useLeaveNotification from "../../SelfLeaveNotification/useLeaveNotification";
-import useDepartmentNotification from "../../../hooks/QueryHook/notification/department-notification/hook";
-import { useQuery } from "react-query";
-import useAuthToken from "../../../hooks/Token/useAuth";
-import useOrgGeo from "../../Geo-Fence/useOrgGeo";
 import useShiftNotification from "../../../hooks/QueryHook/notification/shift-notificatoin/hook";
+import useTDSNotificationHook from "../../../hooks/QueryHook/notification/tds-notification/hook";
+import useAuthToken from "../../../hooks/Token/useAuth";
+import UserProfile from "../../../hooks/UserData/useUser";
+import useOrgGeo from "../../Geo-Fence/useOrgGeo";
+import useLeaveNotification from "../../SelfLeaveNotification/useLeaveNotification";
 import UseEmployeeShiftNotification from "../../SelfShiftNotification/UseEmployeeShiftNotification";
-import { useParams } from "react-router-dom";
 
 const useNotification = () => {
   const { cookies } = useContext(UseContext);
@@ -28,9 +28,9 @@ const useNotification = () => {
   const { getCurrentUser, useGetCurrentRole } = UserProfile();
   const user = getCurrentUser();
   const role = useGetCurrentRole();
-  const { data } = useLeaveNotificationHook();//super admin and manager side notification
-  const { data: shiftNotification, accData } = useShiftNotification();//super admin and manager side notification
-  const { data: employeeShiftNotification } = UseEmployeeShiftNotification();//employee side notification
+  const { data } = useLeaveNotificationHook(); //super admin and manager side notification
+  const { data: shiftNotification, accData } = useShiftNotification(); //super admin and manager side notification
+  const { data: employeeShiftNotification } = UseEmployeeShiftNotification(); //employee side notification
   const { data: selfLeaveNotification } = useLeaveNotification();
   const [emp, setEmp] = useState();
   const { data: data3 } = usePunchNotification();
@@ -51,7 +51,7 @@ const useNotification = () => {
   useEffect(() => {
     if (data && data?.leaveRequests && data?.leaveRequests?.length > 0) {
       let total = 0;
-      data?.leaveRequests.forEach(item => {
+      data?.leaveRequests.forEach((item) => {
         total += item.notificationCount;
       });
       setLeaveCount(total);
@@ -62,10 +62,13 @@ const useNotification = () => {
 
   //employee side leave notification count
   useEffect(() => {
-    if (selfLeaveNotification && selfLeaveNotification?.leaveRequests
-      && selfLeaveNotification?.leaveRequests?.length > 0) {
+    if (
+      selfLeaveNotification &&
+      selfLeaveNotification?.leaveRequests &&
+      selfLeaveNotification?.leaveRequests?.length > 0
+    ) {
       let total = 0;
-      selfLeaveNotification?.leaveRequests?.forEach(item => {
+      selfLeaveNotification?.leaveRequests?.forEach((item) => {
         total += item.approveRejectNotificationCount;
       });
       setEmployeeLeaveCount(total);
@@ -74,15 +77,16 @@ const useNotification = () => {
     }
   }, [selfLeaveNotification]);
 
-  const Leavecount = role === "Super-Admin" || role === "Manager"
-    ? leaveCount
-    : employeeLeaveCount;
+  const Leavecount =
+    role === "Super-Admin" || role === "Manager"
+      ? leaveCount
+      : employeeLeaveCount;
 
   //super admin and manager side shift notification count
   useEffect(() => {
     if (shiftNotification && shiftNotification.length > 0) {
       let total = 0;
-      shiftNotification.forEach(item => {
+      shiftNotification.forEach((item) => {
         total += item.notificationCount;
       });
       setShiftCount(total);
@@ -95,7 +99,7 @@ const useNotification = () => {
   useEffect(() => {
     if (accData && accData.length > 0) {
       let total = 0;
-      accData.forEach(item => {
+      accData.forEach((item) => {
         total += item.notificationAccCount;
       });
       setShiftAccCount(total);
@@ -106,9 +110,13 @@ const useNotification = () => {
 
   //employee side shift notification count
   useEffect(() => {
-    if (employeeShiftNotification && employeeShiftNotification?.requests && employeeShiftNotification?.requests?.length > 0) {
+    if (
+      employeeShiftNotification &&
+      employeeShiftNotification?.requests &&
+      employeeShiftNotification?.requests?.length > 0
+    ) {
       let total = 0;
-      employeeShiftNotification?.requests.forEach(item => {
+      employeeShiftNotification?.requests.forEach((item) => {
         total += item?.approveRejectNotificationCount || 0;
       });
       setEmployeeShiftCount(total);
@@ -117,9 +125,12 @@ const useNotification = () => {
     }
   }, [employeeShiftNotification]);
 
-  const count = role === "Super-Admin" || role === "Manager"
-    ? shiftCount
-    : role === "Accountant" ? shiftAccCount : employeeShiftCount;
+  const count =
+    role === "Super-Admin" || role === "Manager"
+      ? shiftCount
+      : role === "Accountant"
+      ? shiftAccCount
+      : employeeShiftCount;
 
   //Employee Side remote and geofencing Notification count
   const employeeId = user._id;
@@ -147,15 +158,27 @@ const useNotification = () => {
   const punchNotifications = data3?.punchNotification || [];
   const totalFalseNotificationsCount = punchNotifications
     .filter((item) => item.geoFencingArea === false)
-    .reduce((total, item) =>
-      total + (item.punchData?.reduce((sum, punch) => sum + punch.notificationCount, 0) || 0),
-      0);
+    .reduce(
+      (total, item) =>
+        total +
+        (item.punchData?.reduce(
+          (sum, punch) => sum + punch.notificationCount,
+          0
+        ) || 0),
+      0
+    );
 
   const totalTrueNotificationsCount = punchNotifications
     .filter((item) => item.geoFencingArea === true)
-    .reduce((total, item) =>
-      total + (item.punchData?.reduce((sum, punch) => sum + punch.notificationCount, 0) || 0),
-      0);
+    .reduce(
+      (total, item) =>
+        total +
+        (item.punchData?.reduce(
+          (sum, punch) => sum + punch.notificationCount,
+          0
+        ) || 0),
+      0
+    );
 
   // remote punch notification count
   let remotePunchingCount;
@@ -192,21 +215,22 @@ const useNotification = () => {
   const { data: geofencingData } = useOrgGeo(user?.organizationId);
 
   //match currect user and selcted employee in list
-  const isUserMatchInEmployeeList = geofencingData?.area?.some(area =>
+  const isUserMatchInEmployeeList = geofencingData?.area?.some((area) =>
     area.employee.includes(employeeId)
   );
 
   //Notification for loan
-  const {
-    getEmployeeRequestLoanApplication,
-    getLoanEmployee
-  } = useLoanNotification();
+  const { getEmployeeRequestLoanApplication, getLoanEmployee } =
+    useLoanNotification();
 
-  //get notification count of loan 
+  //get notification count of loan
   useEffect(() => {
-    if (getEmployeeRequestLoanApplication && getEmployeeRequestLoanApplication?.length > 0) {
+    if (
+      getEmployeeRequestLoanApplication &&
+      getEmployeeRequestLoanApplication?.length > 0
+    ) {
       let total = 0;
-      getEmployeeRequestLoanApplication?.forEach(item => {
+      getEmployeeRequestLoanApplication?.forEach((item) => {
         total += item.notificationCount;
       });
       setLoanCount(total);
@@ -216,7 +240,7 @@ const useNotification = () => {
 
     if (getLoanEmployee && getLoanEmployee?.length > 0) {
       let total = 0;
-      getLoanEmployee?.forEach(item => {
+      getLoanEmployee?.forEach((item) => {
         total += item.acceptRejectNotificationCount;
       });
       setEmpLoanCount(total);
@@ -225,9 +249,10 @@ const useNotification = () => {
     }
   }, [getEmployeeRequestLoanApplication, getLoanEmployee]);
 
-  const countLoan = role === "Super-Admin" || role === "HR" || role === "Delegate-Super-Admin"
-    ? loanCount
-    : empLoanCount;
+  const countLoan =
+    role === "Super-Admin" || role === "HR" || role === "Delegate-Super-Admin"
+      ? loanCount
+      : empLoanCount;
 
   //notification Count for advance salary
   const { getAdvanceSalary, advanceSalaryNotificationEmp } =
@@ -237,7 +262,7 @@ const useNotification = () => {
   useEffect(() => {
     if (getAdvanceSalary && getAdvanceSalary?.length > 0) {
       let total = 0;
-      getAdvanceSalary?.forEach(item => {
+      getAdvanceSalary?.forEach((item) => {
         total += item.notificationCount;
       });
       setAdvanceSalaryCount(total);
@@ -245,9 +270,12 @@ const useNotification = () => {
       setAdvanceSalaryCount(0);
     }
 
-    if (advanceSalaryNotificationEmp && advanceSalaryNotificationEmp?.length > 0) {
+    if (
+      advanceSalaryNotificationEmp &&
+      advanceSalaryNotificationEmp?.length > 0
+    ) {
       let total = 0;
-      advanceSalaryNotificationEmp?.forEach(item => {
+      advanceSalaryNotificationEmp?.forEach((item) => {
         total += item.acceptRejectNotificationCount;
       });
       setEmpAdvanceSalaryCount(total);
@@ -256,9 +284,10 @@ const useNotification = () => {
     }
   }, [getAdvanceSalary, advanceSalaryNotificationEmp]);
 
-  const countAdvance = role === "Super-Admin" || role === "HR" || role === "Delegate-Super-Admin"
-    ? advanceSalaryCount
-    : empAdvanceSalaryCount;
+  const countAdvance =
+    role === "Super-Admin" || role === "HR" || role === "Delegate-Super-Admin"
+      ? advanceSalaryCount
+      : empAdvanceSalaryCount;
 
   //////////////////////////////////////////////
 
@@ -353,6 +382,10 @@ const useNotification = () => {
           }
         );
         setEmp(resp.data.employee.organizationId);
+        console.log(
+          `🚀 ~ resp.data.employee.organizationId:`,
+          resp.data.employee.organizationId
+        );
       }
     })();
     // eslint-disable-next-line
@@ -379,35 +412,7 @@ const useNotification = () => {
 
     ...(role === "Super-Admin" || role === "Manager"
       ? [
-        {
-          name: "Remote Punching Notification",
-          count: remotePunchingCount,
-          color: "#51FD96",
-          url: "/punch-notification",
-          url2: "/remote-punching-notification",
-          visible: emp?.packageInfo === "Intermediate Plan",
-        },
-        {
-          name: "Geo Fencing Notification",
-          count: geoFencingCount,
-          color: "#51FD96",
-          url: `/organisation/${organisationId}/geo-fencing-notification`,
-          url2: `/organisation/${organisationId}/geofencing-notification`,
-          visible: emp?.packageInfo === "Intermediate Plan",
-        },
-      ]
-      : // For Employees, conditionally show either Remote Punching or Geo Fencing based on `isUserMatchInEmployeeList`
-      [
-        isUserMatchInEmployeeList
-          ? {
-            name: "Geo Fencing Notification",
-            count: geoFencingCount,
-            color: "#51FD96",
-            url: `/organisation/${organisationId}/geo-fencing-notification`,
-            url2: `/organisation/${organisationId}/geofencing-notification`,
-            visible: emp?.packageInfo === "Intermediate Plan",
-          }
-          : {
+          {
             name: "Remote Punching Notification",
             count: remotePunchingCount,
             color: "#51FD96",
@@ -415,7 +420,35 @@ const useNotification = () => {
             url2: "/remote-punching-notification",
             visible: emp?.packageInfo === "Intermediate Plan",
           },
-      ]),
+          {
+            name: "Geo Fencing Notification",
+            count: geoFencingCount,
+            color: "#51FD96",
+            url: `/organisation/${organisationId}/geo-fencing-notification`,
+            url2: `/organisation/${organisationId}/geofencing-notification`,
+            visible: emp?.packageInfo === "Intermediate Plan",
+          },
+        ]
+      : // For Employees, conditionally show either Remote Punching or Geo Fencing based on `isUserMatchInEmployeeList`
+        [
+          isUserMatchInEmployeeList
+            ? {
+                name: "Geo Fencing Notification",
+                count: geoFencingCount,
+                color: "#51FD96",
+                url: `/organisation/${organisationId}/geo-fencing-notification`,
+                url2: `/organisation/${organisationId}/geofencing-notification`,
+                visible: emp?.packageInfo === "Intermediate Plan",
+              }
+            : {
+                name: "Remote Punching Notification",
+                count: remotePunchingCount,
+                color: "#51FD96",
+                url: "/punch-notification",
+                url2: "/remote-punching-notification",
+                visible: emp?.packageInfo === "Intermediate Plan",
+              },
+        ]),
     {
       name: "Document Approval Notification",
       count: data4?.data?.doc.length ?? 0,

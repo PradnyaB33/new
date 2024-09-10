@@ -19,26 +19,44 @@ const packageCountSchema = z.object({
   cycleCount: z.string().refine((doc) => Number(doc) > 0, {
     message: "Cycle Count is greater than 0",
   }),
+  couponCode: z.string().optional(),
   paymentType: z.enum(["Phone_Pay", "RazorPay"]),
+  packages: z
+    .array(z.object({ value: z.string(), label: z.string() }))
+    .optional(),
 });
 
 const Step3 = ({ nextStep }) => {
   // to define the state , hook and import the other function
-  const { count, setStep3Data, cycleCount, paymentType } = useOrg();
+  const { count, setStep3Data, cycleCount, paymentType, packageInfo } =
+    useOrg();
 
   // use useForm
-  const { control, handleSubmit, formState } = useForm({
-    defaultValues: {
-      count,
-      cycleCount,
-      paymentType,
-    },
-    resolver: zodResolver(packageCountSchema),
-  });
+  const { control, handleSubmit, formState, setError, watch, clearErrors } =
+    useForm({
+      defaultValues: {
+        count,
+        cycleCount,
+        paymentType,
+        couponCode: undefined,
+      },
+      resolver: zodResolver(packageCountSchema),
+    });
   const { errors } = formState;
 
   // to define the onSubmit function
   const onSubmit = (data) => {
+    if (watch("couponCode") === undefined || watch("couponCode") == "") {
+      clearErrors("couponCode");
+    }
+    if (
+      (watch("couponCode") !== undefined || watch("couponCode") !== "") &&
+      watch("couponCode") !== "ABCD"
+    ) {
+      // data = { ...data, couponCode: watch("couponCode") };
+      setError("couponCode", { message: "Coupon code is invalid" });
+      // return false;
+    }
     setStep3Data(data);
     nextStep();
   };
@@ -87,6 +105,33 @@ const Step3 = ({ nextStep }) => {
           ]}
           descriptionText={"Additional 2% charges on every transaction"}
         />
+
+        <AuthInputFiled
+          name="packages"
+          icon={FactoryOutlined}
+          control={control}
+          type="select"
+          isMulti={true}
+          options={[{ label: "Remote Task", value: "Remote Task" }]}
+          placeholder="Ex: Remote Task"
+          label="Select Package Addition "
+          errors={errors}
+          error={errors.packages}
+        />
+
+        <div className="my-2">
+          <AuthInputFiled
+            name="couponCode"
+            icon={FactoryOutlined}
+            control={control}
+            type="text"
+            placeholder="Ex: ABCD12345A"
+            label="Enter Coupon code "
+            errors={errors}
+            error={errors.couponCode}
+            descriptionText={"You can request for coupon code to get discount"}
+          />
+        </div>
         <Button type="submit" variant="contained" className="!w-max !mx-auto">
           Confirm & Pay
         </Button>
