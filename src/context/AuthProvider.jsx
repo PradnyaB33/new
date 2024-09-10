@@ -1,6 +1,7 @@
 import { CircularProgress } from "@mui/material";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SwipeableTemporaryDrawer from "../components/app-layout/swipable-drawer";
 import UserProfile from "../hooks/UserData/useUser";
 
 const AuthContext = createContext();
@@ -35,19 +36,45 @@ function RequireAuth({ children, permission }) {
   const { user, role } = useAuth();
   const navigate = useNavigate();
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   const isAuthPage =
     window.location.pathname.includes("sign-in") ||
     window.location.pathname.includes("sign-up");
 
   const isPermission = permission?.includes(role);
+
   useEffect(() => {
-    if (!isPageLoaded) {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    // Listen for online/offline events
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    // Clean up event listeners on component unmount
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isPageLoaded || !isOnline) {
       return;
     }
-    if ((!user || !isPermission) && !isAuthPage) {
-      return navigate("/sign-in");
+
+    let timer;
+    if ((!user || !isPermission) && !isAuthPage && isOnline) {
+      timer = setTimeout(() => {
+        setIsPageLoaded(true);
+        return navigate("/sign-in");
+      }, 1000);
     }
+
+    return () => {
+      clearTimeout(timer);
+    };
 
     // eslint-disable-next-line
   }, [isPageLoaded, isPermission]);
@@ -65,7 +92,7 @@ function RequireAuth({ children, permission }) {
 
   // if (!user && !isAuthPage) return <Navigate to={"/sign-in"} />;
 
-  if (!isPageLoaded) {
+  if (!isPageLoaded || !isOnline) {
     return (
       <div className="flex items-center justify-center   w-full h-[80vh]">
         <div className="grid place-items-center gap-2">
@@ -76,7 +103,14 @@ function RequireAuth({ children, permission }) {
     );
   }
 
-  if (user && isPermission) return children;
+  if (user && isPermission && isOnline) {
+    return (
+      <>
+        <SwipeableTemporaryDrawer />
+        {children}
+      </>
+    );
+  }
 }
 
 export default RequireAuth;

@@ -9,7 +9,7 @@ import Loader from "./components/app-loader/page";
 import AnimationComponent from "./components/emailverify/verification-animation";
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
-import RequireAuth, { AuthProvider } from "./context/AuthProvider";
+import RequireAuth from "./context/AuthProvider";
 import NewOranisationForm from "./pages/AddOrganisation/OrgFrom";
 import Application from "./pages/Application/Application";
 import Billing from "./pages/Billing/page";
@@ -148,7 +148,7 @@ import ShiftNotification from "./pages/shift-notification/page";
 
 const App = () => {
   return (
-    <AuthProvider>
+  
       <Routes>
         <Route
           path="/"
@@ -1781,7 +1781,6 @@ const App = () => {
           }
         />
       </Routes>
-    </AuthProvider>
   );
 };
 
