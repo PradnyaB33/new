@@ -172,6 +172,7 @@ const useNotification = () => {
   } else {
     remotePunchingCount = totalFalseNotificationsCount;
   }
+  console.log("remotePunchingCount", remotePunchingCount);
 
   let geoFencingCount;
   if (role === "Employee") {
@@ -377,7 +378,7 @@ const useNotification = () => {
       visible: true,
     },
 
-    ...(role === "Super-Admin" || role === "Manager"
+    ...(role === "Super-Admin" || role === "Manager" || role === "HR"
       ? [
         {
           name: "Remote Punching Notification",

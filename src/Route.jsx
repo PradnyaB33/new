@@ -263,7 +263,7 @@ const App = () => {
           path="/organisation/:organisationId/setup/letter-types"
           element={<LetterSetup />}
         />
-        <Route path="/organisation/:organisationId/remote-task/:Id" element={<ShowCompletetaskInMap />} />
+        <Route path="/organisation/:organisationId/remote-task/:EmpId/:punchObjectId" element={<ShowCompletetaskInMap />} />
         <Route path="/organisation/:organisationId/remote/info/:Id" element={<RemoteManager />} />
         <Route path="/remote/notification" element={<RemoteNotification />} />
         <Route path="/doc-notification" element={<DocNotification />} />

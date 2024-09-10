@@ -74,7 +74,7 @@ const MainMap = ({ punchData, isLoaded, geofencingCircleData, taskData }) => {
     <GoogleMap
       key={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
       mapContainerStyle={{
-        width: "70%",
+        width: "100%",
         height: "91.8vh",
       }}
       center={{
