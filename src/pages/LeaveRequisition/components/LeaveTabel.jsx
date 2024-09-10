@@ -6,13 +6,14 @@ import React, { useContext, useState } from "react";
 import { TestContext } from "../../../State/Function/Main";
 import useLeaveRequesationHook from "../../../hooks/QueryHook/Leave-Requsation/hook";
 import SummaryTable from "./summaryTable";
- 
+
 const LeaveTable = () => {
   const { handleAlert } = useContext(TestContext);
   const [anchorEl, setAnchorEl] = useState(null);
- 
+
   const { data, isLoading, isError, error } = useLeaveRequesationHook();
- 
+  console.log("data", data);
+
   if (isError) {
     handleAlert(
       true,
@@ -79,7 +80,7 @@ const LeaveTable = () => {
       </article>
     );
   }
- 
+
   if (isError) {
     return <p>Error loading data</p>;
   }
@@ -124,7 +125,7 @@ const LeaveTable = () => {
           </h1>
         </div>
       </div>
- 
+
       <Popover
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
@@ -139,9 +140,8 @@ const LeaveTable = () => {
     </article>
   );
 };
- 
-export default LeaveTable;
 
+export default LeaveTable;
 
 // ✅
 // import { Help, MoreHoriz, MoreVert } from "@mui/icons-material";
@@ -233,7 +233,7 @@ export default LeaveTable;
 //           </IconButton>
 //         </Tooltip>
 //       </h1>
-      
+
 //       <div className="mt-4 px-6">
 //         {data?.leaveTypes?.map((item, index) => (
 //           <div

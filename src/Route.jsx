@@ -145,6 +145,8 @@ import LeaveNotification from "./pages/leave-notification/page";
 import Performance from "./pages/peformance/Performance";
 import PunchNotification from "./pages/punch-notification/page";
 import ShiftNotification from "./pages/shift-notification/page";
+import AddRemotePunchingTask from "./pages/Remote-Punching-Employee/AddRemotePunchingTask";
+import ShowCompletetaskInMap from "./pages/Remote-Punching-Employee/components/ShowCompletetaskInMap";
 
 const App = () => {
   return (
@@ -228,9 +230,22 @@ const App = () => {
         {/* Login Routes */}
         <Route path="/test3" element={<TestYash />} />
         <Route
+          path="/organisation/:organisationId/remote-punching-tasks"
+          element={<RequireAuth
+            permission={[
+              "Super-Admin",
+              "HR",
+              "Manager",
+            ]}
+          >
+            <AddRemotePunchingTask />
+          </RequireAuth>}
+        />
+        <Route
           path="/employee-remote-punching"
           element={<EmployeeRemotePunch />}
         />
+
         <Route
           path="/organisation/:organisationId/employee-remote-punching"
           element={<EmployeeRemotePunch />}
@@ -248,6 +263,7 @@ const App = () => {
           path="/organisation/:organisationId/setup/letter-types"
           element={<LetterSetup />}
         />
+        <Route path="/organisation/:organisationId/remote-task/:Id" element={<ShowCompletetaskInMap />} />
         <Route path="/organisation/:organisationId/remote/info/:Id" element={<RemoteManager />} />
         <Route path="/remote/notification" element={<RemoteNotification />} />
         <Route path="/doc-notification" element={<DocNotification />} />
